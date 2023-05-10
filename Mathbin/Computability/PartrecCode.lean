@@ -50,6 +50,12 @@ namespace Nat.Partrec
 
 open Nat (pair)
 
+/- warning: nat.partrec.rfind' -> Nat.Partrec.rfind' is a dubious translation:
+lean 3 declaration is
+  forall {f : PFun.{0, 0} Nat Nat}, (Nat.Partrec f) -> (Nat.Partrec (Nat.unpaired.{1} (Part.{0} Nat) (fun (a : Nat) (m : Nat) => Part.map.{0, 0} Nat Nat (fun (_x : Nat) => HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) _x m) (Nat.rfind (fun (n : Nat) => Functor.map.{0, 0} Part.{0} (Applicative.toFunctor.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.monad.{0})) Nat Bool (fun (m : Nat) => Decidable.decide (Eq.{1} Nat m (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Nat.decidableEq m (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))))) (f (Nat.pair a (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n m))))))))
+but is expected to have type
+  forall {f : PFun.{0, 0} Nat Nat}, (Nat.Partrec f) -> (Nat.Partrec (Nat.unpaired.{1} (Part.{0} Nat) (fun (a : Nat) (m : Nat) => Part.map.{0, 0} Nat Nat (fun (_x : Nat) => HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) _x m) (Nat.rfind (fun (n : Nat) => Functor.map.{0, 0} Part.{0} (Applicative.toFunctor.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.instMonadPart.{0})) Nat Bool (fun (m : Nat) => Decidable.decide (Eq.{1} Nat m (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (instDecidableEqNat m (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))) (f (Nat.pair a (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n m))))))))
+Case conversion may be inaccurate. Consider using '#align nat.partrec.rfind' Nat.Partrec.rfind'ₓ'. -/
 theorem rfind' {f} (hf : Nat.Partrec f) :
     Nat.Partrec
       (Nat.unpaired fun a m =>
@@ -72,6 +78,7 @@ theorem rfind' {f} (hf : Nat.Partrec f) :
     simp at this; exact this
 #align nat.partrec.rfind' Nat.Partrec.rfind'
 
+#print Nat.Partrec.Code /-
 /-- Code for partial recursive functions from ℕ to ℕ.
 See `nat.partrec.code.eval` for the interpretation of these constructors.
 -/
@@ -85,6 +92,7 @@ inductive Code : Type
   | prec : code → code → code
   | rfind' : code → code
 #align nat.partrec.code Nat.Partrec.Code
+-/
 
 end Nat.Partrec
 
@@ -97,12 +105,15 @@ open Nat.Partrec (code)
 instance : Inhabited Code :=
   ⟨zero⟩
 
+#print Nat.Partrec.Code.const /-
 /-- Returns a code for the constant function outputting a particular natural. -/
 protected def const : ℕ → Code
   | 0 => zero
   | n + 1 => comp succ (const n)
 #align nat.partrec.code.const Nat.Partrec.Code.const
+-/
 
+#print Nat.Partrec.Code.const_inj /-
 theorem const_inj : ∀ {n₁ n₂}, Nat.Partrec.Code.const n₁ = Nat.Partrec.Code.const n₂ → n₁ = n₂
   | 0, 0, h => by simp
   | n₁ + 1, n₂ + 1, h => by
@@ -110,18 +121,24 @@ theorem const_inj : ∀ {n₁ n₂}, Nat.Partrec.Code.const n₁ = Nat.Partrec.C
     injection h with h₁ h₂
     simp only [const_inj h₂]
 #align nat.partrec.code.const_inj Nat.Partrec.Code.const_inj
+-/
 
+#print Nat.Partrec.Code.id /-
 /-- A code for the identity function. -/
 protected def id : Code :=
   pair left right
 #align nat.partrec.code.id Nat.Partrec.Code.id
+-/
 
+#print Nat.Partrec.Code.curry /-
 /-- Given a code `c` taking a pair as input, returns a code using `n` as the first argument to `c`.
 -/
 def curry (c : Code) (n : ℕ) : Code :=
   comp c (pair (Code.const n) Code.id)
 #align nat.partrec.code.curry Nat.Partrec.Code.curry
+-/
 
+#print Nat.Partrec.Code.encodeCode /-
 /-- An encoding of a `nat.partrec.code` as a ℕ. -/
 def encodeCode : Code → ℕ
   | zero => 0
@@ -133,7 +150,9 @@ def encodeCode : Code → ℕ
   | prec cf cg => bit1 (bit0 <| pair (encode_code cf) (encode_code cg)) + 4
   | rfind' cf => bit1 (bit1 <| encode_code cf) + 4
 #align nat.partrec.code.encode_code Nat.Partrec.Code.encodeCode
+-/
 
+#print Nat.Partrec.Code.ofNatCode /-
 /--
 A decoder for `nat.partrec.code.encode_code`, taking any ℕ to the `nat.partrec.code` it represents.
 -/
@@ -157,6 +176,7 @@ def ofNatCode : ℕ → Code
     | tt, ff => prec (of_nat_code m.unpair.1) (of_nat_code m.unpair.2)
     | tt, tt => rfind' (of_nat_code m)
 #align nat.partrec.code.of_nat_code Nat.Partrec.Code.ofNatCode
+-/
 
 /-- Proof that `nat.partrec.code.of_nat_code` is the inverse of `nat.partrec.code.encode_code`-/
 private theorem encode_of_nat_code : ∀ n, encodeCode (ofNatCode n) = n
@@ -189,14 +209,19 @@ instance : Denumerable Code :=
     ⟨encodeCode, ofNatCode, fun c => by
       induction c <;> try rfl <;> simp [encode_code, of_nat_code, -add_comm, *], encode_ofNatCode⟩
 
+#print Nat.Partrec.Code.encodeCode_eq /-
 theorem encodeCode_eq : encode = encodeCode :=
   rfl
 #align nat.partrec.code.encode_code_eq Nat.Partrec.Code.encodeCode_eq
+-/
 
+#print Nat.Partrec.Code.ofNatCode_eq /-
 theorem ofNatCode_eq : ofNat Code = ofNatCode :=
   rfl
 #align nat.partrec.code.of_nat_code_eq Nat.Partrec.Code.ofNatCode_eq
+-/
 
+#print Nat.Partrec.Code.encode_lt_pair /-
 theorem encode_lt_pair (cf cg) :
     encode cf < encode (pair cf cg) ∧ encode cg < encode (pair cf cg) :=
   by
@@ -206,21 +231,27 @@ theorem encode_lt_pair (cf cg) :
   have := lt_of_le_of_lt this (lt_add_of_pos_right _ (by decide : 0 < 4))
   exact ⟨lt_of_le_of_lt (Nat.left_le_pair _ _) this, lt_of_le_of_lt (Nat.right_le_pair _ _) this⟩
 #align nat.partrec.code.encode_lt_pair Nat.Partrec.Code.encode_lt_pair
+-/
 
+#print Nat.Partrec.Code.encode_lt_comp /-
 theorem encode_lt_comp (cf cg) :
     encode cf < encode (comp cf cg) ∧ encode cg < encode (comp cf cg) :=
   by
   suffices; exact (encode_lt_pair cf cg).imp (fun h => lt_trans h this) fun h => lt_trans h this
   change _; simp [encode_code_eq, encode_code]
 #align nat.partrec.code.encode_lt_comp Nat.Partrec.Code.encode_lt_comp
+-/
 
+#print Nat.Partrec.Code.encode_lt_prec /-
 theorem encode_lt_prec (cf cg) :
     encode cf < encode (prec cf cg) ∧ encode cg < encode (prec cf cg) :=
   by
   suffices; exact (encode_lt_pair cf cg).imp (fun h => lt_trans h this) fun h => lt_trans h this
   change _; simp [encode_code_eq, encode_code]
 #align nat.partrec.code.encode_lt_prec Nat.Partrec.Code.encode_lt_prec
+-/
 
+#print Nat.Partrec.Code.encode_lt_rfind' /-
 theorem encode_lt_rfind' (cf) : encode cf < encode (rfind' cf) :=
   by
   simp [encode_code_eq, encode_code, -add_comm]
@@ -229,11 +260,13 @@ theorem encode_lt_rfind' (cf) : encode cf < encode (rfind' cf) :=
   refine' lt_of_le_of_lt (le_trans this _) (lt_add_of_pos_right _ (by decide : 0 < 4))
   exact le_of_lt (Nat.bit0_lt_bit1 <| le_of_lt <| Nat.bit0_lt_bit1 <| le_rfl)
 #align nat.partrec.code.encode_lt_rfind' Nat.Partrec.Code.encode_lt_rfind'
+-/
 
 section
 
 open Primrec
 
+#print Nat.Partrec.Code.pair_prim /-
 theorem pair_prim : Primrec₂ pair :=
   Primrec₂.ofNat_iff.2 <|
     Primrec₂.encode_iff.1 <|
@@ -244,7 +277,9 @@ theorem pair_prim : Primrec₂ pair :=
               (encode_iff.2 <| (Primrec.ofNat Code).comp snd))
         (Primrec₂.const 4)
 #align nat.partrec.code.pair_prim Nat.Partrec.Code.pair_prim
+-/
 
+#print Nat.Partrec.Code.comp_prim /-
 theorem comp_prim : Primrec₂ comp :=
   Primrec₂.ofNat_iff.2 <|
     Primrec₂.encode_iff.1 <|
@@ -255,7 +290,9 @@ theorem comp_prim : Primrec₂ comp :=
               (encode_iff.2 <| (Primrec.ofNat Code).comp snd))
         (Primrec₂.const 4)
 #align nat.partrec.code.comp_prim Nat.Partrec.Code.comp_prim
+-/
 
+#print Nat.Partrec.Code.prec_prim /-
 theorem prec_prim : Primrec₂ prec :=
   Primrec₂.ofNat_iff.2 <|
     Primrec₂.encode_iff.1 <|
@@ -266,7 +303,9 @@ theorem prec_prim : Primrec₂ prec :=
               (encode_iff.2 <| (Primrec.ofNat Code).comp snd))
         (Primrec₂.const 4)
 #align nat.partrec.code.prec_prim Nat.Partrec.Code.prec_prim
+-/
 
+#print Nat.Partrec.Code.rfind_prim /-
 theorem rfind_prim : Primrec rfind' :=
   ofNat_iff.2 <|
     encode_iff.1 <|
@@ -274,7 +313,14 @@ theorem rfind_prim : Primrec rfind' :=
         (nat_double_succ.comp <| nat_double_succ.comp <| encode_iff.2 <| Primrec.ofNat Code)
         (const 4)
 #align nat.partrec.code.rfind_prim Nat.Partrec.Code.rfind_prim
+-/
 
+/- warning: nat.partrec.code.rec_prim' -> Nat.Partrec.Code.rec_prim' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {σ : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} σ] {c : α -> Nat.Partrec.Code}, (Primrec.{u1, 0} α Nat.Partrec.Code _inst_1 (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) c) -> (forall {z : α -> σ}, (Primrec.{u1, u2} α σ _inst_1 _inst_2 z) -> (forall {s : α -> σ}, (Primrec.{u1, u2} α σ _inst_1 _inst_2 s) -> (forall {l : α -> σ}, (Primrec.{u1, u2} α σ _inst_1 _inst_2 l) -> (forall {r : α -> σ}, (Primrec.{u1, u2} α σ _inst_1 _inst_2 r) -> (forall {pr : α -> (Prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ))) -> σ}, (Primrec₂.{u1, u2, u2} α (Prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ))) σ _inst_1 (Primcodable.prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ)) (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) (Primcodable.prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ) (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) (Primcodable.prod.{u2, u2} σ σ _inst_2 _inst_2))) _inst_2 pr) -> (forall {co : α -> (Prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ))) -> σ}, (Primrec₂.{u1, u2, u2} α (Prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ))) σ _inst_1 (Primcodable.prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ)) (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) (Primcodable.prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ) (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) (Primcodable.prod.{u2, u2} σ σ _inst_2 _inst_2))) _inst_2 co) -> (forall {pc : α -> (Prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ))) -> σ}, (Primrec₂.{u1, u2, u2} α (Prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ))) σ _inst_1 (Primcodable.prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ)) (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) (Primcodable.prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ) (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) (Primcodable.prod.{u2, u2} σ σ _inst_2 _inst_2))) _inst_2 pc) -> (forall {rf : α -> (Prod.{0, u2} Nat.Partrec.Code σ) -> σ}, (Primrec₂.{u1, u2, u2} α (Prod.{0, u2} Nat.Partrec.Code σ) σ _inst_1 (Primcodable.prod.{0, u2} Nat.Partrec.Code σ (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) _inst_2) _inst_2 rf) -> (let PR : α -> Nat.Partrec.Code -> Nat.Partrec.Code -> σ -> σ -> σ := fun (a : α) (cf : Nat.Partrec.Code) (cg : Nat.Partrec.Code) (hf : σ) (hg : σ) => pr a (Prod.mk.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ)) cf (Prod.mk.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ) cg (Prod.mk.{u2, u2} σ σ hf hg))); let CO : α -> Nat.Partrec.Code -> Nat.Partrec.Code -> σ -> σ -> σ := fun (a : α) (cf : Nat.Partrec.Code) (cg : Nat.Partrec.Code) (hf : σ) (hg : σ) => co a (Prod.mk.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ)) cf (Prod.mk.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ) cg (Prod.mk.{u2, u2} σ σ hf hg))); let PC : α -> Nat.Partrec.Code -> Nat.Partrec.Code -> σ -> σ -> σ := fun (a : α) (cf : Nat.Partrec.Code) (cg : Nat.Partrec.Code) (hf : σ) (hg : σ) => pc a (Prod.mk.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ)) cf (Prod.mk.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ) cg (Prod.mk.{u2, u2} σ σ hf hg))); let RF : α -> Nat.Partrec.Code -> σ -> σ := fun (a : α) (cf : Nat.Partrec.Code) (hf : σ) => rf a (Prod.mk.{0, u2} Nat.Partrec.Code σ cf hf); let F : α -> Nat.Partrec.Code -> σ := fun (a : α) (c : Nat.Partrec.Code) => Nat.Partrec.Code.recOn.{succ u2} (fun (_x : Nat.Partrec.Code) => σ) c (z a) (s a) (l a) (r a) (PR a) (CO a) (PC a) (RF a); Primrec.{u1, u2} α σ _inst_1 _inst_2 (fun (a : α) => F a (c a)))))))))))
+but is expected to have type
+  forall {α : Type.{u2}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_2 : Primcodable.{u1} σ] {c : α -> Nat.Partrec.Code}, (Primrec.{u2, 0} α Nat.Partrec.Code _inst_1 (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) c) -> (forall {z : α -> σ}, (Primrec.{u2, u1} α σ _inst_1 _inst_2 z) -> (forall {s : α -> σ}, (Primrec.{u2, u1} α σ _inst_1 _inst_2 s) -> (forall {l : α -> σ}, (Primrec.{u2, u1} α σ _inst_1 _inst_2 l) -> (forall {r : α -> σ}, (Primrec.{u2, u1} α σ _inst_1 _inst_2 r) -> (forall {pr : α -> (Prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ))) -> σ}, (Primrec₂.{u2, u1, u1} α (Prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ))) σ _inst_1 (Primcodable.prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ)) (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) (Primcodable.prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ) (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) (Primcodable.prod.{u1, u1} σ σ _inst_2 _inst_2))) _inst_2 pr) -> (forall {co : α -> (Prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ))) -> σ}, (Primrec₂.{u2, u1, u1} α (Prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ))) σ _inst_1 (Primcodable.prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ)) (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) (Primcodable.prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ) (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) (Primcodable.prod.{u1, u1} σ σ _inst_2 _inst_2))) _inst_2 co) -> (forall {pc : α -> (Prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ))) -> σ}, (Primrec₂.{u2, u1, u1} α (Prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ))) σ _inst_1 (Primcodable.prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ)) (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) (Primcodable.prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ) (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) (Primcodable.prod.{u1, u1} σ σ _inst_2 _inst_2))) _inst_2 pc) -> (forall {rf : α -> (Prod.{0, u1} Nat.Partrec.Code σ) -> σ}, (Primrec₂.{u2, u1, u1} α (Prod.{0, u1} Nat.Partrec.Code σ) σ _inst_1 (Primcodable.prod.{0, u1} Nat.Partrec.Code σ (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) _inst_2) _inst_2 rf) -> (let PR : α -> Nat.Partrec.Code -> Nat.Partrec.Code -> σ -> σ -> σ := fun (a : α) (cf : Nat.Partrec.Code) (cg : Nat.Partrec.Code) (hf : σ) (hg : σ) => pr a (Prod.mk.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ)) cf (Prod.mk.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ) cg (Prod.mk.{u1, u1} σ σ hf hg))); let CO : α -> Nat.Partrec.Code -> Nat.Partrec.Code -> σ -> σ -> σ := fun (a : α) (cf : Nat.Partrec.Code) (cg : Nat.Partrec.Code) (hf : σ) (hg : σ) => co a (Prod.mk.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ)) cf (Prod.mk.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ) cg (Prod.mk.{u1, u1} σ σ hf hg))); let PC : α -> Nat.Partrec.Code -> Nat.Partrec.Code -> σ -> σ -> σ := fun (a : α) (cf : Nat.Partrec.Code) (cg : Nat.Partrec.Code) (hf : σ) (hg : σ) => pc a (Prod.mk.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ)) cf (Prod.mk.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ) cg (Prod.mk.{u1, u1} σ σ hf hg))); let RF : α -> Nat.Partrec.Code -> σ -> σ := fun (a : α) (cf : Nat.Partrec.Code) (hf : σ) => rf a (Prod.mk.{0, u1} Nat.Partrec.Code σ cf hf); let F : α -> Nat.Partrec.Code -> σ := fun (a : α) (c : Nat.Partrec.Code) => Nat.Partrec.Code.recOn.{succ u1} (fun (_x : Nat.Partrec.Code) => σ) c (z a) (s a) (l a) (r a) (PR a) (CO a) (PC a) (RF a); Primrec.{u2, u1} α σ _inst_1 _inst_2 (fun (a : α) => F a (c a)))))))))))
+Case conversion may be inaccurate. Consider using '#align nat.partrec.code.rec_prim' Nat.Partrec.Code.rec_prim'ₓ'. -/
 theorem rec_prim' {α σ} [Primcodable α] [Primcodable σ] {c : α → Code} (hc : Primrec c) {z : α → σ}
     (hz : Primrec z) {s : α → σ} (hs : Primrec s) {l : α → σ} (hl : Primrec l) {r : α → σ}
     (hr : Primrec r) {pr : α → Code × Code × σ × σ → σ} (hpr : Primrec₂ pr)
@@ -372,6 +418,12 @@ theorem rec_prim' {α σ} [Primcodable α] [Primcodable σ] {c : α → Code} (h
   cases n.bodd <;> cases n.div2.bodd <;> rfl
 #align nat.partrec.code.rec_prim' Nat.Partrec.Code.rec_prim'
 
+/- warning: nat.partrec.code.rec_prim -> Nat.Partrec.Code.rec_prim is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {σ : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} σ] {c : α -> Nat.Partrec.Code}, (Primrec.{u1, 0} α Nat.Partrec.Code _inst_1 (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) c) -> (forall {z : α -> σ}, (Primrec.{u1, u2} α σ _inst_1 _inst_2 z) -> (forall {s : α -> σ}, (Primrec.{u1, u2} α σ _inst_1 _inst_2 s) -> (forall {l : α -> σ}, (Primrec.{u1, u2} α σ _inst_1 _inst_2 l) -> (forall {r : α -> σ}, (Primrec.{u1, u2} α σ _inst_1 _inst_2 r) -> (forall {pr : α -> Nat.Partrec.Code -> Nat.Partrec.Code -> σ -> σ -> σ}, (Primrec.{max u1 u2, u2} (Prod.{u1, u2} α (Prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ)))) σ (Primcodable.prod.{u1, u2} α (Prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ))) _inst_1 (Primcodable.prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ)) (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) (Primcodable.prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ) (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) (Primcodable.prod.{u2, u2} σ σ _inst_2 _inst_2)))) _inst_2 (fun (a : Prod.{u1, u2} α (Prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ)))) => pr (Prod.fst.{u1, u2} α (Prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ))) a) (Prod.fst.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ)) (Prod.snd.{u1, u2} α (Prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ))) a)) (Prod.fst.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ) (Prod.snd.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ)) (Prod.snd.{u1, u2} α (Prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ))) a))) (Prod.fst.{u2, u2} σ σ (Prod.snd.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ) (Prod.snd.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ)) (Prod.snd.{u1, u2} α (Prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ))) a)))) (Prod.snd.{u2, u2} σ σ (Prod.snd.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ) (Prod.snd.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ)) (Prod.snd.{u1, u2} α (Prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ))) a)))))) -> (forall {co : α -> Nat.Partrec.Code -> Nat.Partrec.Code -> σ -> σ -> σ}, (Primrec.{max u1 u2, u2} (Prod.{u1, u2} α (Prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ)))) σ (Primcodable.prod.{u1, u2} α (Prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ))) _inst_1 (Primcodable.prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ)) (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) (Primcodable.prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ) (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) (Primcodable.prod.{u2, u2} σ σ _inst_2 _inst_2)))) _inst_2 (fun (a : Prod.{u1, u2} α (Prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ)))) => co (Prod.fst.{u1, u2} α (Prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ))) a) (Prod.fst.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ)) (Prod.snd.{u1, u2} α (Prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ))) a)) (Prod.fst.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ) (Prod.snd.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ)) (Prod.snd.{u1, u2} α (Prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ))) a))) (Prod.fst.{u2, u2} σ σ (Prod.snd.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ) (Prod.snd.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ)) (Prod.snd.{u1, u2} α (Prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ))) a)))) (Prod.snd.{u2, u2} σ σ (Prod.snd.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ) (Prod.snd.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ)) (Prod.snd.{u1, u2} α (Prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ))) a)))))) -> (forall {pc : α -> Nat.Partrec.Code -> Nat.Partrec.Code -> σ -> σ -> σ}, (Primrec.{max u1 u2, u2} (Prod.{u1, u2} α (Prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ)))) σ (Primcodable.prod.{u1, u2} α (Prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ))) _inst_1 (Primcodable.prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ)) (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) (Primcodable.prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ) (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) (Primcodable.prod.{u2, u2} σ σ _inst_2 _inst_2)))) _inst_2 (fun (a : Prod.{u1, u2} α (Prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ)))) => pc (Prod.fst.{u1, u2} α (Prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ))) a) (Prod.fst.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ)) (Prod.snd.{u1, u2} α (Prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ))) a)) (Prod.fst.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ) (Prod.snd.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ)) (Prod.snd.{u1, u2} α (Prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ))) a))) (Prod.fst.{u2, u2} σ σ (Prod.snd.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ) (Prod.snd.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ)) (Prod.snd.{u1, u2} α (Prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ))) a)))) (Prod.snd.{u2, u2} σ σ (Prod.snd.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ) (Prod.snd.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ)) (Prod.snd.{u1, u2} α (Prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ))) a)))))) -> (forall {rf : α -> Nat.Partrec.Code -> σ -> σ}, (Primrec.{max u1 u2, u2} (Prod.{u1, u2} α (Prod.{0, u2} Nat.Partrec.Code σ)) σ (Primcodable.prod.{u1, u2} α (Prod.{0, u2} Nat.Partrec.Code σ) _inst_1 (Primcodable.prod.{0, u2} Nat.Partrec.Code σ (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) _inst_2)) _inst_2 (fun (a : Prod.{u1, u2} α (Prod.{0, u2} Nat.Partrec.Code σ)) => rf (Prod.fst.{u1, u2} α (Prod.{0, u2} Nat.Partrec.Code σ) a) (Prod.fst.{0, u2} Nat.Partrec.Code σ (Prod.snd.{u1, u2} α (Prod.{0, u2} Nat.Partrec.Code σ) a)) (Prod.snd.{0, u2} Nat.Partrec.Code σ (Prod.snd.{u1, u2} α (Prod.{0, u2} Nat.Partrec.Code σ) a)))) -> (let F : α -> Nat.Partrec.Code -> σ := fun (a : α) (c : Nat.Partrec.Code) => Nat.Partrec.Code.recOn.{succ u2} (fun (_x : Nat.Partrec.Code) => σ) c (z a) (s a) (l a) (r a) (pr a) (co a) (pc a) (rf a); Primrec.{u1, u2} α σ _inst_1 _inst_2 (fun (a : α) => F a (c a)))))))))))
+but is expected to have type
+  forall {α : Type.{u2}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_2 : Primcodable.{u1} σ] {c : α -> Nat.Partrec.Code}, (Primrec.{u2, 0} α Nat.Partrec.Code _inst_1 (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) c) -> (forall {z : α -> σ}, (Primrec.{u2, u1} α σ _inst_1 _inst_2 z) -> (forall {s : α -> σ}, (Primrec.{u2, u1} α σ _inst_1 _inst_2 s) -> (forall {l : α -> σ}, (Primrec.{u2, u1} α σ _inst_1 _inst_2 l) -> (forall {r : α -> σ}, (Primrec.{u2, u1} α σ _inst_1 _inst_2 r) -> (forall {pr : α -> Nat.Partrec.Code -> Nat.Partrec.Code -> σ -> σ -> σ}, (Primrec.{max u2 u1, u1} (Prod.{u2, u1} α (Prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ)))) σ (Primcodable.prod.{u2, u1} α (Prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ))) _inst_1 (Primcodable.prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ)) (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) (Primcodable.prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ) (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) (Primcodable.prod.{u1, u1} σ σ _inst_2 _inst_2)))) _inst_2 (fun (a : Prod.{u2, u1} α (Prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ)))) => pr (Prod.fst.{u2, u1} α (Prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ))) a) (Prod.fst.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ)) (Prod.snd.{u2, u1} α (Prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ))) a)) (Prod.fst.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ) (Prod.snd.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ)) (Prod.snd.{u2, u1} α (Prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ))) a))) (Prod.fst.{u1, u1} σ σ (Prod.snd.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ) (Prod.snd.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ)) (Prod.snd.{u2, u1} α (Prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ))) a)))) (Prod.snd.{u1, u1} σ σ (Prod.snd.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ) (Prod.snd.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ)) (Prod.snd.{u2, u1} α (Prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ))) a)))))) -> (forall {co : α -> Nat.Partrec.Code -> Nat.Partrec.Code -> σ -> σ -> σ}, (Primrec.{max u2 u1, u1} (Prod.{u2, u1} α (Prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ)))) σ (Primcodable.prod.{u2, u1} α (Prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ))) _inst_1 (Primcodable.prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ)) (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) (Primcodable.prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ) (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) (Primcodable.prod.{u1, u1} σ σ _inst_2 _inst_2)))) _inst_2 (fun (a : Prod.{u2, u1} α (Prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ)))) => co (Prod.fst.{u2, u1} α (Prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ))) a) (Prod.fst.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ)) (Prod.snd.{u2, u1} α (Prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ))) a)) (Prod.fst.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ) (Prod.snd.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ)) (Prod.snd.{u2, u1} α (Prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ))) a))) (Prod.fst.{u1, u1} σ σ (Prod.snd.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ) (Prod.snd.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ)) (Prod.snd.{u2, u1} α (Prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ))) a)))) (Prod.snd.{u1, u1} σ σ (Prod.snd.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ) (Prod.snd.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ)) (Prod.snd.{u2, u1} α (Prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ))) a)))))) -> (forall {pc : α -> Nat.Partrec.Code -> Nat.Partrec.Code -> σ -> σ -> σ}, (Primrec.{max u2 u1, u1} (Prod.{u2, u1} α (Prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ)))) σ (Primcodable.prod.{u2, u1} α (Prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ))) _inst_1 (Primcodable.prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ)) (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) (Primcodable.prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ) (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) (Primcodable.prod.{u1, u1} σ σ _inst_2 _inst_2)))) _inst_2 (fun (a : Prod.{u2, u1} α (Prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ)))) => pc (Prod.fst.{u2, u1} α (Prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ))) a) (Prod.fst.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ)) (Prod.snd.{u2, u1} α (Prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ))) a)) (Prod.fst.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ) (Prod.snd.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ)) (Prod.snd.{u2, u1} α (Prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ))) a))) (Prod.fst.{u1, u1} σ σ (Prod.snd.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ) (Prod.snd.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ)) (Prod.snd.{u2, u1} α (Prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ))) a)))) (Prod.snd.{u1, u1} σ σ (Prod.snd.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ) (Prod.snd.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ)) (Prod.snd.{u2, u1} α (Prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ))) a)))))) -> (forall {rf : α -> Nat.Partrec.Code -> σ -> σ}, (Primrec.{max u2 u1, u1} (Prod.{u2, u1} α (Prod.{0, u1} Nat.Partrec.Code σ)) σ (Primcodable.prod.{u2, u1} α (Prod.{0, u1} Nat.Partrec.Code σ) _inst_1 (Primcodable.prod.{0, u1} Nat.Partrec.Code σ (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) _inst_2)) _inst_2 (fun (a : Prod.{u2, u1} α (Prod.{0, u1} Nat.Partrec.Code σ)) => rf (Prod.fst.{u2, u1} α (Prod.{0, u1} Nat.Partrec.Code σ) a) (Prod.fst.{0, u1} Nat.Partrec.Code σ (Prod.snd.{u2, u1} α (Prod.{0, u1} Nat.Partrec.Code σ) a)) (Prod.snd.{0, u1} Nat.Partrec.Code σ (Prod.snd.{u2, u1} α (Prod.{0, u1} Nat.Partrec.Code σ) a)))) -> (let F : α -> Nat.Partrec.Code -> σ := fun (a : α) (c : Nat.Partrec.Code) => Nat.Partrec.Code.recOn.{succ u1} (fun (_x : Nat.Partrec.Code) => σ) c (z a) (s a) (l a) (r a) (pr a) (co a) (pc a) (rf a); Primrec.{u2, u1} α σ _inst_1 _inst_2 (fun (a : α) => F a (c a)))))))))))
+Case conversion may be inaccurate. Consider using '#align nat.partrec.code.rec_prim Nat.Partrec.Code.rec_primₓ'. -/
 /-- Recursion on `nat.partrec.code` is primitive recursive. -/
 theorem rec_prim {α σ} [Primcodable α] [Primcodable σ] {c : α → Code} (hc : Primrec c) {z : α → σ}
     (hz : Primrec z) {s : α → σ} (hs : Primrec s) {l : α → σ} (hl : Primrec l) {r : α → σ}
@@ -480,6 +532,12 @@ section
 
 open Computable
 
+/- warning: nat.partrec.code.rec_computable -> Nat.Partrec.Code.rec_computable is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {σ : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} σ] {c : α -> Nat.Partrec.Code}, (Computable.{u1, 0} α Nat.Partrec.Code _inst_1 (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) c) -> (forall {z : α -> σ}, (Computable.{u1, u2} α σ _inst_1 _inst_2 z) -> (forall {s : α -> σ}, (Computable.{u1, u2} α σ _inst_1 _inst_2 s) -> (forall {l : α -> σ}, (Computable.{u1, u2} α σ _inst_1 _inst_2 l) -> (forall {r : α -> σ}, (Computable.{u1, u2} α σ _inst_1 _inst_2 r) -> (forall {pr : α -> (Prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ))) -> σ}, (Computable₂.{u1, u2, u2} α (Prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ))) σ _inst_1 (Primcodable.prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ)) (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) (Primcodable.prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ) (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) (Primcodable.prod.{u2, u2} σ σ _inst_2 _inst_2))) _inst_2 pr) -> (forall {co : α -> (Prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ))) -> σ}, (Computable₂.{u1, u2, u2} α (Prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ))) σ _inst_1 (Primcodable.prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ)) (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) (Primcodable.prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ) (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) (Primcodable.prod.{u2, u2} σ σ _inst_2 _inst_2))) _inst_2 co) -> (forall {pc : α -> (Prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ))) -> σ}, (Computable₂.{u1, u2, u2} α (Prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ))) σ _inst_1 (Primcodable.prod.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ)) (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) (Primcodable.prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ) (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) (Primcodable.prod.{u2, u2} σ σ _inst_2 _inst_2))) _inst_2 pc) -> (forall {rf : α -> (Prod.{0, u2} Nat.Partrec.Code σ) -> σ}, (Computable₂.{u1, u2, u2} α (Prod.{0, u2} Nat.Partrec.Code σ) σ _inst_1 (Primcodable.prod.{0, u2} Nat.Partrec.Code σ (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) _inst_2) _inst_2 rf) -> (let PR : α -> Nat.Partrec.Code -> Nat.Partrec.Code -> σ -> σ -> σ := fun (a : α) (cf : Nat.Partrec.Code) (cg : Nat.Partrec.Code) (hf : σ) (hg : σ) => pr a (Prod.mk.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ)) cf (Prod.mk.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ) cg (Prod.mk.{u2, u2} σ σ hf hg))); let CO : α -> Nat.Partrec.Code -> Nat.Partrec.Code -> σ -> σ -> σ := fun (a : α) (cf : Nat.Partrec.Code) (cg : Nat.Partrec.Code) (hf : σ) (hg : σ) => co a (Prod.mk.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ)) cf (Prod.mk.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ) cg (Prod.mk.{u2, u2} σ σ hf hg))); let PC : α -> Nat.Partrec.Code -> Nat.Partrec.Code -> σ -> σ -> σ := fun (a : α) (cf : Nat.Partrec.Code) (cg : Nat.Partrec.Code) (hf : σ) (hg : σ) => pc a (Prod.mk.{0, u2} Nat.Partrec.Code (Prod.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ)) cf (Prod.mk.{0, u2} Nat.Partrec.Code (Prod.{u2, u2} σ σ) cg (Prod.mk.{u2, u2} σ σ hf hg))); let RF : α -> Nat.Partrec.Code -> σ -> σ := fun (a : α) (cf : Nat.Partrec.Code) (hf : σ) => rf a (Prod.mk.{0, u2} Nat.Partrec.Code σ cf hf); let F : α -> Nat.Partrec.Code -> σ := fun (a : α) (c : Nat.Partrec.Code) => Nat.Partrec.Code.recOn.{succ u2} (fun (_x : Nat.Partrec.Code) => σ) c (z a) (s a) (l a) (r a) (PR a) (CO a) (PC a) (RF a); Computable.{u1, u2} α σ _inst_1 _inst_2 (fun (a : α) => F a (c a)))))))))))
+but is expected to have type
+  forall {α : Type.{u2}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_2 : Primcodable.{u1} σ] {c : α -> Nat.Partrec.Code}, (Computable.{u2, 0} α Nat.Partrec.Code _inst_1 (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) c) -> (forall {z : α -> σ}, (Computable.{u2, u1} α σ _inst_1 _inst_2 z) -> (forall {s : α -> σ}, (Computable.{u2, u1} α σ _inst_1 _inst_2 s) -> (forall {l : α -> σ}, (Computable.{u2, u1} α σ _inst_1 _inst_2 l) -> (forall {r : α -> σ}, (Computable.{u2, u1} α σ _inst_1 _inst_2 r) -> (forall {pr : α -> (Prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ))) -> σ}, (Computable₂.{u2, u1, u1} α (Prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ))) σ _inst_1 (Primcodable.prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ)) (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) (Primcodable.prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ) (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) (Primcodable.prod.{u1, u1} σ σ _inst_2 _inst_2))) _inst_2 pr) -> (forall {co : α -> (Prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ))) -> σ}, (Computable₂.{u2, u1, u1} α (Prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ))) σ _inst_1 (Primcodable.prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ)) (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) (Primcodable.prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ) (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) (Primcodable.prod.{u1, u1} σ σ _inst_2 _inst_2))) _inst_2 co) -> (forall {pc : α -> (Prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ))) -> σ}, (Computable₂.{u2, u1, u1} α (Prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ))) σ _inst_1 (Primcodable.prod.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ)) (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) (Primcodable.prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ) (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) (Primcodable.prod.{u1, u1} σ σ _inst_2 _inst_2))) _inst_2 pc) -> (forall {rf : α -> (Prod.{0, u1} Nat.Partrec.Code σ) -> σ}, (Computable₂.{u2, u1, u1} α (Prod.{0, u1} Nat.Partrec.Code σ) σ _inst_1 (Primcodable.prod.{0, u1} Nat.Partrec.Code σ (Primcodable.ofDenumerable.{0} Nat.Partrec.Code Nat.Partrec.Code.instDenumerable) _inst_2) _inst_2 rf) -> (let PR : α -> Nat.Partrec.Code -> Nat.Partrec.Code -> σ -> σ -> σ := fun (a : α) (cf : Nat.Partrec.Code) (cg : Nat.Partrec.Code) (hf : σ) (hg : σ) => pr a (Prod.mk.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ)) cf (Prod.mk.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ) cg (Prod.mk.{u1, u1} σ σ hf hg))); let CO : α -> Nat.Partrec.Code -> Nat.Partrec.Code -> σ -> σ -> σ := fun (a : α) (cf : Nat.Partrec.Code) (cg : Nat.Partrec.Code) (hf : σ) (hg : σ) => co a (Prod.mk.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ)) cf (Prod.mk.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ) cg (Prod.mk.{u1, u1} σ σ hf hg))); let PC : α -> Nat.Partrec.Code -> Nat.Partrec.Code -> σ -> σ -> σ := fun (a : α) (cf : Nat.Partrec.Code) (cg : Nat.Partrec.Code) (hf : σ) (hg : σ) => pc a (Prod.mk.{0, u1} Nat.Partrec.Code (Prod.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ)) cf (Prod.mk.{0, u1} Nat.Partrec.Code (Prod.{u1, u1} σ σ) cg (Prod.mk.{u1, u1} σ σ hf hg))); let RF : α -> Nat.Partrec.Code -> σ -> σ := fun (a : α) (cf : Nat.Partrec.Code) (hf : σ) => rf a (Prod.mk.{0, u1} Nat.Partrec.Code σ cf hf); let F : α -> Nat.Partrec.Code -> σ := fun (a : α) (c : Nat.Partrec.Code) => Nat.Partrec.Code.recOn.{succ u1} (fun (_x : Nat.Partrec.Code) => σ) c (z a) (s a) (l a) (r a) (PR a) (CO a) (PC a) (RF a); Computable.{u2, u1} α σ _inst_1 _inst_2 (fun (a : α) => F a (c a)))))))))))
+Case conversion may be inaccurate. Consider using '#align nat.partrec.code.rec_computable Nat.Partrec.Code.rec_computableₓ'. -/
 /-- Recursion on `nat.partrec.code` is computable. -/
 theorem rec_computable {α σ} [Primcodable α] [Primcodable σ] {c : α → Code} (hc : Computable c)
     {z : α → σ} (hz : Computable z) {s : α → σ} (hs : Computable s) {l : α → σ} (hl : Computable l)
@@ -584,6 +642,7 @@ theorem rec_computable {α σ} [Primcodable α] [Primcodable σ] {c : α → Cod
 
 end
 
+#print Nat.Partrec.Code.eval /-
 /-- The interpretation of a `nat.partrec.code` as a partial function.
 * `nat.partrec.code.zero`: The constant zero function.
 * `nat.partrec.code.succ`: The successor function.
@@ -614,13 +673,22 @@ def eval : Code → ℕ →. ℕ
     Nat.unpaired fun a m =>
       (Nat.rfind fun n => (fun m => m = 0) <$> eval cf (pair a (n + m))).map (· + m)
 #align nat.partrec.code.eval Nat.Partrec.Code.eval
+-/
 
+#print Nat.Partrec.Code.eval_prec_zero /-
 /-- Helper lemma for the evaluation of `prec` in the base case. -/
 @[simp]
 theorem eval_prec_zero (cf cg : Code) (a : ℕ) : eval (prec cf cg) (pair a 0) = eval cf a := by
   rw [eval, Nat.unpaired, Nat.unpair_pair, Nat.rec_zero]
 #align nat.partrec.code.eval_prec_zero Nat.Partrec.Code.eval_prec_zero
+-/
 
+/- warning: nat.partrec.code.eval_prec_succ -> Nat.Partrec.Code.eval_prec_succ is a dubious translation:
+lean 3 declaration is
+  forall (cf : Nat.Partrec.Code) (cg : Nat.Partrec.Code) (a : Nat) (k : Nat), Eq.{1} (Part.{0} Nat) (Nat.Partrec.Code.eval (Nat.Partrec.Code.prec cf cg) (Nat.pair a (Nat.succ k))) (Bind.bind.{0, 0} Part.{0} (Monad.toHasBind.{0, 0} Part.{0} Part.monad.{0}) Nat Nat (Nat.Partrec.Code.eval (Nat.Partrec.Code.prec cf cg) (Nat.pair a k)) (fun (ih : Nat) => Nat.Partrec.Code.eval cg (Nat.pair a (Nat.pair k ih))))
+but is expected to have type
+  forall (cf : Nat.Partrec.Code) (cg : Nat.Partrec.Code) (a : Nat) (k : Nat), Eq.{1} (Part.{0} Nat) (Nat.Partrec.Code.eval (Nat.Partrec.Code.prec cf cg) (Nat.pair a (Nat.succ k))) (Bind.bind.{0, 0} Part.{0} (Monad.toBind.{0, 0} Part.{0} Part.instMonadPart.{0}) Nat Nat (Nat.Partrec.Code.eval (Nat.Partrec.Code.prec cf cg) (Nat.pair a k)) (fun (ih : Nat) => Nat.Partrec.Code.eval cg (Nat.pair a (Nat.pair k ih))))
+Case conversion may be inaccurate. Consider using '#align nat.partrec.code.eval_prec_succ Nat.Partrec.Code.eval_prec_succₓ'. -/
 /-- Helper lemma for the evaluation of `prec` in the recursive case. -/
 theorem eval_prec_succ (cf cg : Code) (a k : ℕ) :
     eval (prec cf cg) (pair a (Nat.succ k)) = do
@@ -634,30 +702,41 @@ theorem eval_prec_succ (cf cg : Code) (a k : ℕ) :
 instance : Membership (ℕ →. ℕ) Code :=
   ⟨fun f c => eval c = f⟩
 
+#print Nat.Partrec.Code.eval_const /-
 @[simp]
 theorem eval_const : ∀ n m, eval (Code.const n) m = Part.some n
   | 0, m => rfl
   | n + 1, m => by simp! [*]
 #align nat.partrec.code.eval_const Nat.Partrec.Code.eval_const
+-/
 
+#print Nat.Partrec.Code.eval_id /-
 @[simp]
 theorem eval_id (n) : eval Code.id n = Part.some n := by simp! [(· <*> ·)]
 #align nat.partrec.code.eval_id Nat.Partrec.Code.eval_id
+-/
 
+#print Nat.Partrec.Code.eval_curry /-
 @[simp]
 theorem eval_curry (c n x) : eval (curry c n) x = eval c (pair n x) := by simp! [(· <*> ·)]
 #align nat.partrec.code.eval_curry Nat.Partrec.Code.eval_curry
+-/
 
+#print Nat.Partrec.Code.const_prim /-
 theorem const_prim : Primrec Code.const :=
   (Primrec.id.nat_iterate (Primrec.const zero)
         (comp_prim.comp (Primrec.const succ) Primrec.snd).to₂).of_eq
     fun n => by simp <;> induction n <;> simp [*, code.const, Function.iterate_succ']
 #align nat.partrec.code.const_prim Nat.Partrec.Code.const_prim
+-/
 
+#print Nat.Partrec.Code.curry_prim /-
 theorem curry_prim : Primrec₂ curry :=
   comp_prim.comp Primrec.fst <| pair_prim.comp (const_prim.comp Primrec.snd) (Primrec.const Code.id)
 #align nat.partrec.code.curry_prim Nat.Partrec.Code.curry_prim
+-/
 
+#print Nat.Partrec.Code.curry_inj /-
 theorem curry_inj {c₁ c₂ n₁ n₂} (h : curry c₁ n₁ = curry c₂ n₂) : c₁ = c₂ ∧ n₁ = n₂ :=
   ⟨by injection h, by
     injection h
@@ -665,7 +744,9 @@ theorem curry_inj {c₁ c₂ n₁ n₂} (h : curry c₁ n₁ = curry c₂ n₂) 
     injection h₂ with h₃ h₄
     exact const_inj h₃⟩
 #align nat.partrec.code.curry_inj Nat.Partrec.Code.curry_inj
+-/
 
+#print Nat.Partrec.Code.smn /-
 /--
 The $S_n^m$ theorem: There is a computable function, namely `nat.partrec.code.curry`, that takes a
 program and a ℕ `n`, and returns a new program using `n` as the first argument.
@@ -673,7 +754,9 @@ program and a ℕ `n`, and returns a new program using `n` as the first argument
 theorem smn : ∃ f : Code → ℕ → Code, Computable₂ f ∧ ∀ c n x, eval (f c n) x = eval c (pair n x) :=
   ⟨curry, Primrec₂.to_comp curry_prim, eval_curry⟩
 #align nat.partrec.code.smn Nat.Partrec.Code.smn
+-/
 
+#print Nat.Partrec.Code.exists_code /-
 /-- A function is partial recursive if and only if there is a code implementing it. -/
 theorem exists_code {f : ℕ →. ℕ} : Nat.Partrec f ↔ ∃ c : Code, eval c = f :=
   ⟨fun h => by
@@ -706,7 +789,9 @@ theorem exists_code {f : ℕ →. ℕ} : Nat.Partrec f ↔ ∃ c : Code, eval c 
     case prec cf cg pf pg => exact pf.prec pg
     case rfind' cf pf => exact pf.rfind'⟩
 #align nat.partrec.code.exists_code Nat.Partrec.Code.exists_code
+-/
 
+#print Nat.Partrec.Code.evaln /-
 /-- A modified evaluation for the code which returns an `option ℕ` instead of a `part ℕ`. To avoid
 undecidability, `evaln` takes a parameter `k` and fails if it encounters a number ≥ k in the course
 of its execution. Other than this, the semantics are the same as in `nat.partrec.code.eval`.
@@ -735,7 +820,9 @@ def evaln : ∀ k : ℕ, Code → ℕ → Option ℕ
         let x ← evaln (k + 1) cf (pair a m)
         if x = 0 then pure m else evaln k (rfind' cf) (mkpair a (m + 1))
 #align nat.partrec.code.evaln Nat.Partrec.Code.evaln
+-/
 
+#print Nat.Partrec.Code.evaln_bound /-
 theorem evaln_bound : ∀ {k c n x}, x ∈ evaln k c n → n < k
   | 0, c, n, x, h => by simp [evaln] at h <;> cases h
   | k + 1, c, n, x, h =>
@@ -744,7 +831,9 @@ theorem evaln_bound : ∀ {k c n x}, x ∈ evaln k c n → n < k
       cases c <;> rw [evaln] at h <;> exact this h
     simpa [(· >> ·)] using Nat.lt_succ_of_le
 #align nat.partrec.code.evaln_bound Nat.Partrec.Code.evaln_bound
+-/
 
+#print Nat.Partrec.Code.evaln_mono /-
 theorem evaln_mono : ∀ {k₁ k₂ c n x}, k₁ ≤ k₂ → x ∈ evaln k₁ c n → x ∈ evaln k₂ c n
   | 0, k₂, c, n, x, hl, h => by simp [evaln] at h <;> cases h
   | k + 1, k₂ + 1, c, n, x, hl, h =>
@@ -780,7 +869,9 @@ theorem evaln_mono : ∀ {k₁ k₂ c n x}, k₁ ≤ k₂ → x ∈ evaln k₁ c
       by_cases x0 : x = 0 <;> simp [x0]
       exact evaln_mono hl'
 #align nat.partrec.code.evaln_mono Nat.Partrec.Code.evaln_mono
+-/
 
+#print Nat.Partrec.Code.evaln_sound /-
 theorem evaln_sound : ∀ {k c n x}, x ∈ evaln k c n → x ∈ eval c n
   | 0, _, n, x, h => by simp [evaln] at h <;> cases h
   | k + 1, c, n, x, h =>
@@ -822,7 +913,9 @@ theorem evaln_sound : ∀ {k c n x}, x ∈ evaln k c n → x ∈ eval c n
         · rcases hy₂ (Nat.lt_of_succ_lt_succ im) with ⟨z, hz, z0⟩
           exact ⟨z, by simpa [Nat.succ_eq_add_one, add_comm, add_left_comm] using hz, z0⟩
 #align nat.partrec.code.evaln_sound Nat.Partrec.Code.evaln_sound
+-/
 
+#print Nat.Partrec.Code.evaln_complete /-
 theorem evaln_complete {c n x} : x ∈ eval c n ↔ ∃ k, x ∈ evaln k c n :=
   ⟨fun h => by
     rsuffices ⟨k, h⟩ : ∃ k, x ∈ evaln (k + 1) c n
@@ -889,6 +982,7 @@ theorem evaln_complete {c n x} : x ∈ eval c n ↔ ∃ k, x ∈ evaln k c n :=
           evaln_mono (Nat.succ_le_succ <| le_max_right _ _) hk₂,
     fun ⟨k, h⟩ => evaln_sound h⟩
 #align nat.partrec.code.evaln_complete Nat.Partrec.Code.evaln_complete
+-/
 
 section
 
@@ -1022,6 +1116,7 @@ private theorem evaln_map (k c n) :
     simpa using kn
 #align nat.partrec.code.evaln_map nat.partrec.code.evaln_map
 
+#print Nat.Partrec.Code.evaln_prim /-
 /-- The `nat.partrec.code.evaln` function is primitive recursive. -/
 theorem evaln_prim : Primrec fun a : (ℕ × Code) × ℕ => evaln a.1.1 a.1.2 a.2 :=
   have :
@@ -1087,6 +1182,7 @@ theorem evaln_prim : Primrec fun a : (ℕ × Code) × ℕ => evaln a.1.1 a.1.2 a
   (option_bind (list_get?.comp (this.comp (const ()) (encode_iff.2 fst)) snd) snd.to₂).of_eq
     fun ⟨⟨k, c⟩, n⟩ => by simp [evaln_map]
 #align nat.partrec.code.evaln_prim Nat.Partrec.Code.evaln_prim
+-/
 
 end
 
@@ -1094,17 +1190,22 @@ section
 
 open Partrec Computable
 
+#print Nat.Partrec.Code.eval_eq_rfindOpt /-
 theorem eval_eq_rfindOpt (c n) : eval c n = Nat.rfindOpt fun k => evaln k c n :=
   Part.ext fun x => by
     refine' evaln_complete.trans (Nat.rfindOpt_mono _).symm
     intro a m n hl; apply evaln_mono hl
 #align nat.partrec.code.eval_eq_rfind_opt Nat.Partrec.Code.eval_eq_rfindOpt
+-/
 
+#print Nat.Partrec.Code.eval_part /-
 theorem eval_part : Partrec₂ eval :=
   (rfindOpt (evaln_prim.to_comp.comp ((snd.pair (fst.comp fst)).pair (snd.comp fst))).to₂).of_eq
     fun a => by simp [eval_eq_rfind_opt]
 #align nat.partrec.code.eval_part Nat.Partrec.Code.eval_part
+-/
 
+#print Nat.Partrec.Code.fixed_point /-
 /-- Roger's fixed-point theorem: Any total, computable `f` has a fixed point: That is, under the
 interpretation given by `nat.partrec.code.eval`, there is a code `c` such that `c` and `f c` have
 the same evaluation.
@@ -1125,12 +1226,15 @@ theorem fixed_point {f : Code → Code} (hf : Computable f) : ∃ c : Code, eval
       show eval (f (curry cg (encode cF))) n = eval (curry cg (encode cF)) n by
         simp [eg', eF', Part.map_id', g]⟩
 #align nat.partrec.code.fixed_point Nat.Partrec.Code.fixed_point
+-/
 
+#print Nat.Partrec.Code.fixed_point₂ /-
 theorem fixed_point₂ {f : Code → ℕ →. ℕ} (hf : Partrec₂ f) : ∃ c : Code, eval c = f c :=
   let ⟨cf, ef⟩ := exists_code.1 hf
   (fixed_point (curry_prim.comp (Primrec.const cf) Primrec.encode).to_comp).imp fun c e =>
     funext fun n => by simp [e.symm, ef, Part.map_id']
 #align nat.partrec.code.fixed_point₂ Nat.Partrec.Code.fixed_point₂
+-/
 
 end
 

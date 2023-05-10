@@ -129,9 +129,9 @@ theorem cond {c : α → Bool} {f : α →. σ} {g : α →. σ} (hc : Computabl
 theorem sum_cases {f : α → Sum β γ} {g : α → β →. σ} {h : α → γ →. σ} (hf : Computable f)
     (hg : Partrec₂ g) (hh : Partrec₂ h) : @Partrec _ σ _ _ fun a => Sum.casesOn (f a) (g a) (h a) :=
   option_some_iff.1 <|
-    (cond (sum_cases hf (const true).to₂ (const false).to₂)
-          (sum_cases_left hf (option_some_iff.2 hg).to₂ (const Option.none).to₂)
-          (sum_cases_right hf (const Option.none).to₂ (option_some_iff.2 hh).to₂)).of_eq
+    (cond (sum_casesOn hf (const true).to₂ (const false).to₂)
+          (sum_casesOn_left hf (option_some_iff.2 hg).to₂ (const Option.none).to₂)
+          (sum_casesOn_right hf (const Option.none).to₂ (option_some_iff.2 hh).to₂)).of_eq
       fun a => by cases f a <;> simp only [Bool.cond_true, Bool.cond_false]
 #align partrec.sum_cases Partrec.sum_cases
 

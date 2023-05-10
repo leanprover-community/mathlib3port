@@ -398,13 +398,13 @@ theorem const (s : σ) : Computable fun a : α => s :=
   (Primrec.const _).to_comp
 #align computable.const Computable.const
 
-#print Computable.of_option /-
-theorem of_option {f : α → Option β} (hf : Computable f) : Partrec fun a => (f a : Part β) :=
+#print Computable.ofOption /-
+theorem ofOption {f : α → Option β} (hf : Computable f) : Partrec fun a => (f a : Part β) :=
   (Nat.Partrec.ppred.comp hf).of_eq fun n =>
     by
     cases' decode α n with a <;> simp
     cases' f a with b <;> simp
-#align computable.of_option Computable.of_option
+#align computable.of_option Computable.ofOption
 -/
 
 /- warning: computable.to₂ -> Computable.to₂ is a dubious translation:
@@ -580,12 +580,12 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Primcodable.{u1} α] {n : Nat}, Computable₂.{u1, 0, u1} (Vector.{u1} α n) (Fin n) α (Primcodable.vector.{u1} α _inst_1 n) (Primcodable.fin n) _inst_1 (Vector.get.{u1} α n)
 Case conversion may be inaccurate. Consider using '#align computable.vector_nth' Computable.vector_getₓ'. -/
 theorem vector_get {n} : Computable (@Vector.get α n) :=
-  Primrec.vector_nth'.to_comp
+  Primrec.vector_get'.to_comp
 #align computable.vector_nth' Computable.vector_get
 
 #print Computable.vector_ofFn' /-
 theorem vector_ofFn' {n} : Computable (@Vector.ofFn α n) :=
-  Primrec.vector_of_fn'.to_comp
+  Primrec.vector_ofFn'.to_comp
 #align computable.vector_of_fn' Computable.vector_ofFn'
 -/
 
@@ -677,7 +677,7 @@ protected theorem some : Partrec (@Part.some α) :=
 
 #print Decidable.Partrec.const' /-
 theorem Decidable.Partrec.const' (s : Part σ) [Decidable s.Dom] : Partrec fun a : α => s :=
-  (of_option (const (toOption s))).of_eq fun a => of_toOption s
+  (ofOption (const (toOption s))).of_eq fun a => of_toOption s
 #align decidable.partrec.const' Decidable.Partrec.const'
 -/
 
@@ -892,7 +892,7 @@ theorem rfind {p : α → ℕ →. Bool} (hp : Partrec₂ p) : Partrec fun a => 
 #print Partrec.rfindOpt /-
 theorem rfindOpt {f : α → ℕ → Option σ} (hf : Computable₂ f) :
     Partrec fun a => Nat.rfindOpt (f a) :=
-  (rfind (Primrec.option_isSome.to_comp.comp hf).Partrec.to₂).bind (of_option hf)
+  (rfind (Primrec.option_isSome.to_comp.comp hf).Partrec.to₂).bind (ofOption hf)
 #align partrec.rfind_opt Partrec.rfindOpt
 -/
 
@@ -923,8 +923,7 @@ theorem bind_decode₂_iff {f : α →. σ} :
     Partrec f ↔ Nat.Partrec fun n => Part.bind (decode₂ α n) fun a => (f a).map encode :=
   ⟨fun hf =>
     nat_iff.1 <|
-      (of_option Primrec.decode₂.to_comp).bind <|
-        (map hf (Computable.encode.comp snd).to₂).comp snd,
+      (ofOption Primrec.decode₂.to_comp).bind <| (map hf (Computable.encode.comp snd).to₂).comp snd,
     fun h =>
     map_encode_iff.1 <| by simpa [encodek₂] using (nat_iff.2 h).comp (@Computable.encode α _)⟩
 #align partrec.bind_decode₂_iff Partrec.bind_decode₂_iff
@@ -1026,7 +1025,7 @@ theorem nat_rec {f : α → ℕ} {g : α → σ} {h : α → ℕ × σ → σ} (
 lean 3 declaration is
   forall {α : Type.{u1}} {σ : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_4 : Primcodable.{u2} σ] {f : α -> Nat} {g : α -> σ} {h : α -> Nat -> σ}, (Computable.{u1, 0} α Nat _inst_1 (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) f) -> (Computable.{u1, u2} α σ _inst_1 _inst_4 g) -> (Computable₂.{u1, 0, u2} α Nat σ _inst_1 (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) _inst_4 h) -> (Computable.{u1, u2} α σ _inst_1 _inst_4 (fun (a : α) => Nat.casesOn.{succ u2} σ (g a) (h a) (f a)))
 but is expected to have type
-  forall {α : Type.{u2}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_4 : Primcodable.{u1} σ] {f : α -> Nat} {g : α -> σ} {h : α -> Nat -> σ}, (Computable.{u2, 0} α Nat _inst_1 (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) f) -> (Computable.{u2, u1} α σ _inst_1 _inst_4 g) -> (Computable₂.{u2, 0, u1} α Nat σ _inst_1 (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) _inst_4 h) -> (Computable.{u2, u1} α σ _inst_1 _inst_4 (fun (a : α) => Nat.casesOn.{succ u1} (fun (x._@.Mathlib.Computability.Partrec._hyg.6892 : Nat) => σ) (f a) (g a) (h a)))
+  forall {α : Type.{u2}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_4 : Primcodable.{u1} σ] {f : α -> Nat} {g : α -> σ} {h : α -> Nat -> σ}, (Computable.{u2, 0} α Nat _inst_1 (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) f) -> (Computable.{u2, u1} α σ _inst_1 _inst_4 g) -> (Computable₂.{u2, 0, u1} α Nat σ _inst_1 (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) _inst_4 h) -> (Computable.{u2, u1} α σ _inst_1 _inst_4 (fun (a : α) => Nat.casesOn.{succ u1} (fun (x._@.Mathlib.Computability.Partrec._hyg.6893 : Nat) => σ) (f a) (g a) (h a)))
 Case conversion may be inaccurate. Consider using '#align computable.nat_cases Computable.nat_casesOnₓ'. -/
 theorem nat_casesOn {f : α → ℕ} {g : α → σ} {h : α → ℕ → σ} (hf : Computable f) (hg : Computable g)
     (hh : Computable₂ h) : Computable fun a => (f a).cases (g a) (h a) :=
@@ -1044,19 +1043,19 @@ theorem cond {c : α → Bool} {f : α → σ} {g : α → σ} (hc : Computable 
   (nat_casesOn (encode_iff.2 hc) hg (hf.comp fst).to₂).of_eq fun a => by cases c a <;> rfl
 #align computable.cond Computable.cond
 
-/- warning: computable.option_cases -> Computable.option_cases is a dubious translation:
+/- warning: computable.option_cases -> Computable.option_casesOn is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {σ : Type.{u3}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] [_inst_4 : Primcodable.{u3} σ] {o : α -> (Option.{u2} β)} {f : α -> σ} {g : α -> β -> σ}, (Computable.{u1, u2} α (Option.{u2} β) _inst_1 (Primcodable.option.{u2} β _inst_2) o) -> (Computable.{u1, u3} α σ _inst_1 _inst_4 f) -> (Computable₂.{u1, u2, u3} α β σ _inst_1 _inst_2 _inst_4 g) -> (Computable.{u1, u3} α σ _inst_1 _inst_4 (fun (a : α) => Option.casesOn.{succ u3, u2} β (fun (_x : Option.{u2} β) => σ) (o a) (f a) (g a)))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u3}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_2 : Primcodable.{u3} β] [_inst_4 : Primcodable.{u1} σ] {o : α -> (Option.{u3} β)} {f : α -> σ} {g : α -> β -> σ}, (Computable.{u2, u3} α (Option.{u3} β) _inst_1 (Primcodable.option.{u3} β _inst_2) o) -> (Computable.{u2, u1} α σ _inst_1 _inst_4 f) -> (Computable₂.{u2, u3, u1} α β σ _inst_1 _inst_2 _inst_4 g) -> (Computable.{u2, u1} α σ _inst_1 _inst_4 (fun (a : α) => Option.casesOn.{succ u1, u3} β (fun (_x : Option.{u3} β) => σ) (o a) (f a) (g a)))
-Case conversion may be inaccurate. Consider using '#align computable.option_cases Computable.option_casesₓ'. -/
-theorem option_cases {o : α → Option β} {f : α → σ} {g : α → β → σ} (ho : Computable o)
+Case conversion may be inaccurate. Consider using '#align computable.option_cases Computable.option_casesOnₓ'. -/
+theorem option_casesOn {o : α → Option β} {f : α → σ} {g : α → β → σ} (ho : Computable o)
     (hf : Computable f) (hg : Computable₂ g) :
     @Computable _ σ _ _ fun a => Option.casesOn (o a) (f a) (g a) :=
   option_some_iff.1 <|
     (nat_casesOn (encode_iff.2 ho) (option_some_iff.2 hf) (map_decode_iff.2 hg)).of_eq fun a => by
       cases o a <;> simp [encodek] <;> rfl
-#align computable.option_cases Computable.option_cases
+#align computable.option_cases Computable.option_casesOn
 
 /- warning: computable.option_bind -> Computable.option_bind is a dubious translation:
 lean 3 declaration is
@@ -1066,7 +1065,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align computable.option_bind Computable.option_bindₓ'. -/
 theorem option_bind {f : α → Option β} {g : α → β → Option σ} (hf : Computable f)
     (hg : Computable₂ g) : Computable fun a => (f a).bind (g a) :=
-  (option_cases hf (const Option.none) hg).of_eq fun a => by cases f a <;> rfl
+  (option_casesOn hf (const Option.none) hg).of_eq fun a => by cases f a <;> rfl
 #align computable.option_bind Computable.option_bind
 
 /- warning: computable.option_map -> Computable.option_map is a dubious translation:
@@ -1083,8 +1082,8 @@ theorem option_map {f : α → Option β} {g : α → β → σ} (hf : Computabl
 #print Computable.option_getD /-
 theorem option_getD {f : α → Option β} {g : α → β} (hf : Computable f) (hg : Computable g) :
     Computable fun a => (f a).getD (g a) :=
-  (Computable.option_cases hf hg (show Computable₂ fun a b => b from Computable.snd)).of_eq fun a =>
-    by cases f a <;> rfl
+  (Computable.option_casesOn hf hg (show Computable₂ fun a b => b from Computable.snd)).of_eq
+    fun a => by cases f a <;> rfl
 #align computable.option_get_or_else Computable.option_getD
 -/
 
@@ -1096,13 +1095,13 @@ theorem subtype_mk {f : α → β} {p : β → Prop} [DecidablePred p] {h : ∀ 
 #align computable.subtype_mk Computable.subtype_mk
 -/
 
-/- warning: computable.sum_cases -> Computable.sum_cases is a dubious translation:
+/- warning: computable.sum_cases -> Computable.sum_casesOn is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {σ : Type.{u4}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] [_inst_3 : Primcodable.{u3} γ] [_inst_4 : Primcodable.{u4} σ] {f : α -> (Sum.{u2, u3} β γ)} {g : α -> β -> σ} {h : α -> γ -> σ}, (Computable.{u1, max u2 u3} α (Sum.{u2, u3} β γ) _inst_1 (Primcodable.sum.{u2, u3} β γ _inst_2 _inst_3) f) -> (Computable₂.{u1, u2, u4} α β σ _inst_1 _inst_2 _inst_4 g) -> (Computable₂.{u1, u3, u4} α γ σ _inst_1 _inst_3 _inst_4 h) -> (Computable.{u1, u4} α σ _inst_1 _inst_4 (fun (a : α) => Sum.casesOn.{succ u4, u2, u3} β γ (fun (_x : Sum.{u2, u3} β γ) => σ) (f a) (g a) (h a)))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u4}} {γ : Type.{u3}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_2 : Primcodable.{u4} β] [_inst_3 : Primcodable.{u3} γ] [_inst_4 : Primcodable.{u1} σ] {f : α -> (Sum.{u4, u3} β γ)} {g : α -> β -> σ} {h : α -> γ -> σ}, (Computable.{u2, max u4 u3} α (Sum.{u4, u3} β γ) _inst_1 (Primcodable.sum.{u4, u3} β γ _inst_2 _inst_3) f) -> (Computable₂.{u2, u4, u1} α β σ _inst_1 _inst_2 _inst_4 g) -> (Computable₂.{u2, u3, u1} α γ σ _inst_1 _inst_3 _inst_4 h) -> (Computable.{u2, u1} α σ _inst_1 _inst_4 (fun (a : α) => Sum.casesOn.{succ u1, u4, u3} β γ (fun (_x : Sum.{u4, u3} β γ) => σ) (f a) (g a) (h a)))
-Case conversion may be inaccurate. Consider using '#align computable.sum_cases Computable.sum_casesₓ'. -/
-theorem sum_cases {f : α → Sum β γ} {g : α → β → σ} {h : α → γ → σ} (hf : Computable f)
+Case conversion may be inaccurate. Consider using '#align computable.sum_cases Computable.sum_casesOnₓ'. -/
+theorem sum_casesOn {f : α → Sum β γ} {g : α → β → σ} {h : α → γ → σ} (hf : Computable f)
     (hg : Computable₂ g) (hh : Computable₂ h) :
     @Computable _ σ _ _ fun a => Sum.casesOn (f a) (g a) (h a) :=
   option_some_iff.1 <|
@@ -1110,7 +1109,7 @@ theorem sum_cases {f : α → Sum β γ} {g : α → β → σ} {h : α → γ �
           (option_map (Computable.decode.comp <| nat_div2.comp <| encode_iff.2 hf) hh)
           (option_map (Computable.decode.comp <| nat_div2.comp <| encode_iff.2 hf) hg)).of_eq
       fun a => by cases' f a with b c <;> simp [Nat.div2_bit, Nat.bodd_bit, encodek] <;> rfl
-#align computable.sum_cases Computable.sum_cases
+#align computable.sum_cases Computable.sum_casesOn
 
 #print Computable.nat_strong_rec /-
 theorem nat_strong_rec (f : α → ℕ → σ) {g : α → List σ → Option σ} (hg : Computable₂ g)
@@ -1178,13 +1177,13 @@ theorem option_some_iff {f : α →. σ} : (Partrec fun a => (f a).map Option.so
     fun hf => hf.map (option_some.comp snd).to₂⟩
 #align partrec.option_some_iff Partrec.option_some_iff
 
-/- warning: partrec.option_cases_right -> Partrec.option_cases_right is a dubious translation:
+/- warning: partrec.option_cases_right -> Partrec.option_casesOn_right is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {σ : Type.{u3}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] [_inst_4 : Primcodable.{u3} σ] {o : α -> (Option.{u2} β)} {f : α -> σ} {g : α -> (PFun.{u2, u3} β σ)}, (Computable.{u1, u2} α (Option.{u2} β) _inst_1 (Primcodable.option.{u2} β _inst_2) o) -> (Computable.{u1, u3} α σ _inst_1 _inst_4 f) -> (Partrec₂.{u1, u2, u3} α β σ _inst_1 _inst_2 _inst_4 g) -> (Partrec.{u1, u3} α σ _inst_1 _inst_4 (fun (a : α) => Option.casesOn.{succ u3, u2} β (fun (_x : Option.{u2} β) => Part.{u3} σ) (o a) (Part.some.{u3} σ (f a)) (g a)))
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u3}} {σ : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u3} β] [_inst_4 : Primcodable.{u2} σ] {o : α -> (Option.{u3} β)} {f : α -> σ} {g : α -> (PFun.{u3, u2} β σ)}, (Computable.{u1, u3} α (Option.{u3} β) _inst_1 (Primcodable.option.{u3} β _inst_2) o) -> (Computable.{u1, u2} α σ _inst_1 _inst_4 f) -> (Partrec₂.{u1, u3, u2} α β σ _inst_1 _inst_2 _inst_4 g) -> (Partrec.{u1, u2} α σ _inst_1 _inst_4 (fun (a : α) => Option.casesOn.{succ u2, u3} β (fun (_x : Option.{u3} β) => Part.{u2} σ) (o a) (Part.some.{u2} σ (f a)) (g a)))
-Case conversion may be inaccurate. Consider using '#align partrec.option_cases_right Partrec.option_cases_rightₓ'. -/
-theorem option_cases_right {o : α → Option β} {f : α → σ} {g : α → β →. σ} (ho : Computable o)
+Case conversion may be inaccurate. Consider using '#align partrec.option_cases_right Partrec.option_casesOn_rightₓ'. -/
+theorem option_casesOn_right {o : α → Option β} {f : α → σ} {g : α → β →. σ} (ho : Computable o)
     (hf : Computable f) (hg : Partrec₂ g) :
     @Partrec _ σ _ _ fun a => Option.casesOn (o a) (some (f a)) (g a) :=
   have :
@@ -1193,15 +1192,15 @@ theorem option_cases_right {o : α → Option β} {f : α → σ} {g : α → β
     nat_casesOn_right (encode_iff.2 ho) hf.Partrec <|
       ((@Computable.decode β _).comp snd).ofOption.bind (hg.comp (fst.comp fst) snd).to₂
   this.of_eq fun a => by cases' o a with b <;> simp [encodek]
-#align partrec.option_cases_right Partrec.option_cases_right
+#align partrec.option_cases_right Partrec.option_casesOn_right
 
-/- warning: partrec.sum_cases_right -> Partrec.sum_cases_right is a dubious translation:
+/- warning: partrec.sum_cases_right -> Partrec.sum_casesOn_right is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {σ : Type.{u4}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] [_inst_3 : Primcodable.{u3} γ] [_inst_4 : Primcodable.{u4} σ] {f : α -> (Sum.{u2, u3} β γ)} {g : α -> β -> σ} {h : α -> (PFun.{u3, u4} γ σ)}, (Computable.{u1, max u2 u3} α (Sum.{u2, u3} β γ) _inst_1 (Primcodable.sum.{u2, u3} β γ _inst_2 _inst_3) f) -> (Computable₂.{u1, u2, u4} α β σ _inst_1 _inst_2 _inst_4 g) -> (Partrec₂.{u1, u3, u4} α γ σ _inst_1 _inst_3 _inst_4 h) -> (Partrec.{u1, u4} α σ _inst_1 _inst_4 (fun (a : α) => Sum.casesOn.{succ u4, u2, u3} β γ (fun (_x : Sum.{u2, u3} β γ) => Part.{u4} σ) (f a) (fun (b : β) => Part.some.{u4} σ (g a b)) (h a)))
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u4}} {γ : Type.{u3}} {σ : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u4} β] [_inst_3 : Primcodable.{u3} γ] [_inst_4 : Primcodable.{u2} σ] {f : α -> (Sum.{u4, u3} β γ)} {g : α -> β -> σ} {h : α -> (PFun.{u3, u2} γ σ)}, (Computable.{u1, max u4 u3} α (Sum.{u4, u3} β γ) _inst_1 (Primcodable.sum.{u4, u3} β γ _inst_2 _inst_3) f) -> (Computable₂.{u1, u4, u2} α β σ _inst_1 _inst_2 _inst_4 g) -> (Partrec₂.{u1, u3, u2} α γ σ _inst_1 _inst_3 _inst_4 h) -> (Partrec.{u1, u2} α σ _inst_1 _inst_4 (fun (a : α) => Sum.casesOn.{succ u2, u4, u3} β γ (fun (_x : Sum.{u4, u3} β γ) => Part.{u2} σ) (f a) (fun (b : β) => Part.some.{u2} σ (g a b)) (h a)))
-Case conversion may be inaccurate. Consider using '#align partrec.sum_cases_right Partrec.sum_cases_rightₓ'. -/
-theorem sum_cases_right {f : α → Sum β γ} {g : α → β → σ} {h : α → γ →. σ} (hf : Computable f)
+Case conversion may be inaccurate. Consider using '#align partrec.sum_cases_right Partrec.sum_casesOn_rightₓ'. -/
+theorem sum_casesOn_right {f : α → Sum β γ} {g : α → β → σ} {h : α → γ →. σ} (hf : Computable f)
     (hg : Computable₂ g) (hh : Partrec₂ h) :
     @Partrec _ σ _ _ fun a => Sum.casesOn (f a) (fun b => some (g a b)) (h a) :=
   have :
@@ -1210,29 +1209,29 @@ theorem sum_cases_right {f : α → Sum β γ} {g : α → β → σ} {h : α �
           (some (Sum.casesOn (f a) (fun b => some (g a b)) fun c => Option.none)) fun c =>
           (h a c).map Option.some :
         Part (Option σ)) :=
-    option_cases_right (sum_cases hf (const Option.none).to₂ (option_some.comp snd).to₂)
-      (sum_cases hf (option_some.comp hg) (const Option.none).to₂) (option_some_iff.2 hh)
+    option_casesOn_right (sum_casesOn hf (const Option.none).to₂ (option_some.comp snd).to₂)
+      (sum_casesOn hf (option_some.comp hg) (const Option.none).to₂) (option_some_iff.2 hh)
   option_some_iff.1 <| this.of_eq fun a => by cases f a <;> simp
-#align partrec.sum_cases_right Partrec.sum_cases_right
+#align partrec.sum_cases_right Partrec.sum_casesOn_right
 
-/- warning: partrec.sum_cases_left -> Partrec.sum_cases_left is a dubious translation:
+/- warning: partrec.sum_cases_left -> Partrec.sum_casesOn_left is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {σ : Type.{u4}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] [_inst_3 : Primcodable.{u3} γ] [_inst_4 : Primcodable.{u4} σ] {f : α -> (Sum.{u2, u3} β γ)} {g : α -> (PFun.{u2, u4} β σ)} {h : α -> γ -> σ}, (Computable.{u1, max u2 u3} α (Sum.{u2, u3} β γ) _inst_1 (Primcodable.sum.{u2, u3} β γ _inst_2 _inst_3) f) -> (Partrec₂.{u1, u2, u4} α β σ _inst_1 _inst_2 _inst_4 g) -> (Computable₂.{u1, u3, u4} α γ σ _inst_1 _inst_3 _inst_4 h) -> (Partrec.{u1, u4} α σ _inst_1 _inst_4 (fun (a : α) => Sum.casesOn.{succ u4, u2, u3} β γ (fun (_x : Sum.{u2, u3} β γ) => Part.{u4} σ) (f a) (g a) (fun (c : γ) => Part.some.{u4} σ (h a c))))
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u4}} {γ : Type.{u3}} {σ : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u4} β] [_inst_3 : Primcodable.{u3} γ] [_inst_4 : Primcodable.{u2} σ] {f : α -> (Sum.{u4, u3} β γ)} {g : α -> (PFun.{u4, u2} β σ)} {h : α -> γ -> σ}, (Computable.{u1, max u4 u3} α (Sum.{u4, u3} β γ) _inst_1 (Primcodable.sum.{u4, u3} β γ _inst_2 _inst_3) f) -> (Partrec₂.{u1, u4, u2} α β σ _inst_1 _inst_2 _inst_4 g) -> (Computable₂.{u1, u3, u2} α γ σ _inst_1 _inst_3 _inst_4 h) -> (Partrec.{u1, u2} α σ _inst_1 _inst_4 (fun (a : α) => Sum.casesOn.{succ u2, u4, u3} β γ (fun (_x : Sum.{u4, u3} β γ) => Part.{u2} σ) (f a) (g a) (fun (c : γ) => Part.some.{u2} σ (h a c))))
-Case conversion may be inaccurate. Consider using '#align partrec.sum_cases_left Partrec.sum_cases_leftₓ'. -/
-theorem sum_cases_left {f : α → Sum β γ} {g : α → β →. σ} {h : α → γ → σ} (hf : Computable f)
+Case conversion may be inaccurate. Consider using '#align partrec.sum_cases_left Partrec.sum_casesOn_leftₓ'. -/
+theorem sum_casesOn_left {f : α → Sum β γ} {g : α → β →. σ} {h : α → γ → σ} (hf : Computable f)
     (hg : Partrec₂ g) (hh : Computable₂ h) :
     @Partrec _ σ _ _ fun a => Sum.casesOn (f a) (g a) fun c => some (h a c) :=
-  (sum_cases_right (sum_cases hf (sum_inr.comp snd).to₂ (sum_inl.comp snd).to₂) hh hg).of_eq
+  (sum_casesOn_right (sum_casesOn hf (sum_inr.comp snd).to₂ (sum_inl.comp snd).to₂) hh hg).of_eq
     fun a => by cases f a <;> simp
-#align partrec.sum_cases_left Partrec.sum_cases_left
+#align partrec.sum_cases_left Partrec.sum_casesOn_left
 
 /- warning: partrec.fix_aux -> Partrec.fix_aux is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {σ : Type.{u2}} (f : PFun.{u1, max u2 u1} α (Sum.{u2, u1} σ α)) (a : α) (b : σ), let F : α -> (PFun.{0, max u2 u1} Nat (Sum.{u2, u1} σ α)) := fun (a : α) (n : Nat) => Nat.rec.{succ (max u2 u1)} (Part.{max u2 u1} (Sum.{u2, u1} σ α)) (Part.some.{max u2 u1} (Sum.{u2, u1} σ α) (Sum.inr.{u2, u1} σ α a)) (fun (y : Nat) (IH : Part.{max u2 u1} (Sum.{u2, u1} σ α)) => Part.bind.{max u2 u1, max u2 u1} (Sum.{u2, u1} σ α) (Sum.{u2, u1} σ α) IH (fun (s : Sum.{u2, u1} σ α) => Sum.casesOn.{succ (max u2 u1), u2, u1} σ α (fun (_x : Sum.{u2, u1} σ α) => Part.{max u2 u1} (Sum.{u2, u1} σ α)) s (fun (_x : σ) => Part.some.{max u2 u1} (Sum.{u2, u1} σ α) s) f)) n; Iff (Exists.{1} Nat (fun (n : Nat) => And (And (Exists.{succ u2} σ (fun (b' : σ) => Membership.Mem.{max u2 u1, max u2 u1} (Sum.{u2, u1} σ α) (Part.{max u2 u1} (Sum.{u2, u1} σ α)) (Part.hasMem.{max u2 u1} (Sum.{u2, u1} σ α)) (Sum.inl.{u2, u1} σ α b') (F a n))) (forall {m : Nat}, (LT.lt.{0} Nat Nat.hasLt m n) -> (Exists.{succ u1} α (fun (b : α) => Membership.Mem.{max u2 u1, max u2 u1} (Sum.{u2, u1} σ α) (Part.{max u2 u1} (Sum.{u2, u1} σ α)) (Part.hasMem.{max u2 u1} (Sum.{u2, u1} σ α)) (Sum.inr.{u2, u1} σ α b) (F a m))))) (Membership.Mem.{max u2 u1, max u2 u1} (Sum.{u2, u1} σ α) (Part.{max u2 u1} (Sum.{u2, u1} σ α)) (Part.hasMem.{max u2 u1} (Sum.{u2, u1} σ α)) (Sum.inl.{u2, u1} σ α b) (F a n)))) (Membership.Mem.{u2, u2} σ (Part.{u2} σ) (Part.hasMem.{u2} σ) b (PFun.fix.{u1, u2} α σ f a))
 but is expected to have type
-  forall {α : Type.{u2}} {σ : Type.{u1}} (f : PFun.{u2, max u2 u1} α (Sum.{u1, u2} σ α)) (a : α) (b : σ), let F : α -> (PFun.{0, max u2 u1} Nat (Sum.{u1, u2} σ α)) := fun (a : α) (n : Nat) => Nat.rec.{max (succ u2) (succ u1)} (fun (x._@.Mathlib.Computability.Partrec._hyg.8728 : Nat) => Part.{max u2 u1} (Sum.{u1, u2} σ α)) (Part.some.{max u2 u1} (Sum.{u1, u2} σ α) (Sum.inr.{u1, u2} σ α a)) (fun (y : Nat) (IH : Part.{max u2 u1} (Sum.{u1, u2} σ α)) => Part.bind.{max u2 u1, max u2 u1} (Sum.{u1, u2} σ α) (Sum.{u1, u2} σ α) IH (fun (s : Sum.{u1, u2} σ α) => Sum.casesOn.{max (succ u2) (succ u1), u1, u2} σ α (fun (_x : Sum.{u1, u2} σ α) => Part.{max u2 u1} (Sum.{u1, u2} σ α)) s (fun (_x : σ) => Part.some.{max u2 u1} (Sum.{u1, u2} σ α) s) f)) n; Iff (Exists.{1} Nat (fun (n : Nat) => And (And (Exists.{succ u1} σ (fun (b' : σ) => Membership.mem.{max u2 u1, max u2 u1} (Sum.{u1, u2} σ α) (Part.{max u2 u1} (Sum.{u1, u2} σ α)) (Part.instMembershipPart.{max u1 u2} (Sum.{u1, u2} σ α)) (Sum.inl.{u1, u2} σ α b') (F a n))) (forall {m : Nat}, (LT.lt.{0} Nat instLTNat m n) -> (Exists.{succ u2} α (fun (b : α) => Membership.mem.{max u2 u1, max u2 u1} (Sum.{u1, u2} σ α) (Part.{max u2 u1} (Sum.{u1, u2} σ α)) (Part.instMembershipPart.{max u2 u1} (Sum.{u1, u2} σ α)) (Sum.inr.{u1, u2} σ α b) (F a m))))) (Membership.mem.{max u2 u1, max u2 u1} (Sum.{u1, u2} σ α) (Part.{max u2 u1} (Sum.{u1, u2} σ α)) (Part.instMembershipPart.{max u1 u2} (Sum.{u1, u2} σ α)) (Sum.inl.{u1, u2} σ α b) (F a n)))) (Membership.mem.{u1, u1} σ (Part.{u1} σ) (Part.instMembershipPart.{u1} σ) b (PFun.fix.{u2, u1} α σ f a))
+  forall {α : Type.{u2}} {σ : Type.{u1}} (f : PFun.{u2, max u2 u1} α (Sum.{u1, u2} σ α)) (a : α) (b : σ), let F : α -> (PFun.{0, max u2 u1} Nat (Sum.{u1, u2} σ α)) := fun (a : α) (n : Nat) => Nat.rec.{max (succ u2) (succ u1)} (fun (x._@.Mathlib.Computability.Partrec._hyg.8733 : Nat) => Part.{max u2 u1} (Sum.{u1, u2} σ α)) (Part.some.{max u2 u1} (Sum.{u1, u2} σ α) (Sum.inr.{u1, u2} σ α a)) (fun (y : Nat) (IH : Part.{max u2 u1} (Sum.{u1, u2} σ α)) => Part.bind.{max u2 u1, max u2 u1} (Sum.{u1, u2} σ α) (Sum.{u1, u2} σ α) IH (fun (s : Sum.{u1, u2} σ α) => Sum.casesOn.{max (succ u2) (succ u1), u1, u2} σ α (fun (_x : Sum.{u1, u2} σ α) => Part.{max u2 u1} (Sum.{u1, u2} σ α)) s (fun (_x : σ) => Part.some.{max u2 u1} (Sum.{u1, u2} σ α) s) f)) n; Iff (Exists.{1} Nat (fun (n : Nat) => And (And (Exists.{succ u1} σ (fun (b' : σ) => Membership.mem.{max u2 u1, max u2 u1} (Sum.{u1, u2} σ α) (Part.{max u2 u1} (Sum.{u1, u2} σ α)) (Part.instMembershipPart.{max u1 u2} (Sum.{u1, u2} σ α)) (Sum.inl.{u1, u2} σ α b') (F a n))) (forall {m : Nat}, (LT.lt.{0} Nat instLTNat m n) -> (Exists.{succ u2} α (fun (b : α) => Membership.mem.{max u2 u1, max u2 u1} (Sum.{u1, u2} σ α) (Part.{max u2 u1} (Sum.{u1, u2} σ α)) (Part.instMembershipPart.{max u2 u1} (Sum.{u1, u2} σ α)) (Sum.inr.{u1, u2} σ α b) (F a m))))) (Membership.mem.{max u2 u1, max u2 u1} (Sum.{u1, u2} σ α) (Part.{max u2 u1} (Sum.{u1, u2} σ α)) (Part.instMembershipPart.{max u1 u2} (Sum.{u1, u2} σ α)) (Sum.inl.{u1, u2} σ α b) (F a n)))) (Membership.mem.{u1, u1} σ (Part.{u1} σ) (Part.instMembershipPart.{u1} σ) b (PFun.fix.{u2, u1} α σ f a))
 Case conversion may be inaccurate. Consider using '#align partrec.fix_aux Partrec.fix_auxₓ'. -/
 theorem fix_aux {α σ} (f : α →. Sum σ α) (a : α) (b : σ) :
     let F : α → ℕ →. Sum σ α := fun a n =>
@@ -1291,11 +1290,11 @@ theorem fix {f : α →. Sum σ α} (hf : Partrec f) : Partrec (PFun.fix f) :=
     n.elim (some (Sum.inr a)) fun y IH => IH.bind fun s => Sum.casesOn s (fun _ => Part.some s) f
   have hF : Partrec₂ F :=
     Partrec.nat_rec snd (sum_inr.comp fst).Partrec
-      (sum_cases_right (snd.comp snd) (snd.comp <| snd.comp fst).to₂ (hf.comp snd).to₂).to₂
+      (sum_casesOn_right (snd.comp snd) (snd.comp <| snd.comp fst).to₂ (hf.comp snd).to₂).to₂
   let p a n := @Part.map _ Bool (fun s => Sum.casesOn s (fun _ => true) fun _ => false) (F a n)
   have hp : Partrec₂ p :=
-    hF.map ((sum_cases Computable.id (const true).to₂ (const false).to₂).comp snd).to₂
-  (hp.rfind.bind (hF.bind (sum_cases_right snd snd.to₂ none.to₂).to₂).to₂).of_eq fun a =>
+    hF.map ((sum_casesOn Computable.id (const true).to₂ (const false).to₂).comp snd).to₂
+  (hp.rfind.bind (hF.bind (sum_casesOn_right snd snd.to₂ none.to₂).to₂).to₂).of_eq fun a =>
     ext fun b => by simp <;> apply fix_aux f
 #align partrec.fix Partrec.fix
 

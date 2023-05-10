@@ -161,17 +161,17 @@ theorem prec1 {f} (m : ℕ) (hf : Primrec f) : Primrec fun n => n.elim m fun y I
 #align nat.primrec.prec1 Nat.Primrec.prec1
 -/
 
-#print Nat.Primrec.cases1 /-
-theorem cases1 {f} (m : ℕ) (hf : Primrec f) : Primrec (Nat.casesOn m f) :=
+#print Nat.Primrec.casesOn1 /-
+theorem casesOn1 {f} (m : ℕ) (hf : Primrec f) : Primrec (Nat.casesOn m f) :=
   (prec1 m (hf.comp left)).of_eq <| by simp [cases]
-#align nat.primrec.cases1 Nat.Primrec.cases1
+#align nat.primrec.cases1 Nat.Primrec.casesOn1
 -/
 
-#print Nat.Primrec.cases /-
-theorem cases {f g} (hf : Primrec f) (hg : Primrec g) :
+#print Nat.Primrec.casesOn' /-
+theorem casesOn' {f g} (hf : Primrec f) (hg : Primrec g) :
     Primrec (unpaired fun z n => n.cases (f z) fun y => g <| pair z y) :=
   (prec hf (hg.comp (pair left (left.comp right)))).of_eq <| by simp [cases]
-#align nat.primrec.cases Nat.Primrec.cases
+#align nat.primrec.cases Nat.Primrec.casesOn'
 -/
 
 #print Nat.Primrec.swap /-
@@ -188,7 +188,7 @@ theorem swap' {f} (hf : Primrec (unpaired f)) : Primrec (unpaired (swap f)) :=
 
 #print Nat.Primrec.pred /-
 theorem pred : Primrec pred :=
-  (cases1 0 Primrec.id).of_eq fun n => by cases n <;> simp [*]
+  (casesOn1 0 Primrec.id).of_eq fun n => by cases n <;> simp [*]
 #align nat.primrec.pred Nat.Primrec.pred
 -/
 
@@ -264,20 +264,21 @@ instance empty : Primcodable Empty :=
 
 #print Primcodable.unit /-
 instance unit : Primcodable PUnit :=
-  ⟨(cases1 1 zero).of_eq fun n => by cases n <;> simp⟩
+  ⟨(casesOn1 1 zero).of_eq fun n => by cases n <;> simp⟩
 #align primcodable.unit Primcodable.unit
 -/
 
 #print Primcodable.option /-
 instance option {α : Type _} [h : Primcodable α] : Primcodable (Option α) :=
-  ⟨(cases1 1 ((cases1 0 (succ.comp succ)).comp (Primcodable.prim α))).of_eq fun n => by
+  ⟨(casesOn1 1 ((casesOn1 0 (succ.comp succ)).comp (Primcodable.prim α))).of_eq fun n => by
       cases n <;> simp <;> cases decode α n <;> rfl⟩
 #align primcodable.option Primcodable.option
 -/
 
 #print Primcodable.bool /-
 instance bool : Primcodable Bool :=
-  ⟨(cases1 1 (cases1 2 zero)).of_eq fun n => by
+  ⟨(casesOn1 1 (casesOn1 2 zero)).of_eq fun n =>
+      by
       cases n; · rfl; cases n; · rfl
       rw [decode_ge_two]; · rfl
       exact by decide⟩
@@ -340,7 +341,7 @@ theorem encdec : Primrec fun n => encode (decode α n) :=
 
 #print Primrec.option_some /-
 theorem option_some : Primrec (@some α) :=
-  ((cases1 0 (succ.comp succ)).comp (Primcodable.prim α)).of_eq fun n => by
+  ((casesOn1 0 (succ.comp succ)).comp (Primcodable.prim α)).of_eq fun n => by
     cases decode α n <;> simp
 #align primrec.option_some Primrec.option_some
 -/
@@ -362,7 +363,7 @@ but is expected to have type
   forall {α : Type.{u2}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_3 : Primcodable.{u1} σ] (x : σ), Primrec.{u2, u1} α σ _inst_1 _inst_3 (fun (a : α) => x)
 Case conversion may be inaccurate. Consider using '#align primrec.const Primrec.constₓ'. -/
 theorem const (x : σ) : Primrec fun a : α => x :=
-  ((cases1 0 (const (encode x).succ)).comp (Primcodable.prim α)).of_eq fun n => by
+  ((casesOn1 0 (const (encode x).succ)).comp (Primcodable.prim α)).of_eq fun n => by
     cases decode α n <;> rfl
 #align primrec.const Primrec.const
 
@@ -379,7 +380,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u3}} {σ : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u3} β] [_inst_3 : Primcodable.{u2} σ] {f : β -> σ} {g : α -> β}, (Primrec.{u3, u2} β σ _inst_2 _inst_3 f) -> (Primrec.{u1, u3} α β _inst_1 _inst_2 g) -> (Primrec.{u1, u2} α σ _inst_1 _inst_3 (fun (a : α) => f (g a)))
 Case conversion may be inaccurate. Consider using '#align primrec.comp Primrec.compₓ'. -/
 theorem comp {f : β → σ} {g : α → β} (hf : Primrec f) (hg : Primrec g) : Primrec fun a => f (g a) :=
-  ((cases1 0 (hf.comp <| pred.comp hg)).comp (Primcodable.prim α)).of_eq fun n =>
+  ((casesOn1 0 (hf.comp <| pred.comp hg)).comp (Primcodable.prim α)).of_eq fun n =>
     by
     cases decode α n; · rfl
     simp [encodek]
@@ -434,49 +435,49 @@ theorem option_some_iff {f : α → σ} : (Primrec fun a => some (f a)) ↔ Prim
   ⟨fun h => encode_iff.1 <| pred.comp <| encode_iff.2 h, option_some.comp⟩
 #align primrec.option_some_iff Primrec.option_some_iff
 
-#print Primrec.ofEquiv /-
-theorem ofEquiv {β} {e : β ≃ α} :
+#print Primrec.of_equiv /-
+theorem of_equiv {β} {e : β ≃ α} :
     haveI := Primcodable.ofEquiv α e
     Primrec e :=
   letI : Primcodable β := Primcodable.ofEquiv α e
   encode_iff.1 Primrec.encode
-#align primrec.of_equiv Primrec.ofEquiv
+#align primrec.of_equiv Primrec.of_equiv
 -/
 
-#print Primrec.ofEquiv_symm /-
-theorem ofEquiv_symm {β} {e : β ≃ α} :
+#print Primrec.of_equiv_symm /-
+theorem of_equiv_symm {β} {e : β ≃ α} :
     haveI := Primcodable.ofEquiv α e
     Primrec e.symm :=
   letI := Primcodable.ofEquiv α e
   encode_iff.1 (show Primrec fun a => encode (e (e.symm a)) by simp [Primrec.encode])
-#align primrec.of_equiv_symm Primrec.ofEquiv_symm
+#align primrec.of_equiv_symm Primrec.of_equiv_symm
 -/
 
-/- warning: primrec.of_equiv_iff -> Primrec.ofEquiv_iff is a dubious translation:
+/- warning: primrec.of_equiv_iff -> Primrec.of_equiv_iff is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {σ : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_3 : Primcodable.{u2} σ] {β : Type.{u3}} (e : Equiv.{succ u3, succ u1} β α) {f : σ -> β}, Iff (Primrec.{u2, u1} σ α _inst_3 _inst_1 (fun (a : σ) => coeFn.{max 1 (max (succ u3) (succ u1)) (succ u1) (succ u3), max (succ u3) (succ u1)} (Equiv.{succ u3, succ u1} β α) (fun (_x : Equiv.{succ u3, succ u1} β α) => β -> α) (Equiv.hasCoeToFun.{succ u3, succ u1} β α) e (f a))) (Primrec.{u2, u3} σ β _inst_3 (Primcodable.ofEquiv.{u1, u3} α β _inst_1 e) f)
 but is expected to have type
   forall {α : Type.{u2}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_3 : Primcodable.{u1} σ] {β : Type.{u3}} (e : Equiv.{succ u3, succ u2} β α) {f : σ -> β}, Iff (Primrec.{u1, u2} σ α _inst_3 _inst_1 (fun (a : σ) => FunLike.coe.{max (succ u2) (succ u3), succ u3, succ u2} (Equiv.{succ u3, succ u2} β α) β (fun (_x : β) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : β) => α) _x) (Equiv.instFunLikeEquiv.{succ u3, succ u2} β α) e (f a))) (Primrec.{u1, u3} σ β _inst_3 (Primcodable.ofEquiv.{u2, u3} α β _inst_1 e) f)
-Case conversion may be inaccurate. Consider using '#align primrec.of_equiv_iff Primrec.ofEquiv_iffₓ'. -/
-theorem ofEquiv_iff {β} (e : β ≃ α) {f : σ → β} :
+Case conversion may be inaccurate. Consider using '#align primrec.of_equiv_iff Primrec.of_equiv_iffₓ'. -/
+theorem of_equiv_iff {β} (e : β ≃ α) {f : σ → β} :
     haveI := Primcodable.ofEquiv α e
     (Primrec fun a => e (f a)) ↔ Primrec f :=
   letI := Primcodable.ofEquiv α e
   ⟨fun h => (of_equiv_symm.comp h).of_eq fun a => by simp, of_equiv.comp⟩
-#align primrec.of_equiv_iff Primrec.ofEquiv_iff
+#align primrec.of_equiv_iff Primrec.of_equiv_iff
 
-/- warning: primrec.of_equiv_symm_iff -> Primrec.ofEquiv_symm_iff is a dubious translation:
+/- warning: primrec.of_equiv_symm_iff -> Primrec.of_equiv_symm_iff is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {σ : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_3 : Primcodable.{u2} σ] {β : Type.{u3}} (e : Equiv.{succ u3, succ u1} β α) {f : σ -> α}, Iff (Primrec.{u2, u3} σ β _inst_3 (Primcodable.ofEquiv.{u1, u3} α β _inst_1 e) (fun (a : σ) => coeFn.{max 1 (max (succ u1) (succ u3)) (succ u3) (succ u1), max (succ u1) (succ u3)} (Equiv.{succ u1, succ u3} α β) (fun (_x : Equiv.{succ u1, succ u3} α β) => α -> β) (Equiv.hasCoeToFun.{succ u1, succ u3} α β) (Equiv.symm.{succ u3, succ u1} β α e) (f a))) (Primrec.{u2, u1} σ α _inst_3 _inst_1 f)
 but is expected to have type
   forall {α : Type.{u2}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_3 : Primcodable.{u1} σ] {β : Type.{u3}} (e : Equiv.{succ u3, succ u2} β α) {f : σ -> α}, Iff (Primrec.{u1, u3} σ β _inst_3 (Primcodable.ofEquiv.{u2, u3} α β _inst_1 e) (fun (a : σ) => FunLike.coe.{max (succ u2) (succ u3), succ u2, succ u3} (Equiv.{succ u2, succ u3} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => β) _x) (Equiv.instFunLikeEquiv.{succ u2, succ u3} α β) (Equiv.symm.{succ u3, succ u2} β α e) (f a))) (Primrec.{u1, u2} σ α _inst_3 _inst_1 f)
-Case conversion may be inaccurate. Consider using '#align primrec.of_equiv_symm_iff Primrec.ofEquiv_symm_iffₓ'. -/
-theorem ofEquiv_symm_iff {β} (e : β ≃ α) {f : σ → α} :
+Case conversion may be inaccurate. Consider using '#align primrec.of_equiv_symm_iff Primrec.of_equiv_symm_iffₓ'. -/
+theorem of_equiv_symm_iff {β} (e : β ≃ α) {f : σ → α} :
     haveI := Primcodable.ofEquiv α e
     (Primrec fun a => e.symm (f a)) ↔ Primrec f :=
   letI := Primcodable.ofEquiv α e
   ⟨fun h => (of_equiv.comp h).of_eq fun a => by simp, of_equiv_symm.comp⟩
-#align primrec.of_equiv_symm_iff Primrec.ofEquiv_symm_iff
+#align primrec.of_equiv_symm_iff Primrec.of_equiv_symm_iff
 
 end Primrec
 
@@ -486,7 +487,7 @@ open Nat.Primrec
 
 #print Primcodable.prod /-
 instance prod {α β} [Primcodable α] [Primcodable β] : Primcodable (α × β) :=
-  ⟨((cases zero ((cases zero succ).comp (pair right ((Primcodable.prim β).comp left)))).comp
+  ⟨((casesOn' zero ((casesOn' zero succ).comp (pair right ((Primcodable.prim β).comp left)))).comp
           (pair right ((Primcodable.prim α).comp left))).of_eq
       fun n => by
       simp [Nat.unpaired]
@@ -510,8 +511,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_3 : Primcodable.{u2} α] [_inst_4 : Primcodable.{u1} β], Primrec.{max u2 u1, u2} (Prod.{u2, u1} α β) α (Primcodable.prod.{u2, u1} α β _inst_3 _inst_4) _inst_3 (Prod.fst.{u2, u1} α β)
 Case conversion may be inaccurate. Consider using '#align primrec.fst Primrec.fstₓ'. -/
 theorem fst {α β} [Primcodable α] [Primcodable β] : Primrec (@Prod.fst α β) :=
-  ((cases zero
-            ((cases zero (Nat.Primrec.succ.comp left)).comp
+  ((casesOn' zero
+            ((casesOn' zero (Nat.Primrec.succ.comp left)).comp
               (pair right ((Primcodable.prim β).comp left)))).comp
         (pair right ((Primcodable.prim α).comp left))).of_eq
     fun n => by
@@ -527,8 +528,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_3 : Primcodable.{u2} α] [_inst_4 : Primcodable.{u1} β], Primrec.{max u2 u1, u1} (Prod.{u2, u1} α β) β (Primcodable.prod.{u2, u1} α β _inst_3 _inst_4) _inst_4 (Prod.snd.{u2, u1} α β)
 Case conversion may be inaccurate. Consider using '#align primrec.snd Primrec.sndₓ'. -/
 theorem snd {α β} [Primcodable α] [Primcodable β] : Primrec (@Prod.snd α β) :=
-  ((cases zero
-            ((cases zero (Nat.Primrec.succ.comp right)).comp
+  ((casesOn' zero
+            ((casesOn' zero (Nat.Primrec.succ.comp right)).comp
               (pair right ((Primcodable.prim β).comp left)))).comp
         (pair right ((Primcodable.prim α).comp left))).of_eq
     fun n => by
@@ -545,7 +546,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align primrec.pair Primrec.pairₓ'. -/
 theorem pair {α β γ} [Primcodable α] [Primcodable β] [Primcodable γ] {f : α → β} {g : α → γ}
     (hf : Primrec f) (hg : Primrec g) : Primrec fun a => (f a, g a) :=
-  ((cases1 0
+  ((casesOn1 0
             (Nat.Primrec.succ.comp <|
               pair (Nat.Primrec.pred.comp hf) (Nat.Primrec.pred.comp hg))).comp
         (Primcodable.prim α)).of_eq
@@ -563,7 +564,7 @@ theorem list_get?₁ : ∀ l : List α, Primrec l.get?
   | [] => dom_denumerable.2 zero
   | a :: l =>
     dom_denumerable.2 <|
-      (cases1 (encode a).succ <| dom_denumerable.1 <| list_nth₁ l).of_eq fun n => by
+      (casesOn1 (encode a).succ <| dom_denumerable.1 <| list_nth₁ l).of_eq fun n => by
         cases n <;> simp
 #align primrec.list_nth₁ Primrec.list_get?₁
 -/
@@ -883,11 +884,11 @@ theorem to₂ {f : α × β → σ} (hf : Primrec f) : Primrec₂ fun a b => f (
   hf.of_eq fun ⟨a, b⟩ => rfl
 #align primrec.to₂ Primrec.to₂
 
-#print Primrec.nat_elim /-
-theorem nat_elim {f : α → β} {g : α → ℕ × β → β} (hf : Primrec f) (hg : Primrec₂ g) :
+#print Primrec.nat_rec /-
+theorem nat_rec {f : α → β} {g : α → ℕ × β → β} (hf : Primrec f) (hg : Primrec₂ g) :
     Primrec₂ fun a (n : ℕ) => n.elim (f a) fun n IH => g a (n, IH) :=
   Primrec₂.nat_iff.2 <|
-    ((Nat.Primrec.cases Nat.Primrec.zero <|
+    ((Nat.Primrec.casesOn' Nat.Primrec.zero <|
               (Nat.Primrec.prec hf <|
                     Nat.Primrec.comp hg <|
                       Nat.Primrec.left.pair <|
@@ -901,48 +902,48 @@ theorem nat_elim {f : α → β} {g : α → ℕ × β → β} (hf : Primrec f) 
       simp [encodek]
       induction' n.unpair.2 with m <;> simp [encodek]
       simp [ih, encodek]
-#align primrec.nat_elim Primrec.nat_elim
+#align primrec.nat_elim Primrec.nat_rec
 -/
 
-#print Primrec.nat_elim' /-
-theorem nat_elim' {f : α → ℕ} {g : α → β} {h : α → ℕ × β → β} (hf : Primrec f) (hg : Primrec g)
+#print Primrec.nat_rec' /-
+theorem nat_rec' {f : α → ℕ} {g : α → β} {h : α → ℕ × β → β} (hf : Primrec f) (hg : Primrec g)
     (hh : Primrec₂ h) : Primrec fun a => (f a).elim (g a) fun n IH => h a (n, IH) :=
-  (nat_elim hg hh).comp Primrec.id hf
-#align primrec.nat_elim' Primrec.nat_elim'
+  (nat_rec hg hh).comp Primrec.id hf
+#align primrec.nat_elim' Primrec.nat_rec'
 -/
 
-#print Primrec.nat_elim₁ /-
-theorem nat_elim₁ {f : ℕ → α → α} (a : α) (hf : Primrec₂ f) : Primrec (Nat.rec a f) :=
-  nat_elim' Primrec.id (const a) <| comp₂ hf Primrec₂.right
-#align primrec.nat_elim₁ Primrec.nat_elim₁
+#print Primrec.nat_rec₁ /-
+theorem nat_rec₁ {f : ℕ → α → α} (a : α) (hf : Primrec₂ f) : Primrec (Nat.rec a f) :=
+  nat_rec' Primrec.id (const a) <| comp₂ hf Primrec₂.right
+#align primrec.nat_elim₁ Primrec.nat_rec₁
 -/
 
-/- warning: primrec.nat_cases' -> Primrec.nat_cases' is a dubious translation:
+/- warning: primrec.nat_cases' -> Primrec.nat_casesOn' is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] {f : α -> β} {g : α -> Nat -> β}, (Primrec.{u1, u2} α β _inst_1 _inst_2 f) -> (Primrec₂.{u1, 0, u2} α Nat β _inst_1 (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) _inst_2 g) -> (Primrec₂.{u1, 0, u2} α Nat β _inst_1 (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) _inst_2 (fun (a : α) => Nat.casesOn.{succ u2} β (f a) (g a)))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_2 : Primcodable.{u1} β] {f : α -> β} {g : α -> Nat -> β}, (Primrec.{u2, u1} α β _inst_1 _inst_2 f) -> (Primrec₂.{u2, 0, u1} α Nat β _inst_1 (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) _inst_2 g) -> (Primrec₂.{u2, 0, u1} α Nat β _inst_1 (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) _inst_2 (fun (a : α) (n : Nat) => Nat.casesOn.{succ u1} (fun (x._@.Mathlib.Computability.Primrec._hyg.4800 : Nat) => β) n (f a) (g a)))
-Case conversion may be inaccurate. Consider using '#align primrec.nat_cases' Primrec.nat_cases'ₓ'. -/
-theorem nat_cases' {f : α → β} {g : α → ℕ → β} (hf : Primrec f) (hg : Primrec₂ g) :
+Case conversion may be inaccurate. Consider using '#align primrec.nat_cases' Primrec.nat_casesOn'ₓ'. -/
+theorem nat_casesOn' {f : α → β} {g : α → ℕ → β} (hf : Primrec f) (hg : Primrec₂ g) :
     Primrec₂ fun a => Nat.casesOn (f a) (g a) :=
-  nat_elim hf <| hg.comp₂ Primrec₂.left <| comp₂ fst Primrec₂.right
-#align primrec.nat_cases' Primrec.nat_cases'
+  nat_rec hf <| hg.comp₂ Primrec₂.left <| comp₂ fst Primrec₂.right
+#align primrec.nat_cases' Primrec.nat_casesOn'
 
-/- warning: primrec.nat_cases -> Primrec.nat_cases is a dubious translation:
+/- warning: primrec.nat_cases -> Primrec.nat_casesOn is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] {f : α -> Nat} {g : α -> β} {h : α -> Nat -> β}, (Primrec.{u1, 0} α Nat _inst_1 (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) f) -> (Primrec.{u1, u2} α β _inst_1 _inst_2 g) -> (Primrec₂.{u1, 0, u2} α Nat β _inst_1 (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) _inst_2 h) -> (Primrec.{u1, u2} α β _inst_1 _inst_2 (fun (a : α) => Nat.casesOn.{succ u2} β (g a) (h a) (f a)))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_2 : Primcodable.{u1} β] {f : α -> Nat} {g : α -> β} {h : α -> Nat -> β}, (Primrec.{u2, 0} α Nat _inst_1 (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) f) -> (Primrec.{u2, u1} α β _inst_1 _inst_2 g) -> (Primrec₂.{u2, 0, u1} α Nat β _inst_1 (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) _inst_2 h) -> (Primrec.{u2, u1} α β _inst_1 _inst_2 (fun (a : α) => Nat.casesOn.{succ u1} (fun (x._@.Mathlib.Computability.Primrec._hyg.4875 : Nat) => β) (f a) (g a) (h a)))
-Case conversion may be inaccurate. Consider using '#align primrec.nat_cases Primrec.nat_casesₓ'. -/
-theorem nat_cases {f : α → ℕ} {g : α → β} {h : α → ℕ → β} (hf : Primrec f) (hg : Primrec g)
+Case conversion may be inaccurate. Consider using '#align primrec.nat_cases Primrec.nat_casesOnₓ'. -/
+theorem nat_casesOn {f : α → ℕ} {g : α → β} {h : α → ℕ → β} (hf : Primrec f) (hg : Primrec g)
     (hh : Primrec₂ h) : Primrec fun a => (f a).cases (g a) (h a) :=
-  (nat_cases' hg hh).comp Primrec.id hf
-#align primrec.nat_cases Primrec.nat_cases
+  (nat_casesOn' hg hh).comp Primrec.id hf
+#align primrec.nat_cases Primrec.nat_casesOn
 
-#print Primrec.nat_cases₁ /-
-theorem nat_cases₁ {f : ℕ → α} (a : α) (hf : Primrec f) : Primrec (Nat.casesOn a f) :=
-  nat_cases Primrec.id (const a) (comp₂ hf Primrec₂.right)
-#align primrec.nat_cases₁ Primrec.nat_cases₁
+#print Primrec.nat_casesOn₁ /-
+theorem nat_casesOn₁ {f : ℕ → α} (a : α) (hf : Primrec f) : Primrec (Nat.casesOn a f) :=
+  nat_casesOn Primrec.id (const a) (comp₂ hf Primrec₂.right)
+#align primrec.nat_cases₁ Primrec.nat_casesOn₁
 -/
 
 /- warning: primrec.nat_iterate -> Primrec.nat_iterate is a dubious translation:
@@ -953,27 +954,27 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align primrec.nat_iterate Primrec.nat_iterateₓ'. -/
 theorem nat_iterate {f : α → ℕ} {g : α → β} {h : α → β → β} (hf : Primrec f) (hg : Primrec g)
     (hh : Primrec₂ h) : Primrec fun a => (h a^[f a]) (g a) :=
-  (nat_elim' hf hg (hh.comp₂ Primrec₂.left <| snd.comp₂ Primrec₂.right)).of_eq fun a => by
+  (nat_rec' hf hg (hh.comp₂ Primrec₂.left <| snd.comp₂ Primrec₂.right)).of_eq fun a => by
     induction f a <;> simp [*, Function.iterate_succ']
 #align primrec.nat_iterate Primrec.nat_iterate
 
-/- warning: primrec.option_cases -> Primrec.option_cases is a dubious translation:
+/- warning: primrec.option_cases -> Primrec.option_casesOn is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {σ : Type.{u3}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] [_inst_5 : Primcodable.{u3} σ] {o : α -> (Option.{u2} β)} {f : α -> σ} {g : α -> β -> σ}, (Primrec.{u1, u2} α (Option.{u2} β) _inst_1 (Primcodable.option.{u2} β _inst_2) o) -> (Primrec.{u1, u3} α σ _inst_1 _inst_5 f) -> (Primrec₂.{u1, u2, u3} α β σ _inst_1 _inst_2 _inst_5 g) -> (Primrec.{u1, u3} α σ _inst_1 _inst_5 (fun (a : α) => Option.casesOn.{succ u3, u2} β (fun (_x : Option.{u2} β) => σ) (o a) (f a) (g a)))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u3}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_2 : Primcodable.{u3} β] [_inst_5 : Primcodable.{u1} σ] {o : α -> (Option.{u3} β)} {f : α -> σ} {g : α -> β -> σ}, (Primrec.{u2, u3} α (Option.{u3} β) _inst_1 (Primcodable.option.{u3} β _inst_2) o) -> (Primrec.{u2, u1} α σ _inst_1 _inst_5 f) -> (Primrec₂.{u2, u3, u1} α β σ _inst_1 _inst_2 _inst_5 g) -> (Primrec.{u2, u1} α σ _inst_1 _inst_5 (fun (a : α) => Option.casesOn.{succ u1, u3} β (fun (_x : Option.{u3} β) => σ) (o a) (f a) (g a)))
-Case conversion may be inaccurate. Consider using '#align primrec.option_cases Primrec.option_casesₓ'. -/
-theorem option_cases {o : α → Option β} {f : α → σ} {g : α → β → σ} (ho : Primrec o)
+Case conversion may be inaccurate. Consider using '#align primrec.option_cases Primrec.option_casesOnₓ'. -/
+theorem option_casesOn {o : α → Option β} {f : α → σ} {g : α → β → σ} (ho : Primrec o)
     (hf : Primrec f) (hg : Primrec₂ g) :
     @Primrec _ σ _ _ fun a => Option.casesOn (o a) (f a) (g a) :=
   encode_iff.1 <|
-    (nat_cases (encode_iff.2 ho) (encode_iff.2 hf) <|
+    (nat_casesOn (encode_iff.2 ho) (encode_iff.2 hf) <|
           pred.comp₂ <|
             Primrec₂.encode_iff.2 <|
               (Primrec₂.nat_iff'.1 hg).comp₂ ((@Primrec.encode α _).comp fst).to₂
                 Primrec₂.right).of_eq
       fun a => by cases' o a with b <;> simp [encodek] <;> rfl
-#align primrec.option_cases Primrec.option_cases
+#align primrec.option_cases Primrec.option_casesOn
 
 /- warning: primrec.option_bind -> Primrec.option_bind is a dubious translation:
 lean 3 declaration is
@@ -983,7 +984,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align primrec.option_bind Primrec.option_bindₓ'. -/
 theorem option_bind {f : α → Option β} {g : α → β → Option σ} (hf : Primrec f) (hg : Primrec₂ g) :
     Primrec fun a => (f a).bind (g a) :=
-  (option_cases hf (const none) hg).of_eq fun a => by cases f a <;> rfl
+  (option_casesOn hf (const none) hg).of_eq fun a => by cases f a <;> rfl
 #align primrec.option_bind Primrec.option_bind
 
 #print Primrec.option_bind₁ /-
@@ -1015,19 +1016,20 @@ theorem option_map₁ {f : α → σ} (hf : Primrec f) : Primrec (Option.map f) 
 
 #print Primrec.option_iget /-
 theorem option_iget [Inhabited α] : Primrec (@Option.iget α _) :=
-  (option_cases Primrec.id (const <| @default α _) Primrec₂.right).of_eq fun o => by cases o <;> rfl
+  (option_casesOn Primrec.id (const <| @default α _) Primrec₂.right).of_eq fun o => by
+    cases o <;> rfl
 #align primrec.option_iget Primrec.option_iget
 -/
 
 #print Primrec.option_isSome /-
 theorem option_isSome : Primrec (@Option.isSome α) :=
-  (option_cases Primrec.id (const false) (const true).to₂).of_eq fun o => by cases o <;> rfl
+  (option_casesOn Primrec.id (const false) (const true).to₂).of_eq fun o => by cases o <;> rfl
 #align primrec.option_is_some Primrec.option_isSome
 -/
 
 #print Primrec.option_getD /-
 theorem option_getD : Primrec₂ (@Option.getD α) :=
-  Primrec.of_eq (option_cases Primrec₂.left Primrec₂.right Primrec₂.right) fun ⟨o, a⟩ => by
+  Primrec.of_eq (option_casesOn Primrec₂.left Primrec₂.right Primrec₂.right) fun ⟨o, a⟩ => by
     cases o <;> rfl
 #align primrec.option_get_or_else Primrec.option_getD
 -/
@@ -1081,7 +1083,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align primrec.cond Primrec.condₓ'. -/
 theorem cond {c : α → Bool} {f : α → σ} {g : α → σ} (hc : Primrec c) (hf : Primrec f)
     (hg : Primrec g) : Primrec fun a => cond (c a) (f a) (g a) :=
-  (nat_cases (encode_iff.2 hc) hg (hf.comp fst).to₂).of_eq fun a => by cases c a <;> rfl
+  (nat_casesOn (encode_iff.2 hc) hg (hf.comp fst).to₂).of_eq fun a => by cases c a <;> rfl
 #align primrec.cond Primrec.cond
 
 /- warning: primrec.ite -> Primrec.ite is a dubious translation:
@@ -1102,7 +1104,7 @@ but is expected to have type
   PrimrecRel.{0, 0} Nat Nat (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (Primcodable.ofDenumerable.{0} Nat Denumerable.nat) (fun (x._@.Mathlib.Computability.Primrec._hyg.6194 : Nat) (x._@.Mathlib.Computability.Primrec._hyg.6196 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Computability.Primrec._hyg.6194 x._@.Mathlib.Computability.Primrec._hyg.6196) (fun (a : Nat) (b : Nat) => Nat.decLe a b)
 Case conversion may be inaccurate. Consider using '#align primrec.nat_le Primrec.nat_leₓ'. -/
 theorem nat_le : PrimrecRel ((· ≤ ·) : ℕ → ℕ → Prop) :=
-  (nat_cases nat_sub (const true) (const false).to₂).of_eq fun p =>
+  (nat_casesOn nat_sub (const true) (const false).to₂).of_eq fun p =>
     by
     dsimp [swap]
     cases' e : p.1 - p.2 with n
@@ -1219,7 +1221,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Primcodable.{u1} α], Primrec₂.{u1, u1, u1} (Option.{u1} α) (Option.{u1} α) (Option.{u1} α) (Primcodable.option.{u1} α _inst_1) (Primcodable.option.{u1} α _inst_1) (Primcodable.option.{u1} α _inst_1) (fun (x._@.Mathlib.Computability.Primrec._hyg.7041 : Option.{u1} α) (x._@.Mathlib.Computability.Primrec._hyg.7043 : Option.{u1} α) => HOrElse.hOrElse.{u1, u1, u1} (Option.{u1} α) (Option.{u1} α) (Option.{u1} α) (instHOrElse.{u1} (Option.{u1} α) (Option.instOrElseOption.{u1} α)) x._@.Mathlib.Computability.Primrec._hyg.7041 (fun (x._@.Mathlib.Computability.Primrec._hyg.7053 : Unit) => x._@.Mathlib.Computability.Primrec._hyg.7043))
 Case conversion may be inaccurate. Consider using '#align primrec.option_orelse Primrec.option_orElseₓ'. -/
 theorem option_orElse : Primrec₂ ((· <|> ·) : Option α → Option α → Option α) :=
-  (option_cases fst snd (fst.comp fst).to₂).of_eq fun ⟨o₁, o₂⟩ => by cases o₁ <;> cases o₂ <;> rfl
+  (option_casesOn fst snd (fst.comp fst).to₂).of_eq fun ⟨o₁, o₂⟩ => by cases o₁ <;> cases o₂ <;> rfl
 #align primrec.option_orelse Primrec.option_orElse
 
 #print Primrec.decode₂ /-
@@ -1269,7 +1271,7 @@ but is expected to have type
   forall {α : Type.{u}} {β : Type.{v}}, (Nat -> α -> β) -> Nat -> (List.{u} α) -> (List.{v} β)
 Case conversion may be inaccurate. Consider using '#align primrec.nat_bodd_div2 [anonymous]ₓ'. -/
 theorem [anonymous] : Primrec Nat.boddDiv2 :=
-  (nat_elim' Primrec.id (const (false, 0))
+  (nat_rec' Primrec.id (const (false, 0))
         (((cond fst (pair (const false) (succ.comp snd)) (pair (const true) snd)).comp snd).comp
             snd).to₂).of_eq
     fun n => by
@@ -1328,7 +1330,7 @@ theorem [anonymous] : Primrec₂ fun n k : ℕ => (n / k, n % k) :=
     a.1.elim (0, 0) fun _ IH =>
       if Nat.succ IH.2 = a.2 then (Nat.succ IH.1, 0) else (IH.1, Nat.succ IH.2)
   have hf : Primrec f :=
-    nat_elim' fst (const (0, 0)) <|
+    nat_rec' fst (const (0, 0)) <|
       ((ite ((@Primrec.eq ℕ _ _).comp (succ.comp <| snd.comp snd) fst)
               (pair (succ.comp <| fst.comp snd) (const 0))
               (pair (fst.comp snd) (succ.comp <| snd.comp snd))).comp
@@ -1544,20 +1546,20 @@ theorem sum_inr : Primrec (@Sum.inr α β) :=
 #align primrec.sum_inr Primrec.sum_inr
 -/
 
-/- warning: primrec.sum_cases -> Primrec.sum_cases is a dubious translation:
+/- warning: primrec.sum_cases -> Primrec.sum_casesOn is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {σ : Type.{u4}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] [_inst_3 : Primcodable.{u3} γ] [_inst_4 : Primcodable.{u4} σ] {f : α -> (Sum.{u2, u3} β γ)} {g : α -> β -> σ} {h : α -> γ -> σ}, (Primrec.{u1, max u2 u3} α (Sum.{u2, u3} β γ) _inst_1 (Primcodable.sum.{u2, u3} β γ _inst_2 _inst_3) f) -> (Primrec₂.{u1, u2, u4} α β σ _inst_1 _inst_2 _inst_4 g) -> (Primrec₂.{u1, u3, u4} α γ σ _inst_1 _inst_3 _inst_4 h) -> (Primrec.{u1, u4} α σ _inst_1 _inst_4 (fun (a : α) => Sum.casesOn.{succ u4, u2, u3} β γ (fun (_x : Sum.{u2, u3} β γ) => σ) (f a) (g a) (h a)))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u4}} {γ : Type.{u3}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_2 : Primcodable.{u4} β] [_inst_3 : Primcodable.{u3} γ] [_inst_4 : Primcodable.{u1} σ] {f : α -> (Sum.{u4, u3} β γ)} {g : α -> β -> σ} {h : α -> γ -> σ}, (Primrec.{u2, max u4 u3} α (Sum.{u4, u3} β γ) _inst_1 (Primcodable.sum.{u4, u3} β γ _inst_2 _inst_3) f) -> (Primrec₂.{u2, u4, u1} α β σ _inst_1 _inst_2 _inst_4 g) -> (Primrec₂.{u2, u3, u1} α γ σ _inst_1 _inst_3 _inst_4 h) -> (Primrec.{u2, u1} α σ _inst_1 _inst_4 (fun (a : α) => Sum.casesOn.{succ u1, u4, u3} β γ (fun (_x : Sum.{u4, u3} β γ) => σ) (f a) (g a) (h a)))
-Case conversion may be inaccurate. Consider using '#align primrec.sum_cases Primrec.sum_casesₓ'. -/
-theorem sum_cases {f : α → Sum β γ} {g : α → β → σ} {h : α → γ → σ} (hf : Primrec f)
+Case conversion may be inaccurate. Consider using '#align primrec.sum_cases Primrec.sum_casesOnₓ'. -/
+theorem sum_casesOn {f : α → Sum β γ} {g : α → β → σ} {h : α → γ → σ} (hf : Primrec f)
     (hg : Primrec₂ g) (hh : Primrec₂ h) : @Primrec _ σ _ _ fun a => Sum.casesOn (f a) (g a) (h a) :=
   option_some_iff.1 <|
     (cond (nat_bodd.comp <| encode_iff.2 hf)
           (option_map (Primrec.decode.comp <| nat_div2.comp <| encode_iff.2 hf) hh)
           (option_map (Primrec.decode.comp <| nat_div2.comp <| encode_iff.2 hf) hg)).of_eq
       fun a => by cases' f a with b c <;> simp [Nat.div2_bit, Nat.bodd_bit, encodek] <;> rfl
-#align primrec.sum_cases Primrec.sum_cases
+#align primrec.sum_cases Primrec.sum_casesOn
 
 #print Primrec.list_cons /-
 theorem list_cons : Primrec₂ (@List.cons α) :=
@@ -1565,18 +1567,18 @@ theorem list_cons : Primrec₂ (@List.cons α) :=
 #align primrec.list_cons Primrec.list_cons
 -/
 
-/- warning: primrec.list_cases -> Primrec.list_cases is a dubious translation:
+/- warning: primrec.list_cases -> Primrec.list_casesOn is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {σ : Type.{u3}} [_inst_1 : Primcodable.{u1} α] [_inst_2 : Primcodable.{u2} β] [_inst_4 : Primcodable.{u3} σ] {f : α -> (List.{u2} β)} {g : α -> σ} {h : α -> (Prod.{u2, u2} β (List.{u2} β)) -> σ}, (Primrec.{u1, u2} α (List.{u2} β) _inst_1 (Primcodable.list.{u2} β _inst_2) f) -> (Primrec.{u1, u3} α σ _inst_1 _inst_4 g) -> (Primrec₂.{u1, u2, u3} α (Prod.{u2, u2} β (List.{u2} β)) σ _inst_1 (Primcodable.prod.{u2, u2} β (List.{u2} β) _inst_2 (Primcodable.list.{u2} β _inst_2)) _inst_4 h) -> (Primrec.{u1, u3} α σ _inst_1 _inst_4 (fun (a : α) => List.casesOn.{succ u3, u2} β (fun (_x : List.{u2} β) => σ) (f a) (g a) (fun (b : β) (l : List.{u2} β) => h a (Prod.mk.{u2, u2} β (List.{u2} β) b l))))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u3}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_2 : Primcodable.{u3} β] [_inst_4 : Primcodable.{u1} σ] {f : α -> (List.{u3} β)} {g : α -> σ} {h : α -> (Prod.{u3, u3} β (List.{u3} β)) -> σ}, (Primrec.{u2, u3} α (List.{u3} β) _inst_1 (Primcodable.list.{u3} β _inst_2) f) -> (Primrec.{u2, u1} α σ _inst_1 _inst_4 g) -> (Primrec₂.{u2, u3, u1} α (Prod.{u3, u3} β (List.{u3} β)) σ _inst_1 (Primcodable.prod.{u3, u3} β (List.{u3} β) _inst_2 (Primcodable.list.{u3} β _inst_2)) _inst_4 h) -> (Primrec.{u2, u1} α σ _inst_1 _inst_4 (fun (a : α) => List.casesOn.{succ u1, u3} β (fun (_x : List.{u3} β) => σ) (f a) (g a) (fun (b : β) (l : List.{u3} β) => h a (Prod.mk.{u3, u3} β (List.{u3} β) b l))))
-Case conversion may be inaccurate. Consider using '#align primrec.list_cases Primrec.list_casesₓ'. -/
-theorem list_cases {f : α → List β} {g : α → σ} {h : α → β × List β → σ} :
+Case conversion may be inaccurate. Consider using '#align primrec.list_cases Primrec.list_casesOnₓ'. -/
+theorem list_casesOn {f : α → List β} {g : α → σ} {h : α → β × List β → σ} :
     Primrec f →
       Primrec g →
         Primrec₂ h → @Primrec _ σ _ _ fun a => List.casesOn (f a) (g a) fun b l => h a (b, l) :=
   list_cases' (Primcodable.prim _)
-#align primrec.list_cases Primrec.list_cases
+#align primrec.list_cases Primrec.list_casesOn
 
 /- warning: primrec.list_foldl -> Primrec.list_foldl is a dubious translation:
 lean 3 declaration is
@@ -1611,7 +1613,7 @@ theorem list_foldr {f : α → List β} {g : α → σ} {h : α → β × σ →
 
 #print Primrec.list_head? /-
 theorem list_head? : Primrec (@List.head? α) :=
-  (list_cases Primrec.id (const none) (option_some_iff.2 <| fst.comp snd).to₂).of_eq fun l => by
+  (list_casesOn Primrec.id (const none) (option_some_iff.2 <| fst.comp snd).to₂).of_eq fun l => by
     cases l <;> rfl
 #align primrec.list_head' Primrec.list_head?
 -/
@@ -1624,7 +1626,7 @@ theorem list_headI [Inhabited α] : Primrec (@List.headI α _) :=
 
 #print Primrec.list_tail /-
 theorem list_tail : Primrec (@List.tail α) :=
-  (list_cases Primrec.id (const []) (snd.comp snd).to₂).of_eq fun l => by cases l <;> rfl
+  (list_casesOn Primrec.id (const []) (snd.comp snd).to₂).of_eq fun l => by cases l <;> rfl
 #align primrec.list_tail Primrec.list_tail
 -/
 
@@ -1657,12 +1659,12 @@ theorem list_get? : Primrec₂ (@List.get? α) :=
       (Sum.inl n)
   have hF : Primrec₂ F :=
     list_foldl fst (sum_inl.comp snd)
-      ((sum_cases fst (nat_cases snd (sum_inr.comp <| snd.comp fst) (sum_inl.comp snd).to₂).to₂
+      ((sum_casesOn fst (nat_casesOn snd (sum_inr.comp <| snd.comp fst) (sum_inl.comp snd).to₂).to₂
               (sum_inr.comp snd).to₂).comp
           snd).to₂
   have :
     @Primrec _ (Option α) _ _ fun p : List α × ℕ => Sum.casesOn (F p.1 p.2) (fun _ => none) some :=
-    sum_cases hF (const none).to₂ (option_some.comp snd).to₂
+    sum_casesOn hF (const none).to₂ (option_some.comp snd).to₂
   this.to₂.of_eq fun l n => by
     dsimp; symm
     induction' l with a l IH generalizing n; · rfl
@@ -1718,7 +1720,7 @@ theorem list_map {f : α → List β} {g : α → β → σ} (hf : Primrec f) (h
 
 #print Primrec.list_range /-
 theorem list_range : Primrec List.range :=
-  (nat_elim' Primrec.id (const []) ((list_concat.comp snd fst).comp snd).to₂).of_eq fun n => by
+  (nat_rec' Primrec.id (const []) ((list_concat.comp snd fst).comp snd).to₂).of_eq fun n => by
     simp <;> induction n <;> simp [*, List.range_succ] <;> rfl
 #align primrec.list_range Primrec.list_range
 -/
@@ -1762,7 +1764,7 @@ theorem nat_strong_rec (f : α → ℕ → σ) {g : α → List σ → Option σ
       (list_get?.comp (this.comp fst (succ.comp snd)) snd).to₂.of_eq fun a n => by
         simp [List.get?_range (Nat.lt_succ_self n)] <;> rfl
   Primrec₂.option_some_iff.1 <|
-    (nat_elim (const (some []))
+    (nat_rec (const (some []))
           (to₂ <|
             option_bind (snd.comp snd) <|
               to₂ <|
@@ -1994,21 +1996,21 @@ theorem vector_ofFn {n} {f : Fin n → α → σ} (hf : ∀ i, Primrec (f i)) :
   vector_toList_iff.1 <| by simp [list_of_fn hf]
 #align primrec.vector_of_fn Primrec.vector_ofFn
 
-#print Primrec.vector_nth' /-
-theorem vector_nth' {n} : Primrec (@Vector.get α n) :=
-  ofEquiv_symm
-#align primrec.vector_nth' Primrec.vector_nth'
+#print Primrec.vector_get' /-
+theorem vector_get' {n} : Primrec (@Vector.get α n) :=
+  of_equiv_symm
+#align primrec.vector_nth' Primrec.vector_get'
 -/
 
-#print Primrec.vector_of_fn' /-
-theorem vector_of_fn' {n} : Primrec (@Vector.ofFn α n) :=
-  ofEquiv
-#align primrec.vector_of_fn' Primrec.vector_of_fn'
+#print Primrec.vector_ofFn' /-
+theorem vector_ofFn' {n} : Primrec (@Vector.ofFn α n) :=
+  of_equiv
+#align primrec.vector_of_fn' Primrec.vector_ofFn'
 -/
 
 #print Primrec.fin_app /-
 theorem fin_app {n} : Primrec₂ (@id (Fin n → σ)) :=
-  (vector_get.comp (vector_of_fn'.comp fst) snd).of_eq fun ⟨v, i⟩ => by simp
+  (vector_get.comp (vector_ofFn'.comp fst) snd).of_eq fun ⟨v, i⟩ => by simp
 #align primrec.fin_app Primrec.fin_app
 -/
 
@@ -2031,7 +2033,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align primrec.fin_curry Primrec.fin_curryₓ'. -/
 theorem fin_curry {n} {f : α → Fin n → σ} : Primrec f ↔ Primrec₂ f :=
   ⟨fun h => fin_app.comp (h.comp fst) snd, fun h =>
-    (vector_nth'.comp
+    (vector_get'.comp
           (vector_ofFn fun i => show Primrec fun a => f a i from h.comp Primrec.id (const i))).of_eq
       fun a => by funext i <;> simp⟩
 #align primrec.fin_curry Primrec.fin_curry
