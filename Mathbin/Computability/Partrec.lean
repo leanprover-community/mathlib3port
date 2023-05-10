@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module computability.partrec
-! leanprover-community/mathlib commit 9ee02c6c2208fd7795005aa394107c0374906cca
+! leanprover-community/mathlib commit 7d34004e19699895c13c86b78ae62bbaea0bc893
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Data.Pfun
 
 /-!
 # The partial recursive functions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The partial recursive functions are defined similarly to the primitive
 recursive functions, but now all functions are partial, implemented

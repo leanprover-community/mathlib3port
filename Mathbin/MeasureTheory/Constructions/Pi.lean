@@ -648,8 +648,8 @@ instance pi.isInvInvariant [∀ i, Group (α i)] [∀ i, HasMeasurableInv (α i)
 #align measure_theory.measure.pi.is_inv_invariant MeasureTheory.Measure.pi.isInvInvariant
 #align measure_theory.measure.pi.is_neg_invariant MeasureTheory.Measure.pi.is_neg_invariant
 
-instance pi.isOpenPosMeasure [∀ i, TopologicalSpace (α i)] [∀ i, IsOpenPosMeasure (μ i)] :
-    IsOpenPosMeasure (MeasureTheory.Measure.pi μ) :=
+instance pi.openPosMeasure [∀ i, TopologicalSpace (α i)] [∀ i, OpenPosMeasure (μ i)] :
+    OpenPosMeasure (MeasureTheory.Measure.pi μ) :=
   by
   constructor
   rintro U U_open ⟨a, ha⟩
@@ -659,7 +659,7 @@ instance pi.isOpenPosMeasure [∀ i, TopologicalSpace (α i)] [∀ i, IsOpenPosM
   rw [CanonicallyOrderedCommSemiring.prod_pos]
   intro i _
   apply (hs i).1.measure_pos (μ i) ⟨a i, (hs i).2⟩
-#align measure_theory.measure.pi.is_open_pos_measure MeasureTheory.Measure.pi.isOpenPosMeasure
+#align measure_theory.measure.pi.is_open_pos_measure MeasureTheory.Measure.pi.openPosMeasure
 
 instance pi.finiteMeasureOnCompacts [∀ i, TopologicalSpace (α i)]
     [∀ i, FiniteMeasureOnCompacts (μ i)] : FiniteMeasureOnCompacts (MeasureTheory.Measure.pi μ) :=

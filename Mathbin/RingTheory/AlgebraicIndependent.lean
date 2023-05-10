@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.algebraic_independent
-! leanprover-community/mathlib commit b95b8c7a484a298228805c72c142f6b062eb0d70
+! leanprover-community/mathlib commit 949dc57e616a621462062668c9f39e4e17b64b69
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -465,13 +465,9 @@ theorem AlgebraicIndependent.mvPolynomialOptionEquivPolynomialAdjoin_apply
 @[simp]
 theorem AlgebraicIndependent.mvPolynomialOptionEquivPolynomialAdjoin_c
     (hx : AlgebraicIndependent R x) (r) :
-    hx.mvPolynomialOptionEquivPolynomialAdjoin (C r) = Polynomial.C (algebraMap _ _ r) :=
-  by
-  -- TODO: this instance is slow to infer
-  have h : IsScalarTower R (MvPolynomial ι R) (Polynomial (MvPolynomial ι R)) :=
-    @Polynomial.isScalarTower (MvPolynomial ι R) _ R _ _ _ _ _ _ _
+    hx.mvPolynomialOptionEquivPolynomialAdjoin (C r) = Polynomial.C (algebraMap _ _ r) := by
   rw [AlgebraicIndependent.mvPolynomialOptionEquivPolynomialAdjoin_apply, aeval_C,
-    @IsScalarTower.algebraMap_apply _ _ _ _ _ _ _ _ _ h, ← Polynomial.C_eq_algebraMap,
+    IsScalarTower.algebraMap_apply R (MvPolynomial ι R), ← Polynomial.C_eq_algebraMap,
     Polynomial.map_C, RingHom.coe_coe, AlgEquiv.commutes]
 #align algebraic_independent.mv_polynomial_option_equiv_polynomial_adjoin_C AlgebraicIndependent.mvPolynomialOptionEquivPolynomialAdjoin_c
 

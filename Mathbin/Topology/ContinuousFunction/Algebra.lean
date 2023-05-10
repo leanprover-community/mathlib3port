@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module topology.continuous_function.algebra
-! leanprover-community/mathlib commit 16e59248c0ebafabd5d071b1cd41743eb8698ffb
+! leanprover-community/mathlib commit 7d34004e19699895c13c86b78ae62bbaea0bc893
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -22,6 +22,9 @@ import Mathbin.Topology.UniformSpace.CompactConvergence
 
 /-!
 # Algebraic structures over continuous functions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we define instances of algebraic structures over the type `continuous_map α β`
 (denoted `C(α, β)`) of **bundled** continuous maps from `α` to `β`. For example, `C(α, β)`

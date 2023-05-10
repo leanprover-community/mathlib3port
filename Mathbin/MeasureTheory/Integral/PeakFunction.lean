@@ -318,7 +318,7 @@ For a less precise but more usable version, see
 `tendsto_set_integral_pow_smul_of_unique_maximum_of_is_compact_of_continuous_on`.
 -/
 theorem tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_integrableOn
-    [MetrizableSpace α] [LocallyFiniteMeasure μ] [IsOpenPosMeasure μ] (hs : IsCompact s) {c : α → ℝ}
+    [MetrizableSpace α] [LocallyFiniteMeasure μ] [OpenPosMeasure μ] (hs : IsCompact s) {c : α → ℝ}
     (hc : ContinuousOn c s) (h'c : ∀ y ∈ s, y ≠ x₀ → c y < c x₀) (hnc : ∀ x ∈ s, 0 ≤ c x)
     (hnc₀ : 0 < c x₀) (h₀ : x₀ ∈ closure (interior s)) (hmg : IntegrableOn g s μ)
     (hcg : ContinuousWithinAt g s x₀) :
@@ -343,7 +343,7 @@ then the sequence of functions `(c x) ^ n / ∫ (c x) ^ n` is a sequence of peak
 concentrating around `x₀`. Therefore, `∫ (c x) ^ n * g / ∫ (c x) ^ n` converges to `g x₀` if `g` is
 continuous on `s`. -/
 theorem tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_continuousOn
-    [MetrizableSpace α] [LocallyFiniteMeasure μ] [IsOpenPosMeasure μ] (hs : IsCompact s) {c : α → ℝ}
+    [MetrizableSpace α] [LocallyFiniteMeasure μ] [OpenPosMeasure μ] (hs : IsCompact s) {c : α → ℝ}
     (hc : ContinuousOn c s) (h'c : ∀ y ∈ s, y ≠ x₀ → c y < c x₀) (hnc : ∀ x ∈ s, 0 ≤ c x)
     (hnc₀ : 0 < c x₀) (h₀ : x₀ ∈ closure (interior s)) (hmg : ContinuousOn g s) :
     Tendsto (fun n : ℕ => (∫ x in s, c x ^ n ∂μ)⁻¹ • ∫ x in s, c x ^ n • g x ∂μ) atTop (𝓝 (g x₀)) :=

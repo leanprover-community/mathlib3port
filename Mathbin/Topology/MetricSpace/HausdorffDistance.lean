@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.hausdorff_distance
-! leanprover-community/mathlib commit 19cb3751e5e9b3d97adb51023949c50c13b5fdfd
+! leanprover-community/mathlib commit c1686dff26eaecf4efd4edd141ebf78de309ae80
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -746,6 +746,20 @@ def infDist (x : α) (s : Set α) : ℝ :=
   ENNReal.toReal (infEdist x s)
 #align metric.inf_dist Metric.infDist
 -/
+
+/- warning: metric.inf_dist_eq_infi -> Metric.infDist_eq_infᵢ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} {x : α}, Eq.{1} Real (Metric.infDist.{u1} α _inst_1 x s) (infᵢ.{0, succ u1} Real Real.hasInf (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) (fun (y : coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) => Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s))))) y)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} {x : α}, Eq.{1} Real (Metric.infDist.{u1} α _inst_1 x s) (infᵢ.{0, succ u1} Real Real.instInfSetReal (Set.Elem.{u1} α s) (fun (y : Set.Elem.{u1} α s) => Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x (Subtype.val.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) y)))
+Case conversion may be inaccurate. Consider using '#align metric.inf_dist_eq_infi Metric.infDist_eq_infᵢₓ'. -/
+theorem infDist_eq_infᵢ : infDist x s = ⨅ y : s, dist x y :=
+  by
+  rw [inf_dist, inf_edist, infᵢ_subtype', ENNReal.toReal_infᵢ]
+  · simp only [dist_edist]
+    rfl
+  · exact fun _ => edist_ne_top _ _
+#align metric.inf_dist_eq_infi Metric.infDist_eq_infᵢ
 
 /- warning: metric.inf_dist_nonneg -> Metric.infDist_nonneg is a dubious translation:
 lean 3 declaration is

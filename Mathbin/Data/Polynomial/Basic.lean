@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.basic
-! leanprover-community/mathlib commit 2651125b48fc5c170ab1111afd0817c903b1fc6c
+! leanprover-community/mathlib commit 949dc57e616a621462062668c9f39e4e17b64b69
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -414,7 +414,7 @@ instance {S} [Monoid S] [DistribMulAction S R] : DistribMulAction S R[X] :=
   Function.Injective.distribMulAction ⟨toFinsupp, toFinsupp_zero, toFinsupp_add⟩ toFinsupp_injective
     toFinsupp_smul
 
-instance {S} [Monoid S] [DistribMulAction S R] [FaithfulSMul S R] : FaithfulSMul S R[X]
+instance {S} [SMulZeroClass S R] [FaithfulSMul S R] : FaithfulSMul S R[X]
     where eq_of_smul_eq_smul s₁ s₂ h :=
     eq_of_smul_eq_smul fun a : ℕ →₀ R => congr_arg toFinsupp (h ⟨a⟩)
 
@@ -422,14 +422,14 @@ instance {S} [Semiring S] [Module S R] : Module S R[X] :=
   Function.Injective.module _ ⟨toFinsupp, toFinsupp_zero, toFinsupp_add⟩ toFinsupp_injective
     toFinsupp_smul
 
-instance {S₁ S₂} [Monoid S₁] [Monoid S₂] [DistribMulAction S₁ R] [DistribMulAction S₂ R]
-    [SMulCommClass S₁ S₂ R] : SMulCommClass S₁ S₂ R[X] :=
+instance {S₁ S₂} [SMulZeroClass S₁ R] [SMulZeroClass S₂ R] [SMulCommClass S₁ S₂ R] :
+    SMulCommClass S₁ S₂ R[X] :=
   ⟨by
     rintro _ _ ⟨⟩
     simp_rw [← of_finsupp_smul, smul_comm]⟩
 
-instance {S₁ S₂} [SMul S₁ S₂] [Monoid S₁] [Monoid S₂] [DistribMulAction S₁ R]
-    [DistribMulAction S₂ R] [IsScalarTower S₁ S₂ R] : IsScalarTower S₁ S₂ R[X] :=
+instance {S₁ S₂} [SMul S₁ S₂] [SMulZeroClass S₁ R] [SMulZeroClass S₂ R] [IsScalarTower S₁ S₂ R] :
+    IsScalarTower S₁ S₂ R[X] :=
   ⟨by
     rintro _ _ ⟨⟩
     simp_rw [← of_finsupp_smul, smul_assoc]⟩
@@ -447,7 +447,7 @@ instance isScalarTower_right {α K : Type _} [Semiring K] [DistribSMul α K] [Is
       simp_rw [smul_eq_mul, ← of_finsupp_smul, ← of_finsupp_mul, ← of_finsupp_smul, smul_mul_assoc]⟩
 #align polynomial.is_scalar_tower_right Polynomial.isScalarTower_right
 
-instance {S} [Monoid S] [DistribMulAction S R] [DistribMulAction Sᵐᵒᵖ R] [IsCentralScalar S R] :
+instance {S} [SMulZeroClass S R] [SMulZeroClass Sᵐᵒᵖ R] [IsCentralScalar S R] :
     IsCentralScalar S R[X] :=
   ⟨by
     rintro _ ⟨⟩

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Thomas Browning, Patrick Lutz
 
 ! This file was ported from Lean 3 source module field_theory.normal
-! leanprover-community/mathlib commit d4437c68c8d350fc9d4e95e1e174409db35e30d7
+! leanprover-community/mathlib commit 949dc57e616a621462062668c9f39e4e17b64b69
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -155,18 +155,24 @@ theorem AlgEquiv.transfer_normal (f : E ≃ₐ[F] E') : Normal F E ↔ Normal F 
   ⟨fun h => Normal.of_algEquiv f, fun h => Normal.of_algEquiv f.symm⟩
 #align alg_equiv.transfer_normal AlgEquiv.transfer_normal
 
+-- seems to be causing a diamond in the below proof
+-- however, this may be a fluke and the proof below uses non-canonical `algebra` instances:
+-- when I replaced all the instances inside the proof with the "canonical" instances we have,
+-- I had the (unprovable) goal (of the form) `adjoin_root.mk f (C x) = adjoin_root.mk f X`
+-- for some `x, f`. So maybe this is indeed the correct approach and rewriting this proof is
+-- salient in the future, or at least taking a closer look at the algebra instances it uses.
+attribute [-instance] AdjoinRoot.hasSmul
+
 theorem Normal.of_isSplittingField (p : F[X]) [hFEp : IsSplittingField F E p] : Normal F E :=
   by
-  by_cases hp : p = 0
-  · have : is_splitting_field F F p := by
-      rw [hp]
-      exact ⟨splits_zero _, Subsingleton.elim _ _⟩
+  rcases eq_or_ne p 0 with (rfl | hp)
+  · haveI : is_splitting_field F F 0 := ⟨splits_zero _, Subsingleton.elim _ _⟩
     exact
       (AlgEquiv.transfer_normal
-            ((is_splitting_field.alg_equiv F p).trans (is_splitting_field.alg_equiv E p).symm)).mp
+            ((is_splitting_field.alg_equiv F 0).trans (is_splitting_field.alg_equiv E 0).symm)).mp
         (normal_self F)
   refine' normal_iff.2 fun x => _
-  haveI hFE : FiniteDimensional F E := is_splitting_field.finite_dimensional E p
+  have hFE : FiniteDimensional F E := is_splitting_field.finite_dimensional E p
   have Hx : IsIntegral F x := isIntegral_of_noetherian (IsNoetherian.iff_fg.2 hFE) x
   refine' ⟨Hx, Or.inr _⟩
   rintro q q_irred ⟨r, hr⟩
@@ -174,13 +180,11 @@ theorem Normal.of_isSplittingField (p : F[X]) [hFEp : IsSplittingField F E p] : 
   haveI := Fact.mk q_irred
   let pbED := AdjoinRoot.powerBasis q_irred.ne_zero
   haveI : FiniteDimensional E D := PowerBasis.finiteDimensional pbED
-  have finrankED : FiniteDimensional.finrank E D = q.nat_degree := PowerBasis.finrank pbED
-  letI : Algebra F D := RingHom.toAlgebra ((algebraMap E D).comp (algebraMap F E))
-  haveI : IsScalarTower F E D := of_algebra_map_eq fun _ => rfl
+  have finrankED : FiniteDimensional.finrank E D = q.nat_degree := by
+    rw [PowerBasis.finrank pbED, AdjoinRoot.powerBasis_dim]
   haveI : FiniteDimensional F D := FiniteDimensional.trans F E D
-  suffices Nonempty (D →ₐ[F] E) by
-    cases' this with ϕ
-    rw [← WithBot.coe_one, degree_eq_iff_nat_degree_eq q_irred.ne_zero, ← finrankED]
+  rsuffices ⟨ϕ⟩ : Nonempty (D →ₐ[F] E)
+  · rw [← WithBot.coe_one, degree_eq_iff_nat_degree_eq q_irred.ne_zero, ← finrankED]
     have nat_lemma : ∀ a b c : ℕ, a * b = c → c ≤ a → 0 < c → b = 1 :=
       by
       intro a b c h1 h2 h3

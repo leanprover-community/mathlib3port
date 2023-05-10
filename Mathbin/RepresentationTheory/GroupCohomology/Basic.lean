@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston
 
 ! This file was ported from Lean 3 source module representation_theory.group_cohomology.basic
-! leanprover-community/mathlib commit ef997baa41b5c428be3fb50089a7139bf4ee886b
+! leanprover-community/mathlib commit cc5dd6244981976cc9da7afc4eee5682b037a013
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -138,8 +138,8 @@ theorem d_eq :
   congr 1
   · congr
     ext
-    have := Fin.partialProd_right_inv (1 : G) g (Fin.castSucc x)
-    simp only [mul_inv_rev, Fin.coe_eq_castSucc, one_smul, Fin.castSucc_fin_succ] at *
+    have := Fin.partialProd_right_inv g (Fin.castSucc x)
+    simp only [mul_inv_rev, Fin.castSucc_fin_succ] at *
     rw [mul_assoc, ← mul_assoc _ _ (g x.succ), this, inv_mul_cancel_left]
   ·
     exact

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston
 
 ! This file was ported from Lean 3 source module representation_theory.group_cohomology.resolution
-! leanprover-community/mathlib commit ef997baa41b5c428be3fb50089a7139bf4ee886b
+! leanprover-community/mathlib commit cc5dd6244981976cc9da7afc4eee5682b037a013
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -108,7 +108,7 @@ def actionDiagonalSucc (G : Type u) [Group G] :
 #align group_cohomology.resolution.Action_diagonal_succ GroupCohomology.Resolution.actionDiagonalSucc
 
 theorem actionDiagonalSucc_hom_apply {G : Type u} [Group G] {n : ℕ} (f : Fin (n + 1) → G) :
-    (actionDiagonalSucc G n).hom.hom f = (f 0, fun i => (f i)⁻¹ * f i.succ) :=
+    (actionDiagonalSucc G n).hom.hom f = (f 0, fun i => (f i.cast_succ)⁻¹ * f i.succ) :=
   by
   induction' n with n hn
   · exact Prod.ext rfl (funext fun x => Fin.elim0 x)
@@ -118,8 +118,7 @@ theorem actionDiagonalSucc_hom_apply {G : Type u} [Group G] {n : ℕ} (f : Fin (
       simp only [iso.trans_hom, comp_hom, types_comp_apply, diagonal_succ_hom_hom,
         left_regular_tensor_iso_hom_hom, tensor_iso_hom, mk_iso_hom_hom, Equiv.toIso_hom,
         tensor_hom, Equiv.piFinSuccAboveEquiv_symm_apply, tensor_apply, types_id_apply, tensor_rho,
-        MonoidHom.one_apply, End.one_def, hn fun j : Fin (n + 1) => f j.succ, Fin.coe_eq_castSucc,
-        Fin.insertNth_zero']
+        MonoidHom.one_apply, End.one_def, hn fun j : Fin (n + 1) => f j.succ, Fin.insertNth_zero']
       refine' Fin.cases (Fin.cons_zero _ _) (fun i => _) x
       · simp only [Fin.cons_succ, mul_left_inj, inv_inj, Fin.castSucc_fin_succ]
 #align group_cohomology.resolution.Action_diagonal_succ_hom_apply GroupCohomology.Resolution.actionDiagonalSucc_hom_apply
@@ -166,7 +165,7 @@ variable {k G n}
 
 theorem diagonalSucc_hom_single (f : Gⁿ⁺¹) (a : k) :
     (diagonalSucc k G n).hom.hom (single f a) =
-      single (f 0) 1 ⊗ₜ single (fun i => (f i)⁻¹ * f i.succ) a :=
+      single (f 0) 1 ⊗ₜ single (fun i => (f i.cast_succ)⁻¹ * f i.succ) a :=
   by
   dsimp only [diagonal_succ]
   simpa only [iso.trans_hom, iso.symm_hom, Action.comp_hom, ModuleCat.comp_def,
@@ -302,7 +301,7 @@ inverse map sends a function `f : Gⁿ → A` to the representation morphism sen
 to `A`. -/
 theorem diagonalHomEquiv_symm_apply (f : (Fin n → G) → A) (x : Fin (n + 1) → G) :
     ((diagonalHomEquiv n A).symm f).hom (Finsupp.single x 1) =
-      A.ρ (x 0) (f fun i : Fin n => (x ↑i)⁻¹ * x i.succ) :=
+      A.ρ (x 0) (f fun i : Fin n => (x i.cast_succ)⁻¹ * x i.succ) :=
   by
   unfold diagonal_hom_equiv
   simp only [LinearEquiv.trans_symm, LinearEquiv.symm_symm, LinearEquiv.trans_apply,
@@ -324,8 +323,8 @@ theorem diagonalHomEquiv_symm_partialProd_succ (f : (Fin n → G) → A) (g : Fi
       f (Fin.contractNth a (· * ·) g) :=
   by
   simp only [diagonal_hom_equiv_symm_apply, Function.comp_apply, Fin.succ_succAbove_zero,
-    Fin.partialProd_zero, map_one, Fin.coe_eq_castSucc, Fin.succ_succAbove_succ,
-    LinearMap.one_apply, Fin.partialProd_succ]
+    Fin.partialProd_zero, map_one, Fin.succ_succAbove_succ, LinearMap.one_apply,
+    Fin.partialProd_succ]
   congr
   ext
   rw [← Fin.partialProd_succ, Fin.inv_partialProd_mul_eq_contractNth]

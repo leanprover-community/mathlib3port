@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.category.Top.open_nhds
-! leanprover-community/mathlib commit 1ec4876214bf9f1ddfbf97ae4b0d777ebd5d6938
+! leanprover-community/mathlib commit 7d34004e19699895c13c86b78ae62bbaea0bc893
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Topology.Category.Top.Opens
 
 /-!
 # The category of open neighborhoods of a point
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Given an object `X` of the category `Top` of topological spaces and a point `x : X`, this file
 builds the type `open_nhds x` of open neighborhoods of `x` in `X` and endows it with the partial

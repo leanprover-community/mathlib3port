@@ -26,72 +26,92 @@ open CategoryTheory
 
 namespace GroupCat
 
+#print GroupCat.toAddGroupCat /-
 /-- The functor `Group ⥤ AddGroup` by sending `X ↦ additive X` and `f ↦ f`.
 -/
 @[simps]
-def toAddGroup : GroupCat ⥤ AddGroupCat
+def toAddGroupCat : GroupCat ⥤ AddGroupCat
     where
   obj X := AddGroupCat.of (Additive X)
   map X Y := MonoidHom.toAdditive
-#align Group.to_AddGroup GroupCat.toAddGroup
+#align Group.to_AddGroup GroupCat.toAddGroupCat
+-/
 
 end GroupCat
 
 namespace CommGroupCat
 
+#print CommGroupCat.toAddCommGroupCat /-
 /-- The functor `CommGroup ⥤ AddCommGroup` by sending `X ↦ additive X` and `f ↦ f`.
 -/
 @[simps]
-def toAddCommGroup : CommGroupCat ⥤ AddCommGroupCat
+def toAddCommGroupCat : CommGroupCat ⥤ AddCommGroupCat
     where
   obj X := AddCommGroupCat.of (Additive X)
   map X Y := MonoidHom.toAdditive
-#align CommGroup.to_AddCommGroup CommGroupCat.toAddCommGroup
+#align CommGroup.to_AddCommGroup CommGroupCat.toAddCommGroupCat
+-/
 
 end CommGroupCat
 
 namespace AddGroupCat
 
+#print AddGroupCat.toGroupCat /-
 /-- The functor `AddGroup ⥤ Group` by sending `X ↦ multiplicative Y` and `f ↦ f`.
 -/
 @[simps]
-def toGroup : AddGroupCat ⥤ GroupCat
+def toGroupCat : AddGroupCat ⥤ GroupCat
     where
   obj X := GroupCat.of (Multiplicative X)
   map X Y := AddMonoidHom.toMultiplicative
-#align AddGroup.to_Group AddGroupCat.toGroup
+#align AddGroup.to_Group AddGroupCat.toGroupCat
+-/
 
 end AddGroupCat
 
 namespace AddCommGroupCat
 
+#print AddCommGroupCat.toCommGroupCat /-
 /-- The functor `AddCommGroup ⥤ CommGroup` by sending `X ↦ multiplicative Y` and `f ↦ f`.
 -/
 @[simps]
-def toCommGroup : AddCommGroupCat ⥤ CommGroupCat
+def toCommGroupCat : AddCommGroupCat ⥤ CommGroupCat
     where
   obj X := CommGroupCat.of (Multiplicative X)
   map X Y := AddMonoidHom.toMultiplicative
-#align AddCommGroup.to_CommGroup AddCommGroupCat.toCommGroup
+#align AddCommGroup.to_CommGroup AddCommGroupCat.toCommGroupCat
+-/
 
 end AddCommGroupCat
 
+/- warning: Group_AddGroup_equivalence -> groupAddGroupEquivalence is a dubious translation:
+lean 3 declaration is
+  CategoryTheory.Equivalence.{u1, u1, succ u1, succ u1} GroupCat.{u1} GroupCat.largeCategory.{u1} AddGroupCat.{u1} AddGroupCat.largeCategory.{u1}
+but is expected to have type
+  CategoryTheory.Equivalence.{u1, u1, succ u1, succ u1} GroupCat.{u1} AddGroupCat.{u1} GroupCat.largeCategory.{u1} AddGroupCat.largeCategory.{u1}
+Case conversion may be inaccurate. Consider using '#align Group_AddGroup_equivalence groupAddGroupEquivalenceₓ'. -/
 /-- The equivalence of categories between `Group` and `AddGroup`
 -/
 @[simps]
 def groupAddGroupEquivalence : GroupCat ≌ AddGroupCat :=
-  Equivalence.mk GroupCat.toAddGroup AddGroupCat.toGroup
+  Equivalence.mk GroupCat.toAddGroupCat AddGroupCat.toGroupCat
     (NatIso.ofComponents (fun X => MulEquiv.toGroupCatIso (MulEquiv.multiplicativeAdditive X))
       fun X Y f => rfl)
     (NatIso.ofComponents (fun X => AddEquiv.toAddGroupCatIso (AddEquiv.additiveMultiplicative X))
       fun X Y f => rfl)
 #align Group_AddGroup_equivalence groupAddGroupEquivalence
 
+/- warning: CommGroup_AddCommGroup_equivalence -> commGroupAddCommGroupEquivalence is a dubious translation:
+lean 3 declaration is
+  CategoryTheory.Equivalence.{u1, u1, succ u1, succ u1} CommGroupCat.{u1} CommGroupCat.largeCategory.{u1} AddCommGroupCat.{u1} AddCommGroupCat.largeCategory.{u1}
+but is expected to have type
+  CategoryTheory.Equivalence.{u1, u1, succ u1, succ u1} CommGroupCat.{u1} AddCommGroupCat.{u1} CommGroupCat.largeCategory.{u1} AddCommGroupCat.largeCategory.{u1}
+Case conversion may be inaccurate. Consider using '#align CommGroup_AddCommGroup_equivalence commGroupAddCommGroupEquivalenceₓ'. -/
 /-- The equivalence of categories between `CommGroup` and `AddCommGroup`.
 -/
 @[simps]
 def commGroupAddCommGroupEquivalence : CommGroupCat ≌ AddCommGroupCat :=
-  Equivalence.mk CommGroupCat.toAddCommGroup AddCommGroupCat.toCommGroup
+  Equivalence.mk CommGroupCat.toAddCommGroupCat AddCommGroupCat.toCommGroupCat
     (NatIso.ofComponents (fun X => MulEquiv.toCommGroupCatIso (MulEquiv.multiplicativeAdditive X))
       fun X Y f => rfl)
     (NatIso.ofComponents

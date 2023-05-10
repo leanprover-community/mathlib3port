@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.adjoin_root
-! leanprover-community/mathlib commit da420a8c6dd5bdfb85c4ced85c34388f633bc6ff
+! leanprover-community/mathlib commit 949dc57e616a621462062668c9f39e4e17b64b69
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -108,16 +108,43 @@ def of : R →+* AdjoinRoot f :=
   (mk f).comp C
 #align adjoin_root.of AdjoinRoot.of
 
-instance [CommSemiring S] [Algebra S R] : Algebra S (AdjoinRoot f) :=
-  Ideal.Quotient.algebra S
+instance [DistribSMul S R] [IsScalarTower S R R] : SMul S (AdjoinRoot f) :=
+  Submodule.Quotient.hasSmul' _
 
-instance [CommSemiring S] [CommSemiring K] [SMul S K] [Algebra S R] [Algebra K R]
-    [IsScalarTower S K R] : IsScalarTower S K (AdjoinRoot f) :=
+instance [DistribSMul S R] [IsScalarTower S R R] : DistribSMul S (AdjoinRoot f) :=
+  Submodule.Quotient.distribSmul' _
+
+@[simp]
+theorem smul_mk [DistribSMul S R] [IsScalarTower S R R] (a : S) (x : R[X]) :
+    a • mk f x = mk f (a • x) :=
+  rfl
+#align adjoin_root.smul_mk AdjoinRoot.smul_mk
+
+theorem smul_of [DistribSMul S R] [IsScalarTower S R R] (a : S) (x : R) :
+    a • of f x = of f (a • x) := by rw [of, RingHom.comp_apply, RingHom.comp_apply, smul_mk, smul_C]
+#align adjoin_root.smul_of AdjoinRoot.smul_of
+
+instance (R₁ R₂ : Type _) [SMul R₁ R₂] [DistribSMul R₁ R] [DistribSMul R₂ R] [IsScalarTower R₁ R R]
+    [IsScalarTower R₂ R R] [IsScalarTower R₁ R₂ R] (f : R[X]) :
+    IsScalarTower R₁ R₂ (AdjoinRoot f) :=
   Submodule.Quotient.isScalarTower _ _
 
-instance [CommSemiring S] [CommSemiring K] [Algebra S R] [Algebra K R] [SMulCommClass S K R] :
-    SMulCommClass S K (AdjoinRoot f) :=
+instance (R₁ R₂ : Type _) [DistribSMul R₁ R] [DistribSMul R₂ R] [IsScalarTower R₁ R R]
+    [IsScalarTower R₂ R R] [SMulCommClass R₁ R₂ R] (f : R[X]) :
+    SMulCommClass R₁ R₂ (AdjoinRoot f) :=
   Submodule.Quotient.smulCommClass _ _
+
+instance isScalarTower_right [DistribSMul S R] [IsScalarTower S R R] :
+    IsScalarTower S (AdjoinRoot f) (AdjoinRoot f) :=
+  Ideal.Quotient.isScalarTower_right
+#align adjoin_root.is_scalar_tower_right AdjoinRoot.isScalarTower_right
+
+instance [Monoid S] [DistribMulAction S R] [IsScalarTower S R R] (f : R[X]) :
+    DistribMulAction S (AdjoinRoot f) :=
+  Submodule.Quotient.distribMulAction' _
+
+instance [CommSemiring S] [Algebra S R] : Algebra S (AdjoinRoot f) :=
+  Ideal.Quotient.algebra S
 
 @[simp]
 theorem algebraMap_eq : algebraMap R (AdjoinRoot f) = of f :=
@@ -369,7 +396,18 @@ instance span_maximal_of_irreducible [Fact (Irreducible f)] : (span {f}).IsMaxim
 #align adjoin_root.span_maximal_of_irreducible AdjoinRoot.span_maximal_of_irreducible
 
 noncomputable instance field [Fact (Irreducible f)] : Field (AdjoinRoot f) :=
-  { AdjoinRoot.commRing f, Ideal.Quotient.field (span {f} : Ideal K[X]) with }
+  { AdjoinRoot.commRing f,
+    Ideal.Quotient.field
+      (span {f} : Ideal K[X]) with
+    ratCast := fun a => of f (a : K)
+    ratCast_mk := fun a b h1 h2 =>
+      by
+      letI : GroupWithZero (AdjoinRoot f) := Ideal.Quotient.groupWithZero _
+      rw [Rat.cast_mk', _root_.map_mul, _root_.map_int_cast, map_inv₀, map_natCast]
+    qsmul := (· • ·)
+    qsmul_eq_mul' := fun a x =>
+      AdjoinRoot.induction_on _ x fun p => by
+        rw [smul_mk, of, RingHom.comp_apply, ← (mk f).map_mul, Polynomial.rat_smul_eq_C_mul] }
 #align adjoin_root.field AdjoinRoot.field
 
 theorem coe_injective (h : degree f ≠ 0) : Function.Injective (coe : K → AdjoinRoot f) :=

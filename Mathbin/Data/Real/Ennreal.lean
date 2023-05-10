@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.real.ennreal
-! leanprover-community/mathlib commit 29cb56a7b35f72758b05a30490e1f10bd62c35c1
+! leanprover-community/mathlib commit c1686dff26eaecf4efd4edd141ebf78de309ae80
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2029,6 +2029,22 @@ Case conversion may be inaccurate. Consider using '#align ennreal.coe_Inf ENNRea
 theorem coe_infₛ {s : Set ℝ≥0} : s.Nonempty → (↑(infₛ s) : ℝ≥0∞) = ⨅ a ∈ s, ↑a :=
   WithTop.coe_infₛ
 #align ennreal.coe_Inf ENNReal.coe_infₛ
+
+theorem coe_supᵢ {ι : Sort _} {f : ι → ℝ≥0} (hf : BddAbove (range f)) :
+    (↑(supᵢ f) : ℝ≥0∞) = ⨆ a, ↑(f a) :=
+  WithTop.coe_supᵢ _ hf
+#align ennreal.coe_supr ENNReal.coe_supᵢ
+
+/- warning: ennreal.coe_infi -> ENNReal.coe_infᵢ is a dubious translation:
+lean 3 declaration is
+  forall {ι : Sort.{u1}} [_inst_1 : Nonempty.{u1} ι] (f : ι -> NNReal), Eq.{1} ENNReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal ENNReal (HasLiftT.mk.{1, 1} NNReal ENNReal (CoeTCₓ.coe.{1, 1} NNReal ENNReal (coeBase.{1, 1} NNReal ENNReal ENNReal.hasCoe))) (infᵢ.{0, u1} NNReal (ConditionallyCompleteLattice.toHasInf.{0} NNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} NNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} NNReal NNReal.conditionallyCompleteLinearOrderBot))) ι f)) (infᵢ.{0, u1} ENNReal (ConditionallyCompleteLattice.toHasInf.{0} ENNReal (CompleteLattice.toConditionallyCompleteLattice.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))) ι (fun (a : ι) => (fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal ENNReal (HasLiftT.mk.{1, 1} NNReal ENNReal (CoeTCₓ.coe.{1, 1} NNReal ENNReal (coeBase.{1, 1} NNReal ENNReal ENNReal.hasCoe))) (f a)))
+but is expected to have type
+  forall {ι : Sort.{u1}} [_inst_1 : Nonempty.{u1} ι] (f : ι -> NNReal), Eq.{1} ENNReal (ENNReal.some (infᵢ.{0, u1} NNReal (ConditionallyCompleteLattice.toInfSet.{0} NNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} NNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} NNReal NNReal.instConditionallyCompleteLinearOrderBotNNReal))) ι f)) (infᵢ.{0, u1} ENNReal (ConditionallyCompleteLattice.toInfSet.{0} ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) ι (fun (a : ι) => ENNReal.some (f a)))
+Case conversion may be inaccurate. Consider using '#align ennreal.coe_infi ENNReal.coe_infᵢₓ'. -/
+@[norm_cast]
+theorem coe_infᵢ {ι : Sort _} [Nonempty ι] (f : ι → ℝ≥0) : (↑(infᵢ f) : ℝ≥0∞) = ⨅ a, ↑(f a) :=
+  WithTop.coe_infᵢ f
+#align ennreal.coe_infi ENNReal.coe_infᵢ
 
 /- warning: ennreal.coe_mem_upper_bounds -> ENNReal.coe_mem_upperBounds is a dubious translation:
 lean 3 declaration is
@@ -5090,6 +5106,67 @@ end Real
 section infᵢ
 
 variable {ι : Sort _} {f g : ι → ℝ≥0∞}
+
+/- warning: ennreal.to_nnreal_infi -> ENNReal.toNNReal_infᵢ is a dubious translation:
+lean 3 declaration is
+  forall {ι : Sort.{u1}} {f : ι -> ENNReal}, (forall (i : ι), Ne.{1} ENNReal (f i) (Top.top.{0} ENNReal (CompleteLattice.toHasTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)))) -> (Eq.{1} NNReal (ENNReal.toNNReal (infᵢ.{0, u1} ENNReal (ConditionallyCompleteLattice.toHasInf.{0} ENNReal (CompleteLattice.toConditionallyCompleteLattice.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))) ι f)) (infᵢ.{0, u1} NNReal (ConditionallyCompleteLattice.toHasInf.{0} NNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} NNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} NNReal NNReal.conditionallyCompleteLinearOrderBot))) ι (fun (i : ι) => ENNReal.toNNReal (f i))))
+but is expected to have type
+  forall {ι : Sort.{u1}} {f : ι -> ENNReal}, (forall (i : ι), Ne.{1} ENNReal (f i) (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) -> (Eq.{1} NNReal (ENNReal.toNNReal (infᵢ.{0, u1} ENNReal (ConditionallyCompleteLattice.toInfSet.{0} ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) ι f)) (infᵢ.{0, u1} NNReal (ConditionallyCompleteLattice.toInfSet.{0} NNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} NNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} NNReal NNReal.instConditionallyCompleteLinearOrderBotNNReal))) ι (fun (i : ι) => ENNReal.toNNReal (f i))))
+Case conversion may be inaccurate. Consider using '#align ennreal.to_nnreal_infi ENNReal.toNNReal_infᵢₓ'. -/
+theorem toNNReal_infᵢ (hf : ∀ i, f i ≠ ∞) : (infᵢ f).toNNReal = ⨅ i, (f i).toNNReal :=
+  by
+  cases isEmpty_or_nonempty ι
+  · rw [infᵢ_of_empty, top_to_nnreal, NNReal.infᵢ_empty]
+  · lift f to ι → ℝ≥0 using hf
+    simp_rw [← coe_infi, to_nnreal_coe]
+#align ennreal.to_nnreal_infi ENNReal.toNNReal_infᵢ
+
+theorem toNNReal_infₛ (s : Set ℝ≥0∞) (hs : ∀ r ∈ s, r ≠ ∞) :
+    (infₛ s).toNNReal = infₛ (ENNReal.toNNReal '' s) :=
+  by
+  have hf : ∀ i, (coe : s → ℝ≥0∞) i ≠ ∞ := fun ⟨r, rs⟩ => hs r rs
+  simpa only [← infₛ_range, ← infₛ_image', Subtype.range_coe_subtype] using to_nnreal_infi hf
+#align ennreal.to_nnreal_Inf ENNReal.toNNReal_infₛ
+
+theorem toNNReal_supᵢ (hf : ∀ i, f i ≠ ∞) : (supᵢ f).toNNReal = ⨆ i, (f i).toNNReal :=
+  by
+  lift f to ι → ℝ≥0 using hf
+  simp_rw [to_nnreal_coe]
+  by_cases h : BddAbove (range f)
+  · rw [← coe_supr h, to_nnreal_coe]
+  · rw [NNReal.supᵢ_of_not_bddAbove h, (WithTop.supr_coe_eq_top f).mpr h, top_to_nnreal]
+#align ennreal.to_nnreal_supr ENNReal.toNNReal_supᵢ
+
+theorem toNNReal_supₛ (s : Set ℝ≥0∞) (hs : ∀ r ∈ s, r ≠ ∞) :
+    (supₛ s).toNNReal = supₛ (ENNReal.toNNReal '' s) :=
+  by
+  have hf : ∀ i, (coe : s → ℝ≥0∞) i ≠ ∞ := fun ⟨r, rs⟩ => hs r rs
+  simpa only [← supₛ_range, ← supₛ_image', Subtype.range_coe_subtype] using to_nnreal_supr hf
+#align ennreal.to_nnreal_Sup ENNReal.toNNReal_supₛ
+
+/- warning: ennreal.to_real_infi -> ENNReal.toReal_infᵢ is a dubious translation:
+lean 3 declaration is
+  forall {ι : Sort.{u1}} {f : ι -> ENNReal}, (forall (i : ι), Ne.{1} ENNReal (f i) (Top.top.{0} ENNReal (CompleteLattice.toHasTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder)))) -> (Eq.{1} Real (ENNReal.toReal (infᵢ.{0, u1} ENNReal (ConditionallyCompleteLattice.toHasInf.{0} ENNReal (CompleteLattice.toConditionallyCompleteLattice.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))) ι f)) (infᵢ.{0, u1} Real Real.hasInf ι (fun (i : ι) => ENNReal.toReal (f i))))
+but is expected to have type
+  forall {ι : Sort.{u1}} {f : ι -> ENNReal}, (forall (i : ι), Ne.{1} ENNReal (f i) (Top.top.{0} ENNReal (CompleteLattice.toTop.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) -> (Eq.{1} Real (ENNReal.toReal (infᵢ.{0, u1} ENNReal (ConditionallyCompleteLattice.toInfSet.{0} ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) ι f)) (infᵢ.{0, u1} Real Real.instInfSetReal ι (fun (i : ι) => ENNReal.toReal (f i))))
+Case conversion may be inaccurate. Consider using '#align ennreal.to_real_infi ENNReal.toReal_infᵢₓ'. -/
+theorem toReal_infᵢ (hf : ∀ i, f i ≠ ∞) : (infᵢ f).toReal = ⨅ i, (f i).toReal := by
+  simp only [ENNReal.toReal, to_nnreal_infi hf, NNReal.coe_infᵢ]
+#align ennreal.to_real_infi ENNReal.toReal_infᵢ
+
+theorem toReal_infₛ (s : Set ℝ≥0∞) (hf : ∀ r ∈ s, r ≠ ∞) :
+    (infₛ s).toReal = infₛ (ENNReal.toReal '' s) := by
+  simp only [ENNReal.toReal, to_nnreal_Inf s hf, NNReal.coe_infₛ, Set.image_image]
+#align ennreal.to_real_Inf ENNReal.toReal_infₛ
+
+theorem toReal_supᵢ (hf : ∀ i, f i ≠ ∞) : (supᵢ f).toReal = ⨆ i, (f i).toReal := by
+  simp only [ENNReal.toReal, to_nnreal_supr hf, NNReal.coe_supᵢ]
+#align ennreal.to_real_supr ENNReal.toReal_supᵢ
+
+theorem toReal_supₛ (s : Set ℝ≥0∞) (hf : ∀ r ∈ s, r ≠ ∞) :
+    (supₛ s).toReal = supₛ (ENNReal.toReal '' s) := by
+  simp only [ENNReal.toReal, to_nnreal_Sup s hf, NNReal.coe_supₛ, Set.image_image]
+#align ennreal.to_real_Sup ENNReal.toReal_supₛ
 
 /- warning: ennreal.infi_add -> ENNReal.infᵢ_add is a dubious translation:
 lean 3 declaration is

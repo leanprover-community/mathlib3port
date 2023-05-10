@@ -531,8 +531,8 @@ variable [IsMulLeftInvariant μ]
 any open set. -/
 @[to_additive
       "If a left-invariant measure gives positive mass to a compact set, then it gives\npositive mass to any open set."]
-theorem isOpenPosMeasure_of_mul_left_invariant_of_compact (K : Set G) (hK : IsCompact K)
-    (h : μ K ≠ 0) : IsOpenPosMeasure μ :=
+theorem openPosMeasure_of_mul_left_invariant_of_compact (K : Set G) (hK : IsCompact K)
+    (h : μ K ≠ 0) : OpenPosMeasure μ :=
   by
   refine' ⟨fun U hU hne => _⟩
   contrapose! h
@@ -545,17 +545,17 @@ theorem isOpenPosMeasure_of_mul_left_invariant_of_compact (K : Set G) (hK : IsCo
     _ ≤ ∑ g in t, μ ((fun h : G => g * h) ⁻¹' U) := (measure_bUnion_finset_le _ _)
     _ = 0 := by simp [measure_preimage_mul, h]
     
-#align measure_theory.is_open_pos_measure_of_mul_left_invariant_of_compact MeasureTheory.isOpenPosMeasure_of_mul_left_invariant_of_compact
-#align measure_theory.is_open_pos_measure_of_add_left_invariant_of_compact MeasureTheory.isOpenPosMeasure_of_add_left_invariant_of_compact
+#align measure_theory.is_open_pos_measure_of_mul_left_invariant_of_compact MeasureTheory.openPosMeasure_of_mul_left_invariant_of_compact
+#align measure_theory.is_open_pos_measure_of_add_left_invariant_of_compact MeasureTheory.openPosMeasure_of_add_left_invariant_of_compact
 
 /-- A nonzero left-invariant regular measure gives positive mass to any open set. -/
 @[to_additive "A nonzero left-invariant regular measure gives positive mass to any open set."]
-theorem isOpenPosMeasure_of_mul_left_invariant_of_regular [Regular μ] (h₀ : μ ≠ 0) :
-    IsOpenPosMeasure μ :=
+theorem openPosMeasure_of_mul_left_invariant_of_regular [Regular μ] (h₀ : μ ≠ 0) :
+    OpenPosMeasure μ :=
   let ⟨K, hK, h2K⟩ := Regular.exists_compact_not_null.mpr h₀
-  isOpenPosMeasure_of_mul_left_invariant_of_compact K hK h2K
-#align measure_theory.is_open_pos_measure_of_mul_left_invariant_of_regular MeasureTheory.isOpenPosMeasure_of_mul_left_invariant_of_regular
-#align measure_theory.is_open_pos_measure_of_add_left_invariant_of_regular MeasureTheory.isOpenPosMeasure_of_add_left_invariant_of_regular
+  openPosMeasure_of_mul_left_invariant_of_compact K hK h2K
+#align measure_theory.is_open_pos_measure_of_mul_left_invariant_of_regular MeasureTheory.openPosMeasure_of_mul_left_invariant_of_regular
+#align measure_theory.is_open_pos_measure_of_add_left_invariant_of_regular MeasureTheory.openPosMeasure_of_add_left_invariant_of_regular
 
 @[to_additive]
 theorem null_iff_of_isMulLeftInvariant [Regular μ] {s : Set G} (hs : IsOpen s) :
@@ -616,7 +616,7 @@ on open sets has infinite mass. -/
   to_additive
       "In a noncompact locally compact additive group, a left-invariant measure which\nis positive on open sets has infinite mass."]
 theorem measure_univ_of_isMulLeftInvariant [LocallyCompactSpace G] [NoncompactSpace G]
-    (μ : Measure G) [IsOpenPosMeasure μ] [μ.IsMulLeftInvariant] : μ univ = ∞ :=
+    (μ : Measure G) [OpenPosMeasure μ] [μ.IsMulLeftInvariant] : μ univ = ∞ :=
   by
   /- Consider a closed compact set `K` with nonempty interior. For any compact set `L`, one may
     find `g = g (L)` such that `L` is disjoint from `g • K`. Iterating this, one finds
@@ -694,14 +694,14 @@ namespace Measure
 /-- A measure on an additive group is an additive Haar measure if it is left-invariant, and gives
 finite mass to compact sets and positive mass to open sets. -/
 class IsAddHaarMeasure {G : Type _} [AddGroup G] [TopologicalSpace G] [MeasurableSpace G]
-  (μ : Measure G) extends FiniteMeasureOnCompacts μ, IsAddLeftInvariant μ, IsOpenPosMeasure μ : Prop
+  (μ : Measure G) extends FiniteMeasureOnCompacts μ, IsAddLeftInvariant μ, OpenPosMeasure μ : Prop
 #align measure_theory.measure.is_add_haar_measure MeasureTheory.Measure.IsAddHaarMeasure
 
 /-- A measure on a group is a Haar measure if it is left-invariant, and gives finite mass to compact
 sets and positive mass to open sets. -/
 @[to_additive]
 class IsHaarMeasure {G : Type _} [Group G] [TopologicalSpace G] [MeasurableSpace G]
-  (μ : Measure G) extends FiniteMeasureOnCompacts μ, IsMulLeftInvariant μ, IsOpenPosMeasure μ : Prop
+  (μ : Measure G) extends FiniteMeasureOnCompacts μ, IsMulLeftInvariant μ, OpenPosMeasure μ : Prop
 #align measure_theory.measure.is_haar_measure MeasureTheory.Measure.IsHaarMeasure
 #align measure_theory.measure.is_add_haar_measure MeasureTheory.Measure.IsAddHaarMeasure
 
@@ -734,7 +734,7 @@ theorem haar_singleton [TopologicalGroup G] [BorelSpace G] (g : G) : μ {g} = μ
 @[to_additive MeasureTheory.Measure.IsAddHaarMeasure.smul]
 theorem IsHaarMeasure.smul {c : ℝ≥0∞} (cpos : c ≠ 0) (ctop : c ≠ ∞) : IsHaarMeasure (c • μ) :=
   { lt_top_of_isCompact := fun K hK => ENNReal.mul_lt_top Ctop hK.measure_lt_top.Ne
-    to_isOpenPosMeasure := isOpenPosMeasure_smul μ cpos }
+    to_openPosMeasure := openPosMeasure_smul μ cpos }
 #align measure_theory.measure.is_haar_measure.smul MeasureTheory.Measure.IsHaarMeasure.smul
 #align measure_theory.measure.is_add_haar_measure.smul MeasureTheory.Measure.IsAddHaarMeasure.smul
 
@@ -747,7 +747,7 @@ theorem isHaarMeasure_of_isCompact_nonempty_interior [TopologicalGroup G] [Borel
     (h'K : (interior K).Nonempty) (h : μ K ≠ 0) (h' : μ K ≠ ∞) : IsHaarMeasure μ :=
   { lt_top_of_isCompact := fun L hL =>
       measure_lt_top_of_isCompact_of_is_mul_left_invariant' h'K h' hL
-    to_isOpenPosMeasure := isOpenPosMeasure_of_mul_left_invariant_of_compact K hK h }
+    to_openPosMeasure := openPosMeasure_of_mul_left_invariant_of_compact K hK h }
 #align measure_theory.measure.is_haar_measure_of_is_compact_nonempty_interior MeasureTheory.Measure.isHaarMeasure_of_isCompact_nonempty_interior
 #align measure_theory.measure.is_add_haar_measure_of_is_compact_nonempty_interior MeasureTheory.Measure.is_add_haar_measure_of_isCompact_nonempty_interior
 
@@ -764,7 +764,7 @@ theorem isHaarMeasure_map [BorelSpace G] [TopologicalGroup G] {H : Type _} [Grou
       intro K hK
       rw [map_apply hf.measurable hK.measurable_set]
       exact IsCompact.measure_lt_top ((⟨⟨f, hf⟩, h_prop⟩ : CocompactMap G H).isCompact_preimage hK)
-    to_isOpenPosMeasure := hf.isOpenPosMeasure_map h_surj }
+    to_openPosMeasure := hf.openPosMeasure_map h_surj }
 #align measure_theory.measure.is_haar_measure_map MeasureTheory.Measure.isHaarMeasure_map
 #align measure_theory.measure.is_add_haar_measure_map MeasureTheory.Measure.is_add_haar_measure_map
 

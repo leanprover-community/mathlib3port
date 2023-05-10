@@ -848,14 +848,14 @@ theorem ClosedEmbedding.measurable {f : α → γ} (hf : ClosedEmbedding f) : Me
   hf.Continuous.Measurable
 #align closed_embedding.measurable ClosedEmbedding.measurable
 
-theorem Continuous.isOpenPosMeasure_map {f : β → γ} (hf : Continuous f)
-    (hf_surj : Function.Surjective f) {μ : Measure β} [μ.IsOpenPosMeasure] :
-    (Measure.map f μ).IsOpenPosMeasure :=
+theorem Continuous.openPosMeasure_map {f : β → γ} (hf : Continuous f)
+    (hf_surj : Function.Surjective f) {μ : Measure β} [μ.OpenPosMeasure] :
+    (Measure.map f μ).OpenPosMeasure :=
   by
   refine' ⟨fun U hUo hUne => _⟩
   rw [measure.map_apply hf.measurable hUo.measurable_set]
   exact (hUo.preimage hf).measure_ne_zero μ (hf_surj.nonempty_preimage.mpr hUne)
-#align continuous.is_open_pos_measure_map Continuous.isOpenPosMeasure_map
+#align continuous.is_open_pos_measure_map Continuous.openPosMeasure_map
 
 /-- If a function is defined piecewise in terms of functions which are continuous on their
 respective pieces, then it is measurable. -/
@@ -906,29 +906,27 @@ instance (priority := 100) ContinuousSMul.hasMeasurableSmul {M α} [TopologicalS
 
 section Lattice
 
-instance (priority := 100) ContinuousSup.hasMeasurableSup [Sup γ] [ContinuousSup γ] :
-    HasMeasurableSup γ
+instance (priority := 100) ContinuousSup.measurableSup [Sup γ] [ContinuousSup γ] : MeasurableSup γ
     where
   measurable_const_sup c := (continuous_const.sup continuous_id).Measurable
   measurable_sup_const c := (continuous_id.sup continuous_const).Measurable
-#align has_continuous_sup.has_measurable_sup ContinuousSup.hasMeasurableSup
+#align has_continuous_sup.has_measurable_sup ContinuousSup.measurableSup
 
-instance (priority := 100) ContinuousSup.hasMeasurableSup₂ [SecondCountableTopology γ] [Sup γ]
-    [ContinuousSup γ] : HasMeasurableSup₂ γ :=
+instance (priority := 100) ContinuousSup.measurableSup₂ [SecondCountableTopology γ] [Sup γ]
+    [ContinuousSup γ] : MeasurableSup₂ γ :=
   ⟨continuous_sup.Measurable⟩
-#align has_continuous_sup.has_measurable_sup₂ ContinuousSup.hasMeasurableSup₂
+#align has_continuous_sup.has_measurable_sup₂ ContinuousSup.measurableSup₂
 
-instance (priority := 100) ContinuousInf.hasMeasurableInf [Inf γ] [ContinuousInf γ] :
-    HasMeasurableInf γ
+instance (priority := 100) ContinuousInf.measurableInf [Inf γ] [ContinuousInf γ] : MeasurableInf γ
     where
   measurable_const_inf c := (continuous_const.inf continuous_id).Measurable
   measurable_inf_const c := (continuous_id.inf continuous_const).Measurable
-#align has_continuous_inf.has_measurable_inf ContinuousInf.hasMeasurableInf
+#align has_continuous_inf.has_measurable_inf ContinuousInf.measurableInf
 
-instance (priority := 100) ContinuousInf.hasMeasurableInf₂ [SecondCountableTopology γ] [Inf γ]
-    [ContinuousInf γ] : HasMeasurableInf₂ γ :=
+instance (priority := 100) ContinuousInf.measurableInf₂ [SecondCountableTopology γ] [Inf γ]
+    [ContinuousInf γ] : MeasurableInf₂ γ :=
   ⟨continuous_inf.Measurable⟩
-#align has_continuous_inf.has_measurable_inf₂ ContinuousInf.hasMeasurableInf₂
+#align has_continuous_inf.has_measurable_inf₂ ContinuousInf.measurableInf₂
 
 end Lattice
 

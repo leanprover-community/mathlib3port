@@ -438,8 +438,8 @@ theorem prod_prod (s : Set α) (t : Set β) : μ.Prod ν (s ×ˢ t) = μ s * ν 
 #align measure_theory.measure.prod_prod MeasureTheory.Measure.prod_prod
 
 instance {X Y : Type _} [TopologicalSpace X] [TopologicalSpace Y] {m : MeasurableSpace X}
-    {μ : Measure X} [IsOpenPosMeasure μ] {m' : MeasurableSpace Y} {ν : Measure Y}
-    [IsOpenPosMeasure ν] [SigmaFinite ν] : IsOpenPosMeasure (μ.Prod ν) :=
+    {μ : Measure X} [OpenPosMeasure μ] {m' : MeasurableSpace Y} {ν : Measure Y} [OpenPosMeasure ν]
+    [SigmaFinite ν] : OpenPosMeasure (μ.Prod ν) :=
   by
   constructor
   rintro U U_open ⟨⟨x, y⟩, hxy⟩

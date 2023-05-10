@@ -1081,7 +1081,7 @@ theorem convolution_eq_right {x₀ : G} (hg : ∀ x ∈ ball x₀ φ.r, g x = g 
 
 variable [BorelSpace G]
 
-variable [LocallyFiniteMeasure μ] [IsOpenPosMeasure μ]
+variable [LocallyFiniteMeasure μ] [OpenPosMeasure μ]
 
 variable [FiniteDimensional ℝ G]
 

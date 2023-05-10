@@ -597,7 +597,7 @@ protected theorem integrable_normed : Integrable (f.normed μ) μ :=
   f.Integrable.div_const _
 #align cont_diff_bump.integrable_normed ContDiffBump.integrable_normed
 
-variable [μ.IsOpenPosMeasure]
+variable [μ.OpenPosMeasure]
 
 theorem integral_pos : 0 < ∫ x, f x ∂μ :=
   by
