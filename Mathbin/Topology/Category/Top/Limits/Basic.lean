@@ -152,9 +152,9 @@ instance topCat_hasLimits : HasLimits TopCat.{u} :=
 
 /- warning: Top.forget_preserves_limits_of_size -> TopCat.forgetPreservesLimitsOfSize is a dubious translation:
 lean 3 declaration is
-  CategoryTheory.Limits.PreservesLimitsOfSize.{v, v, max v u, max v u, succ (max v u), succ (max v u)} TopCat.{max v u} TopCat.largeCategory.{max v u} Type.{max v u} CategoryTheory.types.{max v u} (CategoryTheory.forget.{succ (max v u), max v u, max v u} TopCat.{max v u} TopCat.largeCategory.{max v u} TopCat.concreteCategory.{max v u})
+  CategoryTheory.Limits.PreservesLimitsOfSize.{u2, u2, max u2 u1, max u2 u1, succ (max u2 u1), succ (max u2 u1)} TopCat.{max u2 u1} TopCat.largeCategory.{max u2 u1} Type.{max u2 u1} CategoryTheory.types.{max u2 u1} (CategoryTheory.forget.{succ (max u2 u1), max u2 u1, max u2 u1} TopCat.{max u2 u1} TopCat.largeCategory.{max u2 u1} TopCat.concreteCategory.{max u2 u1})
 but is expected to have type
-  CategoryTheory.Limits.PreservesLimitsOfSize.{v, v, v, v, succ v, succ v} TopCat.{v} instTopCatLargeCategory.{v} Type.{v} CategoryTheory.types.{v} (CategoryTheory.forget.{succ v, v, v} TopCat.{v} instTopCatLargeCategory.{v} TopCat.concreteCategory.{v})
+  CategoryTheory.Limits.PreservesLimitsOfSize.{u1, u1, max u2 u1, max u2 u1, succ (max u2 u1), succ (max u2 u1)} TopCat.{max u2 u1} instTopCatLargeCategory.{max u2 u1} Type.{max u2 u1} CategoryTheory.types.{max u2 u1} (CategoryTheory.forget.{succ (max u2 u1), max u2 u1, max u2 u1} TopCat.{max u2 u1} instTopCatLargeCategory.{max u2 u1} TopCat.concreteCategory.{max u2 u1})
 Case conversion may be inaccurate. Consider using '#align Top.forget_preserves_limits_of_size TopCat.forgetPreservesLimitsOfSizeₓ'. -/
 instance forgetPreservesLimitsOfSize :
     PreservesLimitsOfSize.{v, v} (forget : TopCat.{max v u} ⥤ Type max v u)

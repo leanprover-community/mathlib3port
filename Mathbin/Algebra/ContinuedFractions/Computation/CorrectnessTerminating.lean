@@ -56,6 +56,7 @@ open GeneralizedContinuedFraction (of)
 
 variable {K : Type _} [LinearOrderedField K] {v : K} {n : ℕ}
 
+#print GeneralizedContinuedFraction.compExactValue /-
 /-- Given two continuants `pconts` and `conts` and a value `fr`, this function returns
 - `conts.a / conts.b` if `fr = 0`
 - `exact_conts.a / exact_conts.b` where `exact_conts = next_continuants 1 fr⁻¹ pconts conts`
@@ -74,9 +75,16 @@ protected def compExactValue (pconts conts : Pair K) (fr : K) : K :=
     let exact_conts := nextContinuants 1 fr⁻¹ pconts conts
     exact_conts.a / exact_conts.b
 #align generalized_continued_fraction.comp_exact_value GeneralizedContinuedFraction.compExactValue
+-/
 
 variable [FloorRing K]
 
+/- warning: generalized_continued_fraction.comp_exact_value_correctness_of_stream_eq_some_aux_comp -> GeneralizedContinuedFraction.comp_exact_value_correctness_of_stream_eq_some_aux_comp is a dubious translation:
+lean 3 declaration is
+  forall {K : Type.{u1}} [_inst_1 : LinearOrderedField.{u1} K] [_inst_2 : FloorRing.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1))] {a : K} (b : K) (c : K), (Ne.{succ u1} K (Int.fract.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1)) _inst_2 a) (OfNat.ofNat.{u1} K 0 (OfNat.mk.{u1} K 0 (Zero.zero.{u1} K (MulZeroClass.toHasZero.{u1} K (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} K (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} K (NonAssocRing.toNonUnitalNonAssocRing.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1)))))))))))) -> (Eq.{succ u1} K (HAdd.hAdd.{u1, u1, u1} K K K (instHAdd.{u1} K (Distrib.toHasAdd.{u1} K (Ring.toDistrib.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1)))))) (HDiv.hDiv.{u1, u1, u1} K K K (instHDiv.{u1} K (DivInvMonoid.toHasDiv.{u1} K (DivisionRing.toDivInvMonoid.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1))))) (HAdd.hAdd.{u1, u1, u1} K K K (instHAdd.{u1} K (Distrib.toHasAdd.{u1} K (Ring.toDistrib.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1)))))) (HMul.hMul.{u1, u1, u1} K K K (instHMul.{u1} K (Distrib.toHasMul.{u1} K (Ring.toDistrib.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1)))))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int K (HasLiftT.mk.{1, succ u1} Int K (CoeTCₓ.coe.{1, succ u1} Int K (Int.castCoe.{u1} K (AddGroupWithOne.toHasIntCast.{u1} K (AddCommGroupWithOne.toAddGroupWithOne.{u1} K (Ring.toAddCommGroupWithOne.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1))))))))) (Int.floor.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1)) _inst_2 a)) b) c) (Int.fract.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1)) _inst_2 a)) b) (HDiv.hDiv.{u1, u1, u1} K K K (instHDiv.{u1} K (DivInvMonoid.toHasDiv.{u1} K (DivisionRing.toDivInvMonoid.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1))))) (HAdd.hAdd.{u1, u1, u1} K K K (instHAdd.{u1} K (Distrib.toHasAdd.{u1} K (Ring.toDistrib.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1)))))) (HMul.hMul.{u1, u1, u1} K K K (instHMul.{u1} K (Distrib.toHasMul.{u1} K (Ring.toDistrib.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K (LinearOrderedField.toField.{u1} K _inst_1)))))) b a) c) (Int.fract.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1)) _inst_2 a)))
+but is expected to have type
+  forall {K : Type.{u1}} [_inst_1 : LinearOrderedField.{u1} K] [_inst_2 : FloorRing.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1))] {a : K} (b : K) (c : K), (Ne.{succ u1} K (Int.fract.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1)) _inst_2 a) (OfNat.ofNat.{u1} K 0 (Zero.toOfNat0.{u1} K (CommMonoidWithZero.toZero.{u1} K (CommGroupWithZero.toCommMonoidWithZero.{u1} K (Semifield.toCommGroupWithZero.{u1} K (LinearOrderedSemifield.toSemifield.{u1} K (LinearOrderedField.toLinearOrderedSemifield.{u1} K _inst_1)))))))) -> (Eq.{succ u1} K (HAdd.hAdd.{u1, u1, u1} K K K (instHAdd.{u1} K (Distrib.toAdd.{u1} K (NonUnitalNonAssocSemiring.toDistrib.{u1} K (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} K (NonAssocRing.toNonUnitalNonAssocRing.{u1} K (Ring.toNonAssocRing.{u1} K (StrictOrderedRing.toRing.{u1} K (LinearOrderedRing.toStrictOrderedRing.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1)))))))))) (HDiv.hDiv.{u1, u1, u1} K K K (instHDiv.{u1} K (LinearOrderedField.toDiv.{u1} K _inst_1)) (HAdd.hAdd.{u1, u1, u1} K K K (instHAdd.{u1} K (Distrib.toAdd.{u1} K (NonUnitalNonAssocSemiring.toDistrib.{u1} K (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} K (NonAssocRing.toNonUnitalNonAssocRing.{u1} K (Ring.toNonAssocRing.{u1} K (StrictOrderedRing.toRing.{u1} K (LinearOrderedRing.toStrictOrderedRing.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1)))))))))) (HMul.hMul.{u1, u1, u1} K K K (instHMul.{u1} K (NonUnitalNonAssocRing.toMul.{u1} K (NonAssocRing.toNonUnitalNonAssocRing.{u1} K (Ring.toNonAssocRing.{u1} K (StrictOrderedRing.toRing.{u1} K (LinearOrderedRing.toStrictOrderedRing.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1)))))))) (Int.cast.{u1} K (Ring.toIntCast.{u1} K (StrictOrderedRing.toRing.{u1} K (LinearOrderedRing.toStrictOrderedRing.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1))))) (Int.floor.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1)) _inst_2 a)) b) c) (Int.fract.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1)) _inst_2 a)) b) (HDiv.hDiv.{u1, u1, u1} K K K (instHDiv.{u1} K (LinearOrderedField.toDiv.{u1} K _inst_1)) (HAdd.hAdd.{u1, u1, u1} K K K (instHAdd.{u1} K (Distrib.toAdd.{u1} K (NonUnitalNonAssocSemiring.toDistrib.{u1} K (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} K (NonAssocRing.toNonUnitalNonAssocRing.{u1} K (Ring.toNonAssocRing.{u1} K (StrictOrderedRing.toRing.{u1} K (LinearOrderedRing.toStrictOrderedRing.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1)))))))))) (HMul.hMul.{u1, u1, u1} K K K (instHMul.{u1} K (NonUnitalNonAssocRing.toMul.{u1} K (NonAssocRing.toNonUnitalNonAssocRing.{u1} K (Ring.toNonAssocRing.{u1} K (StrictOrderedRing.toRing.{u1} K (LinearOrderedRing.toStrictOrderedRing.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1)))))))) b a) c) (Int.fract.{u1} K (LinearOrderedCommRing.toLinearOrderedRing.{u1} K (LinearOrderedField.toLinearOrderedCommRing.{u1} K _inst_1)) _inst_2 a)))
+Case conversion may be inaccurate. Consider using '#align generalized_continued_fraction.comp_exact_value_correctness_of_stream_eq_some_aux_comp GeneralizedContinuedFraction.comp_exact_value_correctness_of_stream_eq_some_aux_compₓ'. -/
 /-- Just a computational lemma we need for the next main proof. -/
 protected theorem comp_exact_value_correctness_of_stream_eq_some_aux_comp {a : K} (b c : K)
     (fract_a_ne_zero : Int.fract a ≠ 0) :
@@ -90,6 +98,7 @@ protected theorem comp_exact_value_correctness_of_stream_eq_some_aux_comp {a : K
 open
   GeneralizedContinuedFraction (compExactValue comp_exact_value_correctness_of_stream_eq_some_aux_comp)
 
+#print GeneralizedContinuedFraction.compExactValue_correctness_of_stream_eq_some /-
 /-- Shows the correctness of `comp_exact_value` in case the continued fraction
 `generalized_continued_fraction.of v` did not terminate at position `n`. That is, we obtain the
 value `v` if we pass the two successive (auxiliary) continuants at positions `n` and `n + 1` as well
@@ -203,9 +212,11 @@ theorem compExactValue_correctness_of_stream_eq_some :
         next_continuants, next_numerator, next_denominator, this, tmp_calc, tmp_calc']
       ac_rfl
 #align generalized_continued_fraction.comp_exact_value_correctness_of_stream_eq_some GeneralizedContinuedFraction.compExactValue_correctness_of_stream_eq_some
+-/
 
 open GeneralizedContinuedFraction (of_terminatedAt_n_iff_succ_nth_intFractPair_stream_eq_none)
 
+#print GeneralizedContinuedFraction.of_correctness_of_nth_stream_eq_none /-
 /-- The convergent of `generalized_continued_fraction.of v` at step `n - 1` is exactly `v` if the
 `int_fract_pair.stream` of the corresponding continued fraction terminated at step `n`. -/
 theorem of_correctness_of_nth_stream_eq_none (nth_stream_eq_none : IntFractPair.stream v n = none) :
@@ -235,7 +246,9 @@ theorem of_correctness_of_nth_stream_eq_none (nth_stream_eq_none : IntFractPair.
       simpa [nth_stream_fr_eq_zero, comp_exact_value] using
         comp_exact_value_correctness_of_stream_eq_some nth_stream_eq
 #align generalized_continued_fraction.of_correctness_of_nth_stream_eq_none GeneralizedContinuedFraction.of_correctness_of_nth_stream_eq_none
+-/
 
+#print GeneralizedContinuedFraction.of_correctness_of_terminatedAt /-
 /-- If `generalized_continued_fraction.of v` terminated at step `n`, then the `n`th convergent is
 exactly `v`.
 -/
@@ -245,7 +258,9 @@ theorem of_correctness_of_terminatedAt (terminated_at_n : (of v).TerminatedAt n)
     of_terminatedAt_n_iff_succ_nth_intFractPair_stream_eq_none.left terminated_at_n
   of_correctness_of_nth_stream_eq_none this
 #align generalized_continued_fraction.of_correctness_of_terminated_at GeneralizedContinuedFraction.of_correctness_of_terminatedAt
+-/
 
+#print GeneralizedContinuedFraction.of_correctness_of_terminates /-
 /-- If `generalized_continued_fraction.of v` terminates, then there is `n : ℕ` such that the `n`th
 convergent is exactly `v`.
 -/
@@ -254,9 +269,11 @@ theorem of_correctness_of_terminates (terminates : (of v).Terminates) :
   Exists.elim terminates fun n terminated_at_n =>
     Exists.intro n (of_correctness_of_terminatedAt terminated_at_n)
 #align generalized_continued_fraction.of_correctness_of_terminates GeneralizedContinuedFraction.of_correctness_of_terminates
+-/
 
 open Filter
 
+#print GeneralizedContinuedFraction.of_correctness_atTop_of_terminates /-
 /-- If `generalized_continued_fraction.of v` terminates, then its convergents will eventually always
 be `v`.
 -/
@@ -271,6 +288,7 @@ theorem of_correctness_atTop_of_terminates (terminates : (of v).Terminates) :
   rw [convergents_stable_of_terminated m_geq_n terminated_at_n]
   exact of_correctness_of_terminated_at terminated_at_n
 #align generalized_continued_fraction.of_correctness_at_top_of_terminates GeneralizedContinuedFraction.of_correctness_atTop_of_terminates
+-/
 
 end GeneralizedContinuedFraction
 

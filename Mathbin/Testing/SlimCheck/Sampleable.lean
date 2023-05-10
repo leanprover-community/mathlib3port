@@ -908,6 +908,12 @@ instance Perm'.slimCheck {xs : List α} : SlimCheck.Sampleable { ys : List α //
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 open Tactic
 
+/- warning: slim_check.print_samples -> SlimCheck.printSamples is a dubious translation:
+lean 3 declaration is
+  forall {t : Type.{u}} [_inst_1 : Repr.{u} t], (SlimCheck.Gen.{u} t) -> (Io Unit)
+but is expected to have type
+  forall {t : Type} [_inst_1 : Repr.{0} t], (SlimCheck.Gen.{0} t) -> (IO PUnit.{1})
+Case conversion may be inaccurate. Consider using '#align slim_check.print_samples SlimCheck.printSamplesₓ'. -/
 /-- Print (at most) 10 samples of a given type to stdout for debugging.
 -/
 def printSamples {t : Type u} [Repr t] (g : Gen t) : Io Unit := do
