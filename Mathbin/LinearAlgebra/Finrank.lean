@@ -75,7 +75,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finite_dimensional.finrank_eq_of_rank_eq FiniteDimensional.finrank_eq_of_rank_eqₓ'. -/
 theorem finrank_eq_of_rank_eq {n : ℕ} (h : Module.rank K V = ↑n) : finrank K V = n :=
   by
-  apply_fun to_nat  at h
+  apply_fun toNat  at h
   rw [to_nat_cast] at h
   exact_mod_cast h
 #align finite_dimensional.finrank_eq_of_rank_eq FiniteDimensional.finrank_eq_of_rank_eq

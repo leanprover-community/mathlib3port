@@ -72,7 +72,7 @@ def ofNat : ℕ → WType Natβ
 @[simp]
 def toNat : WType Natβ → ℕ
   | WType.mk nat_α.zero f => 0
-  | WType.mk nat_α.succ f => (to_nat (f ())).succ
+  | WType.mk nat_α.succ f => (toNat (f ())).succ
 #align W_type.to_nat WType.toNat
 -/
 
@@ -90,7 +90,7 @@ theorem leftInverse_nat : Function.LeftInverse ofNat toNat
 #print WType.rightInverse_nat /-
 theorem rightInverse_nat : Function.RightInverse ofNat toNat
   | Nat.zero => rfl
-  | Nat.succ n => by rw [of_nat, to_nat, right_inv_nat n]
+  | Nat.succ n => by rw [of_nat, toNat, right_inv_nat n]
 #align W_type.right_inv_nat WType.rightInverse_nat
 -/
 

@@ -72,7 +72,7 @@ def elim0 {C : Fin2 0 → Sort u} : ∀ i : Fin2 0, C i :=
 /-- Converts a `fin2` into a natural. -/
 def toNat : ∀ {n}, Fin2 n → ℕ
   | _, @fz n => 0
-  | _, @fs n i => succ (to_nat i)
+  | _, @fs n i => succ (toNat i)
 #align fin2.to_nat Fin2.toNat
 -/
 

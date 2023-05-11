@@ -616,13 +616,13 @@ theorem ofNat_le_ofNat {n m : ℕ} (h : n ≤ m) : ofNat n ≤ ofNat m :=
 
 #print Bool.toNat_le_toNat /-
 theorem toNat_le_toNat {b₀ b₁ : Bool} (h : b₀ ≤ b₁) : toNat b₀ ≤ toNat b₁ := by
-  cases h <;> subst h <;> [cases b₁, cases b₀] <;> simp [to_nat, Nat.zero_le]
+  cases h <;> subst h <;> [cases b₁, cases b₀] <;> simp [toNat, Nat.zero_le]
 #align bool.to_nat_le_to_nat Bool.toNat_le_toNat
 -/
 
 #print Bool.ofNat_toNat /-
 theorem ofNat_toNat (b : Bool) : ofNat (toNat b) = b := by
-  cases b <;> simp only [of_nat, to_nat] <;> exact by decide
+  cases b <;> simp only [of_nat, toNat] <;> exact by decide
 #align bool.of_nat_to_nat Bool.ofNat_toNat
 -/
 

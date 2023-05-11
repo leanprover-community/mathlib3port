@@ -49,12 +49,14 @@ attribute [local instance] reflects_limits_of_reflects_isomorphisms
 instance {X : C} : IsCofiltered (J.cover X) :=
   inferInstance
 
+#print CategoryTheory.Sites.pushforward /-
 /-- The pushforward functor `Sheaf J A ⥤ Sheaf K A` associated to a functor `G : C ⥤ D` in the
 same direction as `G`. -/
 @[simps]
 def Sites.pushforward (G : C ⥤ D) : Sheaf J A ⥤ Sheaf K A :=
   sheafToPresheaf J A ⋙ lan G.op ⋙ presheafToSheaf K A
 #align category_theory.sites.pushforward CategoryTheory.Sites.pushforward
+-/
 
 instance (G : C ⥤ D) [RepresentablyFlat G] : PreservesFiniteLimits (Sites.pushforward A J K G) :=
   by
@@ -65,6 +67,7 @@ instance (G : C ⥤ D) [RepresentablyFlat G] : PreservesFiniteLimits (Sites.push
   · apply CategoryTheory.presheafToSheaf.Limits.preservesFiniteLimits.{u₁, v₁, v₁}
     infer_instance
 
+#print CategoryTheory.Sites.pullbackPushforwardAdjunction /-
 /-- The pushforward functor is left adjoint to the pullback functor. -/
 def Sites.pullbackPushforwardAdjunction {G : C ⥤ D} (hG₁ : CompatiblePreserving K G)
     (hG₂ : CoverPreserving J K G) : Sites.pushforward A J K G ⊣ Sites.pullback A hG₁ hG₂ :=
@@ -75,6 +78,7 @@ def Sites.pullbackPushforwardAdjunction {G : C ⥤ D} (hG₁ : CompatiblePreserv
     (NatIso.ofComponents (fun _ => Iso.refl _) fun _ _ _ =>
       (Category.comp_id _).trans (Category.id_comp _).symm)
 #align category_theory.sites.pullback_pushforward_adjunction CategoryTheory.Sites.pullbackPushforwardAdjunction
+-/
 
 end CategoryTheory
 

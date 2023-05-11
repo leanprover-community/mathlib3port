@@ -73,6 +73,7 @@ evaluator for this basis, which we take up in the next section.
 
 namespace ToPartrec
 
+#print Turing.ToPartrec.Code /-
 /-- The type of codes for primitive recursive functions. Unlike `nat.partrec.code`, this uses a set
 of operations on `list ℕ`. See `code.eval` for a description of the behavior of the primitives. -/
 inductive Code
@@ -85,10 +86,12 @@ inductive Code
   | fix : code → code
   deriving DecidableEq, Inhabited
 #align turing.to_partrec.code Turing.ToPartrec.Code
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Turing.ToPartrec.Code.eval /-
 /-- The semantics of the `code` primitives, as partial functions `list ℕ →. list ℕ`. By convention
 we functions that return a single result return a singleton `[n]`, or in some cases `n :: v` where
 `v` will be ignored by a subsequent function.
@@ -129,56 +132,98 @@ def Code.eval : Code → List ℕ →. List ℕ
   | code.fix f =>
     PFun.fix fun v => (f.eval v).map fun v => if v.headI = 0 then Sum.inl v.tail else Sum.inr v.tail
 #align turing.to_partrec.code.eval Turing.ToPartrec.Code.eval
+-/
 
 namespace Code
 
+#print Turing.ToPartrec.Code.nil /-
 /-- `nil` is the constant nil function: `nil v = []`. -/
 def nil : Code :=
   tail.comp succ
 #align turing.to_partrec.code.nil Turing.ToPartrec.Code.nil
+-/
 
+/- warning: turing.to_partrec.code.nil_eval -> Turing.ToPartrec.Code.nil_eval is a dubious translation:
+lean 3 declaration is
+  forall (v : List.{0} Nat), Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Code.eval Turing.ToPartrec.Code.nil v) (Pure.pure.{0, 0} Part.{0} (Applicative.toHasPure.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.monad.{0})) (List.{0} Nat) (List.nil.{0} Nat))
+but is expected to have type
+  forall (v : List.{0} Nat), Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Code.eval Turing.ToPartrec.Code.nil v) (Pure.pure.{0, 0} Part.{0} (Applicative.toPure.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.instMonadPart.{0})) (List.{0} Nat) (List.nil.{0} Nat))
+Case conversion may be inaccurate. Consider using '#align turing.to_partrec.code.nil_eval Turing.ToPartrec.Code.nil_evalₓ'. -/
 @[simp]
 theorem nil_eval (v) : nil.eval v = pure [] := by simp [nil]
 #align turing.to_partrec.code.nil_eval Turing.ToPartrec.Code.nil_eval
 
+#print Turing.ToPartrec.Code.id /-
 /-- `id` is the identity function: `id v = v`. -/
 def id : Code :=
   tail.comp zero'
 #align turing.to_partrec.code.id Turing.ToPartrec.Code.id
+-/
 
+/- warning: turing.to_partrec.code.id_eval -> Turing.ToPartrec.Code.id_eval is a dubious translation:
+lean 3 declaration is
+  forall (v : List.{0} Nat), Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Code.eval Turing.ToPartrec.Code.id v) (Pure.pure.{0, 0} Part.{0} (Applicative.toHasPure.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.monad.{0})) (List.{0} Nat) v)
+but is expected to have type
+  forall (v : List.{0} Nat), Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Code.eval Turing.ToPartrec.Code.id v) (Pure.pure.{0, 0} Part.{0} (Applicative.toPure.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.instMonadPart.{0})) (List.{0} Nat) v)
+Case conversion may be inaccurate. Consider using '#align turing.to_partrec.code.id_eval Turing.ToPartrec.Code.id_evalₓ'. -/
 @[simp]
 theorem id_eval (v) : id.eval v = pure v := by simp [id]
 #align turing.to_partrec.code.id_eval Turing.ToPartrec.Code.id_eval
 
+#print Turing.ToPartrec.Code.head /-
 /-- `head` gets the head of the input list: `head [] = [0]`, `head (n :: v) = [n]`. -/
 def head : Code :=
   cons id nil
 #align turing.to_partrec.code.head Turing.ToPartrec.Code.head
+-/
 
+/- warning: turing.to_partrec.code.head_eval -> Turing.ToPartrec.Code.head_eval is a dubious translation:
+lean 3 declaration is
+  forall (v : List.{0} Nat), Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Code.eval Turing.ToPartrec.Code.head v) (Pure.pure.{0, 0} Part.{0} (Applicative.toHasPure.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.monad.{0})) (List.{0} Nat) (List.cons.{0} Nat (List.headI.{0} Nat Nat.inhabited v) (List.nil.{0} Nat)))
+but is expected to have type
+  forall (v : List.{0} Nat), Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Code.eval Turing.ToPartrec.Code.head v) (Pure.pure.{0, 0} Part.{0} (Applicative.toPure.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.instMonadPart.{0})) (List.{0} Nat) (List.cons.{0} Nat (List.headI.{0} Nat instInhabitedNat v) (List.nil.{0} Nat)))
+Case conversion may be inaccurate. Consider using '#align turing.to_partrec.code.head_eval Turing.ToPartrec.Code.head_evalₓ'. -/
 @[simp]
 theorem head_eval (v) : head.eval v = pure [v.headI] := by simp [head]
 #align turing.to_partrec.code.head_eval Turing.ToPartrec.Code.head_eval
 
+#print Turing.ToPartrec.Code.zero /-
 /-- `zero` is the constant zero function: `zero v = [0]`. -/
 def zero : Code :=
   cons zero' nil
 #align turing.to_partrec.code.zero Turing.ToPartrec.Code.zero
+-/
 
+/- warning: turing.to_partrec.code.zero_eval -> Turing.ToPartrec.Code.zero_eval is a dubious translation:
+lean 3 declaration is
+  forall (v : List.{0} Nat), Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Code.eval Turing.ToPartrec.Code.zero v) (Pure.pure.{0, 0} Part.{0} (Applicative.toHasPure.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.monad.{0})) (List.{0} Nat) (List.cons.{0} Nat (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) (List.nil.{0} Nat)))
+but is expected to have type
+  forall (v : List.{0} Nat), Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Code.eval Turing.ToPartrec.Code.zero v) (Pure.pure.{0, 0} Part.{0} (Applicative.toPure.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.instMonadPart.{0})) (List.{0} Nat) (List.cons.{0} Nat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (List.nil.{0} Nat)))
+Case conversion may be inaccurate. Consider using '#align turing.to_partrec.code.zero_eval Turing.ToPartrec.Code.zero_evalₓ'. -/
 @[simp]
 theorem zero_eval (v) : zero.eval v = pure [0] := by simp [zero]
 #align turing.to_partrec.code.zero_eval Turing.ToPartrec.Code.zero_eval
 
+#print Turing.ToPartrec.Code.pred /-
 /-- `pred` returns the predecessor of the head of the input:
 `pred [] = [0]`, `pred (0 :: v) = [0]`, `pred (n+1 :: v) = [n]`. -/
 def pred : Code :=
   case zero head
 #align turing.to_partrec.code.pred Turing.ToPartrec.Code.pred
+-/
 
+/- warning: turing.to_partrec.code.pred_eval -> Turing.ToPartrec.Code.pred_eval is a dubious translation:
+lean 3 declaration is
+  forall (v : List.{0} Nat), Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Code.eval Turing.ToPartrec.Code.pred v) (Pure.pure.{0, 0} Part.{0} (Applicative.toHasPure.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.monad.{0})) (List.{0} Nat) (List.cons.{0} Nat (Nat.pred (List.headI.{0} Nat Nat.inhabited v)) (List.nil.{0} Nat)))
+but is expected to have type
+  forall (v : List.{0} Nat), Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Code.eval Turing.ToPartrec.Code.pred v) (Pure.pure.{0, 0} Part.{0} (Applicative.toPure.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.instMonadPart.{0})) (List.{0} Nat) (List.cons.{0} Nat (Nat.pred (List.headI.{0} Nat instInhabitedNat v)) (List.nil.{0} Nat)))
+Case conversion may be inaccurate. Consider using '#align turing.to_partrec.code.pred_eval Turing.ToPartrec.Code.pred_evalₓ'. -/
 @[simp]
 theorem pred_eval (v) : pred.eval v = pure [v.headI.pred] := by
   simp [pred] <;> cases v.head <;> simp
 #align turing.to_partrec.code.pred_eval Turing.ToPartrec.Code.pred_eval
 
+#print Turing.ToPartrec.Code.rfind /-
 /-- `rfind f` performs the function of the `rfind` primitive of partial recursive functions.
 `rfind f v` returns the smallest `n` such that `(f (n :: v)).head = 0`.
 
@@ -193,7 +238,9 @@ it calls `f (n :: v)` as the exit test and `n+1 :: v` as the next state. At the 
 def rfind (f : Code) : Code :=
   comp pred <| comp (fix <| cons f <| cons succ tail) zero'
 #align turing.to_partrec.code.rfind Turing.ToPartrec.Code.rfind
+-/
 
+#print Turing.ToPartrec.Code.prec /-
 /-- `prec f g` implements the `prec` (primitive recursion) operation of partial recursive
 functions. `prec f g` evaluates as:
 
@@ -225,10 +272,17 @@ def prec (f g : Code) : Code :=
   let F := case id <| comp (comp (comp tail tail) (fix G)) zero'
   cons (comp F (cons head <| cons (comp f tail) tail)) nil
 #align turing.to_partrec.code.prec Turing.ToPartrec.Code.prec
+-/
 
 attribute [-simp] Part.bind_eq_bind Part.map_eq_map Part.pure_eq_some
 
-theorem ExistsCode.comp {m n} {f : Vector ℕ n →. ℕ} {g : Fin n → Vector ℕ m →. ℕ}
+/- warning: turing.to_partrec.code.exists_code.comp -> Turing.ToPartrec.Code.exists_code.comp is a dubious translation:
+lean 3 declaration is
+  forall {m : Nat} {n : Nat} {f : PFun.{0, 0} (Vector.{0} Nat n) Nat} {g : (Fin n) -> (PFun.{0, 0} (Vector.{0} Nat m) Nat)}, (Exists.{1} Turing.ToPartrec.Code (fun (c : Turing.ToPartrec.Code) => forall (v : Vector.{0} Nat n), Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Code.eval c (Subtype.val.{1} (List.{0} Nat) (fun (l : List.{0} Nat) => Eq.{1} Nat (List.length.{0} Nat l) n) v)) (Functor.map.{0, 0} Part.{0} (Applicative.toFunctor.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.monad.{0})) Nat (List.{0} Nat) (Pure.pure.{0, 0} List.{0} (Applicative.toHasPure.{0, 0} List.{0} (Monad.toApplicative.{0, 0} List.{0} List.monad.{0})) Nat) (f v)))) -> (forall (i : Fin n), Exists.{1} Turing.ToPartrec.Code (fun (c : Turing.ToPartrec.Code) => forall (v : Vector.{0} Nat m), Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Code.eval c (Subtype.val.{1} (List.{0} Nat) (fun (l : List.{0} Nat) => Eq.{1} Nat (List.length.{0} Nat l) m) v)) (Functor.map.{0, 0} Part.{0} (Applicative.toFunctor.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.monad.{0})) Nat (List.{0} Nat) (Pure.pure.{0, 0} List.{0} (Applicative.toHasPure.{0, 0} List.{0} (Monad.toApplicative.{0, 0} List.{0} List.monad.{0})) Nat) (g i v)))) -> (Exists.{1} Turing.ToPartrec.Code (fun (c : Turing.ToPartrec.Code) => forall (v : Vector.{0} Nat m), Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Code.eval c (Subtype.val.{1} (List.{0} Nat) (fun (l : List.{0} Nat) => Eq.{1} Nat (List.length.{0} Nat l) m) v)) (Functor.map.{0, 0} Part.{0} (Applicative.toFunctor.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.monad.{0})) Nat (List.{0} Nat) (Pure.pure.{0, 0} List.{0} (Applicative.toHasPure.{0, 0} List.{0} (Monad.toApplicative.{0, 0} List.{0} List.monad.{0})) Nat) (Bind.bind.{0, 0} Part.{0} (Monad.toHasBind.{0, 0} Part.{0} Part.monad.{0}) (Vector.{0} Nat n) Nat (Vector.mOfFn.{0, 0} Part.{0} Part.monad.{0} Nat n (fun (i : Fin n) => g i v)) f))))
+but is expected to have type
+  forall {m : Nat} {n : Nat} {f : PFun.{0, 0} (Vector.{0} Nat n) Nat} {g : (Fin n) -> (PFun.{0, 0} (Vector.{0} Nat m) Nat)}, (Exists.{1} Turing.ToPartrec.Code (fun (c : Turing.ToPartrec.Code) => forall (v : Vector.{0} Nat n), Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Code.eval c (Subtype.val.{1} (List.{0} Nat) (fun (l : List.{0} Nat) => Eq.{1} Nat (List.length.{0} Nat l) n) v)) (Functor.map.{0, 0} Part.{0} (Applicative.toFunctor.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.instMonadPart.{0})) Nat (List.{0} Nat) (Pure.pure.{0, 0} List.{0} (Applicative.toPure.{0, 0} List.{0} (Monad.toApplicative.{0, 0} List.{0} List.instMonadList.{0})) Nat) (f v)))) -> (forall (i : Fin n), Exists.{1} Turing.ToPartrec.Code (fun (c : Turing.ToPartrec.Code) => forall (v : Vector.{0} Nat m), Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Code.eval c (Subtype.val.{1} (List.{0} Nat) (fun (l : List.{0} Nat) => Eq.{1} Nat (List.length.{0} Nat l) m) v)) (Functor.map.{0, 0} Part.{0} (Applicative.toFunctor.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.instMonadPart.{0})) Nat (List.{0} Nat) (Pure.pure.{0, 0} List.{0} (Applicative.toPure.{0, 0} List.{0} (Monad.toApplicative.{0, 0} List.{0} List.instMonadList.{0})) Nat) (g i v)))) -> (Exists.{1} Turing.ToPartrec.Code (fun (c : Turing.ToPartrec.Code) => forall (v : Vector.{0} Nat m), Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Code.eval c (Subtype.val.{1} (List.{0} Nat) (fun (l : List.{0} Nat) => Eq.{1} Nat (List.length.{0} Nat l) m) v)) (Functor.map.{0, 0} Part.{0} (Applicative.toFunctor.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.instMonadPart.{0})) Nat (List.{0} Nat) (Pure.pure.{0, 0} List.{0} (Applicative.toPure.{0, 0} List.{0} (Monad.toApplicative.{0, 0} List.{0} List.instMonadList.{0})) Nat) (Bind.bind.{0, 0} Part.{0} (Monad.toBind.{0, 0} Part.{0} Part.instMonadPart.{0}) (Vector.{0} Nat n) Nat (Vector.mOfFn.{0, 0} Part.{0} Part.instMonadPart.{0} Nat n (fun (i : Fin n) => g i v)) f))))
+Case conversion may be inaccurate. Consider using '#align turing.to_partrec.code.exists_code.comp Turing.ToPartrec.Code.exists_code.compₓ'. -/
+theorem exists_code.comp {m n} {f : Vector ℕ n →. ℕ} {g : Fin n → Vector ℕ m →. ℕ}
     (hf : ∃ c : Code, ∀ v : Vector ℕ n, c.eval v.1 = pure <$> f v)
     (hg : ∀ i, ∃ c : Code, ∀ v : Vector ℕ m, c.eval v.1 = pure <$> g i v) :
     ∃ c : Code, ∀ v : Vector ℕ m, c.eval v.1 = pure <$> ((Vector.mOfFn fun i => g i v) >>= f) :=
@@ -251,8 +305,14 @@ theorem ExistsCode.comp {m n} {f : Vector ℕ n →. ℕ} {g : Fin n → Vector 
         simp [Vector.mOfFn, hg₁, map_bind, seq_bind_eq, bind_assoc, (· ∘ ·), hl,
           -Subtype.val_eq_coe]
         rfl⟩
-#align turing.to_partrec.code.exists_code.comp Turing.ToPartrec.Code.ExistsCode.comp
+#align turing.to_partrec.code.exists_code.comp Turing.ToPartrec.Code.exists_code.comp
 
+/- warning: turing.to_partrec.code.exists_code -> Turing.ToPartrec.Code.exists_code is a dubious translation:
+lean 3 declaration is
+  forall {n : Nat} {f : PFun.{0, 0} (Vector.{0} Nat n) Nat}, (Nat.Partrec' n f) -> (Exists.{1} Turing.ToPartrec.Code (fun (c : Turing.ToPartrec.Code) => forall (v : Vector.{0} Nat n), Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Code.eval c (Subtype.val.{1} (List.{0} Nat) (fun (l : List.{0} Nat) => Eq.{1} Nat (List.length.{0} Nat l) n) v)) (Functor.map.{0, 0} Part.{0} (Applicative.toFunctor.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.monad.{0})) Nat (List.{0} Nat) (Pure.pure.{0, 0} List.{0} (Applicative.toHasPure.{0, 0} List.{0} (Monad.toApplicative.{0, 0} List.{0} List.monad.{0})) Nat) (f v))))
+but is expected to have type
+  forall {n : Nat} {f : PFun.{0, 0} (Vector.{0} Nat n) Nat}, (Nat.Partrec' n f) -> (Exists.{1} Turing.ToPartrec.Code (fun (c : Turing.ToPartrec.Code) => forall (v : Vector.{0} Nat n), Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Code.eval c (Subtype.val.{1} (List.{0} Nat) (fun (l : List.{0} Nat) => Eq.{1} Nat (List.length.{0} Nat l) n) v)) (Functor.map.{0, 0} Part.{0} (Applicative.toFunctor.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.instMonadPart.{0})) Nat (List.{0} Nat) (Pure.pure.{0, 0} List.{0} (Applicative.toPure.{0, 0} List.{0} (Monad.toApplicative.{0, 0} List.{0} List.instMonadList.{0})) Nat) (f v))))
+Case conversion may be inaccurate. Consider using '#align turing.to_partrec.code.exists_code Turing.ToPartrec.Code.exists_codeₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -436,6 +496,7 @@ to `v'` in finitely many steps if and only if `code.eval c v = some v'`.
 -/
 
 
+#print Turing.ToPartrec.Cont /-
 /-- The type of continuations, built up during evaluation of a `code` expression. -/
 inductive Cont
   | halt
@@ -445,9 +506,11 @@ inductive Cont
   | fix : Code → cont → cont
   deriving Inhabited
 #align turing.to_partrec.cont Turing.ToPartrec.Cont
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Turing.ToPartrec.Cont.eval /-
 /-- The semantics of a continuation. -/
 def Cont.eval : Cont → List ℕ →. List ℕ
   | cont.halt => pure
@@ -458,7 +521,9 @@ def Cont.eval : Cont → List ℕ →. List ℕ
   | cont.comp f k => fun v => Code.eval f v >>= cont.eval k
   | cont.fix f k => fun v => if v.headI = 0 then k.eval v.tail else f.fix.eval v.tail >>= k.eval
 #align turing.to_partrec.cont.eval Turing.ToPartrec.Cont.eval
+-/
 
+#print Turing.ToPartrec.Cfg /-
 /-- The set of configurations of the machine:
 
 * `halt v`: The machine is about to stop and `v : list ℕ` is the result.
@@ -471,9 +536,11 @@ inductive Cfg
   | ret : Cont → List ℕ → cfg
   deriving Inhabited
 #align turing.to_partrec.cfg Turing.ToPartrec.Cfg
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Turing.ToPartrec.stepNormal /-
 /-- Evaluating `c : code` in a continuation `k : cont` and input `v : list ℕ`. This goes by
 recursion on `c`, building an augmented continuation and a value to pass to it.
 
@@ -500,8 +567,10 @@ def stepNormal : Code → Cont → List ℕ → Cfg
     v.headI.elim (step_normal f k v.tail) fun y _ => step_normal g k (y::v.tail)
   | code.fix f, k, v => step_normal f (Cont.fix f k) v
 #align turing.to_partrec.step_normal Turing.ToPartrec.stepNormal
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Turing.ToPartrec.stepRet /-
 /-- Evaluating a continuation `k : cont` on input `v : list ℕ`. This is the second part of
 evaluation, when we receive results from continuations built by `step_normal`.
 
@@ -522,7 +591,9 @@ def stepRet : Cont → List ℕ → Cfg
   | cont.comp f k, v => stepNormal f k v
   | cont.fix f k, v => if v.headI = 0 then step_ret k v.tail else stepNormal f (Cont.fix f k) v.tail
 #align turing.to_partrec.step_ret Turing.ToPartrec.stepRet
+-/
 
+#print Turing.ToPartrec.step /-
 /-- If we are not done (in `cfg.halt` state), then we must be still stuck on a continuation, so
 this main loop calls `step_ret` with the new continuation. The overall `step` function transitions
 from one `cfg` to another, only halting at the `cfg.halt` state. -/
@@ -530,7 +601,9 @@ def step : Cfg → Option Cfg
   | cfg.halt _ => none
   | cfg.ret k v => some (stepRet k v)
 #align turing.to_partrec.step Turing.ToPartrec.step
+-/
 
+#print Turing.ToPartrec.Cont.then /-
 /-- In order to extract a compositional semantics from the sequential execution behavior of
 configurations, we observe that continuations have a monoid structure, with `cont.halt` as the unit
 and `cont.then` as the multiplication. `cont.then k₁ k₂` runs `k₁` until it halts, and then takes
@@ -550,7 +623,14 @@ def Cont.then : Cont → Cont → Cont
   | cont.comp f k, k' => Cont.comp f (k.then k')
   | cont.fix f k, k' => Cont.fix f (k.then k')
 #align turing.to_partrec.cont.then Turing.ToPartrec.Cont.then
+-/
 
+/- warning: turing.to_partrec.cont.then_eval -> Turing.ToPartrec.Cont.then_eval is a dubious translation:
+lean 3 declaration is
+  forall {k : Turing.ToPartrec.Cont} {k' : Turing.ToPartrec.Cont} {v : List.{0} Nat}, Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Cont.eval (Turing.ToPartrec.Cont.then k k') v) (Bind.bind.{0, 0} Part.{0} (Monad.toHasBind.{0, 0} Part.{0} Part.monad.{0}) (List.{0} Nat) (List.{0} Nat) (Turing.ToPartrec.Cont.eval k v) (Turing.ToPartrec.Cont.eval k'))
+but is expected to have type
+  forall {k : Turing.ToPartrec.Cont} {k' : Turing.ToPartrec.Cont} {v : List.{0} Nat}, Eq.{1} (Part.{0} (List.{0} Nat)) (Turing.ToPartrec.Cont.eval (Turing.ToPartrec.Cont.then k k') v) (Bind.bind.{0, 0} Part.{0} (Monad.toBind.{0, 0} Part.{0} Part.instMonadPart.{0}) (List.{0} Nat) (List.{0} Nat) (Turing.ToPartrec.Cont.eval k v) (Turing.ToPartrec.Cont.eval k'))
+Case conversion may be inaccurate. Consider using '#align turing.to_partrec.cont.then_eval Turing.ToPartrec.Cont.then_evalₓ'. -/
 theorem Cont.then_eval {k k' : Cont} {v} : (k.then k').eval v = k.eval v >>= k'.eval :=
   by
   induction k generalizing v <;> simp only [cont.eval, cont.then, bind_assoc, pure_bind, *]
@@ -558,6 +638,7 @@ theorem Cont.then_eval {k k' : Cont} {v} : (k.then k').eval v = k.eval v >>= k'.
   · split_ifs <;> [rfl, simp only [← k_ih, bind_assoc]]
 #align turing.to_partrec.cont.then_eval Turing.ToPartrec.Cont.then_eval
 
+#print Turing.ToPartrec.Cfg.then /-
 /-- The `then k` function is a "configuration homomorphism". Its operation on states is to append
 `k` to the continuation of a `cfg.ret` state, and to run `k` on `v` if we are in the `cfg.halt v`
 state. -/
@@ -565,8 +646,10 @@ def Cfg.then : Cfg → Cont → Cfg
   | cfg.halt v, k' => stepRet k' v
   | cfg.ret k v, k' => Cfg.ret (k.then k') v
 #align turing.to_partrec.cfg.then Turing.ToPartrec.Cfg.then
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:337:16: warning: unsupported simp config option: constructor_eq -/
+#print Turing.ToPartrec.stepNormal_then /-
 /-- The `step_normal` function respects the `then k'` homomorphism. Note that this is an exact
 equality, not a simulation; the original and embedded machines move in lock-step until the
 embedded machine reaches the halt state. -/
@@ -579,7 +662,9 @@ theorem stepNormal_then (c) (k k' : Cont) (v) :
   · cases v.head <;> simp only [Nat.rec]
   case fix c ih => rw [← ih, cont.then]
 #align turing.to_partrec.step_normal_then Turing.ToPartrec.stepNormal_then
+-/
 
+#print Turing.ToPartrec.stepRet_then /-
 /-- The `step_ret` function respects the `then k'` homomorphism. Note that this is an exact
 equality, not a simulation; the original and embedded machines move in lock-step until the
 embedded machine reaches the halt state. -/
@@ -594,7 +679,9 @@ theorem stepRet_then {k k' : Cont} {v} : stepRet (k.then k') v = (stepRet k v).t
     · rw [← step_normal_then]
       rfl
 #align turing.to_partrec.step_ret_then Turing.ToPartrec.stepRet_then
+-/
 
+#print Turing.ToPartrec.Code.Ok /-
 /-- This is a temporary definition, because we will prove in `code_is_ok` that it always holds.
 It asserts that `c` is semantically correct; that is, for any `k` and `v`,
 `eval (step_normal c k v) = eval (cfg.ret k (code.eval c v))`, as an equality of partial values
@@ -605,7 +692,14 @@ evaluates to `cfg.halt (code.eval c v)`. -/
 def Code.Ok (c : Code) :=
   ∀ k v, eval step (stepNormal c k v) = Code.eval c v >>= fun v => eval step (Cfg.ret k v)
 #align turing.to_partrec.code.ok Turing.ToPartrec.Code.Ok
+-/
 
+/- warning: turing.to_partrec.code.ok.zero -> Turing.ToPartrec.Code.Ok.zero is a dubious translation:
+lean 3 declaration is
+  forall {c : Turing.ToPartrec.Code}, (Turing.ToPartrec.Code.Ok c) -> (forall {v : List.{0} Nat}, Eq.{1} (Part.{0} Turing.ToPartrec.Cfg) (Turing.eval.{0} Turing.ToPartrec.Cfg Turing.ToPartrec.step (Turing.ToPartrec.stepNormal c Turing.ToPartrec.Cont.halt v)) (Functor.map.{0, 0} Part.{0} (Applicative.toFunctor.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.monad.{0})) (List.{0} Nat) Turing.ToPartrec.Cfg Turing.ToPartrec.Cfg.halt (Turing.ToPartrec.Code.eval c v)))
+but is expected to have type
+  forall {c : Turing.ToPartrec.Code}, (Turing.ToPartrec.Code.Ok c) -> (forall {v : List.{0} Nat}, Eq.{1} (Part.{0} Turing.ToPartrec.Cfg) (Turing.eval.{0} Turing.ToPartrec.Cfg Turing.ToPartrec.step (Turing.ToPartrec.stepNormal c Turing.ToPartrec.Cont.halt v)) (Functor.map.{0, 0} Part.{0} (Applicative.toFunctor.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.instMonadPart.{0})) (List.{0} Nat) Turing.ToPartrec.Cfg Turing.ToPartrec.Cfg.halt (Turing.ToPartrec.Code.eval c v)))
+Case conversion may be inaccurate. Consider using '#align turing.to_partrec.code.ok.zero Turing.ToPartrec.Code.Ok.zeroₓ'. -/
 theorem Code.Ok.zero {c} (h : Code.Ok c) {v} :
     eval step (stepNormal c Cont.halt v) = Cfg.halt <$> Code.eval c v :=
   by
@@ -613,6 +707,7 @@ theorem Code.Ok.zero {c} (h : Code.Ok c) {v} :
   exact Part.eq_some_iff.2 (mem_eval.2 ⟨refl_trans_gen.single rfl, rfl⟩)
 #align turing.to_partrec.code.ok.zero Turing.ToPartrec.Code.Ok.zero
 
+#print Turing.ToPartrec.stepNormal.is_ret /-
 theorem stepNormal.is_ret (c k v) : ∃ k' v', stepNormal c k v = Cfg.ret k' v' :=
   by
   induction c generalizing k v
@@ -623,7 +718,14 @@ theorem stepNormal.is_ret (c k v) : ∃ k' v', stepNormal c k v = Cfg.ret k' v' 
     cases v.head <;> simp only [Nat.rec] <;> [apply IHf, apply IHg]
   case fix f IHf => apply IHf
 #align turing.to_partrec.step_normal.is_ret Turing.ToPartrec.stepNormal.is_ret
+-/
 
+/- warning: turing.to_partrec.cont_eval_fix -> Turing.ToPartrec.cont_eval_fix is a dubious translation:
+lean 3 declaration is
+  forall {f : Turing.ToPartrec.Code} {k : Turing.ToPartrec.Cont} {v : List.{0} Nat}, (Turing.ToPartrec.Code.Ok f) -> (Eq.{1} (Part.{0} Turing.ToPartrec.Cfg) (Turing.eval.{0} Turing.ToPartrec.Cfg Turing.ToPartrec.step (Turing.ToPartrec.stepNormal f (Turing.ToPartrec.Cont.fix f k) v)) (Bind.bind.{0, 0} Part.{0} (Monad.toHasBind.{0, 0} Part.{0} Part.monad.{0}) (List.{0} Nat) Turing.ToPartrec.Cfg (Turing.ToPartrec.Code.eval (Turing.ToPartrec.Code.fix f) v) (fun (v : List.{0} Nat) => Turing.eval.{0} Turing.ToPartrec.Cfg Turing.ToPartrec.step (Turing.ToPartrec.Cfg.ret k v))))
+but is expected to have type
+  forall {f : Turing.ToPartrec.Code} {k : Turing.ToPartrec.Cont} {v : List.{0} Nat}, (Turing.ToPartrec.Code.Ok f) -> (Eq.{1} (Part.{0} Turing.ToPartrec.Cfg) (Turing.eval.{0} Turing.ToPartrec.Cfg Turing.ToPartrec.step (Turing.ToPartrec.stepNormal f (Turing.ToPartrec.Cont.fix f k) v)) (Bind.bind.{0, 0} Part.{0} (Monad.toBind.{0, 0} Part.{0} Part.instMonadPart.{0}) (List.{0} Nat) Turing.ToPartrec.Cfg (Turing.ToPartrec.Code.eval (Turing.ToPartrec.Code.fix f) v) (fun (v : List.{0} Nat) => Turing.eval.{0} Turing.ToPartrec.Cfg Turing.ToPartrec.step (Turing.ToPartrec.Cfg.ret k v))))
+Case conversion may be inaccurate. Consider using '#align turing.to_partrec.cont_eval_fix Turing.ToPartrec.cont_eval_fixₓ'. -/
 theorem cont_eval_fix {f k v} (fok : Code.Ok f) :
     eval step (stepNormal f (Cont.fix f k) v) = f.fix.eval v >>= fun v => eval step (Cfg.ret k v) :=
   by
@@ -706,6 +808,7 @@ theorem cont_eval_fix {f k v} (fok : Code.Ok f) :
       exact IH v₁.tail ((Part.mem_map_iff _).2 ⟨_, he₁, if_neg h⟩)
 #align turing.to_partrec.cont_eval_fix Turing.ToPartrec.cont_eval_fix
 
+#print Turing.ToPartrec.code_is_ok /-
 theorem code_is_ok (c) : Code.Ok c :=
   by
   induction c <;> intro k v <;> rw [step_normal]
@@ -725,11 +828,24 @@ theorem code_is_ok (c) : Code.Ok c :=
     cases v.head <;> simp only [Nat.rec, code.eval] <;> [apply IHf, apply IHg]
   case fix f IHf => rw [cont_eval_fix IHf]
 #align turing.to_partrec.code_is_ok Turing.ToPartrec.code_is_ok
+-/
 
+/- warning: turing.to_partrec.step_normal_eval -> Turing.ToPartrec.stepNormal_eval is a dubious translation:
+lean 3 declaration is
+  forall (c : Turing.ToPartrec.Code) (v : List.{0} Nat), Eq.{1} (Part.{0} Turing.ToPartrec.Cfg) (Turing.eval.{0} Turing.ToPartrec.Cfg Turing.ToPartrec.step (Turing.ToPartrec.stepNormal c Turing.ToPartrec.Cont.halt v)) (Functor.map.{0, 0} Part.{0} (Applicative.toFunctor.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.monad.{0})) (List.{0} Nat) Turing.ToPartrec.Cfg Turing.ToPartrec.Cfg.halt (Turing.ToPartrec.Code.eval c v))
+but is expected to have type
+  forall (c : Turing.ToPartrec.Code) (v : List.{0} Nat), Eq.{1} (Part.{0} Turing.ToPartrec.Cfg) (Turing.eval.{0} Turing.ToPartrec.Cfg Turing.ToPartrec.step (Turing.ToPartrec.stepNormal c Turing.ToPartrec.Cont.halt v)) (Functor.map.{0, 0} Part.{0} (Applicative.toFunctor.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.instMonadPart.{0})) (List.{0} Nat) Turing.ToPartrec.Cfg Turing.ToPartrec.Cfg.halt (Turing.ToPartrec.Code.eval c v))
+Case conversion may be inaccurate. Consider using '#align turing.to_partrec.step_normal_eval Turing.ToPartrec.stepNormal_evalₓ'. -/
 theorem stepNormal_eval (c v) : eval step (stepNormal c Cont.halt v) = Cfg.halt <$> c.eval v :=
   (code_is_ok c).zero
 #align turing.to_partrec.step_normal_eval Turing.ToPartrec.stepNormal_eval
 
+/- warning: turing.to_partrec.step_ret_eval -> Turing.ToPartrec.stepRet_eval is a dubious translation:
+lean 3 declaration is
+  forall {k : Turing.ToPartrec.Cont} {v : List.{0} Nat}, Eq.{1} (Part.{0} Turing.ToPartrec.Cfg) (Turing.eval.{0} Turing.ToPartrec.Cfg Turing.ToPartrec.step (Turing.ToPartrec.stepRet k v)) (Functor.map.{0, 0} Part.{0} (Applicative.toFunctor.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.monad.{0})) (List.{0} Nat) Turing.ToPartrec.Cfg Turing.ToPartrec.Cfg.halt (Turing.ToPartrec.Cont.eval k v))
+but is expected to have type
+  forall {k : Turing.ToPartrec.Cont} {v : List.{0} Nat}, Eq.{1} (Part.{0} Turing.ToPartrec.Cfg) (Turing.eval.{0} Turing.ToPartrec.Cfg Turing.ToPartrec.step (Turing.ToPartrec.stepRet k v)) (Functor.map.{0, 0} Part.{0} (Applicative.toFunctor.{0, 0} Part.{0} (Monad.toApplicative.{0, 0} Part.{0} Part.instMonadPart.{0})) (List.{0} Nat) Turing.ToPartrec.Cfg Turing.ToPartrec.Cfg.halt (Turing.ToPartrec.Cont.eval k v))
+Case conversion may be inaccurate. Consider using '#align turing.to_partrec.step_ret_eval Turing.ToPartrec.stepRet_evalₓ'. -/
 theorem stepRet_eval {k v} : eval step (stepRet k v) = Cfg.halt <$> k.eval v :=
   by
   induction k generalizing v
@@ -871,6 +987,7 @@ section
 
 open ToPartrec
 
+#print Turing.PartrecToTM2.Γ' /-
 /-- The alphabet for the stacks in the program. `bit0` and `bit1` are used to represent `ℕ` values
 as lists of binary digits, `cons` is used to separate `list ℕ` values, and `Cons` is used to
 separate `list (list ℕ)` values. See the section documentation. -/
@@ -881,7 +998,9 @@ inductive Γ'
   | bit1
   deriving DecidableEq, Inhabited, Fintype
 #align turing.partrec_to_TM2.Γ' Turing.PartrecToTM2.Γ'
+-/
 
+#print Turing.PartrecToTM2.K' /-
 /-- The four stacks used by the program. `main` is used to store the input value in `tr_normal`
 mode and the output value in `Λ'.ret` mode, while `stack` is used to keep all the data for the
 continuations. `rev` is used to store reversed lists when transferring values between stacks, and
@@ -893,9 +1012,11 @@ inductive K'
   | stack
   deriving DecidableEq, Inhabited
 #align turing.partrec_to_TM2.K' Turing.PartrecToTM2.K'
+-/
 
 open K'
 
+#print Turing.PartrecToTM2.Cont' /-
 /-- Continuations as in `to_partrec.cont` but with the data removed. This is done because we want
 the set of all continuations in the program to be finite (so that it can ultimately be encoded into
 the finite state machine of a Turing machine), but a continuation can handle a potentially infinite
@@ -908,7 +1029,9 @@ inductive Cont'
   | fix : Code → cont' → cont'
   deriving DecidableEq, Inhabited
 #align turing.partrec_to_TM2.cont' Turing.PartrecToTM2.Cont'
+-/
 
+#print Turing.PartrecToTM2.Λ' /-
 /-- The set of program positions. We make extensive use of inductive types here to let us describe
 "subroutines"; for example `clear p k q` is a program that clears stack `k`, then does `q` where
 `q` is another label. In order to prevent this from resulting in an infinite number of distinct
@@ -924,6 +1047,7 @@ inductive Λ'
   | pred (q₁ q₂ : Λ')
   | ret (k : Cont')
 #align turing.partrec_to_TM2.Λ' Turing.PartrecToTM2.Λ'
+-/
 
 instance : Inhabited Λ' :=
   ⟨Λ'.ret Cont'.halt⟩
@@ -933,18 +1057,23 @@ instance : DecidableEq Λ' := fun a b =>
   induction a generalizing b <;> cases b <;> try apply Decidable.isFalse; rintro ⟨⟨⟩⟩; done
   all_goals exact decidable_of_iff' _ (by simp [Function.funext_iff])
 
+#print Turing.PartrecToTM2.Stmt' /-
 /-- The type of TM2 statements used by this machine. -/
 def Stmt' :=
   TM2.Stmt (fun _ : K' => Γ') Λ' (Option Γ')deriving Inhabited
 #align turing.partrec_to_TM2.stmt' Turing.PartrecToTM2.Stmt'
+-/
 
+#print Turing.PartrecToTM2.Cfg' /-
 /-- The type of TM2 configurations used by this machine. -/
 def Cfg' :=
   TM2.Cfg (fun _ : K' => Γ') Λ' (Option Γ')deriving Inhabited
 #align turing.partrec_to_TM2.cfg' Turing.PartrecToTM2.Cfg'
+-/
 
 open TM2.Stmt
 
+#print Turing.PartrecToTM2.natEnd /-
 /-- A predicate that detects the end of a natural number, either `Γ'.cons` or `Γ'.Cons` (or
 implicitly the end of the list), for use in predicate-taking functions like `move` and `clear`. -/
 @[simp]
@@ -953,50 +1082,66 @@ def natEnd : Γ' → Bool
   | Γ'.cons => true
   | _ => false
 #align turing.partrec_to_TM2.nat_end Turing.PartrecToTM2.natEnd
+-/
 
+#print Turing.PartrecToTM2.pop' /-
 /-- Pop a value from the stack and place the result in local store. -/
 @[simp]
 def pop' (k : K') : Stmt' → Stmt' :=
   pop k fun x v => v
 #align turing.partrec_to_TM2.pop' Turing.PartrecToTM2.pop'
+-/
 
+#print Turing.PartrecToTM2.peek' /-
 /-- Peek a value from the stack and place the result in local store. -/
 @[simp]
 def peek' (k : K') : Stmt' → Stmt' :=
   peek k fun x v => v
 #align turing.partrec_to_TM2.peek' Turing.PartrecToTM2.peek'
+-/
 
+#print Turing.PartrecToTM2.push' /-
 /-- Push the value in the local store to the given stack. -/
 @[simp]
 def push' (k : K') : Stmt' → Stmt' :=
   push k fun x => x.iget
 #align turing.partrec_to_TM2.push' Turing.PartrecToTM2.push'
+-/
 
+#print Turing.PartrecToTM2.unrev /-
 /-- Move everything from the `rev` stack to the `main` stack (reversed). -/
 def unrev :=
   Λ'.move (fun _ => false) rev main
 #align turing.partrec_to_TM2.unrev Turing.PartrecToTM2.unrev
+-/
 
+#print Turing.PartrecToTM2.moveExcl /-
 /-- Move elements from `k₁` to `k₂` while `p` holds, with the last element being left on `k₁`. -/
 def moveExcl (p k₁ k₂ q) :=
   Λ'.move p k₁ k₂ <| Λ'.push k₁ id q
 #align turing.partrec_to_TM2.move_excl Turing.PartrecToTM2.moveExcl
+-/
 
+#print Turing.PartrecToTM2.move₂ /-
 /-- Move elements from `k₁` to `k₂` without reversion, by performing a double move via the `rev`
 stack. -/
 def move₂ (p k₁ k₂ q) :=
   moveExcl p k₁ rev <| Λ'.move (fun _ => false) rev k₂ q
 #align turing.partrec_to_TM2.move₂ Turing.PartrecToTM2.move₂
+-/
 
+#print Turing.PartrecToTM2.head /-
 /-- Assuming `tr_list v` is on the front of stack `k`, remove it, and push `v.head` onto `main`.
 See the section documentation. -/
 def head (k : K') (q : Λ') : Λ' :=
   Λ'.move natEnd k rev <|
     (Λ'.push rev fun _ => some Γ'.cons) <|
       Λ'.read fun s =>
-        (if s = some Γ'.Cons then id else Λ'.clear (fun x => x = Γ'.Cons) k) <| unrev q
+        (if s = some Γ'.consₗ then id else Λ'.clear (fun x => x = Γ'.consₗ) k) <| unrev q
 #align turing.partrec_to_TM2.head Turing.PartrecToTM2.head
+-/
 
+#print Turing.PartrecToTM2.trNormal /-
 /-- The program that evaluates code `c` with continuation `k`. This expects an initial state where
 `tr_list v` is on `main`, `tr_cont_stack k` is on `stack`, and `aux` and `rev` are empty.
 See the section documentation for details. -/
@@ -1006,13 +1151,15 @@ def trNormal : Code → Cont' → Λ'
   | code.succ, k => head main <| Λ'.succ <| Λ'.ret k
   | code.tail, k => Λ'.clear natEnd main <| Λ'.ret k
   | code.cons f fs, k =>
-    (Λ'.push stack fun _ => some Γ'.Cons) <|
+    (Λ'.push stack fun _ => some Γ'.consₗ) <|
       Λ'.move (fun _ => false) main rev <| Λ'.copy <| tr_normal f (Cont'.cons₁ fs k)
   | code.comp f g, k => tr_normal g (Cont'.comp f k)
   | code.case f g, k => Λ'.pred (tr_normal f k) (tr_normal g k)
   | code.fix f, k => tr_normal f (Cont'.fix f k)
 #align turing.partrec_to_TM2.tr_normal Turing.PartrecToTM2.trNormal
+-/
 
+#print Turing.PartrecToTM2.tr /-
 /-- The main program. See the section documentation for details. -/
 @[simp]
 def tr : Λ' → Stmt'
@@ -1046,7 +1193,7 @@ def tr : Λ' → Stmt'
   | Λ'.ret (cont'.cons₁ fs k) =>
     goto fun _ =>
       move₂ (fun _ => false) main aux <|
-        move₂ (fun s => s = Γ'.Cons) stack main <|
+        move₂ (fun s => s = Γ'.consₗ) stack main <|
           move₂ (fun _ => false) aux stack <| trNormal fs (Cont'.cons₂ k)
   | Λ'.ret (cont'.cons₂ k) => goto fun _ => head stack <| Λ'.ret k
   | Λ'.ret (cont'.comp f k) => goto fun _ => trNormal f k
@@ -1056,7 +1203,9 @@ def tr : Λ' → Stmt'
         cond (natEnd s.iget) (Λ'.ret k) <| Λ'.clear natEnd main <| trNormal f (Cont'.fix f k)
   | Λ'.ret cont'.halt => (load fun _ => none) <| halt
 #align turing.partrec_to_TM2.tr Turing.PartrecToTM2.tr
+-/
 
+#print Turing.PartrecToTM2.trCont /-
 /-- Translating a `cont` continuation to a `cont'` continuation simply entails dropping all the
 data. This data is instead encoded in `tr_cont_stack` in the configuration. -/
 def trCont : Cont → Cont'
@@ -1066,9 +1215,11 @@ def trCont : Cont → Cont'
   | cont.comp c k => Cont'.comp c (tr_cont k)
   | cont.fix c k => Cont'.fix c (tr_cont k)
 #align turing.partrec_to_TM2.tr_cont Turing.PartrecToTM2.trCont
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Turing.PartrecToTM2.trPosNum /-
 /-- We use `pos_num` to define the translation of binary natural numbers. A natural number is
 represented as a little-endian list of `bit0` and `bit1` elements:
 
@@ -1083,7 +1234,9 @@ def trPosNum : PosNum → List Γ'
   | PosNum.bit0 n => Γ'.bit0::tr_pos_num n
   | PosNum.bit1 n => Γ'.bit1::tr_pos_num n
 #align turing.partrec_to_TM2.tr_pos_num Turing.PartrecToTM2.trPosNum
+-/
 
+#print Turing.PartrecToTM2.trNum /-
 /-- We use `num` to define the translation of binary natural numbers. Positive numbers are
 translated using `tr_pos_num`, and `tr_num 0 = []`. So there are never any trailing `bit0`'s in
 a translated `num`.
@@ -1098,25 +1251,33 @@ def trNum : Num → List Γ'
   | Num.zero => []
   | Num.pos n => trPosNum n
 #align turing.partrec_to_TM2.tr_num Turing.PartrecToTM2.trNum
+-/
 
+#print Turing.PartrecToTM2.trNat /-
 /-- Because we use binary encoding, we define `tr_nat` in terms of `tr_num`, using `num`, which are
 binary natural numbers. (We could also use `nat.binary_rec_on`, but `num` and `pos_num` make for
 easy inductions.) -/
 def trNat (n : ℕ) : List Γ' :=
   trNum n
 #align turing.partrec_to_TM2.tr_nat Turing.PartrecToTM2.trNat
+-/
 
+#print Turing.PartrecToTM2.trNat_zero /-
 @[simp]
 theorem trNat_zero : trNat 0 = [] := by rw [tr_nat, Nat.cast_zero] <;> rfl
 #align turing.partrec_to_TM2.tr_nat_zero Turing.PartrecToTM2.trNat_zero
+-/
 
+#print Turing.PartrecToTM2.trNat_default /-
 @[simp]
 theorem trNat_default : trNat default = [] :=
   trNat_zero
 #align turing.partrec_to_TM2.tr_nat_default Turing.PartrecToTM2.trNat_default
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Turing.PartrecToTM2.trList /-
 /-- Lists are translated with a `cons` after each encoded number.
 For example:
 
@@ -1130,9 +1291,11 @@ def trList : List ℕ → List Γ'
   | [] => []
   | n::ns => trNat n ++ Γ'.cons::tr_list ns
 #align turing.partrec_to_TM2.tr_list Turing.PartrecToTM2.trList
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Turing.PartrecToTM2.trLList /-
 /-- Lists of lists are translated with a `Cons` after each encoded list.
 For example:
 
@@ -1143,13 +1306,15 @@ For example:
     [[1, 2], [0]] = [bit1, cons, bit0, bit1, cons, Cons, cons, Cons]
 -/
 @[simp]
-def trLlist : List (List ℕ) → List Γ'
+def trLList : List (List ℕ) → List Γ'
   | [] => []
-  | l::ls => trList l ++ Γ'.Cons::tr_llist ls
-#align turing.partrec_to_TM2.tr_llist Turing.PartrecToTM2.trLlist
+  | l::ls => trList l ++ Γ'.consₗ::tr_llist ls
+#align turing.partrec_to_TM2.tr_llist Turing.PartrecToTM2.trLList
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Turing.PartrecToTM2.contStack /-
 /-- The data part of a continuation is a list of lists, which is encoded on the `stack` stack
 using `tr_llist`. -/
 @[simp]
@@ -1160,13 +1325,17 @@ def contStack : Cont → List (List ℕ)
   | cont.comp _ k => cont_stack k
   | cont.fix _ k => cont_stack k
 #align turing.partrec_to_TM2.cont_stack Turing.PartrecToTM2.contStack
+-/
 
+#print Turing.PartrecToTM2.trContStack /-
 /-- The data part of a continuation is a list of lists, which is encoded on the `stack` stack
 using `tr_llist`. -/
 def trContStack (k : Cont) :=
-  trLlist (contStack k)
+  trLList (contStack k)
 #align turing.partrec_to_TM2.tr_cont_stack Turing.PartrecToTM2.trContStack
+-/
 
+#print Turing.PartrecToTM2.K'.elim /-
 /-- This is the nondependent eliminator for `K'`, but we use it specifically here in order to
 represent the stack data as four lists rather than as a function `K' → list Γ'`, because this makes
 rewrites easier. The theorems `K'.elim_update_main` et. al. show how such a function is updated
@@ -1178,32 +1347,60 @@ def K'.elim (a b c d : List Γ') : K' → List Γ'
   | K'.aux => c
   | K'.stack => d
 #align turing.partrec_to_TM2.K'.elim Turing.PartrecToTM2.K'.elim
+-/
 
+/- warning: turing.partrec_to_TM2.K'.elim_update_main -> Turing.PartrecToTM2.K'.elim_update_main is a dubious translation:
+lean 3 declaration is
+  forall {a : List.{0} Turing.PartrecToTM2.Γ'} {b : List.{0} Turing.PartrecToTM2.Γ'} {c : List.{0} Turing.PartrecToTM2.Γ'} {d : List.{0} Turing.PartrecToTM2.Γ'} {a' : List.{0} Turing.PartrecToTM2.Γ'}, Eq.{1} (Turing.PartrecToTM2.K' -> (List.{0} Turing.PartrecToTM2.Γ')) (Function.update.{1, 1} Turing.PartrecToTM2.K' (fun (a : Turing.PartrecToTM2.K') => List.{0} Turing.PartrecToTM2.Γ') (fun (a : Turing.PartrecToTM2.K') (b : Turing.PartrecToTM2.K') => Turing.PartrecToTM2.K'.decidableEq a b) (Turing.PartrecToTM2.K'.elim a b c d) Turing.PartrecToTM2.K'.main a') (Turing.PartrecToTM2.K'.elim a' b c d)
+but is expected to have type
+  forall {a : List.{0} Turing.PartrecToTM2.Γ'} {b : List.{0} Turing.PartrecToTM2.Γ'} {c : List.{0} Turing.PartrecToTM2.Γ'} {d : List.{0} Turing.PartrecToTM2.Γ'} {a' : List.{0} Turing.PartrecToTM2.Γ'}, Eq.{1} (Turing.PartrecToTM2.K' -> (List.{0} Turing.PartrecToTM2.Γ')) (Function.update.{1, 1} Turing.PartrecToTM2.K' (fun (a : Turing.PartrecToTM2.K') => List.{0} Turing.PartrecToTM2.Γ') (fun (a : Turing.PartrecToTM2.K') (b : Turing.PartrecToTM2.K') => Turing.PartrecToTM2.instDecidableEqK' a b) (Turing.PartrecToTM2.K'.elim a b c d) Turing.PartrecToTM2.K'.main a') (Turing.PartrecToTM2.K'.elim a' b c d)
+Case conversion may be inaccurate. Consider using '#align turing.partrec_to_TM2.K'.elim_update_main Turing.PartrecToTM2.K'.elim_update_mainₓ'. -/
 @[simp]
 theorem K'.elim_update_main {a b c d a'} : update (K'.elim a b c d) main a' = K'.elim a' b c d := by
   funext x <;> cases x <;> rfl
 #align turing.partrec_to_TM2.K'.elim_update_main Turing.PartrecToTM2.K'.elim_update_main
 
+/- warning: turing.partrec_to_TM2.K'.elim_update_rev -> Turing.PartrecToTM2.K'.elim_update_rev is a dubious translation:
+lean 3 declaration is
+  forall {a : List.{0} Turing.PartrecToTM2.Γ'} {b : List.{0} Turing.PartrecToTM2.Γ'} {c : List.{0} Turing.PartrecToTM2.Γ'} {d : List.{0} Turing.PartrecToTM2.Γ'} {b' : List.{0} Turing.PartrecToTM2.Γ'}, Eq.{1} (Turing.PartrecToTM2.K' -> (List.{0} Turing.PartrecToTM2.Γ')) (Function.update.{1, 1} Turing.PartrecToTM2.K' (fun (a : Turing.PartrecToTM2.K') => List.{0} Turing.PartrecToTM2.Γ') (fun (a : Turing.PartrecToTM2.K') (b : Turing.PartrecToTM2.K') => Turing.PartrecToTM2.K'.decidableEq a b) (Turing.PartrecToTM2.K'.elim a b c d) Turing.PartrecToTM2.K'.rev b') (Turing.PartrecToTM2.K'.elim a b' c d)
+but is expected to have type
+  forall {a : List.{0} Turing.PartrecToTM2.Γ'} {b : List.{0} Turing.PartrecToTM2.Γ'} {c : List.{0} Turing.PartrecToTM2.Γ'} {d : List.{0} Turing.PartrecToTM2.Γ'} {b' : List.{0} Turing.PartrecToTM2.Γ'}, Eq.{1} (Turing.PartrecToTM2.K' -> (List.{0} Turing.PartrecToTM2.Γ')) (Function.update.{1, 1} Turing.PartrecToTM2.K' (fun (a : Turing.PartrecToTM2.K') => List.{0} Turing.PartrecToTM2.Γ') (fun (a : Turing.PartrecToTM2.K') (b : Turing.PartrecToTM2.K') => Turing.PartrecToTM2.instDecidableEqK' a b) (Turing.PartrecToTM2.K'.elim a b c d) Turing.PartrecToTM2.K'.rev b') (Turing.PartrecToTM2.K'.elim a b' c d)
+Case conversion may be inaccurate. Consider using '#align turing.partrec_to_TM2.K'.elim_update_rev Turing.PartrecToTM2.K'.elim_update_revₓ'. -/
 @[simp]
 theorem K'.elim_update_rev {a b c d b'} : update (K'.elim a b c d) rev b' = K'.elim a b' c d := by
   funext x <;> cases x <;> rfl
 #align turing.partrec_to_TM2.K'.elim_update_rev Turing.PartrecToTM2.K'.elim_update_rev
 
+/- warning: turing.partrec_to_TM2.K'.elim_update_aux -> Turing.PartrecToTM2.K'.elim_update_aux is a dubious translation:
+lean 3 declaration is
+  forall {a : List.{0} Turing.PartrecToTM2.Γ'} {b : List.{0} Turing.PartrecToTM2.Γ'} {c : List.{0} Turing.PartrecToTM2.Γ'} {d : List.{0} Turing.PartrecToTM2.Γ'} {c' : List.{0} Turing.PartrecToTM2.Γ'}, Eq.{1} (Turing.PartrecToTM2.K' -> (List.{0} Turing.PartrecToTM2.Γ')) (Function.update.{1, 1} Turing.PartrecToTM2.K' (fun (a : Turing.PartrecToTM2.K') => List.{0} Turing.PartrecToTM2.Γ') (fun (a : Turing.PartrecToTM2.K') (b : Turing.PartrecToTM2.K') => Turing.PartrecToTM2.K'.decidableEq a b) (Turing.PartrecToTM2.K'.elim a b c d) Turing.PartrecToTM2.K'.aux c') (Turing.PartrecToTM2.K'.elim a b c' d)
+but is expected to have type
+  forall {a : List.{0} Turing.PartrecToTM2.Γ'} {b : List.{0} Turing.PartrecToTM2.Γ'} {c : List.{0} Turing.PartrecToTM2.Γ'} {d : List.{0} Turing.PartrecToTM2.Γ'} {c' : List.{0} Turing.PartrecToTM2.Γ'}, Eq.{1} (Turing.PartrecToTM2.K' -> (List.{0} Turing.PartrecToTM2.Γ')) (Function.update.{1, 1} Turing.PartrecToTM2.K' (fun (a : Turing.PartrecToTM2.K') => List.{0} Turing.PartrecToTM2.Γ') (fun (a : Turing.PartrecToTM2.K') (b : Turing.PartrecToTM2.K') => Turing.PartrecToTM2.instDecidableEqK' a b) (Turing.PartrecToTM2.K'.elim a b c d) Turing.PartrecToTM2.K'.aux c') (Turing.PartrecToTM2.K'.elim a b c' d)
+Case conversion may be inaccurate. Consider using '#align turing.partrec_to_TM2.K'.elim_update_aux Turing.PartrecToTM2.K'.elim_update_auxₓ'. -/
 @[simp]
 theorem K'.elim_update_aux {a b c d c'} : update (K'.elim a b c d) aux c' = K'.elim a b c' d := by
   funext x <;> cases x <;> rfl
 #align turing.partrec_to_TM2.K'.elim_update_aux Turing.PartrecToTM2.K'.elim_update_aux
 
+/- warning: turing.partrec_to_TM2.K'.elim_update_stack -> Turing.PartrecToTM2.K'.elim_update_stack is a dubious translation:
+lean 3 declaration is
+  forall {a : List.{0} Turing.PartrecToTM2.Γ'} {b : List.{0} Turing.PartrecToTM2.Γ'} {c : List.{0} Turing.PartrecToTM2.Γ'} {d : List.{0} Turing.PartrecToTM2.Γ'} {d' : List.{0} Turing.PartrecToTM2.Γ'}, Eq.{1} (Turing.PartrecToTM2.K' -> (List.{0} Turing.PartrecToTM2.Γ')) (Function.update.{1, 1} Turing.PartrecToTM2.K' (fun (a : Turing.PartrecToTM2.K') => List.{0} Turing.PartrecToTM2.Γ') (fun (a : Turing.PartrecToTM2.K') (b : Turing.PartrecToTM2.K') => Turing.PartrecToTM2.K'.decidableEq a b) (Turing.PartrecToTM2.K'.elim a b c d) Turing.PartrecToTM2.K'.stack d') (Turing.PartrecToTM2.K'.elim a b c d')
+but is expected to have type
+  forall {a : List.{0} Turing.PartrecToTM2.Γ'} {b : List.{0} Turing.PartrecToTM2.Γ'} {c : List.{0} Turing.PartrecToTM2.Γ'} {d : List.{0} Turing.PartrecToTM2.Γ'} {d' : List.{0} Turing.PartrecToTM2.Γ'}, Eq.{1} (Turing.PartrecToTM2.K' -> (List.{0} Turing.PartrecToTM2.Γ')) (Function.update.{1, 1} Turing.PartrecToTM2.K' (fun (a : Turing.PartrecToTM2.K') => List.{0} Turing.PartrecToTM2.Γ') (fun (a : Turing.PartrecToTM2.K') (b : Turing.PartrecToTM2.K') => Turing.PartrecToTM2.instDecidableEqK' a b) (Turing.PartrecToTM2.K'.elim a b c d) Turing.PartrecToTM2.K'.stack d') (Turing.PartrecToTM2.K'.elim a b c d')
+Case conversion may be inaccurate. Consider using '#align turing.partrec_to_TM2.K'.elim_update_stack Turing.PartrecToTM2.K'.elim_update_stackₓ'. -/
 @[simp]
 theorem K'.elim_update_stack {a b c d d'} : update (K'.elim a b c d) stack d' = K'.elim a b c d' :=
   by funext x <;> cases x <;> rfl
 #align turing.partrec_to_TM2.K'.elim_update_stack Turing.PartrecToTM2.K'.elim_update_stack
 
+#print Turing.PartrecToTM2.halt /-
 /-- The halting state corresponding to a `list ℕ` output value. -/
 def halt (v : List ℕ) : Cfg' :=
   ⟨none, none, K'.elim (trList v) [] [] []⟩
 #align turing.partrec_to_TM2.halt Turing.PartrecToTM2.halt
+-/
 
+#print Turing.PartrecToTM2.TrCfg /-
 /-- The `cfg` states map to `cfg'` states almost one to one, except that in normal operation the
 local store contains an arbitrary garbage value. To make the final theorem cleaner we explicitly
 clear it in the halt state so that there is exactly one configuration corresponding to output `v`.
@@ -1213,9 +1410,11 @@ def TrCfg : Cfg → Cfg' → Prop
     ∃ s, c' = ⟨some (Λ'.ret (trCont k)), s, K'.elim (trList v) [] [] (trContStack k)⟩
   | cfg.halt v, c' => c' = halt v
 #align turing.partrec_to_TM2.tr_cfg Turing.PartrecToTM2.TrCfg
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Turing.PartrecToTM2.splitAtPred /-
 /-- This could be a general list definition, but it is also somewhat specialized to this
 application. `split_at_pred p L` will search `L` for the first element satisfying `p`.
 If it is found, say `L = l₁ ++ a :: l₂` where `a` satisfies `p` but `l₁` does not, then it returns
@@ -1227,9 +1426,11 @@ def splitAtPred {α} (p : α → Bool) : List α → List α × Option α × Lis
       let ⟨l₁, o, l₂⟩ := split_at_pred as
       ⟨a::l₁, o, l₂⟩
 #align turing.partrec_to_TM2.split_at_pred Turing.PartrecToTM2.splitAtPred
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Turing.PartrecToTM2.splitAtPred_eq /-
 theorem splitAtPred_eq {α} (p : α → Bool) :
     ∀ L l₁ o l₂,
       (∀ x ∈ l₁, p x = false) →
@@ -1250,12 +1451,16 @@ theorem splitAtPred_eq {α} (p : α → Bool) :
       rw [h₁ a (Or.inl rfl), cond, IH l₁ (some o) l₂ _ ⟨h₂, _⟩] <;> try rfl
       exact fun x h => h₁ x (Or.inr h)
 #align turing.partrec_to_TM2.split_at_pred_eq Turing.PartrecToTM2.splitAtPred_eq
+-/
 
+#print Turing.PartrecToTM2.splitAtPred_false /-
 theorem splitAtPred_false {α} (L : List α) : splitAtPred (fun _ => false) L = (L, none, []) :=
   splitAtPred_eq _ _ _ _ _ (fun _ _ => rfl) ⟨rfl, rfl⟩
 #align turing.partrec_to_TM2.split_at_pred_ff Turing.PartrecToTM2.splitAtPred_false
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Turing.PartrecToTM2.move_ok /-
 theorem move_ok {p k₁ k₂ q s L₁ o L₂} {S : K' → List Γ'} (h₁ : k₁ ≠ k₂)
     (e : splitAtPred p (S k₁) = (L₁, o, L₂)) :
     Reaches₁ (TM2.step tr) ⟨some (Λ'.move p k₁ k₂ q), s, S⟩
@@ -1292,13 +1497,17 @@ theorem move_ok {p k₁ k₂ q s L₁ o L₂} {S : K' → List Γ'} (h₁ : k₁
       simp [Function.update_noteq, h₁, h₁.symm, e₃, List.reverseAux]
     simp [Function.update_comm h₁.symm]
 #align turing.partrec_to_TM2.move_ok Turing.PartrecToTM2.move_ok
+-/
 
+#print Turing.PartrecToTM2.unrev_ok /-
 theorem unrev_ok {q s} {S : K' → List Γ'} :
     Reaches₁ (TM2.step tr) ⟨some (unrev q), s, S⟩
       ⟨some q, none, update (update S rev []) main (List.reverseAux (S rev) (S main))⟩ :=
   move_ok (by decide) <| splitAtPred_false _
 #align turing.partrec_to_TM2.unrev_ok Turing.PartrecToTM2.unrev_ok
+-/
 
+#print Turing.PartrecToTM2.move₂_ok /-
 theorem move₂_ok {p k₁ k₂ q s L₁ o L₂} {S : K' → List Γ'} (h₁ : k₁ ≠ rev ∧ k₂ ≠ rev ∧ k₁ ≠ k₂)
     (h₂ : S rev = []) (e : splitAtPred p (S k₁) = (L₁, o, L₂)) :
     Reaches₁ (TM2.step tr) ⟨some (move₂ p k₁ k₂ q), s, S⟩
@@ -1319,7 +1528,9 @@ theorem move₂_ok {p k₁ k₂ q s L₁ o L₂} {S : K' → List Γ'} (h₁ : k
     simp only [Function.update_noteq h₁.1.symm, Function.update_noteq h₁.2.2.symm,
       Function.update_noteq h₁.2.1, Function.update_same, List.reverse_reverse]
 #align turing.partrec_to_TM2.move₂_ok Turing.PartrecToTM2.move₂_ok
+-/
 
+#print Turing.PartrecToTM2.clear_ok /-
 theorem clear_ok {p k q s L₁ o L₂} {S : K' → List Γ'} (e : splitAtPred p (S k) = (L₁, o, L₂)) :
     Reaches₁ (TM2.step tr) ⟨some (Λ'.clear p k q), s, S⟩ ⟨some q, o, update S k L₂⟩ :=
   by
@@ -1348,7 +1559,9 @@ theorem clear_ok {p k q s L₁ o L₂} {S : K' → List Γ'} (e : splitAtPred p 
     simp [e₂]
     convert@IH (update S k Sk) _ _ using 2 <;> simp [e₃]
 #align turing.partrec_to_TM2.clear_ok Turing.PartrecToTM2.clear_ok
+-/
 
+#print Turing.PartrecToTM2.copy_ok /-
 theorem copy_ok (q s a b c d) :
     Reaches₁ (TM2.step tr) ⟨some (Λ'.copy q), s, K'.elim a b c d⟩
       ⟨some q, none, K'.elim (List.reverseAux b a) [] c (List.reverseAux b d)⟩ :=
@@ -1359,7 +1572,9 @@ theorem copy_ok (q s a b c d) :
     rfl
   refine' trans_gen.head rfl _; simp; exact IH _ _ _
 #align turing.partrec_to_TM2.copy_ok Turing.PartrecToTM2.copy_ok
+-/
 
+#print Turing.PartrecToTM2.trPosNum_natEnd /-
 theorem trPosNum_natEnd : ∀ (n), ∀ x ∈ trPosNum n, natEnd x = false
   | PosNum.one, _, Or.inl rfl => rfl
   | PosNum.bit0 n, _, Or.inl rfl => rfl
@@ -1367,17 +1582,23 @@ theorem trPosNum_natEnd : ∀ (n), ∀ x ∈ trPosNum n, natEnd x = false
   | PosNum.bit1 n, _, Or.inl rfl => rfl
   | PosNum.bit1 n, _, Or.inr h => tr_pos_num_nat_end n _ h
 #align turing.partrec_to_TM2.tr_pos_num_nat_end Turing.PartrecToTM2.trPosNum_natEnd
+-/
 
+#print Turing.PartrecToTM2.trNum_natEnd /-
 theorem trNum_natEnd : ∀ (n), ∀ x ∈ trNum n, natEnd x = false
   | Num.pos n, x, h => trPosNum_natEnd n x h
 #align turing.partrec_to_TM2.tr_num_nat_end Turing.PartrecToTM2.trNum_natEnd
+-/
 
+#print Turing.PartrecToTM2.trNat_natEnd /-
 theorem trNat_natEnd (n) : ∀ x ∈ trNat n, natEnd x = false :=
   trNum_natEnd _
 #align turing.partrec_to_TM2.tr_nat_nat_end Turing.PartrecToTM2.trNat_natEnd
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem trList_ne_cons : ∀ (l), ∀ x ∈ trList l, x ≠ Γ'.Cons
+#print Turing.PartrecToTM2.trList_ne_consₗ /-
+theorem trList_ne_consₗ : ∀ (l), ∀ x ∈ trList l, x ≠ Γ'.consₗ
   | a::l, x, h => by
     simp [tr_list] at h
     obtain h | rfl | h := h
@@ -1385,8 +1606,10 @@ theorem trList_ne_cons : ∀ (l), ∀ x ∈ trList l, x ≠ Γ'.Cons
       cases tr_nat_nat_end _ _ h
     · rintro ⟨⟩
     · exact tr_list_ne_Cons l _ h
-#align turing.partrec_to_TM2.tr_list_ne_Cons Turing.PartrecToTM2.trList_ne_cons
+#align turing.partrec_to_TM2.tr_list_ne_Cons Turing.PartrecToTM2.trList_ne_consₗ
+-/
 
+#print Turing.PartrecToTM2.head_main_ok /-
 theorem head_main_ok {q s L} {c d : List Γ'} :
     Reaches₁ (TM2.step tr) ⟨some (head main q), s, K'.elim (trList L) [] c d⟩
       ⟨some q, none, K'.elim (trList [L.headI]) [] c d⟩ :=
@@ -1403,13 +1626,15 @@ theorem head_main_ok {q s L} {c d : List Γ'} :
   · exact fun x h => Bool.decide_false (tr_list_ne_Cons _ _ h)
   convert unrev_ok; simp [List.reverseAux_eq]
 #align turing.partrec_to_TM2.head_main_ok Turing.PartrecToTM2.head_main_ok
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Turing.PartrecToTM2.head_stack_ok /-
 theorem head_stack_ok {q s L₁ L₂ L₃} :
     Reaches₁ (TM2.step tr)
-      ⟨some (head stack q), s, K'.elim (trList L₁) [] [] (trList L₂ ++ Γ'.Cons::L₃)⟩
+      ⟨some (head stack q), s, K'.elim (trList L₁) [] [] (trList L₂ ++ Γ'.consₗ::L₃)⟩
       ⟨some q, none, K'.elim (trList (L₂.headI::L₁)) [] [] L₃⟩ :=
   by
   cases' L₂ with a L₂
@@ -1437,9 +1662,11 @@ theorem head_stack_ok {q s L₁ L₂ L₃} :
     convert unrev_ok
     simp [List.reverseAux_eq]
 #align turing.partrec_to_TM2.head_stack_ok Turing.PartrecToTM2.head_stack_ok
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Turing.PartrecToTM2.succ_ok /-
 theorem succ_ok {q s n} {c d : List Γ'} :
     Reaches₁ (TM2.step tr) ⟨some (Λ'.succ q), s, K'.elim (trList [n]) [] c d⟩
       ⟨some q, none, K'.elim (trList [n.succ]) [] c d⟩ :=
@@ -1481,6 +1708,7 @@ theorem succ_ok {q s n} {c d : List Γ'} :
     simp
     rfl
 #align turing.partrec_to_TM2.succ_ok Turing.PartrecToTM2.succ_ok
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -1489,6 +1717,7 @@ theorem succ_ok {q s n} {c d : List Γ'} :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Turing.PartrecToTM2.pred_ok /-
 theorem pred_ok (q₁ q₂ s v) (c d : List Γ') :
     ∃ s',
       Reaches₁ (TM2.step tr) ⟨some (Λ'.pred q₁ q₂), s, K'.elim (trList v) [] c d⟩
@@ -1535,7 +1764,9 @@ theorem pred_ok (q₁ q₂ s v) (c d : List Γ') :
     refine' ⟨Γ'.bit0::l₁, _, some a, rfl, trans_gen.single _⟩
     simp [tr_pos_num, PosNum.succ, e, h, nat_end, show some Γ'.bit1 ≠ some Γ'.bit0 by decide]
 #align turing.partrec_to_TM2.pred_ok Turing.PartrecToTM2.pred_ok
+-/
 
+#print Turing.PartrecToTM2.trNormal_respects /-
 theorem trNormal_respects (c k v s) :
     ∃ b₂,
       TrCfg (stepNormal c k v) b₂ ∧
@@ -1569,9 +1800,11 @@ theorem trNormal_respects (c k v s) :
       exact ⟨_, h₁, h.trans h₂⟩
   case fix f IH => apply IH
 #align turing.partrec_to_TM2.tr_normal_respects Turing.PartrecToTM2.trNormal_respects
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Turing.PartrecToTM2.tr_ret_respects /-
 theorem tr_ret_respects (k v s) :
     ∃ b₂,
       TrCfg (stepRet k v) b₂ ∧
@@ -1627,22 +1860,30 @@ theorem tr_ret_respects (k v s) :
       · exact fun x h => tr_nat_nat_end _ _ (List.tail_subset _ h)
       · exact ⟨rfl, this.2⟩
 #align turing.partrec_to_TM2.tr_ret_respects Turing.PartrecToTM2.tr_ret_respects
+-/
 
+#print Turing.PartrecToTM2.tr_respects /-
 theorem tr_respects : Respects step (TM2.step tr) TrCfg
   | cfg.ret k v, _, ⟨s, rfl⟩ => tr_ret_respects _ _ _
   | cfg.halt v, _, rfl => rfl
 #align turing.partrec_to_TM2.tr_respects Turing.PartrecToTM2.tr_respects
+-/
 
+#print Turing.PartrecToTM2.init /-
 /-- The initial state, evaluating function `c` on input `v`. -/
 def init (c : Code) (v : List ℕ) : Cfg' :=
   ⟨some (trNormal c Cont'.halt), none, K'.elim (trList v) [] [] []⟩
 #align turing.partrec_to_TM2.init Turing.PartrecToTM2.init
+-/
 
+#print Turing.PartrecToTM2.tr_init /-
 theorem tr_init (c v) :
     ∃ b, TrCfg (stepNormal c Cont.halt v) b ∧ Reaches₁ (TM2.step tr) (init c v) b :=
   trNormal_respects _ _ _ _
 #align turing.partrec_to_TM2.tr_init Turing.PartrecToTM2.tr_init
+-/
 
+#print Turing.PartrecToTM2.tr_eval /-
 theorem tr_eval (c v) : eval (TM2.step tr) (init c v) = halt <$> Code.eval c v :=
   by
   obtain ⟨i, h₁, h₂⟩ := tr_init c v
@@ -1659,7 +1900,9 @@ theorem tr_eval (c v) : eval (TM2.step tr) (init c v) = halt <$> Code.eval c v :
     obtain ⟨_, ⟨⟩, h⟩ := this _ hv rfl
     exact h
 #align turing.partrec_to_TM2.tr_eval Turing.PartrecToTM2.tr_eval
+-/
 
+#print Turing.PartrecToTM2.trStmts₁ /-
 /-- The set of machine states reachable via downward label jumps, discounting jumps via `ret`. -/
 def trStmts₁ : Λ' → Finset Λ'
   | Q@(Λ'.move p k₁ k₂ q) => insert Q <| tr_stmts₁ q
@@ -1671,7 +1914,9 @@ def trStmts₁ : Λ' → Finset Λ'
   | Q@(Λ'.pred q₁ q₂) => insert Q <| tr_stmts₁ q₁ ∪ insert (unrev q₂) (tr_stmts₁ q₂)
   | Q@(Λ'.ret k) => {Q}
 #align turing.partrec_to_TM2.tr_stmts₁ Turing.PartrecToTM2.trStmts₁
+-/
 
+#print Turing.PartrecToTM2.trStmts₁_trans /-
 theorem trStmts₁_trans {q q'} : q' ∈ trStmts₁ q → trStmts₁ q' ⊆ trStmts₁ q :=
   by
   induction q <;>
@@ -1693,11 +1938,15 @@ theorem trStmts₁_trans {q q'} : q' ∈ trStmts₁ q → trStmts₁ q' ⊆ trSt
     · cases' Finset.mem_insert.1 h' with h' h' <;> simp [h', unrev]
     · exact Or.inr (Or.inr <| Or.inr <| q_ih_q₂ h h')
 #align turing.partrec_to_TM2.tr_stmts₁_trans Turing.PartrecToTM2.trStmts₁_trans
+-/
 
+#print Turing.PartrecToTM2.trStmts₁_self /-
 theorem trStmts₁_self (q) : q ∈ trStmts₁ q := by
   induction q <;> · first |apply Finset.mem_singleton_self|apply Finset.mem_insert_self
 #align turing.partrec_to_TM2.tr_stmts₁_self Turing.PartrecToTM2.trStmts₁_self
+-/
 
+#print Turing.PartrecToTM2.codeSupp' /-
 /-- The (finite!) set of machine states visited during the course of evaluation of `c`,
 including the state `ret k` but not any states after that (that is, the states visited while
 evaluating `k`). -/
@@ -1710,7 +1959,7 @@ def codeSupp' : Code → Cont' → Finset Λ'
       (code_supp' f (Cont'.cons₁ fs k) ∪
         (trStmts₁
             (move₂ (fun _ => false) main aux <|
-              move₂ (fun s => s = Γ'.Cons) stack main <|
+              move₂ (fun s => s = Γ'.consₗ) stack main <|
                 move₂ (fun _ => false) aux stack <| trNormal fs (Cont'.cons₂ k)) ∪
           (code_supp' fs (Cont'.cons₂ k) ∪ trStmts₁ (head stack <| Λ'.ret k))))
   | c@(code.comp f g), k =>
@@ -1722,19 +1971,23 @@ def codeSupp' : Code → Cont' → Finset Λ'
       (code_supp' f (Cont'.fix f k) ∪
         (trStmts₁ (Λ'.clear natEnd main <| trNormal f (Cont'.fix f k)) ∪ {Λ'.ret k}))
 #align turing.partrec_to_TM2.code_supp' Turing.PartrecToTM2.codeSupp'
+-/
 
+#print Turing.PartrecToTM2.codeSupp'_self /-
 @[simp]
 theorem codeSupp'_self (c k) : trStmts₁ (trNormal c k) ⊆ codeSupp' c k := by
   cases c <;> first |rfl|exact Finset.subset_union_left _ _
 #align turing.partrec_to_TM2.code_supp'_self Turing.PartrecToTM2.codeSupp'_self
+-/
 
+#print Turing.PartrecToTM2.contSupp /-
 /-- The (finite!) set of machine states visited during the course of evaluation of a continuation
 `k`, not including the initial state `ret k`. -/
 def contSupp : Cont' → Finset Λ'
   | cont'.cons₁ fs k =>
     trStmts₁
         (move₂ (fun _ => false) main aux <|
-          move₂ (fun s => s = Γ'.Cons) stack main <|
+          move₂ (fun s => s = Γ'.consₗ) stack main <|
             move₂ (fun _ => false) aux stack <| trNormal fs (Cont'.cons₂ k)) ∪
       (codeSupp' fs (Cont'.cons₂ k) ∪ (trStmts₁ (head stack <| Λ'.ret k) ∪ cont_supp k))
   | cont'.cons₂ k => trStmts₁ (head stack <| Λ'.ret k) ∪ cont_supp k
@@ -1742,7 +1995,9 @@ def contSupp : Cont' → Finset Λ'
   | cont'.fix f k => codeSupp' (Code.fix f) k ∪ cont_supp k
   | cont'.halt => ∅
 #align turing.partrec_to_TM2.cont_supp Turing.PartrecToTM2.contSupp
+-/
 
+#print Turing.PartrecToTM2.codeSupp /-
 /-- The (finite!) set of machine states visited during the course of evaluation of `c` in
 continuation `k`. This is actually closed under forward simulation (see `tr_supports`), and the
 existence of this set means that the machine constructed in this section is in fact a proper
@@ -1750,34 +2005,46 @@ Turing machine, with a finite set of states. -/
 def codeSupp (c : Code) (k : Cont') : Finset Λ' :=
   codeSupp' c k ∪ contSupp k
 #align turing.partrec_to_TM2.code_supp Turing.PartrecToTM2.codeSupp
+-/
 
+#print Turing.PartrecToTM2.codeSupp_self /-
 @[simp]
 theorem codeSupp_self (c k) : trStmts₁ (trNormal c k) ⊆ codeSupp c k :=
   Finset.Subset.trans (codeSupp'_self _ _) (Finset.subset_union_left _ _)
 #align turing.partrec_to_TM2.code_supp_self Turing.PartrecToTM2.codeSupp_self
+-/
 
+#print Turing.PartrecToTM2.codeSupp_zero /-
 @[simp]
 theorem codeSupp_zero (k) : codeSupp Code.zero' k = trStmts₁ (trNormal Code.zero' k) ∪ contSupp k :=
   rfl
 #align turing.partrec_to_TM2.code_supp_zero Turing.PartrecToTM2.codeSupp_zero
+-/
 
+#print Turing.PartrecToTM2.codeSupp_succ /-
 @[simp]
 theorem codeSupp_succ (k) : codeSupp Code.succ k = trStmts₁ (trNormal Code.succ k) ∪ contSupp k :=
   rfl
 #align turing.partrec_to_TM2.code_supp_succ Turing.PartrecToTM2.codeSupp_succ
+-/
 
+#print Turing.PartrecToTM2.codeSupp_tail /-
 @[simp]
 theorem codeSupp_tail (k) : codeSupp Code.tail k = trStmts₁ (trNormal Code.tail k) ∪ contSupp k :=
   rfl
 #align turing.partrec_to_TM2.code_supp_tail Turing.PartrecToTM2.codeSupp_tail
+-/
 
+#print Turing.PartrecToTM2.codeSupp_cons /-
 @[simp]
 theorem codeSupp_cons (f fs k) :
     codeSupp (Code.cons f fs) k =
       trStmts₁ (trNormal (Code.cons f fs) k) ∪ codeSupp f (Cont'.cons₁ fs k) :=
   by simp [code_supp, code_supp', cont_supp, Finset.union_assoc]
 #align turing.partrec_to_TM2.code_supp_cons Turing.PartrecToTM2.codeSupp_cons
+-/
 
+#print Turing.PartrecToTM2.codeSupp_comp /-
 @[simp]
 theorem codeSupp_comp (f g k) :
     codeSupp (Code.comp f g) k =
@@ -1787,53 +2054,73 @@ theorem codeSupp_comp (f g k) :
   rw [← Finset.union_assoc _ _ (cont_supp k),
     Finset.union_eq_right_iff_subset.2 (code_supp'_self _ _)]
 #align turing.partrec_to_TM2.code_supp_comp Turing.PartrecToTM2.codeSupp_comp
+-/
 
+#print Turing.PartrecToTM2.codeSupp_case /-
 @[simp]
 theorem codeSupp_case (f g k) :
     codeSupp (Code.case f g) k =
       trStmts₁ (trNormal (Code.case f g) k) ∪ (codeSupp f k ∪ codeSupp g k) :=
   by simp [code_supp, code_supp', cont_supp, Finset.union_assoc, Finset.union_left_comm]
 #align turing.partrec_to_TM2.code_supp_case Turing.PartrecToTM2.codeSupp_case
+-/
 
+#print Turing.PartrecToTM2.codeSupp_fix /-
 @[simp]
 theorem codeSupp_fix (f k) :
     codeSupp (Code.fix f) k = trStmts₁ (trNormal (Code.fix f) k) ∪ codeSupp f (Cont'.fix f k) := by
   simp [code_supp, code_supp', cont_supp, Finset.union_assoc, Finset.union_left_comm,
     Finset.union_left_idem]
 #align turing.partrec_to_TM2.code_supp_fix Turing.PartrecToTM2.codeSupp_fix
+-/
 
+/- warning: turing.partrec_to_TM2.cont_supp_cons₁ -> Turing.PartrecToTM2.contSupp_cons₁ is a dubious translation:
+lean 3 declaration is
+  forall (fs : Turing.ToPartrec.Code) (k : Turing.PartrecToTM2.Cont'), Eq.{1} (Finset.{0} Turing.PartrecToTM2.Λ') (Turing.PartrecToTM2.contSupp (Turing.PartrecToTM2.Cont'.cons₁ fs k)) (Union.union.{0} (Finset.{0} Turing.PartrecToTM2.Λ') (Finset.hasUnion.{0} Turing.PartrecToTM2.Λ' (fun (a : Turing.PartrecToTM2.Λ') (b : Turing.PartrecToTM2.Λ') => Turing.PartrecToTM2.Λ'.instDecidableEq a b)) (Turing.PartrecToTM2.trStmts₁ (Turing.PartrecToTM2.move₂ (fun (_x : Turing.PartrecToTM2.Γ') => Bool.false) Turing.PartrecToTM2.K'.main Turing.PartrecToTM2.K'.aux (Turing.PartrecToTM2.move₂ (fun (s : Turing.PartrecToTM2.Γ') => Decidable.decide (Eq.{1} Turing.PartrecToTM2.Γ' s Turing.PartrecToTM2.Γ'.consₗ) (Turing.PartrecToTM2.Γ'.decidableEq s Turing.PartrecToTM2.Γ'.consₗ)) Turing.PartrecToTM2.K'.stack Turing.PartrecToTM2.K'.main (Turing.PartrecToTM2.move₂ (fun (_x : Turing.PartrecToTM2.Γ') => Bool.false) Turing.PartrecToTM2.K'.aux Turing.PartrecToTM2.K'.stack (Turing.PartrecToTM2.trNormal fs (Turing.PartrecToTM2.Cont'.cons₂ k)))))) (Turing.PartrecToTM2.codeSupp fs (Turing.PartrecToTM2.Cont'.cons₂ k)))
+but is expected to have type
+  forall (fs : Turing.ToPartrec.Code) (k : Turing.PartrecToTM2.Cont'), Eq.{1} (Finset.{0} Turing.PartrecToTM2.Λ') (Turing.PartrecToTM2.contSupp (Turing.PartrecToTM2.Cont'.cons₁ fs k)) (Union.union.{0} (Finset.{0} Turing.PartrecToTM2.Λ') (Finset.instUnionFinset.{0} Turing.PartrecToTM2.Λ' (fun (a : Turing.PartrecToTM2.Λ') (b : Turing.PartrecToTM2.Λ') => Turing.PartrecToTM2.Λ'.instDecidableEq a b)) (Turing.PartrecToTM2.trStmts₁ (Turing.PartrecToTM2.move₂ (fun (_x : Turing.PartrecToTM2.Γ') => Bool.false) Turing.PartrecToTM2.K'.main Turing.PartrecToTM2.K'.aux (Turing.PartrecToTM2.move₂ (fun (s : Turing.PartrecToTM2.Γ') => Decidable.decide (Eq.{1} Turing.PartrecToTM2.Γ' s Turing.PartrecToTM2.Γ'.consₗ) (Turing.PartrecToTM2.instDecidableEqΓ' s Turing.PartrecToTM2.Γ'.consₗ)) Turing.PartrecToTM2.K'.stack Turing.PartrecToTM2.K'.main (Turing.PartrecToTM2.move₂ (fun (_x : Turing.PartrecToTM2.Γ') => Bool.false) Turing.PartrecToTM2.K'.aux Turing.PartrecToTM2.K'.stack (Turing.PartrecToTM2.trNormal fs (Turing.PartrecToTM2.Cont'.cons₂ k)))))) (Turing.PartrecToTM2.codeSupp fs (Turing.PartrecToTM2.Cont'.cons₂ k)))
+Case conversion may be inaccurate. Consider using '#align turing.partrec_to_TM2.cont_supp_cons₁ Turing.PartrecToTM2.contSupp_cons₁ₓ'. -/
 @[simp]
 theorem contSupp_cons₁ (fs k) :
     contSupp (Cont'.cons₁ fs k) =
       trStmts₁
           (move₂ (fun _ => false) main aux <|
-            move₂ (fun s => s = Γ'.Cons) stack main <|
+            move₂ (fun s => s = Γ'.consₗ) stack main <|
               move₂ (fun _ => false) aux stack <| trNormal fs (Cont'.cons₂ k)) ∪
         codeSupp fs (Cont'.cons₂ k) :=
   by simp [code_supp, code_supp', cont_supp, Finset.union_assoc]
 #align turing.partrec_to_TM2.cont_supp_cons₁ Turing.PartrecToTM2.contSupp_cons₁
 
+#print Turing.PartrecToTM2.contSupp_cons₂ /-
 @[simp]
 theorem contSupp_cons₂ (k) :
     contSupp (Cont'.cons₂ k) = trStmts₁ (head stack <| Λ'.ret k) ∪ contSupp k :=
   rfl
 #align turing.partrec_to_TM2.cont_supp_cons₂ Turing.PartrecToTM2.contSupp_cons₂
+-/
 
+#print Turing.PartrecToTM2.contSupp_comp /-
 @[simp]
 theorem contSupp_comp (f k) : contSupp (Cont'.comp f k) = codeSupp f k :=
   rfl
 #align turing.partrec_to_TM2.cont_supp_comp Turing.PartrecToTM2.contSupp_comp
+-/
 
+#print Turing.PartrecToTM2.contSupp_fix /-
 theorem contSupp_fix (f k) : contSupp (Cont'.fix f k) = codeSupp f (Cont'.fix f k) := by
   simp (config := { contextual := true }) [code_supp, code_supp', cont_supp, Finset.union_assoc,
     Finset.subset_iff]
 #align turing.partrec_to_TM2.cont_supp_fix Turing.PartrecToTM2.contSupp_fix
+-/
 
+#print Turing.PartrecToTM2.contSupp_halt /-
 @[simp]
 theorem contSupp_halt : contSupp Cont'.halt = ∅ :=
   rfl
 #align turing.partrec_to_TM2.cont_supp_halt Turing.PartrecToTM2.contSupp_halt
+-/
 
+#print Turing.PartrecToTM2.Λ'.Supports /-
 /-- The statement `Λ'.supports S q` means that `cont_supp k ⊆ S` for any `ret k`
 reachable from `q`.
 (This is a technical condition used in the proof that the machine is supported.) -/
@@ -1847,7 +2134,9 @@ def Λ'.Supports (S : Finset Λ') : Λ' → Prop
   | Q@(Λ'.pred q₁ q₂) => Λ'.supports q₁ ∧ Λ'.supports q₂
   | Q@(Λ'.ret k) => contSupp k ⊆ S
 #align turing.partrec_to_TM2.Λ'.supports Turing.PartrecToTM2.Λ'.Supports
+-/
 
+#print Turing.PartrecToTM2.Supports /-
 /-- A shorthand for the predicate that we are proving in the main theorems `tr_stmts₁_supports`,
 `code_supp'_supports`, `cont_supp_supports`, `code_supp_supports`. The set `S` is fixed throughout
 the proof, and denotes the full set of states in the machine, while `K` is a subset that we are
@@ -1857,28 +2146,44 @@ stays entirely within `S`. -/
 def Supports (K S : Finset Λ') :=
   ∀ q ∈ K, TM2.SupportsStmt S (tr q)
 #align turing.partrec_to_TM2.supports Turing.PartrecToTM2.Supports
+-/
 
+#print Turing.PartrecToTM2.supports_insert /-
 theorem supports_insert {K S q} :
     Supports (insert q K) S ↔ TM2.SupportsStmt S (tr q) ∧ Supports K S := by simp [supports]
 #align turing.partrec_to_TM2.supports_insert Turing.PartrecToTM2.supports_insert
+-/
 
+#print Turing.PartrecToTM2.supports_singleton /-
 theorem supports_singleton {S q} : Supports {q} S ↔ TM2.SupportsStmt S (tr q) := by simp [supports]
 #align turing.partrec_to_TM2.supports_singleton Turing.PartrecToTM2.supports_singleton
+-/
 
+#print Turing.PartrecToTM2.supports_union /-
 theorem supports_union {K₁ K₂ S} : Supports (K₁ ∪ K₂) S ↔ Supports K₁ S ∧ Supports K₂ S := by
   simp [supports, or_imp, forall_and]
 #align turing.partrec_to_TM2.supports_union Turing.PartrecToTM2.supports_union
+-/
 
+/- warning: turing.partrec_to_TM2.supports_bUnion -> Turing.PartrecToTM2.supports_bunionᵢ is a dubious translation:
+lean 3 declaration is
+  forall {K : (Option.{0} Turing.PartrecToTM2.Γ') -> (Finset.{0} Turing.PartrecToTM2.Λ')} {S : Finset.{0} Turing.PartrecToTM2.Λ'}, Iff (Turing.PartrecToTM2.Supports (Finset.bunionᵢ.{0, 0} (Option.{0} Turing.PartrecToTM2.Γ') Turing.PartrecToTM2.Λ' (fun (a : Turing.PartrecToTM2.Λ') (b : Turing.PartrecToTM2.Λ') => Turing.PartrecToTM2.Λ'.instDecidableEq a b) (Finset.univ.{0} (Option.{0} Turing.PartrecToTM2.Γ') (Option.fintype.{0} Turing.PartrecToTM2.Γ' Turing.PartrecToTM2.Γ'.fintype)) K) S) (forall (a : Option.{0} Turing.PartrecToTM2.Γ'), Turing.PartrecToTM2.Supports (K a) S)
+but is expected to have type
+  forall {K : (Option.{0} Turing.PartrecToTM2.Γ') -> (Finset.{0} Turing.PartrecToTM2.Λ')} {S : Finset.{0} Turing.PartrecToTM2.Λ'}, Iff (Turing.PartrecToTM2.Supports (Finset.bunionᵢ.{0, 0} (Option.{0} Turing.PartrecToTM2.Γ') Turing.PartrecToTM2.Λ' (fun (a : Turing.PartrecToTM2.Λ') (b : Turing.PartrecToTM2.Λ') => Turing.PartrecToTM2.Λ'.instDecidableEq a b) (Finset.univ.{0} (Option.{0} Turing.PartrecToTM2.Γ') (instFintypeOption.{0} Turing.PartrecToTM2.Γ' Turing.PartrecToTM2.instFintypeΓ')) K) S) (forall (a : Option.{0} Turing.PartrecToTM2.Γ'), Turing.PartrecToTM2.Supports (K a) S)
+Case conversion may be inaccurate. Consider using '#align turing.partrec_to_TM2.supports_bUnion Turing.PartrecToTM2.supports_bunionᵢₓ'. -/
 theorem supports_bunionᵢ {K : Option Γ' → Finset Λ'} {S} :
     Supports (Finset.univ.bunionᵢ K) S ↔ ∀ a, Supports (K a) S := by
   simp [supports] <;> apply forall_swap
 #align turing.partrec_to_TM2.supports_bUnion Turing.PartrecToTM2.supports_bunionᵢ
 
+#print Turing.PartrecToTM2.head_supports /-
 theorem head_supports {S k q} (H : (q : Λ').Supports S) : (head k q).Supports S := fun _ => by
   dsimp only <;> split_ifs <;> exact H
 #align turing.partrec_to_TM2.head_supports Turing.PartrecToTM2.head_supports
+-/
 
-theorem retSupports {S k} (H₁ : contSupp k ⊆ S) : TM2.SupportsStmt S (tr (Λ'.ret k)) :=
+#print Turing.PartrecToTM2.ret_supports /-
+theorem ret_supports {S k} (H₁ : contSupp k ⊆ S) : TM2.SupportsStmt S (tr (Λ'.ret k)) :=
   by
   have W := fun {q} => tr_stmts₁_self q
   cases k
@@ -1892,8 +2197,10 @@ theorem retSupports {S k} (H₁ : contSupp k ⊆ S) : TM2.SupportsStmt S (tr (Λ
     intro s; dsimp only; cases nat_end s.iget
     · refine' H₁ (R _ <| L _ <| R _ <| R _ <| L _ W)
     · exact H₁ (R _ <| L _ <| R _ <| R _ <| R _ <| Finset.mem_singleton_self _)
-#align turing.partrec_to_TM2.ret_supports Turing.PartrecToTM2.retSupports
+#align turing.partrec_to_TM2.ret_supports Turing.PartrecToTM2.ret_supports
+-/
 
+#print Turing.PartrecToTM2.trStmts₁_supports /-
 theorem trStmts₁_supports {S q} (H₁ : (q : Λ').Supports S) (HS₁ : trStmts₁ q ⊆ S) :
     Supports (trStmts₁ q) S := by
   have W := fun {q} => tr_stmts₁_self q
@@ -1925,14 +2232,18 @@ theorem trStmts₁_supports {S q} (H₁ : (q : Λ').Supports S) (HS₁ : trStmts
   -- ret
   · exact supports_singleton.2 (ret_supports H₁)
 #align turing.partrec_to_TM2.tr_stmts₁_supports Turing.PartrecToTM2.trStmts₁_supports
+-/
 
+#print Turing.PartrecToTM2.trStmts₁_supports' /-
 theorem trStmts₁_supports' {S q K} (H₁ : (q : Λ').Supports S) (H₂ : trStmts₁ q ∪ K ⊆ S)
     (H₃ : K ⊆ S → Supports K S) : Supports (trStmts₁ q ∪ K) S :=
   by
   simp [Finset.union_subset_iff] at H₂
   exact supports_union.2 ⟨tr_stmts₁_supports H₁ H₂.1, H₃ H₂.2⟩
 #align turing.partrec_to_TM2.tr_stmts₁_supports' Turing.PartrecToTM2.trStmts₁_supports'
+-/
 
+#print Turing.PartrecToTM2.trNormal_supports /-
 theorem trNormal_supports {S c k} (Hk : codeSupp c k ⊆ S) : (trNormal c k).Supports S :=
   by
   induction c generalizing k <;> simp [Λ'.supports, head]
@@ -1948,7 +2259,9 @@ theorem trNormal_supports {S c k} (Hk : codeSupp c k ⊆ S) : (trNormal c k).Sup
     exact ⟨IHf Hk.2.1, IHg Hk.2.2⟩
   case fix f IHf => apply IHf; rw [code_supp_fix] at Hk; exact Finset.union_subset_right Hk
 #align turing.partrec_to_TM2.tr_normal_supports Turing.PartrecToTM2.trNormal_supports
+-/
 
+#print Turing.PartrecToTM2.codeSupp'_supports /-
 theorem codeSupp'_supports {S c k} (H : codeSupp c k ⊆ S) : Supports (codeSupp' c k) S :=
   by
   induction c generalizing k
@@ -1989,7 +2302,9 @@ theorem codeSupp'_supports {S c k} (H : codeSupp c k ⊆ S) : Supports (codeSupp
       exact ⟨h.1, ⟨H.1.1, h⟩, H.2⟩
     exact supports_singleton.2 (ret_supports <| Finset.union_subset_right H)
 #align turing.partrec_to_TM2.code_supp'_supports Turing.PartrecToTM2.codeSupp'_supports
+-/
 
+#print Turing.PartrecToTM2.contSupp_supports /-
 theorem contSupp_supports {S k} (H : contSupp k ⊆ S) : Supports (contSupp k) S :=
   by
   induction k
@@ -2010,19 +2325,24 @@ theorem contSupp_supports {S k} (H : contSupp k ⊆ S) : Supports (contSupp k) S
     rw [cont_supp] at H
     exact supports_union.2 ⟨code_supp'_supports H, IH (Finset.union_subset_right H)⟩
 #align turing.partrec_to_TM2.cont_supp_supports Turing.PartrecToTM2.contSupp_supports
+-/
 
+#print Turing.PartrecToTM2.codeSupp_supports /-
 theorem codeSupp_supports {S c k} (H : codeSupp c k ⊆ S) : Supports (codeSupp c k) S :=
   supports_union.2 ⟨codeSupp'_supports H, contSupp_supports (Finset.union_subset_right H)⟩
 #align turing.partrec_to_TM2.code_supp_supports Turing.PartrecToTM2.codeSupp_supports
+-/
 
+#print Turing.PartrecToTM2.tr_supports /-
 /-- The set `code_supp c k` is a finite set that witnesses the effective finiteness of the `tr`
 Turing machine. Starting from the initial state `tr_normal c k`, forward simulation uses only
 states in `code_supp c k`, so this is a finite state machine. Even though the underlying type of
 state labels `Λ'` is infinite, for a given partial recursive function `c` and continuation `k`,
 only finitely many states are accessed, corresponding roughly to subterms of `c`. -/
-theorem trSupports (c k) : @TM2.Supports _ _ _ _ _ ⟨trNormal c k⟩ tr (codeSupp c k) :=
+theorem tr_supports (c k) : @TM2.Supports _ _ _ _ _ ⟨trNormal c k⟩ tr (codeSupp c k) :=
   ⟨codeSupp_self _ _ (trStmts₁_self _), fun l' => codeSupp_supports (Finset.Subset.refl _) _⟩
-#align turing.partrec_to_TM2.tr_supports Turing.PartrecToTM2.trSupports
+#align turing.partrec_to_TM2.tr_supports Turing.PartrecToTM2.tr_supports
+-/
 
 end
 
