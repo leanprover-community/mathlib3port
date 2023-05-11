@@ -1451,6 +1451,12 @@ theorem mul_div_cancel'' (a b : G) : a * b / b = a := by
 #align mul_div_cancel'' mul_div_cancel''
 #align add_sub_cancel add_sub_cancel
 
+/- warning: div_mul_cancel''' -> div_mul_cancel''' is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G) (b : G), Eq.{succ u1} G (HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toHasDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) a (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) b a)) (Inv.inv.{u1} G (DivInvMonoid.toHasInv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) b)
+but is expected to have type
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G) (b : G), Eq.{succ u1} G (HDiv.hDiv.{u1, u1, u1} G G G (instHDiv.{u1} G (DivInvMonoid.toDiv.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) a (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) b a)) (Inv.inv.{u1} G (InvOneClass.toInv.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1)))) b)
+Case conversion may be inaccurate. Consider using '#align div_mul_cancel''' div_mul_cancel'''ₓ'. -/
 @[simp, to_additive sub_add_cancel'']
 theorem div_mul_cancel''' (a b : G) : a / (b * a) = b⁻¹ := by rw [← inv_div, mul_div_cancel'']
 #align div_mul_cancel''' div_mul_cancel'''
