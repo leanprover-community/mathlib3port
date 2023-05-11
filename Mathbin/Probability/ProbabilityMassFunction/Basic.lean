@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Devon Tuma
 
 ! This file was ported from Lean 3 source module probability.probability_mass_function.basic
-! leanprover-community/mathlib commit 4ac69b290818724c159de091daa3acd31da0ee6d
+! leanprover-community/mathlib commit a2706b55e8d7f7e9b1f93143f0b88f2e34a11eea
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.MeasureTheory.Measure.MeasureSpace
 
 /-!
 # Probability mass functions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file is about probability mass functions or discrete probability measures:
 a function `α → ℝ≥0∞` such that the values have (infinite) sum `1`.

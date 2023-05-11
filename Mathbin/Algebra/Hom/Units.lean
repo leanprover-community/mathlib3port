@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Chris Hughes, Kevin Buzzard
 
 ! This file was ported from Lean 3 source module algebra.hom.units
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit a07d750983b94c530ab69a726862c2ab6802b38c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -762,7 +762,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DivisionMonoid.{u1} α] {a : α} {b : α}, (IsUnit.{u1} α (DivInvMonoid.toMonoid.{u1} α (DivisionMonoid.toDivInvMonoid.{u1} α _inst_1)) b) -> (Eq.{succ u1} α (HDiv.hDiv.{u1, u1, u1} α α α (instHDiv.{u1} α (DivInvMonoid.toDiv.{u1} α (DivisionMonoid.toDivInvMonoid.{u1} α _inst_1))) b (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (DivisionMonoid.toDivInvMonoid.{u1} α _inst_1))))) a b)) (HDiv.hDiv.{u1, u1, u1} α α α (instHDiv.{u1} α (DivInvMonoid.toDiv.{u1} α (DivisionMonoid.toDivInvMonoid.{u1} α _inst_1))) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α _inst_1))))) a))
 Case conversion may be inaccurate. Consider using '#align is_unit.div_mul_left IsUnit.div_mul_leftₓ'. -/
-@[to_additive]
+/-- The `group` version of this lemma is `div_mul_cancel'''` -/
+@[to_additive "The `add_group` version of this lemma is `sub_add_cancel''`"]
 protected theorem div_mul_left (h : IsUnit b) : b / (a * b) = 1 / a := by
   rw [div_eq_mul_inv, mul_inv_rev, h.mul_inv_cancel_left, one_div]
 #align is_unit.div_mul_left IsUnit.div_mul_left

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Blyth
 
 ! This file was ported from Lean 3 source module linear_algebra.projective_space.subspace
-! leanprover-community/mathlib commit 70fd9563a21e7b963887c9360bd29b2393e6225a
+! leanprover-community/mathlib commit a2706b55e8d7f7e9b1f93143f0b88f2e34a11eea
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.LinearAlgebra.ProjectiveSpace.Basic
 
 /-!
 # Subspaces of Projective Space
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we define subspaces of a projective space, and show that the subspaces of a projective
 space form a complete lattice under inclusion.

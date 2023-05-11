@@ -68,6 +68,7 @@ variable (J : GrothendieckTopology C) (K : GrothendieckTopology D)
 
 variable {L : GrothendieckTopology A}
 
+#print CategoryTheory.CoverPreserving /-
 /-- A functor `G : (C, J) ⥤ (D, K)` between sites is *cover-preserving*
 if for all covering sieves `R` in `C`, `R.pushforward_functor G` is a covering sieve in `D`.
 -/
@@ -75,14 +76,18 @@ if for all covering sieves `R` in `C`, `R.pushforward_functor G` is a covering s
 structure CoverPreserving (G : C ⥤ D) : Prop where
   cover_preserve : ∀ {U : C} {S : Sieve U} (hS : S ∈ J U), S.functorPushforward G ∈ K (G.obj U)
 #align category_theory.cover_preserving CategoryTheory.CoverPreserving
+-/
 
+#print CategoryTheory.idCoverPreserving /-
 /-- The identity functor on a site is cover-preserving. -/
 theorem idCoverPreserving : CoverPreserving J J (𝟭 _) :=
   ⟨fun U S hS => by simpa using hS⟩
 #align category_theory.id_cover_preserving CategoryTheory.idCoverPreserving
+-/
 
 variable (J) (K)
 
+#print CategoryTheory.CoverPreserving.comp /-
 /-- The composition of two cover-preserving functors is cover-preserving. -/
 theorem CoverPreserving.comp {F} (hF : CoverPreserving J K F) {G} (hG : CoverPreserving K L G) :
     CoverPreserving J L (F ⋙ G) :=
@@ -90,7 +95,9 @@ theorem CoverPreserving.comp {F} (hF : CoverPreserving J K F) {G} (hG : CoverPre
     rw [sieve.functor_pushforward_comp]
     exact hG.cover_preserve (hF.cover_preserve hS)⟩
 #align category_theory.cover_preserving.comp CategoryTheory.CoverPreserving.comp
+-/
 
+#print CategoryTheory.CompatiblePreserving /-
 /-- A functor `G : (C, J) ⥤ (D, K)` between sites is called compatible preserving if for each
 compatible family of elements at `C` and valued in `G.op ⋙ ℱ`, and each commuting diagram
 `f₁ ≫ G.map g₁ = f₂ ≫ G.map g₂`, `x g₁` and `x g₂` coincide when restricted via `fᵢ`.
@@ -105,6 +112,7 @@ structure CompatiblePreserving (K : GrothendieckTopology D) (G : C ⥤ D) : Prop
       {g₂ : Y₂ ⟶ Z} (hg₁ : T g₁) (hg₂ : T g₂) (eq : f₁ ≫ G.map g₁ = f₂ ≫ G.map g₂),
       ℱ.val.map f₁.op (x g₁ hg₁) = ℱ.val.map f₂.op (x g₂ hg₂)
 #align category_theory.compatible_preserving CategoryTheory.CompatiblePreserving
+-/
 
 variable {J K} {G : C ⥤ D} (hG : CompatiblePreserving.{w} K G) (ℱ : SheafOfTypes.{w} K) {Z : C}
 
@@ -112,6 +120,12 @@ variable {T : Presieve Z} {x : FamilyOfElements (G.op ⋙ ℱ.val) T} (h : x.Com
 
 include h hG
 
+/- warning: category_theory.presieve.family_of_elements.compatible.functor_pushforward -> CategoryTheory.Presieve.FamilyOfElements.Compatible.functorPushforward is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u2, u4} C] {D : Type.{u5}} [_inst_2 : CategoryTheory.Category.{u3, u5} D] {K : CategoryTheory.GrothendieckTopology.{u3, u5} D _inst_2} {G : CategoryTheory.Functor.{u2, u3, u4, u5} C _inst_1 D _inst_2}, (CategoryTheory.CompatiblePreserving.{u1, u2, u3, u4, u5} C _inst_1 D _inst_2 K G) -> (forall (ℱ : CategoryTheory.SheafOfTypes.{u1, u3, u5} D _inst_2 K) {Z : C} {T : CategoryTheory.Presieve.{u2, u4} C _inst_1 Z} {x : CategoryTheory.Presieve.FamilyOfElements.{u1, u2, u4} C _inst_1 Z (CategoryTheory.Functor.comp.{u2, u3, u1, u4, u5, succ u1} (Opposite.{succ u4} C) (CategoryTheory.Category.opposite.{u2, u4} C _inst_1) (Opposite.{succ u5} D) (CategoryTheory.Category.opposite.{u3, u5} D _inst_2) Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.Functor.op.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (CategoryTheory.SheafOfTypes.val.{u1, u3, u5} D _inst_2 K ℱ)) T}, (CategoryTheory.Presieve.FamilyOfElements.Compatible.{u1, u2, u4} C _inst_1 (CategoryTheory.Functor.comp.{u2, u3, u1, u4, u5, succ u1} (Opposite.{succ u4} C) (CategoryTheory.Category.opposite.{u2, u4} C _inst_1) (Opposite.{succ u5} D) (CategoryTheory.Category.opposite.{u3, u5} D _inst_2) Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.Functor.op.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (CategoryTheory.SheafOfTypes.val.{u1, u3, u5} D _inst_2 K ℱ)) Z T x) -> (CategoryTheory.Presieve.FamilyOfElements.Compatible.{u1, u3, u5} D _inst_2 (CategoryTheory.SheafOfTypes.val.{u1, u3, u5} D _inst_2 K ℱ) (CategoryTheory.Functor.obj.{u2, u3, u4, u5} C _inst_1 D _inst_2 G Z) (CategoryTheory.Presieve.functorPushforward.{u2, u3, u4, u5} C _inst_1 D _inst_2 G Z T) (CategoryTheory.Presieve.FamilyOfElements.functorPushforward.{u1, u3, u2, u5, u4} D _inst_2 (CategoryTheory.SheafOfTypes.val.{u1, u3, u5} D _inst_2 K ℱ) C _inst_1 G Z T x)))
+but is expected to have type
+  forall {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u2, u4} C] {D : Type.{u5}} [_inst_2 : CategoryTheory.Category.{u3, u5} D] {K : CategoryTheory.GrothendieckTopology.{u3, u5} D _inst_2} {G : CategoryTheory.Functor.{u2, u3, u4, u5} C _inst_1 D _inst_2}, (CategoryTheory.CompatiblePreserving.{u1, u2, u3, u4, u5} C _inst_1 D _inst_2 K G) -> (forall (ℱ : CategoryTheory.SheafOfTypes.{u1, u3, u5} D _inst_2 K) {Z : C} {T : CategoryTheory.Presieve.{u2, u4} C _inst_1 Z} {x : CategoryTheory.Presieve.FamilyOfElements.{u1, u2, u4} C _inst_1 Z (CategoryTheory.Functor.comp.{u2, u3, u1, u4, u5, succ u1} (Opposite.{succ u4} C) (CategoryTheory.Category.opposite.{u2, u4} C _inst_1) (Opposite.{succ u5} D) (CategoryTheory.Category.opposite.{u3, u5} D _inst_2) Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.Functor.op.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (CategoryTheory.SheafOfTypes.val.{u1, u3, u5} D _inst_2 K ℱ)) T}, (CategoryTheory.Presieve.FamilyOfElements.Compatible.{u1, u2, u4} C _inst_1 (CategoryTheory.Functor.comp.{u2, u3, u1, u4, u5, succ u1} (Opposite.{succ u4} C) (CategoryTheory.Category.opposite.{u2, u4} C _inst_1) (Opposite.{succ u5} D) (CategoryTheory.Category.opposite.{u3, u5} D _inst_2) Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.Functor.op.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (CategoryTheory.SheafOfTypes.val.{u1, u3, u5} D _inst_2 K ℱ)) Z T x) -> (CategoryTheory.Presieve.FamilyOfElements.Compatible.{u1, u3, u5} D _inst_2 (CategoryTheory.SheafOfTypes.val.{u1, u3, u5} D _inst_2 K ℱ) (Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) Z) (CategoryTheory.Presieve.functorPushforward.{u2, u3, u4, u5} C _inst_1 D _inst_2 G Z T) (CategoryTheory.Presieve.FamilyOfElements.functorPushforward.{u1, u3, u2, u5, u4} D _inst_2 (CategoryTheory.SheafOfTypes.val.{u1, u3, u5} D _inst_2 K ℱ) C _inst_1 G Z T x)))
+Case conversion may be inaccurate. Consider using '#align category_theory.presieve.family_of_elements.compatible.functor_pushforward CategoryTheory.Presieve.FamilyOfElements.Compatible.functorPushforwardₓ'. -/
 /-- `compatible_preserving` functors indeed preserve compatible families. -/
 theorem Presieve.FamilyOfElements.Compatible.functorPushforward :
     (x.functorPushforward G).Compatible :=
@@ -126,6 +140,12 @@ theorem Presieve.FamilyOfElements.Compatible.functorPushforward :
   simpa using Eq
 #align category_theory.presieve.family_of_elements.compatible.functor_pushforward CategoryTheory.Presieve.FamilyOfElements.Compatible.functorPushforward
 
+/- warning: category_theory.compatible_preserving.apply_map -> CategoryTheory.CompatiblePreserving.apply_map is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u2, u4} C] {D : Type.{u5}} [_inst_2 : CategoryTheory.Category.{u3, u5} D] {K : CategoryTheory.GrothendieckTopology.{u3, u5} D _inst_2} {G : CategoryTheory.Functor.{u2, u3, u4, u5} C _inst_1 D _inst_2}, (CategoryTheory.CompatiblePreserving.{u1, u2, u3, u4, u5} C _inst_1 D _inst_2 K G) -> (forall (ℱ : CategoryTheory.SheafOfTypes.{u1, u3, u5} D _inst_2 K) {Z : C} {T : CategoryTheory.Presieve.{u2, u4} C _inst_1 Z} {x : CategoryTheory.Presieve.FamilyOfElements.{u1, u2, u4} C _inst_1 Z (CategoryTheory.Functor.comp.{u2, u3, u1, u4, u5, succ u1} (Opposite.{succ u4} C) (CategoryTheory.Category.opposite.{u2, u4} C _inst_1) (Opposite.{succ u5} D) (CategoryTheory.Category.opposite.{u3, u5} D _inst_2) Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.Functor.op.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (CategoryTheory.SheafOfTypes.val.{u1, u3, u5} D _inst_2 K ℱ)) T}, (CategoryTheory.Presieve.FamilyOfElements.Compatible.{u1, u2, u4} C _inst_1 (CategoryTheory.Functor.comp.{u2, u3, u1, u4, u5, succ u1} (Opposite.{succ u4} C) (CategoryTheory.Category.opposite.{u2, u4} C _inst_1) (Opposite.{succ u5} D) (CategoryTheory.Category.opposite.{u3, u5} D _inst_2) Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.Functor.op.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (CategoryTheory.SheafOfTypes.val.{u1, u3, u5} D _inst_2 K ℱ)) Z T x) -> (forall {Y : C} {f : Quiver.Hom.{succ u2, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) Y Z} (hf : T Y f), Eq.{succ u1} (CategoryTheory.Functor.obj.{u3, u1, u5, succ u1} (Opposite.{succ u5} D) (CategoryTheory.Category.opposite.{u3, u5} D _inst_2) Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.SheafOfTypes.val.{u1, u3, u5} D _inst_2 K ℱ) (Opposite.op.{succ u5} D (CategoryTheory.Functor.obj.{u2, u3, u4, u5} C _inst_1 D _inst_2 G Y))) (CategoryTheory.Presieve.FamilyOfElements.functorPushforward.{u1, u3, u2, u5, u4} D _inst_2 (CategoryTheory.SheafOfTypes.val.{u1, u3, u5} D _inst_2 K ℱ) C _inst_1 G Z T x (CategoryTheory.Functor.obj.{u2, u3, u4, u5} C _inst_1 D _inst_2 G Y) (CategoryTheory.Functor.map.{u2, u3, u4, u5} C _inst_1 D _inst_2 G Y Z f) (CategoryTheory.Presieve.image_mem_functorPushforward.{u2, u3, u4, u5} C _inst_1 D _inst_2 G Z Y T f hf)) (x Y f hf)))
+but is expected to have type
+  forall {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u2, u4} C] {D : Type.{u5}} [_inst_2 : CategoryTheory.Category.{u3, u5} D] {K : CategoryTheory.GrothendieckTopology.{u3, u5} D _inst_2} {G : CategoryTheory.Functor.{u2, u3, u4, u5} C _inst_1 D _inst_2}, (CategoryTheory.CompatiblePreserving.{u1, u2, u3, u4, u5} C _inst_1 D _inst_2 K G) -> (forall (ℱ : CategoryTheory.SheafOfTypes.{u1, u3, u5} D _inst_2 K) {Z : C} {T : CategoryTheory.Presieve.{u2, u4} C _inst_1 Z} {x : CategoryTheory.Presieve.FamilyOfElements.{u1, u2, u4} C _inst_1 Z (CategoryTheory.Functor.comp.{u2, u3, u1, u4, u5, succ u1} (Opposite.{succ u4} C) (CategoryTheory.Category.opposite.{u2, u4} C _inst_1) (Opposite.{succ u5} D) (CategoryTheory.Category.opposite.{u3, u5} D _inst_2) Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.Functor.op.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (CategoryTheory.SheafOfTypes.val.{u1, u3, u5} D _inst_2 K ℱ)) T}, (CategoryTheory.Presieve.FamilyOfElements.Compatible.{u1, u2, u4} C _inst_1 (CategoryTheory.Functor.comp.{u2, u3, u1, u4, u5, succ u1} (Opposite.{succ u4} C) (CategoryTheory.Category.opposite.{u2, u4} C _inst_1) (Opposite.{succ u5} D) (CategoryTheory.Category.opposite.{u3, u5} D _inst_2) Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.Functor.op.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) (CategoryTheory.SheafOfTypes.val.{u1, u3, u5} D _inst_2 K ℱ)) Z T x) -> (forall {Y : C} {f : Quiver.Hom.{succ u2, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) Y Z} (hf : T Y f), Eq.{succ u1} (Prefunctor.obj.{succ u3, succ u1, u5, succ u1} (Opposite.{succ u5} D) (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} (Opposite.{succ u5} D) (CategoryTheory.Category.toCategoryStruct.{u3, u5} (Opposite.{succ u5} D) (CategoryTheory.Category.opposite.{u3, u5} D _inst_2))) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u3, u1, u5, succ u1} (Opposite.{succ u5} D) (CategoryTheory.Category.opposite.{u3, u5} D _inst_2) Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.SheafOfTypes.val.{u1, u3, u5} D _inst_2 K ℱ)) (Opposite.op.{succ u5} D (Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) Y))) (CategoryTheory.Presieve.FamilyOfElements.functorPushforward.{u1, u3, u2, u5, u4} D _inst_2 (CategoryTheory.SheafOfTypes.val.{u1, u3, u5} D _inst_2 K ℱ) C _inst_1 G Z T x (Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) Y) (Prefunctor.map.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 G) Y Z f) (CategoryTheory.Presieve.image_mem_functorPushforward.{u2, u3, u4, u5} C _inst_1 D _inst_2 G Z Y T f hf)) (x Y f hf)))
+Case conversion may be inaccurate. Consider using '#align category_theory.compatible_preserving.apply_map CategoryTheory.CompatiblePreserving.apply_mapₓ'. -/
 @[simp]
 theorem CompatiblePreserving.apply_map {Y : C} {f : Y ⟶ Z} (hf : T f) :
     x.functorPushforward G (G.map f) (image_mem_functorPushforward G T hf) = x f hf :=
@@ -140,6 +160,12 @@ omit h hG
 
 open Limits.WalkingCospan
 
+/- warning: category_theory.compatible_preserving_of_flat -> CategoryTheory.compatiblePreservingOfFlat is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_4 : CategoryTheory.Category.{u1, u2} C] {D : Type.{u2}} [_inst_5 : CategoryTheory.Category.{u1, u2} D] (K : CategoryTheory.GrothendieckTopology.{u1, u2} D _inst_5) (G : CategoryTheory.Functor.{u1, u1, u2, u2} C _inst_4 D _inst_5) [_inst_6 : CategoryTheory.RepresentablyFlat.{u1, u1, u2, u2} C _inst_4 D _inst_5 G], CategoryTheory.CompatiblePreserving.{u3, u1, u1, u2, u2} C _inst_4 D _inst_5 K G
+but is expected to have type
+  forall {C : Type.{u3}} [_inst_4 : CategoryTheory.Category.{u2, u3} C] {D : Type.{u3}} [_inst_5 : CategoryTheory.Category.{u2, u3} D] (K : CategoryTheory.GrothendieckTopology.{u2, u3} D _inst_5) (G : CategoryTheory.Functor.{u2, u2, u3, u3} C _inst_4 D _inst_5) [_inst_6 : CategoryTheory.RepresentablyFlat.{u2, u2, u3, u3} C _inst_4 D _inst_5 G], CategoryTheory.CompatiblePreserving.{u1, u2, u2, u3, u3} C _inst_4 D _inst_5 K G
+Case conversion may be inaccurate. Consider using '#align category_theory.compatible_preserving_of_flat CategoryTheory.compatiblePreservingOfFlatₓ'. -/
 theorem compatiblePreservingOfFlat {C : Type u₁} [Category.{v₁} C] {D : Type u₁} [Category.{v₁} D]
     (K : GrothendieckTopology D) (G : C ⥤ D) [RepresentablyFlat G] : CompatiblePreserving K G :=
   by
@@ -177,6 +203,12 @@ theorem compatiblePreservingOfFlat {C : Type u₁} [Category.{v₁} C] {D : Type
   exact hx (c'.π.app left).right (c'.π.app right).right hg₁ hg₂ (e₁.symm.trans e₂)
 #align category_theory.compatible_preserving_of_flat CategoryTheory.compatiblePreservingOfFlat
 
+/- warning: category_theory.compatible_preserving_of_downwards_closed -> CategoryTheory.compatiblePreservingOfDownwardsClosed is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D] {K : CategoryTheory.GrothendieckTopology.{u2, u4} D _inst_2} (F : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2) [_inst_4 : CategoryTheory.Full.{u1, u2, u3, u4} C _inst_1 D _inst_2 F] [_inst_5 : CategoryTheory.Faithful.{u1, u2, u3, u4} C _inst_1 D _inst_2 F], (forall {c : C} {d : D}, (Quiver.Hom.{succ u2, u4} D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) d (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F c)) -> (Sigma.{u3, u2} C (fun (c' : C) => CategoryTheory.Iso.{u2, u4} D _inst_2 (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F c') d))) -> (CategoryTheory.CompatiblePreserving.{u5, u1, u2, u3, u4} C _inst_1 D _inst_2 K F)
+but is expected to have type
+  forall {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u2, u4} C] {D : Type.{u5}} [_inst_2 : CategoryTheory.Category.{u3, u5} D] {K : CategoryTheory.GrothendieckTopology.{u3, u5} D _inst_2} (F : CategoryTheory.Functor.{u2, u3, u4, u5} C _inst_1 D _inst_2) [_inst_4 : CategoryTheory.Full.{u2, u3, u4, u5} C _inst_1 D _inst_2 F] [_inst_5 : CategoryTheory.Faithful.{u2, u3, u4, u5} C _inst_1 D _inst_2 F], (forall {c : C} {d : D}, (Quiver.Hom.{succ u3, u5} D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) d (Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 F) c)) -> (Sigma.{u4, u3} C (fun (c' : C) => CategoryTheory.Iso.{u3, u5} D _inst_2 (Prefunctor.obj.{succ u2, succ u3, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} C (CategoryTheory.Category.toCategoryStruct.{u2, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} C _inst_1 D _inst_2 F) c') d))) -> (CategoryTheory.CompatiblePreserving.{u1, u2, u3, u4, u5} C _inst_1 D _inst_2 K F)
+Case conversion may be inaccurate. Consider using '#align category_theory.compatible_preserving_of_downwards_closed CategoryTheory.compatiblePreservingOfDownwardsClosedₓ'. -/
 theorem compatiblePreservingOfDownwardsClosed (F : C ⥤ D) [Full F] [Faithful F]
     (hF : ∀ {c : C} {d : D} (f : d ⟶ F.obj c), Σc', F.obj c' ≅ d) : CompatiblePreserving K F :=
   by
@@ -190,6 +222,7 @@ theorem compatiblePreservingOfDownwardsClosed (F : C ⥤ D) [Full F] [Faithful F
       (F.map_injective <| by simpa using he)
 #align category_theory.compatible_preserving_of_downwards_closed CategoryTheory.compatiblePreservingOfDownwardsClosed
 
+#print CategoryTheory.pullback_isSheaf_of_coverPreserving /-
 /-- If `G` is cover-preserving and compatible-preserving,
 then `G.op ⋙ _` pulls sheaves back to sheaves.
 
@@ -218,15 +251,19 @@ theorem pullback_isSheaf_of_coverPreserving {G : C ⥤ D} (hG₁ : CompatiblePre
     dsimp
     simp [hG₁.apply_map (sheaf_over ℱ X) hx h, ← hy f' h]
 #align category_theory.pullback_is_sheaf_of_cover_preserving CategoryTheory.pullback_isSheaf_of_coverPreserving
+-/
 
+#print CategoryTheory.pullbackSheaf /-
 /-- The pullback of a sheaf along a cover-preserving and compatible-preserving functor. -/
 def pullbackSheaf {G : C ⥤ D} (hG₁ : CompatiblePreserving K G) (hG₂ : CoverPreserving J K G)
     (ℱ : Sheaf K A) : Sheaf J A :=
   ⟨G.op ⋙ ℱ.val, pullback_isSheaf_of_coverPreserving hG₁ hG₂ ℱ⟩
 #align category_theory.pullback_sheaf CategoryTheory.pullbackSheaf
+-/
 
 variable (A)
 
+#print CategoryTheory.Sites.pullback /-
 /-- The induced functor from `Sheaf K A ⥤ Sheaf J A` given by `G.op ⋙ _`
 if `G` is cover-preserving and compatible-preserving.
 -/
@@ -242,6 +279,7 @@ def Sites.pullback {G : C ⥤ D} (hG₁ : CompatiblePreserving K G) (hG₂ : Cov
     ext1
     apply ((whiskering_left _ _ _).obj G.op).map_comp
 #align category_theory.sites.pullback CategoryTheory.Sites.pullback
+-/
 
 end CategoryTheory
 

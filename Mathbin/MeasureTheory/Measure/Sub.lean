@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Martin Zinkevich
 
 ! This file was ported from Lean 3 source module measure_theory.measure.sub
-! leanprover-community/mathlib commit 562bbf524c595c153470e53d36c57b6f891cc480
+! leanprover-community/mathlib commit a2706b55e8d7f7e9b1f93143f0b88f2e34a11eea
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.MeasureTheory.Measure.MeasureSpace
 
 /-!
 # Subtraction of measures
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we define `μ - ν` to be the least measure `τ` such that `μ ≤ τ + ν`.
 It is the equivalent of `(μ - ν) ⊔ 0` if `μ` and `ν` were signed measures.

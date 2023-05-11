@@ -247,6 +247,7 @@ import Mathbin.Algebra.Lie.TensorProduct
 import Mathbin.Algebra.Lie.UniversalEnveloping
 import Mathbin.Algebra.Lie.Weights
 import Mathbin.Algebra.LinearRecurrence
+import Mathbin.Algebra.Modeq
 import Mathbin.Algebra.Module.Algebra
 import Mathbin.Algebra.Module.Basic
 import Mathbin.Algebra.Module.BigOperators

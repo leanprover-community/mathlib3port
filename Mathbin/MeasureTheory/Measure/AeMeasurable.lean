@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.measure.ae_measurable
-! leanprover-community/mathlib commit 3310acfa9787aa171db6d4cba3945f6f275fe9f2
+! leanprover-community/mathlib commit a2706b55e8d7f7e9b1f93143f0b88f2e34a11eea
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.MeasureTheory.Measure.MeasureSpace
 
 /-!
 # Almost everywhere measurable functions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A function is almost everywhere measurable if it coincides almost everywhere with a measurable
 function. This property, called `ae_measurable f μ`, is defined in the file `measure_space_def`.

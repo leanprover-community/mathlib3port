@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.functor.flat
-! leanprover-community/mathlib commit 39478763114722f0ec7613cb2f3f7701f9b86c8d
+! leanprover-community/mathlib commit a2706b55e8d7f7e9b1f93143f0b88f2e34a11eea
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -17,6 +17,9 @@ import Mathbin.CategoryTheory.Limits.Shapes.FiniteLimits
 
 /-!
 # Representably flat functors
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We define representably flat functors as functors such that the category of structured arrows
 over `X` is cofiltered for each `X`. This concept is also known as flat functors as in [Elephant]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.kernel.with_density
-! leanprover-community/mathlib commit 483dd86cfec4a1380d22b1f6acd4c3dc53f501ff
+! leanprover-community/mathlib commit 28b2a92f2996d28e580450863c130955de0ed398
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,7 @@ noncomputable def withDensity (κ : kernel α β) [IsSFiniteKernel κ] (f : α �
           property := by
             refine' measure.measurable_of_measurable_coe _ fun s hs => _
             simp_rw [with_density_apply _ hs]
-            exact measurable_set_lintegral κ hf hs } :
+            exact hf.set_lintegral_kernel_prod_right hs } :
         kernel α β))
     fun hf => 0
 #align probability_theory.kernel.with_density ProbabilityTheory.kernel.withDensity

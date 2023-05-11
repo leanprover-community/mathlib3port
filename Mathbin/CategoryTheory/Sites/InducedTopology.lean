@@ -111,9 +111,9 @@ theorem inducedTopologyCoverLifting : CoverLifting Hld.inducedTopology K G :=
 #align category_theory.locally_cover_dense.induced_topology_cover_lifting CategoryTheory.LocallyCoverDense.inducedTopologyCoverLifting
 
 /-- `G` is cover-preserving wrt the induced topology. -/
-theorem inducedTopologyCoverPreserving : CoverPreserving Hld.inducedTopology K G :=
+theorem inducedTopology_coverPreserving : CoverPreserving Hld.inducedTopology K G :=
   ⟨fun _ S hS => hS⟩
-#align category_theory.locally_cover_dense.induced_topology_cover_preserving CategoryTheory.LocallyCoverDense.inducedTopologyCoverPreserving
+#align category_theory.locally_cover_dense.induced_topology_cover_preserving CategoryTheory.LocallyCoverDense.inducedTopology_coverPreserving
 
 end LocallyCoverDense
 
@@ -166,7 +166,7 @@ is complete.
 -/
 noncomputable def CoverDense.sheafEquiv [Full G] [Faithful G] (H : CoverDense K G) [HasLimits A] :
     Sheaf H.inducedTopology A ≌ Sheaf K A :=
-  H.sheafEquivOfCoverPreservingCoverLifting H.LocallyCoverDense.inducedTopologyCoverPreserving
+  H.sheafEquivOfCoverPreservingCoverLifting H.LocallyCoverDense.inducedTopology_coverPreserving
     H.LocallyCoverDense.inducedTopologyCoverLifting
 #align category_theory.cover_dense.Sheaf_equiv CategoryTheory.CoverDense.sheafEquiv
 

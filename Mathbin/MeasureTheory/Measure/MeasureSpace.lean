@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measure.measure_space
-! leanprover-community/mathlib commit 88fcb83fe7996142dfcfe7368d31304a9adc874a
+! leanprover-community/mathlib commit a2706b55e8d7f7e9b1f93143f0b88f2e34a11eea
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Topology.Algebra.Order.LiminfLimsup
 
 /-!
 # Measure spaces
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The definition of a measure and a measure space are in `measure_theory.measure_space_def`, with
 only a few basic properties. This file provides many more properties of these objects.

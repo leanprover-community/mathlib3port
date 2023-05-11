@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.injective_resolution
-! leanprover-community/mathlib commit 14b69e9f3c16630440a2cbd46f1ddad0d561dee7
+! leanprover-community/mathlib commit a2706b55e8d7f7e9b1f93143f0b88f2e34a11eea
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Algebra.Homology.Single
 
 /-!
 # Injective resolutions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A injective resolution `I : InjectiveResolution Z` of an object `Z : C` consists of
 a `ℕ`-indexed cochain complex `I.cocomplex` of injective objects,

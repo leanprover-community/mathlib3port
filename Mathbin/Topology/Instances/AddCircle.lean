@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module topology.instances.add_circle
-! leanprover-community/mathlib commit f0c8bf9245297a541f468be517f1bde6195105e9
+! leanprover-community/mathlib commit a07d750983b94c530ab69a726862c2ab6802b38c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,7 +54,7 @@ the rational circle `add_circle (1 : ℚ)`, and so we set things up more general
 
 noncomputable section
 
-open Set Function AddSubgroup TopologicalSpace
+open AddCommGroup Set Function AddSubgroup TopologicalSpace
 
 open Topology
 
@@ -100,8 +100,7 @@ theorem toIcoMod_eventuallyEq_toIocMod : toIcoMod hp a =ᶠ[𝓝 x] toIocMod hp 
       (by
         rw [Ico_eq_locus_Ioc_eq_unionᵢ_Ioo]
         exact isOpen_unionᵢ fun i => isOpen_Ioo) <|
-    (AddCommGroup.not_modeq_iff_toIcoMod_eq_toIocMod hp).1 <|
-      (AddCommGroup.not_modeq_iff_ne_mod_zmultiples hp).2 hx
+    (not_modeq_iff_toIcoMod_eq_toIocMod hp).1 <| not_modeq_iff_ne_mod_zmultiples.2 hx
 #align to_Ico_mod_eventually_eq_to_Ioc_mod toIcoMod_eventuallyEq_toIocMod
 
 theorem continuousAt_toIcoMod : ContinuousAt (toIcoMod hp a) x :=
@@ -609,11 +608,10 @@ theorem equivIccQuot_comp_mk_eq_toIocMod :
       Quot.mk _ ⟨toIocMod hp.out a x, Ioc_subset_Icc_self <| toIocMod_mem_Ioc _ _ x⟩ :=
   by
   rw [equiv_Icc_quot_comp_mk_eq_to_Ico_mod]; funext
-  by_cases AddCommGroup.Modeq p a x
-  · simp_rw [(AddCommGroup.modeq_iff_toIcoMod_eq_left hp.out).1 h,
-      (AddCommGroup.modeq_iff_toIocMod_eq_right hp.out).1 h]
+  by_cases a ≡ x [PMOD p]
+  · simp_rw [(modeq_iff_to_Ico_mod_eq_left hp.out).1 h, (modeq_iff_to_Ioc_mod_eq_right hp.out).1 h]
     exact Quot.sound endpoint_ident.mk
-  · simp_rw [(AddCommGroup.not_modeq_iff_toIcoMod_eq_toIocMod hp.out).1 h]
+  · simp_rw [(not_modeq_iff_to_Ico_mod_eq_to_Ioc_mod hp.out).1 h]
 #align add_circle.equiv_Icc_quot_comp_mk_eq_to_Ioc_mod AddCircle.equivIccQuot_comp_mk_eq_toIocMod
 
 /-- The natural map from `[a, a + p] ⊂ 𝕜` with endpoints identified to `𝕜 / ℤ • p`, as a

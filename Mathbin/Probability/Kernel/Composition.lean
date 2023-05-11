@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.kernel.composition
-! leanprover-community/mathlib commit a9545e8a564bac7f24637443f52ae955474e4991
+! leanprover-community/mathlib commit 28b2a92f2996d28e580450863c130955de0ed398
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -138,7 +138,7 @@ theorem compProdFun_unionᵢ (κ : kernel α β) (η : kernel (α × β) γ) [Is
   · intro i
     have hm : MeasurableSet { p : (α × β) × γ | (p.1.2, p.2) ∈ f i } :=
       measurable_fst.snd.prod_mk measurable_snd (hf_meas i)
-    exact ((measurable_prod_mk_mem η hm).comp measurable_prod_mk_left).AEMeasurable
+    exact ((measurable_kernel_prod_mk_left hm).comp measurable_prod_mk_left).AEMeasurable
 #align probability_theory.kernel.comp_prod_fun_Union ProbabilityTheory.kernel.compProdFun_unionᵢ
 
 theorem compProdFun_tsum_right (κ : kernel α β) (η : kernel (α × β) γ) [IsSFiniteKernel η] (a : α)
@@ -155,7 +155,7 @@ theorem compProdFun_tsum_right (κ : kernel α β) (η : kernel (α × β) γ) [
     exact measurable_prod_mk_left hs
   rw [this, lintegral_tsum fun n : ℕ => _]
   exact
-    ((measurable_prod_mk_mem (seq η n) ((measurable_fst.snd.prod_mk measurable_snd) hs)).comp
+    ((measurable_kernel_prod_mk_left ((measurable_fst.snd.prod_mk measurable_snd) hs)).comp
         measurable_prod_mk_left).AEMeasurable
 #align probability_theory.kernel.comp_prod_fun_tsum_right ProbabilityTheory.kernel.compProdFun_tsum_right
 
@@ -186,8 +186,8 @@ theorem measurable_compProdFun_of_finite (κ : kernel α β) [IsFiniteKernel κ]
       have hp_eq_mk : p = (p.fst, p.snd) := prod.mk.eta.symm
       rw [hp_eq_mk, Function.uncurry_apply_pair]
     rw [this]
-    exact measurable_prod_mk_mem η (measurable_fst.snd.prod_mk measurable_snd hs)
-  exact measurable_lintegral κ h_meas
+    exact measurable_kernel_prod_mk_left (measurable_fst.snd.prod_mk measurable_snd hs)
+  exact h_meas.lintegral_kernel_prod_right
 #align probability_theory.kernel.measurable_comp_prod_fun_of_finite ProbabilityTheory.kernel.measurable_compProdFun_of_finite
 
 theorem measurable_compProdFun (κ : kernel α β) [IsSFiniteKernel κ] (η : kernel (α × β) γ)
@@ -206,8 +206,8 @@ theorem measurable_compProdFun (κ : kernel α β) [IsSFiniteKernel κ] (η : ke
       have hp_eq_mk : p = (p.fst, p.snd) := prod.mk.eta.symm
       rw [hp_eq_mk, Function.uncurry_apply_pair]
     rw [this]
-    exact measurable_prod_mk_mem (seq η n) (measurable_fst.snd.prod_mk measurable_snd hs)
-  exact measurable_lintegral κ h_meas
+    exact measurable_kernel_prod_mk_left (measurable_fst.snd.prod_mk measurable_snd hs)
+  exact h_meas.lintegral_kernel_prod_right
 #align probability_theory.kernel.measurable_comp_prod_fun ProbabilityTheory.kernel.measurable_compProdFun
 
 /-- Composition-Product of kernels. It verifies
@@ -287,7 +287,7 @@ theorem lintegral_comp_prod' (κ : kernel α β) [IsSFiniteKernel κ] (η : kern
     rw [this]
     refine' Measurable.comp _ measurable_prod_mk_left
     exact
-      measurable_lintegral η
+      Measurable.lintegral_kernel_prod_right
         ((simple_func.measurable _).comp (measurable_fst.snd.prod_mk measurable_snd))
   rw [lintegral_supr]
   rotate_left
@@ -303,7 +303,7 @@ theorem lintegral_comp_prod' (κ : kernel α β) [IsSFiniteKernel κ] (η : kern
     swap
     ·
       exact
-        (measurable_prod_mk_mem η ((measurable_fst.snd.prod_mk measurable_snd) hs)).comp
+        (measurable_kernel_prod_mk_left ((measurable_fst.snd.prod_mk measurable_snd) hs)).comp
           measurable_prod_mk_left
     congr
     ext1 b
@@ -786,7 +786,7 @@ theorem comp_assoc {δ : Type _} {mδ : MeasurableSpace δ} (ξ : kernel γ δ) 
     ξ ∘ₖ η ∘ₖ κ = ξ ∘ₖ (η ∘ₖ κ) :=
   by
   refine' ext_fun fun a f hf => _
-  simp_rw [lintegral_comp _ _ _ hf, lintegral_comp _ _ _ (measurable_lintegral' ξ hf)]
+  simp_rw [lintegral_comp _ _ _ hf, lintegral_comp _ _ _ hf.lintegral_kernel]
 #align probability_theory.kernel.comp_assoc ProbabilityTheory.kernel.comp_assoc
 
 theorem deterministic_comp_eq_map (hf : Measurable f) (κ : kernel α β) [IsSFiniteKernel κ] :

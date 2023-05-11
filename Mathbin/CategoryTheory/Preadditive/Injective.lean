@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang, Kevin Buzzard
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.injective
-! leanprover-community/mathlib commit 3974a774a707e2e06046a14c0eaef4654584fada
+! leanprover-community/mathlib commit a2706b55e8d7f7e9b1f93143f0b88f2e34a11eea
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.CategoryTheory.Preadditive.Projective
 
 /-!
 # Injective objects and categories with enough injectives
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 An object `J` is injective iff every morphism into `J` can be obtained by extending a monomorphism.
 -/
