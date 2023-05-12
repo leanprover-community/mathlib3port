@@ -35,6 +35,7 @@ namespace CategoryTheory.Abelian
 
 variable {C : Type u} [Category.{v} C] [Abelian C]
 
+#print CategoryTheory.Abelian.has_injective_coseparator /-
 theorem has_injective_coseparator [HasLimits C] [EnoughInjectives C] (G : C) (hG : IsSeparator G) :
     ∃ G : C, Injective G ∧ IsCoseparator G :=
   by
@@ -57,13 +58,16 @@ theorem has_injective_coseparator [HasLimits C] [EnoughInjectives C] (G : C) (hG
         rw [← injective.comp_factor_thru q (limits.image.ι (h ≫ f)), limits.image.fac_assoc,
           category.assoc, hf, comp_zero])
 #align category_theory.abelian.has_injective_coseparator CategoryTheory.Abelian.has_injective_coseparator
+-/
 
+#print CategoryTheory.Abelian.has_projective_separator /-
 theorem has_projective_separator [HasColimits C] [EnoughProjectives C] (G : C)
     (hG : IsCoseparator G) : ∃ G : C, Projective G ∧ IsSeparator G :=
   by
   obtain ⟨T, hT₁, hT₂⟩ := has_injective_coseparator (op G) ((is_separator_op_iff _).2 hG)
   exact ⟨unop T, inferInstance, (is_separator_unop_iff _).2 hT₂⟩
 #align category_theory.abelian.has_projective_separator CategoryTheory.Abelian.has_projective_separator
+-/
 
 end CategoryTheory.Abelian
 

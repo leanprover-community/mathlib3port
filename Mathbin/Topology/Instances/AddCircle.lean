@@ -100,7 +100,7 @@ theorem toIcoMod_eventuallyEq_toIocMod : toIcoMod hp a =ᶠ[𝓝 x] toIocMod hp 
       (by
         rw [Ico_eq_locus_Ioc_eq_unionᵢ_Ioo]
         exact isOpen_unionᵢ fun i => isOpen_Ioo) <|
-    (not_modeq_iff_toIcoMod_eq_toIocMod hp).1 <| not_modeq_iff_ne_mod_zmultiples.2 hx
+    (not_modEq_iff_toIcoMod_eq_toIocMod hp).1 <| not_modEq_iff_ne_mod_zmultiples.2 hx
 #align to_Ico_mod_eventually_eq_to_Ioc_mod toIcoMod_eventuallyEq_toIocMod
 
 theorem continuousAt_toIcoMod : ContinuousAt (toIcoMod hp a) x :=
