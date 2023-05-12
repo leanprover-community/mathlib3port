@@ -4,12 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module probability.conditional_expectation
-! leanprover-community/mathlib commit 70fd9563a21e7b963887c9360bd29b2393e6225a
+! leanprover-community/mathlib commit 2f8347015b12b0864dfaf366ec4909eb70c78740
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Probability.Notation
-import Mathbin.Probability.Independence
+import Mathbin.Probability.Independence.Basic
 import Mathbin.MeasureTheory.Function.ConditionalExpectation.Basic
 
 /-!

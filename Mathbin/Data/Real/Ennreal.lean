@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.real.ennreal
-! leanprover-community/mathlib commit c1686dff26eaecf4efd4edd141ebf78de309ae80
+! leanprover-community/mathlib commit ec4b2eeb50364487f80421c0b4c41328a611f30d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -978,6 +978,7 @@ theorem coe_ofNNRealHom : ⇑ofNNRealHom = coe :=
   rfl
 #align ennreal.coe_of_nnreal_hom ENNReal.coe_ofNNRealHom
 
+-- TODO: generalize some of these (and subsequent lemmas about `smul`) to `with_top α`
 section Actions
 
 /-- A `mul_action` over `ℝ≥0∞` restricts to a `mul_action` over `ℝ≥0`. -/
@@ -1162,6 +1163,13 @@ Case conversion may be inaccurate. Consider using '#align ennreal.top_mul_top EN
 theorem top_mul_top : ∞ * ∞ = ∞ :=
   WithTop.top_mul_top
 #align ennreal.top_mul_top ENNReal.top_mul_top
+
+theorem smul_top {R} [Zero R] [SMulWithZero R ℝ≥0∞] [IsScalarTower R ℝ≥0∞ ℝ≥0∞]
+    [NoZeroSMulDivisors R ℝ≥0∞] (c : R) : c • ∞ = if c = 0 then 0 else ∞ :=
+  by
+  rw [← smul_one_mul, mul_top]
+  simp_rw [smul_eq_zero, or_iff_left one_ne_zero]
+#align ennreal.smul_top ENNReal.smul_top
 
 /- warning: ennreal.top_pow -> ENNReal.top_pow is a dubious translation:
 lean 3 declaration is

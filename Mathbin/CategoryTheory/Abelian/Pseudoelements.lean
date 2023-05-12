@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.abelian.pseudoelements
-! leanprover-community/mathlib commit 70fd9563a21e7b963887c9360bd29b2393e6225a
+! leanprover-community/mathlib commit 781cb2eed038c4caf53bdbd8d20a95e5822d77df
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Algebra.Category.Module.EpiMono
 
 /-!
 # Pseudoelements in abelian categories
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A *pseudoelement* of an object `X` in an abelian category `C` is an equivalence class of arrows
 ending in `X`, where two arrows are considered equivalent if we can find two epimorphisms with a

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Hoskin
 
 ! This file was ported from Lean 3 source module analysis.normed.order.lattice
-! leanprover-community/mathlib commit 10bf4f825ad729c5653adc039dafa3622e7f93c9
+! leanprover-community/mathlib commit 5dc275ec639221ca4d5f56938eb966f6ad9bc89f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,7 +37,7 @@ normed, lattice, ordered, group
 
 
 /-!
-### Normed lattice orderd groups
+### Normed lattice ordered groups
 
 Motivated by the theory of Banach Lattices, this section introduces normed lattice ordered groups.
 -/
@@ -46,6 +46,35 @@ Motivated by the theory of Banach Lattices, this section introduces normed latti
 -- mathport name: abs
 local notation "|" a "|" => abs a
 
+section SolidNorm
+
+/-- Let `α` be an `add_comm_group` with a `lattice` structure. A norm on `α` is *solid* if, for `a`
+and `b` in `α`, with absolute values `|a|` and `|b|` respectively, `|a| ≤ |b|` implies `‖a‖ ≤ ‖b‖`.
+-/
+class HasSolidNorm (α : Type _) [NormedAddCommGroup α] [Lattice α] : Prop where
+  solid : ∀ ⦃x y : α⦄, |x| ≤ |y| → ‖x‖ ≤ ‖y‖
+#align has_solid_norm HasSolidNorm
+
+variable {α : Type _} [NormedAddCommGroup α] [Lattice α] [HasSolidNorm α]
+
+theorem norm_le_norm_of_abs_le_abs {a b : α} (h : |a| ≤ |b|) : ‖a‖ ≤ ‖b‖ :=
+  HasSolidNorm.solid h
+#align norm_le_norm_of_abs_le_abs norm_le_norm_of_abs_le_abs
+
+/-- If `α` has a solid norm, then the balls centered at the origin of `α` are solid sets. -/
+theorem LatticeOrderedAddCommGroup.isSolid_ball (r : ℝ) :
+    LatticeOrderedAddCommGroup.IsSolid (Metric.ball (0 : α) r) := fun _ hx _ hxy =>
+  mem_ball_zero_iff.mpr ((HasSolidNorm.solid hxy).trans_lt (mem_ball_zero_iff.mp hx))
+#align lattice_ordered_add_comm_group.is_solid_ball LatticeOrderedAddCommGroup.isSolid_ball
+
+instance : HasSolidNorm ℝ :=
+  ⟨fun _ _ => id⟩
+
+instance : HasSolidNorm ℚ :=
+  ⟨fun _ _ _ => by simpa only [norm, ← Rat.cast_abs, Rat.cast_le] ⟩
+
+end SolidNorm
+
 #print NormedLatticeAddCommGroup /-
 /--
 Let `α` be a normed commutative group equipped with a partial order covariant with addition, with
@@ -53,26 +82,13 @@ respect which `α` forms a lattice. Suppose that `α` is *solid*, that is to say
 `α`, with absolute values `|a|` and `|b|` respectively, `|a| ≤ |b|` implies `‖a‖ ≤ ‖b‖`. Then `α` is
 said to be a normed lattice ordered group.
 -/
-class NormedLatticeAddCommGroup (α : Type _) extends NormedAddCommGroup α, Lattice α where
+class NormedLatticeAddCommGroup (α : Type _) extends NormedAddCommGroup α, Lattice α,
+  HasSolidNorm α where
   add_le_add_left : ∀ a b : α, a ≤ b → ∀ c : α, c + a ≤ c + b
-  solid : ∀ a b : α, |a| ≤ |b| → ‖a‖ ≤ ‖b‖
 #align normed_lattice_add_comm_group NormedLatticeAddCommGroup
 -/
 
-/- warning: solid -> solid is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : NormedLatticeAddCommGroup.{u1} α] {a : α} {b : α}, (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (NormedLatticeAddCommGroup.toLattice.{u1} α _inst_1))))) (Abs.abs.{u1} α (Neg.toHasAbs.{u1} α (SubNegMonoid.toHasNeg.{u1} α (AddGroup.toSubNegMonoid.{u1} α (NormedAddGroup.toAddGroup.{u1} α (NormedAddCommGroup.toNormedAddGroup.{u1} α (NormedLatticeAddCommGroup.toNormedAddCommGroup.{u1} α _inst_1))))) (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (NormedLatticeAddCommGroup.toLattice.{u1} α _inst_1)))) a) (Abs.abs.{u1} α (Neg.toHasAbs.{u1} α (SubNegMonoid.toHasNeg.{u1} α (AddGroup.toSubNegMonoid.{u1} α (NormedAddGroup.toAddGroup.{u1} α (NormedAddCommGroup.toNormedAddGroup.{u1} α (NormedLatticeAddCommGroup.toNormedAddCommGroup.{u1} α _inst_1))))) (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (NormedLatticeAddCommGroup.toLattice.{u1} α _inst_1)))) b)) -> (LE.le.{0} Real Real.hasLe (Norm.norm.{u1} α (NormedAddCommGroup.toHasNorm.{u1} α (NormedLatticeAddCommGroup.toNormedAddCommGroup.{u1} α _inst_1)) a) (Norm.norm.{u1} α (NormedAddCommGroup.toHasNorm.{u1} α (NormedLatticeAddCommGroup.toNormedAddCommGroup.{u1} α _inst_1)) b))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : NormedLatticeAddCommGroup.{u1} α] {a : α} {b : α}, (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (NormedLatticeAddCommGroup.toLattice.{u1} α _inst_1))))) (Abs.abs.{u1} α (Neg.toHasAbs.{u1} α (NegZeroClass.toNeg.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (SubtractionCommMonoid.toSubtractionMonoid.{u1} α (AddCommGroup.toDivisionAddCommMonoid.{u1} α (NormedAddCommGroup.toAddCommGroup.{u1} α (NormedLatticeAddCommGroup.toNormedAddCommGroup.{u1} α _inst_1))))))) (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (NormedLatticeAddCommGroup.toLattice.{u1} α _inst_1)))) a) (Abs.abs.{u1} α (Neg.toHasAbs.{u1} α (NegZeroClass.toNeg.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (SubtractionCommMonoid.toSubtractionMonoid.{u1} α (AddCommGroup.toDivisionAddCommMonoid.{u1} α (NormedAddCommGroup.toAddCommGroup.{u1} α (NormedLatticeAddCommGroup.toNormedAddCommGroup.{u1} α _inst_1))))))) (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (NormedLatticeAddCommGroup.toLattice.{u1} α _inst_1)))) b)) -> (LE.le.{0} Real Real.instLEReal (Norm.norm.{u1} α (NormedAddCommGroup.toNorm.{u1} α (NormedLatticeAddCommGroup.toNormedAddCommGroup.{u1} α _inst_1)) a) (Norm.norm.{u1} α (NormedAddCommGroup.toNorm.{u1} α (NormedLatticeAddCommGroup.toNormedAddCommGroup.{u1} α _inst_1)) b))
-Case conversion may be inaccurate. Consider using '#align solid solidₓ'. -/
-theorem solid {α : Type _} [NormedLatticeAddCommGroup α] {a b : α} (h : |a| ≤ |b|) : ‖a‖ ≤ ‖b‖ :=
-  NormedLatticeAddCommGroup.solid a b h
-#align solid solid
-
-instance : NormedLatticeAddCommGroup ℝ
-    where
-  add_le_add_left _ _ h _ := add_le_add le_rfl h
-  solid _ _ := id
+instance : NormedLatticeAddCommGroup ℝ where add_le_add_left _ _ h _ := add_le_add le_rfl h
 
 #print NormedLatticeAddCommGroup.toOrderedAddCommGroup /-
 -- see Note [lower instance priority]
@@ -86,7 +102,7 @@ instance (priority := 100) NormedLatticeAddCommGroup.toOrderedAddCommGroup {α :
 
 variable {α : Type _} [NormedLatticeAddCommGroup α]
 
-open LatticeOrderedCommGroup
+open LatticeOrderedCommGroup HasSolidNorm
 
 /- warning: dual_solid -> dual_solid is a dubious translation:
 lean 3 declaration is

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.circular
-! leanprover-community/mathlib commit f2f413b9d4be3a02840d0663dace76e8fe3da053
+! leanprover-community/mathlib commit 213b0cff7bc5ab6696ee07cceec80829ce42efec
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,7 +75,7 @@ What is the correct generality of "rolling the necklace" open? At least, this wo
 `β × α` where `α` is a circular order and `β` is a linear order.
 
 What's next is to define circular groups and provide instances for `zmod n`, the usual circle group
-`circle`, `real.angle`, and `roots_of_unity M`. What conditions do we need on `M` for this last one
+`circle`, and `roots_of_unity M`. What conditions do we need on `M` for this last one
 to work?
 
 We should have circular order homomorphisms. The typical example is

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Calle Sönne, Adam Topaz
 
 ! This file was ported from Lean 3 source module topology.category.Profinite.as_limit
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 781cb2eed038c4caf53bdbd8d20a95e5822d77df
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Topology.DiscreteQuotient
 
 /-!
 # Profinite sets as limits of finite sets.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We show that any profinite set is isomorphic to the limit of its
 discrete (hence finite) quotients.
