@@ -88,12 +88,12 @@ theorem IsSymmetric.apply_clm {T : E →L[𝕜] E} (hT : IsSymmetric (T : E →�
   hT x y
 #align linear_map.is_symmetric.apply_clm LinearMap.IsSymmetric.apply_clm
 
-theorem isSymmetric_zero : (0 : E →ₗ[𝕜] E).IsSymmetric := fun x y =>
+theorem isSymmetricZero : (0 : E →ₗ[𝕜] E).IsSymmetric := fun x y =>
   (inner_zero_right x : ⟪x, 0⟫ = 0).symm ▸ (inner_zero_left y : ⟪0, y⟫ = 0)
-#align linear_map.is_symmetric_zero LinearMap.isSymmetric_zero
+#align linear_map.is_symmetric_zero LinearMap.isSymmetricZero
 
-theorem isSymmetric_id : (LinearMap.id : E →ₗ[𝕜] E).IsSymmetric := fun x y => rfl
-#align linear_map.is_symmetric_id LinearMap.isSymmetric_id
+theorem isSymmetricId : (LinearMap.id : E →ₗ[𝕜] E).IsSymmetric := fun x y => rfl
+#align linear_map.is_symmetric_id LinearMap.isSymmetricId
 
 theorem IsSymmetric.add {T S : E →ₗ[𝕜] E} (hT : T.IsSymmetric) (hS : S.IsSymmetric) :
     (T + S).IsSymmetric := by
@@ -135,9 +135,9 @@ theorem IsSymmetric.coe_reApplyInnerSelf_apply {T : E →L[𝕜] E} (hT : IsSymm
 
 /-- If a symmetric operator preserves a submodule, its restriction to that submodule is
 symmetric. -/
-theorem IsSymmetric.restrict_invariant {T : E →ₗ[𝕜] E} (hT : IsSymmetric T) {V : Submodule 𝕜 E}
+theorem IsSymmetric.restrictInvariant {T : E →ₗ[𝕜] E} (hT : IsSymmetric T) {V : Submodule 𝕜 E}
     (hV : ∀ v ∈ V, T v ∈ V) : IsSymmetric (T.restrict hV) := fun v w => hT v w
-#align linear_map.is_symmetric.restrict_invariant LinearMap.IsSymmetric.restrict_invariant
+#align linear_map.is_symmetric.restrict_invariant LinearMap.IsSymmetric.restrictInvariant
 
 theorem IsSymmetric.restrictScalars {T : E →ₗ[𝕜] E} (hT : T.IsSymmetric) :
     @LinearMap.IsSymmetric ℝ E _ _ (InnerProductSpace.isROrCToReal 𝕜 E)
@@ -191,7 +191,7 @@ theorem IsSymmetric.inner_map_polarization {T : E →ₗ[𝕜] E} (hT : T.IsSymm
       simp_rw [h, MulZeroClass.mul_zero, add_zero]
       norm_cast
   · simp_rw [map_add, map_sub, inner_add_left, inner_add_right, inner_sub_left, inner_sub_right,
-      LinearMap.map_smul, inner_smul_left, inner_smul_right, IsROrC.conj_i, mul_add, mul_sub,
+      LinearMap.map_smul, inner_smul_left, inner_smul_right, IsROrC.conj_I, mul_add, mul_sub,
       sub_sub, ← mul_assoc, mul_neg, h, neg_neg, one_mul, neg_one_mul]
     ring
 #align linear_map.is_symmetric.inner_map_polarization LinearMap.IsSymmetric.inner_map_polarization

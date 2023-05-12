@@ -114,7 +114,7 @@ theorem norm_dslope_le_div_of_mapsTo_ball (hd : DifferentiableOn ℂ f (ball c R
   calc
     ‖dslope f c z‖ = ‖dslope (g ∘ f) c z‖ :=
       by
-      rw [g.dslope_comp, hgf, IsROrC.norm_of_real, abs_norm]
+      rw [g.dslope_comp, hgf, IsROrC.norm_ofReal, abs_norm]
       exact fun _ => hd.differentiable_at (ball_mem_nhds _ hR₁)
     _ ≤ R₂ / R₁ :=
       by

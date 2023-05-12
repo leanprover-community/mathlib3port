@@ -354,7 +354,7 @@ theorem setOfIdeal_of_set_eq_interior (s : Set X) : setOfIdeal (idealOfSet 𝕜 
   exact
     ⟨⟨fun x => g x, continuous_of_real.comp (map_continuous g)⟩, by
       simpa only [coe_mk, of_real_eq_zero] using fun x hx => hgs (subset_closure hx), by
-      simpa only [coe_mk, hgx (Set.mem_singleton x), Pi.one_apply, IsROrC.of_real_one] using
+      simpa only [coe_mk, hgx (Set.mem_singleton x), Pi.one_apply, IsROrC.ofReal_one] using
         one_ne_zero⟩
 #align continuous_map.set_of_ideal_of_set_eq_interior ContinuousMap.setOfIdeal_of_set_eq_interior
 
@@ -473,9 +473,9 @@ theorem continuousMapEval_bijective : Bijective (continuousMapEval X 𝕜) :=
         (isClosed_singleton : _root_.is_closed {y}) (set.disjoint_singleton.mpr hxy) with
       ⟨f, fx, fy, -⟩
     rw [← Ne.def, FunLike.ne_iff]
-    use (⟨coe, IsROrC.continuous_of_real⟩ : C(ℝ, 𝕜)).comp f
+    use (⟨coe, IsROrC.continuous_ofReal⟩ : C(ℝ, 𝕜)).comp f
     simpa only [continuous_map_eval_apply_apply, ContinuousMap.comp_apply, coe_mk, Ne.def,
-      IsROrC.of_real_inj] using
+      IsROrC.ofReal_inj] using
       ((fx (Set.mem_singleton x)).symm ▸ (fy (Set.mem_singleton y)).symm ▸ zero_ne_one : f x ≠ f y)
   · obtain ⟨x, hx⟩ := (ideal_is_maximal_iff (RingHom.ker φ)).mp inferInstance
     refine' ⟨x, ext_ker <| Ideal.ext fun f => _⟩

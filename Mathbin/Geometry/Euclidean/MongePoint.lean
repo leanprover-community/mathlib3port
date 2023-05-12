@@ -392,12 +392,12 @@ theorem direction_altitude {n : ℕ} (s : Simplex ℝ P (n + 1)) (i : Fin (n + 2
 
 /-- The vector span of the opposite face lies in the direction
 orthogonal to an altitude. -/
-theorem vectorSpan_isOrtho_altitude_direction {n : ℕ} (s : Simplex ℝ P (n + 1)) (i : Fin (n + 2)) :
+theorem vectorSpanIsOrthoAltitudeDirection {n : ℕ} (s : Simplex ℝ P (n + 1)) (i : Fin (n + 2)) :
     vectorSpan ℝ (s.points '' ↑(Finset.univ.eraseₓ i)) ⟂ (s.altitude i).direction :=
   by
   rw [direction_altitude]
-  exact (Submodule.isOrtho_orthogonal_right _).mono_right inf_le_left
-#align affine.simplex.vector_span_is_ortho_altitude_direction Affine.Simplex.vectorSpan_isOrtho_altitude_direction
+  exact (Submodule.isOrthoOrthogonalRight _).mono_right inf_le_left
+#align affine.simplex.vector_span_is_ortho_altitude_direction Affine.Simplex.vectorSpanIsOrthoAltitudeDirection
 
 open FiniteDimensional
 

@@ -198,7 +198,7 @@ noncomputable instance (priority := 100) : StarHomClass F A ℂ
       have := AlgHom.apply_mem_spectrum φ (s : A)
       rw [selfAdjoint.coe_re_map_spectrum s] at this
       rcases this with ⟨⟨_, _⟩, _, heq⟩
-      rw [← HEq, IsROrC.star_def, IsROrC.conj_of_real]
+      rw [← HEq, IsROrC.star_def, IsROrC.conj_ofReal]
 
 /-- This is not an instance to avoid type class inference loops. See
 `weak_dual.complex.star_hom_class`. -/

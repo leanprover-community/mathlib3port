@@ -63,7 +63,7 @@ noncomputable def extendTo𝕜' (fr : F →ₗ[ℝ] ℝ) : F →ₗ[𝕜] 𝕜 :
     intro c x
     rw [← of_real_mul]
     congr 1
-    rw [IsROrC.of_real_alg, smul_assoc, fr.map_smul, Algebra.id.smul_eq_mul, one_smul]
+    rw [IsROrC.ofReal_alg, smul_assoc, fr.map_smul, Algebra.id.smul_eq_mul, one_smul]
   have smul_ℝ : ∀ (c : ℝ) (x : F), fc ((c : 𝕜) • x) = (c : 𝕜) * fc x :=
     by
     intro c x

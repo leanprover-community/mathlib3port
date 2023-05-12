@@ -85,6 +85,7 @@ section
 
 variable (hfg : Exact f g) (hgh : Exact g h) (hf'g' : Exact f' g')
 
+#print CategoryTheory.Abelian.mono_of_epi_of_mono_of_mono /-
 /-- The four lemma, mono version. For names of objects and morphisms, refer to the following
     diagram:
 
@@ -128,6 +129,7 @@ theorem mono_of_epi_of_mono_of_mono (hα : Epi α) (hβ : Mono β) (hδ : Mono �
             _ = 0 := (pseudo_exact_of_exact hfg).1 _
             
 #align category_theory.abelian.mono_of_epi_of_mono_of_mono CategoryTheory.Abelian.mono_of_epi_of_mono_of_mono
+-/
 
 end
 
@@ -135,6 +137,7 @@ section
 
 variable (hgh : Exact g h) (hf'g' : Exact f' g') (hg'h' : Exact g' h')
 
+#print CategoryTheory.Abelian.epi_of_epi_of_epi_of_mono /-
 /-- The four lemma, epi version. For names of objects and morphisms, refer to the following
     diagram:
 
@@ -189,6 +192,7 @@ theorem epi_of_epi_of_epi_of_mono (hα : Epi α) (hγ : Epi γ) (hδ : Mono δ) 
       _ = 0 := HasZeroMorphisms.zero_comp _ _
       
 #align category_theory.abelian.epi_of_epi_of_epi_of_mono CategoryTheory.Abelian.epi_of_epi_of_epi_of_mono
+-/
 
 end
 
@@ -204,6 +208,7 @@ variable [IsIso α] [IsIso β] [IsIso δ] [IsIso ε]
 
 include comm₄ hfg hgh hhi hf'g' hg'h' hh'i'
 
+#print CategoryTheory.Abelian.isIso_of_isIso_of_isIso_of_isIso_of_isIso /-
 /-- The five lemma. For names of objects and morphisms, refer to the following diagram:
 
 ```
@@ -222,6 +227,7 @@ theorem isIso_of_isIso_of_isIso_of_isIso_of_isIso : IsIso γ :=
     apply epi_of_epi_of_epi_of_mono comm₂ comm₃ comm₄ hhi hg'h' hh'i' <;> infer_instance
   is_iso_of_mono_of_epi _
 #align category_theory.abelian.is_iso_of_is_iso_of_is_iso_of_is_iso_of_is_iso CategoryTheory.Abelian.isIso_of_isIso_of_isIso_of_isIso_of_isIso
+-/
 
 end Five
 

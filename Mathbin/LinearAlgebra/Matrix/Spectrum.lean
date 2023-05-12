@@ -126,7 +126,7 @@ theorem eigenvalues_eq (i : n) :
   have := hA.spectral_theorem
   rw [← Matrix.mul_inv_eq_iff_eq_mul_of_invertible] at this
   have := congr_arg IsROrC.re (congr_fun (congr_fun this i) i)
-  rw [diagonal_apply_eq, IsROrC.of_real_re, inv_eq_left_inv hA.eigenvector_matrix_mul_inv, ←
+  rw [diagonal_apply_eq, IsROrC.ofReal_re, inv_eq_left_inv hA.eigenvector_matrix_mul_inv, ←
     conj_transpose_eigenvector_matrix, mul_mul_apply] at this
   exact this.symm
 #align matrix.is_hermitian.eigenvalues_eq Matrix.IsHermitian.eigenvalues_eq

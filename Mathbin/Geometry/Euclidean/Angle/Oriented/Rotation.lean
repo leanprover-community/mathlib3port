@@ -189,7 +189,7 @@ theorem kahler_rotation_left (x y : V) (θ : Real.Angle) :
   by
   simp only [o.rotation_apply, map_add, map_mul, LinearMap.map_smulₛₗ, RingHom.id_apply,
     LinearMap.add_apply, LinearMap.smul_apply, real_smul, kahler_right_angle_rotation_left,
-    Real.Angle.coe_expMapCircle, IsROrC.conj_of_real, conj_I]
+    Real.Angle.coe_expMapCircle, IsROrC.conj_ofReal, conj_I]
   ring
 #align orientation.kahler_rotation_left Orientation.kahler_rotation_left
 

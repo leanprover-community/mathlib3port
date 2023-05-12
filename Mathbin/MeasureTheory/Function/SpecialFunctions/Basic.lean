@@ -271,7 +271,7 @@ variable {α 𝕜 : Type _} [IsROrC 𝕜] [MeasurableSpace α] {f : α → 𝕜}
 
 @[measurability]
 theorem IsROrC.measurable_of_real : Measurable (coe : ℝ → 𝕜) :=
-  IsROrC.continuous_of_real.Measurable
+  IsROrC.continuous_ofReal.Measurable
 #align is_R_or_C.measurable_of_real IsROrC.measurable_of_real
 
 theorem measurable_of_re_im (hre : Measurable fun x => IsROrC.re (f x))

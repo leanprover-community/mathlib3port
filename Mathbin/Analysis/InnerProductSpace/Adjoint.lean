@@ -330,7 +330,7 @@ theorem LinearMap.IsSymmetric.isSelfAdjoint {A : E →L[𝕜] E} (hA : (A : E �
 /-- The orthogonal projection is self-adjoint. -/
 theorem orthogonalProjection_isSelfAdjoint (U : Submodule 𝕜 E) [CompleteSpace U] :
     IsSelfAdjoint (U.subtypeL ∘L orthogonalProjection U) :=
-  (orthogonalProjection_isSymmetric U).IsSelfAdjoint
+  (orthogonalProjectionIsSymmetric U).IsSelfAdjoint
 #align orthogonal_projection_is_self_adjoint orthogonalProjection_isSelfAdjoint
 
 theorem conj_orthogonalProjection {T : E →L[𝕜] E} (hT : IsSelfAdjoint T) (U : Submodule 𝕜 E)
@@ -510,9 +510,9 @@ theorem isAdjointPair_inner (A : E' →ₗ[ℝ] F') :
 end Real
 
 /-- The Gram operator T†T is symmetric. -/
-theorem isSymmetric_adjoint_mul_self (T : E →ₗ[𝕜] E) : IsSymmetric (T.adjoint * T) := fun x y => by
+theorem isSymmetricAdjointMulSelf (T : E →ₗ[𝕜] E) : IsSymmetric (T.adjoint * T) := fun x y => by
   simp only [mul_apply, adjoint_inner_left, adjoint_inner_right]
-#align linear_map.is_symmetric_adjoint_mul_self LinearMap.isSymmetric_adjoint_mul_self
+#align linear_map.is_symmetric_adjoint_mul_self LinearMap.isSymmetricAdjointMulSelf
 
 /-- The Gram operator T†T is a positive operator. -/
 theorem re_inner_adjoint_mul_self_nonneg (T : E →ₗ[𝕜] E) (x : E) : 0 ≤ re ⟪x, (T.adjoint * T) x⟫ :=

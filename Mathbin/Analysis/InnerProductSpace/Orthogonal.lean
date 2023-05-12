@@ -225,13 +225,13 @@ theorem orthogonal_eq_top_iff : Kᗮ = ⊤ ↔ K = ⊥ :=
   rwa [h, inf_comm, top_inf_eq] at this
 #align submodule.orthogonal_eq_top_iff Submodule.orthogonal_eq_top_iff
 
-theorem orthogonalFamily_self :
+theorem orthogonalFamilySelf :
     OrthogonalFamily 𝕜 (fun b => ↥(cond b K Kᗮ)) fun b => (cond b K Kᗮ).subtypeₗᵢ
   | tt, tt => absurd rfl
   | tt, ff => fun _ x y => inner_right_of_mem_orthogonal x.Prop y.Prop
   | ff, tt => fun _ x y => inner_left_of_mem_orthogonal y.Prop x.Prop
   | ff, ff => absurd rfl
-#align submodule.orthogonal_family_self Submodule.orthogonalFamily_self
+#align submodule.orthogonal_family_self Submodule.orthogonalFamilySelf
 
 end Submodule
 
@@ -289,22 +289,22 @@ theorem isOrtho_iff_inner_eq {U V : Submodule 𝕜 E} : U ⟂ V ↔ ∀ u ∈ U,
 /- TODO: generalize `submodule.map₂` to semilinear maps, so that we can state
 `U ⟂ V ↔ submodule.map₂ (innerₛₗ 𝕜) U V ≤ ⊥`. -/
 @[simp]
-theorem isOrtho_bot_left {V : Submodule 𝕜 E} : ⊥ ⟂ V :=
+theorem isOrthoBotLeft {V : Submodule 𝕜 E} : ⊥ ⟂ V :=
   bot_le
-#align submodule.is_ortho_bot_left Submodule.isOrtho_bot_left
+#align submodule.is_ortho_bot_left Submodule.isOrthoBotLeft
 
 @[simp]
-theorem isOrtho_bot_right {U : Submodule 𝕜 E} : U ⟂ ⊥ :=
-  isOrtho_bot_left.symm
-#align submodule.is_ortho_bot_right Submodule.isOrtho_bot_right
+theorem isOrthoBotRight {U : Submodule 𝕜 E} : U ⟂ ⊥ :=
+  isOrthoBotLeft.symm
+#align submodule.is_ortho_bot_right Submodule.isOrthoBotRight
 
-theorem IsOrtho.mono_left {U₁ U₂ V : Submodule 𝕜 E} (hU : U₂ ≤ U₁) (h : U₁ ⟂ V) : U₂ ⟂ V :=
+theorem IsOrtho.monoLeft {U₁ U₂ V : Submodule 𝕜 E} (hU : U₂ ≤ U₁) (h : U₁ ⟂ V) : U₂ ⟂ V :=
   hU.trans h
-#align submodule.is_ortho.mono_left Submodule.IsOrtho.mono_left
+#align submodule.is_ortho.mono_left Submodule.IsOrtho.monoLeft
 
-theorem IsOrtho.mono_right {U V₁ V₂ : Submodule 𝕜 E} (hV : V₂ ≤ V₁) (h : U ⟂ V₁) : U ⟂ V₂ :=
+theorem IsOrtho.monoRight {U V₁ V₂ : Submodule 𝕜 E} (hV : V₂ ≤ V₁) (h : U ⟂ V₁) : U ⟂ V₂ :=
   (h.symm.mono_left hV).symm
-#align submodule.is_ortho.mono_right Submodule.IsOrtho.mono_right
+#align submodule.is_ortho.mono_right Submodule.IsOrtho.monoRight
 
 theorem IsOrtho.mono {U₁ V₁ U₂ V₂ : Submodule 𝕜 E} (hU : U₂ ≤ U₁) (hV : V₂ ≤ V₁) (h : U₁ ⟂ V₁) :
     U₂ ⟂ V₂ :=
@@ -314,18 +314,18 @@ theorem IsOrtho.mono {U₁ V₁ U₂ V₂ : Submodule 𝕜 E} (hU : U₂ ≤ U�
 @[simp]
 theorem isOrtho_self {U : Submodule 𝕜 E} : U ⟂ U ↔ U = ⊥ :=
   ⟨fun h => eq_bot_iff.mpr fun x hx => inner_self_eq_zero.mp (h hx x hx), fun h =>
-    h.symm ▸ isOrtho_bot_left⟩
+    h.symm ▸ isOrthoBotLeft⟩
 #align submodule.is_ortho_self Submodule.isOrtho_self
 
 @[simp]
-theorem isOrtho_orthogonal_right (U : Submodule 𝕜 E) : U ⟂ Uᗮ :=
+theorem isOrthoOrthogonalRight (U : Submodule 𝕜 E) : U ⟂ Uᗮ :=
   le_orthogonal_orthogonal _
-#align submodule.is_ortho_orthogonal_right Submodule.isOrtho_orthogonal_right
+#align submodule.is_ortho_orthogonal_right Submodule.isOrthoOrthogonalRight
 
 @[simp]
-theorem isOrtho_orthogonal_left (U : Submodule 𝕜 E) : Uᗮ ⟂ U :=
-  (isOrtho_orthogonal_right U).symm
-#align submodule.is_ortho_orthogonal_left Submodule.isOrtho_orthogonal_left
+theorem isOrthoOrthogonalLeft (U : Submodule 𝕜 E) : Uᗮ ⟂ U :=
+  (isOrthoOrthogonalRight U).symm
+#align submodule.is_ortho_orthogonal_left Submodule.isOrthoOrthogonalLeft
 
 theorem IsOrtho.le {U V : Submodule 𝕜 E} (h : U ⟂ V) : U ≤ Vᗮ :=
   h
@@ -338,7 +338,7 @@ theorem IsOrtho.ge {U V : Submodule 𝕜 E} (h : U ⟂ V) : V ≤ Uᗮ :=
 @[simp]
 theorem isOrtho_top_right {U : Submodule 𝕜 E} : U ⟂ ⊤ ↔ U = ⊥ :=
   ⟨fun h => eq_bot_iff.mpr fun x hx => inner_self_eq_zero.mp (h hx _ mem_top), fun h =>
-    h.symm ▸ isOrtho_bot_left⟩
+    h.symm ▸ isOrthoBotLeft⟩
 #align submodule.is_ortho_top_right Submodule.isOrtho_top_right
 
 @[simp]
@@ -436,9 +436,9 @@ theorem orthogonalFamily_iff_pairwise {ι} {V : ι → Submodule 𝕜 E} :
       forall₂_congr fun x hx => Subtype.forall.trans <| forall₂_congr fun y hy => inner_eq_zero_symm
 #align orthogonal_family_iff_pairwise orthogonalFamily_iff_pairwise
 
-alias orthogonalFamily_iff_pairwise ↔ OrthogonalFamily.pairwise OrthogonalFamily.of_pairwise
+alias orthogonalFamily_iff_pairwise ↔ OrthogonalFamily.pairwise OrthogonalFamily.ofPairwise
 #align orthogonal_family.pairwise OrthogonalFamily.pairwise
-#align orthogonal_family.of_pairwise OrthogonalFamily.of_pairwise
+#align orthogonal_family.of_pairwise OrthogonalFamily.ofPairwise
 
 /-- Two submodules in an orthogonal family with different indices are orthogonal. -/
 theorem OrthogonalFamily.isOrtho {ι} {V : ι → Submodule 𝕜 E}

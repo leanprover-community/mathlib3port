@@ -464,7 +464,7 @@ section ComplexOrder
 open ComplexOrder
 
 theorem eq_coe_norm_of_nonneg {z : ℂ} (hz : 0 ≤ z) : z = ↑‖z‖ := by
-  rw [eq_re_of_real_le hz, IsROrC.norm_of_real, _root_.abs_of_nonneg (Complex.le_def.2 hz).1]
+  rw [eq_re_of_real_le hz, IsROrC.norm_ofReal, _root_.abs_of_nonneg (Complex.le_def.2 hz).1]
 #align complex.eq_coe_norm_of_nonneg Complex.eq_coe_norm_of_nonneg
 
 end ComplexOrder
@@ -535,13 +535,13 @@ variable (𝕜)
 
 @[simp, norm_cast]
 theorem hasSum_of_real {f : α → ℝ} {x : ℝ} : HasSum (fun x => (f x : 𝕜)) x ↔ HasSum f x :=
-  ⟨fun h => by simpa only [IsROrC.reClm_apply, IsROrC.of_real_re] using re_clm.has_sum h,
+  ⟨fun h => by simpa only [IsROrC.reClm_apply, IsROrC.ofReal_re] using re_clm.has_sum h,
     ofRealClm.HasSum⟩
 #align is_R_or_C.has_sum_of_real IsROrC.hasSum_of_real
 
 @[simp, norm_cast]
 theorem summable_of_real {f : α → ℝ} : (Summable fun x => (f x : 𝕜)) ↔ Summable f :=
-  ⟨fun h => by simpa only [IsROrC.reClm_apply, IsROrC.of_real_re] using re_clm.summable h,
+  ⟨fun h => by simpa only [IsROrC.reClm_apply, IsROrC.ofReal_re] using re_clm.summable h,
     ofRealClm.Summable⟩
 #align is_R_or_C.summable_of_real IsROrC.summable_of_real
 

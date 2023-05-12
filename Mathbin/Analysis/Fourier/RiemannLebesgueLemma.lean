@@ -83,7 +83,7 @@ theorem fourier_integral_half_period_translate {w : V} (hw : w ≠ 0) :
   by
   have hiw : ⟪i w, w⟫ = 1 / 2 :=
     by
-    rw [inner_smul_left, inner_self_eq_norm_sq_to_K, IsROrC.coe_real_eq_id, id.def,
+    rw [inner_smul_left, inner_self_eq_norm_sq_to_K, IsROrC.ofReal_real_eq_id, id.def,
       IsROrC.conj_to_real, ← div_div, div_mul_cancel]
     rwa [Ne.def, sq_eq_zero_iff, norm_eq_zero]
   have :

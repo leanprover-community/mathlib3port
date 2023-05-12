@@ -360,7 +360,7 @@ theorem hasFderivAt_of_tendstoUniformlyOnFilter [NeBot l]
   conv =>
     congr
     ext
-    rw [← abs_norm, ← abs_inv, ← @IsROrC.norm_of_real 𝕜 _ _, IsROrC.of_real_inv, ← norm_smul]
+    rw [← abs_norm, ← abs_inv, ← @IsROrC.norm_ofReal 𝕜 _ _, IsROrC.ofReal_inv, ← norm_smul]
   rw [← tendsto_zero_iff_norm_tendsto_zero]
   have :
     (fun a : ι × E => (‖a.2 - x‖⁻¹ : 𝕜) • (g a.2 - g x - (g' x) (a.2 - x))) =

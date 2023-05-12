@@ -396,7 +396,7 @@ of its purely real-valued elements also separates points. -/
 theorem Subalgebra.SeparatesPoints.isROrC_to_real {A : Subalgebra 𝕜 C(X, 𝕜)}
     (hA : A.SeparatesPoints) (hA' : ConjInvariantSubalgebra (A.restrictScalars ℝ)) :
     ((A.restrictScalars ℝ).comap
-        (ofRealAm.compLeftContinuous ℝ continuous_of_real)).SeparatesPoints :=
+        (ofRealAm.compLeftContinuous ℝ continuous_ofReal)).SeparatesPoints :=
   by
   intro x₁ x₂ hx
   -- Let `f` in the subalgebra `A` separate the points `x₁`, `x₂`
