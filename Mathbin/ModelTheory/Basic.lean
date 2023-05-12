@@ -394,11 +394,11 @@ variable (N : Type w') [L.Structure M] [L.Structure N]
 
 open Structure
 
-#print FirstOrder.Language.inhabited.trivialStructure /-
+#print FirstOrder.Language.Inhabited.trivialStructure /-
 /-- Used for defining `first_order.language.Theory.Model.inhabited`. -/
-def inhabited.trivialStructure {α : Type _} [Inhabited α] : L.Structure α :=
+def Inhabited.trivialStructure {α : Type _} [Inhabited α] : L.Structure α :=
   ⟨default, default⟩
-#align first_order.language.inhabited.trivial_structure FirstOrder.Language.inhabited.trivialStructure
+#align first_order.language.inhabited.trivial_structure FirstOrder.Language.Inhabited.trivialStructure
 -/
 
 /-! ### Maps -/
