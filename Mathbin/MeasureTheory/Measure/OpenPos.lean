@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.measure.open_pos
-! leanprover-community/mathlib commit 781cb2eed038c4caf53bdbd8d20a95e5822d77df
+! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,9 +12,6 @@ import Mathbin.MeasureTheory.Measure.MeasureSpace
 
 /-!
 # Measures positive on nonempty opens
-
-> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
-> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we define a typeclass for measures that are positive on nonempty opens, see
 `measure_theory.measure.is_open_pos_measure`. Examples include (additive) Haar measures, as well as

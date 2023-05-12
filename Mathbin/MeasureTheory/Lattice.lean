@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.lattice
-! leanprover-community/mathlib commit 781cb2eed038c4caf53bdbd8d20a95e5822d77df
+! leanprover-community/mathlib commit a95b442734d137aef46c1871e147089877fd0f62
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,9 +12,6 @@ import Mathbin.MeasureTheory.Measure.AeMeasurable
 
 /-!
 # Typeclasses for measurability of lattice operations
-
-> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
-> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we define classes `has_measurable_sup` and `has_measurable_inf` and prove dot-style
 lemmas (`measurable.sup`, `ae_measurable.sup` etc). For binary operations we define two typeclasses:

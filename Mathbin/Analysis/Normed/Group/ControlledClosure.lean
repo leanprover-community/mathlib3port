@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module analysis.normed.group.controlled_closure
-! leanprover-community/mathlib commit 781cb2eed038c4caf53bdbd8d20a95e5822d77df
+! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,9 +12,6 @@ import Mathbin.Analysis.Normed.Group.Hom
 import Mathbin.Analysis.SpecificLimits.Normed
 
 /-! # Extending a backward bound on a normed group homomorphism from a dense set
-
-> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
-> Any changes to this file require a corresponding PR to mathlib4.
 
 Possible TODO (from the PR's review, https://github.com/leanprover-community/mathlib/pull/8498 ):
 "This feels a lot like the second step in the proof of the Banach open mapping theorem

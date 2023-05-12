@@ -4,16 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.measure.mutually_singular
-! leanprover-community/mathlib commit 781cb2eed038c4caf53bdbd8d20a95e5822d77df
+! leanprover-community/mathlib commit 70a4f2197832bceab57d7f41379b2592d1110570
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.MeasureTheory.Measure.MeasureSpace
 
 /-! # Mutually singular measures
-
-> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
-> Any changes to this file require a corresponding PR to mathlib4.
 
 Two measures `μ`, `ν` are said to be mutually singular (`measure_theory.measure.mutually_singular`,
 localized notation `μ ⟂ₘ ν`) if there exists a measurable set `s` such that `μ s = 0` and

@@ -4,13 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.finset.lattice
-! leanprover-community/mathlib commit 2d44d6823a96f9c79b7d1ab185918377be663424
+! leanprover-community/mathlib commit 9d684a893c52e1d6692a504a118bfccbae04feeb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Data.Finset.Fold
 import Mathbin.Data.Finset.Option
-import Mathbin.Data.Finset.Pi
 import Mathbin.Data.Finset.Prod
 import Mathbin.Data.Multiset.Lattice
 import Mathbin.Order.CompleteLattice
@@ -24,7 +23,7 @@ import Mathbin.Order.Hom.Lattice
 -/
 
 
-variable {F α β γ ι κ : Type _}
+variable {F α β γ ι : Type _}
 
 namespace Finset
 
@@ -473,7 +472,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SemilatticeSup.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))] (f : β -> α) (S : Finset.{u2} β), Iff (Eq.{succ u1} α (Finset.sup.{u1, u2} α β _inst_1 _inst_2 S f) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) _inst_2))) (forall (s : β), (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) s S) -> (Eq.{succ u1} α (f s) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) _inst_2))))
 Case conversion may be inaccurate. Consider using '#align finset.sup_eq_bot_iff Finset.sup_eq_bot_iffₓ'. -/
 @[simp]
-protected theorem sup_eq_bot_iff (f : β → α) (S : Finset β) : S.sup f = ⊥ ↔ ∀ s ∈ S, f s = ⊥ := by
+theorem sup_eq_bot_iff (f : β → α) (S : Finset β) : S.sup f = ⊥ ↔ ∀ s ∈ S, f s = ⊥ := by
   classical induction' S using Finset.induction with a S haS hi <;> simp [*]
 #align finset.sup_eq_bot_iff Finset.sup_eq_bot_iff
 
@@ -863,7 +862,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] (f : β -> α) (S : Finset.{u2} β), Iff (Eq.{succ u1} α (Finset.inf.{u1, u2} α β _inst_1 _inst_2 S f) (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) _inst_2))) (forall (s : β), (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) s S) -> (Eq.{succ u1} α (f s) (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) _inst_2))))
 Case conversion may be inaccurate. Consider using '#align finset.inf_eq_top_iff Finset.inf_eq_top_iffₓ'. -/
 @[simp]
-protected theorem inf_eq_top_iff (f : β → α) (S : Finset β) : S.inf f = ⊤ ↔ ∀ s ∈ S, f s = ⊤ :=
+theorem inf_eq_top_iff (f : β → α) (S : Finset β) : S.inf f = ⊤ ↔ ∀ s ∈ S, f s = ⊤ :=
   @Finset.sup_eq_bot_iff αᵒᵈ _ _ _ _ _
 #align finset.inf_eq_top_iff Finset.inf_eq_top_iff
 
@@ -923,7 +922,7 @@ variable [DistribLattice α]
 
 section OrderBot
 
-variable [OrderBot α] {s : Finset ι} {t : Finset κ} {f : ι → α} {g : κ → α} {a : α}
+variable [OrderBot α] {s : Finset β} {f : β → α} {a : α}
 
 /- warning: finset.sup_inf_distrib_left -> Finset.sup_inf_distrib_left is a dubious translation:
 lean 3 declaration is
@@ -954,35 +953,29 @@ theorem sup_inf_distrib_right (s : Finset ι) (f : ι → α) (a : α) :
 
 /- warning: finset.disjoint_sup_right -> Finset.disjoint_sup_right is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : DistribLattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)))))] {s : Finset.{u2} ι} {f : ι -> α} {a : α}, Iff (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1))) _inst_2 a (Finset.sup.{u1, u2} α ι (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)) _inst_2 s f)) (forall {{i : ι}}, (Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i s) -> (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1))) _inst_2 a (f i)))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DistribLattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)))))] {s : Finset.{u2} β} {f : β -> α} {a : α}, Iff (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1))) _inst_2 a (Finset.sup.{u1, u2} α β (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)) _inst_2 s f)) (forall (i : β), (Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) i s) -> (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1))) _inst_2 a (f i)))
 but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : DistribLattice.{u2} α] [_inst_2 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α _inst_1)))))] {s : Finset.{u1} ι} {f : ι -> α} {a : α}, Iff (Disjoint.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α _inst_1))) _inst_2 a (Finset.sup.{u2, u1} α ι (Lattice.toSemilatticeSup.{u2} α (DistribLattice.toLattice.{u2} α _inst_1)) _inst_2 s f)) (forall (i : ι), (Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i s) -> (Disjoint.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α _inst_1))) _inst_2 a (f i)))
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DistribLattice.{u2} α] [_inst_2 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α _inst_1)))))] {s : Finset.{u1} β} {f : β -> α} {a : α}, Iff (Disjoint.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α _inst_1))) _inst_2 a (Finset.sup.{u2, u1} α β (Lattice.toSemilatticeSup.{u2} α (DistribLattice.toLattice.{u2} α _inst_1)) _inst_2 s f)) (forall (i : β), (Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) i s) -> (Disjoint.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α _inst_1))) _inst_2 a (f i)))
 Case conversion may be inaccurate. Consider using '#align finset.disjoint_sup_right Finset.disjoint_sup_rightₓ'. -/
-protected theorem disjoint_sup_right : Disjoint a (s.sup f) ↔ ∀ ⦃i⦄, i ∈ s → Disjoint a (f i) := by
-  simp only [disjoint_iff, sup_inf_distrib_left, Finset.sup_eq_bot_iff]
+protected theorem disjoint_sup_right : Disjoint a (s.sup f) ↔ ∀ i ∈ s, Disjoint a (f i) := by
+  simp only [disjoint_iff, sup_inf_distrib_left, sup_eq_bot_iff]
 #align finset.disjoint_sup_right Finset.disjoint_sup_right
 
 /- warning: finset.disjoint_sup_left -> Finset.disjoint_sup_left is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : DistribLattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)))))] {s : Finset.{u2} ι} {f : ι -> α} {a : α}, Iff (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1))) _inst_2 (Finset.sup.{u1, u2} α ι (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)) _inst_2 s f) a) (forall {{i : ι}}, (Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i s) -> (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1))) _inst_2 (f i) a))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DistribLattice.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)))))] {s : Finset.{u2} β} {f : β -> α} {a : α}, Iff (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1))) _inst_2 (Finset.sup.{u1, u2} α β (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_1)) _inst_2 s f) a) (forall (i : β), (Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) i s) -> (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_1))) _inst_2 (f i) a))
 but is expected to have type
-  forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : DistribLattice.{u2} α] [_inst_2 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α _inst_1)))))] {s : Finset.{u1} ι} {f : ι -> α} {a : α}, Iff (Disjoint.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α _inst_1))) _inst_2 (Finset.sup.{u2, u1} α ι (Lattice.toSemilatticeSup.{u2} α (DistribLattice.toLattice.{u2} α _inst_1)) _inst_2 s f) a) (forall (i : ι), (Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i s) -> (Disjoint.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α _inst_1))) _inst_2 (f i) a))
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DistribLattice.{u2} α] [_inst_2 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α _inst_1)))))] {s : Finset.{u1} β} {f : β -> α} {a : α}, Iff (Disjoint.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α _inst_1))) _inst_2 (Finset.sup.{u2, u1} α β (Lattice.toSemilatticeSup.{u2} α (DistribLattice.toLattice.{u2} α _inst_1)) _inst_2 s f) a) (forall (i : β), (Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) i s) -> (Disjoint.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α _inst_1))) _inst_2 (f i) a))
 Case conversion may be inaccurate. Consider using '#align finset.disjoint_sup_left Finset.disjoint_sup_leftₓ'. -/
-protected theorem disjoint_sup_left : Disjoint (s.sup f) a ↔ ∀ ⦃i⦄, i ∈ s → Disjoint (f i) a := by
-  simp only [disjoint_iff, sup_inf_distrib_right, Finset.sup_eq_bot_iff]
+protected theorem disjoint_sup_left : Disjoint (s.sup f) a ↔ ∀ i ∈ s, Disjoint (f i) a := by
+  simp only [disjoint_iff, sup_inf_distrib_right, sup_eq_bot_iff]
 #align finset.disjoint_sup_left Finset.disjoint_sup_left
-
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem sup_inf_sup (s : Finset ι) (t : Finset κ) (f : ι → α) (g : κ → α) :
-    s.sup f ⊓ t.sup g = (s ×ˢ t).sup fun i => f i.1 ⊓ g i.2 := by
-  simp_rw [Finset.sup_inf_distrib_right, Finset.sup_inf_distrib_left, sup_product_left]
-#align finset.sup_inf_sup Finset.sup_inf_sup
 
 end OrderBot
 
 section OrderTop
 
-variable [OrderTop α] {f : ι → α} {g : κ → α} {s : Finset ι} {t : Finset κ} {a : α}
+variable [OrderTop α]
 
 /- warning: finset.inf_sup_distrib_left -> Finset.inf_sup_distrib_left is a dubious translation:
 lean 3 declaration is
@@ -1006,64 +999,7 @@ theorem inf_sup_distrib_right (s : Finset ι) (f : ι → α) (a : α) :
   @sup_inf_distrib_right αᵒᵈ _ _ _ _ _ _
 #align finset.inf_sup_distrib_right Finset.inf_sup_distrib_right
 
-protected theorem codisjoint_inf_right :
-    Codisjoint a (s.inf f) ↔ ∀ ⦃i⦄, i ∈ s → Codisjoint a (f i) :=
-  @Finset.disjoint_sup_right αᵒᵈ _ _ _ _ _ _
-#align finset.codisjoint_inf_right Finset.codisjoint_inf_right
-
-protected theorem codisjoint_inf_left :
-    Codisjoint (s.inf f) a ↔ ∀ ⦃i⦄, i ∈ s → Codisjoint (f i) a :=
-  @Finset.disjoint_sup_left αᵒᵈ _ _ _ _ _ _
-#align finset.codisjoint_inf_left Finset.codisjoint_inf_left
-
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem inf_sup_inf (s : Finset ι) (t : Finset κ) (f : ι → α) (g : κ → α) :
-    s.inf f ⊔ t.inf g = (s ×ˢ t).inf fun i => f i.1 ⊔ g i.2 :=
-  @sup_inf_sup αᵒᵈ _ _ _ _ _ _ _ _
-#align finset.inf_sup_inf Finset.inf_sup_inf
-
 end OrderTop
-
-section BoundedOrder
-
-variable [BoundedOrder α] [DecidableEq ι]
-
---TODO: Extract out the obvious isomorphism `(insert i s).pi t ≃ t i ×ˢ s.pi t` from this proof
-theorem inf_sup {κ : ι → Type _} (s : Finset ι) (t : ∀ i, Finset (κ i)) (f : ∀ i, κ i → α) :
-    (s.inf fun i => (t i).sup (f i)) =
-      (s.pi t).sup fun g => s.attach.inf fun i => f _ <| g _ i.Prop :=
-  by
-  induction' s using Finset.induction with i s hi ih
-  · simp
-  rw [inf_insert, ih, attach_insert, sup_inf_sup]
-  refine' eq_of_forall_ge_iff fun c => _
-  simp only [Subtype.val_eq_coe, Finset.sup_le_iff, mem_product, mem_pi, and_imp, Prod.forall,
-    inf_insert, inf_image]
-  refine'
-    ⟨fun h g hg =>
-      h (g i <| mem_insert_self _ _) (fun j hj => g j <| mem_insert_of_mem hj)
-        (hg _ <| mem_insert_self _ _) fun j hj => hg _ <| mem_insert_of_mem hj,
-      fun h a g ha hg => _⟩
-  -- TODO: This `have` must be named to prevent it being shadowed by the internal `this` in `simpa`
-  have aux : ∀ j : { x // x ∈ s }, ↑j ≠ i := fun j : s => ne_of_mem_of_not_mem j.2 hi
-  simpa only [cast_eq, dif_pos, Function.comp, Subtype.coe_mk, dif_neg, aux] using
-    h
-      (fun j hj =>
-        if hji : j = i then cast (congr_arg κ hji.symm) a
-        else g _ <| mem_of_mem_insert_of_ne hj hji)
-      _
-  simp_rw [mem_insert]
-  rintro j (rfl | hj)
-  · simpa
-  · simpa [ne_of_mem_of_not_mem hj hi] using hg _ _
-#align finset.inf_sup Finset.inf_sup
-
-theorem sup_inf {κ : ι → Type _} (s : Finset ι) (t : ∀ i, Finset (κ i)) (f : ∀ i, κ i → α) :
-    (s.sup fun i => (t i).inf (f i)) = (s.pi t).inf fun g => s.attach.sup fun i => f _ <| g _ i.2 :=
-  @inf_sup αᵒᵈ _ _ _ _ _ _ _ _
-#align finset.sup_inf Finset.sup_inf
-
-end BoundedOrder
 
 end DistribLattice
 
@@ -1112,31 +1048,6 @@ theorem inf_sdiff_right (hs : s.Nonempty) (f : ι → α) (a : α) :
   · rw [inf_singleton, inf_singleton]
   · rw [inf_cons, inf_cons, h, inf_sdiff]
 #align finset.inf_sdiff_right Finset.inf_sdiff_right
-
-theorem inf_himp_right (s : Finset ι) (f : ι → α) (a : α) :
-    (s.inf fun b => f b ⇨ a) = s.sup f ⇨ a :=
-  @sup_sdiff_left αᵒᵈ _ _ _ _ _
-#align finset.inf_himp_right Finset.inf_himp_right
-
-theorem sup_himp_right (hs : s.Nonempty) (f : ι → α) (a : α) :
-    (s.sup fun b => f b ⇨ a) = s.inf f ⇨ a :=
-  @inf_sdiff_left αᵒᵈ _ _ _ hs _ _
-#align finset.sup_himp_right Finset.sup_himp_right
-
-theorem sup_himp_left (hs : s.Nonempty) (f : ι → α) (a : α) :
-    (s.sup fun b => a ⇨ f b) = a ⇨ s.sup f :=
-  @inf_sdiff_right αᵒᵈ _ _ _ hs _ _
-#align finset.sup_himp_left Finset.sup_himp_left
-
-@[simp]
-protected theorem compl_sup (s : Finset ι) (f : ι → α) : s.sup fᶜ = s.inf fun i => f iᶜ :=
-  map_finset_sup (OrderIso.compl α) _ _
-#align finset.compl_sup Finset.compl_sup
-
-@[simp]
-protected theorem compl_inf (s : Finset ι) (f : ι → α) : s.inf fᶜ = s.sup fun i => f iᶜ :=
-  map_finset_inf (OrderIso.compl α) _ _
-#align finset.compl_inf Finset.compl_inf
 
 end BooleanAlgebra
 

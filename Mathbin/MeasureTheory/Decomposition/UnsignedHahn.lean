@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module measure_theory.decomposition.unsigned_hahn
-! leanprover-community/mathlib commit 781cb2eed038c4caf53bdbd8d20a95e5822d77df
+! leanprover-community/mathlib commit 0f1becb755b3d008b242c622e248a70556ad19e6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,9 +12,6 @@ import Mathbin.MeasureTheory.Measure.MeasureSpace
 
 /-!
 # Unsigned Hahn decomposition theorem
-
-> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
-> Any changes to this file require a corresponding PR to mathlib4.
 
 This file proves the unsigned version of the Hahn decomposition theorem.
 

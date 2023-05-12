@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 
 ! This file was ported from Lean 3 source module algebra.category.Group.equivalence_Group_AddGroup
-! leanprover-community/mathlib commit 781cb2eed038c4caf53bdbd8d20a95e5822d77df
+! leanprover-community/mathlib commit 47b51515e69f59bca5cf34ef456e6000fe205a69
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,9 +13,6 @@ import Mathbin.Algebra.Hom.Equiv.TypeTags
 
 /-!
 # Equivalence between `Group` and `AddGroup`
-
-> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
-> Any changes to this file require a corresponding PR to mathlib4.
 
 This file contains two equivalences:
 * `Group_AddGroup_equivalence` : the equivalence between `Group` and `AddGroup` by sending

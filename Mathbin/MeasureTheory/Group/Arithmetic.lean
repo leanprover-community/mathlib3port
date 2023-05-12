@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.group.arithmetic
-! leanprover-community/mathlib commit 781cb2eed038c4caf53bdbd8d20a95e5822d77df
+! leanprover-community/mathlib commit a75898643b2d774cced9ae7c0b28c21663b99666
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,9 +12,6 @@ import Mathbin.MeasureTheory.Measure.AeMeasurable
 
 /-!
 # Typeclasses for measurability of operations
-
-> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
-> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we define classes `has_measurable_mul` etc and prove dot-style lemmas
 (`measurable.mul`, `ae_measurable.mul` etc). For binary operations we define two typeclasses:

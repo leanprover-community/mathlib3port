@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module algebra.order.to_interval_mod
-! leanprover-community/mathlib commit 213b0cff7bc5ab6696ee07cceec80829ce42efec
+! leanprover-community/mathlib commit a07d750983b94c530ab69a726862c2ab6802b38c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,7 +14,6 @@ import Mathbin.Algebra.Order.Archimedean
 import Mathbin.Algebra.Periodic
 import Mathbin.Data.Int.SuccPred
 import Mathbin.GroupTheory.QuotientGroup
-import Mathbin.Order.Circular
 
 /-!
 # Reducing to an interval modulo its length
@@ -38,6 +37,8 @@ interval.
 
 
 noncomputable section
+
+open AddCommGroup
 
 section LinearOrderedAddCommGroup
 
@@ -738,8 +739,6 @@ theorem toIocMod_le_toIcoMod_add (a b : α) : toIocMod hp a b ≤ toIcoMod hp a 
 
 end IcoIoc
 
-open AddCommGroup
-
 theorem toIcoMod_eq_self : toIcoMod hp a b = b ↔ b ∈ Set.Ico a (a + p) :=
   by
   rw [toIcoMod_eq_iff, and_iff_left]
@@ -780,43 +779,6 @@ theorem toIocMod_periodic (a : α) : Function.Periodic (toIocMod hp a) p :=
   toIocMod_add_right hp a
 #align to_Ioc_mod_periodic toIocMod_periodic
 
--- helper lemmas for when `a = 0`
-section Zero
-
-theorem toIcoMod_zero_sub_comm (a b : α) : toIcoMod hp 0 (a - b) = p - toIocMod hp 0 (b - a) := by
-  rw [← neg_sub, toIcoMod_neg, neg_zero]
-#align to_Ico_mod_zero_sub_comm toIcoMod_zero_sub_comm
-
-theorem toIocMod_zero_sub_comm (a b : α) : toIocMod hp 0 (a - b) = p - toIcoMod hp 0 (b - a) := by
-  rw [← neg_sub, toIocMod_neg, neg_zero]
-#align to_Ioc_mod_zero_sub_comm toIocMod_zero_sub_comm
-
-theorem toIcoDiv_eq_sub (a b : α) : toIcoDiv hp a b = toIcoDiv hp 0 (b - a) := by
-  rw [toIcoDiv_sub_eq_toIcoDiv_add, zero_add]
-#align to_Ico_div_eq_sub toIcoDiv_eq_sub
-
-theorem toIocDiv_eq_sub (a b : α) : toIocDiv hp a b = toIocDiv hp 0 (b - a) := by
-  rw [toIocDiv_sub_eq_toIocDiv_add, zero_add]
-#align to_Ioc_div_eq_sub toIocDiv_eq_sub
-
-theorem toIcoMod_eq_sub (a b : α) : toIcoMod hp a b = toIcoMod hp 0 (b - a) + a := by
-  rw [toIcoMod_sub_eq_sub, zero_add, sub_add_cancel]
-#align to_Ico_mod_eq_sub toIcoMod_eq_sub
-
-theorem toIocMod_eq_sub (a b : α) : toIocMod hp a b = toIocMod hp 0 (b - a) + a := by
-  rw [toIocMod_sub_eq_sub, zero_add, sub_add_cancel]
-#align to_Ioc_mod_eq_sub toIocMod_eq_sub
-
-theorem toIcoMod_add_toIocMod_zero (a b : α) : toIcoMod hp 0 (a - b) + toIocMod hp 0 (b - a) = p :=
-  by rw [toIcoMod_zero_sub_comm, sub_add_cancel]
-#align to_Ico_mod_add_to_Ioc_mod_zero toIcoMod_add_toIocMod_zero
-
-theorem toIocMod_add_toIcoMod_zero (a b : α) : toIocMod hp 0 (a - b) + toIcoMod hp 0 (b - a) = p :=
-  by rw [add_comm, toIcoMod_add_toIocMod_zero]
-#align to_Ioc_mod_add_to_Ico_mod_zero toIocMod_add_toIcoMod_zero
-
-end Zero
-
 /-- `to_Ico_mod` as an equiv from the quotient. -/
 @[simps symm_apply]
 def quotientAddGroup.equivIcoMod (a : α) : α ⧸ AddSubgroup.zmultiples p ≃ Set.Ico a (a + p)
@@ -838,13 +800,7 @@ theorem quotientAddGroup.equivIcoMod_coe (a b : α) :
   rfl
 #align quotient_add_group.equiv_Ico_mod_coe quotientAddGroup.equivIcoMod_coe
 
-@[simp]
-theorem quotientAddGroup.equivIcoMod_zero (a : α) :
-    quotientAddGroup.equivIcoMod hp a 0 = ⟨toIcoMod hp a 0, toIcoMod_mem_Ico hp a _⟩ :=
-  rfl
-#align quotient_add_group.equiv_Ico_mod_zero quotientAddGroup.equivIcoMod_zero
-
-/-- `to_Ioc_mod` as an equiv from the quotient. -/
+/-- `to_Ioc_mod` as an equiv  from the quotient. -/
 @[simps symm_apply]
 def quotientAddGroup.equivIocMod (a : α) : α ⧸ AddSubgroup.zmultiples p ≃ Set.Ioc a (a + p)
     where
@@ -865,174 +821,7 @@ theorem quotientAddGroup.equivIocMod_coe (a b : α) :
   rfl
 #align quotient_add_group.equiv_Ioc_mod_coe quotientAddGroup.equivIocMod_coe
 
-@[simp]
-theorem quotientAddGroup.equivIocMod_zero (a : α) :
-    quotientAddGroup.equivIocMod hp a 0 = ⟨toIocMod hp a 0, toIocMod_mem_Ioc hp a _⟩ :=
-  rfl
-#align quotient_add_group.equiv_Ioc_mod_zero quotientAddGroup.equivIocMod_zero
-
-/-!
-### The circular order structure on `α ⧸ add_subgroup.zmultiples p`
--/
-
-
-section Circular
-
-private theorem to_Ixx_mod_iff (x₁ x₂ x₃ : α) :
-    toIcoMod hp x₁ x₂ ≤ toIocMod hp x₁ x₃ ↔ toIcoMod hp 0 (x₂ - x₁) + toIcoMod hp 0 (x₁ - x₃) ≤ p :=
-  by
-  rw [toIcoMod_eq_sub, toIocMod_eq_sub _ x₁, add_le_add_iff_right, ← neg_sub x₁ x₃, toIocMod_neg,
-    neg_zero, le_sub_iff_add_le]
-#align to_Ixx_mod_iff to_Ixx_mod_iff
-
-private theorem to_Ixx_mod_cyclic_left {x₁ x₂ x₃ : α} (h : toIcoMod hp x₁ x₂ ≤ toIocMod hp x₁ x₃) :
-    toIcoMod hp x₂ x₃ ≤ toIocMod hp x₂ x₁ :=
-  by
-  let x₂' := toIcoMod hp x₁ x₂
-  let x₃' := toIcoMod hp x₂' x₃
-  have h : x₂' ≤ toIocMod hp x₁ x₃' := by simpa
-  have h₂₁ : x₂' < x₁ + p := toIcoMod_lt_right _ _ _
-  have h₃₂ : x₃' - p < x₂' := sub_lt_iff_lt_add.2 (toIcoMod_lt_right _ _ _)
-  suffices hequiv : x₃' ≤ toIocMod hp x₂' x₁
-  · obtain ⟨z, hd⟩ : ∃ z : ℤ, x₂ = x₂' + z • p := ((toIcoMod_eq_iff hp).1 rfl).2
-    simpa [hd]
-  cases' le_or_lt x₃' (x₁ + p) with h₃₁ h₁₃
-  · suffices hIoc₂₁ : toIocMod hp x₂' x₁ = x₁ + p
-    · exact hIoc₂₁.symm.trans_ge h₃₁
-    apply (toIocMod_eq_iff hp).2
-    exact ⟨⟨h₂₁, by simp [left_le_toIcoMod]⟩, -1, by simp⟩
-  have hIoc₁₃ : toIocMod hp x₁ x₃' = x₃' - p :=
-    by
-    apply (toIocMod_eq_iff hp).2
-    exact ⟨⟨lt_sub_iff_add_lt.2 h₁₃, le_of_lt (h₃₂.trans h₂₁)⟩, 1, by simp⟩
-  have not_h₃₂ := (h.trans hIoc₁₃.le).not_lt
-  contradiction
-#align to_Ixx_mod_cyclic_left to_Ixx_mod_cyclic_left
-
-private theorem to_Ixx_mod_antisymm (h₁₂₃ : toIcoMod hp a b ≤ toIocMod hp a c)
-    (h₁₃₂ : toIcoMod hp a c ≤ toIocMod hp a b) : b ≡ a [PMOD p] ∨ c ≡ b [PMOD p] ∨ a ≡ c [PMOD p] :=
-  by
-  by_contra' h
-  rw [modeq_comm] at h
-  rw [← (not_modeq_iff_to_Ico_mod_eq_to_Ioc_mod hp).mp h.2.2] at h₁₂₃
-  rw [← (not_modeq_iff_to_Ico_mod_eq_to_Ioc_mod hp).mp h.1] at h₁₃₂
-  exact h.2.1 ((toIcoMod_inj _).1 <| h₁₃₂.antisymm h₁₂₃)
-#align to_Ixx_mod_antisymm to_Ixx_mod_antisymm
-
-private theorem to_Ixx_mod_total' (a b c : α) :
-    toIcoMod hp b a ≤ toIocMod hp b c ∨ toIcoMod hp b c ≤ toIocMod hp b a :=
-  by
-  /- an essential ingredient is the lemma sabing {a-b} + {b-a} = period if a ≠ b (and = 0 if a = b).
-    Thus if a ≠ b and b ≠ c then ({a-b} + {b-c}) + ({c-b} + {b-a}) = 2 * period, so one of
-    `{a-b} + {b-c}` and `{c-b} + {b-a}` must be `≤ period` -/
-  have := congr_arg₂ (· + ·) (toIcoMod_add_toIocMod_zero hp a b) (toIcoMod_add_toIocMod_zero hp c b)
-  rw [add_add_add_comm, add_comm (toIocMod _ _ _), add_add_add_comm, ← two_nsmul] at this
-  replace := min_le_of_add_le_two_nsmul this.le
-  rw [min_le_iff] at this
-  rw [to_Ixx_mod_iff, to_Ixx_mod_iff]
-  refine' this.imp (le_trans <| add_le_add_left _ _) (le_trans <| add_le_add_left _ _)
-  · apply toIcoMod_le_toIocMod
-  · apply toIcoMod_le_toIocMod
-#align to_Ixx_mod_total' to_Ixx_mod_total'
-
-private theorem to_Ixx_mod_total (a b c : α) :
-    toIcoMod hp a b ≤ toIocMod hp a c ∨ toIcoMod hp c b ≤ toIocMod hp c a :=
-  (to_Ixx_mod_total' _ _ _ _).imp_right <| to_Ixx_mod_cyclic_left _
-#align to_Ixx_mod_total to_Ixx_mod_total
-
-private theorem to_Ixx_mod_trans {x₁ x₂ x₃ x₄ : α}
-    (h₁₂₃ : toIcoMod hp x₁ x₂ ≤ toIocMod hp x₁ x₃ ∧ ¬toIcoMod hp x₃ x₂ ≤ toIocMod hp x₃ x₁)
-    (h₂₃₄ : toIcoMod hp x₂ x₄ ≤ toIocMod hp x₂ x₃ ∧ ¬toIcoMod hp x₃ x₄ ≤ toIocMod hp x₃ x₂) :
-    toIcoMod hp x₁ x₄ ≤ toIocMod hp x₁ x₃ ∧ ¬toIcoMod hp x₃ x₄ ≤ toIocMod hp x₃ x₁ :=
-  by
-  constructor
-  · suffices h : ¬x₃ ≡ x₂ [PMOD p]
-    · have h₁₂₃' := to_Ixx_mod_cyclic_left _ (to_Ixx_mod_cyclic_left _ h₁₂₃.1)
-      have h₂₃₄' := to_Ixx_mod_cyclic_left _ (to_Ixx_mod_cyclic_left _ h₂₃₄.1)
-      rw [(not_modeq_iff_to_Ico_mod_eq_to_Ioc_mod hp).1 h] at h₂₃₄'
-      exact to_Ixx_mod_cyclic_left _ (h₁₂₃'.trans h₂₃₄')
-    by_contra
-    rw [(modeq_iff_to_Ico_mod_eq_left hp).1 h] at h₁₂₃
-    exact h₁₂₃.2 (left_lt_toIocMod _ _ _).le
-  · rw [not_le] at h₁₂₃ h₂₃₄⊢
-    exact (h₁₂₃.2.trans_le (toIcoMod_le_toIocMod _ x₃ x₂)).trans h₂₃₄.2
-#align to_Ixx_mod_trans to_Ixx_mod_trans
-
-namespace quotientAddGroup
-
-variable [hp' : Fact (0 < p)]
-
-include hp'
-
-instance : Btw (α ⧸ AddSubgroup.zmultiples p)
-    where Btw x₁ x₂ x₃ := (equivIcoMod hp'.out 0 (x₂ - x₁) : α) ≤ equivIocMod hp'.out 0 (x₃ - x₁)
-
-theorem btw_coe_iff' {x₁ x₂ x₃ : α} :
-    Btw.Btw (x₁ : α ⧸ AddSubgroup.zmultiples p) x₂ x₃ ↔
-      toIcoMod hp'.out 0 (x₂ - x₁) ≤ toIocMod hp'.out 0 (x₃ - x₁) :=
-  Iff.rfl
-#align quotient_add_group.btw_coe_iff' quotientAddGroup.btw_coe_iff'
-
--- maybe harder to use than the primed one?
-theorem btw_coe_iff {x₁ x₂ x₃ : α} :
-    Btw.Btw (x₁ : α ⧸ AddSubgroup.zmultiples p) x₂ x₃ ↔
-      toIcoMod hp'.out x₁ x₂ ≤ toIocMod hp'.out x₁ x₃ :=
-  by rw [btw_coe_iff', toIocMod_sub_eq_sub, toIcoMod_sub_eq_sub, zero_add, sub_le_sub_iff_right]
-#align quotient_add_group.btw_coe_iff quotientAddGroup.btw_coe_iff
-
-instance circularPreorder : CircularPreorder (α ⧸ AddSubgroup.zmultiples p)
-    where
-  btw_refl x := show _ ≤ _ by simp [sub_self, hp'.out.le]
-  btw_cyclic_left x₁ x₂ x₃ h :=
-    by
-    induction x₁ using QuotientAddGroup.induction_on'
-    induction x₂ using QuotientAddGroup.induction_on'
-    induction x₃ using QuotientAddGroup.induction_on'
-    simp_rw [btw_coe_iff] at h⊢
-    apply to_Ixx_mod_cyclic_left _ h
-  Sbtw := _
-  sbtw_iff_btw_not_btw _ _ _ := Iff.rfl
-  sbtw_trans_left x₁ x₂ x₃ x₄ (h₁₂₃ : _ ∧ _) (h₂₃₄ : _ ∧ _) :=
-    show _ ∧ _ by
-      induction x₁ using QuotientAddGroup.induction_on'
-      induction x₂ using QuotientAddGroup.induction_on'
-      induction x₃ using QuotientAddGroup.induction_on'
-      induction x₄ using QuotientAddGroup.induction_on'
-      simp_rw [btw_coe_iff] at h₁₂₃ h₂₃₄⊢
-      apply to_Ixx_mod_trans _ h₁₂₃ h₂₃₄
-#align quotient_add_group.circular_preorder quotientAddGroup.circularPreorder
-
-instance circularOrder : CircularOrder (α ⧸ AddSubgroup.zmultiples p) :=
-  {
-    quotientAddGroup.circularPreorder with
-    btw_antisymm := fun x₁ x₂ x₃ h₁₂₃ h₃₂₁ =>
-      by
-      induction x₁ using QuotientAddGroup.induction_on'
-      induction x₂ using QuotientAddGroup.induction_on'
-      induction x₃ using QuotientAddGroup.induction_on'
-      rw [btw_cyclic] at h₃₂₁
-      simp_rw [btw_coe_iff] at h₁₂₃ h₃₂₁
-      simp_rw [← modeq_iff_eq_mod_zmultiples]
-      exact to_Ixx_mod_antisymm _ h₁₂₃ h₃₂₁
-    btw_total := fun x₁ x₂ x₃ =>
-      by
-      induction x₁ using QuotientAddGroup.induction_on'
-      induction x₂ using QuotientAddGroup.induction_on'
-      induction x₃ using QuotientAddGroup.induction_on'
-      simp_rw [btw_coe_iff]
-      apply to_Ixx_mod_total }
-#align quotient_add_group.circular_order quotientAddGroup.circularOrder
-
-end quotientAddGroup
-
-end Circular
-
 end LinearOrderedAddCommGroup
-
-/-!
-### Connections to `int.floor` and `int.fract`
--/
-
 
 section LinearOrderedField
 

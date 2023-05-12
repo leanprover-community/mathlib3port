@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module dynamics.ergodic.measure_preserving
-! leanprover-community/mathlib commit 781cb2eed038c4caf53bdbd8d20a95e5822d77df
+! leanprover-community/mathlib commit 92ca63f0fb391a9ca5f22d2409a6080e786d99f7
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,9 +12,6 @@ import Mathbin.MeasureTheory.Measure.AeMeasurable
 
 /-!
 # Measure preserving maps
-
-> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
-> Any changes to this file require a corresponding PR to mathlib4.
 
 We say that `f : α → β` is a measure preserving map w.r.t. measures `μ : measure α` and
 `ν : measure β` if `f` is measurable and `map f μ = ν`. In this file we define the predicate

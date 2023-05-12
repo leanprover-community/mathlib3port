@@ -4,13 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module probability.borel_cantelli
-! leanprover-community/mathlib commit 2f8347015b12b0864dfaf366ec4909eb70c78740
+! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Probability.Martingale.BorelCantelli
 import Mathbin.Probability.ConditionalExpectation
-import Mathbin.Probability.Independence.Basic
+import Mathbin.Probability.Independence
 
 /-!
 
@@ -52,19 +52,19 @@ theorem IndepFun.indepCat_comap_natural_of_lt (hf : ∀ i, StronglyMeasurable (f
   exact indep_supr_of_disjoint (fun k => (hf k).Measurable.comap_le) hfi (by simpa)
 #align probability_theory.Indep_fun.indep_comap_natural_of_lt ProbabilityTheory.IndepFun.indepCat_comap_natural_of_lt
 
-theorem IndepFun.condexp_natural_ae_eq_of_lt [SecondCountableTopology β] [CompleteSpace β]
+theorem IndepFun.condexp_natrual_ae_eq_of_lt [SecondCountableTopology β] [CompleteSpace β]
     [NormedSpace ℝ β] (hf : ∀ i, StronglyMeasurable (f i)) (hfi : IndepFun (fun i => mβ) f μ)
     (hij : i < j) : μ[f j|Filtration.natural f hf i] =ᵐ[μ] fun ω => μ[f j] :=
   condexp_indepCat_eq (hf j).Measurable.comap_le (Filtration.le _ _)
     (comap_measurable <| f j).StronglyMeasurable (hfi.indepCat_comap_natural_of_lt hf hij)
-#align probability_theory.Indep_fun.condexp_natural_ae_eq_of_lt ProbabilityTheory.IndepFun.condexp_natural_ae_eq_of_lt
+#align probability_theory.Indep_fun.condexp_natrual_ae_eq_of_lt ProbabilityTheory.IndepFun.condexp_natrual_ae_eq_of_lt
 
 theorem IndepSet.condexp_indicator_filtrationOfSet_ae_eq (hsm : ∀ n, MeasurableSet (s n))
     (hs : IndepSet s μ) (hij : i < j) :
     μ[(s j).indicator (fun ω => 1 : Ω → ℝ)|filtrationOfSet hsm i] =ᵐ[μ] fun ω => (μ (s j)).toReal :=
   by
   rw [filtration.filtration_of_set_eq_natural hsm]
-  refine' (Indep_fun.condexp_natural_ae_eq_of_lt _ hs.Indep_fun_indicator hij).trans _
+  refine' (Indep_fun.condexp_natrual_ae_eq_of_lt _ hs.Indep_fun_indicator hij).trans _
   · simp only [integral_indicator_const _ (hsm _), Algebra.id.smul_eq_mul, mul_one]
   · infer_instance
 #align probability_theory.Indep_set.condexp_indicator_filtration_of_set_ae_eq ProbabilityTheory.IndepSet.condexp_indicator_filtrationOfSet_ae_eq
