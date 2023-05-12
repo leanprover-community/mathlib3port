@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Calle Sönne
 
 ! This file was ported from Lean 3 source module analysis.special_functions.trigonometric.angle
-! leanprover-community/mathlib commit 2c1d8ca2812b64f88992a5294ea3dba144755cd1
+! leanprover-community/mathlib commit 213b0cff7bc5ab6696ee07cceec80829ce42efec
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,6 +35,9 @@ def Angle : Type :=
 #align real.angle Real.Angle
 
 namespace Angle
+
+instance : CircularOrder Real.Angle :=
+  @AddCircle.circularOrder _ _ _ _ _ ⟨by norm_num [pi_pos] ⟩ _
 
 @[continuity]
 theorem continuous_coe : Continuous (coe : ℝ → Angle) :=

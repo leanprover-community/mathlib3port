@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module topology.instances.add_circle
-! leanprover-community/mathlib commit a07d750983b94c530ab69a726862c2ab6802b38c
+! leanprover-community/mathlib commit 213b0cff7bc5ab6696ee07cceec80829ce42efec
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -191,6 +191,9 @@ variable [hp : Fact (0 < p)]
 include hp
 
 variable (a : 𝕜) [Archimedean 𝕜]
+
+instance : CircularOrder (AddCircle p) :=
+  quotientAddGroup.circularOrder
 
 /-- The equivalence between `add_circle p` and the half-open interval `[a, a + p)`, whose inverse
 is the natural quotient map. -/

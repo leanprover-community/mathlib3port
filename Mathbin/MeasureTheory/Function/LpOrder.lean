@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.function.lp_order
-! leanprover-community/mathlib commit 7f5bf383ec988aa0ea700583c6449332003722a7
+! leanprover-community/mathlib commit 5dc275ec639221ca4d5f56938eb966f6ad9bc89f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -112,7 +112,7 @@ noncomputable instance [Fact (1 ≤ p)] : NormedLatticeAddCommGroup (lp E p μ) 
       refine' snorm_mono_ae _
       filter_upwards [hfg, Lp.coe_fn_abs f, Lp.coe_fn_abs g]with x hx hxf hxg
       rw [hxf, hxg] at hx
-      exact solid hx }
+      exact HasSolidNorm.solid hx }
 
 end Order
 

@@ -2440,7 +2440,8 @@ import Mathbin.Probability.ConditionalExpectation
 import Mathbin.Probability.ConditionalProbability
 import Mathbin.Probability.Density
 import Mathbin.Probability.IdentDistrib
-import Mathbin.Probability.Independence
+import Mathbin.Probability.Independence.Basic
+import Mathbin.Probability.Independence.ZeroOne
 import Mathbin.Probability.Integration
 import Mathbin.Probability.Kernel.Basic
 import Mathbin.Probability.Kernel.Composition

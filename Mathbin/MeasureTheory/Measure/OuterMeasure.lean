@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measure.outer_measure
-! leanprover-community/mathlib commit fe8d0ff42c3c24d789f491dc2622b6cac3d61564
+! leanprover-community/mathlib commit ec4b2eeb50364487f80421c0b4c41328a611f30d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -617,9 +617,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align measure_theory.outer_measure.smul_supr MeasureTheory.OuterMeasure.smul_supᵢₓ'. -/
 theorem smul_supᵢ [SMul R ℝ≥0∞] [IsScalarTower R ℝ≥0∞ ℝ≥0∞] {ι} (f : ι → OuterMeasure α) (c : R) :
     (c • ⨆ i, f i) = ⨆ i, c • f i :=
-  ext fun s => by
-    simp only [smul_apply, supᵢ_apply, ← smul_one_mul c (f _ _), ← smul_one_mul c (supᵢ _),
-      ENNReal.mul_supᵢ]
+  ext fun s => by simp only [smul_apply, supᵢ_apply, ENNReal.smul_supᵢ]
 #align measure_theory.outer_measure.smul_supr MeasureTheory.OuterMeasure.smul_supᵢ
 
 end Supremum
@@ -2099,6 +2097,16 @@ def extend (s : α) : ℝ≥0∞ :=
   ⨅ h : P s, m s h
 #align measure_theory.extend MeasureTheory.extend
 -/
+
+theorem smul_extend {R} [Zero R] [SMulWithZero R ℝ≥0∞] [IsScalarTower R ℝ≥0∞ ℝ≥0∞]
+    [NoZeroSMulDivisors R ℝ≥0∞] {c : R} (hc : c ≠ 0) : c • extend m = extend fun s h => c • m s h :=
+  by
+  ext1 s
+  dsimp [extend]
+  by_cases h : P s
+  · simp [h]
+  · simp [h, ENNReal.smul_top, hc]
+#align measure_theory.smul_extend MeasureTheory.smul_extend
 
 #print MeasureTheory.extend_eq /-
 theorem extend_eq {s : α} (h : P s) : extend m s = m s h := by simp [extend, h]
