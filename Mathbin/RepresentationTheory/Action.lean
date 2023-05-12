@@ -294,7 +294,7 @@ def forget : Action V G ⥤ V where
 instance : Faithful (forget V G) where map_injective' X Y f g w := Hom.ext _ _ w
 
 instance [ConcreteCategory V] : ConcreteCategory (Action V G)
-    where forget := forget V G ⋙ ConcreteCategory.Forget V
+    where forget := forget V G ⋙ ConcreteCategory.forget V
 
 instance hasForgetToV [ConcreteCategory V] : HasForget₂ (Action V G) V where forget₂ := forget V G
 #align Action.has_forget_to_V Action.hasForgetToV

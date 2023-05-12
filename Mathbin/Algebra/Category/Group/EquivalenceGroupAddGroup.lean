@@ -91,7 +91,7 @@ end AddCommGroupCat
 lean 3 declaration is
   CategoryTheory.Equivalence.{u1, u1, succ u1, succ u1} GroupCat.{u1} GroupCat.largeCategory.{u1} AddGroupCat.{u1} AddGroupCat.largeCategory.{u1}
 but is expected to have type
-  CategoryTheory.Equivalence.{u1, u1, succ u1, succ u1} GroupCat.{u1} AddGroupCat.{u1} GroupCat.largeCategory.{u1} AddGroupCat.largeCategory.{u1}
+  CategoryTheory.Equivalence.{u1, u1, succ u1, succ u1} GroupCat.{u1} AddGroupCat.{u1} instGroupCatLargeCategory.{u1} instAddGroupCatLargeCategory.{u1}
 Case conversion may be inaccurate. Consider using '#align Group_AddGroup_equivalence groupAddGroupEquivalenceₓ'. -/
 /-- The equivalence of categories between `Group` and `AddGroup`
 -/
@@ -108,7 +108,7 @@ def groupAddGroupEquivalence : GroupCat ≌ AddGroupCat :=
 lean 3 declaration is
   CategoryTheory.Equivalence.{u1, u1, succ u1, succ u1} CommGroupCat.{u1} CommGroupCat.largeCategory.{u1} AddCommGroupCat.{u1} AddCommGroupCat.largeCategory.{u1}
 but is expected to have type
-  CategoryTheory.Equivalence.{u1, u1, succ u1, succ u1} CommGroupCat.{u1} AddCommGroupCat.{u1} CommGroupCat.largeCategory.{u1} AddCommGroupCat.largeCategory.{u1}
+  CategoryTheory.Equivalence.{u1, u1, succ u1, succ u1} CommGroupCat.{u1} AddCommGroupCat.{u1} instCommGroupCatLargeCategory.{u1} instAddCommGroupCatLargeCategory.{u1}
 Case conversion may be inaccurate. Consider using '#align CommGroup_AddCommGroup_equivalence commGroupAddCommGroupEquivalenceₓ'. -/
 /-- The equivalence of categories between `CommGroup` and `AddCommGroup`.
 -/
