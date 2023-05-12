@@ -46,10 +46,12 @@ boolean ring, boolean algebra
 
 variable {α β γ : Type _}
 
+#print BooleanRing /-
 /-- A Boolean ring is a ring where multiplication is idempotent. -/
 class BooleanRing (α) extends Ring α where
   mul_self : ∀ a : α, a * a = a
 #align boolean_ring BooleanRing
+-/
 
 section BooleanRing
 
@@ -58,11 +60,23 @@ variable [BooleanRing α] (a b : α)
 instance : IsIdempotent α (· * ·) :=
   ⟨BooleanRing.mul_self⟩
 
+/- warning: mul_self -> mul_self is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : BooleanRing.{u1} α] (a : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Distrib.toHasMul.{u1} α (Ring.toDistrib.{u1} α (BooleanRing.toRing.{u1} α _inst_1)))) a a) a
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : BooleanRing.{u1} α] (a : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (BooleanRing.toRing.{u1} α _inst_1))))) a a) a
+Case conversion may be inaccurate. Consider using '#align mul_self mul_selfₓ'. -/
 @[simp]
 theorem mul_self : a * a = a :=
   BooleanRing.mul_self _
 #align mul_self mul_self
 
+/- warning: add_self -> add_self is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : BooleanRing.{u1} α] (a : α), Eq.{succ u1} α (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toHasAdd.{u1} α (Ring.toDistrib.{u1} α (BooleanRing.toRing.{u1} α _inst_1)))) a a) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (BooleanRing.toRing.{u1} α _inst_1)))))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : BooleanRing.{u1} α] (a : α), Eq.{succ u1} α (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (BooleanRing.toRing.{u1} α _inst_1))))))) a a) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (Ring.toSemiring.{u1} α (BooleanRing.toRing.{u1} α _inst_1))))))
+Case conversion may be inaccurate. Consider using '#align add_self add_selfₓ'. -/
 @[simp]
 theorem add_self : a + a = 0 :=
   by
@@ -75,6 +89,12 @@ theorem add_self : a + a = 0 :=
   rwa [self_eq_add_left] at this
 #align add_self add_self
 
+/- warning: neg_eq -> neg_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : BooleanRing.{u1} α] (a : α), Eq.{succ u1} α (Neg.neg.{u1} α (SubNegMonoid.toHasNeg.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddGroupWithOne.toAddGroup.{u1} α (AddCommGroupWithOne.toAddGroupWithOne.{u1} α (Ring.toAddCommGroupWithOne.{u1} α (BooleanRing.toRing.{u1} α _inst_1)))))) a) a
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : BooleanRing.{u1} α] (a : α), Eq.{succ u1} α (Neg.neg.{u1} α (Ring.toNeg.{u1} α (BooleanRing.toRing.{u1} α _inst_1)) a) a
+Case conversion may be inaccurate. Consider using '#align neg_eq neg_eqₓ'. -/
 @[simp]
 theorem neg_eq : -a = a :=
   calc
@@ -84,6 +104,12 @@ theorem neg_eq : -a = a :=
     
 #align neg_eq neg_eq
 
+/- warning: add_eq_zero' -> add_eq_zero' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : BooleanRing.{u1} α] (a : α) (b : α), Iff (Eq.{succ u1} α (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toHasAdd.{u1} α (Ring.toDistrib.{u1} α (BooleanRing.toRing.{u1} α _inst_1)))) a b) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (BooleanRing.toRing.{u1} α _inst_1)))))))))) (Eq.{succ u1} α a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : BooleanRing.{u1} α] (a : α) (b : α), Iff (Eq.{succ u1} α (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (BooleanRing.toRing.{u1} α _inst_1))))))) a b) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (Ring.toSemiring.{u1} α (BooleanRing.toRing.{u1} α _inst_1))))))) (Eq.{succ u1} α a b)
+Case conversion may be inaccurate. Consider using '#align add_eq_zero' add_eq_zero'ₓ'. -/
 theorem add_eq_zero' : a + b = 0 ↔ a = b :=
   calc
     a + b = 0 ↔ a = -b := add_eq_zero_iff_eq_neg
@@ -91,6 +117,12 @@ theorem add_eq_zero' : a + b = 0 ↔ a = b :=
     
 #align add_eq_zero' add_eq_zero'
 
+/- warning: mul_add_mul -> mul_add_mul is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : BooleanRing.{u1} α] (a : α) (b : α), Eq.{succ u1} α (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toHasAdd.{u1} α (Ring.toDistrib.{u1} α (BooleanRing.toRing.{u1} α _inst_1)))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Distrib.toHasMul.{u1} α (Ring.toDistrib.{u1} α (BooleanRing.toRing.{u1} α _inst_1)))) a b) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Distrib.toHasMul.{u1} α (Ring.toDistrib.{u1} α (BooleanRing.toRing.{u1} α _inst_1)))) b a)) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (BooleanRing.toRing.{u1} α _inst_1)))))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : BooleanRing.{u1} α] (a : α) (b : α), Eq.{succ u1} α (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (BooleanRing.toRing.{u1} α _inst_1))))))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (BooleanRing.toRing.{u1} α _inst_1))))) a b) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (BooleanRing.toRing.{u1} α _inst_1))))) b a)) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (Ring.toSemiring.{u1} α (BooleanRing.toRing.{u1} α _inst_1))))))
+Case conversion may be inaccurate. Consider using '#align mul_add_mul mul_add_mulₓ'. -/
 @[simp]
 theorem mul_add_mul : a * b + b * a = 0 :=
   by
@@ -104,19 +136,33 @@ theorem mul_add_mul : a * b + b * a = 0 :=
   rwa [self_eq_add_right] at this
 #align mul_add_mul mul_add_mul
 
+/- warning: sub_eq_add -> sub_eq_add is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : BooleanRing.{u1} α] (a : α) (b : α), Eq.{succ u1} α (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (SubNegMonoid.toHasSub.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddGroupWithOne.toAddGroup.{u1} α (AddCommGroupWithOne.toAddGroupWithOne.{u1} α (Ring.toAddCommGroupWithOne.{u1} α (BooleanRing.toRing.{u1} α _inst_1))))))) a b) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toHasAdd.{u1} α (Ring.toDistrib.{u1} α (BooleanRing.toRing.{u1} α _inst_1)))) a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : BooleanRing.{u1} α] (a : α) (b : α), Eq.{succ u1} α (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (Ring.toSub.{u1} α (BooleanRing.toRing.{u1} α _inst_1))) a b) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (BooleanRing.toRing.{u1} α _inst_1))))))) a b)
+Case conversion may be inaccurate. Consider using '#align sub_eq_add sub_eq_addₓ'. -/
 @[simp]
 theorem sub_eq_add : a - b = a + b := by rw [sub_eq_add_neg, add_right_inj, neg_eq]
 #align sub_eq_add sub_eq_add
 
+/- warning: mul_one_add_self -> mul_one_add_self is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : BooleanRing.{u1} α] (a : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Distrib.toHasMul.{u1} α (Ring.toDistrib.{u1} α (BooleanRing.toRing.{u1} α _inst_1)))) a (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toHasAdd.{u1} α (Ring.toDistrib.{u1} α (BooleanRing.toRing.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (AddMonoidWithOne.toOne.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α (AddCommGroupWithOne.toAddGroupWithOne.{u1} α (Ring.toAddCommGroupWithOne.{u1} α (BooleanRing.toRing.{u1} α _inst_1)))))))) a)) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (BooleanRing.toRing.{u1} α _inst_1)))))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : BooleanRing.{u1} α] (a : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (BooleanRing.toRing.{u1} α _inst_1))))) a (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (BooleanRing.toRing.{u1} α _inst_1))))))) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Semiring.toOne.{u1} α (Ring.toSemiring.{u1} α (BooleanRing.toRing.{u1} α _inst_1))))) a)) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (Ring.toSemiring.{u1} α (BooleanRing.toRing.{u1} α _inst_1))))))
+Case conversion may be inaccurate. Consider using '#align mul_one_add_self mul_one_add_selfₓ'. -/
 @[simp]
 theorem mul_one_add_self : a * (1 + a) = 0 := by rw [mul_add, mul_one, mul_self, add_self]
 #align mul_one_add_self mul_one_add_self
 
+#print BooleanRing.toCommRing /-
 -- Note [lower instance priority]
 instance (priority := 100) BooleanRing.toCommRing : CommRing α :=
   { (inferInstance : BooleanRing α) with
     mul_comm := fun a b => by rw [← add_eq_zero', mul_add_mul] }
 #align boolean_ring.to_comm_ring BooleanRing.toCommRing
+-/
 
 end BooleanRing
 
@@ -128,109 +174,149 @@ instance : BooleanRing PUnit :=
 
 section RingToAlgebra
 
+#print AsBoolAlg /-
 /-- Type synonym to view a Boolean ring as a Boolean algebra. -/
-def AsBoolalg (α : Type _) :=
+def AsBoolAlg (α : Type _) :=
   α
-#align as_boolalg AsBoolalg
+#align as_boolalg AsBoolAlg
+-/
 
+#print toBoolAlg /-
 /-- The "identity" equivalence between `as_boolalg α` and `α`. -/
-def toBoolalg : α ≃ AsBoolalg α :=
+def toBoolAlg : α ≃ AsBoolAlg α :=
   Equiv.refl _
-#align to_boolalg toBoolalg
+#align to_boolalg toBoolAlg
+-/
 
+#print ofBoolAlg /-
 /-- The "identity" equivalence between `α` and `as_boolalg α`. -/
-def ofBoolalg : AsBoolalg α ≃ α :=
+def ofBoolAlg : AsBoolAlg α ≃ α :=
   Equiv.refl _
-#align of_boolalg ofBoolalg
+#align of_boolalg ofBoolAlg
+-/
 
+#print toBoolAlg_symm_eq /-
 @[simp]
-theorem toBoolalg_symm_eq : (@toBoolalg α).symm = ofBoolalg :=
+theorem toBoolAlg_symm_eq : (@toBoolAlg α).symm = ofBoolAlg :=
   rfl
-#align to_boolalg_symm_eq toBoolalg_symm_eq
+#align to_boolalg_symm_eq toBoolAlg_symm_eq
+-/
 
+#print ofBoolAlg_symm_eq /-
 @[simp]
-theorem ofBoolalg_symm_eq : (@ofBoolalg α).symm = toBoolalg :=
+theorem ofBoolAlg_symm_eq : (@ofBoolAlg α).symm = toBoolAlg :=
   rfl
-#align of_boolalg_symm_eq ofBoolalg_symm_eq
+#align of_boolalg_symm_eq ofBoolAlg_symm_eq
+-/
 
+#print toBoolAlg_ofBoolAlg /-
 @[simp]
-theorem toBoolalg_ofBoolalg (a : AsBoolalg α) : toBoolalg (ofBoolalg a) = a :=
+theorem toBoolAlg_ofBoolAlg (a : AsBoolAlg α) : toBoolAlg (ofBoolAlg a) = a :=
   rfl
-#align to_boolalg_of_boolalg toBoolalg_ofBoolalg
+#align to_boolalg_of_boolalg toBoolAlg_ofBoolAlg
+-/
 
+#print ofBoolAlg_toBoolAlg /-
 @[simp]
-theorem ofBoolalg_toBoolalg (a : α) : ofBoolalg (toBoolalg a) = a :=
+theorem ofBoolAlg_toBoolAlg (a : α) : ofBoolAlg (toBoolAlg a) = a :=
   rfl
-#align of_boolalg_to_boolalg ofBoolalg_toBoolalg
+#align of_boolalg_to_boolalg ofBoolAlg_toBoolAlg
+-/
 
+#print toBoolAlg_inj /-
 @[simp]
-theorem toBoolalg_inj {a b : α} : toBoolalg a = toBoolalg b ↔ a = b :=
+theorem toBoolAlg_inj {a b : α} : toBoolAlg a = toBoolAlg b ↔ a = b :=
   Iff.rfl
-#align to_boolalg_inj toBoolalg_inj
+#align to_boolalg_inj toBoolAlg_inj
+-/
 
+#print ofBoolAlg_inj /-
 @[simp]
-theorem ofBoolalg_inj {a b : AsBoolalg α} : ofBoolalg a = ofBoolalg b ↔ a = b :=
+theorem ofBoolAlg_inj {a b : AsBoolAlg α} : ofBoolAlg a = ofBoolAlg b ↔ a = b :=
   Iff.rfl
-#align of_boolalg_inj ofBoolalg_inj
+#align of_boolalg_inj ofBoolAlg_inj
+-/
 
-instance [Inhabited α] : Inhabited (AsBoolalg α) :=
+instance [Inhabited α] : Inhabited (AsBoolAlg α) :=
   ‹Inhabited α›
 
 variable [BooleanRing α] [BooleanRing β] [BooleanRing γ]
 
 namespace BooleanRing
 
+#print BooleanRing.sup /-
 /-- The join operation in a Boolean ring is `x + y + x * y`. -/
-def hasSup : Sup α :=
+def sup : Sup α :=
   ⟨fun x y => x + y + x * y⟩
-#align boolean_ring.has_sup BooleanRing.hasSup
+#align boolean_ring.has_sup BooleanRing.sup
+-/
 
+#print BooleanRing.inf /-
 /-- The meet operation in a Boolean ring is `x * y`. -/
-def hasInf : Inf α :=
+def inf : Inf α :=
   ⟨(· * ·)⟩
-#align boolean_ring.has_inf BooleanRing.hasInf
+#align boolean_ring.has_inf BooleanRing.inf
+-/
 
 scoped[-- Note [lower instance priority]
-BooleanAlgebraOfBooleanRing] attribute [instance 100] BooleanRing.hasSup
+BooleanAlgebraOfBooleanRing] attribute [instance 100] BooleanRing.sup
 
-scoped[BooleanAlgebraOfBooleanRing] attribute [instance 100] BooleanRing.hasInf
+scoped[BooleanAlgebraOfBooleanRing] attribute [instance 100] BooleanRing.inf
 
+#print BooleanRing.sup_comm /-
 theorem sup_comm (a b : α) : a ⊔ b = b ⊔ a :=
   by
   dsimp only [(· ⊔ ·)]
   ring
 #align boolean_ring.sup_comm BooleanRing.sup_comm
+-/
 
+#print BooleanRing.inf_comm /-
 theorem inf_comm (a b : α) : a ⊓ b = b ⊓ a :=
   by
   dsimp only [(· ⊓ ·)]
   ring
 #align boolean_ring.inf_comm BooleanRing.inf_comm
+-/
 
+#print BooleanRing.sup_assoc /-
 theorem sup_assoc (a b c : α) : a ⊔ b ⊔ c = a ⊔ (b ⊔ c) :=
   by
   dsimp only [(· ⊔ ·)]
   ring
 #align boolean_ring.sup_assoc BooleanRing.sup_assoc
+-/
 
+#print BooleanRing.inf_assoc /-
 theorem inf_assoc (a b c : α) : a ⊓ b ⊓ c = a ⊓ (b ⊓ c) :=
   by
   dsimp only [(· ⊓ ·)]
   ring
 #align boolean_ring.inf_assoc BooleanRing.inf_assoc
+-/
 
+#print BooleanRing.sup_inf_self /-
 theorem sup_inf_self (a b : α) : a ⊔ a ⊓ b = a :=
   by
   dsimp only [(· ⊔ ·), (· ⊓ ·)]
   assoc_rw [mul_self, add_self, add_zero]
 #align boolean_ring.sup_inf_self BooleanRing.sup_inf_self
+-/
 
+#print BooleanRing.inf_sup_self /-
 theorem inf_sup_self (a b : α) : a ⊓ (a ⊔ b) = a :=
   by
   dsimp only [(· ⊔ ·), (· ⊓ ·)]
   rw [mul_add, mul_add, mul_self, ← mul_assoc, mul_self, add_assoc, add_self, add_zero]
 #align boolean_ring.inf_sup_self BooleanRing.inf_sup_self
+-/
 
+/- warning: boolean_ring.le_sup_inf_aux -> BooleanRing.le_sup_inf_aux is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : BooleanRing.{u1} α] (a : α) (b : α) (c : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Distrib.toHasMul.{u1} α (Ring.toDistrib.{u1} α (BooleanRing.toRing.{u1} α _inst_1)))) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toHasAdd.{u1} α (Ring.toDistrib.{u1} α (BooleanRing.toRing.{u1} α _inst_1)))) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toHasAdd.{u1} α (Ring.toDistrib.{u1} α (BooleanRing.toRing.{u1} α _inst_1)))) a b) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Distrib.toHasMul.{u1} α (Ring.toDistrib.{u1} α (BooleanRing.toRing.{u1} α _inst_1)))) a b)) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toHasAdd.{u1} α (Ring.toDistrib.{u1} α (BooleanRing.toRing.{u1} α _inst_1)))) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toHasAdd.{u1} α (Ring.toDistrib.{u1} α (BooleanRing.toRing.{u1} α _inst_1)))) a c) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Distrib.toHasMul.{u1} α (Ring.toDistrib.{u1} α (BooleanRing.toRing.{u1} α _inst_1)))) a c))) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toHasAdd.{u1} α (Ring.toDistrib.{u1} α (BooleanRing.toRing.{u1} α _inst_1)))) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toHasAdd.{u1} α (Ring.toDistrib.{u1} α (BooleanRing.toRing.{u1} α _inst_1)))) a (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Distrib.toHasMul.{u1} α (Ring.toDistrib.{u1} α (BooleanRing.toRing.{u1} α _inst_1)))) b c)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Distrib.toHasMul.{u1} α (Ring.toDistrib.{u1} α (BooleanRing.toRing.{u1} α _inst_1)))) a (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Distrib.toHasMul.{u1} α (Ring.toDistrib.{u1} α (BooleanRing.toRing.{u1} α _inst_1)))) b c)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : BooleanRing.{u1} α] (a : α) (b : α) (c : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (BooleanRing.toRing.{u1} α _inst_1))))) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (BooleanRing.toRing.{u1} α _inst_1))))))) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (BooleanRing.toRing.{u1} α _inst_1))))))) a b) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (BooleanRing.toRing.{u1} α _inst_1))))) a b)) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (BooleanRing.toRing.{u1} α _inst_1))))))) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (BooleanRing.toRing.{u1} α _inst_1))))))) a c) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (BooleanRing.toRing.{u1} α _inst_1))))) a c))) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (BooleanRing.toRing.{u1} α _inst_1))))))) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (BooleanRing.toRing.{u1} α _inst_1))))))) a (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (BooleanRing.toRing.{u1} α _inst_1))))) b c)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (BooleanRing.toRing.{u1} α _inst_1))))) a (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (BooleanRing.toRing.{u1} α _inst_1))))) b c)))
+Case conversion may be inaccurate. Consider using '#align boolean_ring.le_sup_inf_aux BooleanRing.le_sup_inf_auxₓ'. -/
 theorem le_sup_inf_aux (a b c : α) : (a + b + a * b) * (a + c + a * c) = a + b * c + a * (b * c) :=
   calc
     (a + b + a * b) * (a + c + a * c) =
@@ -241,12 +327,15 @@ theorem le_sup_inf_aux (a b c : α) : (a + b + a * b) * (a + c + a * c) = a + b 
     
 #align boolean_ring.le_sup_inf_aux BooleanRing.le_sup_inf_aux
 
+#print BooleanRing.le_sup_inf /-
 theorem le_sup_inf (a b c : α) : (a ⊔ b) ⊓ (a ⊔ c) ⊔ (a ⊔ b ⊓ c) = a ⊔ b ⊓ c :=
   by
   dsimp only [(· ⊔ ·), (· ⊓ ·)]
   rw [le_sup_inf_aux, add_self, mul_self, zero_add]
 #align boolean_ring.le_sup_inf BooleanRing.le_sup_inf
+-/
 
+#print BooleanRing.toBooleanAlgebra /-
 /-- The Boolean algebra structure on a Boolean ring.
 
 The data is defined so that:
@@ -278,44 +367,57 @@ def toBooleanAlgebra : BooleanAlgebra α :=
       norm_num [mul_add, mul_self]
       rw [← add_assoc, add_self] }
 #align boolean_ring.to_boolean_algebra BooleanRing.toBooleanAlgebra
+-/
 
 scoped[BooleanAlgebraOfBooleanRing] attribute [instance 100] BooleanRing.toBooleanAlgebra
 
 end BooleanRing
 
-instance : BooleanAlgebra (AsBoolalg α) :=
+instance : BooleanAlgebra (AsBoolAlg α) :=
   @BooleanRing.toBooleanAlgebra α _
 
+#print ofBoolAlg_top /-
 @[simp]
-theorem ofBoolalg_top : ofBoolalg (⊤ : AsBoolalg α) = 1 :=
+theorem ofBoolAlg_top : ofBoolAlg (⊤ : AsBoolAlg α) = 1 :=
   rfl
-#align of_boolalg_top ofBoolalg_top
+#align of_boolalg_top ofBoolAlg_top
+-/
 
+#print ofBoolAlg_bot /-
 @[simp]
-theorem ofBoolalg_bot : ofBoolalg (⊥ : AsBoolalg α) = 0 :=
+theorem ofBoolAlg_bot : ofBoolAlg (⊥ : AsBoolAlg α) = 0 :=
   rfl
-#align of_boolalg_bot ofBoolalg_bot
+#align of_boolalg_bot ofBoolAlg_bot
+-/
 
+#print ofBoolAlg_sup /-
 @[simp]
-theorem ofBoolalg_sup (a b : AsBoolalg α) :
-    ofBoolalg (a ⊔ b) = ofBoolalg a + ofBoolalg b + ofBoolalg a * ofBoolalg b :=
+theorem ofBoolAlg_sup (a b : AsBoolAlg α) :
+    ofBoolAlg (a ⊔ b) = ofBoolAlg a + ofBoolAlg b + ofBoolAlg a * ofBoolAlg b :=
   rfl
-#align of_boolalg_sup ofBoolalg_sup
+#align of_boolalg_sup ofBoolAlg_sup
+-/
 
+#print ofBoolAlg_inf /-
 @[simp]
-theorem ofBoolalg_inf (a b : AsBoolalg α) : ofBoolalg (a ⊓ b) = ofBoolalg a * ofBoolalg b :=
+theorem ofBoolAlg_inf (a b : AsBoolAlg α) : ofBoolAlg (a ⊓ b) = ofBoolAlg a * ofBoolAlg b :=
   rfl
-#align of_boolalg_inf ofBoolalg_inf
+#align of_boolalg_inf ofBoolAlg_inf
+-/
 
+#print ofBoolAlg_compl /-
 @[simp]
-theorem ofBoolalg_compl (a : AsBoolalg α) : ofBoolalg (aᶜ) = 1 + ofBoolalg a :=
+theorem ofBoolAlg_compl (a : AsBoolAlg α) : ofBoolAlg (aᶜ) = 1 + ofBoolAlg a :=
   rfl
-#align of_boolalg_compl ofBoolalg_compl
+#align of_boolalg_compl ofBoolAlg_compl
+-/
 
+#print ofBoolAlg_sdiff /-
 @[simp]
-theorem ofBoolalg_sdiff (a b : AsBoolalg α) : ofBoolalg (a \ b) = ofBoolalg a * (1 + ofBoolalg b) :=
+theorem ofBoolAlg_sdiff (a b : AsBoolAlg α) : ofBoolAlg (a \ b) = ofBoolAlg a * (1 + ofBoolAlg b) :=
   rfl
-#align of_boolalg_sdiff ofBoolalg_sdiff
+#align of_boolalg_sdiff ofBoolAlg_sdiff
+-/
 
 private theorem of_boolalg_symm_diff_aux (a b : α) : (a + b + a * b) * (1 + a * b) = a + b :=
   calc
@@ -325,51 +427,70 @@ private theorem of_boolalg_symm_diff_aux (a b : α) : (a + b + a * b) * (1 + a *
     
 #align of_boolalg_symm_diff_aux of_boolalg_symm_diff_aux
 
+#print ofBoolAlg_symmDiff /-
 @[simp]
-theorem ofBoolalg_symmDiff (a b : AsBoolalg α) : ofBoolalg (a ∆ b) = ofBoolalg a + ofBoolalg b :=
+theorem ofBoolAlg_symmDiff (a b : AsBoolAlg α) : ofBoolAlg (a ∆ b) = ofBoolAlg a + ofBoolAlg b :=
   by
   rw [symmDiff_eq_sup_sdiff_inf]
   exact of_boolalg_symm_diff_aux _ _
-#align of_boolalg_symm_diff ofBoolalg_symmDiff
+#align of_boolalg_symm_diff ofBoolAlg_symmDiff
+-/
 
+/- warning: of_boolalg_mul_of_boolalg_eq_left_iff -> ofBoolAlg_mul_ofBoolAlg_eq_left_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : BooleanRing.{u1} α] {a : AsBoolAlg.{u1} α} {b : AsBoolAlg.{u1} α}, Iff (Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (Distrib.toHasMul.{u1} α (Ring.toDistrib.{u1} α (BooleanRing.toRing.{u1} α _inst_1)))) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (AsBoolAlg.{u1} α) α) (fun (_x : Equiv.{succ u1, succ u1} (AsBoolAlg.{u1} α) α) => (AsBoolAlg.{u1} α) -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} (AsBoolAlg.{u1} α) α) (ofBoolAlg.{u1} α) a) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (AsBoolAlg.{u1} α) α) (fun (_x : Equiv.{succ u1, succ u1} (AsBoolAlg.{u1} α) α) => (AsBoolAlg.{u1} α) -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} (AsBoolAlg.{u1} α) α) (ofBoolAlg.{u1} α) b)) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (AsBoolAlg.{u1} α) α) (fun (_x : Equiv.{succ u1, succ u1} (AsBoolAlg.{u1} α) α) => (AsBoolAlg.{u1} α) -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} (AsBoolAlg.{u1} α) α) (ofBoolAlg.{u1} α) a)) (LE.le.{u1} (AsBoolAlg.{u1} α) (Preorder.toLE.{u1} (AsBoolAlg.{u1} α) (PartialOrder.toPreorder.{u1} (AsBoolAlg.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (AsBoolAlg.{u1} α) (Lattice.toSemilatticeInf.{u1} (AsBoolAlg.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (AsBoolAlg.{u1} α) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} (AsBoolAlg.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (AsBoolAlg.{u1} α) (AsBoolAlg.booleanAlgebra.{u1} α _inst_1)))))))) a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : BooleanRing.{u1} α] {a : AsBoolAlg.{u1} α} {b : AsBoolAlg.{u1} α}, Iff (Eq.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : AsBoolAlg.{u1} α) => α) a) (HMul.hMul.{u1, u1, u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : AsBoolAlg.{u1} α) => α) a) ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : AsBoolAlg.{u1} α) => α) b) ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : AsBoolAlg.{u1} α) => α) a) (instHMul.{u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : AsBoolAlg.{u1} α) => α) a) (NonUnitalNonAssocRing.toMul.{u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : AsBoolAlg.{u1} α) => α) a) (NonAssocRing.toNonUnitalNonAssocRing.{u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : AsBoolAlg.{u1} α) => α) a) (Ring.toNonAssocRing.{u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : AsBoolAlg.{u1} α) => α) a) (BooleanRing.toRing.{u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : AsBoolAlg.{u1} α) => α) a) _inst_1))))) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (AsBoolAlg.{u1} α) α) (AsBoolAlg.{u1} α) (fun (_x : AsBoolAlg.{u1} α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : AsBoolAlg.{u1} α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} (AsBoolAlg.{u1} α) α) (ofBoolAlg.{u1} α) a) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (AsBoolAlg.{u1} α) α) (AsBoolAlg.{u1} α) (fun (_x : AsBoolAlg.{u1} α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : AsBoolAlg.{u1} α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} (AsBoolAlg.{u1} α) α) (ofBoolAlg.{u1} α) b)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (AsBoolAlg.{u1} α) α) (AsBoolAlg.{u1} α) (fun (_x : AsBoolAlg.{u1} α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : AsBoolAlg.{u1} α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} (AsBoolAlg.{u1} α) α) (ofBoolAlg.{u1} α) a)) (LE.le.{u1} (AsBoolAlg.{u1} α) (Preorder.toLE.{u1} (AsBoolAlg.{u1} α) (PartialOrder.toPreorder.{u1} (AsBoolAlg.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (AsBoolAlg.{u1} α) (Lattice.toSemilatticeInf.{u1} (AsBoolAlg.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (AsBoolAlg.{u1} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (AsBoolAlg.{u1} α) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (AsBoolAlg.{u1} α) (BooleanAlgebra.toBiheytingAlgebra.{u1} (AsBoolAlg.{u1} α) (instBooleanAlgebraAsBoolAlg.{u1} α _inst_1))))))))) a b)
+Case conversion may be inaccurate. Consider using '#align of_boolalg_mul_of_boolalg_eq_left_iff ofBoolAlg_mul_ofBoolAlg_eq_left_iffₓ'. -/
 @[simp]
-theorem ofBoolalg_mul_ofBoolalg_eq_left_iff {a b : AsBoolalg α} :
-    ofBoolalg a * ofBoolalg b = ofBoolalg a ↔ a ≤ b :=
-  @inf_eq_left (AsBoolalg α) _ _ _
-#align of_boolalg_mul_of_boolalg_eq_left_iff ofBoolalg_mul_ofBoolalg_eq_left_iff
+theorem ofBoolAlg_mul_ofBoolAlg_eq_left_iff {a b : AsBoolAlg α} :
+    ofBoolAlg a * ofBoolAlg b = ofBoolAlg a ↔ a ≤ b :=
+  @inf_eq_left (AsBoolAlg α) _ _ _
+#align of_boolalg_mul_of_boolalg_eq_left_iff ofBoolAlg_mul_ofBoolAlg_eq_left_iff
 
+#print toBoolAlg_zero /-
 @[simp]
-theorem toBoolalg_zero : toBoolalg (0 : α) = ⊥ :=
+theorem toBoolAlg_zero : toBoolAlg (0 : α) = ⊥ :=
   rfl
-#align to_boolalg_zero toBoolalg_zero
+#align to_boolalg_zero toBoolAlg_zero
+-/
 
+#print toBoolAlg_one /-
 @[simp]
-theorem toBoolalg_one : toBoolalg (1 : α) = ⊤ :=
+theorem toBoolAlg_one : toBoolAlg (1 : α) = ⊤ :=
   rfl
-#align to_boolalg_one toBoolalg_one
+#align to_boolalg_one toBoolAlg_one
+-/
 
+#print toBoolAlg_mul /-
 @[simp]
-theorem toBoolalg_mul (a b : α) : toBoolalg (a * b) = toBoolalg a ⊓ toBoolalg b :=
+theorem toBoolAlg_mul (a b : α) : toBoolAlg (a * b) = toBoolAlg a ⊓ toBoolAlg b :=
   rfl
-#align to_boolalg_mul toBoolalg_mul
+#align to_boolalg_mul toBoolAlg_mul
+-/
 
+#print toBoolAlg_add_add_mul /-
 -- `to_boolalg_add` simplifies the LHS but this lemma is eligible to `dsimp`
 @[simp, nolint simp_nf]
-theorem toBoolalg_add_add_mul (a b : α) : toBoolalg (a + b + a * b) = toBoolalg a ⊔ toBoolalg b :=
+theorem toBoolAlg_add_add_mul (a b : α) : toBoolAlg (a + b + a * b) = toBoolAlg a ⊔ toBoolAlg b :=
   rfl
-#align to_boolalg_add_add_mul toBoolalg_add_add_mul
+#align to_boolalg_add_add_mul toBoolAlg_add_add_mul
+-/
 
+#print toBoolAlg_add /-
 @[simp]
-theorem toBoolalg_add (a b : α) : toBoolalg (a + b) = toBoolalg a ∆ toBoolalg b :=
-  (ofBoolalg_symmDiff _ _).symm
-#align to_boolalg_add toBoolalg_add
+theorem toBoolAlg_add (a b : α) : toBoolAlg (a + b) = toBoolAlg a ∆ toBoolAlg b :=
+  (ofBoolAlg_symmDiff _ _).symm
+#align to_boolalg_add toBoolAlg_add
+-/
 
+#print RingHom.asBoolAlg /-
 /-- Turn a ring homomorphism from Boolean rings `α` to `β` into a bounded lattice homomorphism
 from `α` to `β` considered as Boolean algebras. -/
 @[simps]
-protected def RingHom.asBoolalg (f : α →+* β) : BoundedLatticeHom (AsBoolalg α) (AsBoolalg β)
+protected def RingHom.asBoolAlg (f : α →+* β) : BoundedLatticeHom (AsBoolAlg α) (AsBoolAlg β)
     where
-  toFun := toBoolalg ∘ f ∘ ofBoolalg
+  toFun := toBoolAlg ∘ f ∘ ofBoolAlg
   map_sup' a b := by
     dsimp
     simp_rw [map_add f, map_mul f]
@@ -377,18 +498,27 @@ protected def RingHom.asBoolalg (f : α →+* β) : BoundedLatticeHom (AsBoolalg
   map_inf' := f.map_mul'
   map_top' := f.map_one'
   map_bot' := f.map_zero'
-#align ring_hom.as_boolalg RingHom.asBoolalg
+#align ring_hom.as_boolalg RingHom.asBoolAlg
+-/
 
+#print RingHom.asBoolAlg_id /-
 @[simp]
-theorem RingHom.asBoolalg_id : (RingHom.id α).AsBoolalg = BoundedLatticeHom.id _ :=
+theorem RingHom.asBoolAlg_id : (RingHom.id α).AsBoolAlg = BoundedLatticeHom.id _ :=
   rfl
-#align ring_hom.as_boolalg_id RingHom.asBoolalg_id
+#align ring_hom.as_boolalg_id RingHom.asBoolAlg_id
+-/
 
+/- warning: ring_hom.as_boolalg_comp -> RingHom.asBoolAlg_comp is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : BooleanRing.{u1} α] [_inst_2 : BooleanRing.{u2} β] [_inst_3 : BooleanRing.{u3} γ] (g : RingHom.{u2, u3} β γ (NonAssocRing.toNonAssocSemiring.{u2} β (Ring.toNonAssocRing.{u2} β (BooleanRing.toRing.{u2} β _inst_2))) (NonAssocRing.toNonAssocSemiring.{u3} γ (Ring.toNonAssocRing.{u3} γ (BooleanRing.toRing.{u3} γ _inst_3)))) (f : RingHom.{u1, u2} α β (NonAssocRing.toNonAssocSemiring.{u1} α (Ring.toNonAssocRing.{u1} α (BooleanRing.toRing.{u1} α _inst_1))) (NonAssocRing.toNonAssocSemiring.{u2} β (Ring.toNonAssocRing.{u2} β (BooleanRing.toRing.{u2} β _inst_2)))), Eq.{max (succ u1) (succ u3)} (BoundedLatticeHom.{u1, u3} (AsBoolAlg.{u1} α) (AsBoolAlg.{u3} γ) (GeneralizedCoheytingAlgebra.toLattice.{u1} (AsBoolAlg.{u1} α) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} (AsBoolAlg.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (AsBoolAlg.{u1} α) (AsBoolAlg.booleanAlgebra.{u1} α _inst_1)))) (GeneralizedCoheytingAlgebra.toLattice.{u3} (AsBoolAlg.{u3} γ) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u3} (AsBoolAlg.{u3} γ) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u3} (AsBoolAlg.{u3} γ) (AsBoolAlg.booleanAlgebra.{u3} γ _inst_3)))) (BooleanAlgebra.toBoundedOrder.{u1} (AsBoolAlg.{u1} α) (AsBoolAlg.booleanAlgebra.{u1} α _inst_1)) (BooleanAlgebra.toBoundedOrder.{u3} (AsBoolAlg.{u3} γ) (AsBoolAlg.booleanAlgebra.{u3} γ _inst_3))) (RingHom.asBoolAlg.{u1, u3} α γ _inst_1 _inst_3 (RingHom.comp.{u1, u2, u3} α β γ (NonAssocRing.toNonAssocSemiring.{u1} α (Ring.toNonAssocRing.{u1} α (BooleanRing.toRing.{u1} α _inst_1))) (NonAssocRing.toNonAssocSemiring.{u2} β (Ring.toNonAssocRing.{u2} β (BooleanRing.toRing.{u2} β _inst_2))) (NonAssocRing.toNonAssocSemiring.{u3} γ (Ring.toNonAssocRing.{u3} γ (BooleanRing.toRing.{u3} γ _inst_3))) g f)) (BoundedLatticeHom.comp.{u1, u2, u3} (AsBoolAlg.{u1} α) (AsBoolAlg.{u2} β) (AsBoolAlg.{u3} γ) (GeneralizedCoheytingAlgebra.toLattice.{u1} (AsBoolAlg.{u1} α) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} (AsBoolAlg.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (AsBoolAlg.{u1} α) (AsBoolAlg.booleanAlgebra.{u1} α _inst_1)))) (GeneralizedCoheytingAlgebra.toLattice.{u2} (AsBoolAlg.{u2} β) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u2} (AsBoolAlg.{u2} β) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u2} (AsBoolAlg.{u2} β) (AsBoolAlg.booleanAlgebra.{u2} β _inst_2)))) (GeneralizedCoheytingAlgebra.toLattice.{u3} (AsBoolAlg.{u3} γ) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u3} (AsBoolAlg.{u3} γ) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u3} (AsBoolAlg.{u3} γ) (AsBoolAlg.booleanAlgebra.{u3} γ _inst_3)))) (BooleanAlgebra.toBoundedOrder.{u1} (AsBoolAlg.{u1} α) (AsBoolAlg.booleanAlgebra.{u1} α _inst_1)) (BooleanAlgebra.toBoundedOrder.{u2} (AsBoolAlg.{u2} β) (AsBoolAlg.booleanAlgebra.{u2} β _inst_2)) (BooleanAlgebra.toBoundedOrder.{u3} (AsBoolAlg.{u3} γ) (AsBoolAlg.booleanAlgebra.{u3} γ _inst_3)) (RingHom.asBoolAlg.{u2, u3} β γ _inst_2 _inst_3 g) (RingHom.asBoolAlg.{u1, u2} α β _inst_1 _inst_2 f))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u3}} {γ : Type.{u2}} [_inst_1 : BooleanRing.{u1} α] [_inst_2 : BooleanRing.{u3} β] [_inst_3 : BooleanRing.{u2} γ] (g : RingHom.{u3, u2} β γ (Semiring.toNonAssocSemiring.{u3} β (CommSemiring.toSemiring.{u3} β (CommRing.toCommSemiring.{u3} β (BooleanRing.toCommRing.{u3} β _inst_2)))) (Semiring.toNonAssocSemiring.{u2} γ (CommSemiring.toSemiring.{u2} γ (CommRing.toCommSemiring.{u2} γ (BooleanRing.toCommRing.{u2} γ _inst_3))))) (f : RingHom.{u1, u3} α β (Semiring.toNonAssocSemiring.{u1} α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α (BooleanRing.toCommRing.{u1} α _inst_1)))) (Semiring.toNonAssocSemiring.{u3} β (CommSemiring.toSemiring.{u3} β (CommRing.toCommSemiring.{u3} β (BooleanRing.toCommRing.{u3} β _inst_2))))), Eq.{max (succ u1) (succ u2)} (BoundedLatticeHom.{u1, u2} (AsBoolAlg.{u1} α) (AsBoolAlg.{u2} γ) (GeneralizedCoheytingAlgebra.toLattice.{u1} (AsBoolAlg.{u1} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (AsBoolAlg.{u1} α) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (AsBoolAlg.{u1} α) (BooleanAlgebra.toBiheytingAlgebra.{u1} (AsBoolAlg.{u1} α) (instBooleanAlgebraAsBoolAlg.{u1} α _inst_1))))) (GeneralizedCoheytingAlgebra.toLattice.{u2} (AsBoolAlg.{u2} γ) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} (AsBoolAlg.{u2} γ) (BiheytingAlgebra.toCoheytingAlgebra.{u2} (AsBoolAlg.{u2} γ) (BooleanAlgebra.toBiheytingAlgebra.{u2} (AsBoolAlg.{u2} γ) (instBooleanAlgebraAsBoolAlg.{u2} γ _inst_3))))) (BooleanAlgebra.toBoundedOrder.{u1} (AsBoolAlg.{u1} α) (instBooleanAlgebraAsBoolAlg.{u1} α _inst_1)) (BooleanAlgebra.toBoundedOrder.{u2} (AsBoolAlg.{u2} γ) (instBooleanAlgebraAsBoolAlg.{u2} γ _inst_3))) (RingHom.asBoolAlg.{u1, u2} α γ _inst_1 _inst_3 (RingHom.comp.{u1, u3, u2} α β γ (Semiring.toNonAssocSemiring.{u1} α (CommSemiring.toSemiring.{u1} α (CommRing.toCommSemiring.{u1} α (BooleanRing.toCommRing.{u1} α _inst_1)))) (Semiring.toNonAssocSemiring.{u3} β (CommSemiring.toSemiring.{u3} β (CommRing.toCommSemiring.{u3} β (BooleanRing.toCommRing.{u3} β _inst_2)))) (Semiring.toNonAssocSemiring.{u2} γ (CommSemiring.toSemiring.{u2} γ (CommRing.toCommSemiring.{u2} γ (BooleanRing.toCommRing.{u2} γ _inst_3)))) g f)) (BoundedLatticeHom.comp.{u1, u3, u2} (AsBoolAlg.{u1} α) (AsBoolAlg.{u3} β) (AsBoolAlg.{u2} γ) (GeneralizedCoheytingAlgebra.toLattice.{u1} (AsBoolAlg.{u1} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (AsBoolAlg.{u1} α) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (AsBoolAlg.{u1} α) (BooleanAlgebra.toBiheytingAlgebra.{u1} (AsBoolAlg.{u1} α) (instBooleanAlgebraAsBoolAlg.{u1} α _inst_1))))) (GeneralizedCoheytingAlgebra.toLattice.{u3} (AsBoolAlg.{u3} β) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u3} (AsBoolAlg.{u3} β) (BiheytingAlgebra.toCoheytingAlgebra.{u3} (AsBoolAlg.{u3} β) (BooleanAlgebra.toBiheytingAlgebra.{u3} (AsBoolAlg.{u3} β) (instBooleanAlgebraAsBoolAlg.{u3} β _inst_2))))) (GeneralizedCoheytingAlgebra.toLattice.{u2} (AsBoolAlg.{u2} γ) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} (AsBoolAlg.{u2} γ) (BiheytingAlgebra.toCoheytingAlgebra.{u2} (AsBoolAlg.{u2} γ) (BooleanAlgebra.toBiheytingAlgebra.{u2} (AsBoolAlg.{u2} γ) (instBooleanAlgebraAsBoolAlg.{u2} γ _inst_3))))) (BooleanAlgebra.toBoundedOrder.{u1} (AsBoolAlg.{u1} α) (instBooleanAlgebraAsBoolAlg.{u1} α _inst_1)) (BooleanAlgebra.toBoundedOrder.{u3} (AsBoolAlg.{u3} β) (instBooleanAlgebraAsBoolAlg.{u3} β _inst_2)) (BooleanAlgebra.toBoundedOrder.{u2} (AsBoolAlg.{u2} γ) (instBooleanAlgebraAsBoolAlg.{u2} γ _inst_3)) (RingHom.asBoolAlg.{u3, u2} β γ _inst_2 _inst_3 g) (RingHom.asBoolAlg.{u1, u3} α β _inst_1 _inst_2 f))
+Case conversion may be inaccurate. Consider using '#align ring_hom.as_boolalg_comp RingHom.asBoolAlg_compₓ'. -/
 @[simp]
-theorem RingHom.asBoolalg_comp (g : β →+* γ) (f : α →+* β) :
-    (g.comp f).AsBoolalg = g.AsBoolalg.comp f.AsBoolalg :=
+theorem RingHom.asBoolAlg_comp (g : β →+* γ) (f : α →+* β) :
+    (g.comp f).AsBoolAlg = g.AsBoolAlg.comp f.AsBoolAlg :=
   rfl
-#align ring_hom.as_boolalg_comp RingHom.asBoolalg_comp
+#align ring_hom.as_boolalg_comp RingHom.asBoolAlg_comp
 
 end RingToAlgebra
 
@@ -397,54 +527,73 @@ end RingToAlgebra
 
 section AlgebraToRing
 
+#print AsBoolRing /-
 /-- Type synonym to view a Boolean ring as a Boolean algebra. -/
-def AsBoolring (α : Type _) :=
+def AsBoolRing (α : Type _) :=
   α
-#align as_boolring AsBoolring
+#align as_boolring AsBoolRing
+-/
 
+#print toBoolRing /-
 /-- The "identity" equivalence between `as_boolring α` and `α`. -/
-def toBoolring : α ≃ AsBoolring α :=
+def toBoolRing : α ≃ AsBoolRing α :=
   Equiv.refl _
-#align to_boolring toBoolring
+#align to_boolring toBoolRing
+-/
 
+#print ofBoolRing /-
 /-- The "identity" equivalence between `α` and `as_boolring α`. -/
-def ofBoolring : AsBoolring α ≃ α :=
+def ofBoolRing : AsBoolRing α ≃ α :=
   Equiv.refl _
-#align of_boolring ofBoolring
+#align of_boolring ofBoolRing
+-/
 
+#print toBoolRing_symm_eq /-
 @[simp]
-theorem toBoolring_symm_eq : (@toBoolring α).symm = ofBoolring :=
+theorem toBoolRing_symm_eq : (@toBoolRing α).symm = ofBoolRing :=
   rfl
-#align to_boolring_symm_eq toBoolring_symm_eq
+#align to_boolring_symm_eq toBoolRing_symm_eq
+-/
 
+#print ofBoolRing_symm_eq /-
 @[simp]
-theorem ofBoolring_symm_eq : (@ofBoolring α).symm = toBoolring :=
+theorem ofBoolRing_symm_eq : (@ofBoolRing α).symm = toBoolRing :=
   rfl
-#align of_boolring_symm_eq ofBoolring_symm_eq
+#align of_boolring_symm_eq ofBoolRing_symm_eq
+-/
 
+#print toBoolRing_ofBoolRing /-
 @[simp]
-theorem toBoolring_ofBoolring (a : AsBoolring α) : toBoolring (ofBoolring a) = a :=
+theorem toBoolRing_ofBoolRing (a : AsBoolRing α) : toBoolRing (ofBoolRing a) = a :=
   rfl
-#align to_boolring_of_boolring toBoolring_ofBoolring
+#align to_boolring_of_boolring toBoolRing_ofBoolRing
+-/
 
+#print ofBoolRing_toBoolRing /-
 @[simp]
-theorem ofBoolring_toBoolring (a : α) : ofBoolring (toBoolring a) = a :=
+theorem ofBoolRing_toBoolRing (a : α) : ofBoolRing (toBoolRing a) = a :=
   rfl
-#align of_boolring_to_boolring ofBoolring_toBoolring
+#align of_boolring_to_boolring ofBoolRing_toBoolRing
+-/
 
+#print toBoolRing_inj /-
 @[simp]
-theorem toBoolring_inj {a b : α} : toBoolring a = toBoolring b ↔ a = b :=
+theorem toBoolRing_inj {a b : α} : toBoolRing a = toBoolRing b ↔ a = b :=
   Iff.rfl
-#align to_boolring_inj toBoolring_inj
+#align to_boolring_inj toBoolRing_inj
+-/
 
+#print ofBoolRing_inj /-
 @[simp]
-theorem ofBoolring_inj {a b : AsBoolring α} : ofBoolring a = ofBoolring b ↔ a = b :=
+theorem ofBoolRing_inj {a b : AsBoolRing α} : ofBoolRing a = ofBoolRing b ↔ a = b :=
   Iff.rfl
-#align of_boolring_inj ofBoolring_inj
+#align of_boolring_inj ofBoolRing_inj
+-/
 
-instance [Inhabited α] : Inhabited (AsBoolring α) :=
+instance [Inhabited α] : Inhabited (AsBoolRing α) :=
   ‹Inhabited α›
 
+#print GeneralizedBooleanAlgebra.toNonUnitalCommRing /-
 -- See note [reducible non-instances]
 /-- Every generalized Boolean algebra has the structure of a non unital commutative ring with the
 following data:
@@ -473,12 +622,14 @@ def GeneralizedBooleanAlgebra.toNonUnitalCommRing [GeneralizedBooleanAlgebra α]
   left_distrib := inf_symmDiff_distrib_left
   right_distrib := inf_symmDiff_distrib_right
 #align generalized_boolean_algebra.to_non_unital_comm_ring GeneralizedBooleanAlgebra.toNonUnitalCommRing
+-/
 
-instance [GeneralizedBooleanAlgebra α] : NonUnitalCommRing (AsBoolring α) :=
+instance [GeneralizedBooleanAlgebra α] : NonUnitalCommRing (AsBoolRing α) :=
   @GeneralizedBooleanAlgebra.toNonUnitalCommRing α _
 
 variable [BooleanAlgebra α] [BooleanAlgebra β] [BooleanAlgebra γ]
 
+#print BooleanAlgebra.toBooleanRing /-
 -- See note [reducible non-instances]
 /-- Every Boolean algebra has the structure of a Boolean ring with the following data:
 
@@ -497,117 +648,158 @@ def BooleanAlgebra.toBooleanRing : BooleanRing α :=
     mul_one := fun _ => inf_top_eq
     mul_self := fun b => inf_idem }
 #align boolean_algebra.to_boolean_ring BooleanAlgebra.toBooleanRing
+-/
 
 scoped[BooleanRingOfBooleanAlgebra]
   attribute [instance 100]
     GeneralizedBooleanAlgebra.toNonUnitalCommRing BooleanAlgebra.toBooleanRing
 
-instance : BooleanRing (AsBoolring α) :=
+instance : BooleanRing (AsBoolRing α) :=
   @BooleanAlgebra.toBooleanRing α _
 
+#print ofBoolRing_zero /-
 @[simp]
-theorem ofBoolring_zero : ofBoolring (0 : AsBoolring α) = ⊥ :=
+theorem ofBoolRing_zero : ofBoolRing (0 : AsBoolRing α) = ⊥ :=
   rfl
-#align of_boolring_zero ofBoolring_zero
+#align of_boolring_zero ofBoolRing_zero
+-/
 
+#print ofBoolRing_one /-
 @[simp]
-theorem ofBoolring_one : ofBoolring (1 : AsBoolring α) = ⊤ :=
+theorem ofBoolRing_one : ofBoolRing (1 : AsBoolRing α) = ⊤ :=
   rfl
-#align of_boolring_one ofBoolring_one
+#align of_boolring_one ofBoolRing_one
+-/
 
+#print ofBoolRing_neg /-
 -- `sub_eq_add` proves this lemma but it is eligible for `dsimp`
 @[simp, nolint simp_nf]
-theorem ofBoolring_neg (a : AsBoolring α) : ofBoolring (-a) = ofBoolring a :=
+theorem ofBoolRing_neg (a : AsBoolRing α) : ofBoolRing (-a) = ofBoolRing a :=
   rfl
-#align of_boolring_neg ofBoolring_neg
+#align of_boolring_neg ofBoolRing_neg
+-/
 
+#print ofBoolRing_add /-
 @[simp]
-theorem ofBoolring_add (a b : AsBoolring α) : ofBoolring (a + b) = ofBoolring a ∆ ofBoolring b :=
+theorem ofBoolRing_add (a b : AsBoolRing α) : ofBoolRing (a + b) = ofBoolRing a ∆ ofBoolRing b :=
   rfl
-#align of_boolring_add ofBoolring_add
+#align of_boolring_add ofBoolRing_add
+-/
 
+#print ofBoolRing_sub /-
 -- `sub_eq_add` simplifies the LHS but this lemma is eligible for `dsimp`
 @[simp, nolint simp_nf]
-theorem ofBoolring_sub (a b : AsBoolring α) : ofBoolring (a - b) = ofBoolring a ∆ ofBoolring b :=
+theorem ofBoolRing_sub (a b : AsBoolRing α) : ofBoolRing (a - b) = ofBoolRing a ∆ ofBoolRing b :=
   rfl
-#align of_boolring_sub ofBoolring_sub
+#align of_boolring_sub ofBoolRing_sub
+-/
 
+#print ofBoolRing_mul /-
 @[simp]
-theorem ofBoolring_mul (a b : AsBoolring α) : ofBoolring (a * b) = ofBoolring a ⊓ ofBoolring b :=
+theorem ofBoolRing_mul (a b : AsBoolRing α) : ofBoolRing (a * b) = ofBoolRing a ⊓ ofBoolRing b :=
   rfl
-#align of_boolring_mul ofBoolring_mul
+#align of_boolring_mul ofBoolRing_mul
+-/
 
+#print ofBoolRing_le_ofBoolRing_iff /-
 @[simp]
-theorem ofBoolring_le_ofBoolring_iff {a b : AsBoolring α} :
-    ofBoolring a ≤ ofBoolring b ↔ a * b = a :=
+theorem ofBoolRing_le_ofBoolRing_iff {a b : AsBoolRing α} :
+    ofBoolRing a ≤ ofBoolRing b ↔ a * b = a :=
   inf_eq_left.symm
-#align of_boolring_le_of_boolring_iff ofBoolring_le_ofBoolring_iff
+#align of_boolring_le_of_boolring_iff ofBoolRing_le_ofBoolRing_iff
+-/
 
+#print toBoolRing_bot /-
 @[simp]
-theorem toBoolring_bot : toBoolring (⊥ : α) = 0 :=
+theorem toBoolRing_bot : toBoolRing (⊥ : α) = 0 :=
   rfl
-#align to_boolring_bot toBoolring_bot
+#align to_boolring_bot toBoolRing_bot
+-/
 
+#print toBoolRing_top /-
 @[simp]
-theorem toBoolring_top : toBoolring (⊤ : α) = 1 :=
+theorem toBoolRing_top : toBoolRing (⊤ : α) = 1 :=
   rfl
-#align to_boolring_top toBoolring_top
+#align to_boolring_top toBoolRing_top
+-/
 
+#print toBoolRing_inf /-
 @[simp]
-theorem toBoolring_inf (a b : α) : toBoolring (a ⊓ b) = toBoolring a * toBoolring b :=
+theorem toBoolRing_inf (a b : α) : toBoolRing (a ⊓ b) = toBoolRing a * toBoolRing b :=
   rfl
-#align to_boolring_inf toBoolring_inf
+#align to_boolring_inf toBoolRing_inf
+-/
 
+#print toBoolRing_symmDiff /-
 @[simp]
-theorem toBoolring_symmDiff (a b : α) : toBoolring (a ∆ b) = toBoolring a + toBoolring b :=
+theorem toBoolRing_symmDiff (a b : α) : toBoolRing (a ∆ b) = toBoolRing a + toBoolRing b :=
   rfl
-#align to_boolring_symm_diff toBoolring_symmDiff
+#align to_boolring_symm_diff toBoolRing_symmDiff
+-/
 
+#print BoundedLatticeHom.asBoolRing /-
 /-- Turn a bounded lattice homomorphism from Boolean algebras `α` to `β` into a ring homomorphism
 from `α` to `β` considered as Boolean rings. -/
 @[simps]
-protected def BoundedLatticeHom.asBoolring (f : BoundedLatticeHom α β) :
-    AsBoolring α →+* AsBoolring β
+protected def BoundedLatticeHom.asBoolRing (f : BoundedLatticeHom α β) :
+    AsBoolRing α →+* AsBoolRing β
     where
-  toFun := toBoolring ∘ f ∘ ofBoolring
+  toFun := toBoolRing ∘ f ∘ ofBoolRing
   map_zero' := f.map_bot'
   map_one' := f.map_top'
   map_add' := map_symm_diff' f
   map_mul' := f.map_inf'
-#align bounded_lattice_hom.as_boolring BoundedLatticeHom.asBoolring
+#align bounded_lattice_hom.as_boolring BoundedLatticeHom.asBoolRing
+-/
 
+#print BoundedLatticeHom.asBoolRing_id /-
 @[simp]
-theorem BoundedLatticeHom.asBoolring_id : (BoundedLatticeHom.id α).AsBoolring = RingHom.id _ :=
+theorem BoundedLatticeHom.asBoolRing_id : (BoundedLatticeHom.id α).AsBoolRing = RingHom.id _ :=
   rfl
-#align bounded_lattice_hom.as_boolring_id BoundedLatticeHom.asBoolring_id
+#align bounded_lattice_hom.as_boolring_id BoundedLatticeHom.asBoolRing_id
+-/
 
+/- warning: bounded_lattice_hom.as_boolring_comp -> BoundedLatticeHom.asBoolRing_comp is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : BooleanAlgebra.{u1} α] [_inst_2 : BooleanAlgebra.{u2} β] [_inst_3 : BooleanAlgebra.{u3} γ] (g : BoundedLatticeHom.{u2, u3} β γ (GeneralizedCoheytingAlgebra.toLattice.{u2} β (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u2} β (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u2} β _inst_2))) (GeneralizedCoheytingAlgebra.toLattice.{u3} γ (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u3} γ (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u3} γ _inst_3))) (BooleanAlgebra.toBoundedOrder.{u2} β _inst_2) (BooleanAlgebra.toBoundedOrder.{u3} γ _inst_3)) (f : BoundedLatticeHom.{u1, u2} α β (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1))) (GeneralizedCoheytingAlgebra.toLattice.{u2} β (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u2} β (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u2} β _inst_2))) (BooleanAlgebra.toBoundedOrder.{u1} α _inst_1) (BooleanAlgebra.toBoundedOrder.{u2} β _inst_2)), Eq.{max (succ u1) (succ u3)} (RingHom.{u1, u3} (AsBoolRing.{u1} α) (AsBoolRing.{u3} γ) (NonAssocRing.toNonAssocSemiring.{u1} (AsBoolRing.{u1} α) (Ring.toNonAssocRing.{u1} (AsBoolRing.{u1} α) (BooleanRing.toRing.{u1} (AsBoolRing.{u1} α) (AsBoolRing.booleanRing.{u1} α _inst_1)))) (NonAssocRing.toNonAssocSemiring.{u3} (AsBoolRing.{u3} γ) (Ring.toNonAssocRing.{u3} (AsBoolRing.{u3} γ) (BooleanRing.toRing.{u3} (AsBoolRing.{u3} γ) (AsBoolRing.booleanRing.{u3} γ _inst_3))))) (BoundedLatticeHom.asBoolRing.{u1, u3} α γ _inst_1 _inst_3 (BoundedLatticeHom.comp.{u1, u2, u3} α β γ (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1))) (GeneralizedCoheytingAlgebra.toLattice.{u2} β (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u2} β (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u2} β _inst_2))) (GeneralizedCoheytingAlgebra.toLattice.{u3} γ (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u3} γ (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u3} γ _inst_3))) (BooleanAlgebra.toBoundedOrder.{u1} α _inst_1) (BooleanAlgebra.toBoundedOrder.{u2} β _inst_2) (BooleanAlgebra.toBoundedOrder.{u3} γ _inst_3) g f)) (RingHom.comp.{u1, u2, u3} (AsBoolRing.{u1} α) (AsBoolRing.{u2} β) (AsBoolRing.{u3} γ) (NonAssocRing.toNonAssocSemiring.{u1} (AsBoolRing.{u1} α) (Ring.toNonAssocRing.{u1} (AsBoolRing.{u1} α) (BooleanRing.toRing.{u1} (AsBoolRing.{u1} α) (AsBoolRing.booleanRing.{u1} α _inst_1)))) (NonAssocRing.toNonAssocSemiring.{u2} (AsBoolRing.{u2} β) (Ring.toNonAssocRing.{u2} (AsBoolRing.{u2} β) (BooleanRing.toRing.{u2} (AsBoolRing.{u2} β) (AsBoolRing.booleanRing.{u2} β _inst_2)))) (NonAssocRing.toNonAssocSemiring.{u3} (AsBoolRing.{u3} γ) (Ring.toNonAssocRing.{u3} (AsBoolRing.{u3} γ) (BooleanRing.toRing.{u3} (AsBoolRing.{u3} γ) (AsBoolRing.booleanRing.{u3} γ _inst_3)))) (BoundedLatticeHom.asBoolRing.{u2, u3} β γ _inst_2 _inst_3 g) (BoundedLatticeHom.asBoolRing.{u1, u2} α β _inst_1 _inst_2 f))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u3}} {γ : Type.{u2}} [_inst_1 : BooleanAlgebra.{u1} α] [_inst_2 : BooleanAlgebra.{u3} β] [_inst_3 : BooleanAlgebra.{u2} γ] (g : BoundedLatticeHom.{u3, u2} β γ (GeneralizedCoheytingAlgebra.toLattice.{u3} β (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u3} β (BiheytingAlgebra.toCoheytingAlgebra.{u3} β (BooleanAlgebra.toBiheytingAlgebra.{u3} β _inst_2)))) (GeneralizedCoheytingAlgebra.toLattice.{u2} γ (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} γ (BiheytingAlgebra.toCoheytingAlgebra.{u2} γ (BooleanAlgebra.toBiheytingAlgebra.{u2} γ _inst_3)))) (BooleanAlgebra.toBoundedOrder.{u3} β _inst_2) (BooleanAlgebra.toBoundedOrder.{u2} γ _inst_3)) (f : BoundedLatticeHom.{u1, u3} α β (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))) (GeneralizedCoheytingAlgebra.toLattice.{u3} β (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u3} β (BiheytingAlgebra.toCoheytingAlgebra.{u3} β (BooleanAlgebra.toBiheytingAlgebra.{u3} β _inst_2)))) (BooleanAlgebra.toBoundedOrder.{u1} α _inst_1) (BooleanAlgebra.toBoundedOrder.{u3} β _inst_2)), Eq.{max (succ u1) (succ u2)} (RingHom.{u1, u2} (AsBoolRing.{u1} α) (AsBoolRing.{u2} γ) (Semiring.toNonAssocSemiring.{u1} (AsBoolRing.{u1} α) (CommSemiring.toSemiring.{u1} (AsBoolRing.{u1} α) (CommRing.toCommSemiring.{u1} (AsBoolRing.{u1} α) (BooleanRing.toCommRing.{u1} (AsBoolRing.{u1} α) (instBooleanRingAsBoolRing.{u1} α _inst_1))))) (Semiring.toNonAssocSemiring.{u2} (AsBoolRing.{u2} γ) (CommSemiring.toSemiring.{u2} (AsBoolRing.{u2} γ) (CommRing.toCommSemiring.{u2} (AsBoolRing.{u2} γ) (BooleanRing.toCommRing.{u2} (AsBoolRing.{u2} γ) (instBooleanRingAsBoolRing.{u2} γ _inst_3)))))) (BoundedLatticeHom.asBoolRing.{u1, u2} α γ _inst_1 _inst_3 (BoundedLatticeHom.comp.{u1, u3, u2} α β γ (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1)))) (GeneralizedCoheytingAlgebra.toLattice.{u3} β (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u3} β (BiheytingAlgebra.toCoheytingAlgebra.{u3} β (BooleanAlgebra.toBiheytingAlgebra.{u3} β _inst_2)))) (GeneralizedCoheytingAlgebra.toLattice.{u2} γ (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} γ (BiheytingAlgebra.toCoheytingAlgebra.{u2} γ (BooleanAlgebra.toBiheytingAlgebra.{u2} γ _inst_3)))) (BooleanAlgebra.toBoundedOrder.{u1} α _inst_1) (BooleanAlgebra.toBoundedOrder.{u3} β _inst_2) (BooleanAlgebra.toBoundedOrder.{u2} γ _inst_3) g f)) (RingHom.comp.{u1, u3, u2} (AsBoolRing.{u1} α) (AsBoolRing.{u3} β) (AsBoolRing.{u2} γ) (Semiring.toNonAssocSemiring.{u1} (AsBoolRing.{u1} α) (CommSemiring.toSemiring.{u1} (AsBoolRing.{u1} α) (CommRing.toCommSemiring.{u1} (AsBoolRing.{u1} α) (BooleanRing.toCommRing.{u1} (AsBoolRing.{u1} α) (instBooleanRingAsBoolRing.{u1} α _inst_1))))) (Semiring.toNonAssocSemiring.{u3} (AsBoolRing.{u3} β) (CommSemiring.toSemiring.{u3} (AsBoolRing.{u3} β) (CommRing.toCommSemiring.{u3} (AsBoolRing.{u3} β) (BooleanRing.toCommRing.{u3} (AsBoolRing.{u3} β) (instBooleanRingAsBoolRing.{u3} β _inst_2))))) (Semiring.toNonAssocSemiring.{u2} (AsBoolRing.{u2} γ) (CommSemiring.toSemiring.{u2} (AsBoolRing.{u2} γ) (CommRing.toCommSemiring.{u2} (AsBoolRing.{u2} γ) (BooleanRing.toCommRing.{u2} (AsBoolRing.{u2} γ) (instBooleanRingAsBoolRing.{u2} γ _inst_3))))) (BoundedLatticeHom.asBoolRing.{u3, u2} β γ _inst_2 _inst_3 g) (BoundedLatticeHom.asBoolRing.{u1, u3} α β _inst_1 _inst_2 f))
+Case conversion may be inaccurate. Consider using '#align bounded_lattice_hom.as_boolring_comp BoundedLatticeHom.asBoolRing_compₓ'. -/
 @[simp]
-theorem BoundedLatticeHom.asBoolring_comp (g : BoundedLatticeHom β γ) (f : BoundedLatticeHom α β) :
-    (g.comp f).AsBoolring = g.AsBoolring.comp f.AsBoolring :=
+theorem BoundedLatticeHom.asBoolRing_comp (g : BoundedLatticeHom β γ) (f : BoundedLatticeHom α β) :
+    (g.comp f).AsBoolRing = g.AsBoolRing.comp f.AsBoolRing :=
   rfl
-#align bounded_lattice_hom.as_boolring_comp BoundedLatticeHom.asBoolring_comp
+#align bounded_lattice_hom.as_boolring_comp BoundedLatticeHom.asBoolRing_comp
 
 end AlgebraToRing
 
 /-! ### Equivalence between Boolean rings and Boolean algebras -/
 
 
+#print OrderIso.asBoolAlgAsBoolRing /-
 /-- Order isomorphism between `α` considered as a Boolean ring considered as a Boolean algebra and
 `α`. -/
 @[simps]
-def OrderIso.asBoolalgAsBoolring (α : Type _) [BooleanAlgebra α] : AsBoolalg (AsBoolring α) ≃o α :=
-  ⟨ofBoolalg.trans ofBoolring, fun a b =>
-    ofBoolring_le_ofBoolring_iff.trans ofBoolalg_mul_ofBoolalg_eq_left_iff⟩
-#align order_iso.as_boolalg_as_boolring OrderIso.asBoolalgAsBoolring
+def OrderIso.asBoolAlgAsBoolRing (α : Type _) [BooleanAlgebra α] : AsBoolAlg (AsBoolRing α) ≃o α :=
+  ⟨ofBoolAlg.trans ofBoolRing, fun a b =>
+    ofBoolRing_le_ofBoolRing_iff.trans ofBoolAlg_mul_ofBoolAlg_eq_left_iff⟩
+#align order_iso.as_boolalg_as_boolring OrderIso.asBoolAlgAsBoolRing
+-/
 
+/- warning: ring_equiv.as_boolring_as_boolalg -> RingEquiv.asBoolRingAsBoolAlg is a dubious translation:
+lean 3 declaration is
+  forall (α : Type.{u1}) [_inst_1 : BooleanRing.{u1} α], RingEquiv.{u1, u1} (AsBoolRing.{u1} (AsBoolAlg.{u1} α)) α (Distrib.toHasMul.{u1} (AsBoolRing.{u1} (AsBoolAlg.{u1} α)) (Ring.toDistrib.{u1} (AsBoolRing.{u1} (AsBoolAlg.{u1} α)) (BooleanRing.toRing.{u1} (AsBoolRing.{u1} (AsBoolAlg.{u1} α)) (AsBoolRing.booleanRing.{u1} (AsBoolAlg.{u1} α) (AsBoolAlg.booleanAlgebra.{u1} α _inst_1))))) (Distrib.toHasAdd.{u1} (AsBoolRing.{u1} (AsBoolAlg.{u1} α)) (Ring.toDistrib.{u1} (AsBoolRing.{u1} (AsBoolAlg.{u1} α)) (BooleanRing.toRing.{u1} (AsBoolRing.{u1} (AsBoolAlg.{u1} α)) (AsBoolRing.booleanRing.{u1} (AsBoolAlg.{u1} α) (AsBoolAlg.booleanAlgebra.{u1} α _inst_1))))) (Distrib.toHasMul.{u1} α (Ring.toDistrib.{u1} α (BooleanRing.toRing.{u1} α _inst_1))) (Distrib.toHasAdd.{u1} α (Ring.toDistrib.{u1} α (BooleanRing.toRing.{u1} α _inst_1)))
+but is expected to have type
+  forall (α : Type.{u1}) [_inst_1 : BooleanRing.{u1} α], RingEquiv.{u1, u1} (AsBoolRing.{u1} (AsBoolAlg.{u1} α)) α (NonUnitalNonAssocRing.toMul.{u1} (AsBoolRing.{u1} (AsBoolAlg.{u1} α)) (NonAssocRing.toNonUnitalNonAssocRing.{u1} (AsBoolRing.{u1} (AsBoolAlg.{u1} α)) (Ring.toNonAssocRing.{u1} (AsBoolRing.{u1} (AsBoolAlg.{u1} α)) (BooleanRing.toRing.{u1} (AsBoolRing.{u1} (AsBoolAlg.{u1} α)) (instBooleanRingAsBoolRing.{u1} (AsBoolAlg.{u1} α) (instBooleanAlgebraAsBoolAlg.{u1} α _inst_1)))))) (NonUnitalNonAssocRing.toMul.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (BooleanRing.toRing.{u1} α _inst_1)))) (Distrib.toAdd.{u1} (AsBoolRing.{u1} (AsBoolAlg.{u1} α)) (NonUnitalNonAssocSemiring.toDistrib.{u1} (AsBoolRing.{u1} (AsBoolAlg.{u1} α)) (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} (AsBoolRing.{u1} (AsBoolAlg.{u1} α)) (NonAssocRing.toNonUnitalNonAssocRing.{u1} (AsBoolRing.{u1} (AsBoolAlg.{u1} α)) (Ring.toNonAssocRing.{u1} (AsBoolRing.{u1} (AsBoolAlg.{u1} α)) (BooleanRing.toRing.{u1} (AsBoolRing.{u1} (AsBoolAlg.{u1} α)) (instBooleanRingAsBoolRing.{u1} (AsBoolAlg.{u1} α) (instBooleanAlgebraAsBoolAlg.{u1} α _inst_1)))))))) (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (BooleanRing.toRing.{u1} α _inst_1))))))
+Case conversion may be inaccurate. Consider using '#align ring_equiv.as_boolring_as_boolalg RingEquiv.asBoolRingAsBoolAlgₓ'. -/
 /-- Ring isomorphism between `α` considered as a Boolean algebra considered as a Boolean ring and
 `α`. -/
 @[simps]
-def RingEquiv.asBoolringAsBoolalg (α : Type _) [BooleanRing α] : AsBoolring (AsBoolalg α) ≃+* α :=
-  { ofBoolring.trans ofBoolalg with
+def RingEquiv.asBoolRingAsBoolAlg (α : Type _) [BooleanRing α] : AsBoolRing (AsBoolAlg α) ≃+* α :=
+  { ofBoolRing.trans ofBoolAlg with
     map_mul' := fun a b => rfl
-    map_add' := ofBoolalg_symmDiff }
-#align ring_equiv.as_boolring_as_boolalg RingEquiv.asBoolringAsBoolalg
+    map_add' := ofBoolAlg_symmDiff }
+#align ring_equiv.as_boolring_as_boolalg RingEquiv.asBoolRingAsBoolAlg
 
 open Bool
 

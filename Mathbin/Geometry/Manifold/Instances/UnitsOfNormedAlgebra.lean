@@ -58,7 +58,7 @@ namespace Units
 variable {R : Type _} [NormedRing R] [CompleteSpace R]
 
 instance : ChartedSpace R Rˣ :=
-  openEmbedding_coe.singletonChartedSpace
+  openEmbedding_val.singletonChartedSpace
 
 theorem chartAt_apply {a : Rˣ} {b : Rˣ} : chartAt R a b = b :=
   rfl
@@ -71,7 +71,7 @@ theorem chartAt_source {a : Rˣ} : (chartAt R a).source = Set.univ :=
 variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] [NormedAlgebra 𝕜 R]
 
 instance : SmoothManifoldWithCorners 𝓘(𝕜, R) Rˣ :=
-  openEmbedding_coe.singleton_smoothManifoldWithCorners 𝓘(𝕜, R)
+  openEmbedding_val.singleton_smoothManifoldWithCorners 𝓘(𝕜, R)
 
 end Units
 
