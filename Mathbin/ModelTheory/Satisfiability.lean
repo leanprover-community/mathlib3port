@@ -63,7 +63,7 @@ variable (T)
 
 /-- A theory is satisfiable if a structure models it. -/
 def IsSatisfiable : Prop :=
-  Nonempty (ModelCat.{u, v, max u v} T)
+  Nonempty (ModelType.{u, v, max u v} T)
 #align first_order.language.Theory.is_satisfiable FirstOrder.Language.Theory.IsSatisfiable
 
 /-- A theory is finitely satisfiable if all of its finite subtheories are satisfiable. -/
@@ -76,11 +76,11 @@ variable {T} {T' : L.Theory}
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Model.isSatisfiable (M : Type w) [n : Nonempty M] [S : L.Structure M] [M ⊨ T] :
     T.IsSatisfiable :=
-  ⟨((⊥ : Substructure _ (ModelCat.of T M)).elementarySkolem₁Reduct.toModel T).Shrink⟩
+  ⟨((⊥ : Substructure _ (ModelType.of T M)).elementarySkolem₁Reduct.toModel T).Shrink⟩
 #align first_order.language.Theory.model.is_satisfiable FirstOrder.Language.Theory.Model.isSatisfiable
 
 theorem IsSatisfiable.mono (h : T'.IsSatisfiable) (hs : T ⊆ T') : T.IsSatisfiable :=
-  ⟨(Theory.Model.mono (ModelCat.is_model h.some) hs).Bundled⟩
+  ⟨(Theory.Model.mono (ModelType.is_model h.some) hs).Bundled⟩
 #align first_order.language.Theory.is_satisfiable.mono FirstOrder.Language.Theory.IsSatisfiable.mono
 
 theorem isSatisfiable_empty (L : Language.{u, v}) : IsSatisfiable (∅ : L.Theory) :=
@@ -183,7 +183,7 @@ theorem isSatisfiable_union_distinctConstantsTheory_of_infinite (T : L.Theory) (
 /-- Any theory with an infinite model has arbitrarily large models. -/
 theorem exists_large_model_of_infinite_model (T : L.Theory) (κ : Cardinal.{w}) (M : Type w')
     [L.Structure M] [M ⊨ T] [Infinite M] :
-    ∃ N : ModelCat.{_, _, max u v w} T, Cardinal.lift.{max u v w} κ ≤ (#N) :=
+    ∃ N : ModelType.{_, _, max u v w} T, Cardinal.lift.{max u v w} κ ≤ (#N) :=
   by
   obtain ⟨N⟩ :=
     is_satisfiable_union_distinct_constants_theory_of_infinite T (Set.univ : Set κ.out) M
@@ -294,9 +294,9 @@ variable {L}
 
 namespace Theory
 
-theorem exists_model_card_eq (h : ∃ M : ModelCat.{u, v, max u v} T, Infinite M) (κ : Cardinal.{w})
+theorem exists_model_card_eq (h : ∃ M : ModelType.{u, v, max u v} T, Infinite M) (κ : Cardinal.{w})
     (h1 : ℵ₀ ≤ κ) (h2 : Cardinal.lift.{w} L.card ≤ Cardinal.lift.{max u v} κ) :
-    ∃ N : ModelCat.{u, v, w} T, (#N) = κ :=
+    ∃ N : ModelType.{u, v, w} T, (#N) = κ :=
   by
   cases' h with M MI
   obtain ⟨N, hN, rfl⟩ := exists_elementarily_equivalent_card_eq L M κ h1 h2
@@ -309,7 +309,7 @@ variable (T)
 /-- A theory models a (bounded) formula when any of its nonempty models realizes that formula on all
   inputs.-/
 def ModelsBoundedFormula (φ : L.BoundedFormula α n) : Prop :=
-  ∀ (M : ModelCat.{u, v, max u v} T) (v : α → M) (xs : Fin n → M), φ.realize v xs
+  ∀ (M : ModelType.{u, v, max u v} T) (v : α → M) (xs : Fin n → M), φ.realize v xs
 #align first_order.language.Theory.models_bounded_formula FirstOrder.Language.Theory.ModelsBoundedFormula
 
 -- mathport name: models_bounded_formula
@@ -321,13 +321,13 @@ variable {T}
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem models_formula_iff {φ : L.Formula α} :
-    T ⊨ φ ↔ ∀ (M : ModelCat.{u, v, max u v} T) (v : α → M), φ.realize v :=
+    T ⊨ φ ↔ ∀ (M : ModelType.{u, v, max u v} T) (v : α → M), φ.realize v :=
   forall_congr' fun M => forall_congr' fun v => Unique.forall_iff
 #align first_order.language.Theory.models_formula_iff FirstOrder.Language.Theory.models_formula_iff
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem models_sentence_iff {φ : L.Sentence} : T ⊨ φ ↔ ∀ M : ModelCat.{u, v, max u v} T, M ⊨ φ :=
+theorem models_sentence_iff {φ : L.Sentence} : T ⊨ φ ↔ ∀ M : ModelType.{u, v, max u v} T, M ⊨ φ :=
   models_formula_iff.trans (forall_congr' fun M => Unique.forall_iff)
 #align first_order.language.Theory.models_sentence_iff FirstOrder.Language.Theory.models_sentence_iff
 
@@ -480,7 +480,7 @@ theorem SemanticallyEquivalent.trans {φ ψ θ : L.BoundedFormula α n}
 theorem SemanticallyEquivalent.realize_bd_iff {φ ψ : L.BoundedFormula α n} {M : Type max u v}
     [ne : Nonempty M] [str : L.Structure M] [hM : T.Model M] (h : T.SemanticallyEquivalent φ ψ)
     {v : α → M} {xs : Fin n → M} : φ.realize v xs ↔ ψ.realize v xs :=
-  BoundedFormula.realize_iff.1 (h (ModelCat.of T M) v xs)
+  BoundedFormula.realize_iff.1 (h (ModelType.of T M) v xs)
 #align first_order.language.Theory.semantically_equivalent.realize_bd_iff FirstOrder.Language.Theory.SemanticallyEquivalent.realize_bd_iff
 
 theorem SemanticallyEquivalent.realize_iff {φ ψ : L.Formula α} {M : Type max u v} [ne : Nonempty M]
@@ -689,13 +689,13 @@ variable {L : Language.{u, v}} (κ : Cardinal.{w}) (T : L.Theory)
 
 /-- A theory is `κ`-categorical if all models of size `κ` are isomorphic. -/
 def Categorical : Prop :=
-  ∀ M N : T.ModelCat, (#M) = κ → (#N) = κ → Nonempty (M ≃[L] N)
+  ∀ M N : T.ModelType, (#M) = κ → (#N) = κ → Nonempty (M ≃[L] N)
 #align cardinal.categorical Cardinal.Categorical
 
 /-- The Łoś–Vaught Test : a criterion for categorical theories to be complete. -/
 theorem Categorical.isComplete (h : κ.Categorical T) (h1 : ℵ₀ ≤ κ)
     (h2 : Cardinal.lift.{w} L.card ≤ Cardinal.lift.{max u v} κ) (hS : T.IsSatisfiable)
-    (hT : ∀ M : Theory.ModelCat.{u, v, max u v} T, Infinite M) : T.IsComplete :=
+    (hT : ∀ M : Theory.ModelType.{u, v, max u v} T, Infinite M) : T.IsComplete :=
   ⟨hS, fun φ =>
     by
     obtain ⟨N, hN⟩ := Theory.exists_model_card_eq ⟨hS.some, hT hS.some⟩ κ h1 h2

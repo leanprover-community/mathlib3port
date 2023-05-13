@@ -79,7 +79,7 @@ variable (L : Language.{u, v})
 
 /-- The age of a structure `M` is the class of finitely-generated structures that embed into it. -/
 def age (M : Type w) [L.Structure M] : Set (Bundled.{w} L.Structure) :=
-  { N | Structure.Fg L N ∧ Nonempty (N ↪[L] M) }
+  { N | Structure.FG L N ∧ Nonempty (N ↪[L] M) }
 #align first_order.language.age FirstOrder.Language.age
 
 variable {L} (K : Set (Bundled.{w} L.Structure))
@@ -112,7 +112,7 @@ def Amalgamation : Prop :=
 satisfying the hereditary, joint embedding, and amalgamation properties. -/
 class IsFraisse : Prop where
   is_nonempty : K.Nonempty
-  Fg : ∀ M : Bundled.{w} L.Structure, M ∈ K → Structure.Fg L M
+  FG : ∀ M : Bundled.{w} L.Structure, M ∈ K → Structure.FG L M
   is_equiv_invariant : ∀ M N : Bundled.{w} L.Structure, Nonempty (M ≃[L] N) → (M ∈ K ↔ N ∈ K)
   is_essentially_countable : (Quotient.mk' '' K).Countable
   Hereditary : Hereditary K
@@ -139,17 +139,17 @@ theorem Equiv.age_eq_age (MN : M ≃[L] N) : L.age M = L.age N :=
   le_antisymm MN.toEmbedding.age_subset_age MN.symm.toEmbedding.age_subset_age
 #align first_order.language.equiv.age_eq_age FirstOrder.Language.Equiv.age_eq_age
 
-theorem Structure.Fg.mem_age_of_equiv {M N : Bundled L.Structure} (h : Structure.Fg L M)
+theorem Structure.FG.mem_age_of_equiv {M N : Bundled L.Structure} (h : Structure.FG L M)
     (MN : Nonempty (M ≃[L] N)) : N ∈ L.age M :=
   ⟨MN.some.fg_iff.1 h, ⟨MN.some.symm.toEmbedding⟩⟩
-#align first_order.language.Structure.fg.mem_age_of_equiv FirstOrder.Language.Structure.Fg.mem_age_of_equiv
+#align first_order.language.Structure.fg.mem_age_of_equiv FirstOrder.Language.Structure.FG.mem_age_of_equiv
 
-theorem Hereditary.is_equiv_invariant_of_fg (h : Hereditary K)
-    (fg : ∀ M : Bundled.{w} L.Structure, M ∈ K → Structure.Fg L M) (M N : Bundled.{w} L.Structure)
+theorem Hereditary.is_equiv_invariant_of_fG (h : Hereditary K)
+    (fg : ∀ M : Bundled.{w} L.Structure, M ∈ K → Structure.FG L M) (M N : Bundled.{w} L.Structure)
     (hn : Nonempty (M ≃[L] N)) : M ∈ K ↔ N ∈ K :=
   ⟨fun MK => h M MK ((fg M MK).mem_age_of_equiv hn), fun NK =>
     h N NK ((fg N NK).mem_age_of_equiv ⟨hn.some.symm⟩)⟩
-#align first_order.language.hereditary.is_equiv_invariant_of_fg FirstOrder.Language.Hereditary.is_equiv_invariant_of_fg
+#align first_order.language.hereditary.is_equiv_invariant_of_fg FirstOrder.Language.Hereditary.is_equiv_invariant_of_fG
 
 variable (M)
 
@@ -214,11 +214,11 @@ theorem age_directLimit {ι : Type w} [Preorder ι] [IsDirected ι (· ≤ ·)] 
 #align first_order.language.age_direct_limit FirstOrder.Language.age_directLimit
 
 /-- Sufficient conditions for a class to be the age of a countably-generated structure. -/
-theorem exists_cg_is_age_of (hn : K.Nonempty)
+theorem exists_cG_is_age_of (hn : K.Nonempty)
     (h : ∀ M N : Bundled.{w} L.Structure, Nonempty (M ≃[L] N) → (M ∈ K ↔ N ∈ K))
     (hc : (Quotient.mk' '' K).Countable)
-    (fg : ∀ M : Bundled.{w} L.Structure, M ∈ K → Structure.Fg L M) (hp : Hereditary K)
-    (jep : JointEmbedding K) : ∃ M : Bundled.{w} L.Structure, Structure.Cg L M ∧ L.age M = K :=
+    (fg : ∀ M : Bundled.{w} L.Structure, M ∈ K → Structure.FG L M) (hp : Hereditary K)
+    (jep : JointEmbedding K) : ∃ M : Bundled.{w} L.Structure, Structure.CG L M ∧ L.age M = K :=
   by
   obtain ⟨F, hF⟩ := hc.exists_eq_range (hn.image _)
   simp only [Set.ext_iff, forall_quotient_iff, mem_image, mem_range, Quotient.eq'] at hF
@@ -231,7 +231,7 @@ theorem exists_cg_is_age_of (hn : K.Nonempty)
   let G : ℕ → K := @Nat.rec (fun _ => K) ⟨(F 0).out, hF' 0⟩ fun n N => ⟨P N n, hPK N n⟩
   let f : ∀ i j, i ≤ j → G i ↪[L] G j := directed_system.nat_le_rec fun n => (hP _ n).some
   refine'
-    ⟨bundled.of (direct_limit (fun n => G n) f), direct_limit.cg _ fun n => (fg _ (G n).2).Cg,
+    ⟨bundled.of (direct_limit (fun n => G n) f), direct_limit.cg _ fun n => (fg _ (G n).2).CG,
       (age_direct_limit _ _).trans
         (subset_antisymm (Union_subset fun n N hN => hp (G n) (G n).2 hN) fun N KN => _)⟩
   obtain ⟨n, ⟨e⟩⟩ := (hF N).1 ⟨N, KN, Setoid.refl _⟩
@@ -239,14 +239,14 @@ theorem exists_cg_is_age_of (hn : K.Nonempty)
   cases n
   · exact embedding.refl _ _
   · exact (hFP _ n).some
-#align first_order.language.exists_cg_is_age_of FirstOrder.Language.exists_cg_is_age_of
+#align first_order.language.exists_cg_is_age_of FirstOrder.Language.exists_cG_is_age_of
 
 theorem exists_countable_is_age_of_iff [Countable (Σl, L.Functions l)] :
     (∃ M : Bundled.{w} L.Structure, Countable M ∧ L.age M = K) ↔
       K.Nonempty ∧
         (∀ M N : Bundled.{w} L.Structure, Nonempty (M ≃[L] N) → (M ∈ K ↔ N ∈ K)) ∧
           (Quotient.mk' '' K).Countable ∧
-            (∀ M : Bundled.{w} L.Structure, M ∈ K → Structure.Fg L M) ∧
+            (∀ M : Bundled.{w} L.Structure, M ∈ K → Structure.FG L M) ∧
               Hereditary K ∧ JointEmbedding K :=
   by
   constructor
@@ -265,7 +265,7 @@ variable {K} (L) (M)
 /-- A structure `M` is ultrahomogeneous if every embedding of a finitely generated substructure
 into `M` extends to an automorphism of `M`. -/
 def IsUltrahomogeneous : Prop :=
-  ∀ (S : L.Substructure M) (hs : S.Fg) (f : S ↪[L] M),
+  ∀ (S : L.Substructure M) (hs : S.FG) (f : S ↪[L] M),
     ∃ g : M ≃[L] M, f = g.toEmbedding.comp S.Subtype
 #align first_order.language.is_ultrahomogeneous FirstOrder.Language.IsUltrahomogeneous
 

@@ -135,7 +135,7 @@ theorem structure_simpleGraphOfStructure [S : Language.graph.Structure V] [V ⊨
 #align first_order.language.Structure_simple_graph_of_structure FirstOrder.Language.structure_simpleGraphOfStructure
 
 theorem Theory.simpleGraph_isSatisfiable : Theory.IsSatisfiable Theory.simpleGraph :=
-  ⟨@Theory.ModelCat.of _ _ Unit (SimpleGraph.structure ⊥) _ _⟩
+  ⟨@Theory.ModelType.of _ _ Unit (SimpleGraph.structure ⊥) _ _⟩
 #align first_order.language.Theory.simple_graph_is_satisfiable FirstOrder.Language.Theory.simpleGraph_isSatisfiable
 
 end Language
