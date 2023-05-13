@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 
 ! This file was ported from Lean 3 source module algebra.category.Module.change_of_rings
-! leanprover-community/mathlib commit 8f66240cab125b938b327d3850169d490cfbcdd8
+! leanprover-community/mathlib commit 403190b5419b3f03f1a2893ad9352ca7f7d8bff6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -24,6 +24,11 @@ import Mathbin.RingTheory.TensorProduct
   `f : R ⟶ S`, then `extend_scalars : Module R ⥤ Module S` is defined by `M ↦ S ⨂ M` where the
   module structure is defined by `s • (s' ⊗ m) := (s * s') ⊗ m` and `R`-linear map `l : M ⟶ M'`
   is sent to `S`-linear map `s ⊗ m ↦ s ⊗ l m : S ⨂ M ⟶ S ⨂ M'`.
+
+## Main results
+
+* `category_theory.Module.extend_restrict_scalars_adj`: given commutative rings `R, S` and a ring
+  homomorphism `f : R →+* S`, the extension and restriction of scalars by `f` are adjoint functors.
 
 ## List of notations
 Let `R, S` be rings and `f : R →+* S`
@@ -70,6 +75,11 @@ def restrictScalars {R : Type u₁} {S : Type u₂} [Ring R] [Ring S] (f : R →
   map_id' _ := LinearMap.ext fun m => rfl
   map_comp' _ _ _ g h := LinearMap.ext fun m => rfl
 #align category_theory.Module.restrict_scalars CategoryTheory.Module.restrictScalars
+
+instance {R : Type u₁} {S : Type u₂} [CommRing R] [CommRing S] (f : R →+* S) :
+    CategoryTheory.Faithful (restrictScalars.{v} f)
+    where map_injective' _ _ _ _ h :=
+    LinearMap.ext fun x => by simpa only using FunLike.congr_fun h x
 
 @[simp]
 theorem restrictScalars.map_apply {R : Type u₁} {S : Type u₂} [Ring R] [Ring S] (f : R →+* S)
@@ -183,6 +193,194 @@ theorem map_tmul {M M' : ModuleCat.{v} R} (g : M ⟶ M') (s : S) (m : M) :
 #align category_theory.Module.extend_scalars.map_tmul CategoryTheory.Module.extendScalars.map_tmul
 
 end ExtendScalars
+
+namespace ExtendRestrictScalarsAdj
+
+open ChangeOfRings
+
+open TensorProduct
+
+variable {R : Type u₁} {S : Type u₂} [CommRing R] [CommRing S] (f : R →+* S)
+
+/--
+Given `R`-module X and `S`-module Y and a map `g : (extend_scalars f).obj X ⟶ Y`, i.e. `S`-linear
+map `S ⨂ X → Y`, there is a `X ⟶ (restrict_scalars f).obj Y`, i.e. `R`-linear map `X ⟶ Y` by
+`x ↦ g (1 ⊗ x)`.
+-/
+@[simps]
+def HomEquiv.toRestrictScalars {X Y} (g : (extendScalars f).obj X ⟶ Y) :
+    X ⟶ (restrictScalars f).obj Y
+    where
+  toFun x := g <| (1 : S)⊗ₜ[R,f]x
+  map_add' _ _ := by rw [tmul_add, map_add]
+  map_smul' r x := by
+    letI : Module R S := Module.compHom S f
+    letI : Module R Y := Module.compHom Y f
+    rw [RingHom.id_apply, RestrictScalars.smul_def, ← LinearMap.map_smul, tmul_smul]
+    congr
+#align category_theory.Module.extend_restrict_scalars_adj.hom_equiv.to_restrict_scalars CategoryTheory.Module.ExtendRestrictScalarsAdj.HomEquiv.toRestrictScalars
+
+/--
+Given `R`-module X and `S`-module Y and a map `X ⟶ (restrict_scalars f).obj Y`, i.e `R`-linear map
+`X ⟶ Y`, there is a map `(extend_scalars f).obj X ⟶ Y`, i.e  `S`-linear map `S ⨂ X → Y` by
+`s ⊗ x ↦ s • g x`.
+-/
+@[simps]
+def HomEquiv.fromExtendScalars {X Y} (g : X ⟶ (restrictScalars f).obj Y) :
+    (extendScalars f).obj X ⟶ Y :=
+  by
+  letI m1 : Module R S := Module.compHom S f; letI m2 : Module R Y := Module.compHom Y f
+  refine' ⟨fun z => TensorProduct.lift ⟨fun s => ⟨_, _, _⟩, _, _⟩ z, _, _⟩
+  · exact fun x => s • g x
+  · intros
+    rw [map_add, smul_add]
+  · intros
+    rw [RingHom.id_apply, smul_comm, ← LinearMap.map_smul]
+  · intros
+    ext
+    simp only [LinearMap.coe_mk, LinearMap.add_apply]
+    rw [← add_smul]
+  · intros
+    ext
+    simp only [LinearMap.coe_mk, RingHom.id_apply, LinearMap.smul_apply, RestrictScalars.smul_def,
+      smul_eq_mul]
+    convert mul_smul _ _ _
+  · intros
+    rw [map_add]
+  · intro r z
+    rw [RingHom.id_apply]
+    induction' z using TensorProduct.induction_on with x y x y ih1 ih2
+    · simp only [smul_zero, map_zero]
+    · simp only [LinearMap.coe_mk, extend_scalars.smul_tmul, lift.tmul, ← mul_smul]
+    · rw [smul_add, map_add, ih1, ih2, map_add, smul_add]
+#align category_theory.Module.extend_restrict_scalars_adj.hom_equiv.from_extend_scalars CategoryTheory.Module.ExtendRestrictScalarsAdj.HomEquiv.fromExtendScalars
+
+/-- Given `R`-module X and `S`-module Y, `S`-linear linear maps `(extend_scalars f).obj X ⟶ Y`
+bijectively correspond to `R`-linear maps `X ⟶ (restrict_scalars f).obj Y`.
+-/
+@[simps]
+def homEquiv {X Y} : ((extendScalars f).obj X ⟶ Y) ≃ (X ⟶ (restrictScalars f).obj Y)
+    where
+  toFun := HomEquiv.toRestrictScalars f
+  invFun := HomEquiv.fromExtendScalars f
+  left_inv g := by
+    ext z
+    induction' z using TensorProduct.induction_on with x s z1 z2 ih1 ih2
+    · simp only [map_zero]
+    · erw [TensorProduct.lift.tmul]
+      simp only [LinearMap.coe_mk]
+      change S at x
+      erw [← LinearMap.map_smul, extend_scalars.smul_tmul, mul_one x]
+    · rw [map_add, map_add, ih1, ih2]
+  right_inv g := by
+    ext
+    rw [hom_equiv.to_restrict_scalars_apply, hom_equiv.from_extend_scalars_apply, lift.tmul,
+      LinearMap.coe_mk, LinearMap.coe_mk]
+    convert one_smul _ _
+#align category_theory.Module.extend_restrict_scalars_adj.hom_equiv CategoryTheory.Module.ExtendRestrictScalarsAdj.homEquiv
+
+/--
+For any `R`-module X, there is a natural `R`-linear map from `X` to `X ⨂ S` by sending `x ↦ x ⊗ 1`
+-/
+@[simps]
+def Unit.map {X} : X ⟶ (extendScalars f ⋙ restrictScalars f).obj X
+    where
+  toFun x := (1 : S)⊗ₜ[R,f]x
+  map_add' x x' := by rw [TensorProduct.tmul_add]
+  map_smul' r x := by
+    letI m1 : Module R S := Module.compHom S f
+    tidy
+#align category_theory.Module.extend_restrict_scalars_adj.unit.map CategoryTheory.Module.ExtendRestrictScalarsAdj.Unit.map
+
+/--
+The natural transformation from identity functor on `R`-module to the composition of extension and
+restriction of scalars.
+-/
+@[simps]
+def unit : 𝟭 (ModuleCat R) ⟶ extendScalars f ⋙ restrictScalars f
+    where
+  app _ := Unit.map f
+  naturality' X X' g := by tidy
+#align category_theory.Module.extend_restrict_scalars_adj.unit CategoryTheory.Module.ExtendRestrictScalarsAdj.unit
+
+/-- For any `S`-module Y, there is a natural `R`-linear map from `S ⨂ Y` to `Y` by
+`s ⊗ y ↦ s • y`
+-/
+@[simps]
+def Counit.map {Y} : (restrictScalars f ⋙ extendScalars f).obj Y ⟶ Y :=
+  by
+  letI m1 : Module R S := Module.compHom S f
+  letI m2 : Module R Y := Module.compHom Y f
+  refine' ⟨TensorProduct.lift ⟨fun s : S => ⟨fun y : Y => s • y, smul_add _, _⟩, _, _⟩, _, _⟩
+  · intros
+    rw [RingHom.id_apply, RestrictScalars.smul_def, ← mul_smul, mul_comm, mul_smul,
+      RestrictScalars.smul_def]
+  · intros
+    ext
+    simp only [LinearMap.add_apply, LinearMap.coe_mk, add_smul]
+  · intros
+    ext
+    simpa only [RingHom.id_apply, LinearMap.smul_apply, LinearMap.coe_mk,
+      @RestrictScalars.smul_def _ _ _ _ f ⟨S⟩, smul_eq_mul, mul_smul]
+  · intros
+    rw [map_add]
+  · intro s z
+    rw [RingHom.id_apply]
+    induction' z using TensorProduct.induction_on with x s' z1 z2 ih1 ih2
+    · simp only [smul_zero, map_zero]
+    · simp only [extend_scalars.smul_tmul, LinearMap.coe_mk, TensorProduct.lift.tmul, mul_smul]
+    · rw [smul_add, map_add, map_add, ih1, ih2, smul_add]
+#align category_theory.Module.extend_restrict_scalars_adj.counit.map CategoryTheory.Module.ExtendRestrictScalarsAdj.Counit.map
+
+/-- The natural transformation from the composition of restriction and extension of scalars to the
+identity functor on `S`-module.
+-/
+@[simps]
+def counit : restrictScalars f ⋙ extendScalars f ⟶ 𝟭 (ModuleCat S)
+    where
+  app _ := Counit.map f
+  naturality' Y Y' g := by
+    ext z; induction z using TensorProduct.induction_on
+    · simp only [map_zero]
+    ·
+      simp only [CategoryTheory.Functor.comp_map, ModuleCat.coe_comp, Function.comp_apply,
+        extend_scalars.map_tmul, restrict_scalars.map_apply, counit.map_apply, lift.tmul,
+        LinearMap.coe_mk, CategoryTheory.Functor.id_map, LinearMap.map_smulₛₗ, RingHom.id_apply]
+    · simp only [map_add, *]
+#align category_theory.Module.extend_restrict_scalars_adj.counit CategoryTheory.Module.ExtendRestrictScalarsAdj.counit
+
+end ExtendRestrictScalarsAdj
+
+/-- Given commutative rings `R, S` and a ring hom `f : R →+* S`, the extension and restriction of
+scalars by `f` are adjoint to each other.
+-/
+@[simps]
+def extendRestrictScalarsAdj {R : Type u₁} {S : Type u₂} [CommRing R] [CommRing S] (f : R →+* S) :
+    extendScalars f ⊣ restrictScalars f
+    where
+  homEquiv _ _ := ExtendRestrictScalarsAdj.homEquiv f
+  Unit := ExtendRestrictScalarsAdj.unit f
+  counit := ExtendRestrictScalarsAdj.counit f
+  homEquiv_unit X Y g := LinearMap.ext fun x => by simp
+  homEquiv_counit X Y g :=
+    LinearMap.ext fun x => by
+      induction x using TensorProduct.induction_on
+      · simp only [map_zero]
+      ·
+        simp only [extend_restrict_scalars_adj.hom_equiv_symm_apply, LinearMap.coe_mk,
+          extend_restrict_scalars_adj.hom_equiv.from_extend_scalars_apply, TensorProduct.lift.tmul,
+          extend_restrict_scalars_adj.counit_app, ModuleCat.coe_comp, Function.comp_apply,
+          extend_scalars.map_tmul, extend_restrict_scalars_adj.counit.map_apply]
+      · simp only [map_add, *]
+#align category_theory.Module.extend_restrict_scalars_adj CategoryTheory.Module.extendRestrictScalarsAdj
+
+instance {R : Type u₁} {S : Type u₂} [CommRing R] [CommRing S] (f : R →+* S) :
+    CategoryTheory.IsLeftAdjoint (extendScalars f) :=
+  ⟨_, extendRestrictScalarsAdj f⟩
+
+instance {R : Type u₁} {S : Type u₂} [CommRing R] [CommRing S] (f : R →+* S) :
+    CategoryTheory.IsRightAdjoint (restrictScalars f) :=
+  ⟨_, extendRestrictScalarsAdj f⟩
 
 end CategoryTheory.Module
 

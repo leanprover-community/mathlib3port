@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measure.measure_space
-! leanprover-community/mathlib commit a2706b55e8d7f7e9b1f93143f0b88f2e34a11eea
+! leanprover-community/mathlib commit 343e80208d29d2d15f8050b929aa50fe4ce71b55
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1579,6 +1579,21 @@ instance [MeasurableSpace α] : CompleteLattice (Measure α) :=
     bot_le := fun a s hs => bot_le }
 
 end Inf
+
+@[simp]
+theorem MeasureTheory.OuterMeasure.toMeasure_top [MeasurableSpace α] :
+    (⊤ : OuterMeasure α).toMeasure (by rw [outer_measure.top_caratheodory] <;> exact le_top) =
+      (⊤ : Measure α) :=
+  top_unique fun s hs => by
+    cases' s.eq_empty_or_nonempty with h h <;>
+      simp [h, to_measure_apply ⊤ _ hs, outer_measure.top_apply]
+#align measure_theory.outer_measure.to_measure_top MeasureTheory.OuterMeasure.toMeasure_top
+
+@[simp]
+theorem toOuterMeasure_top [MeasurableSpace α] :
+    (⊤ : Measure α).toOuterMeasure = (⊤ : OuterMeasure α) := by
+  rw [← outer_measure.to_measure_top, to_measure_to_outer_measure, outer_measure.trim_top]
+#align measure_theory.measure.to_outer_measure_top MeasureTheory.Measure.toOuterMeasure_top
 
 /- warning: measure_theory.measure.top_add -> MeasureTheory.Measure.top_add is a dubious translation:
 lean 3 declaration is

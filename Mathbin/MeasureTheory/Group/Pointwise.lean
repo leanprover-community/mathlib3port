@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Alex J. Best
 
 ! This file was ported from Lean 3 source module measure_theory.group.pointwise
-! leanprover-community/mathlib commit 66f7114a1d5cba41c47d417a034bbb2e96cf564a
+! leanprover-community/mathlib commit bd15ff41b70f5e2cc210f26f25a8d5c53b20d3de
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.MeasureTheory.Group.Arithmetic
 
 /-!
 # Pointwise set operations on `measurable_set`s
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we prove several versions of the following fact: if `s` is a measurable set, then so is
 `a • s`. Note that the pointwise product of two measurable sets need not be measurable, so there is

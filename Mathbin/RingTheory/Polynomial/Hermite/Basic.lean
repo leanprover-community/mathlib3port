@@ -3,8 +3,8 @@ Copyright (c) 2023 Luke Mantle. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Luke Mantle
 
-! This file was ported from Lean 3 source module ring_theory.polynomial.hermite
-! leanprover-community/mathlib commit b17e272059b7ba6d9ba850e274b08d2a2cde3ccf
+! This file was ported from Lean 3 source module ring_theory.polynomial.hermite.basic
+! leanprover-community/mathlib commit 066ecdb4834c7a4693e0f0e5154935a6f3d3f90c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -23,6 +23,7 @@ This file defines `polynomial.hermite n`, the nth probabilist's Hermite polynomi
 
 ## Results
 
+* `polynomial.hermite_succ`: the recursion `hermite (n+1) = (x - d/dx) (hermite n)`
 * `polynomial.coeff_hermite_of_odd_add`: for `n`,`k` where `n+k` is odd, `(hermite n).coeff k` is
   zero.
 * `polynomial.monic_hermite`: for all `n`, `hermite n` is monic.
@@ -46,6 +47,7 @@ noncomputable def hermite : ℕ → Polynomial ℤ
   | n + 1 => X * hermite n - (hermite n).derivative
 #align polynomial.hermite Polynomial.hermite
 
+/-- The recursion `hermite (n+1) = (x - d/dx) (hermite n)` -/
 @[simp]
 theorem hermite_succ (n : ℕ) : hermite (n + 1) = X * hermite n - (hermite n).derivative := by
   rw [hermite]

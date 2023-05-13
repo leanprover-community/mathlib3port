@@ -5,7 +5,7 @@ Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Sébasti
   Rémy Degenne, David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.special_functions.pow
-! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
+! leanprover-community/mathlib commit 9e6d4aec88203d856eb35204b26d306896fd3399
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1383,6 +1383,20 @@ theorem isLittleO_pow_exp_pos_mul_atTop (k : ℕ) {b : ℝ} (hb : 0 < b) :
 theorem isLittleO_rpow_exp_atTop (s : ℝ) : (fun x : ℝ => x ^ s) =o[atTop] exp := by
   simpa only [one_mul] using isLittleO_rpow_exp_pos_mul_atTop s one_pos
 #align is_o_rpow_exp_at_top isLittleO_rpow_exp_atTop
+
+/-- `exp (-a * x) = o(x ^ s)` as `x → ∞`, for any positive `a` and real `s`. -/
+theorem isLittleO_exp_neg_mul_rpow_atTop {a : ℝ} (ha : 0 < a) (b : ℝ) :
+    IsLittleO atTop (fun x : ℝ => exp (-a * x)) fun x : ℝ => x ^ b :=
+  by
+  apply is_o_of_tendsto'
+  · refine' (eventually_gt_at_top 0).mp (eventually_of_forall fun t ht h => _)
+    rw [rpow_eq_zero_iff_of_nonneg ht.le] at h
+    exact (ht.ne' h.1).elim
+  · refine' (tendsto_exp_mul_div_rpow_atTop (-b) a ha).inv_tendsto_atTop.congr' _
+    refine' (eventually_ge_at_top 0).mp (eventually_of_forall fun t ht => _)
+    dsimp only
+    rw [Pi.inv_apply, inv_div, ← inv_div_inv, neg_mul, Real.exp_neg, rpow_neg ht, inv_inv]
+#align is_o_exp_neg_mul_rpow_at_top isLittleO_exp_neg_mul_rpow_atTop
 
 theorem isLittleO_log_rpow_atTop {r : ℝ} (hr : 0 < r) : log =o[atTop] fun x => x ^ r :=
   calc

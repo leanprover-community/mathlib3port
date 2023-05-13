@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Louis Carlin, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.euclidean_domain.defs
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
+! leanprover-community/mathlib commit ee7b9f9a9ac2a8d9f04ea39bbfe6b1a3be053b38
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,10 +37,10 @@ don't satisfy the classical notion were provided independently by Hiblot and Nag
 
 ## Main statements
 
-See `algebra.euclidean_domain.basic` for most of the theorems about Eucliean domains,
+See `algebra.euclidean_domain.basic` for most of the theorems about Euclidean domains,
 including Bézout's lemma.
 
-See `algebra.euclidean_domain.instances` for that facts that `ℤ` is a Euclidean domain,
+See `algebra.euclidean_domain.instances` for the fact that `ℤ` is a Euclidean domain,
 as is any field.
 
 ## Notation

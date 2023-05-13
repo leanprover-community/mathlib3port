@@ -634,6 +634,7 @@ import Mathbin.Analysis.LocallyConvex.WithSeminorms
 import Mathbin.Analysis.Matrix
 import Mathbin.Analysis.MeanInequalities
 import Mathbin.Analysis.MeanInequalitiesPow
+import Mathbin.Analysis.MellinTransform
 import Mathbin.Analysis.Normed.Field.Basic
 import Mathbin.Analysis.Normed.Field.InfiniteSum
 import Mathbin.Analysis.Normed.Field.UnitBall
@@ -2591,7 +2592,8 @@ import Mathbin.RingTheory.Polynomial.Dickson
 import Mathbin.RingTheory.Polynomial.Eisenstein.Basic
 import Mathbin.RingTheory.Polynomial.Eisenstein.IsIntegral
 import Mathbin.RingTheory.Polynomial.GaussLemma
-import Mathbin.RingTheory.Polynomial.Hermite
+import Mathbin.RingTheory.Polynomial.Hermite.Basic
+import Mathbin.RingTheory.Polynomial.Hermite.Gaussian
 import Mathbin.RingTheory.Polynomial.Opposites
 import Mathbin.RingTheory.Polynomial.Pochhammer
 import Mathbin.RingTheory.Polynomial.Quotient

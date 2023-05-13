@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Yaël Dillies
 
 ! This file was ported from Lean 3 source module topology.sets.compacts
-! leanprover-community/mathlib commit 1ead22342e1a078bd44744ace999f85756555d35
+! leanprover-community/mathlib commit 8c1b484d6a214e059531e22f1be9898ed6c1fd47
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,7 +32,7 @@ For a topological space `α`,
 
 open Set
 
-variable {α β : Type _} [TopologicalSpace α] [TopologicalSpace β]
+variable {α β γ : Type _} [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
 
 namespace TopologicalSpace
 
@@ -131,9 +131,9 @@ theorem coe_sup (s t : Compacts α) : (↑(s ⊔ t) : Set α) = s ∪ t :=
 
 /- warning: topological_space.compacts.coe_inf -> TopologicalSpace.Compacts.coe_inf is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_3 : T2Space.{u1} α _inst_1] (s : TopologicalSpace.Compacts.{u1} α _inst_1) (t : TopologicalSpace.Compacts.{u1} α _inst_1), Eq.{succ u1} (Set.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (TopologicalSpace.Compacts.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (TopologicalSpace.Compacts.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (TopologicalSpace.Compacts.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (TopologicalSpace.Compacts.{u1} α _inst_1) α (TopologicalSpace.Compacts.setLike.{u1} α _inst_1)))) (Inf.inf.{u1} (TopologicalSpace.Compacts.{u1} α _inst_1) (TopologicalSpace.Compacts.hasInf.{u1} α _inst_1 _inst_3) s t)) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (TopologicalSpace.Compacts.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (TopologicalSpace.Compacts.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (TopologicalSpace.Compacts.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (TopologicalSpace.Compacts.{u1} α _inst_1) α (TopologicalSpace.Compacts.setLike.{u1} α _inst_1)))) s) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (TopologicalSpace.Compacts.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (TopologicalSpace.Compacts.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (TopologicalSpace.Compacts.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (TopologicalSpace.Compacts.{u1} α _inst_1) α (TopologicalSpace.Compacts.setLike.{u1} α _inst_1)))) t))
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_4 : T2Space.{u1} α _inst_1] (s : TopologicalSpace.Compacts.{u1} α _inst_1) (t : TopologicalSpace.Compacts.{u1} α _inst_1), Eq.{succ u1} (Set.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (TopologicalSpace.Compacts.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (TopologicalSpace.Compacts.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (TopologicalSpace.Compacts.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (TopologicalSpace.Compacts.{u1} α _inst_1) α (TopologicalSpace.Compacts.setLike.{u1} α _inst_1)))) (Inf.inf.{u1} (TopologicalSpace.Compacts.{u1} α _inst_1) (TopologicalSpace.Compacts.hasInf.{u1} α _inst_1 _inst_4) s t)) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (TopologicalSpace.Compacts.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (TopologicalSpace.Compacts.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (TopologicalSpace.Compacts.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (TopologicalSpace.Compacts.{u1} α _inst_1) α (TopologicalSpace.Compacts.setLike.{u1} α _inst_1)))) s) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (TopologicalSpace.Compacts.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (TopologicalSpace.Compacts.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (TopologicalSpace.Compacts.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (TopologicalSpace.Compacts.{u1} α _inst_1) α (TopologicalSpace.Compacts.setLike.{u1} α _inst_1)))) t))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_3 : T2Space.{u1} α _inst_1] (s : TopologicalSpace.Compacts.{u1} α _inst_1) (t : TopologicalSpace.Compacts.{u1} α _inst_1), Eq.{succ u1} (Set.{u1} α) (SetLike.coe.{u1, u1} (TopologicalSpace.Compacts.{u1} α _inst_1) α (TopologicalSpace.Compacts.instSetLikeCompacts.{u1} α _inst_1) (Inf.inf.{u1} (TopologicalSpace.Compacts.{u1} α _inst_1) (TopologicalSpace.Compacts.instInfCompacts.{u1} α _inst_1 _inst_3) s t)) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (SetLike.coe.{u1, u1} (TopologicalSpace.Compacts.{u1} α _inst_1) α (TopologicalSpace.Compacts.instSetLikeCompacts.{u1} α _inst_1) s) (SetLike.coe.{u1, u1} (TopologicalSpace.Compacts.{u1} α _inst_1) α (TopologicalSpace.Compacts.instSetLikeCompacts.{u1} α _inst_1) t))
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_4 : T2Space.{u1} α _inst_1] (s : TopologicalSpace.Compacts.{u1} α _inst_1) (t : TopologicalSpace.Compacts.{u1} α _inst_1), Eq.{succ u1} (Set.{u1} α) (SetLike.coe.{u1, u1} (TopologicalSpace.Compacts.{u1} α _inst_1) α (TopologicalSpace.Compacts.instSetLikeCompacts.{u1} α _inst_1) (Inf.inf.{u1} (TopologicalSpace.Compacts.{u1} α _inst_1) (TopologicalSpace.Compacts.instInfCompacts.{u1} α _inst_1 _inst_4) s t)) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (SetLike.coe.{u1, u1} (TopologicalSpace.Compacts.{u1} α _inst_1) α (TopologicalSpace.Compacts.instSetLikeCompacts.{u1} α _inst_1) s) (SetLike.coe.{u1, u1} (TopologicalSpace.Compacts.{u1} α _inst_1) α (TopologicalSpace.Compacts.instSetLikeCompacts.{u1} α _inst_1) t))
 Case conversion may be inaccurate. Consider using '#align topological_space.compacts.coe_inf TopologicalSpace.Compacts.coe_infₓ'. -/
 @[simp]
 theorem coe_inf [T2Space α] (s t : Compacts α) : (↑(s ⊓ t) : Set α) = s ∩ t :=
@@ -182,14 +182,24 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β} (hf : Continuous.{u2, u1} α β _inst_1 _inst_2 f) (s : TopologicalSpace.Compacts.{u2} α _inst_1), Eq.{succ u1} (Set.{u1} β) (SetLike.coe.{u1, u1} (TopologicalSpace.Compacts.{u1} β _inst_2) β (TopologicalSpace.Compacts.instSetLikeCompacts.{u1} β _inst_2) (TopologicalSpace.Compacts.map.{u2, u1} α β _inst_1 _inst_2 f hf s)) (Set.image.{u2, u1} α β f (SetLike.coe.{u2, u2} (TopologicalSpace.Compacts.{u2} α _inst_1) α (TopologicalSpace.Compacts.instSetLikeCompacts.{u2} α _inst_1) s))
 Case conversion may be inaccurate. Consider using '#align topological_space.compacts.coe_map TopologicalSpace.Compacts.coe_mapₓ'. -/
-@[simp]
+@[simp, norm_cast]
 theorem coe_map {f : α → β} (hf : Continuous f) (s : Compacts α) : (s.map f hf : Set β) = f '' s :=
   rfl
 #align topological_space.compacts.coe_map TopologicalSpace.Compacts.coe_map
 
+@[simp]
+theorem map_id (K : Compacts α) : K.map id continuous_id = K :=
+  Compacts.ext <| Set.image_id _
+#align topological_space.compacts.map_id TopologicalSpace.Compacts.map_id
+
+theorem map_comp (f : β → γ) (g : α → β) (hf : Continuous f) (hg : Continuous g) (K : Compacts α) :
+    K.map (f ∘ g) (hf.comp hg) = (K.map g hg).map f hf :=
+  Compacts.ext <| Set.image_comp _ _ _
+#align topological_space.compacts.map_comp TopologicalSpace.Compacts.map_comp
+
 #print TopologicalSpace.Compacts.equiv /-
 /-- A homeomorphism induces an equivalence on compact sets, by taking the image. -/
-@[simp]
+@[simps]
 protected def equiv (f : α ≃ₜ β) : Compacts α ≃ Compacts β
     where
   toFun := Compacts.map f f.Continuous
@@ -203,16 +213,27 @@ protected def equiv (f : α ≃ₜ β) : Compacts α ≃ Compacts β
 #align topological_space.compacts.equiv TopologicalSpace.Compacts.equiv
 -/
 
-/- warning: topological_space.compacts.equiv_to_fun_val -> TopologicalSpace.Compacts.equiv_to_fun_val is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] (f : Homeomorph.{u1, u2} α β _inst_1 _inst_2) (K : TopologicalSpace.Compacts.{u1} α _inst_1), Eq.{succ u2} (Set.{u2} β) (TopologicalSpace.Compacts.carrier.{u2} β _inst_2 (coeFn.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1), max (succ u1) (succ u2)} (Equiv.{succ u1, succ u2} (TopologicalSpace.Compacts.{u1} α _inst_1) (TopologicalSpace.Compacts.{u2} β _inst_2)) (fun (_x : Equiv.{succ u1, succ u2} (TopologicalSpace.Compacts.{u1} α _inst_1) (TopologicalSpace.Compacts.{u2} β _inst_2)) => (TopologicalSpace.Compacts.{u1} α _inst_1) -> (TopologicalSpace.Compacts.{u2} β _inst_2)) (Equiv.hasCoeToFun.{succ u1, succ u2} (TopologicalSpace.Compacts.{u1} α _inst_1) (TopologicalSpace.Compacts.{u2} β _inst_2)) (TopologicalSpace.Compacts.equiv.{u1, u2} α β _inst_1 _inst_2 f) K)) (Set.preimage.{u2, u1} β α (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (Homeomorph.{u2, u1} β α _inst_2 _inst_1) (fun (_x : Homeomorph.{u2, u1} β α _inst_2 _inst_1) => β -> α) (Homeomorph.hasCoeToFun.{u2, u1} β α _inst_2 _inst_1) (Homeomorph.symm.{u1, u2} α β _inst_1 _inst_2 f)) (TopologicalSpace.Compacts.carrier.{u1} α _inst_1 K))
-but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] (f : Homeomorph.{u2, u1} α β _inst_1 _inst_2) (K : TopologicalSpace.Compacts.{u2} α _inst_1), Eq.{succ u1} (Set.{u1} β) (TopologicalSpace.Compacts.carrier.{u1} β _inst_2 (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} (TopologicalSpace.Compacts.{u2} α _inst_1) (TopologicalSpace.Compacts.{u1} β _inst_2)) (TopologicalSpace.Compacts.{u2} α _inst_1) (fun (_x : TopologicalSpace.Compacts.{u2} α _inst_1) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : TopologicalSpace.Compacts.{u2} α _inst_1) => TopologicalSpace.Compacts.{u1} β _inst_2) _x) (Equiv.instFunLikeEquiv.{succ u2, succ u1} (TopologicalSpace.Compacts.{u2} α _inst_1) (TopologicalSpace.Compacts.{u1} β _inst_2)) (TopologicalSpace.Compacts.equiv.{u2, u1} α β _inst_1 _inst_2 f) K)) (Set.preimage.{u1, u2} β α (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (Homeomorph.{u1, u2} β α _inst_2 _inst_1) β (fun (_x : β) => α) (EmbeddingLike.toFunLike.{max (succ u1) (succ u2), succ u1, succ u2} (Homeomorph.{u1, u2} β α _inst_2 _inst_1) β α (EquivLike.toEmbeddingLike.{max (succ u1) (succ u2), succ u1, succ u2} (Homeomorph.{u1, u2} β α _inst_2 _inst_1) β α (Homeomorph.instEquivLikeHomeomorph.{u1, u2} β α _inst_2 _inst_1))) (Homeomorph.symm.{u2, u1} α β _inst_1 _inst_2 f)) (TopologicalSpace.Compacts.carrier.{u2} α _inst_1 K))
-Case conversion may be inaccurate. Consider using '#align topological_space.compacts.equiv_to_fun_val TopologicalSpace.Compacts.equiv_to_fun_valₓ'. -/
+@[simp]
+theorem equiv_refl : Compacts.equiv (Homeomorph.refl α) = Equiv.refl _ :=
+  Equiv.ext map_id
+#align topological_space.compacts.equiv_refl TopologicalSpace.Compacts.equiv_refl
+
+@[simp]
+theorem equiv_trans (f : α ≃ₜ β) (g : β ≃ₜ γ) :
+    Compacts.equiv (f.trans g) = (Compacts.equiv f).trans (Compacts.equiv g) :=
+  Equiv.ext <| map_comp _ _ _ _
+#align topological_space.compacts.equiv_trans TopologicalSpace.Compacts.equiv_trans
+
+@[simp]
+theorem equiv_symm (f : α ≃ₜ β) : Compacts.equiv f.symm = (Compacts.equiv f).symm :=
+  rfl
+#align topological_space.compacts.equiv_symm TopologicalSpace.Compacts.equiv_symm
+
 /-- The image of a compact set under a homeomorphism can also be expressed as a preimage. -/
-theorem equiv_to_fun_val (f : α ≃ₜ β) (K : Compacts α) : (Compacts.equiv f K).1 = f.symm ⁻¹' K.1 :=
-  congr_fun (image_eq_preimage_of_inverse f.left_inv f.right_inv) K.1
-#align topological_space.compacts.equiv_to_fun_val TopologicalSpace.Compacts.equiv_to_fun_val
+theorem coe_equiv_apply_eq_preimage (f : α ≃ₜ β) (K : Compacts α) :
+    (Compacts.equiv f K : Set β) = f.symm ⁻¹' (K : Set α) :=
+  f.toEquiv.image_eq_preimage K
+#align topological_space.compacts.coe_equiv_apply_eq_preimage TopologicalSpace.Compacts.coe_equiv_apply_eq_preimage
 
 /- warning: topological_space.compacts.prod -> TopologicalSpace.Compacts.prod is a dubious translation:
 lean 3 declaration is
@@ -476,6 +497,31 @@ theorem coe_top [CompactSpace α] [Nonempty α] : (↑(⊤ : PositiveCompacts α
 #align topological_space.positive_compacts.coe_top TopologicalSpace.PositiveCompacts.coe_top
 -/
 
+/-- The image of a positive compact set under a continuous open map. -/
+protected def map (f : α → β) (hf : Continuous f) (hf' : IsOpenMap f) (K : PositiveCompacts α) :
+    PositiveCompacts β :=
+  { K.map f hf with
+    interior_nonempty' :=
+      (K.interior_nonempty'.image _).mono (hf'.image_interior_subset K.toCompacts) }
+#align topological_space.positive_compacts.map TopologicalSpace.PositiveCompacts.map
+
+@[simp, norm_cast]
+theorem coe_map {f : α → β} (hf : Continuous f) (hf' : IsOpenMap f) (s : PositiveCompacts α) :
+    (s.map f hf hf' : Set β) = f '' s :=
+  rfl
+#align topological_space.positive_compacts.coe_map TopologicalSpace.PositiveCompacts.coe_map
+
+@[simp]
+theorem map_id (K : PositiveCompacts α) : K.map id continuous_id IsOpenMap.id = K :=
+  PositiveCompacts.ext <| Set.image_id _
+#align topological_space.positive_compacts.map_id TopologicalSpace.PositiveCompacts.map_id
+
+theorem map_comp (f : β → γ) (g : α → β) (hf : Continuous f) (hg : Continuous g) (hf' : IsOpenMap f)
+    (hg' : IsOpenMap g) (K : PositiveCompacts α) :
+    K.map (f ∘ g) (hf.comp hg) (hf'.comp hg') = (K.map g hg hg').map f hf hf' :=
+  PositiveCompacts.ext <| Set.image_comp _ _ _
+#align topological_space.positive_compacts.map_comp TopologicalSpace.PositiveCompacts.map_comp
+
 #print exists_positiveCompacts_subset /-
 theorem exists_positiveCompacts_subset [LocallyCompactSpace α] {U : Set α} (ho : IsOpen U)
     (hn : U.Nonempty) : ∃ K : PositiveCompacts α, ↑K ⊆ U :=
@@ -642,9 +688,9 @@ theorem coe_sup (s t : CompactOpens α) : (↑(s ⊔ t) : Set α) = s ∪ t :=
 
 /- warning: topological_space.compact_opens.coe_inf -> TopologicalSpace.CompactOpens.coe_inf is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_3 : T2Space.{u1} α _inst_1] (s : TopologicalSpace.CompactOpens.{u1} α _inst_1) (t : TopologicalSpace.CompactOpens.{u1} α _inst_1), Eq.{succ u1} (Set.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) α (TopologicalSpace.CompactOpens.setLike.{u1} α _inst_1)))) (Inf.inf.{u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (TopologicalSpace.CompactOpens.hasInf.{u1} α _inst_1 (T2Space.to_quasiSeparatedSpace.{u1} α _inst_1 _inst_3)) s t)) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) α (TopologicalSpace.CompactOpens.setLike.{u1} α _inst_1)))) s) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) α (TopologicalSpace.CompactOpens.setLike.{u1} α _inst_1)))) t))
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_4 : T2Space.{u1} α _inst_1] (s : TopologicalSpace.CompactOpens.{u1} α _inst_1) (t : TopologicalSpace.CompactOpens.{u1} α _inst_1), Eq.{succ u1} (Set.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) α (TopologicalSpace.CompactOpens.setLike.{u1} α _inst_1)))) (Inf.inf.{u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (TopologicalSpace.CompactOpens.hasInf.{u1} α _inst_1 (T2Space.to_quasiSeparatedSpace.{u1} α _inst_1 _inst_4)) s t)) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) α (TopologicalSpace.CompactOpens.setLike.{u1} α _inst_1)))) s) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) α (TopologicalSpace.CompactOpens.setLike.{u1} α _inst_1)))) t))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_3 : T2Space.{u1} α _inst_1] (s : TopologicalSpace.CompactOpens.{u1} α _inst_1) (t : TopologicalSpace.CompactOpens.{u1} α _inst_1), Eq.{succ u1} (Set.{u1} α) (SetLike.coe.{u1, u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) α (TopologicalSpace.CompactOpens.instSetLikeCompactOpens.{u1} α _inst_1) (Inf.inf.{u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (TopologicalSpace.CompactOpens.instInfCompactOpens.{u1} α _inst_1 (T2Space.to_quasiSeparatedSpace.{u1} α _inst_1 _inst_3)) s t)) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (SetLike.coe.{u1, u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) α (TopologicalSpace.CompactOpens.instSetLikeCompactOpens.{u1} α _inst_1) s) (SetLike.coe.{u1, u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) α (TopologicalSpace.CompactOpens.instSetLikeCompactOpens.{u1} α _inst_1) t))
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_4 : T2Space.{u1} α _inst_1] (s : TopologicalSpace.CompactOpens.{u1} α _inst_1) (t : TopologicalSpace.CompactOpens.{u1} α _inst_1), Eq.{succ u1} (Set.{u1} α) (SetLike.coe.{u1, u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) α (TopologicalSpace.CompactOpens.instSetLikeCompactOpens.{u1} α _inst_1) (Inf.inf.{u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (TopologicalSpace.CompactOpens.instInfCompactOpens.{u1} α _inst_1 (T2Space.to_quasiSeparatedSpace.{u1} α _inst_1 _inst_4)) s t)) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (SetLike.coe.{u1, u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) α (TopologicalSpace.CompactOpens.instSetLikeCompactOpens.{u1} α _inst_1) s) (SetLike.coe.{u1, u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) α (TopologicalSpace.CompactOpens.instSetLikeCompactOpens.{u1} α _inst_1) t))
 Case conversion may be inaccurate. Consider using '#align topological_space.compact_opens.coe_inf TopologicalSpace.CompactOpens.coe_infₓ'. -/
 @[simp]
 theorem coe_inf [T2Space α] (s t : CompactOpens α) : (↑(s ⊓ t) : Set α) = s ∩ t :=
@@ -667,9 +713,9 @@ theorem coe_bot : (↑(⊥ : CompactOpens α) : Set α) = ∅ :=
 
 /- warning: topological_space.compact_opens.coe_sdiff -> TopologicalSpace.CompactOpens.coe_sdiff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_3 : T2Space.{u1} α _inst_1] (s : TopologicalSpace.CompactOpens.{u1} α _inst_1) (t : TopologicalSpace.CompactOpens.{u1} α _inst_1), Eq.{succ u1} (Set.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) α (TopologicalSpace.CompactOpens.setLike.{u1} α _inst_1)))) (SDiff.sdiff.{u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (TopologicalSpace.CompactOpens.hasSdiff.{u1} α _inst_1 _inst_3) s t)) (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) α (TopologicalSpace.CompactOpens.setLike.{u1} α _inst_1)))) s) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) α (TopologicalSpace.CompactOpens.setLike.{u1} α _inst_1)))) t))
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_4 : T2Space.{u1} α _inst_1] (s : TopologicalSpace.CompactOpens.{u1} α _inst_1) (t : TopologicalSpace.CompactOpens.{u1} α _inst_1), Eq.{succ u1} (Set.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) α (TopologicalSpace.CompactOpens.setLike.{u1} α _inst_1)))) (SDiff.sdiff.{u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (TopologicalSpace.CompactOpens.hasSdiff.{u1} α _inst_1 _inst_4) s t)) (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) α (TopologicalSpace.CompactOpens.setLike.{u1} α _inst_1)))) s) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) α (TopologicalSpace.CompactOpens.setLike.{u1} α _inst_1)))) t))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_3 : T2Space.{u1} α _inst_1] (s : TopologicalSpace.CompactOpens.{u1} α _inst_1) (t : TopologicalSpace.CompactOpens.{u1} α _inst_1), Eq.{succ u1} (Set.{u1} α) (SetLike.coe.{u1, u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) α (TopologicalSpace.CompactOpens.instSetLikeCompactOpens.{u1} α _inst_1) (SDiff.sdiff.{u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (TopologicalSpace.CompactOpens.instSDiffCompactOpens.{u1} α _inst_1 _inst_3) s t)) (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) (SetLike.coe.{u1, u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) α (TopologicalSpace.CompactOpens.instSetLikeCompactOpens.{u1} α _inst_1) s) (SetLike.coe.{u1, u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) α (TopologicalSpace.CompactOpens.instSetLikeCompactOpens.{u1} α _inst_1) t))
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_4 : T2Space.{u1} α _inst_1] (s : TopologicalSpace.CompactOpens.{u1} α _inst_1) (t : TopologicalSpace.CompactOpens.{u1} α _inst_1), Eq.{succ u1} (Set.{u1} α) (SetLike.coe.{u1, u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) α (TopologicalSpace.CompactOpens.instSetLikeCompactOpens.{u1} α _inst_1) (SDiff.sdiff.{u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (TopologicalSpace.CompactOpens.instSDiffCompactOpens.{u1} α _inst_1 _inst_4) s t)) (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) (SetLike.coe.{u1, u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) α (TopologicalSpace.CompactOpens.instSetLikeCompactOpens.{u1} α _inst_1) s) (SetLike.coe.{u1, u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) α (TopologicalSpace.CompactOpens.instSetLikeCompactOpens.{u1} α _inst_1) t))
 Case conversion may be inaccurate. Consider using '#align topological_space.compact_opens.coe_sdiff TopologicalSpace.CompactOpens.coe_sdiffₓ'. -/
 @[simp]
 theorem coe_sdiff [T2Space α] (s t : CompactOpens α) : (↑(s \ t) : Set α) = s \ t :=
@@ -678,9 +724,9 @@ theorem coe_sdiff [T2Space α] (s t : CompactOpens α) : (↑(s \ t) : Set α) =
 
 /- warning: topological_space.compact_opens.coe_compl -> TopologicalSpace.CompactOpens.coe_compl is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_3 : T2Space.{u1} α _inst_1] [_inst_4 : CompactSpace.{u1} α _inst_1] (s : TopologicalSpace.CompactOpens.{u1} α _inst_1), Eq.{succ u1} (Set.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) α (TopologicalSpace.CompactOpens.setLike.{u1} α _inst_1)))) (HasCompl.compl.{u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (TopologicalSpace.CompactOpens.hasCompl.{u1} α _inst_1 _inst_3 _inst_4) s)) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) α (TopologicalSpace.CompactOpens.setLike.{u1} α _inst_1)))) s))
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_4 : T2Space.{u1} α _inst_1] [_inst_5 : CompactSpace.{u1} α _inst_1] (s : TopologicalSpace.CompactOpens.{u1} α _inst_1), Eq.{succ u1} (Set.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) α (TopologicalSpace.CompactOpens.setLike.{u1} α _inst_1)))) (HasCompl.compl.{u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (TopologicalSpace.CompactOpens.hasCompl.{u1} α _inst_1 _inst_4 _inst_5) s)) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) α (TopologicalSpace.CompactOpens.setLike.{u1} α _inst_1)))) s))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_3 : T2Space.{u1} α _inst_1] [_inst_4 : CompactSpace.{u1} α _inst_1] (s : TopologicalSpace.CompactOpens.{u1} α _inst_1), Eq.{succ u1} (Set.{u1} α) (SetLike.coe.{u1, u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) α (TopologicalSpace.CompactOpens.instSetLikeCompactOpens.{u1} α _inst_1) (HasCompl.compl.{u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (TopologicalSpace.CompactOpens.instHasComplCompactOpens.{u1} α _inst_1 _inst_3 _inst_4) s)) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) (SetLike.coe.{u1, u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) α (TopologicalSpace.CompactOpens.instSetLikeCompactOpens.{u1} α _inst_1) s))
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_4 : T2Space.{u1} α _inst_1] [_inst_5 : CompactSpace.{u1} α _inst_1] (s : TopologicalSpace.CompactOpens.{u1} α _inst_1), Eq.{succ u1} (Set.{u1} α) (SetLike.coe.{u1, u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) α (TopologicalSpace.CompactOpens.instSetLikeCompactOpens.{u1} α _inst_1) (HasCompl.compl.{u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) (TopologicalSpace.CompactOpens.instHasComplCompactOpens.{u1} α _inst_1 _inst_4 _inst_5) s)) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) (SetLike.coe.{u1, u1} (TopologicalSpace.CompactOpens.{u1} α _inst_1) α (TopologicalSpace.CompactOpens.instSetLikeCompactOpens.{u1} α _inst_1) s))
 Case conversion may be inaccurate. Consider using '#align topological_space.compact_opens.coe_compl TopologicalSpace.CompactOpens.coe_complₓ'. -/
 @[simp]
 theorem coe_compl [T2Space α] [CompactSpace α] (s : CompactOpens α) : (↑(sᶜ) : Set α) = sᶜ :=
@@ -704,11 +750,22 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β} (hf : Continuous.{u2, u1} α β _inst_1 _inst_2 f) (hf' : IsOpenMap.{u2, u1} α β _inst_1 _inst_2 f) (s : TopologicalSpace.CompactOpens.{u2} α _inst_1), Eq.{succ u1} (Set.{u1} β) (SetLike.coe.{u1, u1} (TopologicalSpace.CompactOpens.{u1} β _inst_2) β (TopologicalSpace.CompactOpens.instSetLikeCompactOpens.{u1} β _inst_2) (TopologicalSpace.CompactOpens.map.{u2, u1} α β _inst_1 _inst_2 f hf hf' s)) (Set.image.{u2, u1} α β f (SetLike.coe.{u2, u2} (TopologicalSpace.CompactOpens.{u2} α _inst_1) α (TopologicalSpace.CompactOpens.instSetLikeCompactOpens.{u2} α _inst_1) s))
 Case conversion may be inaccurate. Consider using '#align topological_space.compact_opens.coe_map TopologicalSpace.CompactOpens.coe_mapₓ'. -/
-@[simp]
+@[simp, norm_cast]
 theorem coe_map {f : α → β} (hf : Continuous f) (hf' : IsOpenMap f) (s : CompactOpens α) :
     (s.map f hf hf' : Set β) = f '' s :=
   rfl
 #align topological_space.compact_opens.coe_map TopologicalSpace.CompactOpens.coe_map
+
+@[simp]
+theorem map_id (K : CompactOpens α) : K.map id continuous_id IsOpenMap.id = K :=
+  CompactOpens.ext <| Set.image_id _
+#align topological_space.compact_opens.map_id TopologicalSpace.CompactOpens.map_id
+
+theorem map_comp (f : β → γ) (g : α → β) (hf : Continuous f) (hg : Continuous g) (hf' : IsOpenMap f)
+    (hg' : IsOpenMap g) (K : CompactOpens α) :
+    K.map (f ∘ g) (hf.comp hg) (hf'.comp hg') = (K.map g hg hg').map f hf hf' :=
+  CompactOpens.ext <| Set.image_comp _ _ _
+#align topological_space.compact_opens.map_comp TopologicalSpace.CompactOpens.map_comp
 
 /- warning: topological_space.compact_opens.prod -> TopologicalSpace.CompactOpens.prod is a dubious translation:
 lean 3 declaration is

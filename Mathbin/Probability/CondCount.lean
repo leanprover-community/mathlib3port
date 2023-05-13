@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module probability.cond_count
-! leanprover-community/mathlib commit 117e93f82b5f959f8193857370109935291f0cc4
+! leanprover-community/mathlib commit bd15ff41b70f5e2cc210f26f25a8d5c53b20d3de
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Probability.ConditionalProbability
 
 /-!
 # Classical probability
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The classical formulation of probability states that the probability of an event occurring in a
 finite probability space is the ratio of that event to all possible events.

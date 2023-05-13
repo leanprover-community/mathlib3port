@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn
 
 ! This file was ported from Lean 3 source module analysis.calculus.cont_diff
-! leanprover-community/mathlib commit aa68866e61a7f1f40e7d6c8b0116ebd6370525c3
+! leanprover-community/mathlib commit 066ecdb4834c7a4693e0f0e5154935a6f3d3f90c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2425,6 +2425,18 @@ theorem contDiff_top_iff_deriv : ContDiff 𝕜 ∞ f₂ ↔ Differentiable 𝕜 
 theorem ContDiff.continuous_deriv (h : ContDiff 𝕜 n f₂) (hn : 1 ≤ n) : Continuous (deriv f₂) :=
   (contDiff_succ_iff_deriv.mp (h.of_le hn)).2.Continuous
 #align cont_diff.continuous_deriv ContDiff.continuous_deriv
+
+theorem ContDiff.iterate_deriv :
+    ∀ (n : ℕ) {f₂ : 𝕜 → F} (hf : ContDiff 𝕜 ∞ f₂), ContDiff 𝕜 ∞ ((deriv^[n]) f₂)
+  | 0, f₂, hf => hf
+  | n + 1, f₂, hf => ContDiff.iterate_deriv n (contDiff_top_iff_deriv.mp hf).2
+#align cont_diff.iterate_deriv ContDiff.iterate_deriv
+
+theorem ContDiff.iterate_deriv' (n : ℕ) :
+    ∀ (k : ℕ) {f₂ : 𝕜 → F} (hf : ContDiff 𝕜 (n + k : ℕ) f₂), ContDiff 𝕜 n ((deriv^[k]) f₂)
+  | 0, f₂, hf => hf
+  | n + 1, f₂, hf => ContDiff.iterate_deriv' n (contDiff_succ_iff_deriv.mp hf).2
+#align cont_diff.iterate_deriv' ContDiff.iterate_deriv'
 
 end deriv
 

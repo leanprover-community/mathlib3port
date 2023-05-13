@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.order.group.defs
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
+! leanprover-community/mathlib commit b599f4e4e5cf1fbcb4194503671d3d9e569c1fce
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -86,11 +86,13 @@ lean 3 declaration is
 but is expected to have type
   forall (α : Type.{u1}) [_inst_1 : OrderedCommGroup.{u1} α], ContravariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Order.Group.Defs._hyg.244 : α) (x._@.Mathlib.Algebra.Order.Group.Defs._hyg.246 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α (OrderedCommGroup.toCommGroup.{u1} α _inst_1))))))) x._@.Mathlib.Algebra.Order.Group.Defs._hyg.244 x._@.Mathlib.Algebra.Order.Group.Defs._hyg.246) (fun (x._@.Mathlib.Algebra.Order.Group.Defs._hyg.259 : α) (x._@.Mathlib.Algebra.Order.Group.Defs._hyg.261 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α _inst_1))) x._@.Mathlib.Algebra.Order.Group.Defs._hyg.259 x._@.Mathlib.Algebra.Order.Group.Defs._hyg.261)
 Case conversion may be inaccurate. Consider using '#align ordered_comm_group.to_contravariant_class_left_le OrderedCommGroup.to_contravariantClass_left_leₓ'. -/
+-- Backporting note: this instance is not used,
+-- and causes timeouts when interacting with etaExperiment.
 /-- A choice-free shortcut instance. -/
 @[to_additive "A choice-free shortcut instance."]
-instance OrderedCommGroup.to_contravariantClass_left_le (α : Type u) [OrderedCommGroup α] :
-    ContravariantClass α α (· * ·) (· ≤ ·)
-    where elim a b c bc := by simpa using mul_le_mul_left' bc a⁻¹
+theorem OrderedCommGroup.to_contravariantClass_left_le (α : Type u) [OrderedCommGroup α] :
+    ContravariantClass α α (· * ·) (· ≤ ·) :=
+  { elim := fun a b c bc => by simpa using mul_le_mul_left' bc a⁻¹ }
 #align ordered_comm_group.to_contravariant_class_left_le OrderedCommGroup.to_contravariantClass_left_le
 #align ordered_add_comm_group.to_contravariant_class_left_le OrderedAddCommGroup.to_contravariantClass_left_le
 
@@ -100,11 +102,13 @@ lean 3 declaration is
 but is expected to have type
   forall (α : Type.{u1}) [_inst_1 : OrderedCommGroup.{u1} α], ContravariantClass.{u1, u1} α α (Function.swap.{succ u1, succ u1, succ u1} α α (fun (ᾰ : α) (ᾰ : α) => α) (fun (x._@.Mathlib.Algebra.Order.Group.Defs._hyg.315 : α) (x._@.Mathlib.Algebra.Order.Group.Defs._hyg.317 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α (CommGroup.toGroup.{u1} α (OrderedCommGroup.toCommGroup.{u1} α _inst_1))))))) x._@.Mathlib.Algebra.Order.Group.Defs._hyg.315 x._@.Mathlib.Algebra.Order.Group.Defs._hyg.317)) (fun (x._@.Mathlib.Algebra.Order.Group.Defs._hyg.330 : α) (x._@.Mathlib.Algebra.Order.Group.Defs._hyg.332 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α _inst_1))) x._@.Mathlib.Algebra.Order.Group.Defs._hyg.330 x._@.Mathlib.Algebra.Order.Group.Defs._hyg.332)
 Case conversion may be inaccurate. Consider using '#align ordered_comm_group.to_contravariant_class_right_le OrderedCommGroup.to_contravariantClass_right_leₓ'. -/
+-- Backporting note: this instance is not used,
+-- and causes timeouts when interacting with etaExperiment.
 /-- A choice-free shortcut instance. -/
 @[to_additive "A choice-free shortcut instance."]
-instance OrderedCommGroup.to_contravariantClass_right_le (α : Type u) [OrderedCommGroup α] :
-    ContravariantClass α α (swap (· * ·)) (· ≤ ·)
-    where elim a b c bc := by simpa using mul_le_mul_right' bc a⁻¹
+theorem OrderedCommGroup.to_contravariantClass_right_le (α : Type u) [OrderedCommGroup α] :
+    ContravariantClass α α (swap (· * ·)) (· ≤ ·) :=
+  { elim := fun a b c bc => by simpa using mul_le_mul_right' bc a⁻¹ }
 #align ordered_comm_group.to_contravariant_class_right_le OrderedCommGroup.to_contravariantClass_right_le
 #align ordered_add_comm_group.to_contravariant_class_right_le OrderedAddCommGroup.to_contravariantClass_right_le
 
