@@ -65,9 +65,9 @@ theorem to_Types_isSheaf (T : X → Type u) : (presheafToTypes X T).IsSheaf :=
     -- Our first goal is to define a function "lifted" to all of `U`.
     -- We do this one point at a time. Using the axiom of choice, we can pick for each
     -- `x : supr U` an index `i : ι` such that `x` lies in `U i`
-    choose index index_spec using fun x : supᵢ U => opens.mem_supr.mp x.2
+    choose index index_spec using fun x : iSup U => opens.mem_supr.mp x.2
     -- Using this data, we can glue our functions together to a single section
-    let s : ∀ x : supᵢ U, T x := fun x => sf (index x) ⟨x.1, index_spec x⟩
+    let s : ∀ x : iSup U, T x := fun x => sf (index x) ⟨x.1, index_spec x⟩
     refine' ⟨s, _, _⟩
     · intro i
       ext x

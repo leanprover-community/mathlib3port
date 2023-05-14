@@ -653,7 +653,7 @@ Case conversion may be inaccurate. Consider using '#align ring_quot.ring_quot_to
 def ringQuotToIdealQuotient (r : B → B → Prop) : RingQuot r →+* B ⧸ Ideal.ofRel r :=
   lift
     ⟨Ideal.Quotient.mk (Ideal.ofRel r), fun x y h =>
-      Ideal.Quotient.eq.2 <| Submodule.mem_infₛ.mpr fun p w => w ⟨x, y, h, sub_add_cancel x y⟩⟩
+      Ideal.Quotient.eq.2 <| Submodule.mem_sInf.mpr fun p w => w ⟨x, y, h, sub_add_cancel x y⟩⟩
 #align ring_quot.ring_quot_to_ideal_quotient RingQuot.ringQuotToIdealQuotient
 
 /- warning: ring_quot.ring_quot_to_ideal_quotient_apply -> RingQuot.ringQuotToIdealQuotient_apply is a dubious translation:

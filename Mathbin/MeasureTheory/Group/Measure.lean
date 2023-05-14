@@ -788,7 +788,7 @@ instance (priority := 100) IsHaarMeasure.sigmaFinite [SigmaCompactSpace G] : Sig
   ⟨⟨{   Set := compactCovering G
         set_mem := fun n => mem_univ _
         Finite := fun n => IsCompact.measure_lt_top <| isCompact_compactCovering G n
-        spanning := unionᵢ_compactCovering G }⟩⟩
+        spanning := iUnion_compactCovering G }⟩⟩
 #align measure_theory.measure.is_haar_measure.sigma_finite MeasureTheory.Measure.IsHaarMeasure.sigmaFinite
 #align measure_theory.measure.is_add_haar_measure.sigma_finite MeasureTheory.Measure.IsAddHaarMeasure.sigmaFinite
 

@@ -1810,11 +1810,11 @@ theorem semiconj_of_group_action_of_forall_translationNumber_eq {G : Type _} [Gr
   -- Now we apply `cSup_div_semiconj` and go back to `f₁` and `f₂`.
     refine' ⟨⟨_, fun x y hxy => _, fun x => _⟩, cSup_div_semiconj F₂ F₁ fun x => _⟩ <;>
     simp only [hF₁, hF₂, ← MonoidHom.map_inv, coe_mk]
-  · refine' csupᵢ_mono (this y) fun g => _
+  · refine' ciSup_mono (this y) fun g => _
     exact mono _ (mono _ hxy)
   · simp only [map_add_one]
     exact
-      (Monotone.map_csupᵢ_of_continuousAt (continuous_at_id.add continuousAt_const)
+      (Monotone.map_ciSup_of_continuousAt (continuous_at_id.add continuousAt_const)
           (monotone_id.add_const (1 : ℝ)) (this x)).symm
   · exact this x
 #align circle_deg1_lift.semiconj_of_group_action_of_forall_translation_number_eq CircleDeg1Lift.semiconj_of_group_action_of_forall_translationNumber_eq

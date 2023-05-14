@@ -204,7 +204,7 @@ def pairwiseNode (a b : Finset (Tree Unit)) : Finset (Tree Unit) :=
 def treesOfNumNodesEq : ℕ → Finset (Tree Unit)
   | 0 => {nil}
   | n + 1 =>
-    (Finset.Nat.antidiagonal n).attach.bunionᵢ fun ijh =>
+    (Finset.Nat.antidiagonal n).attach.biUnion fun ijh =>
       have := Nat.lt_succ_of_le (fst_le ijh.2)
       have := Nat.lt_succ_of_le (snd_le ijh.2)
       pairwiseNode (trees_of_num_nodes_eq ijh.1.1) (trees_of_num_nodes_eq ijh.1.2)
@@ -219,13 +219,13 @@ theorem treesOfNumNodesEq_zero : treesOfNumNodesEq 0 = {nil} := by rw [trees_of_
 
 /- warning: tree.trees_of_nodes_eq_succ -> Tree.treesOfNumNodesEq_succ is a dubious translation:
 lean 3 declaration is
-  forall (n : Nat), Eq.{1} (Finset.{0} (Tree.{0} Unit)) (Tree.treesOfNumNodesEq (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Finset.bunionᵢ.{0, 0} (Prod.{0, 0} Nat Nat) (Tree.{0} Unit) (fun (a : Tree.{0} Unit) (b : Tree.{0} Unit) => Tree.decidableEq.{0} Unit (fun (a : Unit) (b : Unit) => PUnit.decidableEq.{1} a b) a b) (Finset.Nat.antidiagonal n) (fun (ij : Prod.{0, 0} Nat Nat) => Tree.pairwiseNode (Tree.treesOfNumNodesEq (Prod.fst.{0, 0} Nat Nat ij)) (Tree.treesOfNumNodesEq (Prod.snd.{0, 0} Nat Nat ij))))
+  forall (n : Nat), Eq.{1} (Finset.{0} (Tree.{0} Unit)) (Tree.treesOfNumNodesEq (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Finset.biUnion.{0, 0} (Prod.{0, 0} Nat Nat) (Tree.{0} Unit) (fun (a : Tree.{0} Unit) (b : Tree.{0} Unit) => Tree.decidableEq.{0} Unit (fun (a : Unit) (b : Unit) => PUnit.decidableEq.{1} a b) a b) (Finset.Nat.antidiagonal n) (fun (ij : Prod.{0, 0} Nat Nat) => Tree.pairwiseNode (Tree.treesOfNumNodesEq (Prod.fst.{0, 0} Nat Nat ij)) (Tree.treesOfNumNodesEq (Prod.snd.{0, 0} Nat Nat ij))))
 but is expected to have type
-  forall (n : Nat), Eq.{1} (Finset.{0} (Tree.{0} Unit)) (Tree.treesOfNumNodesEq (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Finset.bunionᵢ.{0, 0} (Prod.{0, 0} Nat Nat) (Tree.{0} Unit) (fun (a : Tree.{0} Unit) (b : Tree.{0} Unit) => instDecidableEqTree.{0} Unit (fun (a : Unit) (b : Unit) => instDecidableEqPUnit.{1} a b) a b) (Finset.Nat.antidiagonal n) (fun (ij : Prod.{0, 0} Nat Nat) => Tree.pairwiseNode (Tree.treesOfNumNodesEq (Prod.fst.{0, 0} Nat Nat ij)) (Tree.treesOfNumNodesEq (Prod.snd.{0, 0} Nat Nat ij))))
+  forall (n : Nat), Eq.{1} (Finset.{0} (Tree.{0} Unit)) (Tree.treesOfNumNodesEq (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Finset.biUnion.{0, 0} (Prod.{0, 0} Nat Nat) (Tree.{0} Unit) (fun (a : Tree.{0} Unit) (b : Tree.{0} Unit) => instDecidableEqTree.{0} Unit (fun (a : Unit) (b : Unit) => instDecidableEqPUnit.{1} a b) a b) (Finset.Nat.antidiagonal n) (fun (ij : Prod.{0, 0} Nat Nat) => Tree.pairwiseNode (Tree.treesOfNumNodesEq (Prod.fst.{0, 0} Nat Nat ij)) (Tree.treesOfNumNodesEq (Prod.snd.{0, 0} Nat Nat ij))))
 Case conversion may be inaccurate. Consider using '#align tree.trees_of_nodes_eq_succ Tree.treesOfNumNodesEq_succₓ'. -/
 theorem treesOfNumNodesEq_succ (n : ℕ) :
     treesOfNumNodesEq (n + 1) =
-      (Nat.antidiagonal n).bunionᵢ fun ij =>
+      (Nat.antidiagonal n).biUnion fun ij =>
         pairwiseNode (treesOfNumNodesEq ij.1) (treesOfNumNodesEq ij.2) :=
   by
   rw [trees_of_num_nodes_eq]

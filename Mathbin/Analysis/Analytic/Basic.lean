@@ -131,7 +131,7 @@ def radius (p : FormalMultilinearSeries 𝕜 E F) : ℝ≥0∞ :=
 /-- If `‖pₙ‖ rⁿ` is bounded in `n`, then the radius of `p` is at least `r`. -/
 theorem le_radius_of_bound (C : ℝ) {r : ℝ≥0} (h : ∀ n : ℕ, ‖p n‖ * r ^ n ≤ C) :
     (r : ℝ≥0∞) ≤ p.radius :=
-  le_supᵢ_of_le r <| le_supᵢ_of_le C <| le_supᵢ (fun _ => (r : ℝ≥0∞)) h
+  le_iSup_of_le r <| le_iSup_of_le C <| le_iSup (fun _ => (r : ℝ≥0∞)) h
 #align formal_multilinear_series.le_radius_of_bound FormalMultilinearSeries.le_radius_of_bound
 
 /-- If `‖pₙ‖ rⁿ` is bounded in `n`, then the radius of `p` is at least `r`. -/
@@ -190,7 +190,7 @@ theorem isLittleO_of_lt_radius (h : ↑r < p.radius) :
     ∃ a ∈ Ioo (0 : ℝ) 1, (fun n => ‖p n‖ * r ^ n) =o[atTop] pow a :=
   by
   rw [(TFAE_exists_lt_isLittleO_pow (fun n => ‖p n‖ * r ^ n) 1).out 1 4]
-  simp only [radius, lt_supᵢ_iff] at h
+  simp only [radius, lt_iSup_iff] at h
   rcases h with ⟨t, C, hC, rt⟩
   rw [ENNReal.coe_lt_coe, ← NNReal.coe_lt_coe] at rt
   have : 0 < (t : ℝ) := r.coe_nonneg.trans_lt rt

@@ -137,10 +137,10 @@ theorem partialSections.closed [∀ j : J, T2Space (F.obj j)] {G : Finset J}
       ⋂ (f : finite_diagram_arrow G) (hf : f ∈ H), { u | F.map f.2.2.2.2 (u f.1) = u f.2.1 } :=
     by
     ext1
-    simp only [Set.mem_interᵢ, Set.mem_setOf_eq]
+    simp only [Set.mem_iInter, Set.mem_setOf_eq]
     rfl
   rw [this]
-  apply isClosed_binterᵢ
+  apply isClosed_biInter
   intro f hf
   apply isClosed_eq
   continuity
@@ -159,7 +159,7 @@ theorem nonempty_limitCone_of_compact_t2_cofiltered_system [IsCofilteredOrEmpty 
     Nonempty (TopCat.limitCone.{u} F).pt := by
   classical
     obtain ⟨u, hu⟩ :=
-      IsCompact.nonempty_interᵢ_of_directed_nonempty_compact_closed (fun G => partial_sections F _)
+      IsCompact.nonempty_iInter_of_directed_nonempty_compact_closed (fun G => partial_sections F _)
         (partial_sections.directed F) (fun G => partial_sections.nonempty F _)
         (fun G => IsClosed.isCompact (partial_sections.closed F _)) fun G =>
         partial_sections.closed F _

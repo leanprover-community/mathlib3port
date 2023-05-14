@@ -74,7 +74,7 @@ variable {R}
 
 #print Polynomial.mem_degreeLE /-
 theorem mem_degreeLE {n : WithBot ℕ} {f : R[X]} : f ∈ degreeLE R n ↔ degree f ≤ n := by
-  simp only [degree_le, Submodule.mem_infᵢ, degree_le_iff_coeff_zero, LinearMap.mem_ker] <;> rfl
+  simp only [degree_le, Submodule.mem_iInf, degree_le_iff_coeff_zero, LinearMap.mem_ker] <;> rfl
 #align polynomial.mem_degree_le Polynomial.mem_degreeLE
 -/
 
@@ -116,7 +116,7 @@ theorem degreeLE_eq_span_X_pow {n : ℕ} :
 #print Polynomial.mem_degreeLT /-
 theorem mem_degreeLT {n : ℕ} {f : R[X]} : f ∈ degreeLT R n ↔ degree f < n :=
   by
-  simp_rw [degree_lt, Submodule.mem_infᵢ, LinearMap.mem_ker, degree, Finset.max_eq_sup_coe,
+  simp_rw [degree_lt, Submodule.mem_iInf, LinearMap.mem_ker, degree, Finset.max_eq_sup_coe,
     Finset.sup_lt_iff (WithBot.bot_lt_coe n), mem_support_iff, WithBot.coe_lt_coe, lt_iff_not_le,
     Ne, not_imp_not]
   rfl
@@ -883,7 +883,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ideal.mem_leading_coeff Ideal.mem_leadingCoeffₓ'. -/
 theorem mem_leadingCoeff (x) : x ∈ I.leadingCoeff ↔ ∃ p ∈ I, Polynomial.leadingCoeff p = x :=
   by
-  rw [leading_coeff, Submodule.mem_supᵢ_of_directed]
+  rw [leading_coeff, Submodule.mem_iSup_of_directed]
   simp only [mem_leading_coeff_nth]
   · constructor
     · rintro ⟨i, p, hpI, hpdeg, rfl⟩

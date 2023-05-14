@@ -425,14 +425,14 @@ def maximalGeneralizedEigenspace (f : End R M) (μ : R) : Submodule R M :=
 
 theorem generalizedEigenspace_le_maximal (f : End R M) (μ : R) (k : ℕ) :
     f.generalizedEigenspace μ k ≤ f.maximalGeneralizedEigenspace μ :=
-  le_supᵢ _ _
+  le_iSup _ _
 #align module.End.generalized_eigenspace_le_maximal Module.End.generalizedEigenspace_le_maximal
 
 @[simp]
 theorem mem_maximalGeneralizedEigenspace (f : End R M) (μ : R) (m : M) :
     m ∈ f.maximalGeneralizedEigenspace μ ↔ ∃ k : ℕ, ((f - μ • 1) ^ k) m = 0 := by
   simp only [maximal_generalized_eigenspace, ← mem_generalized_eigenspace,
-    Submodule.mem_supᵢ_of_chain]
+    Submodule.mem_iSup_of_chain]
 #align module.End.mem_maximal_generalized_eigenspace Module.End.mem_maximalGeneralizedEigenspace
 
 /-- If there exists a natural number `k` such that the kernel of `(f - μ • id) ^ k` is the
@@ -449,7 +449,7 @@ theorem maximalGeneralizedEigenspace_eq [h : IsNoetherian R M] (f : End R M) (μ
       f.generalizedEigenspace μ (maximalGeneralizedEigenspaceIndex f μ) :=
   by
   rw [isNoetherian_iff_wellFounded] at h
-  exact (WellFounded.supᵢ_eq_monotonicSequenceLimit h (f.generalized_eigenspace μ) : _)
+  exact (WellFounded.iSup_eq_monotonicSequenceLimit h (f.generalized_eigenspace μ) : _)
 #align module.End.maximal_generalized_eigenspace_eq Module.End.maximalGeneralizedEigenspace_eq
 
 /-- A generalized eigenvalue for some exponent `k` is also
@@ -594,7 +594,7 @@ theorem map_generalizedEigenrange_le {f : End K V} {μ : K} {n : ℕ} :
 #align module.End.map_generalized_eigenrange_le Module.End.map_generalizedEigenrange_le
 
 /-- The generalized eigenvectors span the entire vector space (Lemma 8.21 of [axler2015]). -/
-theorem supᵢ_generalizedEigenspace_eq_top [IsAlgClosed K] [FiniteDimensional K V] (f : End K V) :
+theorem iSup_generalizedEigenspace_eq_top [IsAlgClosed K] [FiniteDimensional K V] (f : End K V) :
     (⨆ (μ : K) (k : ℕ), f.generalizedEigenspace μ k) = ⊤ :=
   by
   -- We prove the claim by strong induction on the dimension of the vector space.
@@ -636,7 +636,7 @@ theorem supᵢ_generalizedEigenspace_eq_top [IsAlgClosed K] [FiniteDimensional K
     -- The induction hypothesis gives us a statement about subspaces of `ER`. We can transfer this
     -- to a statement about subspaces of `V` via `submodule.subtype`:
     have ih_ER' : (⨆ (μ : K) (k : ℕ), (f'.generalized_eigenspace μ k).map ER.subtype) = ER := by
-      simp only [(Submodule.map_supᵢ _ _).symm, ih_ER, Submodule.map_subtype_top ER]
+      simp only [(Submodule.map_iSup _ _).symm, ih_ER, Submodule.map_subtype_top ER]
     -- Moreover, every generalized eigenspace of `f'` is contained in the corresponding generalized
     -- eigenspace of `f`.
     have hff' :
@@ -649,11 +649,11 @@ theorem supᵢ_generalizedEigenspace_eq_top [IsAlgClosed K] [FiniteDimensional K
     have hER : ER ≤ ⨆ (μ : K) (k : ℕ), f.generalized_eigenspace μ k :=
       by
       rw [← ih_ER']
-      exact supᵢ₂_mono hff'
+      exact iSup₂_mono hff'
     -- `ES` is contained in this span by definition.
     have hES : ES ≤ ⨆ (μ : K) (k : ℕ), f.generalized_eigenspace μ k :=
-      le_trans (le_supᵢ (fun k => f.generalized_eigenspace μ₀ k) (finrank K V))
-        (le_supᵢ (fun μ : K => ⨆ k : ℕ, f.generalized_eigenspace μ k) μ₀)
+      le_trans (le_iSup (fun k => f.generalized_eigenspace μ₀ k) (finrank K V))
+        (le_iSup (fun μ : K => ⨆ k : ℕ, f.generalized_eigenspace μ k) μ₀)
     -- Moreover, we know that `ER` and `ES` are disjoint.
     have h_disjoint : Disjoint ER ES := generalized_eigenvec_disjoint_range_ker f μ₀
     -- Since the dimensions of `ER` and `ES` add up to the dimension of `V`, it follows that the
@@ -661,7 +661,7 @@ theorem supᵢ_generalizedEigenspace_eq_top [IsAlgClosed K] [FiniteDimensional K
     show (⨆ (μ : K) (k : ℕ), f.generalized_eigenspace μ k) = ⊤
     · rw [← top_le_iff, ← Submodule.eq_top_of_disjoint ER ES h_dim_add h_disjoint]
       apply sup_le hER hES
-#align module.End.supr_generalized_eigenspace_eq_top Module.End.supᵢ_generalizedEigenspace_eq_top
+#align module.End.supr_generalized_eigenspace_eq_top Module.End.iSup_generalizedEigenspace_eq_top
 
 end End
 

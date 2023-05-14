@@ -92,9 +92,9 @@ def Bornology.ofBounded {α : Type _} (B : Set (Set α)) (empty_mem : ∅ ∈ B)
 
 /- warning: bornology.of_bounded' -> Bornology.ofBounded' is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} (B : Set.{u1} (Set.{u1} α)), (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α)) B) -> (forall (s₁ : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) s₁ B) -> (forall (s₂ : Set.{u1} α), (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s₂ s₁) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) s₂ B))) -> (forall (s₁ : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) s₁ B) -> (forall (s₂ : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) s₂ B) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s₁ s₂) B))) -> (Eq.{succ u1} (Set.{u1} α) (Set.unionₛ.{u1} α B) (Set.univ.{u1} α)) -> (Bornology.{u1} α)
+  forall {α : Type.{u1}} (B : Set.{u1} (Set.{u1} α)), (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α)) B) -> (forall (s₁ : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) s₁ B) -> (forall (s₂ : Set.{u1} α), (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s₂ s₁) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) s₂ B))) -> (forall (s₁ : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) s₁ B) -> (forall (s₂ : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) s₂ B) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s₁ s₂) B))) -> (Eq.{succ u1} (Set.{u1} α) (Set.sUnion.{u1} α B) (Set.univ.{u1} α)) -> (Bornology.{u1} α)
 but is expected to have type
-  forall {α : Type.{u1}} (B : Set.{u1} (Set.{u1} α)), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α)) B) -> (forall (s₁ : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s₁ B) -> (forall (s₂ : Set.{u1} α), (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s₂ s₁) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s₂ B))) -> (forall (s₁ : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s₁ B) -> (forall (s₂ : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s₂ B) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s₁ s₂) B))) -> (Eq.{succ u1} (Set.{u1} α) (Set.unionₛ.{u1} α B) (Set.univ.{u1} α)) -> (Bornology.{u1} α)
+  forall {α : Type.{u1}} (B : Set.{u1} (Set.{u1} α)), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α)) B) -> (forall (s₁ : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s₁ B) -> (forall (s₂ : Set.{u1} α), (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s₂ s₁) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s₂ B))) -> (forall (s₁ : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s₁ B) -> (forall (s₂ : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s₂ B) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s₁ s₂) B))) -> (Eq.{succ u1} (Set.{u1} α) (Set.sUnion.{u1} α B) (Set.univ.{u1} α)) -> (Bornology.{u1} α)
 Case conversion may be inaccurate. Consider using '#align bornology.of_bounded' Bornology.ofBounded'ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (s₁ s₂ «expr ∈ » B) -/
 /-- A constructor for bornologies by specifying the bounded sets,
@@ -281,11 +281,11 @@ theorem IsBounded.subset (ht : IsBounded t) (hs : s ⊆ t) : IsBounded s :=
 #align bornology.is_bounded.subset Bornology.IsBounded.subset
 -/
 
-#print Bornology.unionₛ_bounded_univ /-
+#print Bornology.sUnion_bounded_univ /-
 @[simp]
-theorem unionₛ_bounded_univ : ⋃₀ { s : Set α | IsBounded s } = univ :=
-  unionₛ_eq_univ_iff.2 fun a => ⟨{a}, isBounded_singleton, mem_singleton a⟩
-#align bornology.sUnion_bounded_univ Bornology.unionₛ_bounded_univ
+theorem sUnion_bounded_univ : ⋃₀ { s : Set α | IsBounded s } = univ :=
+  sUnion_eq_univ_iff.2 fun a => ⟨{a}, isBounded_singleton, mem_singleton a⟩
+#align bornology.sUnion_bounded_univ Bornology.sUnion_bounded_univ
 -/
 
 /- warning: bornology.comap_cobounded_le_iff -> Bornology.comap_cobounded_le_iff is a dubious translation:
@@ -349,86 +349,86 @@ theorem isBounded_ofBounded_iff (B : Set (Set α)) {empty_mem subset_mem union_m
 
 variable [Bornology α]
 
-/- warning: bornology.is_cobounded_bInter -> Bornology.isCobounded_binterᵢ is a dubious translation:
+/- warning: bornology.is_cobounded_bInter -> Bornology.isCobounded_biInter is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : Bornology.{u2} α] {s : Set.{u1} ι} {f : ι -> (Set.{u2} α)}, (Set.Finite.{u1} ι s) -> (Iff (Bornology.IsCobounded.{u2} α _inst_1 (Set.interᵢ.{u2, succ u1} α ι (fun (i : ι) => Set.interᵢ.{u2, 0} α (Membership.Mem.{u1, u1} ι (Set.{u1} ι) (Set.hasMem.{u1} ι) i s) (fun (H : Membership.Mem.{u1, u1} ι (Set.{u1} ι) (Set.hasMem.{u1} ι) i s) => f i)))) (forall (i : ι), (Membership.Mem.{u1, u1} ι (Set.{u1} ι) (Set.hasMem.{u1} ι) i s) -> (Bornology.IsCobounded.{u2} α _inst_1 (f i))))
+  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : Bornology.{u2} α] {s : Set.{u1} ι} {f : ι -> (Set.{u2} α)}, (Set.Finite.{u1} ι s) -> (Iff (Bornology.IsCobounded.{u2} α _inst_1 (Set.iInter.{u2, succ u1} α ι (fun (i : ι) => Set.iInter.{u2, 0} α (Membership.Mem.{u1, u1} ι (Set.{u1} ι) (Set.hasMem.{u1} ι) i s) (fun (H : Membership.Mem.{u1, u1} ι (Set.{u1} ι) (Set.hasMem.{u1} ι) i s) => f i)))) (forall (i : ι), (Membership.Mem.{u1, u1} ι (Set.{u1} ι) (Set.hasMem.{u1} ι) i s) -> (Bornology.IsCobounded.{u2} α _inst_1 (f i))))
 but is expected to have type
-  forall {ι : Type.{u2}} {α : Type.{u1}} [_inst_1 : Bornology.{u1} α] {s : Set.{u2} ι} {f : ι -> (Set.{u1} α)}, (Set.Finite.{u2} ι s) -> (Iff (Bornology.IsCobounded.{u1} α _inst_1 (Set.interᵢ.{u1, succ u2} α ι (fun (i : ι) => Set.interᵢ.{u1, 0} α (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i s) (fun (H : Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i s) => f i)))) (forall (i : ι), (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i s) -> (Bornology.IsCobounded.{u1} α _inst_1 (f i))))
-Case conversion may be inaccurate. Consider using '#align bornology.is_cobounded_bInter Bornology.isCobounded_binterᵢₓ'. -/
-theorem isCobounded_binterᵢ {s : Set ι} {f : ι → Set α} (hs : s.Finite) :
+  forall {ι : Type.{u2}} {α : Type.{u1}} [_inst_1 : Bornology.{u1} α] {s : Set.{u2} ι} {f : ι -> (Set.{u1} α)}, (Set.Finite.{u2} ι s) -> (Iff (Bornology.IsCobounded.{u1} α _inst_1 (Set.iInter.{u1, succ u2} α ι (fun (i : ι) => Set.iInter.{u1, 0} α (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i s) (fun (H : Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i s) => f i)))) (forall (i : ι), (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i s) -> (Bornology.IsCobounded.{u1} α _inst_1 (f i))))
+Case conversion may be inaccurate. Consider using '#align bornology.is_cobounded_bInter Bornology.isCobounded_biInterₓ'. -/
+theorem isCobounded_biInter {s : Set ι} {f : ι → Set α} (hs : s.Finite) :
     IsCobounded (⋂ i ∈ s, f i) ↔ ∀ i ∈ s, IsCobounded (f i) :=
-  binterᵢ_mem hs
-#align bornology.is_cobounded_bInter Bornology.isCobounded_binterᵢ
+  biInter_mem hs
+#align bornology.is_cobounded_bInter Bornology.isCobounded_biInter
 
-/- warning: bornology.is_cobounded_bInter_finset -> Bornology.isCobounded_binterᵢ_finset is a dubious translation:
+/- warning: bornology.is_cobounded_bInter_finset -> Bornology.isCobounded_biInter_finset is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : Bornology.{u2} α] (s : Finset.{u1} ι) {f : ι -> (Set.{u2} α)}, Iff (Bornology.IsCobounded.{u2} α _inst_1 (Set.interᵢ.{u2, succ u1} α ι (fun (i : ι) => Set.interᵢ.{u2, 0} α (Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i s) (fun (H : Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i s) => f i)))) (forall (i : ι), (Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i s) -> (Bornology.IsCobounded.{u2} α _inst_1 (f i)))
+  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : Bornology.{u2} α] (s : Finset.{u1} ι) {f : ι -> (Set.{u2} α)}, Iff (Bornology.IsCobounded.{u2} α _inst_1 (Set.iInter.{u2, succ u1} α ι (fun (i : ι) => Set.iInter.{u2, 0} α (Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i s) (fun (H : Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i s) => f i)))) (forall (i : ι), (Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i s) -> (Bornology.IsCobounded.{u2} α _inst_1 (f i)))
 but is expected to have type
-  forall {ι : Type.{u2}} {α : Type.{u1}} [_inst_1 : Bornology.{u1} α] (s : Finset.{u2} ι) {f : ι -> (Set.{u1} α)}, Iff (Bornology.IsCobounded.{u1} α _inst_1 (Set.interᵢ.{u1, succ u2} α ι (fun (i : ι) => Set.interᵢ.{u1, 0} α (Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i s) (fun (H : Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i s) => f i)))) (forall (i : ι), (Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i s) -> (Bornology.IsCobounded.{u1} α _inst_1 (f i)))
-Case conversion may be inaccurate. Consider using '#align bornology.is_cobounded_bInter_finset Bornology.isCobounded_binterᵢ_finsetₓ'. -/
+  forall {ι : Type.{u2}} {α : Type.{u1}} [_inst_1 : Bornology.{u1} α] (s : Finset.{u2} ι) {f : ι -> (Set.{u1} α)}, Iff (Bornology.IsCobounded.{u1} α _inst_1 (Set.iInter.{u1, succ u2} α ι (fun (i : ι) => Set.iInter.{u1, 0} α (Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i s) (fun (H : Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i s) => f i)))) (forall (i : ι), (Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i s) -> (Bornology.IsCobounded.{u1} α _inst_1 (f i)))
+Case conversion may be inaccurate. Consider using '#align bornology.is_cobounded_bInter_finset Bornology.isCobounded_biInter_finsetₓ'. -/
 @[simp]
-theorem isCobounded_binterᵢ_finset (s : Finset ι) {f : ι → Set α} :
+theorem isCobounded_biInter_finset (s : Finset ι) {f : ι → Set α} :
     IsCobounded (⋂ i ∈ s, f i) ↔ ∀ i ∈ s, IsCobounded (f i) :=
-  binterᵢ_finset_mem s
-#align bornology.is_cobounded_bInter_finset Bornology.isCobounded_binterᵢ_finset
+  biInter_finset_mem s
+#align bornology.is_cobounded_bInter_finset Bornology.isCobounded_biInter_finset
 
-/- warning: bornology.is_cobounded_Inter -> Bornology.isCobounded_interᵢ is a dubious translation:
+/- warning: bornology.is_cobounded_Inter -> Bornology.isCobounded_iInter is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : Bornology.{u2} α] [_inst_2 : Finite.{succ u1} ι] {f : ι -> (Set.{u2} α)}, Iff (Bornology.IsCobounded.{u2} α _inst_1 (Set.interᵢ.{u2, succ u1} α ι (fun (i : ι) => f i))) (forall (i : ι), Bornology.IsCobounded.{u2} α _inst_1 (f i))
+  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : Bornology.{u2} α] [_inst_2 : Finite.{succ u1} ι] {f : ι -> (Set.{u2} α)}, Iff (Bornology.IsCobounded.{u2} α _inst_1 (Set.iInter.{u2, succ u1} α ι (fun (i : ι) => f i))) (forall (i : ι), Bornology.IsCobounded.{u2} α _inst_1 (f i))
 but is expected to have type
-  forall {ι : Type.{u2}} {α : Type.{u1}} [_inst_1 : Bornology.{u1} α] [_inst_2 : Finite.{succ u2} ι] {f : ι -> (Set.{u1} α)}, Iff (Bornology.IsCobounded.{u1} α _inst_1 (Set.interᵢ.{u1, succ u2} α ι (fun (i : ι) => f i))) (forall (i : ι), Bornology.IsCobounded.{u1} α _inst_1 (f i))
-Case conversion may be inaccurate. Consider using '#align bornology.is_cobounded_Inter Bornology.isCobounded_interᵢₓ'. -/
+  forall {ι : Type.{u2}} {α : Type.{u1}} [_inst_1 : Bornology.{u1} α] [_inst_2 : Finite.{succ u2} ι] {f : ι -> (Set.{u1} α)}, Iff (Bornology.IsCobounded.{u1} α _inst_1 (Set.iInter.{u1, succ u2} α ι (fun (i : ι) => f i))) (forall (i : ι), Bornology.IsCobounded.{u1} α _inst_1 (f i))
+Case conversion may be inaccurate. Consider using '#align bornology.is_cobounded_Inter Bornology.isCobounded_iInterₓ'. -/
 @[simp]
-theorem isCobounded_interᵢ [Finite ι] {f : ι → Set α} :
+theorem isCobounded_iInter [Finite ι] {f : ι → Set α} :
     IsCobounded (⋂ i, f i) ↔ ∀ i, IsCobounded (f i) :=
-  interᵢ_mem
-#align bornology.is_cobounded_Inter Bornology.isCobounded_interᵢ
+  iInter_mem
+#align bornology.is_cobounded_Inter Bornology.isCobounded_iInter
 
-#print Bornology.isCobounded_interₛ /-
-theorem isCobounded_interₛ {S : Set (Set α)} (hs : S.Finite) :
+#print Bornology.isCobounded_sInter /-
+theorem isCobounded_sInter {S : Set (Set α)} (hs : S.Finite) :
     IsCobounded (⋂₀ S) ↔ ∀ s ∈ S, IsCobounded s :=
-  interₛ_mem hs
-#align bornology.is_cobounded_sInter Bornology.isCobounded_interₛ
+  sInter_mem hs
+#align bornology.is_cobounded_sInter Bornology.isCobounded_sInter
 -/
 
-/- warning: bornology.is_bounded_bUnion -> Bornology.isBounded_bunionᵢ is a dubious translation:
+/- warning: bornology.is_bounded_bUnion -> Bornology.isBounded_biUnion is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : Bornology.{u2} α] {s : Set.{u1} ι} {f : ι -> (Set.{u2} α)}, (Set.Finite.{u1} ι s) -> (Iff (Bornology.IsBounded.{u2} α _inst_1 (Set.unionᵢ.{u2, succ u1} α ι (fun (i : ι) => Set.unionᵢ.{u2, 0} α (Membership.Mem.{u1, u1} ι (Set.{u1} ι) (Set.hasMem.{u1} ι) i s) (fun (H : Membership.Mem.{u1, u1} ι (Set.{u1} ι) (Set.hasMem.{u1} ι) i s) => f i)))) (forall (i : ι), (Membership.Mem.{u1, u1} ι (Set.{u1} ι) (Set.hasMem.{u1} ι) i s) -> (Bornology.IsBounded.{u2} α _inst_1 (f i))))
+  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : Bornology.{u2} α] {s : Set.{u1} ι} {f : ι -> (Set.{u2} α)}, (Set.Finite.{u1} ι s) -> (Iff (Bornology.IsBounded.{u2} α _inst_1 (Set.iUnion.{u2, succ u1} α ι (fun (i : ι) => Set.iUnion.{u2, 0} α (Membership.Mem.{u1, u1} ι (Set.{u1} ι) (Set.hasMem.{u1} ι) i s) (fun (H : Membership.Mem.{u1, u1} ι (Set.{u1} ι) (Set.hasMem.{u1} ι) i s) => f i)))) (forall (i : ι), (Membership.Mem.{u1, u1} ι (Set.{u1} ι) (Set.hasMem.{u1} ι) i s) -> (Bornology.IsBounded.{u2} α _inst_1 (f i))))
 but is expected to have type
-  forall {ι : Type.{u2}} {α : Type.{u1}} [_inst_1 : Bornology.{u1} α] {s : Set.{u2} ι} {f : ι -> (Set.{u1} α)}, (Set.Finite.{u2} ι s) -> (Iff (Bornology.IsBounded.{u1} α _inst_1 (Set.unionᵢ.{u1, succ u2} α ι (fun (i : ι) => Set.unionᵢ.{u1, 0} α (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i s) (fun (H : Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i s) => f i)))) (forall (i : ι), (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i s) -> (Bornology.IsBounded.{u1} α _inst_1 (f i))))
-Case conversion may be inaccurate. Consider using '#align bornology.is_bounded_bUnion Bornology.isBounded_bunionᵢₓ'. -/
-theorem isBounded_bunionᵢ {s : Set ι} {f : ι → Set α} (hs : s.Finite) :
+  forall {ι : Type.{u2}} {α : Type.{u1}} [_inst_1 : Bornology.{u1} α] {s : Set.{u2} ι} {f : ι -> (Set.{u1} α)}, (Set.Finite.{u2} ι s) -> (Iff (Bornology.IsBounded.{u1} α _inst_1 (Set.iUnion.{u1, succ u2} α ι (fun (i : ι) => Set.iUnion.{u1, 0} α (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i s) (fun (H : Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i s) => f i)))) (forall (i : ι), (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i s) -> (Bornology.IsBounded.{u1} α _inst_1 (f i))))
+Case conversion may be inaccurate. Consider using '#align bornology.is_bounded_bUnion Bornology.isBounded_biUnionₓ'. -/
+theorem isBounded_biUnion {s : Set ι} {f : ι → Set α} (hs : s.Finite) :
     IsBounded (⋃ i ∈ s, f i) ↔ ∀ i ∈ s, IsBounded (f i) := by
   simp only [← is_cobounded_compl_iff, compl_Union, is_cobounded_bInter hs]
-#align bornology.is_bounded_bUnion Bornology.isBounded_bunionᵢ
+#align bornology.is_bounded_bUnion Bornology.isBounded_biUnion
 
-/- warning: bornology.is_bounded_bUnion_finset -> Bornology.isBounded_bunionᵢ_finset is a dubious translation:
+/- warning: bornology.is_bounded_bUnion_finset -> Bornology.isBounded_biUnion_finset is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : Bornology.{u2} α] (s : Finset.{u1} ι) {f : ι -> (Set.{u2} α)}, Iff (Bornology.IsBounded.{u2} α _inst_1 (Set.unionᵢ.{u2, succ u1} α ι (fun (i : ι) => Set.unionᵢ.{u2, 0} α (Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i s) (fun (H : Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i s) => f i)))) (forall (i : ι), (Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i s) -> (Bornology.IsBounded.{u2} α _inst_1 (f i)))
+  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : Bornology.{u2} α] (s : Finset.{u1} ι) {f : ι -> (Set.{u2} α)}, Iff (Bornology.IsBounded.{u2} α _inst_1 (Set.iUnion.{u2, succ u1} α ι (fun (i : ι) => Set.iUnion.{u2, 0} α (Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i s) (fun (H : Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i s) => f i)))) (forall (i : ι), (Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i s) -> (Bornology.IsBounded.{u2} α _inst_1 (f i)))
 but is expected to have type
-  forall {ι : Type.{u2}} {α : Type.{u1}} [_inst_1 : Bornology.{u1} α] (s : Finset.{u2} ι) {f : ι -> (Set.{u1} α)}, Iff (Bornology.IsBounded.{u1} α _inst_1 (Set.unionᵢ.{u1, succ u2} α ι (fun (i : ι) => Set.unionᵢ.{u1, 0} α (Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i s) (fun (H : Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i s) => f i)))) (forall (i : ι), (Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i s) -> (Bornology.IsBounded.{u1} α _inst_1 (f i)))
-Case conversion may be inaccurate. Consider using '#align bornology.is_bounded_bUnion_finset Bornology.isBounded_bunionᵢ_finsetₓ'. -/
-theorem isBounded_bunionᵢ_finset (s : Finset ι) {f : ι → Set α} :
+  forall {ι : Type.{u2}} {α : Type.{u1}} [_inst_1 : Bornology.{u1} α] (s : Finset.{u2} ι) {f : ι -> (Set.{u1} α)}, Iff (Bornology.IsBounded.{u1} α _inst_1 (Set.iUnion.{u1, succ u2} α ι (fun (i : ι) => Set.iUnion.{u1, 0} α (Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i s) (fun (H : Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i s) => f i)))) (forall (i : ι), (Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i s) -> (Bornology.IsBounded.{u1} α _inst_1 (f i)))
+Case conversion may be inaccurate. Consider using '#align bornology.is_bounded_bUnion_finset Bornology.isBounded_biUnion_finsetₓ'. -/
+theorem isBounded_biUnion_finset (s : Finset ι) {f : ι → Set α} :
     IsBounded (⋃ i ∈ s, f i) ↔ ∀ i ∈ s, IsBounded (f i) :=
-  isBounded_bunionᵢ s.finite_toSet
-#align bornology.is_bounded_bUnion_finset Bornology.isBounded_bunionᵢ_finset
+  isBounded_biUnion s.finite_toSet
+#align bornology.is_bounded_bUnion_finset Bornology.isBounded_biUnion_finset
 
-#print Bornology.isBounded_unionₛ /-
-theorem isBounded_unionₛ {S : Set (Set α)} (hs : S.Finite) :
+#print Bornology.isBounded_sUnion /-
+theorem isBounded_sUnion {S : Set (Set α)} (hs : S.Finite) :
     IsBounded (⋃₀ S) ↔ ∀ s ∈ S, IsBounded s := by rw [sUnion_eq_bUnion, is_bounded_bUnion hs]
-#align bornology.is_bounded_sUnion Bornology.isBounded_unionₛ
+#align bornology.is_bounded_sUnion Bornology.isBounded_sUnion
 -/
 
-/- warning: bornology.is_bounded_Union -> Bornology.isBounded_unionᵢ is a dubious translation:
+/- warning: bornology.is_bounded_Union -> Bornology.isBounded_iUnion is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : Bornology.{u2} α] [_inst_2 : Finite.{succ u1} ι] {s : ι -> (Set.{u2} α)}, Iff (Bornology.IsBounded.{u2} α _inst_1 (Set.unionᵢ.{u2, succ u1} α ι (fun (i : ι) => s i))) (forall (i : ι), Bornology.IsBounded.{u2} α _inst_1 (s i))
+  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : Bornology.{u2} α] [_inst_2 : Finite.{succ u1} ι] {s : ι -> (Set.{u2} α)}, Iff (Bornology.IsBounded.{u2} α _inst_1 (Set.iUnion.{u2, succ u1} α ι (fun (i : ι) => s i))) (forall (i : ι), Bornology.IsBounded.{u2} α _inst_1 (s i))
 but is expected to have type
-  forall {ι : Type.{u2}} {α : Type.{u1}} [_inst_1 : Bornology.{u1} α] [_inst_2 : Finite.{succ u2} ι] {s : ι -> (Set.{u1} α)}, Iff (Bornology.IsBounded.{u1} α _inst_1 (Set.unionᵢ.{u1, succ u2} α ι (fun (i : ι) => s i))) (forall (i : ι), Bornology.IsBounded.{u1} α _inst_1 (s i))
-Case conversion may be inaccurate. Consider using '#align bornology.is_bounded_Union Bornology.isBounded_unionᵢₓ'. -/
+  forall {ι : Type.{u2}} {α : Type.{u1}} [_inst_1 : Bornology.{u1} α] [_inst_2 : Finite.{succ u2} ι] {s : ι -> (Set.{u1} α)}, Iff (Bornology.IsBounded.{u1} α _inst_1 (Set.iUnion.{u1, succ u2} α ι (fun (i : ι) => s i))) (forall (i : ι), Bornology.IsBounded.{u1} α _inst_1 (s i))
+Case conversion may be inaccurate. Consider using '#align bornology.is_bounded_Union Bornology.isBounded_iUnionₓ'. -/
 @[simp]
-theorem isBounded_unionᵢ [Finite ι] {s : ι → Set α} : IsBounded (⋃ i, s i) ↔ ∀ i, IsBounded (s i) :=
+theorem isBounded_iUnion [Finite ι] {s : ι → Set α} : IsBounded (⋃ i, s i) ↔ ∀ i, IsBounded (s i) :=
   by rw [← sUnion_range, is_bounded_sUnion (finite_range s), forall_range_iff]
-#align bornology.is_bounded_Union Bornology.isBounded_unionᵢ
+#align bornology.is_bounded_Union Bornology.isBounded_iUnion
 
 end Bornology
 

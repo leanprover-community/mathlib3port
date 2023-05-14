@@ -378,7 +378,7 @@ theorem sourceAffineLocallyOfSourceOpenCover {X Y : Scheme} (f : X ⟶ Y) [IsAff
     exact source_affine_locally_of_source_open_cover_aux hP.respects_iso hP.2 _ _ _ hs hs'
   · rw [Set.eq_univ_iff_forall]
     intro x
-    rw [Set.mem_unionᵢ]
+    rw [Set.mem_iUnion]
     exact ⟨⟨_, 𝒰.f x, rfl⟩, 𝒰.covers x⟩
   · rintro ⟨_, i, rfl⟩
     specialize H i

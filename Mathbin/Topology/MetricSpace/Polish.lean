@@ -291,7 +291,7 @@ theorem exists_polishSpace_forall_le {ι : Type _} [Countable ι] [t : Topologic
       exact (mem_Inter.1 hx n : _)
   have f_closed : IsClosed (range f) := by
     rw [A]
-    apply isClosed_interᵢ fun n => _
+    apply isClosed_iInter fun n => _
     have C : ∀ i : ι, Continuous fun x : ∀ n, aux_copy α n => (id (x i) : α) :=
       by
       intro i
@@ -602,8 +602,8 @@ theorem IsOpen.isClopenable [TopologicalSpace α] [PolishSpace α] {s : Set α} 
 #align is_open.is_clopenable IsOpen.isClopenable
 -/
 
-#print PolishSpace.IsClopenable.unionᵢ /-
-theorem IsClopenable.unionᵢ [t : TopologicalSpace α] [PolishSpace α] {s : ℕ → Set α}
+#print PolishSpace.IsClopenable.iUnion /-
+theorem IsClopenable.iUnion [t : TopologicalSpace α] [PolishSpace α] {s : ℕ → Set α}
     (hs : ∀ n, IsClopenable (s n)) : IsClopenable (⋃ n, s n) :=
   by
   choose m mt m_polish m_closed m_open using hs
@@ -611,7 +611,7 @@ theorem IsClopenable.unionᵢ [t : TopologicalSpace α] [PolishSpace α] {s : �
     ∃ t' : TopologicalSpace α, (∀ n : ℕ, t' ≤ m n) ∧ t' ≤ t ∧ @PolishSpace α t' :=
     exists_polish_space_forall_le m mt m_polish
   have A : is_open[t'] (⋃ n, s n) := by
-    apply isOpen_unionᵢ
+    apply isOpen_iUnion
     intro n
     apply t'm n
     exact m_open n
@@ -620,7 +620,7 @@ theorem IsClopenable.unionᵢ [t : TopologicalSpace α] [PolishSpace α] {s : �
       t'' ≤ t' ∧ @PolishSpace α t'' ∧ is_closed[t''] (⋃ n, s n) ∧ is_open[t''] (⋃ n, s n) :=
     @IsOpen.isClopenable α t' t'_polish _ A
   exact ⟨t'', t''_le.trans ((t'm 0).trans (mt 0)), t''_polish, h1, h2⟩
-#align polish_space.is_clopenable.Union PolishSpace.IsClopenable.unionᵢ
+#align polish_space.is_clopenable.Union PolishSpace.IsClopenable.iUnion
 -/
 
 end PolishSpace

@@ -96,7 +96,7 @@ theorem LocallyIntegrableOn.aeStronglyMeasurable [SecondCountableTopology X]
     rw [← Union_inter, eq_comm, inter_eq_right_iff_subset]
     exact this
   have : Countable T := countable_coe_iff.mpr T_count
-  rw [hT, aeStronglyMeasurable_unionᵢ_iff]
+  rw [hT, aeStronglyMeasurable_iUnion_iff]
   exact fun i : T => (hu i).AeStronglyMeasurable
 #align measure_theory.locally_integrable_on.ae_strongly_measurable MeasureTheory.LocallyIntegrableOn.aeStronglyMeasurable
 

@@ -113,7 +113,7 @@ instance (priority := 100) [PseudoEMetricSpace α] : ParacompactSpace α := by
     have Dopen : ∀ n i, IsOpen (D n i) := by
       intro n i
       rw [Dn]
-      iterate 4 refine' isOpen_unionᵢ fun _ => _
+      iterate 4 refine' isOpen_iUnion fun _ => _
       exact is_open_ball
     -- the covering `D n i` is a refinement of the original covering: `D n i ⊆ s i`
     have HDS : ∀ n i, D n i ⊆ s i := by
@@ -185,8 +185,8 @@ instance (priority := 100) [PseudoEMetricSpace α] : ParacompactSpace α := by
           
       -- Finally, we glue `Hgt` and `Hle`
       have : (⋃ (m ≤ n + k) (i ∈ { i : ι | (D m i ∩ B).Nonempty }), {(m, i)}).Finite :=
-        (finite_le_nat _).bunionᵢ' fun i hi =>
-          (Hle i hi).Finite.bunionᵢ' fun _ _ => finite_singleton _
+        (finite_le_nat _).biUnion' fun i hi =>
+          (Hle i hi).Finite.biUnion' fun _ _ => finite_singleton _
       refine' this.subset fun I hI => _
       simp only [mem_Union]
       refine' ⟨I.1, _, I.2, hI, prod.mk.eta.symm⟩

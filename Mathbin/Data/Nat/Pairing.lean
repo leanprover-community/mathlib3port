@@ -242,64 +242,64 @@ open Nat
 
 section CompleteLattice
 
-/- warning: supr_unpair -> supᵢ_unpair is a dubious translation:
+/- warning: supr_unpair -> iSup_unpair is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] (f : Nat -> Nat -> α), Eq.{succ u1} α (supᵢ.{u1, 1} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) Nat (fun (n : Nat) => f (Prod.fst.{0, 0} Nat Nat (Nat.unpair n)) (Prod.snd.{0, 0} Nat Nat (Nat.unpair n)))) (supᵢ.{u1, 1} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) Nat (fun (i : Nat) => supᵢ.{u1, 1} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) Nat (fun (j : Nat) => f i j)))
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] (f : Nat -> Nat -> α), Eq.{succ u1} α (iSup.{u1, 1} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) Nat (fun (n : Nat) => f (Prod.fst.{0, 0} Nat Nat (Nat.unpair n)) (Prod.snd.{0, 0} Nat Nat (Nat.unpair n)))) (iSup.{u1, 1} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) Nat (fun (i : Nat) => iSup.{u1, 1} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) Nat (fun (j : Nat) => f i j)))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] (f : Nat -> Nat -> α), Eq.{succ u1} α (supᵢ.{u1, 1} α (CompleteLattice.toSupSet.{u1} α _inst_1) Nat (fun (n : Nat) => f (Prod.fst.{0, 0} Nat Nat (Nat.unpair n)) (Prod.snd.{0, 0} Nat Nat (Nat.unpair n)))) (supᵢ.{u1, 1} α (CompleteLattice.toSupSet.{u1} α _inst_1) Nat (fun (i : Nat) => supᵢ.{u1, 1} α (CompleteLattice.toSupSet.{u1} α _inst_1) Nat (fun (j : Nat) => f i j)))
-Case conversion may be inaccurate. Consider using '#align supr_unpair supᵢ_unpairₓ'. -/
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] (f : Nat -> Nat -> α), Eq.{succ u1} α (iSup.{u1, 1} α (CompleteLattice.toSupSet.{u1} α _inst_1) Nat (fun (n : Nat) => f (Prod.fst.{0, 0} Nat Nat (Nat.unpair n)) (Prod.snd.{0, 0} Nat Nat (Nat.unpair n)))) (iSup.{u1, 1} α (CompleteLattice.toSupSet.{u1} α _inst_1) Nat (fun (i : Nat) => iSup.{u1, 1} α (CompleteLattice.toSupSet.{u1} α _inst_1) Nat (fun (j : Nat) => f i j)))
+Case conversion may be inaccurate. Consider using '#align supr_unpair iSup_unpairₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-theorem supᵢ_unpair {α} [CompleteLattice α] (f : ℕ → ℕ → α) :
+theorem iSup_unpair {α} [CompleteLattice α] (f : ℕ → ℕ → α) :
     (⨆ n : ℕ, f n.unpair.1 n.unpair.2) = ⨆ (i : ℕ) (j : ℕ), f i j := by
-  rw [← (supᵢ_prod : (⨆ i : ℕ × ℕ, f i.1 i.2) = _), ← nat.surjective_unpair.supr_comp]
-#align supr_unpair supᵢ_unpair
+  rw [← (iSup_prod : (⨆ i : ℕ × ℕ, f i.1 i.2) = _), ← nat.surjective_unpair.supr_comp]
+#align supr_unpair iSup_unpair
 
-/- warning: infi_unpair -> infᵢ_unpair is a dubious translation:
+/- warning: infi_unpair -> iInf_unpair is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] (f : Nat -> Nat -> α), Eq.{succ u1} α (infᵢ.{u1, 1} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) Nat (fun (n : Nat) => f (Prod.fst.{0, 0} Nat Nat (Nat.unpair n)) (Prod.snd.{0, 0} Nat Nat (Nat.unpair n)))) (infᵢ.{u1, 1} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) Nat (fun (i : Nat) => infᵢ.{u1, 1} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) Nat (fun (j : Nat) => f i j)))
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] (f : Nat -> Nat -> α), Eq.{succ u1} α (iInf.{u1, 1} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) Nat (fun (n : Nat) => f (Prod.fst.{0, 0} Nat Nat (Nat.unpair n)) (Prod.snd.{0, 0} Nat Nat (Nat.unpair n)))) (iInf.{u1, 1} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) Nat (fun (i : Nat) => iInf.{u1, 1} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) Nat (fun (j : Nat) => f i j)))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] (f : Nat -> Nat -> α), Eq.{succ u1} α (infᵢ.{u1, 1} α (CompleteLattice.toInfSet.{u1} α _inst_1) Nat (fun (n : Nat) => f (Prod.fst.{0, 0} Nat Nat (Nat.unpair n)) (Prod.snd.{0, 0} Nat Nat (Nat.unpair n)))) (infᵢ.{u1, 1} α (CompleteLattice.toInfSet.{u1} α _inst_1) Nat (fun (i : Nat) => infᵢ.{u1, 1} α (CompleteLattice.toInfSet.{u1} α _inst_1) Nat (fun (j : Nat) => f i j)))
-Case conversion may be inaccurate. Consider using '#align infi_unpair infᵢ_unpairₓ'. -/
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] (f : Nat -> Nat -> α), Eq.{succ u1} α (iInf.{u1, 1} α (CompleteLattice.toInfSet.{u1} α _inst_1) Nat (fun (n : Nat) => f (Prod.fst.{0, 0} Nat Nat (Nat.unpair n)) (Prod.snd.{0, 0} Nat Nat (Nat.unpair n)))) (iInf.{u1, 1} α (CompleteLattice.toInfSet.{u1} α _inst_1) Nat (fun (i : Nat) => iInf.{u1, 1} α (CompleteLattice.toInfSet.{u1} α _inst_1) Nat (fun (j : Nat) => f i j)))
+Case conversion may be inaccurate. Consider using '#align infi_unpair iInf_unpairₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-theorem infᵢ_unpair {α} [CompleteLattice α] (f : ℕ → ℕ → α) :
+theorem iInf_unpair {α} [CompleteLattice α] (f : ℕ → ℕ → α) :
     (⨅ n : ℕ, f n.unpair.1 n.unpair.2) = ⨅ (i : ℕ) (j : ℕ), f i j :=
-  supᵢ_unpair (show ℕ → ℕ → αᵒᵈ from f)
-#align infi_unpair infᵢ_unpair
+  iSup_unpair (show ℕ → ℕ → αᵒᵈ from f)
+#align infi_unpair iInf_unpair
 
 end CompleteLattice
 
 namespace Set
 
-/- warning: set.Union_unpair_prod -> Set.unionᵢ_unpair_prod is a dubious translation:
+/- warning: set.Union_unpair_prod -> Set.iUnion_unpair_prod is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Nat -> (Set.{u1} α)} {t : Nat -> (Set.{u2} β)}, Eq.{succ (max u1 u2)} (Set.{max u1 u2} (Prod.{u1, u2} α β)) (Set.unionᵢ.{max u1 u2, 1} (Prod.{u1, u2} α β) Nat (fun (n : Nat) => Set.prod.{u1, u2} α β (s (Prod.fst.{0, 0} Nat Nat (Nat.unpair n))) (t (Prod.snd.{0, 0} Nat Nat (Nat.unpair n))))) (Set.prod.{u1, u2} α β (Set.unionᵢ.{u1, 1} α Nat (fun (n : Nat) => s n)) (Set.unionᵢ.{u2, 1} β Nat (fun (n : Nat) => t n)))
+  forall {α : Type.{u1}} {β : Type.{u2}} {s : Nat -> (Set.{u1} α)} {t : Nat -> (Set.{u2} β)}, Eq.{succ (max u1 u2)} (Set.{max u1 u2} (Prod.{u1, u2} α β)) (Set.iUnion.{max u1 u2, 1} (Prod.{u1, u2} α β) Nat (fun (n : Nat) => Set.prod.{u1, u2} α β (s (Prod.fst.{0, 0} Nat Nat (Nat.unpair n))) (t (Prod.snd.{0, 0} Nat Nat (Nat.unpair n))))) (Set.prod.{u1, u2} α β (Set.iUnion.{u1, 1} α Nat (fun (n : Nat) => s n)) (Set.iUnion.{u2, 1} β Nat (fun (n : Nat) => t n)))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Nat -> (Set.{u2} α)} {t : Nat -> (Set.{u1} β)}, Eq.{max (succ u2) (succ u1)} (Set.{max u1 u2} (Prod.{u2, u1} α β)) (Set.unionᵢ.{max u1 u2, 1} (Prod.{u2, u1} α β) Nat (fun (n : Nat) => Set.prod.{u2, u1} α β (s (Prod.fst.{0, 0} Nat Nat (Nat.unpair n))) (t (Prod.snd.{0, 0} Nat Nat (Nat.unpair n))))) (Set.prod.{u2, u1} α β (Set.unionᵢ.{u2, 1} α Nat (fun (n : Nat) => s n)) (Set.unionᵢ.{u1, 1} β Nat (fun (n : Nat) => t n)))
-Case conversion may be inaccurate. Consider using '#align set.Union_unpair_prod Set.unionᵢ_unpair_prodₓ'. -/
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : Nat -> (Set.{u2} α)} {t : Nat -> (Set.{u1} β)}, Eq.{max (succ u2) (succ u1)} (Set.{max u1 u2} (Prod.{u2, u1} α β)) (Set.iUnion.{max u1 u2, 1} (Prod.{u2, u1} α β) Nat (fun (n : Nat) => Set.prod.{u2, u1} α β (s (Prod.fst.{0, 0} Nat Nat (Nat.unpair n))) (t (Prod.snd.{0, 0} Nat Nat (Nat.unpair n))))) (Set.prod.{u2, u1} α β (Set.iUnion.{u2, 1} α Nat (fun (n : Nat) => s n)) (Set.iUnion.{u1, 1} β Nat (fun (n : Nat) => t n)))
+Case conversion may be inaccurate. Consider using '#align set.Union_unpair_prod Set.iUnion_unpair_prodₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem unionᵢ_unpair_prod {α β} {s : ℕ → Set α} {t : ℕ → Set β} :
+theorem iUnion_unpair_prod {α β} {s : ℕ → Set α} {t : ℕ → Set β} :
     (⋃ n : ℕ, s n.unpair.fst ×ˢ t n.unpair.snd) = (⋃ n, s n) ×ˢ ⋃ n, t n :=
   by
   rw [← Union_prod]
   convert surjective_unpair.Union_comp _
   rfl
-#align set.Union_unpair_prod Set.unionᵢ_unpair_prod
+#align set.Union_unpair_prod Set.iUnion_unpair_prod
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-#print Set.unionᵢ_unpair /-
-theorem unionᵢ_unpair {α} (f : ℕ → ℕ → Set α) :
+#print Set.iUnion_unpair /-
+theorem iUnion_unpair {α} (f : ℕ → ℕ → Set α) :
     (⋃ n : ℕ, f n.unpair.1 n.unpair.2) = ⋃ (i : ℕ) (j : ℕ), f i j :=
-  supᵢ_unpair f
-#align set.Union_unpair Set.unionᵢ_unpair
+  iSup_unpair f
+#align set.Union_unpair Set.iUnion_unpair
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-#print Set.interᵢ_unpair /-
-theorem interᵢ_unpair {α} (f : ℕ → ℕ → Set α) :
+#print Set.iInter_unpair /-
+theorem iInter_unpair {α} (f : ℕ → ℕ → Set α) :
     (⋂ n : ℕ, f n.unpair.1 n.unpair.2) = ⋂ (i : ℕ) (j : ℕ), f i j :=
-  infᵢ_unpair f
-#align set.Inter_unpair Set.interᵢ_unpair
+  iInf_unpair f
+#align set.Inter_unpair Set.iInter_unpair
 -/
 
 end Set

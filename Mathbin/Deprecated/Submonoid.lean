@@ -108,37 +108,37 @@ theorem IsSubmonoid.inter {s₁ s₂ : Set M} (is₁ : IsSubmonoid s₁) (is₂ 
 #align is_submonoid.inter IsSubmonoid.inter
 #align is_add_submonoid.inter IsAddSubmonoid.inter
 
-#print IsSubmonoid.interᵢ /-
+#print IsSubmonoid.iInter /-
 /-- The intersection of an indexed set of submonoids of a monoid `M` is a submonoid of `M`. -/
 @[to_additive
       "The intersection of an indexed set of `add_submonoid`s of an `add_monoid` `M` is\nan `add_submonoid` of `M`."]
-theorem IsSubmonoid.interᵢ {ι : Sort _} {s : ι → Set M} (h : ∀ y : ι, IsSubmonoid (s y)) :
-    IsSubmonoid (Set.interᵢ s) :=
-  { one_mem := Set.mem_interᵢ.2 fun y => (h y).one_mem
+theorem IsSubmonoid.iInter {ι : Sort _} {s : ι → Set M} (h : ∀ y : ι, IsSubmonoid (s y)) :
+    IsSubmonoid (Set.iInter s) :=
+  { one_mem := Set.mem_iInter.2 fun y => (h y).one_mem
     mul_mem := fun x₁ x₂ h₁ h₂ =>
-      Set.mem_interᵢ.2 fun y => (h y).mul_mem (Set.mem_interᵢ.1 h₁ y) (Set.mem_interᵢ.1 h₂ y) }
-#align is_submonoid.Inter IsSubmonoid.interᵢ
-#align is_add_submonoid.Inter IsAddSubmonoid.interᵢ
+      Set.mem_iInter.2 fun y => (h y).mul_mem (Set.mem_iInter.1 h₁ y) (Set.mem_iInter.1 h₂ y) }
+#align is_submonoid.Inter IsSubmonoid.iInter
+#align is_add_submonoid.Inter IsAddSubmonoid.iInter
 -/
 
-#print isSubmonoid_unionᵢ_of_directed /-
+#print isSubmonoid_iUnion_of_directed /-
 /-- The union of an indexed, directed, nonempty set of submonoids of a monoid `M` is a submonoid
     of `M`. -/
 @[to_additive
       "The union of an indexed, directed, nonempty set\nof `add_submonoid`s of an `add_monoid` `M` is an `add_submonoid` of `M`. "]
-theorem isSubmonoid_unionᵢ_of_directed {ι : Type _} [hι : Nonempty ι] {s : ι → Set M}
+theorem isSubmonoid_iUnion_of_directed {ι : Type _} [hι : Nonempty ι] {s : ι → Set M}
     (hs : ∀ i, IsSubmonoid (s i)) (directed : ∀ i j, ∃ k, s i ⊆ s k ∧ s j ⊆ s k) :
     IsSubmonoid (⋃ i, s i) :=
   { one_mem :=
       let ⟨i⟩ := hι
-      Set.mem_unionᵢ.2 ⟨i, (hs i).one_mem⟩
+      Set.mem_iUnion.2 ⟨i, (hs i).one_mem⟩
     mul_mem := fun a b ha hb =>
-      let ⟨i, hi⟩ := Set.mem_unionᵢ.1 ha
-      let ⟨j, hj⟩ := Set.mem_unionᵢ.1 hb
+      let ⟨i, hi⟩ := Set.mem_iUnion.1 ha
+      let ⟨j, hj⟩ := Set.mem_iUnion.1 hb
       let ⟨k, hk⟩ := Directed i j
-      Set.mem_unionᵢ.2 ⟨k, (hs k).mul_mem (hk.1 hi) (hk.2 hj)⟩ }
-#align is_submonoid_Union_of_directed isSubmonoid_unionᵢ_of_directed
-#align is_add_submonoid_Union_of_directed isAddSubmonoid_unionᵢ_of_directed
+      Set.mem_iUnion.2 ⟨k, (hs k).mul_mem (hk.1 hi) (hk.2 hj)⟩ }
+#align is_submonoid_Union_of_directed isSubmonoid_iUnion_of_directed
+#align is_add_submonoid_Union_of_directed isAddSubmonoid_iUnion_of_directed
 -/
 
 section powers

@@ -311,7 +311,7 @@ theorem equiv_nim_grundyValue : ∀ (G : Pgame.{u}) [G.Impartial], G ≈ nim (gr
         rw [grundy_value_eq_mex_left]
         intro i₂
         have hnotin : _ ∉ _ := fun hin =>
-          (le_not_le_of_lt (Ordinal.typein_lt_self i₂)).2 (cinfₛ_le' hin)
+          (le_not_le_of_lt (Ordinal.typein_lt_self i₂)).2 (csInf_le' hin)
         simpa using hnotin
       cases' h' with i hi
       use to_left_moves_add (Sum.inl i)

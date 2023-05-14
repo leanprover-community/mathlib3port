@@ -117,11 +117,11 @@ theorem maximalIdeal_isPrincipal_of_isDedekindDomain [LocalRing R] [IsDomain R]
     have hle : Ideal.span {a} ≤ maximal_ideal R := by rwa [Ideal.span_le, Set.singleton_subset_iff]
     have : (Ideal.span {a}).radical = maximal_ideal R :=
       by
-      rw [Ideal.radical_eq_infₛ]
+      rw [Ideal.radical_eq_sInf]
       apply le_antisymm
-      · exact infₛ_le ⟨hle, inferInstance⟩
+      · exact sInf_le ⟨hle, inferInstance⟩
       · refine'
-          le_infₛ fun I hI =>
+          le_sInf fun I hI =>
             (eq_maximal_ideal <| IsDedekindDomain.dimensionLeOne _ (fun e => ha₂ _) hI.2).ge
         rw [← Ideal.span_singleton_eq_bot, eq_bot_iff, ← e]
         exact hI.1

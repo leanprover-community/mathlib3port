@@ -86,19 +86,19 @@ theorem image_rayleigh_eq_image_rayleigh_sphere {r : ℝ} (hr : 0 < r) :
     exact ⟨x, ne_zero_of_mem_sphere hr.ne' ⟨x, hx⟩, hxT⟩
 #align continuous_linear_map.image_rayleigh_eq_image_rayleigh_sphere ContinuousLinearMap.image_rayleigh_eq_image_rayleigh_sphere
 
-theorem supᵢ_rayleigh_eq_supᵢ_rayleigh_sphere {r : ℝ} (hr : 0 < r) :
+theorem iSup_rayleigh_eq_iSup_rayleigh_sphere {r : ℝ} (hr : 0 < r) :
     (⨆ x : { x : E // x ≠ 0 }, rayleigh_quotient x) = ⨆ x : sphere (0 : E) r, rayleigh_quotient x :=
   show (⨆ x : ({0} : Set E)ᶜ, rayleigh_quotient x) = _ by
-    simp only [← @supₛ_image' _ _ _ _ rayleigh_quotient,
+    simp only [← @sSup_image' _ _ _ _ rayleigh_quotient,
       T.image_rayleigh_eq_image_rayleigh_sphere hr]
-#align continuous_linear_map.supr_rayleigh_eq_supr_rayleigh_sphere ContinuousLinearMap.supᵢ_rayleigh_eq_supᵢ_rayleigh_sphere
+#align continuous_linear_map.supr_rayleigh_eq_supr_rayleigh_sphere ContinuousLinearMap.iSup_rayleigh_eq_iSup_rayleigh_sphere
 
-theorem infᵢ_rayleigh_eq_infᵢ_rayleigh_sphere {r : ℝ} (hr : 0 < r) :
+theorem iInf_rayleigh_eq_iInf_rayleigh_sphere {r : ℝ} (hr : 0 < r) :
     (⨅ x : { x : E // x ≠ 0 }, rayleigh_quotient x) = ⨅ x : sphere (0 : E) r, rayleigh_quotient x :=
   show (⨅ x : ({0} : Set E)ᶜ, rayleigh_quotient x) = _ by
-    simp only [← @infₛ_image' _ _ _ _ rayleigh_quotient,
+    simp only [← @sInf_image' _ _ _ _ rayleigh_quotient,
       T.image_rayleigh_eq_image_rayleigh_sphere hr]
-#align continuous_linear_map.infi_rayleigh_eq_infi_rayleigh_sphere ContinuousLinearMap.infᵢ_rayleigh_eq_infᵢ_rayleigh_sphere
+#align continuous_linear_map.infi_rayleigh_eq_infi_rayleigh_sphere ContinuousLinearMap.iInf_rayleigh_eq_iInf_rayleigh_sphere
 
 end ContinuousLinearMap
 
@@ -211,7 +211,7 @@ theorem hasEigenvector_of_isMaxOn (hT : IsSelfAdjoint T) {x₀ : E} (hx₀ : x�
   have hx₀' : 0 < ‖x₀‖ := by simp [hx₀]
   have hx₀'' : x₀ ∈ sphere (0 : E) ‖x₀‖ := by simp
   rw [T.supr_rayleigh_eq_supr_rayleigh_sphere hx₀']
-  refine' IsMaxOn.supᵢ_eq hx₀'' _
+  refine' IsMaxOn.iSup_eq hx₀'' _
   intro x hx
   dsimp
   have : ‖x‖ = ‖x₀‖ := by simpa using hx
@@ -230,7 +230,7 @@ theorem hasEigenvector_of_isMinOn (hT : IsSelfAdjoint T) {x₀ : E} (hx₀ : x�
   have hx₀' : 0 < ‖x₀‖ := by simp [hx₀]
   have hx₀'' : x₀ ∈ sphere (0 : E) ‖x₀‖ := by simp
   rw [T.infi_rayleigh_eq_infi_rayleigh_sphere hx₀']
-  refine' IsMinOn.infᵢ_eq hx₀'' _
+  refine' IsMinOn.iInf_eq hx₀'' _
   intro x hx
   dsimp
   have : ‖x‖ = ‖x₀‖ := by simpa using hx
@@ -254,7 +254,7 @@ include _i
 
 /-- The supremum of the Rayleigh quotient of a symmetric operator `T` on a nontrivial
 finite-dimensional vector space is an eigenvalue for that operator. -/
-theorem hasEigenvalue_supᵢ_of_finiteDimensional (hT : T.IsSymmetric) :
+theorem hasEigenvalue_iSup_of_finiteDimensional (hT : T.IsSymmetric) :
     HasEigenvalue T ↑(⨆ x : { x : E // x ≠ 0 }, IsROrC.re ⟪T x, x⟫ / ‖(x : E)‖ ^ 2) :=
   by
   haveI := FiniteDimensional.proper_isROrC 𝕜 E
@@ -272,11 +272,11 @@ theorem hasEigenvalue_supᵢ_of_finiteDimensional (hT : T.IsSymmetric) :
     have : ‖x₀‖ ≠ 0 := by simp only [hx₀, norm_eq_zero, hx, Ne.def, not_false_iff]
     simpa [← norm_eq_zero, Ne.def]
   exact has_eigenvalue_of_has_eigenvector (T'.prop.has_eigenvector_of_is_max_on hx₀_ne this)
-#align linear_map.is_symmetric.has_eigenvalue_supr_of_finite_dimensional LinearMap.IsSymmetric.hasEigenvalue_supᵢ_of_finiteDimensional
+#align linear_map.is_symmetric.has_eigenvalue_supr_of_finite_dimensional LinearMap.IsSymmetric.hasEigenvalue_iSup_of_finiteDimensional
 
 /-- The infimum of the Rayleigh quotient of a symmetric operator `T` on a nontrivial
 finite-dimensional vector space is an eigenvalue for that operator. -/
-theorem hasEigenvalue_infᵢ_of_finiteDimensional (hT : T.IsSymmetric) :
+theorem hasEigenvalue_iInf_of_finiteDimensional (hT : T.IsSymmetric) :
     HasEigenvalue T ↑(⨅ x : { x : E // x ≠ 0 }, IsROrC.re ⟪T x, x⟫ / ‖(x : E)‖ ^ 2) :=
   by
   haveI := FiniteDimensional.proper_isROrC 𝕜 E
@@ -294,7 +294,7 @@ theorem hasEigenvalue_infᵢ_of_finiteDimensional (hT : T.IsSymmetric) :
     have : ‖x₀‖ ≠ 0 := by simp only [hx₀, norm_eq_zero, hx, Ne.def, not_false_iff]
     simpa [← norm_eq_zero, Ne.def]
   exact has_eigenvalue_of_has_eigenvector (T'.prop.has_eigenvector_of_is_min_on hx₀_ne this)
-#align linear_map.is_symmetric.has_eigenvalue_infi_of_finite_dimensional LinearMap.IsSymmetric.hasEigenvalue_infᵢ_of_finiteDimensional
+#align linear_map.is_symmetric.has_eigenvalue_infi_of_finite_dimensional LinearMap.IsSymmetric.hasEigenvalue_iInf_of_finiteDimensional
 
 omit _i
 

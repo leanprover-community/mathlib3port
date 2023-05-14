@@ -158,12 +158,12 @@ theorem nonempty_iff : Nonempty (T.CompleteType α) ↔ T.IsSatisfiable :=
 instance : Nonempty (CompleteType ∅ α) :=
   nonempty_iff.2 (isSatisfiable_empty L)
 
-theorem interᵢ_setOf_subset {ι : Type _} (S : ι → L[[α]].Theory) :
+theorem iInter_setOf_subset {ι : Type _} (S : ι → L[[α]].Theory) :
     (⋂ i : ι, { p : T.CompleteType α | S i ⊆ p }) = { p | (⋃ i : ι, S i) ⊆ p } :=
   by
   ext
   simp only [mem_Inter, mem_set_of_eq, Union_subset_iff]
-#align first_order.language.Theory.complete_type.Inter_set_of_subset FirstOrder.Language.Theory.CompleteType.interᵢ_setOf_subset
+#align first_order.language.Theory.complete_type.Inter_set_of_subset FirstOrder.Language.Theory.CompleteType.iInter_setOf_subset
 
 theorem toList_foldr_inf_mem {p : T.CompleteType α} {t : Finset L[[α]].Sentence} :
     t.toList.foldr (· ⊓ ·) ⊤ ∈ p ↔ (t : L[[α]].Theory) ⊆ ↑p :=

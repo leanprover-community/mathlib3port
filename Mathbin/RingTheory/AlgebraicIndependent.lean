@@ -344,7 +344,7 @@ theorem AlgebraicIndependent.image {ι} {s : Set ι} {f : ι → A}
   convert AlgebraicIndependent.image_of_comp s f id hs
 #align algebraic_independent.image AlgebraicIndependent.image
 
-theorem algebraicIndependent_unionᵢ_of_directed {η : Type _} [Nonempty η] {s : η → Set A}
+theorem algebraicIndependent_iUnion_of_directed {η : Type _} [Nonempty η] {s : η → Set A}
     (hs : Directed (· ⊆ ·) s) (h : ∀ i, AlgebraicIndependent R (fun x => x : s i → A)) :
     AlgebraicIndependent R (fun x => x : (⋃ i, s i) → A) :=
   by
@@ -352,15 +352,15 @@ theorem algebraicIndependent_unionᵢ_of_directed {η : Type _} [Nonempty η] {s
   rcases finite_subset_Union ft ht with ⟨I, fi, hI⟩
   rcases hs.finset_le fi.to_finset with ⟨i, hi⟩
   exact (h i).mono (subset.trans hI <| Union₂_subset fun j hj => hi j (fi.mem_to_finset.2 hj))
-#align algebraic_independent_Union_of_directed algebraicIndependent_unionᵢ_of_directed
+#align algebraic_independent_Union_of_directed algebraicIndependent_iUnion_of_directed
 
-theorem algebraicIndependent_unionₛ_of_directed {s : Set (Set A)} (hsn : s.Nonempty)
+theorem algebraicIndependent_sUnion_of_directed {s : Set (Set A)} (hsn : s.Nonempty)
     (hs : DirectedOn (· ⊆ ·) s)
     (h : ∀ a ∈ s, AlgebraicIndependent R (fun x => x : (a : Set A) → A)) :
     AlgebraicIndependent R (fun x => x : ⋃₀ s → A) := by
   letI : Nonempty s := nonempty.to_subtype hsn <;> rw [sUnion_eq_Union] <;>
-    exact algebraicIndependent_unionᵢ_of_directed hs.directed_coe (by simpa using h)
-#align algebraic_independent_sUnion_of_directed algebraicIndependent_unionₛ_of_directed
+    exact algebraicIndependent_iUnion_of_directed hs.directed_coe (by simpa using h)
+#align algebraic_independent_sUnion_of_directed algebraicIndependent_sUnion_of_directed
 
 theorem exists_maximal_algebraicIndependent (s t : Set A) (hst : s ⊆ t)
     (hs : AlgebraicIndependent R (coe : s → A)) :
@@ -373,7 +373,7 @@ theorem exists_maximal_algebraicIndependent (s t : Set A) (hst : s ⊆ t)
         ⟨⋃₀ c,
           by
           refine'
-            ⟨⟨algebraicIndependent_unionₛ_of_directed hcn chainc.directed_on fun a ha => (hc ha).1,
+            ⟨⟨algebraicIndependent_sUnion_of_directed hcn chainc.directed_on fun a ha => (hc ha).1,
                 _, _⟩,
               _⟩
           · cases' hcn with x hx

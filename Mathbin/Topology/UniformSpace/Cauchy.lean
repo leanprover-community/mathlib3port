@@ -568,15 +568,15 @@ protected theorem IsComplete.union {s t : Set α} (hs : IsComplete s) (ht : IsCo
       (ht l hl htl).imp fun x hx => ⟨Or.inr hx.fst, hx.snd⟩⟩
 #align is_complete.union IsComplete.union
 
-/- warning: is_complete_Union_separated -> isComplete_unionᵢ_separated is a dubious translation:
+/- warning: is_complete_Union_separated -> isComplete_iUnion_separated is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {ι : Sort.{u2}} {s : ι -> (Set.{u1} α)}, (forall (i : ι), IsComplete.{u1} α _inst_1 (s i)) -> (forall {U : Set.{u1} (Prod.{u1, u1} α α)}, (Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) U (uniformity.{u1} α _inst_1)) -> (forall (i : ι) (j : ι) (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (s i)) -> (forall (y : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y (s j)) -> (Membership.Mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasMem.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) U) -> (Eq.{u2} ι i j))) -> (IsComplete.{u1} α _inst_1 (Set.unionᵢ.{u1, u2} α ι (fun (i : ι) => s i))))
+  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {ι : Sort.{u2}} {s : ι -> (Set.{u1} α)}, (forall (i : ι), IsComplete.{u1} α _inst_1 (s i)) -> (forall {U : Set.{u1} (Prod.{u1, u1} α α)}, (Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) U (uniformity.{u1} α _inst_1)) -> (forall (i : ι) (j : ι) (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (s i)) -> (forall (y : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y (s j)) -> (Membership.Mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasMem.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) U) -> (Eq.{u2} ι i j))) -> (IsComplete.{u1} α _inst_1 (Set.iUnion.{u1, u2} α ι (fun (i : ι) => s i))))
 but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : UniformSpace.{u2} α] {ι : Sort.{u1}} {s : ι -> (Set.{u2} α)}, (forall (i : ι), IsComplete.{u2} α _inst_1 (s i)) -> (forall {U : Set.{u2} (Prod.{u2, u2} α α)}, (Membership.mem.{u2, u2} (Set.{u2} (Prod.{u2, u2} α α)) (Filter.{u2} (Prod.{u2, u2} α α)) (instMembershipSetFilter.{u2} (Prod.{u2, u2} α α)) U (uniformity.{u2} α _inst_1)) -> (forall (i : ι) (j : ι) (x : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x (s i)) -> (forall (y : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) y (s j)) -> (Membership.mem.{u2, u2} (Prod.{u2, u2} α α) (Set.{u2} (Prod.{u2, u2} α α)) (Set.instMembershipSet.{u2} (Prod.{u2, u2} α α)) (Prod.mk.{u2, u2} α α x y) U) -> (Eq.{u1} ι i j))) -> (IsComplete.{u2} α _inst_1 (Set.unionᵢ.{u2, u1} α ι (fun (i : ι) => s i))))
-Case conversion may be inaccurate. Consider using '#align is_complete_Union_separated isComplete_unionᵢ_separatedₓ'. -/
+  forall {α : Type.{u2}} [_inst_1 : UniformSpace.{u2} α] {ι : Sort.{u1}} {s : ι -> (Set.{u2} α)}, (forall (i : ι), IsComplete.{u2} α _inst_1 (s i)) -> (forall {U : Set.{u2} (Prod.{u2, u2} α α)}, (Membership.mem.{u2, u2} (Set.{u2} (Prod.{u2, u2} α α)) (Filter.{u2} (Prod.{u2, u2} α α)) (instMembershipSetFilter.{u2} (Prod.{u2, u2} α α)) U (uniformity.{u2} α _inst_1)) -> (forall (i : ι) (j : ι) (x : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x (s i)) -> (forall (y : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) y (s j)) -> (Membership.mem.{u2, u2} (Prod.{u2, u2} α α) (Set.{u2} (Prod.{u2, u2} α α)) (Set.instMembershipSet.{u2} (Prod.{u2, u2} α α)) (Prod.mk.{u2, u2} α α x y) U) -> (Eq.{u1} ι i j))) -> (IsComplete.{u2} α _inst_1 (Set.iUnion.{u2, u1} α ι (fun (i : ι) => s i))))
+Case conversion may be inaccurate. Consider using '#align is_complete_Union_separated isComplete_iUnion_separatedₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » S) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem isComplete_unionᵢ_separated {ι : Sort _} {s : ι → Set α} (hs : ∀ i, IsComplete (s i))
+theorem isComplete_iUnion_separated {ι : Sort _} {s : ι → Set α} (hs : ∀ i, IsComplete (s i))
     {U : Set (α × α)} (hU : U ∈ 𝓤 α) (hd : ∀ (i j : ι), ∀ x ∈ s i, ∀ y ∈ s j, (x, y) ∈ U → i = j) :
     IsComplete (⋃ i, s i) := by
   set S := ⋃ i, s i
@@ -599,7 +599,7 @@ theorem isComplete_unionᵢ_separated {ι : Sort _} {s : ι → Set α} (hs : �
     exact hd i j x hi y hj (htU <| mk_mem_prod hx hy)
   rcases hs i l hl (le_principal_iff.2 <| mem_of_superset htl hi) with ⟨x, hxs, hlx⟩
   exact ⟨x, mem_Union.2 ⟨i, hxs⟩, hlx⟩
-#align is_complete_Union_separated isComplete_unionᵢ_separated
+#align is_complete_Union_separated isComplete_iUnion_separated
 
 #print CompleteSpace /-
 /-- A complete space is defined here using uniformities. A uniform space
@@ -752,9 +752,9 @@ def TotallyBounded (s : Set α) : Prop :=
 
 /- warning: totally_bounded.exists_subset -> TotallyBounded.exists_subset is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} α}, (TotallyBounded.{u1} α _inst_1 s) -> (forall {U : Set.{u1} (Prod.{u1, u1} α α)}, (Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) U (uniformity.{u1} α _inst_1)) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t s) (fun (H : HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t s) => And (Set.Finite.{u1} α t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Set.unionᵢ.{u1, succ u1} α α (fun (y : α) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t) => setOf.{u1} α (fun (x : α) => Membership.Mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasMem.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) U)))))))))
+  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} α}, (TotallyBounded.{u1} α _inst_1 s) -> (forall {U : Set.{u1} (Prod.{u1, u1} α α)}, (Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) U (uniformity.{u1} α _inst_1)) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t s) (fun (H : HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t s) => And (Set.Finite.{u1} α t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Set.iUnion.{u1, succ u1} α α (fun (y : α) => Set.iUnion.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t) => setOf.{u1} α (fun (x : α) => Membership.Mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasMem.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) U)))))))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} α}, (TotallyBounded.{u1} α _inst_1 s) -> (forall {U : Set.{u1} (Prod.{u1, u1} α α)}, (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) U (uniformity.{u1} α _inst_1)) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) t s) (And (Set.Finite.{u1} α t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Set.unionᵢ.{u1, succ u1} α α (fun (y : α) => Set.unionᵢ.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) (fun (h._@.Mathlib.Topology.UniformSpace.Cauchy._hyg.5698 : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) => setOf.{u1} α (fun (x : α) => Membership.mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.instMembershipSet.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) U)))))))))
+  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} α}, (TotallyBounded.{u1} α _inst_1 s) -> (forall {U : Set.{u1} (Prod.{u1, u1} α α)}, (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) U (uniformity.{u1} α _inst_1)) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) t s) (And (Set.Finite.{u1} α t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Set.iUnion.{u1, succ u1} α α (fun (y : α) => Set.iUnion.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) (fun (h._@.Mathlib.Topology.UniformSpace.Cauchy._hyg.5698 : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) => setOf.{u1} α (fun (x : α) => Membership.mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.instMembershipSet.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) U)))))))))
 Case conversion may be inaccurate. Consider using '#align totally_bounded.exists_subset TotallyBounded.exists_subsetₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem TotallyBounded.exists_subset {s : Set α} (hs : TotallyBounded s) {U : Set (α × α)}
@@ -778,9 +778,9 @@ theorem TotallyBounded.exists_subset {s : Set α} (hs : TotallyBounded s) {U : S
 
 /- warning: totally_bounded_iff_subset -> totallyBounded_iff_subset is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} α}, Iff (TotallyBounded.{u1} α _inst_1 s) (forall (d : Set.{u1} (Prod.{u1, u1} α α)), (Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) d (uniformity.{u1} α _inst_1)) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t s) (fun (H : HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t s) => And (Set.Finite.{u1} α t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Set.unionᵢ.{u1, succ u1} α α (fun (y : α) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t) => setOf.{u1} α (fun (x : α) => Membership.Mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasMem.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) d)))))))))
+  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} α}, Iff (TotallyBounded.{u1} α _inst_1 s) (forall (d : Set.{u1} (Prod.{u1, u1} α α)), (Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) d (uniformity.{u1} α _inst_1)) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t s) (fun (H : HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t s) => And (Set.Finite.{u1} α t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Set.iUnion.{u1, succ u1} α α (fun (y : α) => Set.iUnion.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t) => setOf.{u1} α (fun (x : α) => Membership.Mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasMem.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) d)))))))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} α}, Iff (TotallyBounded.{u1} α _inst_1 s) (forall (d : Set.{u1} (Prod.{u1, u1} α α)), (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) d (uniformity.{u1} α _inst_1)) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) t s) (And (Set.Finite.{u1} α t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Set.unionᵢ.{u1, succ u1} α α (fun (y : α) => Set.unionᵢ.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) (fun (h._@.Mathlib.Topology.UniformSpace.Cauchy._hyg.6626 : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) => setOf.{u1} α (fun (x : α) => Membership.mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.instMembershipSet.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) d)))))))))
+  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} α}, Iff (TotallyBounded.{u1} α _inst_1 s) (forall (d : Set.{u1} (Prod.{u1, u1} α α)), (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) d (uniformity.{u1} α _inst_1)) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) t s) (And (Set.Finite.{u1} α t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Set.iUnion.{u1, succ u1} α α (fun (y : α) => Set.iUnion.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) (fun (h._@.Mathlib.Topology.UniformSpace.Cauchy._hyg.6626 : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) => setOf.{u1} α (fun (x : α) => Membership.mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.instMembershipSet.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) d)))))))))
 Case conversion may be inaccurate. Consider using '#align totally_bounded_iff_subset totallyBounded_iff_subsetₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem totallyBounded_iff_subset {s : Set α} :
@@ -793,15 +793,15 @@ theorem totallyBounded_iff_subset {s : Set α} :
 
 /- warning: filter.has_basis.totally_bounded_iff -> Filter.HasBasis.totallyBounded_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {ι : Sort.{u2}} {p : ι -> Prop} {U : ι -> (Set.{u1} (Prod.{u1, u1} α α))}, (Filter.HasBasis.{u1, u2} (Prod.{u1, u1} α α) ι (uniformity.{u1} α _inst_1) p U) -> (forall {s : Set.{u1} α}, Iff (TotallyBounded.{u1} α _inst_1 s) (forall (i : ι), (p i) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Set.Finite.{u1} α t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Set.unionᵢ.{u1, succ u1} α α (fun (y : α) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t) => setOf.{u1} α (fun (x : α) => Membership.Mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasMem.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) (U i))))))))))
+  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {ι : Sort.{u2}} {p : ι -> Prop} {U : ι -> (Set.{u1} (Prod.{u1, u1} α α))}, (Filter.HasBasis.{u1, u2} (Prod.{u1, u1} α α) ι (uniformity.{u1} α _inst_1) p U) -> (forall {s : Set.{u1} α}, Iff (TotallyBounded.{u1} α _inst_1 s) (forall (i : ι), (p i) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Set.Finite.{u1} α t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Set.iUnion.{u1, succ u1} α α (fun (y : α) => Set.iUnion.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t) => setOf.{u1} α (fun (x : α) => Membership.Mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasMem.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) (U i))))))))))
 but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : UniformSpace.{u2} α] {ι : Sort.{u1}} {p : ι -> Prop} {U : ι -> (Set.{u2} (Prod.{u2, u2} α α))}, (Filter.HasBasis.{u2, u1} (Prod.{u2, u2} α α) ι (uniformity.{u2} α _inst_1) p U) -> (forall {s : Set.{u2} α}, Iff (TotallyBounded.{u2} α _inst_1 s) (forall (i : ι), (p i) -> (Exists.{succ u2} (Set.{u2} α) (fun (t : Set.{u2} α) => And (Set.Finite.{u2} α t) (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) s (Set.unionᵢ.{u2, succ u2} α α (fun (y : α) => Set.unionᵢ.{u2, 0} α (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) y t) (fun (H : Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) y t) => setOf.{u2} α (fun (x : α) => Membership.mem.{u2, u2} (Prod.{u2, u2} α α) (Set.{u2} (Prod.{u2, u2} α α)) (Set.instMembershipSet.{u2} (Prod.{u2, u2} α α)) (Prod.mk.{u2, u2} α α x y) (U i))))))))))
+  forall {α : Type.{u2}} [_inst_1 : UniformSpace.{u2} α] {ι : Sort.{u1}} {p : ι -> Prop} {U : ι -> (Set.{u2} (Prod.{u2, u2} α α))}, (Filter.HasBasis.{u2, u1} (Prod.{u2, u2} α α) ι (uniformity.{u2} α _inst_1) p U) -> (forall {s : Set.{u2} α}, Iff (TotallyBounded.{u2} α _inst_1 s) (forall (i : ι), (p i) -> (Exists.{succ u2} (Set.{u2} α) (fun (t : Set.{u2} α) => And (Set.Finite.{u2} α t) (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) s (Set.iUnion.{u2, succ u2} α α (fun (y : α) => Set.iUnion.{u2, 0} α (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) y t) (fun (H : Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) y t) => setOf.{u2} α (fun (x : α) => Membership.mem.{u2, u2} (Prod.{u2, u2} α α) (Set.{u2} (Prod.{u2, u2} α α)) (Set.instMembershipSet.{u2} (Prod.{u2, u2} α α)) (Prod.mk.{u2, u2} α α x y) (U i))))))))))
 Case conversion may be inaccurate. Consider using '#align filter.has_basis.totally_bounded_iff Filter.HasBasis.totallyBounded_iffₓ'. -/
 theorem Filter.HasBasis.totallyBounded_iff {ι} {p : ι → Prop} {U : ι → Set (α × α)}
     (H : (𝓤 α).HasBasis p U) {s : Set α} :
     TotallyBounded s ↔ ∀ i, p i → ∃ t : Set α, Set.Finite t ∧ s ⊆ ⋃ y ∈ t, { x | (x, y) ∈ U i } :=
   H.forall_iff fun U V hUV h =>
-    h.imp fun t ht => ⟨ht.1, ht.2.trans <| unionᵢ₂_mono fun x hx y hy => hUV hy⟩
+    h.imp fun t ht => ⟨ht.1, ht.2.trans <| iUnion₂_mono fun x hx y hy => hUV hy⟩
 #align filter.has_basis.totally_bounded_iff Filter.HasBasis.totallyBounded_iff
 
 #print totallyBounded_of_forall_symm /-
@@ -834,7 +834,7 @@ theorem TotallyBounded.closure {s : Set α} (h : TotallyBounded s) : TotallyBoun
     let ⟨t, htf, hst⟩ := h V hV.1
     ⟨t, htf,
       closure_minimal hst <|
-        isClosed_bunionᵢ htf fun y hy => hV.2.Preimage (continuous_id.prod_mk continuous_const)⟩
+        isClosed_biUnion htf fun y hy => hV.2.Preimage (continuous_id.prod_mk continuous_const)⟩
 #align totally_bounded.closure TotallyBounded.closure
 -/
 
@@ -865,7 +865,7 @@ theorem Ultrafilter.cauchy_of_totallyBounded {s : Set α} (f : Ultrafilter α) (
     let ⟨t', ht'₁, ht'_symm, ht'_t⟩ := comp_symm_of_uniformity ht
     let ⟨i, hi, hs_union⟩ := hs t' ht'₁
     have : (⋃ y ∈ i, { x | (x, y) ∈ t' }) ∈ f := mem_of_superset (le_principal_iff.mp h) hs_union
-    have : ∃ y ∈ i, { x | (x, y) ∈ t' } ∈ f := (Ultrafilter.finite_bunionᵢ_mem_iff hi).1 this
+    have : ∃ y ∈ i, { x | (x, y) ∈ t' } ∈ f := (Ultrafilter.finite_biUnion_mem_iff hi).1 this
     let ⟨y, hy, hif⟩ := this
     have : { x | (x, y) ∈ t' } ×ˢ { x | (x, y) ∈ t' } ⊆ compRel t' t' :=
       fun ⟨x₁, x₂⟩ ⟨(h₁ : (x₁, y) ∈ t'), (h₂ : (x₂, y) ∈ t')⟩ => ⟨y, h₁, ht'_symm h₂⟩
@@ -895,14 +895,14 @@ theorem totallyBounded_iff_filter {s : Set α} :
         exact principal_mono.2 (diff_subset_diff_right <| bUnion_subset_bUnion_left h)
       · intro t
         simpa [nonempty_diff] using hd_cover t t.finite_to_set
-    have : f ≤ 𝓟 s := infᵢ_le_of_le ∅ (by simp)
+    have : f ≤ 𝓟 s := iInf_le_of_le ∅ (by simp)
     refine' ⟨f, ‹_›, ‹_›, fun c hcf hc => _⟩
     rcases mem_prod_same_iff.1 (hc.2 hd) with ⟨m, hm, hmd⟩
     have : m ∩ s ∈ c := inter_mem hm (le_principal_iff.mp (hcf.trans ‹_›))
     rcases hc.1.nonempty_of_mem this with ⟨y, hym, hys⟩
     set ys := ⋃ y' ∈ ({y} : Finset α), { x | (x, y') ∈ d }
     have : m ⊆ ys := by simpa [ys] using fun x hx => hmd (mk_mem_prod hx hym)
-    have : c ≤ 𝓟 (s \ ys) := hcf.trans (infᵢ_le_of_le {y} le_rfl)
+    have : c ≤ 𝓟 (s \ ys) := hcf.trans (iInf_le_of_le {y} le_rfl)
     refine' hc.1.Ne (empty_mem_iff_bot.mp _)
     filter_upwards [le_principal_iff.1 this, hm]
     refine' fun x hx hxm => hx.2 _
@@ -1026,19 +1026,19 @@ def setSeq (n : ℕ) : Set α :=
 
 #print SequentiallyComplete.setSeq_mem /-
 theorem setSeq_mem (n : ℕ) : setSeq hf U_mem n ∈ f :=
-  (binterᵢ_mem (finite_le_nat n)).2 fun m _ => (setSeqAux hf U_mem m).2.fst
+  (biInter_mem (finite_le_nat n)).2 fun m _ => (setSeqAux hf U_mem m).2.fst
 #align sequentially_complete.set_seq_mem SequentiallyComplete.setSeq_mem
 -/
 
 #print SequentiallyComplete.setSeq_mono /-
 theorem setSeq_mono ⦃m n : ℕ⦄ (h : m ≤ n) : setSeq hf U_mem n ⊆ setSeq hf U_mem m :=
-  binterᵢ_subset_binterᵢ_left fun k hk => le_trans hk h
+  biInter_subset_biInter_left fun k hk => le_trans hk h
 #align sequentially_complete.set_seq_mono SequentiallyComplete.setSeq_mono
 -/
 
 #print SequentiallyComplete.setSeq_sub_aux /-
 theorem setSeq_sub_aux (n : ℕ) : setSeq hf U_mem n ⊆ setSeqAux hf U_mem n :=
-  binterᵢ_subset_of_mem right_mem_Iic
+  biInter_subset_of_mem right_mem_Iic
 #align sequentially_complete.set_seq_sub_aux SequentiallyComplete.setSeq_sub_aux
 -/
 

@@ -339,7 +339,7 @@ theorem exists_isSubordinate [T2Space M] [SigmaCompactSpace M] (hs : IsClosed s)
     ⟨ι, c, f, hf, hsub', hfin⟩
   choose hcs hfU using hf
   -- Then we use the shrinking lemma to get a covering by smaller open
-  rcases exists_subset_unionᵢ_closed_subset hs (fun i => (f i).isOpen_support)
+  rcases exists_subset_iUnion_closed_subset hs (fun i => (f i).isOpen_support)
       (fun x hx => hfin.point_finite x) hsub' with
     ⟨V, hsV, hVc, hVf⟩
   choose r hrR hr using fun i => (f i).exists_r_pos_lt_subset_ball (hVc i) (hVf i)

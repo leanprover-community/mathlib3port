@@ -202,7 +202,7 @@ variable [CommRing 𝕜] {n : ℕ} [AddCommGroup E] [Module 𝕜 E] [Topological
   is the order of the isolated zero of an analytic function `f` at a point if `p` is the Taylor
   series of `f` at that point. -/
 noncomputable def order (p : FormalMultilinearSeries 𝕜 E F) : ℕ :=
-  infₛ { n | p n ≠ 0 }
+  sInf { n | p n ≠ 0 }
 #align formal_multilinear_series.order FormalMultilinearSeries.order
 
 @[simp]

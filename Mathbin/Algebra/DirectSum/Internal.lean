@@ -338,11 +338,11 @@ def DirectSum.coeAlgHom [AddMonoid ι] [CommSemiring S] [Semiring R] [Algebra S 
 
 /-- The supremum of submodules that form a graded monoid is a subalgebra, and equal to the range of
 `direct_sum.coe_alg_hom`. -/
-theorem Submodule.supᵢ_eq_toSubmodule_range [AddMonoid ι] [CommSemiring S] [Semiring R]
+theorem Submodule.iSup_eq_toSubmodule_range [AddMonoid ι] [CommSemiring S] [Semiring R]
     [Algebra S R] (A : ι → Submodule S R) [SetLike.GradedMonoid A] :
     (⨆ i, A i) = (DirectSum.coeAlgHom A).range.toSubmodule :=
-  (Submodule.supᵢ_eq_range_dfinsupp_lsum A).trans <| SetLike.coe_injective rfl
-#align submodule.supr_eq_to_submodule_range Submodule.supᵢ_eq_toSubmodule_range
+  (Submodule.iSup_eq_range_dfinsupp_lsum A).trans <| SetLike.coe_injective rfl
+#align submodule.supr_eq_to_submodule_range Submodule.iSup_eq_toSubmodule_range
 
 @[simp]
 theorem DirectSum.coeAlgHom_of [AddMonoid ι] [CommSemiring S] [Semiring R] [Algebra S R]

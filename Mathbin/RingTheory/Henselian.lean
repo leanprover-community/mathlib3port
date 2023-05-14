@@ -168,7 +168,7 @@ theorem HenselianLocalRing.tFAE (R : Type u) [CommRing R] [LocalRing R] :
 instance (R : Type _) [CommRing R] [hR : HenselianLocalRing R] : HenselianRing R (maximalIdeal R)
     where
   jac := by
-    rw [Ideal.jacobson, le_infₛ_iff]
+    rw [Ideal.jacobson, le_sInf_iff]
     rintro I ⟨-, hI⟩
     exact (eq_maximal_ideal hI).ge
   is_henselian := by

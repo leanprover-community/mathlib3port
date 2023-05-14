@@ -48,7 +48,7 @@ def smallSets (l : Filter α) : Filter (Set α) :=
 #print Filter.smallSets_eq_generate /-
 theorem smallSets_eq_generate {f : Filter α} : f.smallSets = generate (powerset '' f.sets) :=
   by
-  simp_rw [generate_eq_binfi, small_sets, infᵢ_image]
+  simp_rw [generate_eq_binfi, small_sets, iInf_image]
   rfl
 #align filter.small_sets_eq_generate Filter.smallSets_eq_generate
 -/
@@ -182,15 +182,15 @@ theorem comap_smallSets (l : Filter β) (f : α → Set β) :
 #align filter.comap_small_sets Filter.comap_smallSets
 -/
 
-/- warning: filter.small_sets_infi -> Filter.smallSets_infᵢ is a dubious translation:
+/- warning: filter.small_sets_infi -> Filter.smallSets_iInf is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {f : ι -> (Filter.{u1} α)}, Eq.{succ u1} (Filter.{u1} (Set.{u1} α)) (Filter.smallSets.{u1} α (infᵢ.{u1, u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι f)) (infᵢ.{u1, u2} (Filter.{u1} (Set.{u1} α)) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} (Set.{u1} α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Set.{u1} α)) (Filter.completeLattice.{u1} (Set.{u1} α)))) ι (fun (i : ι) => Filter.smallSets.{u1} α (f i)))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {f : ι -> (Filter.{u1} α)}, Eq.{succ u1} (Filter.{u1} (Set.{u1} α)) (Filter.smallSets.{u1} α (iInf.{u1, u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι f)) (iInf.{u1, u2} (Filter.{u1} (Set.{u1} α)) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} (Set.{u1} α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Set.{u1} α)) (Filter.completeLattice.{u1} (Set.{u1} α)))) ι (fun (i : ι) => Filter.smallSets.{u1} α (f i)))
 but is expected to have type
-  forall {α : Type.{u2}} {ι : Sort.{u1}} {f : ι -> (Filter.{u2} α)}, Eq.{succ u2} (Filter.{u2} (Set.{u2} α)) (Filter.smallSets.{u2} α (infᵢ.{u2, u1} (Filter.{u2} α) (ConditionallyCompleteLattice.toInfSet.{u2} (Filter.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} α) (Filter.instCompleteLatticeFilter.{u2} α))) ι f)) (infᵢ.{u2, u1} (Filter.{u2} (Set.{u2} α)) (ConditionallyCompleteLattice.toInfSet.{u2} (Filter.{u2} (Set.{u2} α)) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} (Set.{u2} α)) (Filter.instCompleteLatticeFilter.{u2} (Set.{u2} α)))) ι (fun (i : ι) => Filter.smallSets.{u2} α (f i)))
-Case conversion may be inaccurate. Consider using '#align filter.small_sets_infi Filter.smallSets_infᵢₓ'. -/
-theorem smallSets_infᵢ {f : ι → Filter α} : (infᵢ f).smallSets = ⨅ i, (f i).smallSets :=
-  lift'_infᵢ_of_map_univ powerset_inter powerset_univ
-#align filter.small_sets_infi Filter.smallSets_infᵢ
+  forall {α : Type.{u2}} {ι : Sort.{u1}} {f : ι -> (Filter.{u2} α)}, Eq.{succ u2} (Filter.{u2} (Set.{u2} α)) (Filter.smallSets.{u2} α (iInf.{u2, u1} (Filter.{u2} α) (ConditionallyCompleteLattice.toInfSet.{u2} (Filter.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} α) (Filter.instCompleteLatticeFilter.{u2} α))) ι f)) (iInf.{u2, u1} (Filter.{u2} (Set.{u2} α)) (ConditionallyCompleteLattice.toInfSet.{u2} (Filter.{u2} (Set.{u2} α)) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} (Set.{u2} α)) (Filter.instCompleteLatticeFilter.{u2} (Set.{u2} α)))) ι (fun (i : ι) => Filter.smallSets.{u2} α (f i)))
+Case conversion may be inaccurate. Consider using '#align filter.small_sets_infi Filter.smallSets_iInfₓ'. -/
+theorem smallSets_iInf {f : ι → Filter α} : (iInf f).smallSets = ⨅ i, (f i).smallSets :=
+  lift'_iInf_of_map_univ powerset_inter powerset_univ
+#align filter.small_sets_infi Filter.smallSets_iInf
 
 /- warning: filter.small_sets_inf -> Filter.smallSets_inf is a dubious translation:
 lean 3 declaration is

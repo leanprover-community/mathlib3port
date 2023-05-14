@@ -110,7 +110,7 @@ Case conversion may be inaccurate. Consider using '#align is_upper_set.mul_left 
 theorem IsUpperSet.mul_left (ht : IsUpperSet t) : IsUpperSet (s * t) :=
   by
   rw [← smul_eq_mul, ← bUnion_smul_set]
-  exact isUpperSet_unionᵢ₂ fun x hx => ht.smul
+  exact isUpperSet_iUnion₂ fun x hx => ht.smul
 #align is_upper_set.mul_left IsUpperSet.mul_left
 #align is_upper_set.add_left IsUpperSet.add_left
 
@@ -474,8 +474,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mul_upper_closure mul_upperClosureₓ'. -/
 @[to_additive]
 theorem mul_upperClosure : s * upperClosure t = upperClosure (s * t) := by
-  simp_rw [← smul_eq_mul, ← bUnion_smul_set, upperClosure_unionᵢ, upperClosure_smul,
-    UpperSet.coe_infᵢ₂, UpperSet.coe_smul]
+  simp_rw [← smul_eq_mul, ← bUnion_smul_set, upperClosure_iUnion, upperClosure_smul,
+    UpperSet.coe_iInf₂, UpperSet.coe_smul]
 #align mul_upper_closure mul_upperClosure
 #align add_upper_closure add_upperClosure
 
@@ -487,8 +487,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mul_lower_closure mul_lowerClosureₓ'. -/
 @[to_additive]
 theorem mul_lowerClosure : s * lowerClosure t = lowerClosure (s * t) := by
-  simp_rw [← smul_eq_mul, ← bUnion_smul_set, lowerClosure_unionᵢ, lowerClosure_smul,
-    LowerSet.coe_supᵢ₂, LowerSet.coe_smul]
+  simp_rw [← smul_eq_mul, ← bUnion_smul_set, lowerClosure_iUnion, lowerClosure_smul,
+    LowerSet.coe_iSup₂, LowerSet.coe_smul]
 #align mul_lower_closure mul_lowerClosure
 #align add_lower_closure add_lowerClosure
 

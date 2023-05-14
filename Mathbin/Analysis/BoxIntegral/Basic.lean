@@ -133,7 +133,7 @@ theorem integralSum_sub_partitions (f : ℝⁿ → E) (vol : ι →ᵇᵃ E →L
 
 @[simp]
 theorem integralSum_disjUnion (f : ℝⁿ → E) (vol : ι →ᵇᵃ E →L[ℝ] F) {π₁ π₂ : TaggedPrepartition I}
-    (h : Disjoint π₁.unionᵢ π₂.unionᵢ) :
+    (h : Disjoint π₁.iUnion π₂.iUnion) :
     integralSum f vol (π₁.disjUnion π₂ h) = integralSum f vol π₁ + integralSum f vol π₂ :=
   by
   refine'
@@ -247,7 +247,7 @@ theorem integrable_iff_cauchy_basis [CompleteSpace F] :
   rw [integrable_iff_cauchy, cauchy_map_iff',
     (l.has_basis_to_filter_Union_top _).prod_self.tendsto_iffₓ uniformity_basis_dist_le]
   refine' forall₂_congr fun ε ε0 => exists_congr fun r => _
-  simp only [exists_prop, Prod.forall, Set.mem_unionᵢ, exists_imp, prod_mk_mem_set_prod_eq, and_imp,
+  simp only [exists_prop, Prod.forall, Set.mem_iUnion, exists_imp, prod_mk_mem_set_prod_eq, and_imp,
     mem_inter_iff, mem_set_of_eq]
   exact
     and_congr Iff.rfl
@@ -509,7 +509,7 @@ See also `box_integral.integrable.dist_integral_sum_sum_integral_le_of_mem_base_
 -/
 theorem dist_integralSum_le_of_memBaseSet (h : Integrable I l f vol) (hpos₁ : 0 < ε₁)
     (hpos₂ : 0 < ε₂) (h₁ : l.MemBaseSet I c₁ (h.convergenceR ε₁ c₁) π₁)
-    (h₂ : l.MemBaseSet I c₂ (h.convergenceR ε₂ c₂) π₂) (HU : π₁.unionᵢ = π₂.unionᵢ) :
+    (h₂ : l.MemBaseSet I c₂ (h.convergenceR ε₂ c₂) π₂) (HU : π₁.iUnion = π₂.iUnion) :
     dist (integralSum f vol π₁) (integralSum f vol π₂) ≤ ε₁ + ε₂ :=
   by
   rcases h₁.exists_common_compl h₂ HU with ⟨π, hπU, hπc₁, hπc₂⟩
@@ -537,7 +537,7 @@ theorem tendsto_integralSum_toFilter_prod_self_inf_union_eq_uniformity (h : Inte
     Tendsto
       (fun π : TaggedPrepartition I × TaggedPrepartition I =>
         (integralSum f vol π.1, integralSum f vol π.2))
-      ((l.toFilter I ×ᶠ l.toFilter I) ⊓ 𝓟 { π | π.1.unionᵢ = π.2.unionᵢ }) (𝓤 F) :=
+      ((l.toFilter I ×ᶠ l.toFilter I) ⊓ 𝓟 { π | π.1.iUnion = π.2.iUnion }) (𝓤 F) :=
   by
   refine'
     (((l.has_basis_to_filter I).prod_self.inf_principal _).tendsto_iffₓ uniformity_basis_dist_le).2
@@ -607,7 +607,7 @@ The actual statement
 -/
 theorem dist_integralSum_sum_integral_le_of_memBaseSet_of_union_eq (h : Integrable I l f vol)
     (h0 : 0 < ε) (hπ : l.MemBaseSet I c (h.convergenceR ε c) π) {π₀ : Prepartition I}
-    (hU : π.unionᵢ = π₀.unionᵢ) :
+    (hU : π.iUnion = π₀.iUnion) :
     dist (integralSum f vol π) (∑ J in π₀.boxes, integral J l f vol) ≤ ε :=
   by
   -- Let us prove that the distance is less than or equal to `ε + δ` for all positive `δ`.
@@ -648,7 +648,7 @@ theorem dist_integralSum_sum_integral_le_of_memBaseSet_of_union_eq (h : Integrab
   choose! πi hπip hπiδ' hπiC
   have : l.mem_base_set I C (h.convergence_r δ' C) (π₀.bUnion_tagged πi) :=
     bUnion_tagged_mem_base_set hπiC hπip fun _ => le_max_right _ _
-  have hU' : π.Union = (π₀.bUnion_tagged πi).unionᵢ :=
+  have hU' : π.Union = (π₀.bUnion_tagged πi).iUnion :=
     hU.trans (prepartition.Union_bUnion_partition _ hπip).symm
   have := h.dist_integral_sum_le_of_mem_base_set h0 δ'0 hπ this hU'
   rw [integral_sum_bUnion_tagged] at this
@@ -690,7 +690,7 @@ theorem tendsto_integralSum_sum_integral (h : Integrable I l f vol) (π₀ : Pre
   by
   refine' ((l.has_basis_to_filter_Union I π₀).tendsto_iffₓ nhds_basis_closed_ball).2 fun ε ε0 => _
   refine' ⟨h.convergence_r ε, h.convergence_r_cond ε, _⟩
-  simp only [mem_inter_iff, Set.mem_unionᵢ, mem_set_of_eq]
+  simp only [mem_inter_iff, Set.mem_iUnion, mem_set_of_eq]
   rintro π ⟨c, hc, hU⟩
   exact h.dist_integral_sum_sum_integral_le_of_mem_base_set_of_Union_eq ε0 hc hU
 #align box_integral.integrable.tendsto_integral_sum_sum_integral BoxIntegral.Integrable.tendsto_integralSum_sum_integral
@@ -701,7 +701,7 @@ of `f` over the boxes of `π₁` is equal to the sum of integrals of `f` over th
 
 See also `box_integral.integrable.to_box_additive` for a bundled version. -/
 theorem sum_integral_congr (h : Integrable I l f vol) {π₁ π₂ : Prepartition I}
-    (hU : π₁.unionᵢ = π₂.unionᵢ) :
+    (hU : π₁.iUnion = π₂.iUnion) :
     (∑ J in π₁.boxes, integral J l f vol) = ∑ J in π₂.boxes, integral J l f vol :=
   by
   refine' tendsto_nhds_unique (h.tendsto_integral_sum_sum_integral π₁) _
@@ -822,7 +822,7 @@ theorem hasIntegralOfBRiemannEqFfOfForallIsO (hl : l.bRiemann = false) (B : ι �
   rcases exists_pos_mul_lt ε0' (B I) with ⟨ε', ε'0, hεI⟩
   set δ : ℝ≥0 → ℝⁿ → Ioi (0 : ℝ) := fun c x => if x ∈ s then δ₁ c x (εs x) else (δ₂ c) x ε'
   refine' ⟨δ, fun c => l.r_cond_of_bRiemann_eq_ff hl, _⟩
-  simp only [Set.mem_unionᵢ, mem_inter_iff, mem_set_of_eq]
+  simp only [Set.mem_iUnion, mem_inter_iff, mem_set_of_eq]
   rintro π ⟨c, hπδ, hπp⟩
   -- Now we split the sum into two parts based on whether `π.tag J` belongs to `s` or not.
   rw [← g.sum_partition_boxes le_rfl hπp, mem_closed_ball, integral_sum, ←

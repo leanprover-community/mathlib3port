@@ -93,10 +93,10 @@ protected theorem Decomposition.inductionOn {p : M → Prop} (h_zero : p 0)
     { decompose' := DirectSum.decompose ℳ
       left_inv := fun _ => (decompose ℳ).left_inv _
       right_inv := fun _ => (decompose ℳ).right_inv _ }
-  have mem : ∀ m, m ∈ supᵢ ℳ' := fun m =>
-    (DirectSum.IsInternal.addSubmonoid_supᵢ_eq_top ℳ' (decomposition.is_internal ℳ')).symm ▸ trivial
+  have mem : ∀ m, m ∈ iSup ℳ' := fun m =>
+    (DirectSum.IsInternal.addSubmonoid_iSup_eq_top ℳ' (decomposition.is_internal ℳ')).symm ▸ trivial
   exact fun m =>
-    AddSubmonoid.supᵢ_induction ℳ' (mem m) (fun i m h => h_homogeneous ⟨m, h⟩) h_zero h_add
+    AddSubmonoid.iSup_induction ℳ' (mem m) (fun i m h => h_homogeneous ⟨m, h⟩) h_zero h_add
 #align direct_sum.decomposition.induction_on DirectSum.Decomposition.inductionOn
 
 @[simp]

@@ -561,7 +561,7 @@ instance [CompleteSpace A] : CompleteSpace 𝓜(𝕜, A) :=
   rw [completeSpace_iff_isComplete_range uniform_embedding_to_prod_mul_opposite.to_uniform_inducing]
   apply IsClosed.isComplete
   simp only [range_to_prod_mul_opposite, Set.setOf_forall]
-  refine' isClosed_interᵢ fun x => isClosed_interᵢ fun y => isClosed_eq _ _
+  refine' isClosed_iInter fun x => isClosed_iInter fun y => isClosed_eq _ _
   exact
     ((ContinuousLinearMap.apply 𝕜 A _).Continuous.comp <| continuous_unop.comp continuous_snd).mul
       continuous_const
@@ -685,18 +685,18 @@ instance : CstarRing 𝓜(𝕜, A)
         simp only [mul_snd, ← Sup_closed_unit_ball_eq_nnnorm, star_snd, mul_apply]
         simp only [← @op_nnnorm_mul 𝕜 A]
         simp only [← Sup_closed_unit_ball_eq_nnnorm, mul_apply']
-        refine' csupₛ_eq_of_forall_le_of_forall_lt_exists_gt (hball.image _) _ fun r hr => _
+        refine' csSup_eq_of_forall_le_of_forall_lt_exists_gt (hball.image _) _ fun r hr => _
         · rintro - ⟨x, hx, rfl⟩
-          refine' csupₛ_le (hball.image _) _
+          refine' csSup_le (hball.image _) _
           rintro - ⟨y, hy, rfl⟩
           exact key x y (mem_closedBall_zero_iff.1 hx) (mem_closedBall_zero_iff.1 hy)
         · simp only [Set.mem_image, Set.mem_setOf_eq, exists_prop, exists_exists_and_eq_and]
           have hr' : r.sqrt < ‖a‖₊ := ‖a‖₊.sqrt_mul_self ▸ NNReal.sqrt_lt_sqrt_iff.2 hr
           simp_rw [← nnnorm_fst, ← Sup_closed_unit_ball_eq_nnnorm] at hr'
-          obtain ⟨_, ⟨x, hx, rfl⟩, hxr⟩ := exists_lt_of_lt_csupₛ (hball.image _) hr'
+          obtain ⟨_, ⟨x, hx, rfl⟩, hxr⟩ := exists_lt_of_lt_csSup (hball.image _) hr'
           have hx' : ‖x‖₊ ≤ 1 := mem_closedBall_zero_iff.1 hx
           refine' ⟨star x, mem_closedBall_zero_iff.2 ((nnnorm_star x).trans_le hx'), _⟩
-          refine' lt_csupₛ_of_lt _ ⟨x, hx, rfl⟩ _
+          refine' lt_csSup_of_lt _ ⟨x, hx, rfl⟩ _
           · refine' ⟨‖a‖₊ * ‖a‖₊, _⟩
             rintro - ⟨y, hy, rfl⟩
             exact key (star x) y ((nnnorm_star x).trans_le hx') (mem_closedBall_zero_iff.1 hy)

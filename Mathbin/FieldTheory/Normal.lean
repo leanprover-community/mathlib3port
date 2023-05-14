@@ -248,7 +248,7 @@ end NormalTower
 namespace IntermediateField
 
 /-- A compositum of normal extensions is normal -/
-instance normal_supᵢ {ι : Type _} (t : ι → IntermediateField F K) [h : ∀ i, Normal F (t i)] :
+instance normal_iSup {ι : Type _} (t : ι → IntermediateField F K) [h : ∀ i, Normal F (t i)] :
     Normal F (⨆ i, t i : IntermediateField F K) :=
   by
   refine' ⟨is_algebraic_supr fun i => (h i).1, fun x => _⟩
@@ -262,13 +262,13 @@ instance normal_supᵢ {ι : Type _} (t : ι → IntermediateField F K) [h : ∀
     · exact Polynomial.splits_comp_of_splits _ (algebraMap (t i.1) K) ((h i.1).Splits i.2)
   have hE : E ≤ ⨆ i, t i :=
     by
-    refine' supᵢ_le fun i => supᵢ_le fun hi => le_supᵢ_of_le i.1 _
+    refine' iSup_le fun i => iSup_le fun hi => le_iSup_of_le i.1 _
     rw [adjoin_le_iff, ← image_root_set ((h i.1).Splits i.2) (t i.1).val]
     exact fun _ ⟨a, _, h⟩ => h ▸ a.2
   have := hF.splits ⟨x, hx⟩
   rw [minpoly_eq, Subtype.coe_mk, ← minpoly_eq] at this
   exact Polynomial.splits_comp_of_splits _ (inclusion hE).toRingHom this
-#align intermediate_field.normal_supr IntermediateField.normal_supᵢ
+#align intermediate_field.normal_supr IntermediateField.normal_iSup
 
 variable {F K} {L : Type _} [Field L] [Algebra F L] [Algebra K L] [IsScalarTower F K L]
 
@@ -480,18 +480,18 @@ variable (F K) (L : Type _) [Field L] [Algebra F L] [Algebra K L] [IsScalarTower
 noncomputable def normalClosure : IntermediateField K L :=
   { (⨆ f : K →ₐ[F] L, f.fieldRange).toSubfield with
     algebraMap_mem' := fun r =>
-      le_supᵢ (fun f : K →ₐ[F] L => f.fieldRange) (IsScalarTower.toAlgHom F K L) ⟨r, rfl⟩ }
+      le_iSup (fun f : K →ₐ[F] L => f.fieldRange) (IsScalarTower.toAlgHom F K L) ⟨r, rfl⟩ }
 #align normal_closure normalClosure
 
 namespace normalClosure
 
-theorem restrictScalars_eq_supᵢ_adjoin [h : Normal F L] :
+theorem restrictScalars_eq_iSup_adjoin [h : Normal F L] :
     (normalClosure F K L).restrictScalars F = ⨆ x : K, adjoin F ((minpoly F x).rootSet L) :=
   by
-  refine' le_antisymm (supᵢ_le _) (supᵢ_le fun x => adjoin_le_iff.mpr fun y hy => _)
+  refine' le_antisymm (iSup_le _) (iSup_le fun x => adjoin_le_iff.mpr fun y hy => _)
   · rintro f _ ⟨x, rfl⟩
     refine'
-      le_supᵢ (fun x => adjoin F ((minpoly F x).rootSet L)) x
+      le_iSup (fun x => adjoin F ((minpoly F x).rootSet L)) x
         (subset_adjoin F ((minpoly F x).rootSet L) _)
     rw [mem_root_set_of_ne, AlgHom.toRingHom_eq_coe, AlgHom.coe_toRingHom,
       Polynomial.aeval_algHom_apply, minpoly.aeval, map_zero]
@@ -506,18 +506,18 @@ theorem restrictScalars_eq_supᵢ_adjoin [h : Normal F L] :
               (h.is_integral (algebraMap K L x)))).symm
         ⟨y, hy⟩
     refine'
-      le_supᵢ (fun f : K →ₐ[F] L => f.fieldRange)
+      le_iSup (fun f : K →ₐ[F] L => f.fieldRange)
         ((g.lift_normal L).comp (IsScalarTower.toAlgHom F K L))
         ⟨x, (g.lift_normal_commutes L (adjoin_simple.gen F x)).trans _⟩
     rw [Algebra.id.map_eq_id, RingHom.id_apply]
     apply PowerBasis.lift_gen
-#align normal_closure.restrict_scalars_eq_supr_adjoin normalClosure.restrictScalars_eq_supᵢ_adjoin
+#align normal_closure.restrict_scalars_eq_supr_adjoin normalClosure.restrictScalars_eq_iSup_adjoin
 
 instance normal [h : Normal F L] : Normal F (normalClosure F K L) :=
   by
   let ϕ := algebraMap K L
   rw [← IntermediateField.restrictScalars_normal, restrict_scalars_eq_supr_adjoin]
-  apply IntermediateField.normal_supᵢ F L _
+  apply IntermediateField.normal_iSup F L _
   intro x
   apply Normal.of_isSplittingField (minpoly F x)
   exact
@@ -531,7 +531,7 @@ instance is_finiteDimensional [FiniteDimensional F K] : FiniteDimensional F (nor
   by
   haveI : ∀ f : K →ₐ[F] L, FiniteDimensional F f.fieldRange := fun f =>
     f.to_linear_map.finite_dimensional_range
-  apply IntermediateField.finiteDimensional_supᵢ_of_finite
+  apply IntermediateField.finiteDimensional_iSup_of_finite
 #align normal_closure.is_finite_dimensional normalClosure.is_finiteDimensional
 
 instance isScalarTower : IsScalarTower F (normalClosure F K L) L :=

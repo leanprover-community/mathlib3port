@@ -128,7 +128,7 @@ theorem FractionalIdeal.isPrincipal.of_finite_maximals_of_inv {A : Type _} [Comm
     exact Ideal.IsMaximal.coprime_of_ne hM hM' hne.symm
   have nle : ∀ M ∈ s, ¬(⨅ M' ∈ s.erase M, M') ≤ M := fun M hM =>
     left_lt_sup.1
-      ((hf.mem_to_finset.1 hM).ne_top.lt_top.trans_eq (Ideal.sup_infᵢ_eq_top <| coprime M hM).symm)
+      ((hf.mem_to_finset.1 hM).ne_top.lt_top.trans_eq (Ideal.sup_iInf_eq_top <| coprime M hM).symm)
   have : ∀ M ∈ s, ∃ a ∈ I, ∃ b ∈ I', a * b ∉ IsLocalization.coeSubmodule A M :=
     by
     intro M hM
@@ -176,7 +176,7 @@ theorem FractionalIdeal.isPrincipal.of_finite_maximals_of_inv {A : Type _} [Comm
     obtain ⟨c, hc⟩ := this _ (ha M hM) _ (hb M' hM'.2)
     rw [← hc, Algebra.smul_def, ← _root_.map_mul]
     specialize hu M' hM'.2
-    simp_rw [Ideal.mem_infᵢ, Finset.mem_erase] at hu
+    simp_rw [Ideal.mem_iInf, Finset.mem_erase] at hu
     exact Submodule.mem_map_of_mem (M.mul_mem_right _ <| hu M ⟨hM'.1.symm, hM⟩)
 #align fractional_ideal.is_principal.of_finite_maximals_of_inv FractionalIdeal.isPrincipal.of_finite_maximals_of_inv
 

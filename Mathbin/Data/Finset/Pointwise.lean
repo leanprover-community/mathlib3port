@@ -2503,17 +2503,17 @@ theorem smul_finset_subset_smul {s : Finset α} : a ∈ s → a • t ⊆ s • 
 #align finset.smul_finset_subset_smul Finset.smul_finset_subset_smul
 #align finset.vadd_finset_subset_vadd Finset.vadd_finset_subset_vadd
 
-/- warning: finset.bUnion_smul_finset -> Finset.bunionᵢ_smul_finset is a dubious translation:
+/- warning: finset.bUnion_smul_finset -> Finset.biUnion_smul_finset is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} β] [_inst_2 : SMul.{u1, u2} α β] (s : Finset.{u1} α) (t : Finset.{u2} β), Eq.{succ u2} (Finset.{u2} β) (Finset.bunionᵢ.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) s (fun (_x : α) => SMul.smul.{u1, u2} α (Finset.{u2} β) (Finset.smulFinset.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) _inst_2) _x t)) (SMul.smul.{u1, u2} (Finset.{u1} α) (Finset.{u2} β) (Finset.smul.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) _inst_2) s t)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} β] [_inst_2 : SMul.{u1, u2} α β] (s : Finset.{u1} α) (t : Finset.{u2} β), Eq.{succ u2} (Finset.{u2} β) (Finset.biUnion.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) s (fun (_x : α) => SMul.smul.{u1, u2} α (Finset.{u2} β) (Finset.smulFinset.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) _inst_2) _x t)) (SMul.smul.{u1, u2} (Finset.{u1} α) (Finset.{u2} β) (Finset.smul.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) _inst_2) s t)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} β] [_inst_2 : SMul.{u2, u1} α β] (s : Finset.{u2} α) (t : Finset.{u1} β), Eq.{succ u1} (Finset.{u1} β) (Finset.bunionᵢ.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) s (fun (_x : α) => HSMul.hSMul.{u2, u1, u1} α (Finset.{u1} β) (Finset.{u1} β) (instHSMul.{u2, u1} α (Finset.{u1} β) (Finset.smulFinset.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) _inst_2)) _x t)) (HSMul.hSMul.{u2, u1, u1} (Finset.{u2} α) (Finset.{u1} β) (Finset.{u1} β) (instHSMul.{u2, u1} (Finset.{u2} α) (Finset.{u1} β) (Finset.smul.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) _inst_2)) s t)
-Case conversion may be inaccurate. Consider using '#align finset.bUnion_smul_finset Finset.bunionᵢ_smul_finsetₓ'. -/
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} β] [_inst_2 : SMul.{u2, u1} α β] (s : Finset.{u2} α) (t : Finset.{u1} β), Eq.{succ u1} (Finset.{u1} β) (Finset.biUnion.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) s (fun (_x : α) => HSMul.hSMul.{u2, u1, u1} α (Finset.{u1} β) (Finset.{u1} β) (instHSMul.{u2, u1} α (Finset.{u1} β) (Finset.smulFinset.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) _inst_2)) _x t)) (HSMul.hSMul.{u2, u1, u1} (Finset.{u2} α) (Finset.{u1} β) (Finset.{u1} β) (instHSMul.{u2, u1} (Finset.{u2} α) (Finset.{u1} β) (Finset.smul.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) _inst_2)) s t)
+Case conversion may be inaccurate. Consider using '#align finset.bUnion_smul_finset Finset.biUnion_smul_finsetₓ'. -/
 @[simp, to_additive]
-theorem bunionᵢ_smul_finset (s : Finset α) (t : Finset β) : s.bunionᵢ (· • t) = s • t :=
-  bunionᵢ_image_left
-#align finset.bUnion_smul_finset Finset.bunionᵢ_smul_finset
-#align finset.bUnion_vadd_finset Finset.bunionᵢ_vadd_finset
+theorem biUnion_smul_finset (s : Finset α) (t : Finset β) : s.biUnion (· • t) = s • t :=
+  biUnion_image_left
+#align finset.bUnion_smul_finset Finset.biUnion_smul_finset
+#align finset.bUnion_vadd_finset Finset.biUnion_vadd_finset
 
 end SMul
 
@@ -2704,12 +2704,12 @@ theorem op_smul_finset_subset_mul : a ∈ t → op a • s ⊆ s * t :=
 #align finset.op_vadd_finset_subset_add Finset.op_vadd_finset_subset_add
 -/
 
-#print Finset.bunionᵢ_op_smul_finset /-
+#print Finset.biUnion_op_smul_finset /-
 @[simp, to_additive]
-theorem bunionᵢ_op_smul_finset (s t : Finset α) : (t.bunionᵢ fun a => op a • s) = s * t :=
-  bunionᵢ_image_right
-#align finset.bUnion_op_smul_finset Finset.bunionᵢ_op_smul_finset
-#align finset.bUnion_op_vadd_finset Finset.bunionᵢ_op_vadd_finset
+theorem biUnion_op_smul_finset (s t : Finset α) : (t.biUnion fun a => op a • s) = s * t :=
+  biUnion_image_right
+#align finset.bUnion_op_smul_finset Finset.biUnion_op_smul_finset
+#align finset.bUnion_op_vadd_finset Finset.biUnion_op_vadd_finset
 -/
 
 #print Finset.mul_subset_iff_left /-

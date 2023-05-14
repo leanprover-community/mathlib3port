@@ -79,9 +79,9 @@ variable (f : Filter τ) (ϕ : τ → α → β) (s s₁ s₂ : Set α)
 
 /- warning: omega_limit_def -> omegaLimit_def is a dubious translation:
 lean 3 declaration is
-  forall {τ : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : TopologicalSpace.{u3} β] (f : Filter.{u1} τ) (ϕ : τ -> α -> β) (s : Set.{u2} α), Eq.{succ u3} (Set.{u3} β) (omegaLimit.{u1, u2, u3} τ α β _inst_1 f ϕ s) (Set.interᵢ.{u3, succ u1} β (Set.{u1} τ) (fun (u : Set.{u1} τ) => Set.interᵢ.{u3, 0} β (Membership.Mem.{u1, u1} (Set.{u1} τ) (Filter.{u1} τ) (Filter.hasMem.{u1} τ) u f) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} τ) (Filter.{u1} τ) (Filter.hasMem.{u1} τ) u f) => closure.{u3} β _inst_1 (Set.image2.{u1, u2, u3} τ α β ϕ u s))))
+  forall {τ : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : TopologicalSpace.{u3} β] (f : Filter.{u1} τ) (ϕ : τ -> α -> β) (s : Set.{u2} α), Eq.{succ u3} (Set.{u3} β) (omegaLimit.{u1, u2, u3} τ α β _inst_1 f ϕ s) (Set.iInter.{u3, succ u1} β (Set.{u1} τ) (fun (u : Set.{u1} τ) => Set.iInter.{u3, 0} β (Membership.Mem.{u1, u1} (Set.{u1} τ) (Filter.{u1} τ) (Filter.hasMem.{u1} τ) u f) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} τ) (Filter.{u1} τ) (Filter.hasMem.{u1} τ) u f) => closure.{u3} β _inst_1 (Set.image2.{u1, u2, u3} τ α β ϕ u s))))
 but is expected to have type
-  forall {τ : Type.{u2}} {α : Type.{u1}} {β : Type.{u3}} [_inst_1 : TopologicalSpace.{u3} β] (f : Filter.{u2} τ) (ϕ : τ -> α -> β) (s : Set.{u1} α), Eq.{succ u3} (Set.{u3} β) (omegaLimit.{u2, u1, u3} τ α β _inst_1 f ϕ s) (Set.interᵢ.{u3, succ u2} β (Set.{u2} τ) (fun (u : Set.{u2} τ) => Set.interᵢ.{u3, 0} β (Membership.mem.{u2, u2} (Set.{u2} τ) (Filter.{u2} τ) (instMembershipSetFilter.{u2} τ) u f) (fun (H : Membership.mem.{u2, u2} (Set.{u2} τ) (Filter.{u2} τ) (instMembershipSetFilter.{u2} τ) u f) => closure.{u3} β _inst_1 (Set.image2.{u2, u1, u3} τ α β ϕ u s))))
+  forall {τ : Type.{u2}} {α : Type.{u1}} {β : Type.{u3}} [_inst_1 : TopologicalSpace.{u3} β] (f : Filter.{u2} τ) (ϕ : τ -> α -> β) (s : Set.{u1} α), Eq.{succ u3} (Set.{u3} β) (omegaLimit.{u2, u1, u3} τ α β _inst_1 f ϕ s) (Set.iInter.{u3, succ u2} β (Set.{u2} τ) (fun (u : Set.{u2} τ) => Set.iInter.{u3, 0} β (Membership.mem.{u2, u2} (Set.{u2} τ) (Filter.{u2} τ) (instMembershipSetFilter.{u2} τ) u f) (fun (H : Membership.mem.{u2, u2} (Set.{u2} τ) (Filter.{u2} τ) (instMembershipSetFilter.{u2} τ) u f) => closure.{u3} β _inst_1 (Set.image2.{u2, u1, u3} τ α β ϕ u s))))
 Case conversion may be inaccurate. Consider using '#align omega_limit_def omegaLimit_defₓ'. -/
 theorem omegaLimit_def : ω f ϕ s = ⋂ u ∈ f, closure (image2 ϕ u s) :=
   rfl
@@ -118,7 +118,7 @@ but is expected to have type
   forall {τ : Type.{u1}} {α : Type.{u3}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} β] (f : Filter.{u1} τ) (ϕ : τ -> α -> β) {s₁ : Set.{u3} α} {s₂ : Set.{u3} α}, (HasSubset.Subset.{u3} (Set.{u3} α) (Set.instHasSubsetSet.{u3} α) s₁ s₂) -> (HasSubset.Subset.{u2} (Set.{u2} β) (Set.instHasSubsetSet.{u2} β) (omegaLimit.{u1, u3, u2} τ α β _inst_1 f ϕ s₁) (omegaLimit.{u1, u3, u2} τ α β _inst_1 f ϕ s₂))
 Case conversion may be inaccurate. Consider using '#align omega_limit_mono_right omegaLimit_mono_rightₓ'. -/
 theorem omegaLimit_mono_right {s₁ s₂ : Set α} (hs : s₁ ⊆ s₂) : ω f ϕ s₁ ⊆ ω f ϕ s₂ :=
-  interᵢ₂_mono fun u hu => closure_mono (image2_subset Subset.rfl hs)
+  iInter₂_mono fun u hu => closure_mono (image2_subset Subset.rfl hs)
 #align omega_limit_mono_right omegaLimit_mono_right
 
 /- warning: is_closed_omega_limit -> isClosed_omegaLimit is a dubious translation:
@@ -128,7 +128,7 @@ but is expected to have type
   forall {τ : Type.{u2}} {α : Type.{u1}} {β : Type.{u3}} [_inst_1 : TopologicalSpace.{u3} β] (f : Filter.{u2} τ) (ϕ : τ -> α -> β) (s : Set.{u1} α), IsClosed.{u3} β _inst_1 (omegaLimit.{u2, u1, u3} τ α β _inst_1 f ϕ s)
 Case conversion may be inaccurate. Consider using '#align is_closed_omega_limit isClosed_omegaLimitₓ'. -/
 theorem isClosed_omegaLimit : IsClosed (ω f ϕ s) :=
-  isClosed_interᵢ fun u => isClosed_interᵢ fun hu => isClosed_closure
+  isClosed_iInter fun u => isClosed_iInter fun hu => isClosed_closure
 #align is_closed_omega_limit isClosed_omegaLimit
 
 /- warning: maps_to_omega_limit' -> mapsTo_omegaLimit' is a dubious translation:
@@ -259,15 +259,15 @@ theorem omegaLimit_inter : ω f ϕ (s₁ ∩ s₂) ⊆ ω f ϕ s₁ ∩ ω f ϕ 
     (omegaLimit_mono_right _ _ (inter_subset_right _ _))
 #align omega_limit_inter omegaLimit_inter
 
-/- warning: omega_limit_Inter -> omegaLimit_interᵢ is a dubious translation:
+/- warning: omega_limit_Inter -> omegaLimit_iInter is a dubious translation:
 lean 3 declaration is
-  forall {τ : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} {ι : Type.{u4}} [_inst_1 : TopologicalSpace.{u3} β] (f : Filter.{u1} τ) (ϕ : τ -> α -> β) (p : ι -> (Set.{u2} α)), HasSubset.Subset.{u3} (Set.{u3} β) (Set.hasSubset.{u3} β) (omegaLimit.{u1, u2, u3} τ α β _inst_1 f ϕ (Set.interᵢ.{u2, succ u4} α ι (fun (i : ι) => p i))) (Set.interᵢ.{u3, succ u4} β ι (fun (i : ι) => omegaLimit.{u1, u2, u3} τ α β _inst_1 f ϕ (p i)))
+  forall {τ : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} {ι : Type.{u4}} [_inst_1 : TopologicalSpace.{u3} β] (f : Filter.{u1} τ) (ϕ : τ -> α -> β) (p : ι -> (Set.{u2} α)), HasSubset.Subset.{u3} (Set.{u3} β) (Set.hasSubset.{u3} β) (omegaLimit.{u1, u2, u3} τ α β _inst_1 f ϕ (Set.iInter.{u2, succ u4} α ι (fun (i : ι) => p i))) (Set.iInter.{u3, succ u4} β ι (fun (i : ι) => omegaLimit.{u1, u2, u3} τ α β _inst_1 f ϕ (p i)))
 but is expected to have type
-  forall {τ : Type.{u2}} {α : Type.{u4}} {β : Type.{u3}} {ι : Type.{u1}} [_inst_1 : TopologicalSpace.{u3} β] (f : Filter.{u2} τ) (ϕ : τ -> α -> β) (p : ι -> (Set.{u4} α)), HasSubset.Subset.{u3} (Set.{u3} β) (Set.instHasSubsetSet.{u3} β) (omegaLimit.{u2, u4, u3} τ α β _inst_1 f ϕ (Set.interᵢ.{u4, succ u1} α ι (fun (i : ι) => p i))) (Set.interᵢ.{u3, succ u1} β ι (fun (i : ι) => omegaLimit.{u2, u4, u3} τ α β _inst_1 f ϕ (p i)))
-Case conversion may be inaccurate. Consider using '#align omega_limit_Inter omegaLimit_interᵢₓ'. -/
-theorem omegaLimit_interᵢ (p : ι → Set α) : ω f ϕ (⋂ i, p i) ⊆ ⋂ i, ω f ϕ (p i) :=
-  subset_interᵢ fun i => omegaLimit_mono_right _ _ (interᵢ_subset _ _)
-#align omega_limit_Inter omegaLimit_interᵢ
+  forall {τ : Type.{u2}} {α : Type.{u4}} {β : Type.{u3}} {ι : Type.{u1}} [_inst_1 : TopologicalSpace.{u3} β] (f : Filter.{u2} τ) (ϕ : τ -> α -> β) (p : ι -> (Set.{u4} α)), HasSubset.Subset.{u3} (Set.{u3} β) (Set.instHasSubsetSet.{u3} β) (omegaLimit.{u2, u4, u3} τ α β _inst_1 f ϕ (Set.iInter.{u4, succ u1} α ι (fun (i : ι) => p i))) (Set.iInter.{u3, succ u1} β ι (fun (i : ι) => omegaLimit.{u2, u4, u3} τ α β _inst_1 f ϕ (p i)))
+Case conversion may be inaccurate. Consider using '#align omega_limit_Inter omegaLimit_iInterₓ'. -/
+theorem omegaLimit_iInter (p : ι → Set α) : ω f ϕ (⋂ i, p i) ⊆ ⋂ i, ω f ϕ (p i) :=
+  subset_iInter fun i => omegaLimit_mono_right _ _ (iInter_subset _ _)
+#align omega_limit_Inter omegaLimit_iInter
 
 /- warning: omega_limit_union -> omegaLimit_union is a dubious translation:
 lean 3 declaration is
@@ -291,17 +291,17 @@ theorem omegaLimit_union : ω f ϕ (s₁ ∪ s₂) = ω f ϕ s₁ ∪ ω f ϕ s�
       omegaLimit_mono_right _ _ (subset_union_right _ _) hy]
 #align omega_limit_union omegaLimit_union
 
-/- warning: omega_limit_Union -> omegaLimit_unionᵢ is a dubious translation:
+/- warning: omega_limit_Union -> omegaLimit_iUnion is a dubious translation:
 lean 3 declaration is
-  forall {τ : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} {ι : Type.{u4}} [_inst_1 : TopologicalSpace.{u3} β] (f : Filter.{u1} τ) (ϕ : τ -> α -> β) (p : ι -> (Set.{u2} α)), HasSubset.Subset.{u3} (Set.{u3} β) (Set.hasSubset.{u3} β) (Set.unionᵢ.{u3, succ u4} β ι (fun (i : ι) => omegaLimit.{u1, u2, u3} τ α β _inst_1 f ϕ (p i))) (omegaLimit.{u1, u2, u3} τ α β _inst_1 f ϕ (Set.unionᵢ.{u2, succ u4} α ι (fun (i : ι) => p i)))
+  forall {τ : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} {ι : Type.{u4}} [_inst_1 : TopologicalSpace.{u3} β] (f : Filter.{u1} τ) (ϕ : τ -> α -> β) (p : ι -> (Set.{u2} α)), HasSubset.Subset.{u3} (Set.{u3} β) (Set.hasSubset.{u3} β) (Set.iUnion.{u3, succ u4} β ι (fun (i : ι) => omegaLimit.{u1, u2, u3} τ α β _inst_1 f ϕ (p i))) (omegaLimit.{u1, u2, u3} τ α β _inst_1 f ϕ (Set.iUnion.{u2, succ u4} α ι (fun (i : ι) => p i)))
 but is expected to have type
-  forall {τ : Type.{u1}} {α : Type.{u4}} {β : Type.{u3}} {ι : Type.{u2}} [_inst_1 : TopologicalSpace.{u3} β] (f : Filter.{u1} τ) (ϕ : τ -> α -> β) (p : ι -> (Set.{u4} α)), HasSubset.Subset.{u3} (Set.{u3} β) (Set.instHasSubsetSet.{u3} β) (Set.unionᵢ.{u3, succ u2} β ι (fun (i : ι) => omegaLimit.{u1, u4, u3} τ α β _inst_1 f ϕ (p i))) (omegaLimit.{u1, u4, u3} τ α β _inst_1 f ϕ (Set.unionᵢ.{u4, succ u2} α ι (fun (i : ι) => p i)))
-Case conversion may be inaccurate. Consider using '#align omega_limit_Union omegaLimit_unionᵢₓ'. -/
-theorem omegaLimit_unionᵢ (p : ι → Set α) : (⋃ i, ω f ϕ (p i)) ⊆ ω f ϕ (⋃ i, p i) :=
+  forall {τ : Type.{u1}} {α : Type.{u4}} {β : Type.{u3}} {ι : Type.{u2}} [_inst_1 : TopologicalSpace.{u3} β] (f : Filter.{u1} τ) (ϕ : τ -> α -> β) (p : ι -> (Set.{u4} α)), HasSubset.Subset.{u3} (Set.{u3} β) (Set.instHasSubsetSet.{u3} β) (Set.iUnion.{u3, succ u2} β ι (fun (i : ι) => omegaLimit.{u1, u4, u3} τ α β _inst_1 f ϕ (p i))) (omegaLimit.{u1, u4, u3} τ α β _inst_1 f ϕ (Set.iUnion.{u4, succ u2} α ι (fun (i : ι) => p i)))
+Case conversion may be inaccurate. Consider using '#align omega_limit_Union omegaLimit_iUnionₓ'. -/
+theorem omegaLimit_iUnion (p : ι → Set α) : (⋃ i, ω f ϕ (p i)) ⊆ ω f ϕ (⋃ i, p i) :=
   by
   rw [Union_subset_iff]
   exact fun i => omegaLimit_mono_right _ _ (subset_Union _ _)
-#align omega_limit_Union omegaLimit_unionᵢ
+#align omega_limit_Union omegaLimit_iUnion
 
 /-!
 Different expressions for omega limits, useful for rewrites. In
@@ -310,40 +310,40 @@ subsets of some set `v` also in `f`.
 -/
 
 
-/- warning: omega_limit_eq_Inter -> omegaLimit_eq_interᵢ is a dubious translation:
+/- warning: omega_limit_eq_Inter -> omegaLimit_eq_iInter is a dubious translation:
 lean 3 declaration is
-  forall {τ : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : TopologicalSpace.{u3} β] (f : Filter.{u1} τ) (ϕ : τ -> α -> β) (s : Set.{u2} α), Eq.{succ u3} (Set.{u3} β) (omegaLimit.{u1, u2, u3} τ α β _inst_1 f ϕ s) (Set.interᵢ.{u3, succ u1} β (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Set.{u1} τ)) Type.{u1} (Set.hasCoeToSort.{u1} (Set.{u1} τ)) (Filter.sets.{u1} τ f)) (fun (u : coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Set.{u1} τ)) Type.{u1} (Set.hasCoeToSort.{u1} (Set.{u1} τ)) (Filter.sets.{u1} τ f)) => closure.{u3} β _inst_1 (Set.image2.{u1, u2, u3} τ α β ϕ ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Set.{u1} τ)) Type.{u1} (Set.hasCoeToSort.{u1} (Set.{u1} τ)) (Filter.sets.{u1} τ f)) (Set.{u1} τ) (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Set.{u1} τ)) Type.{u1} (Set.hasCoeToSort.{u1} (Set.{u1} τ)) (Filter.sets.{u1} τ f)) (Set.{u1} τ) (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Set.{u1} τ)) Type.{u1} (Set.hasCoeToSort.{u1} (Set.{u1} τ)) (Filter.sets.{u1} τ f)) (Set.{u1} τ) (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Set.{u1} τ)) Type.{u1} (Set.hasCoeToSort.{u1} (Set.{u1} τ)) (Filter.sets.{u1} τ f)) (Set.{u1} τ) (coeSubtype.{succ u1} (Set.{u1} τ) (fun (x : Set.{u1} τ) => Membership.Mem.{u1, u1} (Set.{u1} τ) (Set.{u1} (Set.{u1} τ)) (Set.hasMem.{u1} (Set.{u1} τ)) x (Filter.sets.{u1} τ f)))))) u) s)))
+  forall {τ : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : TopologicalSpace.{u3} β] (f : Filter.{u1} τ) (ϕ : τ -> α -> β) (s : Set.{u2} α), Eq.{succ u3} (Set.{u3} β) (omegaLimit.{u1, u2, u3} τ α β _inst_1 f ϕ s) (Set.iInter.{u3, succ u1} β (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Set.{u1} τ)) Type.{u1} (Set.hasCoeToSort.{u1} (Set.{u1} τ)) (Filter.sets.{u1} τ f)) (fun (u : coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Set.{u1} τ)) Type.{u1} (Set.hasCoeToSort.{u1} (Set.{u1} τ)) (Filter.sets.{u1} τ f)) => closure.{u3} β _inst_1 (Set.image2.{u1, u2, u3} τ α β ϕ ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Set.{u1} τ)) Type.{u1} (Set.hasCoeToSort.{u1} (Set.{u1} τ)) (Filter.sets.{u1} τ f)) (Set.{u1} τ) (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Set.{u1} τ)) Type.{u1} (Set.hasCoeToSort.{u1} (Set.{u1} τ)) (Filter.sets.{u1} τ f)) (Set.{u1} τ) (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Set.{u1} τ)) Type.{u1} (Set.hasCoeToSort.{u1} (Set.{u1} τ)) (Filter.sets.{u1} τ f)) (Set.{u1} τ) (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Set.{u1} τ)) Type.{u1} (Set.hasCoeToSort.{u1} (Set.{u1} τ)) (Filter.sets.{u1} τ f)) (Set.{u1} τ) (coeSubtype.{succ u1} (Set.{u1} τ) (fun (x : Set.{u1} τ) => Membership.Mem.{u1, u1} (Set.{u1} τ) (Set.{u1} (Set.{u1} τ)) (Set.hasMem.{u1} (Set.{u1} τ)) x (Filter.sets.{u1} τ f)))))) u) s)))
 but is expected to have type
-  forall {τ : Type.{u2}} {α : Type.{u1}} {β : Type.{u3}} [_inst_1 : TopologicalSpace.{u3} β] (f : Filter.{u2} τ) (ϕ : τ -> α -> β) (s : Set.{u1} α), Eq.{succ u3} (Set.{u3} β) (omegaLimit.{u2, u1, u3} τ α β _inst_1 f ϕ s) (Set.interᵢ.{u3, succ u2} β (Set.Elem.{u2} (Set.{u2} τ) (Filter.sets.{u2} τ f)) (fun (u : Set.Elem.{u2} (Set.{u2} τ) (Filter.sets.{u2} τ f)) => closure.{u3} β _inst_1 (Set.image2.{u2, u1, u3} τ α β ϕ (Subtype.val.{succ u2} (Set.{u2} τ) (fun (x : Set.{u2} τ) => Membership.mem.{u2, u2} (Set.{u2} τ) (Set.{u2} (Set.{u2} τ)) (Set.instMembershipSet.{u2} (Set.{u2} τ)) x (Filter.sets.{u2} τ f)) u) s)))
-Case conversion may be inaccurate. Consider using '#align omega_limit_eq_Inter omegaLimit_eq_interᵢₓ'. -/
-theorem omegaLimit_eq_interᵢ : ω f ϕ s = ⋂ u : ↥f.sets, closure (image2 ϕ u s) :=
-  binterᵢ_eq_interᵢ _ _
-#align omega_limit_eq_Inter omegaLimit_eq_interᵢ
+  forall {τ : Type.{u2}} {α : Type.{u1}} {β : Type.{u3}} [_inst_1 : TopologicalSpace.{u3} β] (f : Filter.{u2} τ) (ϕ : τ -> α -> β) (s : Set.{u1} α), Eq.{succ u3} (Set.{u3} β) (omegaLimit.{u2, u1, u3} τ α β _inst_1 f ϕ s) (Set.iInter.{u3, succ u2} β (Set.Elem.{u2} (Set.{u2} τ) (Filter.sets.{u2} τ f)) (fun (u : Set.Elem.{u2} (Set.{u2} τ) (Filter.sets.{u2} τ f)) => closure.{u3} β _inst_1 (Set.image2.{u2, u1, u3} τ α β ϕ (Subtype.val.{succ u2} (Set.{u2} τ) (fun (x : Set.{u2} τ) => Membership.mem.{u2, u2} (Set.{u2} τ) (Set.{u2} (Set.{u2} τ)) (Set.instMembershipSet.{u2} (Set.{u2} τ)) x (Filter.sets.{u2} τ f)) u) s)))
+Case conversion may be inaccurate. Consider using '#align omega_limit_eq_Inter omegaLimit_eq_iInterₓ'. -/
+theorem omegaLimit_eq_iInter : ω f ϕ s = ⋂ u : ↥f.sets, closure (image2 ϕ u s) :=
+  biInter_eq_iInter _ _
+#align omega_limit_eq_Inter omegaLimit_eq_iInter
 
-/- warning: omega_limit_eq_bInter_inter -> omegaLimit_eq_binterᵢ_inter is a dubious translation:
+/- warning: omega_limit_eq_bInter_inter -> omegaLimit_eq_biInter_inter is a dubious translation:
 lean 3 declaration is
-  forall {τ : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : TopologicalSpace.{u3} β] (f : Filter.{u1} τ) (ϕ : τ -> α -> β) (s : Set.{u2} α) {v : Set.{u1} τ}, (Membership.Mem.{u1, u1} (Set.{u1} τ) (Filter.{u1} τ) (Filter.hasMem.{u1} τ) v f) -> (Eq.{succ u3} (Set.{u3} β) (omegaLimit.{u1, u2, u3} τ α β _inst_1 f ϕ s) (Set.interᵢ.{u3, succ u1} β (Set.{u1} τ) (fun (u : Set.{u1} τ) => Set.interᵢ.{u3, 0} β (Membership.Mem.{u1, u1} (Set.{u1} τ) (Filter.{u1} τ) (Filter.hasMem.{u1} τ) u f) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} τ) (Filter.{u1} τ) (Filter.hasMem.{u1} τ) u f) => closure.{u3} β _inst_1 (Set.image2.{u1, u2, u3} τ α β ϕ (Inter.inter.{u1} (Set.{u1} τ) (Set.hasInter.{u1} τ) u v) s)))))
+  forall {τ : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : TopologicalSpace.{u3} β] (f : Filter.{u1} τ) (ϕ : τ -> α -> β) (s : Set.{u2} α) {v : Set.{u1} τ}, (Membership.Mem.{u1, u1} (Set.{u1} τ) (Filter.{u1} τ) (Filter.hasMem.{u1} τ) v f) -> (Eq.{succ u3} (Set.{u3} β) (omegaLimit.{u1, u2, u3} τ α β _inst_1 f ϕ s) (Set.iInter.{u3, succ u1} β (Set.{u1} τ) (fun (u : Set.{u1} τ) => Set.iInter.{u3, 0} β (Membership.Mem.{u1, u1} (Set.{u1} τ) (Filter.{u1} τ) (Filter.hasMem.{u1} τ) u f) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} τ) (Filter.{u1} τ) (Filter.hasMem.{u1} τ) u f) => closure.{u3} β _inst_1 (Set.image2.{u1, u2, u3} τ α β ϕ (Inter.inter.{u1} (Set.{u1} τ) (Set.hasInter.{u1} τ) u v) s)))))
 but is expected to have type
-  forall {τ : Type.{u3}} {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} β] (f : Filter.{u3} τ) (ϕ : τ -> α -> β) (s : Set.{u1} α) {v : Set.{u3} τ}, (Membership.mem.{u3, u3} (Set.{u3} τ) (Filter.{u3} τ) (instMembershipSetFilter.{u3} τ) v f) -> (Eq.{succ u2} (Set.{u2} β) (omegaLimit.{u3, u1, u2} τ α β _inst_1 f ϕ s) (Set.interᵢ.{u2, succ u3} β (Set.{u3} τ) (fun (u : Set.{u3} τ) => Set.interᵢ.{u2, 0} β (Membership.mem.{u3, u3} (Set.{u3} τ) (Filter.{u3} τ) (instMembershipSetFilter.{u3} τ) u f) (fun (H : Membership.mem.{u3, u3} (Set.{u3} τ) (Filter.{u3} τ) (instMembershipSetFilter.{u3} τ) u f) => closure.{u2} β _inst_1 (Set.image2.{u3, u1, u2} τ α β ϕ (Inter.inter.{u3} (Set.{u3} τ) (Set.instInterSet.{u3} τ) u v) s)))))
-Case conversion may be inaccurate. Consider using '#align omega_limit_eq_bInter_inter omegaLimit_eq_binterᵢ_interₓ'. -/
-theorem omegaLimit_eq_binterᵢ_inter {v : Set τ} (hv : v ∈ f) :
+  forall {τ : Type.{u3}} {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} β] (f : Filter.{u3} τ) (ϕ : τ -> α -> β) (s : Set.{u1} α) {v : Set.{u3} τ}, (Membership.mem.{u3, u3} (Set.{u3} τ) (Filter.{u3} τ) (instMembershipSetFilter.{u3} τ) v f) -> (Eq.{succ u2} (Set.{u2} β) (omegaLimit.{u3, u1, u2} τ α β _inst_1 f ϕ s) (Set.iInter.{u2, succ u3} β (Set.{u3} τ) (fun (u : Set.{u3} τ) => Set.iInter.{u2, 0} β (Membership.mem.{u3, u3} (Set.{u3} τ) (Filter.{u3} τ) (instMembershipSetFilter.{u3} τ) u f) (fun (H : Membership.mem.{u3, u3} (Set.{u3} τ) (Filter.{u3} τ) (instMembershipSetFilter.{u3} τ) u f) => closure.{u2} β _inst_1 (Set.image2.{u3, u1, u2} τ α β ϕ (Inter.inter.{u3} (Set.{u3} τ) (Set.instInterSet.{u3} τ) u v) s)))))
+Case conversion may be inaccurate. Consider using '#align omega_limit_eq_bInter_inter omegaLimit_eq_biInter_interₓ'. -/
+theorem omegaLimit_eq_biInter_inter {v : Set τ} (hv : v ∈ f) :
     ω f ϕ s = ⋂ u ∈ f, closure (image2 ϕ (u ∩ v) s) :=
-  Subset.antisymm (interᵢ₂_mono' fun u hu => ⟨u ∩ v, inter_mem hu hv, Subset.rfl⟩)
-    (interᵢ₂_mono fun u hu => closure_mono <| image2_subset (inter_subset_left _ _) Subset.rfl)
-#align omega_limit_eq_bInter_inter omegaLimit_eq_binterᵢ_inter
+  Subset.antisymm (iInter₂_mono' fun u hu => ⟨u ∩ v, inter_mem hu hv, Subset.rfl⟩)
+    (iInter₂_mono fun u hu => closure_mono <| image2_subset (inter_subset_left _ _) Subset.rfl)
+#align omega_limit_eq_bInter_inter omegaLimit_eq_biInter_inter
 
-/- warning: omega_limit_eq_Inter_inter -> omegaLimit_eq_interᵢ_inter is a dubious translation:
+/- warning: omega_limit_eq_Inter_inter -> omegaLimit_eq_iInter_inter is a dubious translation:
 lean 3 declaration is
-  forall {τ : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : TopologicalSpace.{u3} β] (f : Filter.{u1} τ) (ϕ : τ -> α -> β) (s : Set.{u2} α) {v : Set.{u1} τ}, (Membership.Mem.{u1, u1} (Set.{u1} τ) (Filter.{u1} τ) (Filter.hasMem.{u1} τ) v f) -> (Eq.{succ u3} (Set.{u3} β) (omegaLimit.{u1, u2, u3} τ α β _inst_1 f ϕ s) (Set.interᵢ.{u3, succ u1} β (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Set.{u1} τ)) Type.{u1} (Set.hasCoeToSort.{u1} (Set.{u1} τ)) (Filter.sets.{u1} τ f)) (fun (u : coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Set.{u1} τ)) Type.{u1} (Set.hasCoeToSort.{u1} (Set.{u1} τ)) (Filter.sets.{u1} τ f)) => closure.{u3} β _inst_1 (Set.image2.{u1, u2, u3} τ α β ϕ (Inter.inter.{u1} (Set.{u1} τ) (Set.hasInter.{u1} τ) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Set.{u1} τ)) Type.{u1} (Set.hasCoeToSort.{u1} (Set.{u1} τ)) (Filter.sets.{u1} τ f)) (Set.{u1} τ) (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Set.{u1} τ)) Type.{u1} (Set.hasCoeToSort.{u1} (Set.{u1} τ)) (Filter.sets.{u1} τ f)) (Set.{u1} τ) (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Set.{u1} τ)) Type.{u1} (Set.hasCoeToSort.{u1} (Set.{u1} τ)) (Filter.sets.{u1} τ f)) (Set.{u1} τ) (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Set.{u1} τ)) Type.{u1} (Set.hasCoeToSort.{u1} (Set.{u1} τ)) (Filter.sets.{u1} τ f)) (Set.{u1} τ) (coeSubtype.{succ u1} (Set.{u1} τ) (fun (x : Set.{u1} τ) => Membership.Mem.{u1, u1} (Set.{u1} τ) (Set.{u1} (Set.{u1} τ)) (Set.hasMem.{u1} (Set.{u1} τ)) x (Filter.sets.{u1} τ f)))))) u) v) s))))
+  forall {τ : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : TopologicalSpace.{u3} β] (f : Filter.{u1} τ) (ϕ : τ -> α -> β) (s : Set.{u2} α) {v : Set.{u1} τ}, (Membership.Mem.{u1, u1} (Set.{u1} τ) (Filter.{u1} τ) (Filter.hasMem.{u1} τ) v f) -> (Eq.{succ u3} (Set.{u3} β) (omegaLimit.{u1, u2, u3} τ α β _inst_1 f ϕ s) (Set.iInter.{u3, succ u1} β (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Set.{u1} τ)) Type.{u1} (Set.hasCoeToSort.{u1} (Set.{u1} τ)) (Filter.sets.{u1} τ f)) (fun (u : coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Set.{u1} τ)) Type.{u1} (Set.hasCoeToSort.{u1} (Set.{u1} τ)) (Filter.sets.{u1} τ f)) => closure.{u3} β _inst_1 (Set.image2.{u1, u2, u3} τ α β ϕ (Inter.inter.{u1} (Set.{u1} τ) (Set.hasInter.{u1} τ) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Set.{u1} τ)) Type.{u1} (Set.hasCoeToSort.{u1} (Set.{u1} τ)) (Filter.sets.{u1} τ f)) (Set.{u1} τ) (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Set.{u1} τ)) Type.{u1} (Set.hasCoeToSort.{u1} (Set.{u1} τ)) (Filter.sets.{u1} τ f)) (Set.{u1} τ) (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Set.{u1} τ)) Type.{u1} (Set.hasCoeToSort.{u1} (Set.{u1} τ)) (Filter.sets.{u1} τ f)) (Set.{u1} τ) (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Set.{u1} τ)) Type.{u1} (Set.hasCoeToSort.{u1} (Set.{u1} τ)) (Filter.sets.{u1} τ f)) (Set.{u1} τ) (coeSubtype.{succ u1} (Set.{u1} τ) (fun (x : Set.{u1} τ) => Membership.Mem.{u1, u1} (Set.{u1} τ) (Set.{u1} (Set.{u1} τ)) (Set.hasMem.{u1} (Set.{u1} τ)) x (Filter.sets.{u1} τ f)))))) u) v) s))))
 but is expected to have type
-  forall {τ : Type.{u3}} {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} β] (f : Filter.{u3} τ) (ϕ : τ -> α -> β) (s : Set.{u1} α) {v : Set.{u3} τ}, (Membership.mem.{u3, u3} (Set.{u3} τ) (Filter.{u3} τ) (instMembershipSetFilter.{u3} τ) v f) -> (Eq.{succ u2} (Set.{u2} β) (omegaLimit.{u3, u1, u2} τ α β _inst_1 f ϕ s) (Set.interᵢ.{u2, succ u3} β (Set.Elem.{u3} (Set.{u3} τ) (Filter.sets.{u3} τ f)) (fun (u : Set.Elem.{u3} (Set.{u3} τ) (Filter.sets.{u3} τ f)) => closure.{u2} β _inst_1 (Set.image2.{u3, u1, u2} τ α β ϕ (Inter.inter.{u3} (Set.{u3} τ) (Set.instInterSet.{u3} τ) (Subtype.val.{succ u3} (Set.{u3} τ) (fun (x : Set.{u3} τ) => Membership.mem.{u3, u3} (Set.{u3} τ) (Set.{u3} (Set.{u3} τ)) (Set.instMembershipSet.{u3} (Set.{u3} τ)) x (Filter.sets.{u3} τ f)) u) v) s))))
-Case conversion may be inaccurate. Consider using '#align omega_limit_eq_Inter_inter omegaLimit_eq_interᵢ_interₓ'. -/
-theorem omegaLimit_eq_interᵢ_inter {v : Set τ} (hv : v ∈ f) :
+  forall {τ : Type.{u3}} {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} β] (f : Filter.{u3} τ) (ϕ : τ -> α -> β) (s : Set.{u1} α) {v : Set.{u3} τ}, (Membership.mem.{u3, u3} (Set.{u3} τ) (Filter.{u3} τ) (instMembershipSetFilter.{u3} τ) v f) -> (Eq.{succ u2} (Set.{u2} β) (omegaLimit.{u3, u1, u2} τ α β _inst_1 f ϕ s) (Set.iInter.{u2, succ u3} β (Set.Elem.{u3} (Set.{u3} τ) (Filter.sets.{u3} τ f)) (fun (u : Set.Elem.{u3} (Set.{u3} τ) (Filter.sets.{u3} τ f)) => closure.{u2} β _inst_1 (Set.image2.{u3, u1, u2} τ α β ϕ (Inter.inter.{u3} (Set.{u3} τ) (Set.instInterSet.{u3} τ) (Subtype.val.{succ u3} (Set.{u3} τ) (fun (x : Set.{u3} τ) => Membership.mem.{u3, u3} (Set.{u3} τ) (Set.{u3} (Set.{u3} τ)) (Set.instMembershipSet.{u3} (Set.{u3} τ)) x (Filter.sets.{u3} τ f)) u) v) s))))
+Case conversion may be inaccurate. Consider using '#align omega_limit_eq_Inter_inter omegaLimit_eq_iInter_interₓ'. -/
+theorem omegaLimit_eq_iInter_inter {v : Set τ} (hv : v ∈ f) :
     ω f ϕ s = ⋂ u : ↥f.sets, closure (image2 ϕ (u ∩ v) s) :=
   by
-  rw [omegaLimit_eq_binterᵢ_inter _ _ _ hv]
+  rw [omegaLimit_eq_biInter_inter _ _ _ hv]
   apply bInter_eq_Inter
-#align omega_limit_eq_Inter_inter omegaLimit_eq_interᵢ_inter
+#align omega_limit_eq_Inter_inter omegaLimit_eq_iInter_inter
 
 /- warning: omega_limit_subset_closure_fw_image -> omegaLimit_subset_closure_fw_image is a dubious translation:
 lean 3 declaration is
@@ -354,7 +354,7 @@ Case conversion may be inaccurate. Consider using '#align omega_limit_subset_clo
 theorem omegaLimit_subset_closure_fw_image {u : Set τ} (hu : u ∈ f) :
     ω f ϕ s ⊆ closure (image2 ϕ u s) :=
   by
-  rw [omegaLimit_eq_interᵢ]
+  rw [omegaLimit_eq_iInter]
   intro _ hx
   rw [mem_Inter] at hx
   exact hx ⟨u, hu⟩
@@ -389,7 +389,7 @@ theorem eventually_closure_subset_of_isCompact_absorbing_of_isOpen_of_omegaLimit
     by
     have : (⋃ u ∈ f, j u) = ⋃ u : ↥f.sets, j u := bUnion_eq_Union _ _
     rw [this, diff_subset_comm, diff_Union]
-    rw [omegaLimit_eq_interᵢ_inter _ _ _ hv₁] at hn₂
+    rw [omegaLimit_eq_iInter_inter _ _ _ hv₁] at hn₂
     simp_rw [diff_compl]
     rw [← inter_Inter]
     exact subset.trans (inter_subset_right _ _) hn₂
@@ -489,8 +489,8 @@ theorem nonempty_omegaLimit_of_isCompact_absorbing [NeBot f] {c : Set β} (hc₁
     (hc₂ : ∃ v ∈ f, closure (image2 ϕ v s) ⊆ c) (hs : s.Nonempty) : (ω f ϕ s).Nonempty :=
   by
   rcases hc₂ with ⟨v, hv₁, hv₂⟩
-  rw [omegaLimit_eq_interᵢ_inter _ _ _ hv₁]
-  apply IsCompact.nonempty_interᵢ_of_directed_nonempty_compact_closed
+  rw [omegaLimit_eq_iInter_inter _ _ _ hv₁]
+  apply IsCompact.nonempty_iInter_of_directed_nonempty_compact_closed
   · rintro ⟨u₁, hu₁⟩ ⟨u₂, hu₂⟩
     use ⟨u₁ ∩ u₂, inter_mem hu₁ hu₂⟩
     constructor

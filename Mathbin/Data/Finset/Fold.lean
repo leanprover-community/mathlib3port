@@ -167,16 +167,16 @@ theorem fold_disjUnion {s₁ s₂ : Finset α} {b₁ b₂ : β} (h) :
   (congr_arg _ <| Multiset.map_add _ _ _).trans (Multiset.fold_add _ _ _ _ _)
 #align finset.fold_disj_union Finset.fold_disjUnion
 
-/- warning: finset.fold_disj_Union -> Finset.fold_disjUnionᵢ is a dubious translation:
+/- warning: finset.fold_disj_Union -> Finset.fold_disjiUnion is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {op : β -> β -> β} [hc : IsCommutative.{u2} β op] [ha : IsAssociative.{u2} β op] {f : α -> β} {ι : Type.{u3}} {s : Finset.{u3} ι} {t : ι -> (Finset.{u1} α)} {b : ι -> β} {b₀ : β} (h : Set.PairwiseDisjoint.{u1, u3} (Finset.{u1} α) ι (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) ((fun (a : Type.{u3}) (b : Type.{u3}) [self : HasLiftT.{succ u3, succ u3} a b] => self.0) (Finset.{u3} ι) (Set.{u3} ι) (HasLiftT.mk.{succ u3, succ u3} (Finset.{u3} ι) (Set.{u3} ι) (CoeTCₓ.coe.{succ u3, succ u3} (Finset.{u3} ι) (Set.{u3} ι) (Finset.Set.hasCoeT.{u3} ι))) s) t), Eq.{succ u2} β (Finset.fold.{u1, u2} α β op hc ha (Finset.fold.{u3, u2} ι β op hc ha b₀ b s) f (Finset.disjUnionₓ.{u3, u1} ι α s t h)) (Finset.fold.{u3, u2} ι β op hc ha b₀ (fun (i : ι) => Finset.fold.{u1, u2} α β op hc ha (b i) f (t i)) s)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {op : β -> β -> β} [hc : IsCommutative.{u1} β op] [ha : IsAssociative.{u1} β op] {f : α -> β} {ι : Type.{u3}} {s : Finset.{u3} ι} {t : ι -> (Finset.{u2} α)} {b : ι -> β} {b₀ : β} (h : Set.PairwiseDisjoint.{u2, u3} (Finset.{u2} α) ι (Finset.partialOrder.{u2} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u2} α) (Finset.toSet.{u3} ι s) t), Eq.{succ u1} β (Finset.fold.{u2, u1} α β op hc ha (Finset.fold.{u3, u1} ι β op hc ha b₀ b s) f (Finset.disjUnionᵢ.{u3, u2} ι α s t h)) (Finset.fold.{u3, u1} ι β op hc ha b₀ (fun (i : ι) => Finset.fold.{u2, u1} α β op hc ha (b i) f (t i)) s)
-Case conversion may be inaccurate. Consider using '#align finset.fold_disj_Union Finset.fold_disjUnionᵢₓ'. -/
-theorem fold_disjUnionᵢ {ι : Type _} {s : Finset ι} {t : ι → Finset α} {b : ι → β} {b₀ : β} (h) :
+  forall {α : Type.{u2}} {β : Type.{u1}} {op : β -> β -> β} [hc : IsCommutative.{u1} β op] [ha : IsAssociative.{u1} β op] {f : α -> β} {ι : Type.{u3}} {s : Finset.{u3} ι} {t : ι -> (Finset.{u2} α)} {b : ι -> β} {b₀ : β} (h : Set.PairwiseDisjoint.{u2, u3} (Finset.{u2} α) ι (Finset.partialOrder.{u2} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u2} α) (Finset.toSet.{u3} ι s) t), Eq.{succ u1} β (Finset.fold.{u2, u1} α β op hc ha (Finset.fold.{u3, u1} ι β op hc ha b₀ b s) f (Finset.disjiUnion.{u3, u2} ι α s t h)) (Finset.fold.{u3, u1} ι β op hc ha b₀ (fun (i : ι) => Finset.fold.{u2, u1} α β op hc ha (b i) f (t i)) s)
+Case conversion may be inaccurate. Consider using '#align finset.fold_disj_Union Finset.fold_disjiUnionₓ'. -/
+theorem fold_disjiUnion {ι : Type _} {s : Finset ι} {t : ι → Finset α} {b : ι → β} {b₀ : β} (h) :
     (s.disjUnionₓ t h).fold op (s.fold op b₀ b) f = s.fold op b₀ fun i => (t i).fold op (b i) f :=
   (congr_arg _ <| Multiset.map_bind _ _ _).trans (Multiset.fold_bind _ _ _ _ _)
-#align finset.fold_disj_Union Finset.fold_disjUnionᵢ
+#align finset.fold_disj_Union Finset.fold_disjiUnion
 
 /- warning: finset.fold_union_inter -> Finset.fold_union_inter is a dubious translation:
 lean 3 declaration is

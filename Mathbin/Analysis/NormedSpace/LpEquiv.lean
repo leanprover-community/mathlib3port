@@ -145,7 +145,7 @@ section NormedAddCommGroup
 /-- The canonical map between `lp (λ (_ : α), E) ∞` and `α →ᵇ E` as an `add_equiv`. -/
 noncomputable def AddEquiv.lpBcf : lp (fun _ : α => E) ∞ ≃+ (α →ᵇ E)
     where
-  toFun f := ofNormedAddCommGroupDiscrete f ‖f‖ <| le_csupᵢ (memℓp_infty_iff.mp f.Prop)
+  toFun f := ofNormedAddCommGroupDiscrete f ‖f‖ <| le_ciSup (memℓp_infty_iff.mp f.Prop)
   invFun f := ⟨f, f.bddAbove_range_norm_comp⟩
   left_inv f := lp.ext rfl
   right_inv f := ext fun x => rfl

@@ -200,7 +200,7 @@ theorem volume_le_diam (s : Set ℝ) : volume s ≤ EMetric.diam s :=
   by
   by_cases hs : Metric.Bounded s
   · rw [Real.ediam_eq hs, ← volume_Icc]
-    exact volume.mono (Real.subset_Icc_infₛ_supₛ_of_bounded hs)
+    exact volume.mono (Real.subset_Icc_sInf_sSup_of_bounded hs)
   · rw [Metric.ediam_of_unbounded hs]
     exact le_top
 #align real.volume_le_diam Real.volume_le_diam
@@ -730,7 +730,7 @@ theorem Real.integrable_of_summable_norm_Icc {E : Type _} [NormedAddCommGroup E]
           mul_nonneg (norm_nonneg (f.restrict (⟨Icc n (n + 1), is_compact_Icc⟩ : compacts ℝ)))
             ENNReal.toReal_nonneg)
         (fun n => _) hf)
-      (unionᵢ_Icc_int_cast ℝ)
+      (iUnion_Icc_int_cast ℝ)
   simp only [compacts.coe_mk, Real.volume_Icc, add_sub_cancel', ENNReal.toReal_ofReal zero_le_one,
     mul_one, norm_le _ (norm_nonneg _)]
   intro x

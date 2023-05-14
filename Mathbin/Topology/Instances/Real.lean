@@ -86,9 +86,9 @@ instance : SecondCountableTopology ℝ :=
 
 /- warning: real.is_topological_basis_Ioo_rat -> Real.isTopologicalBasis_Ioo_rat is a dubious translation:
 lean 3 declaration is
-  TopologicalSpace.IsTopologicalBasis.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (Set.unionᵢ.{0, 1} (Set.{0} Real) Rat (fun (a : Rat) => Set.unionᵢ.{0, 1} (Set.{0} Real) Rat (fun (b : Rat) => Set.unionᵢ.{0, 0} (Set.{0} Real) (LT.lt.{0} Rat Rat.hasLt a b) (fun (h : LT.lt.{0} Rat Rat.hasLt a b) => Singleton.singleton.{0, 0} (Set.{0} Real) (Set.{0} (Set.{0} Real)) (Set.hasSingleton.{0} (Set.{0} Real)) (Set.Ioo.{0} Real Real.preorder ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat Real (HasLiftT.mk.{1, 1} Rat Real (CoeTCₓ.coe.{1, 1} Rat Real (Rat.castCoe.{0} Real Real.hasRatCast))) a) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat Real (HasLiftT.mk.{1, 1} Rat Real (CoeTCₓ.coe.{1, 1} Rat Real (Rat.castCoe.{0} Real Real.hasRatCast))) b))))))
+  TopologicalSpace.IsTopologicalBasis.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (Set.iUnion.{0, 1} (Set.{0} Real) Rat (fun (a : Rat) => Set.iUnion.{0, 1} (Set.{0} Real) Rat (fun (b : Rat) => Set.iUnion.{0, 0} (Set.{0} Real) (LT.lt.{0} Rat Rat.hasLt a b) (fun (h : LT.lt.{0} Rat Rat.hasLt a b) => Singleton.singleton.{0, 0} (Set.{0} Real) (Set.{0} (Set.{0} Real)) (Set.hasSingleton.{0} (Set.{0} Real)) (Set.Ioo.{0} Real Real.preorder ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat Real (HasLiftT.mk.{1, 1} Rat Real (CoeTCₓ.coe.{1, 1} Rat Real (Rat.castCoe.{0} Real Real.hasRatCast))) a) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Rat Real (HasLiftT.mk.{1, 1} Rat Real (CoeTCₓ.coe.{1, 1} Rat Real (Rat.castCoe.{0} Real Real.hasRatCast))) b))))))
 but is expected to have type
-  TopologicalSpace.IsTopologicalBasis.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (Set.unionᵢ.{0, 1} (Set.{0} Real) Rat (fun (a : Rat) => Set.unionᵢ.{0, 1} (Set.{0} Real) Rat (fun (b : Rat) => Set.unionᵢ.{0, 0} (Set.{0} Real) (LT.lt.{0} Rat Rat.instLTRat_1 a b) (fun (h : LT.lt.{0} Rat Rat.instLTRat_1 a b) => Singleton.singleton.{0, 0} (Set.{0} Real) (Set.{0} (Set.{0} Real)) (Set.instSingletonSet.{0} (Set.{0} Real)) (Set.Ioo.{0} Real Real.instPreorderReal (Rat.cast.{0} Real Real.ratCast a) (Rat.cast.{0} Real Real.ratCast b))))))
+  TopologicalSpace.IsTopologicalBasis.{0} Real (UniformSpace.toTopologicalSpace.{0} Real (PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace)) (Set.iUnion.{0, 1} (Set.{0} Real) Rat (fun (a : Rat) => Set.iUnion.{0, 1} (Set.{0} Real) Rat (fun (b : Rat) => Set.iUnion.{0, 0} (Set.{0} Real) (LT.lt.{0} Rat Rat.instLTRat_1 a b) (fun (h : LT.lt.{0} Rat Rat.instLTRat_1 a b) => Singleton.singleton.{0, 0} (Set.{0} Real) (Set.{0} (Set.{0} Real)) (Set.instSingletonSet.{0} (Set.{0} Real)) (Set.Ioo.{0} Real Real.instPreorderReal (Rat.cast.{0} Real Real.ratCast a) (Rat.cast.{0} Real Real.ratCast b))))))
 Case conversion may be inaccurate. Consider using '#align real.is_topological_basis_Ioo_rat Real.isTopologicalBasis_Ioo_ratₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 theorem Real.isTopologicalBasis_Ioo_rat :
@@ -296,17 +296,17 @@ theorem Real.bounded_iff_bddBelow_bddAbove {s : Set ℝ} : Bounded s ↔ BddBelo
 #align real.bounded_iff_bdd_below_bdd_above Real.bounded_iff_bddBelow_bddAbove
 -/
 
-/- warning: real.subset_Icc_Inf_Sup_of_bounded -> Real.subset_Icc_infₛ_supₛ_of_bounded is a dubious translation:
+/- warning: real.subset_Icc_Inf_Sup_of_bounded -> Real.subset_Icc_sInf_sSup_of_bounded is a dubious translation:
 lean 3 declaration is
-  forall {s : Set.{0} Real}, (Metric.Bounded.{0} Real Real.pseudoMetricSpace s) -> (HasSubset.Subset.{0} (Set.{0} Real) (Set.hasSubset.{0} Real) s (Set.Icc.{0} Real Real.preorder (InfSet.infₛ.{0} Real Real.hasInf s) (SupSet.supₛ.{0} Real Real.hasSup s)))
+  forall {s : Set.{0} Real}, (Metric.Bounded.{0} Real Real.pseudoMetricSpace s) -> (HasSubset.Subset.{0} (Set.{0} Real) (Set.hasSubset.{0} Real) s (Set.Icc.{0} Real Real.preorder (InfSet.sInf.{0} Real Real.hasInf s) (SupSet.sSup.{0} Real Real.hasSup s)))
 but is expected to have type
-  forall {s : Set.{0} Real}, (Metric.Bounded.{0} Real Real.pseudoMetricSpace s) -> (HasSubset.Subset.{0} (Set.{0} Real) (Set.instHasSubsetSet.{0} Real) s (Set.Icc.{0} Real Real.instPreorderReal (InfSet.infₛ.{0} Real Real.instInfSetReal s) (SupSet.supₛ.{0} Real Real.instSupSetReal s)))
-Case conversion may be inaccurate. Consider using '#align real.subset_Icc_Inf_Sup_of_bounded Real.subset_Icc_infₛ_supₛ_of_boundedₓ'. -/
-theorem Real.subset_Icc_infₛ_supₛ_of_bounded {s : Set ℝ} (h : Bounded s) :
-    s ⊆ Icc (infₛ s) (supₛ s) :=
-  subset_Icc_cinfₛ_csupₛ (Real.bounded_iff_bddBelow_bddAbove.1 h).1
+  forall {s : Set.{0} Real}, (Metric.Bounded.{0} Real Real.pseudoMetricSpace s) -> (HasSubset.Subset.{0} (Set.{0} Real) (Set.instHasSubsetSet.{0} Real) s (Set.Icc.{0} Real Real.instPreorderReal (InfSet.sInf.{0} Real Real.instInfSetReal s) (SupSet.sSup.{0} Real Real.instSupSetReal s)))
+Case conversion may be inaccurate. Consider using '#align real.subset_Icc_Inf_Sup_of_bounded Real.subset_Icc_sInf_sSup_of_boundedₓ'. -/
+theorem Real.subset_Icc_sInf_sSup_of_bounded {s : Set ℝ} (h : Bounded s) :
+    s ⊆ Icc (sInf s) (sSup s) :=
+  subset_Icc_csInf_csSup (Real.bounded_iff_bddBelow_bddAbove.1 h).1
     (Real.bounded_iff_bddBelow_bddAbove.1 h).2
-#align real.subset_Icc_Inf_Sup_of_bounded Real.subset_Icc_infₛ_supₛ_of_bounded
+#align real.subset_Icc_Inf_Sup_of_bounded Real.subset_Icc_sInf_sSup_of_bounded
 
 end
 
@@ -443,7 +443,7 @@ theorem AddSubgroup.dense_of_no_min {G : AddSubgroup ℝ} {g₀ : ℝ} (g₀_in 
     · exact ⟨-g₀, G.neg_mem g₀_in, neg_pos.mpr Hg₀⟩
     · exact ⟨g₀, g₀_in, Hg₀⟩
   obtain ⟨a, ha⟩ : ∃ a, IsGLB G_pos a :=
-    ⟨Inf G_pos, isGLB_cinfₛ ⟨g₁, g₁_in, g₁_pos⟩ ⟨0, fun _ hx => le_of_lt hx.2⟩⟩
+    ⟨Inf G_pos, isGLB_csInf ⟨g₁, g₁_in, g₁_pos⟩ ⟨0, fun _ hx => le_of_lt hx.2⟩⟩
   have a_notin : a ∉ G_pos := by
     intro H
     exact H' a ⟨H, ha.1⟩

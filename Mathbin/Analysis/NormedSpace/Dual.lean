@@ -161,7 +161,7 @@ def inclusionInDoubleDualLi : E →ₗᵢ[𝕜] Dual 𝕜 (Dual 𝕜 E) :=
       apply le_antisymm
       · exact double_dual_bound 𝕜 E x
       rw [ContinuousLinearMap.norm_def]
-      refine' le_cinfₛ ContinuousLinearMap.bounds_nonempty _
+      refine' le_csInf ContinuousLinearMap.bounds_nonempty _
       rintro c ⟨hc1, hc2⟩
       exact norm_le_dual_bound 𝕜 x hc1 hc2 }
 #align normed_space.inclusion_in_double_dual_li NormedSpace.inclusionInDoubleDualLi
@@ -197,8 +197,8 @@ theorem polar_univ : polar 𝕜 (univ : Set E) = {(0 : dual 𝕜 E)} :=
 theorem isClosed_polar (s : Set E) : IsClosed (polar 𝕜 s) :=
   by
   dsimp only [NormedSpace.polar]
-  simp only [LinearMap.polar_eq_interᵢ, LinearMap.flip_apply]
-  refine' isClosed_binterᵢ fun z hz => _
+  simp only [LinearMap.polar_eq_iInter, LinearMap.flip_apply]
+  refine' isClosed_biInter fun z hz => _
   exact is_closed_Iic.preimage (ContinuousLinearMap.apply 𝕜 𝕜 z).Continuous.norm
 #align normed_space.is_closed_polar NormedSpace.isClosed_polar
 

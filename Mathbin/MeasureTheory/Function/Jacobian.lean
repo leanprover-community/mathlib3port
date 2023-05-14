@@ -134,7 +134,7 @@ theorem exists_closed_cover_approximatesLinearOn_of_hasFderivWithinAt [SecondCou
   obtain ⟨T, T_count, hT⟩ :
     ∃ T : Set s,
       T.Countable ∧ (⋃ x ∈ T, ball (f' (x : E)) (r (f' x))) = ⋃ x : s, ball (f' x) (r (f' x)) :=
-    TopologicalSpace.isOpen_unionᵢ_countable _ fun x => is_open_ball
+    TopologicalSpace.isOpen_iUnion_countable _ fun x => is_open_ball
   -- fix a sequence `u` of positive reals tending to zero.
   obtain ⟨u, u_anti, u_pos, u_lim⟩ :
     ∃ u : ℕ → ℝ, StrictAnti u ∧ (∀ n : ℕ, 0 < u n) ∧ tendsto u at_top (𝓝 0) :=
@@ -285,7 +285,7 @@ theorem exists_partition_approximatesLinearOn_of_hasFderivWithinAt [SecondCounta
   refine'
     ⟨disjointed t, A, disjoint_disjointed _,
       MeasurableSet.disjointed fun n => (t_closed n).MeasurableSet, _, _, ht⟩
-  · rw [unionᵢ_disjointed]
+  · rw [iUnion_disjointed]
     exact st
   · intro n
     exact (t_approx n).mono_set (inter_subset_inter_right _ (disjointed_subset _ _))
@@ -1021,7 +1021,7 @@ theorem add_haar_image_le_lintegral_abs_det_fderiv (hs : MeasurableSet s)
     apply MeasurableSet.disjointed fun i => _
     exact measurable_spanning_sets μ i
   have A : s = ⋃ n, s ∩ u n := by
-    rw [← inter_Union, unionᵢ_disjointed, Union_spanning_sets, inter_univ]
+    rw [← inter_Union, iUnion_disjointed, Union_spanning_sets, inter_univ]
   calc
     μ (f '' s) ≤ ∑' n, μ (f '' (s ∩ u n)) :=
       by
@@ -1197,7 +1197,7 @@ theorem lintegral_abs_det_fderiv_le_add_haar_image (hs : MeasurableSet s)
     apply MeasurableSet.disjointed fun i => _
     exact measurable_spanning_sets μ i
   have A : s = ⋃ n, s ∩ u n := by
-    rw [← inter_Union, unionᵢ_disjointed, Union_spanning_sets, inter_univ]
+    rw [← inter_Union, iUnion_disjointed, Union_spanning_sets, inter_univ]
   calc
     (∫⁻ x in s, ENNReal.ofReal (|(f' x).det|) ∂μ) =
         ∑' n, ∫⁻ x in s ∩ u n, ENNReal.ofReal (|(f' x).det|) ∂μ :=

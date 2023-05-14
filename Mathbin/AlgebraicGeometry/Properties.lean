@@ -53,7 +53,7 @@ instance : QuasiSober X.carrier :=
         (Homeomorph.ofEmbedding _
               (X.affine_cover.is_open i).base_open.toEmbedding).symm.OpenEmbedding
         PrimeSpectrum.quasiSober
-  · rw [Set.top_eq_univ, Set.unionₛ_range, Set.eq_univ_iff_forall]
+  · rw [Set.top_eq_univ, Set.sUnion_range, Set.eq_univ_iff_forall]
     intro x
     exact ⟨_, ⟨_, rfl⟩, X.affine_cover.covers x⟩
 

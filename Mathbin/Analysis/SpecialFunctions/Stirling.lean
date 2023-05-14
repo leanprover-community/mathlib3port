@@ -228,9 +228,9 @@ theorem stirlingSeq_has_pos_limit_a : ∃ a : ℝ, 0 < a ∧ Tendsto stirlingSeq
   by
   obtain ⟨x, x_pos, hx⟩ := stirling_seq'_bounded_by_pos_constant
   have hx' : x ∈ lowerBounds (Set.range (stirling_seq ∘ succ)) := by simpa [lowerBounds] using hx
-  refine' ⟨_, lt_of_lt_of_le x_pos (le_cinfₛ (Set.range_nonempty _) hx'), _⟩
+  refine' ⟨_, lt_of_lt_of_le x_pos (le_csInf (Set.range_nonempty _) hx'), _⟩
   rw [← Filter.tendsto_add_atTop_iff_nat 1]
-  exact tendsto_atTop_cinfᵢ stirling_seq'_antitone ⟨x, hx'⟩
+  exact tendsto_atTop_ciInf stirling_seq'_antitone ⟨x, hx'⟩
 #align stirling.stirling_seq_has_pos_limit_a Stirling.stirlingSeq_has_pos_limit_a
 
 /-!

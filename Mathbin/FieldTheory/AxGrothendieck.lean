@@ -44,7 +44,7 @@ theorem ax_grothendieck_of_locally_finite {ι K R : Type _} [Field K] [Finite K]
     /- `s` is the set of all coefficients of the polynomial, as well as all of
       the coordinates of `v`, the point I am trying to find the preimage of. -/
     let s : Finset R :=
-      (Finset.bunionᵢ (univ : Finset ι) fun i => (ps i).support.image fun x => coeff x (ps i)) ∪
+      (Finset.biUnion (univ : Finset ι) fun i => (ps i).support.image fun x => coeff x (ps i)) ∪
         (univ : Finset ι).image v
     have hv : ∀ i, v i ∈ Algebra.adjoin K (s : Set R) := fun j =>
       Algebra.subset_adjoin (mem_union_right _ (mem_image.2 ⟨j, mem_univ _, rfl⟩))

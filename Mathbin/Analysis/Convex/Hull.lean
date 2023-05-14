@@ -54,9 +54,9 @@ Case conversion may be inaccurate. Consider using '#align convex_hull convexHull
 def convexHull : ClosureOperator (Set E) :=
   ClosureOperator.mk₃ (fun s => ⋂ (t : Set E) (hst : s ⊆ t) (ht : Convex 𝕜 t), t) (Convex 𝕜)
     (fun s =>
-      Set.subset_interᵢ fun t => Set.subset_interᵢ fun hst => Set.subset_interᵢ fun ht => hst)
-    (fun s => convex_interᵢ fun t => convex_interᵢ fun ht => convex_interᵢ id) fun s t hst ht =>
-    Set.interᵢ_subset_of_subset t <| Set.interᵢ_subset_of_subset hst <| Set.interᵢ_subset _ ht
+      Set.subset_iInter fun t => Set.subset_iInter fun hst => Set.subset_iInter fun ht => hst)
+    (fun s => convex_iInter fun t => convex_iInter fun ht => convex_iInter id) fun s t hst ht =>
+    Set.iInter_subset_of_subset t <| Set.iInter_subset_of_subset hst <| Set.iInter_subset _ ht
 #align convex_hull convexHull
 
 variable (s : Set E)
@@ -77,17 +77,17 @@ theorem convex_convexHull : Convex 𝕜 (convexHull 𝕜 s) :=
   ClosureOperator.closure_mem_mk₃ s
 #align convex_convex_hull convex_convexHull
 
-#print convexHull_eq_interᵢ /-
-theorem convexHull_eq_interᵢ : convexHull 𝕜 s = ⋂ (t : Set E) (hst : s ⊆ t) (ht : Convex 𝕜 t), t :=
+#print convexHull_eq_iInter /-
+theorem convexHull_eq_iInter : convexHull 𝕜 s = ⋂ (t : Set E) (hst : s ⊆ t) (ht : Convex 𝕜 t), t :=
   rfl
-#align convex_hull_eq_Inter convexHull_eq_interᵢ
+#align convex_hull_eq_Inter convexHull_eq_iInter
 -/
 
 variable {𝕜 s} {t : Set E} {x y : E}
 
 #print mem_convexHull_iff /-
 theorem mem_convexHull_iff : x ∈ convexHull 𝕜 s ↔ ∀ t, s ⊆ t → Convex 𝕜 t → x ∈ t := by
-  simp_rw [convexHull_eq_interᵢ, mem_Inter]
+  simp_rw [convexHull_eq_iInter, mem_Inter]
 #align mem_convex_hull_iff mem_convexHull_iff
 -/
 

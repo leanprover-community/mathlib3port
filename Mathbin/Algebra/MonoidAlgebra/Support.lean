@@ -110,10 +110,10 @@ theorem support_mul_single_eq_image [DecidableEq G] [Mul G] (f : MonoidAlgebra k
 
 #print MonoidAlgebra.support_mul /-
 theorem support_mul [Mul G] [DecidableEq G] (a b : MonoidAlgebra k G) :
-    (a * b).support ⊆ a.support.bunionᵢ fun a₁ => b.support.bunionᵢ fun a₂ => {a₁ * a₂} :=
+    (a * b).support ⊆ a.support.biUnion fun a₁ => b.support.biUnion fun a₂ => {a₁ * a₂} :=
   Subset.trans support_sum <|
-    bunionᵢ_mono fun a₁ _ =>
-      Subset.trans support_sum <| bunionᵢ_mono fun a₂ _ => support_single_subset
+    biUnion_mono fun a₁ _ =>
+      Subset.trans support_sum <| biUnion_mono fun a₂ _ => support_single_subset
 #align monoid_algebra.support_mul MonoidAlgebra.support_mul
 -/
 
@@ -175,7 +175,7 @@ variable {k : Type u₁} {G : Type u₂} [Semiring k]
 
 #print AddMonoidAlgebra.support_mul /-
 theorem support_mul [DecidableEq G] [Add G] (a b : AddMonoidAlgebra k G) :
-    (a * b).support ⊆ a.support.bunionᵢ fun a₁ => b.support.bunionᵢ fun a₂ => {a₁ + a₂} :=
+    (a * b).support ⊆ a.support.biUnion fun a₁ => b.support.biUnion fun a₂ => {a₁ + a₂} :=
   @MonoidAlgebra.support_mul k (Multiplicative G) _ _ _ _ _
 #align add_monoid_algebra.support_mul AddMonoidAlgebra.support_mul
 -/

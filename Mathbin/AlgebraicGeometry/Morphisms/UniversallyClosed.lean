@@ -93,7 +93,7 @@ theorem universallyClosedIsLocalAtTarget : PropertyIsLocalAtTarget @UniversallyC
         fun X Y f => (TopCat.homeoOfIso (Scheme.forget_to_Top.map_iso f)).IsClosedMap
   · intro X Y f ι U hU H
     simp_rw [topologically, morphism_restrict_base] at H
-    exact (isClosedMap_iff_isClosedMap_of_supᵢ_eq_top hU).mpr H
+    exact (isClosedMap_iff_isClosedMap_of_iSup_eq_top hU).mpr H
 #align algebraic_geometry.universally_closed_is_local_at_target AlgebraicGeometry.universallyClosedIsLocalAtTarget
 
 theorem UniversallyClosed.openCover_iff {X Y : Scheme.{u}} (f : X ⟶ Y)

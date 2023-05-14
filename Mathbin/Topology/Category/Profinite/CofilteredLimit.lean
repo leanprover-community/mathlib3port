@@ -94,7 +94,7 @@ theorem exists_clopen_of_cofiltered {U : Set C.pt} (hU : IsClopen U) :
   let W : S → Set (F.obj j0) := fun s => if hs : s ∈ G then F.map (f s hs) ⁻¹' V s else Set.univ
   -- Conclude, using the `j0` and the clopen set of `F.obj j0` obtained above.
   refine' ⟨j0, ⋃ (s : S) (hs : s ∈ G), W s, _, _⟩
-  · apply isClopen_bunionᵢ_finset
+  · apply isClopen_biUnion_finset
     intro s hs
     dsimp only [W]
     rw [dif_pos hs]
@@ -102,13 +102,13 @@ theorem exists_clopen_of_cofiltered {U : Set C.pt} (hU : IsClopen U) :
   · ext x
     constructor
     · intro hx
-      simp_rw [Set.preimage_unionᵢ, Set.mem_unionᵢ]
+      simp_rw [Set.preimage_iUnion, Set.mem_iUnion]
       obtain ⟨_, ⟨s, rfl⟩, _, ⟨hs, rfl⟩, hh⟩ := hG hx
       refine' ⟨s, hs, _⟩
       dsimp only [W] at hh⊢
       rwa [dif_pos hs, ← Set.preimage_comp, ← Profinite.coe_comp, C.w]
     · intro hx
-      simp_rw [Set.preimage_unionᵢ, Set.mem_unionᵢ] at hx
+      simp_rw [Set.preimage_iUnion, Set.mem_iUnion] at hx
       obtain ⟨s, hs, hx⟩ := hx
       rw [h]
       refine' ⟨s.1, s.2, _⟩

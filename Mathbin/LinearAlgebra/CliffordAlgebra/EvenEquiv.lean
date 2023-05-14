@@ -128,7 +128,7 @@ open EquivEven
 def toEven : CliffordAlgebra Q →ₐ[R] CliffordAlgebra.even (q' Q) :=
   by
   refine' CliffordAlgebra.lift Q ⟨_, fun m => _⟩
-  · refine' LinearMap.codRestrict _ _ fun m => Submodule.mem_supᵢ_of_mem ⟨2, rfl⟩ _
+  · refine' LinearMap.codRestrict _ _ fun m => Submodule.mem_iSup_of_mem ⟨2, rfl⟩ _
     exact (LinearMap.mulLeft R <| e0 Q).comp (v Q)
     rw [Subtype.coe_mk, pow_two]
     exact Submodule.mul_mem_mul (LinearMap.mem_range_self _ _) (LinearMap.mem_range_self _ _)

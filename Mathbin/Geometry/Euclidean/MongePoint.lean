@@ -334,16 +334,16 @@ theorem eq_mongePoint_of_forall_mem_mongePlane {n : ℕ} {s : Simplex ℝ P (n +
     exact h i₂ hne
   have hi : p -ᵥ s.monge_point ∈ ⨅ i₂ : { i // i₁ ≠ i }, (ℝ ∙ s.points i₁ -ᵥ s.points i₂)ᗮ :=
     by
-    rw [Submodule.mem_infᵢ]
+    rw [Submodule.mem_iInf]
     exact fun i => (Submodule.mem_inf.1 (h' i i.property)).1
-  rw [Submodule.infᵢ_orthogonal, ← Submodule.span_unionᵢ] at hi
+  rw [Submodule.iInf_orthogonal, ← Submodule.span_iUnion] at hi
   have hu :
     (⋃ i : { i // i₁ ≠ i }, ({s.points i₁ -ᵥ s.points i} : Set V)) =
       (· -ᵥ ·) (s.points i₁) '' (s.points '' (Set.univ \ {i₁})) :=
     by
     rw [Set.image_image]
     ext x
-    simp_rw [Set.mem_unionᵢ, Set.mem_image, Set.mem_singleton_iff, Set.mem_diff_singleton]
+    simp_rw [Set.mem_iUnion, Set.mem_image, Set.mem_singleton_iff, Set.mem_diff_singleton]
     constructor
     · rintro ⟨i, rfl⟩
       use i, ⟨Set.mem_univ _, i.property.symm⟩

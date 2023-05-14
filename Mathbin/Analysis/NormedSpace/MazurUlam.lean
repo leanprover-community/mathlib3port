@@ -83,14 +83,14 @@ theorem midpoint_fixed {x y : PE} :
   -- Therefore, `dist (e z) z = 0` for all `e ∈ s`.
   set c := ⨆ e : s, dist ((e : PE ≃ᵢ PE) z) z
   have : c ≤ c / 2 := by
-    apply csupᵢ_le
+    apply ciSup_le
     rintro ⟨e, he⟩
     simp only [Subtype.coe_mk, le_div_iff' (zero_lt_two' ℝ), ← hf_dist]
-    exact le_csupᵢ h_bdd ⟨f e, hf_maps_to he⟩
+    exact le_ciSup h_bdd ⟨f e, hf_maps_to he⟩
   replace : c ≤ 0
   · linarith
   refine' fun e hx hy => dist_le_zero.1 (le_trans _ this)
-  exact le_csupᵢ h_bdd ⟨e, hx, hy⟩
+  exact le_ciSup h_bdd ⟨e, hx, hy⟩
 #align isometry_equiv.midpoint_fixed IsometryEquiv.midpoint_fixed
 
 include F

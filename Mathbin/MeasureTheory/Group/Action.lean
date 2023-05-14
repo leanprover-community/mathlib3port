@@ -210,7 +210,7 @@ theorem measure_isOpen_pos_of_smul_invariant_of_compact_ne_zero (hK : IsCompact 
   pos_iff_ne_zero.2 fun hμU =>
     hμK <|
       measure_mono_null ht <|
-        (measure_bunionᵢ_null_iff t.countable_toSet).2 fun _ _ => by rwa [measure_smul]
+        (measure_biUnion_null_iff t.countable_toSet).2 fun _ _ => by rwa [measure_smul]
 #align measure_theory.measure_is_open_pos_of_smul_invariant_of_compact_ne_zero MeasureTheory.measure_isOpen_pos_of_smul_invariant_of_compact_ne_zero
 #align measure_theory.measure_is_open_pos_of_vadd_invariant_of_compact_ne_zero MeasureTheory.measure_isOpen_pos_of_vadd_invariant_of_compact_ne_zero
 

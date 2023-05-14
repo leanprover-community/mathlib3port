@@ -353,10 +353,10 @@ theorem tsum_prob_mem_Ioi_lt_top {X : Ω → ℝ} (hint : Integrable X) (hnonneg
       apply Set.Subset.antisymm _ _
       · intro ω hω
         obtain ⟨N, hN⟩ : ∃ N : ℕ, X ω ≤ N := exists_nat_ge (X ω)
-        exact Set.mem_unionᵢ.2 ⟨N, hω, hN⟩
+        exact Set.mem_iUnion.2 ⟨N, hω, hN⟩
       ·
         simp (config := { contextual := true }) only [Set.mem_Ioc, Set.mem_Ioi,
-          Set.unionᵢ_subset_iff, Set.setOf_subset_setOf, imp_true_iff]
+          Set.iUnion_subset_iff, Set.setOf_subset_setOf, imp_true_iff]
     rw [this]
     apply tendsto_measure_Union
     intro m n hmn x hx

@@ -70,7 +70,7 @@ namespace Order
 /-- Cofinality of a reflexive order `≼`. This is the smallest cardinality
   of a subset `S : set α` such that `∀ a, ∃ b ∈ S, a ≼ b`. -/
 def cof (r : α → α → Prop) : Cardinal :=
-  infₛ { c | ∃ S : Set α, (∀ a, ∃ b ∈ S, r a b) ∧ (#S) = c }
+  sInf { c | ∃ S : Set α, (∀ a, ∃ b ∈ S, r a b) ∧ (#S) = c }
 #align order.cof Order.cof
 -/
 
@@ -93,7 +93,7 @@ but is expected to have type
   forall {α : Type.{u1}} (r : α -> α -> Prop) {S : Set.{u1} α}, (forall (a : α), Exists.{succ u1} α (fun (b : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b S) (r a b))) -> (LE.le.{succ u1} Cardinal.{u1} Cardinal.instLECardinal.{u1} (Order.cof.{u1} α r) (Cardinal.mk.{u1} (Set.Elem.{u1} α S)))
 Case conversion may be inaccurate. Consider using '#align order.cof_le Order.cof_leₓ'. -/
 theorem cof_le (r : α → α → Prop) {S : Set α} (h : ∀ a, ∃ b ∈ S, r a b) : cof r ≤ (#S) :=
-  cinfₛ_le' ⟨S, h, rfl⟩
+  csInf_le' ⟨S, h, rfl⟩
 #align order.cof_le Order.cof_le
 
 /- warning: order.le_cof -> Order.le_cof is a dubious translation:
@@ -105,7 +105,7 @@ Case conversion may be inaccurate. Consider using '#align order.le_cof Order.le_
 theorem le_cof {r : α → α → Prop} [IsRefl α r] (c : Cardinal) :
     c ≤ cof r ↔ ∀ {S : Set α}, (∀ a, ∃ b ∈ S, r a b) → c ≤ (#S) :=
   by
-  rw [cof, le_cinfₛ_iff'' (cof_nonempty r)]
+  rw [cof, le_csInf_iff'' (cof_nonempty r)]
   use fun H S h => H _ ⟨S, h, rfl⟩
   rintro H d ⟨S, h, rfl⟩
   exact H h
@@ -118,9 +118,9 @@ theorem RelIso.cof_le_lift {α : Type u} {β : Type v} {r : α → α → Prop} 
     (f : r ≃r s) : Cardinal.lift.{max u v} (Order.cof r) ≤ Cardinal.lift.{max u v} (Order.cof s) :=
   by
   rw [Order.cof, Order.cof, lift_Inf, lift_Inf,
-    le_cinfₛ_iff'' (nonempty_image_iff.2 (Order.cof_nonempty s))]
+    le_csInf_iff'' (nonempty_image_iff.2 (Order.cof_nonempty s))]
   rintro - ⟨-, ⟨u, H, rfl⟩, rfl⟩
-  apply cinfₛ_le'
+  apply csInf_le'
   refine'
     ⟨_, ⟨f.symm '' u, fun a => _, rfl⟩,
       lift_mk_eq.{u, v, max u v}.2 ⟨(f.symm.toEquiv.image u).symm⟩⟩
@@ -199,7 +199,7 @@ theorem cof_type (r : α → α → Prop) [IsWellOrder α r] : (type r).cof = St
 
 #print Ordinal.le_cof_type /-
 theorem le_cof_type [IsWellOrder α r] {c} : c ≤ cof (type r) ↔ ∀ S, Unbounded r S → c ≤ (#S) :=
-  (le_cinfₛ_iff'' (StrictOrder.cof_nonempty r)).trans
+  (le_csInf_iff'' (StrictOrder.cof_nonempty r)).trans
     ⟨fun H S h => H _ ⟨S, h, rfl⟩, by
       rintro H d ⟨S, h, rfl⟩
       exact H _ h⟩
@@ -220,7 +220,7 @@ theorem lt_cof_type [IsWellOrder α r] {S : Set α} : (#S) < cof (type r) → Bo
 
 #print Ordinal.cof_eq /-
 theorem cof_eq (r : α → α → Prop) [IsWellOrder α r] : ∃ S, Unbounded r S ∧ (#S) = cof (type r) :=
-  cinfₛ_mem (StrictOrder.cof_nonempty r)
+  csInf_mem (StrictOrder.cof_nonempty r)
 #align ordinal.cof_eq Ordinal.cof_eq
 -/
 
@@ -278,16 +278,16 @@ theorem cof_lsub_def_nonempty (o) :
 #align ordinal.cof_lsub_def_nonempty Ordinal.cof_lsub_def_nonempty
 -/
 
-/- warning: ordinal.cof_eq_Inf_lsub -> Ordinal.cof_eq_infₛ_lsub is a dubious translation:
+/- warning: ordinal.cof_eq_Inf_lsub -> Ordinal.cof_eq_sInf_lsub is a dubious translation:
 lean 3 declaration is
-  forall (o : Ordinal.{u1}), Eq.{succ (succ u1)} Cardinal.{u1} (Ordinal.cof.{u1} o) (InfSet.infₛ.{succ u1} Cardinal.{u1} (ConditionallyCompleteLattice.toHasInf.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Cardinal.{u1} Cardinal.conditionallyCompleteLinearOrderBot.{u1}))) (setOf.{succ u1} Cardinal.{u1} (fun (a : Cardinal.{u1}) => Exists.{succ (succ u1)} Type.{u1} (fun {ι : Type.{u1}} => Exists.{succ (succ u1)} (ι -> Ordinal.{u1}) (fun (f : ι -> Ordinal.{u1}) => And (Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.lsub.{u1, u1} ι f) o) (Eq.{succ (succ u1)} Cardinal.{u1} (Cardinal.mk.{u1} ι) a))))))
+  forall (o : Ordinal.{u1}), Eq.{succ (succ u1)} Cardinal.{u1} (Ordinal.cof.{u1} o) (InfSet.sInf.{succ u1} Cardinal.{u1} (ConditionallyCompleteLattice.toHasInf.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Cardinal.{u1} Cardinal.conditionallyCompleteLinearOrderBot.{u1}))) (setOf.{succ u1} Cardinal.{u1} (fun (a : Cardinal.{u1}) => Exists.{succ (succ u1)} Type.{u1} (fun {ι : Type.{u1}} => Exists.{succ (succ u1)} (ι -> Ordinal.{u1}) (fun (f : ι -> Ordinal.{u1}) => And (Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.lsub.{u1, u1} ι f) o) (Eq.{succ (succ u1)} Cardinal.{u1} (Cardinal.mk.{u1} ι) a))))))
 but is expected to have type
-  forall (o : Ordinal.{u1}), Eq.{succ (succ u1)} Cardinal.{u1} (Ordinal.cof.{u1} o) (InfSet.infₛ.{succ u1} Cardinal.{u1} (ConditionallyCompleteLattice.toInfSet.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Cardinal.{u1} Cardinal.instConditionallyCompleteLinearOrderBotCardinal.{u1}))) (setOf.{succ u1} Cardinal.{u1} (fun (a : Cardinal.{u1}) => Exists.{succ (succ u1)} Type.{u1} (fun (ι : Type.{u1}) => Exists.{succ (succ u1)} (ι -> Ordinal.{u1}) (fun (f : ι -> Ordinal.{u1}) => And (Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.lsub.{u1, u1} ι f) o) (Eq.{succ (succ u1)} Cardinal.{u1} (Cardinal.mk.{u1} ι) a))))))
-Case conversion may be inaccurate. Consider using '#align ordinal.cof_eq_Inf_lsub Ordinal.cof_eq_infₛ_lsubₓ'. -/
-theorem cof_eq_infₛ_lsub (o : Ordinal.{u}) :
-    cof o = infₛ { a : Cardinal | ∃ (ι : Type u)(f : ι → Ordinal), lsub.{u, u} f = o ∧ (#ι) = a } :=
+  forall (o : Ordinal.{u1}), Eq.{succ (succ u1)} Cardinal.{u1} (Ordinal.cof.{u1} o) (InfSet.sInf.{succ u1} Cardinal.{u1} (ConditionallyCompleteLattice.toInfSet.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Cardinal.{u1} Cardinal.instConditionallyCompleteLinearOrderBotCardinal.{u1}))) (setOf.{succ u1} Cardinal.{u1} (fun (a : Cardinal.{u1}) => Exists.{succ (succ u1)} Type.{u1} (fun (ι : Type.{u1}) => Exists.{succ (succ u1)} (ι -> Ordinal.{u1}) (fun (f : ι -> Ordinal.{u1}) => And (Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.lsub.{u1, u1} ι f) o) (Eq.{succ (succ u1)} Cardinal.{u1} (Cardinal.mk.{u1} ι) a))))))
+Case conversion may be inaccurate. Consider using '#align ordinal.cof_eq_Inf_lsub Ordinal.cof_eq_sInf_lsubₓ'. -/
+theorem cof_eq_sInf_lsub (o : Ordinal.{u}) :
+    cof o = sInf { a : Cardinal | ∃ (ι : Type u)(f : ι → Ordinal), lsub.{u, u} f = o ∧ (#ι) = a } :=
   by
-  refine' le_antisymm (le_cinfₛ (cof_lsub_def_nonempty o) _) (cinfₛ_le' _)
+  refine' le_antisymm (le_csInf (cof_lsub_def_nonempty o) _) (csInf_le' _)
   · rintro a ⟨ι, f, hf, rfl⟩
     rw [← type_lt o]
     refine'
@@ -317,7 +317,7 @@ theorem cof_eq_infₛ_lsub (o : Ordinal.{u}) :
     rcases hS (enum (· < ·) a ha) with ⟨b, hb, hb'⟩
     rw [← typein_le_typein, typein_enum] at hb'
     exact hb'.trans_lt (lt_lsub.{u, u} f ⟨b, hb⟩)
-#align ordinal.cof_eq_Inf_lsub Ordinal.cof_eq_infₛ_lsub
+#align ordinal.cof_eq_Inf_lsub Ordinal.cof_eq_sInf_lsub
 
 /- warning: ordinal.lift_cof -> Ordinal.lift_cof is a dubious translation:
 lean 3 declaration is
@@ -355,7 +355,7 @@ theorem lift_cof (o) : (cof o).lift = cof o.lift :=
 theorem cof_le_card (o) : cof o ≤ card o :=
   by
   rw [cof_eq_Inf_lsub]
-  exact cinfₛ_le' card_mem_cof
+  exact csInf_le' card_mem_cof
 #align ordinal.cof_le_card Ordinal.cof_le_card
 -/
 
@@ -375,7 +375,7 @@ theorem exists_lsub_cof (o : Ordinal) :
     ∃ (ι : _)(f : ι → Ordinal), lsub.{u, u} f = o ∧ (#ι) = cof o :=
   by
   rw [cof_eq_Inf_lsub]
-  exact cinfₛ_mem (cof_lsub_def_nonempty o)
+  exact csInf_mem (cof_lsub_def_nonempty o)
 #align ordinal.exists_lsub_cof Ordinal.exists_lsub_cof
 -/
 
@@ -383,7 +383,7 @@ theorem exists_lsub_cof (o : Ordinal) :
 theorem cof_lsub_le {ι} (f : ι → Ordinal) : cof (lsub.{u, u} f) ≤ (#ι) :=
   by
   rw [cof_eq_Inf_lsub]
-  exact cinfₛ_le' ⟨ι, f, rfl, rfl⟩
+  exact csInf_le' ⟨ι, f, rfl, rfl⟩
 #align ordinal.cof_lsub_le Ordinal.cof_lsub_le
 -/
 
@@ -404,7 +404,7 @@ theorem le_cof_iff_lsub {o : Ordinal} {a : Cardinal} :
   by
   rw [cof_eq_Inf_lsub]
   exact
-    (le_cinfₛ_iff'' (cof_lsub_def_nonempty o)).trans
+    (le_csInf_iff'' (cof_lsub_def_nonempty o)).trans
       ⟨fun H ι f hf => H _ ⟨ι, f, hf, rfl⟩, fun H b ⟨ι, f, hf, hb⟩ =>
         by
         rw [← hb]
@@ -459,31 +459,31 @@ theorem sup_lt_ord {ι} {f : ι → Ordinal} {c : Ordinal} (hι : (#ι) < c.cof)
 #align ordinal.sup_lt_ord Ordinal.sup_lt_ord
 -/
 
-/- warning: ordinal.supr_lt_lift -> Ordinal.supᵢ_lt_lift is a dubious translation:
+/- warning: ordinal.supr_lt_lift -> Ordinal.iSup_lt_lift is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {f : ι -> Cardinal.{max u1 u2}} {c : Cardinal.{max u1 u2}}, (LT.lt.{succ (max u1 u2)} Cardinal.{max u1 u2} (Preorder.toLT.{succ (max u1 u2)} Cardinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Cardinal.{max u1 u2} Cardinal.partialOrder.{max u1 u2})) (Cardinal.lift.{u2, u1} (Cardinal.mk.{u1} ι)) (Ordinal.cof.{max u1 u2} (Cardinal.ord.{max u1 u2} c))) -> (forall (i : ι), LT.lt.{succ (max u1 u2)} Cardinal.{max u1 u2} (Preorder.toLT.{succ (max u1 u2)} Cardinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Cardinal.{max u1 u2} Cardinal.partialOrder.{max u1 u2})) (f i) c) -> (LT.lt.{succ (max u1 u2)} Cardinal.{max u1 u2} (Preorder.toLT.{succ (max u1 u2)} Cardinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Cardinal.{max u1 u2} Cardinal.partialOrder.{max u1 u2})) (supᵢ.{succ (max u1 u2), succ u1} Cardinal.{max u1 u2} (ConditionallyCompleteLattice.toHasSup.{succ (max u1 u2)} Cardinal.{max u1 u2} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ (max u1 u2)} Cardinal.{max u1 u2} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ (max u1 u2)} Cardinal.{max u1 u2} Cardinal.conditionallyCompleteLinearOrderBot.{max u1 u2}))) ι f) c)
+  forall {ι : Type.{u1}} {f : ι -> Cardinal.{max u1 u2}} {c : Cardinal.{max u1 u2}}, (LT.lt.{succ (max u1 u2)} Cardinal.{max u1 u2} (Preorder.toLT.{succ (max u1 u2)} Cardinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Cardinal.{max u1 u2} Cardinal.partialOrder.{max u1 u2})) (Cardinal.lift.{u2, u1} (Cardinal.mk.{u1} ι)) (Ordinal.cof.{max u1 u2} (Cardinal.ord.{max u1 u2} c))) -> (forall (i : ι), LT.lt.{succ (max u1 u2)} Cardinal.{max u1 u2} (Preorder.toLT.{succ (max u1 u2)} Cardinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Cardinal.{max u1 u2} Cardinal.partialOrder.{max u1 u2})) (f i) c) -> (LT.lt.{succ (max u1 u2)} Cardinal.{max u1 u2} (Preorder.toLT.{succ (max u1 u2)} Cardinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Cardinal.{max u1 u2} Cardinal.partialOrder.{max u1 u2})) (iSup.{succ (max u1 u2), succ u1} Cardinal.{max u1 u2} (ConditionallyCompleteLattice.toHasSup.{succ (max u1 u2)} Cardinal.{max u1 u2} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ (max u1 u2)} Cardinal.{max u1 u2} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ (max u1 u2)} Cardinal.{max u1 u2} Cardinal.conditionallyCompleteLinearOrderBot.{max u1 u2}))) ι f) c)
 but is expected to have type
-  forall {ι : Type.{u1}} {f : ι -> Cardinal.{max u1 u2}} {c : Cardinal.{max u1 u2}}, (LT.lt.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} (Preorder.toLT.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} Cardinal.partialOrder.{max u1 u2})) (Cardinal.lift.{u2, u1} (Cardinal.mk.{u1} ι)) (Ordinal.cof.{max u1 u2} (Cardinal.ord.{max u1 u2} c))) -> (forall (i : ι), LT.lt.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} (Preorder.toLT.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} Cardinal.partialOrder.{max u1 u2})) (f i) c) -> (LT.lt.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} (Preorder.toLT.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} Cardinal.partialOrder.{max u1 u2})) (supᵢ.{succ (max u1 u2), succ u1} Cardinal.{max u1 u2} (ConditionallyCompleteLattice.toSupSet.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} Cardinal.instConditionallyCompleteLinearOrderBotCardinal.{max u1 u2}))) ι f) c)
-Case conversion may be inaccurate. Consider using '#align ordinal.supr_lt_lift Ordinal.supᵢ_lt_liftₓ'. -/
-theorem supᵢ_lt_lift {ι} {f : ι → Cardinal} {c : Cardinal} (hι : Cardinal.lift (#ι) < c.ord.cof)
-    (hf : ∀ i, f i < c) : supᵢ f < c :=
+  forall {ι : Type.{u1}} {f : ι -> Cardinal.{max u1 u2}} {c : Cardinal.{max u1 u2}}, (LT.lt.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} (Preorder.toLT.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} Cardinal.partialOrder.{max u1 u2})) (Cardinal.lift.{u2, u1} (Cardinal.mk.{u1} ι)) (Ordinal.cof.{max u1 u2} (Cardinal.ord.{max u1 u2} c))) -> (forall (i : ι), LT.lt.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} (Preorder.toLT.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} Cardinal.partialOrder.{max u1 u2})) (f i) c) -> (LT.lt.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} (Preorder.toLT.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} Cardinal.partialOrder.{max u1 u2})) (iSup.{succ (max u1 u2), succ u1} Cardinal.{max u1 u2} (ConditionallyCompleteLattice.toSupSet.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} Cardinal.instConditionallyCompleteLinearOrderBotCardinal.{max u1 u2}))) ι f) c)
+Case conversion may be inaccurate. Consider using '#align ordinal.supr_lt_lift Ordinal.iSup_lt_liftₓ'. -/
+theorem iSup_lt_lift {ι} {f : ι → Cardinal} {c : Cardinal} (hι : Cardinal.lift (#ι) < c.ord.cof)
+    (hf : ∀ i, f i < c) : iSup f < c :=
   by
   rw [← ord_lt_ord, supr_ord (Cardinal.bddAbove_range _)]
   refine' sup_lt_ord_lift hι fun i => _
   rw [ord_lt_ord]
   apply hf
-#align ordinal.supr_lt_lift Ordinal.supᵢ_lt_lift
+#align ordinal.supr_lt_lift Ordinal.iSup_lt_lift
 
-/- warning: ordinal.supr_lt -> Ordinal.supᵢ_lt is a dubious translation:
+/- warning: ordinal.supr_lt -> Ordinal.iSup_lt is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {f : ι -> Cardinal.{u1}} {c : Cardinal.{u1}}, (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Cardinal.mk.{u1} ι) (Ordinal.cof.{u1} (Cardinal.ord.{u1} c))) -> (forall (i : ι), LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (f i) c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (supᵢ.{succ u1, succ u1} Cardinal.{u1} (ConditionallyCompleteLattice.toHasSup.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Cardinal.{u1} Cardinal.conditionallyCompleteLinearOrderBot.{u1}))) ι f) c)
+  forall {ι : Type.{u1}} {f : ι -> Cardinal.{u1}} {c : Cardinal.{u1}}, (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Cardinal.mk.{u1} ι) (Ordinal.cof.{u1} (Cardinal.ord.{u1} c))) -> (forall (i : ι), LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (f i) c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (iSup.{succ u1, succ u1} Cardinal.{u1} (ConditionallyCompleteLattice.toHasSup.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Cardinal.{u1} Cardinal.conditionallyCompleteLinearOrderBot.{u1}))) ι f) c)
 but is expected to have type
-  forall {ι : Type.{u1}} {f : ι -> Cardinal.{u1}} {c : Cardinal.{u1}}, (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Cardinal.mk.{u1} ι) (Ordinal.cof.{u1} (Cardinal.ord.{u1} c))) -> (forall (i : ι), LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (f i) c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (supᵢ.{succ u1, succ u1} Cardinal.{u1} (ConditionallyCompleteLattice.toSupSet.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Cardinal.{u1} Cardinal.instConditionallyCompleteLinearOrderBotCardinal.{u1}))) ι f) c)
-Case conversion may be inaccurate. Consider using '#align ordinal.supr_lt Ordinal.supᵢ_ltₓ'. -/
-theorem supᵢ_lt {ι} {f : ι → Cardinal} {c : Cardinal} (hι : (#ι) < c.ord.cof) :
-    (∀ i, f i < c) → supᵢ f < c :=
-  supᵢ_lt_lift (by rwa [(#ι).lift_id])
-#align ordinal.supr_lt Ordinal.supᵢ_lt
+  forall {ι : Type.{u1}} {f : ι -> Cardinal.{u1}} {c : Cardinal.{u1}}, (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Cardinal.mk.{u1} ι) (Ordinal.cof.{u1} (Cardinal.ord.{u1} c))) -> (forall (i : ι), LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (f i) c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (iSup.{succ u1, succ u1} Cardinal.{u1} (ConditionallyCompleteLattice.toSupSet.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Cardinal.{u1} Cardinal.instConditionallyCompleteLinearOrderBotCardinal.{u1}))) ι f) c)
+Case conversion may be inaccurate. Consider using '#align ordinal.supr_lt Ordinal.iSup_ltₓ'. -/
+theorem iSup_lt {ι} {f : ι → Cardinal} {c : Cardinal} (hι : (#ι) < c.ord.cof) :
+    (∀ i, f i < c) → iSup f < c :=
+  iSup_lt_lift (by rwa [(#ι).lift_id])
+#align ordinal.supr_lt Ordinal.iSup_lt
 
 #print Ordinal.nfpFamily_lt_ord_lift /-
 theorem nfpFamily_lt_ord_lift {ι} {f : ι → Ordinal → Ordinal} {c} (hc : ℵ₀ < cof c)
@@ -858,13 +858,13 @@ protected theorem IsNormal.isFundamentalSequence {f : Ordinal.{u} → Ordinal.{u
       rwa [hf', ← IsNormal.blsub_eq.{u, u} hf ha, lt_blsub_iff] at this
     refine' (lsub_le fun i => _).antisymm (le_of_forall_lt fun b hb => _)
     · rcases H i with ⟨b, hb, hb'⟩
-      exact lt_of_le_of_lt (cinfₛ_le' hb') hb
+      exact lt_of_le_of_lt (csInf_le' hb') hb
     · have := hf.strict_mono hb
       rw [← hf', lt_lsub_iff] at this
       cases' this with i hi
       rcases H i with ⟨b, _, hb⟩
       exact
-        ((le_cinfₛ_iff'' ⟨b, hb⟩).2 fun c hc => hf.strict_mono.le_iff_le.1 (hi.trans hc)).trans_lt
+        ((le_csInf_iff'' ⟨b, hb⟩).2 fun c hc => hf.strict_mono.le_iff_le.1 (hi.trans hc)).trans_lt
           (lt_lsub _ i)
   · rw [@blsub_comp.{u, u, u} a _ (fun b _ => f b) (fun i j hi hj h => hf.strict_mono.monotone h) g
         hg.2.2]
@@ -995,35 +995,35 @@ theorem cof_univ : cof univ.{u, v} = Cardinal.univ :=
 /-! ### Infinite pigeonhole principle -/
 
 
-/- warning: ordinal.unbounded_of_unbounded_sUnion -> Ordinal.unbounded_of_unbounded_unionₛ is a dubious translation:
+/- warning: ordinal.unbounded_of_unbounded_sUnion -> Ordinal.unbounded_of_unbounded_sUnion is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} (r : α -> α -> Prop) [wo : IsWellOrder.{u1} α r] {s : Set.{u1} (Set.{u1} α)}, (Set.Unbounded.{u1} α r (Set.unionₛ.{u1} α s)) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Cardinal.mk.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Set.{u1} α)) Type.{u1} (Set.hasCoeToSort.{u1} (Set.{u1} α)) s)) (StrictOrder.cof.{u1} α r)) -> (Exists.{succ u1} (Set.{u1} α) (fun (x : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) x s) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) x s) => Set.Unbounded.{u1} α r x)))
+  forall {α : Type.{u1}} (r : α -> α -> Prop) [wo : IsWellOrder.{u1} α r] {s : Set.{u1} (Set.{u1} α)}, (Set.Unbounded.{u1} α r (Set.sUnion.{u1} α s)) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Cardinal.mk.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Set.{u1} α)) Type.{u1} (Set.hasCoeToSort.{u1} (Set.{u1} α)) s)) (StrictOrder.cof.{u1} α r)) -> (Exists.{succ u1} (Set.{u1} α) (fun (x : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) x s) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) x s) => Set.Unbounded.{u1} α r x)))
 but is expected to have type
-  forall {α : Type.{u1}} (r : α -> α -> Prop) [wo : IsWellOrder.{u1} α r] {s : Set.{u1} (Set.{u1} α)}, (Set.Unbounded.{u1} α r (Set.unionₛ.{u1} α s)) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Cardinal.mk.{u1} (Set.Elem.{u1} (Set.{u1} α) s)) (StrictOrder.cof.{u1} α r)) -> (Exists.{succ u1} (Set.{u1} α) (fun (x : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) x s) (Set.Unbounded.{u1} α r x)))
-Case conversion may be inaccurate. Consider using '#align ordinal.unbounded_of_unbounded_sUnion Ordinal.unbounded_of_unbounded_unionₛₓ'. -/
+  forall {α : Type.{u1}} (r : α -> α -> Prop) [wo : IsWellOrder.{u1} α r] {s : Set.{u1} (Set.{u1} α)}, (Set.Unbounded.{u1} α r (Set.sUnion.{u1} α s)) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Cardinal.mk.{u1} (Set.Elem.{u1} (Set.{u1} α) s)) (StrictOrder.cof.{u1} α r)) -> (Exists.{succ u1} (Set.{u1} α) (fun (x : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) x s) (Set.Unbounded.{u1} α r x)))
+Case conversion may be inaccurate. Consider using '#align ordinal.unbounded_of_unbounded_sUnion Ordinal.unbounded_of_unbounded_sUnionₓ'. -/
 /-- If the union of s is unbounded and s is smaller than the cofinality,
   then s has an unbounded member -/
-theorem unbounded_of_unbounded_unionₛ (r : α → α → Prop) [wo : IsWellOrder α r] {s : Set (Set α)}
+theorem unbounded_of_unbounded_sUnion (r : α → α → Prop) [wo : IsWellOrder α r] {s : Set (Set α)}
     (h₁ : Unbounded r <| ⋃₀ s) (h₂ : (#s) < StrictOrder.cof r) : ∃ x ∈ s, Unbounded r x :=
   by
   by_contra' h
   simp_rw [not_unbounded_iff] at h
   let f : s → α := fun x : s => wo.wf.sup x (h x.1 x.2)
-  refine' h₂.not_le (le_trans (cinfₛ_le' ⟨range f, fun x => _, rfl⟩) mk_range_le)
+  refine' h₂.not_le (le_trans (csInf_le' ⟨range f, fun x => _, rfl⟩) mk_range_le)
   rcases h₁ x with ⟨y, ⟨c, hc, hy⟩, hxy⟩
   exact ⟨f ⟨c, hc⟩, mem_range_self _, fun hxz => hxy (trans (wo.wf.lt_sup _ hy) hxz)⟩
-#align ordinal.unbounded_of_unbounded_sUnion Ordinal.unbounded_of_unbounded_unionₛ
+#align ordinal.unbounded_of_unbounded_sUnion Ordinal.unbounded_of_unbounded_sUnion
 
-#print Ordinal.unbounded_of_unbounded_unionᵢ /-
+#print Ordinal.unbounded_of_unbounded_iUnion /-
 /-- If the union of s is unbounded and s is smaller than the cofinality,
   then s has an unbounded member -/
-theorem unbounded_of_unbounded_unionᵢ {α β : Type u} (r : α → α → Prop) [wo : IsWellOrder α r]
+theorem unbounded_of_unbounded_iUnion {α β : Type u} (r : α → α → Prop) [wo : IsWellOrder α r]
     (s : β → Set α) (h₁ : Unbounded r <| ⋃ x, s x) (h₂ : (#β) < StrictOrder.cof r) :
     ∃ x : β, Unbounded r (s x) := by
   rw [← sUnion_range] at h₁
   rcases unbounded_of_unbounded_sUnion r h₁ (mk_range_le.trans_lt h₂) with ⟨_, ⟨x, rfl⟩, u⟩
   exact ⟨x, u⟩
-#align ordinal.unbounded_of_unbounded_Union Ordinal.unbounded_of_unbounded_unionᵢ
+#align ordinal.unbounded_of_unbounded_Union Ordinal.unbounded_of_unbounded_iUnion
 -/
 
 #print Ordinal.infinite_pigeonhole /-
@@ -1139,7 +1139,7 @@ theorem isStrongLimit_beth {o : Ordinal} (H : IsSuccLimit o) : IsStrongLimit (be
     exact is_strong_limit_aleph_0
   · refine' ⟨beth_ne_zero o, fun a ha => _⟩
     rw [beth_limit ⟨h, is_succ_limit_iff_succ_lt.1 H⟩] at ha
-    rcases exists_lt_of_lt_csupᵢ' ha with ⟨⟨i, hi⟩, ha⟩
+    rcases exists_lt_of_lt_ciSup' ha with ⟨⟨i, hi⟩, ha⟩
     have := power_le_power_left two_ne_zero ha.le
     rw [← beth_succ] at this
     exact this.trans_lt (beth_lt.2 (H.succ_lt hi))
@@ -1169,7 +1169,7 @@ theorem mk_bounded_subset {α : Type _} (h : ∀ x < #α, (2^x) < (#α)) {r : α
     rw [← coe_set_of, this]
     convert mk_Union_le_sum_mk.trans ((sum_le_supr _).trans (mul_le_max_of_aleph_0_le_left ha))
     apply (max_eq_left _).symm
-    apply csupᵢ_le' fun i => _
+    apply ciSup_le' fun i => _
     rw [mk_powerset]
     apply (h'.two_power_lt _).le
     rw [coe_set_of, card_typein, ← lt_ord, hr]
@@ -1338,9 +1338,9 @@ theorem exists_infinite_fiber {β α : Type _} (f : β → α) (w : (#α) < (#β
 
 /- warning: cardinal.le_range_of_union_finset_eq_top -> Cardinal.le_range_of_union_finset_eq_top is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Infinite.{succ u2} β] (f : α -> (Finset.{u2} β)), (Eq.{succ u2} (Set.{u2} β) (Set.unionᵢ.{u2, succ u1} β α (fun (a : α) => (fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Finset.{u2} β) (Set.{u2} β) (HasLiftT.mk.{succ u2, succ u2} (Finset.{u2} β) (Set.{u2} β) (CoeTCₓ.coe.{succ u2, succ u2} (Finset.{u2} β) (Set.{u2} β) (Finset.Set.hasCoeT.{u2} β))) (f a))) (Top.top.{u2} (Set.{u2} β) (CompleteLattice.toHasTop.{u2} (Set.{u2} β) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} β) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} β) (Set.completeBooleanAlgebra.{u2} β))))))) -> (LE.le.{succ u2} Cardinal.{u2} Cardinal.hasLe.{u2} (Cardinal.mk.{u2} β) (Cardinal.mk.{u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} (Finset.{u2} β)) Type.{u2} (Set.hasCoeToSort.{u2} (Finset.{u2} β)) (Set.range.{u2, succ u1} (Finset.{u2} β) α f))))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Infinite.{succ u2} β] (f : α -> (Finset.{u2} β)), (Eq.{succ u2} (Set.{u2} β) (Set.iUnion.{u2, succ u1} β α (fun (a : α) => (fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Finset.{u2} β) (Set.{u2} β) (HasLiftT.mk.{succ u2, succ u2} (Finset.{u2} β) (Set.{u2} β) (CoeTCₓ.coe.{succ u2, succ u2} (Finset.{u2} β) (Set.{u2} β) (Finset.Set.hasCoeT.{u2} β))) (f a))) (Top.top.{u2} (Set.{u2} β) (CompleteLattice.toHasTop.{u2} (Set.{u2} β) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} β) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} β) (Set.completeBooleanAlgebra.{u2} β))))))) -> (LE.le.{succ u2} Cardinal.{u2} Cardinal.hasLe.{u2} (Cardinal.mk.{u2} β) (Cardinal.mk.{u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} (Finset.{u2} β)) Type.{u2} (Set.hasCoeToSort.{u2} (Finset.{u2} β)) (Set.range.{u2, succ u1} (Finset.{u2} β) α f))))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Infinite.{succ u1} β] (f : α -> (Finset.{u1} β)), (Eq.{succ u1} (Set.{u1} β) (Set.unionᵢ.{u1, succ u2} β α (fun (a : α) => Finset.toSet.{u1} β (f a))) (Top.top.{u1} (Set.{u1} β) (CompleteLattice.toTop.{u1} (Set.{u1} β) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} β) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} β) (Set.instCompleteBooleanAlgebraSet.{u1} β))))))) -> (LE.le.{succ u1} Cardinal.{u1} Cardinal.instLECardinal.{u1} (Cardinal.mk.{u1} β) (Cardinal.mk.{u1} (Set.Elem.{u1} (Finset.{u1} β) (Set.range.{u1, succ u2} (Finset.{u1} β) α f))))
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Infinite.{succ u1} β] (f : α -> (Finset.{u1} β)), (Eq.{succ u1} (Set.{u1} β) (Set.iUnion.{u1, succ u2} β α (fun (a : α) => Finset.toSet.{u1} β (f a))) (Top.top.{u1} (Set.{u1} β) (CompleteLattice.toTop.{u1} (Set.{u1} β) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} β) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} β) (Set.instCompleteBooleanAlgebraSet.{u1} β))))))) -> (LE.le.{succ u1} Cardinal.{u1} Cardinal.instLECardinal.{u1} (Cardinal.mk.{u1} β) (Cardinal.mk.{u1} (Set.Elem.{u1} (Finset.{u1} β) (Set.range.{u1, succ u2} (Finset.{u1} β) α f))))
 Case conversion may be inaccurate. Consider using '#align cardinal.le_range_of_union_finset_eq_top Cardinal.le_range_of_union_finset_eq_topₓ'. -/
 /-- If an infinite type `β` can be expressed as a union of finite sets,
 then the cardinality of the collection of those finite sets
@@ -1424,32 +1424,32 @@ theorem bsup_lt_ord_of_isRegular {o : Ordinal} {f : ∀ a < o, Ordinal} {c} (hc 
 #align cardinal.bsup_lt_ord_of_is_regular Cardinal.bsup_lt_ord_of_isRegular
 -/
 
-/- warning: cardinal.supr_lt_lift_of_is_regular -> Cardinal.supᵢ_lt_lift_of_isRegular is a dubious translation:
+/- warning: cardinal.supr_lt_lift_of_is_regular -> Cardinal.iSup_lt_lift_of_isRegular is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {f : ι -> Cardinal.{max u1 u2}} {c : Cardinal.{max u1 u2}}, (Cardinal.IsRegular.{max u1 u2} c) -> (LT.lt.{succ (max u1 u2)} Cardinal.{max u1 u2} (Preorder.toLT.{succ (max u1 u2)} Cardinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Cardinal.{max u1 u2} Cardinal.partialOrder.{max u1 u2})) (Cardinal.lift.{u2, u1} (Cardinal.mk.{u1} ι)) c) -> (forall (i : ι), LT.lt.{succ (max u1 u2)} Cardinal.{max u1 u2} (Preorder.toLT.{succ (max u1 u2)} Cardinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Cardinal.{max u1 u2} Cardinal.partialOrder.{max u1 u2})) (f i) c) -> (LT.lt.{succ (max u1 u2)} Cardinal.{max u1 u2} (Preorder.toLT.{succ (max u1 u2)} Cardinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Cardinal.{max u1 u2} Cardinal.partialOrder.{max u1 u2})) (supᵢ.{succ (max u1 u2), succ u1} Cardinal.{max u1 u2} (ConditionallyCompleteLattice.toHasSup.{succ (max u1 u2)} Cardinal.{max u1 u2} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ (max u1 u2)} Cardinal.{max u1 u2} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ (max u1 u2)} Cardinal.{max u1 u2} Cardinal.conditionallyCompleteLinearOrderBot.{max u1 u2}))) ι f) c)
+  forall {ι : Type.{u1}} {f : ι -> Cardinal.{max u1 u2}} {c : Cardinal.{max u1 u2}}, (Cardinal.IsRegular.{max u1 u2} c) -> (LT.lt.{succ (max u1 u2)} Cardinal.{max u1 u2} (Preorder.toLT.{succ (max u1 u2)} Cardinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Cardinal.{max u1 u2} Cardinal.partialOrder.{max u1 u2})) (Cardinal.lift.{u2, u1} (Cardinal.mk.{u1} ι)) c) -> (forall (i : ι), LT.lt.{succ (max u1 u2)} Cardinal.{max u1 u2} (Preorder.toLT.{succ (max u1 u2)} Cardinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Cardinal.{max u1 u2} Cardinal.partialOrder.{max u1 u2})) (f i) c) -> (LT.lt.{succ (max u1 u2)} Cardinal.{max u1 u2} (Preorder.toLT.{succ (max u1 u2)} Cardinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Cardinal.{max u1 u2} Cardinal.partialOrder.{max u1 u2})) (iSup.{succ (max u1 u2), succ u1} Cardinal.{max u1 u2} (ConditionallyCompleteLattice.toHasSup.{succ (max u1 u2)} Cardinal.{max u1 u2} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ (max u1 u2)} Cardinal.{max u1 u2} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ (max u1 u2)} Cardinal.{max u1 u2} Cardinal.conditionallyCompleteLinearOrderBot.{max u1 u2}))) ι f) c)
 but is expected to have type
-  forall {ι : Type.{u1}} {f : ι -> Cardinal.{max u1 u2}} {c : Cardinal.{max u1 u2}}, (Cardinal.IsRegular.{max u1 u2} c) -> (LT.lt.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} (Preorder.toLT.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} Cardinal.partialOrder.{max u1 u2})) (Cardinal.lift.{u2, u1} (Cardinal.mk.{u1} ι)) c) -> (forall (i : ι), LT.lt.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} (Preorder.toLT.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} Cardinal.partialOrder.{max u1 u2})) (f i) c) -> (LT.lt.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} (Preorder.toLT.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} Cardinal.partialOrder.{max u1 u2})) (supᵢ.{succ (max u1 u2), succ u1} Cardinal.{max u1 u2} (ConditionallyCompleteLattice.toSupSet.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} Cardinal.instConditionallyCompleteLinearOrderBotCardinal.{max u1 u2}))) ι f) c)
-Case conversion may be inaccurate. Consider using '#align cardinal.supr_lt_lift_of_is_regular Cardinal.supᵢ_lt_lift_of_isRegularₓ'. -/
-theorem supᵢ_lt_lift_of_isRegular {ι} {f : ι → Cardinal} {c} (hc : IsRegular c)
-    (hι : Cardinal.lift (#ι) < c) : (∀ i, f i < c) → supᵢ f < c :=
-  supᵢ_lt_lift (by rwa [hc.cof_eq])
-#align cardinal.supr_lt_lift_of_is_regular Cardinal.supᵢ_lt_lift_of_isRegular
+  forall {ι : Type.{u1}} {f : ι -> Cardinal.{max u1 u2}} {c : Cardinal.{max u1 u2}}, (Cardinal.IsRegular.{max u1 u2} c) -> (LT.lt.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} (Preorder.toLT.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} Cardinal.partialOrder.{max u1 u2})) (Cardinal.lift.{u2, u1} (Cardinal.mk.{u1} ι)) c) -> (forall (i : ι), LT.lt.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} (Preorder.toLT.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} Cardinal.partialOrder.{max u1 u2})) (f i) c) -> (LT.lt.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} (Preorder.toLT.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} Cardinal.partialOrder.{max u1 u2})) (iSup.{succ (max u1 u2), succ u1} Cardinal.{max u1 u2} (ConditionallyCompleteLattice.toSupSet.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} Cardinal.instConditionallyCompleteLinearOrderBotCardinal.{max u1 u2}))) ι f) c)
+Case conversion may be inaccurate. Consider using '#align cardinal.supr_lt_lift_of_is_regular Cardinal.iSup_lt_lift_of_isRegularₓ'. -/
+theorem iSup_lt_lift_of_isRegular {ι} {f : ι → Cardinal} {c} (hc : IsRegular c)
+    (hι : Cardinal.lift (#ι) < c) : (∀ i, f i < c) → iSup f < c :=
+  iSup_lt_lift (by rwa [hc.cof_eq])
+#align cardinal.supr_lt_lift_of_is_regular Cardinal.iSup_lt_lift_of_isRegular
 
-/- warning: cardinal.supr_lt_of_is_regular -> Cardinal.supᵢ_lt_of_isRegular is a dubious translation:
+/- warning: cardinal.supr_lt_of_is_regular -> Cardinal.iSup_lt_of_isRegular is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {f : ι -> Cardinal.{u1}} {c : Cardinal.{u1}}, (Cardinal.IsRegular.{u1} c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Cardinal.mk.{u1} ι) c) -> (forall (i : ι), LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (f i) c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (supᵢ.{succ u1, succ u1} Cardinal.{u1} (ConditionallyCompleteLattice.toHasSup.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Cardinal.{u1} Cardinal.conditionallyCompleteLinearOrderBot.{u1}))) ι f) c)
+  forall {ι : Type.{u1}} {f : ι -> Cardinal.{u1}} {c : Cardinal.{u1}}, (Cardinal.IsRegular.{u1} c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Cardinal.mk.{u1} ι) c) -> (forall (i : ι), LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (f i) c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (iSup.{succ u1, succ u1} Cardinal.{u1} (ConditionallyCompleteLattice.toHasSup.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Cardinal.{u1} Cardinal.conditionallyCompleteLinearOrderBot.{u1}))) ι f) c)
 but is expected to have type
-  forall {ι : Type.{u1}} {f : ι -> Cardinal.{u1}} {c : Cardinal.{u1}}, (Cardinal.IsRegular.{u1} c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Cardinal.mk.{u1} ι) c) -> (forall (i : ι), LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (f i) c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (supᵢ.{succ u1, succ u1} Cardinal.{u1} (ConditionallyCompleteLattice.toSupSet.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Cardinal.{u1} Cardinal.instConditionallyCompleteLinearOrderBotCardinal.{u1}))) ι f) c)
-Case conversion may be inaccurate. Consider using '#align cardinal.supr_lt_of_is_regular Cardinal.supᵢ_lt_of_isRegularₓ'. -/
-theorem supᵢ_lt_of_isRegular {ι} {f : ι → Cardinal} {c} (hc : IsRegular c) (hι : (#ι) < c) :
-    (∀ i, f i < c) → supᵢ f < c :=
-  supᵢ_lt (by rwa [hc.cof_eq])
-#align cardinal.supr_lt_of_is_regular Cardinal.supᵢ_lt_of_isRegular
+  forall {ι : Type.{u1}} {f : ι -> Cardinal.{u1}} {c : Cardinal.{u1}}, (Cardinal.IsRegular.{u1} c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Cardinal.mk.{u1} ι) c) -> (forall (i : ι), LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (f i) c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (iSup.{succ u1, succ u1} Cardinal.{u1} (ConditionallyCompleteLattice.toSupSet.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Cardinal.{u1} Cardinal.instConditionallyCompleteLinearOrderBotCardinal.{u1}))) ι f) c)
+Case conversion may be inaccurate. Consider using '#align cardinal.supr_lt_of_is_regular Cardinal.iSup_lt_of_isRegularₓ'. -/
+theorem iSup_lt_of_isRegular {ι} {f : ι → Cardinal} {c} (hc : IsRegular c) (hι : (#ι) < c) :
+    (∀ i, f i < c) → iSup f < c :=
+  iSup_lt (by rwa [hc.cof_eq])
+#align cardinal.supr_lt_of_is_regular Cardinal.iSup_lt_of_isRegular
 
 #print Cardinal.sum_lt_lift_of_isRegular /-
 theorem sum_lt_lift_of_isRegular {ι : Type u} {f : ι → Cardinal} {c : Cardinal} (hc : IsRegular c)
     (hι : Cardinal.lift.{v, u} (#ι) < c) (hf : ∀ i, f i < c) : sum f < c :=
-  (sum_le_supᵢ_lift _).trans_lt <| mul_lt_of_lt hc.1 hι (supᵢ_lt_lift_of_isRegular hc hι hf)
+  (sum_le_iSup_lift _).trans_lt <| mul_lt_of_lt hc.1 hι (iSup_lt_lift_of_isRegular hc hι hf)
 #align cardinal.sum_lt_lift_of_is_regular Cardinal.sum_lt_lift_of_isRegular
 -/
 

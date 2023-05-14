@@ -1629,7 +1629,7 @@ theorem ae_bdd_liminf_atTop_rpow_of_snorm_bdd {p : ℝ≥0∞} {f : ℕ → α �
   simp_rw [snorm_eq_lintegral_rpow_nnnorm hp hp'] at hbdd
   simp_rw [liminf_eq, eventually_at_top]
   exact
-    supₛ_le fun b ⟨a, ha⟩ =>
+    sSup_le fun b ⟨a, ha⟩ =>
       (ha a le_rfl).trans ((ENNReal.rpow_one_div_le_iff (ENNReal.toReal_pos hp hp')).1 (hbdd _))
 #align measure_theory.ae_bdd_liminf_at_top_rpow_of_snorm_bdd MeasureTheory.ae_bdd_liminf_atTop_rpow_of_snorm_bdd
 

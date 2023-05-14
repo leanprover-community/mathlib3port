@@ -914,8 +914,8 @@ Case conversion may be inaccurate. Consider using '#align finsupp.map_domain_sup
 theorem mapDomain_support [DecidableEq β] {f : α → β} {s : α →₀ M} :
     (s.mapDomain f).support ⊆ s.support.image f :=
   Finset.Subset.trans support_sum <|
-    Finset.Subset.trans (Finset.bunionᵢ_mono fun a ha => support_single_subset) <| by
-      rw [Finset.bunionᵢ_singleton] <;> exact subset.refl _
+    Finset.Subset.trans (Finset.biUnion_mono fun a ha => support_single_subset) <| by
+      rw [Finset.biUnion_singleton] <;> exact subset.refl _
 #align finsupp.map_domain_support Finsupp.mapDomain_support
 
 /- warning: finsupp.map_domain_apply' -> Finsupp.mapDomain_apply' is a dubious translation:
@@ -2101,9 +2101,9 @@ Case conversion may be inaccurate. Consider using '#align finsupp.support_curry 
 theorem support_curry [DecidableEq α] (f : α × β →₀ M) :
     f.curry.support ⊆ f.support.image Prod.fst :=
   by
-  rw [← Finset.bunionᵢ_singleton]
+  rw [← Finset.biUnion_singleton]
   refine' Finset.Subset.trans support_sum _
-  refine' Finset.bunionᵢ_mono fun a _ => support_single_subset
+  refine' Finset.biUnion_mono fun a _ => support_single_subset
 #align finsupp.support_curry Finsupp.support_curry
 
 end CurryUncurry

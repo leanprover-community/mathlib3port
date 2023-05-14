@@ -102,88 +102,88 @@ theorem Iic_disjoint_Ici : Disjoint (Iic a) (Ici b) ↔ ¬b ≤ a :=
   disjoint_comm.trans Ici_disjoint_Iic
 #align set.Iic_disjoint_Ici Set.Iic_disjoint_Ici
 
-#print Set.unionᵢ_Iic /-
+#print Set.iUnion_Iic /-
 @[simp]
-theorem unionᵢ_Iic : (⋃ a : α, Iic a) = univ :=
-  unionᵢ_eq_univ_iff.2 fun x => ⟨x, right_mem_Iic⟩
-#align set.Union_Iic Set.unionᵢ_Iic
+theorem iUnion_Iic : (⋃ a : α, Iic a) = univ :=
+  iUnion_eq_univ_iff.2 fun x => ⟨x, right_mem_Iic⟩
+#align set.Union_Iic Set.iUnion_Iic
 -/
 
-#print Set.unionᵢ_Ici /-
+#print Set.iUnion_Ici /-
 @[simp]
-theorem unionᵢ_Ici : (⋃ a : α, Ici a) = univ :=
-  unionᵢ_eq_univ_iff.2 fun x => ⟨x, left_mem_Ici⟩
-#align set.Union_Ici Set.unionᵢ_Ici
+theorem iUnion_Ici : (⋃ a : α, Ici a) = univ :=
+  iUnion_eq_univ_iff.2 fun x => ⟨x, left_mem_Ici⟩
+#align set.Union_Ici Set.iUnion_Ici
 -/
 
-#print Set.unionᵢ_Icc_right /-
+#print Set.iUnion_Icc_right /-
 @[simp]
-theorem unionᵢ_Icc_right (a : α) : (⋃ b, Icc a b) = Ici a := by
+theorem iUnion_Icc_right (a : α) : (⋃ b, Icc a b) = Ici a := by
   simp only [← Ici_inter_Iic, ← inter_Union, Union_Iic, inter_univ]
-#align set.Union_Icc_right Set.unionᵢ_Icc_right
+#align set.Union_Icc_right Set.iUnion_Icc_right
 -/
 
-#print Set.unionᵢ_Ioc_right /-
+#print Set.iUnion_Ioc_right /-
 @[simp]
-theorem unionᵢ_Ioc_right (a : α) : (⋃ b, Ioc a b) = Ioi a := by
+theorem iUnion_Ioc_right (a : α) : (⋃ b, Ioc a b) = Ioi a := by
   simp only [← Ioi_inter_Iic, ← inter_Union, Union_Iic, inter_univ]
-#align set.Union_Ioc_right Set.unionᵢ_Ioc_right
+#align set.Union_Ioc_right Set.iUnion_Ioc_right
 -/
 
-#print Set.unionᵢ_Icc_left /-
+#print Set.iUnion_Icc_left /-
 @[simp]
-theorem unionᵢ_Icc_left (b : α) : (⋃ a, Icc a b) = Iic b := by
+theorem iUnion_Icc_left (b : α) : (⋃ a, Icc a b) = Iic b := by
   simp only [← Ici_inter_Iic, ← Union_inter, Union_Ici, univ_inter]
-#align set.Union_Icc_left Set.unionᵢ_Icc_left
+#align set.Union_Icc_left Set.iUnion_Icc_left
 -/
 
-#print Set.unionᵢ_Ico_left /-
+#print Set.iUnion_Ico_left /-
 @[simp]
-theorem unionᵢ_Ico_left (b : α) : (⋃ a, Ico a b) = Iio b := by
+theorem iUnion_Ico_left (b : α) : (⋃ a, Ico a b) = Iio b := by
   simp only [← Ici_inter_Iio, ← Union_inter, Union_Ici, univ_inter]
-#align set.Union_Ico_left Set.unionᵢ_Ico_left
+#align set.Union_Ico_left Set.iUnion_Ico_left
 -/
 
-#print Set.unionᵢ_Iio /-
+#print Set.iUnion_Iio /-
 @[simp]
-theorem unionᵢ_Iio [NoMaxOrder α] : (⋃ a : α, Iio a) = univ :=
-  unionᵢ_eq_univ_iff.2 exists_gt
-#align set.Union_Iio Set.unionᵢ_Iio
+theorem iUnion_Iio [NoMaxOrder α] : (⋃ a : α, Iio a) = univ :=
+  iUnion_eq_univ_iff.2 exists_gt
+#align set.Union_Iio Set.iUnion_Iio
 -/
 
-#print Set.unionᵢ_Ioi /-
+#print Set.iUnion_Ioi /-
 @[simp]
-theorem unionᵢ_Ioi [NoMinOrder α] : (⋃ a : α, Ioi a) = univ :=
-  unionᵢ_eq_univ_iff.2 exists_lt
-#align set.Union_Ioi Set.unionᵢ_Ioi
+theorem iUnion_Ioi [NoMinOrder α] : (⋃ a : α, Ioi a) = univ :=
+  iUnion_eq_univ_iff.2 exists_lt
+#align set.Union_Ioi Set.iUnion_Ioi
 -/
 
-#print Set.unionᵢ_Ico_right /-
+#print Set.iUnion_Ico_right /-
 @[simp]
-theorem unionᵢ_Ico_right [NoMaxOrder α] (a : α) : (⋃ b, Ico a b) = Ici a := by
+theorem iUnion_Ico_right [NoMaxOrder α] (a : α) : (⋃ b, Ico a b) = Ici a := by
   simp only [← Ici_inter_Iio, ← inter_Union, Union_Iio, inter_univ]
-#align set.Union_Ico_right Set.unionᵢ_Ico_right
+#align set.Union_Ico_right Set.iUnion_Ico_right
 -/
 
-#print Set.unionᵢ_Ioo_right /-
+#print Set.iUnion_Ioo_right /-
 @[simp]
-theorem unionᵢ_Ioo_right [NoMaxOrder α] (a : α) : (⋃ b, Ioo a b) = Ioi a := by
+theorem iUnion_Ioo_right [NoMaxOrder α] (a : α) : (⋃ b, Ioo a b) = Ioi a := by
   simp only [← Ioi_inter_Iio, ← inter_Union, Union_Iio, inter_univ]
-#align set.Union_Ioo_right Set.unionᵢ_Ioo_right
+#align set.Union_Ioo_right Set.iUnion_Ioo_right
 -/
 
-#print Set.unionᵢ_Ioc_left /-
+#print Set.iUnion_Ioc_left /-
 @[simp]
-theorem unionᵢ_Ioc_left [NoMinOrder α] (b : α) : (⋃ a, Ioc a b) = Iic b := by
+theorem iUnion_Ioc_left [NoMinOrder α] (b : α) : (⋃ a, Ioc a b) = Iic b := by
   simp only [← Ioi_inter_Iic, ← Union_inter, Union_Ioi, univ_inter]
-#align set.Union_Ioc_left Set.unionᵢ_Ioc_left
+#align set.Union_Ioc_left Set.iUnion_Ioc_left
 -/
 
-#print Set.unionᵢ_Ioo_left /-
+#print Set.iUnion_Ioo_left /-
 @[simp]
-theorem unionᵢ_Ioo_left [NoMinOrder α] (b : α) : (⋃ a, Ioo a b) = Iio b := by
+theorem iUnion_Ioo_left [NoMinOrder α] (b : α) : (⋃ a, Ioo a b) = Iio b := by
   simp only [← Ioi_inter_Iio, ← Union_inter, Union_Ioi, univ_inter]
-#align set.Union_Ioo_left Set.unionᵢ_Ioo_left
+#align set.Union_Ioo_left Set.iUnion_Ioo_left
 -/
 
 end Preorder
@@ -233,36 +233,36 @@ theorem eq_of_Ico_disjoint {x₁ x₂ y₁ y₂ : α} (h : Disjoint (Ico x₁ x�
   exact h.elim (fun h => absurd hx (not_lt_of_le h)) id
 #align set.eq_of_Ico_disjoint Set.eq_of_Ico_disjoint
 
-#print Set.unionᵢ_Ico_eq_Iio_self_iff /-
+#print Set.iUnion_Ico_eq_Iio_self_iff /-
 @[simp]
-theorem unionᵢ_Ico_eq_Iio_self_iff {f : ι → α} {a : α} :
+theorem iUnion_Ico_eq_Iio_self_iff {f : ι → α} {a : α} :
     (⋃ i, Ico (f i) a) = Iio a ↔ ∀ x < a, ∃ i, f i ≤ x := by
   simp [← Ici_inter_Iio, ← Union_inter, subset_def]
-#align set.Union_Ico_eq_Iio_self_iff Set.unionᵢ_Ico_eq_Iio_self_iff
+#align set.Union_Ico_eq_Iio_self_iff Set.iUnion_Ico_eq_Iio_self_iff
 -/
 
-#print Set.unionᵢ_Ioc_eq_Ioi_self_iff /-
+#print Set.iUnion_Ioc_eq_Ioi_self_iff /-
 @[simp]
-theorem unionᵢ_Ioc_eq_Ioi_self_iff {f : ι → α} {a : α} :
+theorem iUnion_Ioc_eq_Ioi_self_iff {f : ι → α} {a : α} :
     (⋃ i, Ioc a (f i)) = Ioi a ↔ ∀ x, a < x → ∃ i, x ≤ f i := by
   simp [← Ioi_inter_Iic, ← inter_Union, subset_def]
-#align set.Union_Ioc_eq_Ioi_self_iff Set.unionᵢ_Ioc_eq_Ioi_self_iff
+#align set.Union_Ioc_eq_Ioi_self_iff Set.iUnion_Ioc_eq_Ioi_self_iff
 -/
 
-#print Set.bunionᵢ_Ico_eq_Iio_self_iff /-
+#print Set.biUnion_Ico_eq_Iio_self_iff /-
 @[simp]
-theorem bunionᵢ_Ico_eq_Iio_self_iff {p : ι → Prop} {f : ∀ i, p i → α} {a : α} :
+theorem biUnion_Ico_eq_Iio_self_iff {p : ι → Prop} {f : ∀ i, p i → α} {a : α} :
     (⋃ (i) (hi : p i), Ico (f i hi) a) = Iio a ↔ ∀ x < a, ∃ i hi, f i hi ≤ x := by
   simp [← Ici_inter_Iio, ← Union_inter, subset_def]
-#align set.bUnion_Ico_eq_Iio_self_iff Set.bunionᵢ_Ico_eq_Iio_self_iff
+#align set.bUnion_Ico_eq_Iio_self_iff Set.biUnion_Ico_eq_Iio_self_iff
 -/
 
-#print Set.bunionᵢ_Ioc_eq_Ioi_self_iff /-
+#print Set.biUnion_Ioc_eq_Ioi_self_iff /-
 @[simp]
-theorem bunionᵢ_Ioc_eq_Ioi_self_iff {p : ι → Prop} {f : ∀ i, p i → α} {a : α} :
+theorem biUnion_Ioc_eq_Ioi_self_iff {p : ι → Prop} {f : ∀ i, p i → α} {a : α} :
     (⋃ (i) (hi : p i), Ioc a (f i hi)) = Ioi a ↔ ∀ x, a < x → ∃ i hi, x ≤ f i hi := by
   simp [← Ioi_inter_Iic, ← inter_Union, subset_def]
-#align set.bUnion_Ioc_eq_Ioi_self_iff Set.bunionᵢ_Ioc_eq_Ioi_self_iff
+#align set.bUnion_Ioc_eq_Ioi_self_iff Set.biUnion_Ioc_eq_Ioi_self_iff
 -/
 
 end LinearOrder
@@ -273,36 +273,36 @@ section UnionIxx
 
 variable [LinearOrder α] {s : Set α} {a : α} {f : ι → α}
 
-#print IsGLB.bunionᵢ_Ioi_eq /-
-theorem IsGLB.bunionᵢ_Ioi_eq (h : IsGLB s a) : (⋃ x ∈ s, Ioi x) = Ioi a :=
+#print IsGLB.biUnion_Ioi_eq /-
+theorem IsGLB.biUnion_Ioi_eq (h : IsGLB s a) : (⋃ x ∈ s, Ioi x) = Ioi a :=
   by
   refine' (Union₂_subset fun x hx => _).antisymm fun x hx => _
   · exact Ioi_subset_Ioi (h.1 hx)
   · rcases h.exists_between hx with ⟨y, hys, hay, hyx⟩
     exact mem_bUnion hys hyx
-#align is_glb.bUnion_Ioi_eq IsGLB.bunionᵢ_Ioi_eq
+#align is_glb.bUnion_Ioi_eq IsGLB.biUnion_Ioi_eq
 -/
 
-#print IsGLB.unionᵢ_Ioi_eq /-
-theorem IsGLB.unionᵢ_Ioi_eq (h : IsGLB (range f) a) : (⋃ x, Ioi (f x)) = Ioi a :=
-  bunionᵢ_range.symm.trans h.bunionᵢ_Ioi_eq
-#align is_glb.Union_Ioi_eq IsGLB.unionᵢ_Ioi_eq
+#print IsGLB.iUnion_Ioi_eq /-
+theorem IsGLB.iUnion_Ioi_eq (h : IsGLB (range f) a) : (⋃ x, Ioi (f x)) = Ioi a :=
+  biUnion_range.symm.trans h.biUnion_Ioi_eq
+#align is_glb.Union_Ioi_eq IsGLB.iUnion_Ioi_eq
 -/
 
-#print IsLUB.bunionᵢ_Iio_eq /-
-theorem IsLUB.bunionᵢ_Iio_eq (h : IsLUB s a) : (⋃ x ∈ s, Iio x) = Iio a :=
-  h.dual.bunionᵢ_Ioi_eq
-#align is_lub.bUnion_Iio_eq IsLUB.bunionᵢ_Iio_eq
+#print IsLUB.biUnion_Iio_eq /-
+theorem IsLUB.biUnion_Iio_eq (h : IsLUB s a) : (⋃ x ∈ s, Iio x) = Iio a :=
+  h.dual.biUnion_Ioi_eq
+#align is_lub.bUnion_Iio_eq IsLUB.biUnion_Iio_eq
 -/
 
-#print IsLUB.unionᵢ_Iio_eq /-
-theorem IsLUB.unionᵢ_Iio_eq (h : IsLUB (range f) a) : (⋃ x, Iio (f x)) = Iio a :=
-  h.dual.unionᵢ_Ioi_eq
-#align is_lub.Union_Iio_eq IsLUB.unionᵢ_Iio_eq
+#print IsLUB.iUnion_Iio_eq /-
+theorem IsLUB.iUnion_Iio_eq (h : IsLUB (range f) a) : (⋃ x, Iio (f x)) = Iio a :=
+  h.dual.iUnion_Ioi_eq
+#align is_lub.Union_Iio_eq IsLUB.iUnion_Iio_eq
 -/
 
-#print IsGLB.bunionᵢ_Ici_eq_Ioi /-
-theorem IsGLB.bunionᵢ_Ici_eq_Ioi (a_glb : IsGLB s a) (a_not_mem : a ∉ s) :
+#print IsGLB.biUnion_Ici_eq_Ioi /-
+theorem IsGLB.biUnion_Ici_eq_Ioi (a_glb : IsGLB s a) (a_not_mem : a ∉ s) :
     (⋃ x ∈ s, Ici x) = Ioi a :=
   by
   refine' (Union₂_subset fun x hx => _).antisymm fun x hx => _
@@ -310,77 +310,77 @@ theorem IsGLB.bunionᵢ_Ici_eq_Ioi (a_glb : IsGLB s a) (a_not_mem : a ∉ s) :
   · rcases a_glb.exists_between hx with ⟨y, hys, hay, hyx⟩
     apply mem_Union₂.mpr
     refine' ⟨y, hys, hyx.le⟩
-#align is_glb.bUnion_Ici_eq_Ioi IsGLB.bunionᵢ_Ici_eq_Ioi
+#align is_glb.bUnion_Ici_eq_Ioi IsGLB.biUnion_Ici_eq_Ioi
 -/
 
-#print IsGLB.bunionᵢ_Ici_eq_Ici /-
-theorem IsGLB.bunionᵢ_Ici_eq_Ici (a_glb : IsGLB s a) (a_mem : a ∈ s) : (⋃ x ∈ s, Ici x) = Ici a :=
+#print IsGLB.biUnion_Ici_eq_Ici /-
+theorem IsGLB.biUnion_Ici_eq_Ici (a_glb : IsGLB s a) (a_mem : a ∈ s) : (⋃ x ∈ s, Ici x) = Ici a :=
   by
   refine' (Union₂_subset fun x hx => _).antisymm fun x hx => _
   · exact Ici_subset_Ici.mpr (mem_lower_bounds.mp a_glb.1 x hx)
   · apply mem_Union₂.mpr
     refine' ⟨a, a_mem, hx⟩
-#align is_glb.bUnion_Ici_eq_Ici IsGLB.bunionᵢ_Ici_eq_Ici
+#align is_glb.bUnion_Ici_eq_Ici IsGLB.biUnion_Ici_eq_Ici
 -/
 
-#print IsLUB.bunionᵢ_Iic_eq_Iio /-
-theorem IsLUB.bunionᵢ_Iic_eq_Iio (a_lub : IsLUB s a) (a_not_mem : a ∉ s) :
+#print IsLUB.biUnion_Iic_eq_Iio /-
+theorem IsLUB.biUnion_Iic_eq_Iio (a_lub : IsLUB s a) (a_not_mem : a ∉ s) :
     (⋃ x ∈ s, Iic x) = Iio a :=
-  a_lub.dual.bunionᵢ_Ici_eq_Ioi a_not_mem
-#align is_lub.bUnion_Iic_eq_Iio IsLUB.bunionᵢ_Iic_eq_Iio
+  a_lub.dual.biUnion_Ici_eq_Ioi a_not_mem
+#align is_lub.bUnion_Iic_eq_Iio IsLUB.biUnion_Iic_eq_Iio
 -/
 
-#print IsLUB.bunionᵢ_Iic_eq_Iic /-
-theorem IsLUB.bunionᵢ_Iic_eq_Iic (a_lub : IsLUB s a) (a_mem : a ∈ s) : (⋃ x ∈ s, Iic x) = Iic a :=
-  a_lub.dual.bunionᵢ_Ici_eq_Ici a_mem
-#align is_lub.bUnion_Iic_eq_Iic IsLUB.bunionᵢ_Iic_eq_Iic
+#print IsLUB.biUnion_Iic_eq_Iic /-
+theorem IsLUB.biUnion_Iic_eq_Iic (a_lub : IsLUB s a) (a_mem : a ∈ s) : (⋃ x ∈ s, Iic x) = Iic a :=
+  a_lub.dual.biUnion_Ici_eq_Ici a_mem
+#align is_lub.bUnion_Iic_eq_Iic IsLUB.biUnion_Iic_eq_Iic
 -/
 
-/- warning: Union_Ici_eq_Ioi_infi -> unionᵢ_Ici_eq_Ioi_infᵢ is a dubious translation:
+/- warning: Union_Ici_eq_Ioi_infi -> iUnion_Ici_eq_Ioi_iInf is a dubious translation:
 lean 3 declaration is
-  forall {ι : Sort.{u1}} {R : Type.{u2}} [_inst_2 : CompleteLinearOrder.{u2} R] {f : ι -> R}, (Not (Membership.Mem.{u2, u2} R (Set.{u2} R) (Set.hasMem.{u2} R) (infᵢ.{u2, u1} R (CompleteSemilatticeInf.toHasInf.{u2} R (CompleteLattice.toCompleteSemilatticeInf.{u2} R (CompleteLinearOrder.toCompleteLattice.{u2} R _inst_2))) ι (fun (i : ι) => f i)) (Set.range.{u2, u1} R ι f))) -> (Eq.{succ u2} (Set.{u2} R) (Set.unionᵢ.{u2, u1} R ι (fun (i : ι) => Set.Ici.{u2} R (PartialOrder.toPreorder.{u2} R (CompleteSemilatticeInf.toPartialOrder.{u2} R (CompleteLattice.toCompleteSemilatticeInf.{u2} R (CompleteLinearOrder.toCompleteLattice.{u2} R _inst_2)))) (f i))) (Set.Ioi.{u2} R (PartialOrder.toPreorder.{u2} R (CompleteSemilatticeInf.toPartialOrder.{u2} R (CompleteLattice.toCompleteSemilatticeInf.{u2} R (CompleteLinearOrder.toCompleteLattice.{u2} R _inst_2)))) (infᵢ.{u2, u1} R (CompleteSemilatticeInf.toHasInf.{u2} R (CompleteLattice.toCompleteSemilatticeInf.{u2} R (CompleteLinearOrder.toCompleteLattice.{u2} R _inst_2))) ι (fun (i : ι) => f i))))
+  forall {ι : Sort.{u1}} {R : Type.{u2}} [_inst_2 : CompleteLinearOrder.{u2} R] {f : ι -> R}, (Not (Membership.Mem.{u2, u2} R (Set.{u2} R) (Set.hasMem.{u2} R) (iInf.{u2, u1} R (CompleteSemilatticeInf.toHasInf.{u2} R (CompleteLattice.toCompleteSemilatticeInf.{u2} R (CompleteLinearOrder.toCompleteLattice.{u2} R _inst_2))) ι (fun (i : ι) => f i)) (Set.range.{u2, u1} R ι f))) -> (Eq.{succ u2} (Set.{u2} R) (Set.iUnion.{u2, u1} R ι (fun (i : ι) => Set.Ici.{u2} R (PartialOrder.toPreorder.{u2} R (CompleteSemilatticeInf.toPartialOrder.{u2} R (CompleteLattice.toCompleteSemilatticeInf.{u2} R (CompleteLinearOrder.toCompleteLattice.{u2} R _inst_2)))) (f i))) (Set.Ioi.{u2} R (PartialOrder.toPreorder.{u2} R (CompleteSemilatticeInf.toPartialOrder.{u2} R (CompleteLattice.toCompleteSemilatticeInf.{u2} R (CompleteLinearOrder.toCompleteLattice.{u2} R _inst_2)))) (iInf.{u2, u1} R (CompleteSemilatticeInf.toHasInf.{u2} R (CompleteLattice.toCompleteSemilatticeInf.{u2} R (CompleteLinearOrder.toCompleteLattice.{u2} R _inst_2))) ι (fun (i : ι) => f i))))
 but is expected to have type
-  forall {ι : Sort.{u2}} {R : Type.{u1}} [_inst_2 : CompleteLinearOrder.{u1} R] {f : ι -> R}, (Not (Membership.mem.{u1, u1} R (Set.{u1} R) (Set.instMembershipSet.{u1} R) (infᵢ.{u1, u2} R (CompleteLattice.toInfSet.{u1} R (CompleteLinearOrder.toCompleteLattice.{u1} R _inst_2)) ι (fun (i : ι) => f i)) (Set.range.{u1, u2} R ι f))) -> (Eq.{succ u1} (Set.{u1} R) (Set.unionᵢ.{u1, u2} R ι (fun (i : ι) => Set.Ici.{u1} R (PartialOrder.toPreorder.{u1} R (CompleteSemilatticeInf.toPartialOrder.{u1} R (CompleteLattice.toCompleteSemilatticeInf.{u1} R (CompleteLinearOrder.toCompleteLattice.{u1} R _inst_2)))) (f i))) (Set.Ioi.{u1} R (PartialOrder.toPreorder.{u1} R (CompleteSemilatticeInf.toPartialOrder.{u1} R (CompleteLattice.toCompleteSemilatticeInf.{u1} R (CompleteLinearOrder.toCompleteLattice.{u1} R _inst_2)))) (infᵢ.{u1, u2} R (CompleteLattice.toInfSet.{u1} R (CompleteLinearOrder.toCompleteLattice.{u1} R _inst_2)) ι (fun (i : ι) => f i))))
-Case conversion may be inaccurate. Consider using '#align Union_Ici_eq_Ioi_infi unionᵢ_Ici_eq_Ioi_infᵢₓ'. -/
-theorem unionᵢ_Ici_eq_Ioi_infᵢ {R : Type _} [CompleteLinearOrder R] {f : ι → R}
+  forall {ι : Sort.{u2}} {R : Type.{u1}} [_inst_2 : CompleteLinearOrder.{u1} R] {f : ι -> R}, (Not (Membership.mem.{u1, u1} R (Set.{u1} R) (Set.instMembershipSet.{u1} R) (iInf.{u1, u2} R (CompleteLattice.toInfSet.{u1} R (CompleteLinearOrder.toCompleteLattice.{u1} R _inst_2)) ι (fun (i : ι) => f i)) (Set.range.{u1, u2} R ι f))) -> (Eq.{succ u1} (Set.{u1} R) (Set.iUnion.{u1, u2} R ι (fun (i : ι) => Set.Ici.{u1} R (PartialOrder.toPreorder.{u1} R (CompleteSemilatticeInf.toPartialOrder.{u1} R (CompleteLattice.toCompleteSemilatticeInf.{u1} R (CompleteLinearOrder.toCompleteLattice.{u1} R _inst_2)))) (f i))) (Set.Ioi.{u1} R (PartialOrder.toPreorder.{u1} R (CompleteSemilatticeInf.toPartialOrder.{u1} R (CompleteLattice.toCompleteSemilatticeInf.{u1} R (CompleteLinearOrder.toCompleteLattice.{u1} R _inst_2)))) (iInf.{u1, u2} R (CompleteLattice.toInfSet.{u1} R (CompleteLinearOrder.toCompleteLattice.{u1} R _inst_2)) ι (fun (i : ι) => f i))))
+Case conversion may be inaccurate. Consider using '#align Union_Ici_eq_Ioi_infi iUnion_Ici_eq_Ioi_iInfₓ'. -/
+theorem iUnion_Ici_eq_Ioi_iInf {R : Type _} [CompleteLinearOrder R] {f : ι → R}
     (no_least_elem : (⨅ i, f i) ∉ range f) : (⋃ i : ι, Ici (f i)) = Ioi (⨅ i, f i) := by
-  simp only [← IsGLB.bunionᵢ_Ici_eq_Ioi (@isGLB_infᵢ _ _ _ f) no_least_elem, mem_range,
+  simp only [← IsGLB.biUnion_Ici_eq_Ioi (@isGLB_iInf _ _ _ f) no_least_elem, mem_range,
     Union_exists, Union_Union_eq']
-#align Union_Ici_eq_Ioi_infi unionᵢ_Ici_eq_Ioi_infᵢ
+#align Union_Ici_eq_Ioi_infi iUnion_Ici_eq_Ioi_iInf
 
-/- warning: Union_Iic_eq_Iio_supr -> unionᵢ_Iic_eq_Iio_supᵢ is a dubious translation:
+/- warning: Union_Iic_eq_Iio_supr -> iUnion_Iic_eq_Iio_iSup is a dubious translation:
 lean 3 declaration is
-  forall {ι : Sort.{u1}} {R : Type.{u2}} [_inst_2 : CompleteLinearOrder.{u2} R] {f : ι -> R}, (Not (Membership.Mem.{u2, u2} R (Set.{u2} R) (Set.hasMem.{u2} R) (supᵢ.{u2, u1} R (CompleteSemilatticeSup.toHasSup.{u2} R (CompleteLattice.toCompleteSemilatticeSup.{u2} R (CompleteLinearOrder.toCompleteLattice.{u2} R _inst_2))) ι (fun (i : ι) => f i)) (Set.range.{u2, u1} R ι f))) -> (Eq.{succ u2} (Set.{u2} R) (Set.unionᵢ.{u2, u1} R ι (fun (i : ι) => Set.Iic.{u2} R (PartialOrder.toPreorder.{u2} R (CompleteSemilatticeInf.toPartialOrder.{u2} R (CompleteLattice.toCompleteSemilatticeInf.{u2} R (CompleteLinearOrder.toCompleteLattice.{u2} R _inst_2)))) (f i))) (Set.Iio.{u2} R (PartialOrder.toPreorder.{u2} R (CompleteSemilatticeInf.toPartialOrder.{u2} R (CompleteLattice.toCompleteSemilatticeInf.{u2} R (CompleteLinearOrder.toCompleteLattice.{u2} R _inst_2)))) (supᵢ.{u2, u1} R (CompleteSemilatticeSup.toHasSup.{u2} R (CompleteLattice.toCompleteSemilatticeSup.{u2} R (CompleteLinearOrder.toCompleteLattice.{u2} R _inst_2))) ι (fun (i : ι) => f i))))
+  forall {ι : Sort.{u1}} {R : Type.{u2}} [_inst_2 : CompleteLinearOrder.{u2} R] {f : ι -> R}, (Not (Membership.Mem.{u2, u2} R (Set.{u2} R) (Set.hasMem.{u2} R) (iSup.{u2, u1} R (CompleteSemilatticeSup.toHasSup.{u2} R (CompleteLattice.toCompleteSemilatticeSup.{u2} R (CompleteLinearOrder.toCompleteLattice.{u2} R _inst_2))) ι (fun (i : ι) => f i)) (Set.range.{u2, u1} R ι f))) -> (Eq.{succ u2} (Set.{u2} R) (Set.iUnion.{u2, u1} R ι (fun (i : ι) => Set.Iic.{u2} R (PartialOrder.toPreorder.{u2} R (CompleteSemilatticeInf.toPartialOrder.{u2} R (CompleteLattice.toCompleteSemilatticeInf.{u2} R (CompleteLinearOrder.toCompleteLattice.{u2} R _inst_2)))) (f i))) (Set.Iio.{u2} R (PartialOrder.toPreorder.{u2} R (CompleteSemilatticeInf.toPartialOrder.{u2} R (CompleteLattice.toCompleteSemilatticeInf.{u2} R (CompleteLinearOrder.toCompleteLattice.{u2} R _inst_2)))) (iSup.{u2, u1} R (CompleteSemilatticeSup.toHasSup.{u2} R (CompleteLattice.toCompleteSemilatticeSup.{u2} R (CompleteLinearOrder.toCompleteLattice.{u2} R _inst_2))) ι (fun (i : ι) => f i))))
 but is expected to have type
-  forall {ι : Sort.{u2}} {R : Type.{u1}} [_inst_2 : CompleteLinearOrder.{u1} R] {f : ι -> R}, (Not (Membership.mem.{u1, u1} R (Set.{u1} R) (Set.instMembershipSet.{u1} R) (supᵢ.{u1, u2} R (CompleteLattice.toSupSet.{u1} R (CompleteLinearOrder.toCompleteLattice.{u1} R _inst_2)) ι (fun (i : ι) => f i)) (Set.range.{u1, u2} R ι f))) -> (Eq.{succ u1} (Set.{u1} R) (Set.unionᵢ.{u1, u2} R ι (fun (i : ι) => Set.Iic.{u1} R (PartialOrder.toPreorder.{u1} R (CompleteSemilatticeInf.toPartialOrder.{u1} R (CompleteLattice.toCompleteSemilatticeInf.{u1} R (CompleteLinearOrder.toCompleteLattice.{u1} R _inst_2)))) (f i))) (Set.Iio.{u1} R (PartialOrder.toPreorder.{u1} R (CompleteSemilatticeInf.toPartialOrder.{u1} R (CompleteLattice.toCompleteSemilatticeInf.{u1} R (CompleteLinearOrder.toCompleteLattice.{u1} R _inst_2)))) (supᵢ.{u1, u2} R (CompleteLattice.toSupSet.{u1} R (CompleteLinearOrder.toCompleteLattice.{u1} R _inst_2)) ι (fun (i : ι) => f i))))
-Case conversion may be inaccurate. Consider using '#align Union_Iic_eq_Iio_supr unionᵢ_Iic_eq_Iio_supᵢₓ'. -/
-theorem unionᵢ_Iic_eq_Iio_supᵢ {R : Type _} [CompleteLinearOrder R] {f : ι → R}
+  forall {ι : Sort.{u2}} {R : Type.{u1}} [_inst_2 : CompleteLinearOrder.{u1} R] {f : ι -> R}, (Not (Membership.mem.{u1, u1} R (Set.{u1} R) (Set.instMembershipSet.{u1} R) (iSup.{u1, u2} R (CompleteLattice.toSupSet.{u1} R (CompleteLinearOrder.toCompleteLattice.{u1} R _inst_2)) ι (fun (i : ι) => f i)) (Set.range.{u1, u2} R ι f))) -> (Eq.{succ u1} (Set.{u1} R) (Set.iUnion.{u1, u2} R ι (fun (i : ι) => Set.Iic.{u1} R (PartialOrder.toPreorder.{u1} R (CompleteSemilatticeInf.toPartialOrder.{u1} R (CompleteLattice.toCompleteSemilatticeInf.{u1} R (CompleteLinearOrder.toCompleteLattice.{u1} R _inst_2)))) (f i))) (Set.Iio.{u1} R (PartialOrder.toPreorder.{u1} R (CompleteSemilatticeInf.toPartialOrder.{u1} R (CompleteLattice.toCompleteSemilatticeInf.{u1} R (CompleteLinearOrder.toCompleteLattice.{u1} R _inst_2)))) (iSup.{u1, u2} R (CompleteLattice.toSupSet.{u1} R (CompleteLinearOrder.toCompleteLattice.{u1} R _inst_2)) ι (fun (i : ι) => f i))))
+Case conversion may be inaccurate. Consider using '#align Union_Iic_eq_Iio_supr iUnion_Iic_eq_Iio_iSupₓ'. -/
+theorem iUnion_Iic_eq_Iio_iSup {R : Type _} [CompleteLinearOrder R] {f : ι → R}
     (no_greatest_elem : (⨆ i, f i) ∉ range f) : (⋃ i : ι, Iic (f i)) = Iio (⨆ i, f i) :=
-  @unionᵢ_Ici_eq_Ioi_infᵢ ι (OrderDual R) _ f no_greatest_elem
-#align Union_Iic_eq_Iio_supr unionᵢ_Iic_eq_Iio_supᵢ
+  @iUnion_Ici_eq_Ioi_iInf ι (OrderDual R) _ f no_greatest_elem
+#align Union_Iic_eq_Iio_supr iUnion_Iic_eq_Iio_iSup
 
-/- warning: Union_Ici_eq_Ici_infi -> unionᵢ_Ici_eq_Ici_infᵢ is a dubious translation:
+/- warning: Union_Ici_eq_Ici_infi -> iUnion_Ici_eq_Ici_iInf is a dubious translation:
 lean 3 declaration is
-  forall {ι : Sort.{u1}} {R : Type.{u2}} [_inst_2 : CompleteLinearOrder.{u2} R] {f : ι -> R}, (Membership.Mem.{u2, u2} R (Set.{u2} R) (Set.hasMem.{u2} R) (infᵢ.{u2, u1} R (CompleteSemilatticeInf.toHasInf.{u2} R (CompleteLattice.toCompleteSemilatticeInf.{u2} R (CompleteLinearOrder.toCompleteLattice.{u2} R _inst_2))) ι (fun (i : ι) => f i)) (Set.range.{u2, u1} R ι f)) -> (Eq.{succ u2} (Set.{u2} R) (Set.unionᵢ.{u2, u1} R ι (fun (i : ι) => Set.Ici.{u2} R (PartialOrder.toPreorder.{u2} R (CompleteSemilatticeInf.toPartialOrder.{u2} R (CompleteLattice.toCompleteSemilatticeInf.{u2} R (CompleteLinearOrder.toCompleteLattice.{u2} R _inst_2)))) (f i))) (Set.Ici.{u2} R (PartialOrder.toPreorder.{u2} R (CompleteSemilatticeInf.toPartialOrder.{u2} R (CompleteLattice.toCompleteSemilatticeInf.{u2} R (CompleteLinearOrder.toCompleteLattice.{u2} R _inst_2)))) (infᵢ.{u2, u1} R (CompleteSemilatticeInf.toHasInf.{u2} R (CompleteLattice.toCompleteSemilatticeInf.{u2} R (CompleteLinearOrder.toCompleteLattice.{u2} R _inst_2))) ι (fun (i : ι) => f i))))
+  forall {ι : Sort.{u1}} {R : Type.{u2}} [_inst_2 : CompleteLinearOrder.{u2} R] {f : ι -> R}, (Membership.Mem.{u2, u2} R (Set.{u2} R) (Set.hasMem.{u2} R) (iInf.{u2, u1} R (CompleteSemilatticeInf.toHasInf.{u2} R (CompleteLattice.toCompleteSemilatticeInf.{u2} R (CompleteLinearOrder.toCompleteLattice.{u2} R _inst_2))) ι (fun (i : ι) => f i)) (Set.range.{u2, u1} R ι f)) -> (Eq.{succ u2} (Set.{u2} R) (Set.iUnion.{u2, u1} R ι (fun (i : ι) => Set.Ici.{u2} R (PartialOrder.toPreorder.{u2} R (CompleteSemilatticeInf.toPartialOrder.{u2} R (CompleteLattice.toCompleteSemilatticeInf.{u2} R (CompleteLinearOrder.toCompleteLattice.{u2} R _inst_2)))) (f i))) (Set.Ici.{u2} R (PartialOrder.toPreorder.{u2} R (CompleteSemilatticeInf.toPartialOrder.{u2} R (CompleteLattice.toCompleteSemilatticeInf.{u2} R (CompleteLinearOrder.toCompleteLattice.{u2} R _inst_2)))) (iInf.{u2, u1} R (CompleteSemilatticeInf.toHasInf.{u2} R (CompleteLattice.toCompleteSemilatticeInf.{u2} R (CompleteLinearOrder.toCompleteLattice.{u2} R _inst_2))) ι (fun (i : ι) => f i))))
 but is expected to have type
-  forall {ι : Sort.{u2}} {R : Type.{u1}} [_inst_2 : CompleteLinearOrder.{u1} R] {f : ι -> R}, (Membership.mem.{u1, u1} R (Set.{u1} R) (Set.instMembershipSet.{u1} R) (infᵢ.{u1, u2} R (CompleteLattice.toInfSet.{u1} R (CompleteLinearOrder.toCompleteLattice.{u1} R _inst_2)) ι (fun (i : ι) => f i)) (Set.range.{u1, u2} R ι f)) -> (Eq.{succ u1} (Set.{u1} R) (Set.unionᵢ.{u1, u2} R ι (fun (i : ι) => Set.Ici.{u1} R (PartialOrder.toPreorder.{u1} R (CompleteSemilatticeInf.toPartialOrder.{u1} R (CompleteLattice.toCompleteSemilatticeInf.{u1} R (CompleteLinearOrder.toCompleteLattice.{u1} R _inst_2)))) (f i))) (Set.Ici.{u1} R (PartialOrder.toPreorder.{u1} R (CompleteSemilatticeInf.toPartialOrder.{u1} R (CompleteLattice.toCompleteSemilatticeInf.{u1} R (CompleteLinearOrder.toCompleteLattice.{u1} R _inst_2)))) (infᵢ.{u1, u2} R (CompleteLattice.toInfSet.{u1} R (CompleteLinearOrder.toCompleteLattice.{u1} R _inst_2)) ι (fun (i : ι) => f i))))
-Case conversion may be inaccurate. Consider using '#align Union_Ici_eq_Ici_infi unionᵢ_Ici_eq_Ici_infᵢₓ'. -/
-theorem unionᵢ_Ici_eq_Ici_infᵢ {R : Type _} [CompleteLinearOrder R] {f : ι → R}
+  forall {ι : Sort.{u2}} {R : Type.{u1}} [_inst_2 : CompleteLinearOrder.{u1} R] {f : ι -> R}, (Membership.mem.{u1, u1} R (Set.{u1} R) (Set.instMembershipSet.{u1} R) (iInf.{u1, u2} R (CompleteLattice.toInfSet.{u1} R (CompleteLinearOrder.toCompleteLattice.{u1} R _inst_2)) ι (fun (i : ι) => f i)) (Set.range.{u1, u2} R ι f)) -> (Eq.{succ u1} (Set.{u1} R) (Set.iUnion.{u1, u2} R ι (fun (i : ι) => Set.Ici.{u1} R (PartialOrder.toPreorder.{u1} R (CompleteSemilatticeInf.toPartialOrder.{u1} R (CompleteLattice.toCompleteSemilatticeInf.{u1} R (CompleteLinearOrder.toCompleteLattice.{u1} R _inst_2)))) (f i))) (Set.Ici.{u1} R (PartialOrder.toPreorder.{u1} R (CompleteSemilatticeInf.toPartialOrder.{u1} R (CompleteLattice.toCompleteSemilatticeInf.{u1} R (CompleteLinearOrder.toCompleteLattice.{u1} R _inst_2)))) (iInf.{u1, u2} R (CompleteLattice.toInfSet.{u1} R (CompleteLinearOrder.toCompleteLattice.{u1} R _inst_2)) ι (fun (i : ι) => f i))))
+Case conversion may be inaccurate. Consider using '#align Union_Ici_eq_Ici_infi iUnion_Ici_eq_Ici_iInfₓ'. -/
+theorem iUnion_Ici_eq_Ici_iInf {R : Type _} [CompleteLinearOrder R] {f : ι → R}
     (has_least_elem : (⨅ i, f i) ∈ range f) : (⋃ i : ι, Ici (f i)) = Ici (⨅ i, f i) := by
-  simp only [← IsGLB.bunionᵢ_Ici_eq_Ici (@isGLB_infᵢ _ _ _ f) has_least_elem, mem_range,
+  simp only [← IsGLB.biUnion_Ici_eq_Ici (@isGLB_iInf _ _ _ f) has_least_elem, mem_range,
     Union_exists, Union_Union_eq']
-#align Union_Ici_eq_Ici_infi unionᵢ_Ici_eq_Ici_infᵢ
+#align Union_Ici_eq_Ici_infi iUnion_Ici_eq_Ici_iInf
 
-/- warning: Union_Iic_eq_Iic_supr -> unionᵢ_Iic_eq_Iic_supᵢ is a dubious translation:
+/- warning: Union_Iic_eq_Iic_supr -> iUnion_Iic_eq_Iic_iSup is a dubious translation:
 lean 3 declaration is
-  forall {ι : Sort.{u1}} {R : Type.{u2}} [_inst_2 : CompleteLinearOrder.{u2} R] {f : ι -> R}, (Membership.Mem.{u2, u2} R (Set.{u2} R) (Set.hasMem.{u2} R) (supᵢ.{u2, u1} R (CompleteSemilatticeSup.toHasSup.{u2} R (CompleteLattice.toCompleteSemilatticeSup.{u2} R (CompleteLinearOrder.toCompleteLattice.{u2} R _inst_2))) ι (fun (i : ι) => f i)) (Set.range.{u2, u1} R ι f)) -> (Eq.{succ u2} (Set.{u2} R) (Set.unionᵢ.{u2, u1} R ι (fun (i : ι) => Set.Iic.{u2} R (PartialOrder.toPreorder.{u2} R (CompleteSemilatticeInf.toPartialOrder.{u2} R (CompleteLattice.toCompleteSemilatticeInf.{u2} R (CompleteLinearOrder.toCompleteLattice.{u2} R _inst_2)))) (f i))) (Set.Iic.{u2} R (PartialOrder.toPreorder.{u2} R (CompleteSemilatticeInf.toPartialOrder.{u2} R (CompleteLattice.toCompleteSemilatticeInf.{u2} R (CompleteLinearOrder.toCompleteLattice.{u2} R _inst_2)))) (supᵢ.{u2, u1} R (CompleteSemilatticeSup.toHasSup.{u2} R (CompleteLattice.toCompleteSemilatticeSup.{u2} R (CompleteLinearOrder.toCompleteLattice.{u2} R _inst_2))) ι (fun (i : ι) => f i))))
+  forall {ι : Sort.{u1}} {R : Type.{u2}} [_inst_2 : CompleteLinearOrder.{u2} R] {f : ι -> R}, (Membership.Mem.{u2, u2} R (Set.{u2} R) (Set.hasMem.{u2} R) (iSup.{u2, u1} R (CompleteSemilatticeSup.toHasSup.{u2} R (CompleteLattice.toCompleteSemilatticeSup.{u2} R (CompleteLinearOrder.toCompleteLattice.{u2} R _inst_2))) ι (fun (i : ι) => f i)) (Set.range.{u2, u1} R ι f)) -> (Eq.{succ u2} (Set.{u2} R) (Set.iUnion.{u2, u1} R ι (fun (i : ι) => Set.Iic.{u2} R (PartialOrder.toPreorder.{u2} R (CompleteSemilatticeInf.toPartialOrder.{u2} R (CompleteLattice.toCompleteSemilatticeInf.{u2} R (CompleteLinearOrder.toCompleteLattice.{u2} R _inst_2)))) (f i))) (Set.Iic.{u2} R (PartialOrder.toPreorder.{u2} R (CompleteSemilatticeInf.toPartialOrder.{u2} R (CompleteLattice.toCompleteSemilatticeInf.{u2} R (CompleteLinearOrder.toCompleteLattice.{u2} R _inst_2)))) (iSup.{u2, u1} R (CompleteSemilatticeSup.toHasSup.{u2} R (CompleteLattice.toCompleteSemilatticeSup.{u2} R (CompleteLinearOrder.toCompleteLattice.{u2} R _inst_2))) ι (fun (i : ι) => f i))))
 but is expected to have type
-  forall {ι : Sort.{u2}} {R : Type.{u1}} [_inst_2 : CompleteLinearOrder.{u1} R] {f : ι -> R}, (Membership.mem.{u1, u1} R (Set.{u1} R) (Set.instMembershipSet.{u1} R) (supᵢ.{u1, u2} R (CompleteLattice.toSupSet.{u1} R (CompleteLinearOrder.toCompleteLattice.{u1} R _inst_2)) ι (fun (i : ι) => f i)) (Set.range.{u1, u2} R ι f)) -> (Eq.{succ u1} (Set.{u1} R) (Set.unionᵢ.{u1, u2} R ι (fun (i : ι) => Set.Iic.{u1} R (PartialOrder.toPreorder.{u1} R (CompleteSemilatticeInf.toPartialOrder.{u1} R (CompleteLattice.toCompleteSemilatticeInf.{u1} R (CompleteLinearOrder.toCompleteLattice.{u1} R _inst_2)))) (f i))) (Set.Iic.{u1} R (PartialOrder.toPreorder.{u1} R (CompleteSemilatticeInf.toPartialOrder.{u1} R (CompleteLattice.toCompleteSemilatticeInf.{u1} R (CompleteLinearOrder.toCompleteLattice.{u1} R _inst_2)))) (supᵢ.{u1, u2} R (CompleteLattice.toSupSet.{u1} R (CompleteLinearOrder.toCompleteLattice.{u1} R _inst_2)) ι (fun (i : ι) => f i))))
-Case conversion may be inaccurate. Consider using '#align Union_Iic_eq_Iic_supr unionᵢ_Iic_eq_Iic_supᵢₓ'. -/
-theorem unionᵢ_Iic_eq_Iic_supᵢ {R : Type _} [CompleteLinearOrder R] {f : ι → R}
+  forall {ι : Sort.{u2}} {R : Type.{u1}} [_inst_2 : CompleteLinearOrder.{u1} R] {f : ι -> R}, (Membership.mem.{u1, u1} R (Set.{u1} R) (Set.instMembershipSet.{u1} R) (iSup.{u1, u2} R (CompleteLattice.toSupSet.{u1} R (CompleteLinearOrder.toCompleteLattice.{u1} R _inst_2)) ι (fun (i : ι) => f i)) (Set.range.{u1, u2} R ι f)) -> (Eq.{succ u1} (Set.{u1} R) (Set.iUnion.{u1, u2} R ι (fun (i : ι) => Set.Iic.{u1} R (PartialOrder.toPreorder.{u1} R (CompleteSemilatticeInf.toPartialOrder.{u1} R (CompleteLattice.toCompleteSemilatticeInf.{u1} R (CompleteLinearOrder.toCompleteLattice.{u1} R _inst_2)))) (f i))) (Set.Iic.{u1} R (PartialOrder.toPreorder.{u1} R (CompleteSemilatticeInf.toPartialOrder.{u1} R (CompleteLattice.toCompleteSemilatticeInf.{u1} R (CompleteLinearOrder.toCompleteLattice.{u1} R _inst_2)))) (iSup.{u1, u2} R (CompleteLattice.toSupSet.{u1} R (CompleteLinearOrder.toCompleteLattice.{u1} R _inst_2)) ι (fun (i : ι) => f i))))
+Case conversion may be inaccurate. Consider using '#align Union_Iic_eq_Iic_supr iUnion_Iic_eq_Iic_iSupₓ'. -/
+theorem iUnion_Iic_eq_Iic_iSup {R : Type _} [CompleteLinearOrder R] {f : ι → R}
     (has_greatest_elem : (⨆ i, f i) ∈ range f) : (⋃ i : ι, Iic (f i)) = Iic (⨆ i, f i) :=
-  @unionᵢ_Ici_eq_Ici_infᵢ ι (OrderDual R) _ f has_greatest_elem
-#align Union_Iic_eq_Iic_supr unionᵢ_Iic_eq_Iic_supᵢ
+  @iUnion_Ici_eq_Ici_iInf ι (OrderDual R) _ f has_greatest_elem
+#align Union_Iic_eq_Iic_supr iUnion_Iic_eq_Iic_iSup
 
 end UnionIxx
 

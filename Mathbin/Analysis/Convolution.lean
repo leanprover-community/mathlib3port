@@ -139,7 +139,7 @@ theorem HasCompactSupport.convolution_integrand_bound_right_of_subset (hcg : Has
     ‖L (f t) (g (x - t))‖ ≤ u.indicator (fun t => ‖L‖ * ‖f t‖ * ⨆ i, ‖g i‖) t :=
   by
   apply convolution_integrand_bound_right_of_le_of_subset _ (fun i => _) hx hu
-  exact le_csupᵢ (hg.norm.bdd_above_range_of_has_compact_support hcg.norm) _
+  exact le_ciSup (hg.norm.bdd_above_range_of_has_compact_support hcg.norm) _
 #align has_compact_support.convolution_integrand_bound_right_of_subset HasCompactSupport.convolution_integrand_bound_right_of_subset
 
 theorem HasCompactSupport.convolution_integrand_bound_right (hcg : HasCompactSupport g)
@@ -239,7 +239,7 @@ theorem BddAbove.convolutionExistsAt' {x₀ : G} {s : Set G}
     refine' le_indicator (fun t ht => _) fun t ht => _
     · refine' (L.le_op_norm₂ _ _).trans _
       refine'
-        mul_le_mul_of_nonneg_left (le_csupᵢ_set hbg <| mem_preimage.mpr _)
+        mul_le_mul_of_nonneg_left (le_ciSup_set hbg <| mem_preimage.mpr _)
           (mul_nonneg (norm_nonneg _) (norm_nonneg _))
       rwa [neg_sub, sub_add_cancel]
     · have : t ∉ support fun t => L (f t) (g (x₀ - t)) := mt (fun h => h2s h) ht
@@ -813,7 +813,7 @@ theorem BddAbove.continuous_convolution_right_of_integrable [SecondCountableTopo
     refine' eventually_of_forall fun x => eventually_of_forall fun t => _
     refine' (L.le_op_norm₂ _ _).trans _
     exact
-      mul_le_mul_of_nonneg_left (le_csupᵢ hbg <| x - t) (mul_nonneg (norm_nonneg _) (norm_nonneg _))
+      mul_le_mul_of_nonneg_left (le_ciSup hbg <| x - t) (mul_nonneg (norm_nonneg _) (norm_nonneg _))
   refine' continuous_at_of_dominated _ this _ _
   ·
     exact

@@ -411,10 +411,10 @@ theorem exists_taylor_mean_remainder_bound {f : ℝ → E} {a b : ℝ} {n : ℕ}
     simp [← this]
   -- We estimate by the supremum of the norm of the iterated derivative
   let g : ℝ → ℝ := fun y => ‖iteratedDerivWithin (n + 1) f (Icc a b) y‖
-  use SupSet.supₛ (g '' Icc a b) / n !
+  use SupSet.sSup (g '' Icc a b) / n !
   intro x hx
   rw [div_mul_eq_mul_div₀]
   refine' taylor_mean_remainder_bound hab hf hx fun y => _
-  exact (hf.continuous_on_iterated_deriv_within rfl.le <| uniqueDiffOn_Icc h).norm.le_supₛ_image_Icc
+  exact (hf.continuous_on_iterated_deriv_within rfl.le <| uniqueDiffOn_Icc h).norm.le_sSup_image_Icc
 #align exists_taylor_mean_remainder_bound exists_taylor_mean_remainder_bound
 

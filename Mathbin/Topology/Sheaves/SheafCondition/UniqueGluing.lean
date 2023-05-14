@@ -82,7 +82,7 @@ def IsCompatible (sf : ∀ i : ι, F.obj (op (U i))) : Prop :=
 /-- A section `s` is a gluing for a family of sections `sf` if it restricts to `sf i` on `U i`,
 for all `i`
 -/
-def IsGluing (sf : ∀ i : ι, F.obj (op (U i))) (s : F.obj (op (supᵢ U))) : Prop :=
+def IsGluing (sf : ∀ i : ι, F.obj (op (U i))) (s : F.obj (op (iSup U))) : Prop :=
   ∀ i : ι, F.map (Opens.leSupr U i).op s = sf i
 #align Top.presheaf.is_gluing TopCat.Presheaf.IsGluing
 
@@ -96,7 +96,7 @@ We prove this to be equivalent to the usual one below in
 -/
 def IsSheafUniqueGluing : Prop :=
   ∀ ⦃ι : Type v⦄ (U : ι → Opens X) (sf : ∀ i : ι, F.obj (op (U i))),
-    IsCompatible F U sf → ∃! s : F.obj (op (supᵢ U)), IsGluing F U sf s
+    IsCompatible F U sf → ∃! s : F.obj (op (iSup U)), IsGluing F U sf s
 #align Top.presheaf.is_sheaf_unique_gluing TopCat.Presheaf.IsSheafUniqueGluing
 
 end
@@ -137,7 +137,7 @@ sections `sf` is the same as lying in the preimage of `res` (the leftmost arrow 
 equalizer diagram).
 -/
 @[simp]
-theorem isGluing_iff_eq_res (sf : piOpens F U) (s : F.obj (op (supᵢ U))) :
+theorem isGluing_iff_eq_res (sf : piOpens F U) (s : F.obj (op (iSup U))) :
     IsGluing F U ((piOpensIsoSectionsFamily F U).Hom sf) s ↔ res F U s = sf :=
   by
   constructor <;> intro h
@@ -250,18 +250,18 @@ variable {X : TopCat.{v}} (F : Sheaf C X) {ι : Type v} (U : ι → Opens X)
 /-- A more convenient way of obtaining a unique gluing of sections for a sheaf.
 -/
 theorem existsUnique_gluing (sf : ∀ i : ι, F.1.obj (op (U i))) (h : IsCompatible F.1 U sf) :
-    ∃! s : F.1.obj (op (supᵢ U)), IsGluing F.1 U sf s :=
+    ∃! s : F.1.obj (op (iSup U)), IsGluing F.1 U sf s :=
   (isSheaf_iff_isSheafUniqueGluing F.1).mp F.cond U sf h
 #align Top.sheaf.exists_unique_gluing TopCat.Sheaf.existsUnique_gluing
 
 /-- In this version of the lemma, the inclusion homs `iUV` can be specified directly by the user,
 which can be more convenient in practice.
 -/
-theorem existsUnique_gluing' (V : Opens X) (iUV : ∀ i : ι, U i ⟶ V) (hcover : V ≤ supᵢ U)
+theorem existsUnique_gluing' (V : Opens X) (iUV : ∀ i : ι, U i ⟶ V) (hcover : V ≤ iSup U)
     (sf : ∀ i : ι, F.1.obj (op (U i))) (h : IsCompatible F.1 U sf) :
     ∃! s : F.1.obj (op V), ∀ i : ι, F.1.map (iUV i).op s = sf i :=
   by
-  have V_eq_supr_U : V = supᵢ U := le_antisymm hcover (supᵢ_le fun i => (iUV i).le)
+  have V_eq_supr_U : V = iSup U := le_antisymm hcover (iSup_le fun i => (iUV i).le)
   obtain ⟨gl, gl_spec, gl_uniq⟩ := F.exists_unique_gluing U sf h
   refine' ⟨F.1.map (eq_to_hom V_eq_supr_U).op gl, _, _⟩
   · intro i
@@ -275,7 +275,7 @@ theorem existsUnique_gluing' (V : Opens X) (iUV : ∀ i : ι, U i ⟶ V) (hcover
 #align Top.sheaf.exists_unique_gluing' TopCat.Sheaf.existsUnique_gluing'
 
 @[ext]
-theorem eq_of_locally_eq (s t : F.1.obj (op (supᵢ U)))
+theorem eq_of_locally_eq (s t : F.1.obj (op (iSup U)))
     (h : ∀ i, F.1.map (Opens.leSupr U i).op s = F.1.map (Opens.leSupr U i).op t) : s = t :=
   by
   let sf : ∀ i : ι, F.1.obj (op (U i)) := fun i => F.1.map (opens.le_supr U i).op s
@@ -298,10 +298,10 @@ theorem eq_of_locally_eq (s t : F.1.obj (op (supᵢ U)))
 /-- In this version of the lemma, the inclusion homs `iUV` can be specified directly by the user,
 which can be more convenient in practice.
 -/
-theorem eq_of_locally_eq' (V : Opens X) (iUV : ∀ i : ι, U i ⟶ V) (hcover : V ≤ supᵢ U)
+theorem eq_of_locally_eq' (V : Opens X) (iUV : ∀ i : ι, U i ⟶ V) (hcover : V ≤ iSup U)
     (s t : F.1.obj (op V)) (h : ∀ i, F.1.map (iUV i).op s = F.1.map (iUV i).op t) : s = t :=
   by
-  have V_eq_supr_U : V = supᵢ U := le_antisymm hcover (supᵢ_le fun i => (iUV i).le)
+  have V_eq_supr_U : V = iSup U := le_antisymm hcover (iSup_le fun i => (iUV i).le)
   suffices F.1.map (eq_to_hom V_eq_supr_U.symm).op s = F.1.map (eq_to_hom V_eq_supr_U.symm).op t by
     convert congr_arg (F.1.map (eq_to_hom V_eq_supr_U).op) this <;>
       rw [← comp_apply, ← F.1.map_comp, eq_to_hom_op, eq_to_hom_op, eq_to_hom_trans, eq_to_hom_refl,
@@ -321,8 +321,8 @@ theorem eq_of_locally_eq₂ {U₁ U₂ V : Opens X} (i₁ : U₁ ⟶ V) (i₂ : 
     · refine' le_trans hcover _
       rw [sup_le_iff]
       constructor
-      · convert le_supᵢ (fun t : ULift Bool => if t.1 then U₁ else U₂) (ULift.up True)
-      · convert le_supᵢ (fun t : ULift Bool => if t.1 then U₁ else U₂) (ULift.up False)
+      · convert le_iSup (fun t : ULift Bool => if t.1 then U₁ else U₂) (ULift.up True)
+      · convert le_iSup (fun t : ULift Bool => if t.1 then U₁ else U₂) (ULift.up False)
     · rintro ⟨_ | _⟩ <;> simp [h₁, h₂]
 #align Top.sheaf.eq_of_locally_eq₂ TopCat.Sheaf.eq_of_locally_eq₂
 

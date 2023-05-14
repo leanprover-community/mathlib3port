@@ -92,7 +92,7 @@ theorem precise_refinement [ParacompactSpace X] (u : ι → Set X) (uo : ∀ a, 
   choose α t hto hXt htf ind hind; choose t_inv ht_inv using hXt; choose U hxU hU using htf
   -- Send each `i` to the union of `t a` over `a ∈ ind ⁻¹' {i}`
   refine' ⟨fun i => ⋃ (a : α) (ha : ind a = i), t a, _, _, _, _⟩
-  · exact fun a => isOpen_unionᵢ fun a => isOpen_unionᵢ fun ha => hto a
+  · exact fun a => isOpen_iUnion fun a => isOpen_iUnion fun ha => hto a
   · simp only [eq_univ_iff_forall, mem_Union]
     exact fun x => ⟨ind (t_inv x), _, rfl, ht_inv _⟩
   · refine' fun x => ⟨U x, hxU x, ((hU x).image ind).Subset _⟩
@@ -203,7 +203,7 @@ theorem refinement_of_locallyCompact_sigmaCompact_of_nhds_basis_set [LocallyComp
         ⟨interior (K (K'.find x + 3)),
           IsOpen.mem_nhds isOpen_interior (K.subset_interior_succ _ (hKcov x).1), _⟩
       have : (⋃ k ≤ K'.find x + 2, range <| Sigma.mk k : Set (Σn, T' n)).Finite :=
-        (finite_le_nat _).bunionᵢ fun k hk => finite_range _
+        (finite_le_nat _).biUnion fun k hk => finite_range _
       apply this.subset
       rintro ⟨k, c, hc⟩
       simp only [mem_Union, mem_set_of_eq, mem_image, Subtype.coe_mk]
@@ -283,7 +283,7 @@ theorem normal_of_paracompact_t2 [T2Space X] [ParacompactSpace X] : NormalSpace 
     rcases precise_refinement_set hs u hu fun x hx => mem_Union.2 ⟨⟨x, hx⟩, hxu _⟩ with
       ⟨u', hu'o, hcov', hu'fin, hsub⟩
     refine'
-      ⟨⋃ i, u' i, closure (⋃ i, u' i)ᶜ, isOpen_unionᵢ hu'o, is_closed_closure.is_open_compl, hcov',
+      ⟨⋃ i, u' i, closure (⋃ i, u' i)ᶜ, isOpen_iUnion hu'o, is_closed_closure.is_open_compl, hcov',
         _, disjoint_compl_right.mono le_rfl (compl_le_compl subset_closure)⟩
     rw [hu'fin.closure_Union, compl_Union, subset_Inter_iff]
     refine' fun i x hxt hxu =>

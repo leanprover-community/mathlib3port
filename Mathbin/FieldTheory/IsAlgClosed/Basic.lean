@@ -263,7 +263,7 @@ theorem maximal_subfieldWithHom_chain_bounded (c : Set (SubfieldWithHom K L M hL
       haveI : Nonempty c := Set.Nonempty.to_subtype hcn
       { carrier := ⨆ i : c, (i : subfield_with_hom K L M hL).carrier
         emb :=
-          Subalgebra.supᵢLift (fun i : c => (i : subfield_with_hom K L M hL).carrier)
+          Subalgebra.iSupLift (fun i : c => (i : subfield_with_hom K L M hL).carrier)
             (fun i j =>
               let ⟨k, hik, hjk⟩ := directedOn_iff_directed.1 hc.directed_on i j
               ⟨k, hik.fst, hjk.fst⟩)
@@ -278,7 +278,7 @@ theorem maximal_subfieldWithHom_chain_bounded (c : Set (SubfieldWithHom K L M hL
                   inclusion_self, AlgHom.id_apply x])
             _ rfl }
     ⟨ub, fun N hN =>
-      ⟨(le_supᵢ (fun i : c => (i : SubfieldWithHom K L M hL).carrier) ⟨N, hN⟩ : _),
+      ⟨(le_iSup (fun i : c => (i : SubfieldWithHom K L M hL).carrier) ⟨N, hN⟩ : _),
         by
         intro x
         simp [ub]

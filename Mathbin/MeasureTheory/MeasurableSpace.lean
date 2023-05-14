@@ -87,7 +87,7 @@ protected def map (f : α → β) (m : MeasurableSpace α) : MeasurableSpace β
   MeasurableSet' s := measurable_set[m] <| f ⁻¹' s
   measurable_set_empty := m.measurable_set_empty
   measurable_set_compl s hs := m.measurable_set_compl _ hs
-  measurable_set_unionᵢ f hf := by
+  measurable_set_iUnion f hf := by
     rw [preimage_Union]
     exact m.measurable_set_Union _ hf
 #align measurable_space.map MeasurableSpace.map
@@ -115,9 +115,9 @@ protected def comap (f : α → β) (m : MeasurableSpace β) : MeasurableSpace �
   MeasurableSet' s := ∃ s', measurable_set[m] s' ∧ f ⁻¹' s' = s
   measurable_set_empty := ⟨∅, m.measurable_set_empty, rfl⟩
   measurable_set_compl := fun s ⟨s', h₁, h₂⟩ => ⟨s'ᶜ, m.measurable_set_compl _ h₁, h₂ ▸ rfl⟩
-  measurable_set_unionᵢ s hs :=
+  measurable_set_iUnion s hs :=
     let ⟨s', hs'⟩ := Classical.axiom_of_choice hs
-    ⟨⋃ i, s' i, m.measurable_set_unionᵢ _ fun i => (hs' i).left, by simp [hs']⟩
+    ⟨⋃ i, s' i, m.measurable_set_iUnion _ fun i => (hs' i).left, by simp [hs']⟩
 #align measurable_space.comap MeasurableSpace.comap
 -/
 
@@ -224,16 +224,16 @@ theorem comap_sup : (m₁ ⊔ m₂).comap g = m₁.comap g ⊔ m₂.comap g :=
   (gc_comap_map g).l_sup
 #align measurable_space.comap_sup MeasurableSpace.comap_sup
 
-/- warning: measurable_space.comap_supr -> MeasurableSpace.comap_supᵢ is a dubious translation:
+/- warning: measurable_space.comap_supr -> MeasurableSpace.comap_iSup is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {g : β -> α} {m : ι -> (MeasurableSpace.{u1} α)}, Eq.{succ u2} (MeasurableSpace.{u2} β) (MeasurableSpace.comap.{u2, u1} β α g (supᵢ.{u1, u3} (MeasurableSpace.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (MeasurableSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.completeLattice.{u1} α))) ι (fun (i : ι) => m i))) (supᵢ.{u2, u3} (MeasurableSpace.{u2} β) (ConditionallyCompleteLattice.toHasSup.{u2} (MeasurableSpace.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (MeasurableSpace.{u2} β) (MeasurableSpace.completeLattice.{u2} β))) ι (fun (i : ι) => MeasurableSpace.comap.{u2, u1} β α g (m i)))
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {g : β -> α} {m : ι -> (MeasurableSpace.{u1} α)}, Eq.{succ u2} (MeasurableSpace.{u2} β) (MeasurableSpace.comap.{u2, u1} β α g (iSup.{u1, u3} (MeasurableSpace.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (MeasurableSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.completeLattice.{u1} α))) ι (fun (i : ι) => m i))) (iSup.{u2, u3} (MeasurableSpace.{u2} β) (ConditionallyCompleteLattice.toHasSup.{u2} (MeasurableSpace.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (MeasurableSpace.{u2} β) (MeasurableSpace.completeLattice.{u2} β))) ι (fun (i : ι) => MeasurableSpace.comap.{u2, u1} β α g (m i)))
 but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {ι : Sort.{u1}} {g : β -> α} {m : ι -> (MeasurableSpace.{u3} α)}, Eq.{succ u2} (MeasurableSpace.{u2} β) (MeasurableSpace.comap.{u2, u3} β α g (supᵢ.{u3, u1} (MeasurableSpace.{u3} α) (ConditionallyCompleteLattice.toSupSet.{u3} (MeasurableSpace.{u3} α) (CompleteLattice.toConditionallyCompleteLattice.{u3} (MeasurableSpace.{u3} α) (MeasurableSpace.instCompleteLatticeMeasurableSpace.{u3} α))) ι (fun (i : ι) => m i))) (supᵢ.{u2, u1} (MeasurableSpace.{u2} β) (ConditionallyCompleteLattice.toSupSet.{u2} (MeasurableSpace.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (MeasurableSpace.{u2} β) (MeasurableSpace.instCompleteLatticeMeasurableSpace.{u2} β))) ι (fun (i : ι) => MeasurableSpace.comap.{u2, u3} β α g (m i)))
-Case conversion may be inaccurate. Consider using '#align measurable_space.comap_supr MeasurableSpace.comap_supᵢₓ'. -/
+  forall {α : Type.{u3}} {β : Type.{u2}} {ι : Sort.{u1}} {g : β -> α} {m : ι -> (MeasurableSpace.{u3} α)}, Eq.{succ u2} (MeasurableSpace.{u2} β) (MeasurableSpace.comap.{u2, u3} β α g (iSup.{u3, u1} (MeasurableSpace.{u3} α) (ConditionallyCompleteLattice.toSupSet.{u3} (MeasurableSpace.{u3} α) (CompleteLattice.toConditionallyCompleteLattice.{u3} (MeasurableSpace.{u3} α) (MeasurableSpace.instCompleteLatticeMeasurableSpace.{u3} α))) ι (fun (i : ι) => m i))) (iSup.{u2, u1} (MeasurableSpace.{u2} β) (ConditionallyCompleteLattice.toSupSet.{u2} (MeasurableSpace.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (MeasurableSpace.{u2} β) (MeasurableSpace.instCompleteLatticeMeasurableSpace.{u2} β))) ι (fun (i : ι) => MeasurableSpace.comap.{u2, u3} β α g (m i)))
+Case conversion may be inaccurate. Consider using '#align measurable_space.comap_supr MeasurableSpace.comap_iSupₓ'. -/
 @[simp]
-theorem comap_supᵢ {m : ι → MeasurableSpace α} : (⨆ i, m i).comap g = ⨆ i, (m i).comap g :=
-  (gc_comap_map g).l_supᵢ
-#align measurable_space.comap_supr MeasurableSpace.comap_supᵢ
+theorem comap_iSup {m : ι → MeasurableSpace α} : (⨆ i, m i).comap g = ⨆ i, (m i).comap g :=
+  (gc_comap_map g).l_iSup
+#align measurable_space.comap_supr MeasurableSpace.comap_iSup
 
 /- warning: measurable_space.map_top -> MeasurableSpace.map_top is a dubious translation:
 lean 3 declaration is
@@ -257,16 +257,16 @@ theorem map_inf : (m₁ ⊓ m₂).map f = m₁.map f ⊓ m₂.map f :=
   (gc_comap_map f).u_inf
 #align measurable_space.map_inf MeasurableSpace.map_inf
 
-/- warning: measurable_space.map_infi -> MeasurableSpace.map_infᵢ is a dubious translation:
+/- warning: measurable_space.map_infi -> MeasurableSpace.map_iInf is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {f : α -> β} {m : ι -> (MeasurableSpace.{u1} α)}, Eq.{succ u2} (MeasurableSpace.{u2} β) (MeasurableSpace.map.{u1, u2} α β f (infᵢ.{u1, u3} (MeasurableSpace.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (MeasurableSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.completeLattice.{u1} α))) ι (fun (i : ι) => m i))) (infᵢ.{u2, u3} (MeasurableSpace.{u2} β) (ConditionallyCompleteLattice.toHasInf.{u2} (MeasurableSpace.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (MeasurableSpace.{u2} β) (MeasurableSpace.completeLattice.{u2} β))) ι (fun (i : ι) => MeasurableSpace.map.{u1, u2} α β f (m i)))
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {f : α -> β} {m : ι -> (MeasurableSpace.{u1} α)}, Eq.{succ u2} (MeasurableSpace.{u2} β) (MeasurableSpace.map.{u1, u2} α β f (iInf.{u1, u3} (MeasurableSpace.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (MeasurableSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.completeLattice.{u1} α))) ι (fun (i : ι) => m i))) (iInf.{u2, u3} (MeasurableSpace.{u2} β) (ConditionallyCompleteLattice.toHasInf.{u2} (MeasurableSpace.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (MeasurableSpace.{u2} β) (MeasurableSpace.completeLattice.{u2} β))) ι (fun (i : ι) => MeasurableSpace.map.{u1, u2} α β f (m i)))
 but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {ι : Sort.{u1}} {f : α -> β} {m : ι -> (MeasurableSpace.{u3} α)}, Eq.{succ u2} (MeasurableSpace.{u2} β) (MeasurableSpace.map.{u3, u2} α β f (infᵢ.{u3, u1} (MeasurableSpace.{u3} α) (ConditionallyCompleteLattice.toInfSet.{u3} (MeasurableSpace.{u3} α) (CompleteLattice.toConditionallyCompleteLattice.{u3} (MeasurableSpace.{u3} α) (MeasurableSpace.instCompleteLatticeMeasurableSpace.{u3} α))) ι (fun (i : ι) => m i))) (infᵢ.{u2, u1} (MeasurableSpace.{u2} β) (ConditionallyCompleteLattice.toInfSet.{u2} (MeasurableSpace.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (MeasurableSpace.{u2} β) (MeasurableSpace.instCompleteLatticeMeasurableSpace.{u2} β))) ι (fun (i : ι) => MeasurableSpace.map.{u3, u2} α β f (m i)))
-Case conversion may be inaccurate. Consider using '#align measurable_space.map_infi MeasurableSpace.map_infᵢₓ'. -/
+  forall {α : Type.{u3}} {β : Type.{u2}} {ι : Sort.{u1}} {f : α -> β} {m : ι -> (MeasurableSpace.{u3} α)}, Eq.{succ u2} (MeasurableSpace.{u2} β) (MeasurableSpace.map.{u3, u2} α β f (iInf.{u3, u1} (MeasurableSpace.{u3} α) (ConditionallyCompleteLattice.toInfSet.{u3} (MeasurableSpace.{u3} α) (CompleteLattice.toConditionallyCompleteLattice.{u3} (MeasurableSpace.{u3} α) (MeasurableSpace.instCompleteLatticeMeasurableSpace.{u3} α))) ι (fun (i : ι) => m i))) (iInf.{u2, u1} (MeasurableSpace.{u2} β) (ConditionallyCompleteLattice.toInfSet.{u2} (MeasurableSpace.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (MeasurableSpace.{u2} β) (MeasurableSpace.instCompleteLatticeMeasurableSpace.{u2} β))) ι (fun (i : ι) => MeasurableSpace.map.{u3, u2} α β f (m i)))
+Case conversion may be inaccurate. Consider using '#align measurable_space.map_infi MeasurableSpace.map_iInfₓ'. -/
 @[simp]
-theorem map_infᵢ {m : ι → MeasurableSpace α} : (⨅ i, m i).map f = ⨅ i, (m i).map f :=
-  (gc_comap_map f).u_infᵢ
-#align measurable_space.map_infi MeasurableSpace.map_infᵢ
+theorem map_iInf {m : ι → MeasurableSpace α} : (⨅ i, m i).map f = ⨅ i, (m i).map f :=
+  (gc_comap_map f).u_iInf
+#align measurable_space.map_infi MeasurableSpace.map_iInf
 
 /- warning: measurable_space.comap_map_le -> MeasurableSpace.comap_map_le is a dubious translation:
 lean 3 declaration is
@@ -658,7 +658,7 @@ theorem measurable_to_countable [MeasurableSpace α] [Countable α] [MeasurableS
   by
   intro s hs
   rw [← bUnion_preimage_singleton]
-  refine' MeasurableSet.unionᵢ fun y => MeasurableSet.unionᵢ fun hy => _
+  refine' MeasurableSet.iUnion fun y => MeasurableSet.iUnion fun hy => _
   by_cases hyf : y ∈ range f
   · rcases hyf with ⟨y, rfl⟩
     apply h
@@ -726,7 +726,7 @@ theorem measurable_findGreatest {p : α → ℕ → Prop} [∀ x, DecidablePred 
   refine' measurable_findGreatest' fun k hk => _
   simp only [Nat.findGreatest_eq_iff, set_of_and, set_of_forall, ← compl_set_of]
   repeat'
-    apply_rules [MeasurableSet.inter, MeasurableSet.const, MeasurableSet.interᵢ,
+    apply_rules [MeasurableSet.inter, MeasurableSet.const, MeasurableSet.iInter,
         MeasurableSet.compl, hN] <;>
       try intros
 #align measurable_find_greatest measurable_findGreatest
@@ -1213,7 +1213,7 @@ theorem measurable_from_prod_countable [Countable β] [MeasurableSingletonClass 
     ext1 ⟨x, y⟩
     simp [and_assoc', and_left_comm]
   rw [this]
-  exact MeasurableSet.unionᵢ fun y => (hf y hs).Prod (measurable_set_singleton y)
+  exact MeasurableSet.iUnion fun y => (hf y hs).Prod (measurable_set_singleton y)
 #align measurable_from_prod_countable measurable_from_prod_countable
 
 /- warning: measurable.find -> Measurable.find is a dubious translation:
@@ -1245,7 +1245,7 @@ theorem exists_measurable_piecewise_nat {m : MeasurableSpace α} (t : ℕ → Se
   classical
     let p : ℕ → β → Prop := fun n x => x ∈ t n ∪ (⋃ k, t k)ᶜ
     have M : ∀ n, MeasurableSet { x | p n x } := fun n =>
-      (t_meas n).union (MeasurableSet.compl (MeasurableSet.unionᵢ t_meas))
+      (t_meas n).union (MeasurableSet.compl (MeasurableSet.iUnion t_meas))
     have P : ∀ x, ∃ n, p n x := by
       intro x
       by_cases H : ∀ i : ℕ, x ∉ t i
@@ -1289,8 +1289,8 @@ but is expected to have type
   forall {α : Type.{u3}} {δ : Type.{u2}} {π : δ -> Type.{u1}} [_inst_1 : MeasurableSpace.{u3} α] [_inst_2 : forall (a : δ), MeasurableSpace.{u1} (π a)] {g : α -> (forall (a : δ), π a)}, Iff (Measurable.{u3, max u2 u1} α (forall (a : δ), π a) _inst_1 (MeasurableSpace.pi.{u2, u1} δ (fun (a : δ) => π a) (fun (a : δ) => _inst_2 a)) g) (forall (a : δ), Measurable.{u3, u1} α (π a) _inst_1 (_inst_2 a) (fun (x : α) => g x a))
 Case conversion may be inaccurate. Consider using '#align measurable_pi_iff measurable_pi_iffₓ'. -/
 theorem measurable_pi_iff {g : α → ∀ a, π a} : Measurable g ↔ ∀ a, Measurable fun x => g x a := by
-  simp_rw [measurable_iff_comap_le, MeasurableSpace.pi, MeasurableSpace.comap_supᵢ,
-    MeasurableSpace.comap_comp, Function.comp, supᵢ_le_iff]
+  simp_rw [measurable_iff_comap_le, MeasurableSpace.pi, MeasurableSpace.comap_iSup,
+    MeasurableSpace.comap_comp, Function.comp, iSup_le_iff]
 #align measurable_pi_iff measurable_pi_iff
 
 /- warning: measurable_pi_apply -> measurable_pi_apply is a dubious translation:
@@ -1301,7 +1301,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align measurable_pi_apply measurable_pi_applyₓ'. -/
 @[measurability]
 theorem measurable_pi_apply (a : δ) : Measurable fun f : ∀ a, π a => f a :=
-  Measurable.of_comap_le <| le_supᵢ _ a
+  Measurable.of_comap_le <| le_iSup _ a
 #align measurable_pi_apply measurable_pi_apply
 
 /- warning: measurable.eval -> Measurable.eval is a dubious translation:
@@ -1362,7 +1362,7 @@ theorem MeasurableSet.pi {s : Set δ} {t : ∀ i : δ, Set (π i)} (hs : s.Count
     (ht : ∀ i ∈ s, MeasurableSet (t i)) : MeasurableSet (s.pi t) :=
   by
   rw [pi_def]
-  exact MeasurableSet.binterᵢ hs fun i hi => measurable_pi_apply _ (ht i hi)
+  exact MeasurableSet.biInter hs fun i hi => measurable_pi_apply _ (ht i hi)
 #align measurable_set.pi MeasurableSet.pi
 
 /- warning: measurable_set.univ_pi -> MeasurableSet.univ_pi is a dubious translation:
@@ -2543,7 +2543,7 @@ noncomputable def schroederBernstein {f : α → β} {g : β → α} (hf : Measu
     compl_subset_compl.mpr <| Set.image_subset _ <| compl_subset_compl.mpr <| Set.image_subset _ hAB
   let X : ℕ → Set α := fun n => (F^[n]) univ
   refine' ⟨Inter X, _, _⟩
-  · apply MeasurableSet.interᵢ
+  · apply MeasurableSet.iInter
     intro n
     induction' n with n ih
     · exact MeasurableSet.univ
@@ -2559,7 +2559,7 @@ noncomputable def schroederBernstein {f : α → β} {g : β → α} (hf : Measu
   rintro x hx ⟨y, hy, rfl⟩
   rw [mem_Inter] at hx
   apply hy
-  rw [(inj_on_of_injective hf.injective _).image_interᵢ_eq]
+  rw [(inj_on_of_injective hf.injective _).image_iInter_eq]
   swap
   · infer_instance
   rw [mem_Inter]
@@ -2719,13 +2719,13 @@ alias principal_is_measurably_generated_iff ↔
   _ _root_.measurable_set.principal_is_measurably_generated
 #align measurable_set.principal_is_measurably_generated MeasurableSet.principal_isMeasurablyGenerated
 
-/- warning: filter.infi_is_measurably_generated -> Filter.infᵢ_isMeasurablyGenerated is a dubious translation:
+/- warning: filter.infi_is_measurably_generated -> Filter.iInf_isMeasurablyGenerated is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {ι : Sort.{u_6}} [_inst_1 : MeasurableSpace.{u_1} α] {f : ι -> (Filter.{u_1} α)} [_inst_2 : forall (i : ι), Filter.IsMeasurablyGenerated.{u_1} α _inst_1 (f i)], Filter.IsMeasurablyGenerated.{u_1} α _inst_1 (infᵢ.{u_1, u_6} (Filter.{u_1} α) (ConditionallyCompleteLattice.toHasInf.{u_1} (Filter.{u_1} α) (CompleteLattice.toConditionallyCompleteLattice.{u_1} (Filter.{u_1} α) (Filter.completeLattice.{u_1} α))) ι (fun (i : ι) => f i))
+  forall {α : Type.{u_1}} {ι : Sort.{u_6}} [_inst_1 : MeasurableSpace.{u_1} α] {f : ι -> (Filter.{u_1} α)} [_inst_2 : forall (i : ι), Filter.IsMeasurablyGenerated.{u_1} α _inst_1 (f i)], Filter.IsMeasurablyGenerated.{u_1} α _inst_1 (iInf.{u_1, u_6} (Filter.{u_1} α) (ConditionallyCompleteLattice.toHasInf.{u_1} (Filter.{u_1} α) (CompleteLattice.toConditionallyCompleteLattice.{u_1} (Filter.{u_1} α) (Filter.completeLattice.{u_1} α))) ι (fun (i : ι) => f i))
 but is expected to have type
-  forall {α : Type.{u_1}} {ι : Prop} [_inst_1 : MeasurableSpace.{u_1} α] {f : ι -> (Filter.{u_1} α)} [_inst_2 : forall (i : ι), Filter.IsMeasurablyGenerated.{u_1} α _inst_1 (f i)], Filter.IsMeasurablyGenerated.{u_1} α _inst_1 (infᵢ.{u_1, 0} (Filter.{u_1} α) (ConditionallyCompleteLattice.toInfSet.{u_1} (Filter.{u_1} α) (CompleteLattice.toConditionallyCompleteLattice.{u_1} (Filter.{u_1} α) (Filter.instCompleteLatticeFilter.{u_1} α))) ι (fun (i : ι) => f i))
-Case conversion may be inaccurate. Consider using '#align filter.infi_is_measurably_generated Filter.infᵢ_isMeasurablyGeneratedₓ'. -/
-instance infᵢ_isMeasurablyGenerated {f : ι → Filter α} [∀ i, IsMeasurablyGenerated (f i)] :
+  forall {α : Type.{u_1}} {ι : Prop} [_inst_1 : MeasurableSpace.{u_1} α] {f : ι -> (Filter.{u_1} α)} [_inst_2 : forall (i : ι), Filter.IsMeasurablyGenerated.{u_1} α _inst_1 (f i)], Filter.IsMeasurablyGenerated.{u_1} α _inst_1 (iInf.{u_1, 0} (Filter.{u_1} α) (ConditionallyCompleteLattice.toInfSet.{u_1} (Filter.{u_1} α) (CompleteLattice.toConditionallyCompleteLattice.{u_1} (Filter.{u_1} α) (Filter.instCompleteLatticeFilter.{u_1} α))) ι (fun (i : ι) => f i))
+Case conversion may be inaccurate. Consider using '#align filter.infi_is_measurably_generated Filter.iInf_isMeasurablyGeneratedₓ'. -/
+instance iInf_isMeasurablyGenerated {f : ι → Filter α} [∀ i, IsMeasurablyGenerated (f i)] :
     IsMeasurablyGenerated (⨅ i, f i) :=
   by
   refine' ⟨fun s hs => _⟩
@@ -2736,9 +2736,9 @@ instance infᵢ_isMeasurablyGenerated {f : ι → Filter α} [∀ i, IsMeasurabl
   · rw [← equiv.plift.surjective.infi_comp, mem_infi]
     refine' ⟨t, ht, U, hUf, rfl⟩
   · haveI := ht.countable.to_encodable
-    exact MeasurableSet.interᵢ fun i => (hU i).1
+    exact MeasurableSet.iInter fun i => (hU i).1
   · exact Inter_mono fun i => (hU i).2
-#align filter.infi_is_measurably_generated Filter.infᵢ_isMeasurablyGenerated
+#align filter.infi_is_measurably_generated Filter.iInf_isMeasurablyGenerated
 
 end Filter
 
@@ -2755,7 +2755,7 @@ def IsCountablySpanning (C : Set (Set α)) : Prop :=
 #print isCountablySpanning_measurableSet /-
 theorem isCountablySpanning_measurableSet [MeasurableSpace α] :
     IsCountablySpanning { s : Set α | MeasurableSet s } :=
-  ⟨fun _ => univ, fun _ => MeasurableSet.univ, unionᵢ_const _⟩
+  ⟨fun _ => univ, fun _ => MeasurableSet.univ, iUnion_const _⟩
 #align is_countably_spanning_measurable_set isCountablySpanning_measurableSet
 -/
 
@@ -2925,10 +2925,10 @@ Case conversion may be inaccurate. Consider using '#align measurable_set.measura
 theorem measurableSet_blimsup {s : ℕ → Set α} {p : ℕ → Prop} (h : ∀ n, p n → MeasurableSet (s n)) :
     MeasurableSet <| Filter.blimsup s Filter.atTop p :=
   by
-  simp only [Filter.blimsup_eq_infᵢ_bsupᵢ_of_nat, supr_eq_Union, infi_eq_Inter]
+  simp only [Filter.blimsup_eq_iInf_biSup_of_nat, supr_eq_Union, infi_eq_Inter]
   exact
-    MeasurableSet.interᵢ fun n =>
-      MeasurableSet.unionᵢ fun m => MeasurableSet.unionᵢ fun hm => h m hm.1
+    MeasurableSet.iInter fun n =>
+      MeasurableSet.iUnion fun m => MeasurableSet.iUnion fun hm => h m hm.1
 #align measurable_set.measurable_set_blimsup MeasurableSet.measurableSet_blimsup
 
 /- warning: measurable_set.measurable_set_bliminf -> MeasurableSet.measurableSet_bliminf is a dubious translation:
@@ -2941,10 +2941,10 @@ Case conversion may be inaccurate. Consider using '#align measurable_set.measura
 theorem measurableSet_bliminf {s : ℕ → Set α} {p : ℕ → Prop} (h : ∀ n, p n → MeasurableSet (s n)) :
     MeasurableSet <| Filter.bliminf s Filter.atTop p :=
   by
-  simp only [Filter.bliminf_eq_supᵢ_binfᵢ_of_nat, infi_eq_Inter, supr_eq_Union]
+  simp only [Filter.bliminf_eq_iSup_biInf_of_nat, infi_eq_Inter, supr_eq_Union]
   exact
-    MeasurableSet.unionᵢ fun n =>
-      MeasurableSet.interᵢ fun m => MeasurableSet.interᵢ fun hm => h m hm.1
+    MeasurableSet.iUnion fun n =>
+      MeasurableSet.iInter fun m => MeasurableSet.iInter fun hm => h m hm.1
 #align measurable_set.measurable_set_bliminf MeasurableSet.measurableSet_bliminf
 
 /- warning: measurable_set.measurable_set_limsup -> MeasurableSet.measurableSet_limsup is a dubious translation:

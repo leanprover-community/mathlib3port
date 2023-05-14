@@ -749,48 +749,48 @@ theorem index_inf_le : (H ⊓ K).index ≤ H.index * K.index := by
 #align subgroup.index_inf_le Subgroup.index_inf_le
 #align add_subgroup.index_inf_le AddSubgroup.index_inf_le
 
-#print Subgroup.relindex_infᵢ_ne_zero /-
+#print Subgroup.relindex_iInf_ne_zero /-
 @[to_additive]
-theorem relindex_infᵢ_ne_zero {ι : Type _} [hι : Finite ι] {f : ι → Subgroup G}
+theorem relindex_iInf_ne_zero {ι : Type _} [hι : Finite ι] {f : ι → Subgroup G}
     (hf : ∀ i, (f i).relindex L ≠ 0) : (⨅ i, f i).relindex L ≠ 0 :=
   haveI := Fintype.ofFinite ι
   (finset.prod_ne_zero_iff.mpr fun i hi => hf i) ∘
     nat.card_pi.symm.trans ∘
       Finite.card_eq_zero_of_embedding (quotient_infi_subgroup_of_embedding f L)
-#align subgroup.relindex_infi_ne_zero Subgroup.relindex_infᵢ_ne_zero
-#align add_subgroup.relindex_infi_ne_zero AddSubgroup.relindex_infᵢ_ne_zero
+#align subgroup.relindex_infi_ne_zero Subgroup.relindex_iInf_ne_zero
+#align add_subgroup.relindex_infi_ne_zero AddSubgroup.relindex_iInf_ne_zero
 -/
 
-#print Subgroup.relindex_infᵢ_le /-
+#print Subgroup.relindex_iInf_le /-
 @[to_additive]
-theorem relindex_infᵢ_le {ι : Type _} [Fintype ι] (f : ι → Subgroup G) :
+theorem relindex_iInf_le {ι : Type _} [Fintype ι] (f : ι → Subgroup G) :
     (⨅ i, f i).relindex L ≤ ∏ i, (f i).relindex L :=
   le_of_le_of_eq
-    (Finite.card_le_of_embedding' (quotientInfᵢSubgroupOfEmbedding f L) fun h =>
+    (Finite.card_le_of_embedding' (quotientiInfSubgroupOfEmbedding f L) fun h =>
       let ⟨i, hi, h⟩ := Finset.prod_eq_zero_iff.mp (Nat.card_pi.symm.trans h)
-      relindex_eq_zero_of_le_left (infᵢ_le f i) h)
+      relindex_eq_zero_of_le_left (iInf_le f i) h)
     Nat.card_pi
-#align subgroup.relindex_infi_le Subgroup.relindex_infᵢ_le
-#align add_subgroup.relindex_infi_le AddSubgroup.relindex_infᵢ_le
+#align subgroup.relindex_infi_le Subgroup.relindex_iInf_le
+#align add_subgroup.relindex_infi_le AddSubgroup.relindex_iInf_le
 -/
 
-#print Subgroup.index_infᵢ_ne_zero /-
+#print Subgroup.index_iInf_ne_zero /-
 @[to_additive]
-theorem index_infᵢ_ne_zero {ι : Type _} [Finite ι] {f : ι → Subgroup G}
+theorem index_iInf_ne_zero {ι : Type _} [Finite ι] {f : ι → Subgroup G}
     (hf : ∀ i, (f i).index ≠ 0) : (⨅ i, f i).index ≠ 0 :=
   by
   simp_rw [← relindex_top_right] at hf⊢
   exact relindex_infi_ne_zero hf
-#align subgroup.index_infi_ne_zero Subgroup.index_infᵢ_ne_zero
-#align add_subgroup.index_infi_ne_zero AddSubgroup.index_infᵢ_ne_zero
+#align subgroup.index_infi_ne_zero Subgroup.index_iInf_ne_zero
+#align add_subgroup.index_infi_ne_zero AddSubgroup.index_iInf_ne_zero
 -/
 
-#print Subgroup.index_infᵢ_le /-
+#print Subgroup.index_iInf_le /-
 @[to_additive]
-theorem index_infᵢ_le {ι : Type _} [Fintype ι] (f : ι → Subgroup G) :
+theorem index_iInf_le {ι : Type _} [Fintype ι] (f : ι → Subgroup G) :
     (⨅ i, f i).index ≤ ∏ i, (f i).index := by simp_rw [← relindex_top_right, relindex_infi_le]
-#align subgroup.index_infi_le Subgroup.index_infᵢ_le
-#align add_subgroup.index_infi_le AddSubgroup.index_infᵢ_le
+#align subgroup.index_infi_le Subgroup.index_iInf_le
+#align add_subgroup.index_infi_le AddSubgroup.index_iInf_le
 -/
 
 /- warning: subgroup.index_eq_one -> Subgroup.index_eq_one is a dubious translation:

@@ -228,7 +228,7 @@ theorem ι_range_comap_involute :
 theorem evenOdd_map_involute (n : ZMod 2) :
     (evenOdd Q n).map (involute : CliffordAlgebra Q →ₐ[R] CliffordAlgebra Q).toLinearMap =
       evenOdd Q n :=
-  by simp_rw [even_odd, Submodule.map_supᵢ, Submodule.map_pow, ι_range_map_involute]
+  by simp_rw [even_odd, Submodule.map_iSup, Submodule.map_pow, ι_range_map_involute]
 #align clifford_algebra.even_odd_map_involute CliffordAlgebra.evenOdd_map_involute
 
 @[simp]
@@ -297,7 +297,7 @@ theorem submodule_comap_pow_reverse (p : Submodule R (CliffordAlgebra Q)) (n : �
 @[simp]
 theorem evenOdd_map_reverse (n : ZMod 2) :
     (evenOdd Q n).map (reverse : CliffordAlgebra Q →ₗ[R] CliffordAlgebra Q) = evenOdd Q n := by
-  simp_rw [even_odd, Submodule.map_supᵢ, submodule_map_pow_reverse, ι_range_map_reverse]
+  simp_rw [even_odd, Submodule.map_iSup, submodule_map_pow_reverse, ι_range_map_reverse]
 #align clifford_algebra.even_odd_map_reverse CliffordAlgebra.evenOdd_map_reverse
 
 @[simp]

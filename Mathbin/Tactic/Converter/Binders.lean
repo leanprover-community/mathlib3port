@@ -233,29 +233,29 @@ unsafe def forall_eq_elim : binder_eq_elim
 unsafe def supr_eq_elim : binder_eq_elim
     where
   match_binder e := do
-    let q(@supᵢ $(α) $(cl) $(β) $(f)) ← return e
+    let q(@iSup $(α) $(cl) $(β) $(f)) ← return e
     return (β, f)
   adapt_rel c := do
     let r ← current_relation
     guard (r = `eq)
     c
-  apply_comm := applyc `` supᵢ_comm
+  apply_comm := applyc `` iSup_comm
   applyCongr := congr_arg ∘ funext'
-  apply_elim_eq := applyc `` supᵢ_supᵢ_eq_left <|> applyc `` supᵢ_supᵢ_eq_right
+  apply_elim_eq := applyc `` iSup_iSup_eq_left <|> applyc `` iSup_iSup_eq_right
 #align supr_eq_elim supr_eq_elim
 
 unsafe def infi_eq_elim : binder_eq_elim
     where
   match_binder e := do
-    let q(@infᵢ $(α) $(cl) $(β) $(f)) ← return e
+    let q(@iInf $(α) $(cl) $(β) $(f)) ← return e
     return (β, f)
   adapt_rel c := do
     let r ← current_relation
     guard (r = `eq)
     c
-  apply_comm := applyc `` infᵢ_comm
+  apply_comm := applyc `` iInf_comm
   applyCongr := congr_arg ∘ funext'
-  apply_elim_eq := applyc `` infᵢ_infᵢ_eq_left <|> applyc `` infᵢ_infᵢ_eq_right
+  apply_elim_eq := applyc `` iInf_iInf_eq_left <|> applyc `` iInf_iInf_eq_right
 #align infi_eq_elim infi_eq_elim
 
 universe u v w w₂
@@ -267,16 +267,16 @@ section
 variable [CompleteLattice α]
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic old_conv.conversion -/
-example {s : Set β} {f : β → α} : infₛ (Set.image f s) = ⨅ a ∈ s, f a :=
+example {s : Set β} {f : β → α} : sInf (Set.image f s) = ⨅ a ∈ s, f a :=
   by
-  simp [infₛ_eq_infᵢ, infᵢ_and]
+  simp [sInf_eq_iInf, iInf_and]
   run_tac
     conversion infi_eq_elim.old_conv
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic old_conv.conversion -/
-example {s : Set β} {f : β → α} : supₛ (Set.image f s) = ⨆ a ∈ s, f a :=
+example {s : Set β} {f : β → α} : sSup (Set.image f s) = ⨆ a ∈ s, f a :=
   by
-  simp [supₛ_eq_supᵢ, supᵢ_and]
+  simp [sSup_eq_iSup, iSup_and]
   run_tac
     conversion supr_eq_elim.old_conv
 

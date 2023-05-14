@@ -143,29 +143,29 @@ protected theorem congr (h : AEDisjoint μ s t) (hu : u =ᵐ[μ] s) (hv : v =ᵐ
 #align measure_theory.ae_disjoint.congr MeasureTheory.AEDisjoint.congr
 -/
 
-/- warning: measure_theory.ae_disjoint.Union_left_iff -> MeasureTheory.AEDisjoint.unionᵢ_left_iff is a dubious translation:
+/- warning: measure_theory.ae_disjoint.Union_left_iff -> MeasureTheory.AEDisjoint.iUnion_left_iff is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {α : Type.{u2}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} {t : Set.{u2} α} [_inst_1 : Countable.{succ u1} ι] {s : ι -> (Set.{u2} α)}, Iff (MeasureTheory.AEDisjoint.{u2} α m μ (Set.unionᵢ.{u2, succ u1} α ι (fun (i : ι) => s i)) t) (forall (i : ι), MeasureTheory.AEDisjoint.{u2} α m μ (s i) t)
+  forall {ι : Type.{u1}} {α : Type.{u2}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} {t : Set.{u2} α} [_inst_1 : Countable.{succ u1} ι] {s : ι -> (Set.{u2} α)}, Iff (MeasureTheory.AEDisjoint.{u2} α m μ (Set.iUnion.{u2, succ u1} α ι (fun (i : ι) => s i)) t) (forall (i : ι), MeasureTheory.AEDisjoint.{u2} α m μ (s i) t)
 but is expected to have type
-  forall {ι : Type.{u2}} {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {t : Set.{u1} α} [_inst_1 : Countable.{succ u2} ι] {s : ι -> (Set.{u1} α)}, Iff (MeasureTheory.AEDisjoint.{u1} α m μ (Set.unionᵢ.{u1, succ u2} α ι (fun (i : ι) => s i)) t) (forall (i : ι), MeasureTheory.AEDisjoint.{u1} α m μ (s i) t)
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_disjoint.Union_left_iff MeasureTheory.AEDisjoint.unionᵢ_left_iffₓ'. -/
+  forall {ι : Type.{u2}} {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {t : Set.{u1} α} [_inst_1 : Countable.{succ u2} ι] {s : ι -> (Set.{u1} α)}, Iff (MeasureTheory.AEDisjoint.{u1} α m μ (Set.iUnion.{u1, succ u2} α ι (fun (i : ι) => s i)) t) (forall (i : ι), MeasureTheory.AEDisjoint.{u1} α m μ (s i) t)
+Case conversion may be inaccurate. Consider using '#align measure_theory.ae_disjoint.Union_left_iff MeasureTheory.AEDisjoint.iUnion_left_iffₓ'. -/
 @[simp]
-theorem unionᵢ_left_iff [Countable ι] {s : ι → Set α} :
+theorem iUnion_left_iff [Countable ι] {s : ι → Set α} :
     AEDisjoint μ (⋃ i, s i) t ↔ ∀ i, AEDisjoint μ (s i) t := by
   simp only [ae_disjoint, Union_inter, measure_Union_null_iff]
-#align measure_theory.ae_disjoint.Union_left_iff MeasureTheory.AEDisjoint.unionᵢ_left_iff
+#align measure_theory.ae_disjoint.Union_left_iff MeasureTheory.AEDisjoint.iUnion_left_iff
 
-/- warning: measure_theory.ae_disjoint.Union_right_iff -> MeasureTheory.AEDisjoint.unionᵢ_right_iff is a dubious translation:
+/- warning: measure_theory.ae_disjoint.Union_right_iff -> MeasureTheory.AEDisjoint.iUnion_right_iff is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {α : Type.{u2}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} {s : Set.{u2} α} [_inst_1 : Countable.{succ u1} ι] {t : ι -> (Set.{u2} α)}, Iff (MeasureTheory.AEDisjoint.{u2} α m μ s (Set.unionᵢ.{u2, succ u1} α ι (fun (i : ι) => t i))) (forall (i : ι), MeasureTheory.AEDisjoint.{u2} α m μ s (t i))
+  forall {ι : Type.{u1}} {α : Type.{u2}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} {s : Set.{u2} α} [_inst_1 : Countable.{succ u1} ι] {t : ι -> (Set.{u2} α)}, Iff (MeasureTheory.AEDisjoint.{u2} α m μ s (Set.iUnion.{u2, succ u1} α ι (fun (i : ι) => t i))) (forall (i : ι), MeasureTheory.AEDisjoint.{u2} α m μ s (t i))
 but is expected to have type
-  forall {ι : Type.{u2}} {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {s : Set.{u1} α} [_inst_1 : Countable.{succ u2} ι] {t : ι -> (Set.{u1} α)}, Iff (MeasureTheory.AEDisjoint.{u1} α m μ s (Set.unionᵢ.{u1, succ u2} α ι (fun (i : ι) => t i))) (forall (i : ι), MeasureTheory.AEDisjoint.{u1} α m μ s (t i))
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_disjoint.Union_right_iff MeasureTheory.AEDisjoint.unionᵢ_right_iffₓ'. -/
+  forall {ι : Type.{u2}} {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {s : Set.{u1} α} [_inst_1 : Countable.{succ u2} ι] {t : ι -> (Set.{u1} α)}, Iff (MeasureTheory.AEDisjoint.{u1} α m μ s (Set.iUnion.{u1, succ u2} α ι (fun (i : ι) => t i))) (forall (i : ι), MeasureTheory.AEDisjoint.{u1} α m μ s (t i))
+Case conversion may be inaccurate. Consider using '#align measure_theory.ae_disjoint.Union_right_iff MeasureTheory.AEDisjoint.iUnion_right_iffₓ'. -/
 @[simp]
-theorem unionᵢ_right_iff [Countable ι] {t : ι → Set α} :
+theorem iUnion_right_iff [Countable ι] {t : ι → Set α} :
     AEDisjoint μ s (⋃ i, t i) ↔ ∀ i, AEDisjoint μ s (t i) := by
   simp only [ae_disjoint, inter_Union, measure_Union_null_iff]
-#align measure_theory.ae_disjoint.Union_right_iff MeasureTheory.AEDisjoint.unionᵢ_right_iff
+#align measure_theory.ae_disjoint.Union_right_iff MeasureTheory.AEDisjoint.iUnion_right_iff
 
 /- warning: measure_theory.ae_disjoint.union_left_iff -> MeasureTheory.AEDisjoint.union_left_iff is a dubious translation:
 lean 3 declaration is

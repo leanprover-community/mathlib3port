@@ -160,7 +160,7 @@ theorem ae_const_le_iff_forall_lt_measure_zero {β} [LinearOrder β] [Topologica
   have h_Union : { x | f x < c } = ⋃ n : ℕ, { x | f x ≤ u n } :=
     by
     ext1 x
-    simp_rw [Set.mem_unionᵢ, Set.mem_setOf_eq]
+    simp_rw [Set.mem_iUnion, Set.mem_setOf_eq]
     constructor <;> intro h
     · obtain ⟨n, hn⟩ := ((tendsto_order.1 u_lim).1 _ h).exists
       exact ⟨n, hn.le⟩
@@ -235,7 +235,7 @@ theorem ae_le_of_forall_set_lintegral_le_of_sigmaFinite [SigmaFinite μ] {f g : 
         simp only [ENNReal.coe_nat]
         exact ENNReal.tendsto_nat_nhds_top
       eventually_ge_of_tendsto_gt (hx.trans_le le_top) this
-    apply Set.mem_unionᵢ.2
+    apply Set.mem_iUnion.2
     exact ((L1.and L2).And (eventually_mem_spanning_sets μ x)).exists
   refine' le_antisymm _ bot_le
   calc
@@ -451,8 +451,8 @@ theorem ae_eq_zero_of_forall_set_integral_eq_of_sigmaFinite [SigmaFinite μ] {f 
   by
   let S := spanning_sets μ
   rw [← @measure.restrict_univ _ _ μ, ← Union_spanning_sets μ, eventually_eq, ae_iff,
-    measure.restrict_apply' (MeasurableSet.unionᵢ (measurable_spanning_sets μ))]
-  rw [Set.inter_unionᵢ, measure_Union_null_iff]
+    measure.restrict_apply' (MeasurableSet.iUnion (measurable_spanning_sets μ))]
+  rw [Set.inter_iUnion, measure_Union_null_iff]
   intro n
   have h_meas_n : MeasurableSet (S n) := measurable_spanning_sets μ n
   have hμn : μ (S n) < ∞ := measure_spanning_sets_lt_top μ n

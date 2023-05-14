@@ -458,14 +458,14 @@ theorem card {R : Type _} [Fintype R] :
 
 end Fintype
 
-theorem infᵢ_ker_truncate : (⨅ i : ℕ, (@WittVector.truncate p _ i R _).ker) = ⊥ :=
+theorem iInf_ker_truncate : (⨅ i : ℕ, (@WittVector.truncate p _ i R _).ker) = ⊥ :=
   by
   rw [Submodule.eq_bot_iff]
   intro x hx
   ext
-  simp only [WittVector.mem_ker_truncate, Ideal.mem_infᵢ, WittVector.zero_coeff] at hx⊢
+  simp only [WittVector.mem_ker_truncate, Ideal.mem_iInf, WittVector.zero_coeff] at hx⊢
   exact hx _ _ (Nat.lt_succ_self _)
-#align truncated_witt_vector.infi_ker_truncate TruncatedWittVector.infᵢ_ker_truncate
+#align truncated_witt_vector.infi_ker_truncate TruncatedWittVector.iInf_ker_truncate
 
 end TruncatedWittVector
 
@@ -521,7 +521,7 @@ to a ring hom `S → 𝕎 R`.
 def lift : S →+* 𝕎 R := by
   refine_struct { toFun := lift_fun f } <;>
     · intros
-      rw [← sub_eq_zero, ← Ideal.mem_bot, ← infi_ker_truncate, Ideal.mem_infᵢ]
+      rw [← sub_eq_zero, ← Ideal.mem_bot, ← infi_ker_truncate, Ideal.mem_iInf]
       simp [RingHom.mem_ker, f_compat]
 #align witt_vector.lift WittVector.lift
 
@@ -543,7 +543,7 @@ theorem truncate_comp_lift : (WittVector.truncate n).comp (lift _ f_compat) = f 
 theorem lift_unique (g : S →+* 𝕎 R) (g_compat : ∀ k, (WittVector.truncate k).comp g = f k) :
     lift _ f_compat = g := by
   ext1 x
-  rw [← sub_eq_zero, ← Ideal.mem_bot, ← infi_ker_truncate, Ideal.mem_infᵢ]
+  rw [← sub_eq_zero, ← Ideal.mem_bot, ← infi_ker_truncate, Ideal.mem_iInf]
   intro i
   simp only [RingHom.mem_ker, g_compat, ← RingHom.comp_apply, truncate_comp_lift, RingHom.map_sub,
     sub_self]

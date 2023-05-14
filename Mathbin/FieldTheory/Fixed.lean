@@ -94,7 +94,7 @@ def subfield : Subfield F :=
   Subfield.copy (⨅ m : M, FixedBy.subfield F m) (fixedPoints M F)
     (by
       ext z
-      simp [fixed_points, FixedBy.subfield, infᵢ, Subfield.mem_infₛ])
+      simp [fixed_points, FixedBy.subfield, iInf, Subfield.mem_sInf])
 #align fixed_points.subfield FixedPoints.subfield
 
 instance : IsInvariantSubfield M (FixedPoints.subfield M F)

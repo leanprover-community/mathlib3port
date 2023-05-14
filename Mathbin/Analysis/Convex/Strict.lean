@@ -124,8 +124,8 @@ protected theorem StrictConvex.inter {t : Set E} (hs : StrictConvex 𝕜 s) (ht 
   exact ⟨hs hx.1 hy.1 hxy ha hb hab, ht hx.2 hy.2 hxy ha hb hab⟩
 #align strict_convex.inter StrictConvex.inter
 
-#print Directed.strictConvex_unionᵢ /-
-theorem Directed.strictConvex_unionᵢ {ι : Sort _} {s : ι → Set E} (hdir : Directed (· ⊆ ·) s)
+#print Directed.strictConvex_iUnion /-
+theorem Directed.strictConvex_iUnion {ι : Sort _} {s : ι → Set E} (hdir : Directed (· ⊆ ·) s)
     (hs : ∀ ⦃i : ι⦄, StrictConvex 𝕜 (s i)) : StrictConvex 𝕜 (⋃ i, s i) :=
   by
   rintro x hx y hy hxy a b ha hb hab
@@ -134,16 +134,16 @@ theorem Directed.strictConvex_unionᵢ {ι : Sort _} {s : ι → Set E} (hdir : 
   obtain ⟨j, hy⟩ := hy
   obtain ⟨k, hik, hjk⟩ := hdir i j
   exact interior_mono (subset_Union s k) (hs (hik hx) (hjk hy) hxy ha hb hab)
-#align directed.strict_convex_Union Directed.strictConvex_unionᵢ
+#align directed.strict_convex_Union Directed.strictConvex_iUnion
 -/
 
-#print DirectedOn.strictConvex_unionₛ /-
-theorem DirectedOn.strictConvex_unionₛ {S : Set (Set E)} (hdir : DirectedOn (· ⊆ ·) S)
+#print DirectedOn.strictConvex_sUnion /-
+theorem DirectedOn.strictConvex_sUnion {S : Set (Set E)} (hdir : DirectedOn (· ⊆ ·) S)
     (hS : ∀ s ∈ S, StrictConvex 𝕜 s) : StrictConvex 𝕜 (⋃₀ S) :=
   by
   rw [sUnion_eq_Union]
-  exact (directedOn_iff_directed.1 hdir).strictConvex_unionᵢ fun s => hS _ s.2
-#align directed_on.strict_convex_sUnion DirectedOn.strictConvex_unionₛ
+  exact (directedOn_iff_directed.1 hdir).strictConvex_iUnion fun s => hS _ s.2
+#align directed_on.strict_convex_sUnion DirectedOn.strictConvex_sUnion
 -/
 
 end SMul

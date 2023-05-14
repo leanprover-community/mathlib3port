@@ -318,16 +318,16 @@ theorem mem_nilradical : x ∈ nilradical R ↔ IsNilpotent x :=
   Iff.rfl
 #align mem_nilradical mem_nilradical
 
-/- warning: nilradical_eq_Inf -> nilradical_eq_infₛ is a dubious translation:
+/- warning: nilradical_eq_Inf -> nilradical_eq_sInf is a dubious translation:
 lean 3 declaration is
-  forall (R : Type.{u1}) [_inst_2 : CommSemiring.{u1} R], Eq.{succ u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_2)) (nilradical.{u1} R _inst_2) (InfSet.infₛ.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_2)) (Submodule.hasInf.{u1, u1} R R (CommSemiring.toSemiring.{u1} R _inst_2) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_2)))) (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_2))) (setOf.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_2)) (fun (J : Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_2)) => Ideal.IsPrime.{u1} R (CommSemiring.toSemiring.{u1} R _inst_2) J)))
+  forall (R : Type.{u1}) [_inst_2 : CommSemiring.{u1} R], Eq.{succ u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_2)) (nilradical.{u1} R _inst_2) (InfSet.sInf.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_2)) (Submodule.hasInf.{u1, u1} R R (CommSemiring.toSemiring.{u1} R _inst_2) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_2)))) (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_2))) (setOf.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_2)) (fun (J : Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_2)) => Ideal.IsPrime.{u1} R (CommSemiring.toSemiring.{u1} R _inst_2) J)))
 but is expected to have type
-  forall (R : Type.{u1}) [_inst_2 : CommSemiring.{u1} R], Eq.{succ u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_2)) (nilradical.{u1} R _inst_2) (InfSet.infₛ.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_2)) (Submodule.instInfSetSubmodule.{u1, u1} R R (CommSemiring.toSemiring.{u1} R _inst_2) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_2)))) (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_2))) (setOf.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_2)) (fun (J : Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_2)) => Ideal.IsPrime.{u1} R (CommSemiring.toSemiring.{u1} R _inst_2) J)))
-Case conversion may be inaccurate. Consider using '#align nilradical_eq_Inf nilradical_eq_infₛₓ'. -/
-theorem nilradical_eq_infₛ (R : Type _) [CommSemiring R] :
-    nilradical R = infₛ { J : Ideal R | J.IsPrime } :=
-  (Ideal.radical_eq_infₛ ⊥).trans <| by simp_rw [and_iff_right bot_le]
-#align nilradical_eq_Inf nilradical_eq_infₛ
+  forall (R : Type.{u1}) [_inst_2 : CommSemiring.{u1} R], Eq.{succ u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_2)) (nilradical.{u1} R _inst_2) (InfSet.sInf.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_2)) (Submodule.instInfSetSubmodule.{u1, u1} R R (CommSemiring.toSemiring.{u1} R _inst_2) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_2)))) (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_2))) (setOf.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_2)) (fun (J : Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_2)) => Ideal.IsPrime.{u1} R (CommSemiring.toSemiring.{u1} R _inst_2) J)))
+Case conversion may be inaccurate. Consider using '#align nilradical_eq_Inf nilradical_eq_sInfₓ'. -/
+theorem nilradical_eq_sInf (R : Type _) [CommSemiring R] :
+    nilradical R = sInf { J : Ideal R | J.IsPrime } :=
+  (Ideal.radical_eq_sInf ⊥).trans <| by simp_rw [and_iff_right bot_le]
+#align nilradical_eq_Inf nilradical_eq_sInf
 
 /- warning: nilpotent_iff_mem_prime -> nilpotent_iff_mem_prime is a dubious translation:
 lean 3 declaration is
@@ -337,7 +337,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align nilpotent_iff_mem_prime nilpotent_iff_mem_primeₓ'. -/
 theorem nilpotent_iff_mem_prime : IsNilpotent x ↔ ∀ J : Ideal R, J.IsPrime → x ∈ J :=
   by
-  rw [← mem_nilradical, nilradical_eq_infₛ, Submodule.mem_infₛ]
+  rw [← mem_nilradical, nilradical_eq_sInf, Submodule.mem_sInf]
   rfl
 #align nilpotent_iff_mem_prime nilpotent_iff_mem_prime
 
@@ -348,7 +348,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] (J : Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) [H : Ideal.IsPrime.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1) J], LE.le.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Preorder.toLE.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (PartialOrder.toPreorder.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (OmegaCompletePartialOrder.toPartialOrder.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (CompleteLattice.instOmegaCompletePartialOrder.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Submodule.completeLattice.{u1, u1} R R (CommSemiring.toSemiring.{u1} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)))) (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))))) (nilradical.{u1} R _inst_1) J
 Case conversion may be inaccurate. Consider using '#align nilradical_le_prime nilradical_le_primeₓ'. -/
 theorem nilradical_le_prime (J : Ideal R) [H : J.IsPrime] : nilradical R ≤ J :=
-  (nilradical_eq_infₛ R).symm ▸ infₛ_le H
+  (nilradical_eq_sInf R).symm ▸ sInf_le H
 #align nilradical_le_prime nilradical_le_prime
 
 /- warning: nilradical_eq_zero -> nilradical_eq_zero is a dubious translation:

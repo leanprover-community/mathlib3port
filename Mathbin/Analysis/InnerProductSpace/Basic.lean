@@ -983,7 +983,7 @@ theorem orthonormalUnionOfDirected {η : Type _} {s : η → Set E} (hs : Direct
 theorem orthonormalSUnionOfDirected {s : Set (Set E)} (hs : DirectedOn (· ⊆ ·) s)
     (h : ∀ a ∈ s, Orthonormal 𝕜 (fun x => x : (a : Set E) → E)) :
     Orthonormal 𝕜 (fun x => x : ⋃₀ s → E) := by
-  rw [Set.unionₛ_eq_unionᵢ] <;> exact orthonormalUnionOfDirected hs.directed_coe (by simpa using h)
+  rw [Set.sUnion_eq_iUnion] <;> exact orthonormalUnionOfDirected hs.directed_coe (by simpa using h)
 #align orthonormal_sUnion_of_directed orthonormalSUnionOfDirected
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (w «expr ⊇ » s) -/
@@ -999,7 +999,7 @@ theorem exists_maximal_orthonormal {s : Set E} (hs : Orthonormal 𝕜 (coe : s �
     exact fun u hus hu => h u hu hus
   · refine' fun c hc cc c0 => ⟨⋃₀ c, _, _⟩
     · exact orthonormalSUnionOfDirected cc.directed_on fun x xc => hc xc
-    · exact fun _ => Set.subset_unionₛ_of_mem
+    · exact fun _ => Set.subset_sUnion_of_mem
 #align exists_maximal_orthonormal exists_maximal_orthonormal
 
 theorem Orthonormal.ne_zero {v : ι → E} (hv : Orthonormal 𝕜 v) (i : ι) : v i ≠ 0 :=
@@ -1973,7 +1973,7 @@ theorem Orthonormal.inner_products_summable (hv : Orthonormal 𝕜 v) :
   apply hasSum_of_isLUB_of_nonneg
   · intro b
     simp only [norm_nonneg, pow_nonneg]
-  · refine' isLUB_csupᵢ _
+  · refine' isLUB_ciSup _
     use ‖x‖ ^ 2
     rintro y ⟨s, rfl⟩
     exact hv.sum_inner_products_le x

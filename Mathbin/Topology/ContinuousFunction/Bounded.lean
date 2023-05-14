@@ -160,9 +160,9 @@ def mkOfDiscrete [DiscreteTopology α] (f : α → β) (C : ℝ) (h : ∀ x y : 
 
 /-- The uniform distance between two bounded continuous functions -/
 instance : Dist (α →ᵇ β) :=
-  ⟨fun f g => infₛ { C | 0 ≤ C ∧ ∀ x : α, dist (f x) (g x) ≤ C }⟩
+  ⟨fun f g => sInf { C | 0 ≤ C ∧ ∀ x : α, dist (f x) (g x) ≤ C }⟩
 
-theorem dist_eq : dist f g = infₛ { C | 0 ≤ C ∧ ∀ x : α, dist (f x) (g x) ≤ C } :=
+theorem dist_eq : dist f g = sInf { C | 0 ≤ C ∧ ∀ x : α, dist (f x) (g x) ≤ C } :=
   rfl
 #align bounded_continuous_function.dist_eq BoundedContinuousFunction.dist_eq
 
@@ -176,19 +176,19 @@ theorem dist_set_exists : ∃ C, 0 ≤ C ∧ ∀ x : α, dist (f x) (g x) ≤ C 
 
 /-- The pointwise distance is controlled by the distance between functions, by definition. -/
 theorem dist_coe_le_dist (x : α) : dist (f x) (g x) ≤ dist f g :=
-  le_cinfₛ dist_set_exists fun b hb => hb.2 x
+  le_csInf dist_set_exists fun b hb => hb.2 x
 #align bounded_continuous_function.dist_coe_le_dist BoundedContinuousFunction.dist_coe_le_dist
 
 /- This lemma will be needed in the proof of the metric space instance, but it will become
 useless afterwards as it will be superseded by the general result that the distance is nonnegative
 in metric spaces. -/
 private theorem dist_nonneg' : 0 ≤ dist f g :=
-  le_cinfₛ dist_set_exists fun C => And.left
+  le_csInf dist_set_exists fun C => And.left
 #align bounded_continuous_function.dist_nonneg' bounded_continuous_function.dist_nonneg'
 
 /-- The distance between two functions is controlled by the supremum of the pointwise distances -/
 theorem dist_le (C0 : (0 : ℝ) ≤ C) : dist f g ≤ C ↔ ∀ x : α, dist (f x) (g x) ≤ C :=
-  ⟨fun h x => le_trans (dist_coe_le_dist x) h, fun H => cinfₛ_le ⟨0, fun C => And.left⟩ ⟨C0, H⟩⟩
+  ⟨fun h x => le_trans (dist_coe_le_dist x) h, fun H => csInf_le ⟨0, fun C => And.left⟩ ⟨C0, H⟩⟩
 #align bounded_continuous_function.dist_le BoundedContinuousFunction.dist_le
 
 theorem dist_le_iff_of_nonempty [Nonempty α] : dist f g ≤ C ↔ ∀ x, dist (f x) (g x) ≤ C :=
@@ -218,7 +218,7 @@ theorem dist_lt_iff_of_compact [CompactSpace α] (C0 : (0 : ℝ) < C) :
       convert C0
       apply le_antisymm _ dist_nonneg'
       rw [dist_eq]
-      exact cinfₛ_le ⟨0, fun C => And.left⟩ ⟨le_rfl, fun x => False.elim (h (Nonempty.intro x))⟩
+      exact csInf_le ⟨0, fun C => And.left⟩ ⟨le_rfl, fun x => False.elim (h (Nonempty.intro x))⟩
 #align bounded_continuous_function.dist_lt_iff_of_compact BoundedContinuousFunction.dist_lt_iff_of_compact
 
 theorem dist_lt_iff_of_nonempty_compact [Nonempty α] [CompactSpace α] :
@@ -240,10 +240,10 @@ instance {α β} [TopologicalSpace α] [MetricSpace β] : MetricSpace (α →ᵇ
     where eq_of_dist_eq_zero f g hfg := by
     ext x <;> exact eq_of_dist_eq_zero (le_antisymm (hfg ▸ dist_coe_le_dist _) dist_nonneg)
 
-theorem nndist_eq : nndist f g = infₛ { C | ∀ x : α, nndist (f x) (g x) ≤ C } :=
+theorem nndist_eq : nndist f g = sInf { C | ∀ x : α, nndist (f x) (g x) ≤ C } :=
   Subtype.ext <|
     dist_eq.trans <| by
-      rw [NNReal.coe_infₛ, NNReal.coe_image]
+      rw [NNReal.coe_sInf, NNReal.coe_image]
       simp_rw [mem_set_of_eq, ← NNReal.coe_le_coe, Subtype.coe_mk, exists_prop, coe_nndist]
 #align bounded_continuous_function.nndist_eq BoundedContinuousFunction.nndist_eq
 
@@ -260,16 +260,16 @@ theorem dist_zero_of_empty [IsEmpty α] : dist f g = 0 := by
   rw [(ext isEmptyElim : f = g), dist_self]
 #align bounded_continuous_function.dist_zero_of_empty BoundedContinuousFunction.dist_zero_of_empty
 
-theorem dist_eq_supᵢ : dist f g = ⨆ x : α, dist (f x) (g x) :=
+theorem dist_eq_iSup : dist f g = ⨆ x : α, dist (f x) (g x) :=
   by
-  cases isEmpty_or_nonempty α; · rw [supᵢ_of_empty', Real.supₛ_empty, dist_zero_of_empty]
-  refine' (dist_le_iff_of_nonempty.mpr <| le_csupᵢ _).antisymm (csupᵢ_le dist_coe_le_dist)
+  cases isEmpty_or_nonempty α; · rw [iSup_of_empty', Real.sSup_empty, dist_zero_of_empty]
+  refine' (dist_le_iff_of_nonempty.mpr <| le_ciSup _).antisymm (ciSup_le dist_coe_le_dist)
   exact dist_set_exists.imp fun C hC => forall_range_iff.2 hC.2
-#align bounded_continuous_function.dist_eq_supr BoundedContinuousFunction.dist_eq_supᵢ
+#align bounded_continuous_function.dist_eq_supr BoundedContinuousFunction.dist_eq_iSup
 
-theorem nndist_eq_supᵢ : nndist f g = ⨆ x : α, nndist (f x) (g x) :=
-  Subtype.ext <| dist_eq_supᵢ.trans <| by simp_rw [NNReal.coe_supᵢ, coe_nndist]
-#align bounded_continuous_function.nndist_eq_supr BoundedContinuousFunction.nndist_eq_supᵢ
+theorem nndist_eq_iSup : nndist f g = ⨆ x : α, nndist (f x) (g x) :=
+  Subtype.ext <| dist_eq_iSup.trans <| by simp_rw [NNReal.coe_iSup, coe_nndist]
+#align bounded_continuous_function.nndist_eq_supr BoundedContinuousFunction.nndist_eq_iSup
 
 theorem tendsto_iff_tendstoUniformly {ι : Type _} {F : ι → α →ᵇ β} {f : α →ᵇ β} {l : Filter ι} :
     Tendsto F l (𝓝 f) ↔ TendstoUniformly (fun i => F i) f l :=
@@ -847,13 +847,13 @@ theorem norm_def : ‖f‖ = dist f 0 :=
 
 /-- The norm of a bounded continuous function is the supremum of `‖f x‖`.
 We use `Inf` to ensure that the definition works if `α` has no elements. -/
-theorem norm_eq (f : α →ᵇ β) : ‖f‖ = infₛ { C : ℝ | 0 ≤ C ∧ ∀ x : α, ‖f x‖ ≤ C } := by
+theorem norm_eq (f : α →ᵇ β) : ‖f‖ = sInf { C : ℝ | 0 ≤ C ∧ ∀ x : α, ‖f x‖ ≤ C } := by
   simp [norm_def, BoundedContinuousFunction.dist_eq]
 #align bounded_continuous_function.norm_eq BoundedContinuousFunction.norm_eq
 
 /-- When the domain is non-empty, we do not need the `0 ≤ C` condition in the formula for ‖f‖ as an
 `Inf`. -/
-theorem norm_eq_of_nonempty [h : Nonempty α] : ‖f‖ = infₛ { C : ℝ | ∀ x : α, ‖f x‖ ≤ C } :=
+theorem norm_eq_of_nonempty [h : Nonempty α] : ‖f‖ = sInf { C : ℝ | ∀ x : α, ‖f x‖ ≤ C } :=
   by
   obtain ⟨a⟩ := h
   rw [norm_eq]
@@ -981,13 +981,13 @@ theorem bddAbove_range_norm_comp : BddAbove <| Set.range <| norm ∘ f :=
   (Real.bounded_iff_bddBelow_bddAbove.mp <| @bounded_range _ _ _ _ f.normComp).2
 #align bounded_continuous_function.bdd_above_range_norm_comp BoundedContinuousFunction.bddAbove_range_norm_comp
 
-theorem norm_eq_supᵢ_norm : ‖f‖ = ⨆ x : α, ‖f x‖ := by
+theorem norm_eq_iSup_norm : ‖f‖ = ⨆ x : α, ‖f x‖ := by
   simp_rw [norm_def, dist_eq_supr, coe_zero, Pi.zero_apply, dist_zero_right]
-#align bounded_continuous_function.norm_eq_supr_norm BoundedContinuousFunction.norm_eq_supᵢ_norm
+#align bounded_continuous_function.norm_eq_supr_norm BoundedContinuousFunction.norm_eq_iSup_norm
 
 /-- If `‖(1 : β)‖ = 1`, then `‖(1 : α →ᵇ β)‖ = 1` if `α` is nonempty. -/
 instance [Nonempty α] [One β] [NormOneClass β] : NormOneClass (α →ᵇ β)
-    where norm_one := by simp only [norm_eq_supr_norm, coe_one, Pi.one_apply, norm_one, csupᵢ_const]
+    where norm_one := by simp only [norm_eq_supr_norm, coe_one, Pi.one_apply, norm_one, ciSup_const]
 
 /-- The pointwise opposite of a bounded continuous function is again bounded continuous. -/
 instance : Neg (α →ᵇ β) :=
@@ -1093,9 +1093,9 @@ theorem nnnorm_const_eq [h : Nonempty α] (b : β) : ‖const α b‖₊ = ‖b�
   Subtype.ext <| norm_const_eq _
 #align bounded_continuous_function.nnnorm_const_eq BoundedContinuousFunction.nnnorm_const_eq
 
-theorem nnnorm_eq_supᵢ_nnnorm : ‖f‖₊ = ⨆ x : α, ‖f x‖₊ :=
-  Subtype.ext <| (norm_eq_supᵢ_norm f).trans <| by simp_rw [NNReal.coe_supᵢ, coe_nnnorm]
-#align bounded_continuous_function.nnnorm_eq_supr_nnnorm BoundedContinuousFunction.nnnorm_eq_supᵢ_nnnorm
+theorem nnnorm_eq_iSup_nnnorm : ‖f‖₊ = ⨆ x : α, ‖f x‖₊ :=
+  Subtype.ext <| (norm_eq_iSup_norm f).trans <| by simp_rw [NNReal.coe_iSup, coe_nnnorm]
+#align bounded_continuous_function.nnnorm_eq_supr_nnnorm BoundedContinuousFunction.nnnorm_eq_iSup_nnnorm
 
 theorem abs_diff_coe_le_dist : ‖f x - g x‖ ≤ dist f g :=
   by

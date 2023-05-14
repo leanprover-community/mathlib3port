@@ -104,39 +104,39 @@ theorem IsOpen.exists_smul_mem [IsMinimal M α] (x : α) {U : Set α} (hUo : IsO
 #align is_open.exists_smul_mem IsOpen.exists_smul_mem
 #align is_open.exists_vadd_mem IsOpen.exists_vadd_mem
 
-/- warning: is_open.Union_preimage_smul -> IsOpen.unionᵢ_preimage_smul is a dubious translation:
+/- warning: is_open.Union_preimage_smul -> IsOpen.iUnion_preimage_smul is a dubious translation:
 lean 3 declaration is
-  forall (M : Type.{u1}) {α : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_3 : TopologicalSpace.{u2} α] [_inst_4 : MulAction.{u1, u2} M α _inst_1] [_inst_6 : MulAction.IsMinimal.{u1, u2} M α _inst_1 _inst_3 _inst_4] {U : Set.{u2} α}, (IsOpen.{u2} α _inst_3 U) -> (Set.Nonempty.{u2} α U) -> (Eq.{succ u2} (Set.{u2} α) (Set.unionᵢ.{u2, succ u1} α M (fun (c : M) => Set.preimage.{u2, u2} α α (SMul.smul.{u1, u2} M α (MulAction.toHasSmul.{u1, u2} M α _inst_1 _inst_4) c) U)) (Set.univ.{u2} α))
+  forall (M : Type.{u1}) {α : Type.{u2}} [_inst_1 : Monoid.{u1} M] [_inst_3 : TopologicalSpace.{u2} α] [_inst_4 : MulAction.{u1, u2} M α _inst_1] [_inst_6 : MulAction.IsMinimal.{u1, u2} M α _inst_1 _inst_3 _inst_4] {U : Set.{u2} α}, (IsOpen.{u2} α _inst_3 U) -> (Set.Nonempty.{u2} α U) -> (Eq.{succ u2} (Set.{u2} α) (Set.iUnion.{u2, succ u1} α M (fun (c : M) => Set.preimage.{u2, u2} α α (SMul.smul.{u1, u2} M α (MulAction.toHasSmul.{u1, u2} M α _inst_1 _inst_4) c) U)) (Set.univ.{u2} α))
 but is expected to have type
-  forall (M : Type.{u2}) {α : Type.{u1}} [_inst_1 : Monoid.{u2} M] [_inst_3 : TopologicalSpace.{u1} α] [_inst_4 : MulAction.{u2, u1} M α _inst_1] [_inst_6 : MulAction.IsMinimal.{u2, u1} M α _inst_1 _inst_3 _inst_4] {U : Set.{u1} α}, (IsOpen.{u1} α _inst_3 U) -> (Set.Nonempty.{u1} α U) -> (Eq.{succ u1} (Set.{u1} α) (Set.unionᵢ.{u1, succ u2} α M (fun (c : M) => Set.preimage.{u1, u1} α α ((fun (x._@.Mathlib.Dynamics.Minimal._hyg.339 : M) (x._@.Mathlib.Dynamics.Minimal._hyg.341 : α) => HSMul.hSMul.{u2, u1, u1} M α α (instHSMul.{u2, u1} M α (MulAction.toSMul.{u2, u1} M α _inst_1 _inst_4)) x._@.Mathlib.Dynamics.Minimal._hyg.339 x._@.Mathlib.Dynamics.Minimal._hyg.341) c) U)) (Set.univ.{u1} α))
-Case conversion may be inaccurate. Consider using '#align is_open.Union_preimage_smul IsOpen.unionᵢ_preimage_smulₓ'. -/
+  forall (M : Type.{u2}) {α : Type.{u1}} [_inst_1 : Monoid.{u2} M] [_inst_3 : TopologicalSpace.{u1} α] [_inst_4 : MulAction.{u2, u1} M α _inst_1] [_inst_6 : MulAction.IsMinimal.{u2, u1} M α _inst_1 _inst_3 _inst_4] {U : Set.{u1} α}, (IsOpen.{u1} α _inst_3 U) -> (Set.Nonempty.{u1} α U) -> (Eq.{succ u1} (Set.{u1} α) (Set.iUnion.{u1, succ u2} α M (fun (c : M) => Set.preimage.{u1, u1} α α ((fun (x._@.Mathlib.Dynamics.Minimal._hyg.339 : M) (x._@.Mathlib.Dynamics.Minimal._hyg.341 : α) => HSMul.hSMul.{u2, u1, u1} M α α (instHSMul.{u2, u1} M α (MulAction.toSMul.{u2, u1} M α _inst_1 _inst_4)) x._@.Mathlib.Dynamics.Minimal._hyg.339 x._@.Mathlib.Dynamics.Minimal._hyg.341) c) U)) (Set.univ.{u1} α))
+Case conversion may be inaccurate. Consider using '#align is_open.Union_preimage_smul IsOpen.iUnion_preimage_smulₓ'. -/
 @[to_additive]
-theorem IsOpen.unionᵢ_preimage_smul [IsMinimal M α] {U : Set α} (hUo : IsOpen U)
+theorem IsOpen.iUnion_preimage_smul [IsMinimal M α] {U : Set α} (hUo : IsOpen U)
     (hne : U.Nonempty) : (⋃ c : M, (· • ·) c ⁻¹' U) = univ :=
-  unionᵢ_eq_univ_iff.2 fun x => hUo.exists_smul_mem M x hne
-#align is_open.Union_preimage_smul IsOpen.unionᵢ_preimage_smul
-#align is_open.Union_preimage_vadd IsOpen.unionᵢ_preimage_vadd
+  iUnion_eq_univ_iff.2 fun x => hUo.exists_smul_mem M x hne
+#align is_open.Union_preimage_smul IsOpen.iUnion_preimage_smul
+#align is_open.Union_preimage_vadd IsOpen.iUnion_preimage_vadd
 
-/- warning: is_open.Union_smul -> IsOpen.unionᵢ_smul is a dubious translation:
+/- warning: is_open.Union_smul -> IsOpen.iUnion_smul is a dubious translation:
 lean 3 declaration is
-  forall (G : Type.{u1}) {α : Type.{u2}} [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalSpace.{u2} α] [_inst_5 : MulAction.{u1, u2} G α (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))] [_inst_6 : MulAction.IsMinimal.{u1, u2} G α (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)) _inst_3 _inst_5] {U : Set.{u2} α}, (IsOpen.{u2} α _inst_3 U) -> (Set.Nonempty.{u2} α U) -> (Eq.{succ u2} (Set.{u2} α) (Set.unionᵢ.{u2, succ u1} α G (fun (g : G) => SMul.smul.{u1, u2} G (Set.{u2} α) (Set.smulSet.{u1, u2} G α (MulAction.toHasSmul.{u1, u2} G α (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)) _inst_5)) g U)) (Set.univ.{u2} α))
+  forall (G : Type.{u1}) {α : Type.{u2}} [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalSpace.{u2} α] [_inst_5 : MulAction.{u1, u2} G α (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))] [_inst_6 : MulAction.IsMinimal.{u1, u2} G α (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)) _inst_3 _inst_5] {U : Set.{u2} α}, (IsOpen.{u2} α _inst_3 U) -> (Set.Nonempty.{u2} α U) -> (Eq.{succ u2} (Set.{u2} α) (Set.iUnion.{u2, succ u1} α G (fun (g : G) => SMul.smul.{u1, u2} G (Set.{u2} α) (Set.smulSet.{u1, u2} G α (MulAction.toHasSmul.{u1, u2} G α (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)) _inst_5)) g U)) (Set.univ.{u2} α))
 but is expected to have type
-  forall (G : Type.{u2}) {α : Type.{u1}} [_inst_2 : Group.{u2} G] [_inst_3 : TopologicalSpace.{u1} α] [_inst_5 : MulAction.{u2, u1} G α (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_2))] [_inst_6 : MulAction.IsMinimal.{u2, u1} G α (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_2)) _inst_3 _inst_5] {U : Set.{u1} α}, (IsOpen.{u1} α _inst_3 U) -> (Set.Nonempty.{u1} α U) -> (Eq.{succ u1} (Set.{u1} α) (Set.unionᵢ.{u1, succ u2} α G (fun (g : G) => HSMul.hSMul.{u2, u1, u1} G (Set.{u1} α) (Set.{u1} α) (instHSMul.{u2, u1} G (Set.{u1} α) (Set.smulSet.{u2, u1} G α (MulAction.toSMul.{u2, u1} G α (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_2)) _inst_5))) g U)) (Set.univ.{u1} α))
-Case conversion may be inaccurate. Consider using '#align is_open.Union_smul IsOpen.unionᵢ_smulₓ'. -/
+  forall (G : Type.{u2}) {α : Type.{u1}} [_inst_2 : Group.{u2} G] [_inst_3 : TopologicalSpace.{u1} α] [_inst_5 : MulAction.{u2, u1} G α (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_2))] [_inst_6 : MulAction.IsMinimal.{u2, u1} G α (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_2)) _inst_3 _inst_5] {U : Set.{u1} α}, (IsOpen.{u1} α _inst_3 U) -> (Set.Nonempty.{u1} α U) -> (Eq.{succ u1} (Set.{u1} α) (Set.iUnion.{u1, succ u2} α G (fun (g : G) => HSMul.hSMul.{u2, u1, u1} G (Set.{u1} α) (Set.{u1} α) (instHSMul.{u2, u1} G (Set.{u1} α) (Set.smulSet.{u2, u1} G α (MulAction.toSMul.{u2, u1} G α (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_2)) _inst_5))) g U)) (Set.univ.{u1} α))
+Case conversion may be inaccurate. Consider using '#align is_open.Union_smul IsOpen.iUnion_smulₓ'. -/
 @[to_additive]
-theorem IsOpen.unionᵢ_smul [IsMinimal G α] {U : Set α} (hUo : IsOpen U) (hne : U.Nonempty) :
+theorem IsOpen.iUnion_smul [IsMinimal G α] {U : Set α} (hUo : IsOpen U) (hne : U.Nonempty) :
     (⋃ g : G, g • U) = univ :=
-  unionᵢ_eq_univ_iff.2 fun x =>
+  iUnion_eq_univ_iff.2 fun x =>
     let ⟨g, hg⟩ := hUo.exists_smul_mem G x hne
     ⟨g⁻¹, _, hg, inv_smul_smul _ _⟩
-#align is_open.Union_smul IsOpen.unionᵢ_smul
-#align is_open.Union_vadd IsOpen.unionᵢ_vadd
+#align is_open.Union_smul IsOpen.iUnion_smul
+#align is_open.Union_vadd IsOpen.iUnion_vadd
 
 /- warning: is_compact.exists_finite_cover_smul -> IsCompact.exists_finite_cover_smul is a dubious translation:
 lean 3 declaration is
-  forall (G : Type.{u1}) {α : Type.{u2}} [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalSpace.{u2} α] [_inst_5 : MulAction.{u1, u2} G α (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))] [_inst_6 : MulAction.IsMinimal.{u1, u2} G α (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)) _inst_3 _inst_5] [_inst_7 : ContinuousConstSMul.{u1, u2} G α _inst_3 (MulAction.toHasSmul.{u1, u2} G α (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)) _inst_5)] {K : Set.{u2} α} {U : Set.{u2} α}, (IsCompact.{u2} α _inst_3 K) -> (IsOpen.{u2} α _inst_3 U) -> (Set.Nonempty.{u2} α U) -> (Exists.{succ u1} (Finset.{u1} G) (fun (I : Finset.{u1} G) => HasSubset.Subset.{u2} (Set.{u2} α) (Set.hasSubset.{u2} α) K (Set.unionᵢ.{u2, succ u1} α G (fun (g : G) => Set.unionᵢ.{u2, 0} α (Membership.Mem.{u1, u1} G (Finset.{u1} G) (Finset.hasMem.{u1} G) g I) (fun (H : Membership.Mem.{u1, u1} G (Finset.{u1} G) (Finset.hasMem.{u1} G) g I) => SMul.smul.{u1, u2} G (Set.{u2} α) (Set.smulSet.{u1, u2} G α (MulAction.toHasSmul.{u1, u2} G α (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)) _inst_5)) g U)))))
+  forall (G : Type.{u1}) {α : Type.{u2}} [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalSpace.{u2} α] [_inst_5 : MulAction.{u1, u2} G α (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))] [_inst_6 : MulAction.IsMinimal.{u1, u2} G α (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)) _inst_3 _inst_5] [_inst_7 : ContinuousConstSMul.{u1, u2} G α _inst_3 (MulAction.toHasSmul.{u1, u2} G α (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)) _inst_5)] {K : Set.{u2} α} {U : Set.{u2} α}, (IsCompact.{u2} α _inst_3 K) -> (IsOpen.{u2} α _inst_3 U) -> (Set.Nonempty.{u2} α U) -> (Exists.{succ u1} (Finset.{u1} G) (fun (I : Finset.{u1} G) => HasSubset.Subset.{u2} (Set.{u2} α) (Set.hasSubset.{u2} α) K (Set.iUnion.{u2, succ u1} α G (fun (g : G) => Set.iUnion.{u2, 0} α (Membership.Mem.{u1, u1} G (Finset.{u1} G) (Finset.hasMem.{u1} G) g I) (fun (H : Membership.Mem.{u1, u1} G (Finset.{u1} G) (Finset.hasMem.{u1} G) g I) => SMul.smul.{u1, u2} G (Set.{u2} α) (Set.smulSet.{u1, u2} G α (MulAction.toHasSmul.{u1, u2} G α (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2)) _inst_5)) g U)))))
 but is expected to have type
-  forall (G : Type.{u2}) {α : Type.{u1}} [_inst_2 : Group.{u2} G] [_inst_3 : TopologicalSpace.{u1} α] [_inst_5 : MulAction.{u2, u1} G α (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_2))] [_inst_6 : MulAction.IsMinimal.{u2, u1} G α (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_2)) _inst_3 _inst_5] [_inst_7 : ContinuousConstSMul.{u2, u1} G α _inst_3 (MulAction.toSMul.{u2, u1} G α (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_2)) _inst_5)] {K : Set.{u1} α} {U : Set.{u1} α}, (IsCompact.{u1} α _inst_3 K) -> (IsOpen.{u1} α _inst_3 U) -> (Set.Nonempty.{u1} α U) -> (Exists.{succ u2} (Finset.{u2} G) (fun (I : Finset.{u2} G) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) K (Set.unionᵢ.{u1, succ u2} α G (fun (g : G) => Set.unionᵢ.{u1, 0} α (Membership.mem.{u2, u2} G (Finset.{u2} G) (Finset.instMembershipFinset.{u2} G) g I) (fun (H : Membership.mem.{u2, u2} G (Finset.{u2} G) (Finset.instMembershipFinset.{u2} G) g I) => HSMul.hSMul.{u2, u1, u1} G (Set.{u1} α) (Set.{u1} α) (instHSMul.{u2, u1} G (Set.{u1} α) (Set.smulSet.{u2, u1} G α (MulAction.toSMul.{u2, u1} G α (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_2)) _inst_5))) g U)))))
+  forall (G : Type.{u2}) {α : Type.{u1}} [_inst_2 : Group.{u2} G] [_inst_3 : TopologicalSpace.{u1} α] [_inst_5 : MulAction.{u2, u1} G α (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_2))] [_inst_6 : MulAction.IsMinimal.{u2, u1} G α (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_2)) _inst_3 _inst_5] [_inst_7 : ContinuousConstSMul.{u2, u1} G α _inst_3 (MulAction.toSMul.{u2, u1} G α (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_2)) _inst_5)] {K : Set.{u1} α} {U : Set.{u1} α}, (IsCompact.{u1} α _inst_3 K) -> (IsOpen.{u1} α _inst_3 U) -> (Set.Nonempty.{u1} α U) -> (Exists.{succ u2} (Finset.{u2} G) (fun (I : Finset.{u2} G) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) K (Set.iUnion.{u1, succ u2} α G (fun (g : G) => Set.iUnion.{u1, 0} α (Membership.mem.{u2, u2} G (Finset.{u2} G) (Finset.instMembershipFinset.{u2} G) g I) (fun (H : Membership.mem.{u2, u2} G (Finset.{u2} G) (Finset.instMembershipFinset.{u2} G) g I) => HSMul.hSMul.{u2, u1, u1} G (Set.{u1} α) (Set.{u1} α) (instHSMul.{u2, u1} G (Set.{u1} α) (Set.smulSet.{u2, u1} G α (MulAction.toSMul.{u2, u1} G α (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_2)) _inst_5))) g U)))))
 Case conversion may be inaccurate. Consider using '#align is_compact.exists_finite_cover_smul IsCompact.exists_finite_cover_smulₓ'. -/
 @[to_additive]
 theorem IsCompact.exists_finite_cover_smul [IsMinimal G α] [ContinuousConstSMul G α] {K U : Set α}
@@ -144,7 +144,7 @@ theorem IsCompact.exists_finite_cover_smul [IsMinimal G α] [ContinuousConstSMul
   (hK.elim_finite_subcover (fun g : G => g • U) fun g => hUo.smul _) <|
     calc
       K ⊆ univ := subset_univ K
-      _ = ⋃ g : G, g • U := (hUo.unionᵢ_smul G hne).symm
+      _ = ⋃ g : G, g • U := (hUo.iUnion_smul G hne).symm
       
 #align is_compact.exists_finite_cover_smul IsCompact.exists_finite_cover_smul
 #align is_compact.exists_finite_cover_vadd IsCompact.exists_finite_cover_vadd

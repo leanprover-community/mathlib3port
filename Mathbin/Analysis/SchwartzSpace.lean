@@ -224,22 +224,22 @@ section SeminormAux
 /-- Helper definition for the seminorms of the Schwartz space. -/
 @[protected]
 def seminormAux (k n : ℕ) (f : 𝓢(E, F)) : ℝ :=
-  infₛ { c | 0 ≤ c ∧ ∀ x, ‖x‖ ^ k * ‖iteratedFderiv ℝ n f x‖ ≤ c }
+  sInf { c | 0 ≤ c ∧ ∀ x, ‖x‖ ^ k * ‖iteratedFderiv ℝ n f x‖ ≤ c }
 #align schwartz_map.seminorm_aux SchwartzMap.seminormAux
 
 theorem seminormAux_nonneg (k n : ℕ) (f : 𝓢(E, F)) : 0 ≤ f.seminormAux k n :=
-  le_cinfₛ (bounds_nonempty k n f) fun _ ⟨hx, _⟩ => hx
+  le_csInf (bounds_nonempty k n f) fun _ ⟨hx, _⟩ => hx
 #align schwartz_map.seminorm_aux_nonneg SchwartzMap.seminormAux_nonneg
 
 theorem le_seminormAux (k n : ℕ) (f : 𝓢(E, F)) (x : E) :
     ‖x‖ ^ k * ‖iteratedFderiv ℝ n (⇑f) x‖ ≤ f.seminormAux k n :=
-  le_cinfₛ (bounds_nonempty k n f) fun y ⟨_, h⟩ => h x
+  le_csInf (bounds_nonempty k n f) fun y ⟨_, h⟩ => h x
 #align schwartz_map.le_seminorm_aux SchwartzMap.le_seminormAux
 
 /-- If one controls the norm of every `A x`, then one controls the norm of `A`. -/
 theorem seminormAux_le_bound (k n : ℕ) (f : 𝓢(E, F)) {M : ℝ} (hMp : 0 ≤ M)
     (hM : ∀ x, ‖x‖ ^ k * ‖iteratedFderiv ℝ n f x‖ ≤ M) : f.seminormAux k n ≤ M :=
-  cinfₛ_le (bounds_bddBelow k n f) ⟨hMp, hM⟩
+  csInf_le (bounds_bddBelow k n f) ⟨hMp, hM⟩
 #align schwartz_map.seminorm_aux_le_bound SchwartzMap.seminormAux_le_bound
 
 end SeminormAux
@@ -575,7 +575,7 @@ instance : TopologicalSpace 𝓢(E, F) :=
 theorem schwartz_withSeminorms : WithSeminorms (schwartzSeminormFamily 𝕜 E F) :=
   by
   have A : WithSeminorms (schwartzSeminormFamily ℝ E F) := ⟨rfl⟩
-  rw [SeminormFamily.withSeminorms_iff_nhds_eq_infᵢ] at A⊢
+  rw [SeminormFamily.withSeminorms_iff_nhds_eq_iInf] at A⊢
   rw [A]
   rfl
 #align schwartz_with_seminorms schwartz_withSeminorms

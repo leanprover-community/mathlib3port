@@ -139,7 +139,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ennreal.limsup_add_le ENNReal.limsup_add_leₓ'. -/
 theorem limsup_add_le [CountableInterFilter f] (u v : α → ℝ≥0∞) :
     f.limsup (u + v) ≤ f.limsup u + f.limsup v :=
-  infₛ_le
+  sInf_le
     ((eventually_le_limsup u).mp
       ((eventually_le_limsup v).mono fun _ hxg hxf => add_le_add hxf hxg))
 #align ennreal.limsup_add_le ENNReal.limsup_add_le
@@ -160,7 +160,7 @@ theorem limsup_liminf_le_liminf_limsup {β} [Countable β] {f : Filter α} [Coun
     by
     rw [eventually_countable_forall]
     exact fun b => ENNReal.eventually_le_limsup fun a => u a b
-  refine' infₛ_le (h1.mono fun x hx => Filter.liminf_le_liminf (Filter.eventually_of_forall hx) _)
+  refine' sInf_le (h1.mono fun x hx => Filter.liminf_le_liminf (Filter.eventually_of_forall hx) _)
   run_tac
     filter.is_bounded_default
 #align ennreal.limsup_liminf_le_liminf_limsup ENNReal.limsup_liminf_le_liminf_limsup

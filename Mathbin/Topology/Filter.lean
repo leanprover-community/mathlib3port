@@ -85,18 +85,18 @@ theorem isTopologicalBasis_Iic_principal :
   { exists_subset_inter := by
       rintro _ ⟨s, rfl⟩ _ ⟨t, rfl⟩ l hl
       exact ⟨Iic (𝓟 s) ∩ Iic (𝓟 t), ⟨s ∩ t, by simp⟩, hl, subset.rfl⟩
-    unionₛ_eq := unionₛ_eq_univ_iff.2 fun l => ⟨Iic ⊤, ⟨univ, congr_arg Iic principal_univ⟩, le_top⟩
+    sUnion_eq := sUnion_eq_univ_iff.2 fun l => ⟨Iic ⊤, ⟨univ, congr_arg Iic principal_univ⟩, le_top⟩
     eq_generateFrom := rfl }
 #align filter.is_topological_basis_Iic_principal Filter.isTopologicalBasis_Iic_principal
 
 /- warning: filter.is_open_iff -> Filter.isOpen_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} (Filter.{u1} α)}, Iff (IsOpen.{u1} (Filter.{u1} α) (Filter.topologicalSpace.{u1} α) s) (Exists.{succ u1} (Set.{u1} (Set.{u1} α)) (fun (T : Set.{u1} (Set.{u1} α)) => Eq.{succ u1} (Set.{u1} (Filter.{u1} α)) s (Set.unionᵢ.{u1, succ u1} (Filter.{u1} α) (Set.{u1} α) (fun (t : Set.{u1} α) => Set.unionᵢ.{u1, 0} (Filter.{u1} α) (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) t T) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) t T) => Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α)) (Filter.principal.{u1} α t))))))
+  forall {α : Type.{u1}} {s : Set.{u1} (Filter.{u1} α)}, Iff (IsOpen.{u1} (Filter.{u1} α) (Filter.topologicalSpace.{u1} α) s) (Exists.{succ u1} (Set.{u1} (Set.{u1} α)) (fun (T : Set.{u1} (Set.{u1} α)) => Eq.{succ u1} (Set.{u1} (Filter.{u1} α)) s (Set.iUnion.{u1, succ u1} (Filter.{u1} α) (Set.{u1} α) (fun (t : Set.{u1} α) => Set.iUnion.{u1, 0} (Filter.{u1} α) (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) t T) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) t T) => Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α)) (Filter.principal.{u1} α t))))))
 but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} (Filter.{u1} α)}, Iff (IsOpen.{u1} (Filter.{u1} α) (Filter.instTopologicalSpaceFilter.{u1} α) s) (Exists.{succ u1} (Set.{u1} (Set.{u1} α)) (fun (T : Set.{u1} (Set.{u1} α)) => Eq.{succ u1} (Set.{u1} (Filter.{u1} α)) s (Set.unionᵢ.{u1, succ u1} (Filter.{u1} α) (Set.{u1} α) (fun (t : Set.{u1} α) => Set.unionᵢ.{u1, 0} (Filter.{u1} α) (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) t T) (fun (H : Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) t T) => Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α)) (Filter.principal.{u1} α t))))))
+  forall {α : Type.{u1}} {s : Set.{u1} (Filter.{u1} α)}, Iff (IsOpen.{u1} (Filter.{u1} α) (Filter.instTopologicalSpaceFilter.{u1} α) s) (Exists.{succ u1} (Set.{u1} (Set.{u1} α)) (fun (T : Set.{u1} (Set.{u1} α)) => Eq.{succ u1} (Set.{u1} (Filter.{u1} α)) s (Set.iUnion.{u1, succ u1} (Filter.{u1} α) (Set.{u1} α) (fun (t : Set.{u1} α) => Set.iUnion.{u1, 0} (Filter.{u1} α) (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) t T) (fun (H : Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) t T) => Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α)) (Filter.principal.{u1} α t))))))
 Case conversion may be inaccurate. Consider using '#align filter.is_open_iff Filter.isOpen_iffₓ'. -/
 theorem isOpen_iff {s : Set (Filter α)} : IsOpen s ↔ ∃ T : Set (Set α), s = ⋃ t ∈ T, Iic (𝓟 t) :=
-  isTopologicalBasis_Iic_principal.open_iff_eq_unionₛ.trans <| by
+  isTopologicalBasis_Iic_principal.open_iff_eq_sUnion.trans <| by
     simp only [exists_subset_range_iff, sUnion_image]
 #align filter.is_open_iff Filter.isOpen_iff
 
@@ -108,7 +108,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.nhds_eq Filter.nhds_eqₓ'. -/
 theorem nhds_eq (l : Filter α) : 𝓝 l = l.lift' (Iic ∘ 𝓟) :=
   nhds_generateFrom.trans <| by
-    simp only [mem_set_of_eq, and_comm' (l ∈ _), infᵢ_and, infᵢ_range, Filter.lift', Filter.lift,
+    simp only [mem_set_of_eq, and_comm' (l ∈ _), iInf_and, iInf_range, Filter.lift', Filter.lift,
       (· ∘ ·), mem_Iic, le_principal_iff]
 #align filter.nhds_eq Filter.nhds_eq
 
@@ -224,18 +224,18 @@ theorem nhds_pure (x : α) : 𝓝 (pure x : Filter α) = 𝓟 {⊥, pure x} := b
   rw [← principal_singleton, nhds_principal, principal_singleton, Iic_pure]
 #align filter.nhds_pure Filter.nhds_pure
 
-/- warning: filter.nhds_infi -> Filter.nhds_infᵢ is a dubious translation:
+/- warning: filter.nhds_infi -> Filter.nhds_iInf is a dubious translation:
 lean 3 declaration is
-  forall {ι : Sort.{u1}} {α : Type.{u2}} (f : ι -> (Filter.{u2} α)), Eq.{succ u2} (Filter.{u2} (Filter.{u2} α)) (nhds.{u2} (Filter.{u2} α) (Filter.topologicalSpace.{u2} α) (infᵢ.{u2, u1} (Filter.{u2} α) (ConditionallyCompleteLattice.toHasInf.{u2} (Filter.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} α) (Filter.completeLattice.{u2} α))) ι (fun (i : ι) => f i))) (infᵢ.{u2, u1} (Filter.{u2} (Filter.{u2} α)) (ConditionallyCompleteLattice.toHasInf.{u2} (Filter.{u2} (Filter.{u2} α)) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} (Filter.{u2} α)) (Filter.completeLattice.{u2} (Filter.{u2} α)))) ι (fun (i : ι) => nhds.{u2} (Filter.{u2} α) (Filter.topologicalSpace.{u2} α) (f i)))
+  forall {ι : Sort.{u1}} {α : Type.{u2}} (f : ι -> (Filter.{u2} α)), Eq.{succ u2} (Filter.{u2} (Filter.{u2} α)) (nhds.{u2} (Filter.{u2} α) (Filter.topologicalSpace.{u2} α) (iInf.{u2, u1} (Filter.{u2} α) (ConditionallyCompleteLattice.toHasInf.{u2} (Filter.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} α) (Filter.completeLattice.{u2} α))) ι (fun (i : ι) => f i))) (iInf.{u2, u1} (Filter.{u2} (Filter.{u2} α)) (ConditionallyCompleteLattice.toHasInf.{u2} (Filter.{u2} (Filter.{u2} α)) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} (Filter.{u2} α)) (Filter.completeLattice.{u2} (Filter.{u2} α)))) ι (fun (i : ι) => nhds.{u2} (Filter.{u2} α) (Filter.topologicalSpace.{u2} α) (f i)))
 but is expected to have type
-  forall {ι : Sort.{u1}} {α : Type.{u2}} (f : ι -> (Filter.{u2} α)), Eq.{succ u2} (Filter.{u2} (Filter.{u2} α)) (nhds.{u2} (Filter.{u2} α) (Filter.instTopologicalSpaceFilter.{u2} α) (infᵢ.{u2, u1} (Filter.{u2} α) (ConditionallyCompleteLattice.toInfSet.{u2} (Filter.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} α) (Filter.instCompleteLatticeFilter.{u2} α))) ι (fun (i : ι) => f i))) (infᵢ.{u2, u1} (Filter.{u2} (Filter.{u2} α)) (ConditionallyCompleteLattice.toInfSet.{u2} (Filter.{u2} (Filter.{u2} α)) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} (Filter.{u2} α)) (Filter.instCompleteLatticeFilter.{u2} (Filter.{u2} α)))) ι (fun (i : ι) => nhds.{u2} (Filter.{u2} α) (Filter.instTopologicalSpaceFilter.{u2} α) (f i)))
-Case conversion may be inaccurate. Consider using '#align filter.nhds_infi Filter.nhds_infᵢₓ'. -/
+  forall {ι : Sort.{u1}} {α : Type.{u2}} (f : ι -> (Filter.{u2} α)), Eq.{succ u2} (Filter.{u2} (Filter.{u2} α)) (nhds.{u2} (Filter.{u2} α) (Filter.instTopologicalSpaceFilter.{u2} α) (iInf.{u2, u1} (Filter.{u2} α) (ConditionallyCompleteLattice.toInfSet.{u2} (Filter.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} α) (Filter.instCompleteLatticeFilter.{u2} α))) ι (fun (i : ι) => f i))) (iInf.{u2, u1} (Filter.{u2} (Filter.{u2} α)) (ConditionallyCompleteLattice.toInfSet.{u2} (Filter.{u2} (Filter.{u2} α)) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} (Filter.{u2} α)) (Filter.instCompleteLatticeFilter.{u2} (Filter.{u2} α)))) ι (fun (i : ι) => nhds.{u2} (Filter.{u2} α) (Filter.instTopologicalSpaceFilter.{u2} α) (f i)))
+Case conversion may be inaccurate. Consider using '#align filter.nhds_infi Filter.nhds_iInfₓ'. -/
 @[simp]
-theorem nhds_infᵢ (f : ι → Filter α) : 𝓝 (⨅ i, f i) = ⨅ i, 𝓝 (f i) :=
+theorem nhds_iInf (f : ι → Filter α) : 𝓝 (⨅ i, f i) = ⨅ i, 𝓝 (f i) :=
   by
   simp only [nhds_eq]
   apply lift'_infi_of_map_univ <;> simp
-#align filter.nhds_infi Filter.nhds_infᵢ
+#align filter.nhds_infi Filter.nhds_iInf
 
 /- warning: filter.nhds_inf -> Filter.nhds_inf is a dubious translation:
 lean 3 declaration is
@@ -245,7 +245,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.nhds_inf Filter.nhds_infₓ'. -/
 @[simp]
 theorem nhds_inf (l₁ l₂ : Filter α) : 𝓝 (l₁ ⊓ l₂) = 𝓝 l₁ ⊓ 𝓝 l₂ := by
-  simpa only [infᵢ_bool_eq] using nhds_infᵢ fun b => cond b l₁ l₂
+  simpa only [iInf_bool_eq] using nhds_iInf fun b => cond b l₁ l₂
 #align filter.nhds_inf Filter.nhds_inf
 
 /- warning: filter.monotone_nhds -> Filter.monotone_nhds is a dubious translation:
@@ -258,16 +258,16 @@ theorem monotone_nhds : Monotone (𝓝 : Filter α → Filter (Filter α)) :=
   Monotone.of_map_inf nhds_inf
 #align filter.monotone_nhds Filter.monotone_nhds
 
-/- warning: filter.Inter_nhds -> Filter.interₛ_nhds is a dubious translation:
+/- warning: filter.Inter_nhds -> Filter.sInter_nhds is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} (l : Filter.{u1} α), Eq.{succ u1} (Set.{u1} (Filter.{u1} α)) (Set.interₛ.{u1} (Filter.{u1} α) (setOf.{u1} (Set.{u1} (Filter.{u1} α)) (fun (s : Set.{u1} (Filter.{u1} α)) => Membership.Mem.{u1, u1} (Set.{u1} (Filter.{u1} α)) (Filter.{u1} (Filter.{u1} α)) (Filter.hasMem.{u1} (Filter.{u1} α)) s (nhds.{u1} (Filter.{u1} α) (Filter.topologicalSpace.{u1} α) l)))) (Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α)) l)
+  forall {α : Type.{u1}} (l : Filter.{u1} α), Eq.{succ u1} (Set.{u1} (Filter.{u1} α)) (Set.sInter.{u1} (Filter.{u1} α) (setOf.{u1} (Set.{u1} (Filter.{u1} α)) (fun (s : Set.{u1} (Filter.{u1} α)) => Membership.Mem.{u1, u1} (Set.{u1} (Filter.{u1} α)) (Filter.{u1} (Filter.{u1} α)) (Filter.hasMem.{u1} (Filter.{u1} α)) s (nhds.{u1} (Filter.{u1} α) (Filter.topologicalSpace.{u1} α) l)))) (Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α)) l)
 but is expected to have type
-  forall {α : Type.{u1}} (l : Filter.{u1} α), Eq.{succ u1} (Set.{u1} (Filter.{u1} α)) (Set.interₛ.{u1} (Filter.{u1} α) (setOf.{u1} (Set.{u1} (Filter.{u1} α)) (fun (s : Set.{u1} (Filter.{u1} α)) => Membership.mem.{u1, u1} (Set.{u1} (Filter.{u1} α)) (Filter.{u1} (Filter.{u1} α)) (instMembershipSetFilter.{u1} (Filter.{u1} α)) s (nhds.{u1} (Filter.{u1} α) (Filter.instTopologicalSpaceFilter.{u1} α) l)))) (Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α)) l)
-Case conversion may be inaccurate. Consider using '#align filter.Inter_nhds Filter.interₛ_nhdsₓ'. -/
-theorem interₛ_nhds (l : Filter α) : ⋂₀ { s | s ∈ 𝓝 l } = Iic l := by
+  forall {α : Type.{u1}} (l : Filter.{u1} α), Eq.{succ u1} (Set.{u1} (Filter.{u1} α)) (Set.sInter.{u1} (Filter.{u1} α) (setOf.{u1} (Set.{u1} (Filter.{u1} α)) (fun (s : Set.{u1} (Filter.{u1} α)) => Membership.mem.{u1, u1} (Set.{u1} (Filter.{u1} α)) (Filter.{u1} (Filter.{u1} α)) (instMembershipSetFilter.{u1} (Filter.{u1} α)) s (nhds.{u1} (Filter.{u1} α) (Filter.instTopologicalSpaceFilter.{u1} α) l)))) (Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α)) l)
+Case conversion may be inaccurate. Consider using '#align filter.Inter_nhds Filter.sInter_nhdsₓ'. -/
+theorem sInter_nhds (l : Filter α) : ⋂₀ { s | s ∈ 𝓝 l } = Iic l := by
   simp only [nhds_eq, sInter_lift'_sets monotone_principal.Iic, Iic, le_principal_iff, ←
     set_of_forall, ← Filter.le_def]
-#align filter.Inter_nhds Filter.interₛ_nhds
+#align filter.Inter_nhds Filter.sInter_nhds
 
 /- warning: filter.nhds_mono -> Filter.nhds_mono is a dubious translation:
 lean 3 declaration is
@@ -336,12 +336,12 @@ instance : T0Space (Filter α) :=
 
 /- warning: filter.nhds_at_top -> Filter.nhds_atTop is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], Eq.{succ u1} (Filter.{u1} (Filter.{u1} α)) (nhds.{u1} (Filter.{u1} α) (Filter.topologicalSpace.{u1} α) (Filter.atTop.{u1} α _inst_1)) (infᵢ.{u1, succ u1} (Filter.{u1} (Filter.{u1} α)) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} (Filter.{u1} α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Filter.{u1} α)) (Filter.completeLattice.{u1} (Filter.{u1} α)))) α (fun (x : α) => Filter.principal.{u1} (Filter.{u1} α) (Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α)) (Filter.principal.{u1} α (Set.Ici.{u1} α _inst_1 x)))))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], Eq.{succ u1} (Filter.{u1} (Filter.{u1} α)) (nhds.{u1} (Filter.{u1} α) (Filter.topologicalSpace.{u1} α) (Filter.atTop.{u1} α _inst_1)) (iInf.{u1, succ u1} (Filter.{u1} (Filter.{u1} α)) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} (Filter.{u1} α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Filter.{u1} α)) (Filter.completeLattice.{u1} (Filter.{u1} α)))) α (fun (x : α) => Filter.principal.{u1} (Filter.{u1} α) (Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α)) (Filter.principal.{u1} α (Set.Ici.{u1} α _inst_1 x)))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], Eq.{succ u1} (Filter.{u1} (Filter.{u1} α)) (nhds.{u1} (Filter.{u1} α) (Filter.instTopologicalSpaceFilter.{u1} α) (Filter.atTop.{u1} α _inst_1)) (infᵢ.{u1, succ u1} (Filter.{u1} (Filter.{u1} α)) (ConditionallyCompleteLattice.toInfSet.{u1} (Filter.{u1} (Filter.{u1} α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Filter.{u1} α)) (Filter.instCompleteLatticeFilter.{u1} (Filter.{u1} α)))) α (fun (x : α) => Filter.principal.{u1} (Filter.{u1} α) (Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α)) (Filter.principal.{u1} α (Set.Ici.{u1} α _inst_1 x)))))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], Eq.{succ u1} (Filter.{u1} (Filter.{u1} α)) (nhds.{u1} (Filter.{u1} α) (Filter.instTopologicalSpaceFilter.{u1} α) (Filter.atTop.{u1} α _inst_1)) (iInf.{u1, succ u1} (Filter.{u1} (Filter.{u1} α)) (ConditionallyCompleteLattice.toInfSet.{u1} (Filter.{u1} (Filter.{u1} α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Filter.{u1} α)) (Filter.instCompleteLatticeFilter.{u1} (Filter.{u1} α)))) α (fun (x : α) => Filter.principal.{u1} (Filter.{u1} α) (Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α)) (Filter.principal.{u1} α (Set.Ici.{u1} α _inst_1 x)))))
 Case conversion may be inaccurate. Consider using '#align filter.nhds_at_top Filter.nhds_atTopₓ'. -/
 theorem nhds_atTop [Preorder α] : 𝓝 atTop = ⨅ x : α, 𝓟 (Iic (𝓟 (Ici x))) := by
-  simp only [at_top, nhds_infᵢ, nhds_principal]
+  simp only [at_top, nhds_iInf, nhds_principal]
 #align filter.nhds_at_top Filter.nhds_atTop
 
 /- warning: filter.tendsto_nhds_at_top_iff -> Filter.tendsto_nhds_atTop_iff is a dubious translation:
@@ -357,9 +357,9 @@ protected theorem tendsto_nhds_atTop_iff [Preorder β] {l : Filter α} {f : α �
 
 /- warning: filter.nhds_at_bot -> Filter.nhds_atBot is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], Eq.{succ u1} (Filter.{u1} (Filter.{u1} α)) (nhds.{u1} (Filter.{u1} α) (Filter.topologicalSpace.{u1} α) (Filter.atBot.{u1} α _inst_1)) (infᵢ.{u1, succ u1} (Filter.{u1} (Filter.{u1} α)) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} (Filter.{u1} α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Filter.{u1} α)) (Filter.completeLattice.{u1} (Filter.{u1} α)))) α (fun (x : α) => Filter.principal.{u1} (Filter.{u1} α) (Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α)) (Filter.principal.{u1} α (Set.Iic.{u1} α _inst_1 x)))))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], Eq.{succ u1} (Filter.{u1} (Filter.{u1} α)) (nhds.{u1} (Filter.{u1} α) (Filter.topologicalSpace.{u1} α) (Filter.atBot.{u1} α _inst_1)) (iInf.{u1, succ u1} (Filter.{u1} (Filter.{u1} α)) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} (Filter.{u1} α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Filter.{u1} α)) (Filter.completeLattice.{u1} (Filter.{u1} α)))) α (fun (x : α) => Filter.principal.{u1} (Filter.{u1} α) (Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α)) (Filter.principal.{u1} α (Set.Iic.{u1} α _inst_1 x)))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], Eq.{succ u1} (Filter.{u1} (Filter.{u1} α)) (nhds.{u1} (Filter.{u1} α) (Filter.instTopologicalSpaceFilter.{u1} α) (Filter.atBot.{u1} α _inst_1)) (infᵢ.{u1, succ u1} (Filter.{u1} (Filter.{u1} α)) (ConditionallyCompleteLattice.toInfSet.{u1} (Filter.{u1} (Filter.{u1} α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Filter.{u1} α)) (Filter.instCompleteLatticeFilter.{u1} (Filter.{u1} α)))) α (fun (x : α) => Filter.principal.{u1} (Filter.{u1} α) (Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α)) (Filter.principal.{u1} α (Set.Iic.{u1} α _inst_1 x)))))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], Eq.{succ u1} (Filter.{u1} (Filter.{u1} α)) (nhds.{u1} (Filter.{u1} α) (Filter.instTopologicalSpaceFilter.{u1} α) (Filter.atBot.{u1} α _inst_1)) (iInf.{u1, succ u1} (Filter.{u1} (Filter.{u1} α)) (ConditionallyCompleteLattice.toInfSet.{u1} (Filter.{u1} (Filter.{u1} α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Filter.{u1} α)) (Filter.instCompleteLatticeFilter.{u1} (Filter.{u1} α)))) α (fun (x : α) => Filter.principal.{u1} (Filter.{u1} α) (Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α)) (Filter.principal.{u1} α (Set.Iic.{u1} α _inst_1 x)))))
 Case conversion may be inaccurate. Consider using '#align filter.nhds_at_bot Filter.nhds_atBotₓ'. -/
 theorem nhds_atBot [Preorder α] : 𝓝 atBot = ⨅ x : α, 𝓟 (Iic (𝓟 (Iic x))) :=
   @nhds_atTop αᵒᵈ _
@@ -380,12 +380,12 @@ variable [TopologicalSpace X]
 
 /- warning: filter.nhds_nhds -> Filter.nhds_nhds is a dubious translation:
 lean 3 declaration is
-  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] (x : X), Eq.{succ u1} (Filter.{u1} (Filter.{u1} X)) (nhds.{u1} (Filter.{u1} X) (Filter.topologicalSpace.{u1} X) (nhds.{u1} X _inst_1 x)) (infᵢ.{u1, succ u1} (Filter.{u1} (Filter.{u1} X)) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} (Filter.{u1} X)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Filter.{u1} X)) (Filter.completeLattice.{u1} (Filter.{u1} X)))) (Set.{u1} X) (fun (s : Set.{u1} X) => infᵢ.{u1, 0} (Filter.{u1} (Filter.{u1} X)) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} (Filter.{u1} X)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Filter.{u1} X)) (Filter.completeLattice.{u1} (Filter.{u1} X)))) (IsOpen.{u1} X _inst_1 s) (fun (hs : IsOpen.{u1} X _inst_1 s) => infᵢ.{u1, 0} (Filter.{u1} (Filter.{u1} X)) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} (Filter.{u1} X)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Filter.{u1} X)) (Filter.completeLattice.{u1} (Filter.{u1} X)))) (Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) x s) (fun (hx : Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) x s) => Filter.principal.{u1} (Filter.{u1} X) (Set.Iic.{u1} (Filter.{u1} X) (PartialOrder.toPreorder.{u1} (Filter.{u1} X) (Filter.partialOrder.{u1} X)) (Filter.principal.{u1} X s))))))
+  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] (x : X), Eq.{succ u1} (Filter.{u1} (Filter.{u1} X)) (nhds.{u1} (Filter.{u1} X) (Filter.topologicalSpace.{u1} X) (nhds.{u1} X _inst_1 x)) (iInf.{u1, succ u1} (Filter.{u1} (Filter.{u1} X)) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} (Filter.{u1} X)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Filter.{u1} X)) (Filter.completeLattice.{u1} (Filter.{u1} X)))) (Set.{u1} X) (fun (s : Set.{u1} X) => iInf.{u1, 0} (Filter.{u1} (Filter.{u1} X)) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} (Filter.{u1} X)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Filter.{u1} X)) (Filter.completeLattice.{u1} (Filter.{u1} X)))) (IsOpen.{u1} X _inst_1 s) (fun (hs : IsOpen.{u1} X _inst_1 s) => iInf.{u1, 0} (Filter.{u1} (Filter.{u1} X)) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} (Filter.{u1} X)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Filter.{u1} X)) (Filter.completeLattice.{u1} (Filter.{u1} X)))) (Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) x s) (fun (hx : Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) x s) => Filter.principal.{u1} (Filter.{u1} X) (Set.Iic.{u1} (Filter.{u1} X) (PartialOrder.toPreorder.{u1} (Filter.{u1} X) (Filter.partialOrder.{u1} X)) (Filter.principal.{u1} X s))))))
 but is expected to have type
-  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] (x : X), Eq.{succ u1} (Filter.{u1} (Filter.{u1} X)) (nhds.{u1} (Filter.{u1} X) (Filter.instTopologicalSpaceFilter.{u1} X) (nhds.{u1} X _inst_1 x)) (infᵢ.{u1, succ u1} (Filter.{u1} (Filter.{u1} X)) (ConditionallyCompleteLattice.toInfSet.{u1} (Filter.{u1} (Filter.{u1} X)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Filter.{u1} X)) (Filter.instCompleteLatticeFilter.{u1} (Filter.{u1} X)))) (Set.{u1} X) (fun (s : Set.{u1} X) => infᵢ.{u1, 0} (Filter.{u1} (Filter.{u1} X)) (ConditionallyCompleteLattice.toInfSet.{u1} (Filter.{u1} (Filter.{u1} X)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Filter.{u1} X)) (Filter.instCompleteLatticeFilter.{u1} (Filter.{u1} X)))) (IsOpen.{u1} X _inst_1 s) (fun (hs : IsOpen.{u1} X _inst_1 s) => infᵢ.{u1, 0} (Filter.{u1} (Filter.{u1} X)) (ConditionallyCompleteLattice.toInfSet.{u1} (Filter.{u1} (Filter.{u1} X)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Filter.{u1} X)) (Filter.instCompleteLatticeFilter.{u1} (Filter.{u1} X)))) (Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) x s) (fun (hx : Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) x s) => Filter.principal.{u1} (Filter.{u1} X) (Set.Iic.{u1} (Filter.{u1} X) (PartialOrder.toPreorder.{u1} (Filter.{u1} X) (Filter.instPartialOrderFilter.{u1} X)) (Filter.principal.{u1} X s))))))
+  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] (x : X), Eq.{succ u1} (Filter.{u1} (Filter.{u1} X)) (nhds.{u1} (Filter.{u1} X) (Filter.instTopologicalSpaceFilter.{u1} X) (nhds.{u1} X _inst_1 x)) (iInf.{u1, succ u1} (Filter.{u1} (Filter.{u1} X)) (ConditionallyCompleteLattice.toInfSet.{u1} (Filter.{u1} (Filter.{u1} X)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Filter.{u1} X)) (Filter.instCompleteLatticeFilter.{u1} (Filter.{u1} X)))) (Set.{u1} X) (fun (s : Set.{u1} X) => iInf.{u1, 0} (Filter.{u1} (Filter.{u1} X)) (ConditionallyCompleteLattice.toInfSet.{u1} (Filter.{u1} (Filter.{u1} X)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Filter.{u1} X)) (Filter.instCompleteLatticeFilter.{u1} (Filter.{u1} X)))) (IsOpen.{u1} X _inst_1 s) (fun (hs : IsOpen.{u1} X _inst_1 s) => iInf.{u1, 0} (Filter.{u1} (Filter.{u1} X)) (ConditionallyCompleteLattice.toInfSet.{u1} (Filter.{u1} (Filter.{u1} X)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Filter.{u1} X)) (Filter.instCompleteLatticeFilter.{u1} (Filter.{u1} X)))) (Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) x s) (fun (hx : Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) x s) => Filter.principal.{u1} (Filter.{u1} X) (Set.Iic.{u1} (Filter.{u1} X) (PartialOrder.toPreorder.{u1} (Filter.{u1} X) (Filter.instPartialOrderFilter.{u1} X)) (Filter.principal.{u1} X s))))))
 Case conversion may be inaccurate. Consider using '#align filter.nhds_nhds Filter.nhds_nhdsₓ'. -/
 theorem nhds_nhds (x : X) : 𝓝 (𝓝 x) = ⨅ (s : Set X) (hs : IsOpen s) (hx : x ∈ s), 𝓟 (Iic (𝓟 s)) :=
-  by simp only [(nhds_basis_opens x).nhds.eq_binfᵢ, infᵢ_and, @infᵢ_comm _ (_ ∈ _)]
+  by simp only [(nhds_basis_opens x).nhds.eq_biInf, iInf_and, @iInf_comm _ (_ ∈ _)]
 #align filter.nhds_nhds Filter.nhds_nhds
 
 /- warning: filter.inducing_nhds -> Filter.inducing_nhds is a dubious translation:

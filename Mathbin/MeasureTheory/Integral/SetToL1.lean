@@ -157,7 +157,7 @@ theorem map_empty_eq_zero {β} [AddCancelMonoid β] {T : Set α → β} (hT : Fi
 #align measure_theory.fin_meas_additive.map_empty_eq_zero MeasureTheory.FinMeasAdditive.map_empty_eq_zero
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i j «expr ∈ » sι) -/
-theorem map_unionᵢ_fin_meas_set_eq_sum (T : Set α → β) (T_empty : T ∅ = 0)
+theorem map_iUnion_fin_meas_set_eq_sum (T : Set α → β) (T_empty : T ∅ = 0)
     (h_add : FinMeasAdditive μ T) {ι} (S : ι → Set α) (sι : Finset ι)
     (hS_meas : ∀ i, MeasurableSet (S i)) (hSp : ∀ i ∈ sι, μ (S i) ≠ ∞)
     (h_disj : ∀ (i) (_ : i ∈ sι) (j) (_ : j ∈ sι), i ≠ j → Disjoint (S i) (S j)) :
@@ -179,18 +179,18 @@ theorem map_unionᵢ_fin_meas_set_eq_sum (T : Set α → β) (T_empty : T ∅ = 
     h_add (S a) (⋃ i ∈ s, S i) (hS_meas a) (measurable_set_bUnion _ fun i _ => hS_meas i)
       (hps a (Finset.mem_insert_self a s))]
   · congr
-    convert Finset.supᵢ_insert a s S
+    convert Finset.iSup_insert a s S
   ·
     exact
       ((measure_bUnion_finset_le _ _).trans_lt <|
           ENNReal.sum_lt_top fun i hi => hps i <| Finset.mem_insert_of_mem hi).Ne
-  · simp_rw [Set.inter_unionᵢ]
+  · simp_rw [Set.inter_iUnion]
     refine' Union_eq_empty.mpr fun i => Union_eq_empty.mpr fun hi => _
     rw [← Set.disjoint_iff_inter_eq_empty]
     refine' h_disj a (Finset.mem_insert_self a s) i (Finset.mem_insert_of_mem hi) fun hai => _
     rw [← hai] at hi
     exact has hi
-#align measure_theory.fin_meas_additive.map_Union_fin_meas_set_eq_sum MeasureTheory.FinMeasAdditive.map_unionᵢ_fin_meas_set_eq_sum
+#align measure_theory.fin_meas_additive.map_Union_fin_meas_set_eq_sum MeasureTheory.FinMeasAdditive.map_iUnion_fin_meas_set_eq_sum
 
 end FinMeasAdditive
 
@@ -362,7 +362,7 @@ theorem map_setToSimpleFunc (T : Set α → F →L[ℝ] F') (h_add : FinMeasAddi
       T (⋃ y ∈ Filter (fun b : G => g b = g (f a)) f.range, f ⁻¹' {y}) (g (f a)) :=
     by
     congr
-    rw [← Finset.set_bunionᵢ_preimage_singleton]
+    rw [← Finset.set_biUnion_preimage_singleton]
   rw [h_left_eq']
   rw [h_add.map_Union_fin_meas_set_eq_sum T T_empty]
   · simp only [filter_congr_decidable, sum_apply, ContinuousLinearMap.coe_sum']

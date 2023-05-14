@@ -65,14 +65,14 @@ theorem Ideal.exists_minimalPrimes_le [J.IsPrime] (e : I ≤ J) : ∃ p ∈ I.mi
   rintro (c : Set (Ideal R)) hc hc' J' hJ'
   refine'
     ⟨OrderDual.toDual (Inf c),
-      ⟨Ideal.infₛ_isPrime_of_isChain ⟨J', hJ'⟩ hc'.symm fun x hx => (hc hx).1, _⟩, _⟩
+      ⟨Ideal.sInf_isPrime_of_isChain ⟨J', hJ'⟩ hc'.symm fun x hx => (hc hx).1, _⟩, _⟩
   · rw [OrderDual.ofDual_toDual]
-    convert le_infₛ _
+    convert le_sInf _
     intro x hx
     exact (hc hx).2
   · rintro z hz
     rw [OrderDual.le_toDual]
-    exact infₛ_le hz
+    exact sInf_le hz
 #align ideal.exists_minimal_primes_le Ideal.exists_minimalPrimes_le
 
 @[simp]
@@ -85,20 +85,20 @@ theorem Ideal.radical_minimalPrimes : I.radical.minimalPrimes = I.minimalPrimes 
 #align ideal.radical_minimal_primes Ideal.radical_minimalPrimes
 
 @[simp]
-theorem Ideal.infₛ_minimalPrimes : infₛ I.minimalPrimes = I.radical :=
+theorem Ideal.sInf_minimalPrimes : sInf I.minimalPrimes = I.radical :=
   by
   rw [I.radical_eq_Inf]
   apply le_antisymm
   · intro x hx
-    rw [Ideal.mem_infₛ] at hx⊢
+    rw [Ideal.mem_sInf] at hx⊢
     rintro J ⟨e, hJ⟩
     skip
     obtain ⟨p, hp, hp'⟩ := Ideal.exists_minimalPrimes_le e
     exact hp' (hx hp)
-  · apply infₛ_le_infₛ _
+  · apply sInf_le_sInf _
     intro I hI
     exact hI.1.symm
-#align ideal.Inf_minimal_primes Ideal.infₛ_minimalPrimes
+#align ideal.Inf_minimal_primes Ideal.sInf_minimalPrimes
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (p «expr ∈ » minimal_primes[minimal_primes] R) -/
 theorem Ideal.exists_comap_eq_of_mem_minimalPrimes_of_injective {f : R →+* S}

@@ -83,24 +83,24 @@ theorem isJacobson_iff_prime_eq : IsJacobson R ↔ ∀ P : Ideal R, IsPrime P �
 /-- A ring `R` is Jacobson if and only if for every prime ideal `I`,
  `I` can be written as the infimum of some collection of maximal ideals.
  Allowing ⊤ in the set `M` of maximal ideals is equivalent, but makes some proofs cleaner. -/
-theorem isJacobson_iff_infₛ_maximal :
+theorem isJacobson_iff_sInf_maximal :
     IsJacobson R ↔
       ∀ {I : Ideal R},
-        I.IsPrime → ∃ M : Set (Ideal R), (∀ J ∈ M, IsMaximal J ∨ J = ⊤) ∧ I = infₛ M :=
-  ⟨fun H I h => eq_jacobson_iff_infₛ_maximal.1 (H.out h.IsRadical), fun H =>
-    isJacobson_iff_prime_eq.2 fun P hP => eq_jacobson_iff_infₛ_maximal.2 (H hP)⟩
-#align ideal.is_jacobson_iff_Inf_maximal Ideal.isJacobson_iff_infₛ_maximal
+        I.IsPrime → ∃ M : Set (Ideal R), (∀ J ∈ M, IsMaximal J ∨ J = ⊤) ∧ I = sInf M :=
+  ⟨fun H I h => eq_jacobson_iff_sInf_maximal.1 (H.out h.IsRadical), fun H =>
+    isJacobson_iff_prime_eq.2 fun P hP => eq_jacobson_iff_sInf_maximal.2 (H hP)⟩
+#align ideal.is_jacobson_iff_Inf_maximal Ideal.isJacobson_iff_sInf_maximal
 
-theorem isJacobson_iff_infₛ_maximal' :
+theorem isJacobson_iff_sInf_maximal' :
     IsJacobson R ↔
       ∀ {I : Ideal R},
-        I.IsPrime → ∃ M : Set (Ideal R), (∀ J ∈ M, ∀ (K : Ideal R), J < K → K = ⊤) ∧ I = infₛ M :=
-  ⟨fun H I h => eq_jacobson_iff_infₛ_maximal'.1 (H.out h.IsRadical), fun H =>
-    isJacobson_iff_prime_eq.2 fun P hP => eq_jacobson_iff_infₛ_maximal'.2 (H hP)⟩
-#align ideal.is_jacobson_iff_Inf_maximal' Ideal.isJacobson_iff_infₛ_maximal'
+        I.IsPrime → ∃ M : Set (Ideal R), (∀ J ∈ M, ∀ (K : Ideal R), J < K → K = ⊤) ∧ I = sInf M :=
+  ⟨fun H I h => eq_jacobson_iff_sInf_maximal'.1 (H.out h.IsRadical), fun H =>
+    isJacobson_iff_prime_eq.2 fun P hP => eq_jacobson_iff_sInf_maximal'.2 (H hP)⟩
+#align ideal.is_jacobson_iff_Inf_maximal' Ideal.isJacobson_iff_sInf_maximal'
 
 theorem radical_eq_jacobson [H : IsJacobson R] (I : Ideal R) : I.radical = I.jacobson :=
-  le_antisymm (le_infₛ fun J ⟨hJ, hJ_max⟩ => (IsPrime.radical_le_iff hJ_max.IsPrime).mpr hJ)
+  le_antisymm (le_sInf fun J ⟨hJ, hJ_max⟩ => (IsPrime.radical_le_iff hJ_max.IsPrime).mpr hJ)
     (H.out (radical_isRadical I) ▸ jacobson_mono le_radical)
 #align ideal.radical_eq_jacobson Ideal.radical_eq_jacobson
 
@@ -108,7 +108,7 @@ theorem radical_eq_jacobson [H : IsJacobson R] (I : Ideal R) : I.radical = I.jac
 instance (priority := 100) isJacobson_field {K : Type _} [Field K] : IsJacobson K :=
   ⟨fun I hI =>
     Or.rec_on (eq_bot_or_top I)
-      (fun h => le_antisymm (infₛ_le ⟨le_rfl, h.symm ▸ bot_isMaximal⟩) (h.symm ▸ bot_le)) fun h =>
+      (fun h => le_antisymm (sInf_le ⟨le_rfl, h.symm ▸ bot_isMaximal⟩) (h.symm ▸ bot_le)) fun h =>
       by rw [h, jacobson_eq_top_iff]⟩
 #align ideal.is_jacobson_field Ideal.isJacobson_field
 
@@ -147,7 +147,7 @@ theorem isJacobson_of_isIntegral [Algebra R S] (hRS : Algebra.IsIntegral R S) (h
       jacobson_eq_iff_jacobson_quotient_eq_bot.1
         ((is_jacobson_iff_prime_eq.1 hR) (comap (algebraMap R S) P) (comap_is_prime _ _)),
       comap_jacobson]
-    refine' infₛ_le_infₛ fun J hJ => _
+    refine' sInf_le_sInf fun J hJ => _
     simp only [true_and_iff, Set.mem_image, bot_le, Set.mem_setOf_eq]
     have : J.is_maximal := by simpa using hJ
     exact
@@ -281,8 +281,8 @@ theorem isJacobson_localization [H : IsJacobson R] : IsJacobson S :=
     · exact hxy
     · exact (hPM.le_bot ⟨Submonoid.mem_powers _, hxy⟩).elim
   refine' le_trans _ this
-  rw [Ideal.jacobson, comap_Inf', infₛ_eq_infᵢ]
-  refine' infᵢ_le_infᵢ_of_subset fun I hI => ⟨map (algebraMap R S) I, ⟨_, _⟩⟩
+  rw [Ideal.jacobson, comap_Inf', sInf_eq_iInf]
+  refine' iInf_le_iInf_of_subset fun I hI => ⟨map (algebraMap R S) I, ⟨_, _⟩⟩
   ·
     exact
       ⟨le_trans (le_of_eq (IsLocalization.map_comap (powers y) S P').symm) (map_mono hI.1),
@@ -391,7 +391,7 @@ theorem jacobson_bot_of_integral_localization {R : Type _} [CommRing R] [IsDomai
     refine' eq_bot_iff.mpr (le_trans _ (le_of_eq hϕ'))
     rw [← hSₘ.out is_radical_bot_of_no_zero_divisors, comap_jacobson]
     exact
-      infₛ_le_infₛ fun j hj =>
+      sInf_le_sInf fun j hj =>
         ⟨bot_le,
           let ⟨J, hJ⟩ := hj
           hJ.2 ▸ this J hJ.1.2⟩

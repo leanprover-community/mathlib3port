@@ -49,7 +49,7 @@ include h
 this limit is given in `subadditive.tendsto_lim` -/
 @[nolint unused_arguments]
 protected irreducible_def lim :=
-  infₛ ((fun n : ℕ => u n / n) '' Ici 1)
+  sInf ((fun n : ℕ => u n / n) '' Ici 1)
 #align subadditive.lim Subadditive.lim
 -/
 
@@ -62,7 +62,7 @@ Case conversion may be inaccurate. Consider using '#align subadditive.lim_le_div
 theorem lim_le_div (hbdd : BddBelow (range fun n => u n / n)) {n : ℕ} (hn : n ≠ 0) :
     h.limUnder ≤ u n / n := by
   rw [Subadditive.lim]
-  apply cinfₛ_le _ _
+  apply csInf_le _ _
   · rcases hbdd with ⟨c, hc⟩
     exact ⟨c, fun x hx => hc (image_subset_range _ _ hx)⟩
   · apply mem_image_of_mem
@@ -164,7 +164,7 @@ theorem tendsto_lim (hbdd : BddBelow (range fun n => u n / n)) :
   · obtain ⟨n, npos, hn⟩ : ∃ n : ℕ, 0 < n ∧ u n / n < L :=
       by
       rw [Subadditive.lim] at hL
-      rcases exists_lt_of_cinfₛ_lt (by simp) hL with ⟨x, hx, xL⟩
+      rcases exists_lt_of_csInf_lt (by simp) hL with ⟨x, hx, xL⟩
       rcases(mem_image _ _ _).1 hx with ⟨n, hn, rfl⟩
       exact ⟨n, zero_lt_one.trans_le hn, xL⟩
     exact h.eventually_div_lt_of_div_lt npos.ne' hn

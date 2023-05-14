@@ -53,7 +53,7 @@ def Measure.withDensityᵥ {m : MeasurableSpace α} (μ : Measure α) (f : α �
         convert has_sum_integral_Union hs₁ hs₂ hf.integrable_on
         · ext n
           rw [if_pos (hs₁ n)]
-        · rw [if_pos (MeasurableSet.unionᵢ hs₁)] }
+        · rw [if_pos (MeasurableSet.iUnion hs₁)] }
   else 0
 #align measure_theory.measure.with_densityᵥ MeasureTheory.Measure.withDensityᵥ
 

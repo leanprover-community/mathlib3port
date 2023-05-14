@@ -303,7 +303,7 @@ theorem derivFamily_eq_enumOrd (H : ∀ i, IsNormal (f i)) :
   · rintro a S ⟨i, hi⟩
     rw [← hi]
     exact deriv_family_fp (H i) a
-  rw [Set.mem_interᵢ] at ha
+  rw [Set.mem_iInter] at ha
   rwa [← fp_iff_deriv_family H]
 #align ordinal.deriv_family_eq_enum_ord Ordinal.derivFamily_eq_enumOrd
 -/
@@ -448,7 +448,7 @@ theorem nfpBFamily_eq_self {a} (h : ∀ i hi, f i hi a = a) : nfpBFamily o f a =
 theorem fp_bfamily_unbounded (H : ∀ i hi, IsNormal (f i hi)) :
     (⋂ (i) (hi), Function.fixedPoints (f i hi)).Unbounded (· < ·) := fun a =>
   ⟨_, by
-    rw [Set.mem_interᵢ₂]
+    rw [Set.mem_iInter₂]
     exact fun i hi => nfp_bfamily_fp (H i hi) _, (le_nfpBFamily f a).not_lt⟩
 #align ordinal.fp_bfamily_unbounded Ordinal.fp_bfamily_unbounded
 -/
@@ -524,8 +524,8 @@ theorem derivBFamily_eq_enumOrd (H : ∀ i hi, IsNormal (f i hi)) :
   rw [← eq_enum_ord _ (fp_bfamily_unbounded H)]
   use (deriv_bfamily_is_normal f).StrictMono
   rw [Set.range_eq_iff]
-  refine' ⟨fun a => Set.mem_interᵢ₂.2 fun i hi => deriv_bfamily_fp (H i hi) a, fun a ha => _⟩
-  rw [Set.mem_interᵢ₂] at ha
+  refine' ⟨fun a => Set.mem_iInter₂.2 fun i hi => deriv_bfamily_fp (H i hi) a, fun a ha => _⟩
+  rw [Set.mem_iInter₂] at ha
   rwa [← fp_iff_deriv_bfamily H]
 #align ordinal.deriv_bfamily_eq_enum_ord Ordinal.derivBFamily_eq_enumOrd
 -/
@@ -665,7 +665,7 @@ fixed points. -/
 theorem fp_unbounded (H : IsNormal f) : (Function.fixedPoints f).Unbounded (· < ·) :=
   by
   convert fp_family_unbounded fun _ : Unit => H
-  exact (Set.interᵢ_const _).symm
+  exact (Set.iInter_const _).symm
 #align ordinal.fp_unbounded Ordinal.fp_unbounded
 -/
 
@@ -742,7 +742,7 @@ theorem IsNormal.fp_iff_deriv {f} (H : IsNormal f) {a} : f a = a ↔ ∃ o, deri
 theorem deriv_eq_enumOrd (H : IsNormal f) : deriv f = enumOrd (Function.fixedPoints f) :=
   by
   convert deriv_family_eq_enum_ord fun _ : Unit => H
-  exact (Set.interᵢ_const _).symm
+  exact (Set.iInter_const _).symm
 #align ordinal.deriv_eq_enum_ord Ordinal.deriv_eq_enumOrd
 -/
 

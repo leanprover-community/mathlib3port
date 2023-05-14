@@ -129,13 +129,13 @@ theorem generateFrom_prod_eq {α β} {C : Set (Set α)} {D : Set (Set β)} (hC :
       rintro _ ⟨s, hs, rfl⟩
     · rcases hD with ⟨t, h1t, h2t⟩
       rw [← prod_univ, ← h2t, prod_Union]
-      apply MeasurableSet.unionᵢ
+      apply MeasurableSet.iUnion
       intro n
       apply measurable_set_generate_from
       exact ⟨s, t n, hs, h1t n, rfl⟩
     · rcases hC with ⟨t, h1t, h2t⟩
       rw [← univ_prod, ← h2t, Union_prod_const]
-      apply MeasurableSet.unionᵢ
+      apply MeasurableSet.iUnion
       rintro n
       apply measurable_set_generate_from
       exact mem_image2_of_mem (h1t n) hs
@@ -202,7 +202,7 @@ theorem measurable_measure_prod_mk_left [SigmaFinite ν] {s : Set (α × β)} (h
   by
   have : ∀ x, MeasurableSet (Prod.mk x ⁻¹' s) := fun x => measurable_prod_mk_left hs
   simp only [← @supr_restrict_spanning_sets _ _ ν, this]
-  apply measurable_supᵢ; intro i
+  apply measurable_iSup; intro i
   haveI := Fact.mk (measure_spanning_sets_lt_top ν i)
   exact measurable_measure_prod_mk_left_finite hs
 #align measurable_measure_prod_mk_left measurable_measure_prod_mk_left
@@ -244,7 +244,7 @@ theorem Measurable.lintegral_prod_right' [SigmaFinite ν] :
     simp_rw [Pi.add_apply, lintegral_add_left (hf.comp m)]
     exact h2f.add h2g
   · intro f hf h2f h3f
-    have := measurable_supᵢ h3f
+    have := measurable_iSup h3f
     have : ∀ x, Monotone fun n y => f n (x, y) := fun x i j hij y => h2f hij (x, y)
     simpa [lintegral_supr fun n => (hf n).comp m, this]
 #align measurable.lintegral_prod_right' Measurable.lintegral_prod_right'

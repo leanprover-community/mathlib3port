@@ -48,13 +48,13 @@ def pi (f : ∀ i, Filter (α i)) : Filter (∀ i, α i) :=
 #print Filter.pi.isCountablyGenerated /-
 instance pi.isCountablyGenerated [Countable ι] [∀ i, IsCountablyGenerated (f i)] :
     IsCountablyGenerated (pi f) :=
-  infᵢ.isCountablyGenerated _
+  iInf.isCountablyGenerated _
 #align filter.pi.is_countably_generated Filter.pi.isCountablyGenerated
 -/
 
 #print Filter.tendsto_eval_pi /-
 theorem tendsto_eval_pi (f : ∀ i, Filter (α i)) (i : ι) : Tendsto (eval i) (pi f) (f i) :=
-  tendsto_infᵢ' i tendsto_comap
+  tendsto_iInf' i tendsto_comap
 #align filter.tendsto_eval_pi Filter.tendsto_eval_pi
 -/
 
@@ -87,12 +87,12 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.pi_mono Filter.pi_monoₓ'. -/
 @[mono]
 theorem pi_mono (h : ∀ i, f₁ i ≤ f₂ i) : pi f₁ ≤ pi f₂ :=
-  infᵢ_mono fun i => comap_mono <| h i
+  iInf_mono fun i => comap_mono <| h i
 #align filter.pi_mono Filter.pi_mono
 
 #print Filter.mem_pi_of_mem /-
 theorem mem_pi_of_mem (i : ι) {s : Set (α i)} (hs : s ∈ f i) : eval i ⁻¹' s ∈ pi f :=
-  mem_infᵢ_of_mem i <| preimage_mem_comap hs
+  mem_iInf_of_mem i <| preimage_mem_comap hs
 #align filter.mem_pi_of_mem Filter.mem_pi_of_mem
 -/
 
@@ -411,7 +411,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.Coprod_mono Filter.coprodᵢ_monoₓ'. -/
 @[mono]
 theorem coprodᵢ_mono (hf : ∀ i, f₁ i ≤ f₂ i) : Filter.coprodᵢ f₁ ≤ Filter.coprodᵢ f₂ :=
-  supᵢ_mono fun i => comap_mono (hf i)
+  iSup_mono fun i => comap_mono (hf i)
 #align filter.Coprod_mono Filter.coprodᵢ_mono
 
 variable {β : ι → Type _} {m : ∀ i, α i → β i}

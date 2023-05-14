@@ -133,22 +133,22 @@ theorem integral_finset_bUnion {ι : Type _} (t : Finset ι) {s : ι → Set α}
   induction' t using Finset.induction_on with a t hat IH hs h's
   · simp
   · simp only [Finset.coe_insert, Finset.forall_mem_insert, Set.pairwise_insert,
-      Finset.set_bunionᵢ_insert] at hs hf h's⊢
+      Finset.set_biUnion_insert] at hs hf h's⊢
     rw [integral_union _ _ hf.1 (integrable_on_finset_Union.2 hf.2)]
     · rw [Finset.sum_insert hat, IH hs.2 h's.1 hf.2]
     · simp only [disjoint_Union_right]
       exact fun i hi => (h's.2 i hi (ne_of_mem_of_not_mem hi hat).symm).1
-    · exact Finset.measurableSet_bunionᵢ _ hs.2
+    · exact Finset.measurableSet_biUnion _ hs.2
 #align measure_theory.integral_finset_bUnion MeasureTheory.integral_finset_bUnion
 
-theorem integral_fintype_unionᵢ {ι : Type _} [Fintype ι] {s : ι → Set α}
+theorem integral_fintype_iUnion {ι : Type _} [Fintype ι] {s : ι → Set α}
     (hs : ∀ i, MeasurableSet (s i)) (h's : Pairwise (Disjoint on s))
     (hf : ∀ i, IntegrableOn f (s i) μ) : (∫ x in ⋃ i, s i, f x ∂μ) = ∑ i, ∫ x in s i, f x ∂μ :=
   by
   convert integral_finset_bUnion Finset.univ (fun i hi => hs i) _ fun i _ => hf i
   · simp
   · simp [pairwise_univ, h's]
-#align measure_theory.integral_fintype_Union MeasureTheory.integral_fintype_unionᵢ
+#align measure_theory.integral_fintype_Union MeasureTheory.integral_fintype_iUnion
 
 theorem integral_empty : (∫ x in ∅, f x ∂μ) = 0 := by
   rw [measure.restrict_empty, integral_zero_measure]
@@ -225,7 +225,7 @@ theorem tendsto_set_integral_of_monotone {ι : Type _} [Countable ι] [Semilatti
   by
   have hfi' : (∫⁻ x in ⋃ n, s n, ‖f x‖₊ ∂μ) < ∞ := hfi.2
   set S := ⋃ i, s i
-  have hSm : MeasurableSet S := MeasurableSet.unionᵢ hsm
+  have hSm : MeasurableSet S := MeasurableSet.iUnion hsm
   have hsub : ∀ {i}, s i ⊆ S := subset_Union s
   rw [← with_density_apply _ hSm] at hfi'
   set ν := μ.with_density fun x => ‖f x‖₊ with hν
@@ -242,34 +242,34 @@ theorem tendsto_set_integral_of_monotone {ι : Type _} [Countable ι] [Semilatti
     (hi.2.trans_lt <| ENNReal.add_lt_top.2 ⟨hfi', ENNReal.coe_lt_top⟩).Ne]
 #align measure_theory.tendsto_set_integral_of_monotone MeasureTheory.tendsto_set_integral_of_monotone
 
-theorem hasSum_integral_unionᵢ_ae {ι : Type _} [Countable ι] {s : ι → Set α}
+theorem hasSum_integral_iUnion_ae {ι : Type _} [Countable ι] {s : ι → Set α}
     (hm : ∀ i, NullMeasurableSet (s i) μ) (hd : Pairwise (AEDisjoint μ on s))
     (hfi : IntegrableOn f (⋃ i, s i) μ) :
     HasSum (fun n => ∫ a in s n, f a ∂μ) (∫ a in ⋃ n, s n, f a ∂μ) :=
   by
   simp only [integrable_on, measure.restrict_Union_ae hd hm] at hfi⊢
   exact has_sum_integral_measure hfi
-#align measure_theory.has_sum_integral_Union_ae MeasureTheory.hasSum_integral_unionᵢ_ae
+#align measure_theory.has_sum_integral_Union_ae MeasureTheory.hasSum_integral_iUnion_ae
 
-theorem hasSum_integral_unionᵢ {ι : Type _} [Countable ι] {s : ι → Set α}
+theorem hasSum_integral_iUnion {ι : Type _} [Countable ι] {s : ι → Set α}
     (hm : ∀ i, MeasurableSet (s i)) (hd : Pairwise (Disjoint on s))
     (hfi : IntegrableOn f (⋃ i, s i) μ) :
     HasSum (fun n => ∫ a in s n, f a ∂μ) (∫ a in ⋃ n, s n, f a ∂μ) :=
-  hasSum_integral_unionᵢ_ae (fun i => (hm i).NullMeasurableSet) (hd.mono fun i j h => h.AEDisjoint)
+  hasSum_integral_iUnion_ae (fun i => (hm i).NullMeasurableSet) (hd.mono fun i j h => h.AEDisjoint)
     hfi
-#align measure_theory.has_sum_integral_Union MeasureTheory.hasSum_integral_unionᵢ
+#align measure_theory.has_sum_integral_Union MeasureTheory.hasSum_integral_iUnion
 
-theorem integral_unionᵢ {ι : Type _} [Countable ι] {s : ι → Set α} (hm : ∀ i, MeasurableSet (s i))
+theorem integral_iUnion {ι : Type _} [Countable ι] {s : ι → Set α} (hm : ∀ i, MeasurableSet (s i))
     (hd : Pairwise (Disjoint on s)) (hfi : IntegrableOn f (⋃ i, s i) μ) :
     (∫ a in ⋃ n, s n, f a ∂μ) = ∑' n, ∫ a in s n, f a ∂μ :=
-  (HasSum.tsum_eq (hasSum_integral_unionᵢ hm hd hfi)).symm
-#align measure_theory.integral_Union MeasureTheory.integral_unionᵢ
+  (HasSum.tsum_eq (hasSum_integral_iUnion hm hd hfi)).symm
+#align measure_theory.integral_Union MeasureTheory.integral_iUnion
 
-theorem integral_unionᵢ_ae {ι : Type _} [Countable ι] {s : ι → Set α}
+theorem integral_iUnion_ae {ι : Type _} [Countable ι] {s : ι → Set α}
     (hm : ∀ i, NullMeasurableSet (s i) μ) (hd : Pairwise (AEDisjoint μ on s))
     (hfi : IntegrableOn f (⋃ i, s i) μ) : (∫ a in ⋃ n, s n, f a ∂μ) = ∑' n, ∫ a in s n, f a ∂μ :=
-  (HasSum.tsum_eq (hasSum_integral_unionᵢ_ae hm hd hfi)).symm
-#align measure_theory.integral_Union_ae MeasureTheory.integral_unionᵢ_ae
+  (HasSum.tsum_eq (hasSum_integral_iUnion_ae hm hd hfi)).symm
+#align measure_theory.integral_Union_ae MeasureTheory.integral_iUnion_ae
 
 theorem set_integral_eq_zero_of_ae_eq_zero (ht_eq : ∀ᵐ x ∂μ, x ∈ t → f x = 0) :
     (∫ x in t, f x ∂μ) = 0 :=
@@ -845,9 +845,9 @@ section IntegrableUnion
 
 variable {μ : Measure α} [NormedAddCommGroup E] [Countable β]
 
-theorem integrableOn_unionᵢ_of_summable_integral_norm {f : α → E} {s : β → Set α}
+theorem integrableOn_iUnion_of_summable_integral_norm {f : α → E} {s : β → Set α}
     (hs : ∀ b : β, MeasurableSet (s b)) (hi : ∀ b : β, IntegrableOn f (s b) μ)
-    (h : Summable fun b : β => ∫ a : α in s b, ‖f a‖ ∂μ) : IntegrableOn f (unionᵢ s) μ :=
+    (h : Summable fun b : β => ∫ a : α in s b, ‖f a‖ ∂μ) : IntegrableOn f (iUnion s) μ :=
   by
   refine' ⟨ae_strongly_measurable.Union fun i => (hi i).1, (lintegral_Union_le _ _).trans_lt _⟩
   have B := fun b : β => lintegral_coe_eq_integral (fun a : α => ‖f a‖₊) (hi b).norm
@@ -862,13 +862,13 @@ theorem integrableOn_unionᵢ_of_summable_integral_norm {f : α → E} {s : β �
   have S'' := ENNReal.tsum_coe_eq S'.has_sum
   simp_rw [ENNReal.coe_nnreal_eq, NNReal.coe_mk, coe_nnnorm] at S''
   convert ENNReal.ofReal_lt_top
-#align measure_theory.integrable_on_Union_of_summable_integral_norm MeasureTheory.integrableOn_unionᵢ_of_summable_integral_norm
+#align measure_theory.integrable_on_Union_of_summable_integral_norm MeasureTheory.integrableOn_iUnion_of_summable_integral_norm
 
 variable [TopologicalSpace α] [BorelSpace α] [MetrizableSpace α] [LocallyFiniteMeasure μ]
 
 /-- If `s` is a countable family of compact sets, `f` is a continuous function, and the sequence
 `‖f.restrict (s i)‖ * μ (s i)` is summable, then `f` is integrable on the union of the `s i`. -/
-theorem integrableOn_unionᵢ_of_summable_norm_restrict {f : C(α, E)} {s : β → Compacts α}
+theorem integrableOn_iUnion_of_summable_norm_restrict {f : C(α, E)} {s : β → Compacts α}
     (hf : Summable fun i : β => ‖f.restrict (s i)‖ * ENNReal.toReal (μ <| s i)) :
     IntegrableOn f (⋃ i : β, s i) μ :=
   by
@@ -881,7 +881,7 @@ theorem integrableOn_unionᵢ_of_summable_norm_restrict {f : C(α, E)} {s : β �
     norm_set_integral_le_of_norm_le_const' (s i).IsCompact.measure_lt_top
       (s i).IsCompact.IsClosed.MeasurableSet fun x hx =>
       (norm_norm (f x)).symm ▸ (f.restrict ↑(s i)).norm_coe_le_norm ⟨x, hx⟩
-#align measure_theory.integrable_on_Union_of_summable_norm_restrict MeasureTheory.integrableOn_unionᵢ_of_summable_norm_restrict
+#align measure_theory.integrable_on_Union_of_summable_norm_restrict MeasureTheory.integrableOn_iUnion_of_summable_norm_restrict
 
 /-- If `s` is a countable family of compact sets covering `α`, `f` is a continuous function, and
 the sequence `‖f.restrict (s i)‖ * μ (s i)` is summable, then `f` is integrable. -/
@@ -907,7 +907,7 @@ theorem Antitone.tendsto_set_integral (hsm : ∀ i, MeasurableSet (s i)) (h_anti
   have h_int_eq : (fun i => ∫ a in s i, f a ∂μ) = fun i => ∫ a, (s i).indicator f a ∂μ :=
     funext fun i => (integral_indicator (hsm i)).symm
   rw [h_int_eq]
-  rw [← integral_indicator (MeasurableSet.interᵢ hsm)]
+  rw [← integral_indicator (MeasurableSet.iInter hsm)]
   refine' tendsto_integral_of_dominated_convergence bound _ _ _ _
   · intro n
     rw [aeStronglyMeasurable_indicator_iff (hsm n)]

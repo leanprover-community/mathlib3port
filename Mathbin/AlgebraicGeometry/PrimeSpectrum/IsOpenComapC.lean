@@ -41,7 +41,7 @@ def imageOfDf (f) : Set (PrimeSpectrum R) :=
 theorem isOpen_imageOfDf : IsOpen (imageOfDf f) :=
   by
   rw [image_of_Df, set_of_exists fun i (x : PrimeSpectrum R) => coeff f i ∉ x.asIdeal]
-  exact isOpen_unionᵢ fun i => is_open_basic_open
+  exact isOpen_iUnion fun i => is_open_basic_open
 #align algebraic_geometry.polynomial.is_open_image_of_Df AlgebraicGeometry.Polynomial.isOpen_imageOfDf
 
 /-- If a point of `Spec R[x]` is not contained in the vanishing set of `f`, then its image in
@@ -81,7 +81,7 @@ theorem isOpenMap_comap_c : IsOpenMap (PrimeSpectrum.comap (C : R →+* R[X])) :
   rintro U ⟨s, z⟩
   rw [← compl_compl U, ← z, ← Union_of_singleton_coe s, zero_locus_Union, compl_Inter, image_Union]
   simp_rw [← image_of_Df_eq_comap_C_compl_zero_locus]
-  exact isOpen_unionᵢ fun f => is_open_image_of_Df
+  exact isOpen_iUnion fun f => is_open_image_of_Df
 #align algebraic_geometry.polynomial.is_open_map_comap_C AlgebraicGeometry.Polynomial.isOpenMap_comap_c
 
 end Polynomial

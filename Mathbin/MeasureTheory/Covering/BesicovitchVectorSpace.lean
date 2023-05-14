@@ -131,7 +131,7 @@ end SatelliteConfig
 /-- The maximum cardinality of a `1`-separated set in the ball of radius `2`. This is also the
 optimal number of families in the Besicovitch covering theorem. -/
 def multiplicity (E : Type _) [NormedAddCommGroup E] :=
-  supₛ
+  sSup
     { N | ∃ s : Finset E, s.card = N ∧ (∀ c ∈ s, ‖c‖ ≤ 2) ∧ ∀ c ∈ s, ∀ d ∈ s, c ≠ d → 1 ≤ ‖c - d‖ }
 #align besicovitch.multiplicity Besicovitch.multiplicity
 
@@ -195,7 +195,7 @@ theorem card_le_of_separated (s : Finset E) (hs : ∀ c ∈ s, ‖c‖ ≤ 2)
 
 theorem multiplicity_le : multiplicity E ≤ 5 ^ finrank ℝ E :=
   by
-  apply csupₛ_le
+  apply csSup_le
   · refine' ⟨0, ⟨∅, by simp⟩⟩
   · rintro _ ⟨s, ⟨rfl, h⟩⟩
     exact Besicovitch.card_le_of_separated s h.1 h.2
@@ -204,7 +204,7 @@ theorem multiplicity_le : multiplicity E ≤ 5 ^ finrank ℝ E :=
 theorem card_le_multiplicity {s : Finset E} (hs : ∀ c ∈ s, ‖c‖ ≤ 2)
     (h's : ∀ c ∈ s, ∀ d ∈ s, c ≠ d → 1 ≤ ‖c - d‖) : s.card ≤ multiplicity E :=
   by
-  apply le_csupₛ
+  apply le_csSup
   · refine' ⟨5 ^ finrank ℝ E, _⟩
     rintro _ ⟨s, ⟨rfl, h⟩⟩
     exact Besicovitch.card_le_of_separated s h.1 h.2

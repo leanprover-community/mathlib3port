@@ -1341,16 +1341,16 @@ theorem max_eq_zero {a b : Ordinal} : max a b = 0 ↔ a = 0 ∧ b = 0 :=
   max_eq_bot
 #align ordinal.max_eq_zero Ordinal.max_eq_zero
 
-/- warning: ordinal.Inf_empty -> Ordinal.infₛ_empty is a dubious translation:
+/- warning: ordinal.Inf_empty -> Ordinal.sInf_empty is a dubious translation:
 lean 3 declaration is
-  Eq.{succ (succ u1)} Ordinal.{u1} (InfSet.infₛ.{succ u1} Ordinal.{u1} (ConditionallyCompleteLattice.toHasInf.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Ordinal.{u1} Ordinal.conditionallyCompleteLinearOrderBot.{u1}))) (EmptyCollection.emptyCollection.{succ u1} (Set.{succ u1} Ordinal.{u1}) (Set.hasEmptyc.{succ u1} Ordinal.{u1}))) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1})))
+  Eq.{succ (succ u1)} Ordinal.{u1} (InfSet.sInf.{succ u1} Ordinal.{u1} (ConditionallyCompleteLattice.toHasInf.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Ordinal.{u1} Ordinal.conditionallyCompleteLinearOrderBot.{u1}))) (EmptyCollection.emptyCollection.{succ u1} (Set.{succ u1} Ordinal.{u1}) (Set.hasEmptyc.{succ u1} Ordinal.{u1}))) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1})))
 but is expected to have type
-  Eq.{succ (succ u1)} Ordinal.{u1} (InfSet.infₛ.{succ u1} Ordinal.{u1} (ConditionallyCompleteLattice.toInfSet.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Ordinal.{u1} Ordinal.instConditionallyCompleteLinearOrderBotOrdinal.{u1}))) (EmptyCollection.emptyCollection.{succ u1} (Set.{succ u1} Ordinal.{u1}) (Set.instEmptyCollectionSet.{succ u1} Ordinal.{u1}))) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1}))
-Case conversion may be inaccurate. Consider using '#align ordinal.Inf_empty Ordinal.infₛ_emptyₓ'. -/
+  Eq.{succ (succ u1)} Ordinal.{u1} (InfSet.sInf.{succ u1} Ordinal.{u1} (ConditionallyCompleteLattice.toInfSet.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Ordinal.{u1} Ordinal.instConditionallyCompleteLinearOrderBotOrdinal.{u1}))) (EmptyCollection.emptyCollection.{succ u1} (Set.{succ u1} Ordinal.{u1}) (Set.instEmptyCollectionSet.{succ u1} Ordinal.{u1}))) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1}))
+Case conversion may be inaccurate. Consider using '#align ordinal.Inf_empty Ordinal.sInf_emptyₓ'. -/
 @[simp]
-theorem infₛ_empty : infₛ (∅ : Set Ordinal) = 0 :=
+theorem sInf_empty : sInf (∅ : Set Ordinal) = 0 :=
   dif_neg not_nonempty_empty
-#align ordinal.Inf_empty Ordinal.infₛ_empty
+#align ordinal.Inf_empty Ordinal.sInf_empty
 
 -- ### Successor order properties
 private theorem succ_le_iff' {a b : Ordinal} : a + 1 ≤ b ↔ a < b :=
@@ -1796,10 +1796,10 @@ def ord (c : Cardinal) : Ordinal :=
       suffices : ∀ {α β}, α ≈ β → F α ≤ F β
       exact fun α β h => (this h).antisymm (this (Setoid.symm h))
       rintro α β ⟨f⟩
-      refine' le_cinfᵢ_iff'.2 fun i => _
+      refine' le_ciInf_iff'.2 fun i => _
       haveI := @RelEmbedding.isWellOrder _ _ (f ⁻¹'o i.1) _ (↑(RelIso.preimage f i.1)) i.2
       exact
-        (cinfᵢ_le' _
+        (ciInf_le' _
               (Subtype.mk (⇑f ⁻¹'o i.val)
                 (@RelEmbedding.isWellOrder _ _ _ _ (↑(RelIso.preimage f i.1)) i.2))).trans_eq
           (Quot.sound ⟨RelIso.preimage f i.1⟩))
@@ -1808,9 +1808,9 @@ def ord (c : Cardinal) : Ordinal :=
 
 /- warning: cardinal.ord_eq_Inf -> Cardinal.ord_eq_Inf is a dubious translation:
 lean 3 declaration is
-  forall (α : Type.{u1}), Eq.{succ (succ u1)} Ordinal.{u1} (Cardinal.ord.{u1} (Cardinal.mk.{u1} α)) (infᵢ.{succ u1, succ u1} Ordinal.{u1} (ConditionallyCompleteLattice.toHasInf.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Ordinal.{u1} Ordinal.conditionallyCompleteLinearOrderBot.{u1}))) (Subtype.{succ u1} (α -> α -> Prop) (fun (r : α -> α -> Prop) => IsWellOrder.{u1} α r)) (fun (r : Subtype.{succ u1} (α -> α -> Prop) (fun (r : α -> α -> Prop) => IsWellOrder.{u1} α r)) => Ordinal.type.{u1} α (Subtype.val.{succ u1} (α -> α -> Prop) (fun (r : α -> α -> Prop) => IsWellOrder.{u1} α r) r) (Subtype.property.{succ u1} (α -> α -> Prop) (fun (r : α -> α -> Prop) => IsWellOrder.{u1} α r) r)))
+  forall (α : Type.{u1}), Eq.{succ (succ u1)} Ordinal.{u1} (Cardinal.ord.{u1} (Cardinal.mk.{u1} α)) (iInf.{succ u1, succ u1} Ordinal.{u1} (ConditionallyCompleteLattice.toHasInf.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Ordinal.{u1} Ordinal.conditionallyCompleteLinearOrderBot.{u1}))) (Subtype.{succ u1} (α -> α -> Prop) (fun (r : α -> α -> Prop) => IsWellOrder.{u1} α r)) (fun (r : Subtype.{succ u1} (α -> α -> Prop) (fun (r : α -> α -> Prop) => IsWellOrder.{u1} α r)) => Ordinal.type.{u1} α (Subtype.val.{succ u1} (α -> α -> Prop) (fun (r : α -> α -> Prop) => IsWellOrder.{u1} α r) r) (Subtype.property.{succ u1} (α -> α -> Prop) (fun (r : α -> α -> Prop) => IsWellOrder.{u1} α r) r)))
 but is expected to have type
-  forall (α : Type.{u1}), Eq.{succ (succ u1)} Ordinal.{u1} (Cardinal.ord.{u1} (Cardinal.mk.{u1} α)) (infᵢ.{succ u1, succ u1} Ordinal.{u1} (ConditionallyCompleteLattice.toInfSet.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Ordinal.{u1} Ordinal.instConditionallyCompleteLinearOrderBotOrdinal.{u1}))) (Subtype.{succ u1} (α -> α -> Prop) (fun (r : α -> α -> Prop) => IsWellOrder.{u1} α r)) (fun (r : Subtype.{succ u1} (α -> α -> Prop) (fun (r : α -> α -> Prop) => IsWellOrder.{u1} α r)) => Ordinal.type.{u1} α (Subtype.val.{succ u1} (α -> α -> Prop) (fun (r : α -> α -> Prop) => IsWellOrder.{u1} α r) r) (Subtype.property.{succ u1} (α -> α -> Prop) (fun (r : α -> α -> Prop) => IsWellOrder.{u1} α r) r)))
+  forall (α : Type.{u1}), Eq.{succ (succ u1)} Ordinal.{u1} (Cardinal.ord.{u1} (Cardinal.mk.{u1} α)) (iInf.{succ u1, succ u1} Ordinal.{u1} (ConditionallyCompleteLattice.toInfSet.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Ordinal.{u1} Ordinal.instConditionallyCompleteLinearOrderBotOrdinal.{u1}))) (Subtype.{succ u1} (α -> α -> Prop) (fun (r : α -> α -> Prop) => IsWellOrder.{u1} α r)) (fun (r : Subtype.{succ u1} (α -> α -> Prop) (fun (r : α -> α -> Prop) => IsWellOrder.{u1} α r)) => Ordinal.type.{u1} α (Subtype.val.{succ u1} (α -> α -> Prop) (fun (r : α -> α -> Prop) => IsWellOrder.{u1} α r) r) (Subtype.property.{succ u1} (α -> α -> Prop) (fun (r : α -> α -> Prop) => IsWellOrder.{u1} α r) r)))
 Case conversion may be inaccurate. Consider using '#align cardinal.ord_eq_Inf Cardinal.ord_eq_Infₓ'. -/
 theorem ord_eq_Inf (α : Type u) : ord (#α) = ⨅ r : { r // IsWellOrder α r }, @type α r.1 r.2 :=
   rfl
@@ -1818,14 +1818,14 @@ theorem ord_eq_Inf (α : Type u) : ord (#α) = ⨅ r : { r // IsWellOrder α r }
 
 #print Cardinal.ord_eq /-
 theorem ord_eq (α) : ∃ (r : α → α → Prop)(wo : IsWellOrder α r), ord (#α) = @type α r wo :=
-  let ⟨r, wo⟩ := cinfᵢ_mem fun r : { r // IsWellOrder α r } => @type α r.1 r.2
+  let ⟨r, wo⟩ := ciInf_mem fun r : { r // IsWellOrder α r } => @type α r.1 r.2
   ⟨r.1, r.2, wo.symm⟩
 #align cardinal.ord_eq Cardinal.ord_eq
 -/
 
 #print Cardinal.ord_le_type /-
 theorem ord_le_type (r : α → α → Prop) [h : IsWellOrder α r] : ord (#α) ≤ type r :=
-  cinfᵢ_le' _ (Subtype.mk r h)
+  ciInf_le' _ (Subtype.mk r h)
 #align cardinal.ord_le_type Cardinal.ord_le_type
 -/
 

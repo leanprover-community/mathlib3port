@@ -230,8 +230,8 @@ theorem TendstoInMeasure.exists_seq_tendsto_ae (hfg : TendstoInMeasure μ f atTo
     by
     refine' fun x hx => metric.tendsto_at_top.mpr fun ε hε => _
     rw [hs, limsup_eq_infi_supr_of_nat] at hx
-    simp only [Set.supᵢ_eq_unionᵢ, Set.infᵢ_eq_interᵢ, Set.compl_interᵢ, Set.compl_unionᵢ,
-      Set.mem_unionᵢ, Set.mem_interᵢ, Set.mem_compl_iff, Set.mem_setOf_eq, not_le] at hx
+    simp only [Set.iSup_eq_iUnion, Set.iInf_eq_iInter, Set.compl_iInter, Set.compl_iUnion,
+      Set.mem_iUnion, Set.mem_iInter, Set.mem_compl_iff, Set.mem_setOf_eq, not_le] at hx
     obtain ⟨N, hNx⟩ := hx
     obtain ⟨k, hk_lt_ε⟩ := h_lt_ε_real ε hε
     refine' ⟨max N (k - 1), fun n hn_ge => lt_of_le_of_lt _ hk_lt_ε⟩

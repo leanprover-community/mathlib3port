@@ -186,7 +186,7 @@ Construct the finest (largest) Grothendieck topology for which all the given pre
 This is equal to the construction of <https://stacks.math.columbia.edu/tag/00Z9>.
 -/
 def finestTopology (Ps : Set (Cᵒᵖ ⥤ Type v)) : GrothendieckTopology C :=
-  infₛ (finestTopologySingle '' Ps)
+  sInf (finestTopologySingle '' Ps)
 #align category_theory.sheaf.finest_topology CategoryTheory.Sheaf.finestTopology
 
 /-- Check that if `P ∈ Ps`, then `P` is indeed a sheaf for the finest topology on `Ps`. -/

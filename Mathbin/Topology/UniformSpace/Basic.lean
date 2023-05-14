@@ -354,7 +354,7 @@ def UniformSpace.Core.toTopologicalSpace {α : Type u} (u : UniformSpace.Core α
   isOpen_univ := by simp <;> intro <;> exact univ_mem
   isOpen_inter := fun s t hs ht x ⟨xs, xt⟩ => by
     filter_upwards [hs x xs, ht x xt] <;> simp (config := { contextual := true })
-  isOpen_unionₛ := fun s hs x ⟨t, ts, xt⟩ => by
+  isOpen_sUnion := fun s hs x ⟨t, ts, xt⟩ => by
     filter_upwards [hs t ts x xt]with p ph h using⟨t, ts, ph h⟩
 #align uniform_space.core.to_topological_space UniformSpace.Core.toTopologicalSpace
 -/
@@ -482,17 +482,17 @@ def UniformSpace.ofFun {α β : Type _} [OrderedAddCommMonoid β] (d : α → α
     (half : ∀ ε > (0 : β), ∃ δ > (0 : β), ∀ x < δ, ∀ y < δ, x + y < ε) : UniformSpace α :=
   UniformSpace.ofCore
     { uniformity := ⨅ r > 0, 𝓟 { x | d x.1 x.2 < r }
-      refl := le_infᵢ₂ fun r hr => principal_mono.2 <| idRel_subset.2 fun x => by simpa [refl]
+      refl := le_iInf₂ fun r hr => principal_mono.2 <| idRel_subset.2 fun x => by simpa [refl]
       symm :=
-        tendsto_infᵢ_infᵢ fun r =>
-          tendsto_infᵢ_infᵢ fun _ =>
+        tendsto_iInf_iInf fun r =>
+          tendsto_iInf_iInf fun _ =>
             tendsto_principal_principal.2 fun x hx => by rwa [mem_set_of, symm]
       comp :=
-        le_infᵢ₂ fun r hr =>
+        le_iInf₂ fun r hr =>
           let ⟨δ, h0, hδr⟩ := half r hr
           le_principal_iff.2 <|
             mem_of_superset
-              (mem_lift' <| mem_infᵢ_of_mem δ <| mem_infᵢ_of_mem h0 <| mem_principal_self _)
+              (mem_lift' <| mem_iInf_of_mem δ <| mem_iInf_of_mem h0 <| mem_principal_self _)
               fun ⟨x, z⟩ ⟨y, h₁, h₂⟩ => (triangle _ _ _).trans_lt (hδr _ h₁ _ h₂) }
 #align uniform_space.of_fun UniformSpace.ofFun
 
@@ -508,7 +508,7 @@ theorem UniformSpace.hasBasis_ofFun {α β : Type _} [LinearOrderedAddCommMonoid
     (half : ∀ ε > (0 : β), ∃ δ > (0 : β), ∀ x < δ, ∀ y < δ, x + y < ε) :
     𝓤[UniformSpace.ofFun d refl symm triangle half].HasBasis ((· < ·) (0 : β)) fun ε =>
       { x | d x.1 x.2 < ε } :=
-  hasBasis_binfᵢ_principal'
+  hasBasis_biInf_principal'
     (fun ε₁ h₁ ε₂ h₂ =>
       ⟨min ε₁ ε₂, lt_min h₁ h₂, fun _x hx => lt_of_lt_of_le hx (min_le_left _ _), fun _x hx =>
         lt_of_lt_of_le hx (min_le_right _ _)⟩)
@@ -1131,13 +1131,13 @@ theorem UniformSpace.hasBasis_nhds_prod (x y : α) :
 
 #print nhds_eq_uniformity /-
 theorem nhds_eq_uniformity {x : α} : 𝓝 x = (𝓤 α).lift' (ball x) :=
-  (nhds_basis_uniformity' (𝓤 α).basis_sets).eq_binfᵢ
+  (nhds_basis_uniformity' (𝓤 α).basis_sets).eq_biInf
 #align nhds_eq_uniformity nhds_eq_uniformity
 -/
 
 #print nhds_eq_uniformity' /-
 theorem nhds_eq_uniformity' {x : α} : 𝓝 x = (𝓤 α).lift' fun s => { y | (y, x) ∈ s } :=
-  (nhds_basis_uniformity (𝓤 α).basis_sets).eq_binfᵢ
+  (nhds_basis_uniformity (𝓤 α).basis_sets).eq_biInf
 #align nhds_eq_uniformity' nhds_eq_uniformity'
 -/
 
@@ -1167,9 +1167,9 @@ theorem exists_mem_nhds_ball_subset_of_mem_nhds {a : α} {U : Set α} (h : U ∈
 
 /- warning: is_compact.nhds_set_basis_uniformity -> IsCompact.nhdsSet_basis_uniformity is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : UniformSpace.{u1} α] {p : ι -> Prop} {s : ι -> (Set.{u1} (Prod.{u1, u1} α α))}, (Filter.HasBasis.{u1, u2} (Prod.{u1, u1} α α) ι (uniformity.{u1} α _inst_1) p s) -> (forall {K : Set.{u1} α}, (IsCompact.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) K) -> (Filter.HasBasis.{u1, u2} α ι (nhdsSet.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) K) p (fun (i : ι) => Set.unionᵢ.{u1, succ u1} α α (fun (x : α) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x K) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x K) => UniformSpace.ball.{u1} α x (s i))))))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : UniformSpace.{u1} α] {p : ι -> Prop} {s : ι -> (Set.{u1} (Prod.{u1, u1} α α))}, (Filter.HasBasis.{u1, u2} (Prod.{u1, u1} α α) ι (uniformity.{u1} α _inst_1) p s) -> (forall {K : Set.{u1} α}, (IsCompact.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) K) -> (Filter.HasBasis.{u1, u2} α ι (nhdsSet.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) K) p (fun (i : ι) => Set.iUnion.{u1, succ u1} α α (fun (x : α) => Set.iUnion.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x K) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x K) => UniformSpace.ball.{u1} α x (s i))))))
 but is expected to have type
-  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : UniformSpace.{u2} α] {p : ι -> Prop} {s : ι -> (Set.{u2} (Prod.{u2, u2} α α))}, (Filter.HasBasis.{u2, u1} (Prod.{u2, u2} α α) ι (uniformity.{u2} α _inst_1) p s) -> (forall {K : Set.{u2} α}, (IsCompact.{u2} α (UniformSpace.toTopologicalSpace.{u2} α _inst_1) K) -> (Filter.HasBasis.{u2, u1} α ι (nhdsSet.{u2} α (UniformSpace.toTopologicalSpace.{u2} α _inst_1) K) p (fun (i : ι) => Set.unionᵢ.{u2, succ u2} α α (fun (x : α) => Set.unionᵢ.{u2, 0} α (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x K) (fun (H : Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x K) => UniformSpace.ball.{u2} α x (s i))))))
+  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : UniformSpace.{u2} α] {p : ι -> Prop} {s : ι -> (Set.{u2} (Prod.{u2, u2} α α))}, (Filter.HasBasis.{u2, u1} (Prod.{u2, u2} α α) ι (uniformity.{u2} α _inst_1) p s) -> (forall {K : Set.{u2} α}, (IsCompact.{u2} α (UniformSpace.toTopologicalSpace.{u2} α _inst_1) K) -> (Filter.HasBasis.{u2, u1} α ι (nhdsSet.{u2} α (UniformSpace.toTopologicalSpace.{u2} α _inst_1) K) p (fun (i : ι) => Set.iUnion.{u2, succ u2} α α (fun (x : α) => Set.iUnion.{u2, 0} α (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x K) (fun (H : Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x K) => UniformSpace.ball.{u2} α x (s i))))))
 Case conversion may be inaccurate. Consider using '#align is_compact.nhds_set_basis_uniformity IsCompact.nhdsSet_basis_uniformityₓ'. -/
 theorem IsCompact.nhdsSet_basis_uniformity {p : ι → Prop} {s : ι → Set (α × α)}
     (hU : (𝓤 α).HasBasis p s) {K : Set α} (hK : IsCompact K) :
@@ -1202,9 +1202,9 @@ theorem IsCompact.nhdsSet_basis_uniformity {p : ι → Prop} {s : ι → Set (α
 
 /- warning: disjoint.exists_uniform_thickening -> Disjoint.exists_uniform_thickening is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {A : Set.{u1} α} {B : Set.{u1} α}, (IsCompact.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) A) -> (IsClosed.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) B) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) A B) -> (Exists.{succ u1} (Set.{u1} (Prod.{u1, u1} α α)) (fun (V : Set.{u1} (Prod.{u1, u1} α α)) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) V (uniformity.{u1} α _inst_1)) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) V (uniformity.{u1} α _inst_1)) => Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) (Set.unionᵢ.{u1, succ u1} α α (fun (x : α) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x A) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x A) => UniformSpace.ball.{u1} α x V))) (Set.unionᵢ.{u1, succ u1} α α (fun (x : α) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x B) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x B) => UniformSpace.ball.{u1} α x V))))))
+  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {A : Set.{u1} α} {B : Set.{u1} α}, (IsCompact.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) A) -> (IsClosed.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) B) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) A B) -> (Exists.{succ u1} (Set.{u1} (Prod.{u1, u1} α α)) (fun (V : Set.{u1} (Prod.{u1, u1} α α)) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) V (uniformity.{u1} α _inst_1)) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) V (uniformity.{u1} α _inst_1)) => Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) (Set.iUnion.{u1, succ u1} α α (fun (x : α) => Set.iUnion.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x A) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x A) => UniformSpace.ball.{u1} α x V))) (Set.iUnion.{u1, succ u1} α α (fun (x : α) => Set.iUnion.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x B) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x B) => UniformSpace.ball.{u1} α x V))))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {A : Set.{u1} α} {B : Set.{u1} α}, (IsCompact.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) A) -> (IsClosed.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) B) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) A B) -> (Exists.{succ u1} (Set.{u1} (Prod.{u1, u1} α α)) (fun (V : Set.{u1} (Prod.{u1, u1} α α)) => And (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) V (uniformity.{u1} α _inst_1)) (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (Set.unionᵢ.{u1, succ u1} α α (fun (x : α) => Set.unionᵢ.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x A) (fun (h._@.Mathlib.Topology.UniformSpace.Basic._hyg.10416 : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x A) => UniformSpace.ball.{u1} α x V))) (Set.unionᵢ.{u1, succ u1} α α (fun (x : α) => Set.unionᵢ.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x B) (fun (h._@.Mathlib.Topology.UniformSpace.Basic._hyg.10449 : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x B) => UniformSpace.ball.{u1} α x V))))))
+  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {A : Set.{u1} α} {B : Set.{u1} α}, (IsCompact.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) A) -> (IsClosed.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) B) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) A B) -> (Exists.{succ u1} (Set.{u1} (Prod.{u1, u1} α α)) (fun (V : Set.{u1} (Prod.{u1, u1} α α)) => And (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) V (uniformity.{u1} α _inst_1)) (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (Set.iUnion.{u1, succ u1} α α (fun (x : α) => Set.iUnion.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x A) (fun (h._@.Mathlib.Topology.UniformSpace.Basic._hyg.10416 : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x A) => UniformSpace.ball.{u1} α x V))) (Set.iUnion.{u1, succ u1} α α (fun (x : α) => Set.iUnion.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x B) (fun (h._@.Mathlib.Topology.UniformSpace.Basic._hyg.10449 : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x B) => UniformSpace.ball.{u1} α x V))))))
 Case conversion may be inaccurate. Consider using '#align disjoint.exists_uniform_thickening Disjoint.exists_uniform_thickeningₓ'. -/
 theorem Disjoint.exists_uniform_thickening {A B : Set α} (hA : IsCompact A) (hB : IsClosed B)
     (h : Disjoint A B) : ∃ V ∈ 𝓤 α, Disjoint (⋃ x ∈ A, ball x V) (⋃ x ∈ B, ball x V) :=
@@ -1222,9 +1222,9 @@ theorem Disjoint.exists_uniform_thickening {A B : Set α} (hA : IsCompact A) (hB
 
 /- warning: disjoint.exists_uniform_thickening_of_basis -> Disjoint.exists_uniform_thickening_of_basis is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : UniformSpace.{u1} α] {p : ι -> Prop} {s : ι -> (Set.{u1} (Prod.{u1, u1} α α))}, (Filter.HasBasis.{u1, u2} (Prod.{u1, u1} α α) ι (uniformity.{u1} α _inst_1) p s) -> (forall {A : Set.{u1} α} {B : Set.{u1} α}, (IsCompact.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) A) -> (IsClosed.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) B) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) A B) -> (Exists.{u2} ι (fun (i : ι) => And (p i) (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) (Set.unionᵢ.{u1, succ u1} α α (fun (x : α) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x A) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x A) => UniformSpace.ball.{u1} α x (s i)))) (Set.unionᵢ.{u1, succ u1} α α (fun (x : α) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x B) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x B) => UniformSpace.ball.{u1} α x (s i))))))))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : UniformSpace.{u1} α] {p : ι -> Prop} {s : ι -> (Set.{u1} (Prod.{u1, u1} α α))}, (Filter.HasBasis.{u1, u2} (Prod.{u1, u1} α α) ι (uniformity.{u1} α _inst_1) p s) -> (forall {A : Set.{u1} α} {B : Set.{u1} α}, (IsCompact.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) A) -> (IsClosed.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) B) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) A B) -> (Exists.{u2} ι (fun (i : ι) => And (p i) (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) (Set.iUnion.{u1, succ u1} α α (fun (x : α) => Set.iUnion.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x A) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x A) => UniformSpace.ball.{u1} α x (s i)))) (Set.iUnion.{u1, succ u1} α α (fun (x : α) => Set.iUnion.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x B) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x B) => UniformSpace.ball.{u1} α x (s i))))))))
 but is expected to have type
-  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : UniformSpace.{u2} α] {p : ι -> Prop} {s : ι -> (Set.{u2} (Prod.{u2, u2} α α))}, (Filter.HasBasis.{u2, u1} (Prod.{u2, u2} α α) ι (uniformity.{u2} α _inst_1) p s) -> (forall {A : Set.{u2} α} {B : Set.{u2} α}, (IsCompact.{u2} α (UniformSpace.toTopologicalSpace.{u2} α _inst_1) A) -> (IsClosed.{u2} α (UniformSpace.toTopologicalSpace.{u2} α _inst_1) B) -> (Disjoint.{u2} (Set.{u2} α) (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α)))))) (BoundedOrder.toOrderBot.{u2} (Set.{u2} α) (Preorder.toLE.{u2} (Set.{u2} α) (PartialOrder.toPreorder.{u2} (Set.{u2} α) (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α)))))))) (CompleteLattice.toBoundedOrder.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α)))))) A B) -> (Exists.{u1} ι (fun (i : ι) => And (p i) (Disjoint.{u2} (Set.{u2} α) (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α)))))) (BoundedOrder.toOrderBot.{u2} (Set.{u2} α) (Preorder.toLE.{u2} (Set.{u2} α) (PartialOrder.toPreorder.{u2} (Set.{u2} α) (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α)))))))) (CompleteLattice.toBoundedOrder.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α)))))) (Set.unionᵢ.{u2, succ u2} α α (fun (x : α) => Set.unionᵢ.{u2, 0} α (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x A) (fun (H : Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x A) => UniformSpace.ball.{u2} α x (s i)))) (Set.unionᵢ.{u2, succ u2} α α (fun (x : α) => Set.unionᵢ.{u2, 0} α (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x B) (fun (H : Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x B) => UniformSpace.ball.{u2} α x (s i))))))))
+  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : UniformSpace.{u2} α] {p : ι -> Prop} {s : ι -> (Set.{u2} (Prod.{u2, u2} α α))}, (Filter.HasBasis.{u2, u1} (Prod.{u2, u2} α α) ι (uniformity.{u2} α _inst_1) p s) -> (forall {A : Set.{u2} α} {B : Set.{u2} α}, (IsCompact.{u2} α (UniformSpace.toTopologicalSpace.{u2} α _inst_1) A) -> (IsClosed.{u2} α (UniformSpace.toTopologicalSpace.{u2} α _inst_1) B) -> (Disjoint.{u2} (Set.{u2} α) (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α)))))) (BoundedOrder.toOrderBot.{u2} (Set.{u2} α) (Preorder.toLE.{u2} (Set.{u2} α) (PartialOrder.toPreorder.{u2} (Set.{u2} α) (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α)))))))) (CompleteLattice.toBoundedOrder.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α)))))) A B) -> (Exists.{u1} ι (fun (i : ι) => And (p i) (Disjoint.{u2} (Set.{u2} α) (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α)))))) (BoundedOrder.toOrderBot.{u2} (Set.{u2} α) (Preorder.toLE.{u2} (Set.{u2} α) (PartialOrder.toPreorder.{u2} (Set.{u2} α) (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α)))))))) (CompleteLattice.toBoundedOrder.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α)))))) (Set.iUnion.{u2, succ u2} α α (fun (x : α) => Set.iUnion.{u2, 0} α (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x A) (fun (H : Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x A) => UniformSpace.ball.{u2} α x (s i)))) (Set.iUnion.{u2, succ u2} α α (fun (x : α) => Set.iUnion.{u2, 0} α (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x B) (fun (H : Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x B) => UniformSpace.ball.{u2} α x (s i))))))))
 Case conversion may be inaccurate. Consider using '#align disjoint.exists_uniform_thickening_of_basis Disjoint.exists_uniform_thickening_of_basisₓ'. -/
 theorem Disjoint.exists_uniform_thickening_of_basis {p : ι → Prop} {s : ι → Set (α × α)}
     (hU : (𝓤 α).HasBasis p s) {A B : Set α} (hA : IsCompact A) (hB : IsClosed B)
@@ -1329,9 +1329,9 @@ theorem nhdset_of_mem_uniformity {d : Set (α × α)} (s : Set (α × α)) (hd :
   match this with
   | ⟨t, ht⟩ =>
     ⟨(⋃ p : α × α, ⋃ h : p ∈ s, t p h : Set (α × α)),
-      isOpen_unionᵢ fun p : α × α => isOpen_unionᵢ fun hp => (ht p hp).right.left, fun ⟨a, b⟩ hp =>
+      isOpen_iUnion fun p : α × α => isOpen_iUnion fun hp => (ht p hp).right.left, fun ⟨a, b⟩ hp =>
       by simp <;> exact ⟨a, b, hp, (ht (a, b) hp).right.right⟩,
-      unionᵢ_subset fun p => unionᵢ_subset fun hp => (ht p hp).left⟩
+      iUnion_subset fun p => iUnion_subset fun hp => (ht p hp).left⟩
 #align nhdset_of_mem_uniformity nhdset_of_mem_uniformity
 
 /- warning: nhds_le_uniformity -> nhds_le_uniformity is a dubious translation:
@@ -1355,16 +1355,16 @@ theorem nhds_le_uniformity (x : α) : 𝓝 (x, x) ≤ 𝓤 α :=
   exact w_sub (mem_comp_of_mem_ball w_symm u_in v_in)
 #align nhds_le_uniformity nhds_le_uniformity
 
-/- warning: supr_nhds_le_uniformity -> supᵢ_nhds_le_uniformity is a dubious translation:
+/- warning: supr_nhds_le_uniformity -> iSup_nhds_le_uniformity is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α], LE.le.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Preorder.toLE.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (PartialOrder.toPreorder.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.partialOrder.{u1} (Prod.{u1, u1} α α)))) (supᵢ.{u1, succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (ConditionallyCompleteLattice.toHasSup.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.completeLattice.{u1} (Prod.{u1, u1} α α)))) α (fun (x : α) => nhds.{u1} (Prod.{u1, u1} α α) (Prod.topologicalSpace.{u1, u1} α α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1)) (Prod.mk.{u1, u1} α α x x))) (uniformity.{u1} α _inst_1)
+  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α], LE.le.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Preorder.toLE.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (PartialOrder.toPreorder.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.partialOrder.{u1} (Prod.{u1, u1} α α)))) (iSup.{u1, succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (ConditionallyCompleteLattice.toHasSup.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.completeLattice.{u1} (Prod.{u1, u1} α α)))) α (fun (x : α) => nhds.{u1} (Prod.{u1, u1} α α) (Prod.topologicalSpace.{u1, u1} α α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1)) (Prod.mk.{u1, u1} α α x x))) (uniformity.{u1} α _inst_1)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α], LE.le.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Preorder.toLE.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (PartialOrder.toPreorder.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.instPartialOrderFilter.{u1} (Prod.{u1, u1} α α)))) (supᵢ.{u1, succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (ConditionallyCompleteLattice.toSupSet.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.instCompleteLatticeFilter.{u1} (Prod.{u1, u1} α α)))) α (fun (x : α) => nhds.{u1} (Prod.{u1, u1} α α) (instTopologicalSpaceProd.{u1, u1} α α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1)) (Prod.mk.{u1, u1} α α x x))) (uniformity.{u1} α _inst_1)
-Case conversion may be inaccurate. Consider using '#align supr_nhds_le_uniformity supᵢ_nhds_le_uniformityₓ'. -/
+  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α], LE.le.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Preorder.toLE.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (PartialOrder.toPreorder.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.instPartialOrderFilter.{u1} (Prod.{u1, u1} α α)))) (iSup.{u1, succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (ConditionallyCompleteLattice.toSupSet.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.instCompleteLatticeFilter.{u1} (Prod.{u1, u1} α α)))) α (fun (x : α) => nhds.{u1} (Prod.{u1, u1} α α) (instTopologicalSpaceProd.{u1, u1} α α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1)) (Prod.mk.{u1, u1} α α x x))) (uniformity.{u1} α _inst_1)
+Case conversion may be inaccurate. Consider using '#align supr_nhds_le_uniformity iSup_nhds_le_uniformityₓ'. -/
 /-- Entourages are neighborhoods of the diagonal. -/
-theorem supᵢ_nhds_le_uniformity : (⨆ x : α, 𝓝 (x, x)) ≤ 𝓤 α :=
-  supᵢ_le nhds_le_uniformity
-#align supr_nhds_le_uniformity supᵢ_nhds_le_uniformity
+theorem iSup_nhds_le_uniformity : (⨆ x : α, 𝓝 (x, x)) ≤ 𝓤 α :=
+  iSup_le nhds_le_uniformity
+#align supr_nhds_le_uniformity iSup_nhds_le_uniformity
 
 /- warning: nhds_set_diagonal_le_uniformity -> nhdsSet_diagonal_le_uniformity is a dubious translation:
 lean 3 declaration is
@@ -1374,7 +1374,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align nhds_set_diagonal_le_uniformity nhdsSet_diagonal_le_uniformityₓ'. -/
 /-- Entourages are neighborhoods of the diagonal. -/
 theorem nhdsSet_diagonal_le_uniformity : 𝓝ˢ (diagonal α) ≤ 𝓤 α :=
-  (nhdsSet_diagonal α).trans_le supᵢ_nhds_le_uniformity
+  (nhdsSet_diagonal α).trans_le iSup_nhds_le_uniformity
 #align nhds_set_diagonal_le_uniformity nhdsSet_diagonal_le_uniformity
 
 /-!
@@ -1384,9 +1384,9 @@ theorem nhdsSet_diagonal_le_uniformity : 𝓝ˢ (diagonal α) ≤ 𝓤 α :=
 
 /- warning: closure_eq_uniformity -> closure_eq_uniformity is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] (s : Set.{u1} (Prod.{u1, u1} α α)), Eq.{succ u1} (Set.{u1} (Prod.{u1, u1} α α)) (closure.{u1} (Prod.{u1, u1} α α) (Prod.topologicalSpace.{u1, u1} α α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1)) s) (Set.interᵢ.{u1, succ u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (fun (V : Set.{u1} (Prod.{u1, u1} α α)) => Set.interᵢ.{u1, 0} (Prod.{u1, u1} α α) (Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Set.{u1} (Set.{u1} (Prod.{u1, u1} α α))) (Set.hasMem.{u1} (Set.{u1} (Prod.{u1, u1} α α))) V (setOf.{u1} (Set.{u1} (Prod.{u1, u1} α α)) (fun (V : Set.{u1} (Prod.{u1, u1} α α)) => And (Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) V (uniformity.{u1} α _inst_1)) (SymmetricRel.{u1} α V)))) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Set.{u1} (Set.{u1} (Prod.{u1, u1} α α))) (Set.hasMem.{u1} (Set.{u1} (Prod.{u1, u1} α α))) V (setOf.{u1} (Set.{u1} (Prod.{u1, u1} α α)) (fun (V : Set.{u1} (Prod.{u1, u1} α α)) => And (Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) V (uniformity.{u1} α _inst_1)) (SymmetricRel.{u1} α V)))) => compRel.{u1} α (compRel.{u1} α V s) V)))
+  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] (s : Set.{u1} (Prod.{u1, u1} α α)), Eq.{succ u1} (Set.{u1} (Prod.{u1, u1} α α)) (closure.{u1} (Prod.{u1, u1} α α) (Prod.topologicalSpace.{u1, u1} α α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1)) s) (Set.iInter.{u1, succ u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (fun (V : Set.{u1} (Prod.{u1, u1} α α)) => Set.iInter.{u1, 0} (Prod.{u1, u1} α α) (Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Set.{u1} (Set.{u1} (Prod.{u1, u1} α α))) (Set.hasMem.{u1} (Set.{u1} (Prod.{u1, u1} α α))) V (setOf.{u1} (Set.{u1} (Prod.{u1, u1} α α)) (fun (V : Set.{u1} (Prod.{u1, u1} α α)) => And (Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) V (uniformity.{u1} α _inst_1)) (SymmetricRel.{u1} α V)))) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Set.{u1} (Set.{u1} (Prod.{u1, u1} α α))) (Set.hasMem.{u1} (Set.{u1} (Prod.{u1, u1} α α))) V (setOf.{u1} (Set.{u1} (Prod.{u1, u1} α α)) (fun (V : Set.{u1} (Prod.{u1, u1} α α)) => And (Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) V (uniformity.{u1} α _inst_1)) (SymmetricRel.{u1} α V)))) => compRel.{u1} α (compRel.{u1} α V s) V)))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] (s : Set.{u1} (Prod.{u1, u1} α α)), Eq.{succ u1} (Set.{u1} (Prod.{u1, u1} α α)) (closure.{u1} (Prod.{u1, u1} α α) (instTopologicalSpaceProd.{u1, u1} α α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1)) s) (Set.interᵢ.{u1, succ u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (fun (V : Set.{u1} (Prod.{u1, u1} α α)) => Set.interᵢ.{u1, 0} (Prod.{u1, u1} α α) (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Set.{u1} (Set.{u1} (Prod.{u1, u1} α α))) (Set.instMembershipSet.{u1} (Set.{u1} (Prod.{u1, u1} α α))) V (setOf.{u1} (Set.{u1} (Prod.{u1, u1} α α)) (fun (V : Set.{u1} (Prod.{u1, u1} α α)) => And (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) V (uniformity.{u1} α _inst_1)) (SymmetricRel.{u1} α V)))) (fun (H : Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Set.{u1} (Set.{u1} (Prod.{u1, u1} α α))) (Set.instMembershipSet.{u1} (Set.{u1} (Prod.{u1, u1} α α))) V (setOf.{u1} (Set.{u1} (Prod.{u1, u1} α α)) (fun (V : Set.{u1} (Prod.{u1, u1} α α)) => And (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) V (uniformity.{u1} α _inst_1)) (SymmetricRel.{u1} α V)))) => compRel.{u1} α (compRel.{u1} α V s) V)))
+  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] (s : Set.{u1} (Prod.{u1, u1} α α)), Eq.{succ u1} (Set.{u1} (Prod.{u1, u1} α α)) (closure.{u1} (Prod.{u1, u1} α α) (instTopologicalSpaceProd.{u1, u1} α α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1)) s) (Set.iInter.{u1, succ u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (fun (V : Set.{u1} (Prod.{u1, u1} α α)) => Set.iInter.{u1, 0} (Prod.{u1, u1} α α) (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Set.{u1} (Set.{u1} (Prod.{u1, u1} α α))) (Set.instMembershipSet.{u1} (Set.{u1} (Prod.{u1, u1} α α))) V (setOf.{u1} (Set.{u1} (Prod.{u1, u1} α α)) (fun (V : Set.{u1} (Prod.{u1, u1} α α)) => And (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) V (uniformity.{u1} α _inst_1)) (SymmetricRel.{u1} α V)))) (fun (H : Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Set.{u1} (Set.{u1} (Prod.{u1, u1} α α))) (Set.instMembershipSet.{u1} (Set.{u1} (Prod.{u1, u1} α α))) V (setOf.{u1} (Set.{u1} (Prod.{u1, u1} α α)) (fun (V : Set.{u1} (Prod.{u1, u1} α α)) => And (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) V (uniformity.{u1} α _inst_1)) (SymmetricRel.{u1} α V)))) => compRel.{u1} α (compRel.{u1} α V s) V)))
 Case conversion may be inaccurate. Consider using '#align closure_eq_uniformity closure_eq_uniformityₓ'. -/
 theorem closure_eq_uniformity (s : Set <| α × α) :
     closure s = ⋂ V ∈ { V | V ∈ 𝓤 α ∧ SymmetricRel V }, V ○ s ○ V :=
@@ -1447,16 +1447,16 @@ theorem uniformity_hasBasis_closure : HasBasis (𝓤 α) (fun V : Set (α × α)
 
 /- warning: closure_eq_inter_uniformity -> closure_eq_inter_uniformity is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {t : Set.{u1} (Prod.{u1, u1} α α)}, Eq.{succ u1} (Set.{u1} (Prod.{u1, u1} α α)) (closure.{u1} (Prod.{u1, u1} α α) (Prod.topologicalSpace.{u1, u1} α α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1)) t) (Set.interᵢ.{u1, succ u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (fun (d : Set.{u1} (Prod.{u1, u1} α α)) => Set.interᵢ.{u1, 0} (Prod.{u1, u1} α α) (Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) d (uniformity.{u1} α _inst_1)) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) d (uniformity.{u1} α _inst_1)) => compRel.{u1} α d (compRel.{u1} α t d))))
+  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {t : Set.{u1} (Prod.{u1, u1} α α)}, Eq.{succ u1} (Set.{u1} (Prod.{u1, u1} α α)) (closure.{u1} (Prod.{u1, u1} α α) (Prod.topologicalSpace.{u1, u1} α α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1)) t) (Set.iInter.{u1, succ u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (fun (d : Set.{u1} (Prod.{u1, u1} α α)) => Set.iInter.{u1, 0} (Prod.{u1, u1} α α) (Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) d (uniformity.{u1} α _inst_1)) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) d (uniformity.{u1} α _inst_1)) => compRel.{u1} α d (compRel.{u1} α t d))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {t : Set.{u1} (Prod.{u1, u1} α α)}, Eq.{succ u1} (Set.{u1} (Prod.{u1, u1} α α)) (closure.{u1} (Prod.{u1, u1} α α) (instTopologicalSpaceProd.{u1, u1} α α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1)) t) (Set.interᵢ.{u1, succ u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (fun (d : Set.{u1} (Prod.{u1, u1} α α)) => Set.interᵢ.{u1, 0} (Prod.{u1, u1} α α) (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) d (uniformity.{u1} α _inst_1)) (fun (H : Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) d (uniformity.{u1} α _inst_1)) => compRel.{u1} α d (compRel.{u1} α t d))))
+  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {t : Set.{u1} (Prod.{u1, u1} α α)}, Eq.{succ u1} (Set.{u1} (Prod.{u1, u1} α α)) (closure.{u1} (Prod.{u1, u1} α α) (instTopologicalSpaceProd.{u1, u1} α α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1)) t) (Set.iInter.{u1, succ u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (fun (d : Set.{u1} (Prod.{u1, u1} α α)) => Set.iInter.{u1, 0} (Prod.{u1, u1} α α) (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) d (uniformity.{u1} α _inst_1)) (fun (H : Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) d (uniformity.{u1} α _inst_1)) => compRel.{u1} α d (compRel.{u1} α t d))))
 Case conversion may be inaccurate. Consider using '#align closure_eq_inter_uniformity closure_eq_inter_uniformityₓ'. -/
 theorem closure_eq_inter_uniformity {t : Set (α × α)} : closure t = ⋂ d ∈ 𝓤 α, d ○ (t ○ d) :=
   calc
     closure t = ⋂ (V) (hV : V ∈ 𝓤 α ∧ SymmetricRel V), V ○ t ○ V := closure_eq_uniformity t
     _ = ⋂ V ∈ 𝓤 α, V ○ t ○ V :=
       (Eq.symm <|
-        UniformSpace.hasBasis_symmetric.binterᵢ_mem fun V₁ V₂ hV =>
+        UniformSpace.hasBasis_symmetric.biInter_mem fun V₁ V₂ hV =>
           compRel_mono (compRel_mono hV Subset.rfl) hV)
     _ = ⋂ V ∈ 𝓤 α, V ○ (t ○ V) := by simp only [compRel_assoc]
     
@@ -1465,8 +1465,8 @@ theorem closure_eq_inter_uniformity {t : Set (α × α)} : closure t = ⋂ d ∈
 #print uniformity_eq_uniformity_interior /-
 theorem uniformity_eq_uniformity_interior : 𝓤 α = (𝓤 α).lift' interior :=
   le_antisymm
-    (le_infᵢ fun d =>
-      le_infᵢ fun hd =>
+    (le_iInf fun d =>
+      le_iInf fun hd =>
         by
         let ⟨s, hs, hs_comp⟩ :=
           (mem_lift'_sets <| monotone_id.compRel <| monotone_id.compRel monotone_id).mp
@@ -1526,15 +1526,15 @@ theorem isOpen_iff_open_ball_subset {s : Set α} :
     exact ⟨V, hV, hV'⟩
 #align is_open_iff_open_ball_subset isOpen_iff_open_ball_subset
 
-#print Dense.bunionᵢ_uniformity_ball /-
+#print Dense.biUnion_uniformity_ball /-
 /-- The uniform neighborhoods of all points of a dense set cover the whole space. -/
-theorem Dense.bunionᵢ_uniformity_ball {s : Set α} {U : Set (α × α)} (hs : Dense s) (hU : U ∈ 𝓤 α) :
+theorem Dense.biUnion_uniformity_ball {s : Set α} {U : Set (α × α)} (hs : Dense s) (hU : U ∈ 𝓤 α) :
     (⋃ x ∈ s, ball x U) = univ :=
   by
   refine' Union₂_eq_univ_iff.2 fun y => _
   rcases hs.inter_nhds_nonempty (mem_nhds_right y hU) with ⟨x, hxs, hxy : (x, y) ∈ U⟩
   exact ⟨x, hxs, hxy⟩
-#align dense.bUnion_uniformity_ball Dense.bunionᵢ_uniformity_ball
+#align dense.bUnion_uniformity_ball Dense.biUnion_uniformity_ball
 -/
 
 /-!
@@ -1612,18 +1612,18 @@ theorem UniformSpace.has_seq_basis [IsCountablyGenerated <| 𝓤 α] :
 
 end
 
-/- warning: filter.has_basis.bInter_bUnion_ball -> Filter.HasBasis.binterᵢ_bunionᵢ_ball is a dubious translation:
+/- warning: filter.has_basis.bInter_bUnion_ball -> Filter.HasBasis.biInter_biUnion_ball is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : UniformSpace.{u1} α] {p : ι -> Prop} {U : ι -> (Set.{u1} (Prod.{u1, u1} α α))}, (Filter.HasBasis.{u1, u2} (Prod.{u1, u1} α α) ι (uniformity.{u1} α _inst_1) p U) -> (forall (s : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Set.interᵢ.{u1, u2} α ι (fun (i : ι) => Set.interᵢ.{u1, 0} α (p i) (fun (hi : p i) => Set.unionᵢ.{u1, succ u1} α α (fun (x : α) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) => UniformSpace.ball.{u1} α x (U i)))))) (closure.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) s))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : UniformSpace.{u1} α] {p : ι -> Prop} {U : ι -> (Set.{u1} (Prod.{u1, u1} α α))}, (Filter.HasBasis.{u1, u2} (Prod.{u1, u1} α α) ι (uniformity.{u1} α _inst_1) p U) -> (forall (s : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Set.iInter.{u1, u2} α ι (fun (i : ι) => Set.iInter.{u1, 0} α (p i) (fun (hi : p i) => Set.iUnion.{u1, succ u1} α α (fun (x : α) => Set.iUnion.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) => UniformSpace.ball.{u1} α x (U i)))))) (closure.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) s))
 but is expected to have type
-  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : UniformSpace.{u2} α] {p : ι -> Prop} {U : ι -> (Set.{u2} (Prod.{u2, u2} α α))}, (Filter.HasBasis.{u2, u1} (Prod.{u2, u2} α α) ι (uniformity.{u2} α _inst_1) p U) -> (forall (s : Set.{u2} α), Eq.{succ u2} (Set.{u2} α) (Set.interᵢ.{u2, u1} α ι (fun (i : ι) => Set.interᵢ.{u2, 0} α (p i) (fun (hi : p i) => Set.unionᵢ.{u2, succ u2} α α (fun (x : α) => Set.unionᵢ.{u2, 0} α (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) (fun (H : Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) => UniformSpace.ball.{u2} α x (U i)))))) (closure.{u2} α (UniformSpace.toTopologicalSpace.{u2} α _inst_1) s))
-Case conversion may be inaccurate. Consider using '#align filter.has_basis.bInter_bUnion_ball Filter.HasBasis.binterᵢ_bunionᵢ_ballₓ'. -/
-theorem Filter.HasBasis.binterᵢ_bunionᵢ_ball {p : ι → Prop} {U : ι → Set (α × α)}
+  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : UniformSpace.{u2} α] {p : ι -> Prop} {U : ι -> (Set.{u2} (Prod.{u2, u2} α α))}, (Filter.HasBasis.{u2, u1} (Prod.{u2, u2} α α) ι (uniformity.{u2} α _inst_1) p U) -> (forall (s : Set.{u2} α), Eq.{succ u2} (Set.{u2} α) (Set.iInter.{u2, u1} α ι (fun (i : ι) => Set.iInter.{u2, 0} α (p i) (fun (hi : p i) => Set.iUnion.{u2, succ u2} α α (fun (x : α) => Set.iUnion.{u2, 0} α (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) (fun (H : Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) => UniformSpace.ball.{u2} α x (U i)))))) (closure.{u2} α (UniformSpace.toTopologicalSpace.{u2} α _inst_1) s))
+Case conversion may be inaccurate. Consider using '#align filter.has_basis.bInter_bUnion_ball Filter.HasBasis.biInter_biUnion_ballₓ'. -/
+theorem Filter.HasBasis.biInter_biUnion_ball {p : ι → Prop} {U : ι → Set (α × α)}
     (h : HasBasis (𝓤 α) p U) (s : Set α) : (⋂ (i) (hi : p i), ⋃ x ∈ s, ball x (U i)) = closure s :=
   by
   ext x
   simp [mem_closure_iff_nhds_basis (nhds_basis_uniformity h), ball]
-#align filter.has_basis.bInter_bUnion_ball Filter.HasBasis.binterᵢ_bunionᵢ_ball
+#align filter.has_basis.bInter_bUnion_ball Filter.HasBasis.biInter_biUnion_ball
 
 /-! ### Uniform continuity -/
 
@@ -1746,36 +1746,36 @@ instance : InfSet (UniformSpace α) :=
   ⟨fun s =>
     UniformSpace.ofCore
       { uniformity := ⨅ u ∈ s, 𝓤[u]
-        refl := le_infᵢ fun u => le_infᵢ fun hu => u.refl
+        refl := le_iInf fun u => le_iInf fun hu => u.refl
         symm :=
-          le_infᵢ fun u =>
-            le_infᵢ fun hu => le_trans (map_mono <| infᵢ_le_of_le _ <| infᵢ_le _ hu) u.symm
+          le_iInf fun u =>
+            le_iInf fun hu => le_trans (map_mono <| iInf_le_of_le _ <| iInf_le _ hu) u.symm
         comp :=
-          le_infᵢ fun u =>
-            le_infᵢ fun hu =>
-              le_trans (lift'_mono (infᵢ_le_of_le _ <| infᵢ_le _ hu) <| le_rfl) u.comp }⟩
+          le_iInf fun u =>
+            le_iInf fun hu =>
+              le_trans (lift'_mono (iInf_le_of_le _ <| iInf_le _ hu) <| le_rfl) u.comp }⟩
 
-/- warning: Inf_le -> infₛ_le is a dubious translation:
+/- warning: Inf_le -> sInf_le is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CompleteSemilatticeInf.{u1} α] {s : Set.{u1} α} {a : α}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α _inst_1))) (InfSet.infₛ.{u1} α (CompleteSemilatticeInf.toHasInf.{u1} α _inst_1) s) a)
+  forall {α : Type.{u1}} [_inst_1 : CompleteSemilatticeInf.{u1} α] {s : Set.{u1} α} {a : α}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α _inst_1))) (InfSet.sInf.{u1} α (CompleteSemilatticeInf.toHasInf.{u1} α _inst_1) s) a)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CompleteSemilatticeInf.{u1} α] {s : Set.{u1} α} {a : α}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α _inst_1))) (InfSet.infₛ.{u1} α (CompleteSemilatticeInf.toInfSet.{u1} α _inst_1) s) a)
-Case conversion may be inaccurate. Consider using '#align Inf_le infₛ_leₓ'. -/
-private theorem infₛ_le {tt : Set (UniformSpace α)} {t : UniformSpace α} (h : t ∈ tt) :
-    infₛ tt ≤ t :=
-  show (⨅ u ∈ tt, 𝓤[u]) ≤ 𝓤[t] from infᵢ₂_le t h
-#align Inf_le infₛ_le
+  forall {α : Type.{u1}} [_inst_1 : CompleteSemilatticeInf.{u1} α] {s : Set.{u1} α} {a : α}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α _inst_1))) (InfSet.sInf.{u1} α (CompleteSemilatticeInf.toInfSet.{u1} α _inst_1) s) a)
+Case conversion may be inaccurate. Consider using '#align Inf_le sInf_leₓ'. -/
+private theorem sInf_le {tt : Set (UniformSpace α)} {t : UniformSpace α} (h : t ∈ tt) :
+    sInf tt ≤ t :=
+  show (⨅ u ∈ tt, 𝓤[u]) ≤ 𝓤[t] from iInf₂_le t h
+#align Inf_le sInf_le
 
-/- warning: le_Inf -> le_infₛ is a dubious translation:
+/- warning: le_Inf -> le_sInf is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CompleteSemilatticeInf.{u1} α] {s : Set.{u1} α} {a : α}, (forall (b : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α _inst_1))) a b)) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α _inst_1))) a (InfSet.infₛ.{u1} α (CompleteSemilatticeInf.toHasInf.{u1} α _inst_1) s))
+  forall {α : Type.{u1}} [_inst_1 : CompleteSemilatticeInf.{u1} α] {s : Set.{u1} α} {a : α}, (forall (b : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α _inst_1))) a b)) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α _inst_1))) a (InfSet.sInf.{u1} α (CompleteSemilatticeInf.toHasInf.{u1} α _inst_1) s))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CompleteSemilatticeInf.{u1} α] {s : Set.{u1} α} {a : α}, (forall (b : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α _inst_1))) a b)) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α _inst_1))) a (InfSet.infₛ.{u1} α (CompleteSemilatticeInf.toInfSet.{u1} α _inst_1) s))
-Case conversion may be inaccurate. Consider using '#align le_Inf le_infₛₓ'. -/
-private theorem le_infₛ {tt : Set (UniformSpace α)} {t : UniformSpace α} (h : ∀ t' ∈ tt, t ≤ t') :
-    t ≤ infₛ tt :=
-  show 𝓤[t] ≤ ⨅ u ∈ tt, 𝓤[u] from le_infᵢ₂ h
-#align le_Inf le_infₛ
+  forall {α : Type.{u1}} [_inst_1 : CompleteSemilatticeInf.{u1} α] {s : Set.{u1} α} {a : α}, (forall (b : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α _inst_1))) a b)) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α _inst_1))) a (InfSet.sInf.{u1} α (CompleteSemilatticeInf.toInfSet.{u1} α _inst_1) s))
+Case conversion may be inaccurate. Consider using '#align le_Inf le_sInfₓ'. -/
+private theorem le_sInf {tt : Set (UniformSpace α)} {t : UniformSpace α} (h : ∀ t' ∈ tt, t ≤ t') :
+    t ≤ sInf tt :=
+  show 𝓤[t] ≤ ⨅ u ∈ tt, 𝓤[u] from le_iInf₂ h
+#align le_Inf le_sInf
 
 instance : Top (UniformSpace α) :=
   ⟨UniformSpace.ofCore
@@ -1807,10 +1807,10 @@ instance : Inf (UniformSpace α) :=
 instance : CompleteLattice (UniformSpace α) :=
   {
     UniformSpace.partialOrder with
-    sup := fun a b => infₛ { x | a ≤ x ∧ b ≤ x }
-    le_sup_left := fun a b => le_infₛ fun _ ⟨h, _⟩ => h
-    le_sup_right := fun a b => le_infₛ fun _ ⟨_, h⟩ => h
-    sup_le := fun a b c h₁ h₂ => infₛ_le ⟨h₁, h₂⟩
+    sup := fun a b => sInf { x | a ≤ x ∧ b ≤ x }
+    le_sup_left := fun a b => le_sInf fun _ ⟨h, _⟩ => h
+    le_sup_right := fun a b => le_sInf fun _ ⟨_, h⟩ => h
+    sup_le := fun a b c h₁ h₂ => sInf_le ⟨h₁, h₂⟩
     inf := (· ⊓ ·)
     le_inf := fun a b c h₁ h₂ => show a.uniformity ≤ _ from le_inf h₁ h₂
     inf_le_left := fun a b => show _ ≤ a.uniformity from inf_le_left
@@ -1819,22 +1819,22 @@ instance : CompleteLattice (UniformSpace α) :=
     le_top := fun a => show a.uniformity ≤ ⊤ from le_top
     bot := ⊥
     bot_le := fun u => u.refl
-    supₛ := fun tt => infₛ { t | ∀ t' ∈ tt, t' ≤ t }
-    le_sup := fun s u h => le_infₛ fun u' h' => h' u h
-    sup_le := fun s u h => infₛ_le h
-    infₛ := infₛ
-    le_inf := fun s a hs => le_infₛ hs
-    inf_le := fun s a ha => infₛ_le ha }
+    sSup := fun tt => sInf { t | ∀ t' ∈ tt, t' ≤ t }
+    le_sup := fun s u h => le_sInf fun u' h' => h' u h
+    sup_le := fun s u h => sInf_le h
+    sInf := sInf
+    le_inf := fun s a hs => le_sInf hs
+    inf_le := fun s a ha => sInf_le ha }
 
-/- warning: infi_uniformity -> infᵢ_uniformity is a dubious translation:
+/- warning: infi_uniformity -> iInf_uniformity is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {u : ι -> (UniformSpace.{u1} α)}, Eq.{succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (uniformity.{u1} α (infᵢ.{u1, u2} (UniformSpace.{u1} α) (UniformSpace.hasInf.{u1} α) ι u)) (infᵢ.{u1, u2} (Filter.{u1} (Prod.{u1, u1} α α)) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.completeLattice.{u1} (Prod.{u1, u1} α α)))) ι (fun (i : ι) => uniformity.{u1} α (u i)))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {u : ι -> (UniformSpace.{u1} α)}, Eq.{succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (uniformity.{u1} α (iInf.{u1, u2} (UniformSpace.{u1} α) (UniformSpace.hasInf.{u1} α) ι u)) (iInf.{u1, u2} (Filter.{u1} (Prod.{u1, u1} α α)) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.completeLattice.{u1} (Prod.{u1, u1} α α)))) ι (fun (i : ι) => uniformity.{u1} α (u i)))
 but is expected to have type
-  forall {α : Type.{u2}} {ι : Sort.{u1}} {u : ι -> (UniformSpace.{u2} α)}, Eq.{succ u2} (Filter.{u2} (Prod.{u2, u2} α α)) (uniformity.{u2} α (infᵢ.{u2, u1} (UniformSpace.{u2} α) (instInfSetUniformSpace.{u2} α) ι u)) (infᵢ.{u2, u1} (Filter.{u2} (Prod.{u2, u2} α α)) (ConditionallyCompleteLattice.toInfSet.{u2} (Filter.{u2} (Prod.{u2, u2} α α)) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} (Prod.{u2, u2} α α)) (Filter.instCompleteLatticeFilter.{u2} (Prod.{u2, u2} α α)))) ι (fun (i : ι) => uniformity.{u2} α (u i)))
-Case conversion may be inaccurate. Consider using '#align infi_uniformity infᵢ_uniformityₓ'. -/
-theorem infᵢ_uniformity {ι : Sort _} {u : ι → UniformSpace α} : 𝓤[infᵢ u] = ⨅ i, 𝓤[u i] :=
-  infᵢ_range
-#align infi_uniformity infᵢ_uniformity
+  forall {α : Type.{u2}} {ι : Sort.{u1}} {u : ι -> (UniformSpace.{u2} α)}, Eq.{succ u2} (Filter.{u2} (Prod.{u2, u2} α α)) (uniformity.{u2} α (iInf.{u2, u1} (UniformSpace.{u2} α) (instInfSetUniformSpace.{u2} α) ι u)) (iInf.{u2, u1} (Filter.{u2} (Prod.{u2, u2} α α)) (ConditionallyCompleteLattice.toInfSet.{u2} (Filter.{u2} (Prod.{u2, u2} α α)) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} (Prod.{u2, u2} α α)) (Filter.instCompleteLatticeFilter.{u2} (Prod.{u2, u2} α α)))) ι (fun (i : ι) => uniformity.{u2} α (u i)))
+Case conversion may be inaccurate. Consider using '#align infi_uniformity iInf_uniformityₓ'. -/
+theorem iInf_uniformity {ι : Sort _} {u : ι → UniformSpace α} : 𝓤[iInf u] = ⨅ i, 𝓤[u i] :=
+  iInf_range
+#align infi_uniformity iInf_uniformity
 
 #print inf_uniformity /-
 theorem inf_uniformity {u v : UniformSpace α} : 𝓤[u ⊓ v] = 𝓤[u] ⊓ 𝓤[v] :=
@@ -1918,18 +1918,18 @@ theorem UniformSpace.comap_inf {α γ} {u₁ u₂ : UniformSpace γ} {f : α →
   uniformSpace_eq comap_inf
 #align uniform_space.comap_inf UniformSpace.comap_inf
 
-/- warning: uniform_space.comap_infi -> UniformSpace.comap_infᵢ is a dubious translation:
+/- warning: uniform_space.comap_infi -> UniformSpace.comap_iInf is a dubious translation:
 lean 3 declaration is
-  forall {ι : Sort.{u1}} {α : Type.{u2}} {γ : Type.{u3}} {u : ι -> (UniformSpace.{u3} γ)} {f : α -> γ}, Eq.{succ u2} (UniformSpace.{u2} α) (UniformSpace.comap.{u2, u3} α γ f (infᵢ.{u3, u1} (UniformSpace.{u3} γ) (UniformSpace.hasInf.{u3} γ) ι (fun (i : ι) => u i))) (infᵢ.{u2, u1} (UniformSpace.{u2} α) (UniformSpace.hasInf.{u2} α) ι (fun (i : ι) => UniformSpace.comap.{u2, u3} α γ f (u i)))
+  forall {ι : Sort.{u1}} {α : Type.{u2}} {γ : Type.{u3}} {u : ι -> (UniformSpace.{u3} γ)} {f : α -> γ}, Eq.{succ u2} (UniformSpace.{u2} α) (UniformSpace.comap.{u2, u3} α γ f (iInf.{u3, u1} (UniformSpace.{u3} γ) (UniformSpace.hasInf.{u3} γ) ι (fun (i : ι) => u i))) (iInf.{u2, u1} (UniformSpace.{u2} α) (UniformSpace.hasInf.{u2} α) ι (fun (i : ι) => UniformSpace.comap.{u2, u3} α γ f (u i)))
 but is expected to have type
-  forall {ι : Sort.{u3}} {α : Type.{u2}} {γ : Type.{u1}} {u : ι -> (UniformSpace.{u1} γ)} {f : α -> γ}, Eq.{succ u2} (UniformSpace.{u2} α) (UniformSpace.comap.{u2, u1} α γ f (infᵢ.{u1, u3} (UniformSpace.{u1} γ) (instInfSetUniformSpace.{u1} γ) ι (fun (i : ι) => u i))) (infᵢ.{u2, u3} (UniformSpace.{u2} α) (instInfSetUniformSpace.{u2} α) ι (fun (i : ι) => UniformSpace.comap.{u2, u1} α γ f (u i)))
-Case conversion may be inaccurate. Consider using '#align uniform_space.comap_infi UniformSpace.comap_infᵢₓ'. -/
-theorem UniformSpace.comap_infᵢ {ι α γ} {u : ι → UniformSpace γ} {f : α → γ} :
+  forall {ι : Sort.{u3}} {α : Type.{u2}} {γ : Type.{u1}} {u : ι -> (UniformSpace.{u1} γ)} {f : α -> γ}, Eq.{succ u2} (UniformSpace.{u2} α) (UniformSpace.comap.{u2, u1} α γ f (iInf.{u1, u3} (UniformSpace.{u1} γ) (instInfSetUniformSpace.{u1} γ) ι (fun (i : ι) => u i))) (iInf.{u2, u3} (UniformSpace.{u2} α) (instInfSetUniformSpace.{u2} α) ι (fun (i : ι) => UniformSpace.comap.{u2, u1} α γ f (u i)))
+Case conversion may be inaccurate. Consider using '#align uniform_space.comap_infi UniformSpace.comap_iInfₓ'. -/
+theorem UniformSpace.comap_iInf {ι α γ} {u : ι → UniformSpace γ} {f : α → γ} :
     (⨅ i, u i).comap f = ⨅ i, (u i).comap f :=
   by
   ext : 1
-  simp [uniformity_comap, infᵢ_uniformity]
-#align uniform_space.comap_infi UniformSpace.comap_infᵢ
+  simp [uniformity_comap, iInf_uniformity]
+#align uniform_space.comap_infi UniformSpace.comap_iInf
 
 /- warning: uniform_space.comap_mono -> UniformSpace.comap_mono is a dubious translation:
 lean 3 declaration is
@@ -2042,32 +2042,32 @@ theorem toTopologicalSpace_top : @UniformSpace.toTopologicalSpace α ⊤ = ⊤ :
       this.symm ▸ @isOpen_univ _ ⊤
 #align to_topological_space_top toTopologicalSpace_top
 
-/- warning: to_topological_space_infi -> toTopologicalSpace_infᵢ is a dubious translation:
+/- warning: to_topological_space_infi -> toTopologicalSpace_iInf is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {u : ι -> (UniformSpace.{u1} α)}, Eq.{succ u1} (TopologicalSpace.{u1} α) (UniformSpace.toTopologicalSpace.{u1} α (infᵢ.{u1, u2} (UniformSpace.{u1} α) (UniformSpace.hasInf.{u1} α) ι u)) (infᵢ.{u1, u2} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) ι (fun (i : ι) => UniformSpace.toTopologicalSpace.{u1} α (u i)))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {u : ι -> (UniformSpace.{u1} α)}, Eq.{succ u1} (TopologicalSpace.{u1} α) (UniformSpace.toTopologicalSpace.{u1} α (iInf.{u1, u2} (UniformSpace.{u1} α) (UniformSpace.hasInf.{u1} α) ι u)) (iInf.{u1, u2} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) ι (fun (i : ι) => UniformSpace.toTopologicalSpace.{u1} α (u i)))
 but is expected to have type
-  forall {α : Type.{u2}} {ι : Sort.{u1}} {u : ι -> (UniformSpace.{u2} α)}, Eq.{succ u2} (TopologicalSpace.{u2} α) (UniformSpace.toTopologicalSpace.{u2} α (infᵢ.{u2, u1} (UniformSpace.{u2} α) (instInfSetUniformSpace.{u2} α) ι u)) (infᵢ.{u2, u1} (TopologicalSpace.{u2} α) (ConditionallyCompleteLattice.toInfSet.{u2} (TopologicalSpace.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u2} α))) ι (fun (i : ι) => UniformSpace.toTopologicalSpace.{u2} α (u i)))
-Case conversion may be inaccurate. Consider using '#align to_topological_space_infi toTopologicalSpace_infᵢₓ'. -/
-theorem toTopologicalSpace_infᵢ {ι : Sort _} {u : ι → UniformSpace α} :
-    (infᵢ u).toTopologicalSpace = ⨅ i, (u i).toTopologicalSpace :=
+  forall {α : Type.{u2}} {ι : Sort.{u1}} {u : ι -> (UniformSpace.{u2} α)}, Eq.{succ u2} (TopologicalSpace.{u2} α) (UniformSpace.toTopologicalSpace.{u2} α (iInf.{u2, u1} (UniformSpace.{u2} α) (instInfSetUniformSpace.{u2} α) ι u)) (iInf.{u2, u1} (TopologicalSpace.{u2} α) (ConditionallyCompleteLattice.toInfSet.{u2} (TopologicalSpace.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u2} α))) ι (fun (i : ι) => UniformSpace.toTopologicalSpace.{u2} α (u i)))
+Case conversion may be inaccurate. Consider using '#align to_topological_space_infi toTopologicalSpace_iInfₓ'. -/
+theorem toTopologicalSpace_iInf {ι : Sort _} {u : ι → UniformSpace α} :
+    (iInf u).toTopologicalSpace = ⨅ i, (u i).toTopologicalSpace :=
   by
   refine' eq_of_nhds_eq_nhds fun a => _
-  simp only [nhds_infᵢ, nhds_eq_uniformity, infᵢ_uniformity]
+  simp only [nhds_iInf, nhds_eq_uniformity, iInf_uniformity]
   exact lift'_infi_of_map_univ (ball_inter _) preimage_univ
-#align to_topological_space_infi toTopologicalSpace_infᵢ
+#align to_topological_space_infi toTopologicalSpace_iInf
 
-/- warning: to_topological_space_Inf -> toTopologicalSpace_infₛ is a dubious translation:
+/- warning: to_topological_space_Inf -> toTopologicalSpace_sInf is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} (UniformSpace.{u1} α)}, Eq.{succ u1} (TopologicalSpace.{u1} α) (UniformSpace.toTopologicalSpace.{u1} α (InfSet.infₛ.{u1} (UniformSpace.{u1} α) (UniformSpace.hasInf.{u1} α) s)) (infᵢ.{u1, succ u1} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) (UniformSpace.{u1} α) (fun (i : UniformSpace.{u1} α) => infᵢ.{u1, 0} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) (Membership.Mem.{u1, u1} (UniformSpace.{u1} α) (Set.{u1} (UniformSpace.{u1} α)) (Set.hasMem.{u1} (UniformSpace.{u1} α)) i s) (fun (H : Membership.Mem.{u1, u1} (UniformSpace.{u1} α) (Set.{u1} (UniformSpace.{u1} α)) (Set.hasMem.{u1} (UniformSpace.{u1} α)) i s) => UniformSpace.toTopologicalSpace.{u1} α i)))
+  forall {α : Type.{u1}} {s : Set.{u1} (UniformSpace.{u1} α)}, Eq.{succ u1} (TopologicalSpace.{u1} α) (UniformSpace.toTopologicalSpace.{u1} α (InfSet.sInf.{u1} (UniformSpace.{u1} α) (UniformSpace.hasInf.{u1} α) s)) (iInf.{u1, succ u1} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) (UniformSpace.{u1} α) (fun (i : UniformSpace.{u1} α) => iInf.{u1, 0} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) (Membership.Mem.{u1, u1} (UniformSpace.{u1} α) (Set.{u1} (UniformSpace.{u1} α)) (Set.hasMem.{u1} (UniformSpace.{u1} α)) i s) (fun (H : Membership.Mem.{u1, u1} (UniformSpace.{u1} α) (Set.{u1} (UniformSpace.{u1} α)) (Set.hasMem.{u1} (UniformSpace.{u1} α)) i s) => UniformSpace.toTopologicalSpace.{u1} α i)))
 but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} (UniformSpace.{u1} α)}, Eq.{succ u1} (TopologicalSpace.{u1} α) (UniformSpace.toTopologicalSpace.{u1} α (InfSet.infₛ.{u1} (UniformSpace.{u1} α) (instInfSetUniformSpace.{u1} α) s)) (infᵢ.{u1, succ u1} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toInfSet.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} α))) (UniformSpace.{u1} α) (fun (i : UniformSpace.{u1} α) => infᵢ.{u1, 0} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toInfSet.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} α))) (Membership.mem.{u1, u1} (UniformSpace.{u1} α) (Set.{u1} (UniformSpace.{u1} α)) (Set.instMembershipSet.{u1} (UniformSpace.{u1} α)) i s) (fun (H : Membership.mem.{u1, u1} (UniformSpace.{u1} α) (Set.{u1} (UniformSpace.{u1} α)) (Set.instMembershipSet.{u1} (UniformSpace.{u1} α)) i s) => UniformSpace.toTopologicalSpace.{u1} α i)))
-Case conversion may be inaccurate. Consider using '#align to_topological_space_Inf toTopologicalSpace_infₛₓ'. -/
-theorem toTopologicalSpace_infₛ {s : Set (UniformSpace α)} :
-    (infₛ s).toTopologicalSpace = ⨅ i ∈ s, @UniformSpace.toTopologicalSpace α i :=
+  forall {α : Type.{u1}} {s : Set.{u1} (UniformSpace.{u1} α)}, Eq.{succ u1} (TopologicalSpace.{u1} α) (UniformSpace.toTopologicalSpace.{u1} α (InfSet.sInf.{u1} (UniformSpace.{u1} α) (instInfSetUniformSpace.{u1} α) s)) (iInf.{u1, succ u1} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toInfSet.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} α))) (UniformSpace.{u1} α) (fun (i : UniformSpace.{u1} α) => iInf.{u1, 0} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toInfSet.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} α))) (Membership.mem.{u1, u1} (UniformSpace.{u1} α) (Set.{u1} (UniformSpace.{u1} α)) (Set.instMembershipSet.{u1} (UniformSpace.{u1} α)) i s) (fun (H : Membership.mem.{u1, u1} (UniformSpace.{u1} α) (Set.{u1} (UniformSpace.{u1} α)) (Set.instMembershipSet.{u1} (UniformSpace.{u1} α)) i s) => UniformSpace.toTopologicalSpace.{u1} α i)))
+Case conversion may be inaccurate. Consider using '#align to_topological_space_Inf toTopologicalSpace_sInfₓ'. -/
+theorem toTopologicalSpace_sInf {s : Set (UniformSpace α)} :
+    (sInf s).toTopologicalSpace = ⨅ i ∈ s, @UniformSpace.toTopologicalSpace α i :=
   by
-  rw [infₛ_eq_infᵢ]
-  simp only [← toTopologicalSpace_infᵢ]
-#align to_topological_space_Inf toTopologicalSpace_infₛ
+  rw [sInf_eq_iInf]
+  simp only [← toTopologicalSpace_iInf]
+#align to_topological_space_Inf toTopologicalSpace_sInf
 
 #print toTopologicalSpace_inf /-
 theorem toTopologicalSpace_inf {u v : UniformSpace α} :
@@ -2107,56 +2107,56 @@ theorem UniformContinuous.inf_dom_right {f : α → β} {u₁ u₂ : UniformSpac
 #align uniform_continuous_inf_dom_right UniformContinuous.inf_dom_right
 -/
 
-/- warning: uniform_continuous_Inf_dom -> uniformContinuous_infₛ_dom is a dubious translation:
+/- warning: uniform_continuous_Inf_dom -> uniformContinuous_sInf_dom is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {u₁ : Set.{u1} (UniformSpace.{u1} α)} {u₂ : UniformSpace.{u2} β} {u : UniformSpace.{u1} α}, (Membership.Mem.{u1, u1} (UniformSpace.{u1} α) (Set.{u1} (UniformSpace.{u1} α)) (Set.hasMem.{u1} (UniformSpace.{u1} α)) u u₁) -> (UniformContinuous.{u1, u2} α β u u₂ f) -> (UniformContinuous.{u1, u2} α β (InfSet.infₛ.{u1} (UniformSpace.{u1} α) (UniformSpace.hasInf.{u1} α) u₁) u₂ f)
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {u₁ : Set.{u1} (UniformSpace.{u1} α)} {u₂ : UniformSpace.{u2} β} {u : UniformSpace.{u1} α}, (Membership.Mem.{u1, u1} (UniformSpace.{u1} α) (Set.{u1} (UniformSpace.{u1} α)) (Set.hasMem.{u1} (UniformSpace.{u1} α)) u u₁) -> (UniformContinuous.{u1, u2} α β u u₂ f) -> (UniformContinuous.{u1, u2} α β (InfSet.sInf.{u1} (UniformSpace.{u1} α) (UniformSpace.hasInf.{u1} α) u₁) u₂ f)
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {u₁ : Set.{u1} (UniformSpace.{u1} α)} {u₂ : UniformSpace.{u2} β} {u : UniformSpace.{u1} α}, (Membership.mem.{u1, u1} (UniformSpace.{u1} α) (Set.{u1} (UniformSpace.{u1} α)) (Set.instMembershipSet.{u1} (UniformSpace.{u1} α)) u u₁) -> (UniformContinuous.{u1, u2} α β u u₂ f) -> (UniformContinuous.{u1, u2} α β (InfSet.infₛ.{u1} (UniformSpace.{u1} α) (instInfSetUniformSpace.{u1} α) u₁) u₂ f)
-Case conversion may be inaccurate. Consider using '#align uniform_continuous_Inf_dom uniformContinuous_infₛ_domₓ'. -/
-theorem uniformContinuous_infₛ_dom {f : α → β} {u₁ : Set (UniformSpace α)} {u₂ : UniformSpace β}
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {u₁ : Set.{u1} (UniformSpace.{u1} α)} {u₂ : UniformSpace.{u2} β} {u : UniformSpace.{u1} α}, (Membership.mem.{u1, u1} (UniformSpace.{u1} α) (Set.{u1} (UniformSpace.{u1} α)) (Set.instMembershipSet.{u1} (UniformSpace.{u1} α)) u u₁) -> (UniformContinuous.{u1, u2} α β u u₂ f) -> (UniformContinuous.{u1, u2} α β (InfSet.sInf.{u1} (UniformSpace.{u1} α) (instInfSetUniformSpace.{u1} α) u₁) u₂ f)
+Case conversion may be inaccurate. Consider using '#align uniform_continuous_Inf_dom uniformContinuous_sInf_domₓ'. -/
+theorem uniformContinuous_sInf_dom {f : α → β} {u₁ : Set (UniformSpace α)} {u₂ : UniformSpace β}
     {u : UniformSpace α} (h₁ : u ∈ u₁) (hf : @UniformContinuous u u₂ f) :
-    @UniformContinuous (infₛ u₁) u₂ f :=
+    @UniformContinuous (sInf u₁) u₂ f :=
   by
-  rw [UniformContinuous, infₛ_eq_infᵢ', infᵢ_uniformity]
+  rw [UniformContinuous, sInf_eq_iInf', iInf_uniformity]
   exact tendsto_infi' ⟨u, h₁⟩ hf
-#align uniform_continuous_Inf_dom uniformContinuous_infₛ_dom
+#align uniform_continuous_Inf_dom uniformContinuous_sInf_dom
 
-/- warning: uniform_continuous_Inf_rng -> uniformContinuous_infₛ_rng is a dubious translation:
+/- warning: uniform_continuous_Inf_rng -> uniformContinuous_sInf_rng is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {u₁ : UniformSpace.{u1} α} {u₂ : Set.{u2} (UniformSpace.{u2} β)}, (forall (u : UniformSpace.{u2} β), (Membership.Mem.{u2, u2} (UniformSpace.{u2} β) (Set.{u2} (UniformSpace.{u2} β)) (Set.hasMem.{u2} (UniformSpace.{u2} β)) u u₂) -> (UniformContinuous.{u1, u2} α β u₁ u f)) -> (UniformContinuous.{u1, u2} α β u₁ (InfSet.infₛ.{u2} (UniformSpace.{u2} β) (UniformSpace.hasInf.{u2} β) u₂) f)
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {u₁ : UniformSpace.{u1} α} {u₂ : Set.{u2} (UniformSpace.{u2} β)}, (forall (u : UniformSpace.{u2} β), (Membership.Mem.{u2, u2} (UniformSpace.{u2} β) (Set.{u2} (UniformSpace.{u2} β)) (Set.hasMem.{u2} (UniformSpace.{u2} β)) u u₂) -> (UniformContinuous.{u1, u2} α β u₁ u f)) -> (UniformContinuous.{u1, u2} α β u₁ (InfSet.sInf.{u2} (UniformSpace.{u2} β) (UniformSpace.hasInf.{u2} β) u₂) f)
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {u₁ : UniformSpace.{u1} α} {u₂ : Set.{u2} (UniformSpace.{u2} β)}, (forall (u : UniformSpace.{u2} β), (Membership.mem.{u2, u2} (UniformSpace.{u2} β) (Set.{u2} (UniformSpace.{u2} β)) (Set.instMembershipSet.{u2} (UniformSpace.{u2} β)) u u₂) -> (UniformContinuous.{u1, u2} α β u₁ u f)) -> (UniformContinuous.{u1, u2} α β u₁ (InfSet.infₛ.{u2} (UniformSpace.{u2} β) (instInfSetUniformSpace.{u2} β) u₂) f)
-Case conversion may be inaccurate. Consider using '#align uniform_continuous_Inf_rng uniformContinuous_infₛ_rngₓ'. -/
-theorem uniformContinuous_infₛ_rng {f : α → β} {u₁ : UniformSpace α} {u₂ : Set (UniformSpace β)}
-    (h : ∀ u ∈ u₂, @UniformContinuous u₁ u f) : @UniformContinuous u₁ (infₛ u₂) f :=
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {u₁ : UniformSpace.{u1} α} {u₂ : Set.{u2} (UniformSpace.{u2} β)}, (forall (u : UniformSpace.{u2} β), (Membership.mem.{u2, u2} (UniformSpace.{u2} β) (Set.{u2} (UniformSpace.{u2} β)) (Set.instMembershipSet.{u2} (UniformSpace.{u2} β)) u u₂) -> (UniformContinuous.{u1, u2} α β u₁ u f)) -> (UniformContinuous.{u1, u2} α β u₁ (InfSet.sInf.{u2} (UniformSpace.{u2} β) (instInfSetUniformSpace.{u2} β) u₂) f)
+Case conversion may be inaccurate. Consider using '#align uniform_continuous_Inf_rng uniformContinuous_sInf_rngₓ'. -/
+theorem uniformContinuous_sInf_rng {f : α → β} {u₁ : UniformSpace α} {u₂ : Set (UniformSpace β)}
+    (h : ∀ u ∈ u₂, @UniformContinuous u₁ u f) : @UniformContinuous u₁ (sInf u₂) f :=
   by
-  rw [UniformContinuous, infₛ_eq_infᵢ', infᵢ_uniformity]
+  rw [UniformContinuous, sInf_eq_iInf', iInf_uniformity]
   exact tendsto_infi.mpr fun ⟨u, hu⟩ => h u hu
-#align uniform_continuous_Inf_rng uniformContinuous_infₛ_rng
+#align uniform_continuous_Inf_rng uniformContinuous_sInf_rng
 
-/- warning: uniform_continuous_infi_dom -> uniformContinuous_infᵢ_dom is a dubious translation:
+/- warning: uniform_continuous_infi_dom -> uniformContinuous_iInf_dom is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {f : α -> β} {u₁ : ι -> (UniformSpace.{u1} α)} {u₂ : UniformSpace.{u2} β} {i : ι}, (UniformContinuous.{u1, u2} α β (u₁ i) u₂ f) -> (UniformContinuous.{u1, u2} α β (infᵢ.{u1, u3} (UniformSpace.{u1} α) (UniformSpace.hasInf.{u1} α) ι u₁) u₂ f)
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {f : α -> β} {u₁ : ι -> (UniformSpace.{u1} α)} {u₂ : UniformSpace.{u2} β} {i : ι}, (UniformContinuous.{u1, u2} α β (u₁ i) u₂ f) -> (UniformContinuous.{u1, u2} α β (iInf.{u1, u3} (UniformSpace.{u1} α) (UniformSpace.hasInf.{u1} α) ι u₁) u₂ f)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} {ι : Sort.{u1}} {f : α -> β} {u₁ : ι -> (UniformSpace.{u2} α)} {u₂ : UniformSpace.{u3} β} {i : ι}, (UniformContinuous.{u2, u3} α β (u₁ i) u₂ f) -> (UniformContinuous.{u2, u3} α β (infᵢ.{u2, u1} (UniformSpace.{u2} α) (instInfSetUniformSpace.{u2} α) ι u₁) u₂ f)
-Case conversion may be inaccurate. Consider using '#align uniform_continuous_infi_dom uniformContinuous_infᵢ_domₓ'. -/
-theorem uniformContinuous_infᵢ_dom {f : α → β} {u₁ : ι → UniformSpace α} {u₂ : UniformSpace β}
-    {i : ι} (hf : @UniformContinuous (u₁ i) u₂ f) : @UniformContinuous (infᵢ u₁) u₂ f :=
+  forall {α : Type.{u2}} {β : Type.{u3}} {ι : Sort.{u1}} {f : α -> β} {u₁ : ι -> (UniformSpace.{u2} α)} {u₂ : UniformSpace.{u3} β} {i : ι}, (UniformContinuous.{u2, u3} α β (u₁ i) u₂ f) -> (UniformContinuous.{u2, u3} α β (iInf.{u2, u1} (UniformSpace.{u2} α) (instInfSetUniformSpace.{u2} α) ι u₁) u₂ f)
+Case conversion may be inaccurate. Consider using '#align uniform_continuous_infi_dom uniformContinuous_iInf_domₓ'. -/
+theorem uniformContinuous_iInf_dom {f : α → β} {u₁ : ι → UniformSpace α} {u₂ : UniformSpace β}
+    {i : ι} (hf : @UniformContinuous (u₁ i) u₂ f) : @UniformContinuous (iInf u₁) u₂ f :=
   by
-  rw [UniformContinuous, infᵢ_uniformity]
+  rw [UniformContinuous, iInf_uniformity]
   exact tendsto_infi' i hf
-#align uniform_continuous_infi_dom uniformContinuous_infᵢ_dom
+#align uniform_continuous_infi_dom uniformContinuous_iInf_dom
 
-/- warning: uniform_continuous_infi_rng -> uniformContinuous_infᵢ_rng is a dubious translation:
+/- warning: uniform_continuous_infi_rng -> uniformContinuous_iInf_rng is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {f : α -> β} {u₁ : UniformSpace.{u1} α} {u₂ : ι -> (UniformSpace.{u2} β)}, (forall (i : ι), UniformContinuous.{u1, u2} α β u₁ (u₂ i) f) -> (UniformContinuous.{u1, u2} α β u₁ (infᵢ.{u2, u3} (UniformSpace.{u2} β) (UniformSpace.hasInf.{u2} β) ι u₂) f)
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {f : α -> β} {u₁ : UniformSpace.{u1} α} {u₂ : ι -> (UniformSpace.{u2} β)}, (forall (i : ι), UniformContinuous.{u1, u2} α β u₁ (u₂ i) f) -> (UniformContinuous.{u1, u2} α β u₁ (iInf.{u2, u3} (UniformSpace.{u2} β) (UniformSpace.hasInf.{u2} β) ι u₂) f)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} {ι : Sort.{u1}} {f : α -> β} {u₁ : UniformSpace.{u2} α} {u₂ : ι -> (UniformSpace.{u3} β)}, (forall (i : ι), UniformContinuous.{u2, u3} α β u₁ (u₂ i) f) -> (UniformContinuous.{u2, u3} α β u₁ (infᵢ.{u3, u1} (UniformSpace.{u3} β) (instInfSetUniformSpace.{u3} β) ι u₂) f)
-Case conversion may be inaccurate. Consider using '#align uniform_continuous_infi_rng uniformContinuous_infᵢ_rngₓ'. -/
-theorem uniformContinuous_infᵢ_rng {f : α → β} {u₁ : UniformSpace α} {u₂ : ι → UniformSpace β}
-    (h : ∀ i, @UniformContinuous u₁ (u₂ i) f) : @UniformContinuous u₁ (infᵢ u₂) f := by
-  rwa [UniformContinuous, infᵢ_uniformity, tendsto_infi]
-#align uniform_continuous_infi_rng uniformContinuous_infᵢ_rng
+  forall {α : Type.{u2}} {β : Type.{u3}} {ι : Sort.{u1}} {f : α -> β} {u₁ : UniformSpace.{u2} α} {u₂ : ι -> (UniformSpace.{u3} β)}, (forall (i : ι), UniformContinuous.{u2, u3} α β u₁ (u₂ i) f) -> (UniformContinuous.{u2, u3} α β u₁ (iInf.{u3, u1} (UniformSpace.{u3} β) (instInfSetUniformSpace.{u3} β) ι u₂) f)
+Case conversion may be inaccurate. Consider using '#align uniform_continuous_infi_rng uniformContinuous_iInf_rngₓ'. -/
+theorem uniformContinuous_iInf_rng {f : α → β} {u₁ : UniformSpace α} {u₂ : ι → UniformSpace β}
+    (h : ∀ i, @UniformContinuous u₁ (u₂ i) f) : @UniformContinuous u₁ (iInf u₂) f := by
+  rwa [UniformContinuous, iInf_uniformity, tendsto_infi]
+#align uniform_continuous_infi_rng uniformContinuous_iInf_rng
 
 end UniformContinuousInfi
 
@@ -2572,14 +2572,14 @@ theorem uniformContinuous_inf_dom_right₂ {α β γ} {f : α → β → γ} {ua
   exact @UniformContinuous.comp _ _ _ (id _) (id _) _ _ _ h h_unif_cont_id
 #align uniform_continuous_inf_dom_right₂ uniformContinuous_inf_dom_right₂
 
-/- warning: uniform_continuous_Inf_dom₂ -> uniformContinuous_infₛ_dom₂ is a dubious translation:
+/- warning: uniform_continuous_Inf_dom₂ -> uniformContinuous_sInf_dom₂ is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {f : α -> β -> γ} {uas : Set.{u1} (UniformSpace.{u1} α)} {ubs : Set.{u2} (UniformSpace.{u2} β)} {ua : UniformSpace.{u1} α} {ub : UniformSpace.{u2} β} {uc : UniformSpace.{u3} γ}, (Membership.Mem.{u1, u1} (UniformSpace.{u1} α) (Set.{u1} (UniformSpace.{u1} α)) (Set.hasMem.{u1} (UniformSpace.{u1} α)) ua uas) -> (Membership.Mem.{u2, u2} (UniformSpace.{u2} β) (Set.{u2} (UniformSpace.{u2} β)) (Set.hasMem.{u2} (UniformSpace.{u2} β)) ub ubs) -> (UniformContinuous.{max u1 u2, u3} (Prod.{u1, u2} α β) γ (Prod.uniformSpace.{u1, u2} α β ua ub) uc (fun (p : Prod.{u1, u2} α β) => f (Prod.fst.{u1, u2} α β p) (Prod.snd.{u1, u2} α β p))) -> (UniformContinuous.{max u1 u2, u3} (Prod.{u1, u2} α β) γ (Prod.uniformSpace.{u1, u2} α β (InfSet.infₛ.{u1} (UniformSpace.{u1} α) (UniformSpace.hasInf.{u1} α) uas) (InfSet.infₛ.{u2} (UniformSpace.{u2} β) (UniformSpace.hasInf.{u2} β) ubs)) uc (fun (p : Prod.{u1, u2} α β) => f (Prod.fst.{u1, u2} α β p) (Prod.snd.{u1, u2} α β p)))
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {f : α -> β -> γ} {uas : Set.{u1} (UniformSpace.{u1} α)} {ubs : Set.{u2} (UniformSpace.{u2} β)} {ua : UniformSpace.{u1} α} {ub : UniformSpace.{u2} β} {uc : UniformSpace.{u3} γ}, (Membership.Mem.{u1, u1} (UniformSpace.{u1} α) (Set.{u1} (UniformSpace.{u1} α)) (Set.hasMem.{u1} (UniformSpace.{u1} α)) ua uas) -> (Membership.Mem.{u2, u2} (UniformSpace.{u2} β) (Set.{u2} (UniformSpace.{u2} β)) (Set.hasMem.{u2} (UniformSpace.{u2} β)) ub ubs) -> (UniformContinuous.{max u1 u2, u3} (Prod.{u1, u2} α β) γ (Prod.uniformSpace.{u1, u2} α β ua ub) uc (fun (p : Prod.{u1, u2} α β) => f (Prod.fst.{u1, u2} α β p) (Prod.snd.{u1, u2} α β p))) -> (UniformContinuous.{max u1 u2, u3} (Prod.{u1, u2} α β) γ (Prod.uniformSpace.{u1, u2} α β (InfSet.sInf.{u1} (UniformSpace.{u1} α) (UniformSpace.hasInf.{u1} α) uas) (InfSet.sInf.{u2} (UniformSpace.{u2} β) (UniformSpace.hasInf.{u2} β) ubs)) uc (fun (p : Prod.{u1, u2} α β) => f (Prod.fst.{u1, u2} α β p) (Prod.snd.{u1, u2} α β p)))
 but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {f : α -> β -> γ} {uas : Set.{u3} (UniformSpace.{u3} α)} {ubs : Set.{u2} (UniformSpace.{u2} β)} {ua : UniformSpace.{u3} α} {ub : UniformSpace.{u2} β} {uc : UniformSpace.{u1} γ}, (Membership.mem.{u3, u3} (UniformSpace.{u3} α) (Set.{u3} (UniformSpace.{u3} α)) (Set.instMembershipSet.{u3} (UniformSpace.{u3} α)) ua uas) -> (Membership.mem.{u2, u2} (UniformSpace.{u2} β) (Set.{u2} (UniformSpace.{u2} β)) (Set.instMembershipSet.{u2} (UniformSpace.{u2} β)) ub ubs) -> (UniformContinuous.{max u3 u2, u1} (Prod.{u3, u2} α β) γ (instUniformSpaceProd.{u3, u2} α β ua ub) uc (fun (p : Prod.{u3, u2} α β) => f (Prod.fst.{u3, u2} α β p) (Prod.snd.{u3, u2} α β p))) -> (UniformContinuous.{max u3 u2, u1} (Prod.{u3, u2} α β) γ (instUniformSpaceProd.{u3, u2} α β (InfSet.infₛ.{u3} (UniformSpace.{u3} α) (instInfSetUniformSpace.{u3} α) uas) (InfSet.infₛ.{u2} (UniformSpace.{u2} β) (instInfSetUniformSpace.{u2} β) ubs)) uc (fun (p : Prod.{u3, u2} α β) => f (Prod.fst.{u3, u2} α β p) (Prod.snd.{u3, u2} α β p)))
-Case conversion may be inaccurate. Consider using '#align uniform_continuous_Inf_dom₂ uniformContinuous_infₛ_dom₂ₓ'. -/
+  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {f : α -> β -> γ} {uas : Set.{u3} (UniformSpace.{u3} α)} {ubs : Set.{u2} (UniformSpace.{u2} β)} {ua : UniformSpace.{u3} α} {ub : UniformSpace.{u2} β} {uc : UniformSpace.{u1} γ}, (Membership.mem.{u3, u3} (UniformSpace.{u3} α) (Set.{u3} (UniformSpace.{u3} α)) (Set.instMembershipSet.{u3} (UniformSpace.{u3} α)) ua uas) -> (Membership.mem.{u2, u2} (UniformSpace.{u2} β) (Set.{u2} (UniformSpace.{u2} β)) (Set.instMembershipSet.{u2} (UniformSpace.{u2} β)) ub ubs) -> (UniformContinuous.{max u3 u2, u1} (Prod.{u3, u2} α β) γ (instUniformSpaceProd.{u3, u2} α β ua ub) uc (fun (p : Prod.{u3, u2} α β) => f (Prod.fst.{u3, u2} α β p) (Prod.snd.{u3, u2} α β p))) -> (UniformContinuous.{max u3 u2, u1} (Prod.{u3, u2} α β) γ (instUniformSpaceProd.{u3, u2} α β (InfSet.sInf.{u3} (UniformSpace.{u3} α) (instInfSetUniformSpace.{u3} α) uas) (InfSet.sInf.{u2} (UniformSpace.{u2} β) (instInfSetUniformSpace.{u2} β) ubs)) uc (fun (p : Prod.{u3, u2} α β) => f (Prod.fst.{u3, u2} α β p) (Prod.snd.{u3, u2} α β p)))
+Case conversion may be inaccurate. Consider using '#align uniform_continuous_Inf_dom₂ uniformContinuous_sInf_dom₂ₓ'. -/
 /-- A version of `uniform_continuous_Inf_dom` for binary functions -/
-theorem uniformContinuous_infₛ_dom₂ {α β γ} {f : α → β → γ} {uas : Set (UniformSpace α)}
+theorem uniformContinuous_sInf_dom₂ {α β γ} {f : α → β → γ} {uas : Set (UniformSpace α)}
     {ubs : Set (UniformSpace β)} {ua : UniformSpace α} {ub : UniformSpace β} {uc : UniformSpace γ}
     (ha : ua ∈ uas) (hb : ub ∈ ubs) (hf : UniformContinuous fun p : α × β => f p.1 p.2) : by
     haveI := Inf uas <;> haveI := Inf ubs <;>
@@ -2587,11 +2587,11 @@ theorem uniformContinuous_infₛ_dom₂ {α β γ} {f : α → β → γ} {uas :
   by
   -- proof essentially copied from ``continuous_Inf_dom`
   let t : UniformSpace (α × β) := Prod.uniformSpace
-  have ha := uniformContinuous_infₛ_dom ha uniformContinuous_id
-  have hb := uniformContinuous_infₛ_dom hb uniformContinuous_id
+  have ha := uniformContinuous_sInf_dom ha uniformContinuous_id
+  have hb := uniformContinuous_sInf_dom hb uniformContinuous_id
   have h_unif_cont_id := @UniformContinuous.prod_map _ _ _ _ (Inf uas) (Inf ubs) ua ub _ _ ha hb
   exact @UniformContinuous.comp _ _ _ (id _) (id _) _ _ _ hf h_unif_cont_id
-#align uniform_continuous_Inf_dom₂ uniformContinuous_infₛ_dom₂
+#align uniform_continuous_Inf_dom₂ uniformContinuous_sInf_dom₂
 
 end Prod
 
@@ -2804,9 +2804,9 @@ end Constructions
 
 /- warning: lebesgue_number_lemma -> lebesgue_number_lemma is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} α} {ι : Sort.{u2}} {c : ι -> (Set.{u1} α)}, (IsCompact.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) s) -> (forall (i : ι), IsOpen.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (c i)) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Set.unionᵢ.{u1, u2} α ι (fun (i : ι) => c i))) -> (Exists.{succ u1} (Set.{u1} (Prod.{u1, u1} α α)) (fun (n : Set.{u1} (Prod.{u1, u1} α α)) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) n (uniformity.{u1} α _inst_1)) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) n (uniformity.{u1} α _inst_1)) => forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Exists.{u2} ι (fun (i : ι) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (setOf.{u1} α (fun (y : α) => Membership.Mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasMem.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) n)) (c i))))))
+  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} α} {ι : Sort.{u2}} {c : ι -> (Set.{u1} α)}, (IsCompact.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) s) -> (forall (i : ι), IsOpen.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (c i)) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Set.iUnion.{u1, u2} α ι (fun (i : ι) => c i))) -> (Exists.{succ u1} (Set.{u1} (Prod.{u1, u1} α α)) (fun (n : Set.{u1} (Prod.{u1, u1} α α)) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) n (uniformity.{u1} α _inst_1)) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) n (uniformity.{u1} α _inst_1)) => forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Exists.{u2} ι (fun (i : ι) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (setOf.{u1} α (fun (y : α) => Membership.Mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasMem.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) n)) (c i))))))
 but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : UniformSpace.{u2} α] {s : Set.{u2} α} {ι : Sort.{u1}} {c : ι -> (Set.{u2} α)}, (IsCompact.{u2} α (UniformSpace.toTopologicalSpace.{u2} α _inst_1) s) -> (forall (i : ι), IsOpen.{u2} α (UniformSpace.toTopologicalSpace.{u2} α _inst_1) (c i)) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) s (Set.unionᵢ.{u2, u1} α ι (fun (i : ι) => c i))) -> (Exists.{succ u2} (Set.{u2} (Prod.{u2, u2} α α)) (fun (n : Set.{u2} (Prod.{u2, u2} α α)) => And (Membership.mem.{u2, u2} (Set.{u2} (Prod.{u2, u2} α α)) (Filter.{u2} (Prod.{u2, u2} α α)) (instMembershipSetFilter.{u2} (Prod.{u2, u2} α α)) n (uniformity.{u2} α _inst_1)) (forall (x : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) -> (Exists.{u1} ι (fun (i : ι) => HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) (setOf.{u2} α (fun (y : α) => Membership.mem.{u2, u2} (Prod.{u2, u2} α α) (Set.{u2} (Prod.{u2, u2} α α)) (Set.instMembershipSet.{u2} (Prod.{u2, u2} α α)) (Prod.mk.{u2, u2} α α x y) n)) (c i))))))
+  forall {α : Type.{u2}} [_inst_1 : UniformSpace.{u2} α] {s : Set.{u2} α} {ι : Sort.{u1}} {c : ι -> (Set.{u2} α)}, (IsCompact.{u2} α (UniformSpace.toTopologicalSpace.{u2} α _inst_1) s) -> (forall (i : ι), IsOpen.{u2} α (UniformSpace.toTopologicalSpace.{u2} α _inst_1) (c i)) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) s (Set.iUnion.{u2, u1} α ι (fun (i : ι) => c i))) -> (Exists.{succ u2} (Set.{u2} (Prod.{u2, u2} α α)) (fun (n : Set.{u2} (Prod.{u2, u2} α α)) => And (Membership.mem.{u2, u2} (Set.{u2} (Prod.{u2, u2} α α)) (Filter.{u2} (Prod.{u2, u2} α α)) (instMembershipSetFilter.{u2} (Prod.{u2, u2} α α)) n (uniformity.{u2} α _inst_1)) (forall (x : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) -> (Exists.{u1} ι (fun (i : ι) => HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) (setOf.{u2} α (fun (y : α) => Membership.mem.{u2, u2} (Prod.{u2, u2} α α) (Set.{u2} (Prod.{u2, u2} α α)) (Set.instMembershipSet.{u2} (Prod.{u2, u2} α α)) (Prod.mk.{u2, u2} α α x y) n)) (c i))))))
 Case conversion may be inaccurate. Consider using '#align lebesgue_number_lemma lebesgue_number_lemmaₓ'. -/
 /-- Let `c : ι → set α` be an open cover of a compact set `s`. Then there exists an entourage
 `n` such that for each `x ∈ s` its `n`-neighborhood is contained in some `c i`. -/
@@ -2838,19 +2838,19 @@ theorem lebesgue_number_lemma {α : Type u} [UniformSpace α] {s : Set α} {ι} 
   exact prod_mk_mem_compRel (refl_mem_uniformity hm) (bInter_subset_of_mem bn hy)
 #align lebesgue_number_lemma lebesgue_number_lemma
 
-/- warning: lebesgue_number_lemma_sUnion -> lebesgue_number_lemma_unionₛ is a dubious translation:
+/- warning: lebesgue_number_lemma_sUnion -> lebesgue_number_lemma_sUnion is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} α} {c : Set.{u1} (Set.{u1} α)}, (IsCompact.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) s) -> (forall (t : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) t c) -> (IsOpen.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) t)) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Set.unionₛ.{u1} α c)) -> (Exists.{succ u1} (Set.{u1} (Prod.{u1, u1} α α)) (fun (n : Set.{u1} (Prod.{u1, u1} α α)) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) n (uniformity.{u1} α _inst_1)) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) n (uniformity.{u1} α _inst_1)) => forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) t c) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) t c) => forall (y : α), (Membership.Mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasMem.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) n) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t)))))))
+  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} α} {c : Set.{u1} (Set.{u1} α)}, (IsCompact.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) s) -> (forall (t : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) t c) -> (IsOpen.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) t)) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Set.sUnion.{u1} α c)) -> (Exists.{succ u1} (Set.{u1} (Prod.{u1, u1} α α)) (fun (n : Set.{u1} (Prod.{u1, u1} α α)) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) n (uniformity.{u1} α _inst_1)) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.hasMem.{u1} (Prod.{u1, u1} α α)) n (uniformity.{u1} α _inst_1)) => forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) t c) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) t c) => forall (y : α), (Membership.Mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.hasMem.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) n) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t)))))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} α} {c : Set.{u1} (Set.{u1} α)}, (IsCompact.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) s) -> (forall (t : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) t c) -> (IsOpen.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) t)) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Set.unionₛ.{u1} α c)) -> (Exists.{succ u1} (Set.{u1} (Prod.{u1, u1} α α)) (fun (n : Set.{u1} (Prod.{u1, u1} α α)) => And (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) n (uniformity.{u1} α _inst_1)) (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) t c) (forall (y : α), (Membership.mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.instMembershipSet.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) n) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t)))))))
-Case conversion may be inaccurate. Consider using '#align lebesgue_number_lemma_sUnion lebesgue_number_lemma_unionₛₓ'. -/
+  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} α} {c : Set.{u1} (Set.{u1} α)}, (IsCompact.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) s) -> (forall (t : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) t c) -> (IsOpen.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) t)) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Set.sUnion.{u1} α c)) -> (Exists.{succ u1} (Set.{u1} (Prod.{u1, u1} α α)) (fun (n : Set.{u1} (Prod.{u1, u1} α α)) => And (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) n (uniformity.{u1} α _inst_1)) (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) t c) (forall (y : α), (Membership.mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.instMembershipSet.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) n) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t)))))))
+Case conversion may be inaccurate. Consider using '#align lebesgue_number_lemma_sUnion lebesgue_number_lemma_sUnionₓ'. -/
 /-- Let `c : set (set α)` be an open cover of a compact set `s`. Then there exists an entourage
 `n` such that for each `x ∈ s` its `n`-neighborhood is contained in some `t ∈ c`. -/
-theorem lebesgue_number_lemma_unionₛ {α : Type u} [UniformSpace α] {s : Set α} {c : Set (Set α)}
+theorem lebesgue_number_lemma_sUnion {α : Type u} [UniformSpace α] {s : Set α} {c : Set (Set α)}
     (hs : IsCompact s) (hc₁ : ∀ t ∈ c, IsOpen t) (hc₂ : s ⊆ ⋃₀ c) :
     ∃ n ∈ 𝓤 α, ∀ x ∈ s, ∃ t ∈ c, ∀ y, (x, y) ∈ n → y ∈ t := by
   rw [sUnion_eq_Union] at hc₂ <;> simpa using lebesgue_number_lemma hs (by simpa) hc₂
-#align lebesgue_number_lemma_sUnion lebesgue_number_lemma_unionₛ
+#align lebesgue_number_lemma_sUnion lebesgue_number_lemma_sUnion
 
 /- warning: lebesgue_number_of_compact_open -> lebesgue_number_of_compact_open is a dubious translation:
 lean 3 declaration is

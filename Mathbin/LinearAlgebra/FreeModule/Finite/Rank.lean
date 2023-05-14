@@ -74,7 +74,7 @@ theorem rank_lt_aleph0 : Module.rank R M < ℵ₀ :=
   dsimp only [Module.rank]
   letI := nontrivial_of_invariantBasisNumber R
   obtain ⟨S, hS⟩ := module.finite_def.mp ‹_›
-  refine' (csupᵢ_le' fun i => _).trans_lt (nat_lt_aleph_0 S.card)
+  refine' (ciSup_le' fun i => _).trans_lt (nat_lt_aleph_0 S.card)
   exact linearIndependent_le_span_finset _ i.prop S hS
 #align finite_dimensional.rank_lt_aleph_0 FiniteDimensional.rank_lt_aleph0
 -/

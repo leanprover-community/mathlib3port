@@ -64,7 +64,7 @@ theorem isOpenImmersionIsLocalAtTarget : PropertyIsLocalAtTarget @IsOpenImmersio
   · intro X Y f 𝒰 H
     rw [is_open_immersion_iff_stalk]
     constructor
-    · apply (openEmbedding_iff_openEmbedding_of_supᵢ_eq_top 𝒰.supr_opens_range f.1.base.2).mpr
+    · apply (openEmbedding_iff_openEmbedding_of_iSup_eq_top 𝒰.supr_opens_range f.1.base.2).mpr
       intro i
       have :=
         ((is_open_immersion_respects_iso.arrow_iso_iff
@@ -94,7 +94,7 @@ theorem IsOpenImmersion.openCover_tFAE {X Y : Scheme.{u}} (f : X ⟶ Y) :
         ∀ U : Opens Y.carrier, IsOpenImmersion (f ∣_ U),
         ∀ {U : Scheme} (g : U ⟶ Y) [IsOpenImmersion g],
           IsOpenImmersion (pullback.snd : pullback f g ⟶ _),
-        ∃ (ι : Type u)(U : ι → Opens Y.carrier)(hU : supᵢ U = ⊤),
+        ∃ (ι : Type u)(U : ι → Opens Y.carrier)(hU : iSup U = ⊤),
           ∀ i, IsOpenImmersion (f ∣_ U i)] :=
   isOpenImmersionIsLocalAtTarget.openCover_tFAE f
 #align algebraic_geometry.is_open_immersion.open_cover_tfae AlgebraicGeometry.IsOpenImmersion.openCover_tFAE

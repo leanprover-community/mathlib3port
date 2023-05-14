@@ -435,10 +435,10 @@ instance : TopologicalSpace (CofiniteTopology α)
     rintro hs ht ⟨x, hxs, hxt⟩
     rw [compl_inter]
     exact (hs ⟨x, hxs⟩).union (ht ⟨x, hxt⟩)
-  isOpen_unionₛ := by
+  isOpen_sUnion := by
     rintro s h ⟨x, t, hts, hzt⟩
-    rw [Set.compl_unionₛ]
-    exact Set.Finite.interₛ (mem_image_of_mem _ hts) (h t hts ⟨x, hzt⟩)
+    rw [Set.compl_sUnion]
+    exact Set.Finite.sInter (mem_image_of_mem _ hts) (h t hts ⟨x, hzt⟩)
 
 /- warning: cofinite_topology.is_open_iff -> CofiniteTopology.isOpen_iff is a dubious translation:
 lean 3 declaration is
@@ -792,14 +792,14 @@ theorem continuous_inf_dom_right₂ {α β γ} {f : α → β → γ} {ta1 ta2 :
   exact @Continuous.comp _ _ _ (id _) (id _) _ _ _ h h_continuous_id
 #align continuous_inf_dom_right₂ continuous_inf_dom_right₂
 
-/- warning: continuous_Inf_dom₂ -> continuous_infₛ_dom₂ is a dubious translation:
+/- warning: continuous_Inf_dom₂ -> continuous_sInf_dom₂ is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {f : α -> β -> γ} {tas : Set.{u1} (TopologicalSpace.{u1} α)} {tbs : Set.{u2} (TopologicalSpace.{u2} β)} {ta : TopologicalSpace.{u1} α} {tb : TopologicalSpace.{u2} β} {tc : TopologicalSpace.{u3} γ}, (Membership.Mem.{u1, u1} (TopologicalSpace.{u1} α) (Set.{u1} (TopologicalSpace.{u1} α)) (Set.hasMem.{u1} (TopologicalSpace.{u1} α)) ta tas) -> (Membership.Mem.{u2, u2} (TopologicalSpace.{u2} β) (Set.{u2} (TopologicalSpace.{u2} β)) (Set.hasMem.{u2} (TopologicalSpace.{u2} β)) tb tbs) -> (Continuous.{max u1 u2, u3} (Prod.{u1, u2} α β) γ (Prod.topologicalSpace.{u1, u2} α β ta tb) tc (fun (p : Prod.{u1, u2} α β) => f (Prod.fst.{u1, u2} α β p) (Prod.snd.{u1, u2} α β p))) -> (Continuous.{max u1 u2, u3} (Prod.{u1, u2} α β) γ (Prod.topologicalSpace.{u1, u2} α β (InfSet.infₛ.{u1} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) tas) (InfSet.infₛ.{u2} (TopologicalSpace.{u2} β) (ConditionallyCompleteLattice.toHasInf.{u2} (TopologicalSpace.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} β) (TopologicalSpace.completeLattice.{u2} β))) tbs)) tc (fun (p : Prod.{u1, u2} α β) => f (Prod.fst.{u1, u2} α β p) (Prod.snd.{u1, u2} α β p)))
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {f : α -> β -> γ} {tas : Set.{u1} (TopologicalSpace.{u1} α)} {tbs : Set.{u2} (TopologicalSpace.{u2} β)} {ta : TopologicalSpace.{u1} α} {tb : TopologicalSpace.{u2} β} {tc : TopologicalSpace.{u3} γ}, (Membership.Mem.{u1, u1} (TopologicalSpace.{u1} α) (Set.{u1} (TopologicalSpace.{u1} α)) (Set.hasMem.{u1} (TopologicalSpace.{u1} α)) ta tas) -> (Membership.Mem.{u2, u2} (TopologicalSpace.{u2} β) (Set.{u2} (TopologicalSpace.{u2} β)) (Set.hasMem.{u2} (TopologicalSpace.{u2} β)) tb tbs) -> (Continuous.{max u1 u2, u3} (Prod.{u1, u2} α β) γ (Prod.topologicalSpace.{u1, u2} α β ta tb) tc (fun (p : Prod.{u1, u2} α β) => f (Prod.fst.{u1, u2} α β p) (Prod.snd.{u1, u2} α β p))) -> (Continuous.{max u1 u2, u3} (Prod.{u1, u2} α β) γ (Prod.topologicalSpace.{u1, u2} α β (InfSet.sInf.{u1} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) tas) (InfSet.sInf.{u2} (TopologicalSpace.{u2} β) (ConditionallyCompleteLattice.toHasInf.{u2} (TopologicalSpace.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} β) (TopologicalSpace.completeLattice.{u2} β))) tbs)) tc (fun (p : Prod.{u1, u2} α β) => f (Prod.fst.{u1, u2} α β p) (Prod.snd.{u1, u2} α β p)))
 but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {f : α -> β -> γ} {tas : Set.{u3} (TopologicalSpace.{u3} α)} {tbs : Set.{u2} (TopologicalSpace.{u2} β)} {ta : TopologicalSpace.{u3} α} {tb : TopologicalSpace.{u2} β} {tc : TopologicalSpace.{u1} γ}, (Membership.mem.{u3, u3} (TopologicalSpace.{u3} α) (Set.{u3} (TopologicalSpace.{u3} α)) (Set.instMembershipSet.{u3} (TopologicalSpace.{u3} α)) ta tas) -> (Membership.mem.{u2, u2} (TopologicalSpace.{u2} β) (Set.{u2} (TopologicalSpace.{u2} β)) (Set.instMembershipSet.{u2} (TopologicalSpace.{u2} β)) tb tbs) -> (Continuous.{max u3 u2, u1} (Prod.{u3, u2} α β) γ (instTopologicalSpaceProd.{u3, u2} α β ta tb) tc (fun (p : Prod.{u3, u2} α β) => f (Prod.fst.{u3, u2} α β p) (Prod.snd.{u3, u2} α β p))) -> (Continuous.{max u3 u2, u1} (Prod.{u3, u2} α β) γ (instTopologicalSpaceProd.{u3, u2} α β (InfSet.infₛ.{u3} (TopologicalSpace.{u3} α) (ConditionallyCompleteLattice.toInfSet.{u3} (TopologicalSpace.{u3} α) (CompleteLattice.toConditionallyCompleteLattice.{u3} (TopologicalSpace.{u3} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u3} α))) tas) (InfSet.infₛ.{u2} (TopologicalSpace.{u2} β) (ConditionallyCompleteLattice.toInfSet.{u2} (TopologicalSpace.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} β) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u2} β))) tbs)) tc (fun (p : Prod.{u3, u2} α β) => f (Prod.fst.{u3, u2} α β p) (Prod.snd.{u3, u2} α β p)))
-Case conversion may be inaccurate. Consider using '#align continuous_Inf_dom₂ continuous_infₛ_dom₂ₓ'. -/
+  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {f : α -> β -> γ} {tas : Set.{u3} (TopologicalSpace.{u3} α)} {tbs : Set.{u2} (TopologicalSpace.{u2} β)} {ta : TopologicalSpace.{u3} α} {tb : TopologicalSpace.{u2} β} {tc : TopologicalSpace.{u1} γ}, (Membership.mem.{u3, u3} (TopologicalSpace.{u3} α) (Set.{u3} (TopologicalSpace.{u3} α)) (Set.instMembershipSet.{u3} (TopologicalSpace.{u3} α)) ta tas) -> (Membership.mem.{u2, u2} (TopologicalSpace.{u2} β) (Set.{u2} (TopologicalSpace.{u2} β)) (Set.instMembershipSet.{u2} (TopologicalSpace.{u2} β)) tb tbs) -> (Continuous.{max u3 u2, u1} (Prod.{u3, u2} α β) γ (instTopologicalSpaceProd.{u3, u2} α β ta tb) tc (fun (p : Prod.{u3, u2} α β) => f (Prod.fst.{u3, u2} α β p) (Prod.snd.{u3, u2} α β p))) -> (Continuous.{max u3 u2, u1} (Prod.{u3, u2} α β) γ (instTopologicalSpaceProd.{u3, u2} α β (InfSet.sInf.{u3} (TopologicalSpace.{u3} α) (ConditionallyCompleteLattice.toInfSet.{u3} (TopologicalSpace.{u3} α) (CompleteLattice.toConditionallyCompleteLattice.{u3} (TopologicalSpace.{u3} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u3} α))) tas) (InfSet.sInf.{u2} (TopologicalSpace.{u2} β) (ConditionallyCompleteLattice.toInfSet.{u2} (TopologicalSpace.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} β) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u2} β))) tbs)) tc (fun (p : Prod.{u3, u2} α β) => f (Prod.fst.{u3, u2} α β p) (Prod.snd.{u3, u2} α β p)))
+Case conversion may be inaccurate. Consider using '#align continuous_Inf_dom₂ continuous_sInf_dom₂ₓ'. -/
 /-- A version of `continuous_Inf_dom` for binary functions -/
-theorem continuous_infₛ_dom₂ {α β γ} {f : α → β → γ} {tas : Set (TopologicalSpace α)}
+theorem continuous_sInf_dom₂ {α β γ} {f : α → β → γ} {tas : Set (TopologicalSpace α)}
     {tbs : Set (TopologicalSpace β)} {ta : TopologicalSpace α} {tb : TopologicalSpace β}
     {tc : TopologicalSpace γ} (ha : ta ∈ tas) (hb : tb ∈ tbs)
     (hf : Continuous fun p : α × β => f p.1 p.2) : by
@@ -807,11 +807,11 @@ theorem continuous_infₛ_dom₂ {α β γ} {f : α → β → γ} {tas : Set (T
       exact @Continuous _ _ _ tc fun p : α × β => f p.1 p.2 :=
   by
   let t : TopologicalSpace (α × β) := Prod.topologicalSpace
-  have ha := continuous_infₛ_dom ha continuous_id
-  have hb := continuous_infₛ_dom hb continuous_id
+  have ha := continuous_sInf_dom ha continuous_id
+  have hb := continuous_sInf_dom hb continuous_id
   have h_continuous_id := @Continuous.prod_map _ _ _ _ ta tb (Inf tas) (Inf tbs) _ _ ha hb
   exact @Continuous.comp _ _ _ (id _) (id _) _ _ _ hf h_continuous_id
-#align continuous_Inf_dom₂ continuous_infₛ_dom₂
+#align continuous_Inf_dom₂ continuous_sInf_dom₂
 
 /- warning: filter.eventually.prod_inl_nhds -> Filter.Eventually.prod_inl_nhds is a dubious translation:
 lean 3 declaration is
@@ -1112,9 +1112,9 @@ theorem ContinuousAt.prod_map' {f : α → γ} {g : β → δ} {x : α} {y : β}
 
 /- warning: prod_generate_from_generate_from_eq -> prod_generateFrom_generateFrom_eq is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} (Set.{u1} α)} {t : Set.{u2} (Set.{u2} β)}, (Eq.{succ u1} (Set.{u1} α) (Set.unionₛ.{u1} α s) (Set.univ.{u1} α)) -> (Eq.{succ u2} (Set.{u2} β) (Set.unionₛ.{u2} β t) (Set.univ.{u2} β)) -> (Eq.{succ (max u1 u2)} (TopologicalSpace.{max u1 u2} (Prod.{u1, u2} α β)) (Prod.topologicalSpace.{u1, u2} α β (TopologicalSpace.generateFrom.{u1} α s) (TopologicalSpace.generateFrom.{u2} β t)) (TopologicalSpace.generateFrom.{max u1 u2} (Prod.{u1, u2} α β) (setOf.{max u1 u2} (Set.{max u1 u2} (Prod.{u1, u2} α β)) (fun (g : Set.{max u1 u2} (Prod.{u1, u2} α β)) => Exists.{succ u1} (Set.{u1} α) (fun (u : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) u s) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) u s) => Exists.{succ u2} (Set.{u2} β) (fun (v : Set.{u2} β) => Exists.{0} (Membership.Mem.{u2, u2} (Set.{u2} β) (Set.{u2} (Set.{u2} β)) (Set.hasMem.{u2} (Set.{u2} β)) v t) (fun (H : Membership.Mem.{u2, u2} (Set.{u2} β) (Set.{u2} (Set.{u2} β)) (Set.hasMem.{u2} (Set.{u2} β)) v t) => Eq.{succ (max u1 u2)} (Set.{max u1 u2} (Prod.{u1, u2} α β)) g (Set.prod.{u1, u2} α β u v)))))))))
+  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} (Set.{u1} α)} {t : Set.{u2} (Set.{u2} β)}, (Eq.{succ u1} (Set.{u1} α) (Set.sUnion.{u1} α s) (Set.univ.{u1} α)) -> (Eq.{succ u2} (Set.{u2} β) (Set.sUnion.{u2} β t) (Set.univ.{u2} β)) -> (Eq.{succ (max u1 u2)} (TopologicalSpace.{max u1 u2} (Prod.{u1, u2} α β)) (Prod.topologicalSpace.{u1, u2} α β (TopologicalSpace.generateFrom.{u1} α s) (TopologicalSpace.generateFrom.{u2} β t)) (TopologicalSpace.generateFrom.{max u1 u2} (Prod.{u1, u2} α β) (setOf.{max u1 u2} (Set.{max u1 u2} (Prod.{u1, u2} α β)) (fun (g : Set.{max u1 u2} (Prod.{u1, u2} α β)) => Exists.{succ u1} (Set.{u1} α) (fun (u : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) u s) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) u s) => Exists.{succ u2} (Set.{u2} β) (fun (v : Set.{u2} β) => Exists.{0} (Membership.Mem.{u2, u2} (Set.{u2} β) (Set.{u2} (Set.{u2} β)) (Set.hasMem.{u2} (Set.{u2} β)) v t) (fun (H : Membership.Mem.{u2, u2} (Set.{u2} β) (Set.{u2} (Set.{u2} β)) (Set.hasMem.{u2} (Set.{u2} β)) v t) => Eq.{succ (max u1 u2)} (Set.{max u1 u2} (Prod.{u1, u2} α β)) g (Set.prod.{u1, u2} α β u v)))))))))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} (Set.{u2} α)} {t : Set.{u1} (Set.{u1} β)}, (Eq.{succ u2} (Set.{u2} α) (Set.unionₛ.{u2} α s) (Set.univ.{u2} α)) -> (Eq.{succ u1} (Set.{u1} β) (Set.unionₛ.{u1} β t) (Set.univ.{u1} β)) -> (Eq.{max (succ u2) (succ u1)} (TopologicalSpace.{max u1 u2} (Prod.{u2, u1} α β)) (instTopologicalSpaceProd.{u2, u1} α β (TopologicalSpace.generateFrom.{u2} α s) (TopologicalSpace.generateFrom.{u1} β t)) (TopologicalSpace.generateFrom.{max u2 u1} (Prod.{u2, u1} α β) (setOf.{max u2 u1} (Set.{max u2 u1} (Prod.{u2, u1} α β)) (fun (g : Set.{max u2 u1} (Prod.{u2, u1} α β)) => Exists.{succ u2} (Set.{u2} α) (fun (u : Set.{u2} α) => And (Membership.mem.{u2, u2} (Set.{u2} α) (Set.{u2} (Set.{u2} α)) (Set.instMembershipSet.{u2} (Set.{u2} α)) u s) (Exists.{succ u1} (Set.{u1} β) (fun (v : Set.{u1} β) => And (Membership.mem.{u1, u1} (Set.{u1} β) (Set.{u1} (Set.{u1} β)) (Set.instMembershipSet.{u1} (Set.{u1} β)) v t) (Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (Prod.{u2, u1} α β)) g (Set.prod.{u2, u1} α β u v)))))))))
+  forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} (Set.{u2} α)} {t : Set.{u1} (Set.{u1} β)}, (Eq.{succ u2} (Set.{u2} α) (Set.sUnion.{u2} α s) (Set.univ.{u2} α)) -> (Eq.{succ u1} (Set.{u1} β) (Set.sUnion.{u1} β t) (Set.univ.{u1} β)) -> (Eq.{max (succ u2) (succ u1)} (TopologicalSpace.{max u1 u2} (Prod.{u2, u1} α β)) (instTopologicalSpaceProd.{u2, u1} α β (TopologicalSpace.generateFrom.{u2} α s) (TopologicalSpace.generateFrom.{u1} β t)) (TopologicalSpace.generateFrom.{max u2 u1} (Prod.{u2, u1} α β) (setOf.{max u2 u1} (Set.{max u2 u1} (Prod.{u2, u1} α β)) (fun (g : Set.{max u2 u1} (Prod.{u2, u1} α β)) => Exists.{succ u2} (Set.{u2} α) (fun (u : Set.{u2} α) => And (Membership.mem.{u2, u2} (Set.{u2} α) (Set.{u2} (Set.{u2} α)) (Set.instMembershipSet.{u2} (Set.{u2} α)) u s) (Exists.{succ u1} (Set.{u1} β) (fun (v : Set.{u1} β) => And (Membership.mem.{u1, u1} (Set.{u1} β) (Set.{u1} (Set.{u1} β)) (Set.instMembershipSet.{u1} (Set.{u1} β)) v t) (Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (Prod.{u2, u1} α β)) g (Set.prod.{u2, u1} α β u v)))))))))
 Case conversion may be inaccurate. Consider using '#align prod_generate_from_generate_from_eq prod_generateFrom_generateFrom_eqₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -1138,8 +1138,8 @@ theorem prod_generateFrom_generateFrom_eq {α β : Type _} {s : Set (Set α)} {t
           show G.IsOpen (Prod.fst ⁻¹' u) by
             rw [← this]
             exact
-              isOpen_unionᵢ fun v =>
-                isOpen_unionᵢ fun hv => generate_open.basic _ ⟨_, hu, _, hv, rfl⟩)
+              isOpen_iUnion fun v =>
+                isOpen_iUnion fun hv => generate_open.basic _ ⟨_, hu, _, hv, rfl⟩)
       (coinduced_le_iff_le_induced.mp <|
         le_generateFrom fun v hv =>
           have : (⋃ u ∈ s, u ×ˢ v) = Prod.snd ⁻¹' v := by
@@ -1147,8 +1147,8 @@ theorem prod_generateFrom_generateFrom_eq {α β : Type _} {s : Set (Set α)} {t
           show G.IsOpen (Prod.snd ⁻¹' v) by
             rw [← this]
             exact
-              isOpen_unionᵢ fun u =>
-                isOpen_unionᵢ fun hu => generate_open.basic _ ⟨_, hu, _, hv, rfl⟩))
+              isOpen_iUnion fun u =>
+                isOpen_iUnion fun hu => generate_open.basic _ ⟨_, hu, _, hv, rfl⟩))
 #align prod_generate_from_generate_from_eq prod_generateFrom_generateFrom_eq
 
 /- warning: prod_eq_generate_from -> prod_eq_generateFrom is a dubious translation:
@@ -2089,7 +2089,7 @@ but is expected to have type
   forall {α : Type.{u3}} {ι : Type.{u2}} {π : ι -> Type.{u1}} [_inst_1 : TopologicalSpace.{u3} α] [_inst_2 : forall (i : ι), TopologicalSpace.{u1} (π i)] {f : α -> (forall (i : ι), π i)}, Iff (Continuous.{u3, max u2 u1} α (forall (i : ι), π i) _inst_1 (Pi.topologicalSpace.{u2, u1} ι (fun (i : ι) => π i) (fun (a : ι) => _inst_2 a)) f) (forall (i : ι), Continuous.{u3, u1} α (π i) _inst_1 (_inst_2 i) (fun (a : α) => f a i))
 Case conversion may be inaccurate. Consider using '#align continuous_pi_iff continuous_pi_iffₓ'. -/
 theorem continuous_pi_iff : Continuous f ↔ ∀ i, Continuous fun a => f a i := by
-  simp only [continuous_infᵢ_rng, continuous_induced_rng]
+  simp only [continuous_iInf_rng, continuous_induced_rng]
 #align continuous_pi_iff continuous_pi_iff
 
 /- warning: continuous_pi -> continuous_pi is a dubious translation:
@@ -2111,7 +2111,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align continuous_apply continuous_applyₓ'. -/
 @[continuity]
 theorem continuous_apply (i : ι) : Continuous fun p : ∀ i, π i => p i :=
-  continuous_infᵢ_dom continuous_induced_dom
+  continuous_iInf_dom continuous_induced_dom
 #align continuous_apply continuous_apply
 
 /- warning: continuous_apply_apply -> continuous_apply_apply is a dubious translation:
@@ -2154,7 +2154,7 @@ but is expected to have type
   forall {ι : Type.{u2}} {π : ι -> Type.{u1}} [_inst_2 : forall (i : ι), TopologicalSpace.{u1} (π i)] {a : forall (i : ι), π i}, Eq.{max (succ u2) (succ u1)} (Filter.{max u2 u1} (forall (i : ι), π i)) (nhds.{max u2 u1} (forall (i : ι), π i) (Pi.topologicalSpace.{u2, u1} ι (fun (i : ι) => π i) (fun (a : ι) => _inst_2 a)) a) (Filter.pi.{u2, u1} ι (fun (i : ι) => π i) (fun (i : ι) => nhds.{u1} (π i) (_inst_2 i) (a i)))
 Case conversion may be inaccurate. Consider using '#align nhds_pi nhds_piₓ'. -/
 theorem nhds_pi {a : ∀ i, π i} : 𝓝 a = pi fun i => 𝓝 (a i) := by
-  simp only [nhds_infᵢ, nhds_induced, Filter.pi]
+  simp only [nhds_iInf, nhds_induced, Filter.pi]
 #align nhds_pi nhds_pi
 
 /- warning: tendsto_pi_nhds -> tendsto_pi_nhds is a dubious translation:
@@ -2282,7 +2282,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_open_set_pi isOpen_set_piₓ'. -/
 theorem isOpen_set_pi {i : Set ι} {s : ∀ a, Set (π a)} (hi : i.Finite)
     (hs : ∀ a ∈ i, IsOpen (s a)) : IsOpen (pi i s) := by
-  rw [pi_def] <;> exact isOpen_binterᵢ hi fun a ha => (hs _ ha).Preimage (continuous_apply _)
+  rw [pi_def] <;> exact isOpen_biInter hi fun a ha => (hs _ ha).Preimage (continuous_apply _)
 #align is_open_set_pi isOpen_set_pi
 
 /- warning: is_open_pi_iff -> isOpen_pi_iff is a dubious translation:
@@ -2358,7 +2358,7 @@ Case conversion may be inaccurate. Consider using '#align is_closed_set_pi isClo
 theorem isClosed_set_pi {i : Set ι} {s : ∀ a, Set (π a)} (hs : ∀ a ∈ i, IsClosed (s a)) :
     IsClosed (pi i s) := by
   rw [pi_def] <;>
-    exact isClosed_interᵢ fun a => isClosed_interᵢ fun ha => (hs _ ha).Preimage (continuous_apply _)
+    exact isClosed_iInter fun a => isClosed_iInter fun ha => (hs _ ha).Preimage (continuous_apply _)
 #align is_closed_set_pi isClosed_set_pi
 
 /- warning: mem_nhds_of_pi_mem_nhds -> mem_nhds_of_pi_mem_nhds is a dubious translation:
@@ -2435,7 +2435,7 @@ theorem pi_eq_generateFrom :
         { g | ∃ (s : ∀ a, Set (π a))(i : Finset ι), (∀ a ∈ i, IsOpen (s a)) ∧ g = pi (↑i) s } :=
   le_antisymm
     (le_generateFrom fun g ⟨s, i, hi, Eq⟩ => Eq.symm ▸ isOpen_set_pi (Finset.finite_toSet _) hi)
-    (le_infᵢ fun a s ⟨t, ht, s_eq⟩ =>
+    (le_iInf fun a s ⟨t, ht, s_eq⟩ =>
       GenerateOpen.basic _ <|
         ⟨update (fun a => univ) a t, {a}, by simpa using ht, s_eq ▸ by ext f <;> simp [Set.pi]⟩)
 #align pi_eq_generate_from pi_eq_generateFrom
@@ -2453,7 +2453,7 @@ theorem pi_generateFrom_eq {π : ι → Type _} {g : ∀ a, Set (Set (π a))} :
   exact fun s ⟨t, i, ht, Eq⟩ => ⟨t, i, fun a ha => generate_open.basic _ (ht a ha), Eq⟩
   · rintro s ⟨t, i, hi, rfl⟩
     rw [pi_def]
-    apply isOpen_binterᵢ (Finset.finite_toSet _)
+    apply isOpen_biInter (Finset.finite_toSet _)
     intro a ha
     show ((generate_from G).coinduced fun f : ∀ a, π a => f a).IsOpen (t a)
     refine' le_generateFrom _ _ (hi a ha)
@@ -2491,26 +2491,26 @@ theorem pi_generateFrom_eq_finite {π : ι → Type _} {g : ∀ a, Set (Set (π 
 #align pi_generate_from_eq_finite pi_generateFrom_eq_finite
 -/
 
-/- warning: inducing_infi_to_pi -> inducing_infᵢ_to_pi is a dubious translation:
+/- warning: inducing_infi_to_pi -> inducing_iInf_to_pi is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {π : ι -> Type.{u2}} [_inst_2 : forall (i : ι), TopologicalSpace.{u2} (π i)] {X : Type.{u3}} (f : forall (i : ι), X -> (π i)), Inducing.{u3, max u1 u2} X (forall (i : ι), π i) (infᵢ.{u3, succ u1} (TopologicalSpace.{u3} X) (ConditionallyCompleteLattice.toHasInf.{u3} (TopologicalSpace.{u3} X) (CompleteLattice.toConditionallyCompleteLattice.{u3} (TopologicalSpace.{u3} X) (TopologicalSpace.completeLattice.{u3} X))) ι (fun (i : ι) => TopologicalSpace.induced.{u3, u2} X (π i) (f i) (inferInstance.{succ u2} (TopologicalSpace.{u2} (π i)) (_inst_2 i)))) (Pi.topologicalSpace.{u1, u2} ι (fun (i : ι) => π i) (fun (a : ι) => _inst_2 a)) (fun (x : X) (i : ι) => f i x)
+  forall {ι : Type.{u1}} {π : ι -> Type.{u2}} [_inst_2 : forall (i : ι), TopologicalSpace.{u2} (π i)] {X : Type.{u3}} (f : forall (i : ι), X -> (π i)), Inducing.{u3, max u1 u2} X (forall (i : ι), π i) (iInf.{u3, succ u1} (TopologicalSpace.{u3} X) (ConditionallyCompleteLattice.toHasInf.{u3} (TopologicalSpace.{u3} X) (CompleteLattice.toConditionallyCompleteLattice.{u3} (TopologicalSpace.{u3} X) (TopologicalSpace.completeLattice.{u3} X))) ι (fun (i : ι) => TopologicalSpace.induced.{u3, u2} X (π i) (f i) (inferInstance.{succ u2} (TopologicalSpace.{u2} (π i)) (_inst_2 i)))) (Pi.topologicalSpace.{u1, u2} ι (fun (i : ι) => π i) (fun (a : ι) => _inst_2 a)) (fun (x : X) (i : ι) => f i x)
 but is expected to have type
-  forall {ι : Type.{u2}} {π : ι -> Type.{u1}} [_inst_2 : forall (i : ι), TopologicalSpace.{u1} (π i)] {X : Type.{u3}} (f : forall (i : ι), X -> (π i)), Inducing.{u3, max u2 u1} X (forall (i : ι), π i) (infᵢ.{u3, succ u2} (TopologicalSpace.{u3} X) (ConditionallyCompleteLattice.toInfSet.{u3} (TopologicalSpace.{u3} X) (CompleteLattice.toConditionallyCompleteLattice.{u3} (TopologicalSpace.{u3} X) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u3} X))) ι (fun (i : ι) => TopologicalSpace.induced.{u3, u1} X (π i) (f i) (inferInstance.{succ u1} (TopologicalSpace.{u1} (π i)) (_inst_2 i)))) (Pi.topologicalSpace.{u2, u1} ι (fun (i : ι) => π i) (fun (a : ι) => _inst_2 a)) (fun (x : X) (i : ι) => f i x)
-Case conversion may be inaccurate. Consider using '#align inducing_infi_to_pi inducing_infᵢ_to_piₓ'. -/
+  forall {ι : Type.{u2}} {π : ι -> Type.{u1}} [_inst_2 : forall (i : ι), TopologicalSpace.{u1} (π i)] {X : Type.{u3}} (f : forall (i : ι), X -> (π i)), Inducing.{u3, max u2 u1} X (forall (i : ι), π i) (iInf.{u3, succ u2} (TopologicalSpace.{u3} X) (ConditionallyCompleteLattice.toInfSet.{u3} (TopologicalSpace.{u3} X) (CompleteLattice.toConditionallyCompleteLattice.{u3} (TopologicalSpace.{u3} X) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u3} X))) ι (fun (i : ι) => TopologicalSpace.induced.{u3, u1} X (π i) (f i) (inferInstance.{succ u1} (TopologicalSpace.{u1} (π i)) (_inst_2 i)))) (Pi.topologicalSpace.{u2, u1} ι (fun (i : ι) => π i) (fun (a : ι) => _inst_2 a)) (fun (x : X) (i : ι) => f i x)
+Case conversion may be inaccurate. Consider using '#align inducing_infi_to_pi inducing_iInf_to_piₓ'. -/
 /-- Suppose `π i` is a family of topological spaces indexed by `i : ι`, and `X` is a type
 endowed with a family of maps `f i : X → π i` for every `i : ι`, hence inducing a
 map `g : X → Π i, π i`. This lemma shows that infimum of the topologies on `X` induced by
 the `f i` as `i : ι` varies is simply the topology on `X` induced by `g : X → Π i, π i`
 where `Π i, π i` is endowed with the usual product topology. -/
-theorem inducing_infᵢ_to_pi {X : Type _} (f : ∀ i, X → π i) :
+theorem inducing_iInf_to_pi {X : Type _} (f : ∀ i, X → π i) :
     @Inducing X (∀ i, π i) (⨅ i, induced (f i) inferInstance) _ fun x i => f i x :=
   by
   constructor
-  erw [induced_infᵢ]
+  erw [induced_iInf]
   congr 1
   funext
   erw [induced_compose]
-#align inducing_infi_to_pi inducing_infᵢ_to_pi
+#align inducing_infi_to_pi inducing_iInf_to_pi
 
 variable [Finite ι] [∀ i, DiscreteTopology (π i)]
 
@@ -2520,8 +2520,8 @@ instance Pi.discreteTopology : DiscreteTopology (∀ i, π i) :=
   singletons_open_iff_discrete.mp fun x =>
     by
     rw [show {x} = ⋂ i, { y : ∀ i, π i | y i = x i } by ext;
-        simp only [funext_iff, Set.mem_singleton_iff, Set.mem_interᵢ, Set.mem_setOf_eq]]
-    exact isOpen_interᵢ fun i => (continuous_apply i).isOpen_preimage {x i} (isOpen_discrete {x i})
+        simp only [funext_iff, Set.mem_singleton_iff, Set.mem_iInter, Set.mem_setOf_eq]]
+    exact isOpen_iInter fun i => (continuous_apply i).isOpen_preimage {x i} (isOpen_discrete {x i})
 #align Pi.discrete_topology Pi.discreteTopology
 -/
 
@@ -2540,7 +2540,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align continuous_sigma_mk continuous_sigmaMkₓ'. -/
 @[continuity]
 theorem continuous_sigmaMk {i : ι} : Continuous (@Sigma.mk ι σ i) :=
-  continuous_supᵢ_rng continuous_coinduced_rng
+  continuous_iSup_rng continuous_coinduced_rng
 #align continuous_sigma_mk continuous_sigmaMk
 
 /- warning: is_open_sigma_iff -> isOpen_sigma_iff is a dubious translation:
@@ -2550,7 +2550,7 @@ but is expected to have type
   forall {ι : Type.{u1}} {σ : ι -> Type.{u2}} [_inst_1 : forall (i : ι), TopologicalSpace.{u2} (σ i)] {s : Set.{max u2 u1} (Sigma.{u1, u2} ι σ)}, Iff (IsOpen.{max u1 u2} (Sigma.{u1, u2} ι σ) (instTopologicalSpaceSigma.{u1, u2} ι σ (fun (a : ι) => _inst_1 a)) s) (forall (i : ι), IsOpen.{u2} (σ i) (_inst_1 i) (Set.preimage.{u2, max u2 u1} (σ i) (Sigma.{u1, u2} ι σ) (Sigma.mk.{u1, u2} ι σ i) s))
 Case conversion may be inaccurate. Consider using '#align is_open_sigma_iff isOpen_sigma_iffₓ'. -/
 theorem isOpen_sigma_iff {s : Set (Sigma σ)} : IsOpen s ↔ ∀ i, IsOpen (Sigma.mk i ⁻¹' s) := by
-  simp only [isOpen_supᵢ_iff, isOpen_coinduced]
+  simp only [isOpen_iSup_iff, isOpen_coinduced]
 #align is_open_sigma_iff isOpen_sigma_iff
 
 /- warning: is_closed_sigma_iff -> isClosed_sigma_iff is a dubious translation:
@@ -2690,7 +2690,7 @@ theorem isOpen_sigma_fst_preimage (s : Set ι) : IsOpen (Sigma.fst ⁻¹' s : Se
   by
   rw [← bUnion_of_singleton s, preimage_Union₂]
   simp only [← range_sigma_mk]
-  exact isOpen_bunionᵢ fun _ _ => isOpen_range_sigmaMk
+  exact isOpen_biUnion fun _ _ => isOpen_range_sigmaMk
 #align is_open_sigma_fst_preimage isOpen_sigma_fst_preimage
 
 /- warning: continuous_sigma_iff -> continuous_sigma_iff is a dubious translation:
@@ -2702,7 +2702,7 @@ Case conversion may be inaccurate. Consider using '#align continuous_sigma_iff c
 /-- A map out of a sum type is continuous iff its restriction to each summand is. -/
 @[simp]
 theorem continuous_sigma_iff {f : Sigma σ → α} : Continuous f ↔ ∀ i, Continuous fun a => f ⟨i, a⟩ :=
-  by simp only [continuous_supᵢ_dom, continuous_coinduced_dom]
+  by simp only [continuous_iSup_dom, continuous_coinduced_dom]
 #align continuous_sigma_iff continuous_sigma_iff
 
 /- warning: continuous_sigma -> continuous_sigma is a dubious translation:

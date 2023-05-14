@@ -124,13 +124,13 @@ def splitCenterBoxEmb (I : Box ι) : Set ι ↪ Box ι :=
 #align box_integral.box.split_center_box_emb BoxIntegral.Box.splitCenterBoxEmb
 -/
 
-#print BoxIntegral.Box.unionᵢ_coe_splitCenterBox /-
+#print BoxIntegral.Box.iUnion_coe_splitCenterBox /-
 @[simp]
-theorem unionᵢ_coe_splitCenterBox (I : Box ι) : (⋃ s, (I.splitCenterBox s : Set (ι → ℝ))) = I :=
+theorem iUnion_coe_splitCenterBox (I : Box ι) : (⋃ s, (I.splitCenterBox s : Set (ι → ℝ))) = I :=
   by
   ext x
   simp
-#align box_integral.box.Union_coe_split_center_box BoxIntegral.Box.unionᵢ_coe_splitCenterBox
+#align box_integral.box.Union_coe_split_center_box BoxIntegral.Box.iUnion_coe_splitCenterBox
 -/
 
 /- warning: box_integral.box.upper_sub_lower_split_center_box -> BoxIntegral.Box.upper_sub_lower_splitCenterBox is a dubious translation:
@@ -205,12 +205,12 @@ theorem subbox_induction_on' {p : Box ι → Prop} (I : Box ι)
   set z : ι → ℝ := ⨆ m, (J m).lower
   have hzJ : ∀ m, z ∈ (J m).Icc :=
     mem_Inter.1
-      (csupᵢ_mem_Inter_Icc_of_antitone_Icc ((@box.Icc ι).Monotone.comp_antitone hJmono) fun m =>
+      (ciSup_mem_Inter_Icc_of_antitone_Icc ((@box.Icc ι).Monotone.comp_antitone hJmono) fun m =>
         (J m).lower_le_upper)
   have hJl_mem : ∀ m, (J m).lower ∈ I.Icc := fun m => le_iff_Icc.1 (hJle m) (J m).lower_mem_Icc
   have hJu_mem : ∀ m, (J m).upper ∈ I.Icc := fun m => le_iff_Icc.1 (hJle m) (J m).upper_mem_Icc
   have hJlz : tendsto (fun m => (J m).lower) at_top (𝓝 z) :=
-    tendsto_atTop_csupᵢ (antitone_lower.comp hJmono) ⟨I.upper, fun x ⟨m, hm⟩ => hm ▸ (hJl_mem m).2⟩
+    tendsto_atTop_ciSup (antitone_lower.comp hJmono) ⟨I.upper, fun x ⟨m, hm⟩ => hm ▸ (hJl_mem m).2⟩
   have hJuz : tendsto (fun m => (J m).upper) at_top (𝓝 z) :=
     by
     suffices tendsto (fun m => (J m).upper - (J m).lower) at_top (𝓝 0) by simpa using hJlz.add this

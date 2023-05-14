@@ -73,7 +73,7 @@ theorem mem_map_algebraMap_iff {I : Ideal R} {z} :
   by
   constructor
   · change _ → z ∈ map_ideal M S I
-    refine' fun h => Ideal.mem_infₛ.1 h fun z hz => _
+    refine' fun h => Ideal.mem_sInf.1 h fun z hz => _
     obtain ⟨y, hy⟩ := hz
     use ⟨⟨⟨y, hy.left⟩, 1⟩, by simp [hy.right]⟩
   · rintro ⟨⟨a, s⟩, h⟩

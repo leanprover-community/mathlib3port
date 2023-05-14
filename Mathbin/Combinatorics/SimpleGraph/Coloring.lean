@@ -205,7 +205,7 @@ def selfColoring : G.Coloring V :=
 /-- The chromatic number of a graph is the minimal number of colors needed to color it.
 If `G` isn't colorable with finitely many colors, this will be 0. -/
 noncomputable def chromaticNumber : ℕ :=
-  infₛ { n : ℕ | G.Colorable n }
+  sInf { n : ℕ | G.Colorable n }
 #align simple_graph.chromatic_number SimpleGraph.chromaticNumber
 -/
 
@@ -330,7 +330,7 @@ theorem chromaticNumber_bddBelow : BddBelow { n : ℕ | G.Colorable n } :=
 theorem chromaticNumber_le_of_colorable {n : ℕ} (hc : G.Colorable n) : G.chromaticNumber ≤ n :=
   by
   rw [chromatic_number]
-  apply cinfₛ_le chromatic_number_bdd_below
+  apply csInf_le chromatic_number_bdd_below
   fconstructor
   exact Classical.choice hc
 #align simple_graph.chromatic_number_le_of_colorable SimpleGraph.chromaticNumber_le_of_colorable
@@ -339,7 +339,7 @@ theorem chromaticNumber_le_of_colorable {n : ℕ} (hc : G.Colorable n) : G.chrom
 #print SimpleGraph.chromaticNumber_le_card /-
 theorem chromaticNumber_le_card [Fintype α] (C : G.Coloring α) :
     G.chromaticNumber ≤ Fintype.card α :=
-  cinfₛ_le chromaticNumber_bddBelow C.to_colorable
+  csInf_le chromaticNumber_bddBelow C.to_colorable
 #align simple_graph.chromatic_number_le_card SimpleGraph.chromaticNumber_le_card
 -/
 
@@ -347,7 +347,7 @@ theorem chromaticNumber_le_card [Fintype α] (C : G.Coloring α) :
 theorem colorable_chromaticNumber {m : ℕ} (hc : G.Colorable m) : G.Colorable G.chromaticNumber :=
   by
   dsimp only [chromatic_number]
-  rw [Nat.infₛ_def]
+  rw [Nat.sInf_def]
   apply Nat.find_spec
   exact colorable_set_nonempty_of_colorable hc
 #align simple_graph.colorable_chromatic_number SimpleGraph.colorable_chromaticNumber
@@ -365,7 +365,7 @@ theorem colorable_chromaticNumber_of_fintype (G : SimpleGraph V) [Finite V] :
 theorem chromaticNumber_le_one_of_subsingleton (G : SimpleGraph V) [Subsingleton V] :
     G.chromaticNumber ≤ 1 := by
   rw [chromatic_number]
-  apply cinfₛ_le chromatic_number_bdd_below
+  apply csInf_le chromatic_number_bdd_below
   fconstructor
   refine' coloring.mk (fun _ => 0) _
   intro v w
@@ -378,7 +378,7 @@ theorem chromaticNumber_le_one_of_subsingleton (G : SimpleGraph V) [Subsingleton
 theorem chromaticNumber_eq_zero_of_isempty (G : SimpleGraph V) [IsEmpty V] :
     G.chromaticNumber = 0 := by
   rw [← nonpos_iff_eq_zero]
-  apply cinfₛ_le chromatic_number_bdd_below
+  apply csInf_le chromatic_number_bdd_below
   apply colorable_of_is_empty
 #align simple_graph.chromatic_number_eq_zero_of_isempty SimpleGraph.chromaticNumber_eq_zero_of_isempty
 -/
@@ -396,7 +396,7 @@ theorem isEmpty_of_chromaticNumber_eq_zero (G : SimpleGraph V) [Finite V]
 #print SimpleGraph.chromaticNumber_pos /-
 theorem chromaticNumber_pos [Nonempty V] {n : ℕ} (hc : G.Colorable n) : 0 < G.chromaticNumber :=
   by
-  apply le_cinfₛ (colorable_set_nonempty_of_colorable hc)
+  apply le_csInf (colorable_set_nonempty_of_colorable hc)
   intro m hm
   by_contra h'
   simp only [not_le, Nat.lt_one_iff] at h'
@@ -410,7 +410,7 @@ theorem chromaticNumber_pos [Nonempty V] {n : ℕ} (hc : G.Colorable n) : 0 < G.
 theorem colorable_of_chromaticNumber_pos (h : 0 < G.chromaticNumber) :
     G.Colorable G.chromaticNumber :=
   by
-  obtain ⟨h, hn⟩ := Nat.nonempty_of_pos_infₛ h
+  obtain ⟨h, hn⟩ := Nat.nonempty_of_pos_sInf h
   exact colorable_chromatic_number hn
 #align simple_graph.colorable_of_chromatic_number_pos SimpleGraph.colorable_of_chromaticNumber_pos
 -/
@@ -432,7 +432,7 @@ theorem Colorable.chromaticNumber_le_of_forall_imp {V' : Type _} {G' : SimpleGra
     (hc : G'.Colorable m) (h : ∀ n, G'.Colorable n → G.Colorable n) :
     G.chromaticNumber ≤ G'.chromaticNumber :=
   by
-  apply cinfₛ_le chromatic_number_bdd_below
+  apply csInf_le chromatic_number_bdd_below
   apply h
   apply colorable_chromatic_number hc
 #align simple_graph.colorable.chromatic_number_le_of_forall_imp SimpleGraph.Colorable.chromaticNumber_le_of_forall_imp
@@ -464,7 +464,7 @@ theorem chromaticNumber_eq_card_of_forall_surj [Fintype α] (C : G.Coloring α)
   · by_contra hc
     rw [not_le] at hc
     obtain ⟨n, cn, hc⟩ :=
-      exists_lt_of_cinfₛ_lt (colorable_set_nonempty_of_colorable C.to_colorable) hc
+      exists_lt_of_csInf_lt (colorable_set_nonempty_of_colorable C.to_colorable) hc
     rw [← Fintype.card_fin n] at hc
     have f := (Function.Embedding.nonempty_of_card_le (le_of_lt hc)).some
     have C' := cn.some

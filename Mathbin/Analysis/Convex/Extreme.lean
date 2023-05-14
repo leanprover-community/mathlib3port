@@ -147,8 +147,8 @@ protected theorem IsExtreme.mono (hAC : IsExtreme 𝕜 A C) (hBA : B ⊆ A) (hCB
   ⟨hCB, fun x₁ hx₁B x₂ hx₂B x hxC hx => hAC.2 (hBA hx₁B) (hBA hx₂B) hxC hx⟩
 #align is_extreme.mono IsExtreme.mono
 
-#print isExtreme_interᵢ /-
-theorem isExtreme_interᵢ {ι : Sort _} [Nonempty ι] {F : ι → Set E}
+#print isExtreme_iInter /-
+theorem isExtreme_iInter {ι : Sort _} [Nonempty ι] {F : ι → Set E}
     (hAF : ∀ i : ι, IsExtreme 𝕜 A (F i)) : IsExtreme 𝕜 A (⋂ i : ι, F i) :=
   by
   obtain i := Classical.arbitrary ι
@@ -156,26 +156,26 @@ theorem isExtreme_interᵢ {ι : Sort _} [Nonempty ι] {F : ι → Set E}
   simp_rw [mem_Inter] at hxF⊢
   have h := fun i => (hAF i).2 hx₁A hx₂A (hxF i) hx
   exact ⟨fun i => (h i).1, fun i => (h i).2⟩
-#align is_extreme_Inter isExtreme_interᵢ
+#align is_extreme_Inter isExtreme_iInter
 -/
 
-#print isExtreme_binterᵢ /-
-theorem isExtreme_binterᵢ {F : Set (Set E)} (hF : F.Nonempty) (hA : ∀ B ∈ F, IsExtreme 𝕜 A B) :
+#print isExtreme_biInter /-
+theorem isExtreme_biInter {F : Set (Set E)} (hF : F.Nonempty) (hA : ∀ B ∈ F, IsExtreme 𝕜 A B) :
     IsExtreme 𝕜 A (⋂ B ∈ F, B) := by
   haveI := hF.to_subtype
-  simpa only [Inter_subtype] using isExtreme_interᵢ fun i : F => hA _ i.2
-#align is_extreme_bInter isExtreme_binterᵢ
+  simpa only [Inter_subtype] using isExtreme_iInter fun i : F => hA _ i.2
+#align is_extreme_bInter isExtreme_biInter
 -/
 
-#print isExtreme_interₛ /-
-theorem isExtreme_interₛ {F : Set (Set E)} (hF : F.Nonempty) (hAF : ∀ B ∈ F, IsExtreme 𝕜 A B) :
+#print isExtreme_sInter /-
+theorem isExtreme_sInter {F : Set (Set E)} (hF : F.Nonempty) (hAF : ∀ B ∈ F, IsExtreme 𝕜 A B) :
     IsExtreme 𝕜 A (⋂₀ F) := by
   obtain ⟨B, hB⟩ := hF
   refine' ⟨(sInter_subset_of_mem hB).trans (hAF B hB).1, fun x₁ hx₁A x₂ hx₂A x hxF hx => _⟩
   simp_rw [mem_sInter] at hxF⊢
   have h := fun B hB => (hAF B hB).2 hx₁A hx₂A (hxF B hB) hx
   exact ⟨fun B hB => (h B hB).1, fun B hB => (h B hB).2⟩
-#align is_extreme_sInter isExtreme_interₛ
+#align is_extreme_sInter isExtreme_sInter
 -/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A) -/

@@ -293,11 +293,11 @@ section CommMonoid
 variable [CommMonoid G]
 
 @[to_additive]
-theorem exponent_eq_supᵢ_orderOf (h : ∀ g : G, 0 < orderOf g) : exponent G = ⨆ g : G, orderOf g :=
+theorem exponent_eq_iSup_orderOf (h : ∀ g : G, 0 < orderOf g) : exponent G = ⨆ g : G, orderOf g :=
   by
-  rw [supᵢ]
+  rw [iSup]
   rcases eq_or_ne (exponent G) 0 with (he | he)
-  · rw [he, Set.Infinite.Nat.supₛ_eq_zero <| (exponent_eq_zero_iff_range_order_of_infinite h).1 he]
+  · rw [he, Set.Infinite.Nat.sSup_eq_zero <| (exponent_eq_zero_iff_range_order_of_infinite h).1 he]
   have hne : (Set.range (orderOf : G → ℕ)).Nonempty := ⟨1, 1, orderOf_one⟩
   have hfin : (Set.range (orderOf : G → ℕ)).Finite := by
     rwa [← exponent_ne_zero_iff_range_order_of_finite h]
@@ -316,7 +316,7 @@ theorem exponent_eq_supᵢ_orderOf (h : ∀ g : G, 0 < orderOf g) : exponent G =
   suffices orderOf t < orderOf (t ^ p ^ k * g)
     by
     rw [ht] at this
-    exact this.not_le (le_csupₛ hfin.bdd_above <| Set.mem_range_self _)
+    exact this.not_le (le_csSup hfin.bdd_above <| Set.mem_range_self _)
   have hpk : p ^ k ∣ orderOf t := Nat.ord_proj_dvd _ _
   have hpk' : orderOf (t ^ p ^ k) = orderOf t / p ^ k := by
     rw [orderOf_pow' t (pow_ne_zero k hp.ne_zero), Nat.gcd_eq_right hpk]
@@ -334,11 +334,11 @@ theorem exponent_eq_supᵢ_orderOf (h : ∀ g : G, 0 < orderOf g) : exponent G =
     lt_mul_iff_one_lt_right <| h t, ← pow_succ']
   exact one_lt_pow hp.one_lt a.succ_ne_zero
   exact hpk
-#align monoid.exponent_eq_supr_order_of Monoid.exponent_eq_supᵢ_orderOf
-#align add_monoid.exponent_eq_supr_order_of AddMonoid.exponent_eq_supᵢ_orderOf
+#align monoid.exponent_eq_supr_order_of Monoid.exponent_eq_iSup_orderOf
+#align add_monoid.exponent_eq_supr_order_of AddMonoid.exponent_eq_iSup_orderOf
 
 @[to_additive]
-theorem exponent_eq_supᵢ_order_of' :
+theorem exponent_eq_iSup_order_of' :
     exponent G = if ∃ g : G, orderOf g = 0 then 0 else ⨆ g : G, orderOf g :=
   by
   split_ifs
@@ -346,8 +346,8 @@ theorem exponent_eq_supᵢ_order_of' :
     exact exponent_eq_zero_of_order_zero hg
   · have := not_exists.mp h
     exact exponent_eq_supr_order_of fun g => Ne.bot_lt <| this g
-#align monoid.exponent_eq_supr_order_of' Monoid.exponent_eq_supᵢ_order_of'
-#align add_monoid.exponent_eq_supr_order_of' AddMonoid.exponent_eq_supᵢ_order_of'
+#align monoid.exponent_eq_supr_order_of' Monoid.exponent_eq_iSup_order_of'
+#align add_monoid.exponent_eq_supr_order_of' AddMonoid.exponent_eq_iSup_order_of'
 
 end CommMonoid
 
@@ -359,7 +359,7 @@ variable [CancelCommMonoid G]
 theorem exponent_eq_max'_orderOf [Fintype G] :
     exponent G = ((@Finset.univ G _).image orderOf).max' ⟨1, by simp⟩ :=
   by
-  rw [← Finset.Nonempty.cSup_eq_max', Finset.coe_image, Finset.coe_univ, Set.image_univ, ← supᵢ]
+  rw [← Finset.Nonempty.cSup_eq_max', Finset.coe_image, Finset.coe_univ, Set.image_univ, ← iSup]
   exact exponent_eq_supr_order_of orderOf_pos
 #align monoid.exponent_eq_max'_order_of Monoid.exponent_eq_max'_orderOf
 #align add_monoid.exponent_eq_max'_order_of AddMonoid.exponent_eq_max'_order_of

@@ -148,7 +148,7 @@ theorem isOpen_a (L : E →L[𝕜] F) (r ε : ℝ) : IsOpen (a f L r ε) :=
 #align fderiv_measurable_aux.is_open_A FderivMeasurableAux.isOpen_a
 
 theorem isOpen_b {K : Set (E →L[𝕜] F)} {r s ε : ℝ} : IsOpen (b f K r s ε) := by
-  simp [B, isOpen_unionᵢ, IsOpen.inter, is_open_A]
+  simp [B, isOpen_iUnion, IsOpen.inter, is_open_A]
 #align fderiv_measurable_aux.is_open_B FderivMeasurableAux.isOpen_b
 
 theorem a_mono (L : E →L[𝕜] F) (r : ℝ) {ε δ : ℝ} (h : ε ≤ δ) : a f L r ε ⊆ a f L r δ :=
@@ -428,8 +428,8 @@ variable (𝕜 f)
 is Borel-measurable. -/
 theorem measurableSet_of_differentiableAt_of_isComplete {K : Set (E →L[𝕜] F)} (hK : IsComplete K) :
     MeasurableSet { x | DifferentiableAt 𝕜 f x ∧ fderiv 𝕜 f x ∈ K } := by
-  simp [differentiable_set_eq_D K hK, D, is_open_B.measurable_set, MeasurableSet.interᵢ,
-    MeasurableSet.unionᵢ]
+  simp [differentiable_set_eq_D K hK, D, is_open_B.measurable_set, MeasurableSet.iInter,
+    MeasurableSet.iUnion]
 #align measurable_set_of_differentiable_at_of_is_complete measurableSet_of_differentiableAt_of_isComplete
 
 variable [CompleteSpace F]
@@ -826,8 +826,8 @@ variable (f)
 set, is Borel-measurable. -/
 theorem measurableSet_of_differentiableWithinAt_Ici_of_isComplete {K : Set F} (hK : IsComplete K) :
     MeasurableSet { x | DifferentiableWithinAt ℝ f (Ici x) x ∧ derivWithin f (Ici x) x ∈ K } := by
-  simp [differentiable_set_eq_D K hK, D, measurable_set_B, MeasurableSet.interᵢ,
-    MeasurableSet.unionᵢ]
+  simp [differentiable_set_eq_D K hK, D, measurable_set_B, MeasurableSet.iInter,
+    MeasurableSet.iUnion]
 #align measurable_set_of_differentiable_within_at_Ici_of_is_complete measurableSet_of_differentiableWithinAt_Ici_of_isComplete
 
 variable [CompleteSpace F]

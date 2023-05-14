@@ -106,8 +106,8 @@ variable {f : ℕ → ℝ≥0∞}
 theorem le_tsum_condensed (hf : ∀ ⦃m n⦄, 0 < m → m ≤ n → f n ≤ f m) :
     (∑' k, f k) ≤ f 0 + ∑' k : ℕ, 2 ^ k * f (2 ^ k) :=
   by
-  rw [ENNReal.tsum_eq_supᵢ_nat' (Nat.tendsto_pow_atTop_atTop_of_one_lt _root_.one_lt_two)]
-  refine' supᵢ_le fun n => (Finset.le_sum_condensed hf n).trans (add_le_add_left _ _)
+  rw [ENNReal.tsum_eq_iSup_nat' (Nat.tendsto_pow_atTop_atTop_of_one_lt _root_.one_lt_two)]
+  refine' iSup_le fun n => (Finset.le_sum_condensed hf n).trans (add_le_add_left _ _)
   simp only [nsmul_eq_mul, Nat.cast_pow, Nat.cast_two]
   apply ENNReal.sum_le_tsum
 #align ennreal.le_tsum_condensed ENNReal.le_tsum_condensed
@@ -115,9 +115,9 @@ theorem le_tsum_condensed (hf : ∀ ⦃m n⦄, 0 < m → m ≤ n → f n ≤ f m
 theorem tsum_condensed_le (hf : ∀ ⦃m n⦄, 1 < m → m ≤ n → f n ≤ f m) :
     (∑' k : ℕ, 2 ^ k * f (2 ^ k)) ≤ f 1 + 2 * ∑' k, f k :=
   by
-  rw [ENNReal.tsum_eq_supᵢ_nat' (tendsto_at_top_mono Nat.le_succ tendsto_id), two_mul, ← two_nsmul]
+  rw [ENNReal.tsum_eq_iSup_nat' (tendsto_at_top_mono Nat.le_succ tendsto_id), two_mul, ← two_nsmul]
   refine'
-    supᵢ_le fun n =>
+    iSup_le fun n =>
       le_trans _
         (add_le_add_left
           (nsmul_le_nsmul_of_le_right (ENNReal.sum_le_tsum <| Finset.Ico 2 (2 ^ n + 1)) _) _)

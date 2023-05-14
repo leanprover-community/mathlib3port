@@ -213,7 +213,7 @@ theorem QuasiSeparated.openCover_tFAE {X Y : Scheme.{u}} (f : X ⟶ Y) :
         ∀ U : Opens Y.carrier, QuasiSeparated (f ∣_ U),
         ∀ {U : Scheme} (g : U ⟶ Y) [IsOpenImmersion g],
           QuasiSeparated (pullback.snd : pullback f g ⟶ _),
-        ∃ (ι : Type u)(U : ι → Opens Y.carrier)(hU : supᵢ U = ⊤), ∀ i, QuasiSeparated (f ∣_ U i)] :=
+        ∃ (ι : Type u)(U : ι → Opens Y.carrier)(hU : iSup U = ⊤), ∀ i, QuasiSeparated (f ∣_ U i)] :=
   QuasiSeparated.isLocalAtTarget.openCover_tFAE f
 #align algebraic_geometry.quasi_separated.open_cover_tfae AlgebraicGeometry.QuasiSeparated.openCover_tFAE
 
@@ -269,8 +269,8 @@ instance quasiSeparatedSpace_of_isAffine (X : Scheme) [IsAffine X] :
   intro U V hU hU' hV hV'
   obtain ⟨s, hs, e⟩ := (is_compact_open_iff_eq_basic_open_union _).mp ⟨hU', hU⟩
   obtain ⟨s', hs', e'⟩ := (is_compact_open_iff_eq_basic_open_union _).mp ⟨hV', hV⟩
-  rw [e, e', Set.unionᵢ₂_inter]
-  simp_rw [Set.inter_unionᵢ₂]
+  rw [e, e', Set.iUnion₂_inter]
+  simp_rw [Set.inter_iUnion₂]
   apply hs.is_compact_bUnion
   · intro i hi
     apply hs'.is_compact_bUnion
@@ -444,7 +444,7 @@ theorem exists_eq_pow_mul_of_isCompact_of_isQuasiSeparated (X : Scheme) (U : Ope
           (S ⊓ U.1).2⟩
     haveI := hs'.to_subtype
     cases nonempty_fintype s
-    replace hs : S ⊓ U.1 = supᵢ fun i : s => (i : opens X.carrier) :=
+    replace hs : S ⊓ U.1 = iSup fun i : s => (i : opens X.carrier) :=
       by
       ext1
       simpa using hs
@@ -454,14 +454,14 @@ theorem exists_eq_pow_mul_of_isCompact_of_isQuasiSeparated (X : Scheme) (U : Ope
       refine' le_trans _ inf_le_left
       use U.1
       erw [hs]
-      exact le_supᵢ _ _
+      exact le_iSup _ _
     have hs₂ : ∀ i : s, i.1.1 ≤ U.1 := by
       intro i
       change (i : opens X.carrier) ≤ U
       refine' le_trans _ inf_le_right
       use S
       erw [hs]
-      exact le_supᵢ _ _
+      exact le_iSup _ _
     -- On each affine open in the intersection, we have `f ^ (n + n₂) * y₁ = f ^ (n + n₁) * y₂`
     -- for some `n` since `f ^ n₂ * y₁ = f ^ (n₁ + n₂) * x = f ^ n₁ * y₂` on `X_f`.
     have :
@@ -488,7 +488,7 @@ theorem exists_eq_pow_mul_of_isCompact_of_isQuasiSeparated (X : Scheme) (U : Ope
       fapply X.sheaf.eq_of_locally_eq' fun i : s => i.1.1
       · refine' fun i => hom_of_le _
         erw [hs]
-        exact le_supᵢ _ _
+        exact le_iSup _ _
       · exact le_of_eq hs
       · intro i
         replace hn :=

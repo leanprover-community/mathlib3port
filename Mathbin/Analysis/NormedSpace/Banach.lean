@@ -100,7 +100,7 @@ theorem exists_approx_preimage_norm_le (surj : Surjective f) :
     refine' (mem_image _ _ _).2 ⟨x, ⟨_, hx⟩⟩
     rwa [mem_ball, dist_eq_norm, sub_zero]
   have : ∃ (n : ℕ)(x : _), x ∈ interior (closure (f '' ball 0 n)) :=
-    nonempty_interior_of_unionᵢ_of_closed (fun n => isClosed_closure) A
+    nonempty_interior_of_iUnion_of_closed (fun n => isClosed_closure) A
   simp only [mem_interior_iff_mem_nhds, Metric.mem_nhds_iff] at this
   rcases this with ⟨n, a, ε, ⟨εpos, H⟩⟩
   rcases NormedField.exists_one_lt_norm 𝕜 with ⟨c, hc⟩

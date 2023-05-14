@@ -1061,318 +1061,318 @@ theorem exists_isLUB (S : Set ℝ) (hne : S.Nonempty) (hbdd : BddAbove S) : ∃ 
 noncomputable instance : SupSet ℝ :=
   ⟨fun S => if h : S.Nonempty ∧ BddAbove S then Classical.choose (exists_isLUB S h.1 h.2) else 0⟩
 
-/- warning: real.Sup_def -> Real.supₛ_def is a dubious translation:
+/- warning: real.Sup_def -> Real.sSup_def is a dubious translation:
 lean 3 declaration is
-  forall (S : Set.{0} Real), Eq.{1} Real (SupSet.supₛ.{0} Real Real.hasSup S) (dite.{1} Real (And (Set.Nonempty.{0} Real S) (BddAbove.{0} Real Real.preorder S)) (And.decidable (Set.Nonempty.{0} Real S) (BddAbove.{0} Real Real.preorder S) (Classical.propDecidable (Set.Nonempty.{0} Real S)) (Classical.propDecidable (BddAbove.{0} Real Real.preorder S))) (fun (h : And (Set.Nonempty.{0} Real S) (BddAbove.{0} Real Real.preorder S)) => Classical.choose.{1} Real (fun (x : Real) => IsLUB.{0} Real Real.preorder S x) (Real.exists_isLUB S (And.left (Set.Nonempty.{0} Real S) (BddAbove.{0} Real Real.preorder S) h) (And.right (Set.Nonempty.{0} Real S) (BddAbove.{0} Real Real.preorder S) h))) (fun (h : Not (And (Set.Nonempty.{0} Real S) (BddAbove.{0} Real Real.preorder S))) => OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))
+  forall (S : Set.{0} Real), Eq.{1} Real (SupSet.sSup.{0} Real Real.hasSup S) (dite.{1} Real (And (Set.Nonempty.{0} Real S) (BddAbove.{0} Real Real.preorder S)) (And.decidable (Set.Nonempty.{0} Real S) (BddAbove.{0} Real Real.preorder S) (Classical.propDecidable (Set.Nonempty.{0} Real S)) (Classical.propDecidable (BddAbove.{0} Real Real.preorder S))) (fun (h : And (Set.Nonempty.{0} Real S) (BddAbove.{0} Real Real.preorder S)) => Classical.choose.{1} Real (fun (x : Real) => IsLUB.{0} Real Real.preorder S x) (Real.exists_isLUB S (And.left (Set.Nonempty.{0} Real S) (BddAbove.{0} Real Real.preorder S) h) (And.right (Set.Nonempty.{0} Real S) (BddAbove.{0} Real Real.preorder S) h))) (fun (h : Not (And (Set.Nonempty.{0} Real S) (BddAbove.{0} Real Real.preorder S))) => OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))
 but is expected to have type
-  forall (S : Set.{0} Real), Eq.{1} Real (SupSet.supₛ.{0} Real Real.instSupSetReal S) (dite.{1} Real (And (Set.Nonempty.{0} Real S) (BddAbove.{0} Real Real.instPreorderReal S)) (instDecidableAnd (Set.Nonempty.{0} Real S) (BddAbove.{0} Real Real.instPreorderReal S) (Classical.propDecidable (Set.Nonempty.{0} Real S)) (Classical.propDecidable (BddAbove.{0} Real Real.instPreorderReal S))) (fun (h : And (Set.Nonempty.{0} Real S) (BddAbove.{0} Real Real.instPreorderReal S)) => Classical.choose.{1} Real (fun (x : Real) => IsLUB.{0} Real Real.instPreorderReal S x) (Real.exists_isLUB S (And.left (Set.Nonempty.{0} Real S) (BddAbove.{0} Real Real.instPreorderReal S) h) (And.right (Set.Nonempty.{0} Real S) (BddAbove.{0} Real Real.instPreorderReal S) h))) (fun (h : Not (And (Set.Nonempty.{0} Real S) (BddAbove.{0} Real Real.instPreorderReal S))) => OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))
-Case conversion may be inaccurate. Consider using '#align real.Sup_def Real.supₛ_defₓ'. -/
-theorem supₛ_def (S : Set ℝ) :
-    supₛ S = if h : S.Nonempty ∧ BddAbove S then Classical.choose (exists_isLUB S h.1 h.2) else 0 :=
+  forall (S : Set.{0} Real), Eq.{1} Real (SupSet.sSup.{0} Real Real.instSupSetReal S) (dite.{1} Real (And (Set.Nonempty.{0} Real S) (BddAbove.{0} Real Real.instPreorderReal S)) (instDecidableAnd (Set.Nonempty.{0} Real S) (BddAbove.{0} Real Real.instPreorderReal S) (Classical.propDecidable (Set.Nonempty.{0} Real S)) (Classical.propDecidable (BddAbove.{0} Real Real.instPreorderReal S))) (fun (h : And (Set.Nonempty.{0} Real S) (BddAbove.{0} Real Real.instPreorderReal S)) => Classical.choose.{1} Real (fun (x : Real) => IsLUB.{0} Real Real.instPreorderReal S x) (Real.exists_isLUB S (And.left (Set.Nonempty.{0} Real S) (BddAbove.{0} Real Real.instPreorderReal S) h) (And.right (Set.Nonempty.{0} Real S) (BddAbove.{0} Real Real.instPreorderReal S) h))) (fun (h : Not (And (Set.Nonempty.{0} Real S) (BddAbove.{0} Real Real.instPreorderReal S))) => OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))
+Case conversion may be inaccurate. Consider using '#align real.Sup_def Real.sSup_defₓ'. -/
+theorem sSup_def (S : Set ℝ) :
+    sSup S = if h : S.Nonempty ∧ BddAbove S then Classical.choose (exists_isLUB S h.1 h.2) else 0 :=
   rfl
-#align real.Sup_def Real.supₛ_def
+#align real.Sup_def Real.sSup_def
 
-/- warning: real.is_lub_Sup -> Real.isLUB_supₛ is a dubious translation:
+/- warning: real.is_lub_Sup -> Real.isLUB_sSup is a dubious translation:
 lean 3 declaration is
-  forall (S : Set.{0} Real), (Set.Nonempty.{0} Real S) -> (BddAbove.{0} Real Real.preorder S) -> (IsLUB.{0} Real Real.preorder S (SupSet.supₛ.{0} Real Real.hasSup S))
+  forall (S : Set.{0} Real), (Set.Nonempty.{0} Real S) -> (BddAbove.{0} Real Real.preorder S) -> (IsLUB.{0} Real Real.preorder S (SupSet.sSup.{0} Real Real.hasSup S))
 but is expected to have type
-  forall (S : Set.{0} Real), (Set.Nonempty.{0} Real S) -> (BddAbove.{0} Real Real.instPreorderReal S) -> (IsLUB.{0} Real Real.instPreorderReal S (SupSet.supₛ.{0} Real Real.instSupSetReal S))
-Case conversion may be inaccurate. Consider using '#align real.is_lub_Sup Real.isLUB_supₛₓ'. -/
-protected theorem isLUB_supₛ (S : Set ℝ) (h₁ : S.Nonempty) (h₂ : BddAbove S) : IsLUB S (supₛ S) :=
+  forall (S : Set.{0} Real), (Set.Nonempty.{0} Real S) -> (BddAbove.{0} Real Real.instPreorderReal S) -> (IsLUB.{0} Real Real.instPreorderReal S (SupSet.sSup.{0} Real Real.instSupSetReal S))
+Case conversion may be inaccurate. Consider using '#align real.is_lub_Sup Real.isLUB_sSupₓ'. -/
+protected theorem isLUB_sSup (S : Set ℝ) (h₁ : S.Nonempty) (h₂ : BddAbove S) : IsLUB S (sSup S) :=
   by
   simp only [Sup_def, dif_pos (And.intro h₁ h₂)]
   apply Classical.choose_spec
-#align real.is_lub_Sup Real.isLUB_supₛ
+#align real.is_lub_Sup Real.isLUB_sSup
 
 noncomputable instance : InfSet ℝ :=
-  ⟨fun S => -supₛ (-S)⟩
+  ⟨fun S => -sSup (-S)⟩
 
-/- warning: real.Inf_def -> Real.infₛ_def is a dubious translation:
+/- warning: real.Inf_def -> Real.sInf_def is a dubious translation:
 lean 3 declaration is
-  forall (S : Set.{0} Real), Eq.{1} Real (InfSet.infₛ.{0} Real Real.hasInf S) (Neg.neg.{0} Real Real.hasNeg (SupSet.supₛ.{0} Real Real.hasSup (Neg.neg.{0} (Set.{0} Real) (Set.neg.{0} Real Real.hasNeg) S)))
+  forall (S : Set.{0} Real), Eq.{1} Real (InfSet.sInf.{0} Real Real.hasInf S) (Neg.neg.{0} Real Real.hasNeg (SupSet.sSup.{0} Real Real.hasSup (Neg.neg.{0} (Set.{0} Real) (Set.neg.{0} Real Real.hasNeg) S)))
 but is expected to have type
-  forall (S : Set.{0} Real), Eq.{1} Real (InfSet.infₛ.{0} Real Real.instInfSetReal S) (Neg.neg.{0} Real Real.instNegReal (SupSet.supₛ.{0} Real Real.instSupSetReal (Neg.neg.{0} (Set.{0} Real) (Set.neg.{0} Real Real.instNegReal) S)))
-Case conversion may be inaccurate. Consider using '#align real.Inf_def Real.infₛ_defₓ'. -/
-theorem infₛ_def (S : Set ℝ) : infₛ S = -supₛ (-S) :=
+  forall (S : Set.{0} Real), Eq.{1} Real (InfSet.sInf.{0} Real Real.instInfSetReal S) (Neg.neg.{0} Real Real.instNegReal (SupSet.sSup.{0} Real Real.instSupSetReal (Neg.neg.{0} (Set.{0} Real) (Set.neg.{0} Real Real.instNegReal) S)))
+Case conversion may be inaccurate. Consider using '#align real.Inf_def Real.sInf_defₓ'. -/
+theorem sInf_def (S : Set ℝ) : sInf S = -sSup (-S) :=
   rfl
-#align real.Inf_def Real.infₛ_def
+#align real.Inf_def Real.sInf_def
 
-/- warning: real.is_glb_Inf -> Real.is_glb_infₛ is a dubious translation:
+/- warning: real.is_glb_Inf -> Real.is_glb_sInf is a dubious translation:
 lean 3 declaration is
-  forall (S : Set.{0} Real), (Set.Nonempty.{0} Real S) -> (BddBelow.{0} Real Real.preorder S) -> (IsGLB.{0} Real Real.preorder S (InfSet.infₛ.{0} Real Real.hasInf S))
+  forall (S : Set.{0} Real), (Set.Nonempty.{0} Real S) -> (BddBelow.{0} Real Real.preorder S) -> (IsGLB.{0} Real Real.preorder S (InfSet.sInf.{0} Real Real.hasInf S))
 but is expected to have type
-  forall (S : Set.{0} Real), (Set.Nonempty.{0} Real S) -> (BddBelow.{0} Real Real.instPreorderReal S) -> (IsGLB.{0} Real Real.instPreorderReal S (InfSet.infₛ.{0} Real Real.instInfSetReal S))
-Case conversion may be inaccurate. Consider using '#align real.is_glb_Inf Real.is_glb_infₛₓ'. -/
-protected theorem is_glb_infₛ (S : Set ℝ) (h₁ : S.Nonempty) (h₂ : BddBelow S) : IsGLB S (infₛ S) :=
+  forall (S : Set.{0} Real), (Set.Nonempty.{0} Real S) -> (BddBelow.{0} Real Real.instPreorderReal S) -> (IsGLB.{0} Real Real.instPreorderReal S (InfSet.sInf.{0} Real Real.instInfSetReal S))
+Case conversion may be inaccurate. Consider using '#align real.is_glb_Inf Real.is_glb_sInfₓ'. -/
+protected theorem is_glb_sInf (S : Set ℝ) (h₁ : S.Nonempty) (h₂ : BddBelow S) : IsGLB S (sInf S) :=
   by
   rw [Inf_def, ← isLUB_neg', neg_neg]
-  exact Real.isLUB_supₛ _ h₁.neg h₂.neg
-#align real.is_glb_Inf Real.is_glb_infₛ
+  exact Real.isLUB_sSup _ h₁.neg h₂.neg
+#align real.is_glb_Inf Real.is_glb_sInf
 
 noncomputable instance : ConditionallyCompleteLinearOrder ℝ :=
   { Real.linearOrder, Real.lattice with
-    supₛ := SupSet.supₛ
-    infₛ := InfSet.infₛ
-    le_cSup := fun s a hs ha => (Real.isLUB_supₛ s ⟨a, ha⟩ hs).1 ha
-    cSup_le := fun s a hs ha => (Real.isLUB_supₛ s hs ⟨a, ha⟩).2 ha
-    cInf_le := fun s a hs ha => (Real.is_glb_infₛ s ⟨a, ha⟩ hs).1 ha
-    le_cInf := fun s a hs ha => (Real.is_glb_infₛ s hs ⟨a, ha⟩).2 ha }
+    sSup := SupSet.sSup
+    sInf := InfSet.sInf
+    le_cSup := fun s a hs ha => (Real.isLUB_sSup s ⟨a, ha⟩ hs).1 ha
+    cSup_le := fun s a hs ha => (Real.isLUB_sSup s hs ⟨a, ha⟩).2 ha
+    cInf_le := fun s a hs ha => (Real.is_glb_sInf s ⟨a, ha⟩ hs).1 ha
+    le_cInf := fun s a hs ha => (Real.is_glb_sInf s hs ⟨a, ha⟩).2 ha }
 
-/- warning: real.lt_Inf_add_pos -> Real.lt_infₛ_add_pos is a dubious translation:
+/- warning: real.lt_Inf_add_pos -> Real.lt_sInf_add_pos is a dubious translation:
 lean 3 declaration is
-  forall {s : Set.{0} Real}, (Set.Nonempty.{0} Real s) -> (forall {ε : Real}, (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) ε) -> (Exists.{1} Real (fun (a : Real) => Exists.{0} (Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) a s) (fun (H : Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) a s) => LT.lt.{0} Real Real.hasLt a (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) (InfSet.infₛ.{0} Real Real.hasInf s) ε)))))
+  forall {s : Set.{0} Real}, (Set.Nonempty.{0} Real s) -> (forall {ε : Real}, (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) ε) -> (Exists.{1} Real (fun (a : Real) => Exists.{0} (Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) a s) (fun (H : Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) a s) => LT.lt.{0} Real Real.hasLt a (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) (InfSet.sInf.{0} Real Real.hasInf s) ε)))))
 but is expected to have type
-  forall {s : Set.{0} Real}, (Set.Nonempty.{0} Real s) -> (forall {ε : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) ε) -> (Exists.{1} Real (fun (a : Real) => And (Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) a s) (LT.lt.{0} Real Real.instLTReal a (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (InfSet.infₛ.{0} Real Real.instInfSetReal s) ε)))))
-Case conversion may be inaccurate. Consider using '#align real.lt_Inf_add_pos Real.lt_infₛ_add_posₓ'. -/
-theorem lt_infₛ_add_pos {s : Set ℝ} (h : s.Nonempty) {ε : ℝ} (hε : 0 < ε) :
-    ∃ a ∈ s, a < infₛ s + ε :=
-  exists_lt_of_cinfₛ_lt h <| lt_add_of_pos_right _ hε
-#align real.lt_Inf_add_pos Real.lt_infₛ_add_pos
+  forall {s : Set.{0} Real}, (Set.Nonempty.{0} Real s) -> (forall {ε : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) ε) -> (Exists.{1} Real (fun (a : Real) => And (Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) a s) (LT.lt.{0} Real Real.instLTReal a (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (InfSet.sInf.{0} Real Real.instInfSetReal s) ε)))))
+Case conversion may be inaccurate. Consider using '#align real.lt_Inf_add_pos Real.lt_sInf_add_posₓ'. -/
+theorem lt_sInf_add_pos {s : Set ℝ} (h : s.Nonempty) {ε : ℝ} (hε : 0 < ε) :
+    ∃ a ∈ s, a < sInf s + ε :=
+  exists_lt_of_csInf_lt h <| lt_add_of_pos_right _ hε
+#align real.lt_Inf_add_pos Real.lt_sInf_add_pos
 
-/- warning: real.add_neg_lt_Sup -> Real.add_neg_lt_supₛ is a dubious translation:
+/- warning: real.add_neg_lt_Sup -> Real.add_neg_lt_sSup is a dubious translation:
 lean 3 declaration is
-  forall {s : Set.{0} Real}, (Set.Nonempty.{0} Real s) -> (forall {ε : Real}, (LT.lt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Exists.{1} Real (fun (a : Real) => Exists.{0} (Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) a s) (fun (H : Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) a s) => LT.lt.{0} Real Real.hasLt (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) (SupSet.supₛ.{0} Real Real.hasSup s) ε) a))))
+  forall {s : Set.{0} Real}, (Set.Nonempty.{0} Real s) -> (forall {ε : Real}, (LT.lt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Exists.{1} Real (fun (a : Real) => Exists.{0} (Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) a s) (fun (H : Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) a s) => LT.lt.{0} Real Real.hasLt (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) (SupSet.sSup.{0} Real Real.hasSup s) ε) a))))
 but is expected to have type
-  forall {s : Set.{0} Real}, (Set.Nonempty.{0} Real s) -> (forall {ε : Real}, (LT.lt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Exists.{1} Real (fun (a : Real) => And (Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) a s) (LT.lt.{0} Real Real.instLTReal (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (SupSet.supₛ.{0} Real Real.instSupSetReal s) ε) a))))
-Case conversion may be inaccurate. Consider using '#align real.add_neg_lt_Sup Real.add_neg_lt_supₛₓ'. -/
-theorem add_neg_lt_supₛ {s : Set ℝ} (h : s.Nonempty) {ε : ℝ} (hε : ε < 0) :
-    ∃ a ∈ s, supₛ s + ε < a :=
-  exists_lt_of_lt_csupₛ h <| add_lt_iff_neg_left.2 hε
-#align real.add_neg_lt_Sup Real.add_neg_lt_supₛ
+  forall {s : Set.{0} Real}, (Set.Nonempty.{0} Real s) -> (forall {ε : Real}, (LT.lt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Exists.{1} Real (fun (a : Real) => And (Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) a s) (LT.lt.{0} Real Real.instLTReal (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (SupSet.sSup.{0} Real Real.instSupSetReal s) ε) a))))
+Case conversion may be inaccurate. Consider using '#align real.add_neg_lt_Sup Real.add_neg_lt_sSupₓ'. -/
+theorem add_neg_lt_sSup {s : Set ℝ} (h : s.Nonempty) {ε : ℝ} (hε : ε < 0) :
+    ∃ a ∈ s, sSup s + ε < a :=
+  exists_lt_of_lt_csSup h <| add_lt_iff_neg_left.2 hε
+#align real.add_neg_lt_Sup Real.add_neg_lt_sSup
 
-/- warning: real.Inf_le_iff -> Real.infₛ_le_iff is a dubious translation:
+/- warning: real.Inf_le_iff -> Real.sInf_le_iff is a dubious translation:
 lean 3 declaration is
-  forall {s : Set.{0} Real}, (BddBelow.{0} Real Real.preorder s) -> (Set.Nonempty.{0} Real s) -> (forall {a : Real}, Iff (LE.le.{0} Real Real.hasLe (InfSet.infₛ.{0} Real Real.hasInf s) a) (forall (ε : Real), (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) ε) -> (Exists.{1} Real (fun (x : Real) => Exists.{0} (Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) x s) (fun (H : Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) x s) => LT.lt.{0} Real Real.hasLt x (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) a ε))))))
+  forall {s : Set.{0} Real}, (BddBelow.{0} Real Real.preorder s) -> (Set.Nonempty.{0} Real s) -> (forall {a : Real}, Iff (LE.le.{0} Real Real.hasLe (InfSet.sInf.{0} Real Real.hasInf s) a) (forall (ε : Real), (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) ε) -> (Exists.{1} Real (fun (x : Real) => Exists.{0} (Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) x s) (fun (H : Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) x s) => LT.lt.{0} Real Real.hasLt x (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) a ε))))))
 but is expected to have type
-  forall {s : Set.{0} Real}, (BddBelow.{0} Real Real.instPreorderReal s) -> (Set.Nonempty.{0} Real s) -> (forall {a : Real}, Iff (LE.le.{0} Real Real.instLEReal (InfSet.infₛ.{0} Real Real.instInfSetReal s) a) (forall (ε : Real), (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) ε) -> (Exists.{1} Real (fun (x : Real) => And (Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) x s) (LT.lt.{0} Real Real.instLTReal x (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) a ε))))))
-Case conversion may be inaccurate. Consider using '#align real.Inf_le_iff Real.infₛ_le_iffₓ'. -/
-theorem infₛ_le_iff {s : Set ℝ} (h : BddBelow s) (h' : s.Nonempty) {a : ℝ} :
-    infₛ s ≤ a ↔ ∀ ε, 0 < ε → ∃ x ∈ s, x < a + ε :=
+  forall {s : Set.{0} Real}, (BddBelow.{0} Real Real.instPreorderReal s) -> (Set.Nonempty.{0} Real s) -> (forall {a : Real}, Iff (LE.le.{0} Real Real.instLEReal (InfSet.sInf.{0} Real Real.instInfSetReal s) a) (forall (ε : Real), (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) ε) -> (Exists.{1} Real (fun (x : Real) => And (Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) x s) (LT.lt.{0} Real Real.instLTReal x (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) a ε))))))
+Case conversion may be inaccurate. Consider using '#align real.Inf_le_iff Real.sInf_le_iffₓ'. -/
+theorem sInf_le_iff {s : Set ℝ} (h : BddBelow s) (h' : s.Nonempty) {a : ℝ} :
+    sInf s ≤ a ↔ ∀ ε, 0 < ε → ∃ x ∈ s, x < a + ε :=
   by
   rw [le_iff_forall_pos_lt_add]
   constructor <;> intro H ε ε_pos
-  · exact exists_lt_of_cinfₛ_lt h' (H ε ε_pos)
+  · exact exists_lt_of_csInf_lt h' (H ε ε_pos)
   · rcases H ε ε_pos with ⟨x, x_in, hx⟩
-    exact cinfₛ_lt_of_lt h x_in hx
-#align real.Inf_le_iff Real.infₛ_le_iff
+    exact csInf_lt_of_lt h x_in hx
+#align real.Inf_le_iff Real.sInf_le_iff
 
-/- warning: real.le_Sup_iff -> Real.le_supₛ_iff is a dubious translation:
+/- warning: real.le_Sup_iff -> Real.le_sSup_iff is a dubious translation:
 lean 3 declaration is
-  forall {s : Set.{0} Real}, (BddAbove.{0} Real Real.preorder s) -> (Set.Nonempty.{0} Real s) -> (forall {a : Real}, Iff (LE.le.{0} Real Real.hasLe a (SupSet.supₛ.{0} Real Real.hasSup s)) (forall (ε : Real), (LT.lt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Exists.{1} Real (fun (x : Real) => Exists.{0} (Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) x s) (fun (H : Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) x s) => LT.lt.{0} Real Real.hasLt (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) a ε) x)))))
+  forall {s : Set.{0} Real}, (BddAbove.{0} Real Real.preorder s) -> (Set.Nonempty.{0} Real s) -> (forall {a : Real}, Iff (LE.le.{0} Real Real.hasLe a (SupSet.sSup.{0} Real Real.hasSup s)) (forall (ε : Real), (LT.lt.{0} Real Real.hasLt ε (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (Exists.{1} Real (fun (x : Real) => Exists.{0} (Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) x s) (fun (H : Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) x s) => LT.lt.{0} Real Real.hasLt (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) a ε) x)))))
 but is expected to have type
-  forall {s : Set.{0} Real}, (BddAbove.{0} Real Real.instPreorderReal s) -> (Set.Nonempty.{0} Real s) -> (forall {a : Real}, Iff (LE.le.{0} Real Real.instLEReal a (SupSet.supₛ.{0} Real Real.instSupSetReal s)) (forall (ε : Real), (LT.lt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Exists.{1} Real (fun (x : Real) => And (Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) x s) (LT.lt.{0} Real Real.instLTReal (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) a ε) x)))))
-Case conversion may be inaccurate. Consider using '#align real.le_Sup_iff Real.le_supₛ_iffₓ'. -/
-theorem le_supₛ_iff {s : Set ℝ} (h : BddAbove s) (h' : s.Nonempty) {a : ℝ} :
-    a ≤ supₛ s ↔ ∀ ε, ε < 0 → ∃ x ∈ s, a + ε < x :=
+  forall {s : Set.{0} Real}, (BddAbove.{0} Real Real.instPreorderReal s) -> (Set.Nonempty.{0} Real s) -> (forall {a : Real}, Iff (LE.le.{0} Real Real.instLEReal a (SupSet.sSup.{0} Real Real.instSupSetReal s)) (forall (ε : Real), (LT.lt.{0} Real Real.instLTReal ε (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Exists.{1} Real (fun (x : Real) => And (Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) x s) (LT.lt.{0} Real Real.instLTReal (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) a ε) x)))))
+Case conversion may be inaccurate. Consider using '#align real.le_Sup_iff Real.le_sSup_iffₓ'. -/
+theorem le_sSup_iff {s : Set ℝ} (h : BddAbove s) (h' : s.Nonempty) {a : ℝ} :
+    a ≤ sSup s ↔ ∀ ε, ε < 0 → ∃ x ∈ s, a + ε < x :=
   by
   rw [le_iff_forall_pos_lt_add]
   refine' ⟨fun H ε ε_neg => _, fun H ε ε_pos => _⟩
-  · exact exists_lt_of_lt_csupₛ h' (lt_sub_iff_add_lt.mp (H _ (neg_pos.mpr ε_neg)))
+  · exact exists_lt_of_lt_csSup h' (lt_sub_iff_add_lt.mp (H _ (neg_pos.mpr ε_neg)))
   · rcases H _ (neg_lt_zero.mpr ε_pos) with ⟨x, x_in, hx⟩
-    exact sub_lt_iff_lt_add.mp (lt_csupₛ_of_lt h x_in hx)
-#align real.le_Sup_iff Real.le_supₛ_iff
+    exact sub_lt_iff_lt_add.mp (lt_csSup_of_lt h x_in hx)
+#align real.le_Sup_iff Real.le_sSup_iff
 
-/- warning: real.Sup_empty -> Real.supₛ_empty is a dubious translation:
+/- warning: real.Sup_empty -> Real.sSup_empty is a dubious translation:
 lean 3 declaration is
-  Eq.{1} Real (SupSet.supₛ.{0} Real Real.hasSup (EmptyCollection.emptyCollection.{0} (Set.{0} Real) (Set.hasEmptyc.{0} Real))) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))
+  Eq.{1} Real (SupSet.sSup.{0} Real Real.hasSup (EmptyCollection.emptyCollection.{0} (Set.{0} Real) (Set.hasEmptyc.{0} Real))) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))
 but is expected to have type
-  Eq.{1} Real (SupSet.supₛ.{0} Real Real.instSupSetReal (EmptyCollection.emptyCollection.{0} (Set.{0} Real) (Set.instEmptyCollectionSet.{0} Real))) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))
-Case conversion may be inaccurate. Consider using '#align real.Sup_empty Real.supₛ_emptyₓ'. -/
+  Eq.{1} Real (SupSet.sSup.{0} Real Real.instSupSetReal (EmptyCollection.emptyCollection.{0} (Set.{0} Real) (Set.instEmptyCollectionSet.{0} Real))) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))
+Case conversion may be inaccurate. Consider using '#align real.Sup_empty Real.sSup_emptyₓ'. -/
 @[simp]
-theorem supₛ_empty : supₛ (∅ : Set ℝ) = 0 :=
+theorem sSup_empty : sSup (∅ : Set ℝ) = 0 :=
   dif_neg <| by simp
-#align real.Sup_empty Real.supₛ_empty
+#align real.Sup_empty Real.sSup_empty
 
-/- warning: real.csupr_empty -> Real.csupᵢ_empty is a dubious translation:
+/- warning: real.csupr_empty -> Real.ciSup_empty is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u1}} [_inst_1 : IsEmpty.{u1} α] (f : α -> Real), Eq.{1} Real (supᵢ.{0, u1} Real Real.hasSup α (fun (i : α) => f i)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))
+  forall {α : Sort.{u1}} [_inst_1 : IsEmpty.{u1} α] (f : α -> Real), Eq.{1} Real (iSup.{0, u1} Real Real.hasSup α (fun (i : α) => f i)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))
 but is expected to have type
-  forall {α : Sort.{u1}} [_inst_1 : IsEmpty.{u1} α] (f : α -> Real), Eq.{1} Real (supᵢ.{0, u1} Real Real.instSupSetReal α (fun (i : α) => f i)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))
-Case conversion may be inaccurate. Consider using '#align real.csupr_empty Real.csupᵢ_emptyₓ'. -/
-theorem csupᵢ_empty {α : Sort _} [IsEmpty α] (f : α → ℝ) : (⨆ i, f i) = 0 :=
+  forall {α : Sort.{u1}} [_inst_1 : IsEmpty.{u1} α] (f : α -> Real), Eq.{1} Real (iSup.{0, u1} Real Real.instSupSetReal α (fun (i : α) => f i)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))
+Case conversion may be inaccurate. Consider using '#align real.csupr_empty Real.ciSup_emptyₓ'. -/
+theorem ciSup_empty {α : Sort _} [IsEmpty α] (f : α → ℝ) : (⨆ i, f i) = 0 :=
   by
-  dsimp [supᵢ]
-  convert Real.supₛ_empty
+  dsimp [iSup]
+  convert Real.sSup_empty
   rw [Set.range_eq_empty_iff]
   infer_instance
-#align real.csupr_empty Real.csupᵢ_empty
+#align real.csupr_empty Real.ciSup_empty
 
-/- warning: real.csupr_const_zero -> Real.csupᵢ_const_zero is a dubious translation:
+/- warning: real.csupr_const_zero -> Real.ciSup_const_zero is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u1}}, Eq.{1} Real (supᵢ.{0, u1} Real Real.hasSup α (fun (i : α) => OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))
+  forall {α : Sort.{u1}}, Eq.{1} Real (iSup.{0, u1} Real Real.hasSup α (fun (i : α) => OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))
 but is expected to have type
-  forall {α : Sort.{u1}}, Eq.{1} Real (supᵢ.{0, u1} Real Real.instSupSetReal α (fun (i : α) => OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))
-Case conversion may be inaccurate. Consider using '#align real.csupr_const_zero Real.csupᵢ_const_zeroₓ'. -/
+  forall {α : Sort.{u1}}, Eq.{1} Real (iSup.{0, u1} Real Real.instSupSetReal α (fun (i : α) => OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))
+Case conversion may be inaccurate. Consider using '#align real.csupr_const_zero Real.ciSup_const_zeroₓ'. -/
 @[simp]
-theorem csupᵢ_const_zero {α : Sort _} : (⨆ i : α, (0 : ℝ)) = 0 :=
+theorem ciSup_const_zero {α : Sort _} : (⨆ i : α, (0 : ℝ)) = 0 :=
   by
   cases isEmpty_or_nonempty α
-  · exact Real.csupᵢ_empty _
-  · exact csupᵢ_const
-#align real.csupr_const_zero Real.csupᵢ_const_zero
+  · exact Real.ciSup_empty _
+  · exact ciSup_const
+#align real.csupr_const_zero Real.ciSup_const_zero
 
-/- warning: real.Sup_of_not_bdd_above -> Real.supₛ_of_not_bddAbove is a dubious translation:
+/- warning: real.Sup_of_not_bdd_above -> Real.sSup_of_not_bddAbove is a dubious translation:
 lean 3 declaration is
-  forall {s : Set.{0} Real}, (Not (BddAbove.{0} Real Real.preorder s)) -> (Eq.{1} Real (SupSet.supₛ.{0} Real Real.hasSup s) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))
+  forall {s : Set.{0} Real}, (Not (BddAbove.{0} Real Real.preorder s)) -> (Eq.{1} Real (SupSet.sSup.{0} Real Real.hasSup s) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))
 but is expected to have type
-  forall {s : Set.{0} Real}, (Not (BddAbove.{0} Real Real.instPreorderReal s)) -> (Eq.{1} Real (SupSet.supₛ.{0} Real Real.instSupSetReal s) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))
-Case conversion may be inaccurate. Consider using '#align real.Sup_of_not_bdd_above Real.supₛ_of_not_bddAboveₓ'. -/
-theorem supₛ_of_not_bddAbove {s : Set ℝ} (hs : ¬BddAbove s) : supₛ s = 0 :=
+  forall {s : Set.{0} Real}, (Not (BddAbove.{0} Real Real.instPreorderReal s)) -> (Eq.{1} Real (SupSet.sSup.{0} Real Real.instSupSetReal s) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))
+Case conversion may be inaccurate. Consider using '#align real.Sup_of_not_bdd_above Real.sSup_of_not_bddAboveₓ'. -/
+theorem sSup_of_not_bddAbove {s : Set ℝ} (hs : ¬BddAbove s) : sSup s = 0 :=
   dif_neg fun h => hs h.2
-#align real.Sup_of_not_bdd_above Real.supₛ_of_not_bddAbove
+#align real.Sup_of_not_bdd_above Real.sSup_of_not_bddAbove
 
-/- warning: real.supr_of_not_bdd_above -> Real.supᵢ_of_not_bddAbove is a dubious translation:
+/- warning: real.supr_of_not_bdd_above -> Real.iSup_of_not_bddAbove is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u1}} {f : α -> Real}, (Not (BddAbove.{0} Real Real.preorder (Set.range.{0, u1} Real α f))) -> (Eq.{1} Real (supᵢ.{0, u1} Real Real.hasSup α (fun (i : α) => f i)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))
+  forall {α : Sort.{u1}} {f : α -> Real}, (Not (BddAbove.{0} Real Real.preorder (Set.range.{0, u1} Real α f))) -> (Eq.{1} Real (iSup.{0, u1} Real Real.hasSup α (fun (i : α) => f i)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))
 but is expected to have type
-  forall {α : Sort.{u1}} {f : α -> Real}, (Not (BddAbove.{0} Real Real.instPreorderReal (Set.range.{0, u1} Real α f))) -> (Eq.{1} Real (supᵢ.{0, u1} Real Real.instSupSetReal α (fun (i : α) => f i)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))
-Case conversion may be inaccurate. Consider using '#align real.supr_of_not_bdd_above Real.supᵢ_of_not_bddAboveₓ'. -/
-theorem supᵢ_of_not_bddAbove {α : Sort _} {f : α → ℝ} (hf : ¬BddAbove (Set.range f)) :
+  forall {α : Sort.{u1}} {f : α -> Real}, (Not (BddAbove.{0} Real Real.instPreorderReal (Set.range.{0, u1} Real α f))) -> (Eq.{1} Real (iSup.{0, u1} Real Real.instSupSetReal α (fun (i : α) => f i)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))
+Case conversion may be inaccurate. Consider using '#align real.supr_of_not_bdd_above Real.iSup_of_not_bddAboveₓ'. -/
+theorem iSup_of_not_bddAbove {α : Sort _} {f : α → ℝ} (hf : ¬BddAbove (Set.range f)) :
     (⨆ i, f i) = 0 :=
-  supₛ_of_not_bddAbove hf
-#align real.supr_of_not_bdd_above Real.supᵢ_of_not_bddAbove
+  sSup_of_not_bddAbove hf
+#align real.supr_of_not_bdd_above Real.iSup_of_not_bddAbove
 
-/- warning: real.Sup_univ -> Real.supₛ_univ is a dubious translation:
+/- warning: real.Sup_univ -> Real.sSup_univ is a dubious translation:
 lean 3 declaration is
-  Eq.{1} Real (SupSet.supₛ.{0} Real Real.hasSup (Set.univ.{0} Real)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))
+  Eq.{1} Real (SupSet.sSup.{0} Real Real.hasSup (Set.univ.{0} Real)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))
 but is expected to have type
-  Eq.{1} Real (SupSet.supₛ.{0} Real Real.instSupSetReal (Set.univ.{0} Real)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))
-Case conversion may be inaccurate. Consider using '#align real.Sup_univ Real.supₛ_univₓ'. -/
-theorem supₛ_univ : supₛ (@Set.univ ℝ) = 0 :=
-  Real.supₛ_of_not_bddAbove fun ⟨x, h⟩ => not_le_of_lt (lt_add_one _) <| h (Set.mem_univ _)
-#align real.Sup_univ Real.supₛ_univ
+  Eq.{1} Real (SupSet.sSup.{0} Real Real.instSupSetReal (Set.univ.{0} Real)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))
+Case conversion may be inaccurate. Consider using '#align real.Sup_univ Real.sSup_univₓ'. -/
+theorem sSup_univ : sSup (@Set.univ ℝ) = 0 :=
+  Real.sSup_of_not_bddAbove fun ⟨x, h⟩ => not_le_of_lt (lt_add_one _) <| h (Set.mem_univ _)
+#align real.Sup_univ Real.sSup_univ
 
-/- warning: real.Inf_empty -> Real.infₛ_empty is a dubious translation:
+/- warning: real.Inf_empty -> Real.sInf_empty is a dubious translation:
 lean 3 declaration is
-  Eq.{1} Real (InfSet.infₛ.{0} Real Real.hasInf (EmptyCollection.emptyCollection.{0} (Set.{0} Real) (Set.hasEmptyc.{0} Real))) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))
+  Eq.{1} Real (InfSet.sInf.{0} Real Real.hasInf (EmptyCollection.emptyCollection.{0} (Set.{0} Real) (Set.hasEmptyc.{0} Real))) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))
 but is expected to have type
-  Eq.{1} Real (InfSet.infₛ.{0} Real Real.instInfSetReal (EmptyCollection.emptyCollection.{0} (Set.{0} Real) (Set.instEmptyCollectionSet.{0} Real))) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))
-Case conversion may be inaccurate. Consider using '#align real.Inf_empty Real.infₛ_emptyₓ'. -/
+  Eq.{1} Real (InfSet.sInf.{0} Real Real.instInfSetReal (EmptyCollection.emptyCollection.{0} (Set.{0} Real) (Set.instEmptyCollectionSet.{0} Real))) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))
+Case conversion may be inaccurate. Consider using '#align real.Inf_empty Real.sInf_emptyₓ'. -/
 @[simp]
-theorem infₛ_empty : infₛ (∅ : Set ℝ) = 0 := by simp [Inf_def, supₛ_empty]
-#align real.Inf_empty Real.infₛ_empty
+theorem sInf_empty : sInf (∅ : Set ℝ) = 0 := by simp [Inf_def, sSup_empty]
+#align real.Inf_empty Real.sInf_empty
 
-/- warning: real.cinfi_empty -> Real.cinfᵢ_empty is a dubious translation:
+/- warning: real.cinfi_empty -> Real.ciInf_empty is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u1}} [_inst_1 : IsEmpty.{u1} α] (f : α -> Real), Eq.{1} Real (infᵢ.{0, u1} Real Real.hasInf α (fun (i : α) => f i)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))
+  forall {α : Sort.{u1}} [_inst_1 : IsEmpty.{u1} α] (f : α -> Real), Eq.{1} Real (iInf.{0, u1} Real Real.hasInf α (fun (i : α) => f i)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))
 but is expected to have type
-  forall {α : Sort.{u1}} [_inst_1 : IsEmpty.{u1} α] (f : α -> Real), Eq.{1} Real (infᵢ.{0, u1} Real Real.instInfSetReal α (fun (i : α) => f i)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))
-Case conversion may be inaccurate. Consider using '#align real.cinfi_empty Real.cinfᵢ_emptyₓ'. -/
-theorem cinfᵢ_empty {α : Sort _} [IsEmpty α] (f : α → ℝ) : (⨅ i, f i) = 0 := by
-  rw [infᵢ_of_empty', infₛ_empty]
-#align real.cinfi_empty Real.cinfᵢ_empty
+  forall {α : Sort.{u1}} [_inst_1 : IsEmpty.{u1} α] (f : α -> Real), Eq.{1} Real (iInf.{0, u1} Real Real.instInfSetReal α (fun (i : α) => f i)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))
+Case conversion may be inaccurate. Consider using '#align real.cinfi_empty Real.ciInf_emptyₓ'. -/
+theorem ciInf_empty {α : Sort _} [IsEmpty α] (f : α → ℝ) : (⨅ i, f i) = 0 := by
+  rw [iInf_of_empty', sInf_empty]
+#align real.cinfi_empty Real.ciInf_empty
 
-/- warning: real.cinfi_const_zero -> Real.cinfᵢ_const_zero is a dubious translation:
+/- warning: real.cinfi_const_zero -> Real.ciInf_const_zero is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u1}}, Eq.{1} Real (infᵢ.{0, u1} Real Real.hasInf α (fun (i : α) => OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))
+  forall {α : Sort.{u1}}, Eq.{1} Real (iInf.{0, u1} Real Real.hasInf α (fun (i : α) => OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))
 but is expected to have type
-  forall {α : Sort.{u1}}, Eq.{1} Real (infᵢ.{0, u1} Real Real.instInfSetReal α (fun (i : α) => OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))
-Case conversion may be inaccurate. Consider using '#align real.cinfi_const_zero Real.cinfᵢ_const_zeroₓ'. -/
+  forall {α : Sort.{u1}}, Eq.{1} Real (iInf.{0, u1} Real Real.instInfSetReal α (fun (i : α) => OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))
+Case conversion may be inaccurate. Consider using '#align real.cinfi_const_zero Real.ciInf_const_zeroₓ'. -/
 @[simp]
-theorem cinfᵢ_const_zero {α : Sort _} : (⨅ i : α, (0 : ℝ)) = 0 :=
+theorem ciInf_const_zero {α : Sort _} : (⨅ i : α, (0 : ℝ)) = 0 :=
   by
   cases isEmpty_or_nonempty α
-  · exact Real.cinfᵢ_empty _
-  · exact cinfᵢ_const
-#align real.cinfi_const_zero Real.cinfᵢ_const_zero
+  · exact Real.ciInf_empty _
+  · exact ciInf_const
+#align real.cinfi_const_zero Real.ciInf_const_zero
 
-/- warning: real.Inf_of_not_bdd_below -> Real.infₛ_of_not_bddBelow is a dubious translation:
+/- warning: real.Inf_of_not_bdd_below -> Real.sInf_of_not_bddBelow is a dubious translation:
 lean 3 declaration is
-  forall {s : Set.{0} Real}, (Not (BddBelow.{0} Real Real.preorder s)) -> (Eq.{1} Real (InfSet.infₛ.{0} Real Real.hasInf s) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))
+  forall {s : Set.{0} Real}, (Not (BddBelow.{0} Real Real.preorder s)) -> (Eq.{1} Real (InfSet.sInf.{0} Real Real.hasInf s) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))
 but is expected to have type
-  forall {s : Set.{0} Real}, (Not (BddBelow.{0} Real Real.instPreorderReal s)) -> (Eq.{1} Real (InfSet.infₛ.{0} Real Real.instInfSetReal s) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))
-Case conversion may be inaccurate. Consider using '#align real.Inf_of_not_bdd_below Real.infₛ_of_not_bddBelowₓ'. -/
-theorem infₛ_of_not_bddBelow {s : Set ℝ} (hs : ¬BddBelow s) : infₛ s = 0 :=
-  neg_eq_zero.2 <| supₛ_of_not_bddAbove <| mt bddAbove_neg.1 hs
-#align real.Inf_of_not_bdd_below Real.infₛ_of_not_bddBelow
+  forall {s : Set.{0} Real}, (Not (BddBelow.{0} Real Real.instPreorderReal s)) -> (Eq.{1} Real (InfSet.sInf.{0} Real Real.instInfSetReal s) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))
+Case conversion may be inaccurate. Consider using '#align real.Inf_of_not_bdd_below Real.sInf_of_not_bddBelowₓ'. -/
+theorem sInf_of_not_bddBelow {s : Set ℝ} (hs : ¬BddBelow s) : sInf s = 0 :=
+  neg_eq_zero.2 <| sSup_of_not_bddAbove <| mt bddAbove_neg.1 hs
+#align real.Inf_of_not_bdd_below Real.sInf_of_not_bddBelow
 
-/- warning: real.infi_of_not_bdd_below -> Real.infᵢ_of_not_bddBelow is a dubious translation:
+/- warning: real.infi_of_not_bdd_below -> Real.iInf_of_not_bddBelow is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u1}} {f : α -> Real}, (Not (BddBelow.{0} Real Real.preorder (Set.range.{0, u1} Real α f))) -> (Eq.{1} Real (infᵢ.{0, u1} Real Real.hasInf α (fun (i : α) => f i)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))
+  forall {α : Sort.{u1}} {f : α -> Real}, (Not (BddBelow.{0} Real Real.preorder (Set.range.{0, u1} Real α f))) -> (Eq.{1} Real (iInf.{0, u1} Real Real.hasInf α (fun (i : α) => f i)) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))
 but is expected to have type
-  forall {α : Sort.{u1}} {f : α -> Real}, (Not (BddBelow.{0} Real Real.instPreorderReal (Set.range.{0, u1} Real α f))) -> (Eq.{1} Real (infᵢ.{0, u1} Real Real.instInfSetReal α (fun (i : α) => f i)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))
-Case conversion may be inaccurate. Consider using '#align real.infi_of_not_bdd_below Real.infᵢ_of_not_bddBelowₓ'. -/
-theorem infᵢ_of_not_bddBelow {α : Sort _} {f : α → ℝ} (hf : ¬BddBelow (Set.range f)) :
+  forall {α : Sort.{u1}} {f : α -> Real}, (Not (BddBelow.{0} Real Real.instPreorderReal (Set.range.{0, u1} Real α f))) -> (Eq.{1} Real (iInf.{0, u1} Real Real.instInfSetReal α (fun (i : α) => f i)) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))
+Case conversion may be inaccurate. Consider using '#align real.infi_of_not_bdd_below Real.iInf_of_not_bddBelowₓ'. -/
+theorem iInf_of_not_bddBelow {α : Sort _} {f : α → ℝ} (hf : ¬BddBelow (Set.range f)) :
     (⨅ i, f i) = 0 :=
-  infₛ_of_not_bddBelow hf
-#align real.infi_of_not_bdd_below Real.infᵢ_of_not_bddBelow
+  sInf_of_not_bddBelow hf
+#align real.infi_of_not_bdd_below Real.iInf_of_not_bddBelow
 
-/- warning: real.Sup_nonneg -> Real.supₛ_nonneg is a dubious translation:
+/- warning: real.Sup_nonneg -> Real.sSup_nonneg is a dubious translation:
 lean 3 declaration is
-  forall (S : Set.{0} Real), (forall (x : Real), (Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) x S) -> (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) x)) -> (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) (SupSet.supₛ.{0} Real Real.hasSup S))
+  forall (S : Set.{0} Real), (forall (x : Real), (Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) x S) -> (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) x)) -> (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) (SupSet.sSup.{0} Real Real.hasSup S))
 but is expected to have type
-  forall (S : Set.{0} Real), (forall (x : Real), (Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) x S) -> (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) x)) -> (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) (SupSet.supₛ.{0} Real Real.instSupSetReal S))
-Case conversion may be inaccurate. Consider using '#align real.Sup_nonneg Real.supₛ_nonnegₓ'. -/
+  forall (S : Set.{0} Real), (forall (x : Real), (Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) x S) -> (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) x)) -> (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) (SupSet.sSup.{0} Real Real.instSupSetReal S))
+Case conversion may be inaccurate. Consider using '#align real.Sup_nonneg Real.sSup_nonnegₓ'. -/
 /--
 As `0` is the default value for `real.Sup` of the empty set or sets which are not bounded above, it
 suffices to show that `S` is bounded below by `0` to show that `0 ≤ Inf S`.
 -/
-theorem supₛ_nonneg (S : Set ℝ) (hS : ∀ x ∈ S, (0 : ℝ) ≤ x) : 0 ≤ supₛ S :=
+theorem sSup_nonneg (S : Set ℝ) (hS : ∀ x ∈ S, (0 : ℝ) ≤ x) : 0 ≤ sSup S :=
   by
   rcases S.eq_empty_or_nonempty with (rfl | ⟨y, hy⟩)
   · exact Sup_empty.ge
-  · apply dite _ (fun h => le_csupₛ_of_le h hy <| hS y hy) fun h => (Sup_of_not_bdd_above h).ge
-#align real.Sup_nonneg Real.supₛ_nonneg
+  · apply dite _ (fun h => le_csSup_of_le h hy <| hS y hy) fun h => (Sup_of_not_bdd_above h).ge
+#align real.Sup_nonneg Real.sSup_nonneg
 
-/- warning: real.Sup_nonpos -> Real.supₛ_nonpos is a dubious translation:
+/- warning: real.Sup_nonpos -> Real.sSup_nonpos is a dubious translation:
 lean 3 declaration is
-  forall (S : Set.{0} Real), (forall (x : Real), (Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) x S) -> (LE.le.{0} Real Real.hasLe x (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))) -> (LE.le.{0} Real Real.hasLe (SupSet.supₛ.{0} Real Real.hasSup S) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))
+  forall (S : Set.{0} Real), (forall (x : Real), (Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) x S) -> (LE.le.{0} Real Real.hasLe x (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))) -> (LE.le.{0} Real Real.hasLe (SupSet.sSup.{0} Real Real.hasSup S) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))
 but is expected to have type
-  forall (S : Set.{0} Real), (forall (x : Real), (Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) x S) -> (LE.le.{0} Real Real.instLEReal x (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) -> (LE.le.{0} Real Real.instLEReal (SupSet.supₛ.{0} Real Real.instSupSetReal S) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))
-Case conversion may be inaccurate. Consider using '#align real.Sup_nonpos Real.supₛ_nonposₓ'. -/
+  forall (S : Set.{0} Real), (forall (x : Real), (Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) x S) -> (LE.le.{0} Real Real.instLEReal x (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) -> (LE.le.{0} Real Real.instLEReal (SupSet.sSup.{0} Real Real.instSupSetReal S) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))
+Case conversion may be inaccurate. Consider using '#align real.Sup_nonpos Real.sSup_nonposₓ'. -/
 /-- As `0` is the default value for `real.Sup` of the empty set, it suffices to show that `S` is
 bounded above by `0` to show that `Sup S ≤ 0`.
 -/
-theorem supₛ_nonpos (S : Set ℝ) (hS : ∀ x ∈ S, x ≤ (0 : ℝ)) : supₛ S ≤ 0 :=
+theorem sSup_nonpos (S : Set ℝ) (hS : ∀ x ∈ S, x ≤ (0 : ℝ)) : sSup S ≤ 0 :=
   by
   rcases S.eq_empty_or_nonempty with (rfl | hS₂)
-  exacts[Sup_empty.le, csupₛ_le hS₂ hS]
-#align real.Sup_nonpos Real.supₛ_nonpos
+  exacts[Sup_empty.le, csSup_le hS₂ hS]
+#align real.Sup_nonpos Real.sSup_nonpos
 
-/- warning: real.Inf_nonneg -> Real.infₛ_nonneg is a dubious translation:
+/- warning: real.Inf_nonneg -> Real.sInf_nonneg is a dubious translation:
 lean 3 declaration is
-  forall (S : Set.{0} Real), (forall (x : Real), (Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) x S) -> (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) x)) -> (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) (InfSet.infₛ.{0} Real Real.hasInf S))
+  forall (S : Set.{0} Real), (forall (x : Real), (Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) x S) -> (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) x)) -> (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) (InfSet.sInf.{0} Real Real.hasInf S))
 but is expected to have type
-  forall (S : Set.{0} Real), (forall (x : Real), (Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) x S) -> (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) x)) -> (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) (InfSet.infₛ.{0} Real Real.instInfSetReal S))
-Case conversion may be inaccurate. Consider using '#align real.Inf_nonneg Real.infₛ_nonnegₓ'. -/
+  forall (S : Set.{0} Real), (forall (x : Real), (Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) x S) -> (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) x)) -> (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) (InfSet.sInf.{0} Real Real.instInfSetReal S))
+Case conversion may be inaccurate. Consider using '#align real.Inf_nonneg Real.sInf_nonnegₓ'. -/
 /-- As `0` is the default value for `real.Inf` of the empty set, it suffices to show that `S` is
 bounded below by `0` to show that `0 ≤ Inf S`.
 -/
-theorem infₛ_nonneg (S : Set ℝ) (hS : ∀ x ∈ S, (0 : ℝ) ≤ x) : 0 ≤ infₛ S :=
+theorem sInf_nonneg (S : Set ℝ) (hS : ∀ x ∈ S, (0 : ℝ) ≤ x) : 0 ≤ sInf S :=
   by
   rcases S.eq_empty_or_nonempty with (rfl | hS₂)
-  exacts[Inf_empty.ge, le_cinfₛ hS₂ hS]
-#align real.Inf_nonneg Real.infₛ_nonneg
+  exacts[Inf_empty.ge, le_csInf hS₂ hS]
+#align real.Inf_nonneg Real.sInf_nonneg
 
-/- warning: real.Inf_nonpos -> Real.infₛ_nonpos is a dubious translation:
+/- warning: real.Inf_nonpos -> Real.sInf_nonpos is a dubious translation:
 lean 3 declaration is
-  forall (S : Set.{0} Real), (forall (x : Real), (Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) x S) -> (LE.le.{0} Real Real.hasLe x (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))) -> (LE.le.{0} Real Real.hasLe (InfSet.infₛ.{0} Real Real.hasInf S) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))
+  forall (S : Set.{0} Real), (forall (x : Real), (Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) x S) -> (LE.le.{0} Real Real.hasLe x (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))) -> (LE.le.{0} Real Real.hasLe (InfSet.sInf.{0} Real Real.hasInf S) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))
 but is expected to have type
-  forall (S : Set.{0} Real), (forall (x : Real), (Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) x S) -> (LE.le.{0} Real Real.instLEReal x (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) -> (LE.le.{0} Real Real.instLEReal (InfSet.infₛ.{0} Real Real.instInfSetReal S) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))
-Case conversion may be inaccurate. Consider using '#align real.Inf_nonpos Real.infₛ_nonposₓ'. -/
+  forall (S : Set.{0} Real), (forall (x : Real), (Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) x S) -> (LE.le.{0} Real Real.instLEReal x (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) -> (LE.le.{0} Real Real.instLEReal (InfSet.sInf.{0} Real Real.instInfSetReal S) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))
+Case conversion may be inaccurate. Consider using '#align real.Inf_nonpos Real.sInf_nonposₓ'. -/
 /--
 As `0` is the default value for `real.Inf` of the empty set or sets which are not bounded below, it
 suffices to show that `S` is bounded above by `0` to show that `Inf S ≤ 0`.
 -/
-theorem infₛ_nonpos (S : Set ℝ) (hS : ∀ x ∈ S, x ≤ (0 : ℝ)) : infₛ S ≤ 0 :=
+theorem sInf_nonpos (S : Set ℝ) (hS : ∀ x ∈ S, x ≤ (0 : ℝ)) : sInf S ≤ 0 :=
   by
   rcases S.eq_empty_or_nonempty with (rfl | ⟨y, hy⟩)
   · exact Inf_empty.le
-  · apply dite _ (fun h => cinfₛ_le_of_le h hy <| hS y hy) fun h => (Inf_of_not_bdd_below h).le
-#align real.Inf_nonpos Real.infₛ_nonpos
+  · apply dite _ (fun h => csInf_le_of_le h hy <| hS y hy) fun h => (Inf_of_not_bdd_below h).le
+#align real.Inf_nonpos Real.sInf_nonpos
 
-/- warning: real.Inf_le_Sup -> Real.infₛ_le_supₛ is a dubious translation:
+/- warning: real.Inf_le_Sup -> Real.sInf_le_sSup is a dubious translation:
 lean 3 declaration is
-  forall (s : Set.{0} Real), (BddBelow.{0} Real Real.preorder s) -> (BddAbove.{0} Real Real.preorder s) -> (LE.le.{0} Real Real.hasLe (InfSet.infₛ.{0} Real Real.hasInf s) (SupSet.supₛ.{0} Real Real.hasSup s))
+  forall (s : Set.{0} Real), (BddBelow.{0} Real Real.preorder s) -> (BddAbove.{0} Real Real.preorder s) -> (LE.le.{0} Real Real.hasLe (InfSet.sInf.{0} Real Real.hasInf s) (SupSet.sSup.{0} Real Real.hasSup s))
 but is expected to have type
-  forall (s : Set.{0} Real), (BddBelow.{0} Real Real.instPreorderReal s) -> (BddAbove.{0} Real Real.instPreorderReal s) -> (LE.le.{0} Real Real.instLEReal (InfSet.infₛ.{0} Real Real.instInfSetReal s) (SupSet.supₛ.{0} Real Real.instSupSetReal s))
-Case conversion may be inaccurate. Consider using '#align real.Inf_le_Sup Real.infₛ_le_supₛₓ'. -/
-theorem infₛ_le_supₛ (s : Set ℝ) (h₁ : BddBelow s) (h₂ : BddAbove s) : infₛ s ≤ supₛ s :=
+  forall (s : Set.{0} Real), (BddBelow.{0} Real Real.instPreorderReal s) -> (BddAbove.{0} Real Real.instPreorderReal s) -> (LE.le.{0} Real Real.instLEReal (InfSet.sInf.{0} Real Real.instInfSetReal s) (SupSet.sSup.{0} Real Real.instSupSetReal s))
+Case conversion may be inaccurate. Consider using '#align real.Inf_le_Sup Real.sInf_le_sSupₓ'. -/
+theorem sInf_le_sSup (s : Set ℝ) (h₁ : BddBelow s) (h₂ : BddAbove s) : sInf s ≤ sSup s :=
   by
   rcases s.eq_empty_or_nonempty with (rfl | hne)
-  · rw [infₛ_empty, supₛ_empty]
-  · exact cinfₛ_le_csupₛ h₁ h₂ hne
-#align real.Inf_le_Sup Real.infₛ_le_supₛ
+  · rw [sInf_empty, sSup_empty]
+  · exact csInf_le_csSup h₁ h₂ hne
+#align real.Inf_le_Sup Real.sInf_le_sSup
 
 /- warning: real.cau_seq_converges -> Real.cauSeq_converges is a dubious translation:
 lean 3 declaration is
@@ -1389,12 +1389,12 @@ theorem cauSeq_converges (f : CauSeq ℝ abs) : ∃ x, f ≈ const abs x :=
   have ub : ∃ x, ∀ y ∈ S, y ≤ x := (exists_gt f).imp ub'
   refine' ⟨Sup S, ((lt_total _ _).resolve_left fun h => _).resolve_right fun h => _⟩
   · rcases h with ⟨ε, ε0, i, ih⟩
-    refine' (csupₛ_le lb (ub' _ _)).not_lt (sub_lt_self _ (half_pos ε0))
+    refine' (csSup_le lb (ub' _ _)).not_lt (sub_lt_self _ (half_pos ε0))
     refine' ⟨_, half_pos ε0, i, fun j ij => _⟩
     rw [sub_apply, const_apply, sub_right_comm, le_sub_iff_add_le, add_halves]
     exact ih _ ij
   · rcases h with ⟨ε, ε0, i, ih⟩
-    refine' (le_csupₛ ub _).not_lt ((lt_add_iff_pos_left _).2 (half_pos ε0))
+    refine' (le_csSup ub _).not_lt ((lt_add_iff_pos_left _).2 (half_pos ε0))
     refine' ⟨_, half_pos ε0, i, fun j ij => _⟩
     rw [sub_apply, const_apply, add_comm, ← sub_sub, le_sub_iff_add_le, add_halves]
     exact ih _ ij

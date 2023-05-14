@@ -75,7 +75,7 @@ theorem isTopologicalBasis_cofiltered_limit (T : ∀ j, Set (Set (F.obj j)))
         refine' ⟨j, V, hV, rfl⟩
     -- Using `D`, we can apply the characterization of the topological basis of a
     -- topology defined as an infimum...
-    convert isTopologicalBasis_infᵢ hT fun j (x : D.X) => D.π.app j x
+    convert isTopologicalBasis_iInf hT fun j (x : D.X) => D.π.app j x
     ext U0
     constructor
     · rintro ⟨j, V, hV, rfl⟩
@@ -110,7 +110,7 @@ theorem isTopologicalBasis_cofiltered_limit (T : ∀ j, Set (Set (F.obj j)))
           · intro P he hh
             simpa
           · intro a E ha hh1 hh2 hh3 hh4 hh5
-            rw [Finset.set_binterᵢ_insert]
+            rw [Finset.set_biInter_insert]
             refine' hh4 _ _ (hh5 _ (Finset.mem_insert_self _ _)) (hh1 _ hh3 hh4 _)
             intro e he
             exact hh5 e (Finset.mem_insert_of_mem he)
@@ -123,10 +123,10 @@ theorem isTopologicalBasis_cofiltered_limit (T : ∀ j, Set (Set (F.obj j)))
       · -- conclude...
         rw [h2]
         dsimp [V]
-        rw [Set.preimage_interᵢ]
+        rw [Set.preimage_iInter]
         congr 1
         ext1 e
-        rw [Set.preimage_interᵢ]
+        rw [Set.preimage_iInter]
         congr 1
         ext1 he
         dsimp [Vs]

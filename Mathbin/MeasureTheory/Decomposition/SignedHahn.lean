@@ -246,7 +246,7 @@ private theorem restrict_nonpos_seq_disjoint' {n m : ℕ} (h : n < m) :
   · rw [restrict_nonpos_seq] at hx₂
     exact
       (some_exists_one_div_lt_subset hx₂).2
-        (Set.mem_unionᵢ.2 ⟨n, Set.mem_unionᵢ.2 ⟨nat.lt_succ_iff.mp h, hx₁⟩⟩)
+        (Set.mem_iUnion.2 ⟨n, Set.mem_iUnion.2 ⟨nat.lt_succ_iff.mp h, hx₁⟩⟩)
 #align measure_theory.signed_measure.restrict_nonpos_seq_disjoint' measure_theory.signed_measure.restrict_nonpos_seq_disjoint'
 
 private theorem restrict_nonpos_seq_disjoint : Pairwise (Disjoint on restrictNonposSeq s i) :=
@@ -267,7 +267,7 @@ private theorem exists_subset_restrict_nonpos' (hi₁ : MeasurableSet i) (hi₂ 
   set k := Nat.find hn with hk₁
   have hk₂ : s ≤[i \ ⋃ l < k, restrict_nonpos_seq s i l] 0 := Nat.find_spec hn
   have hmeas : MeasurableSet (⋃ (l : ℕ) (H : l < k), restrict_nonpos_seq s i l) :=
-    MeasurableSet.unionᵢ fun _ => MeasurableSet.unionᵢ fun _ => restrict_nonpos_seq_measurable_set _
+    MeasurableSet.iUnion fun _ => MeasurableSet.iUnion fun _ => restrict_nonpos_seq_measurable_set _
   refine' ⟨i \ ⋃ l < k, restrict_nonpos_seq s i l, hi₁.diff hmeas, Set.diff_subset _ _, hk₂, _⟩
   rw [of_diff hmeas hi₁, s.of_disjoint_Union_nat]
   · have h₁ : ∀ l < k, 0 ≤ s (restrict_nonpos_seq s i l) :=
@@ -276,8 +276,8 @@ private theorem exists_subset_restrict_nonpos' (hi₁ : MeasurableSet i) (hi₂ 
       refine' le_of_lt (measure_of_restrict_nonpos_seq h _ _)
       refine' mt (restrict_le_zero_subset _ (hi₁.diff _) (Set.Subset.refl _)) (Nat.find_min hn hl)
       exact
-        MeasurableSet.unionᵢ fun _ =>
-          MeasurableSet.unionᵢ fun _ => restrict_nonpos_seq_measurable_set _
+        MeasurableSet.iUnion fun _ =>
+          MeasurableSet.iUnion fun _ => restrict_nonpos_seq_measurable_set _
     suffices 0 ≤ ∑' l : ℕ, s (⋃ H : l < k, restrict_nonpos_seq s i l)
       by
       rw [sub_neg]
@@ -287,21 +287,21 @@ private theorem exists_subset_restrict_nonpos' (hi₁ : MeasurableSet i) (hi₂ 
     by_cases l < k
     · convert h₁ _ h
       ext x
-      rw [Set.mem_unionᵢ, exists_prop, and_iff_right_iff_imp]
+      rw [Set.mem_iUnion, exists_prop, and_iff_right_iff_imp]
       exact fun _ => h
     · convert le_of_eq s.empty.symm
       ext
-      simp only [exists_prop, Set.mem_empty_iff_false, Set.mem_unionᵢ, not_and, iff_false_iff]
+      simp only [exists_prop, Set.mem_empty_iff_false, Set.mem_iUnion, not_and, iff_false_iff]
       exact fun h' => False.elim (h h')
   · intro
-    exact MeasurableSet.unionᵢ fun _ => restrict_nonpos_seq_measurable_set _
+    exact MeasurableSet.iUnion fun _ => restrict_nonpos_seq_measurable_set _
   · intro a b hab
     refine' set.disjoint_Union_left.mpr fun ha => _
     refine' set.disjoint_Union_right.mpr fun hb => _
     exact restrict_nonpos_seq_disjoint hab
-  · apply Set.unionᵢ_subset
+  · apply Set.iUnion_subset
     intro a x
-    simp only [and_imp, exists_prop, Set.mem_unionᵢ]
+    simp only [and_imp, exists_prop, Set.mem_iUnion]
     intro _ hx
     exact restrict_nonpos_seq_subset _ hx
   · infer_instance
@@ -325,13 +325,13 @@ theorem exists_subset_restrict_nonpos (hi : s i < 0) :
     intro n
     convert hn (n + 1) <;>
       · ext l
-        simp only [exists_prop, Set.mem_unionᵢ, and_congr_left_iff]
+        simp only [exists_prop, Set.mem_iUnion, and_congr_left_iff]
         exact fun _ => nat.lt_succ_iff.symm
   have h₁ : s i = s A + ∑' l, s (restrict_nonpos_seq s i l) :=
     by
     rw [hA, ← s.of_disjoint_Union_nat, add_comm, of_add_of_diff]
-    exact MeasurableSet.unionᵢ fun _ => restrict_nonpos_seq_measurable_set _
-    exacts[hi₁, Set.unionᵢ_subset fun _ => restrict_nonpos_seq_subset _, fun _ =>
+    exact MeasurableSet.iUnion fun _ => restrict_nonpos_seq_measurable_set _
+    exacts[hi₁, Set.iUnion_subset fun _ => restrict_nonpos_seq_subset _, fun _ =>
       restrict_nonpos_seq_measurable_set _, restrict_nonpos_seq_disjoint]
   have h₂ : s A ≤ s i := by
     rw [h₁]
@@ -356,7 +356,7 @@ theorem exists_subset_restrict_nonpos (hi : s i < 0) :
     convert at_top.tendsto_at_top_add_const_right (-1) h₃
     simp
   have A_meas : MeasurableSet A :=
-    hi₁.diff (MeasurableSet.unionᵢ fun _ => restrict_nonpos_seq_measurable_set _)
+    hi₁.diff (MeasurableSet.iUnion fun _ => restrict_nonpos_seq_measurable_set _)
   refine' ⟨A, A_meas, Set.diff_subset _ _, _, h₂.trans_lt hi⟩
   by_contra hnn
   rw [restrict_le_restrict_iff _ _ A_meas] at hnn
@@ -379,7 +379,7 @@ theorem exists_subset_restrict_nonpos (hi : s i < 0) :
     by
     apply Set.diff_subset_diff_right
     intro x
-    simp only [Set.mem_unionᵢ]
+    simp only [Set.mem_iUnion]
     rintro ⟨n, _, hn₂⟩
     exact ⟨n, hn₂⟩
   refine'
@@ -416,14 +416,14 @@ theorem bddBelow_measureOfNegatives : BddBelow s.measureOfNegatives :=
   have hfalse : ∀ n : ℕ, s A ≤ -n := by
     intro n
     refine' le_trans _ (le_of_lt (h_lt _))
-    rw [hA, ← Set.diff_union_of_subset (Set.subset_unionᵢ _ n),
+    rw [hA, ← Set.diff_union_of_subset (Set.subset_iUnion _ n),
       of_union Set.disjoint_sdiff_left _ (hmeas n)]
     · refine' add_le_of_nonpos_left _
       have : s ≤[A] 0 := restrict_le_restrict_Union _ _ hmeas hr
       refine' nonpos_of_restrict_le_zero _ (restrict_le_zero_subset _ _ (Set.diff_subset _ _) this)
-      exact MeasurableSet.unionᵢ hmeas
+      exact MeasurableSet.iUnion hmeas
     · infer_instance
-    · exact (MeasurableSet.unionᵢ hmeas).diffₓ (hmeas n)
+    · exact (MeasurableSet.iUnion hmeas).diffₓ (hmeas n)
   rcases exists_nat_gt (-s A) with ⟨n, hn⟩
   exact lt_irrefl _ ((neg_lt.1 hn).trans_le (hfalse n))
 #align measure_theory.signed_measure.bdd_below_measure_of_negatives MeasureTheory.SignedMeasure.bddBelow_measureOfNegatives
@@ -434,18 +434,18 @@ theorem exists_compl_positive_negative (s : SignedMeasure α) :
     ∃ i : Set α, MeasurableSet i ∧ 0 ≤[i] s ∧ s ≤[iᶜ] 0 :=
   by
   obtain ⟨f, _, hf₂, hf₁⟩ :=
-    exists_seq_tendsto_infₛ ⟨0, @zero_mem_measure_of_negatives _ _ s⟩ bdd_below_measure_of_negatives
+    exists_seq_tendsto_sInf ⟨0, @zero_mem_measure_of_negatives _ _ s⟩ bdd_below_measure_of_negatives
   choose B hB using hf₁
   have hB₁ : ∀ n, MeasurableSet (B n) := fun n => (hB n).1.1
   have hB₂ : ∀ n, s ≤[B n] 0 := fun n => (hB n).1.2
   set A := ⋃ n, B n with hA
-  have hA₁ : MeasurableSet A := MeasurableSet.unionᵢ hB₁
+  have hA₁ : MeasurableSet A := MeasurableSet.iUnion hB₁
   have hA₂ : s ≤[A] 0 := restrict_le_restrict_Union _ _ hB₁ hB₂
   have hA₃ : s A = Inf s.measure_of_negatives :=
     by
     apply le_antisymm
     · refine' le_of_tendsto_of_tendsto tendsto_const_nhds hf₂ (eventually_of_forall fun n => _)
-      rw [← (hB n).2, hA, ← Set.diff_union_of_subset (Set.subset_unionᵢ _ n),
+      rw [← (hB n).2, hA, ← Set.diff_union_of_subset (Set.subset_iUnion _ n),
         of_union Set.disjoint_sdiff_left _ (hB₁ n)]
       · refine' add_le_of_nonpos_left _
         have : s ≤[A] 0 :=
@@ -454,10 +454,10 @@ theorem exists_compl_positive_negative (s : SignedMeasure α) :
             h
         refine'
           nonpos_of_restrict_le_zero _ (restrict_le_zero_subset _ _ (Set.diff_subset _ _) this)
-        exact MeasurableSet.unionᵢ hB₁
+        exact MeasurableSet.iUnion hB₁
       · infer_instance
-      · exact (MeasurableSet.unionᵢ hB₁).diffₓ (hB₁ n)
-    · exact cinfₛ_le bdd_below_measure_of_negatives ⟨A, ⟨hA₁, hA₂⟩, rfl⟩
+      · exact (MeasurableSet.iUnion hB₁).diffₓ (hB₁ n)
+    · exact csInf_le bdd_below_measure_of_negatives ⟨A, ⟨hA₁, hA₂⟩, rfl⟩
   refine' ⟨Aᶜ, hA₁.compl, _, (compl_compl A).symm ▸ hA₂⟩
   rw [restrict_le_restrict_iff _ _ hA₁.compl]
   intro C hC hC₁
@@ -471,7 +471,7 @@ theorem exists_compl_positive_negative (s : SignedMeasure α) :
     linarith
     infer_instance
   refine' not_le.2 this _
-  refine' cinfₛ_le bdd_below_measure_of_negatives ⟨A ∪ D, ⟨_, _⟩, rfl⟩
+  refine' csInf_le bdd_below_measure_of_negatives ⟨A ∪ D, ⟨_, _⟩, rfl⟩
   · exact hA₁.union hD₁
   · exact restrict_le_restrict_union _ _ hA₁ hA₂ hD₁ hD₂
 #align measure_theory.signed_measure.exists_compl_positive_negative MeasureTheory.SignedMeasure.exists_compl_positive_negative

@@ -157,30 +157,30 @@ theorem Convex.inter {t : Set E} (hs : Convex 𝕜 s) (ht : Convex 𝕜 t) : Con
   fun x hx => (hs hx.1).inter (ht hx.2)
 #align convex.inter Convex.inter
 
-#print convex_interₛ /-
-theorem convex_interₛ {S : Set (Set E)} (h : ∀ s ∈ S, Convex 𝕜 s) : Convex 𝕜 (⋂₀ S) := fun x hx =>
-  starConvex_interₛ fun s hs => h _ hs <| hx _ hs
-#align convex_sInter convex_interₛ
+#print convex_sInter /-
+theorem convex_sInter {S : Set (Set E)} (h : ∀ s ∈ S, Convex 𝕜 s) : Convex 𝕜 (⋂₀ S) := fun x hx =>
+  starConvex_sInter fun s hs => h _ hs <| hx _ hs
+#align convex_sInter convex_sInter
 -/
 
-#print convex_interᵢ /-
-theorem convex_interᵢ {ι : Sort _} {s : ι → Set E} (h : ∀ i, Convex 𝕜 (s i)) :
+#print convex_iInter /-
+theorem convex_iInter {ι : Sort _} {s : ι → Set E} (h : ∀ i, Convex 𝕜 (s i)) :
     Convex 𝕜 (⋂ i, s i) :=
-  interₛ_range s ▸ convex_interₛ <| forall_range_iff.2 h
-#align convex_Inter convex_interᵢ
+  sInter_range s ▸ convex_sInter <| forall_range_iff.2 h
+#align convex_Inter convex_iInter
 -/
 
-/- warning: convex_Inter₂ -> convex_interᵢ₂ is a dubious translation:
+/- warning: convex_Inter₂ -> convex_iInter₂ is a dubious translation:
 lean 3 declaration is
-  forall {𝕜 : Type.{u1}} {E : Type.{u2}} [_inst_1 : OrderedSemiring.{u1} 𝕜] [_inst_2 : AddCommMonoid.{u2} E] [_inst_4 : SMul.{u1, u2} 𝕜 E] {ι : Sort.{u3}} {κ : ι -> Sort.{u4}} {s : forall (i : ι), (κ i) -> (Set.{u2} E)}, (forall (i : ι) (j : κ i), Convex.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_4 (s i j)) -> (Convex.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_4 (Set.interᵢ.{u2, u3} E ι (fun (i : ι) => Set.interᵢ.{u2, u4} E (κ i) (fun (j : κ i) => s i j))))
+  forall {𝕜 : Type.{u1}} {E : Type.{u2}} [_inst_1 : OrderedSemiring.{u1} 𝕜] [_inst_2 : AddCommMonoid.{u2} E] [_inst_4 : SMul.{u1, u2} 𝕜 E] {ι : Sort.{u3}} {κ : ι -> Sort.{u4}} {s : forall (i : ι), (κ i) -> (Set.{u2} E)}, (forall (i : ι) (j : κ i), Convex.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_4 (s i j)) -> (Convex.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_4 (Set.iInter.{u2, u3} E ι (fun (i : ι) => Set.iInter.{u2, u4} E (κ i) (fun (j : κ i) => s i j))))
 but is expected to have type
-  forall {𝕜 : Type.{u1}} {E : Type.{u2}} [_inst_1 : OrderedSemiring.{u1} 𝕜] [_inst_2 : AddCommMonoid.{u2} E] [_inst_4 : SMul.{u1, u2} 𝕜 E] {ι : Sort.{u4}} {κ : ι -> Sort.{u3}} {s : forall (i : ι), (κ i) -> (Set.{u2} E)}, (forall (i : ι) (j : κ i), Convex.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_4 (s i j)) -> (Convex.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_4 (Set.interᵢ.{u2, u4} E ι (fun (i : ι) => Set.interᵢ.{u2, u3} E (κ i) (fun (j : κ i) => s i j))))
-Case conversion may be inaccurate. Consider using '#align convex_Inter₂ convex_interᵢ₂ₓ'. -/
+  forall {𝕜 : Type.{u1}} {E : Type.{u2}} [_inst_1 : OrderedSemiring.{u1} 𝕜] [_inst_2 : AddCommMonoid.{u2} E] [_inst_4 : SMul.{u1, u2} 𝕜 E] {ι : Sort.{u4}} {κ : ι -> Sort.{u3}} {s : forall (i : ι), (κ i) -> (Set.{u2} E)}, (forall (i : ι) (j : κ i), Convex.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_4 (s i j)) -> (Convex.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_4 (Set.iInter.{u2, u4} E ι (fun (i : ι) => Set.iInter.{u2, u3} E (κ i) (fun (j : κ i) => s i j))))
+Case conversion may be inaccurate. Consider using '#align convex_Inter₂ convex_iInter₂ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-theorem convex_interᵢ₂ {ι : Sort _} {κ : ι → Sort _} {s : ∀ i, κ i → Set E}
+theorem convex_iInter₂ {ι : Sort _} {κ : ι → Sort _} {s : ∀ i, κ i → Set E}
     (h : ∀ i j, Convex 𝕜 (s i j)) : Convex 𝕜 (⋂ (i) (j), s i j) :=
-  convex_interᵢ fun i => convex_interᵢ <| h i
-#align convex_Inter₂ convex_interᵢ₂
+  convex_iInter fun i => convex_iInter <| h i
+#align convex_Inter₂ convex_iInter₂
 
 /- warning: convex.prod -> Convex.prod is a dubious translation:
 lean 3 declaration is
@@ -204,8 +204,8 @@ theorem convex_pi {ι : Type _} {E : ι → Type _} [∀ i, AddCommMonoid (E i)]
   fun x hx => starConvex_pi fun i hi => ht hi <| hx _ hi
 #align convex_pi convex_pi
 
-#print Directed.convex_unionᵢ /-
-theorem Directed.convex_unionᵢ {ι : Sort _} {s : ι → Set E} (hdir : Directed (· ⊆ ·) s)
+#print Directed.convex_iUnion /-
+theorem Directed.convex_iUnion {ι : Sort _} {s : ι → Set E} (hdir : Directed (· ⊆ ·) s)
     (hc : ∀ ⦃i : ι⦄, Convex 𝕜 (s i)) : Convex 𝕜 (⋃ i, s i) :=
   by
   rintro x hx y hy a b ha hb hab
@@ -214,16 +214,16 @@ theorem Directed.convex_unionᵢ {ι : Sort _} {s : ι → Set E} (hdir : Direct
   obtain ⟨j, hy⟩ := hy
   obtain ⟨k, hik, hjk⟩ := hdir i j
   exact ⟨k, hc (hik hx) (hjk hy) ha hb hab⟩
-#align directed.convex_Union Directed.convex_unionᵢ
+#align directed.convex_Union Directed.convex_iUnion
 -/
 
-#print DirectedOn.convex_unionₛ /-
-theorem DirectedOn.convex_unionₛ {c : Set (Set E)} (hdir : DirectedOn (· ⊆ ·) c)
+#print DirectedOn.convex_sUnion /-
+theorem DirectedOn.convex_sUnion {c : Set (Set E)} (hdir : DirectedOn (· ⊆ ·) c)
     (hc : ∀ ⦃A : Set E⦄, A ∈ c → Convex 𝕜 A) : Convex 𝕜 (⋃₀ c) :=
   by
   rw [sUnion_eq_Union]
-  exact (directedOn_iff_directed.1 hdir).convex_unionᵢ fun A => hc A.2
-#align directed_on.convex_sUnion DirectedOn.convex_unionₛ
+  exact (directedOn_iff_directed.1 hdir).convex_iUnion fun A => hc A.2
+#align directed_on.convex_sUnion DirectedOn.convex_sUnion
 -/
 
 end SMul
@@ -1135,14 +1135,14 @@ def stdSimplex : Set (ι → 𝕜) :=
 
 /- warning: std_simplex_eq_inter -> stdSimplex_eq_inter is a dubious translation:
 lean 3 declaration is
-  forall (𝕜 : Type.{u1}) (ι : Type.{u2}) [_inst_1 : OrderedSemiring.{u1} 𝕜] [_inst_2 : Fintype.{u2} ι], Eq.{succ (max u2 u1)} (Set.{max u2 u1} (ι -> 𝕜)) (stdSimplex.{u1, u2} 𝕜 ι _inst_1 _inst_2) (Inter.inter.{max u2 u1} (Set.{max u2 u1} (ι -> 𝕜)) (Set.hasInter.{max u2 u1} (ι -> 𝕜)) (Set.interᵢ.{max u2 u1, succ u2} (ι -> 𝕜) ι (fun (x : ι) => setOf.{max u2 u1} (ι -> 𝕜) (fun (f : ι -> 𝕜) => LE.le.{u1} 𝕜 (Preorder.toLE.{u1} 𝕜 (PartialOrder.toPreorder.{u1} 𝕜 (OrderedAddCommMonoid.toPartialOrder.{u1} 𝕜 (OrderedSemiring.toOrderedAddCommMonoid.{u1} 𝕜 _inst_1)))) (OfNat.ofNat.{u1} 𝕜 0 (OfNat.mk.{u1} 𝕜 0 (Zero.zero.{u1} 𝕜 (MulZeroClass.toHasZero.{u1} 𝕜 (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (OrderedSemiring.toSemiring.{u1} 𝕜 _inst_1)))))))) (f x)))) (setOf.{max u2 u1} (ι -> 𝕜) (fun (f : ι -> 𝕜) => Eq.{succ u1} 𝕜 (Finset.sum.{u1, u2} 𝕜 ι (OrderedAddCommMonoid.toAddCommMonoid.{u1} 𝕜 (OrderedSemiring.toOrderedAddCommMonoid.{u1} 𝕜 _inst_1)) (Finset.univ.{u2} ι _inst_2) (fun (x : ι) => f x)) (OfNat.ofNat.{u1} 𝕜 1 (OfNat.mk.{u1} 𝕜 1 (One.one.{u1} 𝕜 (AddMonoidWithOne.toOne.{u1} 𝕜 (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} 𝕜 (NonAssocSemiring.toAddCommMonoidWithOne.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (OrderedSemiring.toSemiring.{u1} 𝕜 _inst_1)))))))))))
+  forall (𝕜 : Type.{u1}) (ι : Type.{u2}) [_inst_1 : OrderedSemiring.{u1} 𝕜] [_inst_2 : Fintype.{u2} ι], Eq.{succ (max u2 u1)} (Set.{max u2 u1} (ι -> 𝕜)) (stdSimplex.{u1, u2} 𝕜 ι _inst_1 _inst_2) (Inter.inter.{max u2 u1} (Set.{max u2 u1} (ι -> 𝕜)) (Set.hasInter.{max u2 u1} (ι -> 𝕜)) (Set.iInter.{max u2 u1, succ u2} (ι -> 𝕜) ι (fun (x : ι) => setOf.{max u2 u1} (ι -> 𝕜) (fun (f : ι -> 𝕜) => LE.le.{u1} 𝕜 (Preorder.toLE.{u1} 𝕜 (PartialOrder.toPreorder.{u1} 𝕜 (OrderedAddCommMonoid.toPartialOrder.{u1} 𝕜 (OrderedSemiring.toOrderedAddCommMonoid.{u1} 𝕜 _inst_1)))) (OfNat.ofNat.{u1} 𝕜 0 (OfNat.mk.{u1} 𝕜 0 (Zero.zero.{u1} 𝕜 (MulZeroClass.toHasZero.{u1} 𝕜 (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} 𝕜 (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (OrderedSemiring.toSemiring.{u1} 𝕜 _inst_1)))))))) (f x)))) (setOf.{max u2 u1} (ι -> 𝕜) (fun (f : ι -> 𝕜) => Eq.{succ u1} 𝕜 (Finset.sum.{u1, u2} 𝕜 ι (OrderedAddCommMonoid.toAddCommMonoid.{u1} 𝕜 (OrderedSemiring.toOrderedAddCommMonoid.{u1} 𝕜 _inst_1)) (Finset.univ.{u2} ι _inst_2) (fun (x : ι) => f x)) (OfNat.ofNat.{u1} 𝕜 1 (OfNat.mk.{u1} 𝕜 1 (One.one.{u1} 𝕜 (AddMonoidWithOne.toOne.{u1} 𝕜 (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} 𝕜 (NonAssocSemiring.toAddCommMonoidWithOne.{u1} 𝕜 (Semiring.toNonAssocSemiring.{u1} 𝕜 (OrderedSemiring.toSemiring.{u1} 𝕜 _inst_1)))))))))))
 but is expected to have type
-  forall (𝕜 : Type.{u2}) (ι : Type.{u1}) [_inst_1 : OrderedSemiring.{u2} 𝕜] [_inst_2 : Fintype.{u1} ι], Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (ι -> 𝕜)) (stdSimplex.{u2, u1} 𝕜 ι _inst_1 _inst_2) (Inter.inter.{max u2 u1} (Set.{max u2 u1} (ι -> 𝕜)) (Set.instInterSet.{max u2 u1} (ι -> 𝕜)) (Set.interᵢ.{max u2 u1, succ u1} (ι -> 𝕜) ι (fun (x : ι) => setOf.{max u2 u1} (ι -> 𝕜) (fun (f : ι -> 𝕜) => LE.le.{u2} 𝕜 (Preorder.toLE.{u2} 𝕜 (PartialOrder.toPreorder.{u2} 𝕜 (OrderedSemiring.toPartialOrder.{u2} 𝕜 _inst_1))) (OfNat.ofNat.{u2} 𝕜 0 (Zero.toOfNat0.{u2} 𝕜 (MonoidWithZero.toZero.{u2} 𝕜 (Semiring.toMonoidWithZero.{u2} 𝕜 (OrderedSemiring.toSemiring.{u2} 𝕜 _inst_1))))) (f x)))) (setOf.{max u2 u1} (ι -> 𝕜) (fun (f : ι -> 𝕜) => Eq.{succ u2} 𝕜 (Finset.sum.{u2, u1} 𝕜 ι (OrderedAddCommMonoid.toAddCommMonoid.{u2} 𝕜 (OrderedSemiring.toOrderedAddCommMonoid.{u2} 𝕜 _inst_1)) (Finset.univ.{u1} ι _inst_2) (fun (x : ι) => f x)) (OfNat.ofNat.{u2} 𝕜 1 (One.toOfNat1.{u2} 𝕜 (Semiring.toOne.{u2} 𝕜 (OrderedSemiring.toSemiring.{u2} 𝕜 _inst_1)))))))
+  forall (𝕜 : Type.{u2}) (ι : Type.{u1}) [_inst_1 : OrderedSemiring.{u2} 𝕜] [_inst_2 : Fintype.{u1} ι], Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (ι -> 𝕜)) (stdSimplex.{u2, u1} 𝕜 ι _inst_1 _inst_2) (Inter.inter.{max u2 u1} (Set.{max u2 u1} (ι -> 𝕜)) (Set.instInterSet.{max u2 u1} (ι -> 𝕜)) (Set.iInter.{max u2 u1, succ u1} (ι -> 𝕜) ι (fun (x : ι) => setOf.{max u2 u1} (ι -> 𝕜) (fun (f : ι -> 𝕜) => LE.le.{u2} 𝕜 (Preorder.toLE.{u2} 𝕜 (PartialOrder.toPreorder.{u2} 𝕜 (OrderedSemiring.toPartialOrder.{u2} 𝕜 _inst_1))) (OfNat.ofNat.{u2} 𝕜 0 (Zero.toOfNat0.{u2} 𝕜 (MonoidWithZero.toZero.{u2} 𝕜 (Semiring.toMonoidWithZero.{u2} 𝕜 (OrderedSemiring.toSemiring.{u2} 𝕜 _inst_1))))) (f x)))) (setOf.{max u2 u1} (ι -> 𝕜) (fun (f : ι -> 𝕜) => Eq.{succ u2} 𝕜 (Finset.sum.{u2, u1} 𝕜 ι (OrderedAddCommMonoid.toAddCommMonoid.{u2} 𝕜 (OrderedSemiring.toOrderedAddCommMonoid.{u2} 𝕜 _inst_1)) (Finset.univ.{u1} ι _inst_2) (fun (x : ι) => f x)) (OfNat.ofNat.{u2} 𝕜 1 (One.toOfNat1.{u2} 𝕜 (Semiring.toOne.{u2} 𝕜 (OrderedSemiring.toSemiring.{u2} 𝕜 _inst_1)))))))
 Case conversion may be inaccurate. Consider using '#align std_simplex_eq_inter stdSimplex_eq_interₓ'. -/
 theorem stdSimplex_eq_inter : stdSimplex 𝕜 ι = (⋂ x, { f | 0 ≤ f x }) ∩ { f | (∑ x, f x) = 1 } :=
   by
   ext f
-  simp only [stdSimplex, Set.mem_inter_iff, Set.mem_interᵢ, Set.mem_setOf_eq]
+  simp only [stdSimplex, Set.mem_inter_iff, Set.mem_iInter, Set.mem_setOf_eq]
 #align std_simplex_eq_inter stdSimplex_eq_inter
 
 /- warning: convex_std_simplex -> convex_stdSimplex is a dubious translation:

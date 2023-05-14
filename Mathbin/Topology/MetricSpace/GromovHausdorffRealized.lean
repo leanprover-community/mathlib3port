@@ -326,7 +326,7 @@ private theorem closed_candidates_b : IsClosed (candidatesB X Y) :=
       |apply
         IsClosed.inter _
           _|apply
-        isClosed_interᵢ
+        isClosed_iInter
           _|apply I1 _ _|apply I2 _ _|apply I3 _ _|apply I4 _ _ _|apply I5 _|apply I6 _ _|intro x
 #align Gromov_Hausdorff.closed_candidates_b Gromov_Hausdorff.closed_candidates_b
 
@@ -370,7 +370,7 @@ private theorem HD_bound_aux1 (f : Cb X Y) (C : ℝ) :
   rcases(Real.bounded_iff_bddBelow_bddAbove.1 f.bounded_range).2 with ⟨Cf, hCf⟩
   refine' ⟨Cf + C, forall_range_iff.2 fun x => _⟩
   calc
-    (⨅ y, f (inl x, inr y) + C) ≤ f (inl x, inr default) + C := cinfᵢ_le (HD_below_aux1 C) default
+    (⨅ y, f (inl x, inr y) + C) ≤ f (inl x, inr default) + C := ciInf_le (HD_below_aux1 C) default
     _ ≤ Cf + C := add_le_add ((fun x => hCf (mem_range_self x)) _) le_rfl
     
 #align Gromov_Hausdorff.HD_bound_aux1 Gromov_Hausdorff.HD_bound_aux1
@@ -387,7 +387,7 @@ private theorem HD_bound_aux2 (f : Cb X Y) (C : ℝ) :
   rcases(Real.bounded_iff_bddBelow_bddAbove.1 f.bounded_range).2 with ⟨Cf, hCf⟩
   refine' ⟨Cf + C, forall_range_iff.2 fun y => _⟩
   calc
-    (⨅ x, f (inl x, inr y) + C) ≤ f (inl default, inr y) + C := cinfᵢ_le (HD_below_aux2 C) default
+    (⨅ x, f (inl x, inr y) + C) ≤ f (inl default, inr y) + C := ciInf_le (HD_below_aux2 C) default
     _ ≤ Cf + C := add_le_add ((fun x => hCf (mem_range_self x)) _) le_rfl
     
 #align Gromov_Hausdorff.HD_bound_aux2 Gromov_Hausdorff.HD_bound_aux2
@@ -397,10 +397,10 @@ be sufficient to look for functions with `HD(f)` bounded by this bound. -/
 theorem hD_candidatesBDist_le :
     hD (candidatesBDist X Y) ≤ diam (univ : Set X) + 1 + diam (univ : Set Y) :=
   by
-  refine' max_le (csupᵢ_le fun x => _) (csupᵢ_le fun y => _)
+  refine' max_le (ciSup_le fun x => _) (ciSup_le fun y => _)
   · have A :
       (⨅ y, candidates_b_dist X Y (inl x, inr y)) ≤ candidates_b_dist X Y (inl x, inr default) :=
-      cinfᵢ_le (by simpa using HD_below_aux1 0) default
+      ciInf_le (by simpa using HD_below_aux1 0) default
     have B : dist (inl x) (inr default) ≤ diam (univ : Set X) + 1 + diam (univ : Set Y) :=
       calc
         dist (inl x) (inr (default : Y)) = dist x (default : X) + 1 + dist default default := rfl
@@ -415,7 +415,7 @@ theorem hD_candidatesBDist_le :
     exact le_trans A B
   · have A :
       (⨅ x, candidates_b_dist X Y (inl x, inr y)) ≤ candidates_b_dist X Y (inl default, inr y) :=
-      cinfᵢ_le (by simpa using HD_below_aux2 0) default
+      ciInf_le (by simpa using HD_below_aux2 0) default
     have B : dist (inl default) (inr y) ≤ diam (univ : Set X) + 1 + diam (univ : Set Y) :=
       calc
         dist (inl (default : X)) (inr y) = dist default default + 1 + dist default y := rfl
@@ -442,21 +442,21 @@ private theorem HD_lipschitz_aux1 (f g : Cb X Y) :
   -- prove the inequality but with `dist f g` inside, by using inequalities comparing
   -- supr to supr and infi to infi
   have Z : (⨆ x, ⨅ y, f (inl x, inr y)) ≤ ⨆ x, ⨅ y, g (inl x, inr y) + dist f g :=
-    csupᵢ_mono (HD_bound_aux1 _ (dist f g)) fun x =>
-      cinfᵢ_mono ⟨cf, forall_range_iff.2 fun i => Hcf _⟩ fun y => coe_le_coe_add_dist
+    ciSup_mono (HD_bound_aux1 _ (dist f g)) fun x =>
+      ciInf_mono ⟨cf, forall_range_iff.2 fun i => Hcf _⟩ fun y => coe_le_coe_add_dist
   -- move the `dist f g` out of the infimum and the supremum, arguing that continuous monotone maps
   -- (here the addition of `dist f g`) preserve infimum and supremum
   have E1 : ∀ x, (⨅ y, g (inl x, inr y)) + dist f g = ⨅ y, g (inl x, inr y) + dist f g :=
     by
     intro x
-    refine' Monotone.map_cinfᵢ_of_continuousAt (continuous_at_id.add continuousAt_const) _ _
+    refine' Monotone.map_ciInf_of_continuousAt (continuous_at_id.add continuousAt_const) _ _
     · intro x y hx
       simpa
     · show BddBelow (range fun y : Y => g (inl x, inr y))
       exact ⟨cg, forall_range_iff.2 fun i => Hcg _⟩
   have E2 : (⨆ x, ⨅ y, g (inl x, inr y)) + dist f g = ⨆ x, (⨅ y, g (inl x, inr y)) + dist f g :=
     by
-    refine' Monotone.map_csupᵢ_of_continuousAt (continuous_at_id.add continuousAt_const) _ _
+    refine' Monotone.map_ciSup_of_continuousAt (continuous_at_id.add continuousAt_const) _ _
     · intro x y hx
       simpa
     · simpa using HD_bound_aux1 _ 0
@@ -474,21 +474,21 @@ private theorem HD_lipschitz_aux2 (f g : Cb X Y) :
   -- prove the inequality but with `dist f g` inside, by using inequalities comparing
   -- supr to supr and infi to infi
   have Z : (⨆ y, ⨅ x, f (inl x, inr y)) ≤ ⨆ y, ⨅ x, g (inl x, inr y) + dist f g :=
-    csupᵢ_mono (HD_bound_aux2 _ (dist f g)) fun y =>
-      cinfᵢ_mono ⟨cf, forall_range_iff.2 fun i => Hcf _⟩ fun y => coe_le_coe_add_dist
+    ciSup_mono (HD_bound_aux2 _ (dist f g)) fun y =>
+      ciInf_mono ⟨cf, forall_range_iff.2 fun i => Hcf _⟩ fun y => coe_le_coe_add_dist
   -- move the `dist f g` out of the infimum and the supremum, arguing that continuous monotone maps
   -- (here the addition of `dist f g`) preserve infimum and supremum
   have E1 : ∀ y, (⨅ x, g (inl x, inr y)) + dist f g = ⨅ x, g (inl x, inr y) + dist f g :=
     by
     intro y
-    refine' Monotone.map_cinfᵢ_of_continuousAt (continuous_at_id.add continuousAt_const) _ _
+    refine' Monotone.map_ciInf_of_continuousAt (continuous_at_id.add continuousAt_const) _ _
     · intro x y hx
       simpa
     · show BddBelow (range fun x : X => g (inl x, inr y))
       exact ⟨cg, forall_range_iff.2 fun i => Hcg _⟩
   have E2 : (⨆ y, ⨅ x, g (inl x, inr y)) + dist f g = ⨆ y, (⨅ x, g (inl x, inr y)) + dist f g :=
     by
-    refine' Monotone.map_csupᵢ_of_continuousAt (continuous_at_id.add continuousAt_const) _ _
+    refine' Monotone.map_ciSup_of_continuousAt (continuous_at_id.add continuousAt_const) _ _
     · intro x y hx
       simpa
     · simpa using HD_bound_aux2 _ 0
@@ -600,9 +600,9 @@ theorem hausdorffDist_optimal_le_hD {f} (h : f ∈ candidatesB X Y) :
       lt_of_le_of_lt (le_max_left _ _) hr
     have I2 :
       (⨅ y, optimal_GH_dist X Y (inl z, inr y)) ≤ ⨆ x, ⨅ y, optimal_GH_dist X Y (inl x, inr y) :=
-      le_csupₛ (by simpa using HD_bound_aux1 _ 0) (mem_range_self _)
+      le_csSup (by simpa using HD_bound_aux1 _ 0) (mem_range_self _)
     have I : (⨅ y, optimal_GH_dist X Y (inl z, inr y)) < r := lt_of_le_of_lt I2 I1
-    rcases exists_lt_of_cinfₛ_lt (range_nonempty _) I with ⟨r', ⟨z', rfl⟩, hr'⟩
+    rcases exists_lt_of_csInf_lt (range_nonempty _) I with ⟨r', ⟨z', rfl⟩, hr'⟩
     exact ⟨optimal_GH_injr X Y z', mem_range_self _, le_of_lt hr'⟩
   refine' Hausdorff_dist_le_of_mem_dist _ A _
   · inhabit X
@@ -613,9 +613,9 @@ theorem hausdorffDist_optimal_le_hD {f} (h : f ∈ candidatesB X Y) :
       lt_of_le_of_lt (le_max_right _ _) hr
     have I2 :
       (⨅ x, optimal_GH_dist X Y (inl x, inr z)) ≤ ⨆ y, ⨅ x, optimal_GH_dist X Y (inl x, inr y) :=
-      le_csupₛ (by simpa using HD_bound_aux2 _ 0) (mem_range_self _)
+      le_csSup (by simpa using HD_bound_aux2 _ 0) (mem_range_self _)
     have I : (⨅ x, optimal_GH_dist X Y (inl x, inr z)) < r := lt_of_le_of_lt I2 I1
-    rcases exists_lt_of_cinfₛ_lt (range_nonempty _) I with ⟨r', ⟨z', rfl⟩, hr'⟩
+    rcases exists_lt_of_csInf_lt (range_nonempty _) I with ⟨r', ⟨z', rfl⟩, hr'⟩
     refine' ⟨optimal_GH_injl X Y z', mem_range_self _, le_of_lt _⟩
     rwa [dist_comm]
 #align Gromov_Hausdorff.Hausdorff_dist_optimal_le_HD GromovHausdorff.hausdorffDist_optimal_le_hD

@@ -207,23 +207,23 @@ theorem aeSeq_n_eq_fun_n_ae [Countable ι] (hf : ∀ i, AEMeasurable (f i) μ)
   ae_all_iff.mp (aeSeq_eq_fun_ae hf hp) n
 #align ae_seq.ae_seq_n_eq_fun_n_ae aeSeq.aeSeq_n_eq_fun_n_ae
 
-/- warning: ae_seq.supr -> aeSeq.supᵢ is a dubious translation:
+/- warning: ae_seq.supr -> aeSeq.iSup is a dubious translation:
 lean 3 declaration is
-  forall {ι : Sort.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : MeasurableSpace.{u2} α] [_inst_2 : MeasurableSpace.{u3} β] {f : ι -> α -> β} {μ : MeasureTheory.Measure.{u2} α _inst_1} {p : α -> (ι -> β) -> Prop} [_inst_3 : CompleteLattice.{u3} β] [_inst_4 : Countable.{u1} ι] (hf : forall (i : ι), AEMeasurable.{u2, u3} α β _inst_2 _inst_1 (f i) μ), (Filter.Eventually.{u2} α (fun (x : α) => p x (fun (n : ι) => f n x)) (MeasureTheory.Measure.ae.{u2} α _inst_1 μ)) -> (Filter.EventuallyEq.{u2, u3} α β (MeasureTheory.Measure.ae.{u2} α _inst_1 μ) (supᵢ.{max u2 u3, u1} (α -> β) (Pi.supSet.{u2, u3} α (fun (ᾰ : α) => β) (fun (i : α) => ConditionallyCompleteLattice.toHasSup.{u3} β (CompleteLattice.toConditionallyCompleteLattice.{u3} β _inst_3))) ι (fun (n : ι) => aeSeq.{u1, u2, u3} ι α β _inst_1 _inst_2 (fun (i : ι) => f i) μ hf p n)) (supᵢ.{max u2 u3, u1} (α -> β) (Pi.supSet.{u2, u3} α (fun (ᾰ : α) => β) (fun (i : α) => ConditionallyCompleteLattice.toHasSup.{u3} β (CompleteLattice.toConditionallyCompleteLattice.{u3} β _inst_3))) ι (fun (n : ι) => f n)))
+  forall {ι : Sort.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : MeasurableSpace.{u2} α] [_inst_2 : MeasurableSpace.{u3} β] {f : ι -> α -> β} {μ : MeasureTheory.Measure.{u2} α _inst_1} {p : α -> (ι -> β) -> Prop} [_inst_3 : CompleteLattice.{u3} β] [_inst_4 : Countable.{u1} ι] (hf : forall (i : ι), AEMeasurable.{u2, u3} α β _inst_2 _inst_1 (f i) μ), (Filter.Eventually.{u2} α (fun (x : α) => p x (fun (n : ι) => f n x)) (MeasureTheory.Measure.ae.{u2} α _inst_1 μ)) -> (Filter.EventuallyEq.{u2, u3} α β (MeasureTheory.Measure.ae.{u2} α _inst_1 μ) (iSup.{max u2 u3, u1} (α -> β) (Pi.supSet.{u2, u3} α (fun (ᾰ : α) => β) (fun (i : α) => ConditionallyCompleteLattice.toHasSup.{u3} β (CompleteLattice.toConditionallyCompleteLattice.{u3} β _inst_3))) ι (fun (n : ι) => aeSeq.{u1, u2, u3} ι α β _inst_1 _inst_2 (fun (i : ι) => f i) μ hf p n)) (iSup.{max u2 u3, u1} (α -> β) (Pi.supSet.{u2, u3} α (fun (ᾰ : α) => β) (fun (i : α) => ConditionallyCompleteLattice.toHasSup.{u3} β (CompleteLattice.toConditionallyCompleteLattice.{u3} β _inst_3))) ι (fun (n : ι) => f n)))
 but is expected to have type
-  forall {ι : Sort.{u2}} {α : Type.{u1}} {β : Type.{u3}} [_inst_1 : MeasurableSpace.{u1} α] [_inst_2 : MeasurableSpace.{u3} β] {f : ι -> α -> β} {μ : MeasureTheory.Measure.{u1} α _inst_1} {p : α -> (ι -> β) -> Prop} [_inst_3 : CompleteLattice.{u3} β] [_inst_4 : Countable.{u2} ι] (hf : forall (i : ι), AEMeasurable.{u1, u3} α β _inst_2 _inst_1 (f i) μ), (Filter.Eventually.{u1} α (fun (x : α) => p x (fun (n : ι) => f n x)) (MeasureTheory.Measure.ae.{u1} α _inst_1 μ)) -> (Filter.EventuallyEq.{u1, u3} α β (MeasureTheory.Measure.ae.{u1} α _inst_1 μ) (supᵢ.{max u1 u3, u2} (α -> β) (Pi.supSet.{u1, u3} α (fun (ᾰ : α) => β) (fun (i : α) => ConditionallyCompleteLattice.toSupSet.{u3} β (CompleteLattice.toConditionallyCompleteLattice.{u3} β _inst_3))) ι (fun (n : ι) => aeSeq.{u2, u1, u3} ι α β _inst_1 _inst_2 (fun (i : ι) => f i) μ hf p n)) (supᵢ.{max u1 u3, u2} (α -> β) (Pi.supSet.{u1, u3} α (fun (ᾰ : α) => β) (fun (i : α) => ConditionallyCompleteLattice.toSupSet.{u3} β (CompleteLattice.toConditionallyCompleteLattice.{u3} β _inst_3))) ι (fun (n : ι) => f n)))
-Case conversion may be inaccurate. Consider using '#align ae_seq.supr aeSeq.supᵢₓ'. -/
-theorem supᵢ [CompleteLattice β] [Countable ι] (hf : ∀ i, AEMeasurable (f i) μ)
+  forall {ι : Sort.{u2}} {α : Type.{u1}} {β : Type.{u3}} [_inst_1 : MeasurableSpace.{u1} α] [_inst_2 : MeasurableSpace.{u3} β] {f : ι -> α -> β} {μ : MeasureTheory.Measure.{u1} α _inst_1} {p : α -> (ι -> β) -> Prop} [_inst_3 : CompleteLattice.{u3} β] [_inst_4 : Countable.{u2} ι] (hf : forall (i : ι), AEMeasurable.{u1, u3} α β _inst_2 _inst_1 (f i) μ), (Filter.Eventually.{u1} α (fun (x : α) => p x (fun (n : ι) => f n x)) (MeasureTheory.Measure.ae.{u1} α _inst_1 μ)) -> (Filter.EventuallyEq.{u1, u3} α β (MeasureTheory.Measure.ae.{u1} α _inst_1 μ) (iSup.{max u1 u3, u2} (α -> β) (Pi.supSet.{u1, u3} α (fun (ᾰ : α) => β) (fun (i : α) => ConditionallyCompleteLattice.toSupSet.{u3} β (CompleteLattice.toConditionallyCompleteLattice.{u3} β _inst_3))) ι (fun (n : ι) => aeSeq.{u2, u1, u3} ι α β _inst_1 _inst_2 (fun (i : ι) => f i) μ hf p n)) (iSup.{max u1 u3, u2} (α -> β) (Pi.supSet.{u1, u3} α (fun (ᾰ : α) => β) (fun (i : α) => ConditionallyCompleteLattice.toSupSet.{u3} β (CompleteLattice.toConditionallyCompleteLattice.{u3} β _inst_3))) ι (fun (n : ι) => f n)))
+Case conversion may be inaccurate. Consider using '#align ae_seq.supr aeSeq.iSupₓ'. -/
+theorem iSup [CompleteLattice β] [Countable ι] (hf : ∀ i, AEMeasurable (f i) μ)
     (hp : ∀ᵐ x ∂μ, p x fun n => f n x) : (⨆ n, aeSeq hf p n) =ᵐ[μ] ⨆ n, f n :=
   by
-  simp_rw [Filter.EventuallyEq, ae_iff, supᵢ_apply]
+  simp_rw [Filter.EventuallyEq, ae_iff, iSup_apply]
   have h_ss : aeSeqSet hf p ⊆ { a : α | (⨆ i : ι, aeSeq hf p i a) = ⨆ i : ι, f i a } :=
     by
     intro x hx
     congr
     exact funext fun i => ae_seq_eq_fun_of_mem_ae_seq_set hf hx i
   exact measure_mono_null (set.compl_subset_compl.mpr h_ss) (measure_compl_ae_seq_set_eq_zero hf hp)
-#align ae_seq.supr aeSeq.supᵢ
+#align ae_seq.supr aeSeq.iSup
 
 end aeSeq
 

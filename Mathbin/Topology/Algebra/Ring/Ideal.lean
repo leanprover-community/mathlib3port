@@ -80,7 +80,7 @@ theorem QuotientRing.isOpenMap_coe : IsOpenMap (mk N) :=
   intro s s_op
   change IsOpen (mk N ⁻¹' (mk N '' s))
   rw [quotient_ring_saturate]
-  exact isOpen_unionᵢ fun ⟨n, _⟩ => isOpenMap_add_left n s s_op
+  exact isOpen_iUnion fun ⟨n, _⟩ => isOpenMap_add_left n s s_op
 #align quotient_ring.is_open_map_coe QuotientRing.isOpenMap_coe
 
 /- warning: quotient_ring.quotient_map_coe_coe -> QuotientRing.quotientMap_coe_coe is a dubious translation:

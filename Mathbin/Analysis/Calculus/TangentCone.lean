@@ -377,7 +377,7 @@ theorem UniqueDiffWithinAt.univ_pi (ι : Type _) [Finite ι] (E : ι → Type _)
     simp only [uniqueDiffWithinAt_iff, closure_pi_set] at h⊢
     refine' ⟨(dense_pi univ fun i _ => (h i).1).mono _, fun i _ => (h i).2⟩
     norm_cast
-    simp only [← Submodule.supᵢ_map_single, supᵢ_le_iff, LinearMap.map_span, Submodule.span_le, ←
+    simp only [← Submodule.iSup_map_single, iSup_le_iff, LinearMap.map_span, Submodule.span_le, ←
       maps_to']
     exact fun i =>
       (mapsTo_tangent_cone_pi fun j hj => (h j).2).mono subset.rfl Submodule.subset_span

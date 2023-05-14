@@ -488,18 +488,18 @@ theorem map_sup (S T : Subsemigroup M) (f : M →ₙ* N) : (S ⊔ T).map f = S.m
 #align subsemigroup.map_sup Subsemigroup.map_sup
 #align add_subsemigroup.map_sup AddSubsemigroup.map_sup
 
-/- warning: subsemigroup.map_supr -> Subsemigroup.map_supᵢ is a dubious translation:
+/- warning: subsemigroup.map_supr -> Subsemigroup.map_iSup is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : Mul.{u1} M] [_inst_2 : Mul.{u2} N] {ι : Sort.{u3}} (f : MulHom.{u1, u2} M N _inst_1 _inst_2) (s : ι -> (Subsemigroup.{u1} M _inst_1)), Eq.{succ u2} (Subsemigroup.{u2} N _inst_2) (Subsemigroup.map.{u1, u2} M N _inst_1 _inst_2 f (supᵢ.{u1, u3} (Subsemigroup.{u1} M _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Subsemigroup.{u1} M _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.completeLattice.{u1} M _inst_1))) ι s)) (supᵢ.{u2, u3} (Subsemigroup.{u2} N _inst_2) (CompleteSemilatticeSup.toHasSup.{u2} (Subsemigroup.{u2} N _inst_2) (CompleteLattice.toCompleteSemilatticeSup.{u2} (Subsemigroup.{u2} N _inst_2) (Subsemigroup.completeLattice.{u2} N _inst_2))) ι (fun (i : ι) => Subsemigroup.map.{u1, u2} M N _inst_1 _inst_2 f (s i)))
+  forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : Mul.{u1} M] [_inst_2 : Mul.{u2} N] {ι : Sort.{u3}} (f : MulHom.{u1, u2} M N _inst_1 _inst_2) (s : ι -> (Subsemigroup.{u1} M _inst_1)), Eq.{succ u2} (Subsemigroup.{u2} N _inst_2) (Subsemigroup.map.{u1, u2} M N _inst_1 _inst_2 f (iSup.{u1, u3} (Subsemigroup.{u1} M _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Subsemigroup.{u1} M _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.completeLattice.{u1} M _inst_1))) ι s)) (iSup.{u2, u3} (Subsemigroup.{u2} N _inst_2) (CompleteSemilatticeSup.toHasSup.{u2} (Subsemigroup.{u2} N _inst_2) (CompleteLattice.toCompleteSemilatticeSup.{u2} (Subsemigroup.{u2} N _inst_2) (Subsemigroup.completeLattice.{u2} N _inst_2))) ι (fun (i : ι) => Subsemigroup.map.{u1, u2} M N _inst_1 _inst_2 f (s i)))
 but is expected to have type
-  forall {M : Type.{u2}} {N : Type.{u1}} [_inst_1 : Mul.{u2} M] [_inst_2 : Mul.{u1} N] {ι : Sort.{u3}} (f : MulHom.{u2, u1} M N _inst_1 _inst_2) (s : ι -> (Subsemigroup.{u2} M _inst_1)), Eq.{succ u1} (Subsemigroup.{u1} N _inst_2) (Subsemigroup.map.{u2, u1} M N _inst_1 _inst_2 f (supᵢ.{u2, u3} (Subsemigroup.{u2} M _inst_1) (CompleteLattice.toSupSet.{u2} (Subsemigroup.{u2} M _inst_1) (Subsemigroup.instCompleteLatticeSubsemigroup.{u2} M _inst_1)) ι s)) (supᵢ.{u1, u3} (Subsemigroup.{u1} N _inst_2) (CompleteLattice.toSupSet.{u1} (Subsemigroup.{u1} N _inst_2) (Subsemigroup.instCompleteLatticeSubsemigroup.{u1} N _inst_2)) ι (fun (i : ι) => Subsemigroup.map.{u2, u1} M N _inst_1 _inst_2 f (s i)))
-Case conversion may be inaccurate. Consider using '#align subsemigroup.map_supr Subsemigroup.map_supᵢₓ'. -/
+  forall {M : Type.{u2}} {N : Type.{u1}} [_inst_1 : Mul.{u2} M] [_inst_2 : Mul.{u1} N] {ι : Sort.{u3}} (f : MulHom.{u2, u1} M N _inst_1 _inst_2) (s : ι -> (Subsemigroup.{u2} M _inst_1)), Eq.{succ u1} (Subsemigroup.{u1} N _inst_2) (Subsemigroup.map.{u2, u1} M N _inst_1 _inst_2 f (iSup.{u2, u3} (Subsemigroup.{u2} M _inst_1) (CompleteLattice.toSupSet.{u2} (Subsemigroup.{u2} M _inst_1) (Subsemigroup.instCompleteLatticeSubsemigroup.{u2} M _inst_1)) ι s)) (iSup.{u1, u3} (Subsemigroup.{u1} N _inst_2) (CompleteLattice.toSupSet.{u1} (Subsemigroup.{u1} N _inst_2) (Subsemigroup.instCompleteLatticeSubsemigroup.{u1} N _inst_2)) ι (fun (i : ι) => Subsemigroup.map.{u2, u1} M N _inst_1 _inst_2 f (s i)))
+Case conversion may be inaccurate. Consider using '#align subsemigroup.map_supr Subsemigroup.map_iSupₓ'. -/
 @[to_additive]
-theorem map_supᵢ {ι : Sort _} (f : M →ₙ* N) (s : ι → Subsemigroup M) :
-    (supᵢ s).map f = ⨆ i, (s i).map f :=
-  (gc_map_comap f).l_supᵢ
-#align subsemigroup.map_supr Subsemigroup.map_supᵢ
-#align add_subsemigroup.map_supr AddSubsemigroup.map_supᵢ
+theorem map_iSup {ι : Sort _} (f : M →ₙ* N) (s : ι → Subsemigroup M) :
+    (iSup s).map f = ⨆ i, (s i).map f :=
+  (gc_map_comap f).l_iSup
+#align subsemigroup.map_supr Subsemigroup.map_iSup
+#align add_subsemigroup.map_supr AddSubsemigroup.map_iSup
 
 /- warning: subsemigroup.comap_inf -> Subsemigroup.comap_inf is a dubious translation:
 lean 3 declaration is
@@ -513,18 +513,18 @@ theorem comap_inf (S T : Subsemigroup N) (f : M →ₙ* N) : (S ⊓ T).comap f =
 #align subsemigroup.comap_inf Subsemigroup.comap_inf
 #align add_subsemigroup.comap_inf AddSubsemigroup.comap_inf
 
-/- warning: subsemigroup.comap_infi -> Subsemigroup.comap_infᵢ is a dubious translation:
+/- warning: subsemigroup.comap_infi -> Subsemigroup.comap_iInf is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : Mul.{u1} M] [_inst_2 : Mul.{u2} N] {ι : Sort.{u3}} (f : MulHom.{u1, u2} M N _inst_1 _inst_2) (s : ι -> (Subsemigroup.{u2} N _inst_2)), Eq.{succ u1} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.comap.{u1, u2} M N _inst_1 _inst_2 f (infᵢ.{u2, u3} (Subsemigroup.{u2} N _inst_2) (Subsemigroup.hasInf.{u2} N _inst_2) ι s)) (infᵢ.{u1, u3} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.hasInf.{u1} M _inst_1) ι (fun (i : ι) => Subsemigroup.comap.{u1, u2} M N _inst_1 _inst_2 f (s i)))
+  forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : Mul.{u1} M] [_inst_2 : Mul.{u2} N] {ι : Sort.{u3}} (f : MulHom.{u1, u2} M N _inst_1 _inst_2) (s : ι -> (Subsemigroup.{u2} N _inst_2)), Eq.{succ u1} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.comap.{u1, u2} M N _inst_1 _inst_2 f (iInf.{u2, u3} (Subsemigroup.{u2} N _inst_2) (Subsemigroup.hasInf.{u2} N _inst_2) ι s)) (iInf.{u1, u3} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.hasInf.{u1} M _inst_1) ι (fun (i : ι) => Subsemigroup.comap.{u1, u2} M N _inst_1 _inst_2 f (s i)))
 but is expected to have type
-  forall {M : Type.{u2}} {N : Type.{u1}} [_inst_1 : Mul.{u2} M] [_inst_2 : Mul.{u1} N] {ι : Sort.{u3}} (f : MulHom.{u2, u1} M N _inst_1 _inst_2) (s : ι -> (Subsemigroup.{u1} N _inst_2)), Eq.{succ u2} (Subsemigroup.{u2} M _inst_1) (Subsemigroup.comap.{u2, u1} M N _inst_1 _inst_2 f (infᵢ.{u1, u3} (Subsemigroup.{u1} N _inst_2) (Subsemigroup.instInfSetSubsemigroup.{u1} N _inst_2) ι s)) (infᵢ.{u2, u3} (Subsemigroup.{u2} M _inst_1) (Subsemigroup.instInfSetSubsemigroup.{u2} M _inst_1) ι (fun (i : ι) => Subsemigroup.comap.{u2, u1} M N _inst_1 _inst_2 f (s i)))
-Case conversion may be inaccurate. Consider using '#align subsemigroup.comap_infi Subsemigroup.comap_infᵢₓ'. -/
+  forall {M : Type.{u2}} {N : Type.{u1}} [_inst_1 : Mul.{u2} M] [_inst_2 : Mul.{u1} N] {ι : Sort.{u3}} (f : MulHom.{u2, u1} M N _inst_1 _inst_2) (s : ι -> (Subsemigroup.{u1} N _inst_2)), Eq.{succ u2} (Subsemigroup.{u2} M _inst_1) (Subsemigroup.comap.{u2, u1} M N _inst_1 _inst_2 f (iInf.{u1, u3} (Subsemigroup.{u1} N _inst_2) (Subsemigroup.instInfSetSubsemigroup.{u1} N _inst_2) ι s)) (iInf.{u2, u3} (Subsemigroup.{u2} M _inst_1) (Subsemigroup.instInfSetSubsemigroup.{u2} M _inst_1) ι (fun (i : ι) => Subsemigroup.comap.{u2, u1} M N _inst_1 _inst_2 f (s i)))
+Case conversion may be inaccurate. Consider using '#align subsemigroup.comap_infi Subsemigroup.comap_iInfₓ'. -/
 @[to_additive]
-theorem comap_infᵢ {ι : Sort _} (f : M →ₙ* N) (s : ι → Subsemigroup N) :
-    (infᵢ s).comap f = ⨅ i, (s i).comap f :=
-  (gc_map_comap f).u_infᵢ
-#align subsemigroup.comap_infi Subsemigroup.comap_infᵢ
-#align add_subsemigroup.comap_infi AddSubsemigroup.comap_infᵢ
+theorem comap_iInf {ι : Sort _} (f : M →ₙ* N) (s : ι → Subsemigroup N) :
+    (iInf s).comap f = ⨅ i, (s i).comap f :=
+  (gc_map_comap f).u_iInf
+#align subsemigroup.comap_infi Subsemigroup.comap_iInf
+#align add_subsemigroup.comap_infi AddSubsemigroup.comap_iInf
 
 /- warning: subsemigroup.map_bot -> Subsemigroup.map_bot is a dubious translation:
 lean 3 declaration is
@@ -621,18 +621,18 @@ theorem comap_inf_map_of_injective (S T : Subsemigroup M) : (S.map f ⊓ T.map f
 #align subsemigroup.comap_inf_map_of_injective Subsemigroup.comap_inf_map_of_injective
 #align add_subsemigroup.comap_inf_map_of_injective AddSubsemigroup.comap_inf_map_of_injective
 
-/- warning: subsemigroup.comap_infi_map_of_injective -> Subsemigroup.comap_infᵢ_map_of_injective is a dubious translation:
+/- warning: subsemigroup.comap_infi_map_of_injective -> Subsemigroup.comap_iInf_map_of_injective is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : Mul.{u1} M] [_inst_2 : Mul.{u2} N] {ι : Type.{u3}} {f : MulHom.{u1, u2} M N _inst_1 _inst_2}, (Function.Injective.{succ u1, succ u2} M N (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MulHom.{u1, u2} M N _inst_1 _inst_2) (fun (_x : MulHom.{u1, u2} M N _inst_1 _inst_2) => M -> N) (MulHom.hasCoeToFun.{u1, u2} M N _inst_1 _inst_2) f)) -> (forall (S : ι -> (Subsemigroup.{u1} M _inst_1)), Eq.{succ u1} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.comap.{u1, u2} M N _inst_1 _inst_2 f (infᵢ.{u2, succ u3} (Subsemigroup.{u2} N _inst_2) (Subsemigroup.hasInf.{u2} N _inst_2) ι (fun (i : ι) => Subsemigroup.map.{u1, u2} M N _inst_1 _inst_2 f (S i)))) (infᵢ.{u1, succ u3} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.hasInf.{u1} M _inst_1) ι S))
+  forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : Mul.{u1} M] [_inst_2 : Mul.{u2} N] {ι : Type.{u3}} {f : MulHom.{u1, u2} M N _inst_1 _inst_2}, (Function.Injective.{succ u1, succ u2} M N (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MulHom.{u1, u2} M N _inst_1 _inst_2) (fun (_x : MulHom.{u1, u2} M N _inst_1 _inst_2) => M -> N) (MulHom.hasCoeToFun.{u1, u2} M N _inst_1 _inst_2) f)) -> (forall (S : ι -> (Subsemigroup.{u1} M _inst_1)), Eq.{succ u1} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.comap.{u1, u2} M N _inst_1 _inst_2 f (iInf.{u2, succ u3} (Subsemigroup.{u2} N _inst_2) (Subsemigroup.hasInf.{u2} N _inst_2) ι (fun (i : ι) => Subsemigroup.map.{u1, u2} M N _inst_1 _inst_2 f (S i)))) (iInf.{u1, succ u3} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.hasInf.{u1} M _inst_1) ι S))
 but is expected to have type
-  forall {M : Type.{u3}} {N : Type.{u2}} [_inst_1 : Mul.{u3} M] [_inst_2 : Mul.{u2} N] {ι : Type.{u1}} {f : MulHom.{u3, u2} M N _inst_1 _inst_2}, (Function.Injective.{succ u3, succ u2} M N (FunLike.coe.{max (succ u3) (succ u2), succ u3, succ u2} (MulHom.{u3, u2} M N _inst_1 _inst_2) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : M) => N) _x) (MulHomClass.toFunLike.{max u3 u2, u3, u2} (MulHom.{u3, u2} M N _inst_1 _inst_2) M N _inst_1 _inst_2 (MulHom.mulHomClass.{u3, u2} M N _inst_1 _inst_2)) f)) -> (forall (S : ι -> (Subsemigroup.{u3} M _inst_1)), Eq.{succ u3} (Subsemigroup.{u3} M _inst_1) (Subsemigroup.comap.{u3, u2} M N _inst_1 _inst_2 f (infᵢ.{u2, succ u1} (Subsemigroup.{u2} N _inst_2) (Subsemigroup.instInfSetSubsemigroup.{u2} N _inst_2) ι (fun (i : ι) => Subsemigroup.map.{u3, u2} M N _inst_1 _inst_2 f (S i)))) (infᵢ.{u3, succ u1} (Subsemigroup.{u3} M _inst_1) (Subsemigroup.instInfSetSubsemigroup.{u3} M _inst_1) ι S))
-Case conversion may be inaccurate. Consider using '#align subsemigroup.comap_infi_map_of_injective Subsemigroup.comap_infᵢ_map_of_injectiveₓ'. -/
+  forall {M : Type.{u3}} {N : Type.{u2}} [_inst_1 : Mul.{u3} M] [_inst_2 : Mul.{u2} N] {ι : Type.{u1}} {f : MulHom.{u3, u2} M N _inst_1 _inst_2}, (Function.Injective.{succ u3, succ u2} M N (FunLike.coe.{max (succ u3) (succ u2), succ u3, succ u2} (MulHom.{u3, u2} M N _inst_1 _inst_2) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : M) => N) _x) (MulHomClass.toFunLike.{max u3 u2, u3, u2} (MulHom.{u3, u2} M N _inst_1 _inst_2) M N _inst_1 _inst_2 (MulHom.mulHomClass.{u3, u2} M N _inst_1 _inst_2)) f)) -> (forall (S : ι -> (Subsemigroup.{u3} M _inst_1)), Eq.{succ u3} (Subsemigroup.{u3} M _inst_1) (Subsemigroup.comap.{u3, u2} M N _inst_1 _inst_2 f (iInf.{u2, succ u1} (Subsemigroup.{u2} N _inst_2) (Subsemigroup.instInfSetSubsemigroup.{u2} N _inst_2) ι (fun (i : ι) => Subsemigroup.map.{u3, u2} M N _inst_1 _inst_2 f (S i)))) (iInf.{u3, succ u1} (Subsemigroup.{u3} M _inst_1) (Subsemigroup.instInfSetSubsemigroup.{u3} M _inst_1) ι S))
+Case conversion may be inaccurate. Consider using '#align subsemigroup.comap_infi_map_of_injective Subsemigroup.comap_iInf_map_of_injectiveₓ'. -/
 @[to_additive]
-theorem comap_infᵢ_map_of_injective (S : ι → Subsemigroup M) :
-    (⨅ i, (S i).map f).comap f = infᵢ S :=
-  (gciMapComap hf).u_infᵢ_l _
-#align subsemigroup.comap_infi_map_of_injective Subsemigroup.comap_infᵢ_map_of_injective
-#align add_subsemigroup.comap_infi_map_of_injective AddSubsemigroup.comap_infᵢ_map_of_injective
+theorem comap_iInf_map_of_injective (S : ι → Subsemigroup M) :
+    (⨅ i, (S i).map f).comap f = iInf S :=
+  (gciMapComap hf).u_iInf_l _
+#align subsemigroup.comap_infi_map_of_injective Subsemigroup.comap_iInf_map_of_injective
+#align add_subsemigroup.comap_infi_map_of_injective AddSubsemigroup.comap_iInf_map_of_injective
 
 /- warning: subsemigroup.comap_sup_map_of_injective -> Subsemigroup.comap_sup_map_of_injective is a dubious translation:
 lean 3 declaration is
@@ -646,18 +646,18 @@ theorem comap_sup_map_of_injective (S T : Subsemigroup M) : (S.map f ⊔ T.map f
 #align subsemigroup.comap_sup_map_of_injective Subsemigroup.comap_sup_map_of_injective
 #align add_subsemigroup.comap_sup_map_of_injective AddSubsemigroup.comap_sup_map_of_injective
 
-/- warning: subsemigroup.comap_supr_map_of_injective -> Subsemigroup.comap_supᵢ_map_of_injective is a dubious translation:
+/- warning: subsemigroup.comap_supr_map_of_injective -> Subsemigroup.comap_iSup_map_of_injective is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : Mul.{u1} M] [_inst_2 : Mul.{u2} N] {ι : Type.{u3}} {f : MulHom.{u1, u2} M N _inst_1 _inst_2}, (Function.Injective.{succ u1, succ u2} M N (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MulHom.{u1, u2} M N _inst_1 _inst_2) (fun (_x : MulHom.{u1, u2} M N _inst_1 _inst_2) => M -> N) (MulHom.hasCoeToFun.{u1, u2} M N _inst_1 _inst_2) f)) -> (forall (S : ι -> (Subsemigroup.{u1} M _inst_1)), Eq.{succ u1} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.comap.{u1, u2} M N _inst_1 _inst_2 f (supᵢ.{u2, succ u3} (Subsemigroup.{u2} N _inst_2) (CompleteSemilatticeSup.toHasSup.{u2} (Subsemigroup.{u2} N _inst_2) (CompleteLattice.toCompleteSemilatticeSup.{u2} (Subsemigroup.{u2} N _inst_2) (Subsemigroup.completeLattice.{u2} N _inst_2))) ι (fun (i : ι) => Subsemigroup.map.{u1, u2} M N _inst_1 _inst_2 f (S i)))) (supᵢ.{u1, succ u3} (Subsemigroup.{u1} M _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Subsemigroup.{u1} M _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.completeLattice.{u1} M _inst_1))) ι S))
+  forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : Mul.{u1} M] [_inst_2 : Mul.{u2} N] {ι : Type.{u3}} {f : MulHom.{u1, u2} M N _inst_1 _inst_2}, (Function.Injective.{succ u1, succ u2} M N (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MulHom.{u1, u2} M N _inst_1 _inst_2) (fun (_x : MulHom.{u1, u2} M N _inst_1 _inst_2) => M -> N) (MulHom.hasCoeToFun.{u1, u2} M N _inst_1 _inst_2) f)) -> (forall (S : ι -> (Subsemigroup.{u1} M _inst_1)), Eq.{succ u1} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.comap.{u1, u2} M N _inst_1 _inst_2 f (iSup.{u2, succ u3} (Subsemigroup.{u2} N _inst_2) (CompleteSemilatticeSup.toHasSup.{u2} (Subsemigroup.{u2} N _inst_2) (CompleteLattice.toCompleteSemilatticeSup.{u2} (Subsemigroup.{u2} N _inst_2) (Subsemigroup.completeLattice.{u2} N _inst_2))) ι (fun (i : ι) => Subsemigroup.map.{u1, u2} M N _inst_1 _inst_2 f (S i)))) (iSup.{u1, succ u3} (Subsemigroup.{u1} M _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Subsemigroup.{u1} M _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.completeLattice.{u1} M _inst_1))) ι S))
 but is expected to have type
-  forall {M : Type.{u3}} {N : Type.{u2}} [_inst_1 : Mul.{u3} M] [_inst_2 : Mul.{u2} N] {ι : Type.{u1}} {f : MulHom.{u3, u2} M N _inst_1 _inst_2}, (Function.Injective.{succ u3, succ u2} M N (FunLike.coe.{max (succ u3) (succ u2), succ u3, succ u2} (MulHom.{u3, u2} M N _inst_1 _inst_2) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : M) => N) _x) (MulHomClass.toFunLike.{max u3 u2, u3, u2} (MulHom.{u3, u2} M N _inst_1 _inst_2) M N _inst_1 _inst_2 (MulHom.mulHomClass.{u3, u2} M N _inst_1 _inst_2)) f)) -> (forall (S : ι -> (Subsemigroup.{u3} M _inst_1)), Eq.{succ u3} (Subsemigroup.{u3} M _inst_1) (Subsemigroup.comap.{u3, u2} M N _inst_1 _inst_2 f (supᵢ.{u2, succ u1} (Subsemigroup.{u2} N _inst_2) (CompleteLattice.toSupSet.{u2} (Subsemigroup.{u2} N _inst_2) (Subsemigroup.instCompleteLatticeSubsemigroup.{u2} N _inst_2)) ι (fun (i : ι) => Subsemigroup.map.{u3, u2} M N _inst_1 _inst_2 f (S i)))) (supᵢ.{u3, succ u1} (Subsemigroup.{u3} M _inst_1) (CompleteLattice.toSupSet.{u3} (Subsemigroup.{u3} M _inst_1) (Subsemigroup.instCompleteLatticeSubsemigroup.{u3} M _inst_1)) ι S))
-Case conversion may be inaccurate. Consider using '#align subsemigroup.comap_supr_map_of_injective Subsemigroup.comap_supᵢ_map_of_injectiveₓ'. -/
+  forall {M : Type.{u3}} {N : Type.{u2}} [_inst_1 : Mul.{u3} M] [_inst_2 : Mul.{u2} N] {ι : Type.{u1}} {f : MulHom.{u3, u2} M N _inst_1 _inst_2}, (Function.Injective.{succ u3, succ u2} M N (FunLike.coe.{max (succ u3) (succ u2), succ u3, succ u2} (MulHom.{u3, u2} M N _inst_1 _inst_2) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : M) => N) _x) (MulHomClass.toFunLike.{max u3 u2, u3, u2} (MulHom.{u3, u2} M N _inst_1 _inst_2) M N _inst_1 _inst_2 (MulHom.mulHomClass.{u3, u2} M N _inst_1 _inst_2)) f)) -> (forall (S : ι -> (Subsemigroup.{u3} M _inst_1)), Eq.{succ u3} (Subsemigroup.{u3} M _inst_1) (Subsemigroup.comap.{u3, u2} M N _inst_1 _inst_2 f (iSup.{u2, succ u1} (Subsemigroup.{u2} N _inst_2) (CompleteLattice.toSupSet.{u2} (Subsemigroup.{u2} N _inst_2) (Subsemigroup.instCompleteLatticeSubsemigroup.{u2} N _inst_2)) ι (fun (i : ι) => Subsemigroup.map.{u3, u2} M N _inst_1 _inst_2 f (S i)))) (iSup.{u3, succ u1} (Subsemigroup.{u3} M _inst_1) (CompleteLattice.toSupSet.{u3} (Subsemigroup.{u3} M _inst_1) (Subsemigroup.instCompleteLatticeSubsemigroup.{u3} M _inst_1)) ι S))
+Case conversion may be inaccurate. Consider using '#align subsemigroup.comap_supr_map_of_injective Subsemigroup.comap_iSup_map_of_injectiveₓ'. -/
 @[to_additive]
-theorem comap_supᵢ_map_of_injective (S : ι → Subsemigroup M) :
-    (⨆ i, (S i).map f).comap f = supᵢ S :=
-  (gciMapComap hf).u_supᵢ_l _
-#align subsemigroup.comap_supr_map_of_injective Subsemigroup.comap_supᵢ_map_of_injective
-#align add_subsemigroup.comap_supr_map_of_injective AddSubsemigroup.comap_supᵢ_map_of_injective
+theorem comap_iSup_map_of_injective (S : ι → Subsemigroup M) :
+    (⨆ i, (S i).map f).comap f = iSup S :=
+  (gciMapComap hf).u_iSup_l _
+#align subsemigroup.comap_supr_map_of_injective Subsemigroup.comap_iSup_map_of_injective
+#align add_subsemigroup.comap_supr_map_of_injective AddSubsemigroup.comap_iSup_map_of_injective
 
 /- warning: subsemigroup.map_le_map_iff_of_injective -> Subsemigroup.map_le_map_iff_of_injective is a dubious translation:
 lean 3 declaration is
@@ -747,18 +747,18 @@ theorem map_inf_comap_of_surjective (S T : Subsemigroup N) :
 #align subsemigroup.map_inf_comap_of_surjective Subsemigroup.map_inf_comap_of_surjective
 #align add_subsemigroup.map_inf_comap_of_surjective AddSubsemigroup.map_inf_comap_of_surjective
 
-/- warning: subsemigroup.map_infi_comap_of_surjective -> Subsemigroup.map_infᵢ_comap_of_surjective is a dubious translation:
+/- warning: subsemigroup.map_infi_comap_of_surjective -> Subsemigroup.map_iInf_comap_of_surjective is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : Mul.{u1} M] [_inst_2 : Mul.{u2} N] {ι : Type.{u3}} {f : MulHom.{u1, u2} M N _inst_1 _inst_2}, (Function.Surjective.{succ u1, succ u2} M N (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MulHom.{u1, u2} M N _inst_1 _inst_2) (fun (_x : MulHom.{u1, u2} M N _inst_1 _inst_2) => M -> N) (MulHom.hasCoeToFun.{u1, u2} M N _inst_1 _inst_2) f)) -> (forall (S : ι -> (Subsemigroup.{u2} N _inst_2)), Eq.{succ u2} (Subsemigroup.{u2} N _inst_2) (Subsemigroup.map.{u1, u2} M N _inst_1 _inst_2 f (infᵢ.{u1, succ u3} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.hasInf.{u1} M _inst_1) ι (fun (i : ι) => Subsemigroup.comap.{u1, u2} M N _inst_1 _inst_2 f (S i)))) (infᵢ.{u2, succ u3} (Subsemigroup.{u2} N _inst_2) (Subsemigroup.hasInf.{u2} N _inst_2) ι S))
+  forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : Mul.{u1} M] [_inst_2 : Mul.{u2} N] {ι : Type.{u3}} {f : MulHom.{u1, u2} M N _inst_1 _inst_2}, (Function.Surjective.{succ u1, succ u2} M N (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MulHom.{u1, u2} M N _inst_1 _inst_2) (fun (_x : MulHom.{u1, u2} M N _inst_1 _inst_2) => M -> N) (MulHom.hasCoeToFun.{u1, u2} M N _inst_1 _inst_2) f)) -> (forall (S : ι -> (Subsemigroup.{u2} N _inst_2)), Eq.{succ u2} (Subsemigroup.{u2} N _inst_2) (Subsemigroup.map.{u1, u2} M N _inst_1 _inst_2 f (iInf.{u1, succ u3} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.hasInf.{u1} M _inst_1) ι (fun (i : ι) => Subsemigroup.comap.{u1, u2} M N _inst_1 _inst_2 f (S i)))) (iInf.{u2, succ u3} (Subsemigroup.{u2} N _inst_2) (Subsemigroup.hasInf.{u2} N _inst_2) ι S))
 but is expected to have type
-  forall {M : Type.{u2}} {N : Type.{u3}} [_inst_1 : Mul.{u2} M] [_inst_2 : Mul.{u3} N] {ι : Type.{u1}} {f : MulHom.{u2, u3} M N _inst_1 _inst_2}, (Function.Surjective.{succ u2, succ u3} M N (FunLike.coe.{max (succ u2) (succ u3), succ u2, succ u3} (MulHom.{u2, u3} M N _inst_1 _inst_2) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : M) => N) _x) (MulHomClass.toFunLike.{max u2 u3, u2, u3} (MulHom.{u2, u3} M N _inst_1 _inst_2) M N _inst_1 _inst_2 (MulHom.mulHomClass.{u2, u3} M N _inst_1 _inst_2)) f)) -> (forall (S : ι -> (Subsemigroup.{u3} N _inst_2)), Eq.{succ u3} (Subsemigroup.{u3} N _inst_2) (Subsemigroup.map.{u2, u3} M N _inst_1 _inst_2 f (infᵢ.{u2, succ u1} (Subsemigroup.{u2} M _inst_1) (Subsemigroup.instInfSetSubsemigroup.{u2} M _inst_1) ι (fun (i : ι) => Subsemigroup.comap.{u2, u3} M N _inst_1 _inst_2 f (S i)))) (infᵢ.{u3, succ u1} (Subsemigroup.{u3} N _inst_2) (Subsemigroup.instInfSetSubsemigroup.{u3} N _inst_2) ι S))
-Case conversion may be inaccurate. Consider using '#align subsemigroup.map_infi_comap_of_surjective Subsemigroup.map_infᵢ_comap_of_surjectiveₓ'. -/
+  forall {M : Type.{u2}} {N : Type.{u3}} [_inst_1 : Mul.{u2} M] [_inst_2 : Mul.{u3} N] {ι : Type.{u1}} {f : MulHom.{u2, u3} M N _inst_1 _inst_2}, (Function.Surjective.{succ u2, succ u3} M N (FunLike.coe.{max (succ u2) (succ u3), succ u2, succ u3} (MulHom.{u2, u3} M N _inst_1 _inst_2) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : M) => N) _x) (MulHomClass.toFunLike.{max u2 u3, u2, u3} (MulHom.{u2, u3} M N _inst_1 _inst_2) M N _inst_1 _inst_2 (MulHom.mulHomClass.{u2, u3} M N _inst_1 _inst_2)) f)) -> (forall (S : ι -> (Subsemigroup.{u3} N _inst_2)), Eq.{succ u3} (Subsemigroup.{u3} N _inst_2) (Subsemigroup.map.{u2, u3} M N _inst_1 _inst_2 f (iInf.{u2, succ u1} (Subsemigroup.{u2} M _inst_1) (Subsemigroup.instInfSetSubsemigroup.{u2} M _inst_1) ι (fun (i : ι) => Subsemigroup.comap.{u2, u3} M N _inst_1 _inst_2 f (S i)))) (iInf.{u3, succ u1} (Subsemigroup.{u3} N _inst_2) (Subsemigroup.instInfSetSubsemigroup.{u3} N _inst_2) ι S))
+Case conversion may be inaccurate. Consider using '#align subsemigroup.map_infi_comap_of_surjective Subsemigroup.map_iInf_comap_of_surjectiveₓ'. -/
 @[to_additive]
-theorem map_infᵢ_comap_of_surjective (S : ι → Subsemigroup N) :
-    (⨅ i, (S i).comap f).map f = infᵢ S :=
-  (giMapComap hf).l_infᵢ_u _
-#align subsemigroup.map_infi_comap_of_surjective Subsemigroup.map_infᵢ_comap_of_surjective
-#align add_subsemigroup.map_infi_comap_of_surjective AddSubsemigroup.map_infᵢ_comap_of_surjective
+theorem map_iInf_comap_of_surjective (S : ι → Subsemigroup N) :
+    (⨅ i, (S i).comap f).map f = iInf S :=
+  (giMapComap hf).l_iInf_u _
+#align subsemigroup.map_infi_comap_of_surjective Subsemigroup.map_iInf_comap_of_surjective
+#align add_subsemigroup.map_infi_comap_of_surjective AddSubsemigroup.map_iInf_comap_of_surjective
 
 /- warning: subsemigroup.map_sup_comap_of_surjective -> Subsemigroup.map_sup_comap_of_surjective is a dubious translation:
 lean 3 declaration is
@@ -773,18 +773,18 @@ theorem map_sup_comap_of_surjective (S T : Subsemigroup N) :
 #align subsemigroup.map_sup_comap_of_surjective Subsemigroup.map_sup_comap_of_surjective
 #align add_subsemigroup.map_sup_comap_of_surjective AddSubsemigroup.map_sup_comap_of_surjective
 
-/- warning: subsemigroup.map_supr_comap_of_surjective -> Subsemigroup.map_supᵢ_comap_of_surjective is a dubious translation:
+/- warning: subsemigroup.map_supr_comap_of_surjective -> Subsemigroup.map_iSup_comap_of_surjective is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : Mul.{u1} M] [_inst_2 : Mul.{u2} N] {ι : Type.{u3}} {f : MulHom.{u1, u2} M N _inst_1 _inst_2}, (Function.Surjective.{succ u1, succ u2} M N (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MulHom.{u1, u2} M N _inst_1 _inst_2) (fun (_x : MulHom.{u1, u2} M N _inst_1 _inst_2) => M -> N) (MulHom.hasCoeToFun.{u1, u2} M N _inst_1 _inst_2) f)) -> (forall (S : ι -> (Subsemigroup.{u2} N _inst_2)), Eq.{succ u2} (Subsemigroup.{u2} N _inst_2) (Subsemigroup.map.{u1, u2} M N _inst_1 _inst_2 f (supᵢ.{u1, succ u3} (Subsemigroup.{u1} M _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Subsemigroup.{u1} M _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.completeLattice.{u1} M _inst_1))) ι (fun (i : ι) => Subsemigroup.comap.{u1, u2} M N _inst_1 _inst_2 f (S i)))) (supᵢ.{u2, succ u3} (Subsemigroup.{u2} N _inst_2) (CompleteSemilatticeSup.toHasSup.{u2} (Subsemigroup.{u2} N _inst_2) (CompleteLattice.toCompleteSemilatticeSup.{u2} (Subsemigroup.{u2} N _inst_2) (Subsemigroup.completeLattice.{u2} N _inst_2))) ι S))
+  forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : Mul.{u1} M] [_inst_2 : Mul.{u2} N] {ι : Type.{u3}} {f : MulHom.{u1, u2} M N _inst_1 _inst_2}, (Function.Surjective.{succ u1, succ u2} M N (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MulHom.{u1, u2} M N _inst_1 _inst_2) (fun (_x : MulHom.{u1, u2} M N _inst_1 _inst_2) => M -> N) (MulHom.hasCoeToFun.{u1, u2} M N _inst_1 _inst_2) f)) -> (forall (S : ι -> (Subsemigroup.{u2} N _inst_2)), Eq.{succ u2} (Subsemigroup.{u2} N _inst_2) (Subsemigroup.map.{u1, u2} M N _inst_1 _inst_2 f (iSup.{u1, succ u3} (Subsemigroup.{u1} M _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Subsemigroup.{u1} M _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.completeLattice.{u1} M _inst_1))) ι (fun (i : ι) => Subsemigroup.comap.{u1, u2} M N _inst_1 _inst_2 f (S i)))) (iSup.{u2, succ u3} (Subsemigroup.{u2} N _inst_2) (CompleteSemilatticeSup.toHasSup.{u2} (Subsemigroup.{u2} N _inst_2) (CompleteLattice.toCompleteSemilatticeSup.{u2} (Subsemigroup.{u2} N _inst_2) (Subsemigroup.completeLattice.{u2} N _inst_2))) ι S))
 but is expected to have type
-  forall {M : Type.{u2}} {N : Type.{u3}} [_inst_1 : Mul.{u2} M] [_inst_2 : Mul.{u3} N] {ι : Type.{u1}} {f : MulHom.{u2, u3} M N _inst_1 _inst_2}, (Function.Surjective.{succ u2, succ u3} M N (FunLike.coe.{max (succ u2) (succ u3), succ u2, succ u3} (MulHom.{u2, u3} M N _inst_1 _inst_2) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : M) => N) _x) (MulHomClass.toFunLike.{max u2 u3, u2, u3} (MulHom.{u2, u3} M N _inst_1 _inst_2) M N _inst_1 _inst_2 (MulHom.mulHomClass.{u2, u3} M N _inst_1 _inst_2)) f)) -> (forall (S : ι -> (Subsemigroup.{u3} N _inst_2)), Eq.{succ u3} (Subsemigroup.{u3} N _inst_2) (Subsemigroup.map.{u2, u3} M N _inst_1 _inst_2 f (supᵢ.{u2, succ u1} (Subsemigroup.{u2} M _inst_1) (CompleteLattice.toSupSet.{u2} (Subsemigroup.{u2} M _inst_1) (Subsemigroup.instCompleteLatticeSubsemigroup.{u2} M _inst_1)) ι (fun (i : ι) => Subsemigroup.comap.{u2, u3} M N _inst_1 _inst_2 f (S i)))) (supᵢ.{u3, succ u1} (Subsemigroup.{u3} N _inst_2) (CompleteLattice.toSupSet.{u3} (Subsemigroup.{u3} N _inst_2) (Subsemigroup.instCompleteLatticeSubsemigroup.{u3} N _inst_2)) ι S))
-Case conversion may be inaccurate. Consider using '#align subsemigroup.map_supr_comap_of_surjective Subsemigroup.map_supᵢ_comap_of_surjectiveₓ'. -/
+  forall {M : Type.{u2}} {N : Type.{u3}} [_inst_1 : Mul.{u2} M] [_inst_2 : Mul.{u3} N] {ι : Type.{u1}} {f : MulHom.{u2, u3} M N _inst_1 _inst_2}, (Function.Surjective.{succ u2, succ u3} M N (FunLike.coe.{max (succ u2) (succ u3), succ u2, succ u3} (MulHom.{u2, u3} M N _inst_1 _inst_2) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2391 : M) => N) _x) (MulHomClass.toFunLike.{max u2 u3, u2, u3} (MulHom.{u2, u3} M N _inst_1 _inst_2) M N _inst_1 _inst_2 (MulHom.mulHomClass.{u2, u3} M N _inst_1 _inst_2)) f)) -> (forall (S : ι -> (Subsemigroup.{u3} N _inst_2)), Eq.{succ u3} (Subsemigroup.{u3} N _inst_2) (Subsemigroup.map.{u2, u3} M N _inst_1 _inst_2 f (iSup.{u2, succ u1} (Subsemigroup.{u2} M _inst_1) (CompleteLattice.toSupSet.{u2} (Subsemigroup.{u2} M _inst_1) (Subsemigroup.instCompleteLatticeSubsemigroup.{u2} M _inst_1)) ι (fun (i : ι) => Subsemigroup.comap.{u2, u3} M N _inst_1 _inst_2 f (S i)))) (iSup.{u3, succ u1} (Subsemigroup.{u3} N _inst_2) (CompleteLattice.toSupSet.{u3} (Subsemigroup.{u3} N _inst_2) (Subsemigroup.instCompleteLatticeSubsemigroup.{u3} N _inst_2)) ι S))
+Case conversion may be inaccurate. Consider using '#align subsemigroup.map_supr_comap_of_surjective Subsemigroup.map_iSup_comap_of_surjectiveₓ'. -/
 @[to_additive]
-theorem map_supᵢ_comap_of_surjective (S : ι → Subsemigroup N) :
-    (⨆ i, (S i).comap f).map f = supᵢ S :=
-  (giMapComap hf).l_supᵢ_u _
-#align subsemigroup.map_supr_comap_of_surjective Subsemigroup.map_supᵢ_comap_of_surjective
-#align add_subsemigroup.map_supr_comap_of_surjective AddSubsemigroup.map_supᵢ_comap_of_surjective
+theorem map_iSup_comap_of_surjective (S : ι → Subsemigroup N) :
+    (⨆ i, (S i).comap f).map f = iSup S :=
+  (giMapComap hf).l_iSup_u _
+#align subsemigroup.map_supr_comap_of_surjective Subsemigroup.map_iSup_comap_of_surjective
+#align add_subsemigroup.map_supr_comap_of_surjective AddSubsemigroup.map_iSup_comap_of_surjective
 
 /- warning: subsemigroup.comap_le_comap_iff_of_surjective -> Subsemigroup.comap_le_comap_iff_of_surjective is a dubious translation:
 lean 3 declaration is

@@ -90,13 +90,13 @@ def space (K : SimplicialComplex 𝕜 E) : Set E :=
 
 #print Geometry.SimplicialComplex.mem_space_iff /-
 theorem mem_space_iff : x ∈ K.space ↔ ∃ s ∈ K.faces, x ∈ convexHull 𝕜 (s : Set E) :=
-  mem_unionᵢ₂
+  mem_iUnion₂
 #align geometry.simplicial_complex.mem_space_iff Geometry.SimplicialComplex.mem_space_iff
 -/
 
 #print Geometry.SimplicialComplex.convexHull_subset_space /-
 theorem convexHull_subset_space (hs : s ∈ K.faces) : convexHull 𝕜 ↑s ⊆ K.space :=
-  subset_bunionᵢ_of_mem hs
+  subset_biUnion_of_mem hs
 #align geometry.simplicial_complex.convex_hull_subset_space Geometry.SimplicialComplex.convexHull_subset_space
 -/
 
@@ -209,7 +209,7 @@ theorem vertices_eq : K.vertices = ⋃ k ∈ K.faces, (k : Set E) :=
 
 #print Geometry.SimplicialComplex.vertices_subset_space /-
 theorem vertices_subset_space : K.vertices ⊆ K.space :=
-  vertices_eq.Subset.trans <| unionᵢ₂_mono fun x hx => subset_convexHull 𝕜 x
+  vertices_eq.Subset.trans <| iUnion₂_mono fun x hx => subset_convexHull 𝕜 x
 #align geometry.simplicial_complex.vertices_subset_space Geometry.SimplicialComplex.vertices_subset_space
 -/
 
@@ -325,7 +325,7 @@ theorem faces_bot : (⊥ : SimplicialComplex 𝕜 E).faces = ∅ :=
 
 #print Geometry.SimplicialComplex.space_bot /-
 theorem space_bot : (⊥ : SimplicialComplex 𝕜 E).space = ∅ :=
-  Set.bunionᵢ_empty _
+  Set.biUnion_empty _
 #align geometry.simplicial_complex.space_bot Geometry.SimplicialComplex.space_bot
 -/
 

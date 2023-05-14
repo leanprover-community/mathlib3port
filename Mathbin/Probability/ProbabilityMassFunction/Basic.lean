@@ -274,7 +274,7 @@ Case conversion may be inaccurate. Consider using '#align pmf.to_outer_measure_c
 @[simp]
 theorem toOuterMeasure_caratheodory : p.toOuterMeasure.caratheodory = ⊤ :=
   by
-  refine' eq_top_iff.2 <| le_trans (le_infₛ fun x hx => _) (le_sum_caratheodory _)
+  refine' eq_top_iff.2 <| le_trans (le_sInf fun x hx => _) (le_sum_caratheodory _)
   exact
     let ⟨y, hy⟩ := hx
     ((le_of_eq (dirac_caratheodory y).symm).trans (le_smul_caratheodory _ _)).trans (le_of_eq hy)

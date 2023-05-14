@@ -571,7 +571,7 @@ end Map
 theorem eq_of_forall_proj_eq [T2Space X] [CompactSpace X] [disc : TotallyDisconnectedSpace X]
     {x y : X} (h : ∀ Q : DiscreteQuotient X, Q.proj x = Q.proj y) : x = y :=
   by
-  rw [← mem_singleton_iff, ← connectedComponent_eq_singleton, connectedComponent_eq_interᵢ_clopen,
+  rw [← mem_singleton_iff, ← connectedComponent_eq_singleton, connectedComponent_eq_iInter_clopen,
     mem_Inter]
   rintro ⟨U, hU1, hU2⟩
   exact (Quotient.exact' (h (of_clopen hU1))).mpr hU2
@@ -603,7 +603,7 @@ theorem exists_of_compat [CompactSpace X] (Qs : ∀ Q : DiscreteQuotient X, Q)
     ∃ x : X, ∀ Q : DiscreteQuotient X, Q.proj x = Qs _ :=
   by
   obtain ⟨x, hx⟩ : (⋂ Q, proj Q ⁻¹' {Qs Q}).Nonempty :=
-    IsCompact.nonempty_interᵢ_of_directed_nonempty_compact_closed
+    IsCompact.nonempty_iInter_of_directed_nonempty_compact_closed
       (fun Q : DiscreteQuotient X => Q.proj ⁻¹' {Qs _}) (directed_of_inf fun A B h => _)
       (fun Q => (singleton_nonempty _).Preimage Q.proj_surjective)
       (fun i => (is_closed_preimage _ _).IsCompact) fun i => is_closed_preimage _ _

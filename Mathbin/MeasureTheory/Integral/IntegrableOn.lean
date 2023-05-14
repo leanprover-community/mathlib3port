@@ -210,18 +210,18 @@ theorem integrableOn_finite_bUnion {s : Set β} (hs : s.Finite) {t : β → Set 
 #align measure_theory.integrable_on_finite_bUnion MeasureTheory.integrableOn_finite_bUnion
 
 @[simp]
-theorem integrableOn_finset_unionᵢ {s : Finset β} {t : β → Set α} :
+theorem integrableOn_finset_iUnion {s : Finset β} {t : β → Set α} :
     IntegrableOn f (⋃ i ∈ s, t i) μ ↔ ∀ i ∈ s, IntegrableOn f (t i) μ :=
   integrableOn_finite_bUnion s.finite_toSet
-#align measure_theory.integrable_on_finset_Union MeasureTheory.integrableOn_finset_unionᵢ
+#align measure_theory.integrable_on_finset_Union MeasureTheory.integrableOn_finset_iUnion
 
 @[simp]
-theorem integrableOn_finite_unionᵢ [Finite β] {t : β → Set α} :
+theorem integrableOn_finite_iUnion [Finite β] {t : β → Set α} :
     IntegrableOn f (⋃ i, t i) μ ↔ ∀ i, IntegrableOn f (t i) μ :=
   by
   cases nonempty_fintype β
   simpa using @integrable_on_finset_Union _ _ _ _ _ f μ Finset.univ t
-#align measure_theory.integrable_on_finite_Union MeasureTheory.integrableOn_finite_unionᵢ
+#align measure_theory.integrable_on_finite_Union MeasureTheory.integrableOn_finite_iUnion
 
 theorem IntegrableOn.add_measure (hμ : IntegrableOn f s μ) (hν : IntegrableOn f s ν) :
     IntegrableOn f s (μ + ν) := by

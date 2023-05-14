@@ -250,7 +250,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.disjoint_left_ord_separating_set Set.disjoint_left_ordSeparatingSetₓ'. -/
 theorem disjoint_left_ordSeparatingSet : Disjoint s (ordSeparatingSet s t) :=
   Disjoint.inter_right' _ <|
-    disjoint_unionᵢ₂_right.2 fun x hx =>
+    disjoint_iUnion₂_right.2 fun x hx =>
       disjoint_compl_right.mono_right <| ordConnectedComponent_subset
 #align set.disjoint_left_ord_separating_set Set.disjoint_left_ordSeparatingSet
 

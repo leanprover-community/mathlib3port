@@ -74,17 +74,17 @@ theorem IsOpen.inter (s t : Set α) : IsOpen α s → IsOpen α t → IsOpen α 
   CompleteLattice.inf_continuous'
 #align Scott.is_open.inter Scott.IsOpen.inter
 
-#print Scott.isOpen_unionₛ /-
-theorem isOpen_unionₛ (s : Set (Set α)) (hs : ∀ t ∈ s, IsOpen α t) : IsOpen α (⋃₀ s) :=
+#print Scott.isOpen_sUnion /-
+theorem isOpen_sUnion (s : Set (Set α)) (hs : ∀ t ∈ s, IsOpen α t) : IsOpen α (⋃₀ s) :=
   by
   simp only [IsOpen] at hs⊢
-  convert CompleteLattice.supₛ_continuous' (setOf ⁻¹' s) _
+  convert CompleteLattice.sSup_continuous' (setOf ⁻¹' s) _
   · ext1 x
-    simp only [supₛ_apply, set_of_bijective.surjective.exists, exists_prop, mem_preimage,
-      SetCoe.exists, supᵢ_Prop_eq, mem_set_of_eq, Subtype.coe_mk, mem_sUnion]
+    simp only [sSup_apply, set_of_bijective.surjective.exists, exists_prop, mem_preimage,
+      SetCoe.exists, iSup_Prop_eq, mem_set_of_eq, Subtype.coe_mk, mem_sUnion]
   · intro p hp
     exact hs (setOf p) (mem_preimage.1 hp)
-#align Scott.is_open_sUnion Scott.isOpen_unionₛ
+#align Scott.is_open_sUnion Scott.isOpen_sUnion
 -/
 
 end Scott
@@ -105,7 +105,7 @@ instance Scott.topologicalSpace (α : Type u) [OmegaCompletePartialOrder α] :
   IsOpen := Scott.IsOpen α
   isOpen_univ := Scott.isOpen_univ α
   isOpen_inter := Scott.IsOpen.inter α
-  isOpen_unionₛ := Scott.isOpen_unionₛ α
+  isOpen_sUnion := Scott.isOpen_sUnion α
 #align Scott.topological_space Scott.topologicalSpace
 -/
 
@@ -184,7 +184,7 @@ theorem scottContinuous_of_continuous {α β} [OmegaCompletePartialOrder α]
   specialize hf_h c
   simp only [notBelow, OrderHom.coe_fun_mk, eq_iff_iff, mem_set_of_eq] at hf_h
   rw [← not_iff_not]
-  simp only [ωSup_le_iff, hf_h, ωSup, supᵢ, Sup, CompleteLattice.sup, CompleteSemilatticeSup.sup,
+  simp only [ωSup_le_iff, hf_h, ωSup, iSup, Sup, CompleteLattice.sup, CompleteSemilatticeSup.sup,
     exists_prop, mem_range, OrderHom.coe_fun_mk, chain.map_coe, Function.comp_apply, eq_iff_iff,
     not_forall]
   tauto

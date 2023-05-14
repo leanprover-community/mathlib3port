@@ -290,7 +290,7 @@ instance (priority := 100) ofAbelianIsSolvable [IsLieAbelian L] : IsSolvable R L
 
 /-- The (solvable) radical of Lie algebra is the `Sup` of all solvable ideals. -/
 def radical :=
-  supₛ { I : LieIdeal R L | IsSolvable R I }
+  sSup { I : LieIdeal R L | IsSolvable R I }
 #align lie_algebra.radical LieAlgebra.radical
 
 /-- The radical of a Noetherian Lie algebra is solvable. -/
@@ -307,12 +307,12 @@ instance radicalIsSolvable [IsNoetherian R L] : IsSolvable R (radical R L) :=
 /-- The `→` direction of this lemma is actually true without the `is_noetherian` assumption. -/
 theorem LieIdeal.solvable_iff_le_radical [IsNoetherian R L] (I : LieIdeal R L) :
     IsSolvable R I ↔ I ≤ radical R L :=
-  ⟨fun h => le_supₛ h, fun h => leSolvableIdealSolvable h inferInstance⟩
+  ⟨fun h => le_sSup h, fun h => leSolvableIdealSolvable h inferInstance⟩
 #align lie_algebra.lie_ideal.solvable_iff_le_radical LieAlgebra.LieIdeal.solvable_iff_le_radical
 
 theorem center_le_radical : center R L ≤ radical R L :=
   have h : IsSolvable R (center R L) := by infer_instance
-  le_supₛ h
+  le_sSup h
 #align lie_algebra.center_le_radical LieAlgebra.center_le_radical
 
 /-- Given a solvable Lie ideal `I` with derived series `I = D₀ ≥ D₁ ≥ ⋯ ≥ Dₖ = ⊥`, this is the
@@ -320,7 +320,7 @@ natural number `k` (the number of inclusions).
 
 For a non-solvable ideal, the value is 0. -/
 noncomputable def derivedLengthOfIdeal (I : LieIdeal R L) : ℕ :=
-  infₛ { k | derivedSeriesOfIdeal R L k I = ⊥ }
+  sInf { k | derivedSeriesOfIdeal R L k I = ⊥ }
 #align lie_algebra.derived_length_of_ideal LieAlgebra.derivedLengthOfIdeal
 
 /-- The derived length of a Lie algebra is the derived length of its 'top' Lie ideal.
@@ -344,7 +344,7 @@ theorem derived_series_of_derived_length_succ (I : LieIdeal R L) (k : ℕ) :
     change derived_series_of_ideal R L k₁ I = ⊥ at h₁
     rw [← h₁]
     exact derived_series_of_ideal_antitone I h₁₂
-  exact Nat.infₛ_upward_closed_eq_succ_iff hs k
+  exact Nat.sInf_upward_closed_eq_succ_iff hs k
 #align lie_algebra.derived_series_of_derived_length_succ LieAlgebra.derived_series_of_derived_length_succ
 
 theorem derivedLength_eq_derivedLengthOfIdeal (I : LieIdeal R L) :

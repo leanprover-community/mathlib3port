@@ -370,36 +370,36 @@ theorem zpowers_one_eq_bot : Subgroup.zpowers (1 : G) = ⊥ :=
 theorem centralizer_closure (S : Set G) :
     (closure S).centralizer = ⨅ g ∈ S, (zpowers g).centralizer :=
   le_antisymm
-      (le_infᵢ fun g => le_infᵢ fun hg => centralizer_le <| zpowers_le.2 <| subset_closure hg) <|
+      (le_iInf fun g => le_iInf fun hg => centralizer_le <| zpowers_le.2 <| subset_closure hg) <|
     le_centralizer_iff.1 <|
       (closure_le _).2 fun g =>
-        SetLike.mem_coe.2 ∘ zpowers_le.1 ∘ le_centralizer_iff.1 ∘ infᵢ_le_of_le g ∘ infᵢ_le _
+        SetLike.mem_coe.2 ∘ zpowers_le.1 ∘ le_centralizer_iff.1 ∘ iInf_le_of_le g ∘ iInf_le _
 #align subgroup.centralizer_closure Subgroup.centralizer_closure
 #align add_subgroup.centralizer_closure AddSubgroup.centralizer_closure
 -/
 
-/- warning: subgroup.center_eq_infi -> Subgroup.center_eq_infᵢ is a dubious translation:
+/- warning: subgroup.center_eq_infi -> Subgroup.center_eq_iInf is a dubious translation:
 lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (S : Set.{u1} G), (Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.closure.{u1} G _inst_1 S) (Top.top.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.hasTop.{u1} G _inst_1))) -> (Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.center.{u1} G _inst_1) (infᵢ.{u1, succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.hasInf.{u1} G _inst_1) G (fun (g : G) => infᵢ.{u1, 0} (Subgroup.{u1} G _inst_1) (Subgroup.hasInf.{u1} G _inst_1) (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) g S) (fun (H : Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) g S) => Subgroup.centralizer.{u1} G _inst_1 (Subgroup.zpowers.{u1} G _inst_1 g)))))
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (S : Set.{u1} G), (Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.closure.{u1} G _inst_1 S) (Top.top.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.hasTop.{u1} G _inst_1))) -> (Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.center.{u1} G _inst_1) (iInf.{u1, succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.hasInf.{u1} G _inst_1) G (fun (g : G) => iInf.{u1, 0} (Subgroup.{u1} G _inst_1) (Subgroup.hasInf.{u1} G _inst_1) (Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) g S) (fun (H : Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) g S) => Subgroup.centralizer.{u1} G _inst_1 (Subgroup.zpowers.{u1} G _inst_1 g)))))
 but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (S : Set.{u1} G), (Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.closure.{u1} G _inst_1 S) (Top.top.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instTopSubgroup.{u1} G _inst_1))) -> (Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.center.{u1} G _inst_1) (infᵢ.{u1, succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.instInfSetSubgroup.{u1} G _inst_1) G (fun (g : G) => infᵢ.{u1, 0} (Subgroup.{u1} G _inst_1) (Subgroup.instInfSetSubgroup.{u1} G _inst_1) (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) g S) (fun (H : Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) g S) => Subgroup.centralizer.{u1} G _inst_1 (Subgroup.zpowers.{u1} G _inst_1 g)))))
-Case conversion may be inaccurate. Consider using '#align subgroup.center_eq_infi Subgroup.center_eq_infᵢₓ'. -/
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (S : Set.{u1} G), (Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.closure.{u1} G _inst_1 S) (Top.top.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instTopSubgroup.{u1} G _inst_1))) -> (Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.center.{u1} G _inst_1) (iInf.{u1, succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.instInfSetSubgroup.{u1} G _inst_1) G (fun (g : G) => iInf.{u1, 0} (Subgroup.{u1} G _inst_1) (Subgroup.instInfSetSubgroup.{u1} G _inst_1) (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) g S) (fun (H : Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) g S) => Subgroup.centralizer.{u1} G _inst_1 (Subgroup.zpowers.{u1} G _inst_1 g)))))
+Case conversion may be inaccurate. Consider using '#align subgroup.center_eq_infi Subgroup.center_eq_iInfₓ'. -/
 @[to_additive]
-theorem center_eq_infᵢ (S : Set G) (hS : closure S = ⊤) :
+theorem center_eq_iInf (S : Set G) (hS : closure S = ⊤) :
     center G = ⨅ g ∈ S, centralizer (zpowers g) := by
   rw [← centralizer_top, ← hS, centralizer_closure]
-#align subgroup.center_eq_infi Subgroup.center_eq_infᵢ
-#align add_subgroup.center_eq_infi AddSubgroup.center_eq_infᵢ
+#align subgroup.center_eq_infi Subgroup.center_eq_iInf
+#align add_subgroup.center_eq_infi AddSubgroup.center_eq_iInf
 
 /- warning: subgroup.center_eq_infi' -> Subgroup.center_eq_infi' is a dubious translation:
 lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (S : Set.{u1} G), (Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.closure.{u1} G _inst_1 S) (Top.top.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.hasTop.{u1} G _inst_1))) -> (Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.center.{u1} G _inst_1) (infᵢ.{u1, succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.hasInf.{u1} G _inst_1) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} G) Type.{u1} (Set.hasCoeToSort.{u1} G) S) (fun (g : coeSort.{succ u1, succ (succ u1)} (Set.{u1} G) Type.{u1} (Set.hasCoeToSort.{u1} G) S) => Subgroup.centralizer.{u1} G _inst_1 (Subgroup.zpowers.{u1} G _inst_1 ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} G) Type.{u1} (Set.hasCoeToSort.{u1} G) S) G (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} G) Type.{u1} (Set.hasCoeToSort.{u1} G) S) G (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} G) Type.{u1} (Set.hasCoeToSort.{u1} G) S) G (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} G) Type.{u1} (Set.hasCoeToSort.{u1} G) S) G (coeSubtype.{succ u1} G (fun (x : G) => Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) x S))))) g)))))
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (S : Set.{u1} G), (Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.closure.{u1} G _inst_1 S) (Top.top.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.hasTop.{u1} G _inst_1))) -> (Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.center.{u1} G _inst_1) (iInf.{u1, succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.hasInf.{u1} G _inst_1) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} G) Type.{u1} (Set.hasCoeToSort.{u1} G) S) (fun (g : coeSort.{succ u1, succ (succ u1)} (Set.{u1} G) Type.{u1} (Set.hasCoeToSort.{u1} G) S) => Subgroup.centralizer.{u1} G _inst_1 (Subgroup.zpowers.{u1} G _inst_1 ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} G) Type.{u1} (Set.hasCoeToSort.{u1} G) S) G (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} G) Type.{u1} (Set.hasCoeToSort.{u1} G) S) G (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} G) Type.{u1} (Set.hasCoeToSort.{u1} G) S) G (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} G) Type.{u1} (Set.hasCoeToSort.{u1} G) S) G (coeSubtype.{succ u1} G (fun (x : G) => Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) x S))))) g)))))
 but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (S : Set.{u1} G), (Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.closure.{u1} G _inst_1 S) (Top.top.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instTopSubgroup.{u1} G _inst_1))) -> (Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.center.{u1} G _inst_1) (infᵢ.{u1, succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.instInfSetSubgroup.{u1} G _inst_1) (Set.Elem.{u1} G S) (fun (g : Set.Elem.{u1} G S) => Subgroup.centralizer.{u1} G _inst_1 (Subgroup.zpowers.{u1} G _inst_1 (Subtype.val.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) x S) g)))))
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (S : Set.{u1} G), (Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.closure.{u1} G _inst_1 S) (Top.top.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instTopSubgroup.{u1} G _inst_1))) -> (Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.center.{u1} G _inst_1) (iInf.{u1, succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.instInfSetSubgroup.{u1} G _inst_1) (Set.Elem.{u1} G S) (fun (g : Set.Elem.{u1} G S) => Subgroup.centralizer.{u1} G _inst_1 (Subgroup.zpowers.{u1} G _inst_1 (Subtype.val.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) x S) g)))))
 Case conversion may be inaccurate. Consider using '#align subgroup.center_eq_infi' Subgroup.center_eq_infi'ₓ'. -/
 @[to_additive]
 theorem center_eq_infi' (S : Set G) (hS : closure S = ⊤) :
-    center G = ⨅ g : S, centralizer (zpowers g) := by rw [center_eq_infi S hS, ← infᵢ_subtype'']
+    center G = ⨅ g : S, centralizer (zpowers g) := by rw [center_eq_infi S hS, ← iInf_subtype'']
 #align subgroup.center_eq_infi' Subgroup.center_eq_infi'
 #align add_subgroup.center_eq_infi' AddSubgroup.center_eq_infi'
 

@@ -348,11 +348,11 @@ theorem exists_measurable_supersets_limRatio {p q : ℝ≥0} (hpq : p < q) :
   ·
     exact
       (measurable_set_to_measurable _ _).union
-        (MeasurableSet.unionᵢ fun n => measurable_set_to_measurable _ _)
+        (MeasurableSet.iUnion fun n => measurable_set_to_measurable _ _)
   ·
     exact
       (measurable_set_to_measurable _ _).union
-        (MeasurableSet.unionᵢ fun n => measurable_set_to_measurable _ _)
+        (MeasurableSet.iUnion fun n => measurable_set_to_measurable _ _)
   · intro x hx
     by_cases h : x ∈ s
     · refine' Or.inr (mem_Union.2 ⟨spanning_sets_index (ρ + μ) x, _⟩)

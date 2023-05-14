@@ -1319,7 +1319,7 @@ theorem contDiffWithinAt_pi :
   refine' ⟨fun h i => h.continuousLinearMapComp (pr i), fun h m hm => _⟩
   choose u hux p hp using fun i => h i m hm
   exact
-    ⟨⋂ i, u i, Filter.interᵢ_mem.2 hux, _,
+    ⟨⋂ i, u i, Filter.iInter_mem.2 hux, _,
       hasFtaylorSeriesUpToOn_pi.2 fun i => (hp i).mono <| Inter_subset _ _⟩
 #align cont_diff_within_at_pi contDiffWithinAt_pi
 

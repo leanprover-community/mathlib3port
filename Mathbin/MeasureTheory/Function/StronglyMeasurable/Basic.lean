@@ -341,7 +341,7 @@ theorem finStronglyMeasurable_of_set_sigmaFinite [TopologicalSpace β] [Zero β]
         · exact ⟨n, fun m hnm => Set.mem_inter (hn m hnm) hxt⟩
         rsuffices ⟨n, hn⟩ : ∃ n, x ∈ S n
         · exact ⟨n, fun m hnm => monotone_spanning_sets (μ.restrict t) hnm hn⟩
-        rw [← Set.mem_unionᵢ, Union_spanning_sets (μ.restrict t)]
+        rw [← Set.mem_iUnion, Union_spanning_sets (μ.restrict t)]
         trivial
       refine' ⟨n, fun m hnm => _⟩
       simp_rw [fs, simple_func.restrict_apply _ ((hS_meas m).inter ht),
@@ -993,7 +993,7 @@ theorem exists_spanning_measurableSet_norm_le [SeminormedAddCommGroup β] {m m0 
   have norm_sets_spanning : (⋃ n, norm_sets n) = Set.univ :=
     by
     ext1 x
-    simp only [Set.mem_unionᵢ, Set.mem_setOf_eq, Set.mem_univ, iff_true_iff]
+    simp only [Set.mem_iUnion, Set.mem_setOf_eq, Set.mem_univ, iff_true_iff]
     exact ⟨⌈‖f x‖⌉₊, Nat.le_ceil ‖f x‖⟩
   let sets n := sigma_finite_sets n ∩ norm_sets n
   have h_meas : ∀ n, measurable_set[m] (sets n) :=
@@ -1010,7 +1010,7 @@ theorem exists_spanning_measurableSet_norm_le [SeminormedAddCommGroup β] {m m0 
   · have :
       (⋃ i, sigma_finite_sets i ∩ norm_sets i) = (⋃ i, sigma_finite_sets i) ∩ ⋃ i, norm_sets i :=
       by
-      refine' Set.unionᵢ_inter_of_monotone (monotone_spanning_sets (μ.trim hm)) fun i j hij x => _
+      refine' Set.iUnion_inter_of_monotone (monotone_spanning_sets (μ.trim hm)) fun i j hij x => _
       simp only [norm_sets, Set.mem_setOf_eq]
       refine' fun hif => hif.trans _
       exact_mod_cast hij
@@ -1073,20 +1073,20 @@ theorem exists_set_sigmaFinite [Zero β] [TopologicalSpace β] [T2Space β]
   let T n := support (fs n)
   have hT_meas : ∀ n, MeasurableSet (T n) := fun n => simple_func.measurable_set_support (fs n)
   let t := ⋃ n, T n
-  refine' ⟨t, MeasurableSet.unionᵢ hT_meas, _, _⟩
+  refine' ⟨t, MeasurableSet.iUnion hT_meas, _, _⟩
   · have h_fs_zero : ∀ n, ∀ x ∈ tᶜ, fs n x = 0 :=
       by
       intro n x hxt
-      rw [Set.mem_compl_iff, Set.mem_unionᵢ, not_exists] at hxt
+      rw [Set.mem_compl_iff, Set.mem_iUnion, not_exists] at hxt
       simpa using hxt n
     refine' fun x hxt => tendsto_nhds_unique (h_approx x) _
     rw [funext fun n => h_fs_zero n x hxt]
     exact tendsto_const_nhds
   · refine' ⟨⟨⟨fun n => tᶜ ∪ T n, fun n => trivial, fun n => _, _⟩⟩⟩
-    · rw [measure.restrict_apply' (MeasurableSet.unionᵢ hT_meas), Set.union_inter_distrib_right,
+    · rw [measure.restrict_apply' (MeasurableSet.iUnion hT_meas), Set.union_inter_distrib_right,
         Set.compl_inter_self t, Set.empty_union]
       exact (measure_mono (Set.inter_subset_left _ _)).trans_lt (hT_lt_top n)
-    · rw [← Set.union_unionᵢ (tᶜ) T]
+    · rw [← Set.union_iUnion (tᶜ) T]
       exact Set.compl_union_self _
 #align measure_theory.fin_strongly_measurable.exists_set_sigma_finite MeasureTheory.FinStronglyMeasurable.exists_set_sigmaFinite
 
@@ -1756,25 +1756,25 @@ theorem add_measure [PseudoMetrizableSpace β] {ν : Measure α} {f : α → β}
   aeStronglyMeasurable_add_measure_iff.2 ⟨hμ, hν⟩
 #align measure_theory.ae_strongly_measurable.add_measure MeasureTheory.AeStronglyMeasurable.add_measure
 
-protected theorem unionᵢ [PseudoMetrizableSpace β] {s : ι → Set α}
+protected theorem iUnion [PseudoMetrizableSpace β] {s : ι → Set α}
     (h : ∀ i, AeStronglyMeasurable f (μ.restrict (s i))) :
     AeStronglyMeasurable f (μ.restrict (⋃ i, s i)) :=
-  (sum_measure h).mono_measure <| restrict_unionᵢ_le
-#align measure_theory.ae_strongly_measurable.Union MeasureTheory.AeStronglyMeasurable.unionᵢ
+  (sum_measure h).mono_measure <| restrict_iUnion_le
+#align measure_theory.ae_strongly_measurable.Union MeasureTheory.AeStronglyMeasurable.iUnion
 
 @[simp]
-theorem aeStronglyMeasurable_unionᵢ_iff [PseudoMetrizableSpace β] {s : ι → Set α} :
+theorem aeStronglyMeasurable_iUnion_iff [PseudoMetrizableSpace β] {s : ι → Set α} :
     AeStronglyMeasurable f (μ.restrict (⋃ i, s i)) ↔
       ∀ i, AeStronglyMeasurable f (μ.restrict (s i)) :=
-  ⟨fun h i => h.mono_measure <| restrict_mono (subset_unionᵢ _ _) le_rfl,
-    AeStronglyMeasurable.unionᵢ⟩
-#align ae_strongly_measurable_Union_iff aeStronglyMeasurable_unionᵢ_iff
+  ⟨fun h i => h.mono_measure <| restrict_mono (subset_iUnion _ _) le_rfl,
+    AeStronglyMeasurable.iUnion⟩
+#align ae_strongly_measurable_Union_iff aeStronglyMeasurable_iUnion_iff
 
 @[simp]
 theorem aeStronglyMeasurable_union_iff [PseudoMetrizableSpace β] {s t : Set α} :
     AeStronglyMeasurable f (μ.restrict (s ∪ t)) ↔
       AeStronglyMeasurable f (μ.restrict s) ∧ AeStronglyMeasurable f (μ.restrict t) :=
-  by simp only [union_eq_Union, aeStronglyMeasurable_unionᵢ_iff, Bool.forall_bool, cond, and_comm]
+  by simp only [union_eq_Union, aeStronglyMeasurable_iUnion_iff, Bool.forall_bool, cond, and_comm]
 #align ae_strongly_measurable_union_iff aeStronglyMeasurable_union_iff
 
 theorem aeStronglyMeasurable_uIoc_iff [LinearOrder α] [PseudoMetrizableSpace β] {f : α → β}

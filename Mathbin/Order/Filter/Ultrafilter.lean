@@ -40,8 +40,8 @@ open Classical Filter
 equal to this filter. -/
 instance : IsAtomic (Filter α) :=
   IsAtomic.of_isChain_bounded fun c hc hne hb =>
-    ⟨infₛ c, (infₛ_neBot_of_directed' hne (show IsChain (· ≥ ·) c from hc.symm).DirectedOn hb).Ne,
-      fun x hx => infₛ_le hx⟩
+    ⟨sInf c, (sInf_neBot_of_directed' hne (show IsChain (· ≥ ·) c from hc.symm).DirectedOn hb).Ne,
+      fun x hx => sInf_le hx⟩
 
 #print Ultrafilter /-
 /-- An ultrafilter is a minimal (maximal in the set order) proper filter. -/
@@ -323,27 +323,27 @@ theorem eventually_imp : (∀ᶠ x in f, p x → q x) ↔ (∀ᶠ x in f, p x) �
 #align ultrafilter.eventually_imp Ultrafilter.eventually_imp
 -/
 
-/- warning: ultrafilter.finite_sUnion_mem_iff -> Ultrafilter.finite_unionₛ_mem_iff is a dubious translation:
+/- warning: ultrafilter.finite_sUnion_mem_iff -> Ultrafilter.finite_sUnion_mem_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {f : Ultrafilter.{u1} α} {s : Set.{u1} (Set.{u1} α)}, (Set.Finite.{u1} (Set.{u1} α) s) -> (Iff (Membership.Mem.{u1, u1} (Set.{u1} α) (Ultrafilter.{u1} α) (Ultrafilter.hasMem.{u1} α) (Set.unionₛ.{u1} α s) f) (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) t s) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) t s) => Membership.Mem.{u1, u1} (Set.{u1} α) (Ultrafilter.{u1} α) (Ultrafilter.hasMem.{u1} α) t f))))
+  forall {α : Type.{u1}} {f : Ultrafilter.{u1} α} {s : Set.{u1} (Set.{u1} α)}, (Set.Finite.{u1} (Set.{u1} α) s) -> (Iff (Membership.Mem.{u1, u1} (Set.{u1} α) (Ultrafilter.{u1} α) (Ultrafilter.hasMem.{u1} α) (Set.sUnion.{u1} α s) f) (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) t s) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) t s) => Membership.Mem.{u1, u1} (Set.{u1} α) (Ultrafilter.{u1} α) (Ultrafilter.hasMem.{u1} α) t f))))
 but is expected to have type
-  forall {α : Type.{u1}} {f : Ultrafilter.{u1} α} {s : Set.{u1} (Set.{u1} α)}, (Set.Finite.{u1} (Set.{u1} α) s) -> (Iff (Membership.mem.{u1, u1} (Set.{u1} α) (Ultrafilter.{u1} α) (Ultrafilter.instMembershipSetUltrafilter.{u1} α) (Set.unionₛ.{u1} α s) f) (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) t s) (Membership.mem.{u1, u1} (Set.{u1} α) (Ultrafilter.{u1} α) (Ultrafilter.instMembershipSetUltrafilter.{u1} α) t f))))
-Case conversion may be inaccurate. Consider using '#align ultrafilter.finite_sUnion_mem_iff Ultrafilter.finite_unionₛ_mem_iffₓ'. -/
-theorem finite_unionₛ_mem_iff {s : Set (Set α)} (hs : s.Finite) : ⋃₀ s ∈ f ↔ ∃ t ∈ s, t ∈ f :=
+  forall {α : Type.{u1}} {f : Ultrafilter.{u1} α} {s : Set.{u1} (Set.{u1} α)}, (Set.Finite.{u1} (Set.{u1} α) s) -> (Iff (Membership.mem.{u1, u1} (Set.{u1} α) (Ultrafilter.{u1} α) (Ultrafilter.instMembershipSetUltrafilter.{u1} α) (Set.sUnion.{u1} α s) f) (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) t s) (Membership.mem.{u1, u1} (Set.{u1} α) (Ultrafilter.{u1} α) (Ultrafilter.instMembershipSetUltrafilter.{u1} α) t f))))
+Case conversion may be inaccurate. Consider using '#align ultrafilter.finite_sUnion_mem_iff Ultrafilter.finite_sUnion_mem_iffₓ'. -/
+theorem finite_sUnion_mem_iff {s : Set (Set α)} (hs : s.Finite) : ⋃₀ s ∈ f ↔ ∃ t ∈ s, t ∈ f :=
   Finite.induction_on hs (by simp) fun a s ha hs his => by
     simp [union_mem_iff, his, or_and_right, exists_or]
-#align ultrafilter.finite_sUnion_mem_iff Ultrafilter.finite_unionₛ_mem_iff
+#align ultrafilter.finite_sUnion_mem_iff Ultrafilter.finite_sUnion_mem_iff
 
-/- warning: ultrafilter.finite_bUnion_mem_iff -> Ultrafilter.finite_bunionᵢ_mem_iff is a dubious translation:
+/- warning: ultrafilter.finite_bUnion_mem_iff -> Ultrafilter.finite_biUnion_mem_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Ultrafilter.{u1} α} {is : Set.{u2} β} {s : β -> (Set.{u1} α)}, (Set.Finite.{u2} β is) -> (Iff (Membership.Mem.{u1, u1} (Set.{u1} α) (Ultrafilter.{u1} α) (Ultrafilter.hasMem.{u1} α) (Set.unionᵢ.{u1, succ u2} α β (fun (i : β) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) i is) (fun (H : Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) i is) => s i))) f) (Exists.{succ u2} β (fun (i : β) => Exists.{0} (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) i is) (fun (H : Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) i is) => Membership.Mem.{u1, u1} (Set.{u1} α) (Ultrafilter.{u1} α) (Ultrafilter.hasMem.{u1} α) (s i) f))))
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : Ultrafilter.{u1} α} {is : Set.{u2} β} {s : β -> (Set.{u1} α)}, (Set.Finite.{u2} β is) -> (Iff (Membership.Mem.{u1, u1} (Set.{u1} α) (Ultrafilter.{u1} α) (Ultrafilter.hasMem.{u1} α) (Set.iUnion.{u1, succ u2} α β (fun (i : β) => Set.iUnion.{u1, 0} α (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) i is) (fun (H : Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) i is) => s i))) f) (Exists.{succ u2} β (fun (i : β) => Exists.{0} (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) i is) (fun (H : Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) i is) => Membership.Mem.{u1, u1} (Set.{u1} α) (Ultrafilter.{u1} α) (Ultrafilter.hasMem.{u1} α) (s i) f))))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Ultrafilter.{u1} α} {is : Set.{u2} β} {s : β -> (Set.{u1} α)}, (Set.Finite.{u2} β is) -> (Iff (Membership.mem.{u1, u1} (Set.{u1} α) (Ultrafilter.{u1} α) (Ultrafilter.instMembershipSetUltrafilter.{u1} α) (Set.unionᵢ.{u1, succ u2} α β (fun (i : β) => Set.unionᵢ.{u1, 0} α (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) i is) (fun (H : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) i is) => s i))) f) (Exists.{succ u2} β (fun (i : β) => And (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) i is) (Membership.mem.{u1, u1} (Set.{u1} α) (Ultrafilter.{u1} α) (Ultrafilter.instMembershipSetUltrafilter.{u1} α) (s i) f))))
-Case conversion may be inaccurate. Consider using '#align ultrafilter.finite_bUnion_mem_iff Ultrafilter.finite_bunionᵢ_mem_iffₓ'. -/
-theorem finite_bunionᵢ_mem_iff {is : Set β} {s : β → Set α} (his : is.Finite) :
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : Ultrafilter.{u1} α} {is : Set.{u2} β} {s : β -> (Set.{u1} α)}, (Set.Finite.{u2} β is) -> (Iff (Membership.mem.{u1, u1} (Set.{u1} α) (Ultrafilter.{u1} α) (Ultrafilter.instMembershipSetUltrafilter.{u1} α) (Set.iUnion.{u1, succ u2} α β (fun (i : β) => Set.iUnion.{u1, 0} α (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) i is) (fun (H : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) i is) => s i))) f) (Exists.{succ u2} β (fun (i : β) => And (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) i is) (Membership.mem.{u1, u1} (Set.{u1} α) (Ultrafilter.{u1} α) (Ultrafilter.instMembershipSetUltrafilter.{u1} α) (s i) f))))
+Case conversion may be inaccurate. Consider using '#align ultrafilter.finite_bUnion_mem_iff Ultrafilter.finite_biUnion_mem_iffₓ'. -/
+theorem finite_biUnion_mem_iff {is : Set β} {s : β → Set α} (his : is.Finite) :
     (⋃ i ∈ is, s i) ∈ f ↔ ∃ i ∈ is, s i ∈ f := by
   simp only [← sUnion_image, finite_sUnion_mem_iff (his.image s), bex_image_iff]
-#align ultrafilter.finite_bUnion_mem_iff Ultrafilter.finite_bunionᵢ_mem_iff
+#align ultrafilter.finite_bUnion_mem_iff Ultrafilter.finite_biUnion_mem_iff
 
 #print Ultrafilter.map /-
 /-- Pushforward for ultrafilters. -/
@@ -526,7 +526,7 @@ Case conversion may be inaccurate. Consider using '#align ultrafilter.eq_pure_of
 theorem eq_pure_of_finite_mem (h : s.Finite) (h' : s ∈ f) : ∃ x ∈ s, f = pure x :=
   by
   rw [← bUnion_of_singleton s] at h'
-  rcases(Ultrafilter.finite_bunionᵢ_mem_iff h).mp h' with ⟨a, has, haf⟩
+  rcases(Ultrafilter.finite_biUnion_mem_iff h).mp h' with ⟨a, has, haf⟩
   exact ⟨a, has, eq_of_le (Filter.le_pure_iff.2 haf)⟩
 #align ultrafilter.eq_pure_of_finite_mem Ultrafilter.eq_pure_of_finite_mem
 
@@ -735,17 +735,17 @@ theorem le_iff_ultrafilter {f₁ f₂ : Filter α} : f₁ ≤ f₂ ↔ ∀ g : U
   ⟨fun h g h₁ => h₁.trans h, fun h s hs => mem_iff_ultrafilter.2 fun g hg => h g hg hs⟩
 #align filter.le_iff_ultrafilter Filter.le_iff_ultrafilter
 
-/- warning: filter.supr_ultrafilter_le_eq -> Filter.supᵢ_ultrafilter_le_eq is a dubious translation:
+/- warning: filter.supr_ultrafilter_le_eq -> Filter.iSup_ultrafilter_le_eq is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} (f : Filter.{u1} α), Eq.{succ u1} (Filter.{u1} α) (supᵢ.{u1, succ u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (Ultrafilter.{u1} α) (fun (g : Ultrafilter.{u1} α) => supᵢ.{u1, 0} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Ultrafilter.{u1} α) (Filter.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (Ultrafilter.Filter.hasCoeT.{u1} α))) g) f) (fun (hg : LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Ultrafilter.{u1} α) (Filter.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (Ultrafilter.Filter.hasCoeT.{u1} α))) g) f) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Ultrafilter.{u1} α) (Filter.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (Ultrafilter.Filter.hasCoeT.{u1} α))) g))) f
+  forall {α : Type.{u1}} (f : Filter.{u1} α), Eq.{succ u1} (Filter.{u1} α) (iSup.{u1, succ u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (Ultrafilter.{u1} α) (fun (g : Ultrafilter.{u1} α) => iSup.{u1, 0} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Ultrafilter.{u1} α) (Filter.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (Ultrafilter.Filter.hasCoeT.{u1} α))) g) f) (fun (hg : LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Ultrafilter.{u1} α) (Filter.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (Ultrafilter.Filter.hasCoeT.{u1} α))) g) f) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Ultrafilter.{u1} α) (Filter.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Ultrafilter.{u1} α) (Filter.{u1} α) (Ultrafilter.Filter.hasCoeT.{u1} α))) g))) f
 but is expected to have type
-  forall {α : Type.{u1}} (f : Filter.{u1} α), Eq.{succ u1} (Filter.{u1} α) (supᵢ.{u1, succ u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toSupSet.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) (Ultrafilter.{u1} α) (fun (g : Ultrafilter.{u1} α) => supᵢ.{u1, 0} (Filter.{u1} α) (ConditionallyCompleteLattice.toSupSet.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Ultrafilter.toFilter.{u1} α g) f) (fun (hg : LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Ultrafilter.toFilter.{u1} α g) f) => Ultrafilter.toFilter.{u1} α g))) f
-Case conversion may be inaccurate. Consider using '#align filter.supr_ultrafilter_le_eq Filter.supᵢ_ultrafilter_le_eqₓ'. -/
+  forall {α : Type.{u1}} (f : Filter.{u1} α), Eq.{succ u1} (Filter.{u1} α) (iSup.{u1, succ u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toSupSet.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) (Ultrafilter.{u1} α) (fun (g : Ultrafilter.{u1} α) => iSup.{u1, 0} (Filter.{u1} α) (ConditionallyCompleteLattice.toSupSet.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Ultrafilter.toFilter.{u1} α g) f) (fun (hg : LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Ultrafilter.toFilter.{u1} α g) f) => Ultrafilter.toFilter.{u1} α g))) f
+Case conversion may be inaccurate. Consider using '#align filter.supr_ultrafilter_le_eq Filter.iSup_ultrafilter_le_eqₓ'. -/
 /-- A filter equals the intersection of all the ultrafilters which contain it. -/
-theorem supᵢ_ultrafilter_le_eq (f : Filter α) :
+theorem iSup_ultrafilter_le_eq (f : Filter α) :
     (⨆ (g : Ultrafilter α) (hg : ↑g ≤ f), (g : Filter α)) = f :=
-  eq_of_forall_ge_iff fun f' => by simp only [supᵢ_le_iff, ← le_iff_ultrafilter]
-#align filter.supr_ultrafilter_le_eq Filter.supᵢ_ultrafilter_le_eq
+  eq_of_forall_ge_iff fun f' => by simp only [iSup_le_iff, ← le_iff_ultrafilter]
+#align filter.supr_ultrafilter_le_eq Filter.iSup_ultrafilter_le_eq
 
 /- warning: filter.tendsto_iff_ultrafilter -> Filter.tendsto_iff_ultrafilter is a dubious translation:
 lean 3 declaration is

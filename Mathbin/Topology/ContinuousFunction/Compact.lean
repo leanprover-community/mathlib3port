@@ -241,9 +241,9 @@ theorem neg_norm_le_apply (f : C(α, ℝ)) (x : α) : -‖f‖ ≤ f x :=
   le_trans (neg_le_neg (f.norm_coe_le_norm x)) (neg_le.mp (neg_le_abs_self (f x)))
 #align continuous_map.neg_norm_le_apply ContinuousMap.neg_norm_le_apply
 
-theorem norm_eq_supᵢ_norm : ‖f‖ = ⨆ x : α, ‖f x‖ :=
-  (mkOfCompact f).norm_eq_supᵢ_norm
-#align continuous_map.norm_eq_supr_norm ContinuousMap.norm_eq_supᵢ_norm
+theorem norm_eq_iSup_norm : ‖f‖ = ⨆ x : α, ‖f x‖ :=
+  (mkOfCompact f).norm_eq_iSup_norm
+#align continuous_map.norm_eq_supr_norm ContinuousMap.norm_eq_iSup_norm
 
 theorem norm_restrict_mono_set {X : Type _} [TopologicalSpace X] (f : C(X, E))
     {K L : TopologicalSpace.Compacts X} (hKL : K ≤ L) : ‖f.restrict K‖ ≤ ‖f.restrict L‖ :=

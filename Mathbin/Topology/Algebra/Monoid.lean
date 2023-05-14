@@ -458,8 +458,8 @@ theorem isClosed_setOf_map_mul [Mul M₁] [Mul M₂] [ContinuousMul M₂] :
   by
   simp only [set_of_forall]
   exact
-    isClosed_interᵢ fun x =>
-      isClosed_interᵢ fun y =>
+    isClosed_iInter fun x =>
+      isClosed_iInter fun y =>
         isClosed_eq (continuous_apply _) ((continuous_apply _).mul (continuous_apply _))
 #align is_closed_set_of_map_mul isClosed_setOf_map_mul
 #align is_closed_set_of_map_add isClosed_setOf_map_add
@@ -1263,35 +1263,35 @@ section LatticeOps
 
 variable {ι' : Sort _} [Mul M]
 
-/- warning: has_continuous_mul_Inf -> continuousMul_infₛ is a dubious translation:
+/- warning: has_continuous_mul_Inf -> continuousMul_sInf is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_2 : Mul.{u1} M] {ts : Set.{u1} (TopologicalSpace.{u1} M)}, (forall (t : TopologicalSpace.{u1} M), (Membership.Mem.{u1, u1} (TopologicalSpace.{u1} M) (Set.{u1} (TopologicalSpace.{u1} M)) (Set.hasMem.{u1} (TopologicalSpace.{u1} M)) t ts) -> (ContinuousMul.{u1} M t _inst_2)) -> (ContinuousMul.{u1} M (InfSet.infₛ.{u1} (TopologicalSpace.{u1} M) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} M) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} M) (TopologicalSpace.completeLattice.{u1} M))) ts) _inst_2)
+  forall {M : Type.{u1}} [_inst_2 : Mul.{u1} M] {ts : Set.{u1} (TopologicalSpace.{u1} M)}, (forall (t : TopologicalSpace.{u1} M), (Membership.Mem.{u1, u1} (TopologicalSpace.{u1} M) (Set.{u1} (TopologicalSpace.{u1} M)) (Set.hasMem.{u1} (TopologicalSpace.{u1} M)) t ts) -> (ContinuousMul.{u1} M t _inst_2)) -> (ContinuousMul.{u1} M (InfSet.sInf.{u1} (TopologicalSpace.{u1} M) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} M) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} M) (TopologicalSpace.completeLattice.{u1} M))) ts) _inst_2)
 but is expected to have type
-  forall {M : Type.{u1}} [_inst_2 : Mul.{u1} M] {ts : Set.{u1} (TopologicalSpace.{u1} M)}, (forall (t : TopologicalSpace.{u1} M), (Membership.mem.{u1, u1} (TopologicalSpace.{u1} M) (Set.{u1} (TopologicalSpace.{u1} M)) (Set.instMembershipSet.{u1} (TopologicalSpace.{u1} M)) t ts) -> (ContinuousMul.{u1} M t _inst_2)) -> (ContinuousMul.{u1} M (InfSet.infₛ.{u1} (TopologicalSpace.{u1} M) (ConditionallyCompleteLattice.toInfSet.{u1} (TopologicalSpace.{u1} M) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} M) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} M))) ts) _inst_2)
-Case conversion may be inaccurate. Consider using '#align has_continuous_mul_Inf continuousMul_infₛₓ'. -/
+  forall {M : Type.{u1}} [_inst_2 : Mul.{u1} M] {ts : Set.{u1} (TopologicalSpace.{u1} M)}, (forall (t : TopologicalSpace.{u1} M), (Membership.mem.{u1, u1} (TopologicalSpace.{u1} M) (Set.{u1} (TopologicalSpace.{u1} M)) (Set.instMembershipSet.{u1} (TopologicalSpace.{u1} M)) t ts) -> (ContinuousMul.{u1} M t _inst_2)) -> (ContinuousMul.{u1} M (InfSet.sInf.{u1} (TopologicalSpace.{u1} M) (ConditionallyCompleteLattice.toInfSet.{u1} (TopologicalSpace.{u1} M) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} M) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} M))) ts) _inst_2)
+Case conversion may be inaccurate. Consider using '#align has_continuous_mul_Inf continuousMul_sInfₓ'. -/
 @[to_additive]
-theorem continuousMul_infₛ {ts : Set (TopologicalSpace M)} (h : ∀ t ∈ ts, @ContinuousMul M t _) :
-    @ContinuousMul M (infₛ ts) _ :=
+theorem continuousMul_sInf {ts : Set (TopologicalSpace M)} (h : ∀ t ∈ ts, @ContinuousMul M t _) :
+    @ContinuousMul M (sInf ts) _ :=
   {
     continuous_mul :=
-      continuous_infₛ_rng.2 fun t ht =>
-        continuous_infₛ_dom₂ ht ht (@ContinuousMul.continuous_mul M t _ (h t ht)) }
-#align has_continuous_mul_Inf continuousMul_infₛ
-#align has_continuous_add_Inf continuousAdd_infₛ
+      continuous_sInf_rng.2 fun t ht =>
+        continuous_sInf_dom₂ ht ht (@ContinuousMul.continuous_mul M t _ (h t ht)) }
+#align has_continuous_mul_Inf continuousMul_sInf
+#align has_continuous_add_Inf continuousAdd_sInf
 
-/- warning: has_continuous_mul_infi -> continuousMul_infᵢ is a dubious translation:
+/- warning: has_continuous_mul_infi -> continuousMul_iInf is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} {ι' : Sort.{u2}} [_inst_2 : Mul.{u1} M] {ts : ι' -> (TopologicalSpace.{u1} M)}, (forall (i : ι'), ContinuousMul.{u1} M (ts i) _inst_2) -> (ContinuousMul.{u1} M (infᵢ.{u1, u2} (TopologicalSpace.{u1} M) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} M) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} M) (TopologicalSpace.completeLattice.{u1} M))) ι' (fun (i : ι') => ts i)) _inst_2)
+  forall {M : Type.{u1}} {ι' : Sort.{u2}} [_inst_2 : Mul.{u1} M] {ts : ι' -> (TopologicalSpace.{u1} M)}, (forall (i : ι'), ContinuousMul.{u1} M (ts i) _inst_2) -> (ContinuousMul.{u1} M (iInf.{u1, u2} (TopologicalSpace.{u1} M) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} M) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} M) (TopologicalSpace.completeLattice.{u1} M))) ι' (fun (i : ι') => ts i)) _inst_2)
 but is expected to have type
-  forall {M : Type.{u2}} {ι' : Sort.{u1}} [_inst_2 : Mul.{u2} M] {ts : ι' -> (TopologicalSpace.{u2} M)}, (forall (i : ι'), ContinuousMul.{u2} M (ts i) _inst_2) -> (ContinuousMul.{u2} M (infᵢ.{u2, u1} (TopologicalSpace.{u2} M) (ConditionallyCompleteLattice.toInfSet.{u2} (TopologicalSpace.{u2} M) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} M) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u2} M))) ι' (fun (i : ι') => ts i)) _inst_2)
-Case conversion may be inaccurate. Consider using '#align has_continuous_mul_infi continuousMul_infᵢₓ'. -/
+  forall {M : Type.{u2}} {ι' : Sort.{u1}} [_inst_2 : Mul.{u2} M] {ts : ι' -> (TopologicalSpace.{u2} M)}, (forall (i : ι'), ContinuousMul.{u2} M (ts i) _inst_2) -> (ContinuousMul.{u2} M (iInf.{u2, u1} (TopologicalSpace.{u2} M) (ConditionallyCompleteLattice.toInfSet.{u2} (TopologicalSpace.{u2} M) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} M) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u2} M))) ι' (fun (i : ι') => ts i)) _inst_2)
+Case conversion may be inaccurate. Consider using '#align has_continuous_mul_infi continuousMul_iInfₓ'. -/
 @[to_additive]
-theorem continuousMul_infᵢ {ts : ι' → TopologicalSpace M} (h' : ∀ i, @ContinuousMul M (ts i) _) :
+theorem continuousMul_iInf {ts : ι' → TopologicalSpace M} (h' : ∀ i, @ContinuousMul M (ts i) _) :
     @ContinuousMul M (⨅ i, ts i) _ := by
-  rw [← infₛ_range]
-  exact continuousMul_infₛ (set.forall_range_iff.mpr h')
-#align has_continuous_mul_infi continuousMul_infᵢ
-#align has_continuous_add_infi continuousAdd_infᵢ
+  rw [← sInf_range]
+  exact continuousMul_sInf (set.forall_range_iff.mpr h')
+#align has_continuous_mul_infi continuousMul_iInf
+#align has_continuous_add_infi continuousAdd_iInf
 
 /- warning: has_continuous_mul_inf -> continuousMul_inf is a dubious translation:
 lean 3 declaration is
@@ -1303,8 +1303,8 @@ Case conversion may be inaccurate. Consider using '#align has_continuous_mul_inf
 theorem continuousMul_inf {t₁ t₂ : TopologicalSpace M} (h₁ : @ContinuousMul M t₁ _)
     (h₂ : @ContinuousMul M t₂ _) : @ContinuousMul M (t₁ ⊓ t₂) _ :=
   by
-  rw [inf_eq_infᵢ]
-  refine' continuousMul_infᵢ fun b => _
+  rw [inf_eq_iInf]
+  refine' continuousMul_iInf fun b => _
   cases b <;> assumption
 #align has_continuous_mul_inf continuousMul_inf
 #align has_continuous_add_inf continuousAdd_inf

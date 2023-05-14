@@ -65,7 +65,7 @@ but is expected to have type
   forall {α : Type.{u1}} {σ : Type.{u2}} (M : NFA.{u1, u2} α σ) (s : σ) (S : Set.{u2} σ) (a : α), Iff (Membership.mem.{u2, u2} σ (Set.{u2} σ) (Set.instMembershipSet.{u2} σ) s (NFA.stepSet.{u1, u2} α σ M S a)) (Exists.{succ u2} σ (fun (t : σ) => And (Membership.mem.{u2, u2} σ (Set.{u2} σ) (Set.instMembershipSet.{u2} σ) t S) (Membership.mem.{u2, u2} σ (Set.{u2} σ) (Set.instMembershipSet.{u2} σ) s (NFA.step.{u1, u2} α σ M t a))))
 Case conversion may be inaccurate. Consider using '#align NFA.mem_step_set NFA.mem_stepSetₓ'. -/
 theorem mem_stepSet (s : σ) (S : Set σ) (a : α) : s ∈ M.stepSet S a ↔ ∃ t ∈ S, s ∈ M.step t a :=
-  mem_unionᵢ₂
+  mem_iUnion₂
 #align NFA.mem_step_set NFA.mem_stepSet
 
 #print NFA.stepSet_empty /-

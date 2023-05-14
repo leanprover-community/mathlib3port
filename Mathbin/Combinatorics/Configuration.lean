@@ -126,10 +126,10 @@ theorem Nondegenerate.exists_injective_of_card_le [Nondegenerate P L] [Fintype P
     (h : Fintype.card L ≤ Fintype.card P) : ∃ f : L → P, Function.Injective f ∧ ∀ l, f l ∉ l := by
   classical
     let t : L → Finset P := fun l => Set.toFinset { p | p ∉ l }
-    suffices ∀ s : Finset L, s.card ≤ (s.bunionᵢ t).card
+    suffices ∀ s : Finset L, s.card ≤ (s.biUnion t).card
       by
       -- Hall's marriage theorem
-      obtain ⟨f, hf1, hf2⟩ := (Finset.all_card_le_bunionᵢ_card_iff_exists_injective t).mp this
+      obtain ⟨f, hf1, hf2⟩ := (Finset.all_card_le_biUnion_card_iff_exists_injective t).mp this
       exact ⟨f, hf1, fun l => set.mem_to_finset.mp (hf2 l)⟩
     intro s
     by_cases hs₀ : s.card = 0
@@ -139,7 +139,7 @@ theorem Nondegenerate.exists_injective_of_card_le [Nondegenerate P L] [Fintype P
     -- If `s = {l}`, then pick a point `p ∉ l`
     · obtain ⟨l, rfl⟩ := finset.card_eq_one.mp hs₁
       obtain ⟨p, hl⟩ := exists_point l
-      rw [Finset.card_singleton, Finset.singleton_bunionᵢ, Nat.one_le_iff_ne_zero]
+      rw [Finset.card_singleton, Finset.singleton_biUnion, Nat.one_le_iff_ne_zero]
       exact Finset.card_ne_zero_of_mem (set.mem_to_finset.mpr hl)
     suffices s.bUnion tᶜ.card ≤ sᶜ.card
       by
@@ -152,7 +152,7 @@ theorem Nondegenerate.exists_injective_of_card_le [Nondegenerate P L] [Fintype P
       by
       -- At most one line through two points of `s`
       refine' finset.card_le_one_iff.mpr fun p₁ p₂ hp₁ hp₂ => _
-      simp_rw [Finset.mem_compl, Finset.mem_bunionᵢ, exists_prop, not_exists, not_and,
+      simp_rw [Finset.mem_compl, Finset.mem_biUnion, exists_prop, not_exists, not_and,
         Set.mem_toFinset, Set.mem_setOf_eq, Classical.not_not] at hp₁ hp₂
       obtain ⟨l₁, l₂, hl₁, hl₂, hl₃⟩ :=
         finset.one_lt_card_iff.mp (nat.one_lt_iff_ne_zero_and_ne_one.mpr ⟨hs₀, hs₁⟩)

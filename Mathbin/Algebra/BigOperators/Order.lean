@@ -314,11 +314,11 @@ theorem pow_card_le_prod (s : Finset ι) (f : ι → N) (n : N) (h : ∀ x ∈ s
 #align finset.pow_card_le_prod Finset.pow_card_le_prod
 #align finset.card_nsmul_le_sum Finset.card_nsmul_le_sum
 
-#print Finset.card_bunionᵢ_le_card_mul /-
-theorem card_bunionᵢ_le_card_mul [DecidableEq β] (s : Finset ι) (f : ι → Finset β) (n : ℕ)
-    (h : ∀ a ∈ s, (f a).card ≤ n) : (s.bunionᵢ f).card ≤ s.card * n :=
-  card_bunionᵢ_le.trans <| sum_le_card_nsmul _ _ _ h
-#align finset.card_bUnion_le_card_mul Finset.card_bunionᵢ_le_card_mul
+#print Finset.card_biUnion_le_card_mul /-
+theorem card_biUnion_le_card_mul [DecidableEq β] (s : Finset ι) (f : ι → Finset β) (n : ℕ)
+    (h : ∀ a ∈ s, (f a).card ≤ n) : (s.biUnion f).card ≤ s.card * n :=
+  card_biUnion_le.trans <| sum_le_card_nsmul _ _ _ h
+#align finset.card_bUnion_le_card_mul Finset.card_biUnion_le_card_mul
 -/
 
 variable {ι' : Type _} [DecidableEq ι']
@@ -535,28 +535,28 @@ theorem sum_card [Fintype α] (h : ∀ a, (B.filterₓ <| (· ∈ ·) a).card = 
 #align finset.sum_card Finset.sum_card
 -/
 
-/- warning: finset.card_le_card_bUnion -> Finset.card_le_card_bunionᵢ is a dubious translation:
+/- warning: finset.card_le_card_bUnion -> Finset.card_le_card_biUnion is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} α] {s : Finset.{u1} ι} {f : ι -> (Finset.{u2} α)}, (Set.PairwiseDisjoint.{u2, u1} (Finset.{u2} α) ι (Finset.partialOrder.{u2} α) (Finset.orderBot.{u2} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} ι) (Set.{u1} ι) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (Finset.Set.hasCoeT.{u1} ι))) s) f) -> (forall (i : ι), (Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i s) -> (Finset.Nonempty.{u2} α (f i))) -> (LE.le.{0} Nat Nat.hasLe (Finset.card.{u1} ι s) (Finset.card.{u2} α (Finset.bunionᵢ.{u1, u2} ι α (fun (a : α) (b : α) => _inst_1 a b) s f)))
+  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} α] {s : Finset.{u1} ι} {f : ι -> (Finset.{u2} α)}, (Set.PairwiseDisjoint.{u2, u1} (Finset.{u2} α) ι (Finset.partialOrder.{u2} α) (Finset.orderBot.{u2} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} ι) (Set.{u1} ι) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (Finset.Set.hasCoeT.{u1} ι))) s) f) -> (forall (i : ι), (Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i s) -> (Finset.Nonempty.{u2} α (f i))) -> (LE.le.{0} Nat Nat.hasLe (Finset.card.{u1} ι s) (Finset.card.{u2} α (Finset.biUnion.{u1, u2} ι α (fun (a : α) (b : α) => _inst_1 a b) s f)))
 but is expected to have type
-  forall {ι : Type.{u2}} {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u2} ι} {f : ι -> (Finset.{u1} α)}, (Set.PairwiseDisjoint.{u1, u2} (Finset.{u1} α) ι (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (Finset.toSet.{u2} ι s) f) -> (forall (i : ι), (Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i s) -> (Finset.Nonempty.{u1} α (f i))) -> (LE.le.{0} Nat instLENat (Finset.card.{u2} ι s) (Finset.card.{u1} α (Finset.bunionᵢ.{u2, u1} ι α (fun (a : α) (b : α) => _inst_1 a b) s f)))
-Case conversion may be inaccurate. Consider using '#align finset.card_le_card_bUnion Finset.card_le_card_bunionᵢₓ'. -/
-theorem card_le_card_bunionᵢ {s : Finset ι} {f : ι → Finset α} (hs : (s : Set ι).PairwiseDisjoint f)
-    (hf : ∀ i ∈ s, (f i).Nonempty) : s.card ≤ (s.bunionᵢ f).card :=
+  forall {ι : Type.{u2}} {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u2} ι} {f : ι -> (Finset.{u1} α)}, (Set.PairwiseDisjoint.{u1, u2} (Finset.{u1} α) ι (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (Finset.toSet.{u2} ι s) f) -> (forall (i : ι), (Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i s) -> (Finset.Nonempty.{u1} α (f i))) -> (LE.le.{0} Nat instLENat (Finset.card.{u2} ι s) (Finset.card.{u1} α (Finset.biUnion.{u2, u1} ι α (fun (a : α) (b : α) => _inst_1 a b) s f)))
+Case conversion may be inaccurate. Consider using '#align finset.card_le_card_bUnion Finset.card_le_card_biUnionₓ'. -/
+theorem card_le_card_biUnion {s : Finset ι} {f : ι → Finset α} (hs : (s : Set ι).PairwiseDisjoint f)
+    (hf : ∀ i ∈ s, (f i).Nonempty) : s.card ≤ (s.biUnion f).card :=
   by
   rw [card_bUnion hs, card_eq_sum_ones]
   exact sum_le_sum fun i hi => (hf i hi).card_pos
-#align finset.card_le_card_bUnion Finset.card_le_card_bunionᵢ
+#align finset.card_le_card_bUnion Finset.card_le_card_biUnion
 
-/- warning: finset.card_le_card_bUnion_add_card_fiber -> Finset.card_le_card_bunionᵢ_add_card_fiber is a dubious translation:
+/- warning: finset.card_le_card_bUnion_add_card_fiber -> Finset.card_le_card_biUnion_add_card_fiber is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} α] {s : Finset.{u1} ι} {f : ι -> (Finset.{u2} α)}, (Set.PairwiseDisjoint.{u2, u1} (Finset.{u2} α) ι (Finset.partialOrder.{u2} α) (Finset.orderBot.{u2} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} ι) (Set.{u1} ι) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (Finset.Set.hasCoeT.{u1} ι))) s) f) -> (LE.le.{0} Nat Nat.hasLe (Finset.card.{u1} ι s) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (Finset.card.{u2} α (Finset.bunionᵢ.{u1, u2} ι α (fun (a : α) (b : α) => _inst_1 a b) s f)) (Finset.card.{u1} ι (Finset.filter.{u1} ι (fun (i : ι) => Eq.{succ u2} (Finset.{u2} α) (f i) (EmptyCollection.emptyCollection.{u2} (Finset.{u2} α) (Finset.hasEmptyc.{u2} α))) (fun (a : ι) => Finset.decidableEq.{u2} α (fun (a : α) (b : α) => _inst_1 a b) (f a) (EmptyCollection.emptyCollection.{u2} (Finset.{u2} α) (Finset.hasEmptyc.{u2} α))) s))))
+  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} α] {s : Finset.{u1} ι} {f : ι -> (Finset.{u2} α)}, (Set.PairwiseDisjoint.{u2, u1} (Finset.{u2} α) ι (Finset.partialOrder.{u2} α) (Finset.orderBot.{u2} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} ι) (Set.{u1} ι) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (Finset.Set.hasCoeT.{u1} ι))) s) f) -> (LE.le.{0} Nat Nat.hasLe (Finset.card.{u1} ι s) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (Finset.card.{u2} α (Finset.biUnion.{u1, u2} ι α (fun (a : α) (b : α) => _inst_1 a b) s f)) (Finset.card.{u1} ι (Finset.filter.{u1} ι (fun (i : ι) => Eq.{succ u2} (Finset.{u2} α) (f i) (EmptyCollection.emptyCollection.{u2} (Finset.{u2} α) (Finset.hasEmptyc.{u2} α))) (fun (a : ι) => Finset.decidableEq.{u2} α (fun (a : α) (b : α) => _inst_1 a b) (f a) (EmptyCollection.emptyCollection.{u2} (Finset.{u2} α) (Finset.hasEmptyc.{u2} α))) s))))
 but is expected to have type
-  forall {ι : Type.{u2}} {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u2} ι} {f : ι -> (Finset.{u1} α)}, (Set.PairwiseDisjoint.{u1, u2} (Finset.{u1} α) ι (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (Finset.toSet.{u2} ι s) f) -> (LE.le.{0} Nat instLENat (Finset.card.{u2} ι s) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (Finset.card.{u1} α (Finset.bunionᵢ.{u2, u1} ι α (fun (a : α) (b : α) => _inst_1 a b) s f)) (Finset.card.{u2} ι (Finset.filter.{u2} ι (fun (i : ι) => Eq.{succ u1} (Finset.{u1} α) (f i) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.instEmptyCollectionFinset.{u1} α))) (fun (a : ι) => Finset.decidableEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (f a) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.instEmptyCollectionFinset.{u1} α))) s))))
-Case conversion may be inaccurate. Consider using '#align finset.card_le_card_bUnion_add_card_fiber Finset.card_le_card_bunionᵢ_add_card_fiberₓ'. -/
-theorem card_le_card_bunionᵢ_add_card_fiber {s : Finset ι} {f : ι → Finset α}
+  forall {ι : Type.{u2}} {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u2} ι} {f : ι -> (Finset.{u1} α)}, (Set.PairwiseDisjoint.{u1, u2} (Finset.{u1} α) ι (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (Finset.toSet.{u2} ι s) f) -> (LE.le.{0} Nat instLENat (Finset.card.{u2} ι s) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (Finset.card.{u1} α (Finset.biUnion.{u2, u1} ι α (fun (a : α) (b : α) => _inst_1 a b) s f)) (Finset.card.{u2} ι (Finset.filter.{u2} ι (fun (i : ι) => Eq.{succ u1} (Finset.{u1} α) (f i) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.instEmptyCollectionFinset.{u1} α))) (fun (a : ι) => Finset.decidableEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (f a) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.instEmptyCollectionFinset.{u1} α))) s))))
+Case conversion may be inaccurate. Consider using '#align finset.card_le_card_bUnion_add_card_fiber Finset.card_le_card_biUnion_add_card_fiberₓ'. -/
+theorem card_le_card_biUnion_add_card_fiber {s : Finset ι} {f : ι → Finset α}
     (hs : (s : Set ι).PairwiseDisjoint f) :
-    s.card ≤ (s.bunionᵢ f).card + (s.filterₓ fun i => f i = ∅).card :=
+    s.card ≤ (s.biUnion f).card + (s.filterₓ fun i => f i = ∅).card :=
   by
   rw [← Finset.filter_card_add_filter_neg_card_eq_card fun i => f i = ∅, add_comm]
   exact
@@ -565,20 +565,20 @@ theorem card_le_card_bunionᵢ_add_card_fiber {s : Finset ι} {f : ι → Finset
             nonempty_of_ne_empty <| (mem_filter.1 hi).2).trans <|
         card_le_of_subset <| bUnion_subset_bUnion_of_subset_left _ <| filter_subset _ _)
       _
-#align finset.card_le_card_bUnion_add_card_fiber Finset.card_le_card_bunionᵢ_add_card_fiber
+#align finset.card_le_card_bUnion_add_card_fiber Finset.card_le_card_biUnion_add_card_fiber
 
-/- warning: finset.card_le_card_bUnion_add_one -> Finset.card_le_card_bunionᵢ_add_one is a dubious translation:
+/- warning: finset.card_le_card_bUnion_add_one -> Finset.card_le_card_biUnion_add_one is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} α] {s : Finset.{u1} ι} {f : ι -> (Finset.{u2} α)}, (Function.Injective.{succ u1, succ u2} ι (Finset.{u2} α) f) -> (Set.PairwiseDisjoint.{u2, u1} (Finset.{u2} α) ι (Finset.partialOrder.{u2} α) (Finset.orderBot.{u2} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} ι) (Set.{u1} ι) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (Finset.Set.hasCoeT.{u1} ι))) s) f) -> (LE.le.{0} Nat Nat.hasLe (Finset.card.{u1} ι s) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (Finset.card.{u2} α (Finset.bunionᵢ.{u1, u2} ι α (fun (a : α) (b : α) => _inst_1 a b) s f)) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))
+  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} α] {s : Finset.{u1} ι} {f : ι -> (Finset.{u2} α)}, (Function.Injective.{succ u1, succ u2} ι (Finset.{u2} α) f) -> (Set.PairwiseDisjoint.{u2, u1} (Finset.{u2} α) ι (Finset.partialOrder.{u2} α) (Finset.orderBot.{u2} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} ι) (Set.{u1} ι) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (Finset.Set.hasCoeT.{u1} ι))) s) f) -> (LE.le.{0} Nat Nat.hasLe (Finset.card.{u1} ι s) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (Finset.card.{u2} α (Finset.biUnion.{u1, u2} ι α (fun (a : α) (b : α) => _inst_1 a b) s f)) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))
 but is expected to have type
-  forall {ι : Type.{u2}} {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u2} ι} {f : ι -> (Finset.{u1} α)}, (Function.Injective.{succ u2, succ u1} ι (Finset.{u1} α) f) -> (Set.PairwiseDisjoint.{u1, u2} (Finset.{u1} α) ι (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (Finset.toSet.{u2} ι s) f) -> (LE.le.{0} Nat instLENat (Finset.card.{u2} ι s) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (Finset.card.{u1} α (Finset.bunionᵢ.{u2, u1} ι α (fun (a : α) (b : α) => _inst_1 a b) s f)) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))
-Case conversion may be inaccurate. Consider using '#align finset.card_le_card_bUnion_add_one Finset.card_le_card_bunionᵢ_add_oneₓ'. -/
-theorem card_le_card_bunionᵢ_add_one {s : Finset ι} {f : ι → Finset α} (hf : Injective f)
-    (hs : (s : Set ι).PairwiseDisjoint f) : s.card ≤ (s.bunionᵢ f).card + 1 :=
-  (card_le_card_bunionᵢ_add_card_fiber hs).trans <|
+  forall {ι : Type.{u2}} {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u2} ι} {f : ι -> (Finset.{u1} α)}, (Function.Injective.{succ u2, succ u1} ι (Finset.{u1} α) f) -> (Set.PairwiseDisjoint.{u1, u2} (Finset.{u1} α) ι (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (Finset.toSet.{u2} ι s) f) -> (LE.le.{0} Nat instLENat (Finset.card.{u2} ι s) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (Finset.card.{u1} α (Finset.biUnion.{u2, u1} ι α (fun (a : α) (b : α) => _inst_1 a b) s f)) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))
+Case conversion may be inaccurate. Consider using '#align finset.card_le_card_bUnion_add_one Finset.card_le_card_biUnion_add_oneₓ'. -/
+theorem card_le_card_biUnion_add_one {s : Finset ι} {f : ι → Finset α} (hf : Injective f)
+    (hs : (s : Set ι).PairwiseDisjoint f) : s.card ≤ (s.biUnion f).card + 1 :=
+  (card_le_card_biUnion_add_card_fiber hs).trans <|
     add_le_add_left
       (card_le_one.2 fun i hi j hj => hf <| (mem_filter.1 hi).2.trans (mem_filter.1 hj).2.symm) _
-#align finset.card_le_card_bUnion_add_one Finset.card_le_card_bunionᵢ_add_one
+#align finset.card_le_card_bUnion_add_one Finset.card_le_card_biUnion_add_one
 
 end DoubleCounting
 

@@ -736,7 +736,7 @@ theorem isOpenMap_quotient_mk'_mul [ContinuousConstSMul Γ T] :
   by
   intro U hU
   rw [isOpen_coinduced, MulAction.quotient_preimage_image_eq_union_mul U]
-  exact isOpen_unionᵢ fun γ => (Homeomorph.smul γ).IsOpenMap U hU
+  exact isOpen_iUnion fun γ => (Homeomorph.smul γ).IsOpenMap U hU
 #align is_open_map_quotient_mk_mul isOpenMap_quotient_mk'_mul
 #align is_open_map_quotient_mk_add isOpenMap_quotient_mk'_add
 

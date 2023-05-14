@@ -184,7 +184,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align pmf.mem_support_bind_iff Pmf.mem_support_bind_iffₓ'. -/
 theorem mem_support_bind_iff (b : β) :
     b ∈ (p.bind f).support ↔ ∃ a ∈ p.support, b ∈ (f a).support := by
-  simp only [support_bind, Set.mem_unionᵢ, Set.mem_setOf_eq]
+  simp only [support_bind, Set.mem_iUnion, Set.mem_setOf_eq]
 #align pmf.mem_support_bind_iff Pmf.mem_support_bind_iff
 
 #print Pmf.pure_bind /-
@@ -334,7 +334,7 @@ theorem support_bindOnSupport :
   by
   refine' Set.ext fun b => _
   simp only [ENNReal.tsum_eq_zero, not_or, mem_support_iff, bind_on_support_apply, Ne.def,
-    not_forall, mul_eq_zero, Set.mem_unionᵢ]
+    not_forall, mul_eq_zero, Set.mem_iUnion]
   exact
     ⟨fun hb =>
       let ⟨a, ⟨ha, ha'⟩⟩ := hb
@@ -348,7 +348,7 @@ theorem support_bindOnSupport :
 #print Pmf.mem_support_bindOnSupport_iff /-
 theorem mem_support_bindOnSupport_iff (b : β) :
     b ∈ (p.bindOnSupport f).support ↔ ∃ (a : α)(h : a ∈ p.support), b ∈ (f a h).support := by
-  simp only [support_bind_on_support, Set.mem_setOf_eq, Set.mem_unionᵢ]
+  simp only [support_bind_on_support, Set.mem_setOf_eq, Set.mem_iUnion]
 #align pmf.mem_support_bind_on_support_iff Pmf.mem_support_bindOnSupport_iff
 -/
 

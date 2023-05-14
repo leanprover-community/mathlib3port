@@ -53,7 +53,7 @@ theorem ultrafilterBasis_is_basis : TopologicalSpace.IsTopologicalBasis (ultrafi
     rintro _ ⟨a, rfl⟩ _ ⟨b, rfl⟩ u ⟨ua, ub⟩
     refine' ⟨_, ⟨a ∩ b, rfl⟩, inter_mem ua ub, fun v hv => ⟨_, _⟩⟩ <;> apply mem_of_superset hv <;>
       simp [inter_subset_right a b],
-    eq_univ_of_univ_subset <| subset_unionₛ_of_mem <| ⟨univ, eq_univ_of_forall fun u => univ_mem⟩,
+    eq_univ_of_univ_subset <| subset_sUnion_of_mem <| ⟨univ, eq_univ_of_forall fun u => univ_mem⟩,
     rfl⟩
 #align ultrafilter_basis_is_basis ultrafilterBasis_is_basis
 -/
@@ -88,7 +88,7 @@ theorem ultrafilter_converges_iff {u : Ultrafilter (Ultrafilter α)} {x : Ultraf
     ↑u ≤ 𝓝 x ↔ x = joinM u := by
   rw [eq_comm, ← Ultrafilter.coe_le_coe]
   change ↑u ≤ 𝓝 x ↔ ∀ s ∈ x, { v : Ultrafilter α | s ∈ v } ∈ u
-  simp only [TopologicalSpace.nhds_generateFrom, le_infᵢ_iff, ultrafilterBasis, le_principal_iff,
+  simp only [TopologicalSpace.nhds_generateFrom, le_iInf_iff, ultrafilterBasis, le_principal_iff,
     mem_set_of_eq]
   constructor
   · intro h a ha
@@ -121,7 +121,7 @@ instance : TotallyDisconnectedSpace (Ultrafilter α) :=
   intro B hB
   rw [← Ultrafilter.coe_le_coe]
   intro s hs
-  rw [connectedComponent_eq_interᵢ_clopen, Set.mem_interᵢ] at hB
+  rw [connectedComponent_eq_iInter_clopen, Set.mem_iInter] at hB
   let Z := { F : Ultrafilter α | s ∈ F }
   have hZ : IsClopen Z := ⟨ultrafilter_isOpen_basic s, ultrafilter_isClosed_basic s⟩
   exact hB ⟨Z, hZ, hs⟩
@@ -138,8 +138,8 @@ theorem ultrafilter_comap_pure_nhds (b : Ultrafilter α) : comap pure (𝓝 b) �
   simp only [comap_infi, comap_principal]
   intro s hs
   rw [← le_principal_iff]
-  refine' infᵢ_le_of_le { u | s ∈ u } _
-  refine' infᵢ_le_of_le ⟨hs, ⟨s, rfl⟩⟩ _
+  refine' iInf_le_of_le { u | s ∈ u } _
+  refine' iInf_le_of_le ⟨hs, ⟨s, rfl⟩⟩ _
   exact principal_mono.2 fun a => id
 #align ultrafilter_comap_pure_nhds ultrafilter_comap_pure_nhds
 

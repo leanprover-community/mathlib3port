@@ -79,7 +79,7 @@ def hallMatchingsOn.restrict {ι : Type u} {α : Type v} (t : ι → Finset α) 
 /-- When the Hall condition is satisfied, the set of matchings on a finite set is nonempty.
 This is where `finset.all_card_le_bUnion_card_iff_exists_injective'` comes into the argument. -/
 theorem hallMatchingsOn.nonempty {ι : Type u} {α : Type v} [DecidableEq α] (t : ι → Finset α)
-    (h : ∀ s : Finset ι, s.card ≤ (s.bunionᵢ t).card) (ι' : Finset ι) :
+    (h : ∀ s : Finset ι, s.card ≤ (s.biUnion t).card) (ι' : Finset ι) :
     Nonempty (hallMatchingsOn t ι') := by
   classical
     refine' ⟨Classical.indefiniteDescription _ _⟩
@@ -126,9 +126,9 @@ Recall that `s.bUnion t` is the union of all the sets `t i` for `i ∈ s`.
 This theorem is bootstrapped from `finset.all_card_le_bUnion_card_iff_exists_injective'`,
 which has the additional constraint that `ι` is a `fintype`.
 -/
-theorem Finset.all_card_le_bunionᵢ_card_iff_exists_injective {ι : Type u} {α : Type v}
+theorem Finset.all_card_le_biUnion_card_iff_exists_injective {ι : Type u} {α : Type v}
     [DecidableEq α] (t : ι → Finset α) :
-    (∀ s : Finset ι, s.card ≤ (s.bunionᵢ t).card) ↔
+    (∀ s : Finset ι, s.card ≤ (s.biUnion t).card) ↔
       ∃ f : ι → α, Function.Injective f ∧ ∀ x, f x ∈ t x :=
   by
   constructor
@@ -165,10 +165,10 @@ theorem Finset.all_card_le_bunionᵢ_card_iff_exists_injective {ι : Type u} {α
     rw [← Finset.card_image_of_injective s hf₁]
     apply Finset.card_le_of_subset
     intro
-    rw [Finset.mem_image, Finset.mem_bunionᵢ]
+    rw [Finset.mem_image, Finset.mem_biUnion]
     rintro ⟨x, hx, rfl⟩
     exact ⟨x, hx, hf₂ x⟩
-#align finset.all_card_le_bUnion_card_iff_exists_injective Finset.all_card_le_bunionᵢ_card_iff_exists_injective
+#align finset.all_card_le_bUnion_card_iff_exists_injective Finset.all_card_le_biUnion_card_iff_exists_injective
 
 /-- Given a relation such that the image of every singleton set is finite, then the image of every
 finite set is finite. -/
@@ -198,7 +198,7 @@ theorem Fintype.all_card_le_rel_image_card_iff_exists_injective {α : Type u} {�
       ∃ f : α → β, Function.Injective f ∧ ∀ x, r x (f x) :=
   by
   let r' a := (Rel.image r {a}).toFinset
-  have h : ∀ A : Finset α, Fintype.card (Rel.image r A) = (A.bunionᵢ r').card :=
+  have h : ∀ A : Finset α, Fintype.card (Rel.image r A) = (A.biUnion r').card :=
     by
     intro A
     rw [← Set.toFinset_card]
@@ -207,7 +207,7 @@ theorem Fintype.all_card_le_rel_image_card_iff_exists_injective {α : Type u} {�
     simp [Rel.image]
   have h' : ∀ (f : α → β) (x), r x (f x) ↔ f x ∈ r' x := by simp [Rel.image]
   simp only [h, h']
-  apply Finset.all_card_le_bunionᵢ_card_iff_exists_injective
+  apply Finset.all_card_le_biUnion_card_iff_exists_injective
 #align fintype.all_card_le_rel_image_card_iff_exists_injective Fintype.all_card_le_rel_image_card_iff_exists_injective
 
 -- TODO: decidable_pred makes Yael sad. When an appropriate decidable_rel-like exists, fix it.
@@ -225,13 +225,13 @@ theorem Fintype.all_card_le_filter_rel_iff_exists_injective {α : Type u} {β : 
   by
   haveI := Classical.decEq β
   let r' a := univ.filter fun b => r a b
-  have h : ∀ A : Finset α, (univ.filter fun b : β => ∃ a ∈ A, r a b) = A.bunionᵢ r' :=
+  have h : ∀ A : Finset α, (univ.filter fun b : β => ∃ a ∈ A, r a b) = A.biUnion r' :=
     by
     intro A
     ext b
     simp
   have h' : ∀ (f : α → β) (x), r x (f x) ↔ f x ∈ r' x := by simp
   simp_rw [h, h']
-  apply Finset.all_card_le_bunionᵢ_card_iff_exists_injective
+  apply Finset.all_card_le_biUnion_card_iff_exists_injective
 #align fintype.all_card_le_filter_rel_iff_exists_injective Fintype.all_card_le_filter_rel_iff_exists_injective
 

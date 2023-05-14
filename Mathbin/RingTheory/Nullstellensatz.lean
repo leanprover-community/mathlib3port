@@ -198,7 +198,7 @@ theorem vanishingIdeal_zeroLocus_eq_radical (I : Ideal (MvPolynomial σ k)) :
     vanishingIdeal (zeroLocus I) = I.radical :=
   by
   rw [I.radical_eq_jacobson]
-  refine' le_antisymm (le_infₛ _) fun p hp x hx => _
+  refine' le_antisymm (le_sInf _) fun p hp x hx => _
   · rintro J ⟨hJI, hJ⟩
     obtain ⟨x, hx⟩ := (is_maximal_iff_eq_vanishing_ideal_singleton J).1 hJ
     refine' hx.symm ▸ vanishing_ideal_anti_mono fun y hy p hp => _

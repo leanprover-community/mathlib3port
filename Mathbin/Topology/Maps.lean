@@ -130,7 +130,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align inducing.nhds_set_eq_comap Inducing.nhdsSet_eq_comapₓ'. -/
 theorem Inducing.nhdsSet_eq_comap {f : α → β} (hf : Inducing f) (s : Set α) :
     𝓝ˢ s = comap f (𝓝ˢ (f '' s)) := by
-  simp only [nhdsSet, supₛ_image, comap_supr, hf.nhds_eq_comap, supᵢ_image]
+  simp only [nhdsSet, sSup_image, comap_supr, hf.nhds_eq_comap, iSup_image]
 #align inducing.nhds_set_eq_comap Inducing.nhdsSet_eq_comap
 
 /- warning: inducing.map_nhds_eq -> Inducing.map_nhds_eq is a dubious translation:

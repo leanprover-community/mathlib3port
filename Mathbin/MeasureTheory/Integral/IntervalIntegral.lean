@@ -1497,7 +1497,7 @@ theorem MeasureTheory.Integrable.hasSum_intervalIntegral (hfi : Integrable f μ)
     HasSum (fun n : ℤ => ∫ x in y + n..y + n + 1, f x ∂μ) (∫ x, f x ∂μ) :=
   by
   simp_rw [integral_of_le (le_add_of_nonneg_right zero_le_one)]
-  rw [← integral_univ, ← unionᵢ_Ioc_add_int_cast y]
+  rw [← integral_univ, ← iUnion_Ioc_add_int_cast y]
   exact
     has_sum_integral_Union (fun i => measurableSet_Ioc) (pairwise_disjoint_Ioc_add_int_cast y)
       hfi.integrable_on

@@ -71,14 +71,14 @@ If there is no largest such `n` (e.g. because `p = ⊥`), then `ramification_idx
 defined to be 0.
 -/
 noncomputable def ramificationIdx : ℕ :=
-  supₛ { n | map f p ≤ P ^ n }
+  sSup { n | map f p ≤ P ^ n }
 #align ideal.ramification_idx Ideal.ramificationIdx
 
 variable {f p P}
 
 theorem ramificationIdx_eq_find (h : ∃ n, ∀ k, map f p ≤ P ^ k → k ≤ n) :
     ramificationIdx f p P = Nat.find h :=
-  Nat.supₛ_def h
+  Nat.sSup_def h
 #align ideal.ramification_idx_eq_find Ideal.ramificationIdx_eq_find
 
 theorem ramificationIdx_eq_zero (h : ∀ n : ℕ, ∃ k, map f p ≤ P ^ k ∧ n < k) :

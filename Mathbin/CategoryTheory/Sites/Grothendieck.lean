@@ -339,8 +339,8 @@ instance : PartialOrder (GrothendieckTopology C) :=
 
 /-- See <https://stacks.math.columbia.edu/tag/00Z7> -/
 instance : InfSet (GrothendieckTopology C)
-    where infₛ T :=
-    { sieves := infₛ (sieves '' T)
+    where sInf T :=
+    { sieves := sInf (sieves '' T)
       top_mem' := by
         rintro X S ⟨⟨_, J, hJ, rfl⟩, rfl⟩
         simp
@@ -352,29 +352,29 @@ instance : InfSet (GrothendieckTopology C)
         apply
           J.transitive (hS _ ⟨⟨_, _, hJ, rfl⟩, rfl⟩) _ fun Y f hf => h hf _ ⟨⟨_, _, hJ, rfl⟩, rfl⟩ }
 
-/- warning: category_theory.grothendieck_topology.is_glb_Inf -> CategoryTheory.GrothendieckTopology.isGLB_infₛ is a dubious translation:
+/- warning: category_theory.grothendieck_topology.is_glb_Inf -> CategoryTheory.GrothendieckTopology.isGLB_sInf is a dubious translation:
 lean 3 declaration is
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] (s : Set.{max u2 u1} (CategoryTheory.GrothendieckTopology.{u1, u2} C _inst_1)), IsGLB.{max u2 u1} (CategoryTheory.GrothendieckTopology.{u1, u2} C _inst_1) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.GrothendieckTopology.{u1, u2} C _inst_1) (CategoryTheory.GrothendieckTopology.partialOrder.{u1, u2} C _inst_1)) s (InfSet.infₛ.{max u2 u1} (CategoryTheory.GrothendieckTopology.{u1, u2} C _inst_1) (CategoryTheory.GrothendieckTopology.hasInf.{u1, u2} C _inst_1) s)
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] (s : Set.{max u2 u1} (CategoryTheory.GrothendieckTopology.{u1, u2} C _inst_1)), IsGLB.{max u2 u1} (CategoryTheory.GrothendieckTopology.{u1, u2} C _inst_1) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.GrothendieckTopology.{u1, u2} C _inst_1) (CategoryTheory.GrothendieckTopology.partialOrder.{u1, u2} C _inst_1)) s (InfSet.sInf.{max u2 u1} (CategoryTheory.GrothendieckTopology.{u1, u2} C _inst_1) (CategoryTheory.GrothendieckTopology.hasInf.{u1, u2} C _inst_1) s)
 but is expected to have type
-  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] (s : Set.{max u2 u1} (CategoryTheory.GrothendieckTopology.{u1, u2} C _inst_1)), IsGLB.{max u2 u1} (CategoryTheory.GrothendieckTopology.{u1, u2} C _inst_1) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.GrothendieckTopology.{u1, u2} C _inst_1) (CategoryTheory.GrothendieckTopology.instPartialOrderGrothendieckTopology.{u1, u2} C _inst_1)) s (InfSet.infₛ.{max u2 u1} (CategoryTheory.GrothendieckTopology.{u1, u2} C _inst_1) (CategoryTheory.GrothendieckTopology.instInfSetGrothendieckTopology.{u1, u2} C _inst_1) s)
-Case conversion may be inaccurate. Consider using '#align category_theory.grothendieck_topology.is_glb_Inf CategoryTheory.GrothendieckTopology.isGLB_infₛₓ'. -/
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] (s : Set.{max u2 u1} (CategoryTheory.GrothendieckTopology.{u1, u2} C _inst_1)), IsGLB.{max u2 u1} (CategoryTheory.GrothendieckTopology.{u1, u2} C _inst_1) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.GrothendieckTopology.{u1, u2} C _inst_1) (CategoryTheory.GrothendieckTopology.instPartialOrderGrothendieckTopology.{u1, u2} C _inst_1)) s (InfSet.sInf.{max u2 u1} (CategoryTheory.GrothendieckTopology.{u1, u2} C _inst_1) (CategoryTheory.GrothendieckTopology.instInfSetGrothendieckTopology.{u1, u2} C _inst_1) s)
+Case conversion may be inaccurate. Consider using '#align category_theory.grothendieck_topology.is_glb_Inf CategoryTheory.GrothendieckTopology.isGLB_sInfₓ'. -/
 /-- See <https://stacks.math.columbia.edu/tag/00Z7> -/
-theorem isGLB_infₛ (s : Set (GrothendieckTopology C)) : IsGLB s (infₛ s) :=
+theorem isGLB_sInf (s : Set (GrothendieckTopology C)) : IsGLB s (sInf s) :=
   by
   refine' @IsGLB.of_image _ _ _ _ sieves _ _ _ _
   · intros
     rfl
-  · exact isGLB_infₛ _
-#align category_theory.grothendieck_topology.is_glb_Inf CategoryTheory.GrothendieckTopology.isGLB_infₛ
+  · exact isGLB_sInf _
+#align category_theory.grothendieck_topology.is_glb_Inf CategoryTheory.GrothendieckTopology.isGLB_sInf
 
 /-- Construct a complete lattice from the `Inf`, but make the trivial and discrete topologies
 definitionally equal to the bottom and top respectively.
 -/
 instance : CompleteLattice (GrothendieckTopology C) :=
-  CompleteLattice.copy (completeLatticeOfInf _ isGLB_infₛ) _ rfl (discrete C)
+  CompleteLattice.copy (completeLatticeOfInf _ isGLB_sInf) _ rfl (discrete C)
     (by
       apply le_antisymm
-      · exact @CompleteLattice.le_top _ (completeLatticeOfInf _ isGLB_infₛ) (discrete C)
+      · exact @CompleteLattice.le_top _ (completeLatticeOfInf _ isGLB_sInf) (discrete C)
       · intro X S hS
         apply Set.mem_univ)
     (trivial C)
@@ -383,8 +383,8 @@ instance : CompleteLattice (GrothendieckTopology C) :=
       · intro X S hS
         rw [trivial_covering] at hS
         apply covering_of_eq_top _ hS
-      · refine' @CompleteLattice.bot_le _ (completeLatticeOfInf _ isGLB_infₛ) (trivial C))
-    _ rfl _ rfl _ rfl infₛ rfl
+      · refine' @CompleteLattice.bot_le _ (completeLatticeOfInf _ isGLB_sInf) (trivial C))
+    _ rfl _ rfl _ rfl sInf rfl
 
 instance : Inhabited (GrothendieckTopology C) :=
   ⟨⊤⟩

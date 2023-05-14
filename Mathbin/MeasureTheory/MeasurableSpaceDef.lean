@@ -59,7 +59,7 @@ structure MeasurableSpace (α : Type _) where
   MeasurableSet' : Set α → Prop
   measurable_set_empty : measurable_set' ∅
   measurable_set_compl : ∀ s, measurable_set' s → measurable_set' (sᶜ)
-  measurable_set_unionᵢ : ∀ f : ℕ → Set α, (∀ i, measurable_set' (f i)) → measurable_set' (⋃ i, f i)
+  measurable_set_iUnion : ∀ f : ℕ → Set α, (∀ i, measurable_set' (f i)) → measurable_set' (⋃ i, f i)
 #align measurable_space MeasurableSpace
 -/
 
@@ -142,130 +142,130 @@ theorem MeasurableSet.congr {s t : Set α} (hs : MeasurableSet s) (h : s = t) : 
 #align measurable_set.congr MeasurableSet.congr
 -/
 
-#print MeasurableSet.bunionᵢ_decode₂ /-
-theorem MeasurableSet.bunionᵢ_decode₂ [Encodable β] ⦃f : β → Set α⦄ (h : ∀ b, MeasurableSet (f b))
+#print MeasurableSet.biUnion_decode₂ /-
+theorem MeasurableSet.biUnion_decode₂ [Encodable β] ⦃f : β → Set α⦄ (h : ∀ b, MeasurableSet (f b))
     (n : ℕ) : MeasurableSet (⋃ b ∈ decode₂ β n, f b) :=
-  Encodable.unionᵢ_decode₂_cases MeasurableSet.empty h
-#align measurable_set.bUnion_decode₂ MeasurableSet.bunionᵢ_decode₂
+  Encodable.iUnion_decode₂_cases MeasurableSet.empty h
+#align measurable_set.bUnion_decode₂ MeasurableSet.biUnion_decode₂
 -/
 
-#print MeasurableSet.unionᵢ /-
-theorem MeasurableSet.unionᵢ [Countable ι] ⦃f : ι → Set α⦄ (h : ∀ b, MeasurableSet (f b)) :
+#print MeasurableSet.iUnion /-
+theorem MeasurableSet.iUnion [Countable ι] ⦃f : ι → Set α⦄ (h : ∀ b, MeasurableSet (f b)) :
     MeasurableSet (⋃ b, f b) := by
   cases nonempty_encodable (PLift ι)
-  rw [← Union_plift_down, ← Encodable.unionᵢ_decode₂]
-  exact ‹MeasurableSpace α›.measurable_set_unionᵢ _ (MeasurableSet.bunionᵢ_decode₂ fun _ => h _)
-#align measurable_set.Union MeasurableSet.unionᵢ
+  rw [← Union_plift_down, ← Encodable.iUnion_decode₂]
+  exact ‹MeasurableSpace α›.measurable_set_iUnion _ (MeasurableSet.biUnion_decode₂ fun _ => h _)
+#align measurable_set.Union MeasurableSet.iUnion
 -/
 
-/- warning: measurable_set.bUnion -> MeasurableSet.bunionᵢ is a dubious translation:
+/- warning: measurable_set.bUnion -> MeasurableSet.biUnion is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {f : β -> (Set.{u1} α)} {s : Set.{u2} β}, (Set.Countable.{u2} β s) -> (forall (b : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) b s) -> (MeasurableSet.{u1} α m (f b))) -> (MeasurableSet.{u1} α m (Set.unionᵢ.{u1, succ u2} α β (fun (b : β) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) b s) (fun (H : Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) b s) => f b))))
+  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {f : β -> (Set.{u1} α)} {s : Set.{u2} β}, (Set.Countable.{u2} β s) -> (forall (b : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) b s) -> (MeasurableSet.{u1} α m (f b))) -> (MeasurableSet.{u1} α m (Set.iUnion.{u1, succ u2} α β (fun (b : β) => Set.iUnion.{u1, 0} α (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) b s) (fun (H : Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) b s) => f b))))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {f : β -> (Set.{u2} α)} {s : Set.{u1} β}, (Set.Countable.{u1} β s) -> (forall (b : β), (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) b s) -> (MeasurableSet.{u2} α m (f b))) -> (MeasurableSet.{u2} α m (Set.unionᵢ.{u2, succ u1} α β (fun (b : β) => Set.unionᵢ.{u2, 0} α (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) b s) (fun (H : Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) b s) => f b))))
-Case conversion may be inaccurate. Consider using '#align measurable_set.bUnion MeasurableSet.bunionᵢₓ'. -/
-theorem MeasurableSet.bunionᵢ {f : β → Set α} {s : Set β} (hs : s.Countable)
+  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {f : β -> (Set.{u2} α)} {s : Set.{u1} β}, (Set.Countable.{u1} β s) -> (forall (b : β), (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) b s) -> (MeasurableSet.{u2} α m (f b))) -> (MeasurableSet.{u2} α m (Set.iUnion.{u2, succ u1} α β (fun (b : β) => Set.iUnion.{u2, 0} α (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) b s) (fun (H : Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) b s) => f b))))
+Case conversion may be inaccurate. Consider using '#align measurable_set.bUnion MeasurableSet.biUnionₓ'. -/
+theorem MeasurableSet.biUnion {f : β → Set α} {s : Set β} (hs : s.Countable)
     (h : ∀ b ∈ s, MeasurableSet (f b)) : MeasurableSet (⋃ b ∈ s, f b) :=
   by
   rw [bUnion_eq_Union]
   haveI := hs.to_encodable
-  exact MeasurableSet.unionᵢ (by simpa using h)
-#align measurable_set.bUnion MeasurableSet.bunionᵢ
+  exact MeasurableSet.iUnion (by simpa using h)
+#align measurable_set.bUnion MeasurableSet.biUnion
 
-/- warning: set.finite.measurable_set_bUnion -> Set.Finite.measurableSet_bunionᵢ is a dubious translation:
+/- warning: set.finite.measurable_set_bUnion -> Set.Finite.measurableSet_biUnion is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {f : β -> (Set.{u1} α)} {s : Set.{u2} β}, (Set.Finite.{u2} β s) -> (forall (b : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) b s) -> (MeasurableSet.{u1} α m (f b))) -> (MeasurableSet.{u1} α m (Set.unionᵢ.{u1, succ u2} α β (fun (b : β) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) b s) (fun (H : Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) b s) => f b))))
+  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {f : β -> (Set.{u1} α)} {s : Set.{u2} β}, (Set.Finite.{u2} β s) -> (forall (b : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) b s) -> (MeasurableSet.{u1} α m (f b))) -> (MeasurableSet.{u1} α m (Set.iUnion.{u1, succ u2} α β (fun (b : β) => Set.iUnion.{u1, 0} α (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) b s) (fun (H : Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) b s) => f b))))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {f : β -> (Set.{u2} α)} {s : Set.{u1} β}, (Set.Finite.{u1} β s) -> (forall (b : β), (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) b s) -> (MeasurableSet.{u2} α m (f b))) -> (MeasurableSet.{u2} α m (Set.unionᵢ.{u2, succ u1} α β (fun (b : β) => Set.unionᵢ.{u2, 0} α (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) b s) (fun (H : Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) b s) => f b))))
-Case conversion may be inaccurate. Consider using '#align set.finite.measurable_set_bUnion Set.Finite.measurableSet_bunionᵢₓ'. -/
-theorem Set.Finite.measurableSet_bunionᵢ {f : β → Set α} {s : Set β} (hs : s.Finite)
+  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {f : β -> (Set.{u2} α)} {s : Set.{u1} β}, (Set.Finite.{u1} β s) -> (forall (b : β), (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) b s) -> (MeasurableSet.{u2} α m (f b))) -> (MeasurableSet.{u2} α m (Set.iUnion.{u2, succ u1} α β (fun (b : β) => Set.iUnion.{u2, 0} α (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) b s) (fun (H : Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) b s) => f b))))
+Case conversion may be inaccurate. Consider using '#align set.finite.measurable_set_bUnion Set.Finite.measurableSet_biUnionₓ'. -/
+theorem Set.Finite.measurableSet_biUnion {f : β → Set α} {s : Set β} (hs : s.Finite)
     (h : ∀ b ∈ s, MeasurableSet (f b)) : MeasurableSet (⋃ b ∈ s, f b) :=
-  MeasurableSet.bunionᵢ hs.Countable h
-#align set.finite.measurable_set_bUnion Set.Finite.measurableSet_bunionᵢ
+  MeasurableSet.biUnion hs.Countable h
+#align set.finite.measurable_set_bUnion Set.Finite.measurableSet_biUnion
 
-/- warning: finset.measurable_set_bUnion -> Finset.measurableSet_bunionᵢ is a dubious translation:
+/- warning: finset.measurable_set_bUnion -> Finset.measurableSet_biUnion is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {f : β -> (Set.{u1} α)} (s : Finset.{u2} β), (forall (b : β), (Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) b s) -> (MeasurableSet.{u1} α m (f b))) -> (MeasurableSet.{u1} α m (Set.unionᵢ.{u1, succ u2} α β (fun (b : β) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) b s) (fun (H : Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) b s) => f b))))
+  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {f : β -> (Set.{u1} α)} (s : Finset.{u2} β), (forall (b : β), (Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) b s) -> (MeasurableSet.{u1} α m (f b))) -> (MeasurableSet.{u1} α m (Set.iUnion.{u1, succ u2} α β (fun (b : β) => Set.iUnion.{u1, 0} α (Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) b s) (fun (H : Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) b s) => f b))))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {f : β -> (Set.{u2} α)} (s : Finset.{u1} β), (forall (b : β), (Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) b s) -> (MeasurableSet.{u2} α m (f b))) -> (MeasurableSet.{u2} α m (Set.unionᵢ.{u2, succ u1} α β (fun (b : β) => Set.unionᵢ.{u2, 0} α (Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) b s) (fun (H : Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) b s) => f b))))
-Case conversion may be inaccurate. Consider using '#align finset.measurable_set_bUnion Finset.measurableSet_bunionᵢₓ'. -/
-theorem Finset.measurableSet_bunionᵢ {f : β → Set α} (s : Finset β)
+  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {f : β -> (Set.{u2} α)} (s : Finset.{u1} β), (forall (b : β), (Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) b s) -> (MeasurableSet.{u2} α m (f b))) -> (MeasurableSet.{u2} α m (Set.iUnion.{u2, succ u1} α β (fun (b : β) => Set.iUnion.{u2, 0} α (Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) b s) (fun (H : Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) b s) => f b))))
+Case conversion may be inaccurate. Consider using '#align finset.measurable_set_bUnion Finset.measurableSet_biUnionₓ'. -/
+theorem Finset.measurableSet_biUnion {f : β → Set α} (s : Finset β)
     (h : ∀ b ∈ s, MeasurableSet (f b)) : MeasurableSet (⋃ b ∈ s, f b) :=
-  s.finite_toSet.measurableSet_bunionᵢ h
-#align finset.measurable_set_bUnion Finset.measurableSet_bunionᵢ
+  s.finite_toSet.measurableSet_biUnion h
+#align finset.measurable_set_bUnion Finset.measurableSet_biUnion
 
-#print MeasurableSet.unionₛ /-
-theorem MeasurableSet.unionₛ {s : Set (Set α)} (hs : s.Countable) (h : ∀ t ∈ s, MeasurableSet t) :
+#print MeasurableSet.sUnion /-
+theorem MeasurableSet.sUnion {s : Set (Set α)} (hs : s.Countable) (h : ∀ t ∈ s, MeasurableSet t) :
     MeasurableSet (⋃₀ s) := by
   rw [sUnion_eq_bUnion]
-  exact MeasurableSet.bunionᵢ hs h
-#align measurable_set.sUnion MeasurableSet.unionₛ
+  exact MeasurableSet.biUnion hs h
+#align measurable_set.sUnion MeasurableSet.sUnion
 -/
 
-#print Set.Finite.measurableSet_unionₛ /-
-theorem Set.Finite.measurableSet_unionₛ {s : Set (Set α)} (hs : s.Finite)
+#print Set.Finite.measurableSet_sUnion /-
+theorem Set.Finite.measurableSet_sUnion {s : Set (Set α)} (hs : s.Finite)
     (h : ∀ t ∈ s, MeasurableSet t) : MeasurableSet (⋃₀ s) :=
-  MeasurableSet.unionₛ hs.Countable h
-#align set.finite.measurable_set_sUnion Set.Finite.measurableSet_unionₛ
+  MeasurableSet.sUnion hs.Countable h
+#align set.finite.measurable_set_sUnion Set.Finite.measurableSet_sUnion
 -/
 
-#print MeasurableSet.interᵢ /-
-theorem MeasurableSet.interᵢ [Countable ι] {f : ι → Set α} (h : ∀ b, MeasurableSet (f b)) :
+#print MeasurableSet.iInter /-
+theorem MeasurableSet.iInter [Countable ι] {f : ι → Set α} (h : ∀ b, MeasurableSet (f b)) :
     MeasurableSet (⋂ b, f b) :=
   MeasurableSet.compl_iff.1 <| by
     rw [compl_Inter]
-    exact MeasurableSet.unionᵢ fun b => (h b).compl
-#align measurable_set.Inter MeasurableSet.interᵢ
+    exact MeasurableSet.iUnion fun b => (h b).compl
+#align measurable_set.Inter MeasurableSet.iInter
 -/
 
-/- warning: measurable_set.bInter -> MeasurableSet.binterᵢ is a dubious translation:
+/- warning: measurable_set.bInter -> MeasurableSet.biInter is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {f : β -> (Set.{u1} α)} {s : Set.{u2} β}, (Set.Countable.{u2} β s) -> (forall (b : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) b s) -> (MeasurableSet.{u1} α m (f b))) -> (MeasurableSet.{u1} α m (Set.interᵢ.{u1, succ u2} α β (fun (b : β) => Set.interᵢ.{u1, 0} α (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) b s) (fun (H : Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) b s) => f b))))
+  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {f : β -> (Set.{u1} α)} {s : Set.{u2} β}, (Set.Countable.{u2} β s) -> (forall (b : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) b s) -> (MeasurableSet.{u1} α m (f b))) -> (MeasurableSet.{u1} α m (Set.iInter.{u1, succ u2} α β (fun (b : β) => Set.iInter.{u1, 0} α (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) b s) (fun (H : Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) b s) => f b))))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {f : β -> (Set.{u2} α)} {s : Set.{u1} β}, (Set.Countable.{u1} β s) -> (forall (b : β), (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) b s) -> (MeasurableSet.{u2} α m (f b))) -> (MeasurableSet.{u2} α m (Set.interᵢ.{u2, succ u1} α β (fun (b : β) => Set.interᵢ.{u2, 0} α (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) b s) (fun (H : Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) b s) => f b))))
-Case conversion may be inaccurate. Consider using '#align measurable_set.bInter MeasurableSet.binterᵢₓ'. -/
-theorem MeasurableSet.binterᵢ {f : β → Set α} {s : Set β} (hs : s.Countable)
+  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {f : β -> (Set.{u2} α)} {s : Set.{u1} β}, (Set.Countable.{u1} β s) -> (forall (b : β), (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) b s) -> (MeasurableSet.{u2} α m (f b))) -> (MeasurableSet.{u2} α m (Set.iInter.{u2, succ u1} α β (fun (b : β) => Set.iInter.{u2, 0} α (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) b s) (fun (H : Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) b s) => f b))))
+Case conversion may be inaccurate. Consider using '#align measurable_set.bInter MeasurableSet.biInterₓ'. -/
+theorem MeasurableSet.biInter {f : β → Set α} {s : Set β} (hs : s.Countable)
     (h : ∀ b ∈ s, MeasurableSet (f b)) : MeasurableSet (⋂ b ∈ s, f b) :=
   MeasurableSet.compl_iff.1 <| by
     rw [compl_Inter₂]
-    exact MeasurableSet.bunionᵢ hs fun b hb => (h b hb).compl
-#align measurable_set.bInter MeasurableSet.binterᵢ
+    exact MeasurableSet.biUnion hs fun b hb => (h b hb).compl
+#align measurable_set.bInter MeasurableSet.biInter
 
-/- warning: set.finite.measurable_set_bInter -> Set.Finite.measurableSet_binterᵢ is a dubious translation:
+/- warning: set.finite.measurable_set_bInter -> Set.Finite.measurableSet_biInter is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {f : β -> (Set.{u1} α)} {s : Set.{u2} β}, (Set.Finite.{u2} β s) -> (forall (b : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) b s) -> (MeasurableSet.{u1} α m (f b))) -> (MeasurableSet.{u1} α m (Set.interᵢ.{u1, succ u2} α β (fun (b : β) => Set.interᵢ.{u1, 0} α (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) b s) (fun (H : Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) b s) => f b))))
+  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {f : β -> (Set.{u1} α)} {s : Set.{u2} β}, (Set.Finite.{u2} β s) -> (forall (b : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) b s) -> (MeasurableSet.{u1} α m (f b))) -> (MeasurableSet.{u1} α m (Set.iInter.{u1, succ u2} α β (fun (b : β) => Set.iInter.{u1, 0} α (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) b s) (fun (H : Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) b s) => f b))))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {f : β -> (Set.{u2} α)} {s : Set.{u1} β}, (Set.Finite.{u1} β s) -> (forall (b : β), (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) b s) -> (MeasurableSet.{u2} α m (f b))) -> (MeasurableSet.{u2} α m (Set.interᵢ.{u2, succ u1} α β (fun (b : β) => Set.interᵢ.{u2, 0} α (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) b s) (fun (H : Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) b s) => f b))))
-Case conversion may be inaccurate. Consider using '#align set.finite.measurable_set_bInter Set.Finite.measurableSet_binterᵢₓ'. -/
-theorem Set.Finite.measurableSet_binterᵢ {f : β → Set α} {s : Set β} (hs : s.Finite)
+  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {f : β -> (Set.{u2} α)} {s : Set.{u1} β}, (Set.Finite.{u1} β s) -> (forall (b : β), (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) b s) -> (MeasurableSet.{u2} α m (f b))) -> (MeasurableSet.{u2} α m (Set.iInter.{u2, succ u1} α β (fun (b : β) => Set.iInter.{u2, 0} α (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) b s) (fun (H : Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) b s) => f b))))
+Case conversion may be inaccurate. Consider using '#align set.finite.measurable_set_bInter Set.Finite.measurableSet_biInterₓ'. -/
+theorem Set.Finite.measurableSet_biInter {f : β → Set α} {s : Set β} (hs : s.Finite)
     (h : ∀ b ∈ s, MeasurableSet (f b)) : MeasurableSet (⋂ b ∈ s, f b) :=
-  MeasurableSet.binterᵢ hs.Countable h
-#align set.finite.measurable_set_bInter Set.Finite.measurableSet_binterᵢ
+  MeasurableSet.biInter hs.Countable h
+#align set.finite.measurable_set_bInter Set.Finite.measurableSet_biInter
 
-/- warning: finset.measurable_set_bInter -> Finset.measurableSet_binterᵢ is a dubious translation:
+/- warning: finset.measurable_set_bInter -> Finset.measurableSet_biInter is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {f : β -> (Set.{u1} α)} (s : Finset.{u2} β), (forall (b : β), (Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) b s) -> (MeasurableSet.{u1} α m (f b))) -> (MeasurableSet.{u1} α m (Set.interᵢ.{u1, succ u2} α β (fun (b : β) => Set.interᵢ.{u1, 0} α (Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) b s) (fun (H : Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) b s) => f b))))
+  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {f : β -> (Set.{u1} α)} (s : Finset.{u2} β), (forall (b : β), (Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) b s) -> (MeasurableSet.{u1} α m (f b))) -> (MeasurableSet.{u1} α m (Set.iInter.{u1, succ u2} α β (fun (b : β) => Set.iInter.{u1, 0} α (Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) b s) (fun (H : Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) b s) => f b))))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {f : β -> (Set.{u2} α)} (s : Finset.{u1} β), (forall (b : β), (Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) b s) -> (MeasurableSet.{u2} α m (f b))) -> (MeasurableSet.{u2} α m (Set.interᵢ.{u2, succ u1} α β (fun (b : β) => Set.interᵢ.{u2, 0} α (Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) b s) (fun (H : Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) b s) => f b))))
-Case conversion may be inaccurate. Consider using '#align finset.measurable_set_bInter Finset.measurableSet_binterᵢₓ'. -/
-theorem Finset.measurableSet_binterᵢ {f : β → Set α} (s : Finset β)
+  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {f : β -> (Set.{u2} α)} (s : Finset.{u1} β), (forall (b : β), (Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) b s) -> (MeasurableSet.{u2} α m (f b))) -> (MeasurableSet.{u2} α m (Set.iInter.{u2, succ u1} α β (fun (b : β) => Set.iInter.{u2, 0} α (Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) b s) (fun (H : Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) b s) => f b))))
+Case conversion may be inaccurate. Consider using '#align finset.measurable_set_bInter Finset.measurableSet_biInterₓ'. -/
+theorem Finset.measurableSet_biInter {f : β → Set α} (s : Finset β)
     (h : ∀ b ∈ s, MeasurableSet (f b)) : MeasurableSet (⋂ b ∈ s, f b) :=
-  s.finite_toSet.measurableSet_binterᵢ h
-#align finset.measurable_set_bInter Finset.measurableSet_binterᵢ
+  s.finite_toSet.measurableSet_biInter h
+#align finset.measurable_set_bInter Finset.measurableSet_biInter
 
-#print MeasurableSet.interₛ /-
-theorem MeasurableSet.interₛ {s : Set (Set α)} (hs : s.Countable) (h : ∀ t ∈ s, MeasurableSet t) :
+#print MeasurableSet.sInter /-
+theorem MeasurableSet.sInter {s : Set (Set α)} (hs : s.Countable) (h : ∀ t ∈ s, MeasurableSet t) :
     MeasurableSet (⋂₀ s) := by
   rw [sInter_eq_bInter]
-  exact MeasurableSet.binterᵢ hs h
-#align measurable_set.sInter MeasurableSet.interₛ
+  exact MeasurableSet.biInter hs h
+#align measurable_set.sInter MeasurableSet.sInter
 -/
 
-#print Set.Finite.measurableSet_interₛ /-
-theorem Set.Finite.measurableSet_interₛ {s : Set (Set α)} (hs : s.Finite)
+#print Set.Finite.measurableSet_sInter /-
+theorem Set.Finite.measurableSet_sInter {s : Set (Set α)} (hs : s.Finite)
     (h : ∀ t ∈ s, MeasurableSet t) : MeasurableSet (⋂₀ s) :=
-  MeasurableSet.interₛ hs.Countable h
-#align set.finite.measurable_set_sInter Set.Finite.measurableSet_interₛ
+  MeasurableSet.sInter hs.Countable h
+#align set.finite.measurable_set_sInter Set.Finite.measurableSet_sInter
 -/
 
 /- warning: measurable_set.union -> MeasurableSet.union is a dubious translation:
@@ -278,7 +278,7 @@ Case conversion may be inaccurate. Consider using '#align measurable_set.union M
 theorem MeasurableSet.union {s₁ s₂ : Set α} (h₁ : MeasurableSet s₁) (h₂ : MeasurableSet s₂) :
     MeasurableSet (s₁ ∪ s₂) := by
   rw [union_eq_Union]
-  exact MeasurableSet.unionᵢ (Bool.forall_bool.2 ⟨h₂, h₁⟩)
+  exact MeasurableSet.iUnion (Bool.forall_bool.2 ⟨h₂, h₁⟩)
 #align measurable_set.union MeasurableSet.union
 
 /- warning: measurable_set.inter -> MeasurableSet.inter is a dubious translation:
@@ -458,7 +458,7 @@ protected theorem Finset.measurableSet (s : Finset α) : MeasurableSet (↑s : S
 theorem Set.Countable.measurableSet {s : Set α} (hs : s.Countable) : MeasurableSet s :=
   by
   rw [← bUnion_of_singleton s]
-  exact MeasurableSet.bunionᵢ hs fun b hb => measurable_set_singleton b
+  exact MeasurableSet.biUnion hs fun b hb => measurable_set_singleton b
 #align set.countable.measurable_set Set.Countable.measurableSet
 -/
 
@@ -498,7 +498,7 @@ def generateFrom (s : Set (Set α)) : MeasurableSpace α
   MeasurableSet' := GenerateMeasurable s
   measurable_set_empty := GenerateMeasurable.empty
   measurable_set_compl := GenerateMeasurable.compl
-  measurable_set_unionᵢ := GenerateMeasurable.unionᵢ
+  measurable_set_iUnion := GenerateMeasurable.iUnion
 #align measurable_space.generate_from MeasurableSpace.generateFrom
 -/
 
@@ -511,9 +511,9 @@ theorem measurableSet_generateFrom {s : Set (Set α)} {t : Set α} (ht : t ∈ s
 
 /- warning: measurable_space.generate_from_induction -> MeasurableSpace.generateFrom_induction is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} (p : (Set.{u1} α) -> Prop) (C : Set.{u1} (Set.{u1} α)), (forall (t : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) t C) -> (p t)) -> (p (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α))) -> (forall (t : Set.{u1} α), (p t) -> (p (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) t))) -> (forall (f : Nat -> (Set.{u1} α)), (forall (n : Nat), p (f n)) -> (p (Set.unionᵢ.{u1, 1} α Nat (fun (i : Nat) => f i)))) -> (forall {s : Set.{u1} α}, (MeasurableSet.{u1} α (MeasurableSpace.generateFrom.{u1} α C) s) -> (p s))
+  forall {α : Type.{u1}} (p : (Set.{u1} α) -> Prop) (C : Set.{u1} (Set.{u1} α)), (forall (t : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) t C) -> (p t)) -> (p (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α))) -> (forall (t : Set.{u1} α), (p t) -> (p (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) t))) -> (forall (f : Nat -> (Set.{u1} α)), (forall (n : Nat), p (f n)) -> (p (Set.iUnion.{u1, 1} α Nat (fun (i : Nat) => f i)))) -> (forall {s : Set.{u1} α}, (MeasurableSet.{u1} α (MeasurableSpace.generateFrom.{u1} α C) s) -> (p s))
 but is expected to have type
-  forall {α : Type.{u1}} (p : (Set.{u1} α) -> Prop) (C : Set.{u1} (Set.{u1} α)), (forall (t : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) t C) -> (p t)) -> (p (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α))) -> (forall (t : Set.{u1} α), (p t) -> (p (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) t))) -> (forall (f : Nat -> (Set.{u1} α)), (forall (n : Nat), p (f n)) -> (p (Set.unionᵢ.{u1, 1} α Nat (fun (i : Nat) => f i)))) -> (forall {s : Set.{u1} α}, (MeasurableSet.{u1} α (MeasurableSpace.generateFrom.{u1} α C) s) -> (p s))
+  forall {α : Type.{u1}} (p : (Set.{u1} α) -> Prop) (C : Set.{u1} (Set.{u1} α)), (forall (t : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) t C) -> (p t)) -> (p (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α))) -> (forall (t : Set.{u1} α), (p t) -> (p (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) t))) -> (forall (f : Nat -> (Set.{u1} α)), (forall (n : Nat), p (f n)) -> (p (Set.iUnion.{u1, 1} α Nat (fun (i : Nat) => f i)))) -> (forall {s : Set.{u1} α}, (MeasurableSet.{u1} α (MeasurableSpace.generateFrom.{u1} α C) s) -> (p s))
 Case conversion may be inaccurate. Consider using '#align measurable_space.generate_from_induction MeasurableSpace.generateFrom_inductionₓ'. -/
 @[elab_as_elim]
 theorem generateFrom_induction (p : Set α → Prop) (C : Set (Set α)) (hC : ∀ t ∈ C, p t)
@@ -530,7 +530,7 @@ theorem generateFrom_le {s : Set (Set α)} {m : MeasurableSpace α}
     (h : ∀ t ∈ s, measurable_set[m] t) : generateFrom s ≤ m :=
   fun t (ht : GenerateMeasurable s t) =>
   ht.recOn h (measurable_set_empty m) (fun s _ hs => measurable_set_compl m s hs) fun f _ hf =>
-    measurable_set_unionᵢ m f hf
+    measurable_set_iUnion m f hf
 #align measurable_space.generate_from_le MeasurableSpace.generateFrom_le
 -/
 
@@ -557,7 +557,7 @@ protected def mkOfClosure (g : Set (Set α)) (hg : { t | measurable_set[generate
   MeasurableSet' s := s ∈ g
   measurable_set_empty := hg ▸ measurable_set_empty _
   measurable_set_compl := hg ▸ measurable_set_compl _
-  measurable_set_unionᵢ := hg ▸ measurable_set_unionᵢ _
+  measurable_set_iUnion := hg ▸ measurable_set_iUnion _
 #align measurable_space.mk_of_closure MeasurableSpace.mkOfClosure
 -/
 
@@ -677,15 +677,15 @@ theorem measurableSet_bot_iff {s : Set α} : @MeasurableSet α ⊥ s ↔ s = ∅
     { MeasurableSet' := fun s => s = ∅ ∨ s = univ
       measurable_set_empty := Or.inl rfl
       measurable_set_compl := by simp (config := { contextual := true }) [or_imp]
-      measurable_set_unionᵢ := fun f hf =>
+      measurable_set_iUnion := fun f hf =>
         by_cases
           (fun h : ∃ i, f i = univ =>
             let ⟨i, hi⟩ := h
-            Or.inr <| eq_univ_of_univ_subset <| hi ▸ le_supᵢ f i)
+            Or.inr <| eq_univ_of_univ_subset <| hi ▸ le_iSup f i)
           fun h : ¬∃ i, f i = univ =>
           Or.inl <|
             eq_empty_of_subset_empty <|
-              unionᵢ_subset fun i =>
+              iUnion_subset fun i =>
                 (hf i).elim (by simp (config := { contextual := true })) fun hi =>
                   False.elim <| h ⟨i, hi⟩ }
   have : b = ⊥ :=
@@ -718,29 +718,29 @@ theorem measurableSet_inf {m₁ m₂ : MeasurableSpace α} {s : Set α} :
   Iff.rfl
 #align measurable_space.measurable_set_inf MeasurableSpace.measurableSet_inf
 
-/- warning: measurable_space.measurable_set_Inf -> MeasurableSpace.measurableSet_infₛ is a dubious translation:
+/- warning: measurable_space.measurable_set_Inf -> MeasurableSpace.measurableSet_sInf is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ms : Set.{u1} (MeasurableSpace.{u1} α)} {s : Set.{u1} α}, Iff (MeasurableSet.{u1} α (InfSet.infₛ.{u1} (MeasurableSpace.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (MeasurableSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.completeLattice.{u1} α))) ms) s) (forall (m : MeasurableSpace.{u1} α), (Membership.Mem.{u1, u1} (MeasurableSpace.{u1} α) (Set.{u1} (MeasurableSpace.{u1} α)) (Set.hasMem.{u1} (MeasurableSpace.{u1} α)) m ms) -> (MeasurableSet.{u1} α m s))
+  forall {α : Type.{u1}} {ms : Set.{u1} (MeasurableSpace.{u1} α)} {s : Set.{u1} α}, Iff (MeasurableSet.{u1} α (InfSet.sInf.{u1} (MeasurableSpace.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (MeasurableSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.completeLattice.{u1} α))) ms) s) (forall (m : MeasurableSpace.{u1} α), (Membership.Mem.{u1, u1} (MeasurableSpace.{u1} α) (Set.{u1} (MeasurableSpace.{u1} α)) (Set.hasMem.{u1} (MeasurableSpace.{u1} α)) m ms) -> (MeasurableSet.{u1} α m s))
 but is expected to have type
-  forall {α : Type.{u1}} {ms : Set.{u1} (MeasurableSpace.{u1} α)} {s : Set.{u1} α}, Iff (MeasurableSet.{u1} α (InfSet.infₛ.{u1} (MeasurableSpace.{u1} α) (ConditionallyCompleteLattice.toInfSet.{u1} (MeasurableSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.instCompleteLatticeMeasurableSpace.{u1} α))) ms) s) (forall (m : MeasurableSpace.{u1} α), (Membership.mem.{u1, u1} (MeasurableSpace.{u1} α) (Set.{u1} (MeasurableSpace.{u1} α)) (Set.instMembershipSet.{u1} (MeasurableSpace.{u1} α)) m ms) -> (MeasurableSet.{u1} α m s))
-Case conversion may be inaccurate. Consider using '#align measurable_space.measurable_set_Inf MeasurableSpace.measurableSet_infₛₓ'. -/
+  forall {α : Type.{u1}} {ms : Set.{u1} (MeasurableSpace.{u1} α)} {s : Set.{u1} α}, Iff (MeasurableSet.{u1} α (InfSet.sInf.{u1} (MeasurableSpace.{u1} α) (ConditionallyCompleteLattice.toInfSet.{u1} (MeasurableSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.instCompleteLatticeMeasurableSpace.{u1} α))) ms) s) (forall (m : MeasurableSpace.{u1} α), (Membership.mem.{u1, u1} (MeasurableSpace.{u1} α) (Set.{u1} (MeasurableSpace.{u1} α)) (Set.instMembershipSet.{u1} (MeasurableSpace.{u1} α)) m ms) -> (MeasurableSet.{u1} α m s))
+Case conversion may be inaccurate. Consider using '#align measurable_space.measurable_set_Inf MeasurableSpace.measurableSet_sInfₓ'. -/
 @[simp]
-theorem measurableSet_infₛ {ms : Set (MeasurableSpace α)} {s : Set α} :
-    @MeasurableSet _ (infₛ ms) s ↔ ∀ m ∈ ms, @MeasurableSet _ m s :=
+theorem measurableSet_sInf {ms : Set (MeasurableSpace α)} {s : Set α} :
+    @MeasurableSet _ (sInf ms) s ↔ ∀ m ∈ ms, @MeasurableSet _ m s :=
   show s ∈ ⋂₀ _ ↔ _ by simp
-#align measurable_space.measurable_set_Inf MeasurableSpace.measurableSet_infₛ
+#align measurable_space.measurable_set_Inf MeasurableSpace.measurableSet_sInf
 
-/- warning: measurable_space.measurable_set_infi -> MeasurableSpace.measurableSet_infᵢ is a dubious translation:
+/- warning: measurable_space.measurable_set_infi -> MeasurableSpace.measurableSet_iInf is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {m : ι -> (MeasurableSpace.{u1} α)} {s : Set.{u1} α}, Iff (MeasurableSet.{u1} α (infᵢ.{u1, u2} (MeasurableSpace.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (MeasurableSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.completeLattice.{u1} α))) ι m) s) (forall (i : ι), MeasurableSet.{u1} α (m i) s)
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {m : ι -> (MeasurableSpace.{u1} α)} {s : Set.{u1} α}, Iff (MeasurableSet.{u1} α (iInf.{u1, u2} (MeasurableSpace.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (MeasurableSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.completeLattice.{u1} α))) ι m) s) (forall (i : ι), MeasurableSet.{u1} α (m i) s)
 but is expected to have type
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {m : ι -> (MeasurableSpace.{u1} α)} {s : Set.{u1} α}, Iff (MeasurableSet.{u1} α (infᵢ.{u1, u2} (MeasurableSpace.{u1} α) (ConditionallyCompleteLattice.toInfSet.{u1} (MeasurableSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.instCompleteLatticeMeasurableSpace.{u1} α))) ι m) s) (forall (i : ι), MeasurableSet.{u1} α (m i) s)
-Case conversion may be inaccurate. Consider using '#align measurable_space.measurable_set_infi MeasurableSpace.measurableSet_infᵢₓ'. -/
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {m : ι -> (MeasurableSpace.{u1} α)} {s : Set.{u1} α}, Iff (MeasurableSet.{u1} α (iInf.{u1, u2} (MeasurableSpace.{u1} α) (ConditionallyCompleteLattice.toInfSet.{u1} (MeasurableSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.instCompleteLatticeMeasurableSpace.{u1} α))) ι m) s) (forall (i : ι), MeasurableSet.{u1} α (m i) s)
+Case conversion may be inaccurate. Consider using '#align measurable_space.measurable_set_infi MeasurableSpace.measurableSet_iInfₓ'. -/
 @[simp]
-theorem measurableSet_infᵢ {ι} {m : ι → MeasurableSpace α} {s : Set α} :
-    @MeasurableSet _ (infᵢ m) s ↔ ∀ i, @MeasurableSet _ (m i) s := by
-  rw [infᵢ, measurable_set_Inf, forall_range_iff]
-#align measurable_space.measurable_set_infi MeasurableSpace.measurableSet_infᵢ
+theorem measurableSet_iInf {ι} {m : ι → MeasurableSpace α} {s : Set α} :
+    @MeasurableSet _ (iInf m) s ↔ ∀ i, @MeasurableSet _ (m i) s := by
+  rw [iInf, measurable_set_Inf, forall_range_iff]
+#align measurable_space.measurable_set_infi MeasurableSpace.measurableSet_iInf
 
 /- warning: measurable_space.measurable_set_sup -> MeasurableSpace.measurableSet_sup is a dubious translation:
 lean 3 declaration is
@@ -753,55 +753,55 @@ theorem measurableSet_sup {m₁ m₂ : MeasurableSpace α} {s : Set α} :
   Iff.refl _
 #align measurable_space.measurable_set_sup MeasurableSpace.measurableSet_sup
 
-/- warning: measurable_space.measurable_set_Sup -> MeasurableSpace.measurableSet_supₛ is a dubious translation:
+/- warning: measurable_space.measurable_set_Sup -> MeasurableSpace.measurableSet_sSup is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ms : Set.{u1} (MeasurableSpace.{u1} α)} {s : Set.{u1} α}, Iff (MeasurableSet.{u1} α (SupSet.supₛ.{u1} (MeasurableSpace.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (MeasurableSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.completeLattice.{u1} α))) ms) s) (MeasurableSpace.GenerateMeasurable.{u1} α (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => Exists.{succ u1} (MeasurableSpace.{u1} α) (fun (m : MeasurableSpace.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (MeasurableSpace.{u1} α) (Set.{u1} (MeasurableSpace.{u1} α)) (Set.hasMem.{u1} (MeasurableSpace.{u1} α)) m ms) (fun (H : Membership.Mem.{u1, u1} (MeasurableSpace.{u1} α) (Set.{u1} (MeasurableSpace.{u1} α)) (Set.hasMem.{u1} (MeasurableSpace.{u1} α)) m ms) => MeasurableSet.{u1} α m s)))) s)
+  forall {α : Type.{u1}} {ms : Set.{u1} (MeasurableSpace.{u1} α)} {s : Set.{u1} α}, Iff (MeasurableSet.{u1} α (SupSet.sSup.{u1} (MeasurableSpace.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (MeasurableSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.completeLattice.{u1} α))) ms) s) (MeasurableSpace.GenerateMeasurable.{u1} α (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => Exists.{succ u1} (MeasurableSpace.{u1} α) (fun (m : MeasurableSpace.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (MeasurableSpace.{u1} α) (Set.{u1} (MeasurableSpace.{u1} α)) (Set.hasMem.{u1} (MeasurableSpace.{u1} α)) m ms) (fun (H : Membership.Mem.{u1, u1} (MeasurableSpace.{u1} α) (Set.{u1} (MeasurableSpace.{u1} α)) (Set.hasMem.{u1} (MeasurableSpace.{u1} α)) m ms) => MeasurableSet.{u1} α m s)))) s)
 but is expected to have type
-  forall {α : Type.{u1}} {ms : Set.{u1} (MeasurableSpace.{u1} α)} {s : Set.{u1} α}, Iff (MeasurableSet.{u1} α (SupSet.supₛ.{u1} (MeasurableSpace.{u1} α) (ConditionallyCompleteLattice.toSupSet.{u1} (MeasurableSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.instCompleteLatticeMeasurableSpace.{u1} α))) ms) s) (MeasurableSpace.GenerateMeasurable.{u1} α (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => Exists.{succ u1} (MeasurableSpace.{u1} α) (fun (m : MeasurableSpace.{u1} α) => And (Membership.mem.{u1, u1} (MeasurableSpace.{u1} α) (Set.{u1} (MeasurableSpace.{u1} α)) (Set.instMembershipSet.{u1} (MeasurableSpace.{u1} α)) m ms) (MeasurableSet.{u1} α m s)))) s)
-Case conversion may be inaccurate. Consider using '#align measurable_space.measurable_set_Sup MeasurableSpace.measurableSet_supₛₓ'. -/
-theorem measurableSet_supₛ {ms : Set (MeasurableSpace α)} {s : Set α} :
-    measurable_set[supₛ ms] s ↔
+  forall {α : Type.{u1}} {ms : Set.{u1} (MeasurableSpace.{u1} α)} {s : Set.{u1} α}, Iff (MeasurableSet.{u1} α (SupSet.sSup.{u1} (MeasurableSpace.{u1} α) (ConditionallyCompleteLattice.toSupSet.{u1} (MeasurableSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.instCompleteLatticeMeasurableSpace.{u1} α))) ms) s) (MeasurableSpace.GenerateMeasurable.{u1} α (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => Exists.{succ u1} (MeasurableSpace.{u1} α) (fun (m : MeasurableSpace.{u1} α) => And (Membership.mem.{u1, u1} (MeasurableSpace.{u1} α) (Set.{u1} (MeasurableSpace.{u1} α)) (Set.instMembershipSet.{u1} (MeasurableSpace.{u1} α)) m ms) (MeasurableSet.{u1} α m s)))) s)
+Case conversion may be inaccurate. Consider using '#align measurable_space.measurable_set_Sup MeasurableSpace.measurableSet_sSupₓ'. -/
+theorem measurableSet_sSup {ms : Set (MeasurableSpace α)} {s : Set α} :
+    measurable_set[sSup ms] s ↔
       GenerateMeasurable { s : Set α | ∃ m ∈ ms, measurable_set[m] s } s :=
   by
   change @measurable_set' _ (generate_from <| ⋃₀ _) _ ↔ _
   simp [generate_from, ← set_of_exists]
-#align measurable_space.measurable_set_Sup MeasurableSpace.measurableSet_supₛ
+#align measurable_space.measurable_set_Sup MeasurableSpace.measurableSet_sSup
 
-/- warning: measurable_space.measurable_set_supr -> MeasurableSpace.measurableSet_supᵢ is a dubious translation:
+/- warning: measurable_space.measurable_set_supr -> MeasurableSpace.measurableSet_iSup is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {m : ι -> (MeasurableSpace.{u1} α)} {s : Set.{u1} α}, Iff (MeasurableSet.{u1} α (supᵢ.{u1, u2} (MeasurableSpace.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (MeasurableSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.completeLattice.{u1} α))) ι m) s) (MeasurableSpace.GenerateMeasurable.{u1} α (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => Exists.{u2} ι (fun (i : ι) => MeasurableSet.{u1} α (m i) s))) s)
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {m : ι -> (MeasurableSpace.{u1} α)} {s : Set.{u1} α}, Iff (MeasurableSet.{u1} α (iSup.{u1, u2} (MeasurableSpace.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (MeasurableSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.completeLattice.{u1} α))) ι m) s) (MeasurableSpace.GenerateMeasurable.{u1} α (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => Exists.{u2} ι (fun (i : ι) => MeasurableSet.{u1} α (m i) s))) s)
 but is expected to have type
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {m : ι -> (MeasurableSpace.{u1} α)} {s : Set.{u1} α}, Iff (MeasurableSet.{u1} α (supᵢ.{u1, u2} (MeasurableSpace.{u1} α) (ConditionallyCompleteLattice.toSupSet.{u1} (MeasurableSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.instCompleteLatticeMeasurableSpace.{u1} α))) ι m) s) (MeasurableSpace.GenerateMeasurable.{u1} α (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => Exists.{u2} ι (fun (i : ι) => MeasurableSet.{u1} α (m i) s))) s)
-Case conversion may be inaccurate. Consider using '#align measurable_space.measurable_set_supr MeasurableSpace.measurableSet_supᵢₓ'. -/
-theorem measurableSet_supᵢ {ι} {m : ι → MeasurableSpace α} {s : Set α} :
-    @MeasurableSet _ (supᵢ m) s ↔ GenerateMeasurable { s : Set α | ∃ i, measurable_set[m i] s } s :=
-  by simp only [supᵢ, measurable_set_Sup, exists_range_iff]
-#align measurable_space.measurable_set_supr MeasurableSpace.measurableSet_supᵢ
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {m : ι -> (MeasurableSpace.{u1} α)} {s : Set.{u1} α}, Iff (MeasurableSet.{u1} α (iSup.{u1, u2} (MeasurableSpace.{u1} α) (ConditionallyCompleteLattice.toSupSet.{u1} (MeasurableSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.instCompleteLatticeMeasurableSpace.{u1} α))) ι m) s) (MeasurableSpace.GenerateMeasurable.{u1} α (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => Exists.{u2} ι (fun (i : ι) => MeasurableSet.{u1} α (m i) s))) s)
+Case conversion may be inaccurate. Consider using '#align measurable_space.measurable_set_supr MeasurableSpace.measurableSet_iSupₓ'. -/
+theorem measurableSet_iSup {ι} {m : ι → MeasurableSpace α} {s : Set α} :
+    @MeasurableSet _ (iSup m) s ↔ GenerateMeasurable { s : Set α | ∃ i, measurable_set[m i] s } s :=
+  by simp only [iSup, measurable_set_Sup, exists_range_iff]
+#align measurable_space.measurable_set_supr MeasurableSpace.measurableSet_iSup
 
-/- warning: measurable_space.measurable_space_supr_eq -> MeasurableSpace.measurableSpace_supᵢ_eq is a dubious translation:
+/- warning: measurable_space.measurable_space_supr_eq -> MeasurableSpace.measurableSpace_iSup_eq is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} (m : ι -> (MeasurableSpace.{u1} α)), Eq.{succ u1} (MeasurableSpace.{u1} α) (supᵢ.{u1, u2} (MeasurableSpace.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (MeasurableSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.completeLattice.{u1} α))) ι (fun (n : ι) => m n)) (MeasurableSpace.generateFrom.{u1} α (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => Exists.{u2} ι (fun (n : ι) => MeasurableSet.{u1} α (m n) s))))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} (m : ι -> (MeasurableSpace.{u1} α)), Eq.{succ u1} (MeasurableSpace.{u1} α) (iSup.{u1, u2} (MeasurableSpace.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (MeasurableSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.completeLattice.{u1} α))) ι (fun (n : ι) => m n)) (MeasurableSpace.generateFrom.{u1} α (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => Exists.{u2} ι (fun (n : ι) => MeasurableSet.{u1} α (m n) s))))
 but is expected to have type
-  forall {α : Type.{u2}} {ι : Sort.{u1}} (m : ι -> (MeasurableSpace.{u2} α)), Eq.{succ u2} (MeasurableSpace.{u2} α) (supᵢ.{u2, u1} (MeasurableSpace.{u2} α) (ConditionallyCompleteLattice.toSupSet.{u2} (MeasurableSpace.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (MeasurableSpace.{u2} α) (MeasurableSpace.instCompleteLatticeMeasurableSpace.{u2} α))) ι (fun (n : ι) => m n)) (MeasurableSpace.generateFrom.{u2} α (setOf.{u2} (Set.{u2} α) (fun (s : Set.{u2} α) => Exists.{u1} ι (fun (n : ι) => MeasurableSet.{u2} α (m n) s))))
-Case conversion may be inaccurate. Consider using '#align measurable_space.measurable_space_supr_eq MeasurableSpace.measurableSpace_supᵢ_eqₓ'. -/
-theorem measurableSpace_supᵢ_eq (m : ι → MeasurableSpace α) :
+  forall {α : Type.{u2}} {ι : Sort.{u1}} (m : ι -> (MeasurableSpace.{u2} α)), Eq.{succ u2} (MeasurableSpace.{u2} α) (iSup.{u2, u1} (MeasurableSpace.{u2} α) (ConditionallyCompleteLattice.toSupSet.{u2} (MeasurableSpace.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (MeasurableSpace.{u2} α) (MeasurableSpace.instCompleteLatticeMeasurableSpace.{u2} α))) ι (fun (n : ι) => m n)) (MeasurableSpace.generateFrom.{u2} α (setOf.{u2} (Set.{u2} α) (fun (s : Set.{u2} α) => Exists.{u1} ι (fun (n : ι) => MeasurableSet.{u2} α (m n) s))))
+Case conversion may be inaccurate. Consider using '#align measurable_space.measurable_space_supr_eq MeasurableSpace.measurableSpace_iSup_eqₓ'. -/
+theorem measurableSpace_iSup_eq (m : ι → MeasurableSpace α) :
     (⨆ n, m n) = generateFrom { s | ∃ n, measurable_set[m n] s } :=
   by
   ext s
   rw [measurable_set_supr]
   rfl
-#align measurable_space.measurable_space_supr_eq MeasurableSpace.measurableSpace_supᵢ_eq
+#align measurable_space.measurable_space_supr_eq MeasurableSpace.measurableSpace_iSup_eq
 
-/- warning: measurable_space.generate_from_Union_measurable_set -> MeasurableSpace.generateFrom_unionᵢ_measurableSet is a dubious translation:
+/- warning: measurable_space.generate_from_Union_measurable_set -> MeasurableSpace.generateFrom_iUnion_measurableSet is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} (m : ι -> (MeasurableSpace.{u1} α)), Eq.{succ u1} (MeasurableSpace.{u1} α) (MeasurableSpace.generateFrom.{u1} α (Set.unionᵢ.{u1, u2} (Set.{u1} α) ι (fun (n : ι) => setOf.{u1} (Set.{u1} α) (fun (t : Set.{u1} α) => MeasurableSet.{u1} α (m n) t)))) (supᵢ.{u1, u2} (MeasurableSpace.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (MeasurableSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.completeLattice.{u1} α))) ι (fun (n : ι) => m n))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} (m : ι -> (MeasurableSpace.{u1} α)), Eq.{succ u1} (MeasurableSpace.{u1} α) (MeasurableSpace.generateFrom.{u1} α (Set.iUnion.{u1, u2} (Set.{u1} α) ι (fun (n : ι) => setOf.{u1} (Set.{u1} α) (fun (t : Set.{u1} α) => MeasurableSet.{u1} α (m n) t)))) (iSup.{u1, u2} (MeasurableSpace.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (MeasurableSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.completeLattice.{u1} α))) ι (fun (n : ι) => m n))
 but is expected to have type
-  forall {α : Type.{u2}} {ι : Sort.{u1}} (m : ι -> (MeasurableSpace.{u2} α)), Eq.{succ u2} (MeasurableSpace.{u2} α) (MeasurableSpace.generateFrom.{u2} α (Set.unionᵢ.{u2, u1} (Set.{u2} α) ι (fun (n : ι) => setOf.{u2} (Set.{u2} α) (fun (t : Set.{u2} α) => MeasurableSet.{u2} α (m n) t)))) (supᵢ.{u2, u1} (MeasurableSpace.{u2} α) (ConditionallyCompleteLattice.toSupSet.{u2} (MeasurableSpace.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (MeasurableSpace.{u2} α) (MeasurableSpace.instCompleteLatticeMeasurableSpace.{u2} α))) ι (fun (n : ι) => m n))
-Case conversion may be inaccurate. Consider using '#align measurable_space.generate_from_Union_measurable_set MeasurableSpace.generateFrom_unionᵢ_measurableSetₓ'. -/
-theorem generateFrom_unionᵢ_measurableSet (m : ι → MeasurableSpace α) :
+  forall {α : Type.{u2}} {ι : Sort.{u1}} (m : ι -> (MeasurableSpace.{u2} α)), Eq.{succ u2} (MeasurableSpace.{u2} α) (MeasurableSpace.generateFrom.{u2} α (Set.iUnion.{u2, u1} (Set.{u2} α) ι (fun (n : ι) => setOf.{u2} (Set.{u2} α) (fun (t : Set.{u2} α) => MeasurableSet.{u2} α (m n) t)))) (iSup.{u2, u1} (MeasurableSpace.{u2} α) (ConditionallyCompleteLattice.toSupSet.{u2} (MeasurableSpace.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (MeasurableSpace.{u2} α) (MeasurableSpace.instCompleteLatticeMeasurableSpace.{u2} α))) ι (fun (n : ι) => m n))
+Case conversion may be inaccurate. Consider using '#align measurable_space.generate_from_Union_measurable_set MeasurableSpace.generateFrom_iUnion_measurableSetₓ'. -/
+theorem generateFrom_iUnion_measurableSet (m : ι → MeasurableSpace α) :
     generateFrom (⋃ n, { t | measurable_set[m n] t }) = ⨆ n, m n :=
-  (@giGenerateFrom α).l_supᵢ_u m
-#align measurable_space.generate_from_Union_measurable_set MeasurableSpace.generateFrom_unionᵢ_measurableSet
+  (@giGenerateFrom α).l_iSup_u m
+#align measurable_space.generate_from_Union_measurable_set MeasurableSpace.generateFrom_iUnion_measurableSet
 
 end CompleteLattice
 

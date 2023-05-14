@@ -60,7 +60,7 @@ def atBot [Preorder α] : Filter α :=
 
 #print Filter.mem_atTop /-
 theorem mem_atTop [Preorder α] (a : α) : { b : α | a ≤ b } ∈ @atTop α _ :=
-  mem_infᵢ_of_mem a <| Subset.refl _
+  mem_iInf_of_mem a <| Subset.refl _
 #align filter.mem_at_top Filter.mem_atTop
 -/
 
@@ -79,7 +79,7 @@ theorem Ioi_mem_atTop [Preorder α] [NoMaxOrder α] (x : α) : Ioi x ∈ (atTop 
 
 #print Filter.mem_atBot /-
 theorem mem_atBot [Preorder α] (a : α) : { b : α | b ≤ a } ∈ @atBot α _ :=
-  mem_infᵢ_of_mem a <| Subset.refl _
+  mem_iInf_of_mem a <| Subset.refl _
 #align filter.mem_at_bot Filter.mem_atBot
 -/
 
@@ -209,7 +209,7 @@ theorem disjoint_atTop_atBot [PartialOrder α] [Nontrivial α] : Disjoint (atTop
 
 #print Filter.atTop_basis /-
 theorem atTop_basis [Nonempty α] [SemilatticeSup α] : (@atTop α _).HasBasis (fun _ => True) Ici :=
-  hasBasis_infᵢ_principal (directed_of_sup fun a b => Ici_subset_Ici.2)
+  hasBasis_iInf_principal (directed_of_sup fun a b => Ici_subset_Ici.2)
 #align filter.at_top_basis Filter.atTop_basis
 -/
 
@@ -409,7 +409,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.order_top.at_top_eq Filter.OrderTop.atTop_eqₓ'. -/
 theorem OrderTop.atTop_eq (α) [PartialOrder α] [OrderTop α] : (atTop : Filter α) = pure ⊤ :=
   le_antisymm (le_pure_iff.2 <| (eventually_ge_atTop ⊤).mono fun b => top_unique)
-    (le_infᵢ fun b => le_principal_iff.2 le_top)
+    (le_iInf fun b => le_principal_iff.2 le_top)
 #align filter.order_top.at_top_eq Filter.OrderTop.atTop_eq
 
 /- warning: filter.order_bot.at_bot_eq -> Filter.OrderBot.atBot_eq is a dubious translation:
@@ -433,7 +433,7 @@ theorem Subsingleton.atTop_eq (α) [Subsingleton α] [Preorder α] : (atTop : Fi
   by
   refine' top_unique fun s hs x => _
   letI : Unique α := ⟨⟨x⟩, fun y => Subsingleton.elim y x⟩
-  rw [at_top, cinfᵢ_unique, Unique.default_eq x, mem_principal] at hs
+  rw [at_top, ciInf_unique, Unique.default_eq x, mem_principal] at hs
   exact hs left_mem_Ici
 #align filter.subsingleton.at_top_eq Filter.Subsingleton.atTop_eq
 
@@ -550,20 +550,20 @@ theorem Frequently.forall_exists_of_atBot [SemilatticeInf α] [Nonempty α] {p :
 
 /- warning: filter.map_at_top_eq -> Filter.map_atTop_eq is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Nonempty.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] {f : α -> β}, Eq.{succ u2} (Filter.{u2} β) (Filter.map.{u1, u2} α β f (Filter.atTop.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))) (infᵢ.{u2, succ u1} (Filter.{u2} β) (ConditionallyCompleteLattice.toHasInf.{u2} (Filter.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β))) α (fun (a : α) => Filter.principal.{u2} β (Set.image.{u1, u2} α β f (setOf.{u1} α (fun (a' : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2))) a a')))))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Nonempty.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] {f : α -> β}, Eq.{succ u2} (Filter.{u2} β) (Filter.map.{u1, u2} α β f (Filter.atTop.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))) (iInf.{u2, succ u1} (Filter.{u2} β) (ConditionallyCompleteLattice.toHasInf.{u2} (Filter.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β))) α (fun (a : α) => Filter.principal.{u2} β (Set.image.{u1, u2} α β f (setOf.{u1} α (fun (a' : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2))) a a')))))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Nonempty.{succ u2} α] [_inst_2 : SemilatticeSup.{u2} α] {f : α -> β}, Eq.{succ u1} (Filter.{u1} β) (Filter.map.{u2, u1} α β f (Filter.atTop.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeSup.toPartialOrder.{u2} α _inst_2)))) (infᵢ.{u1, succ u2} (Filter.{u1} β) (ConditionallyCompleteLattice.toInfSet.{u1} (Filter.{u1} β) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} β) (Filter.instCompleteLatticeFilter.{u1} β))) α (fun (a : α) => Filter.principal.{u1} β (Set.image.{u2, u1} α β f (setOf.{u2} α (fun (a' : α) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeSup.toPartialOrder.{u2} α _inst_2))) a a')))))
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Nonempty.{succ u2} α] [_inst_2 : SemilatticeSup.{u2} α] {f : α -> β}, Eq.{succ u1} (Filter.{u1} β) (Filter.map.{u2, u1} α β f (Filter.atTop.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeSup.toPartialOrder.{u2} α _inst_2)))) (iInf.{u1, succ u2} (Filter.{u1} β) (ConditionallyCompleteLattice.toInfSet.{u1} (Filter.{u1} β) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} β) (Filter.instCompleteLatticeFilter.{u1} β))) α (fun (a : α) => Filter.principal.{u1} β (Set.image.{u2, u1} α β f (setOf.{u2} α (fun (a' : α) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeSup.toPartialOrder.{u2} α _inst_2))) a a')))))
 Case conversion may be inaccurate. Consider using '#align filter.map_at_top_eq Filter.map_atTop_eqₓ'. -/
 theorem map_atTop_eq [Nonempty α] [SemilatticeSup α] {f : α → β} :
     atTop.map f = ⨅ a, 𝓟 <| f '' { a' | a ≤ a' } :=
-  (atTop_basis.map _).eq_infᵢ
+  (atTop_basis.map _).eq_iInf
 #align filter.map_at_top_eq Filter.map_atTop_eq
 
 /- warning: filter.map_at_bot_eq -> Filter.map_atBot_eq is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Nonempty.{succ u1} α] [_inst_2 : SemilatticeInf.{u1} α] {f : α -> β}, Eq.{succ u2} (Filter.{u2} β) (Filter.map.{u1, u2} α β f (Filter.atBot.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_2)))) (infᵢ.{u2, succ u1} (Filter.{u2} β) (ConditionallyCompleteLattice.toHasInf.{u2} (Filter.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β))) α (fun (a : α) => Filter.principal.{u2} β (Set.image.{u1, u2} α β f (setOf.{u1} α (fun (a' : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_2))) a' a)))))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Nonempty.{succ u1} α] [_inst_2 : SemilatticeInf.{u1} α] {f : α -> β}, Eq.{succ u2} (Filter.{u2} β) (Filter.map.{u1, u2} α β f (Filter.atBot.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_2)))) (iInf.{u2, succ u1} (Filter.{u2} β) (ConditionallyCompleteLattice.toHasInf.{u2} (Filter.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β))) α (fun (a : α) => Filter.principal.{u2} β (Set.image.{u1, u2} α β f (setOf.{u1} α (fun (a' : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_2))) a' a)))))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Nonempty.{succ u2} α] [_inst_2 : SemilatticeInf.{u2} α] {f : α -> β}, Eq.{succ u1} (Filter.{u1} β) (Filter.map.{u2, u1} α β f (Filter.atBot.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α _inst_2)))) (infᵢ.{u1, succ u2} (Filter.{u1} β) (ConditionallyCompleteLattice.toInfSet.{u1} (Filter.{u1} β) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} β) (Filter.instCompleteLatticeFilter.{u1} β))) α (fun (a : α) => Filter.principal.{u1} β (Set.image.{u2, u1} α β f (setOf.{u2} α (fun (a' : α) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α _inst_2))) a' a)))))
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Nonempty.{succ u2} α] [_inst_2 : SemilatticeInf.{u2} α] {f : α -> β}, Eq.{succ u1} (Filter.{u1} β) (Filter.map.{u2, u1} α β f (Filter.atBot.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α _inst_2)))) (iInf.{u1, succ u2} (Filter.{u1} β) (ConditionallyCompleteLattice.toInfSet.{u1} (Filter.{u1} β) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} β) (Filter.instCompleteLatticeFilter.{u1} β))) α (fun (a : α) => Filter.principal.{u1} β (Set.image.{u2, u1} α β f (setOf.{u2} α (fun (a' : α) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α _inst_2))) a' a)))))
 Case conversion may be inaccurate. Consider using '#align filter.map_at_bot_eq Filter.map_atBot_eqₓ'. -/
 theorem map_atBot_eq [Nonempty α] [SemilatticeInf α] {f : α → β} :
     atBot.map f = ⨅ a, 𝓟 <| f '' { a' | a' ≤ a } :=
@@ -2202,7 +2202,7 @@ Case conversion may be inaccurate. Consider using '#align filter.tendsto_at_top_
 /-- A function `f` grows to `+∞` independent of an order-preserving embedding `e`. -/
 theorem tendsto_atTop_atTop [Nonempty α] [SemilatticeSup α] [Preorder β] {f : α → β} :
     Tendsto f atTop atTop ↔ ∀ b : β, ∃ i : α, ∀ a : α, i ≤ a → b ≤ f a :=
-  Iff.trans tendsto_infᵢ <| forall_congr' fun b => tendsto_atTop_principal
+  Iff.trans tendsto_iInf <| forall_congr' fun b => tendsto_atTop_principal
 #align filter.tendsto_at_top_at_top Filter.tendsto_atTop_atTop
 
 /- warning: filter.tendsto_at_top_at_bot -> Filter.tendsto_atTop_atBot is a dubious translation:
@@ -2246,7 +2246,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.tendsto_at_top_at_top_of_monotone Filter.tendsto_atTop_atTop_of_monotoneₓ'. -/
 theorem tendsto_atTop_atTop_of_monotone [Preorder α] [Preorder β] {f : α → β} (hf : Monotone f)
     (h : ∀ b, ∃ a, b ≤ f a) : Tendsto f atTop atTop :=
-  tendsto_infᵢ.2 fun b =>
+  tendsto_iInf.2 fun b =>
     tendsto_principal.2 <|
       let ⟨a, ha⟩ := h b
       mem_of_superset (mem_atTop a) fun a' ha' => le_trans ha (hf ha')
@@ -2260,7 +2260,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.tendsto_at_bot_at_bot_of_monotone Filter.tendsto_atBot_atBot_of_monotoneₓ'. -/
 theorem tendsto_atBot_atBot_of_monotone [Preorder α] [Preorder β] {f : α → β} (hf : Monotone f)
     (h : ∀ b, ∃ a, f a ≤ b) : Tendsto f atBot atBot :=
-  tendsto_infᵢ.2 fun b =>
+  tendsto_iInf.2 fun b =>
     tendsto_principal.2 <|
       let ⟨a, ha⟩ := h b
       mem_of_superset (mem_atBot a) fun a' ha' => le_trans (hf ha') ha
@@ -2337,7 +2337,7 @@ Case conversion may be inaccurate. Consider using '#align filter.comap_embedding
 theorem comap_embedding_atTop [Preorder β] [Preorder γ] {e : β → γ}
     (hm : ∀ b₁ b₂, e b₁ ≤ e b₂ ↔ b₁ ≤ b₂) (hu : ∀ c, ∃ b, c ≤ e b) : comap e atTop = atTop :=
   le_antisymm
-    (le_infᵢ fun b =>
+    (le_iInf fun b =>
       le_principal_iff.2 <| mem_comap.2 ⟨Ici (e b), mem_atTop _, fun x => (hm _ _).1⟩)
     (tendsto_atTop_atTop_of_monotone (fun _ _ => (hm _ _).2) hu).le_comap
 #align filter.comap_embedding_at_top Filter.comap_embedding_atTop
@@ -2384,23 +2384,23 @@ theorem tendsto_finset_range : Tendsto Finset.range atTop atTop :=
 #align filter.tendsto_finset_range Filter.tendsto_finset_range
 -/
 
-/- warning: filter.at_top_finset_eq_infi -> Filter.atTop_finset_eq_infᵢ is a dubious translation:
+/- warning: filter.at_top_finset_eq_infi -> Filter.atTop_finset_eq_iInf is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}}, Eq.{succ u1} (Filter.{u1} (Finset.{u1} α)) (Filter.atTop.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (infᵢ.{u1, succ u1} (Filter.{u1} (Finset.{u1} α)) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} (Finset.{u1} α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Finset.{u1} α)) (Filter.completeLattice.{u1} (Finset.{u1} α)))) α (fun (x : α) => Filter.principal.{u1} (Finset.{u1} α) (Set.Ici.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.hasSingleton.{u1} α) x))))
+  forall {α : Type.{u1}}, Eq.{succ u1} (Filter.{u1} (Finset.{u1} α)) (Filter.atTop.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (iInf.{u1, succ u1} (Filter.{u1} (Finset.{u1} α)) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} (Finset.{u1} α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Finset.{u1} α)) (Filter.completeLattice.{u1} (Finset.{u1} α)))) α (fun (x : α) => Filter.principal.{u1} (Finset.{u1} α) (Set.Ici.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.hasSingleton.{u1} α) x))))
 but is expected to have type
-  forall {α : Type.{u1}}, Eq.{succ u1} (Filter.{u1} (Finset.{u1} α)) (Filter.atTop.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (infᵢ.{u1, succ u1} (Filter.{u1} (Finset.{u1} α)) (ConditionallyCompleteLattice.toInfSet.{u1} (Filter.{u1} (Finset.{u1} α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Finset.{u1} α)) (Filter.instCompleteLatticeFilter.{u1} (Finset.{u1} α)))) α (fun (x : α) => Filter.principal.{u1} (Finset.{u1} α) (Set.Ici.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.instSingletonFinset.{u1} α) x))))
-Case conversion may be inaccurate. Consider using '#align filter.at_top_finset_eq_infi Filter.atTop_finset_eq_infᵢₓ'. -/
-theorem atTop_finset_eq_infᵢ : (atTop : Filter <| Finset α) = ⨅ x : α, 𝓟 (Ici {x}) :=
+  forall {α : Type.{u1}}, Eq.{succ u1} (Filter.{u1} (Finset.{u1} α)) (Filter.atTop.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (iInf.{u1, succ u1} (Filter.{u1} (Finset.{u1} α)) (ConditionallyCompleteLattice.toInfSet.{u1} (Filter.{u1} (Finset.{u1} α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Finset.{u1} α)) (Filter.instCompleteLatticeFilter.{u1} (Finset.{u1} α)))) α (fun (x : α) => Filter.principal.{u1} (Finset.{u1} α) (Set.Ici.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.instSingletonFinset.{u1} α) x))))
+Case conversion may be inaccurate. Consider using '#align filter.at_top_finset_eq_infi Filter.atTop_finset_eq_iInfₓ'. -/
+theorem atTop_finset_eq_iInf : (atTop : Filter <| Finset α) = ⨅ x : α, 𝓟 (Ici {x}) :=
   by
-  refine' le_antisymm (le_infᵢ fun i => le_principal_iff.2 <| mem_at_top {i}) _
+  refine' le_antisymm (le_iInf fun i => le_principal_iff.2 <| mem_at_top {i}) _
   refine'
-    le_infᵢ fun s =>
+    le_iInf fun s =>
       le_principal_iff.2 <| mem_infi_of_Inter s.finite_toSet (fun i => mem_principal_self _) _
   simp only [subset_def, mem_Inter, SetCoe.forall, mem_Ici, Finset.le_iff_subset,
     Finset.mem_singleton, Finset.subset_iff, forall_eq]
   dsimp
   exact fun t => id
-#align filter.at_top_finset_eq_infi Filter.atTop_finset_eq_infᵢ
+#align filter.at_top_finset_eq_infi Filter.atTop_finset_eq_iInf
 
 #print Filter.tendsto_atTop_finset_of_monotone /-
 /-- If `f` is a monotone sequence of `finset`s and each `x` belongs to one of `f n`, then
@@ -2454,8 +2454,8 @@ theorem prod_atTop_atTop_eq {β₁ β₂ : Type _} [SemilatticeSup β₁] [Semil
   by
   cases (isEmpty_or_nonempty β₁).symm
   cases (isEmpty_or_nonempty β₂).symm
-  · simp [at_top, prod_infi_left, prod_infi_right, infᵢ_prod]
-    exact infᵢ_comm
+  · simp [at_top, prod_infi_left, prod_infi_right, iInf_prod]
+    exact iInf_comm
   · simp only [at_top.filter_eq_bot_of_is_empty, prod_bot]
   · simp only [at_top.filter_eq_bot_of_is_empty, bot_prod]
 #align filter.prod_at_top_at_top_eq Filter.prod_atTop_atTop_eq
@@ -2672,7 +2672,7 @@ theorem map_atTop_eq_of_gc [SemilatticeSup α] [SemilatticeSup β] {f : α → �
     le_antisymm
       (hf.tendsto_at_top_at_top fun b => ⟨g (b ⊔ b'), le_sup_left.trans <| hgi _ le_sup_right⟩) _
   rw [@map_at_top_eq _ _ ⟨g b'⟩]
-  refine' le_infᵢ fun a => infᵢ_le_of_le (f a ⊔ b') <| principal_mono.2 fun b hb => _
+  refine' le_iInf fun a => iInf_le_of_le (f a ⊔ b') <| principal_mono.2 fun b hb => _
   rw [mem_Ici, sup_le_iff] at hb
   exact ⟨g b, (gc _ _ hb.2).1 hb.1, le_antisymm ((gc _ _ hb.2).2 le_rfl) (hgi _ hb.2)⟩
 #align filter.map_at_top_eq_of_gc Filter.map_atTop_eq_of_gc
@@ -2700,7 +2700,7 @@ theorem map_val_atTop_of_Ici_subset [SemilatticeSup α] {a : α} {s : Set α} (h
     simp only [ge_iff_le, principal_mono, Ici_subset_Ici, ← Subtype.coe_le_coe, Subtype.coe_mk]
     exact ⟨le_sup_left.trans le_sup_left, le_sup_right.trans le_sup_left⟩
   haveI : Nonempty s := ⟨⟨a, h le_rfl⟩⟩
-  simp only [le_antisymm_iff, at_top, le_infᵢ_iff, le_principal_iff, mem_map, mem_set_of_eq,
+  simp only [le_antisymm_iff, at_top, le_iInf_iff, le_principal_iff, mem_map, mem_set_of_eq,
     map_infi_eq this, map_principal]
   constructor
   · intro x
@@ -3082,9 +3082,9 @@ theorem map_atTop_finset_prod_le_of_prod_eq [CommMonoid α] {f : β → α} {g :
   by
   rw [map_at_top_eq, map_at_top_eq] <;>
     exact
-      le_infᵢ fun b =>
+      le_iInf fun b =>
         let ⟨v, hv⟩ := h_eq b
-        infᵢ_le_of_le v <| by simp [Set.image_subset_iff] <;> exact hv
+        iInf_le_of_le v <| by simp [Set.image_subset_iff] <;> exact hv
 #align filter.map_at_top_finset_prod_le_of_prod_eq Filter.map_atTop_finset_prod_le_of_prod_eq
 #align filter.map_at_top_finset_sum_le_of_sum_eq Filter.map_atTop_finset_sum_le_of_sum_eq
 

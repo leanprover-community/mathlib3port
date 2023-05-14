@@ -63,8 +63,8 @@ noncomputable def nearestPtInd (e : ℕ → α) : ℕ → α →ₛ ℕ
   | 0 => const α 0
   | N + 1 =>
     piecewise (⋂ k ≤ N, { x | edist (e (N + 1)) x < edist (e k) x })
-      (MeasurableSet.interᵢ fun k =>
-        MeasurableSet.interᵢ fun hk =>
+      (MeasurableSet.iInter fun k =>
+        MeasurableSet.iInter fun hk =>
           measurableSet_lt measurable_edist_right measurable_edist_right)
       (const α <| N + 1) (nearest_pt_ind N)
 #align measure_theory.simple_func.nearest_pt_ind MeasureTheory.SimpleFunc.nearestPtInd

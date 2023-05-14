@@ -45,7 +45,7 @@ variable (Λ : (X →ᵇ ℝ≥0) →ₗ[ℝ≥0] ℝ≥0)
 `λ(K) = inf {Λf | 1≤f on K}`. When X is a compact Hausdorff space, this will be shown to be a
 content, and will be shown to agree with the Riesz measure on the compact subsets `K ⊆ X`. -/
 def rieszContentAux : Compacts X → ℝ≥0 := fun K =>
-  infₛ (Λ '' { f : X →ᵇ ℝ≥0 | ∀ x ∈ K, (1 : ℝ≥0) ≤ f x })
+  sInf (Λ '' { f : X →ᵇ ℝ≥0 | ∀ x ∈ K, (1 : ℝ≥0) ≤ f x })
 #align riesz_content_aux rieszContentAux
 
 section RieszMonotone
@@ -65,7 +65,7 @@ theorem riesz_content_aux_image_nonempty (K : Compacts X) :
 monotone: if `K₁ ⊆ K₂` are compact subsets in X, then `λ(K₁) ≤ λ(K₂)`. -/
 theorem rieszContentAux_mono {K₁ K₂ : Compacts X} (h : K₁ ≤ K₂) :
     rieszContentAux Λ K₁ ≤ rieszContentAux Λ K₂ :=
-  cinfₛ_le_cinfₛ (OrderBot.bddBelow _) (riesz_content_aux_image_nonempty Λ K₂)
+  csInf_le_csInf (OrderBot.bddBelow _) (riesz_content_aux_image_nonempty Λ K₂)
     (image_subset Λ (setOf_subset_setOf.mpr fun f f_hyp x x_in_K₁ => f_hyp x (h x_in_K₁)))
 #align riesz_content_aux_mono rieszContentAux_mono
 
@@ -77,7 +77,7 @@ section RieszSubadditive
 content of K; namely `λ(K) ≤ Λ f`. -/
 theorem rieszContentAux_le {K : Compacts X} {f : X →ᵇ ℝ≥0} (h : ∀ x ∈ K, (1 : ℝ≥0) ≤ f x) :
     rieszContentAux Λ K ≤ Λ f :=
-  cinfₛ_le (OrderBot.bddBelow _) ⟨f, ⟨h, rfl⟩⟩
+  csInf_le (OrderBot.bddBelow _) ⟨f, ⟨h, rfl⟩⟩
 #align riesz_content_aux_le rieszContentAux_le
 
 /-- The Riesz content can be approximated arbitrarily well by evaluating the positive linear
@@ -88,7 +88,7 @@ theorem exists_lt_rieszContentAux_add_pos (K : Compacts X) {ε : ℝ≥0} (εpos
   by
   --choose a test function `f` s.t. `Λf = α < λ(K) + ε`
   obtain ⟨α, ⟨⟨f, f_hyp⟩, α_hyp⟩⟩ :=
-    exists_lt_of_cinfₛ_lt (riesz_content_aux_image_nonempty Λ K)
+    exists_lt_of_csInf_lt (riesz_content_aux_image_nonempty Λ K)
       (lt_add_of_pos_right (rieszContentAux Λ K) εpos)
   refine' ⟨f, f_hyp.left, _⟩
   rw [f_hyp.right]

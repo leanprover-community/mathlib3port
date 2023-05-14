@@ -165,27 +165,27 @@ theorem isPreconnected_of_forall_pair {s : Set α}
   exacts[isPreconnected_empty, isPreconnected_of_forall x fun y => H x hx y]
 #align is_preconnected_of_forall_pair isPreconnected_of_forall_pair
 
-#print isPreconnected_unionₛ /-
+#print isPreconnected_sUnion /-
 /-- A union of a family of preconnected sets with a common point is preconnected as well. -/
-theorem isPreconnected_unionₛ (x : α) (c : Set (Set α)) (H1 : ∀ s ∈ c, x ∈ s)
+theorem isPreconnected_sUnion (x : α) (c : Set (Set α)) (H1 : ∀ s ∈ c, x ∈ s)
     (H2 : ∀ s ∈ c, IsPreconnected s) : IsPreconnected (⋃₀ c) :=
   by
   apply isPreconnected_of_forall x
   rintro y ⟨s, sc, ys⟩
   exact ⟨s, subset_sUnion_of_mem sc, H1 s sc, ys, H2 s sc⟩
-#align is_preconnected_sUnion isPreconnected_unionₛ
+#align is_preconnected_sUnion isPreconnected_sUnion
 -/
 
-/- warning: is_preconnected_Union -> isPreconnected_unionᵢ is a dubious translation:
+/- warning: is_preconnected_Union -> isPreconnected_iUnion is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {ι : Sort.{u2}} {s : ι -> (Set.{u1} α)}, (Set.Nonempty.{u1} α (Set.interᵢ.{u1, u2} α ι (fun (i : ι) => s i))) -> (forall (i : ι), IsPreconnected.{u1} α _inst_1 (s i)) -> (IsPreconnected.{u1} α _inst_1 (Set.unionᵢ.{u1, u2} α ι (fun (i : ι) => s i)))
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {ι : Sort.{u2}} {s : ι -> (Set.{u1} α)}, (Set.Nonempty.{u1} α (Set.iInter.{u1, u2} α ι (fun (i : ι) => s i))) -> (forall (i : ι), IsPreconnected.{u1} α _inst_1 (s i)) -> (IsPreconnected.{u1} α _inst_1 (Set.iUnion.{u1, u2} α ι (fun (i : ι) => s i)))
 but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {ι : Sort.{u1}} {s : ι -> (Set.{u2} α)}, (Set.Nonempty.{u2} α (Set.interᵢ.{u2, u1} α ι (fun (i : ι) => s i))) -> (forall (i : ι), IsPreconnected.{u2} α _inst_1 (s i)) -> (IsPreconnected.{u2} α _inst_1 (Set.unionᵢ.{u2, u1} α ι (fun (i : ι) => s i)))
-Case conversion may be inaccurate. Consider using '#align is_preconnected_Union isPreconnected_unionᵢₓ'. -/
-theorem isPreconnected_unionᵢ {ι : Sort _} {s : ι → Set α} (h₁ : (⋂ i, s i).Nonempty)
+  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {ι : Sort.{u1}} {s : ι -> (Set.{u2} α)}, (Set.Nonempty.{u2} α (Set.iInter.{u2, u1} α ι (fun (i : ι) => s i))) -> (forall (i : ι), IsPreconnected.{u2} α _inst_1 (s i)) -> (IsPreconnected.{u2} α _inst_1 (Set.iUnion.{u2, u1} α ι (fun (i : ι) => s i)))
+Case conversion may be inaccurate. Consider using '#align is_preconnected_Union isPreconnected_iUnionₓ'. -/
+theorem isPreconnected_iUnion {ι : Sort _} {s : ι → Set α} (h₁ : (⋂ i, s i).Nonempty)
     (h₂ : ∀ i, IsPreconnected (s i)) : IsPreconnected (⋃ i, s i) :=
-  Exists.elim h₁ fun f hf => isPreconnected_unionₛ f _ hf (forall_range_iff.2 h₂)
-#align is_preconnected_Union isPreconnected_unionᵢ
+  Exists.elim h₁ fun f hf => isPreconnected_sUnion f _ hf (forall_range_iff.2 h₂)
+#align is_preconnected_Union isPreconnected_iUnion
 
 /- warning: is_preconnected.union -> IsPreconnected.union is a dubious translation:
 lean 3 declaration is
@@ -195,8 +195,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_preconnected.union IsPreconnected.unionₓ'. -/
 theorem IsPreconnected.union (x : α) {s t : Set α} (H1 : x ∈ s) (H2 : x ∈ t) (H3 : IsPreconnected s)
     (H4 : IsPreconnected t) : IsPreconnected (s ∪ t) :=
-  unionₛ_pair s t ▸
-    isPreconnected_unionₛ x {s, t} (by rintro r (rfl | rfl | h) <;> assumption)
+  sUnion_pair s t ▸
+    isPreconnected_sUnion x {s, t} (by rintro r (rfl | rfl | h) <;> assumption)
       (by rintro r (rfl | rfl | h) <;> assumption)
 #align is_preconnected.union IsPreconnected.union
 
@@ -229,9 +229,9 @@ theorem IsConnected.union {s t : Set α} (H : (s ∩ t).Nonempty) (Hs : IsConnec
       Ht.is_preconnected
 #align is_connected.union IsConnected.union
 
-#print IsPreconnected.unionₛ_directed /-
+#print IsPreconnected.sUnion_directed /-
 /-- The directed sUnion of a set S of preconnected subsets is preconnected. -/
-theorem IsPreconnected.unionₛ_directed {S : Set (Set α)} (K : DirectedOn (· ⊆ ·) S)
+theorem IsPreconnected.sUnion_directed {S : Set (Set α)} (K : DirectedOn (· ⊆ ·) S)
     (H : ∀ s ∈ S, IsPreconnected s) : IsPreconnected (⋃₀ S) :=
   by
   rintro u v hu hv Huv ⟨a, ⟨s, hsS, has⟩, hau⟩ ⟨b, ⟨t, htS, hbt⟩, hbv⟩
@@ -240,21 +240,21 @@ theorem IsPreconnected.unionₛ_directed {S : Set (Set α)} (K : DirectedOn (· 
     H _ hrS u v hu hv ((subset_sUnion_of_mem hrS).trans Huv) ⟨a, hsr has, hau⟩ ⟨b, htr hbt, hbv⟩
   have Kruv : r ∩ (u ∩ v) ⊆ ⋃₀ S ∩ (u ∩ v) := inter_subset_inter_left _ (subset_sUnion_of_mem hrS)
   exact Hnuv.mono Kruv
-#align is_preconnected.sUnion_directed IsPreconnected.unionₛ_directed
+#align is_preconnected.sUnion_directed IsPreconnected.sUnion_directed
 -/
 
-/- warning: is_preconnected.bUnion_of_refl_trans_gen -> IsPreconnected.bunionᵢ_of_reflTransGen is a dubious translation:
+/- warning: is_preconnected.bUnion_of_refl_trans_gen -> IsPreconnected.biUnion_of_reflTransGen is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {ι : Type.{u2}} {t : Set.{u2} ι} {s : ι -> (Set.{u1} α)}, (forall (i : ι), (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i t) -> (IsPreconnected.{u1} α _inst_1 (s i))) -> (forall (i : ι), (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i t) -> (forall (j : ι), (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) j t) -> (Relation.ReflTransGen.{u2} ι (fun (i : ι) (j : ι) => And (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (s i) (s j))) (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i t)) i j))) -> (IsPreconnected.{u1} α _inst_1 (Set.unionᵢ.{u1, succ u2} α ι (fun (n : ι) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) n t) (fun (H : Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) n t) => s n))))
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {ι : Type.{u2}} {t : Set.{u2} ι} {s : ι -> (Set.{u1} α)}, (forall (i : ι), (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i t) -> (IsPreconnected.{u1} α _inst_1 (s i))) -> (forall (i : ι), (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i t) -> (forall (j : ι), (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) j t) -> (Relation.ReflTransGen.{u2} ι (fun (i : ι) (j : ι) => And (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (s i) (s j))) (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i t)) i j))) -> (IsPreconnected.{u1} α _inst_1 (Set.iUnion.{u1, succ u2} α ι (fun (n : ι) => Set.iUnion.{u1, 0} α (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) n t) (fun (H : Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) n t) => s n))))
 but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {ι : Type.{u1}} {t : Set.{u1} ι} {s : ι -> (Set.{u2} α)}, (forall (i : ι), (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i t) -> (IsPreconnected.{u2} α _inst_1 (s i))) -> (forall (i : ι), (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i t) -> (forall (j : ι), (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) j t) -> (Relation.ReflTransGen.{u1} ι (fun (i : ι) (j : ι) => And (Set.Nonempty.{u2} α (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) (s i) (s j))) (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i t)) i j))) -> (IsPreconnected.{u2} α _inst_1 (Set.unionᵢ.{u2, succ u1} α ι (fun (n : ι) => Set.unionᵢ.{u2, 0} α (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) n t) (fun (H : Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) n t) => s n))))
-Case conversion may be inaccurate. Consider using '#align is_preconnected.bUnion_of_refl_trans_gen IsPreconnected.bunionᵢ_of_reflTransGenₓ'. -/
+  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {ι : Type.{u1}} {t : Set.{u1} ι} {s : ι -> (Set.{u2} α)}, (forall (i : ι), (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i t) -> (IsPreconnected.{u2} α _inst_1 (s i))) -> (forall (i : ι), (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i t) -> (forall (j : ι), (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) j t) -> (Relation.ReflTransGen.{u1} ι (fun (i : ι) (j : ι) => And (Set.Nonempty.{u2} α (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) (s i) (s j))) (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i t)) i j))) -> (IsPreconnected.{u2} α _inst_1 (Set.iUnion.{u2, succ u1} α ι (fun (n : ι) => Set.iUnion.{u2, 0} α (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) n t) (fun (H : Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) n t) => s n))))
+Case conversion may be inaccurate. Consider using '#align is_preconnected.bUnion_of_refl_trans_gen IsPreconnected.biUnion_of_reflTransGenₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i j «expr ∈ » t) -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (p «expr ⊆ » t) -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i j «expr ∈ » t) -/
 /-- The bUnion of a family of preconnected sets is preconnected if the graph determined by
 whether two sets intersect is preconnected. -/
-theorem IsPreconnected.bunionᵢ_of_reflTransGen {ι : Type _} {t : Set ι} {s : ι → Set α}
+theorem IsPreconnected.biUnion_of_reflTransGen {ι : Type _} {t : Set ι} {s : ι → Set α}
     (H : ∀ i ∈ t, IsPreconnected (s i))
     (K :
       ∀ (i) (_ : i ∈ t) (j) (_ : j ∈ t),
@@ -287,58 +287,58 @@ theorem IsPreconnected.bunionᵢ_of_reflTransGen {ι : Type _} {t : Set ι} {s :
   obtain ⟨j : ι, hj : j ∈ t, hyj : y ∈ s j⟩ := mem_Union₂.1 hy
   obtain ⟨p, hpt, hip, hjp, hp⟩ := P i hi j hj (K i hi j hj)
   exact ⟨⋃ j ∈ p, s j, bUnion_subset_bUnion_left hpt, mem_bUnion hip hxi, mem_bUnion hjp hyj, hp⟩
-#align is_preconnected.bUnion_of_refl_trans_gen IsPreconnected.bunionᵢ_of_reflTransGen
+#align is_preconnected.bUnion_of_refl_trans_gen IsPreconnected.biUnion_of_reflTransGen
 
-/- warning: is_connected.bUnion_of_refl_trans_gen -> IsConnected.bunionᵢ_of_reflTransGen is a dubious translation:
+/- warning: is_connected.bUnion_of_refl_trans_gen -> IsConnected.biUnion_of_reflTransGen is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {ι : Type.{u2}} {t : Set.{u2} ι} {s : ι -> (Set.{u1} α)}, (Set.Nonempty.{u2} ι t) -> (forall (i : ι), (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i t) -> (IsConnected.{u1} α _inst_1 (s i))) -> (forall (i : ι), (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i t) -> (forall (j : ι), (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) j t) -> (Relation.ReflTransGen.{u2} ι (fun (i : ι) (j : ι) => And (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (s i) (s j))) (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i t)) i j))) -> (IsConnected.{u1} α _inst_1 (Set.unionᵢ.{u1, succ u2} α ι (fun (n : ι) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) n t) (fun (H : Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) n t) => s n))))
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {ι : Type.{u2}} {t : Set.{u2} ι} {s : ι -> (Set.{u1} α)}, (Set.Nonempty.{u2} ι t) -> (forall (i : ι), (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i t) -> (IsConnected.{u1} α _inst_1 (s i))) -> (forall (i : ι), (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i t) -> (forall (j : ι), (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) j t) -> (Relation.ReflTransGen.{u2} ι (fun (i : ι) (j : ι) => And (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (s i) (s j))) (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i t)) i j))) -> (IsConnected.{u1} α _inst_1 (Set.iUnion.{u1, succ u2} α ι (fun (n : ι) => Set.iUnion.{u1, 0} α (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) n t) (fun (H : Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) n t) => s n))))
 but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {ι : Type.{u1}} {t : Set.{u1} ι} {s : ι -> (Set.{u2} α)}, (Set.Nonempty.{u1} ι t) -> (forall (i : ι), (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i t) -> (IsConnected.{u2} α _inst_1 (s i))) -> (forall (i : ι), (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i t) -> (forall (j : ι), (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) j t) -> (Relation.ReflTransGen.{u1} ι (fun (i : ι) (j : ι) => And (Set.Nonempty.{u2} α (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) (s i) (s j))) (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i t)) i j))) -> (IsConnected.{u2} α _inst_1 (Set.unionᵢ.{u2, succ u1} α ι (fun (n : ι) => Set.unionᵢ.{u2, 0} α (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) n t) (fun (H : Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) n t) => s n))))
-Case conversion may be inaccurate. Consider using '#align is_connected.bUnion_of_refl_trans_gen IsConnected.bunionᵢ_of_reflTransGenₓ'. -/
+  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {ι : Type.{u1}} {t : Set.{u1} ι} {s : ι -> (Set.{u2} α)}, (Set.Nonempty.{u1} ι t) -> (forall (i : ι), (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i t) -> (IsConnected.{u2} α _inst_1 (s i))) -> (forall (i : ι), (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i t) -> (forall (j : ι), (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) j t) -> (Relation.ReflTransGen.{u1} ι (fun (i : ι) (j : ι) => And (Set.Nonempty.{u2} α (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) (s i) (s j))) (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i t)) i j))) -> (IsConnected.{u2} α _inst_1 (Set.iUnion.{u2, succ u1} α ι (fun (n : ι) => Set.iUnion.{u2, 0} α (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) n t) (fun (H : Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) n t) => s n))))
+Case conversion may be inaccurate. Consider using '#align is_connected.bUnion_of_refl_trans_gen IsConnected.biUnion_of_reflTransGenₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i j «expr ∈ » t) -/
 /-- The bUnion of a family of preconnected sets is preconnected if the graph determined by
 whether two sets intersect is preconnected. -/
-theorem IsConnected.bunionᵢ_of_reflTransGen {ι : Type _} {t : Set ι} {s : ι → Set α}
+theorem IsConnected.biUnion_of_reflTransGen {ι : Type _} {t : Set ι} {s : ι → Set α}
     (ht : t.Nonempty) (H : ∀ i ∈ t, IsConnected (s i))
     (K :
       ∀ (i) (_ : i ∈ t) (j) (_ : j ∈ t),
         ReflTransGen (fun i j : ι => (s i ∩ s j).Nonempty ∧ i ∈ t) i j) :
     IsConnected (⋃ n ∈ t, s n) :=
-  ⟨nonempty_bunionᵢ.2 <| ⟨ht.some, ht.some_mem, (H _ ht.some_mem).Nonempty⟩,
-    IsPreconnected.bunionᵢ_of_reflTransGen (fun i hi => (H i hi).IsPreconnected) K⟩
-#align is_connected.bUnion_of_refl_trans_gen IsConnected.bunionᵢ_of_reflTransGen
+  ⟨nonempty_biUnion.2 <| ⟨ht.some, ht.some_mem, (H _ ht.some_mem).Nonempty⟩,
+    IsPreconnected.biUnion_of_reflTransGen (fun i hi => (H i hi).IsPreconnected) K⟩
+#align is_connected.bUnion_of_refl_trans_gen IsConnected.biUnion_of_reflTransGen
 
-/- warning: is_preconnected.Union_of_refl_trans_gen -> IsPreconnected.unionᵢ_of_reflTransGen is a dubious translation:
+/- warning: is_preconnected.Union_of_refl_trans_gen -> IsPreconnected.iUnion_of_reflTransGen is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {ι : Type.{u2}} {s : ι -> (Set.{u1} α)}, (forall (i : ι), IsPreconnected.{u1} α _inst_1 (s i)) -> (forall (i : ι) (j : ι), Relation.ReflTransGen.{u2} ι (fun (i : ι) (j : ι) => Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (s i) (s j))) i j) -> (IsPreconnected.{u1} α _inst_1 (Set.unionᵢ.{u1, succ u2} α ι (fun (n : ι) => s n)))
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {ι : Type.{u2}} {s : ι -> (Set.{u1} α)}, (forall (i : ι), IsPreconnected.{u1} α _inst_1 (s i)) -> (forall (i : ι) (j : ι), Relation.ReflTransGen.{u2} ι (fun (i : ι) (j : ι) => Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (s i) (s j))) i j) -> (IsPreconnected.{u1} α _inst_1 (Set.iUnion.{u1, succ u2} α ι (fun (n : ι) => s n)))
 but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {ι : Type.{u1}} {s : ι -> (Set.{u2} α)}, (forall (i : ι), IsPreconnected.{u2} α _inst_1 (s i)) -> (forall (i : ι) (j : ι), Relation.ReflTransGen.{u1} ι (fun (i : ι) (j : ι) => Set.Nonempty.{u2} α (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) (s i) (s j))) i j) -> (IsPreconnected.{u2} α _inst_1 (Set.unionᵢ.{u2, succ u1} α ι (fun (n : ι) => s n)))
-Case conversion may be inaccurate. Consider using '#align is_preconnected.Union_of_refl_trans_gen IsPreconnected.unionᵢ_of_reflTransGenₓ'. -/
+  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {ι : Type.{u1}} {s : ι -> (Set.{u2} α)}, (forall (i : ι), IsPreconnected.{u2} α _inst_1 (s i)) -> (forall (i : ι) (j : ι), Relation.ReflTransGen.{u1} ι (fun (i : ι) (j : ι) => Set.Nonempty.{u2} α (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) (s i) (s j))) i j) -> (IsPreconnected.{u2} α _inst_1 (Set.iUnion.{u2, succ u1} α ι (fun (n : ι) => s n)))
+Case conversion may be inaccurate. Consider using '#align is_preconnected.Union_of_refl_trans_gen IsPreconnected.iUnion_of_reflTransGenₓ'. -/
 /-- Preconnectedness of the Union of a family of preconnected sets
 indexed by the vertices of a preconnected graph,
 where two vertices are joined when the corresponding sets intersect. -/
-theorem IsPreconnected.unionᵢ_of_reflTransGen {ι : Type _} {s : ι → Set α}
+theorem IsPreconnected.iUnion_of_reflTransGen {ι : Type _} {s : ι → Set α}
     (H : ∀ i, IsPreconnected (s i))
     (K : ∀ i j, ReflTransGen (fun i j : ι => (s i ∩ s j).Nonempty) i j) :
     IsPreconnected (⋃ n, s n) := by
   rw [← bUnion_univ]
   exact
-    IsPreconnected.bunionᵢ_of_reflTransGen (fun i _ => H i) fun i _ j _ => by
+    IsPreconnected.biUnion_of_reflTransGen (fun i _ => H i) fun i _ j _ => by
       simpa [mem_univ] using K i j
-#align is_preconnected.Union_of_refl_trans_gen IsPreconnected.unionᵢ_of_reflTransGen
+#align is_preconnected.Union_of_refl_trans_gen IsPreconnected.iUnion_of_reflTransGen
 
-/- warning: is_connected.Union_of_refl_trans_gen -> IsConnected.unionᵢ_of_reflTransGen is a dubious translation:
+/- warning: is_connected.Union_of_refl_trans_gen -> IsConnected.iUnion_of_reflTransGen is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {ι : Type.{u2}} [_inst_2 : Nonempty.{succ u2} ι] {s : ι -> (Set.{u1} α)}, (forall (i : ι), IsConnected.{u1} α _inst_1 (s i)) -> (forall (i : ι) (j : ι), Relation.ReflTransGen.{u2} ι (fun (i : ι) (j : ι) => Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (s i) (s j))) i j) -> (IsConnected.{u1} α _inst_1 (Set.unionᵢ.{u1, succ u2} α ι (fun (n : ι) => s n)))
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {ι : Type.{u2}} [_inst_2 : Nonempty.{succ u2} ι] {s : ι -> (Set.{u1} α)}, (forall (i : ι), IsConnected.{u1} α _inst_1 (s i)) -> (forall (i : ι) (j : ι), Relation.ReflTransGen.{u2} ι (fun (i : ι) (j : ι) => Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (s i) (s j))) i j) -> (IsConnected.{u1} α _inst_1 (Set.iUnion.{u1, succ u2} α ι (fun (n : ι) => s n)))
 but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {ι : Type.{u1}} [_inst_2 : Nonempty.{succ u1} ι] {s : ι -> (Set.{u2} α)}, (forall (i : ι), IsConnected.{u2} α _inst_1 (s i)) -> (forall (i : ι) (j : ι), Relation.ReflTransGen.{u1} ι (fun (i : ι) (j : ι) => Set.Nonempty.{u2} α (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) (s i) (s j))) i j) -> (IsConnected.{u2} α _inst_1 (Set.unionᵢ.{u2, succ u1} α ι (fun (n : ι) => s n)))
-Case conversion may be inaccurate. Consider using '#align is_connected.Union_of_refl_trans_gen IsConnected.unionᵢ_of_reflTransGenₓ'. -/
-theorem IsConnected.unionᵢ_of_reflTransGen {ι : Type _} [Nonempty ι] {s : ι → Set α}
+  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {ι : Type.{u1}} [_inst_2 : Nonempty.{succ u1} ι] {s : ι -> (Set.{u2} α)}, (forall (i : ι), IsConnected.{u2} α _inst_1 (s i)) -> (forall (i : ι) (j : ι), Relation.ReflTransGen.{u1} ι (fun (i : ι) (j : ι) => Set.Nonempty.{u2} α (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) (s i) (s j))) i j) -> (IsConnected.{u2} α _inst_1 (Set.iUnion.{u2, succ u1} α ι (fun (n : ι) => s n)))
+Case conversion may be inaccurate. Consider using '#align is_connected.Union_of_refl_trans_gen IsConnected.iUnion_of_reflTransGenₓ'. -/
+theorem IsConnected.iUnion_of_reflTransGen {ι : Type _} [Nonempty ι] {s : ι → Set α}
     (H : ∀ i, IsConnected (s i))
     (K : ∀ i j, ReflTransGen (fun i j : ι => (s i ∩ s j).Nonempty) i j) : IsConnected (⋃ n, s n) :=
-  ⟨nonempty_unionᵢ.2 <| Nonempty.elim ‹_› fun i : ι => ⟨i, (H _).Nonempty⟩,
-    IsPreconnected.unionᵢ_of_reflTransGen (fun i => (H i).IsPreconnected) K⟩
-#align is_connected.Union_of_refl_trans_gen IsConnected.unionᵢ_of_reflTransGen
+  ⟨nonempty_iUnion.2 <| Nonempty.elim ‹_› fun i : ι => ⟨i, (H _).Nonempty⟩,
+    IsPreconnected.iUnion_of_reflTransGen (fun i => (H i).IsPreconnected) K⟩
+#align is_connected.Union_of_refl_trans_gen IsConnected.iUnion_of_reflTransGen
 
 section SuccOrder
 
@@ -346,49 +346,49 @@ open Order
 
 variable [LinearOrder β] [SuccOrder β] [IsSuccArchimedean β]
 
-/- warning: is_preconnected.Union_of_chain -> IsPreconnected.unionᵢ_of_chain is a dubious translation:
+/- warning: is_preconnected.Union_of_chain -> IsPreconnected.iUnion_of_chain is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] [_inst_3 : SuccOrder.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2))))] [_inst_4 : IsSuccArchimedean.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) _inst_3] {s : β -> (Set.{u1} α)}, (forall (n : β), IsPreconnected.{u1} α _inst_1 (s n)) -> (forall (n : β), Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (s n) (s (Order.succ.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) _inst_3 n)))) -> (IsPreconnected.{u1} α _inst_1 (Set.unionᵢ.{u1, succ u2} α β (fun (n : β) => s n)))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] [_inst_3 : SuccOrder.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2))))] [_inst_4 : IsSuccArchimedean.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) _inst_3] {s : β -> (Set.{u1} α)}, (forall (n : β), IsPreconnected.{u1} α _inst_1 (s n)) -> (forall (n : β), Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (s n) (s (Order.succ.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) _inst_3 n)))) -> (IsPreconnected.{u1} α _inst_1 (Set.iUnion.{u1, succ u2} α β (fun (n : β) => s n)))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] [_inst_3 : SuccOrder.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2)))))] [_inst_4 : IsSuccArchimedean.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) _inst_3] {s : β -> (Set.{u1} α)}, (forall (n : β), IsPreconnected.{u1} α _inst_1 (s n)) -> (forall (n : β), Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (s n) (s (Order.succ.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) _inst_3 n)))) -> (IsPreconnected.{u1} α _inst_1 (Set.unionᵢ.{u1, succ u2} α β (fun (n : β) => s n)))
-Case conversion may be inaccurate. Consider using '#align is_preconnected.Union_of_chain IsPreconnected.unionᵢ_of_chainₓ'. -/
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] [_inst_3 : SuccOrder.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2)))))] [_inst_4 : IsSuccArchimedean.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) _inst_3] {s : β -> (Set.{u1} α)}, (forall (n : β), IsPreconnected.{u1} α _inst_1 (s n)) -> (forall (n : β), Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (s n) (s (Order.succ.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) _inst_3 n)))) -> (IsPreconnected.{u1} α _inst_1 (Set.iUnion.{u1, succ u2} α β (fun (n : β) => s n)))
+Case conversion may be inaccurate. Consider using '#align is_preconnected.Union_of_chain IsPreconnected.iUnion_of_chainₓ'. -/
 /-- The Union of connected sets indexed by a type with an archimedean successor (like `ℕ` or `ℤ`)
   such that any two neighboring sets meet is preconnected. -/
-theorem IsPreconnected.unionᵢ_of_chain {s : β → Set α} (H : ∀ n, IsPreconnected (s n))
+theorem IsPreconnected.iUnion_of_chain {s : β → Set α} (H : ∀ n, IsPreconnected (s n))
     (K : ∀ n, (s n ∩ s (succ n)).Nonempty) : IsPreconnected (⋃ n, s n) :=
-  IsPreconnected.unionᵢ_of_reflTransGen H fun i j =>
+  IsPreconnected.iUnion_of_reflTransGen H fun i j =>
     reflTransGen_of_succ _ (fun i _ => K i) fun i _ =>
       by
       rw [inter_comm]
       exact K i
-#align is_preconnected.Union_of_chain IsPreconnected.unionᵢ_of_chain
+#align is_preconnected.Union_of_chain IsPreconnected.iUnion_of_chain
 
-/- warning: is_connected.Union_of_chain -> IsConnected.unionᵢ_of_chain is a dubious translation:
+/- warning: is_connected.Union_of_chain -> IsConnected.iUnion_of_chain is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] [_inst_3 : SuccOrder.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2))))] [_inst_4 : IsSuccArchimedean.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) _inst_3] [_inst_5 : Nonempty.{succ u2} β] {s : β -> (Set.{u1} α)}, (forall (n : β), IsConnected.{u1} α _inst_1 (s n)) -> (forall (n : β), Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (s n) (s (Order.succ.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) _inst_3 n)))) -> (IsConnected.{u1} α _inst_1 (Set.unionᵢ.{u1, succ u2} α β (fun (n : β) => s n)))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] [_inst_3 : SuccOrder.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2))))] [_inst_4 : IsSuccArchimedean.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) _inst_3] [_inst_5 : Nonempty.{succ u2} β] {s : β -> (Set.{u1} α)}, (forall (n : β), IsConnected.{u1} α _inst_1 (s n)) -> (forall (n : β), Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (s n) (s (Order.succ.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) _inst_3 n)))) -> (IsConnected.{u1} α _inst_1 (Set.iUnion.{u1, succ u2} α β (fun (n : β) => s n)))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] [_inst_3 : SuccOrder.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2)))))] [_inst_4 : IsSuccArchimedean.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) _inst_3] [_inst_5 : Nonempty.{succ u2} β] {s : β -> (Set.{u1} α)}, (forall (n : β), IsConnected.{u1} α _inst_1 (s n)) -> (forall (n : β), Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (s n) (s (Order.succ.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) _inst_3 n)))) -> (IsConnected.{u1} α _inst_1 (Set.unionᵢ.{u1, succ u2} α β (fun (n : β) => s n)))
-Case conversion may be inaccurate. Consider using '#align is_connected.Union_of_chain IsConnected.unionᵢ_of_chainₓ'. -/
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] [_inst_3 : SuccOrder.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2)))))] [_inst_4 : IsSuccArchimedean.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) _inst_3] [_inst_5 : Nonempty.{succ u2} β] {s : β -> (Set.{u1} α)}, (forall (n : β), IsConnected.{u1} α _inst_1 (s n)) -> (forall (n : β), Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (s n) (s (Order.succ.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) _inst_3 n)))) -> (IsConnected.{u1} α _inst_1 (Set.iUnion.{u1, succ u2} α β (fun (n : β) => s n)))
+Case conversion may be inaccurate. Consider using '#align is_connected.Union_of_chain IsConnected.iUnion_of_chainₓ'. -/
 /-- The Union of connected sets indexed by a type with an archimedean successor (like `ℕ` or `ℤ`)
   such that any two neighboring sets meet is connected. -/
-theorem IsConnected.unionᵢ_of_chain [Nonempty β] {s : β → Set α} (H : ∀ n, IsConnected (s n))
+theorem IsConnected.iUnion_of_chain [Nonempty β] {s : β → Set α} (H : ∀ n, IsConnected (s n))
     (K : ∀ n, (s n ∩ s (succ n)).Nonempty) : IsConnected (⋃ n, s n) :=
-  IsConnected.unionᵢ_of_reflTransGen H fun i j =>
+  IsConnected.iUnion_of_reflTransGen H fun i j =>
     reflTransGen_of_succ _ (fun i _ => K i) fun i _ =>
       by
       rw [inter_comm]
       exact K i
-#align is_connected.Union_of_chain IsConnected.unionᵢ_of_chain
+#align is_connected.Union_of_chain IsConnected.iUnion_of_chain
 
-/- warning: is_preconnected.bUnion_of_chain -> IsPreconnected.bunionᵢ_of_chain is a dubious translation:
+/- warning: is_preconnected.bUnion_of_chain -> IsPreconnected.biUnion_of_chain is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] [_inst_3 : SuccOrder.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2))))] [_inst_4 : IsSuccArchimedean.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) _inst_3] {s : β -> (Set.{u1} α)} {t : Set.{u2} β}, (Set.OrdConnected.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) t) -> (forall (n : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) n t) -> (IsPreconnected.{u1} α _inst_1 (s n))) -> (forall (n : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) n t) -> (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) (Order.succ.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) _inst_3 n) t) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (s n) (s (Order.succ.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) _inst_3 n))))) -> (IsPreconnected.{u1} α _inst_1 (Set.unionᵢ.{u1, succ u2} α β (fun (n : β) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) n t) (fun (H : Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) n t) => s n))))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] [_inst_3 : SuccOrder.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2))))] [_inst_4 : IsSuccArchimedean.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) _inst_3] {s : β -> (Set.{u1} α)} {t : Set.{u2} β}, (Set.OrdConnected.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) t) -> (forall (n : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) n t) -> (IsPreconnected.{u1} α _inst_1 (s n))) -> (forall (n : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) n t) -> (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) (Order.succ.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) _inst_3 n) t) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (s n) (s (Order.succ.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) _inst_3 n))))) -> (IsPreconnected.{u1} α _inst_1 (Set.iUnion.{u1, succ u2} α β (fun (n : β) => Set.iUnion.{u1, 0} α (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) n t) (fun (H : Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) n t) => s n))))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] [_inst_3 : SuccOrder.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2)))))] [_inst_4 : IsSuccArchimedean.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) _inst_3] {s : β -> (Set.{u1} α)} {t : Set.{u2} β}, (Set.OrdConnected.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) t) -> (forall (n : β), (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) n t) -> (IsPreconnected.{u1} α _inst_1 (s n))) -> (forall (n : β), (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) n t) -> (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) (Order.succ.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) _inst_3 n) t) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (s n) (s (Order.succ.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) _inst_3 n))))) -> (IsPreconnected.{u1} α _inst_1 (Set.unionᵢ.{u1, succ u2} α β (fun (n : β) => Set.unionᵢ.{u1, 0} α (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) n t) (fun (H : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) n t) => s n))))
-Case conversion may be inaccurate. Consider using '#align is_preconnected.bUnion_of_chain IsPreconnected.bunionᵢ_of_chainₓ'. -/
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] [_inst_3 : SuccOrder.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2)))))] [_inst_4 : IsSuccArchimedean.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) _inst_3] {s : β -> (Set.{u1} α)} {t : Set.{u2} β}, (Set.OrdConnected.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) t) -> (forall (n : β), (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) n t) -> (IsPreconnected.{u1} α _inst_1 (s n))) -> (forall (n : β), (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) n t) -> (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) (Order.succ.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) _inst_3 n) t) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (s n) (s (Order.succ.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) _inst_3 n))))) -> (IsPreconnected.{u1} α _inst_1 (Set.iUnion.{u1, succ u2} α β (fun (n : β) => Set.iUnion.{u1, 0} α (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) n t) (fun (H : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) n t) => s n))))
+Case conversion may be inaccurate. Consider using '#align is_preconnected.bUnion_of_chain IsPreconnected.biUnion_of_chainₓ'. -/
 /-- The Union of preconnected sets indexed by a subset of a type with an archimedean successor
   (like `ℕ` or `ℤ`) such that any two neighboring sets meet is preconnected. -/
-theorem IsPreconnected.bunionᵢ_of_chain {s : β → Set α} {t : Set β} (ht : OrdConnected t)
+theorem IsPreconnected.biUnion_of_chain {s : β → Set α} {t : Set β} (ht : OrdConnected t)
     (H : ∀ n ∈ t, IsPreconnected (s n))
     (K : ∀ n : β, n ∈ t → succ n ∈ t → (s n ∩ s (succ n)).Nonempty) :
     IsPreconnected (⋃ n ∈ t, s n) :=
@@ -399,28 +399,28 @@ theorem IsPreconnected.bunionᵢ_of_chain {s : β → Set α} {t : Set β} (ht :
     ht.out hi hj ⟨hk.1.trans <| le_succ k, succ_le_of_lt hk.2⟩
   have h3 : ∀ {i j k : β}, i ∈ t → j ∈ t → k ∈ Ico i j → (s k ∩ s (succ k)).Nonempty :=
     fun i j k hi hj hk => K _ (h1 hi hj hk) (h2 hi hj hk)
-  refine' IsPreconnected.bunionᵢ_of_reflTransGen H fun i hi j hj => _
+  refine' IsPreconnected.biUnion_of_reflTransGen H fun i hi j hj => _
   exact
     reflTransGen_of_succ _ (fun k hk => ⟨h3 hi hj hk, h1 hi hj hk⟩) fun k hk =>
       ⟨by
         rw [inter_comm]
         exact h3 hj hi hk, h2 hj hi hk⟩
-#align is_preconnected.bUnion_of_chain IsPreconnected.bunionᵢ_of_chain
+#align is_preconnected.bUnion_of_chain IsPreconnected.biUnion_of_chain
 
-/- warning: is_connected.bUnion_of_chain -> IsConnected.bunionᵢ_of_chain is a dubious translation:
+/- warning: is_connected.bUnion_of_chain -> IsConnected.biUnion_of_chain is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] [_inst_3 : SuccOrder.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2))))] [_inst_4 : IsSuccArchimedean.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) _inst_3] {s : β -> (Set.{u1} α)} {t : Set.{u2} β}, (Set.Nonempty.{u2} β t) -> (Set.OrdConnected.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) t) -> (forall (n : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) n t) -> (IsConnected.{u1} α _inst_1 (s n))) -> (forall (n : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) n t) -> (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) (Order.succ.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) _inst_3 n) t) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (s n) (s (Order.succ.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) _inst_3 n))))) -> (IsConnected.{u1} α _inst_1 (Set.unionᵢ.{u1, succ u2} α β (fun (n : β) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) n t) (fun (H : Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) n t) => s n))))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] [_inst_3 : SuccOrder.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2))))] [_inst_4 : IsSuccArchimedean.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) _inst_3] {s : β -> (Set.{u1} α)} {t : Set.{u2} β}, (Set.Nonempty.{u2} β t) -> (Set.OrdConnected.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) t) -> (forall (n : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) n t) -> (IsConnected.{u1} α _inst_1 (s n))) -> (forall (n : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) n t) -> (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) (Order.succ.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) _inst_3 n) t) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (s n) (s (Order.succ.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) _inst_3 n))))) -> (IsConnected.{u1} α _inst_1 (Set.iUnion.{u1, succ u2} α β (fun (n : β) => Set.iUnion.{u1, 0} α (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) n t) (fun (H : Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) n t) => s n))))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] [_inst_3 : SuccOrder.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2)))))] [_inst_4 : IsSuccArchimedean.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) _inst_3] {s : β -> (Set.{u1} α)} {t : Set.{u2} β}, (Set.Nonempty.{u2} β t) -> (Set.OrdConnected.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) t) -> (forall (n : β), (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) n t) -> (IsConnected.{u1} α _inst_1 (s n))) -> (forall (n : β), (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) n t) -> (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) (Order.succ.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) _inst_3 n) t) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (s n) (s (Order.succ.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) _inst_3 n))))) -> (IsConnected.{u1} α _inst_1 (Set.unionᵢ.{u1, succ u2} α β (fun (n : β) => Set.unionᵢ.{u1, 0} α (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) n t) (fun (H : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) n t) => s n))))
-Case conversion may be inaccurate. Consider using '#align is_connected.bUnion_of_chain IsConnected.bunionᵢ_of_chainₓ'. -/
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] [_inst_3 : SuccOrder.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2)))))] [_inst_4 : IsSuccArchimedean.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) _inst_3] {s : β -> (Set.{u1} α)} {t : Set.{u2} β}, (Set.Nonempty.{u2} β t) -> (Set.OrdConnected.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) t) -> (forall (n : β), (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) n t) -> (IsConnected.{u1} α _inst_1 (s n))) -> (forall (n : β), (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) n t) -> (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) (Order.succ.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) _inst_3 n) t) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (s n) (s (Order.succ.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) _inst_3 n))))) -> (IsConnected.{u1} α _inst_1 (Set.iUnion.{u1, succ u2} α β (fun (n : β) => Set.iUnion.{u1, 0} α (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) n t) (fun (H : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) n t) => s n))))
+Case conversion may be inaccurate. Consider using '#align is_connected.bUnion_of_chain IsConnected.biUnion_of_chainₓ'. -/
 /-- The Union of connected sets indexed by a subset of a type with an archimedean successor
   (like `ℕ` or `ℤ`) such that any two neighboring sets meet is preconnected. -/
-theorem IsConnected.bunionᵢ_of_chain {s : β → Set α} {t : Set β} (hnt : t.Nonempty)
+theorem IsConnected.biUnion_of_chain {s : β → Set α} {t : Set β} (hnt : t.Nonempty)
     (ht : OrdConnected t) (H : ∀ n ∈ t, IsConnected (s n))
     (K : ∀ n : β, n ∈ t → succ n ∈ t → (s n ∩ s (succ n)).Nonempty) : IsConnected (⋃ n ∈ t, s n) :=
-  ⟨nonempty_bunionᵢ.2 <| ⟨hnt.some, hnt.some_mem, (H _ hnt.some_mem).Nonempty⟩,
-    IsPreconnected.bunionᵢ_of_chain ht (fun i hi => (H i hi).IsPreconnected) K⟩
-#align is_connected.bUnion_of_chain IsConnected.bunionᵢ_of_chain
+  ⟨nonempty_biUnion.2 <| ⟨hnt.some, hnt.some_mem, (H _ hnt.some_mem).Nonempty⟩,
+    IsPreconnected.biUnion_of_chain ht (fun i hi => (H i hi).IsPreconnected) K⟩
+#align is_connected.bUnion_of_chain IsConnected.biUnion_of_chain
 
 end SuccOrder
 
@@ -872,7 +872,7 @@ theorem connectedComponentIn_eq_empty {F : Set α} {x : α} (h : x ∉ F) :
 
 #print mem_connectedComponent /-
 theorem mem_connectedComponent {x : α} : x ∈ connectedComponent x :=
-  mem_unionₛ_of_mem (mem_singleton x) ⟨isConnected_singleton.IsPreconnected, mem_singleton x⟩
+  mem_sUnion_of_mem (mem_singleton x) ⟨isConnected_singleton.IsPreconnected, mem_singleton x⟩
 #align mem_connected_component mem_connectedComponent
 -/
 
@@ -907,7 +907,7 @@ theorem connectedComponentIn_subset (F : Set α) (x : α) : connectedComponentIn
 
 #print isPreconnected_connectedComponent /-
 theorem isPreconnected_connectedComponent {x : α} : IsPreconnected (connectedComponent x) :=
-  isPreconnected_unionₛ x _ (fun _ => And.right) fun _ => And.left
+  isPreconnected_sUnion x _ (fun _ => And.right) fun _ => And.left
 #align is_preconnected_connected_component isPreconnected_connectedComponent
 -/
 
@@ -939,7 +939,7 @@ theorem isConnected_connectedComponentIn_iff {x : α} {F : Set α} :
 
 #print IsPreconnected.subset_connectedComponent /-
 theorem IsPreconnected.subset_connectedComponent {x : α} {s : Set α} (H1 : IsPreconnected s)
-    (H2 : x ∈ s) : s ⊆ connectedComponent x := fun z hz => mem_unionₛ_of_mem hz ⟨H1, H2⟩
+    (H2 : x ∈ s) : s ⊆ connectedComponent x := fun z hz => mem_sUnion_of_mem hz ⟨H1, H2⟩
 #align is_preconnected.subset_connected_component IsPreconnected.subset_connectedComponent
 -/
 
@@ -1311,16 +1311,16 @@ theorem isPreconnected_iff_subset_of_disjoint {s : Set α} :
       exact ⟨x, hxs, ⟨hxu, h hxs⟩⟩
 #align is_preconnected_iff_subset_of_disjoint isPreconnected_iff_subset_of_disjoint
 
-/- warning: is_connected_iff_sUnion_disjoint_open -> isConnected_iff_unionₛ_disjoint_open is a dubious translation:
+/- warning: is_connected_iff_sUnion_disjoint_open -> isConnected_iff_sUnion_disjoint_open is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, Iff (IsConnected.{u1} α _inst_1 s) (forall (U : Finset.{u1} (Set.{u1} α)), (forall (u : Set.{u1} α) (v : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Finset.{u1} (Set.{u1} α)) (Finset.hasMem.{u1} (Set.{u1} α)) u U) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Finset.{u1} (Set.{u1} α)) (Finset.hasMem.{u1} (Set.{u1} α)) v U) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) u v))) -> (Eq.{succ u1} (Set.{u1} α) u v)) -> (forall (u : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Finset.{u1} (Set.{u1} α)) (Finset.hasMem.{u1} (Set.{u1} α)) u U) -> (IsOpen.{u1} α _inst_1 u)) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Set.unionₛ.{u1} α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} (Set.{u1} α)) (Set.{u1} (Set.{u1} α)) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} (Set.{u1} α)) (Set.{u1} (Set.{u1} α)) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} (Set.{u1} α)) (Set.{u1} (Set.{u1} α)) (Finset.Set.hasCoeT.{u1} (Set.{u1} α)))) U))) -> (Exists.{succ u1} (Set.{u1} α) (fun (u : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Finset.{u1} (Set.{u1} α)) (Finset.hasMem.{u1} (Set.{u1} α)) u U) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Finset.{u1} (Set.{u1} α)) (Finset.hasMem.{u1} (Set.{u1} α)) u U) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s u))))
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, Iff (IsConnected.{u1} α _inst_1 s) (forall (U : Finset.{u1} (Set.{u1} α)), (forall (u : Set.{u1} α) (v : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Finset.{u1} (Set.{u1} α)) (Finset.hasMem.{u1} (Set.{u1} α)) u U) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Finset.{u1} (Set.{u1} α)) (Finset.hasMem.{u1} (Set.{u1} α)) v U) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) u v))) -> (Eq.{succ u1} (Set.{u1} α) u v)) -> (forall (u : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Finset.{u1} (Set.{u1} α)) (Finset.hasMem.{u1} (Set.{u1} α)) u U) -> (IsOpen.{u1} α _inst_1 u)) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Set.sUnion.{u1} α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} (Set.{u1} α)) (Set.{u1} (Set.{u1} α)) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} (Set.{u1} α)) (Set.{u1} (Set.{u1} α)) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} (Set.{u1} α)) (Set.{u1} (Set.{u1} α)) (Finset.Set.hasCoeT.{u1} (Set.{u1} α)))) U))) -> (Exists.{succ u1} (Set.{u1} α) (fun (u : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Finset.{u1} (Set.{u1} α)) (Finset.hasMem.{u1} (Set.{u1} α)) u U) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Finset.{u1} (Set.{u1} α)) (Finset.hasMem.{u1} (Set.{u1} α)) u U) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s u))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, Iff (IsConnected.{u1} α _inst_1 s) (forall (U : Finset.{u1} (Set.{u1} α)), (forall (u : Set.{u1} α) (v : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Finset.{u1} (Set.{u1} α)) (Finset.instMembershipFinset.{u1} (Set.{u1} α)) u U) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Finset.{u1} (Set.{u1} α)) (Finset.instMembershipFinset.{u1} (Set.{u1} α)) v U) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) u v))) -> (Eq.{succ u1} (Set.{u1} α) u v)) -> (forall (u : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Finset.{u1} (Set.{u1} α)) (Finset.instMembershipFinset.{u1} (Set.{u1} α)) u U) -> (IsOpen.{u1} α _inst_1 u)) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Set.unionₛ.{u1} α (Finset.toSet.{u1} (Set.{u1} α) U))) -> (Exists.{succ u1} (Set.{u1} α) (fun (u : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Finset.{u1} (Set.{u1} α)) (Finset.instMembershipFinset.{u1} (Set.{u1} α)) u U) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s u))))
-Case conversion may be inaccurate. Consider using '#align is_connected_iff_sUnion_disjoint_open isConnected_iff_unionₛ_disjoint_openₓ'. -/
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, Iff (IsConnected.{u1} α _inst_1 s) (forall (U : Finset.{u1} (Set.{u1} α)), (forall (u : Set.{u1} α) (v : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Finset.{u1} (Set.{u1} α)) (Finset.instMembershipFinset.{u1} (Set.{u1} α)) u U) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Finset.{u1} (Set.{u1} α)) (Finset.instMembershipFinset.{u1} (Set.{u1} α)) v U) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) u v))) -> (Eq.{succ u1} (Set.{u1} α) u v)) -> (forall (u : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Finset.{u1} (Set.{u1} α)) (Finset.instMembershipFinset.{u1} (Set.{u1} α)) u U) -> (IsOpen.{u1} α _inst_1 u)) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Set.sUnion.{u1} α (Finset.toSet.{u1} (Set.{u1} α) U))) -> (Exists.{succ u1} (Set.{u1} α) (fun (u : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Finset.{u1} (Set.{u1} α)) (Finset.instMembershipFinset.{u1} (Set.{u1} α)) u U) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s u))))
+Case conversion may be inaccurate. Consider using '#align is_connected_iff_sUnion_disjoint_open isConnected_iff_sUnion_disjoint_openₓ'. -/
 /-- A set `s` is connected if and only if
 for every cover by a finite collection of open sets that are pairwise disjoint on `s`,
 it is contained in one of the members of the collection. -/
-theorem isConnected_iff_unionₛ_disjoint_open {s : Set α} :
+theorem isConnected_iff_sUnion_disjoint_open {s : Set α} :
     IsConnected s ↔
       ∀ (U : Finset (Set α)) (H : ∀ u v : Set α, u ∈ U → v ∈ U → (s ∩ (u ∩ v)).Nonempty → u = v)
         (hU : ∀ u ∈ U, IsOpen u) (hs : s ⊆ ⋃₀ ↑U), ∃ u ∈ U, s ⊆ u :=
@@ -1344,7 +1344,7 @@ theorem isConnected_iff_unionₛ_disjoint_open {s : Set α} :
         · intros
           solve_by_elim [Finset.mem_insert_of_mem]
       · solve_by_elim [Finset.mem_insert_self]
-      · apply isOpen_unionₛ
+      · apply isOpen_sUnion
         intros
         solve_by_elim [Finset.mem_insert_of_mem]
       · apply eq_empty_of_subset_empty
@@ -1374,7 +1374,7 @@ theorem isConnected_iff_unionₛ_disjoint_open {s : Set α} :
       rw [Finset.mem_insert, Finset.mem_singleton]
       rintro (rfl | rfl) <;> assumption
     · simpa using hs
-#align is_connected_iff_sUnion_disjoint_open isConnected_iff_unionₛ_disjoint_open
+#align is_connected_iff_sUnion_disjoint_open isConnected_iff_sUnion_disjoint_open
 
 /- warning: is_preconnected.subset_clopen -> IsPreconnected.subset_clopen is a dubious translation:
 lean 3 declaration is
@@ -1480,22 +1480,22 @@ theorem IsClopen.connectedComponent_subset {x} (hs : IsClopen s) (hx : x ∈ s) 
 #align is_clopen.connected_component_subset IsClopen.connectedComponent_subset
 -/
 
-#print connectedComponent_subset_interᵢ_clopen /-
+#print connectedComponent_subset_iInter_clopen /-
 /-- The connected component of a point is always a subset of the intersection of all its clopen
 neighbourhoods. -/
-theorem connectedComponent_subset_interᵢ_clopen {x : α} :
+theorem connectedComponent_subset_iInter_clopen {x : α} :
     connectedComponent x ⊆ ⋂ Z : { Z : Set α // IsClopen Z ∧ x ∈ Z }, Z :=
-  subset_interᵢ fun Z => Z.2.1.connectedComponent_subset Z.2.2
-#align connected_component_subset_Inter_clopen connectedComponent_subset_interᵢ_clopen
+  subset_iInter fun Z => Z.2.1.connectedComponent_subset Z.2.2
+#align connected_component_subset_Inter_clopen connectedComponent_subset_iInter_clopen
 -/
 
-#print IsClopen.bunionᵢ_connectedComponent_eq /-
+#print IsClopen.biUnion_connectedComponent_eq /-
 /-- A clopen set is the union of its connected components. -/
-theorem IsClopen.bunionᵢ_connectedComponent_eq {Z : Set α} (h : IsClopen Z) :
+theorem IsClopen.biUnion_connectedComponent_eq {Z : Set α} (h : IsClopen Z) :
     (⋃ x ∈ Z, connectedComponent x) = Z :=
-  Subset.antisymm (unionᵢ₂_subset fun x => h.connectedComponent_subset) fun x hx =>
-    mem_unionᵢ₂_of_mem hx mem_connectedComponent
-#align is_clopen.bUnion_connected_component_eq IsClopen.bunionᵢ_connectedComponent_eq
+  Subset.antisymm (iUnion₂_subset fun x => h.connectedComponent_subset) fun x hx =>
+    mem_iUnion₂_of_mem hx mem_connectedComponent
+#align is_clopen.bUnion_connected_component_eq IsClopen.biUnion_connectedComponent_eq
 -/
 
 #print preimage_connectedComponent_connected /-

@@ -445,11 +445,11 @@ instance : Inf (LieSubmodule R L M) :=
 instance : InfSet (LieSubmodule R L M) :=
   ⟨fun S =>
     {
-      infₛ
+      sInf
         "./././Mathport/Syntax/Translate/Expr.lean:366:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}" with
       lie_mem := fun x m h =>
         by
-        simp only [Submodule.mem_carrier, mem_Inter, Submodule.infₛ_coe, mem_set_of_eq,
+        simp only [Submodule.mem_carrier, mem_Inter, Submodule.sInf_coe, mem_set_of_eq,
           forall_apply_eq_imp_iff₂, exists_imp] at *
         intro N hN
         apply N.lie_mem (h N hN) }⟩
@@ -461,22 +461,22 @@ theorem inf_coe : (↑(N ⊓ N') : Set M) = N ∩ N' :=
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:366:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S} -/
 @[simp]
-theorem infₛ_coe_to_submodule (S : Set (LieSubmodule R L M)) :
-    (↑(infₛ S) : Submodule R M) =
-      infₛ
+theorem sInf_coe_to_submodule (S : Set (LieSubmodule R L M)) :
+    (↑(sInf S) : Submodule R M) =
+      sInf
         "./././Mathport/Syntax/Translate/Expr.lean:366:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}" :=
   rfl
-#align lie_submodule.Inf_coe_to_submodule LieSubmodule.infₛ_coe_to_submodule
+#align lie_submodule.Inf_coe_to_submodule LieSubmodule.sInf_coe_to_submodule
 
 @[simp]
-theorem infₛ_coe (S : Set (LieSubmodule R L M)) : (↑(infₛ S) : Set M) = ⋂ s ∈ S, (s : Set M) :=
+theorem sInf_coe (S : Set (LieSubmodule R L M)) : (↑(sInf S) : Set M) = ⋂ s ∈ S, (s : Set M) :=
   by
-  rw [← LieSubmodule.coe_to_submodule, Inf_coe_to_submodule, Submodule.infₛ_coe]
+  rw [← LieSubmodule.coe_to_submodule, Inf_coe_to_submodule, Submodule.sInf_coe]
   ext m
   simpa only [mem_Inter, mem_set_of_eq, forall_apply_eq_imp_iff₂, exists_imp]
-#align lie_submodule.Inf_coe LieSubmodule.infₛ_coe
+#align lie_submodule.Inf_coe LieSubmodule.sInf_coe
 
-theorem infₛ_glb (S : Set (LieSubmodule R L M)) : IsGLB S (infₛ S) :=
+theorem sInf_glb (S : Set (LieSubmodule R L M)) : IsGLB S (sInf S) :=
   by
   have h : ∀ N N' : LieSubmodule R L M, (N : Set M) ≤ N' ↔ N ≤ N' :=
     by
@@ -484,8 +484,8 @@ theorem infₛ_glb (S : Set (LieSubmodule R L M)) : IsGLB S (infₛ S) :=
     rfl
   apply IsGLB.of_image h
   simp only [Inf_coe]
-  exact isGLB_binfᵢ
-#align lie_submodule.Inf_glb LieSubmodule.infₛ_glb
+  exact isGLB_biInf
+#align lie_submodule.Inf_glb LieSubmodule.sInf_glb
 
 /-- The set of Lie submodules of a Lie module form a complete lattice.
 
@@ -493,7 +493,7 @@ We provide explicit values for the fields `bot`, `top`, `inf` to get more conven
 than we would otherwise obtain from `complete_lattice_of_Inf`.  -/
 instance : CompleteLattice (LieSubmodule R L M) :=
   { SetLike.partialOrder,
-    completeLatticeOfInf _ infₛ_glb with
+    completeLatticeOfInf _ sInf_glb with
     le := (· ≤ ·)
     lt := (· < ·)
     bot := ⊥
@@ -531,7 +531,7 @@ theorem sup_coe_to_submodule :
     simp only [Submodule.mem_sup]
     rintro x m ⟨y, hy, z, hz, rfl⟩
     refine' ⟨⁅x, y⁆, N.lie_mem hy, ⁅x, z⁆, N'.lie_mem hz, (lie_add _ _ _).symm⟩
-  refine' le_antisymm (infₛ_le ⟨{ (N ⊔ N' : Submodule R M) with lie_mem := aux }, _⟩) _
+  refine' le_antisymm (sInf_le ⟨{ (N ⊔ N' : Submodule R M) with lie_mem := aux }, _⟩) _
   ·
     simp only [exists_prop, and_true_iff, mem_set_of_eq, eq_self_iff_true, coe_to_submodule_mk, ←
       coe_submodule_le_coe_submodule, and_self_iff, le_sup_left, le_sup_right]
@@ -667,7 +667,7 @@ variable (R L) (s : Set M)
 
 /-- The `lie_span` of a set `s ⊆ M` is the smallest Lie submodule of `M` that contains `s`. -/
 def lieSpan : LieSubmodule R L M :=
-  infₛ { N | s ⊆ N }
+  sInf { N | s ⊆ N }
 #align lie_submodule.lie_span LieSubmodule.lieSpan
 
 variable {R L s}
@@ -753,9 +753,9 @@ theorem span_union (s t : Set M) : lieSpan R L (s ∪ t) = lieSpan R L s ⊔ lie
   (LieSubmodule.gi R L M).gc.l_sup
 #align lie_submodule.span_union LieSubmodule.span_union
 
-theorem span_unionᵢ {ι} (s : ι → Set M) : lieSpan R L (⋃ i, s i) = ⨆ i, lieSpan R L (s i) :=
-  (LieSubmodule.gi R L M).gc.l_supᵢ
-#align lie_submodule.span_Union LieSubmodule.span_unionᵢ
+theorem span_iUnion {ι} (s : ι → Set M) : lieSpan R L (⋃ i, s i) = ⨆ i, lieSpan R L (s i) :=
+  (LieSubmodule.gi R L M).gc.l_iSup
+#align lie_submodule.span_Union LieSubmodule.span_iUnion
 
 end LieSpan
 

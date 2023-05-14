@@ -236,7 +236,7 @@ theorem SmoothFiberwiseLinear.locality_aux₂ (e : LocalHomeomorph (B × F) (B �
       exact hUu x hx
     have hU' : IsOpen U := by
       rw [hUu']
-      apply isOpen_unionᵢ hu
+      apply isOpen_iUnion hu
     let Φ₀ : U → F ≃L[𝕜] F := Union_lift u (fun x => φ x ∘ coe) huφ U hUu'.le
     let Φ : B → F ≃L[𝕜] F := fun y =>
       if hy : y ∈ U then Φ₀ ⟨y, hy⟩ else ContinuousLinearEquiv.refl 𝕜 F
@@ -339,7 +339,7 @@ theorem mem_smoothFiberwiseLinear_iff (e : LocalHomeomorph (B × F) (B × F)) :
         SmoothOn IB 𝓘(𝕜, F →L[𝕜] F) (fun x => φ x : B → F →L[𝕜] F) U)(h2φ :
         SmoothOn IB 𝓘(𝕜, F →L[𝕜] F) (fun x => (φ x).symm : B → F →L[𝕜] F) U),
         e.EqOnSource (FiberwiseLinear.localHomeomorph φ hU hφ.ContinuousOn h2φ.ContinuousOn) :=
-  show e ∈ Set.unionᵢ _ ↔ _ by
+  show e ∈ Set.iUnion _ ↔ _ by
     simp only [mem_Union]
     rfl
 #align mem_smooth_fiberwise_linear_iff mem_smoothFiberwiseLinear_iff

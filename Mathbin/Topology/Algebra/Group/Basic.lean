@@ -434,7 +434,7 @@ theorem isClosed_setOf_map_inv [Inv G₁] [Inv G₂] [ContinuousInv G₂] :
     IsClosed { f : G₁ → G₂ | ∀ x, f x⁻¹ = (f x)⁻¹ } :=
   by
   simp only [set_of_forall]
-  refine' isClosed_interᵢ fun i => isClosed_eq (continuous_apply _) (continuous_apply _).inv
+  refine' isClosed_iInter fun i => isClosed_eq (continuous_apply _) (continuous_apply _).inv
 #align is_closed_set_of_map_inv isClosed_setOf_map_inv
 #align is_closed_set_of_map_neg isClosed_setOf_map_neg
 
@@ -552,35 +552,35 @@ section LatticeOps
 
 variable {ι' : Sort _} [Inv G]
 
-/- warning: has_continuous_inv_Inf -> continuousInv_infₛ is a dubious translation:
+/- warning: has_continuous_inv_Inf -> continuousInv_sInf is a dubious translation:
 lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Inv.{u1} G] {ts : Set.{u1} (TopologicalSpace.{u1} G)}, (forall (t : TopologicalSpace.{u1} G), (Membership.Mem.{u1, u1} (TopologicalSpace.{u1} G) (Set.{u1} (TopologicalSpace.{u1} G)) (Set.hasMem.{u1} (TopologicalSpace.{u1} G)) t ts) -> (ContinuousInv.{u1} G t _inst_1)) -> (ContinuousInv.{u1} G (InfSet.infₛ.{u1} (TopologicalSpace.{u1} G) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} G) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} G) (TopologicalSpace.completeLattice.{u1} G))) ts) _inst_1)
+  forall {G : Type.{u1}} [_inst_1 : Inv.{u1} G] {ts : Set.{u1} (TopologicalSpace.{u1} G)}, (forall (t : TopologicalSpace.{u1} G), (Membership.Mem.{u1, u1} (TopologicalSpace.{u1} G) (Set.{u1} (TopologicalSpace.{u1} G)) (Set.hasMem.{u1} (TopologicalSpace.{u1} G)) t ts) -> (ContinuousInv.{u1} G t _inst_1)) -> (ContinuousInv.{u1} G (InfSet.sInf.{u1} (TopologicalSpace.{u1} G) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} G) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} G) (TopologicalSpace.completeLattice.{u1} G))) ts) _inst_1)
 but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Inv.{u1} G] {ts : Set.{u1} (TopologicalSpace.{u1} G)}, (forall (t : TopologicalSpace.{u1} G), (Membership.mem.{u1, u1} (TopologicalSpace.{u1} G) (Set.{u1} (TopologicalSpace.{u1} G)) (Set.instMembershipSet.{u1} (TopologicalSpace.{u1} G)) t ts) -> (ContinuousInv.{u1} G t _inst_1)) -> (ContinuousInv.{u1} G (InfSet.infₛ.{u1} (TopologicalSpace.{u1} G) (ConditionallyCompleteLattice.toInfSet.{u1} (TopologicalSpace.{u1} G) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} G) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} G))) ts) _inst_1)
-Case conversion may be inaccurate. Consider using '#align has_continuous_inv_Inf continuousInv_infₛₓ'. -/
+  forall {G : Type.{u1}} [_inst_1 : Inv.{u1} G] {ts : Set.{u1} (TopologicalSpace.{u1} G)}, (forall (t : TopologicalSpace.{u1} G), (Membership.mem.{u1, u1} (TopologicalSpace.{u1} G) (Set.{u1} (TopologicalSpace.{u1} G)) (Set.instMembershipSet.{u1} (TopologicalSpace.{u1} G)) t ts) -> (ContinuousInv.{u1} G t _inst_1)) -> (ContinuousInv.{u1} G (InfSet.sInf.{u1} (TopologicalSpace.{u1} G) (ConditionallyCompleteLattice.toInfSet.{u1} (TopologicalSpace.{u1} G) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} G) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} G))) ts) _inst_1)
+Case conversion may be inaccurate. Consider using '#align has_continuous_inv_Inf continuousInv_sInfₓ'. -/
 @[to_additive]
-theorem continuousInv_infₛ {ts : Set (TopologicalSpace G)} (h : ∀ t ∈ ts, @ContinuousInv G t _) :
-    @ContinuousInv G (infₛ ts) _ :=
+theorem continuousInv_sInf {ts : Set (TopologicalSpace G)} (h : ∀ t ∈ ts, @ContinuousInv G t _) :
+    @ContinuousInv G (sInf ts) _ :=
   {
     continuous_inv :=
-      continuous_infₛ_rng.2 fun t ht =>
-        continuous_infₛ_dom ht (@ContinuousInv.continuous_inv G t _ (h t ht)) }
-#align has_continuous_inv_Inf continuousInv_infₛ
-#align has_continuous_neg_Inf continuousNeg_infₛ
+      continuous_sInf_rng.2 fun t ht =>
+        continuous_sInf_dom ht (@ContinuousInv.continuous_inv G t _ (h t ht)) }
+#align has_continuous_inv_Inf continuousInv_sInf
+#align has_continuous_neg_Inf continuousNeg_sInf
 
-/- warning: has_continuous_inv_infi -> continuousInv_infᵢ is a dubious translation:
+/- warning: has_continuous_inv_infi -> continuousInv_iInf is a dubious translation:
 lean 3 declaration is
-  forall {G : Type.{u1}} {ι' : Sort.{u2}} [_inst_1 : Inv.{u1} G] {ts' : ι' -> (TopologicalSpace.{u1} G)}, (forall (i : ι'), ContinuousInv.{u1} G (ts' i) _inst_1) -> (ContinuousInv.{u1} G (infᵢ.{u1, u2} (TopologicalSpace.{u1} G) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} G) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} G) (TopologicalSpace.completeLattice.{u1} G))) ι' (fun (i : ι') => ts' i)) _inst_1)
+  forall {G : Type.{u1}} {ι' : Sort.{u2}} [_inst_1 : Inv.{u1} G] {ts' : ι' -> (TopologicalSpace.{u1} G)}, (forall (i : ι'), ContinuousInv.{u1} G (ts' i) _inst_1) -> (ContinuousInv.{u1} G (iInf.{u1, u2} (TopologicalSpace.{u1} G) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} G) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} G) (TopologicalSpace.completeLattice.{u1} G))) ι' (fun (i : ι') => ts' i)) _inst_1)
 but is expected to have type
-  forall {G : Type.{u2}} {ι' : Sort.{u1}} [_inst_1 : Inv.{u2} G] {ts' : ι' -> (TopologicalSpace.{u2} G)}, (forall (i : ι'), ContinuousInv.{u2} G (ts' i) _inst_1) -> (ContinuousInv.{u2} G (infᵢ.{u2, u1} (TopologicalSpace.{u2} G) (ConditionallyCompleteLattice.toInfSet.{u2} (TopologicalSpace.{u2} G) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} G) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u2} G))) ι' (fun (i : ι') => ts' i)) _inst_1)
-Case conversion may be inaccurate. Consider using '#align has_continuous_inv_infi continuousInv_infᵢₓ'. -/
+  forall {G : Type.{u2}} {ι' : Sort.{u1}} [_inst_1 : Inv.{u2} G] {ts' : ι' -> (TopologicalSpace.{u2} G)}, (forall (i : ι'), ContinuousInv.{u2} G (ts' i) _inst_1) -> (ContinuousInv.{u2} G (iInf.{u2, u1} (TopologicalSpace.{u2} G) (ConditionallyCompleteLattice.toInfSet.{u2} (TopologicalSpace.{u2} G) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} G) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u2} G))) ι' (fun (i : ι') => ts' i)) _inst_1)
+Case conversion may be inaccurate. Consider using '#align has_continuous_inv_infi continuousInv_iInfₓ'. -/
 @[to_additive]
-theorem continuousInv_infᵢ {ts' : ι' → TopologicalSpace G} (h' : ∀ i, @ContinuousInv G (ts' i) _) :
+theorem continuousInv_iInf {ts' : ι' → TopologicalSpace G} (h' : ∀ i, @ContinuousInv G (ts' i) _) :
     @ContinuousInv G (⨅ i, ts' i) _ := by
-  rw [← infₛ_range]
-  exact continuousInv_infₛ (set.forall_range_iff.mpr h')
-#align has_continuous_inv_infi continuousInv_infᵢ
-#align has_continuous_neg_infi continuousNeg_infᵢ
+  rw [← sInf_range]
+  exact continuousInv_sInf (set.forall_range_iff.mpr h')
+#align has_continuous_inv_infi continuousInv_iInf
+#align has_continuous_neg_infi continuousNeg_iInf
 
 /- warning: has_continuous_inv_inf -> continuousInv_inf is a dubious translation:
 lean 3 declaration is
@@ -592,8 +592,8 @@ Case conversion may be inaccurate. Consider using '#align has_continuous_inv_inf
 theorem continuousInv_inf {t₁ t₂ : TopologicalSpace G} (h₁ : @ContinuousInv G t₁ _)
     (h₂ : @ContinuousInv G t₂ _) : @ContinuousInv G (t₁ ⊓ t₂) _ :=
   by
-  rw [inf_eq_infᵢ]
-  refine' continuousInv_infᵢ fun b => _
+  rw [inf_eq_iInf]
+  refine' continuousInv_iInf fun b => _
   cases b <;> assumption
 #align has_continuous_inv_inf continuousInv_inf
 #align has_continuous_neg_inf continuousNeg_inf
@@ -1465,7 +1465,7 @@ theorem QuotientGroup.isOpenMap_coe : IsOpenMap (coe : G → G ⧸ N) :=
   intro s s_op
   change IsOpen ((coe : G → G ⧸ N) ⁻¹' (coe '' s))
   rw [QuotientGroup.preimage_image_mk N s]
-  exact isOpen_unionᵢ fun n => (continuous_mul_right _).isOpen_preimage s s_op
+  exact isOpen_iUnion fun n => (continuous_mul_right _).isOpen_preimage s s_op
 #align quotient_group.is_open_map_coe QuotientGroup.isOpenMap_coe
 #align quotient_add_group.is_open_map_coe QuotientAddGroup.isOpenMap_coe
 -/
@@ -1800,7 +1800,7 @@ variable [TopologicalSpace β] [Group α] [MulAction α β] [ContinuousConstSMul
 theorem IsOpen.smul_left (ht : IsOpen t) : IsOpen (s • t) :=
   by
   rw [← bUnion_smul_set]
-  exact isOpen_bunionᵢ fun a _ => ht.smul _
+  exact isOpen_biUnion fun a _ => ht.smul _
 #align is_open.smul_left IsOpen.smul_left
 #align is_open.vadd_left IsOpen.vadd_left
 -/
@@ -1917,7 +1917,7 @@ Case conversion may be inaccurate. Consider using '#align is_open.mul_right IsOp
 theorem IsOpen.mul_right (hs : IsOpen s) : IsOpen (s * t) :=
   by
   rw [← bUnion_op_smul_set]
-  exact isOpen_bunionᵢ fun a _ => hs.smul _
+  exact isOpen_biUnion fun a _ => hs.smul _
 #align is_open.mul_right IsOpen.mul_right
 #align is_open.add_right IsOpen.add_right
 
@@ -1987,7 +1987,7 @@ Case conversion may be inaccurate. Consider using '#align is_open.div_left IsOpe
 theorem IsOpen.div_left (ht : IsOpen t) : IsOpen (s / t) :=
   by
   rw [← Union_div_left_image]
-  exact isOpen_bunionᵢ fun a ha => isOpenMap_div_left a t ht
+  exact isOpen_biUnion fun a ha => isOpenMap_div_left a t ht
 #align is_open.div_left IsOpen.div_left
 #align is_open.sub_left IsOpen.sub_left
 
@@ -2001,7 +2001,7 @@ Case conversion may be inaccurate. Consider using '#align is_open.div_right IsOp
 theorem IsOpen.div_right (hs : IsOpen s) : IsOpen (s / t) :=
   by
   rw [← Union_div_right_image]
-  exact isOpen_bunionᵢ fun a ha => isOpenMap_div_right a s hs
+  exact isOpen_biUnion fun a ha => isOpenMap_div_right a s hs
 #align is_open.div_right IsOpen.div_right
 #align is_open.sub_right IsOpen.sub_right
 
@@ -2322,9 +2322,9 @@ variable [TopologicalSpace G] [Group G] [TopologicalGroup G]
 
 /- warning: compact_covered_by_mul_left_translates -> compact_covered_by_mul_left_translates is a dubious translation:
 lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] {K : Set.{u1} G} {V : Set.{u1} G}, (IsCompact.{u1} G _inst_1 K) -> (Set.Nonempty.{u1} G (interior.{u1} G _inst_1 V)) -> (Exists.{succ u1} (Finset.{u1} G) (fun (t : Finset.{u1} G) => HasSubset.Subset.{u1} (Set.{u1} G) (Set.hasSubset.{u1} G) K (Set.unionᵢ.{u1, succ u1} G G (fun (g : G) => Set.unionᵢ.{u1, 0} G (Membership.Mem.{u1, u1} G (Finset.{u1} G) (Finset.hasMem.{u1} G) g t) (fun (H : Membership.Mem.{u1, u1} G (Finset.{u1} G) (Finset.hasMem.{u1} G) g t) => Set.preimage.{u1, u1} G G (fun (h : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) g h) V)))))
+  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] {K : Set.{u1} G} {V : Set.{u1} G}, (IsCompact.{u1} G _inst_1 K) -> (Set.Nonempty.{u1} G (interior.{u1} G _inst_1 V)) -> (Exists.{succ u1} (Finset.{u1} G) (fun (t : Finset.{u1} G) => HasSubset.Subset.{u1} (Set.{u1} G) (Set.hasSubset.{u1} G) K (Set.iUnion.{u1, succ u1} G G (fun (g : G) => Set.iUnion.{u1, 0} G (Membership.Mem.{u1, u1} G (Finset.{u1} G) (Finset.hasMem.{u1} G) g t) (fun (H : Membership.Mem.{u1, u1} G (Finset.{u1} G) (Finset.hasMem.{u1} G) g t) => Set.preimage.{u1, u1} G G (fun (h : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) g h) V)))))
 but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] {K : Set.{u1} G} {V : Set.{u1} G}, (IsCompact.{u1} G _inst_1 K) -> (Set.Nonempty.{u1} G (interior.{u1} G _inst_1 V)) -> (Exists.{succ u1} (Finset.{u1} G) (fun (t : Finset.{u1} G) => HasSubset.Subset.{u1} (Set.{u1} G) (Set.instHasSubsetSet.{u1} G) K (Set.unionᵢ.{u1, succ u1} G G (fun (g : G) => Set.unionᵢ.{u1, 0} G (Membership.mem.{u1, u1} G (Finset.{u1} G) (Finset.instMembershipFinset.{u1} G) g t) (fun (H : Membership.mem.{u1, u1} G (Finset.{u1} G) (Finset.instMembershipFinset.{u1} G) g t) => Set.preimage.{u1, u1} G G (fun (h : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) g h) V)))))
+  forall {G : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} G] [_inst_2 : Group.{u1} G] [_inst_3 : TopologicalGroup.{u1} G _inst_1 _inst_2] {K : Set.{u1} G} {V : Set.{u1} G}, (IsCompact.{u1} G _inst_1 K) -> (Set.Nonempty.{u1} G (interior.{u1} G _inst_1 V)) -> (Exists.{succ u1} (Finset.{u1} G) (fun (t : Finset.{u1} G) => HasSubset.Subset.{u1} (Set.{u1} G) (Set.instHasSubsetSet.{u1} G) K (Set.iUnion.{u1, succ u1} G G (fun (g : G) => Set.iUnion.{u1, 0} G (Membership.mem.{u1, u1} G (Finset.{u1} G) (Finset.instMembershipFinset.{u1} G) g t) (fun (H : Membership.mem.{u1, u1} G (Finset.{u1} G) (Finset.instMembershipFinset.{u1} G) g t) => Set.preimage.{u1, u1} G G (fun (h : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_2))))) g h) V)))))
 Case conversion may be inaccurate. Consider using '#align compact_covered_by_mul_left_translates compact_covered_by_mul_left_translatesₓ'. -/
 /-- A compact set is covered by finitely many left multiplicative translates of a set
   with non-empty interior. -/
@@ -2589,36 +2589,36 @@ section LatticeOps
 
 variable {ι : Sort _} [Group G]
 
-/- warning: topological_group_Inf -> topologicalGroup_infₛ is a dubious translation:
+/- warning: topological_group_Inf -> topologicalGroup_sInf is a dubious translation:
 lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ts : Set.{u1} (TopologicalSpace.{u1} G)}, (forall (t : TopologicalSpace.{u1} G), (Membership.Mem.{u1, u1} (TopologicalSpace.{u1} G) (Set.{u1} (TopologicalSpace.{u1} G)) (Set.hasMem.{u1} (TopologicalSpace.{u1} G)) t ts) -> (TopologicalGroup.{u1} G t _inst_1)) -> (TopologicalGroup.{u1} G (InfSet.infₛ.{u1} (TopologicalSpace.{u1} G) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} G) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} G) (TopologicalSpace.completeLattice.{u1} G))) ts) _inst_1)
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ts : Set.{u1} (TopologicalSpace.{u1} G)}, (forall (t : TopologicalSpace.{u1} G), (Membership.Mem.{u1, u1} (TopologicalSpace.{u1} G) (Set.{u1} (TopologicalSpace.{u1} G)) (Set.hasMem.{u1} (TopologicalSpace.{u1} G)) t ts) -> (TopologicalGroup.{u1} G t _inst_1)) -> (TopologicalGroup.{u1} G (InfSet.sInf.{u1} (TopologicalSpace.{u1} G) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} G) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} G) (TopologicalSpace.completeLattice.{u1} G))) ts) _inst_1)
 but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ts : Set.{u1} (TopologicalSpace.{u1} G)}, (forall (t : TopologicalSpace.{u1} G), (Membership.mem.{u1, u1} (TopologicalSpace.{u1} G) (Set.{u1} (TopologicalSpace.{u1} G)) (Set.instMembershipSet.{u1} (TopologicalSpace.{u1} G)) t ts) -> (TopologicalGroup.{u1} G t _inst_1)) -> (TopologicalGroup.{u1} G (InfSet.infₛ.{u1} (TopologicalSpace.{u1} G) (ConditionallyCompleteLattice.toInfSet.{u1} (TopologicalSpace.{u1} G) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} G) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} G))) ts) _inst_1)
-Case conversion may be inaccurate. Consider using '#align topological_group_Inf topologicalGroup_infₛₓ'. -/
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ts : Set.{u1} (TopologicalSpace.{u1} G)}, (forall (t : TopologicalSpace.{u1} G), (Membership.mem.{u1, u1} (TopologicalSpace.{u1} G) (Set.{u1} (TopologicalSpace.{u1} G)) (Set.instMembershipSet.{u1} (TopologicalSpace.{u1} G)) t ts) -> (TopologicalGroup.{u1} G t _inst_1)) -> (TopologicalGroup.{u1} G (InfSet.sInf.{u1} (TopologicalSpace.{u1} G) (ConditionallyCompleteLattice.toInfSet.{u1} (TopologicalSpace.{u1} G) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} G) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} G))) ts) _inst_1)
+Case conversion may be inaccurate. Consider using '#align topological_group_Inf topologicalGroup_sInfₓ'. -/
 @[to_additive]
-theorem topologicalGroup_infₛ {ts : Set (TopologicalSpace G)}
-    (h : ∀ t ∈ ts, @TopologicalGroup G t _) : @TopologicalGroup G (infₛ ts) _ :=
+theorem topologicalGroup_sInf {ts : Set (TopologicalSpace G)}
+    (h : ∀ t ∈ ts, @TopologicalGroup G t _) : @TopologicalGroup G (sInf ts) _ :=
   { to_continuousInv :=
-      @continuousInv_infₛ _ _ _ fun t ht => @TopologicalGroup.to_continuousInv G t _ <| h t ht
+      @continuousInv_sInf _ _ _ fun t ht => @TopologicalGroup.to_continuousInv G t _ <| h t ht
     to_continuousMul :=
-      @continuousMul_infₛ _ _ _ fun t ht => @TopologicalGroup.to_continuousMul G t _ <| h t ht }
-#align topological_group_Inf topologicalGroup_infₛ
-#align topological_add_group_Inf topologicalAddGroup_infₛ
+      @continuousMul_sInf _ _ _ fun t ht => @TopologicalGroup.to_continuousMul G t _ <| h t ht }
+#align topological_group_Inf topologicalGroup_sInf
+#align topological_add_group_Inf topologicalAddGroup_sInf
 
-/- warning: topological_group_infi -> topologicalGroup_infᵢ is a dubious translation:
+/- warning: topological_group_infi -> topologicalGroup_iInf is a dubious translation:
 lean 3 declaration is
-  forall {G : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : Group.{u1} G] {ts' : ι -> (TopologicalSpace.{u1} G)}, (forall (i : ι), TopologicalGroup.{u1} G (ts' i) _inst_1) -> (TopologicalGroup.{u1} G (infᵢ.{u1, u2} (TopologicalSpace.{u1} G) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} G) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} G) (TopologicalSpace.completeLattice.{u1} G))) ι (fun (i : ι) => ts' i)) _inst_1)
+  forall {G : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : Group.{u1} G] {ts' : ι -> (TopologicalSpace.{u1} G)}, (forall (i : ι), TopologicalGroup.{u1} G (ts' i) _inst_1) -> (TopologicalGroup.{u1} G (iInf.{u1, u2} (TopologicalSpace.{u1} G) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} G) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} G) (TopologicalSpace.completeLattice.{u1} G))) ι (fun (i : ι) => ts' i)) _inst_1)
 but is expected to have type
-  forall {G : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : Group.{u2} G] {ts' : ι -> (TopologicalSpace.{u2} G)}, (forall (i : ι), TopologicalGroup.{u2} G (ts' i) _inst_1) -> (TopologicalGroup.{u2} G (infᵢ.{u2, u1} (TopologicalSpace.{u2} G) (ConditionallyCompleteLattice.toInfSet.{u2} (TopologicalSpace.{u2} G) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} G) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u2} G))) ι (fun (i : ι) => ts' i)) _inst_1)
-Case conversion may be inaccurate. Consider using '#align topological_group_infi topologicalGroup_infᵢₓ'. -/
+  forall {G : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : Group.{u2} G] {ts' : ι -> (TopologicalSpace.{u2} G)}, (forall (i : ι), TopologicalGroup.{u2} G (ts' i) _inst_1) -> (TopologicalGroup.{u2} G (iInf.{u2, u1} (TopologicalSpace.{u2} G) (ConditionallyCompleteLattice.toInfSet.{u2} (TopologicalSpace.{u2} G) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} G) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u2} G))) ι (fun (i : ι) => ts' i)) _inst_1)
+Case conversion may be inaccurate. Consider using '#align topological_group_infi topologicalGroup_iInfₓ'. -/
 @[to_additive]
-theorem topologicalGroup_infᵢ {ts' : ι → TopologicalSpace G}
+theorem topologicalGroup_iInf {ts' : ι → TopologicalSpace G}
     (h' : ∀ i, @TopologicalGroup G (ts' i) _) : @TopologicalGroup G (⨅ i, ts' i) _ :=
   by
-  rw [← infₛ_range]
-  exact topologicalGroup_infₛ (set.forall_range_iff.mpr h')
-#align topological_group_infi topologicalGroup_infᵢ
-#align topological_add_group_infi topologicalAddGroup_infᵢ
+  rw [← sInf_range]
+  exact topologicalGroup_sInf (set.forall_range_iff.mpr h')
+#align topological_group_infi topologicalGroup_iInf
+#align topological_add_group_infi topologicalAddGroup_iInf
 
 /- warning: topological_group_inf -> topologicalGroup_inf is a dubious translation:
 lean 3 declaration is
@@ -2630,8 +2630,8 @@ Case conversion may be inaccurate. Consider using '#align topological_group_inf 
 theorem topologicalGroup_inf {t₁ t₂ : TopologicalSpace G} (h₁ : @TopologicalGroup G t₁ _)
     (h₂ : @TopologicalGroup G t₂ _) : @TopologicalGroup G (t₁ ⊓ t₂) _ :=
   by
-  rw [inf_eq_infᵢ]
-  refine' topologicalGroup_infᵢ fun b => _
+  rw [inf_eq_iInf]
+  refine' topologicalGroup_iInf fun b => _
   cases b <;> assumption
 #align topological_group_inf topologicalGroup_inf
 #align topological_add_group_inf topologicalAddGroup_inf
@@ -2827,34 +2827,34 @@ local notation "cont" => @Continuous _ _
 /-- Infimum of a collection of group topologies. -/
 @[to_additive "Infimum of a collection of additive group topologies"]
 instance : InfSet (GroupTopology α)
-    where infₛ S :=
-    ⟨infₛ (toTopologicalSpace '' S), topologicalGroup_infₛ <| ball_image_iff.2 fun t ht => t.2⟩
+    where sInf S :=
+    ⟨sInf (toTopologicalSpace '' S), topologicalGroup_sInf <| ball_image_iff.2 fun t ht => t.2⟩
 
-/- warning: group_topology.to_topological_space_Inf -> GroupTopology.toTopologicalSpace_infₛ is a dubious translation:
+/- warning: group_topology.to_topological_space_Inf -> GroupTopology.toTopologicalSpace_sInf is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] (s : Set.{u1} (GroupTopology.{u1} α _inst_1)), Eq.{succ u1} (TopologicalSpace.{u1} α) (GroupTopology.toTopologicalSpace.{u1} α _inst_1 (InfSet.infₛ.{u1} (GroupTopology.{u1} α _inst_1) (GroupTopology.hasInf.{u1} α _inst_1) s)) (InfSet.infₛ.{u1} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) (Set.image.{u1, u1} (GroupTopology.{u1} α _inst_1) (TopologicalSpace.{u1} α) (GroupTopology.toTopologicalSpace.{u1} α _inst_1) s))
+  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] (s : Set.{u1} (GroupTopology.{u1} α _inst_1)), Eq.{succ u1} (TopologicalSpace.{u1} α) (GroupTopology.toTopologicalSpace.{u1} α _inst_1 (InfSet.sInf.{u1} (GroupTopology.{u1} α _inst_1) (GroupTopology.hasInf.{u1} α _inst_1) s)) (InfSet.sInf.{u1} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) (Set.image.{u1, u1} (GroupTopology.{u1} α _inst_1) (TopologicalSpace.{u1} α) (GroupTopology.toTopologicalSpace.{u1} α _inst_1) s))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] (s : Set.{u1} (GroupTopology.{u1} α _inst_1)), Eq.{succ u1} (TopologicalSpace.{u1} α) (GroupTopology.toTopologicalSpace.{u1} α _inst_1 (InfSet.infₛ.{u1} (GroupTopology.{u1} α _inst_1) (GroupTopology.instInfSetGroupTopology.{u1} α _inst_1) s)) (InfSet.infₛ.{u1} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toInfSet.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} α))) (Set.image.{u1, u1} (GroupTopology.{u1} α _inst_1) (TopologicalSpace.{u1} α) (GroupTopology.toTopologicalSpace.{u1} α _inst_1) s))
-Case conversion may be inaccurate. Consider using '#align group_topology.to_topological_space_Inf GroupTopology.toTopologicalSpace_infₛₓ'. -/
+  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] (s : Set.{u1} (GroupTopology.{u1} α _inst_1)), Eq.{succ u1} (TopologicalSpace.{u1} α) (GroupTopology.toTopologicalSpace.{u1} α _inst_1 (InfSet.sInf.{u1} (GroupTopology.{u1} α _inst_1) (GroupTopology.instInfSetGroupTopology.{u1} α _inst_1) s)) (InfSet.sInf.{u1} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toInfSet.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} α))) (Set.image.{u1, u1} (GroupTopology.{u1} α _inst_1) (TopologicalSpace.{u1} α) (GroupTopology.toTopologicalSpace.{u1} α _inst_1) s))
+Case conversion may be inaccurate. Consider using '#align group_topology.to_topological_space_Inf GroupTopology.toTopologicalSpace_sInfₓ'. -/
 @[simp, to_additive]
-theorem toTopologicalSpace_infₛ (s : Set (GroupTopology α)) :
-    (infₛ s).toTopologicalSpace = infₛ (toTopologicalSpace '' s) :=
+theorem toTopologicalSpace_sInf (s : Set (GroupTopology α)) :
+    (sInf s).toTopologicalSpace = sInf (toTopologicalSpace '' s) :=
   rfl
-#align group_topology.to_topological_space_Inf GroupTopology.toTopologicalSpace_infₛ
-#align add_group_topology.to_topological_space_Inf AddGroupTopology.toTopologicalSpace_infₛ
+#align group_topology.to_topological_space_Inf GroupTopology.toTopologicalSpace_sInf
+#align add_group_topology.to_topological_space_Inf AddGroupTopology.toTopologicalSpace_sInf
 
-/- warning: group_topology.to_topological_space_infi -> GroupTopology.toTopologicalSpace_infᵢ is a dubious translation:
+/- warning: group_topology.to_topological_space_infi -> GroupTopology.toTopologicalSpace_iInf is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] {ι : Sort.{u2}} (s : ι -> (GroupTopology.{u1} α _inst_1)), Eq.{succ u1} (TopologicalSpace.{u1} α) (GroupTopology.toTopologicalSpace.{u1} α _inst_1 (infᵢ.{u1, u2} (GroupTopology.{u1} α _inst_1) (GroupTopology.hasInf.{u1} α _inst_1) ι (fun (i : ι) => s i))) (infᵢ.{u1, u2} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) ι (fun (i : ι) => GroupTopology.toTopologicalSpace.{u1} α _inst_1 (s i)))
+  forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] {ι : Sort.{u2}} (s : ι -> (GroupTopology.{u1} α _inst_1)), Eq.{succ u1} (TopologicalSpace.{u1} α) (GroupTopology.toTopologicalSpace.{u1} α _inst_1 (iInf.{u1, u2} (GroupTopology.{u1} α _inst_1) (GroupTopology.hasInf.{u1} α _inst_1) ι (fun (i : ι) => s i))) (iInf.{u1, u2} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) ι (fun (i : ι) => GroupTopology.toTopologicalSpace.{u1} α _inst_1 (s i)))
 but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : Group.{u2} α] {ι : Sort.{u1}} (s : ι -> (GroupTopology.{u2} α _inst_1)), Eq.{succ u2} (TopologicalSpace.{u2} α) (GroupTopology.toTopologicalSpace.{u2} α _inst_1 (infᵢ.{u2, u1} (GroupTopology.{u2} α _inst_1) (GroupTopology.instInfSetGroupTopology.{u2} α _inst_1) ι (fun (i : ι) => s i))) (infᵢ.{u2, u1} (TopologicalSpace.{u2} α) (ConditionallyCompleteLattice.toInfSet.{u2} (TopologicalSpace.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u2} α))) ι (fun (i : ι) => GroupTopology.toTopologicalSpace.{u2} α _inst_1 (s i)))
-Case conversion may be inaccurate. Consider using '#align group_topology.to_topological_space_infi GroupTopology.toTopologicalSpace_infᵢₓ'. -/
+  forall {α : Type.{u2}} [_inst_1 : Group.{u2} α] {ι : Sort.{u1}} (s : ι -> (GroupTopology.{u2} α _inst_1)), Eq.{succ u2} (TopologicalSpace.{u2} α) (GroupTopology.toTopologicalSpace.{u2} α _inst_1 (iInf.{u2, u1} (GroupTopology.{u2} α _inst_1) (GroupTopology.instInfSetGroupTopology.{u2} α _inst_1) ι (fun (i : ι) => s i))) (iInf.{u2, u1} (TopologicalSpace.{u2} α) (ConditionallyCompleteLattice.toInfSet.{u2} (TopologicalSpace.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u2} α))) ι (fun (i : ι) => GroupTopology.toTopologicalSpace.{u2} α _inst_1 (s i)))
+Case conversion may be inaccurate. Consider using '#align group_topology.to_topological_space_infi GroupTopology.toTopologicalSpace_iInfₓ'. -/
 @[simp, to_additive]
-theorem toTopologicalSpace_infᵢ {ι} (s : ι → GroupTopology α) :
+theorem toTopologicalSpace_iInf {ι} (s : ι → GroupTopology α) :
     (⨅ i, s i).toTopologicalSpace = ⨅ i, (s i).toTopologicalSpace :=
-  congr_arg infₛ (range_comp _ _).symm
-#align group_topology.to_topological_space_infi GroupTopology.toTopologicalSpace_infᵢ
-#align add_group_topology.to_topological_space_infi AddGroupTopology.toTopologicalSpace_infᵢ
+  congr_arg sInf (range_comp _ _).symm
+#align group_topology.to_topological_space_infi GroupTopology.toTopologicalSpace_iInf
+#align add_group_topology.to_topological_space_infi AddGroupTopology.toTopologicalSpace_iInf
 
 /-- Group topologies on `γ` form a complete lattice, with `⊥` the discrete topology and `⊤` the
 indiscrete topology.
@@ -2869,7 +2869,7 @@ topologies contained in the intersection of `s` and `t`. -/
 instance : CompleteSemilatticeInf (GroupTopology α) :=
   { GroupTopology.hasInf,
     GroupTopology.partialOrder with
-    inf_le := fun S a haS => toTopologicalSpace_le.1 <| infₛ_le ⟨a, haS, rfl⟩
+    inf_le := fun S a haS => toTopologicalSpace_le.1 <| sInf_le ⟨a, haS, rfl⟩
     le_inf := by
       intro S a hab
       apply topological_space.complete_lattice.le_Inf
@@ -2891,7 +2891,7 @@ topology such that `f` is continuous and `β` is a topological group. -/
 @[to_additive
       "Given `f : α → β` and a topology on `α`, the coinduced additive group topology on `β`\nis the finest topology such that `f` is continuous and `β` is a topological additive group."]
 def coinduced {α β : Type _} [t : TopologicalSpace α] [Group β] (f : α → β) : GroupTopology β :=
-  infₛ { b : GroupTopology β | TopologicalSpace.coinduced f t ≤ b.toTopologicalSpace }
+  sInf { b : GroupTopology β | TopologicalSpace.coinduced f t ≤ b.toTopologicalSpace }
 #align group_topology.coinduced GroupTopology.coinduced
 #align add_group_topology.coinduced AddGroupTopology.coinduced
 -/
@@ -2906,7 +2906,7 @@ Case conversion may be inaccurate. Consider using '#align group_topology.coinduc
 theorem coinduced_continuous {α β : Type _} [t : TopologicalSpace α] [Group β] (f : α → β) :
     cont t (coinduced f).toTopologicalSpace f :=
   by
-  rw [continuous_infₛ_rng]
+  rw [continuous_sInf_rng]
   rintro _ ⟨t', ht', rfl⟩
   exact continuous_iff_coinduced_le.2 ht'
 #align group_topology.coinduced_continuous GroupTopology.coinduced_continuous

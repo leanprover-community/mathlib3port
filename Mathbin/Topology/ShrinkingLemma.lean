@@ -81,15 +81,15 @@ variable {u : ι → Set X} {s : Set X}
 instance : CoeFun (PartialRefinement u s) fun _ => ι → Set X :=
   ⟨toFun⟩
 
-/- warning: shrinking_lemma.partial_refinement.subset_Union -> ShrinkingLemma.PartialRefinement.subset_unionᵢ is a dubious translation:
+/- warning: shrinking_lemma.partial_refinement.subset_Union -> ShrinkingLemma.PartialRefinement.subset_iUnion is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : NormalSpace.{u2} X _inst_1] {u : ι -> (Set.{u2} X)} {s : Set.{u2} X} (v : ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s), HasSubset.Subset.{u2} (Set.{u2} X) (Set.hasSubset.{u2} X) s (Set.unionᵢ.{u2, succ u1} X ι (fun (i : ι) => coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s) (fun (_x : ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s) => ι -> (Set.{u2} X)) (ShrinkingLemma.PartialRefinement.hasCoeToFun.{u1, u2} ι X _inst_1 _inst_2 u s) v i))
+  forall {ι : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : NormalSpace.{u2} X _inst_1] {u : ι -> (Set.{u2} X)} {s : Set.{u2} X} (v : ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s), HasSubset.Subset.{u2} (Set.{u2} X) (Set.hasSubset.{u2} X) s (Set.iUnion.{u2, succ u1} X ι (fun (i : ι) => coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s) (fun (_x : ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s) => ι -> (Set.{u2} X)) (ShrinkingLemma.PartialRefinement.hasCoeToFun.{u1, u2} ι X _inst_1 _inst_2 u s) v i))
 but is expected to have type
-  forall {ι : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} X] {_inst_2 : ι -> (Set.{u2} X)} {u : Set.{u2} X} (s : ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u), HasSubset.Subset.{u2} (Set.{u2} X) (Set.instHasSubsetSet.{u2} X) u (Set.unionᵢ.{u2, succ u1} X ι (fun (i : ι) => ShrinkingLemma.PartialRefinement.toFun.{u1, u2} ι X _inst_1 _inst_2 u s i))
-Case conversion may be inaccurate. Consider using '#align shrinking_lemma.partial_refinement.subset_Union ShrinkingLemma.PartialRefinement.subset_unionᵢₓ'. -/
-theorem subset_unionᵢ (v : PartialRefinement u s) : s ⊆ ⋃ i, v i :=
+  forall {ι : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} X] {_inst_2 : ι -> (Set.{u2} X)} {u : Set.{u2} X} (s : ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u), HasSubset.Subset.{u2} (Set.{u2} X) (Set.instHasSubsetSet.{u2} X) u (Set.iUnion.{u2, succ u1} X ι (fun (i : ι) => ShrinkingLemma.PartialRefinement.toFun.{u1, u2} ι X _inst_1 _inst_2 u s i))
+Case conversion may be inaccurate. Consider using '#align shrinking_lemma.partial_refinement.subset_Union ShrinkingLemma.PartialRefinement.subset_iUnionₓ'. -/
+theorem subset_iUnion (v : PartialRefinement u s) : s ⊆ ⋃ i, v i :=
   v.subset_Union'
-#align shrinking_lemma.partial_refinement.subset_Union ShrinkingLemma.PartialRefinement.subset_unionᵢ
+#align shrinking_lemma.partial_refinement.subset_Union ShrinkingLemma.PartialRefinement.subset_iUnion
 
 /- warning: shrinking_lemma.partial_refinement.closure_subset -> ShrinkingLemma.PartialRefinement.closure_subset is a dubious translation:
 lean 3 declaration is
@@ -227,15 +227,15 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align shrinking_lemma.partial_refinement.find_apply_of_mem ShrinkingLemma.PartialRefinement.find_apply_of_memₓ'. -/
 theorem find_apply_of_mem {c : Set (PartialRefinement u s)} (hc : IsChain (· ≤ ·) c)
     (ne : c.Nonempty) {i v} (hv : v ∈ c) (hi : i ∈ carrier v) : find c Ne i i = v i :=
-  apply_eq_of_chain hc (find_mem _ _) hv ((mem_find_carrier_iff _).2 <| mem_unionᵢ₂.2 ⟨v, hv, hi⟩)
+  apply_eq_of_chain hc (find_mem _ _) hv ((mem_find_carrier_iff _).2 <| mem_iUnion₂.2 ⟨v, hv, hi⟩)
     hi
 #align shrinking_lemma.partial_refinement.find_apply_of_mem ShrinkingLemma.PartialRefinement.find_apply_of_mem
 
 /- warning: shrinking_lemma.partial_refinement.chain_Sup -> ShrinkingLemma.PartialRefinement.chainSup is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : NormalSpace.{u2} X _inst_1] {u : ι -> (Set.{u2} X)} {s : Set.{u2} X} (c : Set.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s)), (IsChain.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s) (LE.le.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s) (Preorder.toLE.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s) (PartialOrder.toPreorder.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s) (ShrinkingLemma.PartialRefinement.partialOrder.{u1, u2} ι X _inst_1 _inst_2 u s)))) c) -> (Set.Nonempty.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s) c) -> (forall (x : X), (Membership.Mem.{u2, u2} X (Set.{u2} X) (Set.hasMem.{u2} X) x s) -> (Set.Finite.{u1} ι (setOf.{u1} ι (fun (i : ι) => Membership.Mem.{u2, u2} X (Set.{u2} X) (Set.hasMem.{u2} X) x (u i))))) -> (HasSubset.Subset.{u2} (Set.{u2} X) (Set.hasSubset.{u2} X) s (Set.unionᵢ.{u2, succ u1} X ι (fun (i : ι) => u i))) -> (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s)
+  forall {ι : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : NormalSpace.{u2} X _inst_1] {u : ι -> (Set.{u2} X)} {s : Set.{u2} X} (c : Set.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s)), (IsChain.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s) (LE.le.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s) (Preorder.toLE.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s) (PartialOrder.toPreorder.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s) (ShrinkingLemma.PartialRefinement.partialOrder.{u1, u2} ι X _inst_1 _inst_2 u s)))) c) -> (Set.Nonempty.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s) c) -> (forall (x : X), (Membership.Mem.{u2, u2} X (Set.{u2} X) (Set.hasMem.{u2} X) x s) -> (Set.Finite.{u1} ι (setOf.{u1} ι (fun (i : ι) => Membership.Mem.{u2, u2} X (Set.{u2} X) (Set.hasMem.{u2} X) x (u i))))) -> (HasSubset.Subset.{u2} (Set.{u2} X) (Set.hasSubset.{u2} X) s (Set.iUnion.{u2, succ u1} X ι (fun (i : ι) => u i))) -> (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s)
 but is expected to have type
-  forall {ι : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} X] {_inst_2 : ι -> (Set.{u2} X)} {u : Set.{u2} X} (s : Set.{max u2 u1} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u)), (IsChain.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (fun (x._@.Mathlib.Topology.ShrinkingLemma._hyg.986 : ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (x._@.Mathlib.Topology.ShrinkingLemma._hyg.988 : ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) => LE.le.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (Preorder.toLE.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (PartialOrder.toPreorder.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (ShrinkingLemma.PartialRefinement.instPartialOrderPartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u))) x._@.Mathlib.Topology.ShrinkingLemma._hyg.986 x._@.Mathlib.Topology.ShrinkingLemma._hyg.988) s) -> (Set.Nonempty.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) s) -> (forall (x : X), (Membership.mem.{u2, u2} X (Set.{u2} X) (Set.instMembershipSet.{u2} X) x u) -> (Set.Finite.{u1} ι (setOf.{u1} ι (fun (i : ι) => Membership.mem.{u2, u2} X (Set.{u2} X) (Set.instMembershipSet.{u2} X) x (_inst_2 i))))) -> (HasSubset.Subset.{u2} (Set.{u2} X) (Set.instHasSubsetSet.{u2} X) u (Set.unionᵢ.{u2, succ u1} X ι (fun (i : ι) => _inst_2 i))) -> (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u)
+  forall {ι : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} X] {_inst_2 : ι -> (Set.{u2} X)} {u : Set.{u2} X} (s : Set.{max u2 u1} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u)), (IsChain.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (fun (x._@.Mathlib.Topology.ShrinkingLemma._hyg.986 : ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (x._@.Mathlib.Topology.ShrinkingLemma._hyg.988 : ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) => LE.le.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (Preorder.toLE.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (PartialOrder.toPreorder.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (ShrinkingLemma.PartialRefinement.instPartialOrderPartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u))) x._@.Mathlib.Topology.ShrinkingLemma._hyg.986 x._@.Mathlib.Topology.ShrinkingLemma._hyg.988) s) -> (Set.Nonempty.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) s) -> (forall (x : X), (Membership.mem.{u2, u2} X (Set.{u2} X) (Set.instMembershipSet.{u2} X) x u) -> (Set.Finite.{u1} ι (setOf.{u1} ι (fun (i : ι) => Membership.mem.{u2, u2} X (Set.{u2} X) (Set.instMembershipSet.{u2} X) x (_inst_2 i))))) -> (HasSubset.Subset.{u2} (Set.{u2} X) (Set.instHasSubsetSet.{u2} X) u (Set.iUnion.{u2, succ u1} X ι (fun (i : ι) => _inst_2 i))) -> (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u)
 Case conversion may be inaccurate. Consider using '#align shrinking_lemma.partial_refinement.chain_Sup ShrinkingLemma.PartialRefinement.chainSupₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∉ » chain_Sup_carrier c) -/
 /-- Least upper bound of a nonempty chain of partial refinements. -/
@@ -254,7 +254,7 @@ def chainSup (c : Set (PartialRefinement u s)) (hc : IsChain (· ≤ ·) c) (ne 
     choose! v hvc hiv using hx
     rcases(hfin x hxs).exists_maximal_wrt v _ (mem_Union.1 (hU hxs)) with
       ⟨i, hxi : x ∈ u i, hmax : ∀ j, x ∈ u j → v i ≤ v j → v i = v j⟩
-    rcases mem_Union.1 ((v i).subset_unionᵢ hxs) with ⟨j, hj⟩
+    rcases mem_Union.1 ((v i).subset_iUnion hxs) with ⟨j, hj⟩
     use j
     have hj' : x ∈ u j := (v i).Subset _ hj
     have : v j ≤ v i := (hc.total (hvc _ hxi) (hvc _ hj')).elim (fun h => (hmax j hj' h).ge) id
@@ -263,15 +263,15 @@ def chainSup (c : Set (PartialRefinement u s)) (hc : IsChain (· ≤ ·) c) (ne 
 
 /- warning: shrinking_lemma.partial_refinement.le_chain_Sup -> ShrinkingLemma.PartialRefinement.le_chainSup is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : NormalSpace.{u2} X _inst_1] {u : ι -> (Set.{u2} X)} {s : Set.{u2} X} {c : Set.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s)} (hc : IsChain.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s) (LE.le.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s) (Preorder.toLE.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s) (PartialOrder.toPreorder.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s) (ShrinkingLemma.PartialRefinement.partialOrder.{u1, u2} ι X _inst_1 _inst_2 u s)))) c) (ne : Set.Nonempty.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s) c) (hfin : forall (x : X), (Membership.Mem.{u2, u2} X (Set.{u2} X) (Set.hasMem.{u2} X) x s) -> (Set.Finite.{u1} ι (setOf.{u1} ι (fun (i : ι) => Membership.Mem.{u2, u2} X (Set.{u2} X) (Set.hasMem.{u2} X) x (u i))))) (hU : HasSubset.Subset.{u2} (Set.{u2} X) (Set.hasSubset.{u2} X) s (Set.unionᵢ.{u2, succ u1} X ι (fun (i : ι) => u i))) {v : ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s}, (Membership.Mem.{max u1 u2, max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s) (Set.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s)) (Set.hasMem.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s)) v c) -> (LE.le.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s) (Preorder.toLE.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s) (PartialOrder.toPreorder.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s) (ShrinkingLemma.PartialRefinement.partialOrder.{u1, u2} ι X _inst_1 _inst_2 u s))) v (ShrinkingLemma.PartialRefinement.chainSup.{u1, u2} ι X _inst_1 _inst_2 u s c hc ne hfin hU))
+  forall {ι : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : NormalSpace.{u2} X _inst_1] {u : ι -> (Set.{u2} X)} {s : Set.{u2} X} {c : Set.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s)} (hc : IsChain.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s) (LE.le.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s) (Preorder.toLE.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s) (PartialOrder.toPreorder.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s) (ShrinkingLemma.PartialRefinement.partialOrder.{u1, u2} ι X _inst_1 _inst_2 u s)))) c) (ne : Set.Nonempty.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s) c) (hfin : forall (x : X), (Membership.Mem.{u2, u2} X (Set.{u2} X) (Set.hasMem.{u2} X) x s) -> (Set.Finite.{u1} ι (setOf.{u1} ι (fun (i : ι) => Membership.Mem.{u2, u2} X (Set.{u2} X) (Set.hasMem.{u2} X) x (u i))))) (hU : HasSubset.Subset.{u2} (Set.{u2} X) (Set.hasSubset.{u2} X) s (Set.iUnion.{u2, succ u1} X ι (fun (i : ι) => u i))) {v : ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s}, (Membership.Mem.{max u1 u2, max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s) (Set.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s)) (Set.hasMem.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s)) v c) -> (LE.le.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s) (Preorder.toLE.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s) (PartialOrder.toPreorder.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u s) (ShrinkingLemma.PartialRefinement.partialOrder.{u1, u2} ι X _inst_1 _inst_2 u s))) v (ShrinkingLemma.PartialRefinement.chainSup.{u1, u2} ι X _inst_1 _inst_2 u s c hc ne hfin hU))
 but is expected to have type
-  forall {ι : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} X] {_inst_2 : ι -> (Set.{u2} X)} {u : Set.{u2} X} {s : Set.{max u2 u1} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u)} (c : IsChain.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (fun (x._@.Mathlib.Topology.ShrinkingLemma._hyg.1456 : ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (x._@.Mathlib.Topology.ShrinkingLemma._hyg.1458 : ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) => LE.le.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (Preorder.toLE.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (PartialOrder.toPreorder.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (ShrinkingLemma.PartialRefinement.instPartialOrderPartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u))) x._@.Mathlib.Topology.ShrinkingLemma._hyg.1456 x._@.Mathlib.Topology.ShrinkingLemma._hyg.1458) s) (hc : Set.Nonempty.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) s) (ne : forall (x : X), (Membership.mem.{u2, u2} X (Set.{u2} X) (Set.instMembershipSet.{u2} X) x u) -> (Set.Finite.{u1} ι (setOf.{u1} ι (fun (i : ι) => Membership.mem.{u2, u2} X (Set.{u2} X) (Set.instMembershipSet.{u2} X) x (_inst_2 i))))) (hfin : HasSubset.Subset.{u2} (Set.{u2} X) (Set.instHasSubsetSet.{u2} X) u (Set.unionᵢ.{u2, succ u1} X ι (fun (i : ι) => _inst_2 i))) {hU : ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u}, (Membership.mem.{max u1 u2, max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (Set.{max u2 u1} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u)) (Set.instMembershipSet.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u)) hU s) -> (LE.le.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (Preorder.toLE.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (PartialOrder.toPreorder.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (ShrinkingLemma.PartialRefinement.instPartialOrderPartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u))) hU (ShrinkingLemma.PartialRefinement.chainSup.{u1, u2} ι X _inst_1 _inst_2 u s c hc ne hfin))
+  forall {ι : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} X] {_inst_2 : ι -> (Set.{u2} X)} {u : Set.{u2} X} {s : Set.{max u2 u1} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u)} (c : IsChain.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (fun (x._@.Mathlib.Topology.ShrinkingLemma._hyg.1456 : ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (x._@.Mathlib.Topology.ShrinkingLemma._hyg.1458 : ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) => LE.le.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (Preorder.toLE.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (PartialOrder.toPreorder.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (ShrinkingLemma.PartialRefinement.instPartialOrderPartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u))) x._@.Mathlib.Topology.ShrinkingLemma._hyg.1456 x._@.Mathlib.Topology.ShrinkingLemma._hyg.1458) s) (hc : Set.Nonempty.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) s) (ne : forall (x : X), (Membership.mem.{u2, u2} X (Set.{u2} X) (Set.instMembershipSet.{u2} X) x u) -> (Set.Finite.{u1} ι (setOf.{u1} ι (fun (i : ι) => Membership.mem.{u2, u2} X (Set.{u2} X) (Set.instMembershipSet.{u2} X) x (_inst_2 i))))) (hfin : HasSubset.Subset.{u2} (Set.{u2} X) (Set.instHasSubsetSet.{u2} X) u (Set.iUnion.{u2, succ u1} X ι (fun (i : ι) => _inst_2 i))) {hU : ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u}, (Membership.mem.{max u1 u2, max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (Set.{max u2 u1} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u)) (Set.instMembershipSet.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u)) hU s) -> (LE.le.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (Preorder.toLE.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (PartialOrder.toPreorder.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (ShrinkingLemma.PartialRefinement.instPartialOrderPartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u))) hU (ShrinkingLemma.PartialRefinement.chainSup.{u1, u2} ι X _inst_1 _inst_2 u s c hc ne hfin))
 Case conversion may be inaccurate. Consider using '#align shrinking_lemma.partial_refinement.le_chain_Sup ShrinkingLemma.PartialRefinement.le_chainSupₓ'. -/
 /-- `chain_Sup hu c hc ne hfin hU` is an upper bound of the chain `c`. -/
 theorem le_chainSup {c : Set (PartialRefinement u s)} (hc : IsChain (· ≤ ·) c) (ne : c.Nonempty)
     (hfin : ∀ x ∈ s, { i | x ∈ u i }.Finite) (hU : s ⊆ ⋃ i, u i) {v} (hv : v ∈ c) :
     v ≤ chainSup c hc Ne hfin hU :=
-  ⟨fun i hi => mem_bunionᵢ hv hi, fun i hi => (find_apply_of_mem hc _ hv hi).symm⟩
+  ⟨fun i hi => mem_biUnion hv hi, fun i hi => (find_apply_of_mem hc _ hv hi).symm⟩
 #align shrinking_lemma.partial_refinement.le_chain_Sup ShrinkingLemma.PartialRefinement.le_chainSup
 
 /- warning: shrinking_lemma.partial_refinement.exists_gt -> ShrinkingLemma.PartialRefinement.exists_gt is a dubious translation:
@@ -295,7 +295,7 @@ theorem exists_gt (v : PartialRefinement u s) (hs : IsClosed s) (i : ι) (hi : i
     rcases mem_Union.1 (v.subset_Union hxs) with ⟨j, hj⟩
     exact (em (j = i)).elim (fun h => h ▸ hj) fun h => (H j h hj).elim
   have C : IsClosed (s ∩ ⋂ (j) (_ : j ≠ i), v jᶜ) :=
-    IsClosed.inter hs (isClosed_binterᵢ fun _ _ => isClosed_compl_iff.2 <| v.is_open _)
+    IsClosed.inter hs (isClosed_biInter fun _ _ => isClosed_compl_iff.2 <| v.is_open _)
   rcases normal_exists_closure_subset C (v.is_open i) I with ⟨vi, ovi, hvi, cvi⟩
   refine' ⟨⟨update v i vi, insert i v.carrier, _, _, _, _⟩, _, _⟩
   · intro j
@@ -328,13 +328,13 @@ open ShrinkingLemma
 
 variable {u : ι → Set X} {s : Set X}
 
-#print exists_subset_unionᵢ_closure_subset /-
+#print exists_subset_iUnion_closure_subset /-
 /-- Shrinking lemma. A point-finite open cover of a closed subset of a normal space can be "shrunk"
 to a new open cover so that the closure of each new open set is contained in the corresponding
 original open set. -/
-theorem exists_subset_unionᵢ_closure_subset (hs : IsClosed s) (uo : ∀ i, IsOpen (u i))
+theorem exists_subset_iUnion_closure_subset (hs : IsClosed s) (uo : ∀ i, IsOpen (u i))
     (uf : ∀ x ∈ s, { i | x ∈ u i }.Finite) (us : s ⊆ ⋃ i, u i) :
-    ∃ v : ι → Set X, s ⊆ unionᵢ v ∧ (∀ i, IsOpen (v i)) ∧ ∀ i, closure (v i) ⊆ u i := by
+    ∃ v : ι → Set X, s ⊆ iUnion v ∧ (∀ i, IsOpen (v i)) ∧ ∀ i, closure (v i) ⊆ u i := by
   classical
     haveI : Nonempty (partial_refinement u s) :=
       ⟨⟨u, ∅, uo, us, fun _ => False.elim, fun _ _ => rfl⟩⟩
@@ -350,43 +350,43 @@ theorem exists_subset_unionᵢ_closure_subset (hs : IsClosed s) (uo : ∀ i, IsO
     rcases hv with ⟨i, hi⟩
     rcases v.exists_gt hs i hi with ⟨v', hlt⟩
     exact ⟨v', hlt.le, hlt.ne'⟩
-#align exists_subset_Union_closure_subset exists_subset_unionᵢ_closure_subset
+#align exists_subset_Union_closure_subset exists_subset_iUnion_closure_subset
 -/
 
-#print exists_subset_unionᵢ_closed_subset /-
+#print exists_subset_iUnion_closed_subset /-
 /-- Shrinking lemma. A point-finite open cover of a closed subset of a normal space can be "shrunk"
 to a new closed cover so that each new closed set is contained in the corresponding original open
 set. See also `exists_subset_Union_closure_subset` for a stronger statement. -/
-theorem exists_subset_unionᵢ_closed_subset (hs : IsClosed s) (uo : ∀ i, IsOpen (u i))
+theorem exists_subset_iUnion_closed_subset (hs : IsClosed s) (uo : ∀ i, IsOpen (u i))
     (uf : ∀ x ∈ s, { i | x ∈ u i }.Finite) (us : s ⊆ ⋃ i, u i) :
-    ∃ v : ι → Set X, s ⊆ unionᵢ v ∧ (∀ i, IsClosed (v i)) ∧ ∀ i, v i ⊆ u i :=
-  let ⟨v, hsv, hvo, hv⟩ := exists_subset_unionᵢ_closure_subset hs uo uf us
-  ⟨fun i => closure (v i), Subset.trans hsv (unionᵢ_mono fun i => subset_closure), fun i =>
+    ∃ v : ι → Set X, s ⊆ iUnion v ∧ (∀ i, IsClosed (v i)) ∧ ∀ i, v i ⊆ u i :=
+  let ⟨v, hsv, hvo, hv⟩ := exists_subset_iUnion_closure_subset hs uo uf us
+  ⟨fun i => closure (v i), Subset.trans hsv (iUnion_mono fun i => subset_closure), fun i =>
     isClosed_closure, hv⟩
-#align exists_subset_Union_closed_subset exists_subset_unionᵢ_closed_subset
+#align exists_subset_Union_closed_subset exists_subset_iUnion_closed_subset
 -/
 
-#print exists_unionᵢ_eq_closure_subset /-
+#print exists_iUnion_eq_closure_subset /-
 /-- Shrinking lemma. A point-finite open cover of a closed subset of a normal space can be "shrunk"
 to a new open cover so that the closure of each new open set is contained in the corresponding
 original open set. -/
-theorem exists_unionᵢ_eq_closure_subset (uo : ∀ i, IsOpen (u i)) (uf : ∀ x, { i | x ∈ u i }.Finite)
+theorem exists_iUnion_eq_closure_subset (uo : ∀ i, IsOpen (u i)) (uf : ∀ x, { i | x ∈ u i }.Finite)
     (uU : (⋃ i, u i) = univ) :
-    ∃ v : ι → Set X, unionᵢ v = univ ∧ (∀ i, IsOpen (v i)) ∧ ∀ i, closure (v i) ⊆ u i :=
-  let ⟨v, vU, hv⟩ := exists_subset_unionᵢ_closure_subset isClosed_univ uo (fun x _ => uf x) uU.ge
+    ∃ v : ι → Set X, iUnion v = univ ∧ (∀ i, IsOpen (v i)) ∧ ∀ i, closure (v i) ⊆ u i :=
+  let ⟨v, vU, hv⟩ := exists_subset_iUnion_closure_subset isClosed_univ uo (fun x _ => uf x) uU.ge
   ⟨v, univ_subset_iff.1 vU, hv⟩
-#align exists_Union_eq_closure_subset exists_unionᵢ_eq_closure_subset
+#align exists_Union_eq_closure_subset exists_iUnion_eq_closure_subset
 -/
 
-#print exists_unionᵢ_eq_closed_subset /-
+#print exists_iUnion_eq_closed_subset /-
 /-- Shrinking lemma. A point-finite open cover of a closed subset of a normal space can be "shrunk"
 to a new closed cover so that each of the new closed sets is contained in the corresponding
 original open set. See also `exists_Union_eq_closure_subset` for a stronger statement. -/
-theorem exists_unionᵢ_eq_closed_subset (uo : ∀ i, IsOpen (u i)) (uf : ∀ x, { i | x ∈ u i }.Finite)
+theorem exists_iUnion_eq_closed_subset (uo : ∀ i, IsOpen (u i)) (uf : ∀ x, { i | x ∈ u i }.Finite)
     (uU : (⋃ i, u i) = univ) :
-    ∃ v : ι → Set X, unionᵢ v = univ ∧ (∀ i, IsClosed (v i)) ∧ ∀ i, v i ⊆ u i :=
-  let ⟨v, vU, hv⟩ := exists_subset_unionᵢ_closed_subset isClosed_univ uo (fun x _ => uf x) uU.ge
+    ∃ v : ι → Set X, iUnion v = univ ∧ (∀ i, IsClosed (v i)) ∧ ∀ i, v i ⊆ u i :=
+  let ⟨v, vU, hv⟩ := exists_subset_iUnion_closed_subset isClosed_univ uo (fun x _ => uf x) uU.ge
   ⟨v, univ_subset_iff.1 vU, hv⟩
-#align exists_Union_eq_closed_subset exists_unionᵢ_eq_closed_subset
+#align exists_Union_eq_closed_subset exists_iUnion_eq_closed_subset
 -/
 

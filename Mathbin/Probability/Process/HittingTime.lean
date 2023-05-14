@@ -52,7 +52,7 @@ before `m` then the hitting time is simply `m`).
 
 The hitting time is a stopping time if the process is adapted and discrete. -/
 noncomputable def hitting [Preorder ι] [InfSet ι] (u : ι → Ω → β) (s : Set β) (n m : ι) : Ω → ι :=
-  fun x => if ∃ j ∈ Set.Icc n m, u j x ∈ s then infₛ (Set.Icc n m ∩ { i : ι | u i x ∈ s }) else m
+  fun x => if ∃ j ∈ Set.Icc n m, u j x ∈ s then sInf (Set.Icc n m ∩ { i : ι | u i x ∈ s }) else m
 #align measure_theory.hitting MeasureTheory.hitting
 
 section Inequalities
@@ -78,7 +78,7 @@ theorem hitting_le {m : ι} (ω : Ω) : hitting u s n m ω ≤ m :=
   · simp only [hitting]
     split_ifs
     · obtain ⟨j, hj₁, hj₂⟩ := h
-      exact (cinfₛ_le (BddBelow.inter_of_left bddBelow_Icc) (Set.mem_inter hj₁ hj₂)).trans hj₁.2
+      exact (csInf_le (BddBelow.inter_of_left bddBelow_Icc) (Set.mem_inter hj₁ hj₂)).trans hj₁.2
     · exact le_rfl
   · rw [hitting_of_lt h_lt]
 #align measure_theory.hitting_le MeasureTheory.hitting_le
@@ -91,12 +91,12 @@ theorem not_mem_of_lt_hitting {m k : ι} (hk₁ : k < hitting u s n m ω) (hk₂
     refine' ⟨k, ⟨hk₂, le_trans hk₁.le <| hitting_le _⟩, h⟩
     refine' not_le.2 hk₁ _
     simp_rw [hitting, if_pos hexists]
-    exact cinfₛ_le bdd_below_Icc.inter_of_left ⟨⟨hk₂, le_trans hk₁.le <| hitting_le _⟩, h⟩
+    exact csInf_le bdd_below_Icc.inter_of_left ⟨⟨hk₂, le_trans hk₁.le <| hitting_le _⟩, h⟩
 #align measure_theory.not_mem_of_lt_hitting MeasureTheory.not_mem_of_lt_hitting
 
 theorem hitting_eq_end_iff {m : ι} :
     hitting u s n m ω = m ↔
-      (∃ j ∈ Set.Icc n m, u j ω ∈ s) → infₛ (Set.Icc n m ∩ { i : ι | u i ω ∈ s }) = m :=
+      (∃ j ∈ Set.Icc n m, u j ω ∈ s) → sInf (Set.Icc n m ∩ { i : ι | u i ω ∈ s }) = m :=
   by rw [hitting, ite_eq_right_iff]
 #align measure_theory.hitting_eq_end_iff MeasureTheory.hitting_eq_end_iff
 
@@ -106,7 +106,7 @@ theorem hitting_of_le {m : ι} (hmn : m ≤ n) : hitting u s n m ω = m :=
   · simp only [hitting, Set.Icc_self, ite_eq_right_iff, Set.mem_Icc, exists_prop,
       forall_exists_index, and_imp]
     intro i hi₁ hi₂ hi
-    rw [Set.inter_eq_left_iff_subset.2, cinfₛ_singleton]
+    rw [Set.inter_eq_left_iff_subset.2, csInf_singleton]
     exact Set.singleton_subset_iff.2 (le_antisymm hi₂ hi₁ ▸ hi)
   · exact hitting_of_lt h
 #align measure_theory.hitting_of_le MeasureTheory.hitting_of_le
@@ -115,7 +115,7 @@ theorem le_hitting {m : ι} (hnm : n ≤ m) (ω : Ω) : n ≤ hitting u s n m ω
   by
   simp only [hitting]
   split_ifs
-  · refine' le_cinfₛ _ fun b hb => _
+  · refine' le_csInf _ fun b hb => _
     · obtain ⟨k, hk_Icc, hk_s⟩ := h
       exact ⟨k, hk_Icc, hk_s⟩
     · rw [Set.mem_inter_iff] at hb
@@ -143,7 +143,7 @@ theorem hitting_mem_set [IsWellOrder ι (· < ·)] {m : ι} (h_exists : ∃ j �
     by
     obtain ⟨k, hk₁, hk₂⟩ := h_exists
     exact ⟨k, Set.mem_inter hk₁ hk₂⟩
-  have h_mem := cinfₛ_mem h_nonempty
+  have h_mem := csInf_mem h_nonempty
   rw [Set.mem_inter_iff] at h_mem
   exact h_mem.2
 #align measure_theory.hitting_mem_set MeasureTheory.hitting_mem_set
@@ -162,7 +162,7 @@ theorem hitting_le_of_mem {m : ι} (hin : n ≤ i) (him : i ≤ m) (his : u i ω
   by
   have h_exists : ∃ k ∈ Set.Icc n m, u k ω ∈ s := ⟨i, ⟨hin, him⟩, his⟩
   simp_rw [hitting, if_pos h_exists]
-  exact cinfₛ_le (BddBelow.inter_of_left bddBelow_Icc) (Set.mem_inter ⟨hin, him⟩ his)
+  exact csInf_le (BddBelow.inter_of_left bddBelow_Icc) (Set.mem_inter ⟨hin, him⟩ his)
 #align measure_theory.hitting_le_of_mem MeasureTheory.hitting_le_of_mem
 
 theorem hitting_le_iff_of_exists [IsWellOrder ι (· < ·)] {m : ι}
@@ -215,14 +215,14 @@ theorem hitting_eq_hitting_of_exists {m₁ m₂ : ι} (h : m₁ ≤ m₂)
   rw [if_pos]
   · refine'
       le_antisymm _
-        (cinfₛ_le_cinfₛ bdd_below_Icc.inter_of_left ⟨j, hj₁, hj₂⟩
+        (csInf_le_csInf bdd_below_Icc.inter_of_left ⟨j, hj₁, hj₂⟩
           (Set.inter_subset_inter_left _ (Set.Icc_subset_Icc_right h)))
-    refine' le_cinfₛ ⟨j, Set.Icc_subset_Icc_right h hj₁, hj₂⟩ fun i hi => _
+    refine' le_csInf ⟨j, Set.Icc_subset_Icc_right h hj₁, hj₂⟩ fun i hi => _
     by_cases hi' : i ≤ m₁
-    · exact cinfₛ_le bdd_below_Icc.inter_of_left ⟨⟨hi.1.1, hi'⟩, hi.2⟩
+    · exact csInf_le bdd_below_Icc.inter_of_left ⟨⟨hi.1.1, hi'⟩, hi.2⟩
     ·
       exact
-        ((cinfₛ_le bdd_below_Icc.inter_of_left ⟨hj₁, hj₂⟩).trans (hj₁.2.trans le_rfl)).trans
+        ((csInf_le bdd_below_Icc.inter_of_left ⟨hj₁, hj₂⟩).trans (hj₁.2.trans le_rfl)).trans
           (le_of_lt (not_le.1 hi'))
   exact ⟨j, ⟨hj₁.1, hj₁.2.trans h⟩, hj₂⟩
 #align measure_theory.hitting_eq_hitting_of_exists MeasureTheory.hitting_eq_hitting_of_exists
@@ -234,7 +234,7 @@ theorem hitting_mono {m₁ m₂ : ι} (hm : m₁ ≤ m₂) : hitting u s n m₁ 
   · simp_rw [hitting, if_neg h]
     split_ifs with h'
     · obtain ⟨j, hj₁, hj₂⟩ := h'
-      refine' le_cinfₛ ⟨j, hj₁, hj₂⟩ _
+      refine' le_csInf ⟨j, hj₁, hj₂⟩ _
       by_contra hneg
       push_neg  at hneg
       obtain ⟨i, hi₁, hi₂⟩ := hneg
@@ -258,11 +258,11 @@ theorem hitting_isStoppingTime [ConditionallyCompleteLinearOrder ι] [IsWellOrde
       by
       ext x
       rw [Set.mem_setOf_eq, hitting_le_iff_of_lt _ hi]
-      simp only [Set.mem_Icc, exists_prop, Set.mem_unionᵢ, Set.mem_preimage]
+      simp only [Set.mem_Icc, exists_prop, Set.mem_iUnion, Set.mem_preimage]
     rw [h_set_eq_Union]
     exact
-      MeasurableSet.unionᵢ fun j =>
-        MeasurableSet.unionᵢ fun hj => f.mono hj.2 _ ((hu j).Measurable hs)
+      MeasurableSet.iUnion fun j =>
+        MeasurableSet.iUnion fun hj => f.mono hj.2 _ ((hu j).Measurable hs)
 #align measure_theory.hitting_is_stopping_time MeasureTheory.hitting_isStoppingTime
 
 theorem stoppedValue_hitting_mem [ConditionallyCompleteLinearOrder ι] [IsWellOrder ι (· < ·)]
@@ -272,7 +272,7 @@ theorem stoppedValue_hitting_mem [ConditionallyCompleteLinearOrder ι] [IsWellOr
   simp only [stopped_value, hitting, if_pos h]
   obtain ⟨j, hj₁, hj₂⟩ := h
   have : Inf (Set.Icc n m ∩ { i | u i ω ∈ s }) ∈ Set.Icc n m ∩ { i | u i ω ∈ s } :=
-    cinfₛ_mem (Set.nonempty_of_mem ⟨hj₁, hj₂⟩)
+    csInf_mem (Set.nonempty_of_mem ⟨hj₁, hj₂⟩)
   exact this.2
 #align measure_theory.stopped_value_hitting_mem MeasureTheory.stoppedValue_hitting_mem
 
@@ -296,14 +296,14 @@ theorem isStoppingTime_hitting_isStoppingTime [ConditionallyCompleteLinearOrder 
   have h₂ : (⋃ i > n, { x | τ x = i } ∩ { x | hitting u s i N x ≤ n }) = ∅ :=
     by
     ext x
-    simp only [gt_iff_lt, Set.mem_unionᵢ, Set.mem_inter_iff, Set.mem_setOf_eq, exists_prop,
+    simp only [gt_iff_lt, Set.mem_iUnion, Set.mem_inter_iff, Set.mem_setOf_eq, exists_prop,
       Set.mem_empty_iff_false, iff_false_iff, not_exists, not_and, not_le]
     rintro m hm rfl
     exact lt_of_lt_of_le hm (le_hitting (hτbdd _) _)
   rw [h₁, h₂, Set.union_empty]
   exact
-    MeasurableSet.unionᵢ fun i =>
-      MeasurableSet.unionᵢ fun hi =>
+    MeasurableSet.iUnion fun i =>
+      MeasurableSet.iUnion fun hi =>
         (f.mono hi _ (hτ.measurable_set_eq i)).inter (hitting_is_stopping_time hf hs n)
 #align measure_theory.is_stopping_time_hitting_is_stopping_time MeasureTheory.isStoppingTime_hitting_isStoppingTime
 
@@ -311,15 +311,15 @@ section CompleteLattice
 
 variable [CompleteLattice ι] {u : ι → Ω → β} {s : Set β} {f : Filtration ι m}
 
-theorem hitting_eq_infₛ (ω : Ω) : hitting u s ⊥ ⊤ ω = infₛ { i : ι | u i ω ∈ s } :=
+theorem hitting_eq_sInf (ω : Ω) : hitting u s ⊥ ⊤ ω = sInf { i : ι | u i ω ∈ s } :=
   by
   simp only [hitting, Set.mem_Icc, bot_le, le_top, and_self_iff, exists_true_left, Set.Icc_bot,
     Set.Iic_top, Set.univ_inter, ite_eq_left_iff, not_exists]
   intro h_nmem_s
   symm
-  rw [infₛ_eq_top]
+  rw [sInf_eq_top]
   exact fun i hi_mem_s => absurd hi_mem_s (h_nmem_s i)
-#align measure_theory.hitting_eq_Inf MeasureTheory.hitting_eq_infₛ
+#align measure_theory.hitting_eq_Inf MeasureTheory.hitting_eq_sInf
 
 end CompleteLattice
 

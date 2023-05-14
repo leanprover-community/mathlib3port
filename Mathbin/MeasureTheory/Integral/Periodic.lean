@@ -347,8 +347,8 @@ include hg h_int
 /-- If `g : ℝ → ℝ` is periodic with period `T > 0`, then for any `t : ℝ`, the function
 `t ↦ ∫ x in 0..t, g x` is bounded below by `t ↦ X + ⌊t/T⌋ • Y` for appropriate constants `X` and
 `Y`. -/
-theorem infₛ_add_zsmul_le_integral_of_pos (hT : 0 < T) (t : ℝ) :
-    (infₛ ((fun t => ∫ x in 0 ..t, g x) '' Icc 0 T) + ⌊t / T⌋ • ∫ x in 0 ..T, g x) ≤
+theorem sInf_add_zsmul_le_integral_of_pos (hT : 0 < T) (t : ℝ) :
+    (sInf ((fun t => ∫ x in 0 ..t, g x) '' Icc 0 T) + ⌊t / T⌋ • ∫ x in 0 ..T, g x) ≤
       ∫ x in 0 ..t, g x :=
   by
   let ε := Int.fract (t / T) * T
@@ -358,16 +358,16 @@ theorem infₛ_add_zsmul_le_integral_of_pos (hT : 0 < T) (t : ℝ) :
   rw [hg.interval_integral_add_zsmul_eq ⌊t / T⌋ ε h_int, hg.interval_integral_add_eq ε 0, zero_add,
     add_le_add_iff_right]
   exact
-    (continuous_primitive h_int 0).ContinuousOn.infₛ_image_Icc_le
+    (continuous_primitive h_int 0).ContinuousOn.sInf_image_Icc_le
       (mem_Icc_of_Ico (Int.fract_div_mul_self_mem_Ico T t hT))
-#align function.periodic.Inf_add_zsmul_le_integral_of_pos Function.Periodic.infₛ_add_zsmul_le_integral_of_pos
+#align function.periodic.Inf_add_zsmul_le_integral_of_pos Function.Periodic.sInf_add_zsmul_le_integral_of_pos
 
 /-- If `g : ℝ → ℝ` is periodic with period `T > 0`, then for any `t : ℝ`, the function
 `t ↦ ∫ x in 0..t, g x` is bounded above by `t ↦ X + ⌊t/T⌋ • Y` for appropriate constants `X` and
 `Y`. -/
-theorem integral_le_supₛ_add_zsmul_of_pos (hT : 0 < T) (t : ℝ) :
+theorem integral_le_sSup_add_zsmul_of_pos (hT : 0 < T) (t : ℝ) :
     (∫ x in 0 ..t, g x) ≤
-      supₛ ((fun t => ∫ x in 0 ..t, g x) '' Icc 0 T) + ⌊t / T⌋ • ∫ x in 0 ..T, g x :=
+      sSup ((fun t => ∫ x in 0 ..t, g x) '' Icc 0 T) + ⌊t / T⌋ • ∫ x in 0 ..T, g x :=
   by
   let ε := Int.fract (t / T) * T
   conv_lhs =>
@@ -376,9 +376,9 @@ theorem integral_le_supₛ_add_zsmul_of_pos (hT : 0 < T) (t : ℝ) :
   rw [hg.interval_integral_add_zsmul_eq ⌊t / T⌋ ε h_int, hg.interval_integral_add_eq ε 0, zero_add,
     add_le_add_iff_right]
   exact
-    (continuous_primitive h_int 0).ContinuousOn.le_supₛ_image_Icc
+    (continuous_primitive h_int 0).ContinuousOn.le_sSup_image_Icc
       (mem_Icc_of_Ico (Int.fract_div_mul_self_mem_Ico T t hT))
-#align function.periodic.integral_le_Sup_add_zsmul_of_pos Function.Periodic.integral_le_supₛ_add_zsmul_of_pos
+#align function.periodic.integral_le_Sup_add_zsmul_of_pos Function.Periodic.integral_le_sSup_add_zsmul_of_pos
 
 /-- If `g : ℝ → ℝ` is periodic with period `T > 0` and `0 < ∫ x in 0..T, g x`, then
 `t ↦ ∫ x in 0..t, g x` tends to `∞` as `t` tends to `∞`. -/

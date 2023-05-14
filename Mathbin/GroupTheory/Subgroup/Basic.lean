@@ -1569,55 +1569,55 @@ instance : InfSet (Subgroup G) :=
   ⟨fun s =>
     { (⨅ S ∈ s, Subgroup.toSubmonoid S).copy (⋂ S ∈ s, ↑S) (by simp) with
       inv_mem' := fun x hx =>
-        Set.mem_binterᵢ fun i h => i.inv_mem (by apply Set.mem_interᵢ₂.1 hx i h) }⟩
+        Set.mem_biInter fun i h => i.inv_mem (by apply Set.mem_iInter₂.1 hx i h) }⟩
 
-/- warning: subgroup.coe_Inf -> Subgroup.coe_infₛ is a dubious translation:
+/- warning: subgroup.coe_Inf -> Subgroup.coe_sInf is a dubious translation:
 lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (H : Set.{u1} (Subgroup.{u1} G _inst_1)), Eq.{succ u1} (Set.{u1} G) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subgroup.{u1} G _inst_1) (Set.{u1} G) (HasLiftT.mk.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Set.{u1} G) (CoeTCₓ.coe.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Set.{u1} G) (SetLike.Set.hasCoeT.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)))) (InfSet.infₛ.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.hasInf.{u1} G _inst_1) H)) (Set.interᵢ.{u1, succ u1} G (Subgroup.{u1} G _inst_1) (fun (s : Subgroup.{u1} G _inst_1) => Set.interᵢ.{u1, 0} G (Membership.Mem.{u1, u1} (Subgroup.{u1} G _inst_1) (Set.{u1} (Subgroup.{u1} G _inst_1)) (Set.hasMem.{u1} (Subgroup.{u1} G _inst_1)) s H) (fun (H : Membership.Mem.{u1, u1} (Subgroup.{u1} G _inst_1) (Set.{u1} (Subgroup.{u1} G _inst_1)) (Set.hasMem.{u1} (Subgroup.{u1} G _inst_1)) s H) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subgroup.{u1} G _inst_1) (Set.{u1} G) (HasLiftT.mk.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Set.{u1} G) (CoeTCₓ.coe.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Set.{u1} G) (SetLike.Set.hasCoeT.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)))) s)))
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (H : Set.{u1} (Subgroup.{u1} G _inst_1)), Eq.{succ u1} (Set.{u1} G) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subgroup.{u1} G _inst_1) (Set.{u1} G) (HasLiftT.mk.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Set.{u1} G) (CoeTCₓ.coe.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Set.{u1} G) (SetLike.Set.hasCoeT.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)))) (InfSet.sInf.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.hasInf.{u1} G _inst_1) H)) (Set.iInter.{u1, succ u1} G (Subgroup.{u1} G _inst_1) (fun (s : Subgroup.{u1} G _inst_1) => Set.iInter.{u1, 0} G (Membership.Mem.{u1, u1} (Subgroup.{u1} G _inst_1) (Set.{u1} (Subgroup.{u1} G _inst_1)) (Set.hasMem.{u1} (Subgroup.{u1} G _inst_1)) s H) (fun (H : Membership.Mem.{u1, u1} (Subgroup.{u1} G _inst_1) (Set.{u1} (Subgroup.{u1} G _inst_1)) (Set.hasMem.{u1} (Subgroup.{u1} G _inst_1)) s H) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subgroup.{u1} G _inst_1) (Set.{u1} G) (HasLiftT.mk.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Set.{u1} G) (CoeTCₓ.coe.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Set.{u1} G) (SetLike.Set.hasCoeT.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)))) s)))
 but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (H : Set.{u1} (Subgroup.{u1} G _inst_1)), Eq.{succ u1} (Set.{u1} G) (SetLike.coe.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1) (InfSet.infₛ.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instInfSetSubgroup.{u1} G _inst_1) H)) (Set.interᵢ.{u1, succ u1} G (Subgroup.{u1} G _inst_1) (fun (s : Subgroup.{u1} G _inst_1) => Set.interᵢ.{u1, 0} G (Membership.mem.{u1, u1} (Subgroup.{u1} G _inst_1) (Set.{u1} (Subgroup.{u1} G _inst_1)) (Set.instMembershipSet.{u1} (Subgroup.{u1} G _inst_1)) s H) (fun (H : Membership.mem.{u1, u1} (Subgroup.{u1} G _inst_1) (Set.{u1} (Subgroup.{u1} G _inst_1)) (Set.instMembershipSet.{u1} (Subgroup.{u1} G _inst_1)) s H) => SetLike.coe.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1) s)))
-Case conversion may be inaccurate. Consider using '#align subgroup.coe_Inf Subgroup.coe_infₛₓ'. -/
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (H : Set.{u1} (Subgroup.{u1} G _inst_1)), Eq.{succ u1} (Set.{u1} G) (SetLike.coe.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1) (InfSet.sInf.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instInfSetSubgroup.{u1} G _inst_1) H)) (Set.iInter.{u1, succ u1} G (Subgroup.{u1} G _inst_1) (fun (s : Subgroup.{u1} G _inst_1) => Set.iInter.{u1, 0} G (Membership.mem.{u1, u1} (Subgroup.{u1} G _inst_1) (Set.{u1} (Subgroup.{u1} G _inst_1)) (Set.instMembershipSet.{u1} (Subgroup.{u1} G _inst_1)) s H) (fun (H : Membership.mem.{u1, u1} (Subgroup.{u1} G _inst_1) (Set.{u1} (Subgroup.{u1} G _inst_1)) (Set.instMembershipSet.{u1} (Subgroup.{u1} G _inst_1)) s H) => SetLike.coe.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1) s)))
+Case conversion may be inaccurate. Consider using '#align subgroup.coe_Inf Subgroup.coe_sInfₓ'. -/
 @[simp, norm_cast, to_additive]
-theorem coe_infₛ (H : Set (Subgroup G)) : ((infₛ H : Subgroup G) : Set G) = ⋂ s ∈ H, ↑s :=
+theorem coe_sInf (H : Set (Subgroup G)) : ((sInf H : Subgroup G) : Set G) = ⋂ s ∈ H, ↑s :=
   rfl
-#align subgroup.coe_Inf Subgroup.coe_infₛ
-#align add_subgroup.coe_Inf AddSubgroup.coe_infₛ
+#align subgroup.coe_Inf Subgroup.coe_sInf
+#align add_subgroup.coe_Inf AddSubgroup.coe_sInf
 
-/- warning: subgroup.mem_Inf -> Subgroup.mem_infₛ is a dubious translation:
+/- warning: subgroup.mem_Inf -> Subgroup.mem_sInf is a dubious translation:
 lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {S : Set.{u1} (Subgroup.{u1} G _inst_1)} {x : G}, Iff (Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) x (InfSet.infₛ.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.hasInf.{u1} G _inst_1) S)) (forall (p : Subgroup.{u1} G _inst_1), (Membership.Mem.{u1, u1} (Subgroup.{u1} G _inst_1) (Set.{u1} (Subgroup.{u1} G _inst_1)) (Set.hasMem.{u1} (Subgroup.{u1} G _inst_1)) p S) -> (Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) x p))
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {S : Set.{u1} (Subgroup.{u1} G _inst_1)} {x : G}, Iff (Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) x (InfSet.sInf.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.hasInf.{u1} G _inst_1) S)) (forall (p : Subgroup.{u1} G _inst_1), (Membership.Mem.{u1, u1} (Subgroup.{u1} G _inst_1) (Set.{u1} (Subgroup.{u1} G _inst_1)) (Set.hasMem.{u1} (Subgroup.{u1} G _inst_1)) p S) -> (Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) x p))
 but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {S : Set.{u1} (Subgroup.{u1} G _inst_1)} {x : G}, Iff (Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x (InfSet.infₛ.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instInfSetSubgroup.{u1} G _inst_1) S)) (forall (p : Subgroup.{u1} G _inst_1), (Membership.mem.{u1, u1} (Subgroup.{u1} G _inst_1) (Set.{u1} (Subgroup.{u1} G _inst_1)) (Set.instMembershipSet.{u1} (Subgroup.{u1} G _inst_1)) p S) -> (Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x p))
-Case conversion may be inaccurate. Consider using '#align subgroup.mem_Inf Subgroup.mem_infₛₓ'. -/
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {S : Set.{u1} (Subgroup.{u1} G _inst_1)} {x : G}, Iff (Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x (InfSet.sInf.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instInfSetSubgroup.{u1} G _inst_1) S)) (forall (p : Subgroup.{u1} G _inst_1), (Membership.mem.{u1, u1} (Subgroup.{u1} G _inst_1) (Set.{u1} (Subgroup.{u1} G _inst_1)) (Set.instMembershipSet.{u1} (Subgroup.{u1} G _inst_1)) p S) -> (Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x p))
+Case conversion may be inaccurate. Consider using '#align subgroup.mem_Inf Subgroup.mem_sInfₓ'. -/
 @[simp, to_additive]
-theorem mem_infₛ {S : Set (Subgroup G)} {x : G} : x ∈ infₛ S ↔ ∀ p ∈ S, x ∈ p :=
-  Set.mem_interᵢ₂
-#align subgroup.mem_Inf Subgroup.mem_infₛ
-#align add_subgroup.mem_Inf AddSubgroup.mem_infₛ
+theorem mem_sInf {S : Set (Subgroup G)} {x : G} : x ∈ sInf S ↔ ∀ p ∈ S, x ∈ p :=
+  Set.mem_iInter₂
+#align subgroup.mem_Inf Subgroup.mem_sInf
+#align add_subgroup.mem_Inf AddSubgroup.mem_sInf
 
-/- warning: subgroup.mem_infi -> Subgroup.mem_infᵢ is a dubious translation:
+/- warning: subgroup.mem_infi -> Subgroup.mem_iInf is a dubious translation:
 lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ι : Sort.{u2}} {S : ι -> (Subgroup.{u1} G _inst_1)} {x : G}, Iff (Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) x (infᵢ.{u1, u2} (Subgroup.{u1} G _inst_1) (Subgroup.hasInf.{u1} G _inst_1) ι (fun (i : ι) => S i))) (forall (i : ι), Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) x (S i))
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ι : Sort.{u2}} {S : ι -> (Subgroup.{u1} G _inst_1)} {x : G}, Iff (Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) x (iInf.{u1, u2} (Subgroup.{u1} G _inst_1) (Subgroup.hasInf.{u1} G _inst_1) ι (fun (i : ι) => S i))) (forall (i : ι), Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) x (S i))
 but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ι : Sort.{u2}} {S : ι -> (Subgroup.{u1} G _inst_1)} {x : G}, Iff (Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x (infᵢ.{u1, u2} (Subgroup.{u1} G _inst_1) (Subgroup.instInfSetSubgroup.{u1} G _inst_1) ι (fun (i : ι) => S i))) (forall (i : ι), Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x (S i))
-Case conversion may be inaccurate. Consider using '#align subgroup.mem_infi Subgroup.mem_infᵢₓ'. -/
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ι : Sort.{u2}} {S : ι -> (Subgroup.{u1} G _inst_1)} {x : G}, Iff (Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x (iInf.{u1, u2} (Subgroup.{u1} G _inst_1) (Subgroup.instInfSetSubgroup.{u1} G _inst_1) ι (fun (i : ι) => S i))) (forall (i : ι), Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x (S i))
+Case conversion may be inaccurate. Consider using '#align subgroup.mem_infi Subgroup.mem_iInfₓ'. -/
 @[to_additive]
-theorem mem_infᵢ {ι : Sort _} {S : ι → Subgroup G} {x : G} : (x ∈ ⨅ i, S i) ↔ ∀ i, x ∈ S i := by
-  simp only [infᵢ, mem_Inf, Set.forall_range_iff]
-#align subgroup.mem_infi Subgroup.mem_infᵢ
-#align add_subgroup.mem_infi AddSubgroup.mem_infᵢ
+theorem mem_iInf {ι : Sort _} {S : ι → Subgroup G} {x : G} : (x ∈ ⨅ i, S i) ↔ ∀ i, x ∈ S i := by
+  simp only [iInf, mem_Inf, Set.forall_range_iff]
+#align subgroup.mem_infi Subgroup.mem_iInf
+#align add_subgroup.mem_infi AddSubgroup.mem_iInf
 
-/- warning: subgroup.coe_infi -> Subgroup.coe_infᵢ is a dubious translation:
+/- warning: subgroup.coe_infi -> Subgroup.coe_iInf is a dubious translation:
 lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ι : Sort.{u2}} {S : ι -> (Subgroup.{u1} G _inst_1)}, Eq.{succ u1} (Set.{u1} G) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subgroup.{u1} G _inst_1) (Set.{u1} G) (HasLiftT.mk.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Set.{u1} G) (CoeTCₓ.coe.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Set.{u1} G) (SetLike.Set.hasCoeT.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)))) (infᵢ.{u1, u2} (Subgroup.{u1} G _inst_1) (Subgroup.hasInf.{u1} G _inst_1) ι (fun (i : ι) => S i))) (Set.interᵢ.{u1, u2} G ι (fun (i : ι) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subgroup.{u1} G _inst_1) (Set.{u1} G) (HasLiftT.mk.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Set.{u1} G) (CoeTCₓ.coe.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Set.{u1} G) (SetLike.Set.hasCoeT.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)))) (S i)))
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ι : Sort.{u2}} {S : ι -> (Subgroup.{u1} G _inst_1)}, Eq.{succ u1} (Set.{u1} G) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subgroup.{u1} G _inst_1) (Set.{u1} G) (HasLiftT.mk.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Set.{u1} G) (CoeTCₓ.coe.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Set.{u1} G) (SetLike.Set.hasCoeT.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)))) (iInf.{u1, u2} (Subgroup.{u1} G _inst_1) (Subgroup.hasInf.{u1} G _inst_1) ι (fun (i : ι) => S i))) (Set.iInter.{u1, u2} G ι (fun (i : ι) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subgroup.{u1} G _inst_1) (Set.{u1} G) (HasLiftT.mk.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Set.{u1} G) (CoeTCₓ.coe.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Set.{u1} G) (SetLike.Set.hasCoeT.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)))) (S i)))
 but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ι : Sort.{u2}} {S : ι -> (Subgroup.{u1} G _inst_1)}, Eq.{succ u1} (Set.{u1} G) (SetLike.coe.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1) (infᵢ.{u1, u2} (Subgroup.{u1} G _inst_1) (Subgroup.instInfSetSubgroup.{u1} G _inst_1) ι (fun (i : ι) => S i))) (Set.interᵢ.{u1, u2} G ι (fun (i : ι) => SetLike.coe.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1) (S i)))
-Case conversion may be inaccurate. Consider using '#align subgroup.coe_infi Subgroup.coe_infᵢₓ'. -/
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ι : Sort.{u2}} {S : ι -> (Subgroup.{u1} G _inst_1)}, Eq.{succ u1} (Set.{u1} G) (SetLike.coe.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1) (iInf.{u1, u2} (Subgroup.{u1} G _inst_1) (Subgroup.instInfSetSubgroup.{u1} G _inst_1) ι (fun (i : ι) => S i))) (Set.iInter.{u1, u2} G ι (fun (i : ι) => SetLike.coe.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1) (S i)))
+Case conversion may be inaccurate. Consider using '#align subgroup.coe_infi Subgroup.coe_iInfₓ'. -/
 @[simp, norm_cast, to_additive]
-theorem coe_infᵢ {ι : Sort _} {S : ι → Subgroup G} : (↑(⨅ i, S i) : Set G) = ⋂ i, S i := by
-  simp only [infᵢ, coe_Inf, Set.binterᵢ_range]
-#align subgroup.coe_infi Subgroup.coe_infᵢ
-#align add_subgroup.coe_infi AddSubgroup.coe_infᵢ
+theorem coe_iInf {ι : Sort _} {S : ι → Subgroup G} : (↑(⨅ i, S i) : Set G) = ⋂ i, S i := by
+  simp only [iInf, coe_Inf, Set.biInter_range]
+#align subgroup.coe_infi Subgroup.coe_iInf
+#align add_subgroup.coe_infi AddSubgroup.coe_iInf
 
 /-- Subgroups of a group form a complete lattice. -/
 @[to_additive "The `add_subgroup`s of an `add_group` form a complete lattice."]
@@ -1625,7 +1625,7 @@ instance : CompleteLattice (Subgroup G) :=
   {
     completeLatticeOfInf (Subgroup G) fun s =>
       IsGLB.of_image (fun H K => show (H : Set G) ≤ K ↔ H ≤ K from SetLike.coe_subset_coe)
-        isGLB_binfᵢ with
+        isGLB_biInf with
     bot := ⊥
     bot_le := fun S x hx => (mem_bot.1 hx).symm ▸ S.one_mem
     top := ⊤
@@ -1671,31 +1671,31 @@ theorem mul_mem_sup {S T : Subgroup G} {x y : G} (hx : x ∈ S) (hy : y ∈ T) :
 #align subgroup.mul_mem_sup Subgroup.mul_mem_sup
 #align add_subgroup.add_mem_sup AddSubgroup.add_mem_sup
 
-/- warning: subgroup.mem_supr_of_mem -> Subgroup.mem_supᵢ_of_mem is a dubious translation:
+/- warning: subgroup.mem_supr_of_mem -> Subgroup.mem_iSup_of_mem is a dubious translation:
 lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ι : Sort.{u2}} {S : ι -> (Subgroup.{u1} G _inst_1)} (i : ι) {x : G}, (Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) x (S i)) -> (Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) x (supᵢ.{u1, u2} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.completeLattice.{u1} G _inst_1))) ι S))
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ι : Sort.{u2}} {S : ι -> (Subgroup.{u1} G _inst_1)} (i : ι) {x : G}, (Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) x (S i)) -> (Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) x (iSup.{u1, u2} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.completeLattice.{u1} G _inst_1))) ι S))
 but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ι : Sort.{u2}} {S : ι -> (Subgroup.{u1} G _inst_1)} (i : ι) {x : G}, (Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x (S i)) -> (Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x (supᵢ.{u1, u2} (Subgroup.{u1} G _inst_1) (CompleteLattice.toSupSet.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1)) ι S))
-Case conversion may be inaccurate. Consider using '#align subgroup.mem_supr_of_mem Subgroup.mem_supᵢ_of_memₓ'. -/
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ι : Sort.{u2}} {S : ι -> (Subgroup.{u1} G _inst_1)} (i : ι) {x : G}, (Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x (S i)) -> (Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x (iSup.{u1, u2} (Subgroup.{u1} G _inst_1) (CompleteLattice.toSupSet.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1)) ι S))
+Case conversion may be inaccurate. Consider using '#align subgroup.mem_supr_of_mem Subgroup.mem_iSup_of_memₓ'. -/
 @[to_additive]
-theorem mem_supᵢ_of_mem {ι : Sort _} {S : ι → Subgroup G} (i : ι) :
-    ∀ {x : G}, x ∈ S i → x ∈ supᵢ S :=
-  show S i ≤ supᵢ S from le_supᵢ _ _
-#align subgroup.mem_supr_of_mem Subgroup.mem_supᵢ_of_mem
-#align add_subgroup.mem_supr_of_mem AddSubgroup.mem_supᵢ_of_mem
+theorem mem_iSup_of_mem {ι : Sort _} {S : ι → Subgroup G} (i : ι) :
+    ∀ {x : G}, x ∈ S i → x ∈ iSup S :=
+  show S i ≤ iSup S from le_iSup _ _
+#align subgroup.mem_supr_of_mem Subgroup.mem_iSup_of_mem
+#align add_subgroup.mem_supr_of_mem AddSubgroup.mem_iSup_of_mem
 
-/- warning: subgroup.mem_Sup_of_mem -> Subgroup.mem_supₛ_of_mem is a dubious translation:
+/- warning: subgroup.mem_Sup_of_mem -> Subgroup.mem_sSup_of_mem is a dubious translation:
 lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {S : Set.{u1} (Subgroup.{u1} G _inst_1)} {s : Subgroup.{u1} G _inst_1}, (Membership.Mem.{u1, u1} (Subgroup.{u1} G _inst_1) (Set.{u1} (Subgroup.{u1} G _inst_1)) (Set.hasMem.{u1} (Subgroup.{u1} G _inst_1)) s S) -> (forall {x : G}, (Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) x s) -> (Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) x (SupSet.supₛ.{u1} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.completeLattice.{u1} G _inst_1))) S)))
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {S : Set.{u1} (Subgroup.{u1} G _inst_1)} {s : Subgroup.{u1} G _inst_1}, (Membership.Mem.{u1, u1} (Subgroup.{u1} G _inst_1) (Set.{u1} (Subgroup.{u1} G _inst_1)) (Set.hasMem.{u1} (Subgroup.{u1} G _inst_1)) s S) -> (forall {x : G}, (Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) x s) -> (Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) x (SupSet.sSup.{u1} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.completeLattice.{u1} G _inst_1))) S)))
 but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {S : Set.{u1} (Subgroup.{u1} G _inst_1)} {s : Subgroup.{u1} G _inst_1}, (Membership.mem.{u1, u1} (Subgroup.{u1} G _inst_1) (Set.{u1} (Subgroup.{u1} G _inst_1)) (Set.instMembershipSet.{u1} (Subgroup.{u1} G _inst_1)) s S) -> (forall {x : G}, (Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x s) -> (Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x (SupSet.supₛ.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toSupSet.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1)) S)))
-Case conversion may be inaccurate. Consider using '#align subgroup.mem_Sup_of_mem Subgroup.mem_supₛ_of_memₓ'. -/
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {S : Set.{u1} (Subgroup.{u1} G _inst_1)} {s : Subgroup.{u1} G _inst_1}, (Membership.mem.{u1, u1} (Subgroup.{u1} G _inst_1) (Set.{u1} (Subgroup.{u1} G _inst_1)) (Set.instMembershipSet.{u1} (Subgroup.{u1} G _inst_1)) s S) -> (forall {x : G}, (Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x s) -> (Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x (SupSet.sSup.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toSupSet.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1)) S)))
+Case conversion may be inaccurate. Consider using '#align subgroup.mem_Sup_of_mem Subgroup.mem_sSup_of_memₓ'. -/
 @[to_additive]
-theorem mem_supₛ_of_mem {S : Set (Subgroup G)} {s : Subgroup G} (hs : s ∈ S) :
-    ∀ {x : G}, x ∈ s → x ∈ supₛ S :=
-  show s ≤ supₛ S from le_supₛ hs
-#align subgroup.mem_Sup_of_mem Subgroup.mem_supₛ_of_mem
-#align add_subgroup.mem_Sup_of_mem AddSubgroup.mem_supₛ_of_mem
+theorem mem_sSup_of_mem {S : Set (Subgroup G)} {s : Subgroup G} (hs : s ∈ S) :
+    ∀ {x : G}, x ∈ s → x ∈ sSup S :=
+  show s ≤ sSup S from le_sSup hs
+#align subgroup.mem_Sup_of_mem Subgroup.mem_sSup_of_mem
+#align add_subgroup.mem_Sup_of_mem AddSubgroup.mem_sSup_of_mem
 
 #print Subgroup.subsingleton_iff /-
 @[simp, to_additive]
@@ -1744,7 +1744,7 @@ theorem eq_top_iff' : H = ⊤ ↔ ∀ x : G, x ∈ H :=
 /-- The `subgroup` generated by a set. -/
 @[to_additive "The `add_subgroup` generated by a set"]
 def closure (k : Set G) : Subgroup G :=
-  infₛ { K | k ⊆ K }
+  sInf { K | k ⊆ K }
 #align subgroup.closure Subgroup.closure
 #align add_subgroup.closure AddSubgroup.closure
 -/
@@ -1759,7 +1759,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subgroup.mem_closure Subgroup.mem_closureₓ'. -/
 @[to_additive]
 theorem mem_closure {x : G} : x ∈ closure k ↔ ∀ K : Subgroup G, k ⊆ K → x ∈ K :=
-  mem_infₛ
+  mem_sInf
 #align subgroup.mem_closure Subgroup.mem_closure
 #align add_subgroup.mem_closure AddSubgroup.mem_closure
 
@@ -1798,7 +1798,7 @@ Case conversion may be inaccurate. Consider using '#align subgroup.closure_le Su
 /-- A subgroup `K` includes `closure k` if and only if it includes `k`. -/
 @[simp, to_additive "An additive subgroup `K` includes `closure k` if and only if it includes `k`"]
 theorem closure_le : closure k ≤ K ↔ k ⊆ K :=
-  ⟨Subset.trans subset_closure, fun h => infₛ_le h⟩
+  ⟨Subset.trans subset_closure, fun h => sInf_le h⟩
 #align subgroup.closure_le Subgroup.closure_le
 #align add_subgroup.closure_le AddSubgroup.closure_le
 
@@ -2004,17 +2004,17 @@ theorem closure_union (s t : Set G) : closure (s ∪ t) = closure s ⊔ closure 
 #align subgroup.closure_union Subgroup.closure_union
 #align add_subgroup.closure_union AddSubgroup.closure_union
 
-/- warning: subgroup.closure_Union -> Subgroup.closure_unionᵢ is a dubious translation:
+/- warning: subgroup.closure_Union -> Subgroup.closure_iUnion is a dubious translation:
 lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ι : Sort.{u2}} (s : ι -> (Set.{u1} G)), Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.closure.{u1} G _inst_1 (Set.unionᵢ.{u1, u2} G ι (fun (i : ι) => s i))) (supᵢ.{u1, u2} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.completeLattice.{u1} G _inst_1))) ι (fun (i : ι) => Subgroup.closure.{u1} G _inst_1 (s i)))
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ι : Sort.{u2}} (s : ι -> (Set.{u1} G)), Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.closure.{u1} G _inst_1 (Set.iUnion.{u1, u2} G ι (fun (i : ι) => s i))) (iSup.{u1, u2} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.completeLattice.{u1} G _inst_1))) ι (fun (i : ι) => Subgroup.closure.{u1} G _inst_1 (s i)))
 but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ι : Sort.{u2}} (s : ι -> (Set.{u1} G)), Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.closure.{u1} G _inst_1 (Set.unionᵢ.{u1, u2} G ι (fun (i : ι) => s i))) (supᵢ.{u1, u2} (Subgroup.{u1} G _inst_1) (CompleteLattice.toSupSet.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1)) ι (fun (i : ι) => Subgroup.closure.{u1} G _inst_1 (s i)))
-Case conversion may be inaccurate. Consider using '#align subgroup.closure_Union Subgroup.closure_unionᵢₓ'. -/
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ι : Sort.{u2}} (s : ι -> (Set.{u1} G)), Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.closure.{u1} G _inst_1 (Set.iUnion.{u1, u2} G ι (fun (i : ι) => s i))) (iSup.{u1, u2} (Subgroup.{u1} G _inst_1) (CompleteLattice.toSupSet.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1)) ι (fun (i : ι) => Subgroup.closure.{u1} G _inst_1 (s i)))
+Case conversion may be inaccurate. Consider using '#align subgroup.closure_Union Subgroup.closure_iUnionₓ'. -/
 @[to_additive]
-theorem closure_unionᵢ {ι} (s : ι → Set G) : closure (⋃ i, s i) = ⨆ i, closure (s i) :=
-  (Subgroup.gi G).gc.l_supᵢ
-#align subgroup.closure_Union Subgroup.closure_unionᵢ
-#align add_subgroup.closure_Union AddSubgroup.closure_unionᵢ
+theorem closure_iUnion {ι} (s : ι → Set G) : closure (⋃ i, s i) = ⨆ i, closure (s i) :=
+  (Subgroup.gi G).gc.l_iSup
+#align subgroup.closure_Union Subgroup.closure_iUnion
+#align add_subgroup.closure_Union AddSubgroup.closure_iUnion
 
 /- warning: subgroup.closure_eq_bot_iff -> Subgroup.closure_eq_bot_iff is a dubious translation:
 lean 3 declaration is
@@ -2030,17 +2030,17 @@ theorem closure_eq_bot_iff (G : Type _) [Group G] (S : Set G) : closure S = ⊥ 
 #align subgroup.closure_eq_bot_iff Subgroup.closure_eq_bot_iff
 #align add_subgroup.closure_eq_bot_iff AddSubgroup.closure_eq_bot_iff
 
-/- warning: subgroup.supr_eq_closure -> Subgroup.supᵢ_eq_closure is a dubious translation:
+/- warning: subgroup.supr_eq_closure -> Subgroup.iSup_eq_closure is a dubious translation:
 lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ι : Sort.{u2}} (p : ι -> (Subgroup.{u1} G _inst_1)), Eq.{succ u1} (Subgroup.{u1} G _inst_1) (supᵢ.{u1, u2} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.completeLattice.{u1} G _inst_1))) ι (fun (i : ι) => p i)) (Subgroup.closure.{u1} G _inst_1 (Set.unionᵢ.{u1, u2} G ι (fun (i : ι) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subgroup.{u1} G _inst_1) (Set.{u1} G) (HasLiftT.mk.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Set.{u1} G) (CoeTCₓ.coe.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Set.{u1} G) (SetLike.Set.hasCoeT.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)))) (p i))))
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ι : Sort.{u2}} (p : ι -> (Subgroup.{u1} G _inst_1)), Eq.{succ u1} (Subgroup.{u1} G _inst_1) (iSup.{u1, u2} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.completeLattice.{u1} G _inst_1))) ι (fun (i : ι) => p i)) (Subgroup.closure.{u1} G _inst_1 (Set.iUnion.{u1, u2} G ι (fun (i : ι) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subgroup.{u1} G _inst_1) (Set.{u1} G) (HasLiftT.mk.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Set.{u1} G) (CoeTCₓ.coe.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Set.{u1} G) (SetLike.Set.hasCoeT.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)))) (p i))))
 but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ι : Sort.{u2}} (p : ι -> (Subgroup.{u1} G _inst_1)), Eq.{succ u1} (Subgroup.{u1} G _inst_1) (supᵢ.{u1, u2} (Subgroup.{u1} G _inst_1) (CompleteLattice.toSupSet.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1)) ι (fun (i : ι) => p i)) (Subgroup.closure.{u1} G _inst_1 (Set.unionᵢ.{u1, u2} G ι (fun (i : ι) => SetLike.coe.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1) (p i))))
-Case conversion may be inaccurate. Consider using '#align subgroup.supr_eq_closure Subgroup.supᵢ_eq_closureₓ'. -/
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ι : Sort.{u2}} (p : ι -> (Subgroup.{u1} G _inst_1)), Eq.{succ u1} (Subgroup.{u1} G _inst_1) (iSup.{u1, u2} (Subgroup.{u1} G _inst_1) (CompleteLattice.toSupSet.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1)) ι (fun (i : ι) => p i)) (Subgroup.closure.{u1} G _inst_1 (Set.iUnion.{u1, u2} G ι (fun (i : ι) => SetLike.coe.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1) (p i))))
+Case conversion may be inaccurate. Consider using '#align subgroup.supr_eq_closure Subgroup.iSup_eq_closureₓ'. -/
 @[to_additive]
-theorem supᵢ_eq_closure {ι : Sort _} (p : ι → Subgroup G) :
-    (⨆ i, p i) = closure (⋃ i, (p i : Set G)) := by simp_rw [closure_unionᵢ, closure_eq]
-#align subgroup.supr_eq_closure Subgroup.supᵢ_eq_closure
-#align add_subgroup.supr_eq_closure AddSubgroup.supᵢ_eq_closure
+theorem iSup_eq_closure {ι : Sort _} (p : ι → Subgroup G) :
+    (⨆ i, p i) = closure (⋃ i, (p i : Set G)) := by simp_rw [closure_iUnion, closure_eq]
+#align subgroup.supr_eq_closure Subgroup.iSup_eq_closure
+#align add_subgroup.supr_eq_closure AddSubgroup.iSup_eq_closure
 
 /- warning: subgroup.mem_closure_singleton -> Subgroup.mem_closure_singleton is a dubious translation:
 lean 3 declaration is
@@ -2105,19 +2105,19 @@ theorem closure_eq_top_of_mclosure_eq_top {S : Set G} (h : Submonoid.closure S =
 #align subgroup.closure_eq_top_of_mclosure_eq_top Subgroup.closure_eq_top_of_mclosure_eq_top
 #align add_subgroup.closure_eq_top_of_mclosure_eq_top AddSubgroup.closure_eq_top_of_mclosure_eq_top
 
-/- warning: subgroup.mem_supr_of_directed -> Subgroup.mem_supᵢ_of_directed is a dubious translation:
+/- warning: subgroup.mem_supr_of_directed -> Subgroup.mem_iSup_of_directed is a dubious translation:
 lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ι : Sort.{u2}} [hι : Nonempty.{u2} ι] {K : ι -> (Subgroup.{u1} G _inst_1)}, (Directed.{u1, u2} (Subgroup.{u1} G _inst_1) ι (LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (SetLike.partialOrder.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1))))) K) -> (forall {x : G}, Iff (Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) x (supᵢ.{u1, u2} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.completeLattice.{u1} G _inst_1))) ι K)) (Exists.{u2} ι (fun (i : ι) => Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) x (K i))))
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ι : Sort.{u2}} [hι : Nonempty.{u2} ι] {K : ι -> (Subgroup.{u1} G _inst_1)}, (Directed.{u1, u2} (Subgroup.{u1} G _inst_1) ι (LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (SetLike.partialOrder.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1))))) K) -> (forall {x : G}, Iff (Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) x (iSup.{u1, u2} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.completeLattice.{u1} G _inst_1))) ι K)) (Exists.{u2} ι (fun (i : ι) => Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) x (K i))))
 but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ι : Sort.{u2}} [hι : Nonempty.{u2} ι] {K : ι -> (Subgroup.{u1} G _inst_1)}, (Directed.{u1, u2} (Subgroup.{u1} G _inst_1) ι (fun (x._@.Mathlib.GroupTheory.Subgroup.Basic._hyg.10372 : Subgroup.{u1} G _inst_1) (x._@.Mathlib.GroupTheory.Subgroup.Basic._hyg.10374 : Subgroup.{u1} G _inst_1) => LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeInf.toPartialOrder.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1))))) x._@.Mathlib.GroupTheory.Subgroup.Basic._hyg.10372 x._@.Mathlib.GroupTheory.Subgroup.Basic._hyg.10374) K) -> (forall {x : G}, Iff (Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x (supᵢ.{u1, u2} (Subgroup.{u1} G _inst_1) (CompleteLattice.toSupSet.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1)) ι K)) (Exists.{u2} ι (fun (i : ι) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x (K i))))
-Case conversion may be inaccurate. Consider using '#align subgroup.mem_supr_of_directed Subgroup.mem_supᵢ_of_directedₓ'. -/
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ι : Sort.{u2}} [hι : Nonempty.{u2} ι] {K : ι -> (Subgroup.{u1} G _inst_1)}, (Directed.{u1, u2} (Subgroup.{u1} G _inst_1) ι (fun (x._@.Mathlib.GroupTheory.Subgroup.Basic._hyg.10372 : Subgroup.{u1} G _inst_1) (x._@.Mathlib.GroupTheory.Subgroup.Basic._hyg.10374 : Subgroup.{u1} G _inst_1) => LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeInf.toPartialOrder.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1))))) x._@.Mathlib.GroupTheory.Subgroup.Basic._hyg.10372 x._@.Mathlib.GroupTheory.Subgroup.Basic._hyg.10374) K) -> (forall {x : G}, Iff (Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x (iSup.{u1, u2} (Subgroup.{u1} G _inst_1) (CompleteLattice.toSupSet.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1)) ι K)) (Exists.{u2} ι (fun (i : ι) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x (K i))))
+Case conversion may be inaccurate. Consider using '#align subgroup.mem_supr_of_directed Subgroup.mem_iSup_of_directedₓ'. -/
 @[to_additive]
-theorem mem_supᵢ_of_directed {ι} [hι : Nonempty ι] {K : ι → Subgroup G} (hK : Directed (· ≤ ·) K)
-    {x : G} : x ∈ (supᵢ K : Subgroup G) ↔ ∃ i, x ∈ K i :=
+theorem mem_iSup_of_directed {ι} [hι : Nonempty ι] {K : ι → Subgroup G} (hK : Directed (· ≤ ·) K)
+    {x : G} : x ∈ (iSup K : Subgroup G) ↔ ∃ i, x ∈ K i :=
   by
-  refine' ⟨_, fun ⟨i, hi⟩ => (SetLike.le_def.1 <| le_supᵢ K i) hi⟩
+  refine' ⟨_, fun ⟨i, hi⟩ => (SetLike.le_def.1 <| le_iSup K i) hi⟩
   suffices x ∈ closure (⋃ i, (K i : Set G)) → ∃ i, x ∈ K i by
-    simpa only [closure_unionᵢ, closure_eq (K _)] using this
+    simpa only [closure_iUnion, closure_eq (K _)] using this
   refine' fun hx => closure_induction hx (fun _ => mem_Union.1) _ _ _
   · exact hι.elim fun i => ⟨i, (K i).one_mem⟩
   · rintro x y ⟨i, hi⟩ ⟨j, hj⟩
@@ -2125,36 +2125,36 @@ theorem mem_supᵢ_of_directed {ι} [hι : Nonempty ι] {K : ι → Subgroup G} 
     exact ⟨k, mul_mem (hki hi) (hkj hj)⟩
   rintro _ ⟨i, hi⟩
   exact ⟨i, inv_mem hi⟩
-#align subgroup.mem_supr_of_directed Subgroup.mem_supᵢ_of_directed
-#align add_subgroup.mem_supr_of_directed AddSubgroup.mem_supᵢ_of_directed
+#align subgroup.mem_supr_of_directed Subgroup.mem_iSup_of_directed
+#align add_subgroup.mem_supr_of_directed AddSubgroup.mem_iSup_of_directed
 
-/- warning: subgroup.coe_supr_of_directed -> Subgroup.coe_supᵢ_of_directed is a dubious translation:
+/- warning: subgroup.coe_supr_of_directed -> Subgroup.coe_iSup_of_directed is a dubious translation:
 lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ι : Sort.{u2}} [_inst_4 : Nonempty.{u2} ι] {S : ι -> (Subgroup.{u1} G _inst_1)}, (Directed.{u1, u2} (Subgroup.{u1} G _inst_1) ι (LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (SetLike.partialOrder.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1))))) S) -> (Eq.{succ u1} (Set.{u1} G) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subgroup.{u1} G _inst_1) (Set.{u1} G) (HasLiftT.mk.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Set.{u1} G) (CoeTCₓ.coe.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Set.{u1} G) (SetLike.Set.hasCoeT.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)))) (supᵢ.{u1, u2} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.completeLattice.{u1} G _inst_1))) ι (fun (i : ι) => S i))) (Set.unionᵢ.{u1, u2} G ι (fun (i : ι) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subgroup.{u1} G _inst_1) (Set.{u1} G) (HasLiftT.mk.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Set.{u1} G) (CoeTCₓ.coe.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Set.{u1} G) (SetLike.Set.hasCoeT.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)))) (S i))))
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ι : Sort.{u2}} [_inst_4 : Nonempty.{u2} ι] {S : ι -> (Subgroup.{u1} G _inst_1)}, (Directed.{u1, u2} (Subgroup.{u1} G _inst_1) ι (LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (SetLike.partialOrder.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1))))) S) -> (Eq.{succ u1} (Set.{u1} G) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subgroup.{u1} G _inst_1) (Set.{u1} G) (HasLiftT.mk.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Set.{u1} G) (CoeTCₓ.coe.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Set.{u1} G) (SetLike.Set.hasCoeT.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)))) (iSup.{u1, u2} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.completeLattice.{u1} G _inst_1))) ι (fun (i : ι) => S i))) (Set.iUnion.{u1, u2} G ι (fun (i : ι) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subgroup.{u1} G _inst_1) (Set.{u1} G) (HasLiftT.mk.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Set.{u1} G) (CoeTCₓ.coe.{succ u1, succ u1} (Subgroup.{u1} G _inst_1) (Set.{u1} G) (SetLike.Set.hasCoeT.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)))) (S i))))
 but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ι : Sort.{u2}} [_inst_4 : Nonempty.{u2} ι] {S : ι -> (Subgroup.{u1} G _inst_1)}, (Directed.{u1, u2} (Subgroup.{u1} G _inst_1) ι (fun (x._@.Mathlib.GroupTheory.Subgroup.Basic._hyg.10621 : Subgroup.{u1} G _inst_1) (x._@.Mathlib.GroupTheory.Subgroup.Basic._hyg.10623 : Subgroup.{u1} G _inst_1) => LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeInf.toPartialOrder.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1))))) x._@.Mathlib.GroupTheory.Subgroup.Basic._hyg.10621 x._@.Mathlib.GroupTheory.Subgroup.Basic._hyg.10623) S) -> (Eq.{succ u1} (Set.{u1} G) (SetLike.coe.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1) (supᵢ.{u1, u2} (Subgroup.{u1} G _inst_1) (CompleteLattice.toSupSet.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1)) ι (fun (i : ι) => S i))) (Set.unionᵢ.{u1, u2} G ι (fun (i : ι) => SetLike.coe.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1) (S i))))
-Case conversion may be inaccurate. Consider using '#align subgroup.coe_supr_of_directed Subgroup.coe_supᵢ_of_directedₓ'. -/
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {ι : Sort.{u2}} [_inst_4 : Nonempty.{u2} ι] {S : ι -> (Subgroup.{u1} G _inst_1)}, (Directed.{u1, u2} (Subgroup.{u1} G _inst_1) ι (fun (x._@.Mathlib.GroupTheory.Subgroup.Basic._hyg.10621 : Subgroup.{u1} G _inst_1) (x._@.Mathlib.GroupTheory.Subgroup.Basic._hyg.10623 : Subgroup.{u1} G _inst_1) => LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeInf.toPartialOrder.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1))))) x._@.Mathlib.GroupTheory.Subgroup.Basic._hyg.10621 x._@.Mathlib.GroupTheory.Subgroup.Basic._hyg.10623) S) -> (Eq.{succ u1} (Set.{u1} G) (SetLike.coe.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1) (iSup.{u1, u2} (Subgroup.{u1} G _inst_1) (CompleteLattice.toSupSet.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1)) ι (fun (i : ι) => S i))) (Set.iUnion.{u1, u2} G ι (fun (i : ι) => SetLike.coe.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1) (S i))))
+Case conversion may be inaccurate. Consider using '#align subgroup.coe_supr_of_directed Subgroup.coe_iSup_of_directedₓ'. -/
 @[to_additive]
-theorem coe_supᵢ_of_directed {ι} [Nonempty ι] {S : ι → Subgroup G} (hS : Directed (· ≤ ·) S) :
+theorem coe_iSup_of_directed {ι} [Nonempty ι] {S : ι → Subgroup G} (hS : Directed (· ≤ ·) S) :
     ((⨆ i, S i : Subgroup G) : Set G) = ⋃ i, ↑(S i) :=
   Set.ext fun x => by simp [mem_supr_of_directed hS]
-#align subgroup.coe_supr_of_directed Subgroup.coe_supᵢ_of_directed
-#align add_subgroup.coe_supr_of_directed AddSubgroup.coe_supᵢ_of_directed
+#align subgroup.coe_supr_of_directed Subgroup.coe_iSup_of_directed
+#align add_subgroup.coe_supr_of_directed AddSubgroup.coe_iSup_of_directed
 
-/- warning: subgroup.mem_Sup_of_directed_on -> Subgroup.mem_supₛ_of_directedOn is a dubious translation:
+/- warning: subgroup.mem_Sup_of_directed_on -> Subgroup.mem_sSup_of_directedOn is a dubious translation:
 lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {K : Set.{u1} (Subgroup.{u1} G _inst_1)}, (Set.Nonempty.{u1} (Subgroup.{u1} G _inst_1) K) -> (DirectedOn.{u1} (Subgroup.{u1} G _inst_1) (LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (SetLike.partialOrder.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1))))) K) -> (forall {x : G}, Iff (Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) x (SupSet.supₛ.{u1} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.completeLattice.{u1} G _inst_1))) K)) (Exists.{succ u1} (Subgroup.{u1} G _inst_1) (fun (s : Subgroup.{u1} G _inst_1) => Exists.{0} (Membership.Mem.{u1, u1} (Subgroup.{u1} G _inst_1) (Set.{u1} (Subgroup.{u1} G _inst_1)) (Set.hasMem.{u1} (Subgroup.{u1} G _inst_1)) s K) (fun (H : Membership.Mem.{u1, u1} (Subgroup.{u1} G _inst_1) (Set.{u1} (Subgroup.{u1} G _inst_1)) (Set.hasMem.{u1} (Subgroup.{u1} G _inst_1)) s K) => Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) x s))))
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {K : Set.{u1} (Subgroup.{u1} G _inst_1)}, (Set.Nonempty.{u1} (Subgroup.{u1} G _inst_1) K) -> (DirectedOn.{u1} (Subgroup.{u1} G _inst_1) (LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (SetLike.partialOrder.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1))))) K) -> (forall {x : G}, Iff (Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) x (SupSet.sSup.{u1} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.completeLattice.{u1} G _inst_1))) K)) (Exists.{succ u1} (Subgroup.{u1} G _inst_1) (fun (s : Subgroup.{u1} G _inst_1) => Exists.{0} (Membership.Mem.{u1, u1} (Subgroup.{u1} G _inst_1) (Set.{u1} (Subgroup.{u1} G _inst_1)) (Set.hasMem.{u1} (Subgroup.{u1} G _inst_1)) s K) (fun (H : Membership.Mem.{u1, u1} (Subgroup.{u1} G _inst_1) (Set.{u1} (Subgroup.{u1} G _inst_1)) (Set.hasMem.{u1} (Subgroup.{u1} G _inst_1)) s K) => Membership.Mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.hasMem.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) x s))))
 but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {K : Set.{u1} (Subgroup.{u1} G _inst_1)}, (Set.Nonempty.{u1} (Subgroup.{u1} G _inst_1) K) -> (DirectedOn.{u1} (Subgroup.{u1} G _inst_1) (fun (x._@.Mathlib.GroupTheory.Subgroup.Basic._hyg.10723 : Subgroup.{u1} G _inst_1) (x._@.Mathlib.GroupTheory.Subgroup.Basic._hyg.10725 : Subgroup.{u1} G _inst_1) => LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeInf.toPartialOrder.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1))))) x._@.Mathlib.GroupTheory.Subgroup.Basic._hyg.10723 x._@.Mathlib.GroupTheory.Subgroup.Basic._hyg.10725) K) -> (forall {x : G}, Iff (Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x (SupSet.supₛ.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toSupSet.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1)) K)) (Exists.{succ u1} (Subgroup.{u1} G _inst_1) (fun (s : Subgroup.{u1} G _inst_1) => And (Membership.mem.{u1, u1} (Subgroup.{u1} G _inst_1) (Set.{u1} (Subgroup.{u1} G _inst_1)) (Set.instMembershipSet.{u1} (Subgroup.{u1} G _inst_1)) s K) (Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x s))))
-Case conversion may be inaccurate. Consider using '#align subgroup.mem_Sup_of_directed_on Subgroup.mem_supₛ_of_directedOnₓ'. -/
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {K : Set.{u1} (Subgroup.{u1} G _inst_1)}, (Set.Nonempty.{u1} (Subgroup.{u1} G _inst_1) K) -> (DirectedOn.{u1} (Subgroup.{u1} G _inst_1) (fun (x._@.Mathlib.GroupTheory.Subgroup.Basic._hyg.10723 : Subgroup.{u1} G _inst_1) (x._@.Mathlib.GroupTheory.Subgroup.Basic._hyg.10725 : Subgroup.{u1} G _inst_1) => LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeInf.toPartialOrder.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1))))) x._@.Mathlib.GroupTheory.Subgroup.Basic._hyg.10723 x._@.Mathlib.GroupTheory.Subgroup.Basic._hyg.10725) K) -> (forall {x : G}, Iff (Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x (SupSet.sSup.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toSupSet.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1)) K)) (Exists.{succ u1} (Subgroup.{u1} G _inst_1) (fun (s : Subgroup.{u1} G _inst_1) => And (Membership.mem.{u1, u1} (Subgroup.{u1} G _inst_1) (Set.{u1} (Subgroup.{u1} G _inst_1)) (Set.instMembershipSet.{u1} (Subgroup.{u1} G _inst_1)) s K) (Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x s))))
+Case conversion may be inaccurate. Consider using '#align subgroup.mem_Sup_of_directed_on Subgroup.mem_sSup_of_directedOnₓ'. -/
 @[to_additive]
-theorem mem_supₛ_of_directedOn {K : Set (Subgroup G)} (Kne : K.Nonempty) (hK : DirectedOn (· ≤ ·) K)
-    {x : G} : x ∈ supₛ K ↔ ∃ s ∈ K, x ∈ s :=
+theorem mem_sSup_of_directedOn {K : Set (Subgroup G)} (Kne : K.Nonempty) (hK : DirectedOn (· ≤ ·) K)
+    {x : G} : x ∈ sSup K ↔ ∃ s ∈ K, x ∈ s :=
   by
   haveI : Nonempty K := Kne.to_subtype
-  simp only [supₛ_eq_supᵢ', mem_supr_of_directed hK.directed_coe, SetCoe.exists, Subtype.coe_mk]
-#align subgroup.mem_Sup_of_directed_on Subgroup.mem_supₛ_of_directedOn
-#align add_subgroup.mem_Sup_of_directed_on AddSubgroup.mem_supₛ_of_directedOn
+  simp only [sSup_eq_iSup', mem_supr_of_directed hK.directed_coe, SetCoe.exists, Subtype.coe_mk]
+#align subgroup.mem_Sup_of_directed_on Subgroup.mem_sSup_of_directedOn
+#align add_subgroup.mem_Sup_of_directed_on AddSubgroup.mem_sSup_of_directedOn
 
 variable {N : Type _} [Group N] {P : Type _} [Group P]
 
@@ -2441,18 +2441,18 @@ theorem map_sup (H K : Subgroup G) (f : G →* N) : (H ⊔ K).map f = H.map f �
 #align subgroup.map_sup Subgroup.map_sup
 #align add_subgroup.map_sup AddSubgroup.map_sup
 
-/- warning: subgroup.map_supr -> Subgroup.map_supᵢ is a dubious translation:
+/- warning: subgroup.map_supr -> Subgroup.map_iSup is a dubious translation:
 lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {N : Type.{u2}} [_inst_4 : Group.{u2} N] {ι : Sort.{u3}} (f : MonoidHom.{u1, u2} G N (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Monoid.toMulOneClass.{u2} N (DivInvMonoid.toMonoid.{u2} N (Group.toDivInvMonoid.{u2} N _inst_4)))) (s : ι -> (Subgroup.{u1} G _inst_1)), Eq.{succ u2} (Subgroup.{u2} N _inst_4) (Subgroup.map.{u1, u2} G _inst_1 N _inst_4 f (supᵢ.{u1, u3} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.completeLattice.{u1} G _inst_1))) ι s)) (supᵢ.{u2, u3} (Subgroup.{u2} N _inst_4) (CompleteSemilatticeSup.toHasSup.{u2} (Subgroup.{u2} N _inst_4) (CompleteLattice.toCompleteSemilatticeSup.{u2} (Subgroup.{u2} N _inst_4) (Subgroup.completeLattice.{u2} N _inst_4))) ι (fun (i : ι) => Subgroup.map.{u1, u2} G _inst_1 N _inst_4 f (s i)))
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {N : Type.{u2}} [_inst_4 : Group.{u2} N] {ι : Sort.{u3}} (f : MonoidHom.{u1, u2} G N (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Monoid.toMulOneClass.{u2} N (DivInvMonoid.toMonoid.{u2} N (Group.toDivInvMonoid.{u2} N _inst_4)))) (s : ι -> (Subgroup.{u1} G _inst_1)), Eq.{succ u2} (Subgroup.{u2} N _inst_4) (Subgroup.map.{u1, u2} G _inst_1 N _inst_4 f (iSup.{u1, u3} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.completeLattice.{u1} G _inst_1))) ι s)) (iSup.{u2, u3} (Subgroup.{u2} N _inst_4) (CompleteSemilatticeSup.toHasSup.{u2} (Subgroup.{u2} N _inst_4) (CompleteLattice.toCompleteSemilatticeSup.{u2} (Subgroup.{u2} N _inst_4) (Subgroup.completeLattice.{u2} N _inst_4))) ι (fun (i : ι) => Subgroup.map.{u1, u2} G _inst_1 N _inst_4 f (s i)))
 but is expected to have type
-  forall {G : Type.{u2}} [_inst_1 : Group.{u2} G] {N : Type.{u1}} [_inst_4 : Group.{u1} N] {ι : Sort.{u3}} (f : MonoidHom.{u2, u1} G N (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) (Monoid.toMulOneClass.{u1} N (DivInvMonoid.toMonoid.{u1} N (Group.toDivInvMonoid.{u1} N _inst_4)))) (s : ι -> (Subgroup.{u2} G _inst_1)), Eq.{succ u1} (Subgroup.{u1} N _inst_4) (Subgroup.map.{u2, u1} G _inst_1 N _inst_4 f (supᵢ.{u2, u3} (Subgroup.{u2} G _inst_1) (CompleteLattice.toSupSet.{u2} (Subgroup.{u2} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u2} G _inst_1)) ι s)) (supᵢ.{u1, u3} (Subgroup.{u1} N _inst_4) (CompleteLattice.toSupSet.{u1} (Subgroup.{u1} N _inst_4) (Subgroup.instCompleteLatticeSubgroup.{u1} N _inst_4)) ι (fun (i : ι) => Subgroup.map.{u2, u1} G _inst_1 N _inst_4 f (s i)))
-Case conversion may be inaccurate. Consider using '#align subgroup.map_supr Subgroup.map_supᵢₓ'. -/
+  forall {G : Type.{u2}} [_inst_1 : Group.{u2} G] {N : Type.{u1}} [_inst_4 : Group.{u1} N] {ι : Sort.{u3}} (f : MonoidHom.{u2, u1} G N (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) (Monoid.toMulOneClass.{u1} N (DivInvMonoid.toMonoid.{u1} N (Group.toDivInvMonoid.{u1} N _inst_4)))) (s : ι -> (Subgroup.{u2} G _inst_1)), Eq.{succ u1} (Subgroup.{u1} N _inst_4) (Subgroup.map.{u2, u1} G _inst_1 N _inst_4 f (iSup.{u2, u3} (Subgroup.{u2} G _inst_1) (CompleteLattice.toSupSet.{u2} (Subgroup.{u2} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u2} G _inst_1)) ι s)) (iSup.{u1, u3} (Subgroup.{u1} N _inst_4) (CompleteLattice.toSupSet.{u1} (Subgroup.{u1} N _inst_4) (Subgroup.instCompleteLatticeSubgroup.{u1} N _inst_4)) ι (fun (i : ι) => Subgroup.map.{u2, u1} G _inst_1 N _inst_4 f (s i)))
+Case conversion may be inaccurate. Consider using '#align subgroup.map_supr Subgroup.map_iSupₓ'. -/
 @[to_additive]
-theorem map_supᵢ {ι : Sort _} (f : G →* N) (s : ι → Subgroup G) :
-    (supᵢ s).map f = ⨆ i, (s i).map f :=
-  (gc_map_comap f).l_supᵢ
-#align subgroup.map_supr Subgroup.map_supᵢ
-#align add_subgroup.map_supr AddSubgroup.map_supᵢ
+theorem map_iSup {ι : Sort _} (f : G →* N) (s : ι → Subgroup G) :
+    (iSup s).map f = ⨆ i, (s i).map f :=
+  (gc_map_comap f).l_iSup
+#align subgroup.map_supr Subgroup.map_iSup
+#align add_subgroup.map_supr AddSubgroup.map_iSup
 
 /- warning: subgroup.comap_sup_comap_le -> Subgroup.comap_sup_comap_le is a dubious translation:
 lean 3 declaration is
@@ -2467,18 +2467,18 @@ theorem comap_sup_comap_le (H K : Subgroup N) (f : G →* N) :
 #align subgroup.comap_sup_comap_le Subgroup.comap_sup_comap_le
 #align add_subgroup.comap_sup_comap_le AddSubgroup.comap_sup_comap_le
 
-/- warning: subgroup.supr_comap_le -> Subgroup.supᵢ_comap_le is a dubious translation:
+/- warning: subgroup.supr_comap_le -> Subgroup.iSup_comap_le is a dubious translation:
 lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {N : Type.{u2}} [_inst_4 : Group.{u2} N] {ι : Sort.{u3}} (f : MonoidHom.{u1, u2} G N (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Monoid.toMulOneClass.{u2} N (DivInvMonoid.toMonoid.{u2} N (Group.toDivInvMonoid.{u2} N _inst_4)))) (s : ι -> (Subgroup.{u2} N _inst_4)), LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (SetLike.partialOrder.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)))) (supᵢ.{u1, u3} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.completeLattice.{u1} G _inst_1))) ι (fun (i : ι) => Subgroup.comap.{u1, u2} G _inst_1 N _inst_4 f (s i))) (Subgroup.comap.{u1, u2} G _inst_1 N _inst_4 f (supᵢ.{u2, u3} (Subgroup.{u2} N _inst_4) (CompleteSemilatticeSup.toHasSup.{u2} (Subgroup.{u2} N _inst_4) (CompleteLattice.toCompleteSemilatticeSup.{u2} (Subgroup.{u2} N _inst_4) (Subgroup.completeLattice.{u2} N _inst_4))) ι s))
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {N : Type.{u2}} [_inst_4 : Group.{u2} N] {ι : Sort.{u3}} (f : MonoidHom.{u1, u2} G N (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Monoid.toMulOneClass.{u2} N (DivInvMonoid.toMonoid.{u2} N (Group.toDivInvMonoid.{u2} N _inst_4)))) (s : ι -> (Subgroup.{u2} N _inst_4)), LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (SetLike.partialOrder.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)))) (iSup.{u1, u3} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.completeLattice.{u1} G _inst_1))) ι (fun (i : ι) => Subgroup.comap.{u1, u2} G _inst_1 N _inst_4 f (s i))) (Subgroup.comap.{u1, u2} G _inst_1 N _inst_4 f (iSup.{u2, u3} (Subgroup.{u2} N _inst_4) (CompleteSemilatticeSup.toHasSup.{u2} (Subgroup.{u2} N _inst_4) (CompleteLattice.toCompleteSemilatticeSup.{u2} (Subgroup.{u2} N _inst_4) (Subgroup.completeLattice.{u2} N _inst_4))) ι s))
 but is expected to have type
-  forall {G : Type.{u2}} [_inst_1 : Group.{u2} G] {N : Type.{u1}} [_inst_4 : Group.{u1} N] {ι : Sort.{u3}} (f : MonoidHom.{u2, u1} G N (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) (Monoid.toMulOneClass.{u1} N (DivInvMonoid.toMonoid.{u1} N (Group.toDivInvMonoid.{u1} N _inst_4)))) (s : ι -> (Subgroup.{u1} N _inst_4)), LE.le.{u2} (Subgroup.{u2} G _inst_1) (Preorder.toLE.{u2} (Subgroup.{u2} G _inst_1) (PartialOrder.toPreorder.{u2} (Subgroup.{u2} G _inst_1) (CompleteSemilatticeInf.toPartialOrder.{u2} (Subgroup.{u2} G _inst_1) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Subgroup.{u2} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u2} G _inst_1))))) (supᵢ.{u2, u3} (Subgroup.{u2} G _inst_1) (CompleteLattice.toSupSet.{u2} (Subgroup.{u2} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u2} G _inst_1)) ι (fun (i : ι) => Subgroup.comap.{u2, u1} G _inst_1 N _inst_4 f (s i))) (Subgroup.comap.{u2, u1} G _inst_1 N _inst_4 f (supᵢ.{u1, u3} (Subgroup.{u1} N _inst_4) (CompleteLattice.toSupSet.{u1} (Subgroup.{u1} N _inst_4) (Subgroup.instCompleteLatticeSubgroup.{u1} N _inst_4)) ι s))
-Case conversion may be inaccurate. Consider using '#align subgroup.supr_comap_le Subgroup.supᵢ_comap_leₓ'. -/
+  forall {G : Type.{u2}} [_inst_1 : Group.{u2} G] {N : Type.{u1}} [_inst_4 : Group.{u1} N] {ι : Sort.{u3}} (f : MonoidHom.{u2, u1} G N (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) (Monoid.toMulOneClass.{u1} N (DivInvMonoid.toMonoid.{u1} N (Group.toDivInvMonoid.{u1} N _inst_4)))) (s : ι -> (Subgroup.{u1} N _inst_4)), LE.le.{u2} (Subgroup.{u2} G _inst_1) (Preorder.toLE.{u2} (Subgroup.{u2} G _inst_1) (PartialOrder.toPreorder.{u2} (Subgroup.{u2} G _inst_1) (CompleteSemilatticeInf.toPartialOrder.{u2} (Subgroup.{u2} G _inst_1) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Subgroup.{u2} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u2} G _inst_1))))) (iSup.{u2, u3} (Subgroup.{u2} G _inst_1) (CompleteLattice.toSupSet.{u2} (Subgroup.{u2} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u2} G _inst_1)) ι (fun (i : ι) => Subgroup.comap.{u2, u1} G _inst_1 N _inst_4 f (s i))) (Subgroup.comap.{u2, u1} G _inst_1 N _inst_4 f (iSup.{u1, u3} (Subgroup.{u1} N _inst_4) (CompleteLattice.toSupSet.{u1} (Subgroup.{u1} N _inst_4) (Subgroup.instCompleteLatticeSubgroup.{u1} N _inst_4)) ι s))
+Case conversion may be inaccurate. Consider using '#align subgroup.supr_comap_le Subgroup.iSup_comap_leₓ'. -/
 @[to_additive]
-theorem supᵢ_comap_le {ι : Sort _} (f : G →* N) (s : ι → Subgroup N) :
-    (⨆ i, (s i).comap f) ≤ (supᵢ s).comap f :=
-  Monotone.le_map_supᵢ fun _ _ => comap_mono
-#align subgroup.supr_comap_le Subgroup.supᵢ_comap_le
-#align add_subgroup.supr_comap_le AddSubgroup.supᵢ_comap_le
+theorem iSup_comap_le {ι : Sort _} (f : G →* N) (s : ι → Subgroup N) :
+    (⨆ i, (s i).comap f) ≤ (iSup s).comap f :=
+  Monotone.le_map_iSup fun _ _ => comap_mono
+#align subgroup.supr_comap_le Subgroup.iSup_comap_le
+#align add_subgroup.supr_comap_le AddSubgroup.iSup_comap_le
 
 /- warning: subgroup.comap_inf -> Subgroup.comap_inf is a dubious translation:
 lean 3 declaration is
@@ -2492,18 +2492,18 @@ theorem comap_inf (H K : Subgroup N) (f : G →* N) : (H ⊓ K).comap f = H.coma
 #align subgroup.comap_inf Subgroup.comap_inf
 #align add_subgroup.comap_inf AddSubgroup.comap_inf
 
-/- warning: subgroup.comap_infi -> Subgroup.comap_infᵢ is a dubious translation:
+/- warning: subgroup.comap_infi -> Subgroup.comap_iInf is a dubious translation:
 lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {N : Type.{u2}} [_inst_4 : Group.{u2} N] {ι : Sort.{u3}} (f : MonoidHom.{u1, u2} G N (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Monoid.toMulOneClass.{u2} N (DivInvMonoid.toMonoid.{u2} N (Group.toDivInvMonoid.{u2} N _inst_4)))) (s : ι -> (Subgroup.{u2} N _inst_4)), Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.comap.{u1, u2} G _inst_1 N _inst_4 f (infᵢ.{u2, u3} (Subgroup.{u2} N _inst_4) (Subgroup.hasInf.{u2} N _inst_4) ι s)) (infᵢ.{u1, u3} (Subgroup.{u1} G _inst_1) (Subgroup.hasInf.{u1} G _inst_1) ι (fun (i : ι) => Subgroup.comap.{u1, u2} G _inst_1 N _inst_4 f (s i)))
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {N : Type.{u2}} [_inst_4 : Group.{u2} N] {ι : Sort.{u3}} (f : MonoidHom.{u1, u2} G N (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Monoid.toMulOneClass.{u2} N (DivInvMonoid.toMonoid.{u2} N (Group.toDivInvMonoid.{u2} N _inst_4)))) (s : ι -> (Subgroup.{u2} N _inst_4)), Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.comap.{u1, u2} G _inst_1 N _inst_4 f (iInf.{u2, u3} (Subgroup.{u2} N _inst_4) (Subgroup.hasInf.{u2} N _inst_4) ι s)) (iInf.{u1, u3} (Subgroup.{u1} G _inst_1) (Subgroup.hasInf.{u1} G _inst_1) ι (fun (i : ι) => Subgroup.comap.{u1, u2} G _inst_1 N _inst_4 f (s i)))
 but is expected to have type
-  forall {G : Type.{u2}} [_inst_1 : Group.{u2} G] {N : Type.{u1}} [_inst_4 : Group.{u1} N] {ι : Sort.{u3}} (f : MonoidHom.{u2, u1} G N (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) (Monoid.toMulOneClass.{u1} N (DivInvMonoid.toMonoid.{u1} N (Group.toDivInvMonoid.{u1} N _inst_4)))) (s : ι -> (Subgroup.{u1} N _inst_4)), Eq.{succ u2} (Subgroup.{u2} G _inst_1) (Subgroup.comap.{u2, u1} G _inst_1 N _inst_4 f (infᵢ.{u1, u3} (Subgroup.{u1} N _inst_4) (Subgroup.instInfSetSubgroup.{u1} N _inst_4) ι s)) (infᵢ.{u2, u3} (Subgroup.{u2} G _inst_1) (Subgroup.instInfSetSubgroup.{u2} G _inst_1) ι (fun (i : ι) => Subgroup.comap.{u2, u1} G _inst_1 N _inst_4 f (s i)))
-Case conversion may be inaccurate. Consider using '#align subgroup.comap_infi Subgroup.comap_infᵢₓ'. -/
+  forall {G : Type.{u2}} [_inst_1 : Group.{u2} G] {N : Type.{u1}} [_inst_4 : Group.{u1} N] {ι : Sort.{u3}} (f : MonoidHom.{u2, u1} G N (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) (Monoid.toMulOneClass.{u1} N (DivInvMonoid.toMonoid.{u1} N (Group.toDivInvMonoid.{u1} N _inst_4)))) (s : ι -> (Subgroup.{u1} N _inst_4)), Eq.{succ u2} (Subgroup.{u2} G _inst_1) (Subgroup.comap.{u2, u1} G _inst_1 N _inst_4 f (iInf.{u1, u3} (Subgroup.{u1} N _inst_4) (Subgroup.instInfSetSubgroup.{u1} N _inst_4) ι s)) (iInf.{u2, u3} (Subgroup.{u2} G _inst_1) (Subgroup.instInfSetSubgroup.{u2} G _inst_1) ι (fun (i : ι) => Subgroup.comap.{u2, u1} G _inst_1 N _inst_4 f (s i)))
+Case conversion may be inaccurate. Consider using '#align subgroup.comap_infi Subgroup.comap_iInfₓ'. -/
 @[to_additive]
-theorem comap_infᵢ {ι : Sort _} (f : G →* N) (s : ι → Subgroup N) :
-    (infᵢ s).comap f = ⨅ i, (s i).comap f :=
-  (gc_map_comap f).u_infᵢ
-#align subgroup.comap_infi Subgroup.comap_infᵢ
-#align add_subgroup.comap_infi AddSubgroup.comap_infᵢ
+theorem comap_iInf {ι : Sort _} (f : G →* N) (s : ι → Subgroup N) :
+    (iInf s).comap f = ⨅ i, (s i).comap f :=
+  (gc_map_comap f).u_iInf
+#align subgroup.comap_infi Subgroup.comap_iInf
+#align add_subgroup.comap_infi AddSubgroup.comap_iInf
 
 /- warning: subgroup.map_inf_le -> Subgroup.map_inf_le is a dubious translation:
 lean 3 declaration is
@@ -3897,7 +3897,7 @@ but is expected to have type
   forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {s : Set.{u1} G} {x : G}, Iff (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) x (Group.conjugatesOfSet.{u1} G _inst_1 s)) (Exists.{succ u1} G (fun (a : G) => And (Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) a s) (IsConj.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)) a x)))
 Case conversion may be inaccurate. Consider using '#align group.mem_conjugates_of_set_iff Group.mem_conjugatesOfSet_iffₓ'. -/
 theorem mem_conjugatesOfSet_iff {x : G} : x ∈ conjugatesOfSet s ↔ ∃ a ∈ s, IsConj a x :=
-  Set.mem_unionᵢ₂
+  Set.mem_iUnion₂
 #align group.mem_conjugates_of_set_iff Group.mem_conjugatesOfSet_iff
 
 #print Group.subset_conjugatesOfSet /-
@@ -3908,7 +3908,7 @@ theorem subset_conjugatesOfSet : s ⊆ conjugatesOfSet s := fun (x : G) (h : x �
 
 #print Group.conjugatesOfSet_mono /-
 theorem conjugatesOfSet_mono {s t : Set G} (h : s ⊆ t) : conjugatesOfSet s ⊆ conjugatesOfSet t :=
-  Set.bunionᵢ_subset_bunionᵢ_left h
+  Set.biUnion_subset_biUnion_left h
 #align group.conjugates_of_set_mono Group.conjugatesOfSet_mono
 -/
 
@@ -3933,7 +3933,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align group.conjugates_of_set_subset Group.conjugatesOfSet_subsetₓ'. -/
 theorem conjugatesOfSet_subset {s : Set G} {N : Subgroup G} [N.Normal] (h : s ⊆ N) :
     conjugatesOfSet s ⊆ N :=
-  Set.unionᵢ₂_subset fun x H => conjugates_subset_normal (h H)
+  Set.iUnion₂_subset fun x H => conjugates_subset_normal (h H)
 #align group.conjugates_of_set_subset Group.conjugatesOfSet_subset
 
 /- warning: group.conj_mem_conjugates_of_set -> Group.conj_mem_conjugatesOfSet is a dubious translation:
@@ -4048,13 +4048,13 @@ theorem normalClosure_mono {s t : Set G} (h : s ⊆ t) : normalClosure s ≤ nor
   normalClosure_le_normal (Set.Subset.trans h subset_normalClosure)
 #align subgroup.normal_closure_mono Subgroup.normalClosure_mono
 
-#print Subgroup.normalClosure_eq_infᵢ /-
-theorem normalClosure_eq_infᵢ :
+#print Subgroup.normalClosure_eq_iInf /-
+theorem normalClosure_eq_iInf :
     normalClosure s = ⨅ (N : Subgroup G) (_ : Normal N) (hs : s ⊆ N), N :=
-  le_antisymm (le_infᵢ fun N => le_infᵢ fun hN => le_infᵢ normal_closure_le_normal)
-    (infᵢ_le_of_le (normalClosure s)
-      (infᵢ_le_of_le (by infer_instance) (infᵢ_le_of_le subset_normalClosure le_rfl)))
-#align subgroup.normal_closure_eq_infi Subgroup.normalClosure_eq_infᵢ
+  le_antisymm (le_iInf fun N => le_iInf fun hN => le_iInf normal_closure_le_normal)
+    (iInf_le_of_le (normalClosure s)
+      (iInf_le_of_le (by infer_instance) (iInf_le_of_le subset_normalClosure le_rfl)))
+#align subgroup.normal_closure_eq_infi Subgroup.normalClosure_eq_iInf
 -/
 
 #print Subgroup.normalClosure_eq_self /-
@@ -4141,19 +4141,19 @@ theorem normalCore_mono {H K : Subgroup G} (h : H ≤ K) : H.normalCore ≤ K.no
   normal_le_normalCore.mpr (H.normalCore_le.trans h)
 #align subgroup.normal_core_mono Subgroup.normalCore_mono
 
-/- warning: subgroup.normal_core_eq_supr -> Subgroup.normalCore_eq_supᵢ is a dubious translation:
+/- warning: subgroup.normal_core_eq_supr -> Subgroup.normalCore_eq_iSup is a dubious translation:
 lean 3 declaration is
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (H : Subgroup.{u1} G _inst_1), Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.normalCore.{u1} G _inst_1 H) (supᵢ.{u1, succ u1} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.completeLattice.{u1} G _inst_1))) (Subgroup.{u1} G _inst_1) (fun (N : Subgroup.{u1} G _inst_1) => supᵢ.{u1, 0} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.completeLattice.{u1} G _inst_1))) (Subgroup.Normal.{u1} G _inst_1 N) (fun (_x : Subgroup.Normal.{u1} G _inst_1 N) => supᵢ.{u1, 0} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.completeLattice.{u1} G _inst_1))) (LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (SetLike.partialOrder.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)))) N H) (fun (hs : LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (SetLike.partialOrder.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)))) N H) => N))))
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (H : Subgroup.{u1} G _inst_1), Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.normalCore.{u1} G _inst_1 H) (iSup.{u1, succ u1} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.completeLattice.{u1} G _inst_1))) (Subgroup.{u1} G _inst_1) (fun (N : Subgroup.{u1} G _inst_1) => iSup.{u1, 0} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.completeLattice.{u1} G _inst_1))) (Subgroup.Normal.{u1} G _inst_1 N) (fun (_x : Subgroup.Normal.{u1} G _inst_1 N) => iSup.{u1, 0} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.completeLattice.{u1} G _inst_1))) (LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (SetLike.partialOrder.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)))) N H) (fun (hs : LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (SetLike.partialOrder.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)))) N H) => N))))
 but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (H : Subgroup.{u1} G _inst_1), Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.normalCore.{u1} G _inst_1 H) (supᵢ.{u1, succ u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toSupSet.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1)) (Subgroup.{u1} G _inst_1) (fun (N : Subgroup.{u1} G _inst_1) => supᵢ.{u1, 0} (Subgroup.{u1} G _inst_1) (CompleteLattice.toSupSet.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1)) (Subgroup.Normal.{u1} G _inst_1 N) (fun (_x : Subgroup.Normal.{u1} G _inst_1 N) => supᵢ.{u1, 0} (Subgroup.{u1} G _inst_1) (CompleteLattice.toSupSet.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1)) (LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeInf.toPartialOrder.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1))))) N H) (fun (hs : LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeInf.toPartialOrder.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1))))) N H) => N))))
-Case conversion may be inaccurate. Consider using '#align subgroup.normal_core_eq_supr Subgroup.normalCore_eq_supᵢₓ'. -/
-theorem normalCore_eq_supᵢ (H : Subgroup G) :
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (H : Subgroup.{u1} G _inst_1), Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Subgroup.normalCore.{u1} G _inst_1 H) (iSup.{u1, succ u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toSupSet.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1)) (Subgroup.{u1} G _inst_1) (fun (N : Subgroup.{u1} G _inst_1) => iSup.{u1, 0} (Subgroup.{u1} G _inst_1) (CompleteLattice.toSupSet.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1)) (Subgroup.Normal.{u1} G _inst_1 N) (fun (_x : Subgroup.Normal.{u1} G _inst_1 N) => iSup.{u1, 0} (Subgroup.{u1} G _inst_1) (CompleteLattice.toSupSet.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1)) (LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeInf.toPartialOrder.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1))))) N H) (fun (hs : LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeInf.toPartialOrder.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1))))) N H) => N))))
+Case conversion may be inaccurate. Consider using '#align subgroup.normal_core_eq_supr Subgroup.normalCore_eq_iSupₓ'. -/
+theorem normalCore_eq_iSup (H : Subgroup G) :
     H.normalCore = ⨆ (N : Subgroup G) (_ : Normal N) (hs : N ≤ H), N :=
   le_antisymm
-    (le_supᵢ_of_le H.normalCore
-      (le_supᵢ_of_le H.normalCore_normal (le_supᵢ_of_le H.normalCore_le le_rfl)))
-    (supᵢ_le fun N => supᵢ_le fun hN => supᵢ_le normal_le_normal_core.mpr)
-#align subgroup.normal_core_eq_supr Subgroup.normalCore_eq_supᵢ
+    (le_iSup_of_le H.normalCore
+      (le_iSup_of_le H.normalCore_normal (le_iSup_of_le H.normalCore_le le_rfl)))
+    (iSup_le fun N => iSup_le fun hN => iSup_le normal_le_normal_core.mpr)
+#align subgroup.normal_core_eq_supr Subgroup.normalCore_eq_iSup
 
 #print Subgroup.normalCore_eq_self /-
 @[simp]

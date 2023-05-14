@@ -105,16 +105,16 @@ theorem not_measurable (v : VectorMeasure α M) {i : Set α} (hi : ¬MeasurableS
   v.not_measurable' hi
 #align measure_theory.vector_measure.not_measurable MeasureTheory.VectorMeasure.not_measurable
 
-theorem m_unionᵢ (v : VectorMeasure α M) {f : ℕ → Set α} (hf₁ : ∀ i, MeasurableSet (f i))
+theorem m_iUnion (v : VectorMeasure α M) {f : ℕ → Set α} (hf₁ : ∀ i, MeasurableSet (f i))
     (hf₂ : Pairwise (Disjoint on f)) : HasSum (fun i => v (f i)) (v (⋃ i, f i)) :=
   v.m_Union' hf₁ hf₂
-#align measure_theory.vector_measure.m_Union MeasureTheory.VectorMeasure.m_unionᵢ
+#align measure_theory.vector_measure.m_Union MeasureTheory.VectorMeasure.m_iUnion
 
-theorem of_disjoint_unionᵢ_nat [T2Space M] (v : VectorMeasure α M) {f : ℕ → Set α}
+theorem of_disjoint_iUnion_nat [T2Space M] (v : VectorMeasure α M) {f : ℕ → Set α}
     (hf₁ : ∀ i, MeasurableSet (f i)) (hf₂ : Pairwise (Disjoint on f)) :
     v (⋃ i, f i) = ∑' i, v (f i) :=
-  (v.m_unionᵢ hf₁ hf₂).tsum_eq.symm
-#align measure_theory.vector_measure.of_disjoint_Union_nat MeasureTheory.VectorMeasure.of_disjoint_unionᵢ_nat
+  (v.m_iUnion hf₁ hf₂).tsum_eq.symm
+#align measure_theory.vector_measure.of_disjoint_Union_nat MeasureTheory.VectorMeasure.of_disjoint_iUnion_nat
 
 theorem coe_injective : @Function.Injective (VectorMeasure α M) (Set α → M) coeFn := fun v w h =>
   by
@@ -146,16 +146,16 @@ theorem ext {s t : VectorMeasure α M} (h : ∀ i : Set α, MeasurableSet i → 
 
 variable [T2Space M] {v : VectorMeasure α M} {f : ℕ → Set α}
 
-theorem hasSum_of_disjoint_unionᵢ [Countable β] {f : β → Set α} (hf₁ : ∀ i, MeasurableSet (f i))
+theorem hasSum_of_disjoint_iUnion [Countable β] {f : β → Set α} (hf₁ : ∀ i, MeasurableSet (f i))
     (hf₂ : Pairwise (Disjoint on f)) : HasSum (fun i => v (f i)) (v (⋃ i, f i)) :=
   by
   cases nonempty_encodable β
   set g := fun i : ℕ => ⋃ (b : β) (H : b ∈ Encodable.decode₂ β i), f b with hg
   have hg₁ : ∀ i, MeasurableSet (g i) := fun _ =>
-    MeasurableSet.unionᵢ fun b => MeasurableSet.unionᵢ fun _ => hf₁ b
-  have hg₂ : Pairwise (Disjoint on g) := Encodable.unionᵢ_decode₂_disjoint_on hf₂
+    MeasurableSet.iUnion fun b => MeasurableSet.iUnion fun _ => hf₁ b
+  have hg₂ : Pairwise (Disjoint on g) := Encodable.iUnion_decode₂_disjoint_on hf₂
   have := v.of_disjoint_Union_nat hg₁ hg₂
-  rw [hg, Encodable.unionᵢ_decode₂] at this
+  rw [hg, Encodable.iUnion_decode₂] at this
   have hg₃ : (fun i : β => v (f i)) = fun i => v (g (Encodable.encode i)) :=
     by
     ext
@@ -170,7 +170,7 @@ theorem hasSum_of_disjoint_unionᵢ [Countable β] {f : β → Set α} (hf₁ : 
     · rintro ⟨b, hb₁, hb₂⟩
       rw [Encodable.decode₂_is_partial_inv _ _] at hb₁
       rwa [← Encodable.encode_injective hb₁]
-  rw [Summable.hasSum_iff, this, ← tsum_unionᵢ_decode₂]
+  rw [Summable.hasSum_iff, this, ← tsum_iUnion_decode₂]
   · exact v.empty
   · rw [hg₃]
     change Summable ((fun i => v (g i)) ∘ Encodable.encode)
@@ -181,12 +181,12 @@ theorem hasSum_of_disjoint_unionᵢ [Countable β] {f : β → Set α} (hf₁ : 
       simp only [Union_eq_empty, Option.mem_def, not_exists, mem_range] at hx⊢
       intro i hi
       exact False.elim ((hx i) ((Encodable.decode₂_is_partial_inv _ _).1 hi))
-#align measure_theory.vector_measure.has_sum_of_disjoint_Union MeasureTheory.VectorMeasure.hasSum_of_disjoint_unionᵢ
+#align measure_theory.vector_measure.has_sum_of_disjoint_Union MeasureTheory.VectorMeasure.hasSum_of_disjoint_iUnion
 
-theorem of_disjoint_unionᵢ [Countable β] {f : β → Set α} (hf₁ : ∀ i, MeasurableSet (f i))
+theorem of_disjoint_iUnion [Countable β] {f : β → Set α} (hf₁ : ∀ i, MeasurableSet (f i))
     (hf₂ : Pairwise (Disjoint on f)) : v (⋃ i, f i) = ∑' i, v (f i) :=
-  (hasSum_of_disjoint_unionᵢ hf₁ hf₂).tsum_eq.symm
-#align measure_theory.vector_measure.of_disjoint_Union MeasureTheory.VectorMeasure.of_disjoint_unionᵢ
+  (hasSum_of_disjoint_iUnion hf₁ hf₂).tsum_eq.symm
+#align measure_theory.vector_measure.of_disjoint_Union MeasureTheory.VectorMeasure.of_disjoint_iUnion
 
 theorem of_union {A B : Set α} (h : Disjoint A B) (hA : MeasurableSet A) (hB : MeasurableSet B) :
     v (A ∪ B) = v A + v B :=
@@ -232,17 +232,17 @@ theorem of_diff_of_diff_eq_zero {A B : Set α} (hA : MeasurableSet A) (hB : Meas
     
 #align measure_theory.vector_measure.of_diff_of_diff_eq_zero MeasureTheory.VectorMeasure.of_diff_of_diff_eq_zero
 
-theorem of_unionᵢ_nonneg {M : Type _} [TopologicalSpace M] [OrderedAddCommMonoid M]
+theorem of_iUnion_nonneg {M : Type _} [TopologicalSpace M] [OrderedAddCommMonoid M]
     [OrderClosedTopology M] {v : VectorMeasure α M} (hf₁ : ∀ i, MeasurableSet (f i))
     (hf₂ : Pairwise (Disjoint on f)) (hf₃ : ∀ i, 0 ≤ v (f i)) : 0 ≤ v (⋃ i, f i) :=
-  (v.of_disjoint_unionᵢ_nat hf₁ hf₂).symm ▸ tsum_nonneg hf₃
-#align measure_theory.vector_measure.of_Union_nonneg MeasureTheory.VectorMeasure.of_unionᵢ_nonneg
+  (v.of_disjoint_iUnion_nat hf₁ hf₂).symm ▸ tsum_nonneg hf₃
+#align measure_theory.vector_measure.of_Union_nonneg MeasureTheory.VectorMeasure.of_iUnion_nonneg
 
-theorem of_unionᵢ_nonpos {M : Type _} [TopologicalSpace M] [OrderedAddCommMonoid M]
+theorem of_iUnion_nonpos {M : Type _} [TopologicalSpace M] [OrderedAddCommMonoid M]
     [OrderClosedTopology M] {v : VectorMeasure α M} (hf₁ : ∀ i, MeasurableSet (f i))
     (hf₂ : Pairwise (Disjoint on f)) (hf₃ : ∀ i, v (f i) ≤ 0) : v (⋃ i, f i) ≤ 0 :=
-  (v.of_disjoint_unionᵢ_nat hf₁ hf₂).symm ▸ tsum_nonpos hf₃
-#align measure_theory.vector_measure.of_Union_nonpos MeasureTheory.VectorMeasure.of_unionᵢ_nonpos
+  (v.of_disjoint_iUnion_nat hf₁ hf₂).symm ▸ tsum_nonpos hf₃
+#align measure_theory.vector_measure.of_Union_nonpos MeasureTheory.VectorMeasure.of_iUnion_nonpos
 
 theorem of_nonneg_disjoint_union_eq_zero {s : SignedMeasure α} {A B : Set α} (h : Disjoint A B)
     (hA₁ : MeasurableSet A) (hB₁ : MeasurableSet B) (hA₂ : 0 ≤ s A) (hB₂ : 0 ≤ s B)
@@ -279,7 +279,7 @@ def smul (r : R) (v : VectorMeasure α M) : VectorMeasure α M
   measureOf' := r • v
   empty' := by rw [Pi.smul_apply, Empty, smul_zero]
   not_measurable' _ hi := by rw [Pi.smul_apply, v.not_measurable hi, smul_zero]
-  m_Union' _ hf₁ hf₂ := HasSum.const_smul _ (v.m_unionᵢ hf₁ hf₂)
+  m_Union' _ hf₁ hf₂ := HasSum.const_smul _ (v.m_iUnion hf₁ hf₂)
 #align measure_theory.vector_measure.smul MeasureTheory.VectorMeasure.smul
 
 instance : SMul R (VectorMeasure α M) :=
@@ -325,7 +325,7 @@ def add (v w : VectorMeasure α M) : VectorMeasure α M
   measureOf' := v + w
   empty' := by simp
   not_measurable' _ hi := by simp [v.not_measurable hi, w.not_measurable hi]
-  m_Union' f hf₁ hf₂ := HasSum.add (v.m_unionᵢ hf₁ hf₂) (w.m_unionᵢ hf₁ hf₂)
+  m_Union' f hf₁ hf₂ := HasSum.add (v.m_iUnion hf₁ hf₂) (w.m_iUnion hf₁ hf₂)
 #align measure_theory.vector_measure.add MeasureTheory.VectorMeasure.add
 
 instance : Add (VectorMeasure α M) :=
@@ -366,7 +366,7 @@ def neg (v : VectorMeasure α M) : VectorMeasure α M
   measureOf' := -v
   empty' := by simp
   not_measurable' _ hi := by simp [v.not_measurable hi]
-  m_Union' f hf₁ hf₂ := HasSum.neg <| v.m_unionᵢ hf₁ hf₂
+  m_Union' f hf₁ hf₂ := HasSum.neg <| v.m_iUnion hf₁ hf₂
 #align measure_theory.vector_measure.neg MeasureTheory.VectorMeasure.neg
 
 instance : Neg (VectorMeasure α M) :=
@@ -387,7 +387,7 @@ def sub (v w : VectorMeasure α M) : VectorMeasure α M
   measureOf' := v - w
   empty' := by simp
   not_measurable' _ hi := by simp [v.not_measurable hi, w.not_measurable hi]
-  m_Union' f hf₁ hf₂ := HasSum.sub (v.m_unionᵢ hf₁ hf₂) (w.m_unionᵢ hf₁ hf₂)
+  m_Union' f hf₁ hf₂ := HasSum.sub (v.m_iUnion hf₁ hf₂) (w.m_iUnion hf₁ hf₂)
 #align measure_theory.vector_measure.sub MeasureTheory.VectorMeasure.sub
 
 instance : Sub (VectorMeasure α M) :=
@@ -449,7 +449,7 @@ def toSignedMeasure (μ : Measure α) [hμ : FiniteMeasure μ] : SignedMeasure �
   not_measurable' _ hi := if_neg hi
   m_Union' := by
     intro _ hf₁ hf₂
-    rw [μ.m_Union hf₁ hf₂, ENNReal.tsum_toReal_eq, if_pos (MeasurableSet.unionᵢ hf₁),
+    rw [μ.m_Union hf₁ hf₂, ENNReal.tsum_toReal_eq, if_pos (MeasurableSet.iUnion hf₁),
       Summable.hasSum_iff]
     · congr
       ext n
@@ -531,7 +531,7 @@ def toEnnrealVectorMeasure (μ : Measure α) : VectorMeasure α ℝ≥0∞
   not_measurable' _ hi := if_neg hi
   m_Union' _ hf₁ hf₂ := by
     rw [Summable.hasSum_iff ENNReal.summable]
-    · rw [if_pos (MeasurableSet.unionᵢ hf₁), MeasureTheory.measure_unionᵢ hf₂ hf₁]
+    · rw [if_pos (MeasurableSet.iUnion hf₁), MeasureTheory.measure_iUnion hf₂ hf₁]
       exact tsum_congr fun n => if_pos (hf₁ n)
 #align measure_theory.measure.to_ennreal_vector_measure MeasureTheory.Measure.toEnnrealVectorMeasure
 
@@ -573,7 +573,7 @@ section
 
 /-- A vector measure over `ℝ≥0∞` is a measure. -/
 def ennrealToMeasure {m : MeasurableSpace α} (v : VectorMeasure α ℝ≥0∞) : Measure α :=
-  ofMeasurable (fun s _ => v s) v.Empty fun f hf₁ hf₂ => v.of_disjoint_unionᵢ_nat hf₁ hf₂
+  ofMeasurable (fun s _ => v s) v.Empty fun f hf₁ hf₂ => v.of_disjoint_iUnion_nat hf₁ hf₂
 #align measure_theory.vector_measure.ennreal_to_measure MeasureTheory.VectorMeasure.ennrealToMeasure
 
 theorem ennrealToMeasure_apply {m : MeasurableSpace α} {v : VectorMeasure α ℝ≥0∞} {s : Set α}
@@ -618,7 +618,7 @@ def map (v : VectorMeasure α M) (f : α → β) : VectorMeasure β M :=
         convert v.m_Union (fun i => hf (hg₁ i)) fun i j hij => (hg₂ hij).Preimage _
         · ext i
           rw [if_pos (hg₁ i)]
-        · rw [preimage_Union, if_pos (MeasurableSet.unionᵢ hg₁)] }
+        · rw [preimage_Union, if_pos (MeasurableSet.iUnion hg₁)] }
   else 0
 #align measure_theory.vector_measure.map MeasureTheory.VectorMeasure.map
 
@@ -657,7 +657,7 @@ def mapRange (v : VectorMeasure α M) (f : M →+ N) (hf : Continuous f) : Vecto
   measureOf' s := f (v s)
   empty' := by rw [Empty, AddMonoidHom.map_zero]
   not_measurable' i hi := by rw [not_measurable v hi, AddMonoidHom.map_zero]
-  m_Union' g hg₁ hg₂ := HasSum.map (v.m_unionᵢ hg₁ hg₂) f hf
+  m_Union' g hg₁ hg₂ := HasSum.map (v.m_iUnion hg₁ hg₂) f hf
 #align measure_theory.vector_measure.map_range MeasureTheory.VectorMeasure.mapRange
 
 @[simp]
@@ -738,7 +738,7 @@ def restrict (v : VectorMeasure α M) (i : Set α) : VectorMeasure α M :=
             (hf₂.mono fun i j => Disjoint.mono inf_le_left inf_le_left)
         · ext n
           rw [if_pos (hf₁ n)]
-        · rw [Union_inter, if_pos (MeasurableSet.unionᵢ hf₁)] }
+        · rw [Union_inter, if_pos (MeasurableSet.iUnion hf₁)] }
   else 0
 #align measure_theory.vector_measure.restrict MeasureTheory.VectorMeasure.restrict
 
@@ -1010,12 +1010,12 @@ variable {M : Type _} [TopologicalSpace M] [OrderedAddCommMonoid M] [OrderClosed
 
 variable (v w : VectorMeasure α M) {i j : Set α}
 
-theorem restrict_le_restrict_unionᵢ {f : ℕ → Set α} (hf₁ : ∀ n, MeasurableSet (f n))
+theorem restrict_le_restrict_iUnion {f : ℕ → Set α} (hf₁ : ∀ n, MeasurableSet (f n))
     (hf₂ : ∀ n, v ≤[f n] w) : v ≤[⋃ n, f n] w :=
   by
   refine' restrict_le_restrict_of_subset_le v w fun a ha₁ ha₂ => _
   have ha₃ : (⋃ n, a ∩ disjointed f n) = a := by
-    rwa [← inter_Union, unionᵢ_disjointed, inter_eq_left_iff_subset]
+    rwa [← inter_Union, iUnion_disjointed, inter_eq_left_iff_subset]
   have ha₄ : Pairwise (Disjoint on fun n => a ∩ disjointed f n) :=
     (disjoint_disjointed _).mono fun i j => Disjoint.mono inf_le_right inf_le_right
   rw [← ha₃, v.of_disjoint_Union_nat _ ha₄, w.of_disjoint_Union_nat _ ha₄]
@@ -1031,13 +1031,13 @@ theorem restrict_le_restrict_unionᵢ {f : ℕ → Set α} (hf₁ : ∀ n, Measu
   · intro n
     exact ha₁.inter (MeasurableSet.disjointed hf₁ n)
   · exact fun n => ha₁.inter (MeasurableSet.disjointed hf₁ n)
-#align measure_theory.vector_measure.restrict_le_restrict_Union MeasureTheory.VectorMeasure.restrict_le_restrict_unionᵢ
+#align measure_theory.vector_measure.restrict_le_restrict_Union MeasureTheory.VectorMeasure.restrict_le_restrict_iUnion
 
-theorem restrict_le_restrict_countable_unionᵢ [Countable β] {f : β → Set α}
+theorem restrict_le_restrict_countable_iUnion [Countable β] {f : β → Set α}
     (hf₁ : ∀ b, MeasurableSet (f b)) (hf₂ : ∀ b, v ≤[f b] w) : v ≤[⋃ b, f b] w :=
   by
   cases nonempty_encodable β
-  rw [← Encodable.unionᵢ_decode₂]
+  rw [← Encodable.iUnion_decode₂]
   refine' restrict_le_restrict_Union v w _ _
   · intro n
     measurability
@@ -1045,7 +1045,7 @@ theorem restrict_le_restrict_countable_unionᵢ [Countable β] {f : β → Set �
     cases' Encodable.decode₂ β n with b
     · simp
     · simp [hf₂ b]
-#align measure_theory.vector_measure.restrict_le_restrict_countable_Union MeasureTheory.VectorMeasure.restrict_le_restrict_countable_unionᵢ
+#align measure_theory.vector_measure.restrict_le_restrict_countable_Union MeasureTheory.VectorMeasure.restrict_le_restrict_countable_iUnion
 
 theorem restrict_le_restrict_union (hi₁ : MeasurableSet i) (hi₂ : v ≤[i] w) (hj₁ : MeasurableSet j)
     (hj₂ : v ≤[j] w) : v ≤[i ∪ j] w := by
@@ -1371,7 +1371,7 @@ def trim {m n : MeasurableSpace α} (v : VectorMeasure α M) (hle : m ≤ n) : @
     convert v.m_Union hf₁' hf₂
     · ext n
       rw [if_pos (hf₁ n)]
-    · rw [if_pos (@MeasurableSet.unionᵢ _ _ m _ _ hf₁)]
+    · rw [if_pos (@MeasurableSet.iUnion _ _ m _ _ hf₁)]
 #align measure_theory.vector_measure.trim MeasureTheory.VectorMeasure.trim
 
 variable {n : MeasurableSpace α} {v : VectorMeasure α M}
@@ -1437,8 +1437,8 @@ def toMeasureOfZeroLe (s : SignedMeasure α) (i : Set α) (hi₁ : MeasurableSet
         by
         intro n m hnm
         exact ((hf₂ hnm).inf_left' i).inf_right' i
-      simp only [to_measure_of_zero_le', s.restrict_apply hi₁ (MeasurableSet.unionᵢ hf₁),
-        Set.inter_comm, Set.inter_unionᵢ, s.of_disjoint_Union_nat h₁ h₂, ENNReal.some_eq_coe,
+      simp only [to_measure_of_zero_le', s.restrict_apply hi₁ (MeasurableSet.iUnion hf₁),
+        Set.inter_comm, Set.inter_iUnion, s.of_disjoint_Union_nat h₁ h₂, ENNReal.some_eq_coe,
         id.def]
       have h : ∀ n, 0 ≤ s (i ∩ f n) := fun n =>
         s.nonneg_of_zero_le_restrict (s.zero_le_restrict_subset hi₁ (inter_subset_left _ _) hi₂)

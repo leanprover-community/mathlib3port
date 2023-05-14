@@ -88,7 +88,7 @@ theorem finiteType_ofLocalizationSpanTarget : OfLocalizationSpanTarget @FiniteTy
       rw [Finset.coe_union, Finset.coe_image]
       exact Or.inr (Set.mem_image_of_mem _ (finsupp.mem_support_iff.mpr h))
     · intro r
-      rw [Finset.coe_union, Finset.coe_union, Finset.coe_bunionᵢ]
+      rw [Finset.coe_union, Finset.coe_union, Finset.coe_biUnion]
       -- Since all `sᵢ` and numerators of `t r` are in the algebra, it suffices to show that the
       -- image of `x` in `Sᵣ` falls in the `R`-adjoin of `t r`, which is of course true.
       obtain ⟨⟨_, n₂, rfl⟩, hn₂⟩ :=

@@ -713,18 +713,18 @@ theorem IsAffineOpen.basicOpen_union_eq_self_iff {X : Scheme} {U : Opens X.carri
     simp only [Set.inter_self, opens.carrier_eq_coe, Set.inter_eq_right_iff_subset] at h
     ext1
     refine' Set.Subset.antisymm _ h
-    simp only [Set.unionᵢ_subset_iff, SetCoe.forall, opens.coe_supr]
+    simp only [Set.iUnion_subset_iff, SetCoe.forall, opens.coe_supr]
     intro x hx
     exact X.basic_open_le x
-  · simp only [opens.supr_def, Subtype.coe_mk, Set.preimage_unionᵢ, Subtype.val_eq_coe]
+  · simp only [opens.supr_def, Subtype.coe_mk, Set.preimage_iUnion, Subtype.val_eq_coe]
     congr 3
     · ext1 x
       exact congr_arg opens.carrier (hU.from_Spec_map_basic_open _)
     · exact congr_arg opens.carrier hU.from_Spec_base_preimage
   · simp only [opens.carrier_eq_coe, PrimeSpectrum.basicOpen_eq_zeroLocus_compl]
-    rw [← Set.compl_interᵢ, Set.compl_univ_iff, ← PrimeSpectrum.zeroLocus_unionᵢ, ←
+    rw [← Set.compl_iInter, Set.compl_univ_iff, ← PrimeSpectrum.zeroLocus_iUnion, ←
       PrimeSpectrum.zeroLocus_empty_iff_eq_top, PrimeSpectrum.zeroLocus_span]
-    simp only [Set.unionᵢ_singleton_eq_range, Subtype.range_val_subtype, Set.setOf_mem_eq]
+    simp only [Set.iUnion_singleton_eq_range, Subtype.range_val_subtype, Set.setOf_mem_eq]
 #align algebraic_geometry.is_affine_open.basic_open_union_eq_self_iff AlgebraicGeometry.IsAffineOpen.basicOpen_union_eq_self_iff
 
 theorem IsAffineOpen.self_le_basicOpen_union_iff {X : Scheme} {U : Opens X.carrier}
@@ -733,7 +733,7 @@ theorem IsAffineOpen.self_le_basicOpen_union_iff {X : Scheme} {U : Opens X.carri
   by
   rw [← hU.basic_open_union_eq_self_iff, @comm _ Eq]
   refine' ⟨fun h => le_antisymm h _, le_of_eq⟩
-  simp only [supᵢ_le_iff, SetCoe.forall]
+  simp only [iSup_le_iff, SetCoe.forall]
   intro x hx
   exact X.basic_open_le x
 #align algebraic_geometry.is_affine_open.self_le_basic_open_union_iff AlgebraicGeometry.IsAffineOpen.self_le_basicOpen_union_iff
@@ -778,7 +778,7 @@ theorem of_affine_open_cover {X : Scheme} (V : X.affineOpens) (S : Set X.affineO
       exact hf₂ x
     rw [← V.prop.self_le_basic_open_union_iff]
     intro x hx
-    rw [supᵢ_range', opens.mem_supr]
+    rw [iSup_range', opens.mem_supr]
     exact ⟨_, hf₁ ⟨x, hx⟩⟩
 #align algebraic_geometry.of_affine_open_cover AlgebraicGeometry.of_affine_open_cover
 

@@ -239,17 +239,17 @@ theorem nilpotent_endo_of_nilpotent_module [hM : IsNilpotent R L M] :
 
 This result will be used downstream to show that weight spaces are Lie submodules, at which time
 it will be possible to state it in the language of weight spaces. -/
-theorem infᵢ_max_gen_zero_eigenspace_eq_top_of_nilpotent [IsNilpotent R L M] :
+theorem iInf_max_gen_zero_eigenspace_eq_top_of_nilpotent [IsNilpotent R L M] :
     (⨅ x : L, (toEndomorphism R L M x).maximalGeneralizedEigenspace 0) = ⊤ :=
   by
   ext m
   simp only [Module.End.mem_maximalGeneralizedEigenspace, Submodule.mem_top, sub_zero, iff_true_iff,
-    zero_smul, Submodule.mem_infᵢ]
+    zero_smul, Submodule.mem_iInf]
   intro x
   obtain ⟨k, hk⟩ := nilpotent_endo_of_nilpotent_module R L M
   use k; rw [hk]
   exact LinearMap.zero_apply m
-#align lie_module.infi_max_gen_zero_eigenspace_eq_top_of_nilpotent LieModule.infᵢ_max_gen_zero_eigenspace_eq_top_of_nilpotent
+#align lie_module.infi_max_gen_zero_eigenspace_eq_top_of_nilpotent LieModule.iInf_max_gen_zero_eigenspace_eq_top_of_nilpotent
 
 /-- If the quotient of a Lie module `M` by a Lie submodule on which the Lie algebra acts trivially
 is nilpotent then `M` is nilpotent.
@@ -276,7 +276,7 @@ the natural number `k` (the number of inclusions).
 
 For a non-nilpotent module, we use the junk value 0. -/
 noncomputable def nilpotencyLength : ℕ :=
-  infₛ { k | lowerCentralSeries R L M k = ⊥ }
+  sInf { k | lowerCentralSeries R L M k = ⊥ }
 #align lie_module.nilpotency_length LieModule.nilpotencyLength
 
 theorem nilpotencyLength_eq_zero_iff [IsNilpotent R L M] :
@@ -290,8 +290,8 @@ theorem nilpotencyLength_eq_zero_iff [IsNilpotent R L M] :
   change Inf s = 0 ↔ _
   rw [← LieSubmodule.subsingleton_iff R L M, ← subsingleton_iff_bot_eq_top, ←
     lower_central_series_zero, @eq_comm (LieSubmodule R L M)]
-  refine' ⟨fun h => h ▸ Nat.infₛ_mem hs, fun h => _⟩
-  rw [Nat.infₛ_eq_zero]
+  refine' ⟨fun h => h ▸ Nat.sInf_mem hs, fun h => _⟩
+  rw [Nat.sInf_eq_zero]
   exact Or.inl h
 #align lie_module.nilpotency_length_eq_zero_iff LieModule.nilpotencyLength_eq_zero_iff
 
@@ -305,7 +305,7 @@ theorem nilpotencyLength_eq_succ_iff (k : ℕ) :
     by
     rintro k₁ k₂ h₁₂ (h₁ : lower_central_series R L M k₁ = ⊥)
     exact eq_bot_iff.mpr (h₁ ▸ antitone_lower_central_series R L M h₁₂)
-  exact Nat.infₛ_upward_closed_eq_succ_iff hs k
+  exact Nat.sInf_upward_closed_eq_succ_iff hs k
 #align lie_module.nilpotency_length_eq_succ_iff LieModule.nilpotencyLength_eq_succ_iff
 
 /-- Given a non-trivial nilpotent Lie module `M` with lower central series
@@ -573,10 +573,10 @@ theorem LieAlgebra.nilpotent_ad_of_nilpotent_algebra [IsNilpotent R L] :
 #align lie_algebra.nilpotent_ad_of_nilpotent_algebra LieAlgebra.nilpotent_ad_of_nilpotent_algebra
 
 /-- See also `lie_algebra.zero_root_space_eq_top_of_nilpotent`. -/
-theorem LieAlgebra.infᵢ_max_gen_zero_eigenspace_eq_top_of_nilpotent [IsNilpotent R L] :
+theorem LieAlgebra.iInf_max_gen_zero_eigenspace_eq_top_of_nilpotent [IsNilpotent R L] :
     (⨅ x : L, (ad R L x).maximalGeneralizedEigenspace 0) = ⊤ :=
-  LieModule.infᵢ_max_gen_zero_eigenspace_eq_top_of_nilpotent R L L
-#align lie_algebra.infi_max_gen_zero_eigenspace_eq_top_of_nilpotent LieAlgebra.infᵢ_max_gen_zero_eigenspace_eq_top_of_nilpotent
+  LieModule.iInf_max_gen_zero_eigenspace_eq_top_of_nilpotent R L L
+#align lie_algebra.infi_max_gen_zero_eigenspace_eq_top_of_nilpotent LieAlgebra.iInf_max_gen_zero_eigenspace_eq_top_of_nilpotent
 
 -- TODO Generalise the below to Lie modules if / when we define morphisms, equivs of Lie modules
 -- covering a Lie algebra morphism of (possibly different) Lie algebras.

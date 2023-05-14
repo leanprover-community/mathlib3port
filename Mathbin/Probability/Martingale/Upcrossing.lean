@@ -408,7 +408,7 @@ theorem upcrossingStrat_nonneg : 0 ≤ upcrossingStrat a b f N n ω :=
 
 theorem upcrossingStrat_le_one : upcrossingStrat a b f N n ω ≤ 1 :=
   by
-  rw [upcrossing_strat, ← Set.indicator_finset_bunionᵢ_apply]
+  rw [upcrossing_strat, ← Set.indicator_finset_biUnion_apply]
   · exact Set.indicator_le_self' (fun _ _ => zero_le_one) _
   · intro i hi j hj hij
     rw [Set.Ico_disjoint_Ico]
@@ -505,7 +505,7 @@ theorem Submartingale.sum_mul_upcrossingStrat_le [FiniteMeasure μ] (hf : Submar
 /-- The number of upcrossings (strictly) before time `N`. -/
 noncomputable def upcrossingsBefore [Preorder ι] [OrderBot ι] [InfSet ι] (a b : ℝ) (f : ι → Ω → ℝ)
     (N : ι) (ω : Ω) : ℕ :=
-  supₛ { n | upperCrossingTime a b f N n ω < N }
+  sSup { n | upperCrossingTime a b f N n ω < N }
 #align measure_theory.upcrossings_before MeasureTheory.upcrossingsBefore
 
 @[simp]
@@ -535,7 +535,7 @@ theorem upperCrossingTime_eq_of_upcrossingsBefore_lt (hab : a < b)
     (hn : upcrossingsBefore a b f N ω < n) : upperCrossingTime a b f N n ω = N :=
   by
   refine' le_antisymm upper_crossing_time_le (not_lt.1 _)
-  convert not_mem_of_csupₛ_lt hn (upper_crossing_time_lt_bdd_above hab)
+  convert not_mem_of_csSup_lt hn (upper_crossing_time_lt_bdd_above hab)
 #align measure_theory.upper_crossing_time_eq_of_upcrossings_before_lt MeasureTheory.upperCrossingTime_eq_of_upcrossingsBefore_lt
 
 theorem upcrossingsBefore_le (f : ℕ → Ω → ℝ) (ω : Ω) (hab : a < b) :
@@ -543,7 +543,7 @@ theorem upcrossingsBefore_le (f : ℕ → Ω → ℝ) (ω : Ω) (hab : a < b) :
   by_cases hN : N = 0
   · subst hN
     rw [upcrossings_before_zero]
-  · refine' csupₛ_le ⟨0, zero_lt_iff.2 hN⟩ fun n (hn : _ < _) => _
+  · refine' csSup_le ⟨0, zero_lt_iff.2 hN⟩ fun n (hn : _ < _) => _
     by_contra hnN
     exact hn.ne (upper_crossing_time_eq_of_bound_le hab (not_le.1 hnN).le)
 #align measure_theory.upcrossings_before_le MeasureTheory.upcrossingsBefore_le
@@ -611,18 +611,18 @@ theorem upcrossingsBefore_mono (hab : a < b) : Monotone fun N ω => upcrossingsB
   intro N M hNM ω
   simp only [upcrossings_before]
   by_cases hemp : { n : ℕ | upper_crossing_time a b f N n ω < N }.Nonempty
-  · refine' csupₛ_le_csupₛ (upper_crossing_time_lt_bdd_above hab) hemp fun n hn => _
+  · refine' csSup_le_csSup (upper_crossing_time_lt_bdd_above hab) hemp fun n hn => _
     rw [Set.mem_setOf_eq, upper_crossing_time_eq_upper_crossing_time_of_lt hNM hn]
     exact lt_of_lt_of_le hn hNM
   · rw [Set.not_nonempty_iff_eq_empty] at hemp
-    simp [hemp, csupₛ_empty, bot_eq_zero', zero_le']
+    simp [hemp, csSup_empty, bot_eq_zero', zero_le']
 #align measure_theory.upcrossings_before_mono MeasureTheory.upcrossingsBefore_mono
 
 theorem upcrossingsBefore_lt_of_exists_upcrossing (hab : a < b) {N₁ N₂ : ℕ} (hN₁ : N ≤ N₁)
     (hN₁' : f N₁ ω < a) (hN₂ : N₁ ≤ N₂) (hN₂' : b < f N₂ ω) :
     upcrossingsBefore a b f N ω < upcrossingsBefore a b f (N₂ + 1) ω :=
   by
-  refine' lt_of_lt_of_le (Nat.lt_succ_self _) (le_csupₛ (upper_crossing_time_lt_bdd_above hab) _)
+  refine' lt_of_lt_of_le (Nat.lt_succ_self _) (le_csSup (upper_crossing_time_lt_bdd_above hab) _)
   rw [Set.mem_setOf_eq, upper_crossing_time_succ_eq, hitting_lt_iff _ le_rfl]
   swap
   · infer_instance
@@ -631,7 +631,7 @@ theorem upcrossingsBefore_lt_of_exists_upcrossing (hab : a < b) {N₁ N₂ : ℕ
     refine' ⟨N₁, ⟨le_trans _ hN₁, hN₂⟩, hN₁'.le⟩
     by_cases hN : 0 < N
     · have : upper_crossing_time a b f N (upcrossings_before a b f N ω) ω < N :=
-        Nat.supₛ_mem (upper_crossing_time_lt_nonempty hN) (upper_crossing_time_lt_bdd_above hab)
+        Nat.sSup_mem (upper_crossing_time_lt_nonempty hN) (upper_crossing_time_lt_bdd_above hab)
       rw [upper_crossing_time_eq_upper_crossing_time_of_lt (hN₁.trans (hN₂.trans <| Nat.le_succ _))
           this]
       exact this.le
@@ -665,7 +665,7 @@ theorem sub_eq_zero_of_upcrossingsBefore_lt (hab : a < b) (hn : upcrossingsBefor
     by
     rw [upcrossings_before] at hn
     rw [← not_lt]
-    exact fun h => not_le.2 hn (le_csupₛ (upper_crossing_time_lt_bdd_above hab) h)
+    exact fun h => not_le.2 hn (le_csSup (upper_crossing_time_lt_bdd_above hab) h)
   simp [stopped_value, upper_crossing_time_stabilize' (Nat.le_succ n) this,
     lower_crossing_time_stabilize' le_rfl
       (le_trans this upper_crossing_time_le_lower_crossing_time)]
@@ -950,7 +950,7 @@ noncomputable def upcrossings [Preorder ι] [OrderBot ι] [InfSet ι] (a b : ℝ
 
 theorem Adapted.measurable_upcrossings (hf : Adapted ℱ f) (hab : a < b) :
     Measurable (upcrossings a b f) :=
-  measurable_supᵢ fun N => measurable_from_top.comp (hf.measurable_upcrossingsBefore hab)
+  measurable_iSup fun N => measurable_from_top.comp (hf.measurable_upcrossingsBefore hab)
 #align measure_theory.adapted.measurable_upcrossings MeasureTheory.Adapted.measurable_upcrossings
 
 theorem upcrossings_lt_top_iff :
@@ -964,7 +964,7 @@ theorem upcrossings_lt_top_iff :
       exact ⟨r, le_rfl⟩
     · rintro ⟨k, hk⟩
       exact lt_of_le_of_lt hk ENNReal.coe_lt_top
-  simp_rw [this, upcrossings, supᵢ_le_iff]
+  simp_rw [this, upcrossings, iSup_le_iff]
   constructor <;> rintro ⟨k, hk⟩
   · obtain ⟨m, hm⟩ := exists_nat_ge k
     refine' ⟨m, fun N => Nat.cast_le.1 ((hk N).trans _)⟩
@@ -988,7 +988,7 @@ theorem Submartingale.mul_lintegral_upcrossings_le_lintegral_pos_part [FiniteMea
       · exact (hf.sub_martingale (martingale_const _ _ _)).Pos.Integrable _
       · exact eventually_of_forall fun ω => LatticeOrderedCommGroup.pos_nonneg _
     rw [lintegral_supr']
-    · simp_rw [this, ENNReal.mul_supᵢ, supᵢ_le_iff]
+    · simp_rw [this, ENNReal.mul_iSup, iSup_le_iff]
       intro N
       rw [(by simp :
           (∫⁻ ω, upcrossings_before a b f N ω ∂μ) = ∫⁻ ω, ↑(upcrossings_before a b f N ω : ℝ≥0) ∂μ),
@@ -997,7 +997,7 @@ theorem Submartingale.mul_lintegral_upcrossings_le_lintegral_pos_part [FiniteMea
         exact
           (ENNReal.ofReal_le_ofReal
                 (hf.mul_integral_upcrossings_before_le_integral_pos_part a b N)).trans
-            (le_supᵢ _ N)
+            (le_iSup _ N)
       · simp only [NNReal.coe_nat_cast, hf.adapted.integrable_upcrossings_before hab]
     ·
       exact fun n =>

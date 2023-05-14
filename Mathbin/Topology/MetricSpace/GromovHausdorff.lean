@@ -189,7 +189,7 @@ Hausdorff distance between isometric copies of the two spaces in a metric space.
 we only consider embeddings in `ℓ^∞(ℝ)`, but we will prove below that it works for all spaces. -/
 instance : Dist GHSpace
     where dist x y :=
-    infₛ <|
+    sInf <|
       (fun p : NonemptyCompacts ℓ_infty_ℝ × NonemptyCompacts ℓ_infty_ℝ =>
           hausdorffDist (p.1 : Set ℓ_infty_ℝ) p.2) ''
         { a | ⟦a⟧ = x } ×ˢ { b | ⟦b⟧ = y }
@@ -258,7 +258,7 @@ theorem gHDist_le_hausdorffDist {X : Type u} [MetricSpace X] [CompactSpace X] [N
   have BY : ⟦B⟧ = to_GH_space Y := by
     rw [eq_to_GH_space_iff]
     exact ⟨fun x => F (Ψ' x), (kuratowskiEmbedding.isometry _).comp IΨ', range_comp _ _⟩
-  refine' cinfₛ_le ⟨0, _⟩ _
+  refine' csInf_le ⟨0, _⟩ _
   · simp only [lowerBounds, mem_image, mem_prod, mem_set_of_eq, Prod.exists, and_imp,
       forall_exists_index]
     intro t _ _ _ _ ht
@@ -382,7 +382,7 @@ theorem hausdorffDist_optimal {X : Type u} [MetricSpace X] [CompactSpace X] [Non
       rcases mem_range.1 this with ⟨y, hy⟩
       calc
         (⨅ y, Fb (inl x, inr y)) ≤ Fb (inl x, inr y) :=
-          cinfᵢ_le (by simpa only [add_zero] using HD_below_aux1 0) y
+          ciInf_le (by simpa only [add_zero] using HD_below_aux1 0) y
         _ = dist (Φ x) (Ψ y) := rfl
         _ = dist (f (inl x)) z := by rw [hy]
         _ ≤ r := le_of_lt hz
@@ -399,12 +399,12 @@ theorem hausdorffDist_optimal {X : Type u} [MetricSpace X] [CompactSpace X] [Non
       rcases mem_range.1 this with ⟨x, hx⟩
       calc
         (⨅ x, Fb (inl x, inr y)) ≤ Fb (inl x, inr y) :=
-          cinfᵢ_le (by simpa only [add_zero] using HD_below_aux2 0) x
+          ciInf_le (by simpa only [add_zero] using HD_below_aux2 0) x
         _ = dist (Φ x) (Ψ y) := rfl
         _ = dist z (f (inr y)) := by rw [hx]
         _ ≤ r := le_of_lt hz
         
-    simp only [HD, csupᵢ_le I1, csupᵢ_le I2, max_le_iff, and_self_iff]
+    simp only [HD, ciSup_le I1, ciSup_le I2, max_le_iff, and_self_iff]
   /- Get the same inequality for any coupling. If the coupling is quite good, the desired
     inequality has been proved above. If it is bad, then the inequality is obvious. -/
   have B :
@@ -427,7 +427,7 @@ theorem hausdorffDist_optimal {X : Type u} [MetricSpace X] [CompactSpace X] [Non
         _ ≤ Hausdorff_dist (p : Set ℓ_infty_ℝ) q := not_lt.1 h
         
   refine' le_antisymm _ _
-  · apply le_cinfₛ
+  · apply le_csInf
     · refine' (Set.Nonempty.prod _ _).image _ <;> exact ⟨_, rfl⟩
     · rintro b ⟨⟨p, q⟩, ⟨hp, hq⟩, rfl⟩
       exact B p q hp hq
@@ -461,7 +461,7 @@ instance : MetricSpace GHSpace where
   dist_self x := by
     rcases exists_rep x with ⟨y, hy⟩
     refine' le_antisymm _ _
-    · apply cinfₛ_le
+    · apply csInf_le
       ·
         exact
           ⟨0, by
@@ -470,7 +470,7 @@ instance : MetricSpace GHSpace where
       · simp only [mem_image, mem_prod, mem_set_of_eq, Prod.exists]
         exists y, y
         simpa only [and_self_iff, Hausdorff_dist_self_zero, eq_self_iff_true, and_true_iff]
-    · apply le_cinfₛ
+    · apply le_csInf
       · exact (nonempty.prod ⟨y, hy⟩ ⟨y, hy⟩).image _
       · rintro b ⟨⟨u, v⟩, ⟨hu, hv⟩, rfl⟩
         exact Hausdorff_dist_nonneg

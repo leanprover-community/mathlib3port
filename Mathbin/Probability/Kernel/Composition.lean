@@ -103,7 +103,7 @@ theorem compProdFun_empty (κ : kernel α β) (η : kernel (α × β) γ) (a : �
     MeasureTheory.lintegral_const, MulZeroClass.zero_mul]
 #align probability_theory.kernel.comp_prod_fun_empty ProbabilityTheory.kernel.compProdFun_empty
 
-theorem compProdFun_unionᵢ (κ : kernel α β) (η : kernel (α × β) γ) [IsSFiniteKernel η] (a : α)
+theorem compProdFun_iUnion (κ : kernel α β) (η : kernel (α × β) γ) [IsSFiniteKernel η] (a : α)
     (f : ℕ → Set (β × γ)) (hf_meas : ∀ i, MeasurableSet (f i))
     (hf_disj : Pairwise (Disjoint on f)) :
     compProdFun κ η a (⋃ i, f i) = ∑' i, compProdFun κ η a (f i) :=
@@ -114,7 +114,7 @@ theorem compProdFun_unionᵢ (κ : kernel α β) (η : kernel (α × β) γ) [Is
     by
     ext1 b
     congr with c
-    simp only [Set.mem_unionᵢ, Set.supᵢ_eq_unionᵢ, Set.mem_setOf_eq]
+    simp only [Set.mem_iUnion, Set.iSup_eq_iUnion, Set.mem_setOf_eq]
     rfl
   rw [comp_prod_fun, h_Union]
   have h_tsum :
@@ -139,7 +139,7 @@ theorem compProdFun_unionᵢ (κ : kernel α β) (η : kernel (α × β) γ) [Is
     have hm : MeasurableSet { p : (α × β) × γ | (p.1.2, p.2) ∈ f i } :=
       measurable_fst.snd.prod_mk measurable_snd (hf_meas i)
     exact ((measurable_kernel_prod_mk_left hm).comp measurable_prod_mk_left).AEMeasurable
-#align probability_theory.kernel.comp_prod_fun_Union ProbabilityTheory.kernel.compProdFun_unionᵢ
+#align probability_theory.kernel.comp_prod_fun_Union ProbabilityTheory.kernel.compProdFun_iUnion
 
 theorem compProdFun_tsum_right (κ : kernel α β) (η : kernel (α × β) γ) [IsSFiniteKernel η] (a : α)
     (hs : MeasurableSet s) : compProdFun κ η a s = ∑' n, compProdFun κ (seq η n) a s :=
@@ -218,7 +218,7 @@ noncomputable def compProd (κ : kernel α β) [IsSFiniteKernel κ] (η : kernel
     where
   val a :=
     Measure.ofMeasurable (fun s hs => compProdFun κ η a s) (compProdFun_empty κ η a)
-      (compProdFun_unionᵢ κ η a)
+      (compProdFun_iUnion κ η a)
   property := by
     refine' measure.measurable_of_measurable_coe _ fun s hs => _
     have :

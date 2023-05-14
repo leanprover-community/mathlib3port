@@ -177,7 +177,7 @@ theorem essSup_eq [ConditionallyCompleteLinearOrder γ] [TopologicalSpace γ] [O
   by
   have I : ∀ a, μ { x : α | a < f x } = ν { x : β | a < g x } := fun a =>
     h.measure_mem_eq measurableSet_Ioi
-  simp_rw [essSup_eq_infₛ, I]
+  simp_rw [essSup_eq_sInf, I]
 #align probability_theory.ident_distrib.ess_sup_eq ProbabilityTheory.IdentDistrib.essSup_eq
 
 theorem lintegral_eq {f : α → ℝ≥0∞} {g : β → ℝ≥0∞} (h : IdentDistrib f g μ ν) :

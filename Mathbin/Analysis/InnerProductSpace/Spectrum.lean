@@ -105,23 +105,23 @@ theorem orthogonalFamilyEigenspaces' :
 
 /-- The mutual orthogonal complement of the eigenspaces of a self-adjoint operator on an inner
 product space is an invariant subspace of the operator. -/
-theorem orthogonal_supᵢ_eigenspaces_invariant ⦃v : E⦄ (hv : v ∈ (⨆ μ, eigenspace T μ)ᗮ) :
+theorem orthogonal_iSup_eigenspaces_invariant ⦃v : E⦄ (hv : v ∈ (⨆ μ, eigenspace T μ)ᗮ) :
     T v ∈ (⨆ μ, eigenspace T μ)ᗮ :=
   by
-  rw [← Submodule.infᵢ_orthogonal] at hv⊢
+  rw [← Submodule.iInf_orthogonal] at hv⊢
   exact T.infi_invariant hT.invariant_orthogonal_eigenspace v hv
-#align linear_map.is_symmetric.orthogonal_supr_eigenspaces_invariant LinearMap.IsSymmetric.orthogonal_supᵢ_eigenspaces_invariant
+#align linear_map.is_symmetric.orthogonal_supr_eigenspaces_invariant LinearMap.IsSymmetric.orthogonal_iSup_eigenspaces_invariant
 
 /-- The mutual orthogonal complement of the eigenspaces of a self-adjoint operator on an inner
 product space has no eigenvalues. -/
-theorem orthogonal_supᵢ_eigenspaces (μ : 𝕜) :
-    eigenspace (T.restrict hT.orthogonal_supᵢ_eigenspaces_invariant) μ = ⊥ :=
+theorem orthogonal_iSup_eigenspaces (μ : 𝕜) :
+    eigenspace (T.restrict hT.orthogonal_iSup_eigenspaces_invariant) μ = ⊥ :=
   by
   set p : Submodule 𝕜 E := (⨆ μ, eigenspace T μ)ᗮ
   refine' eigenspace_restrict_eq_bot hT.orthogonal_supr_eigenspaces_invariant _
-  have H₂ : eigenspace T μ ⟂ p := (Submodule.isOrthoOrthogonalRight _).mono_left (le_supᵢ _ _)
+  have H₂ : eigenspace T μ ⟂ p := (Submodule.isOrthoOrthogonalRight _).mono_left (le_iSup _ _)
   exact H₂.disjoint
-#align linear_map.is_symmetric.orthogonal_supr_eigenspaces LinearMap.IsSymmetric.orthogonal_supᵢ_eigenspaces
+#align linear_map.is_symmetric.orthogonal_supr_eigenspaces LinearMap.IsSymmetric.orthogonal_iSup_eigenspaces
 
 /-! ### Finite-dimensional theory -/
 
@@ -130,25 +130,25 @@ variable [FiniteDimensional 𝕜 E]
 
 /-- The mutual orthogonal complement of the eigenspaces of a self-adjoint operator on a
 finite-dimensional inner product space is trivial. -/
-theorem orthogonal_supᵢ_eigenspaces_eq_bot : (⨆ μ, eigenspace T μ)ᗮ = ⊥ :=
+theorem orthogonal_iSup_eigenspaces_eq_bot : (⨆ μ, eigenspace T μ)ᗮ = ⊥ :=
   by
   have hT' : is_symmetric _ := hT.restrict_invariant hT.orthogonal_supr_eigenspaces_invariant
   -- a self-adjoint operator on a nontrivial inner product space has an eigenvalue
   haveI := hT'.subsingleton_of_no_eigenvalue_finite_dimensional hT.orthogonal_supr_eigenspaces
   exact Submodule.eq_bot_of_subsingleton _
-#align linear_map.is_symmetric.orthogonal_supr_eigenspaces_eq_bot LinearMap.IsSymmetric.orthogonal_supᵢ_eigenspaces_eq_bot
+#align linear_map.is_symmetric.orthogonal_supr_eigenspaces_eq_bot LinearMap.IsSymmetric.orthogonal_iSup_eigenspaces_eq_bot
 
-theorem orthogonal_supᵢ_eigenspaces_eq_bot' : (⨆ μ : Eigenvalues T, eigenspace T μ)ᗮ = ⊥ :=
+theorem orthogonal_iSup_eigenspaces_eq_bot' : (⨆ μ : Eigenvalues T, eigenspace T μ)ᗮ = ⊥ :=
   show (⨆ μ : { μ // eigenspace T μ ≠ ⊥ }, eigenspace T μ)ᗮ = ⊥ by
-    rw [supᵢ_ne_bot_subtype, hT.orthogonal_supr_eigenspaces_eq_bot]
-#align linear_map.is_symmetric.orthogonal_supr_eigenspaces_eq_bot' LinearMap.IsSymmetric.orthogonal_supᵢ_eigenspaces_eq_bot'
+    rw [iSup_ne_bot_subtype, hT.orthogonal_supr_eigenspaces_eq_bot]
+#align linear_map.is_symmetric.orthogonal_supr_eigenspaces_eq_bot' LinearMap.IsSymmetric.orthogonal_iSup_eigenspaces_eq_bot'
 
 include dec_𝕜
 
 /-- The eigenspaces of a self-adjoint operator on a finite-dimensional inner product space `E` give
 an internal direct sum decomposition of `E`. -/
 theorem direct_sum_isInternal : DirectSum.IsInternal fun μ : Eigenvalues T => eigenspace T μ :=
-  hT.orthogonalFamilyEigenspaces'.isInternal_iff.mpr hT.orthogonal_supᵢ_eigenspaces_eq_bot'
+  hT.orthogonalFamilyEigenspaces'.isInternal_iff.mpr hT.orthogonal_iSup_eigenspaces_eq_bot'
 #align linear_map.is_symmetric.direct_sum_is_internal LinearMap.IsSymmetric.direct_sum_isInternal
 
 section Version1

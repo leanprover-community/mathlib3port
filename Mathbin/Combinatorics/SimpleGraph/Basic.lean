@@ -332,73 +332,73 @@ instance : InfSet (SimpleGraph V) :=
       symm := fun _ _ => And.imp (forall₂_imp fun _ _ => Adj.symm) Ne.symm
       loopless := fun a h => h.2 rfl }⟩
 
-/- warning: simple_graph.Sup_adj -> SimpleGraph.supₛ_adj is a dubious translation:
+/- warning: simple_graph.Sup_adj -> SimpleGraph.sSup_adj is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {s : Set.{u1} (SimpleGraph.{u1} V)} {a : V} {b : V}, Iff (SimpleGraph.Adj.{u1} V (SupSet.supₛ.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasSup.{u1} V) s) a b) (Exists.{succ u1} (SimpleGraph.{u1} V) (fun (G : SimpleGraph.{u1} V) => Exists.{0} (Membership.Mem.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (SimpleGraph.{u1} V)) (Set.hasMem.{u1} (SimpleGraph.{u1} V)) G s) (fun (H : Membership.Mem.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (SimpleGraph.{u1} V)) (Set.hasMem.{u1} (SimpleGraph.{u1} V)) G s) => SimpleGraph.Adj.{u1} V G a b)))
+  forall {V : Type.{u1}} {s : Set.{u1} (SimpleGraph.{u1} V)} {a : V} {b : V}, Iff (SimpleGraph.Adj.{u1} V (SupSet.sSup.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasSup.{u1} V) s) a b) (Exists.{succ u1} (SimpleGraph.{u1} V) (fun (G : SimpleGraph.{u1} V) => Exists.{0} (Membership.Mem.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (SimpleGraph.{u1} V)) (Set.hasMem.{u1} (SimpleGraph.{u1} V)) G s) (fun (H : Membership.Mem.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (SimpleGraph.{u1} V)) (Set.hasMem.{u1} (SimpleGraph.{u1} V)) G s) => SimpleGraph.Adj.{u1} V G a b)))
 but is expected to have type
-  forall {V : Type.{u1}} {s : Set.{u1} (SimpleGraph.{u1} V)} {a : V} {b : V}, Iff (SimpleGraph.Adj.{u1} V (SupSet.supₛ.{u1} (SimpleGraph.{u1} V) (SimpleGraph.supSet.{u1} V) s) a b) (Exists.{succ u1} (SimpleGraph.{u1} V) (fun (G : SimpleGraph.{u1} V) => And (Membership.mem.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (SimpleGraph.{u1} V)) (Set.instMembershipSet.{u1} (SimpleGraph.{u1} V)) G s) (SimpleGraph.Adj.{u1} V G a b)))
-Case conversion may be inaccurate. Consider using '#align simple_graph.Sup_adj SimpleGraph.supₛ_adjₓ'. -/
+  forall {V : Type.{u1}} {s : Set.{u1} (SimpleGraph.{u1} V)} {a : V} {b : V}, Iff (SimpleGraph.Adj.{u1} V (SupSet.sSup.{u1} (SimpleGraph.{u1} V) (SimpleGraph.supSet.{u1} V) s) a b) (Exists.{succ u1} (SimpleGraph.{u1} V) (fun (G : SimpleGraph.{u1} V) => And (Membership.mem.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (SimpleGraph.{u1} V)) (Set.instMembershipSet.{u1} (SimpleGraph.{u1} V)) G s) (SimpleGraph.Adj.{u1} V G a b)))
+Case conversion may be inaccurate. Consider using '#align simple_graph.Sup_adj SimpleGraph.sSup_adjₓ'. -/
 @[simp]
-theorem supₛ_adj {s : Set (SimpleGraph V)} {a b : V} : (supₛ s).Adj a b ↔ ∃ G ∈ s, Adj G a b :=
+theorem sSup_adj {s : Set (SimpleGraph V)} {a b : V} : (sSup s).Adj a b ↔ ∃ G ∈ s, Adj G a b :=
   Iff.rfl
-#align simple_graph.Sup_adj SimpleGraph.supₛ_adj
+#align simple_graph.Sup_adj SimpleGraph.sSup_adj
 
-/- warning: simple_graph.Inf_adj -> SimpleGraph.infₛ_adj is a dubious translation:
+/- warning: simple_graph.Inf_adj -> SimpleGraph.sInf_adj is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {a : V} {b : V} {s : Set.{u1} (SimpleGraph.{u1} V)}, Iff (SimpleGraph.Adj.{u1} V (InfSet.infₛ.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasInf.{u1} V) s) a b) (And (forall (G : SimpleGraph.{u1} V), (Membership.Mem.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (SimpleGraph.{u1} V)) (Set.hasMem.{u1} (SimpleGraph.{u1} V)) G s) -> (SimpleGraph.Adj.{u1} V G a b)) (Ne.{succ u1} V a b))
+  forall {V : Type.{u1}} {a : V} {b : V} {s : Set.{u1} (SimpleGraph.{u1} V)}, Iff (SimpleGraph.Adj.{u1} V (InfSet.sInf.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasInf.{u1} V) s) a b) (And (forall (G : SimpleGraph.{u1} V), (Membership.Mem.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (SimpleGraph.{u1} V)) (Set.hasMem.{u1} (SimpleGraph.{u1} V)) G s) -> (SimpleGraph.Adj.{u1} V G a b)) (Ne.{succ u1} V a b))
 but is expected to have type
-  forall {V : Type.{u1}} {a : V} {b : V} {s : Set.{u1} (SimpleGraph.{u1} V)}, Iff (SimpleGraph.Adj.{u1} V (InfSet.infₛ.{u1} (SimpleGraph.{u1} V) (SimpleGraph.infSet.{u1} V) s) a b) (And (forall (G : SimpleGraph.{u1} V), (Membership.mem.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (SimpleGraph.{u1} V)) (Set.instMembershipSet.{u1} (SimpleGraph.{u1} V)) G s) -> (SimpleGraph.Adj.{u1} V G a b)) (Ne.{succ u1} V a b))
-Case conversion may be inaccurate. Consider using '#align simple_graph.Inf_adj SimpleGraph.infₛ_adjₓ'. -/
+  forall {V : Type.{u1}} {a : V} {b : V} {s : Set.{u1} (SimpleGraph.{u1} V)}, Iff (SimpleGraph.Adj.{u1} V (InfSet.sInf.{u1} (SimpleGraph.{u1} V) (SimpleGraph.infSet.{u1} V) s) a b) (And (forall (G : SimpleGraph.{u1} V), (Membership.mem.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (SimpleGraph.{u1} V)) (Set.instMembershipSet.{u1} (SimpleGraph.{u1} V)) G s) -> (SimpleGraph.Adj.{u1} V G a b)) (Ne.{succ u1} V a b))
+Case conversion may be inaccurate. Consider using '#align simple_graph.Inf_adj SimpleGraph.sInf_adjₓ'. -/
 @[simp]
-theorem infₛ_adj {s : Set (SimpleGraph V)} : (infₛ s).Adj a b ↔ (∀ G ∈ s, Adj G a b) ∧ a ≠ b :=
+theorem sInf_adj {s : Set (SimpleGraph V)} : (sInf s).Adj a b ↔ (∀ G ∈ s, Adj G a b) ∧ a ≠ b :=
   Iff.rfl
-#align simple_graph.Inf_adj SimpleGraph.infₛ_adj
+#align simple_graph.Inf_adj SimpleGraph.sInf_adj
 
-/- warning: simple_graph.supr_adj -> SimpleGraph.supᵢ_adj is a dubious translation:
+/- warning: simple_graph.supr_adj -> SimpleGraph.iSup_adj is a dubious translation:
 lean 3 declaration is
-  forall {ι : Sort.{u2}} {V : Type.{u1}} {a : V} {b : V} {f : ι -> (SimpleGraph.{u1} V)}, Iff (SimpleGraph.Adj.{u1} V (supᵢ.{u1, u2} (SimpleGraph.{u1} V) (SimpleGraph.hasSup.{u1} V) ι (fun (i : ι) => f i)) a b) (Exists.{u2} ι (fun (i : ι) => SimpleGraph.Adj.{u1} V (f i) a b))
+  forall {ι : Sort.{u2}} {V : Type.{u1}} {a : V} {b : V} {f : ι -> (SimpleGraph.{u1} V)}, Iff (SimpleGraph.Adj.{u1} V (iSup.{u1, u2} (SimpleGraph.{u1} V) (SimpleGraph.hasSup.{u1} V) ι (fun (i : ι) => f i)) a b) (Exists.{u2} ι (fun (i : ι) => SimpleGraph.Adj.{u1} V (f i) a b))
 but is expected to have type
-  forall {ι : Sort.{u1}} {V : Type.{u2}} {a : V} {b : V} {f : ι -> (SimpleGraph.{u2} V)}, Iff (SimpleGraph.Adj.{u2} V (supᵢ.{u2, u1} (SimpleGraph.{u2} V) (SimpleGraph.supSet.{u2} V) ι (fun (i : ι) => f i)) a b) (Exists.{u1} ι (fun (i : ι) => SimpleGraph.Adj.{u2} V (f i) a b))
-Case conversion may be inaccurate. Consider using '#align simple_graph.supr_adj SimpleGraph.supᵢ_adjₓ'. -/
+  forall {ι : Sort.{u1}} {V : Type.{u2}} {a : V} {b : V} {f : ι -> (SimpleGraph.{u2} V)}, Iff (SimpleGraph.Adj.{u2} V (iSup.{u2, u1} (SimpleGraph.{u2} V) (SimpleGraph.supSet.{u2} V) ι (fun (i : ι) => f i)) a b) (Exists.{u1} ι (fun (i : ι) => SimpleGraph.Adj.{u2} V (f i) a b))
+Case conversion may be inaccurate. Consider using '#align simple_graph.supr_adj SimpleGraph.iSup_adjₓ'. -/
 @[simp]
-theorem supᵢ_adj {f : ι → SimpleGraph V} : (⨆ i, f i).Adj a b ↔ ∃ i, (f i).Adj a b := by simp [supᵢ]
-#align simple_graph.supr_adj SimpleGraph.supᵢ_adj
+theorem iSup_adj {f : ι → SimpleGraph V} : (⨆ i, f i).Adj a b ↔ ∃ i, (f i).Adj a b := by simp [iSup]
+#align simple_graph.supr_adj SimpleGraph.iSup_adj
 
-/- warning: simple_graph.infi_adj -> SimpleGraph.infᵢ_adj is a dubious translation:
+/- warning: simple_graph.infi_adj -> SimpleGraph.iInf_adj is a dubious translation:
 lean 3 declaration is
-  forall {ι : Sort.{u2}} {V : Type.{u1}} {a : V} {b : V} {f : ι -> (SimpleGraph.{u1} V)}, Iff (SimpleGraph.Adj.{u1} V (infᵢ.{u1, u2} (SimpleGraph.{u1} V) (SimpleGraph.hasInf.{u1} V) ι (fun (i : ι) => f i)) a b) (And (forall (i : ι), SimpleGraph.Adj.{u1} V (f i) a b) (Ne.{succ u1} V a b))
+  forall {ι : Sort.{u2}} {V : Type.{u1}} {a : V} {b : V} {f : ι -> (SimpleGraph.{u1} V)}, Iff (SimpleGraph.Adj.{u1} V (iInf.{u1, u2} (SimpleGraph.{u1} V) (SimpleGraph.hasInf.{u1} V) ι (fun (i : ι) => f i)) a b) (And (forall (i : ι), SimpleGraph.Adj.{u1} V (f i) a b) (Ne.{succ u1} V a b))
 but is expected to have type
-  forall {ι : Sort.{u1}} {V : Type.{u2}} {a : V} {b : V} {f : ι -> (SimpleGraph.{u2} V)}, Iff (SimpleGraph.Adj.{u2} V (infᵢ.{u2, u1} (SimpleGraph.{u2} V) (SimpleGraph.infSet.{u2} V) ι (fun (i : ι) => f i)) a b) (And (forall (i : ι), SimpleGraph.Adj.{u2} V (f i) a b) (Ne.{succ u2} V a b))
-Case conversion may be inaccurate. Consider using '#align simple_graph.infi_adj SimpleGraph.infᵢ_adjₓ'. -/
+  forall {ι : Sort.{u1}} {V : Type.{u2}} {a : V} {b : V} {f : ι -> (SimpleGraph.{u2} V)}, Iff (SimpleGraph.Adj.{u2} V (iInf.{u2, u1} (SimpleGraph.{u2} V) (SimpleGraph.infSet.{u2} V) ι (fun (i : ι) => f i)) a b) (And (forall (i : ι), SimpleGraph.Adj.{u2} V (f i) a b) (Ne.{succ u2} V a b))
+Case conversion may be inaccurate. Consider using '#align simple_graph.infi_adj SimpleGraph.iInf_adjₓ'. -/
 @[simp]
-theorem infᵢ_adj {f : ι → SimpleGraph V} : (⨅ i, f i).Adj a b ↔ (∀ i, (f i).Adj a b) ∧ a ≠ b := by
-  simp [infᵢ]
-#align simple_graph.infi_adj SimpleGraph.infᵢ_adj
+theorem iInf_adj {f : ι → SimpleGraph V} : (⨅ i, f i).Adj a b ↔ (∀ i, (f i).Adj a b) ∧ a ≠ b := by
+  simp [iInf]
+#align simple_graph.infi_adj SimpleGraph.iInf_adj
 
-/- warning: simple_graph.Inf_adj_of_nonempty -> SimpleGraph.infₛ_adj_of_nonempty is a dubious translation:
+/- warning: simple_graph.Inf_adj_of_nonempty -> SimpleGraph.sInf_adj_of_nonempty is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u1}} {a : V} {b : V} {s : Set.{u1} (SimpleGraph.{u1} V)}, (Set.Nonempty.{u1} (SimpleGraph.{u1} V) s) -> (Iff (SimpleGraph.Adj.{u1} V (InfSet.infₛ.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasInf.{u1} V) s) a b) (forall (G : SimpleGraph.{u1} V), (Membership.Mem.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (SimpleGraph.{u1} V)) (Set.hasMem.{u1} (SimpleGraph.{u1} V)) G s) -> (SimpleGraph.Adj.{u1} V G a b)))
+  forall {V : Type.{u1}} {a : V} {b : V} {s : Set.{u1} (SimpleGraph.{u1} V)}, (Set.Nonempty.{u1} (SimpleGraph.{u1} V) s) -> (Iff (SimpleGraph.Adj.{u1} V (InfSet.sInf.{u1} (SimpleGraph.{u1} V) (SimpleGraph.hasInf.{u1} V) s) a b) (forall (G : SimpleGraph.{u1} V), (Membership.Mem.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (SimpleGraph.{u1} V)) (Set.hasMem.{u1} (SimpleGraph.{u1} V)) G s) -> (SimpleGraph.Adj.{u1} V G a b)))
 but is expected to have type
-  forall {V : Type.{u1}} {a : V} {b : V} {s : Set.{u1} (SimpleGraph.{u1} V)}, (Set.Nonempty.{u1} (SimpleGraph.{u1} V) s) -> (Iff (SimpleGraph.Adj.{u1} V (InfSet.infₛ.{u1} (SimpleGraph.{u1} V) (SimpleGraph.infSet.{u1} V) s) a b) (forall (G : SimpleGraph.{u1} V), (Membership.mem.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (SimpleGraph.{u1} V)) (Set.instMembershipSet.{u1} (SimpleGraph.{u1} V)) G s) -> (SimpleGraph.Adj.{u1} V G a b)))
-Case conversion may be inaccurate. Consider using '#align simple_graph.Inf_adj_of_nonempty SimpleGraph.infₛ_adj_of_nonemptyₓ'. -/
-theorem infₛ_adj_of_nonempty {s : Set (SimpleGraph V)} (hs : s.Nonempty) :
-    (infₛ s).Adj a b ↔ ∀ G ∈ s, Adj G a b :=
-  infₛ_adj.trans <|
+  forall {V : Type.{u1}} {a : V} {b : V} {s : Set.{u1} (SimpleGraph.{u1} V)}, (Set.Nonempty.{u1} (SimpleGraph.{u1} V) s) -> (Iff (SimpleGraph.Adj.{u1} V (InfSet.sInf.{u1} (SimpleGraph.{u1} V) (SimpleGraph.infSet.{u1} V) s) a b) (forall (G : SimpleGraph.{u1} V), (Membership.mem.{u1, u1} (SimpleGraph.{u1} V) (Set.{u1} (SimpleGraph.{u1} V)) (Set.instMembershipSet.{u1} (SimpleGraph.{u1} V)) G s) -> (SimpleGraph.Adj.{u1} V G a b)))
+Case conversion may be inaccurate. Consider using '#align simple_graph.Inf_adj_of_nonempty SimpleGraph.sInf_adj_of_nonemptyₓ'. -/
+theorem sInf_adj_of_nonempty {s : Set (SimpleGraph V)} (hs : s.Nonempty) :
+    (sInf s).Adj a b ↔ ∀ G ∈ s, Adj G a b :=
+  sInf_adj.trans <|
     and_iff_left_of_imp <| by
       obtain ⟨G, hG⟩ := hs
       exact fun h => (h _ hG).Ne
-#align simple_graph.Inf_adj_of_nonempty SimpleGraph.infₛ_adj_of_nonempty
+#align simple_graph.Inf_adj_of_nonempty SimpleGraph.sInf_adj_of_nonempty
 
-/- warning: simple_graph.infi_adj_of_nonempty -> SimpleGraph.infᵢ_adj_of_nonempty is a dubious translation:
+/- warning: simple_graph.infi_adj_of_nonempty -> SimpleGraph.iInf_adj_of_nonempty is a dubious translation:
 lean 3 declaration is
-  forall {ι : Sort.{u2}} {V : Type.{u1}} {a : V} {b : V} [_inst_1 : Nonempty.{u2} ι] {f : ι -> (SimpleGraph.{u1} V)}, Iff (SimpleGraph.Adj.{u1} V (infᵢ.{u1, u2} (SimpleGraph.{u1} V) (SimpleGraph.hasInf.{u1} V) ι (fun (i : ι) => f i)) a b) (forall (i : ι), SimpleGraph.Adj.{u1} V (f i) a b)
+  forall {ι : Sort.{u2}} {V : Type.{u1}} {a : V} {b : V} [_inst_1 : Nonempty.{u2} ι] {f : ι -> (SimpleGraph.{u1} V)}, Iff (SimpleGraph.Adj.{u1} V (iInf.{u1, u2} (SimpleGraph.{u1} V) (SimpleGraph.hasInf.{u1} V) ι (fun (i : ι) => f i)) a b) (forall (i : ι), SimpleGraph.Adj.{u1} V (f i) a b)
 but is expected to have type
-  forall {ι : Sort.{u1}} {V : Type.{u2}} {a : V} {b : V} [_inst_1 : Nonempty.{u1} ι] {f : ι -> (SimpleGraph.{u2} V)}, Iff (SimpleGraph.Adj.{u2} V (infᵢ.{u2, u1} (SimpleGraph.{u2} V) (SimpleGraph.infSet.{u2} V) ι (fun (i : ι) => f i)) a b) (forall (i : ι), SimpleGraph.Adj.{u2} V (f i) a b)
-Case conversion may be inaccurate. Consider using '#align simple_graph.infi_adj_of_nonempty SimpleGraph.infᵢ_adj_of_nonemptyₓ'. -/
-theorem infᵢ_adj_of_nonempty [Nonempty ι] {f : ι → SimpleGraph V} :
+  forall {ι : Sort.{u1}} {V : Type.{u2}} {a : V} {b : V} [_inst_1 : Nonempty.{u1} ι] {f : ι -> (SimpleGraph.{u2} V)}, Iff (SimpleGraph.Adj.{u2} V (iInf.{u2, u1} (SimpleGraph.{u2} V) (SimpleGraph.infSet.{u2} V) ι (fun (i : ι) => f i)) a b) (forall (i : ι), SimpleGraph.Adj.{u2} V (f i) a b)
+Case conversion may be inaccurate. Consider using '#align simple_graph.infi_adj_of_nonempty SimpleGraph.iInf_adj_of_nonemptyₓ'. -/
+theorem iInf_adj_of_nonempty [Nonempty ι] {f : ι → SimpleGraph V} :
     (⨅ i, f i).Adj a b ↔ ∀ i, (f i).Adj a b := by
-  simp [infᵢ, Inf_adj_of_nonempty (Set.range_nonempty _)]
-#align simple_graph.infi_adj_of_nonempty SimpleGraph.infᵢ_adj_of_nonempty
+  simp [iInf, Inf_adj_of_nonempty (Set.range_nonempty _)]
+#align simple_graph.infi_adj_of_nonempty SimpleGraph.iInf_adj_of_nonempty
 
 /-- For graphs `G`, `H`, `G ≤ H` iff `∀ a b, G.adj a b → H.adj a b`. -/
 instance : DistribLattice (SimpleGraph V) :=
@@ -428,18 +428,18 @@ instance : CompleteBooleanAlgebra (SimpleGraph V) :=
       by_cases a.adj v w
       exact Or.inl h
       exact Or.inr ⟨Ne, h⟩
-    supₛ := supₛ
+    sSup := sSup
     le_sup := fun s G hG a b hab => ⟨G, hG, hab⟩
     sup_le := fun s G hG a b => by
       rintro ⟨H, hH, hab⟩
       exact hG _ hH hab
-    infₛ := infₛ
+    sInf := sInf
     inf_le := fun s G hG a b hab => hab.1 hG
     le_inf := fun s G hG a b hab => ⟨fun H hH => hG _ hH hab, hab.Ne⟩
-    inf_sup_le_supᵢ_inf := fun G s a b hab => by
+    inf_sup_le_iSup_inf := fun G s a b hab => by
       simpa only [exists_prop, Sup_adj, and_imp, forall_exists_index, Inf_adj, supr_adj, inf_adj, ←
         exists_and_right, exists_and_left, and_assoc', and_self_right] using hab
-    infᵢ_sup_le_sup_inf := fun G s a b hab =>
+    iInf_sup_le_sup_inf := fun G s a b hab =>
       by
       simp only [sup_adj, Inf_adj, infi_adj] at hab⊢
       have : (∀ G' ∈ s, adj G a b ∨ adj G' a b) ∧ a ≠ b :=

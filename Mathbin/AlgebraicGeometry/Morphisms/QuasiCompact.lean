@@ -90,7 +90,7 @@ theorem isCompact_open_iff_eq_basicOpen_union {X : Scheme} [IsAffine X] (U : Set
     IsCompact U ∧ IsOpen U ↔
       ∃ s : Set (X.Presheaf.obj (op ⊤)),
         s.Finite ∧ U = ⋃ (i : X.Presheaf.obj (op ⊤)) (h : i ∈ s), X.basicOpen i :=
-  (isBasis_basicOpen X).isCompact_open_iff_eq_finite_unionᵢ _
+  (isBasis_basicOpen X).isCompact_open_iff_eq_finite_iUnion _
     (fun i => ((top_isAffineOpen _).basicOpen_is_affine _).IsCompact) _
 #align algebraic_geometry.is_compact_open_iff_eq_basic_open_union AlgebraicGeometry.isCompact_open_iff_eq_basicOpen_union
 
@@ -102,7 +102,7 @@ theorem quasiCompact_iff_forall_affine :
   refine' ⟨fun H U hU => H U U.IsOpen hU.IsCompact, _⟩
   intro H U hU hU'
   obtain ⟨S, hS, rfl⟩ := (is_compact_open_iff_eq_finset_affine_union U).mp ⟨hU', hU⟩
-  simp only [Set.preimage_unionᵢ, Subtype.val_eq_coe]
+  simp only [Set.preimage_iUnion, Subtype.val_eq_coe]
   exact hS.is_compact_bUnion fun i _ => H i i.Prop
 #align algebraic_geometry.quasi_compact_iff_forall_affine AlgebraicGeometry.quasiCompact_iff_forall_affine
 
@@ -143,7 +143,7 @@ theorem isCompact_basicOpen (X : Scheme) {U : Opens X.carrier} (hU : IsCompact (
         apply hom_of_le
         change _ ⊆ (U : Set X.carrier)
         rw [e]
-        convert@Set.subset_unionᵢ₂ _ _ _ (fun (U : X.affine_opens) (h : U ∈ s) => ↑U) V V.prop using
+        convert@Set.subset_iUnion₂ _ _ _ (fun (U : X.affine_opens) (h : U ∈ s) => ↑U) V V.prop using
           1
         rfl
       erw [← X.to_LocallyRingedSpace.to_RingedSpace.basic_open_res this.op]
@@ -154,14 +154,14 @@ theorem isCompact_basicOpen (X : Scheme) {U : Opens X.carrier} (hU : IsCompact (
       (set.inter_eq_right_iff_subset.mpr
               (SetLike.coe_subset_coe.2 <| RingedSpace.basic_open_le _ _)).symm.trans
         _
-    rw [e, Set.unionᵢ₂_inter]
-    apply le_antisymm <;> apply Set.unionᵢ₂_subset
+    rw [e, Set.iUnion₂_inter]
+    apply le_antisymm <;> apply Set.iUnion₂_subset
     · intro i hi
-      refine' Set.Subset.trans _ (Set.subset_unionᵢ₂ _ (Set.mem_range_self ⟨i, hi⟩))
+      refine' Set.Subset.trans _ (Set.subset_iUnion₂ _ (Set.mem_range_self ⟨i, hi⟩))
       exact Set.Subset.rfl
     · rintro ⟨i, hi⟩ ⟨⟨j, hj⟩, hj'⟩
       rw [← hj']
-      refine' Set.Subset.trans _ (Set.subset_unionᵢ₂ j hj)
+      refine' Set.Subset.trans _ (Set.subset_iUnion₂ j hj)
       exact Set.Subset.rfl
 #align algebraic_geometry.is_compact_basic_open AlgebraicGeometry.isCompact_basicOpen
 
@@ -185,8 +185,8 @@ theorem QuasiCompact.affinePropertyIsLocal : (QuasiCompact.affineProperty : _).I
     change IsCompact ((opens.map f.val.base).obj ⊤).1
     rw [← hS]
     dsimp [opens.map]
-    simp only [opens.coe_supr, Set.preimage_unionᵢ, Subtype.val_eq_coe]
-    exacts[isCompact_unionᵢ fun i => is_compact_iff_compact_space.mpr (hS' i), top_is_affine_open _]
+    simp only [opens.coe_supr, Set.preimage_iUnion, Subtype.val_eq_coe]
+    exacts[isCompact_iUnion fun i => is_compact_iff_compact_space.mpr (hS' i), top_is_affine_open _]
 #align algebraic_geometry.quasi_compact.affine_property_is_local AlgebraicGeometry.QuasiCompact.affinePropertyIsLocal
 
 theorem QuasiCompact.affine_openCover_tFAE {X Y : Scheme.{u}} (f : X ⟶ Y) :
@@ -198,7 +198,7 @@ theorem QuasiCompact.affine_openCover_tFAE {X Y : Scheme.{u}} (f : X ⟶ Y) :
           CompactSpace (pullback f (𝒰.map i)).carrier,
         ∀ {U : Scheme} (g : U ⟶ Y) [IsAffine U] [IsOpenImmersion g],
           CompactSpace (pullback f g).carrier,
-        ∃ (ι : Type u)(U : ι → Opens Y.carrier)(hU : supᵢ U = ⊤)(hU' : ∀ i, IsAffineOpen (U i)),
+        ∃ (ι : Type u)(U : ι → Opens Y.carrier)(hU : iSup U = ⊤)(hU' : ∀ i, IsAffineOpen (U i)),
           ∀ i, CompactSpace (f.1.base ⁻¹' (U i).1)] :=
   quasiCompact_eq_affineProperty.symm ▸ QuasiCompact.affinePropertyIsLocal.affine_openCover_tFAE f
 #align algebraic_geometry.quasi_compact.affine_open_cover_tfae AlgebraicGeometry.QuasiCompact.affine_openCover_tFAE
@@ -218,7 +218,7 @@ theorem QuasiCompact.openCover_tFAE {X Y : Scheme.{u}} (f : X ⟶ Y) :
         ∀ U : Opens Y.carrier, QuasiCompact (f ∣_ U),
         ∀ {U : Scheme} (g : U ⟶ Y) [IsOpenImmersion g],
           QuasiCompact (pullback.snd : pullback f g ⟶ _),
-        ∃ (ι : Type u)(U : ι → Opens Y.carrier)(hU : supᵢ U = ⊤), ∀ i, QuasiCompact (f ∣_ U i)] :=
+        ∃ (ι : Type u)(U : ι → Opens Y.carrier)(hU : iSup U = ⊤), ∀ i, QuasiCompact (f ∣_ U i)] :=
   quasiCompact_eq_affineProperty.symm ▸
     QuasiCompact.affinePropertyIsLocal.targetAffineLocallyIsLocal.openCover_tFAE f
 #align algebraic_geometry.quasi_compact.open_cover_tfae AlgebraicGeometry.QuasiCompact.openCover_tFAE
@@ -297,14 +297,14 @@ theorem compact_open_induction_on {P : Opens X.carrier → Prop} (S : Opens X.ca
     P S := by
   classical
     obtain ⟨s, hs, hs'⟩ := (is_compact_open_iff_eq_finset_affine_union S.1).mp ⟨hS, S.2⟩
-    replace hs' : S = supᵢ fun i : s => (i : opens X.carrier) :=
+    replace hs' : S = iSup fun i : s => (i : opens X.carrier) :=
       by
       ext1
       simpa using hs'
     subst hs'
     apply hs.induction_on
     · convert h₁
-      rw [supᵢ_eq_bot]
+      rw [iSup_eq_bot]
       rintro ⟨_, h⟩
       exact h.elim
     · intro x s h₃ hs h₄
@@ -314,9 +314,9 @@ theorem compact_open_induction_on {P : Opens X.carrier → Prop} (S : Opens X.ca
         exact ⟨s, hs, by simp⟩
       convert h₂ _ this x h₄
       simp only [coe_coe]
-      rw [supᵢ_subtype, sup_comm]
-      conv_rhs => rw [supᵢ_subtype]
-      exact supᵢ_insert
+      rw [iSup_subtype, sup_comm]
+      conv_rhs => rw [iSup_subtype]
+      exact iSup_insert
 #align algebraic_geometry.compact_open_induction_on AlgebraicGeometry.compact_open_induction_on
 
 theorem exists_pow_mul_eq_zero_of_res_basicOpen_eq_zero_of_isAffineOpen (X : Scheme)
@@ -336,14 +336,14 @@ theorem exists_pow_mul_eq_zero_of_res_basicOpen_eq_zero_of_isCompact (X : Scheme
     (H : x |_ X.basicOpen f = 0) : ∃ n : ℕ, f ^ n * x = 0 :=
   by
   obtain ⟨s, hs, e⟩ := (is_compact_open_iff_eq_finset_affine_union U.1).mp ⟨hU, U.2⟩
-  replace e : U = supᵢ fun i : s => (i : opens X.carrier)
+  replace e : U = iSup fun i : s => (i : opens X.carrier)
   · ext1
     simpa using e
   have h₁ : ∀ i : s, i.1.1 ≤ U := by
     intro i
     change (i : opens X.carrier) ≤ U
     rw [e]
-    exact le_supᵢ _ _
+    exact le_iSup _ _
   have H' := fun i : s =>
     exists_pow_mul_eq_zero_of_res_basic_open_eq_zero_of_is_affine_open X i.1.2
       (X.presheaf.map (hom_of_le (h₁ i)).op x) (X.presheaf.map (hom_of_le (h₁ i)).op f) _

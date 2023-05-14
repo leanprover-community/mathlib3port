@@ -639,7 +639,7 @@ noncomputable instance [@DecidableRel α (· ≤ ·)] : CompleteLattice (Interva
   classical exact
       { Interval.lattice,
         Interval.boundedOrder with
-        supₛ := fun S =>
+        sSup := fun S =>
           if h : S ⊆ {⊥} then ⊥
           else
             some
@@ -648,13 +648,13 @@ noncomputable instance [@DecidableRel α (· ≤ ·)] : CompleteLattice (Interva
                 by
                 obtain ⟨s, hs, ha⟩ := not_subset.1 h
                 lift s to NonemptyInterval α using ha
-                exact infᵢ₂_le_of_le s hs (le_supᵢ₂_of_le s hs s.fst_le_snd)⟩
+                exact iInf₂_le_of_le s hs (le_iSup₂_of_le s hs s.fst_le_snd)⟩
         le_sup := fun s s ha => by
           split_ifs
           · exact (h ha).le
           cases s
           · exact bot_le
-          · exact WithBot.some_le_some.2 ⟨infᵢ₂_le _ ha, le_supᵢ₂_of_le _ ha le_rfl⟩
+          · exact WithBot.some_le_some.2 ⟨iInf₂_le _ ha, le_iSup₂_of_le _ ha le_rfl⟩
         sup_le := fun s s ha => by
           split_ifs
           · exact bot_le
@@ -662,9 +662,9 @@ noncomputable instance [@DecidableRel α (· ≤ ·)] : CompleteLattice (Interva
           lift s to NonemptyInterval α using ne_bot_of_le_ne_bot hb (ha _ hs)
           exact
             WithBot.coe_le_coe.2
-              ⟨le_infᵢ₂ fun c hc => (WithBot.coe_le_coe.1 <| ha _ hc).1,
-                supᵢ₂_le fun c hc => (WithBot.coe_le_coe.1 <| ha _ hc).2⟩
-        infₛ := fun S =>
+              ⟨le_iInf₂ fun c hc => (WithBot.coe_le_coe.1 <| ha _ hc).1,
+                iSup₂_le fun c hc => (WithBot.coe_le_coe.1 <| ha _ hc).2⟩
+        sInf := fun S =>
           if h :
               ⊥ ∉ S ∧
                 ∀ ⦃s : NonemptyInterval α⦄,
@@ -672,12 +672,12 @@ noncomputable instance [@DecidableRel α (· ≤ ·)] : CompleteLattice (Interva
             some
               ⟨⟨⨆ (s : NonemptyInterval α) (h : ↑s ∈ S), s.fst,
                   ⨅ (s : NonemptyInterval α) (h : ↑s ∈ S), s.snd⟩,
-                supᵢ₂_le fun s hs => le_infᵢ₂ <| h.2 hs⟩
+                iSup₂_le fun s hs => le_iInf₂ <| h.2 hs⟩
           else ⊥
         inf_le := fun s s ha => by
           split_ifs
           · lift s to NonemptyInterval α using ne_of_mem_of_not_mem ha h.1
-            exact WithBot.coe_le_coe.2 ⟨le_supᵢ₂ s ha, infᵢ₂_le s ha⟩
+            exact WithBot.coe_le_coe.2 ⟨le_iSup₂ s ha, iInf₂_le s ha⟩
           · exact bot_le
         le_inf := fun S s ha => by
           cases s
@@ -686,8 +686,8 @@ noncomputable instance [@DecidableRel α (· ≤ ·)] : CompleteLattice (Interva
           ·
             exact
               WithBot.some_le_some.2
-                ⟨supᵢ₂_le fun t hb => (WithBot.coe_le_coe.1 <| ha _ hb).1,
-                  le_infᵢ₂ fun t hb => (WithBot.coe_le_coe.1 <| ha _ hb).2⟩
+                ⟨iSup₂_le fun t hb => (WithBot.coe_le_coe.1 <| ha _ hb).1,
+                  le_iInf₂ fun t hb => (WithBot.coe_le_coe.1 <| ha _ hb).2⟩
           rw [not_and_or, Classical.not_not] at h
           cases h
           · exact ha _ h
@@ -697,8 +697,8 @@ noncomputable instance [@DecidableRel α (· ≤ ·)] : CompleteLattice (Interva
                 s.fst_le_snd.trans (WithBot.coe_le_coe.1 <| ha _ hc).2 }
 
 @[simp, norm_cast]
-theorem coe_infₛ [@DecidableRel α (· ≤ ·)] (S : Set (Interval α)) :
-    ↑(infₛ S) = ⋂ s ∈ S, (s : Set α) :=
+theorem coe_sInf [@DecidableRel α (· ≤ ·)] (S : Set (Interval α)) :
+    ↑(sInf S) = ⋂ s ∈ S, (s : Set α) :=
   by
   change coe (dite _ _ _) = _
   split_ifs
@@ -712,12 +712,12 @@ theorem coe_infₛ [@DecidableRel α (· ≤ ·)] (S : Set (Interval α)) :
     rintro ⟨x, hx⟩
     rw [mem_Inter₂] at hx
     exact h fun s ha t hb => (hx _ ha).1.trans (hx _ hb).2
-#align interval.coe_Inf Interval.coe_infₛ
+#align interval.coe_Inf Interval.coe_sInf
 
 @[simp, norm_cast]
-theorem coe_infᵢ [@DecidableRel α (· ≤ ·)] (f : ι → Interval α) :
-    ↑(⨅ i, f i) = ⋂ i, (f i : Set α) := by simp [infᵢ]
-#align interval.coe_infi Interval.coe_infᵢ
+theorem coe_iInf [@DecidableRel α (· ≤ ·)] (f : ι → Interval α) :
+    ↑(⨅ i, f i) = ⋂ i, (f i : Set α) := by simp [iInf]
+#align interval.coe_infi Interval.coe_iInf
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/

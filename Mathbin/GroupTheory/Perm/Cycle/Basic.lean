@@ -2519,8 +2519,8 @@ theorem Countable.exists_cycleOn (hs : s.Countable) :
 #align set.countable.exists_cycle_on Set.Countable.exists_cycleOn
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Set.prod_self_eq_unionᵢ_perm /-
-theorem prod_self_eq_unionᵢ_perm (hf : f.IsCycleOn s) :
+#print Set.prod_self_eq_iUnion_perm /-
+theorem prod_self_eq_iUnion_perm (hf : f.IsCycleOn s) :
     s ×ˢ s = ⋃ n : ℤ, (fun a => (a, (f ^ n) a)) '' s :=
   by
   ext ⟨a, b⟩
@@ -2530,7 +2530,7 @@ theorem prod_self_eq_unionᵢ_perm (hf : f.IsCycleOn s) :
     exact ⟨_, _, hx.1, rfl⟩
   · rintro ⟨n, a, ha, ⟨⟩⟩
     exact ⟨ha, (hf.1.perm_zpow _).MapsTo ha⟩
-#align set.prod_self_eq_Union_perm Set.prod_self_eq_unionᵢ_perm
+#align set.prod_self_eq_Union_perm Set.prod_self_eq_iUnion_perm
 -/
 
 end Set

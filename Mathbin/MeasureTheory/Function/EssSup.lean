@@ -90,19 +90,19 @@ section ConditionallyCompleteLinearOrder
 
 variable [ConditionallyCompleteLinearOrder β] {x : β} {f : α → β}
 
-theorem essSup_eq_infₛ {m : MeasurableSpace α} (μ : Measure α) (f : α → β) :
-    essSup f μ = infₛ { a | μ { x | a < f x } = 0 } :=
+theorem essSup_eq_sInf {m : MeasurableSpace α} (μ : Measure α) (f : α → β) :
+    essSup f μ = sInf { a | μ { x | a < f x } = 0 } :=
   by
   dsimp [essSup, limsup, Limsup]
   simp only [ae_iff, not_le]
-#align ess_sup_eq_Inf essSup_eq_infₛ
+#align ess_sup_eq_Inf essSup_eq_sInf
 
-theorem essInf_eq_supₛ {m : MeasurableSpace α} (μ : Measure α) (f : α → β) :
-    essInf f μ = supₛ { a | μ { x | f x < a } = 0 } :=
+theorem essInf_eq_sSup {m : MeasurableSpace α} (μ : Measure α) (f : α → β) :
+    essInf f μ = sSup { a | μ { x | f x < a } = 0 } :=
   by
   dsimp [essInf, liminf, Liminf]
   simp only [ae_iff, not_le]
-#align ess_inf_eq_Sup essInf_eq_supₛ
+#align ess_inf_eq_Sup essInf_eq_sSup
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 theorem ae_lt_of_essSup_lt (hx : essSup f μ < x)
@@ -170,7 +170,7 @@ variable [CompleteLattice β]
 
 @[simp]
 theorem essSup_measure_zero {m : MeasurableSpace α} {f : α → β} : essSup f (0 : Measure α) = ⊥ :=
-  le_bot_iff.mp (infₛ_le (by simp [Set.mem_setOf_eq, eventually_le, ae_iff]))
+  le_bot_iff.mp (sInf_le (by simp [Set.mem_setOf_eq, eventually_le, ae_iff]))
 #align ess_sup_measure_zero essSup_measure_zero
 
 @[simp]
@@ -428,7 +428,7 @@ theorem essSup_liminf_le {ι} [Countable ι] [LinearOrder ι] (f : ι → α →
 
 theorem coe_essSup {f : α → ℝ≥0} (hf : IsBoundedUnder (· ≤ ·) μ.ae f) :
     (↑(essSup f μ) : ℝ≥0∞) = essSup (fun x => f x) μ :=
-  (ENNReal.coe_infₛ <| hf).trans <|
+  (ENNReal.coe_sInf <| hf).trans <|
     eq_of_forall_le_iff fun r => by
       simp [essSup, limsup, Limsup, eventually_map, ENNReal.forall_ennreal]
 #align ennreal.coe_ess_sup ENNReal.coe_essSup

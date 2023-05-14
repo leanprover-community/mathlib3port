@@ -441,5 +441,5 @@ end Multiset
 
 -- Assert that we define `finset` without the material on the set lattice.
 -- Note that we cannot put this in `data.finset.basic` because we proved relevant lemmas there.
-assert_not_exists Set.interₛ
+assert_not_exists Set.sInter
 

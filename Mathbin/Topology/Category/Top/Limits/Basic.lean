@@ -80,7 +80,7 @@ def limitConeInfi (F : J ⥤ TopCat.{max v u}) : Cone F
       ⨅ j, (F.obj j).str.induced ((Types.limitCone (F ⋙ forget)).π.app j)⟩
   π :=
     { app := fun j =>
-        ⟨(Types.limitCone (F ⋙ forget)).π.app j, continuous_iff_le_induced.mpr (infᵢ_le _ _)⟩
+        ⟨(Types.limitCone (F ⋙ forget)).π.app j, continuous_iff_le_induced.mpr (iInf_le _ _)⟩
       naturality' := fun j j' f =>
         ContinuousMap.coe_injective ((Types.limitCone (F ⋙ forget)).π.naturality f) }
 #align Top.limit_cone_infi TopCat.limitConeInfi
@@ -124,7 +124,7 @@ def limitConeInfiIsLimit (F : J ⥤ TopCat.{max v u}) : IsLimit (limitConeInfi F
   refine' is_limit.of_faithful forget (types.limit_cone_is_limit _) (fun s => ⟨_, _⟩) fun s => rfl
   exact
     continuous_iff_coinduced_le.mpr
-      (le_infᵢ fun j =>
+      (le_iInf fun j =>
         coinduced_le_iff_le_induced.mp <|
           (continuous_iff_coinduced_le.mp (s.π.app j).Continuous : _))
 #align Top.limit_cone_infi_is_limit TopCat.limitConeInfiIsLimit
@@ -188,7 +188,7 @@ def colimitCocone (F : J ⥤ TopCat.{max v u}) : Cocone F
       ⨆ j, (F.obj j).str.coinduced ((Types.colimitCocone (F ⋙ forget)).ι.app j)⟩
   ι :=
     { app := fun j =>
-        ⟨(Types.colimitCocone (F ⋙ forget)).ι.app j, continuous_iff_coinduced_le.mpr (le_supᵢ _ j)⟩
+        ⟨(Types.colimitCocone (F ⋙ forget)).ι.app j, continuous_iff_coinduced_le.mpr (le_iSup _ j)⟩
       naturality' := fun j j' f =>
         ContinuousMap.coe_injective ((Types.colimitCocone (F ⋙ forget)).ι.naturality f) }
 #align Top.colimit_cocone TopCat.colimitCocone
@@ -209,7 +209,7 @@ def colimitCoconeIsColimit (F : J ⥤ TopCat.{max v u}) : IsColimit (colimitCoco
     is_colimit.of_faithful forget (types.colimit_cocone_is_colimit _) (fun s => ⟨_, _⟩) fun s => rfl
   exact
     continuous_iff_le_induced.mpr
-      (supᵢ_le fun j =>
+      (iSup_le fun j =>
         coinduced_le_iff_le_induced.mp <|
           (continuous_iff_coinduced_le.mp (s.ι.app j).Continuous : _))
 #align Top.colimit_cocone_is_colimit TopCat.colimitCoconeIsColimit

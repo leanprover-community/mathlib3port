@@ -515,15 +515,15 @@ theorem not_infinite_of_exists_st {x : ℝ*} : (∃ r : ℝ, IsSt x r) → ¬Inf
 #align hyperreal.not_infinite_of_exists_st Hyperreal.not_infinite_of_exists_st
 -/
 
-/- warning: hyperreal.is_st_Sup -> Hyperreal.isSt_supₛ is a dubious translation:
+/- warning: hyperreal.is_st_Sup -> Hyperreal.isSt_sSup is a dubious translation:
 lean 3 declaration is
-  forall {x : Hyperreal}, (Not (Hyperreal.Infinite x)) -> (Hyperreal.IsSt x (SupSet.supₛ.{0} Real Real.hasSup (setOf.{0} Real (fun (y : Real) => LT.lt.{0} Hyperreal (Preorder.toLT.{0} Hyperreal (PartialOrder.toPreorder.{0} Hyperreal (OrderedAddCommGroup.toPartialOrder.{0} Hyperreal (StrictOrderedRing.toOrderedAddCommGroup.{0} Hyperreal (LinearOrderedRing.toStrictOrderedRing.{0} Hyperreal (LinearOrderedCommRing.toLinearOrderedRing.{0} Hyperreal (LinearOrderedField.toLinearOrderedCommRing.{0} Hyperreal Hyperreal.linearOrderedField))))))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real Hyperreal (HasLiftT.mk.{1, 1} Real Hyperreal (CoeTCₓ.coe.{1, 1} Real Hyperreal Hyperreal.hasCoeT)) y) x))))
+  forall {x : Hyperreal}, (Not (Hyperreal.Infinite x)) -> (Hyperreal.IsSt x (SupSet.sSup.{0} Real Real.hasSup (setOf.{0} Real (fun (y : Real) => LT.lt.{0} Hyperreal (Preorder.toLT.{0} Hyperreal (PartialOrder.toPreorder.{0} Hyperreal (OrderedAddCommGroup.toPartialOrder.{0} Hyperreal (StrictOrderedRing.toOrderedAddCommGroup.{0} Hyperreal (LinearOrderedRing.toStrictOrderedRing.{0} Hyperreal (LinearOrderedCommRing.toLinearOrderedRing.{0} Hyperreal (LinearOrderedField.toLinearOrderedCommRing.{0} Hyperreal Hyperreal.linearOrderedField))))))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real Hyperreal (HasLiftT.mk.{1, 1} Real Hyperreal (CoeTCₓ.coe.{1, 1} Real Hyperreal Hyperreal.hasCoeT)) y) x))))
 but is expected to have type
-  forall {x : Hyperreal}, (Not (Hyperreal.Infinite x)) -> (Hyperreal.IsSt x (SupSet.supₛ.{0} Real Real.instSupSetReal (setOf.{0} Real (fun (y : Real) => LT.lt.{0} Hyperreal (Preorder.toLT.{0} Hyperreal (PartialOrder.toPreorder.{0} Hyperreal (StrictOrderedRing.toPartialOrder.{0} Hyperreal (LinearOrderedRing.toStrictOrderedRing.{0} Hyperreal (LinearOrderedCommRing.toLinearOrderedRing.{0} Hyperreal (LinearOrderedField.toLinearOrderedCommRing.{0} Hyperreal Hyperreal.instLinearOrderedFieldHyperreal)))))) (Hyperreal.ofReal y) x))))
-Case conversion may be inaccurate. Consider using '#align hyperreal.is_st_Sup Hyperreal.isSt_supₛₓ'. -/
-theorem isSt_supₛ {x : ℝ*} (hni : ¬Infinite x) : IsSt x (supₛ { y : ℝ | (y : ℝ*) < x }) :=
+  forall {x : Hyperreal}, (Not (Hyperreal.Infinite x)) -> (Hyperreal.IsSt x (SupSet.sSup.{0} Real Real.instSupSetReal (setOf.{0} Real (fun (y : Real) => LT.lt.{0} Hyperreal (Preorder.toLT.{0} Hyperreal (PartialOrder.toPreorder.{0} Hyperreal (StrictOrderedRing.toPartialOrder.{0} Hyperreal (LinearOrderedRing.toStrictOrderedRing.{0} Hyperreal (LinearOrderedCommRing.toLinearOrderedRing.{0} Hyperreal (LinearOrderedField.toLinearOrderedCommRing.{0} Hyperreal Hyperreal.instLinearOrderedFieldHyperreal)))))) (Hyperreal.ofReal y) x))))
+Case conversion may be inaccurate. Consider using '#align hyperreal.is_st_Sup Hyperreal.isSt_sSupₓ'. -/
+theorem isSt_sSup {x : ℝ*} (hni : ¬Infinite x) : IsSt x (sSup { y : ℝ | (y : ℝ*) < x }) :=
   let S : Set ℝ := { y : ℝ | (y : ℝ*) < x }
-  let R : _ := supₛ S
+  let R : _ := sSup S
   have hnile := not_forall.mp (not_or.mp hni).1
   have hnige := not_forall.mp (not_or.mp hni).2
   Exists.dcases_on hnile <|
@@ -536,26 +536,26 @@ theorem isSt_supₛ {x : ℝ*} (hni : ¬Infinite x) : IsSt x (supₛ { y : ℝ |
       ⟨lt_of_not_le fun c =>
           have hc : ∀ y ∈ S, y ≤ R - δ := fun y hy =>
             coe_le_coe.1 <| le_of_lt <| lt_of_lt_of_le hy c
-          not_lt_of_le (csupₛ_le HR₁ hc) <| sub_lt_self R hδ,
+          not_lt_of_le (csSup_le HR₁ hc) <| sub_lt_self R hδ,
         lt_of_not_le fun c =>
           have hc : ↑(R + δ / 2) < x :=
             lt_of_lt_of_le (add_lt_add_left (coe_lt_coe.2 (half_lt_self hδ)) R) c
-          not_lt_of_le (le_csupₛ HR₂ hc) <| (lt_add_iff_pos_right _).mpr <| half_pos hδ⟩
-#align hyperreal.is_st_Sup Hyperreal.isSt_supₛ
+          not_lt_of_le (le_csSup HR₂ hc) <| (lt_add_iff_pos_right _).mpr <| half_pos hδ⟩
+#align hyperreal.is_st_Sup Hyperreal.isSt_sSup
 
 #print Hyperreal.exists_st_of_not_infinite /-
 theorem exists_st_of_not_infinite {x : ℝ*} (hni : ¬Infinite x) : ∃ r : ℝ, IsSt x r :=
-  ⟨supₛ { y : ℝ | (y : ℝ*) < x }, isSt_supₛ hni⟩
+  ⟨sSup { y : ℝ | (y : ℝ*) < x }, isSt_sSup hni⟩
 #align hyperreal.exists_st_of_not_infinite Hyperreal.exists_st_of_not_infinite
 -/
 
-/- warning: hyperreal.st_eq_Sup -> Hyperreal.st_eq_supₛ is a dubious translation:
+/- warning: hyperreal.st_eq_Sup -> Hyperreal.st_eq_sSup is a dubious translation:
 lean 3 declaration is
-  forall {x : Hyperreal}, Eq.{1} Real (Hyperreal.st x) (SupSet.supₛ.{0} Real Real.hasSup (setOf.{0} Real (fun (y : Real) => LT.lt.{0} Hyperreal (Preorder.toLT.{0} Hyperreal (PartialOrder.toPreorder.{0} Hyperreal (OrderedAddCommGroup.toPartialOrder.{0} Hyperreal (StrictOrderedRing.toOrderedAddCommGroup.{0} Hyperreal (LinearOrderedRing.toStrictOrderedRing.{0} Hyperreal (LinearOrderedCommRing.toLinearOrderedRing.{0} Hyperreal (LinearOrderedField.toLinearOrderedCommRing.{0} Hyperreal Hyperreal.linearOrderedField))))))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real Hyperreal (HasLiftT.mk.{1, 1} Real Hyperreal (CoeTCₓ.coe.{1, 1} Real Hyperreal Hyperreal.hasCoeT)) y) x)))
+  forall {x : Hyperreal}, Eq.{1} Real (Hyperreal.st x) (SupSet.sSup.{0} Real Real.hasSup (setOf.{0} Real (fun (y : Real) => LT.lt.{0} Hyperreal (Preorder.toLT.{0} Hyperreal (PartialOrder.toPreorder.{0} Hyperreal (OrderedAddCommGroup.toPartialOrder.{0} Hyperreal (StrictOrderedRing.toOrderedAddCommGroup.{0} Hyperreal (LinearOrderedRing.toStrictOrderedRing.{0} Hyperreal (LinearOrderedCommRing.toLinearOrderedRing.{0} Hyperreal (LinearOrderedField.toLinearOrderedCommRing.{0} Hyperreal Hyperreal.linearOrderedField))))))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real Hyperreal (HasLiftT.mk.{1, 1} Real Hyperreal (CoeTCₓ.coe.{1, 1} Real Hyperreal Hyperreal.hasCoeT)) y) x)))
 but is expected to have type
-  forall {x : Hyperreal}, Eq.{1} Real (Hyperreal.st x) (SupSet.supₛ.{0} Real Real.instSupSetReal (setOf.{0} Real (fun (y : Real) => LT.lt.{0} Hyperreal (Preorder.toLT.{0} Hyperreal (PartialOrder.toPreorder.{0} Hyperreal (StrictOrderedRing.toPartialOrder.{0} Hyperreal (LinearOrderedRing.toStrictOrderedRing.{0} Hyperreal (LinearOrderedCommRing.toLinearOrderedRing.{0} Hyperreal (LinearOrderedField.toLinearOrderedCommRing.{0} Hyperreal Hyperreal.instLinearOrderedFieldHyperreal)))))) (Hyperreal.ofReal y) x)))
-Case conversion may be inaccurate. Consider using '#align hyperreal.st_eq_Sup Hyperreal.st_eq_supₛₓ'. -/
-theorem st_eq_supₛ {x : ℝ*} : st x = supₛ { y : ℝ | (y : ℝ*) < x } :=
+  forall {x : Hyperreal}, Eq.{1} Real (Hyperreal.st x) (SupSet.sSup.{0} Real Real.instSupSetReal (setOf.{0} Real (fun (y : Real) => LT.lt.{0} Hyperreal (Preorder.toLT.{0} Hyperreal (PartialOrder.toPreorder.{0} Hyperreal (StrictOrderedRing.toPartialOrder.{0} Hyperreal (LinearOrderedRing.toStrictOrderedRing.{0} Hyperreal (LinearOrderedCommRing.toLinearOrderedRing.{0} Hyperreal (LinearOrderedField.toLinearOrderedCommRing.{0} Hyperreal Hyperreal.instLinearOrderedFieldHyperreal)))))) (Hyperreal.ofReal y) x)))
+Case conversion may be inaccurate. Consider using '#align hyperreal.st_eq_Sup Hyperreal.st_eq_sSupₓ'. -/
+theorem st_eq_sSup {x : ℝ*} : st x = sSup { y : ℝ | (y : ℝ*) < x } :=
   by
   unfold st; split_ifs
   · exact is_st_unique (Classical.choose_spec h) (is_st_Sup (not_infinite_of_exists_st h))
@@ -568,7 +568,7 @@ theorem st_eq_supₛ {x : ℝ*} : st x = supₛ { y : ℝ | (y : ℝ*) < x } :=
               False.elim (Set.not_mem_empty i hi)⟩ :
           { y : ℝ | (y : ℝ*) < x } = ∅)]
       exact real.Sup_empty.symm
-#align hyperreal.st_eq_Sup Hyperreal.st_eq_supₛ
+#align hyperreal.st_eq_Sup Hyperreal.st_eq_sSup
 
 #print Hyperreal.exists_st_iff_not_infinite /-
 theorem exists_st_iff_not_infinite {x : ℝ*} : (∃ r : ℝ, IsSt x r) ↔ ¬Infinite x :=

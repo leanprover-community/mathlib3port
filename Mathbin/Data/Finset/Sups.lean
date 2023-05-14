@@ -281,25 +281,25 @@ theorem subset_sups {s t : Set α} :
 
 variable (s t u v)
 
-/- warning: finset.bUnion_image_sup_left -> Finset.bunionᵢ_image_sup_left is a dubious translation:
+/- warning: finset.bUnion_image_sup_left -> Finset.biUnion_image_sup_left is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] (s : Finset.{u1} α) (t : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Finset.bunionᵢ.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) s (fun (a : α) => Finset.image.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α _inst_2) a) t)) (HasSups.sups.{u1} (Finset.{u1} α) (Finset.hasSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2) s t)
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] (s : Finset.{u1} α) (t : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Finset.biUnion.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) s (fun (a : α) => Finset.image.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α _inst_2) a) t)) (HasSups.sups.{u1} (Finset.{u1} α) (Finset.hasSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2) s t)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] (s : Finset.{u1} α) (t : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Finset.bunionᵢ.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) s (fun (a : α) => Finset.image.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) ((fun (x._@.Mathlib.Data.Finset.Sups._hyg.1857 : α) (x._@.Mathlib.Data.Finset.Sups._hyg.1859 : α) => Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α _inst_2) x._@.Mathlib.Data.Finset.Sups._hyg.1857 x._@.Mathlib.Data.Finset.Sups._hyg.1859) a) t)) (HasSups.sups.{u1} (Finset.{u1} α) (Finset.hasSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2) s t)
-Case conversion may be inaccurate. Consider using '#align finset.bUnion_image_sup_left Finset.bunionᵢ_image_sup_leftₓ'. -/
-theorem bunionᵢ_image_sup_left : (s.bunionᵢ fun a => t.image <| (· ⊔ ·) a) = s ⊻ t :=
-  bunionᵢ_image_left
-#align finset.bUnion_image_sup_left Finset.bunionᵢ_image_sup_left
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] (s : Finset.{u1} α) (t : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Finset.biUnion.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) s (fun (a : α) => Finset.image.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) ((fun (x._@.Mathlib.Data.Finset.Sups._hyg.1857 : α) (x._@.Mathlib.Data.Finset.Sups._hyg.1859 : α) => Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α _inst_2) x._@.Mathlib.Data.Finset.Sups._hyg.1857 x._@.Mathlib.Data.Finset.Sups._hyg.1859) a) t)) (HasSups.sups.{u1} (Finset.{u1} α) (Finset.hasSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2) s t)
+Case conversion may be inaccurate. Consider using '#align finset.bUnion_image_sup_left Finset.biUnion_image_sup_leftₓ'. -/
+theorem biUnion_image_sup_left : (s.biUnion fun a => t.image <| (· ⊔ ·) a) = s ⊻ t :=
+  biUnion_image_left
+#align finset.bUnion_image_sup_left Finset.biUnion_image_sup_left
 
-/- warning: finset.bUnion_image_sup_right -> Finset.bunionᵢ_image_sup_right is a dubious translation:
+/- warning: finset.bUnion_image_sup_right -> Finset.biUnion_image_sup_right is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] (s : Finset.{u1} α) (t : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Finset.bunionᵢ.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) t (fun (b : α) => Finset.image.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) (fun (a : α) => Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α _inst_2) a b) s)) (HasSups.sups.{u1} (Finset.{u1} α) (Finset.hasSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2) s t)
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] (s : Finset.{u1} α) (t : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Finset.biUnion.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) t (fun (b : α) => Finset.image.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) (fun (a : α) => Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α _inst_2) a b) s)) (HasSups.sups.{u1} (Finset.{u1} α) (Finset.hasSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2) s t)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] (s : Finset.{u1} α) (t : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Finset.bunionᵢ.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) t (fun (b : α) => Finset.image.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) (fun (a : α) => Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α _inst_2) a b) s)) (HasSups.sups.{u1} (Finset.{u1} α) (Finset.hasSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2) s t)
-Case conversion may be inaccurate. Consider using '#align finset.bUnion_image_sup_right Finset.bunionᵢ_image_sup_rightₓ'. -/
-theorem bunionᵢ_image_sup_right : (t.bunionᵢ fun b => s.image fun a => a ⊔ b) = s ⊻ t :=
-  bunionᵢ_image_right
-#align finset.bUnion_image_sup_right Finset.bunionᵢ_image_sup_right
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] (s : Finset.{u1} α) (t : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Finset.biUnion.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) t (fun (b : α) => Finset.image.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) (fun (a : α) => Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α _inst_2) a b) s)) (HasSups.sups.{u1} (Finset.{u1} α) (Finset.hasSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2) s t)
+Case conversion may be inaccurate. Consider using '#align finset.bUnion_image_sup_right Finset.biUnion_image_sup_rightₓ'. -/
+theorem biUnion_image_sup_right : (t.biUnion fun b => s.image fun a => a ⊔ b) = s ⊻ t :=
+  biUnion_image_right
+#align finset.bUnion_image_sup_right Finset.biUnion_image_sup_right
 
 /- warning: finset.image_sup_product -> Finset.image_sup_product is a dubious translation:
 lean 3 declaration is
@@ -579,25 +579,25 @@ theorem subset_infs {s t : Set α} :
 
 variable (s t u v)
 
-/- warning: finset.bUnion_image_inf_left -> Finset.bunionᵢ_image_inf_left is a dubious translation:
+/- warning: finset.bUnion_image_inf_left -> Finset.biUnion_image_inf_left is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeInf.{u1} α] (s : Finset.{u1} α) (t : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Finset.bunionᵢ.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) s (fun (a : α) => Finset.image.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α _inst_2) a) t)) (HasInfs.infs.{u1} (Finset.{u1} α) (Finset.hasInfs.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2) s t)
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeInf.{u1} α] (s : Finset.{u1} α) (t : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Finset.biUnion.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) s (fun (a : α) => Finset.image.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α _inst_2) a) t)) (HasInfs.infs.{u1} (Finset.{u1} α) (Finset.hasInfs.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2) s t)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeInf.{u1} α] (s : Finset.{u1} α) (t : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Finset.bunionᵢ.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) s (fun (a : α) => Finset.image.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) ((fun (x._@.Mathlib.Data.Finset.Sups._hyg.4108 : α) (x._@.Mathlib.Data.Finset.Sups._hyg.4110 : α) => Inf.inf.{u1} α (SemilatticeInf.toInf.{u1} α _inst_2) x._@.Mathlib.Data.Finset.Sups._hyg.4108 x._@.Mathlib.Data.Finset.Sups._hyg.4110) a) t)) (HasInfs.infs.{u1} (Finset.{u1} α) (Finset.hasInfs.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2) s t)
-Case conversion may be inaccurate. Consider using '#align finset.bUnion_image_inf_left Finset.bunionᵢ_image_inf_leftₓ'. -/
-theorem bunionᵢ_image_inf_left : (s.bunionᵢ fun a => t.image <| (· ⊓ ·) a) = s ⊼ t :=
-  bunionᵢ_image_left
-#align finset.bUnion_image_inf_left Finset.bunionᵢ_image_inf_left
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeInf.{u1} α] (s : Finset.{u1} α) (t : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Finset.biUnion.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) s (fun (a : α) => Finset.image.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) ((fun (x._@.Mathlib.Data.Finset.Sups._hyg.4108 : α) (x._@.Mathlib.Data.Finset.Sups._hyg.4110 : α) => Inf.inf.{u1} α (SemilatticeInf.toInf.{u1} α _inst_2) x._@.Mathlib.Data.Finset.Sups._hyg.4108 x._@.Mathlib.Data.Finset.Sups._hyg.4110) a) t)) (HasInfs.infs.{u1} (Finset.{u1} α) (Finset.hasInfs.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2) s t)
+Case conversion may be inaccurate. Consider using '#align finset.bUnion_image_inf_left Finset.biUnion_image_inf_leftₓ'. -/
+theorem biUnion_image_inf_left : (s.biUnion fun a => t.image <| (· ⊓ ·) a) = s ⊼ t :=
+  biUnion_image_left
+#align finset.bUnion_image_inf_left Finset.biUnion_image_inf_left
 
-/- warning: finset.bUnion_image_inf_right -> Finset.bunionᵢ_image_inf_right is a dubious translation:
+/- warning: finset.bUnion_image_inf_right -> Finset.biUnion_image_inf_right is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeInf.{u1} α] (s : Finset.{u1} α) (t : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Finset.bunionᵢ.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) t (fun (b : α) => Finset.image.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) (fun (a : α) => Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α _inst_2) a b) s)) (HasInfs.infs.{u1} (Finset.{u1} α) (Finset.hasInfs.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2) s t)
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeInf.{u1} α] (s : Finset.{u1} α) (t : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Finset.biUnion.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) t (fun (b : α) => Finset.image.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) (fun (a : α) => Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α _inst_2) a b) s)) (HasInfs.infs.{u1} (Finset.{u1} α) (Finset.hasInfs.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2) s t)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeInf.{u1} α] (s : Finset.{u1} α) (t : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Finset.bunionᵢ.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) t (fun (b : α) => Finset.image.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) (fun (a : α) => Inf.inf.{u1} α (SemilatticeInf.toInf.{u1} α _inst_2) a b) s)) (HasInfs.infs.{u1} (Finset.{u1} α) (Finset.hasInfs.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2) s t)
-Case conversion may be inaccurate. Consider using '#align finset.bUnion_image_inf_right Finset.bunionᵢ_image_inf_rightₓ'. -/
-theorem bunionᵢ_image_inf_right : (t.bunionᵢ fun b => s.image fun a => a ⊓ b) = s ⊼ t :=
-  bunionᵢ_image_right
-#align finset.bUnion_image_inf_right Finset.bunionᵢ_image_inf_right
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeInf.{u1} α] (s : Finset.{u1} α) (t : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Finset.biUnion.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) t (fun (b : α) => Finset.image.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) (fun (a : α) => Inf.inf.{u1} α (SemilatticeInf.toInf.{u1} α _inst_2) a b) s)) (HasInfs.infs.{u1} (Finset.{u1} α) (Finset.hasInfs.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2) s t)
+Case conversion may be inaccurate. Consider using '#align finset.bUnion_image_inf_right Finset.biUnion_image_inf_rightₓ'. -/
+theorem biUnion_image_inf_right : (t.biUnion fun b => s.image fun a => a ⊓ b) = s ⊼ t :=
+  biUnion_image_right
+#align finset.bUnion_image_inf_right Finset.biUnion_image_inf_right
 
 /- warning: finset.image_inf_product -> Finset.image_inf_product is a dubious translation:
 lean 3 declaration is

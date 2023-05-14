@@ -66,10 +66,10 @@ theorem MeasureTheory.aEMeasurable_of_exist_almost_disjoint_supersets {α : Type
   let u' : β → Set α := fun p => ⋂ q ∈ s ∩ Ioi p, u p q
   have u'_meas : ∀ i, MeasurableSet (u' i) := by
     intro i
-    exact MeasurableSet.binterᵢ (s_count.mono (inter_subset_left _ _)) fun b hb => (huv i b).1
+    exact MeasurableSet.biInter (s_count.mono (inter_subset_left _ _)) fun b hb => (huv i b).1
   let f' : α → β := fun x => ⨅ i : s, piecewise (u' i) (fun x => (i : β)) (fun x => (⊤ : β)) x
   have f'_meas : Measurable f' := by
-    apply measurable_infᵢ
+    apply measurable_iInf
     exact fun i => Measurable.piecewise (u'_meas i) measurable_const measurable_const
   let t := ⋃ (p : s) (q : s ∩ Ioi p), u' p ∩ v p q
   have μt : μ t ≤ 0 :=
@@ -103,7 +103,7 @@ theorem MeasureTheory.aEMeasurable_of_exist_almost_disjoint_supersets {α : Type
       ext y
       simp only [not_exists, exists_prop, mem_set_of_eq, mem_compl_iff, not_not_mem]
     filter_upwards [this]with x hx
-    apply (infᵢ_eq_of_forall_ge_of_forall_gt_exists_lt _ _).symm
+    apply (iInf_eq_of_forall_ge_of_forall_gt_exists_lt _ _).symm
     · intro i
       by_cases H : x ∈ u' i
       swap

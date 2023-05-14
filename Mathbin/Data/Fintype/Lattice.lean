@@ -31,27 +31,27 @@ namespace Finset
 
 variable [Fintype α] {s : Finset α}
 
-/- warning: finset.sup_univ_eq_supr -> Finset.sup_univ_eq_supᵢ is a dubious translation:
+/- warning: finset.sup_univ_eq_supr -> Finset.sup_univ_eq_iSup is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Fintype.{u1} α] [_inst_2 : CompleteLattice.{u2} β] (f : α -> β), Eq.{succ u2} β (Finset.sup.{u2, u1} β α (Lattice.toSemilatticeSup.{u2} β (CompleteLattice.toLattice.{u2} β _inst_2)) (BoundedOrder.toOrderBot.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β (Lattice.toSemilatticeSup.{u2} β (CompleteLattice.toLattice.{u2} β _inst_2))))) (CompleteLattice.toBoundedOrder.{u2} β _inst_2)) (Finset.univ.{u1} α _inst_1) f) (supᵢ.{u2, succ u1} β (CompleteSemilatticeSup.toHasSup.{u2} β (CompleteLattice.toCompleteSemilatticeSup.{u2} β _inst_2)) α f)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Fintype.{u1} α] [_inst_2 : CompleteLattice.{u2} β] (f : α -> β), Eq.{succ u2} β (Finset.sup.{u2, u1} β α (Lattice.toSemilatticeSup.{u2} β (CompleteLattice.toLattice.{u2} β _inst_2)) (BoundedOrder.toOrderBot.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β (Lattice.toSemilatticeSup.{u2} β (CompleteLattice.toLattice.{u2} β _inst_2))))) (CompleteLattice.toBoundedOrder.{u2} β _inst_2)) (Finset.univ.{u1} α _inst_1) f) (iSup.{u2, succ u1} β (CompleteSemilatticeSup.toHasSup.{u2} β (CompleteLattice.toCompleteSemilatticeSup.{u2} β _inst_2)) α f)
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Fintype.{u1} α] [_inst_2 : CompleteLattice.{u2} β] (f : α -> β), Eq.{succ u2} β (Finset.sup.{u2, u1} β α (Lattice.toSemilatticeSup.{u2} β (CompleteLattice.toLattice.{u2} β _inst_2)) (BoundedOrder.toOrderBot.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β (Lattice.toSemilatticeSup.{u2} β (CompleteLattice.toLattice.{u2} β _inst_2))))) (CompleteLattice.toBoundedOrder.{u2} β _inst_2)) (Finset.univ.{u1} α _inst_1) f) (supᵢ.{u2, succ u1} β (CompleteLattice.toSupSet.{u2} β _inst_2) α f)
-Case conversion may be inaccurate. Consider using '#align finset.sup_univ_eq_supr Finset.sup_univ_eq_supᵢₓ'. -/
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Fintype.{u1} α] [_inst_2 : CompleteLattice.{u2} β] (f : α -> β), Eq.{succ u2} β (Finset.sup.{u2, u1} β α (Lattice.toSemilatticeSup.{u2} β (CompleteLattice.toLattice.{u2} β _inst_2)) (BoundedOrder.toOrderBot.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeSup.toPartialOrder.{u2} β (Lattice.toSemilatticeSup.{u2} β (CompleteLattice.toLattice.{u2} β _inst_2))))) (CompleteLattice.toBoundedOrder.{u2} β _inst_2)) (Finset.univ.{u1} α _inst_1) f) (iSup.{u2, succ u1} β (CompleteLattice.toSupSet.{u2} β _inst_2) α f)
+Case conversion may be inaccurate. Consider using '#align finset.sup_univ_eq_supr Finset.sup_univ_eq_iSupₓ'. -/
 /-- A special case of `finset.sup_eq_supr` that omits the useless `x ∈ univ` binder. -/
-theorem sup_univ_eq_supᵢ [CompleteLattice β] (f : α → β) : Finset.univ.sup f = supᵢ f :=
-  (sup_eq_supᵢ _ f).trans <| congr_arg _ <| funext fun a => supᵢ_pos (mem_univ _)
-#align finset.sup_univ_eq_supr Finset.sup_univ_eq_supᵢ
+theorem sup_univ_eq_iSup [CompleteLattice β] (f : α → β) : Finset.univ.sup f = iSup f :=
+  (sup_eq_iSup _ f).trans <| congr_arg _ <| funext fun a => iSup_pos (mem_univ _)
+#align finset.sup_univ_eq_supr Finset.sup_univ_eq_iSup
 
-/- warning: finset.inf_univ_eq_infi -> Finset.inf_univ_eq_infᵢ is a dubious translation:
+/- warning: finset.inf_univ_eq_infi -> Finset.inf_univ_eq_iInf is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Fintype.{u1} α] [_inst_2 : CompleteLattice.{u2} β] (f : α -> β), Eq.{succ u2} β (Finset.inf.{u2, u1} β α (Lattice.toSemilatticeInf.{u2} β (CompleteLattice.toLattice.{u2} β _inst_2)) (BoundedOrder.toOrderTop.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (CompleteLattice.toLattice.{u2} β _inst_2))))) (CompleteLattice.toBoundedOrder.{u2} β _inst_2)) (Finset.univ.{u1} α _inst_1) f) (infᵢ.{u2, succ u1} β (CompleteSemilatticeInf.toHasInf.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2)) α f)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Fintype.{u1} α] [_inst_2 : CompleteLattice.{u2} β] (f : α -> β), Eq.{succ u2} β (Finset.inf.{u2, u1} β α (Lattice.toSemilatticeInf.{u2} β (CompleteLattice.toLattice.{u2} β _inst_2)) (BoundedOrder.toOrderTop.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (CompleteLattice.toLattice.{u2} β _inst_2))))) (CompleteLattice.toBoundedOrder.{u2} β _inst_2)) (Finset.univ.{u1} α _inst_1) f) (iInf.{u2, succ u1} β (CompleteSemilatticeInf.toHasInf.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2)) α f)
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Fintype.{u1} α] [_inst_2 : CompleteLattice.{u2} β] (f : α -> β), Eq.{succ u2} β (Finset.inf.{u2, u1} β α (Lattice.toSemilatticeInf.{u2} β (CompleteLattice.toLattice.{u2} β _inst_2)) (BoundedOrder.toOrderTop.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (CompleteLattice.toLattice.{u2} β _inst_2))))) (CompleteLattice.toBoundedOrder.{u2} β _inst_2)) (Finset.univ.{u1} α _inst_1) f) (infᵢ.{u2, succ u1} β (CompleteLattice.toInfSet.{u2} β _inst_2) α f)
-Case conversion may be inaccurate. Consider using '#align finset.inf_univ_eq_infi Finset.inf_univ_eq_infᵢₓ'. -/
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Fintype.{u1} α] [_inst_2 : CompleteLattice.{u2} β] (f : α -> β), Eq.{succ u2} β (Finset.inf.{u2, u1} β α (Lattice.toSemilatticeInf.{u2} β (CompleteLattice.toLattice.{u2} β _inst_2)) (BoundedOrder.toOrderTop.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (CompleteLattice.toLattice.{u2} β _inst_2))))) (CompleteLattice.toBoundedOrder.{u2} β _inst_2)) (Finset.univ.{u1} α _inst_1) f) (iInf.{u2, succ u1} β (CompleteLattice.toInfSet.{u2} β _inst_2) α f)
+Case conversion may be inaccurate. Consider using '#align finset.inf_univ_eq_infi Finset.inf_univ_eq_iInfₓ'. -/
 /-- A special case of `finset.inf_eq_infi` that omits the useless `x ∈ univ` binder. -/
-theorem inf_univ_eq_infᵢ [CompleteLattice β] (f : α → β) : Finset.univ.inf f = infᵢ f :=
-  sup_univ_eq_supᵢ (f : α → βᵒᵈ)
-#align finset.inf_univ_eq_infi Finset.inf_univ_eq_infᵢ
+theorem inf_univ_eq_iInf [CompleteLattice β] (f : α → β) : Finset.univ.inf f = iInf f :=
+  sup_univ_eq_iSup (f : α → βᵒᵈ)
+#align finset.inf_univ_eq_infi Finset.inf_univ_eq_iInf
 
 /- warning: finset.fold_inf_univ -> Finset.fold_inf_univ is a dubious translation:
 lean 3 declaration is

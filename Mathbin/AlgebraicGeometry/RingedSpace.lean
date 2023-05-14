@@ -77,7 +77,7 @@ theorem isUnit_of_isUnit_germ (U : Opens X) (f : X.Presheaf.obj (op U))
   by
   -- We pick a cover of `U` by open sets `V x`, such that `f` is a unit on each `V x`.
   choose V iVU m h_unit using fun x : U => X.is_unit_res_of_is_unit_germ U f x (h x)
-  have hcover : U ≤ supᵢ V := by
+  have hcover : U ≤ iSup V := by
     intro x hxU
     rw [opens.mem_supr]
     exact ⟨⟨x, hxU⟩, m ⟨x, hxU⟩⟩

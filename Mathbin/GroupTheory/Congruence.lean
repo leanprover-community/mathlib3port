@@ -500,39 +500,39 @@ instance : InfSet (Con M) :=
           c.trans (h1 c hc) <| h2 c hc⟩⟩,
       fun _ _ _ _ h1 h2 c hc => c.mul (h1 c hc) <| h2 c hc⟩⟩
 
-/- warning: con.Inf_to_setoid -> Con.infₛ_toSetoid is a dubious translation:
+/- warning: con.Inf_to_setoid -> Con.sInf_toSetoid is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] (S : Set.{u1} (Con.{u1} M _inst_1)), Eq.{succ u1} (Setoid.{succ u1} M) (Con.toSetoid.{u1} M _inst_1 (InfSet.infₛ.{u1} (Con.{u1} M _inst_1) (Con.hasInf.{u1} M _inst_1) S)) (InfSet.infₛ.{u1} (Setoid.{succ u1} M) (Setoid.hasInf.{u1} M) (Set.image.{u1, u1} (Con.{u1} M _inst_1) (Setoid.{succ u1} M) (Con.toSetoid.{u1} M _inst_1) S))
+  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] (S : Set.{u1} (Con.{u1} M _inst_1)), Eq.{succ u1} (Setoid.{succ u1} M) (Con.toSetoid.{u1} M _inst_1 (InfSet.sInf.{u1} (Con.{u1} M _inst_1) (Con.hasInf.{u1} M _inst_1) S)) (InfSet.sInf.{u1} (Setoid.{succ u1} M) (Setoid.hasInf.{u1} M) (Set.image.{u1, u1} (Con.{u1} M _inst_1) (Setoid.{succ u1} M) (Con.toSetoid.{u1} M _inst_1) S))
 but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] (S : Set.{u1} (Con.{u1} M _inst_1)), Eq.{succ u1} (Setoid.{succ u1} M) (Con.toSetoid.{u1} M _inst_1 (InfSet.infₛ.{u1} (Con.{u1} M _inst_1) (Con.instInfSetCon.{u1} M _inst_1) S)) (InfSet.infₛ.{u1} (Setoid.{succ u1} M) (Setoid.instInfSetSetoid.{u1} M) (Set.image.{u1, u1} (Con.{u1} M _inst_1) (Setoid.{succ u1} M) (Con.toSetoid.{u1} M _inst_1) S))
-Case conversion may be inaccurate. Consider using '#align con.Inf_to_setoid Con.infₛ_toSetoidₓ'. -/
+  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] (S : Set.{u1} (Con.{u1} M _inst_1)), Eq.{succ u1} (Setoid.{succ u1} M) (Con.toSetoid.{u1} M _inst_1 (InfSet.sInf.{u1} (Con.{u1} M _inst_1) (Con.instInfSetCon.{u1} M _inst_1) S)) (InfSet.sInf.{u1} (Setoid.{succ u1} M) (Setoid.instInfSetSetoid.{u1} M) (Set.image.{u1, u1} (Con.{u1} M _inst_1) (Setoid.{succ u1} M) (Con.toSetoid.{u1} M _inst_1) S))
+Case conversion may be inaccurate. Consider using '#align con.Inf_to_setoid Con.sInf_toSetoidₓ'. -/
 /-- The infimum of a set of congruence relations is the same as the infimum of the set's image
     under the map to the underlying equivalence relation. -/
 @[to_additive
       "The infimum of a set of additive congruence relations is the same as the infimum of\nthe set's image under the map to the underlying equivalence relation."]
-theorem infₛ_toSetoid (S : Set (Con M)) : (infₛ S).toSetoid = infₛ (toSetoid '' S) :=
+theorem sInf_toSetoid (S : Set (Con M)) : (sInf S).toSetoid = sInf (toSetoid '' S) :=
   Setoid.ext' fun x y =>
     ⟨fun h r ⟨c, hS, hr⟩ => by rw [← hr] <;> exact h c hS, fun h c hS => h c.toSetoid ⟨c, hS, rfl⟩⟩
-#align con.Inf_to_setoid Con.infₛ_toSetoid
-#align add_con.Inf_to_setoid AddCon.infₛ_toSetoid
+#align con.Inf_to_setoid Con.sInf_toSetoid
+#align add_con.Inf_to_setoid AddCon.sInf_toSetoid
 
-/- warning: con.Inf_def -> Con.infₛ_def is a dubious translation:
+/- warning: con.Inf_def -> Con.sInf_def is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] (S : Set.{u1} (Con.{u1} M _inst_1)), Eq.{succ u1} (M -> M -> Prop) (coeFn.{succ u1, succ u1} (Con.{u1} M _inst_1) (fun (_x : Con.{u1} M _inst_1) => M -> M -> Prop) (Con.hasCoeToFun.{u1} M _inst_1) (InfSet.infₛ.{u1} (Con.{u1} M _inst_1) (Con.hasInf.{u1} M _inst_1) S)) (InfSet.infₛ.{u1} (M -> M -> Prop) (Pi.infSet.{u1, u1} M (fun (ᾰ : M) => M -> Prop) (fun (i : M) => Pi.infSet.{u1, 0} M (fun (ᾰ : M) => Prop) (fun (i : M) => CompleteSemilatticeInf.toHasInf.{0} Prop (CompleteLattice.toCompleteSemilatticeInf.{0} Prop Prop.completeLattice)))) (Set.image.{u1, u1} (Con.{u1} M _inst_1) (M -> M -> Prop) (coeFn.{succ u1, succ u1} (Con.{u1} M _inst_1) (fun (ᾰ : Con.{u1} M _inst_1) => M -> M -> Prop) (Con.hasCoeToFun.{u1} M _inst_1)) S))
+  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] (S : Set.{u1} (Con.{u1} M _inst_1)), Eq.{succ u1} (M -> M -> Prop) (coeFn.{succ u1, succ u1} (Con.{u1} M _inst_1) (fun (_x : Con.{u1} M _inst_1) => M -> M -> Prop) (Con.hasCoeToFun.{u1} M _inst_1) (InfSet.sInf.{u1} (Con.{u1} M _inst_1) (Con.hasInf.{u1} M _inst_1) S)) (InfSet.sInf.{u1} (M -> M -> Prop) (Pi.infSet.{u1, u1} M (fun (ᾰ : M) => M -> Prop) (fun (i : M) => Pi.infSet.{u1, 0} M (fun (ᾰ : M) => Prop) (fun (i : M) => CompleteSemilatticeInf.toHasInf.{0} Prop (CompleteLattice.toCompleteSemilatticeInf.{0} Prop Prop.completeLattice)))) (Set.image.{u1, u1} (Con.{u1} M _inst_1) (M -> M -> Prop) (coeFn.{succ u1, succ u1} (Con.{u1} M _inst_1) (fun (ᾰ : Con.{u1} M _inst_1) => M -> M -> Prop) (Con.hasCoeToFun.{u1} M _inst_1)) S))
 but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] (S : Set.{u1} (Con.{u1} M _inst_1)), Eq.{succ u1} (forall (ᾰ : M), (fun (x._@.Mathlib.GroupTheory.Congruence._hyg.479 : M) => M -> Prop) ᾰ) (FunLike.coe.{succ u1, succ u1, succ u1} (Con.{u1} M _inst_1) M (fun (_x : M) => (fun (x._@.Mathlib.GroupTheory.Congruence._hyg.479 : M) => M -> Prop) _x) (Con.instFunLikeConForAllProp.{u1} M _inst_1) (InfSet.infₛ.{u1} (Con.{u1} M _inst_1) (Con.instInfSetCon.{u1} M _inst_1) S)) (InfSet.infₛ.{u1} (M -> M -> Prop) (Pi.infSet.{u1, u1} M (fun (ᾰ : M) => M -> Prop) (fun (i : M) => Pi.infSet.{u1, 0} M (fun (ᾰ : M) => Prop) (fun (i : M) => CompleteBooleanAlgebra.toInfSet.{0} Prop Prop.completeBooleanAlgebra))) (Set.image.{u1, u1} (Con.{u1} M _inst_1) (M -> M -> Prop) (FunLike.coe.{succ u1, succ u1, succ u1} (Con.{u1} M _inst_1) M (fun (ᾰ : M) => (fun (x._@.Mathlib.GroupTheory.Congruence._hyg.479 : M) => M -> Prop) ᾰ) (Con.instFunLikeConForAllProp.{u1} M _inst_1)) S))
-Case conversion may be inaccurate. Consider using '#align con.Inf_def Con.infₛ_defₓ'. -/
+  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] (S : Set.{u1} (Con.{u1} M _inst_1)), Eq.{succ u1} (forall (ᾰ : M), (fun (x._@.Mathlib.GroupTheory.Congruence._hyg.479 : M) => M -> Prop) ᾰ) (FunLike.coe.{succ u1, succ u1, succ u1} (Con.{u1} M _inst_1) M (fun (_x : M) => (fun (x._@.Mathlib.GroupTheory.Congruence._hyg.479 : M) => M -> Prop) _x) (Con.instFunLikeConForAllProp.{u1} M _inst_1) (InfSet.sInf.{u1} (Con.{u1} M _inst_1) (Con.instInfSetCon.{u1} M _inst_1) S)) (InfSet.sInf.{u1} (M -> M -> Prop) (Pi.infSet.{u1, u1} M (fun (ᾰ : M) => M -> Prop) (fun (i : M) => Pi.infSet.{u1, 0} M (fun (ᾰ : M) => Prop) (fun (i : M) => CompleteBooleanAlgebra.toInfSet.{0} Prop Prop.completeBooleanAlgebra))) (Set.image.{u1, u1} (Con.{u1} M _inst_1) (M -> M -> Prop) (FunLike.coe.{succ u1, succ u1, succ u1} (Con.{u1} M _inst_1) M (fun (ᾰ : M) => (fun (x._@.Mathlib.GroupTheory.Congruence._hyg.479 : M) => M -> Prop) ᾰ) (Con.instFunLikeConForAllProp.{u1} M _inst_1)) S))
+Case conversion may be inaccurate. Consider using '#align con.Inf_def Con.sInf_defₓ'. -/
 /-- The infimum of a set of congruence relations is the same as the infimum of the set's image
     under the map to the underlying binary relation. -/
 @[to_additive
       "The infimum of a set of additive congruence relations is the same as the infimum\nof the set's image under the map to the underlying binary relation."]
-theorem infₛ_def (S : Set (Con M)) : ⇑(infₛ S) = infₛ (@Set.image (Con M) (M → M → Prop) coeFn S) :=
+theorem sInf_def (S : Set (Con M)) : ⇑(sInf S) = sInf (@Set.image (Con M) (M → M → Prop) coeFn S) :=
   by
   ext
-  simp only [infₛ_image, infᵢ_apply, infᵢ_Prop_eq]
+  simp only [sInf_image, iInf_apply, iInf_Prop_eq]
   rfl
-#align con.Inf_def Con.infₛ_def
-#align add_con.Inf_def AddCon.infₛ_def
+#align con.Inf_def Con.sInf_def
+#align add_con.Inf_def AddCon.sInf_def
 
 @[to_additive]
 instance : PartialOrder (Con M) where
@@ -592,20 +592,20 @@ theorem inf_iff_and {c d : Con M} {x y} : (c ⊓ d) x y ↔ c x y ∧ d x y :=
 
 /- warning: con.con_gen_eq -> Con.conGen_eq is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] (r : M -> M -> Prop), Eq.{succ u1} (Con.{u1} M _inst_1) (conGen.{u1} M _inst_1 r) (InfSet.infₛ.{u1} (Con.{u1} M _inst_1) (Con.hasInf.{u1} M _inst_1) (setOf.{u1} (Con.{u1} M _inst_1) (fun (s : Con.{u1} M _inst_1) => forall (x : M) (y : M), (r x y) -> (coeFn.{succ u1, succ u1} (Con.{u1} M _inst_1) (fun (_x : Con.{u1} M _inst_1) => M -> M -> Prop) (Con.hasCoeToFun.{u1} M _inst_1) s x y))))
+  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] (r : M -> M -> Prop), Eq.{succ u1} (Con.{u1} M _inst_1) (conGen.{u1} M _inst_1 r) (InfSet.sInf.{u1} (Con.{u1} M _inst_1) (Con.hasInf.{u1} M _inst_1) (setOf.{u1} (Con.{u1} M _inst_1) (fun (s : Con.{u1} M _inst_1) => forall (x : M) (y : M), (r x y) -> (coeFn.{succ u1, succ u1} (Con.{u1} M _inst_1) (fun (_x : Con.{u1} M _inst_1) => M -> M -> Prop) (Con.hasCoeToFun.{u1} M _inst_1) s x y))))
 but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] (r : M -> M -> Prop), Eq.{succ u1} (Con.{u1} M _inst_1) (conGen.{u1} M _inst_1 r) (InfSet.infₛ.{u1} (Con.{u1} M _inst_1) (Con.instInfSetCon.{u1} M _inst_1) (setOf.{u1} (Con.{u1} M _inst_1) (fun (s : Con.{u1} M _inst_1) => forall (x : M) (y : M), (r x y) -> (FunLike.coe.{succ u1, succ u1, succ u1} (Con.{u1} M _inst_1) M (fun (_x : M) => (fun (x._@.Mathlib.GroupTheory.Congruence._hyg.479 : M) => M -> Prop) _x) (Con.instFunLikeConForAllProp.{u1} M _inst_1) s x y))))
+  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] (r : M -> M -> Prop), Eq.{succ u1} (Con.{u1} M _inst_1) (conGen.{u1} M _inst_1 r) (InfSet.sInf.{u1} (Con.{u1} M _inst_1) (Con.instInfSetCon.{u1} M _inst_1) (setOf.{u1} (Con.{u1} M _inst_1) (fun (s : Con.{u1} M _inst_1) => forall (x : M) (y : M), (r x y) -> (FunLike.coe.{succ u1, succ u1, succ u1} (Con.{u1} M _inst_1) M (fun (_x : M) => (fun (x._@.Mathlib.GroupTheory.Congruence._hyg.479 : M) => M -> Prop) _x) (Con.instFunLikeConForAllProp.{u1} M _inst_1) s x y))))
 Case conversion may be inaccurate. Consider using '#align con.con_gen_eq Con.conGen_eqₓ'. -/
 /-- The inductively defined smallest congruence relation containing a binary relation `r` equals
     the infimum of the set of congruence relations containing `r`. -/
 @[to_additive add_con_gen_eq
       "The inductively defined smallest additive congruence relation\ncontaining a binary relation `r` equals the infimum of the set of additive congruence relations\ncontaining `r`."]
-theorem conGen_eq (r : M → M → Prop) : conGen r = infₛ { s : Con M | ∀ x y, r x y → s x y } :=
+theorem conGen_eq (r : M → M → Prop) : conGen r = sInf { s : Con M | ∀ x y, r x y → s x y } :=
   le_antisymm
     (fun x y H =>
       ConGen.Rel.rec_on H (fun _ _ h _ hs => hs _ _ h) (Con.refl _) (fun _ _ _ => Con.symm _)
         (fun _ _ _ _ _ => Con.trans _) fun w x y z _ _ h1 h2 c hc => c.mul (h1 c hc) <| h2 c hc)
-    (infₛ_le fun _ _ => ConGen.Rel.of _ _)
+    (sInf_le fun _ _ => ConGen.Rel.of _ _)
 #align con.con_gen_eq Con.conGen_eq
 #align add_con.add_con_gen_eq AddCon.addConGen_eq
 
@@ -615,7 +615,7 @@ theorem conGen_eq (r : M → M → Prop) : conGen r = infₛ { s : Con M | ∀ x
 @[to_additive add_con_gen_le
       "The smallest additive congruence relation containing a binary\nrelation `r` is contained in any additive congruence relation containing `r`."]
 theorem conGen_le {r : M → M → Prop} {c : Con M} (h : ∀ x y, r x y → @Setoid.r _ c.toSetoid x y) :
-    conGen r ≤ c := by rw [con_gen_eq] <;> exact infₛ_le h
+    conGen r ≤ c := by rw [con_gen_eq] <;> exact sInf_le h
 #align con.con_gen_le Con.conGen_le
 #align add_con.add_con_gen_le AddCon.addConGen_le
 -/
@@ -637,7 +637,7 @@ theorem conGen_mono {r s : M → M → Prop} (h : ∀ x y, r x y → s x y) : co
   to_additive add_con_gen_of_add_con
       "Additive congruence relations equal the smallest\nadditive congruence relation in which they are contained."]
 theorem conGen_of_con (c : Con M) : conGen c = c :=
-  le_antisymm (by rw [con_gen_eq] <;> exact infₛ_le fun _ _ => id) ConGen.Rel.of
+  le_antisymm (by rw [con_gen_eq] <;> exact sInf_le fun _ _ => id) ConGen.Rel.of
 #align con.con_gen_of_con Con.conGen_of_con
 #align add_con.add_con_gen_of_con AddCon.addConGen_of_addCon
 -/
@@ -686,44 +686,44 @@ theorem sup_def {c d : Con M} : c ⊔ d = conGen (c.R ⊔ d.R) := by rw [sup_eq_
 #align con.sup_def Con.sup_def
 #align add_con.sup_def AddCon.sup_def
 
-/- warning: con.Sup_eq_con_gen -> Con.supₛ_eq_conGen is a dubious translation:
+/- warning: con.Sup_eq_con_gen -> Con.sSup_eq_conGen is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] (S : Set.{u1} (Con.{u1} M _inst_1)), Eq.{succ u1} (Con.{u1} M _inst_1) (SupSet.supₛ.{u1} (Con.{u1} M _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Con.{u1} M _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Con.{u1} M _inst_1) (Con.completeLattice.{u1} M _inst_1))) S) (conGen.{u1} M _inst_1 (fun (x : M) (y : M) => Exists.{succ u1} (Con.{u1} M _inst_1) (fun (c : Con.{u1} M _inst_1) => And (Membership.Mem.{u1, u1} (Con.{u1} M _inst_1) (Set.{u1} (Con.{u1} M _inst_1)) (Set.hasMem.{u1} (Con.{u1} M _inst_1)) c S) (coeFn.{succ u1, succ u1} (Con.{u1} M _inst_1) (fun (_x : Con.{u1} M _inst_1) => M -> M -> Prop) (Con.hasCoeToFun.{u1} M _inst_1) c x y))))
+  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] (S : Set.{u1} (Con.{u1} M _inst_1)), Eq.{succ u1} (Con.{u1} M _inst_1) (SupSet.sSup.{u1} (Con.{u1} M _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Con.{u1} M _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Con.{u1} M _inst_1) (Con.completeLattice.{u1} M _inst_1))) S) (conGen.{u1} M _inst_1 (fun (x : M) (y : M) => Exists.{succ u1} (Con.{u1} M _inst_1) (fun (c : Con.{u1} M _inst_1) => And (Membership.Mem.{u1, u1} (Con.{u1} M _inst_1) (Set.{u1} (Con.{u1} M _inst_1)) (Set.hasMem.{u1} (Con.{u1} M _inst_1)) c S) (coeFn.{succ u1, succ u1} (Con.{u1} M _inst_1) (fun (_x : Con.{u1} M _inst_1) => M -> M -> Prop) (Con.hasCoeToFun.{u1} M _inst_1) c x y))))
 but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] (S : Set.{u1} (Con.{u1} M _inst_1)), Eq.{succ u1} (Con.{u1} M _inst_1) (SupSet.supₛ.{u1} (Con.{u1} M _inst_1) (CompleteLattice.toSupSet.{u1} (Con.{u1} M _inst_1) (Con.instCompleteLatticeCon.{u1} M _inst_1)) S) (conGen.{u1} M _inst_1 (fun (x : M) (y : M) => Exists.{succ u1} (Con.{u1} M _inst_1) (fun (c : Con.{u1} M _inst_1) => And (Membership.mem.{u1, u1} (Con.{u1} M _inst_1) (Set.{u1} (Con.{u1} M _inst_1)) (Set.instMembershipSet.{u1} (Con.{u1} M _inst_1)) c S) (FunLike.coe.{succ u1, succ u1, succ u1} (Con.{u1} M _inst_1) M (fun (_x : M) => (fun (x._@.Mathlib.GroupTheory.Congruence._hyg.479 : M) => M -> Prop) _x) (Con.instFunLikeConForAllProp.{u1} M _inst_1) c x y))))
-Case conversion may be inaccurate. Consider using '#align con.Sup_eq_con_gen Con.supₛ_eq_conGenₓ'. -/
+  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] (S : Set.{u1} (Con.{u1} M _inst_1)), Eq.{succ u1} (Con.{u1} M _inst_1) (SupSet.sSup.{u1} (Con.{u1} M _inst_1) (CompleteLattice.toSupSet.{u1} (Con.{u1} M _inst_1) (Con.instCompleteLatticeCon.{u1} M _inst_1)) S) (conGen.{u1} M _inst_1 (fun (x : M) (y : M) => Exists.{succ u1} (Con.{u1} M _inst_1) (fun (c : Con.{u1} M _inst_1) => And (Membership.mem.{u1, u1} (Con.{u1} M _inst_1) (Set.{u1} (Con.{u1} M _inst_1)) (Set.instMembershipSet.{u1} (Con.{u1} M _inst_1)) c S) (FunLike.coe.{succ u1, succ u1, succ u1} (Con.{u1} M _inst_1) M (fun (_x : M) => (fun (x._@.Mathlib.GroupTheory.Congruence._hyg.479 : M) => M -> Prop) _x) (Con.instFunLikeConForAllProp.{u1} M _inst_1) c x y))))
+Case conversion may be inaccurate. Consider using '#align con.Sup_eq_con_gen Con.sSup_eq_conGenₓ'. -/
 /-- The supremum of a set of congruence relations `S` equals the smallest congruence relation
     containing the binary relation 'there exists `c ∈ S` such that `x` is related to `y` by
     `c`'. -/
 @[to_additive Sup_eq_add_con_gen
       "The supremum of a set of additive congruence relations `S` equals\nthe smallest additive congruence relation containing the binary relation 'there exists `c ∈ S`\nsuch that `x` is related to `y` by `c`'."]
-theorem supₛ_eq_conGen (S : Set (Con M)) : supₛ S = conGen fun x y => ∃ c : Con M, c ∈ S ∧ c x y :=
+theorem sSup_eq_conGen (S : Set (Con M)) : sSup S = conGen fun x y => ∃ c : Con M, c ∈ S ∧ c x y :=
   by
   rw [con_gen_eq]
   apply congr_arg Inf
   ext
   exact ⟨fun h _ _ ⟨r, hr⟩ => h hr.1 hr.2, fun h r hS _ _ hr => h _ _ ⟨r, hS, hr⟩⟩
-#align con.Sup_eq_con_gen Con.supₛ_eq_conGen
-#align add_con.Sup_eq_add_con_gen AddCon.supₛ_eq_addConGen
+#align con.Sup_eq_con_gen Con.sSup_eq_conGen
+#align add_con.Sup_eq_add_con_gen AddCon.sSup_eq_addConGen
 
-/- warning: con.Sup_def -> Con.supₛ_def is a dubious translation:
+/- warning: con.Sup_def -> Con.sSup_def is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] {S : Set.{u1} (Con.{u1} M _inst_1)}, Eq.{succ u1} (Con.{u1} M _inst_1) (SupSet.supₛ.{u1} (Con.{u1} M _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Con.{u1} M _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Con.{u1} M _inst_1) (Con.completeLattice.{u1} M _inst_1))) S) (conGen.{u1} M _inst_1 (SupSet.supₛ.{u1} (M -> M -> Prop) (Pi.supSet.{u1, u1} M (fun (ᾰ : M) => M -> Prop) (fun (i : M) => Pi.supSet.{u1, 0} M (fun (ᾰ : M) => Prop) (fun (i : M) => CompleteSemilatticeSup.toHasSup.{0} Prop (CompleteLattice.toCompleteSemilatticeSup.{0} Prop Prop.completeLattice)))) (Set.image.{u1, u1} (Con.{u1} M _inst_1) (M -> M -> Prop) (coeFn.{succ u1, succ u1} (Con.{u1} M _inst_1) (fun (ᾰ : Con.{u1} M _inst_1) => M -> M -> Prop) (Con.hasCoeToFun.{u1} M _inst_1)) S)))
+  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] {S : Set.{u1} (Con.{u1} M _inst_1)}, Eq.{succ u1} (Con.{u1} M _inst_1) (SupSet.sSup.{u1} (Con.{u1} M _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Con.{u1} M _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Con.{u1} M _inst_1) (Con.completeLattice.{u1} M _inst_1))) S) (conGen.{u1} M _inst_1 (SupSet.sSup.{u1} (M -> M -> Prop) (Pi.supSet.{u1, u1} M (fun (ᾰ : M) => M -> Prop) (fun (i : M) => Pi.supSet.{u1, 0} M (fun (ᾰ : M) => Prop) (fun (i : M) => CompleteSemilatticeSup.toHasSup.{0} Prop (CompleteLattice.toCompleteSemilatticeSup.{0} Prop Prop.completeLattice)))) (Set.image.{u1, u1} (Con.{u1} M _inst_1) (M -> M -> Prop) (coeFn.{succ u1, succ u1} (Con.{u1} M _inst_1) (fun (ᾰ : Con.{u1} M _inst_1) => M -> M -> Prop) (Con.hasCoeToFun.{u1} M _inst_1)) S)))
 but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] {S : Set.{u1} (Con.{u1} M _inst_1)}, Eq.{succ u1} (Con.{u1} M _inst_1) (SupSet.supₛ.{u1} (Con.{u1} M _inst_1) (CompleteLattice.toSupSet.{u1} (Con.{u1} M _inst_1) (Con.instCompleteLatticeCon.{u1} M _inst_1)) S) (conGen.{u1} M _inst_1 (SupSet.supₛ.{u1} (M -> M -> Prop) (Pi.supSet.{u1, u1} M (fun (ᾰ : M) => M -> Prop) (fun (i : M) => Pi.supSet.{u1, 0} M (fun (ᾰ : M) => Prop) (fun (i : M) => CompleteBooleanAlgebra.toSupSet.{0} Prop Prop.completeBooleanAlgebra))) (Set.image.{u1, u1} (Con.{u1} M _inst_1) (M -> M -> Prop) (FunLike.coe.{succ u1, succ u1, succ u1} (Con.{u1} M _inst_1) M (fun (ᾰ : M) => (fun (x._@.Mathlib.GroupTheory.Congruence._hyg.479 : M) => M -> Prop) ᾰ) (Con.instFunLikeConForAllProp.{u1} M _inst_1)) S)))
-Case conversion may be inaccurate. Consider using '#align con.Sup_def Con.supₛ_defₓ'. -/
+  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] {S : Set.{u1} (Con.{u1} M _inst_1)}, Eq.{succ u1} (Con.{u1} M _inst_1) (SupSet.sSup.{u1} (Con.{u1} M _inst_1) (CompleteLattice.toSupSet.{u1} (Con.{u1} M _inst_1) (Con.instCompleteLatticeCon.{u1} M _inst_1)) S) (conGen.{u1} M _inst_1 (SupSet.sSup.{u1} (M -> M -> Prop) (Pi.supSet.{u1, u1} M (fun (ᾰ : M) => M -> Prop) (fun (i : M) => Pi.supSet.{u1, 0} M (fun (ᾰ : M) => Prop) (fun (i : M) => CompleteBooleanAlgebra.toSupSet.{0} Prop Prop.completeBooleanAlgebra))) (Set.image.{u1, u1} (Con.{u1} M _inst_1) (M -> M -> Prop) (FunLike.coe.{succ u1, succ u1, succ u1} (Con.{u1} M _inst_1) M (fun (ᾰ : M) => (fun (x._@.Mathlib.GroupTheory.Congruence._hyg.479 : M) => M -> Prop) ᾰ) (Con.instFunLikeConForAllProp.{u1} M _inst_1)) S)))
+Case conversion may be inaccurate. Consider using '#align con.Sup_def Con.sSup_defₓ'. -/
 /-- The supremum of a set of congruence relations is the same as the smallest congruence relation
     containing the supremum of the set's image under the map to the underlying binary relation. -/
 @[to_additive
       "The supremum of a set of additive congruence relations is the same as the smallest\nadditive congruence relation containing the supremum of the set's image under the map to the\nunderlying binary relation."]
-theorem supₛ_def {S : Set (Con M)} :
-    supₛ S = conGen (supₛ (@Set.image (Con M) (M → M → Prop) coeFn S)) :=
+theorem sSup_def {S : Set (Con M)} :
+    sSup S = conGen (sSup (@Set.image (Con M) (M → M → Prop) coeFn S)) :=
   by
-  rw [Sup_eq_con_gen, supₛ_image]
+  rw [Sup_eq_con_gen, sSup_image]
   congr with (x y)
-  simp only [supₛ_image, supᵢ_apply, supᵢ_Prop_eq, exists_prop, rel_eq_coe]
-#align con.Sup_def Con.supₛ_def
-#align add_con.Sup_def AddCon.supₛ_def
+  simp only [sSup_image, iSup_apply, iSup_Prop_eq, exists_prop, rel_eq_coe]
+#align con.Sup_def Con.sSup_def
+#align add_con.Sup_def AddCon.sSup_def
 
 variable (M)
 

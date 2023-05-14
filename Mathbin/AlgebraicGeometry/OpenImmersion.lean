@@ -1497,7 +1497,7 @@ def OpenCover.finiteSubcover {X : Scheme} (𝒰 : OpenCover X) [H : CompactSpace
     by
     intro x
     have h' : x ∈ (⊤ : Set X.carrier) := trivial
-    rw [← Classical.choose_spec this, Set.mem_unionᵢ] at h'
+    rw [← Classical.choose_spec this, Set.mem_iUnion] at h'
     rcases h' with ⟨y, _, ⟨hy, rfl⟩, hy'⟩
     exact ⟨⟨y, hy⟩, hy'⟩
   exact
@@ -2053,28 +2053,28 @@ def Scheme.OpenCover.pullbackCover {X : Scheme} (𝒰 : X.OpenCover) {W : Scheme
       infer_instance
 #align algebraic_geometry.Scheme.open_cover.pullback_cover AlgebraicGeometry.Scheme.OpenCover.pullbackCover
 
-theorem Scheme.OpenCover.unionᵢ_range {X : Scheme} (𝒰 : X.OpenCover) :
+theorem Scheme.OpenCover.iUnion_range {X : Scheme} (𝒰 : X.OpenCover) :
     (⋃ i, Set.range (𝒰.map i).1.base) = Set.univ :=
   by
   rw [Set.eq_univ_iff_forall]
   intro x
-  rw [Set.mem_unionᵢ]
+  rw [Set.mem_iUnion]
   exact ⟨𝒰.f x, 𝒰.covers x⟩
-#align algebraic_geometry.Scheme.open_cover.Union_range AlgebraicGeometry.Scheme.OpenCover.unionᵢ_range
+#align algebraic_geometry.Scheme.open_cover.Union_range AlgebraicGeometry.Scheme.OpenCover.iUnion_range
 
-theorem Scheme.OpenCover.supᵢ_opensRange {X : Scheme} (𝒰 : X.OpenCover) :
+theorem Scheme.OpenCover.iSup_opensRange {X : Scheme} (𝒰 : X.OpenCover) :
     (⨆ i, (𝒰.map i).opensRange) = ⊤ :=
   Opens.ext <| by
     rw [opens.coe_supr]
     exact 𝒰.Union_range
-#align algebraic_geometry.Scheme.open_cover.supr_opens_range AlgebraicGeometry.Scheme.OpenCover.supᵢ_opensRange
+#align algebraic_geometry.Scheme.open_cover.supr_opens_range AlgebraicGeometry.Scheme.OpenCover.iSup_opensRange
 
 theorem Scheme.OpenCover.compactSpace {X : Scheme} (𝒰 : X.OpenCover) [Finite 𝒰.J]
     [H : ∀ i, CompactSpace (𝒰.obj i).carrier] : CompactSpace X.carrier :=
   by
   cases nonempty_fintype 𝒰.J
   rw [← isCompact_univ_iff, ← 𝒰.Union_range]
-  apply isCompact_unionᵢ
+  apply isCompact_iUnion
   intro i
   rw [isCompact_iff_compactSpace]
   exact

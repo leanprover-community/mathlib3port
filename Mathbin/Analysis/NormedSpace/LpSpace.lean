@@ -123,7 +123,7 @@ theorem memℓp_gen' {C : ℝ} {f : ∀ i, E i} (hf : ∀ s : Finset α, (∑ i 
   apply hasSum_of_isLUB_of_nonneg
   · intro b
     exact Real.rpow_nonneg_of_nonneg (norm_nonneg _) _
-  apply isLUB_csupᵢ
+  apply isLUB_ciSup
   use C
   rintro - ⟨s, rfl⟩
   exact hf s
@@ -410,7 +410,7 @@ theorem norm_eq_csupr (f : lp E ∞) : ‖f‖ = ⨆ i, ‖f i‖ :=
 theorem isLUB_norm [Nonempty α] (f : lp E ∞) : IsLUB (Set.range fun i => ‖f i‖) ‖f‖ :=
   by
   rw [lp.norm_eq_csupr]
-  exact isLUB_csupᵢ (lp.memℓp f)
+  exact isLUB_ciSup (lp.memℓp f)
 #align lp.is_lub_norm lp.isLUB_norm
 
 theorem norm_eq_tsum_rpow (hp : 0 < p.toReal) (f : lp E p) :
@@ -447,7 +447,7 @@ theorem norm_nonneg' (f : lp E p) : 0 ≤ ‖f‖ :=
   · simp [lp.norm_eq_card_dsupport f]
   · cases' isEmpty_or_nonempty α with _i _i <;> skip
     · rw [lp.norm_eq_csupr]
-      simp [Real.csupᵢ_empty]
+      simp [Real.ciSup_empty]
     inhabit α
     exact (norm_nonneg (f default)).trans ((lp.isLUB_norm f).1 ⟨default, rfl⟩)
   · rw [lp.norm_eq_tsum_rpow hp f]
@@ -897,7 +897,7 @@ theorem infty_coeFn_int_cast (z : ℤ) : ⇑(z : lp B ∞) = z :=
 
 instance [Nonempty I] : NormOneClass (lp B ∞)
     where norm_one := by
-    simp_rw [lp.norm_eq_csupr, infty_coe_fn_one, Pi.one_apply, norm_one, csupᵢ_const]
+    simp_rw [lp.norm_eq_csupr, infty_coe_fn_one, Pi.one_apply, norm_one, ciSup_const]
 
 instance inftyNormedRing : NormedRing (lp B ∞) :=
   { lp.inftyRing, lp.nonUnitalNormedRing with }

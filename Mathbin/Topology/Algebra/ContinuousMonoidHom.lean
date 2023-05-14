@@ -301,11 +301,11 @@ theorem closedEmbedding_toContinuousMap [ContinuousMul B] [T2Space B] :
         by
         rw [this, compl_compl]
         refine' (ContinuousMap.isOpen_gen isCompact_singleton isOpen_compl_singleton).union _
-        repeat' apply isOpen_unionᵢ; intro
+        repeat' apply isOpen_iUnion; intro
         repeat' apply IsOpen.inter
         all_goals apply ContinuousMap.isOpen_gen isCompact_singleton; assumption
-      simp_rw [Set.compl_union, Set.compl_unionᵢ, Set.image_singleton, Set.singleton_subset_iff,
-        Set.ext_iff, Set.mem_inter_iff, Set.mem_interᵢ, Set.mem_compl_iff]
+      simp_rw [Set.compl_union, Set.compl_iUnion, Set.image_singleton, Set.singleton_subset_iff,
+        Set.ext_iff, Set.mem_inter_iff, Set.mem_iInter, Set.mem_compl_iff]
       refine' fun f => ⟨_, _⟩
       · rintro ⟨f, rfl⟩
         exact

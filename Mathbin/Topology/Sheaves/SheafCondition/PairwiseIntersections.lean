@@ -343,9 +343,9 @@ Every cone over `F(U) ⟶ F(U ⊓ V)` and `F(V) ⟶ F(U ⊓ V)` factors through 
 def interUnionPullbackConeLift : s.pt ⟶ F.1.obj (op (U ⊔ V)) :=
   by
   let ι : ULift.{w} walking_pair → opens X := fun j => walking_pair.cases_on j.down U V
-  have hι : U ⊔ V = supᵢ ι := by
+  have hι : U ⊔ V = iSup ι := by
     ext
-    rw [opens.coe_supr, Set.mem_unionᵢ]
+    rw [opens.coe_supr, Set.mem_iUnion]
     constructor
     · rintro (h | h)
       exacts[⟨⟨walking_pair.left⟩, h⟩, ⟨⟨walking_pair.right⟩, h⟩]
@@ -400,9 +400,9 @@ theorem interUnionPullbackConeLift_right :
 def isLimitPullbackCone : IsLimit (interUnionPullbackCone F U V) :=
   by
   let ι : ULift.{w} walking_pair → opens X := fun ⟨j⟩ => walking_pair.cases_on j U V
-  have hι : U ⊔ V = supᵢ ι := by
+  have hι : U ⊔ V = iSup ι := by
     ext
-    rw [opens.coe_supr, Set.mem_unionᵢ]
+    rw [opens.coe_supr, Set.mem_iUnion]
     constructor
     · rintro (h | h)
       exacts[⟨⟨walking_pair.left⟩, h⟩, ⟨⟨walking_pair.right⟩, h⟩]

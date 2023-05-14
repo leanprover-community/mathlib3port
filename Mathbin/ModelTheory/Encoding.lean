@@ -168,14 +168,14 @@ theorem card_sigma : (#Σn, L.term (Sum α (Fin n))) = max ℵ₀ (#Sum α (Σi,
   · rw [mk_sigma]
     refine' (sum_le_supr_lift _).trans _
     rw [mk_nat, lift_aleph_0, mul_eq_max_of_aleph_0_le_left le_rfl, max_le_iff,
-      csupᵢ_le_iff' (bdd_above_range _)]
+      ciSup_le_iff' (bdd_above_range _)]
     · refine' ⟨le_max_left _ _, fun i => card_le.trans _⟩
       refine' max_le (le_max_left _ _) _
       rw [← add_eq_max le_rfl, mk_sum, mk_sum, mk_sum, add_comm (Cardinal.lift (#α)), lift_add,
         add_assoc, lift_lift, lift_lift, mk_fin, lift_nat_cast]
       exact add_le_add_right (nat_lt_aleph_0 _).le _
     · rw [← one_le_iff_ne_zero]
-      refine' trans _ (le_csupᵢ (bdd_above_range _) 1)
+      refine' trans _ (le_ciSup (bdd_above_range _) 1)
       rw [one_le_iff_ne_zero, mk_ne_zero_iff]
       exact ⟨var (Sum.inr 0)⟩
   · rw [max_le_iff, ← infinite_iff]

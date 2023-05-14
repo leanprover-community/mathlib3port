@@ -196,8 +196,8 @@ theorem jacobson_eq_maximalIdeal (I : Ideal R) (h : I ≠ ⊤) :
     I.jacobson = LocalRing.maximalIdeal R :=
   by
   apply le_antisymm
-  · exact infₛ_le ⟨LocalRing.le_maximalIdeal h, LocalRing.maximalIdeal.isMaximal R⟩
-  · exact le_infₛ fun J (hJ : I ≤ J ∧ J.IsMaximal) => le_of_eq (LocalRing.eq_maximalIdeal hJ.2).symm
+  · exact sInf_le ⟨LocalRing.le_maximalIdeal h, LocalRing.maximalIdeal.isMaximal R⟩
+  · exact le_sInf fun J (hJ : I ≤ J ∧ J.IsMaximal) => le_of_eq (LocalRing.eq_maximalIdeal hJ.2).symm
 #align local_ring.jacobson_eq_maximal_ideal LocalRing.jacobson_eq_maximalIdeal
 
 end LocalRing

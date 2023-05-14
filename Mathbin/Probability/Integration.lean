@@ -72,8 +72,8 @@ theorem lintegral_mul_indicator_eq_lintegral_mul_lintegral_indicator {Mf mΩ : M
       right_distrib, h_ind_f', h_ind_g]
   · intro f h_meas_f h_mono_f h_ind_f
     have h_measM_f : ∀ n, Measurable (f n) := fun n => (h_meas_f n).mono hMf le_rfl
-    simp_rw [ENNReal.supᵢ_mul]
-    rw [lintegral_supr h_measM_f h_mono_f, lintegral_supr, ENNReal.supᵢ_mul]
+    simp_rw [ENNReal.iSup_mul]
+    rw [lintegral_supr h_measM_f h_mono_f, lintegral_supr, ENNReal.iSup_mul]
     · simp_rw [← h_ind_f]
     · exact fun n => h_mul_indicator _ (h_measM_f n)
     · exact fun m n h_le a => mul_le_mul_right' (h_mono_f h_le a) _
@@ -105,8 +105,8 @@ theorem lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurableSpace
       h_ind_f', h_ind_g']
   · intro f' h_meas_f' h_mono_f' h_ind_f'
     have h_measM_f' : ∀ n, Measurable (f' n) := fun n => (h_meas_f' n).mono hMg le_rfl
-    simp_rw [ENNReal.mul_supᵢ]
-    rw [lintegral_supr, lintegral_supr h_measM_f' h_mono_f', ENNReal.mul_supᵢ]
+    simp_rw [ENNReal.mul_iSup]
+    rw [lintegral_supr, lintegral_supr h_measM_f' h_mono_f', ENNReal.mul_iSup]
     · simp_rw [← h_ind_f']
     · exact fun n => h_measM_f.mul (h_measM_f' n)
     · exact fun n m (h_le : n ≤ m) a => mul_le_mul_left' (h_mono_f' h_le a) _

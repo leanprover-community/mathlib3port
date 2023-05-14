@@ -151,7 +151,7 @@ theorem AnalyticSet.image_of_continuous {β : Type _} [TopologicalSpace β] {s :
 #align measure_theory.analytic_set.image_of_continuous MeasureTheory.AnalyticSet.image_of_continuous
 
 /-- A countable intersection of analytic sets is analytic. -/
-theorem AnalyticSet.interᵢ [hι : Nonempty ι] [Countable ι] [T2Space α] {s : ι → Set α}
+theorem AnalyticSet.iInter [hι : Nonempty ι] [Countable ι] [T2Space α] {s : ι → Set α}
     (hs : ∀ n, AnalyticSet (s n)) : AnalyticSet (⋂ n, s n) :=
   by
   rcases hι with ⟨i₀⟩
@@ -165,7 +165,7 @@ theorem AnalyticSet.interᵢ [hι : Nonempty ι] [Countable ι] [T2Space α] {s 
   let γ := ∀ n, β n
   let t : Set γ := ⋂ n, { x | f n (x n) = f i₀ (x i₀) }
   have t_closed : IsClosed t := by
-    apply isClosed_interᵢ
+    apply isClosed_iInter
     intro n
     exact
       isClosed_eq ((f_cont n).comp (continuous_apply n)) ((f_cont i₀).comp (continuous_apply i₀))
@@ -193,10 +193,10 @@ theorem AnalyticSet.interᵢ [hι : Nonempty ι] [Countable ι] [T2Space α] {s 
       exact hx i₀
   rw [← F_range]
   exact analytic_set_range_of_polish_space F_cont
-#align measure_theory.analytic_set.Inter MeasureTheory.AnalyticSet.interᵢ
+#align measure_theory.analytic_set.Inter MeasureTheory.AnalyticSet.iInter
 
 /-- A countable union of analytic sets is analytic. -/
-theorem AnalyticSet.unionᵢ [Countable ι] {s : ι → Set α} (hs : ∀ n, AnalyticSet (s n)) :
+theorem AnalyticSet.iUnion [Countable ι] {s : ι → Set α} (hs : ∀ n, AnalyticSet (s n)) :
     AnalyticSet (⋃ n, s n) :=
   by
   /- For the proof, write each `s n` as the continuous image under a map `f n` of a
@@ -218,7 +218,7 @@ theorem AnalyticSet.unionᵢ [Countable ι] {s : ι → Set α} (hs : ∀ n, Ana
     rw [← f_range n]
   rw [← F_range]
   exact analytic_set_range_of_polish_space F_cont
-#align measure_theory.analytic_set.Union MeasureTheory.AnalyticSet.unionᵢ
+#align measure_theory.analytic_set.Union MeasureTheory.AnalyticSet.iUnion
 
 theorem IsClosed.analyticSet [PolishSpace α] {s : Set α} (hs : IsClosed s) : AnalyticSet s :=
   by
@@ -286,7 +286,7 @@ def MeasurablySeparable {α : Type _} [MeasurableSpace α] (s t : Set α) : Prop
   ∃ u, s ⊆ u ∧ Disjoint t u ∧ MeasurableSet u
 #align measure_theory.measurably_separable MeasureTheory.MeasurablySeparable
 
-theorem MeasurablySeparable.unionᵢ [Countable ι] {α : Type _} [MeasurableSpace α] {s t : ι → Set α}
+theorem MeasurablySeparable.iUnion [Countable ι] {α : Type _} [MeasurableSpace α] {s t : ι → Set α}
     (h : ∀ m n, MeasurablySeparable (s m) (t n)) : MeasurablySeparable (⋃ n, s n) (⋃ m, t m) :=
   by
   choose u hsu htu hu using h
@@ -297,9 +297,9 @@ theorem MeasurablySeparable.unionᵢ [Countable ι] {α : Type _} [MeasurableSpa
     intro n m
     apply Disjoint.mono_right _ (htu m n)
     apply Inter_subset
-  · refine' MeasurableSet.unionᵢ fun m => _
-    exact MeasurableSet.interᵢ fun n => hu m n
-#align measure_theory.measurably_separable.Union MeasureTheory.MeasurablySeparable.unionᵢ
+  · refine' MeasurableSet.iUnion fun m => _
+    exact MeasurableSet.iInter fun n => hu m n
+#align measure_theory.measurably_separable.Union MeasureTheory.MeasurablySeparable.iUnion
 
 /-- The hard part of the Lusin separation theorem saying that two disjoint analytic sets are
 contained in disjoint Borel sets (see the full statement in `analytic_set.measurably_separable`).
@@ -511,14 +511,14 @@ theorem measurableSet_range_of_continuous_injective {β : Type _} [TopologicalSp
       by
       intro b
       refine' is_closed_closure.measurable_set.inter _
-      refine' MeasurableSet.interᵢ fun s => _
-      exact MeasurableSet.interᵢ fun hs => (q_meas _).diffₓ (q_meas _)
+      refine' MeasurableSet.iInter fun s => _
+      exact MeasurableSet.iInter fun hs => (q_meas _).diffₓ (q_meas _)
     have F_meas : ∀ n, MeasurableSet (F n) := by
       intro n
-      refine' MeasurableSet.unionᵢ fun s => _
-      exact MeasurableSet.unionᵢ fun hs => E_meas _
+      refine' MeasurableSet.iUnion fun s => _
+      exact MeasurableSet.iUnion fun hs => E_meas _
     rw [this]
-    exact MeasurableSet.interᵢ fun n => F_meas n
+    exact MeasurableSet.iInter fun n => F_meas n
   -- we check both inclusions.
   apply subset.antisymm
   -- we start with the easy inclusion `range f ⊆ ⋂ F n`. One just needs to unfold the definitions.
@@ -765,13 +765,13 @@ theorem measurableSet_exists_tendsto [hγ : OpensMeasurableSpace γ] [Countable 
   simp_rw [and_iff_right (hl.map _),
     Filter.HasBasis.le_basis_iff (this _).to_hasBasis Metric.uniformity_basis_dist_inv_nat_succ,
     Set.setOf_forall]
-  refine' MeasurableSet.binterᵢ Set.countable_univ fun K _ => _
+  refine' MeasurableSet.biInter Set.countable_univ fun K _ => _
   simp_rw [Set.setOf_exists]
-  refine' MeasurableSet.bunionᵢ Set.countable_univ fun N hN => _
+  refine' MeasurableSet.biUnion Set.countable_univ fun N hN => _
   simp_rw [prod_image_image_eq, image_subset_iff, prod_subset_iff, Set.setOf_forall]
   exact
-    MeasurableSet.binterᵢ (to_countable (u N)) fun i _ =>
-      MeasurableSet.binterᵢ (to_countable (u N)) fun j _ =>
+    MeasurableSet.biInter (to_countable (u N)) fun i _ =>
+      MeasurableSet.biInter (to_countable (u N)) fun j _ =>
         measurableSet_lt (Measurable.dist (hf i) (hf j)) measurable_const
 #align measure_theory.measurable_set_exists_tendsto MeasureTheory.measurableSet_exists_tendsto
 

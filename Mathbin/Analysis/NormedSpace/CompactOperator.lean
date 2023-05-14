@@ -612,7 +612,7 @@ theorem isClosed_setOf_isCompactOperator {𝕜₁ 𝕜₂ : Type _} [Nontriviall
     change IsCompactOperator (u : M₁ →ₛₗ[σ₁₂] M₂)
     rw [isCompactOperator_iff_isCompact_closure_image_closedBall (u : M₁ →ₛₗ[σ₁₂] M₂) zero_lt_one]
     exact isCompact_of_totallyBounded_isClosed this.closure isClosed_closure
-  rw [totallyBounded_iff_subset_finite_unionᵢ_nhds_zero]
+  rw [totallyBounded_iff_subset_finite_iUnion_nhds_zero]
   intro U hU
   rcases exists_nhds_zero_half hU with ⟨V, hV, hVU⟩
   let SV : Set M₁ × Set M₂ := ⟨closed_ball 0 1, -V⟩

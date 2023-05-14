@@ -69,7 +69,7 @@ def MeasureTheory.SignedMeasure.toComplexMeasure (s t : SignedMeasure α) : Comp
   measureOf' i := ⟨s i, t i⟩
   empty' := by rw [s.empty, t.empty] <;> rfl
   not_measurable' i hi := by rw [s.not_measurable hi, t.not_measurable hi] <;> rfl
-  m_Union' f hf hfdisj := (Complex.hasSum_iff _ _).2 ⟨s.m_unionᵢ hf hfdisj, t.m_unionᵢ hf hfdisj⟩
+  m_Union' f hf hfdisj := (Complex.hasSum_iff _ _).2 ⟨s.m_iUnion hf hfdisj, t.m_iUnion hf hfdisj⟩
 #align measure_theory.signed_measure.to_complex_measure MeasureTheory.SignedMeasure.toComplexMeasure
 
 theorem MeasureTheory.SignedMeasure.toComplexMeasure_apply {s t : SignedMeasure α} {i : Set α} :

@@ -164,8 +164,8 @@ instance {X : Compactum} : TopologicalSpace X
   IsOpen U := ∀ F : Ultrafilter X, X.str F ∈ U → U ∈ F
   isOpen_univ _ _ := Filter.univ_sets _
   isOpen_inter S T h3 h4 h5 h6 := Filter.inter_sets _ (h3 _ h6.1) (h4 _ h6.2)
-  isOpen_unionₛ := fun S h1 F ⟨T, hT, h2⟩ =>
-    mem_of_superset (h1 T hT _ h2) (Set.subset_unionₛ_of_mem hT)
+  isOpen_sUnion := fun S h1 F ⟨T, hT, h2⟩ =>
+    mem_of_superset (h1 T hT _ h2) (Set.subset_sUnion_of_mem hT)
 
 theorem isClosed_iff {X : Compactum} (S : Set X) :
     IsClosed S ↔ ∀ F : Ultrafilter X, S ∈ F → X.str F ∈ S :=

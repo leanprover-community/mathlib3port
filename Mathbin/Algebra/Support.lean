@@ -304,35 +304,35 @@ theorem mulSupport_min [LinearOrder M] (f g : α → M) :
 #align function.mul_support_min Function.mulSupport_min
 #align function.support_min Function.support_min
 
-/- warning: function.mul_support_supr -> Function.mulSupport_supᵢ is a dubious translation:
+/- warning: function.mul_support_supr -> Function.mulSupport_iSup is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {M : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : One.{u2} M] [_inst_4 : ConditionallyCompleteLattice.{u2} M] [_inst_5 : Nonempty.{u3} ι] (f : ι -> α -> M), HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Function.mulSupport.{u1, u2} α M _inst_1 (fun (x : α) => supᵢ.{u2, u3} M (ConditionallyCompleteLattice.toHasSup.{u2} M _inst_4) ι (fun (i : ι) => f i x))) (Set.unionᵢ.{u1, u3} α ι (fun (i : ι) => Function.mulSupport.{u1, u2} α M _inst_1 (f i)))
+  forall {α : Type.{u1}} {M : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : One.{u2} M] [_inst_4 : ConditionallyCompleteLattice.{u2} M] [_inst_5 : Nonempty.{u3} ι] (f : ι -> α -> M), HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Function.mulSupport.{u1, u2} α M _inst_1 (fun (x : α) => iSup.{u2, u3} M (ConditionallyCompleteLattice.toHasSup.{u2} M _inst_4) ι (fun (i : ι) => f i x))) (Set.iUnion.{u1, u3} α ι (fun (i : ι) => Function.mulSupport.{u1, u2} α M _inst_1 (f i)))
 but is expected to have type
-  forall {α : Type.{u1}} {M : Type.{u3}} {ι : Sort.{u2}} [_inst_1 : One.{u3} M] [_inst_4 : ConditionallyCompleteLattice.{u3} M] [_inst_5 : Nonempty.{u2} ι] (f : ι -> α -> M), HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Function.mulSupport.{u1, u3} α M _inst_1 (fun (x : α) => supᵢ.{u3, u2} M (ConditionallyCompleteLattice.toSupSet.{u3} M _inst_4) ι (fun (i : ι) => f i x))) (Set.unionᵢ.{u1, u2} α ι (fun (i : ι) => Function.mulSupport.{u1, u3} α M _inst_1 (f i)))
-Case conversion may be inaccurate. Consider using '#align function.mul_support_supr Function.mulSupport_supᵢₓ'. -/
+  forall {α : Type.{u1}} {M : Type.{u3}} {ι : Sort.{u2}} [_inst_1 : One.{u3} M] [_inst_4 : ConditionallyCompleteLattice.{u3} M] [_inst_5 : Nonempty.{u2} ι] (f : ι -> α -> M), HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Function.mulSupport.{u1, u3} α M _inst_1 (fun (x : α) => iSup.{u3, u2} M (ConditionallyCompleteLattice.toSupSet.{u3} M _inst_4) ι (fun (i : ι) => f i x))) (Set.iUnion.{u1, u2} α ι (fun (i : ι) => Function.mulSupport.{u1, u3} α M _inst_1 (f i)))
+Case conversion may be inaccurate. Consider using '#align function.mul_support_supr Function.mulSupport_iSupₓ'. -/
 @[to_additive]
-theorem mulSupport_supᵢ [ConditionallyCompleteLattice M] [Nonempty ι] (f : ι → α → M) :
+theorem mulSupport_iSup [ConditionallyCompleteLattice M] [Nonempty ι] (f : ι → α → M) :
     (mulSupport fun x => ⨆ i, f i x) ⊆ ⋃ i, mulSupport (f i) :=
   by
   rw [mul_support_subset_iff']
   simp only [mem_Union, not_exists, nmem_mul_support]
   intro x hx
-  simp only [hx, csupᵢ_const]
-#align function.mul_support_supr Function.mulSupport_supᵢ
-#align function.support_supr Function.support_supᵢ
+  simp only [hx, ciSup_const]
+#align function.mul_support_supr Function.mulSupport_iSup
+#align function.support_supr Function.support_iSup
 
-/- warning: function.mul_support_infi -> Function.mulSupport_infᵢ is a dubious translation:
+/- warning: function.mul_support_infi -> Function.mulSupport_iInf is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {M : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : One.{u2} M] [_inst_4 : ConditionallyCompleteLattice.{u2} M] [_inst_5 : Nonempty.{u3} ι] (f : ι -> α -> M), HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Function.mulSupport.{u1, u2} α M _inst_1 (fun (x : α) => infᵢ.{u2, u3} M (ConditionallyCompleteLattice.toHasInf.{u2} M _inst_4) ι (fun (i : ι) => f i x))) (Set.unionᵢ.{u1, u3} α ι (fun (i : ι) => Function.mulSupport.{u1, u2} α M _inst_1 (f i)))
+  forall {α : Type.{u1}} {M : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : One.{u2} M] [_inst_4 : ConditionallyCompleteLattice.{u2} M] [_inst_5 : Nonempty.{u3} ι] (f : ι -> α -> M), HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Function.mulSupport.{u1, u2} α M _inst_1 (fun (x : α) => iInf.{u2, u3} M (ConditionallyCompleteLattice.toHasInf.{u2} M _inst_4) ι (fun (i : ι) => f i x))) (Set.iUnion.{u1, u3} α ι (fun (i : ι) => Function.mulSupport.{u1, u2} α M _inst_1 (f i)))
 but is expected to have type
-  forall {α : Type.{u1}} {M : Type.{u3}} {ι : Sort.{u2}} [_inst_1 : One.{u3} M] [_inst_4 : ConditionallyCompleteLattice.{u3} M] [_inst_5 : Nonempty.{u2} ι] (f : ι -> α -> M), HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Function.mulSupport.{u1, u3} α M _inst_1 (fun (x : α) => infᵢ.{u3, u2} M (ConditionallyCompleteLattice.toInfSet.{u3} M _inst_4) ι (fun (i : ι) => f i x))) (Set.unionᵢ.{u1, u2} α ι (fun (i : ι) => Function.mulSupport.{u1, u3} α M _inst_1 (f i)))
-Case conversion may be inaccurate. Consider using '#align function.mul_support_infi Function.mulSupport_infᵢₓ'. -/
+  forall {α : Type.{u1}} {M : Type.{u3}} {ι : Sort.{u2}} [_inst_1 : One.{u3} M] [_inst_4 : ConditionallyCompleteLattice.{u3} M] [_inst_5 : Nonempty.{u2} ι] (f : ι -> α -> M), HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Function.mulSupport.{u1, u3} α M _inst_1 (fun (x : α) => iInf.{u3, u2} M (ConditionallyCompleteLattice.toInfSet.{u3} M _inst_4) ι (fun (i : ι) => f i x))) (Set.iUnion.{u1, u2} α ι (fun (i : ι) => Function.mulSupport.{u1, u3} α M _inst_1 (f i)))
+Case conversion may be inaccurate. Consider using '#align function.mul_support_infi Function.mulSupport_iInfₓ'. -/
 @[to_additive]
-theorem mulSupport_infᵢ [ConditionallyCompleteLattice M] [Nonempty ι] (f : ι → α → M) :
+theorem mulSupport_iInf [ConditionallyCompleteLattice M] [Nonempty ι] (f : ι → α → M) :
     (mulSupport fun x => ⨅ i, f i x) ⊆ ⋃ i, mulSupport (f i) :=
-  @mulSupport_supᵢ _ Mᵒᵈ ι ⟨(1 : M)⟩ _ _ f
-#align function.mul_support_infi Function.mulSupport_infᵢ
-#align function.support_infi Function.support_infᵢ
+  @mulSupport_iSup _ Mᵒᵈ ι ⟨(1 : M)⟩ _ _ f
+#align function.mul_support_infi Function.mulSupport_iInf
+#align function.support_infi Function.support_iInf
 
 #print Function.mulSupport_comp_subset /-
 @[to_additive]
@@ -688,9 +688,9 @@ theorem support_div [GroupWithZero G₀] (f g : α → G₀) :
 
 /- warning: function.mul_support_prod -> Function.mulSupport_prod is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {M : Type.{u3}} [_inst_1 : CommMonoid.{u3} M] (s : Finset.{u1} α) (f : α -> β -> M), HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) (Function.mulSupport.{u2, u3} β M (MulOneClass.toHasOne.{u3} M (Monoid.toMulOneClass.{u3} M (CommMonoid.toMonoid.{u3} M _inst_1))) (fun (x : β) => Finset.prod.{u3, u1} M α _inst_1 s (fun (i : α) => f i x))) (Set.unionᵢ.{u2, succ u1} β α (fun (i : α) => Set.unionᵢ.{u2, 0} β (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) i s) (fun (H : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) i s) => Function.mulSupport.{u2, u3} β M (MulOneClass.toHasOne.{u3} M (Monoid.toMulOneClass.{u3} M (CommMonoid.toMonoid.{u3} M _inst_1))) (f i))))
+  forall {α : Type.{u1}} {β : Type.{u2}} {M : Type.{u3}} [_inst_1 : CommMonoid.{u3} M] (s : Finset.{u1} α) (f : α -> β -> M), HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) (Function.mulSupport.{u2, u3} β M (MulOneClass.toHasOne.{u3} M (Monoid.toMulOneClass.{u3} M (CommMonoid.toMonoid.{u3} M _inst_1))) (fun (x : β) => Finset.prod.{u3, u1} M α _inst_1 s (fun (i : α) => f i x))) (Set.iUnion.{u2, succ u1} β α (fun (i : α) => Set.iUnion.{u2, 0} β (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) i s) (fun (H : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) i s) => Function.mulSupport.{u2, u3} β M (MulOneClass.toHasOne.{u3} M (Monoid.toMulOneClass.{u3} M (CommMonoid.toMonoid.{u3} M _inst_1))) (f i))))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {M : Type.{u3}} [_inst_1 : CommMonoid.{u3} M] (s : Finset.{u2} α) (f : α -> β -> M), HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet.{u1} β) (Function.mulSupport.{u1, u3} β M (Monoid.toOne.{u3} M (CommMonoid.toMonoid.{u3} M _inst_1)) (fun (x : β) => Finset.prod.{u3, u2} M α _inst_1 s (fun (i : α) => f i x))) (Set.unionᵢ.{u1, succ u2} β α (fun (i : α) => Set.unionᵢ.{u1, 0} β (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) i s) (fun (H : Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) i s) => Function.mulSupport.{u1, u3} β M (Monoid.toOne.{u3} M (CommMonoid.toMonoid.{u3} M _inst_1)) (f i))))
+  forall {α : Type.{u2}} {β : Type.{u1}} {M : Type.{u3}} [_inst_1 : CommMonoid.{u3} M] (s : Finset.{u2} α) (f : α -> β -> M), HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet.{u1} β) (Function.mulSupport.{u1, u3} β M (Monoid.toOne.{u3} M (CommMonoid.toMonoid.{u3} M _inst_1)) (fun (x : β) => Finset.prod.{u3, u2} M α _inst_1 s (fun (i : α) => f i x))) (Set.iUnion.{u1, succ u2} β α (fun (i : α) => Set.iUnion.{u1, 0} β (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) i s) (fun (H : Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) i s) => Function.mulSupport.{u1, u3} β M (Monoid.toOne.{u3} M (CommMonoid.toMonoid.{u3} M _inst_1)) (f i))))
 Case conversion may be inaccurate. Consider using '#align function.mul_support_prod Function.mulSupport_prodₓ'. -/
 @[to_additive]
 theorem mulSupport_prod [CommMonoid M] (s : Finset α) (f : α → β → M) :
@@ -704,25 +704,25 @@ theorem mulSupport_prod [CommMonoid M] (s : Finset α) (f : α → β → M) :
 
 /- warning: function.support_prod_subset -> Function.support_prod_subset is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {A : Type.{u3}} [_inst_1 : CommMonoidWithZero.{u3} A] (s : Finset.{u1} α) (f : α -> β -> A), HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) (Function.support.{u2, u3} β A (MulZeroClass.toHasZero.{u3} A (MulZeroOneClass.toMulZeroClass.{u3} A (MonoidWithZero.toMulZeroOneClass.{u3} A (CommMonoidWithZero.toMonoidWithZero.{u3} A _inst_1)))) (fun (x : β) => Finset.prod.{u3, u1} A α (CommMonoidWithZero.toCommMonoid.{u3} A _inst_1) s (fun (i : α) => f i x))) (Set.interᵢ.{u2, succ u1} β α (fun (i : α) => Set.interᵢ.{u2, 0} β (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) i s) (fun (H : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) i s) => Function.support.{u2, u3} β A (MulZeroClass.toHasZero.{u3} A (MulZeroOneClass.toMulZeroClass.{u3} A (MonoidWithZero.toMulZeroOneClass.{u3} A (CommMonoidWithZero.toMonoidWithZero.{u3} A _inst_1)))) (f i))))
+  forall {α : Type.{u1}} {β : Type.{u2}} {A : Type.{u3}} [_inst_1 : CommMonoidWithZero.{u3} A] (s : Finset.{u1} α) (f : α -> β -> A), HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) (Function.support.{u2, u3} β A (MulZeroClass.toHasZero.{u3} A (MulZeroOneClass.toMulZeroClass.{u3} A (MonoidWithZero.toMulZeroOneClass.{u3} A (CommMonoidWithZero.toMonoidWithZero.{u3} A _inst_1)))) (fun (x : β) => Finset.prod.{u3, u1} A α (CommMonoidWithZero.toCommMonoid.{u3} A _inst_1) s (fun (i : α) => f i x))) (Set.iInter.{u2, succ u1} β α (fun (i : α) => Set.iInter.{u2, 0} β (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) i s) (fun (H : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) i s) => Function.support.{u2, u3} β A (MulZeroClass.toHasZero.{u3} A (MulZeroOneClass.toMulZeroClass.{u3} A (MonoidWithZero.toMulZeroOneClass.{u3} A (CommMonoidWithZero.toMonoidWithZero.{u3} A _inst_1)))) (f i))))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {A : Type.{u3}} [_inst_1 : CommMonoidWithZero.{u3} A] (s : Finset.{u2} α) (f : α -> β -> A), HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet.{u1} β) (Function.support.{u1, u3} β A (CommMonoidWithZero.toZero.{u3} A _inst_1) (fun (x : β) => Finset.prod.{u3, u2} A α (CommMonoidWithZero.toCommMonoid.{u3} A _inst_1) s (fun (i : α) => f i x))) (Set.interᵢ.{u1, succ u2} β α (fun (i : α) => Set.interᵢ.{u1, 0} β (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) i s) (fun (H : Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) i s) => Function.support.{u1, u3} β A (CommMonoidWithZero.toZero.{u3} A _inst_1) (f i))))
+  forall {α : Type.{u2}} {β : Type.{u1}} {A : Type.{u3}} [_inst_1 : CommMonoidWithZero.{u3} A] (s : Finset.{u2} α) (f : α -> β -> A), HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet.{u1} β) (Function.support.{u1, u3} β A (CommMonoidWithZero.toZero.{u3} A _inst_1) (fun (x : β) => Finset.prod.{u3, u2} A α (CommMonoidWithZero.toCommMonoid.{u3} A _inst_1) s (fun (i : α) => f i x))) (Set.iInter.{u1, succ u2} β α (fun (i : α) => Set.iInter.{u1, 0} β (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) i s) (fun (H : Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) i s) => Function.support.{u1, u3} β A (CommMonoidWithZero.toZero.{u3} A _inst_1) (f i))))
 Case conversion may be inaccurate. Consider using '#align function.support_prod_subset Function.support_prod_subsetₓ'. -/
 theorem support_prod_subset [CommMonoidWithZero A] (s : Finset α) (f : α → β → A) :
     (support fun x => ∏ i in s, f i x) ⊆ ⋂ i ∈ s, support (f i) := fun x hx =>
-  mem_interᵢ₂.2 fun i hi H => hx <| Finset.prod_eq_zero hi H
+  mem_iInter₂.2 fun i hi H => hx <| Finset.prod_eq_zero hi H
 #align function.support_prod_subset Function.support_prod_subset
 
 /- warning: function.support_prod -> Function.support_prod is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {A : Type.{u3}} [_inst_1 : CommMonoidWithZero.{u3} A] [_inst_2 : NoZeroDivisors.{u3} A (MulZeroClass.toHasMul.{u3} A (MulZeroOneClass.toMulZeroClass.{u3} A (MonoidWithZero.toMulZeroOneClass.{u3} A (CommMonoidWithZero.toMonoidWithZero.{u3} A _inst_1)))) (MulZeroClass.toHasZero.{u3} A (MulZeroOneClass.toMulZeroClass.{u3} A (MonoidWithZero.toMulZeroOneClass.{u3} A (CommMonoidWithZero.toMonoidWithZero.{u3} A _inst_1))))] [_inst_3 : Nontrivial.{u3} A] (s : Finset.{u1} α) (f : α -> β -> A), Eq.{succ u2} (Set.{u2} β) (Function.support.{u2, u3} β A (MulZeroClass.toHasZero.{u3} A (MulZeroOneClass.toMulZeroClass.{u3} A (MonoidWithZero.toMulZeroOneClass.{u3} A (CommMonoidWithZero.toMonoidWithZero.{u3} A _inst_1)))) (fun (x : β) => Finset.prod.{u3, u1} A α (CommMonoidWithZero.toCommMonoid.{u3} A _inst_1) s (fun (i : α) => f i x))) (Set.interᵢ.{u2, succ u1} β α (fun (i : α) => Set.interᵢ.{u2, 0} β (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) i s) (fun (H : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) i s) => Function.support.{u2, u3} β A (MulZeroClass.toHasZero.{u3} A (MulZeroOneClass.toMulZeroClass.{u3} A (MonoidWithZero.toMulZeroOneClass.{u3} A (CommMonoidWithZero.toMonoidWithZero.{u3} A _inst_1)))) (f i))))
+  forall {α : Type.{u1}} {β : Type.{u2}} {A : Type.{u3}} [_inst_1 : CommMonoidWithZero.{u3} A] [_inst_2 : NoZeroDivisors.{u3} A (MulZeroClass.toHasMul.{u3} A (MulZeroOneClass.toMulZeroClass.{u3} A (MonoidWithZero.toMulZeroOneClass.{u3} A (CommMonoidWithZero.toMonoidWithZero.{u3} A _inst_1)))) (MulZeroClass.toHasZero.{u3} A (MulZeroOneClass.toMulZeroClass.{u3} A (MonoidWithZero.toMulZeroOneClass.{u3} A (CommMonoidWithZero.toMonoidWithZero.{u3} A _inst_1))))] [_inst_3 : Nontrivial.{u3} A] (s : Finset.{u1} α) (f : α -> β -> A), Eq.{succ u2} (Set.{u2} β) (Function.support.{u2, u3} β A (MulZeroClass.toHasZero.{u3} A (MulZeroOneClass.toMulZeroClass.{u3} A (MonoidWithZero.toMulZeroOneClass.{u3} A (CommMonoidWithZero.toMonoidWithZero.{u3} A _inst_1)))) (fun (x : β) => Finset.prod.{u3, u1} A α (CommMonoidWithZero.toCommMonoid.{u3} A _inst_1) s (fun (i : α) => f i x))) (Set.iInter.{u2, succ u1} β α (fun (i : α) => Set.iInter.{u2, 0} β (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) i s) (fun (H : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) i s) => Function.support.{u2, u3} β A (MulZeroClass.toHasZero.{u3} A (MulZeroOneClass.toMulZeroClass.{u3} A (MonoidWithZero.toMulZeroOneClass.{u3} A (CommMonoidWithZero.toMonoidWithZero.{u3} A _inst_1)))) (f i))))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {A : Type.{u3}} [_inst_1 : CommMonoidWithZero.{u3} A] [_inst_2 : NoZeroDivisors.{u3} A (MulZeroClass.toMul.{u3} A (MulZeroOneClass.toMulZeroClass.{u3} A (MonoidWithZero.toMulZeroOneClass.{u3} A (CommMonoidWithZero.toMonoidWithZero.{u3} A _inst_1)))) (CommMonoidWithZero.toZero.{u3} A _inst_1)] [_inst_3 : Nontrivial.{u3} A] (s : Finset.{u2} α) (f : α -> β -> A), Eq.{succ u1} (Set.{u1} β) (Function.support.{u1, u3} β A (CommMonoidWithZero.toZero.{u3} A _inst_1) (fun (x : β) => Finset.prod.{u3, u2} A α (CommMonoidWithZero.toCommMonoid.{u3} A _inst_1) s (fun (i : α) => f i x))) (Set.interᵢ.{u1, succ u2} β α (fun (i : α) => Set.interᵢ.{u1, 0} β (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) i s) (fun (H : Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) i s) => Function.support.{u1, u3} β A (CommMonoidWithZero.toZero.{u3} A _inst_1) (f i))))
+  forall {α : Type.{u2}} {β : Type.{u1}} {A : Type.{u3}} [_inst_1 : CommMonoidWithZero.{u3} A] [_inst_2 : NoZeroDivisors.{u3} A (MulZeroClass.toMul.{u3} A (MulZeroOneClass.toMulZeroClass.{u3} A (MonoidWithZero.toMulZeroOneClass.{u3} A (CommMonoidWithZero.toMonoidWithZero.{u3} A _inst_1)))) (CommMonoidWithZero.toZero.{u3} A _inst_1)] [_inst_3 : Nontrivial.{u3} A] (s : Finset.{u2} α) (f : α -> β -> A), Eq.{succ u1} (Set.{u1} β) (Function.support.{u1, u3} β A (CommMonoidWithZero.toZero.{u3} A _inst_1) (fun (x : β) => Finset.prod.{u3, u2} A α (CommMonoidWithZero.toCommMonoid.{u3} A _inst_1) s (fun (i : α) => f i x))) (Set.iInter.{u1, succ u2} β α (fun (i : α) => Set.iInter.{u1, 0} β (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) i s) (fun (H : Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) i s) => Function.support.{u1, u3} β A (CommMonoidWithZero.toZero.{u3} A _inst_1) (f i))))
 Case conversion may be inaccurate. Consider using '#align function.support_prod Function.support_prodₓ'. -/
 theorem support_prod [CommMonoidWithZero A] [NoZeroDivisors A] [Nontrivial A] (s : Finset α)
     (f : α → β → A) : (support fun x => ∏ i in s, f i x) = ⋂ i ∈ s, support (f i) :=
   Set.ext fun x => by
-    simp only [support, Ne.def, Finset.prod_eq_zero_iff, mem_set_of_eq, Set.mem_interᵢ, not_exists]
+    simp only [support, Ne.def, Finset.prod_eq_zero_iff, mem_set_of_eq, Set.mem_iInter, not_exists]
 #align function.support_prod Function.support_prod
 
 /- warning: function.mul_support_one_add -> Function.mulSupport_one_add is a dubious translation:

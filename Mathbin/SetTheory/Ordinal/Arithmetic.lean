@@ -774,7 +774,7 @@ theorem sub_nonempty {a b : Ordinal} : { o | a ≤ b + o }.Nonempty :=
 
 /-- `a - b` is the unique ordinal satisfying `b + (a - b) = a` when `b ≤ a`. -/
 instance : Sub Ordinal :=
-  ⟨fun a b => infₛ { o | a ≤ b + o }⟩
+  ⟨fun a b => sInf { o | a ≤ b + o }⟩
 
 /- warning: ordinal.le_add_sub -> Ordinal.le_add_sub is a dubious translation:
 lean 3 declaration is
@@ -783,7 +783,7 @@ but is expected to have type
   forall (a : Ordinal.{u1}) (b : Ordinal.{u1}), LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.add.{u1}) b (HSub.hSub.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHSub.{succ u1} Ordinal.{u1} Ordinal.sub.{u1}) a b))
 Case conversion may be inaccurate. Consider using '#align ordinal.le_add_sub Ordinal.le_add_subₓ'. -/
 theorem le_add_sub (a b : Ordinal) : a ≤ b + (a - b) :=
-  cinfₛ_mem sub_nonempty
+  csInf_mem sub_nonempty
 #align ordinal.le_add_sub Ordinal.le_add_sub
 
 /- warning: ordinal.sub_le -> Ordinal.sub_le is a dubious translation:
@@ -793,7 +793,7 @@ but is expected to have type
   forall {a : Ordinal.{u1}} {b : Ordinal.{u1}} {c : Ordinal.{u1}}, Iff (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (HSub.hSub.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHSub.{succ u1} Ordinal.{u1} Ordinal.sub.{u1}) a b) c) (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.add.{u1}) b c))
 Case conversion may be inaccurate. Consider using '#align ordinal.sub_le Ordinal.sub_leₓ'. -/
 theorem sub_le {a b c : Ordinal} : a - b ≤ c ↔ a ≤ b + c :=
-  ⟨fun h => (le_add_sub a b).trans (add_le_add_left h _), fun h => cinfₛ_le' h⟩
+  ⟨fun h => (le_add_sub a b).trans (add_le_add_left h _), fun h => csInf_le' h⟩
 #align ordinal.sub_le Ordinal.sub_le
 
 /- warning: ordinal.lt_sub -> Ordinal.lt_sub is a dubious translation:
@@ -1353,7 +1353,7 @@ theorem div_nonempty {a b : Ordinal} (h : b ≠ 0) : { o | a < b * succ o }.None
 
 /-- `a / b` is the unique ordinal `o` satisfying `a = b * o + o'` with `o' < b`. -/
 instance : Div Ordinal :=
-  ⟨fun a b => if h : b = 0 then 0 else infₛ { o | a < b * succ o }⟩
+  ⟨fun a b => if h : b = 0 then 0 else sInf { o | a < b * succ o }⟩
 
 /- warning: ordinal.div_zero -> Ordinal.div_zero is a dubious translation:
 lean 3 declaration is
@@ -1368,11 +1368,11 @@ theorem div_zero (a : Ordinal) : a / 0 = 0 :=
 
 /- warning: ordinal.div_def -> Ordinal.div_def is a dubious translation:
 lean 3 declaration is
-  forall (a : Ordinal.{u1}) {b : Ordinal.{u1}}, (Ne.{succ (succ u1)} Ordinal.{u1} b (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1})))) -> (Eq.{succ (succ u1)} Ordinal.{u1} (HDiv.hDiv.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHDiv.{succ u1} Ordinal.{u1} Ordinal.hasDiv.{u1}) a b) (InfSet.infₛ.{succ u1} Ordinal.{u1} (ConditionallyCompleteLattice.toHasInf.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Ordinal.{u1} Ordinal.conditionallyCompleteLinearOrderBot.{u1}))) (setOf.{succ u1} Ordinal.{u1} (fun (o : Ordinal.{u1}) => LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) b (Order.succ.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) Ordinal.succOrder.{u1} o))))))
+  forall (a : Ordinal.{u1}) {b : Ordinal.{u1}}, (Ne.{succ (succ u1)} Ordinal.{u1} b (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1})))) -> (Eq.{succ (succ u1)} Ordinal.{u1} (HDiv.hDiv.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHDiv.{succ u1} Ordinal.{u1} Ordinal.hasDiv.{u1}) a b) (InfSet.sInf.{succ u1} Ordinal.{u1} (ConditionallyCompleteLattice.toHasInf.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Ordinal.{u1} Ordinal.conditionallyCompleteLinearOrderBot.{u1}))) (setOf.{succ u1} Ordinal.{u1} (fun (o : Ordinal.{u1}) => LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) b (Order.succ.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) Ordinal.succOrder.{u1} o))))))
 but is expected to have type
-  forall (a : Ordinal.{u1}) {b : Ordinal.{u1}}, (Ne.{succ (succ u1)} Ordinal.{u1} b (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1}))) -> (Eq.{succ (succ u1)} Ordinal.{u1} (HDiv.hDiv.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHDiv.{succ u1} Ordinal.{u1} Ordinal.div.{u1}) a b) (InfSet.infₛ.{succ u1} Ordinal.{u1} (ConditionallyCompleteLattice.toInfSet.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Ordinal.{u1} Ordinal.instConditionallyCompleteLinearOrderBotOrdinal.{u1}))) (setOf.{succ u1} Ordinal.{u1} (fun (o : Ordinal.{u1}) => LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) b (Order.succ.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) Ordinal.succOrder.{u1} o))))))
+  forall (a : Ordinal.{u1}) {b : Ordinal.{u1}}, (Ne.{succ (succ u1)} Ordinal.{u1} b (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1}))) -> (Eq.{succ (succ u1)} Ordinal.{u1} (HDiv.hDiv.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHDiv.{succ u1} Ordinal.{u1} Ordinal.div.{u1}) a b) (InfSet.sInf.{succ u1} Ordinal.{u1} (ConditionallyCompleteLattice.toInfSet.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Ordinal.{u1} Ordinal.instConditionallyCompleteLinearOrderBotOrdinal.{u1}))) (setOf.{succ u1} Ordinal.{u1} (fun (o : Ordinal.{u1}) => LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) b (Order.succ.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) Ordinal.succOrder.{u1} o))))))
 Case conversion may be inaccurate. Consider using '#align ordinal.div_def Ordinal.div_defₓ'. -/
-theorem div_def (a) {b : Ordinal} (h : b ≠ 0) : a / b = infₛ { o | a < b * succ o } :=
+theorem div_def (a) {b : Ordinal} (h : b ≠ 0) : a / b = sInf { o | a < b * succ o } :=
   dif_neg h
 #align ordinal.div_def Ordinal.div_def
 
@@ -1383,7 +1383,7 @@ but is expected to have type
   forall (a : Ordinal.{u1}) {b : Ordinal.{u1}}, (Ne.{succ (succ u1)} Ordinal.{u1} b (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1}))) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) b (Order.succ.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) Ordinal.succOrder.{u1} (HDiv.hDiv.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHDiv.{succ u1} Ordinal.{u1} Ordinal.div.{u1}) a b))))
 Case conversion may be inaccurate. Consider using '#align ordinal.lt_mul_succ_div Ordinal.lt_mul_succ_divₓ'. -/
 theorem lt_mul_succ_div (a) {b : Ordinal} (h : b ≠ 0) : a < b * succ (a / b) := by
-  rw [div_def a h] <;> exact cinfₛ_mem (div_nonempty h)
+  rw [div_def a h] <;> exact csInf_mem (div_nonempty h)
 #align ordinal.lt_mul_succ_div Ordinal.lt_mul_succ_div
 
 /- warning: ordinal.lt_mul_div_add -> Ordinal.lt_mul_div_add is a dubious translation:
@@ -1404,7 +1404,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ordinal.div_le Ordinal.div_leₓ'. -/
 theorem div_le {a b c : Ordinal} (b0 : b ≠ 0) : a / b ≤ c ↔ a < b * succ c :=
   ⟨fun h => (lt_mul_succ_div a b0).trans_le (mul_le_mul_left' (succ_le_succ_iff.2 h) _), fun h => by
-    rw [div_def a b0] <;> exact cinfₛ_le' h⟩
+    rw [div_def a b0] <;> exact csInf_le' h⟩
 #align ordinal.div_le Ordinal.div_le
 
 /- warning: ordinal.lt_div -> Ordinal.lt_div is a dubious translation:
@@ -2025,40 +2025,40 @@ theorem comp_familyOfBFamily {o} (f : ∀ a < o, α) (g : α → β) :
 #print Ordinal.sup /-
 /-- The supremum of a family of ordinals -/
 def sup {ι : Type u} (f : ι → Ordinal.{max u v}) : Ordinal.{max u v} :=
-  supᵢ f
+  iSup f
 #align ordinal.sup Ordinal.sup
 -/
 
-/- warning: ordinal.Sup_eq_sup -> Ordinal.supₛ_eq_sup is a dubious translation:
+/- warning: ordinal.Sup_eq_sup -> Ordinal.sSup_eq_sup is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} (f : ι -> Ordinal.{max u1 u2}), Eq.{succ (succ (max u1 u2))} Ordinal.{max u1 u2} (SupSet.supₛ.{succ (max u1 u2)} Ordinal.{max u1 u2} (ConditionallyCompleteLattice.toHasSup.{succ (max u1 u2)} Ordinal.{max u1 u2} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ (max u1 u2)} Ordinal.{max u1 u2} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.conditionallyCompleteLinearOrderBot.{max u1 u2}))) (Set.range.{succ (max u1 u2), succ u1} Ordinal.{max u1 u2} ι f)) (Ordinal.sup.{u1, u2} ι f)
+  forall {ι : Type.{u1}} (f : ι -> Ordinal.{max u1 u2}), Eq.{succ (succ (max u1 u2))} Ordinal.{max u1 u2} (SupSet.sSup.{succ (max u1 u2)} Ordinal.{max u1 u2} (ConditionallyCompleteLattice.toHasSup.{succ (max u1 u2)} Ordinal.{max u1 u2} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ (max u1 u2)} Ordinal.{max u1 u2} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.conditionallyCompleteLinearOrderBot.{max u1 u2}))) (Set.range.{succ (max u1 u2), succ u1} Ordinal.{max u1 u2} ι f)) (Ordinal.sup.{u1, u2} ι f)
 but is expected to have type
-  forall {ι : Type.{u1}} (f : ι -> Ordinal.{max u1 u2}), Eq.{max (succ (succ u1)) (succ (succ u2))} Ordinal.{max u1 u2} (SupSet.supₛ.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (ConditionallyCompleteLattice.toSupSet.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.instConditionallyCompleteLinearOrderBotOrdinal.{max u1 u2}))) (Set.range.{max (succ u1) (succ u2), succ u1} Ordinal.{max u1 u2} ι f)) (Ordinal.sup.{u1, u2} ι f)
-Case conversion may be inaccurate. Consider using '#align ordinal.Sup_eq_sup Ordinal.supₛ_eq_supₓ'. -/
+  forall {ι : Type.{u1}} (f : ι -> Ordinal.{max u1 u2}), Eq.{max (succ (succ u1)) (succ (succ u2))} Ordinal.{max u1 u2} (SupSet.sSup.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (ConditionallyCompleteLattice.toSupSet.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.instConditionallyCompleteLinearOrderBotOrdinal.{max u1 u2}))) (Set.range.{max (succ u1) (succ u2), succ u1} Ordinal.{max u1 u2} ι f)) (Ordinal.sup.{u1, u2} ι f)
+Case conversion may be inaccurate. Consider using '#align ordinal.Sup_eq_sup Ordinal.sSup_eq_supₓ'. -/
 @[simp]
-theorem supₛ_eq_sup {ι : Type u} (f : ι → Ordinal.{max u v}) : supₛ (Set.range f) = sup f :=
+theorem sSup_eq_sup {ι : Type u} (f : ι → Ordinal.{max u v}) : sSup (Set.range f) = sup f :=
   rfl
-#align ordinal.Sup_eq_sup Ordinal.supₛ_eq_sup
+#align ordinal.Sup_eq_sup Ordinal.sSup_eq_sup
 
 #print Ordinal.bddAbove_range /-
 /-- The range of an indexed ordinal function, whose outputs live in a higher universe than the
     inputs, is always bounded above. See `ordinal.lsub` for an explicit bound. -/
 theorem bddAbove_range {ι : Type u} (f : ι → Ordinal.{max u v}) : BddAbove (Set.range f) :=
-  ⟨(supᵢ (succ ∘ card ∘ f)).ord, by
+  ⟨(iSup (succ ∘ card ∘ f)).ord, by
     rintro a ⟨i, rfl⟩
-    exact le_of_lt (Cardinal.lt_ord.2 ((lt_succ _).trans_le (le_csupᵢ (bdd_above_range _) _)))⟩
+    exact le_of_lt (Cardinal.lt_ord.2 ((lt_succ _).trans_le (le_ciSup (bdd_above_range _) _)))⟩
 #align ordinal.bdd_above_range Ordinal.bddAbove_range
 -/
 
 #print Ordinal.le_sup /-
 theorem le_sup {ι} (f : ι → Ordinal) : ∀ i, f i ≤ sup f := fun i =>
-  le_csupₛ (bddAbove_range f) (mem_range_self i)
+  le_csSup (bddAbove_range f) (mem_range_self i)
 #align ordinal.le_sup Ordinal.le_sup
 -/
 
 #print Ordinal.sup_le_iff /-
 theorem sup_le_iff {ι} {f : ι → Ordinal} {a} : sup f ≤ a ↔ ∀ i, f i ≤ a :=
-  (csupₛ_le_iff' (bddAbove_range f)).trans (by simp)
+  (csSup_le_iff' (bddAbove_range f)).trans (by simp)
 #align ordinal.sup_le_iff Ordinal.sup_le_iff
 -/
 
@@ -2117,7 +2117,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ordinal.sup_empty Ordinal.sup_emptyₓ'. -/
 @[simp]
 theorem sup_empty {ι} [IsEmpty ι] (f : ι → Ordinal) : sup f = 0 :=
-  csupᵢ_of_empty f
+  ciSup_of_empty f
 #align ordinal.sup_empty Ordinal.sup_empty
 
 /- warning: ordinal.sup_const -> Ordinal.sup_const is a dubious translation:
@@ -2128,7 +2128,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ordinal.sup_const Ordinal.sup_constₓ'. -/
 @[simp]
 theorem sup_const {ι} [hι : Nonempty ι] (o : Ordinal) : (sup fun _ : ι => o) = o :=
-  csupᵢ_const
+  ciSup_const
 #align ordinal.sup_const Ordinal.sup_const
 
 /- warning: ordinal.sup_unique -> Ordinal.sup_unique is a dubious translation:
@@ -2139,7 +2139,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ordinal.sup_unique Ordinal.sup_uniqueₓ'. -/
 @[simp]
 theorem sup_unique {ι} [Unique ι] (f : ι → Ordinal) : sup f = f default :=
-  csupᵢ_unique
+  ciSup_unique
 #align ordinal.sup_unique Ordinal.sup_unique
 
 #print Ordinal.sup_le_of_range_subset /-
@@ -2233,42 +2233,42 @@ theorem bddAbove_of_small (s : Set Ordinal.{u}) [h : Small.{u} s] : BddAbove s :
 #align ordinal.bdd_above_of_small Ordinal.bddAbove_of_small
 -/
 
-#print Ordinal.sup_eq_supₛ /-
-theorem sup_eq_supₛ {s : Set Ordinal.{u}} (hs : Small.{u} s) :
-    (sup.{u, u} fun x => (@equivShrink s hs).symm x) = supₛ s :=
+#print Ordinal.sup_eq_sSup /-
+theorem sup_eq_sSup {s : Set Ordinal.{u}} (hs : Small.{u} s) :
+    (sup.{u, u} fun x => (@equivShrink s hs).symm x) = sSup s :=
   let hs' := bddAbove_iff_small.2 hs
-  ((csupₛ_le_iff' hs').2 (le_sup_shrink_equiv hs)).antisymm'
-    (sup_le fun x => le_csupₛ hs' (Subtype.mem _))
-#align ordinal.sup_eq_Sup Ordinal.sup_eq_supₛ
+  ((csSup_le_iff' hs').2 (le_sup_shrink_equiv hs)).antisymm'
+    (sup_le fun x => le_csSup hs' (Subtype.mem _))
+#align ordinal.sup_eq_Sup Ordinal.sup_eq_sSup
 -/
 
-/- warning: ordinal.Sup_ord -> Ordinal.supₛ_ord is a dubious translation:
+/- warning: ordinal.Sup_ord -> Ordinal.sSup_ord is a dubious translation:
 lean 3 declaration is
-  forall {s : Set.{succ u1} Cardinal.{u1}}, (BddAbove.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}) s) -> (Eq.{succ (succ u1)} Ordinal.{u1} (Cardinal.ord.{u1} (SupSet.supₛ.{succ u1} Cardinal.{u1} (ConditionallyCompleteLattice.toHasSup.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Cardinal.{u1} Cardinal.conditionallyCompleteLinearOrderBot.{u1}))) s)) (SupSet.supₛ.{succ u1} Ordinal.{u1} (ConditionallyCompleteLattice.toHasSup.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Ordinal.{u1} Ordinal.conditionallyCompleteLinearOrderBot.{u1}))) (Set.image.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} Cardinal.ord.{u1} s)))
+  forall {s : Set.{succ u1} Cardinal.{u1}}, (BddAbove.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}) s) -> (Eq.{succ (succ u1)} Ordinal.{u1} (Cardinal.ord.{u1} (SupSet.sSup.{succ u1} Cardinal.{u1} (ConditionallyCompleteLattice.toHasSup.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Cardinal.{u1} Cardinal.conditionallyCompleteLinearOrderBot.{u1}))) s)) (SupSet.sSup.{succ u1} Ordinal.{u1} (ConditionallyCompleteLattice.toHasSup.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Ordinal.{u1} Ordinal.conditionallyCompleteLinearOrderBot.{u1}))) (Set.image.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} Cardinal.ord.{u1} s)))
 but is expected to have type
-  forall {s : Set.{succ u1} Cardinal.{u1}}, (BddAbove.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}) s) -> (Eq.{succ (succ u1)} Ordinal.{u1} (Cardinal.ord.{u1} (SupSet.supₛ.{succ u1} Cardinal.{u1} (ConditionallyCompleteLattice.toSupSet.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Cardinal.{u1} Cardinal.instConditionallyCompleteLinearOrderBotCardinal.{u1}))) s)) (SupSet.supₛ.{succ u1} Ordinal.{u1} (ConditionallyCompleteLattice.toSupSet.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Ordinal.{u1} Ordinal.instConditionallyCompleteLinearOrderBotOrdinal.{u1}))) (Set.image.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} Cardinal.ord.{u1} s)))
-Case conversion may be inaccurate. Consider using '#align ordinal.Sup_ord Ordinal.supₛ_ordₓ'. -/
-theorem supₛ_ord {s : Set Cardinal.{u}} (hs : BddAbove s) : (supₛ s).ord = supₛ (ord '' s) :=
+  forall {s : Set.{succ u1} Cardinal.{u1}}, (BddAbove.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}) s) -> (Eq.{succ (succ u1)} Ordinal.{u1} (Cardinal.ord.{u1} (SupSet.sSup.{succ u1} Cardinal.{u1} (ConditionallyCompleteLattice.toSupSet.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Cardinal.{u1} Cardinal.instConditionallyCompleteLinearOrderBotCardinal.{u1}))) s)) (SupSet.sSup.{succ u1} Ordinal.{u1} (ConditionallyCompleteLattice.toSupSet.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Ordinal.{u1} Ordinal.instConditionallyCompleteLinearOrderBotOrdinal.{u1}))) (Set.image.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} Cardinal.ord.{u1} s)))
+Case conversion may be inaccurate. Consider using '#align ordinal.Sup_ord Ordinal.sSup_ordₓ'. -/
+theorem sSup_ord {s : Set Cardinal.{u}} (hs : BddAbove s) : (sSup s).ord = sSup (ord '' s) :=
   eq_of_forall_ge_iff fun a =>
     by
-    rw [csupₛ_le_iff'
+    rw [csSup_le_iff'
         (bdd_above_iff_small.2 (@small_image _ _ _ s (Cardinal.bddAbove_iff_small.1 hs))),
-      ord_le, csupₛ_le_iff' hs]
+      ord_le, csSup_le_iff' hs]
     simp [ord_le]
-#align ordinal.Sup_ord Ordinal.supₛ_ord
+#align ordinal.Sup_ord Ordinal.sSup_ord
 
-/- warning: ordinal.supr_ord -> Ordinal.supᵢ_ord is a dubious translation:
+/- warning: ordinal.supr_ord -> Ordinal.iSup_ord is a dubious translation:
 lean 3 declaration is
-  forall {ι : Sort.{u1}} {f : ι -> Cardinal.{u2}}, (BddAbove.{succ u2} Cardinal.{u2} (PartialOrder.toPreorder.{succ u2} Cardinal.{u2} Cardinal.partialOrder.{u2}) (Set.range.{succ u2, u1} Cardinal.{u2} ι f)) -> (Eq.{succ (succ u2)} Ordinal.{u2} (Cardinal.ord.{u2} (supᵢ.{succ u2, u1} Cardinal.{u2} (ConditionallyCompleteLattice.toHasSup.{succ u2} Cardinal.{u2} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u2} Cardinal.{u2} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u2} Cardinal.{u2} Cardinal.conditionallyCompleteLinearOrderBot.{u2}))) ι f)) (supᵢ.{succ u2, u1} Ordinal.{u2} (ConditionallyCompleteLattice.toHasSup.{succ u2} Ordinal.{u2} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u2} Ordinal.{u2} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u2} Ordinal.{u2} Ordinal.conditionallyCompleteLinearOrderBot.{u2}))) ι (fun (i : ι) => Cardinal.ord.{u2} (f i))))
+  forall {ι : Sort.{u1}} {f : ι -> Cardinal.{u2}}, (BddAbove.{succ u2} Cardinal.{u2} (PartialOrder.toPreorder.{succ u2} Cardinal.{u2} Cardinal.partialOrder.{u2}) (Set.range.{succ u2, u1} Cardinal.{u2} ι f)) -> (Eq.{succ (succ u2)} Ordinal.{u2} (Cardinal.ord.{u2} (iSup.{succ u2, u1} Cardinal.{u2} (ConditionallyCompleteLattice.toHasSup.{succ u2} Cardinal.{u2} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u2} Cardinal.{u2} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u2} Cardinal.{u2} Cardinal.conditionallyCompleteLinearOrderBot.{u2}))) ι f)) (iSup.{succ u2, u1} Ordinal.{u2} (ConditionallyCompleteLattice.toHasSup.{succ u2} Ordinal.{u2} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u2} Ordinal.{u2} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u2} Ordinal.{u2} Ordinal.conditionallyCompleteLinearOrderBot.{u2}))) ι (fun (i : ι) => Cardinal.ord.{u2} (f i))))
 but is expected to have type
-  forall {ι : Sort.{u2}} {f : ι -> Cardinal.{u1}}, (BddAbove.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}) (Set.range.{succ u1, u2} Cardinal.{u1} ι f)) -> (Eq.{succ (succ u1)} Ordinal.{u1} (Cardinal.ord.{u1} (supᵢ.{succ u1, u2} Cardinal.{u1} (ConditionallyCompleteLattice.toSupSet.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Cardinal.{u1} Cardinal.instConditionallyCompleteLinearOrderBotCardinal.{u1}))) ι f)) (supᵢ.{succ u1, u2} Ordinal.{u1} (ConditionallyCompleteLattice.toSupSet.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Ordinal.{u1} Ordinal.instConditionallyCompleteLinearOrderBotOrdinal.{u1}))) ι (fun (i : ι) => Cardinal.ord.{u1} (f i))))
-Case conversion may be inaccurate. Consider using '#align ordinal.supr_ord Ordinal.supᵢ_ordₓ'. -/
-theorem supᵢ_ord {ι} {f : ι → Cardinal} (hf : BddAbove (range f)) : (supᵢ f).ord = ⨆ i, (f i).ord :=
+  forall {ι : Sort.{u2}} {f : ι -> Cardinal.{u1}}, (BddAbove.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}) (Set.range.{succ u1, u2} Cardinal.{u1} ι f)) -> (Eq.{succ (succ u1)} Ordinal.{u1} (Cardinal.ord.{u1} (iSup.{succ u1, u2} Cardinal.{u1} (ConditionallyCompleteLattice.toSupSet.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Cardinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Cardinal.{u1} Cardinal.instConditionallyCompleteLinearOrderBotCardinal.{u1}))) ι f)) (iSup.{succ u1, u2} Ordinal.{u1} (ConditionallyCompleteLattice.toSupSet.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Ordinal.{u1} Ordinal.instConditionallyCompleteLinearOrderBotOrdinal.{u1}))) ι (fun (i : ι) => Cardinal.ord.{u1} (f i))))
+Case conversion may be inaccurate. Consider using '#align ordinal.supr_ord Ordinal.iSup_ordₓ'. -/
+theorem iSup_ord {ι} {f : ι → Cardinal} (hf : BddAbove (range f)) : (iSup f).ord = ⨆ i, (f i).ord :=
   by
-  unfold supᵢ
+  unfold iSup
   convert Sup_ord hf
   rw [range_comp]
-#align ordinal.supr_ord Ordinal.supᵢ_ord
+#align ordinal.supr_ord Ordinal.iSup_ord
 
 private theorem sup_le_sup {ι ι' : Type u} (r : ι → ι → Prop) (r' : ι' → ι' → Prop)
     [IsWellOrder ι r] [IsWellOrder ι' r'] {o} (ho : type r = o) (ho' : type r' = o)
@@ -2318,18 +2318,18 @@ theorem sup_eq_bsup' {o ι} (r : ι → ι → Prop) [IsWellOrder ι r] (ho : ty
 #align ordinal.sup_eq_bsup' Ordinal.sup_eq_bsup'
 -/
 
-/- warning: ordinal.Sup_eq_bsup -> Ordinal.supₛ_eq_bsup is a dubious translation:
+/- warning: ordinal.Sup_eq_bsup -> Ordinal.sSup_eq_bsup is a dubious translation:
 lean 3 declaration is
-  forall {o : Ordinal.{u1}} (f : forall (a : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a o) -> Ordinal.{max u1 u2}), Eq.{succ (succ (max u1 u2))} Ordinal.{max u1 u2} (SupSet.supₛ.{succ (max u1 u2)} Ordinal.{max u1 u2} (ConditionallyCompleteLattice.toHasSup.{succ (max u1 u2)} Ordinal.{max u1 u2} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ (max u1 u2)} Ordinal.{max u1 u2} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.conditionallyCompleteLinearOrderBot.{max u1 u2}))) (Ordinal.brange.{succ (max u1 u2), u1} Ordinal.{max u1 u2} o f)) (Ordinal.bsup.{u1, u2} o f)
+  forall {o : Ordinal.{u1}} (f : forall (a : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a o) -> Ordinal.{max u1 u2}), Eq.{succ (succ (max u1 u2))} Ordinal.{max u1 u2} (SupSet.sSup.{succ (max u1 u2)} Ordinal.{max u1 u2} (ConditionallyCompleteLattice.toHasSup.{succ (max u1 u2)} Ordinal.{max u1 u2} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ (max u1 u2)} Ordinal.{max u1 u2} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.conditionallyCompleteLinearOrderBot.{max u1 u2}))) (Ordinal.brange.{succ (max u1 u2), u1} Ordinal.{max u1 u2} o f)) (Ordinal.bsup.{u1, u2} o f)
 but is expected to have type
-  forall {o : Ordinal.{u1}} (f : forall (a : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a o) -> Ordinal.{max u1 u2}), Eq.{max (succ (succ u1)) (succ (succ u2))} Ordinal.{max u1 u2} (SupSet.supₛ.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (ConditionallyCompleteLattice.toSupSet.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.instConditionallyCompleteLinearOrderBotOrdinal.{max u1 u2}))) (Ordinal.brange.{max (succ u1) (succ u2), u1} Ordinal.{max u1 u2} o f)) (Ordinal.bsup.{u1, u2} o f)
-Case conversion may be inaccurate. Consider using '#align ordinal.Sup_eq_bsup Ordinal.supₛ_eq_bsupₓ'. -/
+  forall {o : Ordinal.{u1}} (f : forall (a : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a o) -> Ordinal.{max u1 u2}), Eq.{max (succ (succ u1)) (succ (succ u2))} Ordinal.{max u1 u2} (SupSet.sSup.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (ConditionallyCompleteLattice.toSupSet.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.instConditionallyCompleteLinearOrderBotOrdinal.{max u1 u2}))) (Ordinal.brange.{max (succ u1) (succ u2), u1} Ordinal.{max u1 u2} o f)) (Ordinal.bsup.{u1, u2} o f)
+Case conversion may be inaccurate. Consider using '#align ordinal.Sup_eq_bsup Ordinal.sSup_eq_bsupₓ'. -/
 @[simp]
-theorem supₛ_eq_bsup {o} (f : ∀ a < o, Ordinal) : supₛ (brange o f) = bsup o f :=
+theorem sSup_eq_bsup {o} (f : ∀ a < o, Ordinal) : sSup (brange o f) = bsup o f :=
   by
   congr
   rw [range_family_of_bfamily]
-#align ordinal.Sup_eq_bsup Ordinal.supₛ_eq_bsup
+#align ordinal.Sup_eq_bsup Ordinal.sSup_eq_bsup
 
 #print Ordinal.bsup_eq_sup' /-
 @[simp]
@@ -3117,13 +3117,13 @@ theorem IsNormal.eq_iff_zero_and_succ {f g : Ordinal.{u} → Ordinal.{u}} (hf : 
 #print Ordinal.mex /-
 /-- The minimum excluded ordinal in a family of ordinals. -/
 def mex {ι : Type u} (f : ι → Ordinal.{max u v}) : Ordinal :=
-  infₛ (Set.range fᶜ)
+  sInf (Set.range fᶜ)
 #align ordinal.mex Ordinal.mex
 -/
 
 #print Ordinal.mex_not_mem_range /-
 theorem mex_not_mem_range {ι : Type u} (f : ι → Ordinal.{max u v}) : mex f ∉ Set.range f :=
-  cinfₛ_mem (nonempty_compl_range f)
+  csInf_mem (nonempty_compl_range f)
 #align ordinal.mex_not_mem_range Ordinal.mex_not_mem_range
 -/
 
@@ -3148,7 +3148,7 @@ but is expected to have type
   forall {ι : Type.{u2}} {f : ι -> Ordinal.{max u1 u2}} {a : Ordinal.{max u1 u2}}, (forall (i : ι), Ne.{succ (succ (max u1 u2))} Ordinal.{max u1 u2} (f i) a) -> (LE.le.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (Preorder.toLE.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} Ordinal.partialOrder.{max u1 u2})) (Ordinal.mex.{u2, u1} ι f) a)
 Case conversion may be inaccurate. Consider using '#align ordinal.mex_le_of_ne Ordinal.mex_le_of_neₓ'. -/
 theorem mex_le_of_ne {ι} {f : ι → Ordinal} {a} (ha : ∀ i, f i ≠ a) : mex f ≤ a :=
-  cinfₛ_le' (by simp [ha])
+  csInf_le' (by simp [ha])
 #align ordinal.mex_le_of_ne Ordinal.mex_le_of_ne
 
 /- warning: ordinal.exists_of_lt_mex -> Ordinal.exists_of_lt_mex is a dubious translation:
@@ -3165,7 +3165,7 @@ theorem exists_of_lt_mex {ι} {f : ι → Ordinal} {a} (ha : a < mex f) : ∃ i,
 
 #print Ordinal.mex_le_lsub /-
 theorem mex_le_lsub {ι} (f : ι → Ordinal) : mex f ≤ lsub f :=
-  cinfₛ_le' (lsub_not_mem_range f)
+  csInf_le' (lsub_not_mem_range f)
 #align ordinal.mex_le_lsub Ordinal.mex_le_lsub
 -/
 
@@ -3339,7 +3339,7 @@ section
 #print Ordinal.enumOrd /-
 /-- Enumerator function for an unbounded set of ordinals. -/
 def enumOrd (S : Set Ordinal.{u}) : Ordinal → Ordinal :=
-  lt_wf.fix fun o f => infₛ (S ∩ Set.Ici (blsub.{u, u} o f))
+  lt_wf.fix fun o f => sInf (S ∩ Set.Ici (blsub.{u, u} o f))
 #align ordinal.enum_ord Ordinal.enumOrd
 -/
 
@@ -3347,14 +3347,14 @@ variable {S : Set Ordinal.{u}}
 
 /- warning: ordinal.enum_ord_def' -> Ordinal.enumOrd_def' is a dubious translation:
 lean 3 declaration is
-  forall {S : Set.{succ u1} Ordinal.{u1}} (o : Ordinal.{u1}), Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.enumOrd.{u1} S o) (InfSet.infₛ.{succ u1} Ordinal.{u1} (ConditionallyCompleteLattice.toHasInf.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Ordinal.{u1} Ordinal.conditionallyCompleteLinearOrderBot.{u1}))) (Inter.inter.{succ u1} (Set.{succ u1} Ordinal.{u1}) (Set.hasInter.{succ u1} Ordinal.{u1}) S (Set.Ici.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) (Ordinal.blsub.{u1, u1} o (fun (a : Ordinal.{u1}) (_x : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a o) => Ordinal.enumOrd.{u1} S a)))))
+  forall {S : Set.{succ u1} Ordinal.{u1}} (o : Ordinal.{u1}), Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.enumOrd.{u1} S o) (InfSet.sInf.{succ u1} Ordinal.{u1} (ConditionallyCompleteLattice.toHasInf.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Ordinal.{u1} Ordinal.conditionallyCompleteLinearOrderBot.{u1}))) (Inter.inter.{succ u1} (Set.{succ u1} Ordinal.{u1}) (Set.hasInter.{succ u1} Ordinal.{u1}) S (Set.Ici.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) (Ordinal.blsub.{u1, u1} o (fun (a : Ordinal.{u1}) (_x : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a o) => Ordinal.enumOrd.{u1} S a)))))
 but is expected to have type
-  forall {S : Set.{succ u1} Ordinal.{u1}} (o : Ordinal.{u1}), Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.enumOrd.{u1} S o) (InfSet.infₛ.{succ u1} Ordinal.{u1} (ConditionallyCompleteLattice.toInfSet.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Ordinal.{u1} Ordinal.instConditionallyCompleteLinearOrderBotOrdinal.{u1}))) (Inter.inter.{succ u1} (Set.{succ u1} Ordinal.{u1}) (Set.instInterSet.{succ u1} Ordinal.{u1}) S (Set.Ici.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) (Ordinal.blsub.{u1, u1} o (fun (a : Ordinal.{u1}) (_x : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a o) => Ordinal.enumOrd.{u1} S a)))))
+  forall {S : Set.{succ u1} Ordinal.{u1}} (o : Ordinal.{u1}), Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.enumOrd.{u1} S o) (InfSet.sInf.{succ u1} Ordinal.{u1} (ConditionallyCompleteLattice.toInfSet.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Ordinal.{u1} Ordinal.instConditionallyCompleteLinearOrderBotOrdinal.{u1}))) (Inter.inter.{succ u1} (Set.{succ u1} Ordinal.{u1}) (Set.instInterSet.{succ u1} Ordinal.{u1}) S (Set.Ici.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) (Ordinal.blsub.{u1, u1} o (fun (a : Ordinal.{u1}) (_x : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a o) => Ordinal.enumOrd.{u1} S a)))))
 Case conversion may be inaccurate. Consider using '#align ordinal.enum_ord_def' Ordinal.enumOrd_def'ₓ'. -/
 /-- The equation that characterizes `enum_ord` definitionally. This isn't the nicest expression to
     work with, so consider using `enum_ord_def` instead. -/
 theorem enumOrd_def' (o) :
-    enumOrd S o = infₛ (S ∩ Set.Ici (blsub.{u, u} o fun a _ => enumOrd S a)) :=
+    enumOrd S o = sInf (S ∩ Set.Ici (blsub.{u, u} o fun a _ => enumOrd S a)) :=
   lt_wf.fix_eq _ _
 #align ordinal.enum_ord_def' Ordinal.enumOrd_def'
 
@@ -3374,7 +3374,7 @@ private theorem enum_ord_mem_aux (hS : Unbounded (· < ·) S) (o) :
     enumOrd S o ∈ S ∩ Set.Ici (blsub.{u, u} o fun c _ => enumOrd S c) :=
   by
   rw [enum_ord_def']
-  exact cinfₛ_mem (enum_ord_def'_nonempty hS _)
+  exact csInf_mem (enum_ord_def'_nonempty hS _)
 #align ordinal.enum_ord_mem_aux ordinal.enum_ord_mem_aux
 
 #print Ordinal.enumOrd_mem /-
@@ -3398,12 +3398,12 @@ theorem enumOrd_strictMono (hS : Unbounded (· < ·) S) : StrictMono (enumOrd S)
 
 /- warning: ordinal.enum_ord_def -> Ordinal.enumOrd_def is a dubious translation:
 lean 3 declaration is
-  forall {S : Set.{succ u1} Ordinal.{u1}} (o : Ordinal.{u1}), Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.enumOrd.{u1} S o) (InfSet.infₛ.{succ u1} Ordinal.{u1} (ConditionallyCompleteLattice.toHasInf.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Ordinal.{u1} Ordinal.conditionallyCompleteLinearOrderBot.{u1}))) (Inter.inter.{succ u1} (Set.{succ u1} Ordinal.{u1}) (Set.hasInter.{succ u1} Ordinal.{u1}) S (setOf.{succ u1} Ordinal.{u1} (fun (b : Ordinal.{u1}) => forall (c : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) c o) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Ordinal.enumOrd.{u1} S c) b)))))
+  forall {S : Set.{succ u1} Ordinal.{u1}} (o : Ordinal.{u1}), Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.enumOrd.{u1} S o) (InfSet.sInf.{succ u1} Ordinal.{u1} (ConditionallyCompleteLattice.toHasInf.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Ordinal.{u1} Ordinal.conditionallyCompleteLinearOrderBot.{u1}))) (Inter.inter.{succ u1} (Set.{succ u1} Ordinal.{u1}) (Set.hasInter.{succ u1} Ordinal.{u1}) S (setOf.{succ u1} Ordinal.{u1} (fun (b : Ordinal.{u1}) => forall (c : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) c o) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Ordinal.enumOrd.{u1} S c) b)))))
 but is expected to have type
-  forall {S : Set.{succ u1} Ordinal.{u1}} (o : Ordinal.{u1}), Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.enumOrd.{u1} S o) (InfSet.infₛ.{succ u1} Ordinal.{u1} (ConditionallyCompleteLattice.toInfSet.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Ordinal.{u1} Ordinal.instConditionallyCompleteLinearOrderBotOrdinal.{u1}))) (Inter.inter.{succ u1} (Set.{succ u1} Ordinal.{u1}) (Set.instInterSet.{succ u1} Ordinal.{u1}) S (setOf.{succ u1} Ordinal.{u1} (fun (b : Ordinal.{u1}) => forall (c : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) c o) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Ordinal.enumOrd.{u1} S c) b)))))
+  forall {S : Set.{succ u1} Ordinal.{u1}} (o : Ordinal.{u1}), Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.enumOrd.{u1} S o) (InfSet.sInf.{succ u1} Ordinal.{u1} (ConditionallyCompleteLattice.toInfSet.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Ordinal.{u1} Ordinal.instConditionallyCompleteLinearOrderBotOrdinal.{u1}))) (Inter.inter.{succ u1} (Set.{succ u1} Ordinal.{u1}) (Set.instInterSet.{succ u1} Ordinal.{u1}) S (setOf.{succ u1} Ordinal.{u1} (fun (b : Ordinal.{u1}) => forall (c : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) c o) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Ordinal.enumOrd.{u1} S c) b)))))
 Case conversion may be inaccurate. Consider using '#align ordinal.enum_ord_def Ordinal.enumOrd_defₓ'. -/
 /-- A more workable definition for `enum_ord`. -/
-theorem enumOrd_def (o) : enumOrd S o = infₛ (S ∩ { b | ∀ c, c < o → enumOrd S c < b }) :=
+theorem enumOrd_def (o) : enumOrd S o = sInf (S ∩ { b | ∀ c, c < o → enumOrd S c < b }) :=
   by
   rw [enum_ord_def']
   congr ; ext
@@ -3429,7 +3429,7 @@ theorem enumOrd_range {f : Ordinal → Ordinal} (hf : StrictMono f) : enumOrd (r
       ⟨mem_range_self a, fun b hb => by
         rw [H b hb]
         exact hf hb⟩
-    refine' (cinfₛ_le' Hfa).antisymm ((le_cinfₛ_iff'' ⟨_, Hfa⟩).2 _)
+    refine' (csInf_le' Hfa).antisymm ((le_csInf_iff'' ⟨_, Hfa⟩).2 _)
     rintro _ ⟨⟨c, rfl⟩, hc : ∀ b < a, enum_ord (range f) b < f c⟩
     rw [hf.le_iff_le]
     contrapose! hc
@@ -3448,12 +3448,12 @@ theorem enumOrd_univ : enumOrd Set.univ = id :=
 
 /- warning: ordinal.enum_ord_zero -> Ordinal.enumOrd_zero is a dubious translation:
 lean 3 declaration is
-  forall {S : Set.{succ u1} Ordinal.{u1}}, Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.enumOrd.{u1} S (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1})))) (InfSet.infₛ.{succ u1} Ordinal.{u1} (ConditionallyCompleteLattice.toHasInf.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Ordinal.{u1} Ordinal.conditionallyCompleteLinearOrderBot.{u1}))) S)
+  forall {S : Set.{succ u1} Ordinal.{u1}}, Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.enumOrd.{u1} S (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1})))) (InfSet.sInf.{succ u1} Ordinal.{u1} (ConditionallyCompleteLattice.toHasInf.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Ordinal.{u1} Ordinal.conditionallyCompleteLinearOrderBot.{u1}))) S)
 but is expected to have type
-  forall {S : Set.{succ u1} Ordinal.{u1}}, Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.enumOrd.{u1} S (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1}))) (InfSet.infₛ.{succ u1} Ordinal.{u1} (ConditionallyCompleteLattice.toInfSet.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Ordinal.{u1} Ordinal.instConditionallyCompleteLinearOrderBotOrdinal.{u1}))) S)
+  forall {S : Set.{succ u1} Ordinal.{u1}}, Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.enumOrd.{u1} S (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1}))) (InfSet.sInf.{succ u1} Ordinal.{u1} (ConditionallyCompleteLattice.toInfSet.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{succ u1} Ordinal.{u1} (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{succ u1} Ordinal.{u1} Ordinal.instConditionallyCompleteLinearOrderBotOrdinal.{u1}))) S)
 Case conversion may be inaccurate. Consider using '#align ordinal.enum_ord_zero Ordinal.enumOrd_zeroₓ'. -/
 @[simp]
-theorem enumOrd_zero : enumOrd S 0 = infₛ S :=
+theorem enumOrd_zero : enumOrd S 0 = sInf S :=
   by
   rw [enum_ord_def]
   simp [Ordinal.not_lt_zero]
@@ -3464,7 +3464,7 @@ theorem enumOrd_succ_le {a b} (hS : Unbounded (· < ·) S) (ha : a ∈ S) (hb : 
     enumOrd S (succ b) ≤ a := by
   rw [enum_ord_def]
   exact
-    cinfₛ_le' ⟨ha, fun c hc => ((enum_ord_strict_mono hS).Monotone (le_of_lt_succ hc)).trans_lt hb⟩
+    csInf_le' ⟨ha, fun c hc => ((enum_ord_strict_mono hS).Monotone (le_of_lt_succ hc)).trans_lt hb⟩
 #align ordinal.enum_ord_succ_le Ordinal.enumOrd_succ_le
 -/
 
@@ -3474,24 +3474,24 @@ theorem enumOrd_le_of_subset {S T : Set Ordinal} (hS : Unbounded (· < ·) S) (h
   apply Ordinal.induction a
   intro b H
   rw [enum_ord_def]
-  exact cinfₛ_le' ⟨hST (enum_ord_mem hS b), fun c h => (H c h).trans_lt (enum_ord_strict_mono hS h)⟩
+  exact csInf_le' ⟨hST (enum_ord_mem hS b), fun c h => (H c h).trans_lt (enum_ord_strict_mono hS h)⟩
 #align ordinal.enum_ord_le_of_subset Ordinal.enumOrd_le_of_subset
 -/
 
 #print Ordinal.enumOrd_surjective /-
 theorem enumOrd_surjective (hS : Unbounded (· < ·) S) : ∀ s ∈ S, ∃ a, enumOrd S a = s := fun s hs =>
-  ⟨supₛ { a | enumOrd S a ≤ s }, by
+  ⟨sSup { a | enumOrd S a ≤ s }, by
     apply le_antisymm
     · rw [enum_ord_def]
-      refine' cinfₛ_le' ⟨hs, fun a ha => _⟩
+      refine' csInf_le' ⟨hs, fun a ha => _⟩
       have : enum_ord S 0 ≤ s := by
         rw [enum_ord_zero]
-        exact cinfₛ_le' hs
-      rcases exists_lt_of_lt_csupₛ ⟨0, this⟩ ha with ⟨b, hb, hab⟩
+        exact csInf_le' hs
+      rcases exists_lt_of_lt_csSup ⟨0, this⟩ ha with ⟨b, hb, hab⟩
       exact (enum_ord_strict_mono hS hab).trans_le hb
     · by_contra' h
       exact
-        (le_csupₛ ⟨s, fun a => (lt_wf.self_le_of_strict_mono (enum_ord_strict_mono hS) a).trans⟩
+        (le_csSup ⟨s, fun a => (lt_wf.self_le_of_strict_mono (enum_ord_strict_mono hS) a).trans⟩
               (enum_ord_succ_le hS hs h)).not_lt
           (lt_succ _)⟩
 #align ordinal.enum_ord_surjective Ordinal.enumOrd_surjective

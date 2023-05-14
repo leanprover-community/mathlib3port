@@ -33,20 +33,20 @@ namespace TopologicalSpace
 
 /- warning: topological_space.eq_induced_by_maps_to_sierpinski -> TopologicalSpace.eq_induced_by_maps_to_sierpinski is a dubious translation:
 lean 3 declaration is
-  forall (X : Type.{u1}) [t : TopologicalSpace.{u1} X], Eq.{succ u1} (TopologicalSpace.{u1} X) t (infᵢ.{u1, succ u1} (TopologicalSpace.{u1} X) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} X) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} X) (TopologicalSpace.completeLattice.{u1} X))) (TopologicalSpace.Opens.{u1} X t) (fun (u : TopologicalSpace.Opens.{u1} X t) => TopologicalSpace.induced.{u1, 0} X Prop (fun (_x : X) => Membership.Mem.{u1, u1} X (TopologicalSpace.Opens.{u1} X t) (SetLike.hasMem.{u1, u1} (TopologicalSpace.Opens.{u1} X t) X (TopologicalSpace.Opens.setLike.{u1} X t)) _x u) sierpinskiSpace))
+  forall (X : Type.{u1}) [t : TopologicalSpace.{u1} X], Eq.{succ u1} (TopologicalSpace.{u1} X) t (iInf.{u1, succ u1} (TopologicalSpace.{u1} X) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} X) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} X) (TopologicalSpace.completeLattice.{u1} X))) (TopologicalSpace.Opens.{u1} X t) (fun (u : TopologicalSpace.Opens.{u1} X t) => TopologicalSpace.induced.{u1, 0} X Prop (fun (_x : X) => Membership.Mem.{u1, u1} X (TopologicalSpace.Opens.{u1} X t) (SetLike.hasMem.{u1, u1} (TopologicalSpace.Opens.{u1} X t) X (TopologicalSpace.Opens.setLike.{u1} X t)) _x u) sierpinskiSpace))
 but is expected to have type
-  forall (X : Type.{u1}) [t : TopologicalSpace.{u1} X], Eq.{succ u1} (TopologicalSpace.{u1} X) t (infᵢ.{u1, succ u1} (TopologicalSpace.{u1} X) (ConditionallyCompleteLattice.toInfSet.{u1} (TopologicalSpace.{u1} X) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} X) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} X))) (TopologicalSpace.Opens.{u1} X t) (fun (u : TopologicalSpace.Opens.{u1} X t) => TopologicalSpace.induced.{u1, 0} X Prop (fun (_x : X) => Membership.mem.{u1, u1} X (TopologicalSpace.Opens.{u1} X t) (SetLike.instMembership.{u1, u1} (TopologicalSpace.Opens.{u1} X t) X (TopologicalSpace.Opens.instSetLikeOpens.{u1} X t)) _x u) sierpinskiSpace))
+  forall (X : Type.{u1}) [t : TopologicalSpace.{u1} X], Eq.{succ u1} (TopologicalSpace.{u1} X) t (iInf.{u1, succ u1} (TopologicalSpace.{u1} X) (ConditionallyCompleteLattice.toInfSet.{u1} (TopologicalSpace.{u1} X) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} X) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} X))) (TopologicalSpace.Opens.{u1} X t) (fun (u : TopologicalSpace.Opens.{u1} X t) => TopologicalSpace.induced.{u1, 0} X Prop (fun (_x : X) => Membership.mem.{u1, u1} X (TopologicalSpace.Opens.{u1} X t) (SetLike.instMembership.{u1, u1} (TopologicalSpace.Opens.{u1} X t) X (TopologicalSpace.Opens.instSetLikeOpens.{u1} X t)) _x u) sierpinskiSpace))
 Case conversion may be inaccurate. Consider using '#align topological_space.eq_induced_by_maps_to_sierpinski TopologicalSpace.eq_induced_by_maps_to_sierpinskiₓ'. -/
 theorem eq_induced_by_maps_to_sierpinski (X : Type _) [t : TopologicalSpace X] :
     t = ⨅ u : Opens X, sierpinskiSpace.induced (· ∈ u) :=
   by
   apply le_antisymm
-  · rw [le_infᵢ_iff]
+  · rw [le_iInf_iff]
     exact fun u => Continuous.le_induced (is_open_iff_continuous_mem.mp u.2)
   · intro u h
-    rw [← generateFrom_unionᵢ_isOpen]
+    rw [← generateFrom_iUnion_isOpen]
     apply is_open_generate_from_of_mem
-    simp only [Set.mem_unionᵢ, Set.mem_setOf_eq, isOpen_induced_iff]
+    simp only [Set.mem_iUnion, Set.mem_setOf_eq, isOpen_induced_iff]
     exact ⟨⟨u, h⟩, {True}, isOpen_singleton_true, by simp [Set.preimage]⟩
 #align topological_space.eq_induced_by_maps_to_sierpinski TopologicalSpace.eq_induced_by_maps_to_sierpinski
 
@@ -71,7 +71,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align topological_space.product_of_mem_opens_inducing TopologicalSpace.productOfMemOpens_inducingₓ'. -/
 theorem productOfMemOpens_inducing : Inducing (productOfMemOpens X) :=
   by
-  convert inducing_infᵢ_to_pi fun (u : opens X) (x : X) => x ∈ u
+  convert inducing_iInf_to_pi fun (u : opens X) (x : X) => x ∈ u
   apply eq_induced_by_maps_to_sierpinski
 #align topological_space.product_of_mem_opens_inducing TopologicalSpace.productOfMemOpens_inducing
 

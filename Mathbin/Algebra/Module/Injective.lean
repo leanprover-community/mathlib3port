@@ -215,13 +215,13 @@ Case conversion may be inaccurate. Consider using '#align module.Baer.extension_
 def ExtensionOf.max {c : Set (ExtensionOf i f)} (hchain : IsChain (· ≤ ·) c)
     (hnonempty : c.Nonempty) : ExtensionOf i f :=
   {
-    LinearPMap.supₛ _
+    LinearPMap.sSup _
       (IsChain.directedOn <|
         chain_linearPMap_of_chain_extensionOf
           hchain) with
     le :=
       le_trans hnonempty.some.le <|
-        (LinearPMap.le_supₛ _ <|
+        (LinearPMap.le_sSup _ <|
             (Set.mem_image _ _ _).mpr ⟨hnonempty.some, hnonempty.choose_spec, rfl⟩).1
     is_extension := fun m =>
       by
@@ -229,7 +229,7 @@ def ExtensionOf.max {c : Set (ExtensionOf i f)} (hchain : IsChain (· ≤ ·) c)
       symm
       generalize_proofs _ h0 h1
       exact
-        LinearPMap.supₛ_apply (IsChain.directedOn <| chain_linear_pmap_of_chain_extension_of hchain)
+        LinearPMap.sSup_apply (IsChain.directedOn <| chain_linear_pmap_of_chain_extension_of hchain)
           ((Set.mem_image _ _ _).mpr ⟨hnonempty.some, hnonempty.some_spec, rfl⟩) ⟨i m, h1⟩ }
 #align module.Baer.extension_of.max Module.Baer.ExtensionOf.max
 
@@ -242,7 +242,7 @@ Case conversion may be inaccurate. Consider using '#align module.Baer.extension_
 theorem ExtensionOf.le_max {c : Set (ExtensionOf i f)} (hchain : IsChain (· ≤ ·) c)
     (hnonempty : c.Nonempty) (a : ExtensionOf i f) (ha : a ∈ c) :
     a ≤ ExtensionOf.max hchain hnonempty :=
-  LinearPMap.le_supₛ (IsChain.directedOn <| chain_linearPMap_of_chain_extensionOf hchain) <|
+  LinearPMap.le_sSup (IsChain.directedOn <| chain_linearPMap_of_chain_extensionOf hchain) <|
     (Set.mem_image _ _ _).mpr ⟨a, ha, rfl⟩
 #align module.Baer.extension_of.le_max Module.Baer.ExtensionOf.le_max
 

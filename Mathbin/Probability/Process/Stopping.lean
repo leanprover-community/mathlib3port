@@ -102,8 +102,8 @@ protected theorem measurableSet_eq_of_countable_range (hτ : IsStoppingTime f τ
   have : { ω | τ ω = i } = { ω | τ ω ≤ i } \ ⋃ (j ∈ Set.range τ) (hj : j < i), { ω | τ ω ≤ j } :=
     by
     ext1 a
-    simp only [Set.mem_setOf_eq, Set.mem_range, Set.unionᵢ_exists, Set.unionᵢ_unionᵢ_eq',
-      Set.mem_diff, Set.mem_unionᵢ, exists_prop, not_exists, not_and, not_le]
+    simp only [Set.mem_setOf_eq, Set.mem_range, Set.iUnion_exists, Set.iUnion_iUnion_eq',
+      Set.mem_diff, Set.mem_iUnion, exists_prop, not_exists, not_and, not_le]
     constructor <;> intro h
     · simp only [h, lt_iff_le_not_le, le_refl, and_imp, imp_self, imp_true_iff, and_self_iff]
     · have h_lt_or_eq : τ a < i ∨ τ a = i := lt_or_eq_of_le h.1
@@ -113,11 +113,11 @@ protected theorem measurableSet_eq_of_countable_range (hτ : IsStoppingTime f τ
       · rfl
   rw [this]
   refine' (hτ.measurable_set_le i).diffₓ _
-  refine' MeasurableSet.bunionᵢ h_countable fun j hj => _
+  refine' MeasurableSet.biUnion h_countable fun j hj => _
   by_cases hji : j < i
-  · simp only [hji, Set.unionᵢ_true]
+  · simp only [hji, Set.iUnion_true]
     exact f.mono hji.le _ (hτ.measurable_set_le j)
-  · simp only [hji, Set.unionᵢ_false]
+  · simp only [hji, Set.iUnion_false]
     exact @MeasurableSet.empty _ (f i)
 #align measure_theory.is_stopping_time.measurable_set_eq_of_countable_range MeasureTheory.IsStoppingTime.measurableSet_eq_of_countable_range
 
@@ -197,7 +197,7 @@ theorem IsStoppingTime.measurableSet_lt_of_isLUB (hτ : IsStoppingTime f τ) (i 
   have h_Ioi_eq_Union : Set.Iio i = ⋃ j, { k | k ≤ seq j } :=
     by
     ext1 k
-    simp only [Set.mem_Iio, Set.mem_unionᵢ, Set.mem_setOf_eq]
+    simp only [Set.mem_Iio, Set.mem_iUnion, Set.mem_setOf_eq]
     refine' ⟨fun hk_lt_i => _, fun h_exists_k_le_seq => _⟩
     · rw [tendsto_at_top'] at h_tendsto
       have h_nhds : Set.Ici k ∈ 𝓝 i :=
@@ -211,8 +211,8 @@ theorem IsStoppingTime.measurableSet_lt_of_isLUB (hτ : IsStoppingTime f τ) (i 
     ext1 ω
     simp only [Set.mem_setOf_eq, Set.mem_preimage, Set.mem_Iio]
   rw [h_lt_eq_preimage, h_Ioi_eq_Union]
-  simp only [Set.preimage_unionᵢ, Set.preimage_setOf_eq]
-  exact MeasurableSet.unionᵢ fun n => f.mono (h_bound n).le _ (hτ.measurable_set_le (seq n))
+  simp only [Set.preimage_iUnion, Set.preimage_setOf_eq]
+  exact MeasurableSet.iUnion fun n => f.mono (h_bound n).le _ (hτ.measurable_set_le (seq n))
 #align measure_theory.is_stopping_time.measurable_set_lt_of_is_lub MeasureTheory.IsStoppingTime.measurableSet_lt_of_isLUB
 
 theorem IsStoppingTime.measurableSet_lt (hτ : IsStoppingTime f τ) (i : ι) :
@@ -272,7 +272,7 @@ theorem isStoppingTime_of_measurableSet_eq [Preorder ι] [Countable ι] {f : Fil
       by
       ext
       simp]
-  refine' MeasurableSet.bunionᵢ (Set.to_countable _) fun k hk => _
+  refine' MeasurableSet.biUnion (Set.to_countable _) fun k hk => _
   exact f.mono hk _ (hτ k)
 #align measure_theory.is_stopping_time_of_measurable_set_eq MeasureTheory.isStoppingTime_of_measurableSet_eq
 
@@ -339,10 +339,10 @@ theorem add {f : Filtration ℕ m} {τ π : Ω → ℕ} (hτ : IsStoppingTime f 
   rw [(_ : { ω | (τ + π) ω ≤ i } = ⋃ k ≤ i, { ω | π ω = k } ∩ { ω | τ ω + k ≤ i })]
   ·
     exact
-      MeasurableSet.unionᵢ fun k =>
-        MeasurableSet.unionᵢ fun hk => (hπ.measurable_set_eq_le hk).inter (hτ.add_const_nat i)
+      MeasurableSet.iUnion fun k =>
+        MeasurableSet.iUnion fun hk => (hπ.measurable_set_eq_le hk).inter (hτ.add_const_nat i)
   ext ω
-  simp only [Pi.add_apply, Set.mem_setOf_eq, Set.mem_unionᵢ, Set.mem_inter_iff, exists_prop]
+  simp only [Pi.add_apply, Set.mem_setOf_eq, Set.mem_iUnion, Set.mem_inter_iff, exists_prop]
   refine' ⟨fun h => ⟨π ω, by linarith, rfl, h⟩, _⟩
   rintro ⟨j, hj, rfl, h⟩
   assumption
@@ -366,10 +366,10 @@ protected def measurableSpace (hτ : IsStoppingTime f τ) : MeasurableSpace Ω
       · exact hτ i
     · rw [Set.union_inter_distrib_right]
       simp only [Set.compl_inter_self, Set.union_empty]
-  measurable_set_unionᵢ s hs i := by
+  measurable_set_iUnion s hs i := by
     rw [forall_swap] at hs
-    rw [Set.unionᵢ_inter]
-    exact MeasurableSet.unionᵢ (hs i)
+    rw [Set.iUnion_inter]
+    exact MeasurableSet.iUnion (hs i)
 #align measure_theory.is_stopping_time.measurable_space MeasureTheory.IsStoppingTime.measurableSpace
 
 protected theorem measurableSet (hτ : IsStoppingTime f τ) (s : Set Ω) :
@@ -394,9 +394,9 @@ theorem measurableSpace_le_of_countable [Countable ι] (hτ : IsStoppingTime f �
   intro s hs
   change ∀ i, measurable_set[f i] (s ∩ { ω | τ ω ≤ i }) at hs
   rw [(_ : s = ⋃ i, s ∩ { ω | τ ω ≤ i })]
-  · exact MeasurableSet.unionᵢ fun i => f.le i _ (hs i)
+  · exact MeasurableSet.iUnion fun i => f.le i _ (hs i)
   · ext ω
-    constructor <;> rw [Set.mem_unionᵢ]
+    constructor <;> rw [Set.mem_iUnion]
     · exact fun hx => ⟨τ ω, hx, le_rfl⟩
     · rintro ⟨_, hx, _⟩
       exact hx
@@ -409,9 +409,9 @@ theorem measurableSpace_le' [IsCountablyGenerated (atTop : Filter ι)] [(atTop :
   change ∀ i, measurable_set[f i] (s ∩ { ω | τ ω ≤ i }) at hs
   obtain ⟨seq : ℕ → ι, h_seq_tendsto⟩ := at_top.exists_seq_tendsto
   rw [(_ : s = ⋃ n, s ∩ { ω | τ ω ≤ seq n })]
-  · exact MeasurableSet.unionᵢ fun i => f.le (seq i) _ (hs (seq i))
+  · exact MeasurableSet.iUnion fun i => f.le (seq i) _ (hs (seq i))
   · ext ω
-    constructor <;> rw [Set.mem_unionᵢ]
+    constructor <;> rw [Set.mem_iUnion]
     · intro hx
       suffices : ∃ i, τ ω ≤ seq i
       exact ⟨this.some, hx, this.some_spec⟩
@@ -635,12 +635,12 @@ protected theorem measurableSpace_le_of_countable_range (hτ : IsStoppingTime f 
   intro s hs
   change ∀ i, measurable_set[f i] (s ∩ { ω | τ ω ≤ i }) at hs
   rw [(_ : s = ⋃ i ∈ Set.range τ, s ∩ { ω | τ ω ≤ i })]
-  · exact MeasurableSet.bunionᵢ h_countable fun i _ => f.le i _ (hs i)
+  · exact MeasurableSet.biUnion h_countable fun i _ => f.le i _ (hs i)
   · ext ω
-    constructor <;> rw [Set.mem_unionᵢ]
+    constructor <;> rw [Set.mem_iUnion]
     · exact fun hx => ⟨τ ω, by simpa using hx⟩
     · rintro ⟨i, hx⟩
-      simp only [Set.mem_range, Set.unionᵢ_exists, Set.mem_unionᵢ, Set.mem_inter_iff,
+      simp only [Set.mem_range, Set.iUnion_exists, Set.mem_iUnion, Set.mem_inter_iff,
         Set.mem_setOf_eq, exists_prop, exists_and_right] at hx
       exact hx.1.2
 #align measure_theory.is_stopping_time.measurable_space_le_of_countable_range MeasureTheory.IsStoppingTime.measurableSpace_le_of_countable_range

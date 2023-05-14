@@ -854,20 +854,20 @@ theorem isPwo_sup [Preorder α] (s : Finset ι) {f : ι → Set α} :
 @[simp]
 theorem wellFoundedOn_bUnion [IsStrictOrder α r] (s : Finset ι) {f : ι → Set α} :
     (⋃ i ∈ s, f i).WellFoundedOn r ↔ ∀ i ∈ s, (f i).WellFoundedOn r := by
-  simpa only [Finset.sup_eq_supᵢ] using s.well_founded_on_sup
+  simpa only [Finset.sup_eq_iSup] using s.well_founded_on_sup
 #align finset.well_founded_on_bUnion Finset.wellFoundedOn_bUnion
 -/
 
 /- warning: finset.partially_well_ordered_on_bUnion -> Finset.partiallyWellOrderedOn_bUnion is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {α : Type.{u2}} {r : α -> α -> Prop} (s : Finset.{u1} ι) {f : ι -> (Set.{u2} α)}, Iff (Set.PartiallyWellOrderedOn.{u2} α (Set.unionᵢ.{u2, succ u1} α ι (fun (i : ι) => Set.unionᵢ.{u2, 0} α (Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i s) (fun (H : Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i s) => f i))) r) (forall (i : ι), (Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i s) -> (Set.PartiallyWellOrderedOn.{u2} α (f i) r))
+  forall {ι : Type.{u1}} {α : Type.{u2}} {r : α -> α -> Prop} (s : Finset.{u1} ι) {f : ι -> (Set.{u2} α)}, Iff (Set.PartiallyWellOrderedOn.{u2} α (Set.iUnion.{u2, succ u1} α ι (fun (i : ι) => Set.iUnion.{u2, 0} α (Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i s) (fun (H : Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i s) => f i))) r) (forall (i : ι), (Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i s) -> (Set.PartiallyWellOrderedOn.{u2} α (f i) r))
 but is expected to have type
-  forall {ι : Type.{u2}} {α : Type.{u1}} {r : α -> α -> Prop} (s : Finset.{u2} ι) {f : ι -> (Set.{u1} α)}, Iff (Set.PartiallyWellOrderedOn.{u1} α (Set.unionᵢ.{u1, succ u2} α ι (fun (i : ι) => Set.unionᵢ.{u1, 0} α (Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i s) (fun (H : Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i s) => f i))) r) (forall (i : ι), (Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i s) -> (Set.PartiallyWellOrderedOn.{u1} α (f i) r))
+  forall {ι : Type.{u2}} {α : Type.{u1}} {r : α -> α -> Prop} (s : Finset.{u2} ι) {f : ι -> (Set.{u1} α)}, Iff (Set.PartiallyWellOrderedOn.{u1} α (Set.iUnion.{u1, succ u2} α ι (fun (i : ι) => Set.iUnion.{u1, 0} α (Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i s) (fun (H : Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i s) => f i))) r) (forall (i : ι), (Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i s) -> (Set.PartiallyWellOrderedOn.{u1} α (f i) r))
 Case conversion may be inaccurate. Consider using '#align finset.partially_well_ordered_on_bUnion Finset.partiallyWellOrderedOn_bUnionₓ'. -/
 @[simp]
 theorem partiallyWellOrderedOn_bUnion (s : Finset ι) {f : ι → Set α} :
     (⋃ i ∈ s, f i).PartiallyWellOrderedOn r ↔ ∀ i ∈ s, (f i).PartiallyWellOrderedOn r := by
-  simpa only [Finset.sup_eq_supᵢ] using s.partially_well_ordered_on_sup
+  simpa only [Finset.sup_eq_iSup] using s.partially_well_ordered_on_sup
 #align finset.partially_well_ordered_on_bUnion Finset.partiallyWellOrderedOn_bUnion
 
 #print Finset.isWf_bUnion /-

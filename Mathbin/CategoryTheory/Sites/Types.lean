@@ -201,7 +201,7 @@ theorem subcanonical_typesGrothendieckTopology : Sheaf.Subcanonical typesGrothen
 theorem typesGrothendieckTopology_eq_canonical :
     typesGrothendieckTopology.{u} = Sheaf.canonicalTopology (Type u) :=
   le_antisymm subcanonical_typesGrothendieckTopology <|
-    infₛ_le
+    sInf_le
       ⟨yoneda.obj (ULift Bool), ⟨_, rfl⟩,
         GrothendieckTopology.ext <|
           funext fun α =>

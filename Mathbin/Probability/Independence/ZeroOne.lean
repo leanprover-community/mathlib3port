@@ -59,7 +59,7 @@ open Filter
 
 theorem indepCat_bsupr_compl (h_le : ∀ n, s n ≤ m0) (h_indep : Indep s μ) (t : Set ι) :
     IndepCat (⨆ n ∈ t, s n) (⨆ n ∈ tᶜ, s n) μ :=
-  indepCat_supᵢ_of_disjoint h_le h_indep disjoint_compl_right
+  indepCat_iSup_of_disjoint h_le h_indep disjoint_compl_right
 #align probability_theory.indep_bsupr_compl ProbabilityTheory.indepCat_bsupr_compl
 
 section Abstract
@@ -88,43 +88,43 @@ theorem indepCat_bsupr_limsup (h_le : ∀ n, s n ≤ m0) (h_indep : Indep s μ) 
           is_bounded_default)
       _
   simp only [Set.mem_compl_iff, eventually_map]
-  exact eventually_of_mem (hf t ht) le_supᵢ₂
+  exact eventually_of_mem (hf t ht) le_iSup₂
 #align probability_theory.indep_bsupr_limsup ProbabilityTheory.indepCat_bsupr_limsup
 
-theorem indepCat_supᵢ_directed_limsup (h_le : ∀ n, s n ≤ m0) (h_indep : Indep s μ)
+theorem indepCat_iSup_directed_limsup (h_le : ∀ n, s n ≤ m0) (h_indep : Indep s μ)
     (hf : ∀ t, p t → tᶜ ∈ f) (hns : Directed (· ≤ ·) ns) (hnsp : ∀ a, p (ns a)) :
     IndepCat (⨆ a, ⨆ n ∈ ns a, s n) (limsup s f) μ :=
   by
   refine' indep_supr_of_directed_le _ _ _ _
   · exact fun a => indep_bsupr_limsup h_le h_indep hf (hnsp a)
-  · exact fun a => supᵢ₂_le fun n hn => h_le n
-  · exact limsup_le_supr.trans (supᵢ_le h_le)
+  · exact fun a => iSup₂_le fun n hn => h_le n
+  · exact limsup_le_supr.trans (iSup_le h_le)
   · intro a b
     obtain ⟨c, hc⟩ := hns a b
-    refine' ⟨c, _, _⟩ <;> refine' supᵢ_mono fun n => supᵢ_mono' fun hn => ⟨_, le_rfl⟩
+    refine' ⟨c, _, _⟩ <;> refine' iSup_mono fun n => iSup_mono' fun hn => ⟨_, le_rfl⟩
     · exact hc.1 hn
     · exact hc.2 hn
-#align probability_theory.indep_supr_directed_limsup ProbabilityTheory.indepCat_supᵢ_directed_limsup
+#align probability_theory.indep_supr_directed_limsup ProbabilityTheory.indepCat_iSup_directed_limsup
 
-theorem indepCat_supᵢ_limsup (h_le : ∀ n, s n ≤ m0) (h_indep : Indep s μ) (hf : ∀ t, p t → tᶜ ∈ f)
+theorem indepCat_iSup_limsup (h_le : ∀ n, s n ≤ m0) (h_indep : Indep s μ) (hf : ∀ t, p t → tᶜ ∈ f)
     (hns : Directed (· ≤ ·) ns) (hnsp : ∀ a, p (ns a)) (hns_univ : ∀ n, ∃ a, n ∈ ns a) :
     IndepCat (⨆ n, s n) (limsup s f) μ :=
   by
   suffices (⨆ a, ⨆ n ∈ ns a, s n) = ⨆ n, s n by
     rw [← this]
     exact indep_supr_directed_limsup h_le h_indep hf hns hnsp
-  rw [supᵢ_comm]
-  refine' supᵢ_congr fun n => _
-  have : (⨆ (i : α) (H : n ∈ ns i), s n) = ⨆ h : ∃ i, n ∈ ns i, s n := by rw [supᵢ_exists]
+  rw [iSup_comm]
+  refine' iSup_congr fun n => _
+  have : (⨆ (i : α) (H : n ∈ ns i), s n) = ⨆ h : ∃ i, n ∈ ns i, s n := by rw [iSup_exists]
   haveI : Nonempty (∃ i : α, n ∈ ns i) := ⟨hns_univ n⟩
-  rw [this, supᵢ_const]
-#align probability_theory.indep_supr_limsup ProbabilityTheory.indepCat_supᵢ_limsup
+  rw [this, iSup_const]
+#align probability_theory.indep_supr_limsup ProbabilityTheory.indepCat_iSup_limsup
 
 theorem indepCat_limsup_self (h_le : ∀ n, s n ≤ m0) (h_indep : Indep s μ) (hf : ∀ t, p t → tᶜ ∈ f)
     (hns : Directed (· ≤ ·) ns) (hnsp : ∀ a, p (ns a)) (hns_univ : ∀ n, ∃ a, n ∈ ns a) :
     IndepCat (limsup s f) (limsup s f) μ :=
-  indepCat_of_indepCat_of_le_left (indepCat_supᵢ_limsup h_le h_indep hf hns hnsp hns_univ)
-    limsup_le_supᵢ
+  indepCat_of_indepCat_of_le_left (indepCat_iSup_limsup h_le h_indep hf hns hnsp hns_univ)
+    limsup_le_iSup
 #align probability_theory.indep_limsup_self ProbabilityTheory.indepCat_limsup_self
 
 theorem measure_zero_or_one_of_measurableSet_limsup (h_le : ∀ n, s n ≤ m0) (h_indep : Indep s μ)

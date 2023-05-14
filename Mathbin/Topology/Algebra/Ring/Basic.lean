@@ -467,24 +467,24 @@ instance : PartialOrder (RingTopology α) :=
 local notation "cont" => @Continuous _ _
 
 private def def_Inf (S : Set (RingTopology α)) : RingTopology α :=
-  let Inf_S' := infₛ (toTopologicalSpace '' S)
+  let Inf_S' := sInf (toTopologicalSpace '' S)
   { toTopologicalSpace := Inf_S'
     continuous_add := by
-      apply continuous_infₛ_rng.2
+      apply continuous_sInf_rng.2
       rintro _ ⟨⟨t, tr⟩, haS, rfl⟩; skip
-      have h := continuous_infₛ_dom (Set.mem_image_of_mem to_topological_space haS) continuous_id
+      have h := continuous_sInf_dom (Set.mem_image_of_mem to_topological_space haS) continuous_id
       have h_continuous_id := @Continuous.prod_map _ _ _ _ t t Inf_S' Inf_S' _ _ h h
       exact @Continuous.comp _ _ _ (id _) (id _) t _ _ continuous_add h_continuous_id
     continuous_mul := by
-      apply continuous_infₛ_rng.2
+      apply continuous_sInf_rng.2
       rintro _ ⟨⟨t, tr⟩, haS, rfl⟩; skip
-      have h := continuous_infₛ_dom (Set.mem_image_of_mem to_topological_space haS) continuous_id
+      have h := continuous_sInf_dom (Set.mem_image_of_mem to_topological_space haS) continuous_id
       have h_continuous_id := @Continuous.prod_map _ _ _ _ t t Inf_S' Inf_S' _ _ h h
       exact @Continuous.comp _ _ _ (id _) (id _) t _ _ continuous_mul h_continuous_id
     continuous_neg := by
-      apply continuous_infₛ_rng.2
+      apply continuous_sInf_rng.2
       rintro _ ⟨⟨t, tr⟩, haS, rfl⟩; skip
-      have h := continuous_infₛ_dom (Set.mem_image_of_mem to_topological_space haS) continuous_id
+      have h := continuous_sInf_dom (Set.mem_image_of_mem to_topological_space haS) continuous_id
       exact @Continuous.comp _ _ _ (id _) (id _) t _ _ continuous_neg h }
 #align ring_topology.def_Inf ring_topology.def_Inf
 
@@ -498,7 +498,7 @@ The supremum of two ring topologies `s` and `t` is the infimum of the family of 
 contained in the intersection of `s` and `t`. -/
 instance : CompleteSemilatticeInf (RingTopology α) :=
   { RingTopology.partialOrder with
-    infₛ := defInf
+    sInf := defInf
     inf_le := fun S a haS =>
       by
       apply topological_space.complete_lattice.Inf_le
@@ -516,7 +516,7 @@ instance : CompleteLattice (RingTopology α) :=
 /-- Given `f : α → β` and a topology on `α`, the coinduced ring topology on `β` is the finest
 topology such that `f` is continuous and `β` is a topological ring. -/
 def coinduced {α β : Type _} [t : TopologicalSpace α] [Ring β] (f : α → β) : RingTopology β :=
-  infₛ { b : RingTopology β | TopologicalSpace.coinduced f t ≤ b.toTopologicalSpace }
+  sInf { b : RingTopology β | TopologicalSpace.coinduced f t ≤ b.toTopologicalSpace }
 #align ring_topology.coinduced RingTopology.coinduced
 -/
 
@@ -530,7 +530,7 @@ theorem coinduced_continuous {α β : Type _} [t : TopologicalSpace α] [Ring β
     cont t (coinduced f).toTopologicalSpace f :=
   by
   rw [continuous_iff_coinduced_le]
-  refine' le_infₛ _
+  refine' le_sInf _
   rintro _ ⟨t', ht', rfl⟩
   exact ht'
 #align ring_topology.coinduced_continuous RingTopology.coinduced_continuous

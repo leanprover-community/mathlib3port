@@ -328,7 +328,7 @@ theorem SurjectiveOnWith.surjOn {f : NormedAddGroupHom V₁ V₂} {K : AddSubgro
 #print NormedAddGroupHom.opNorm /-
 /-- The operator norm of a seminormed group homomorphism is the inf of all its bounds. -/
 def opNorm (f : NormedAddGroupHom V₁ V₂) :=
-  infₛ { c | 0 ≤ c ∧ ∀ x, ‖f x‖ ≤ c * ‖x‖ }
+  sInf { c | 0 ≤ c ∧ ∀ x, ‖f x‖ ≤ c * ‖x‖ }
 #align normed_add_group_hom.op_norm NormedAddGroupHom.opNorm
 -/
 
@@ -340,11 +340,11 @@ instance hasOpNorm : Norm (NormedAddGroupHom V₁ V₂) :=
 
 /- warning: normed_add_group_hom.norm_def -> NormedAddGroupHom.norm_def is a dubious translation:
 lean 3 declaration is
-  forall {V₁ : Type.{u1}} {V₂ : Type.{u2}} [_inst_2 : SeminormedAddCommGroup.{u1} V₁] [_inst_3 : SeminormedAddCommGroup.{u2} V₂] (f : NormedAddGroupHom.{u1, u2} V₁ V₂ _inst_2 _inst_3), Eq.{1} Real (Norm.norm.{max u1 u2} (NormedAddGroupHom.{u1, u2} V₁ V₂ _inst_2 _inst_3) (NormedAddGroupHom.hasOpNorm.{u1, u2} V₁ V₂ _inst_2 _inst_3) f) (InfSet.infₛ.{0} Real Real.hasInf (setOf.{0} Real (fun (c : Real) => And (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) c) (forall (x : V₁), LE.le.{0} Real Real.hasLe (Norm.norm.{u2} V₂ (SeminormedAddCommGroup.toHasNorm.{u2} V₂ _inst_3) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (NormedAddGroupHom.{u1, u2} V₁ V₂ _inst_2 _inst_3) (fun (_x : NormedAddGroupHom.{u1, u2} V₁ V₂ _inst_2 _inst_3) => V₁ -> V₂) (NormedAddGroupHom.hasCoeToFun.{u1, u2} V₁ V₂ _inst_2 _inst_3) f x)) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.hasMul) c (Norm.norm.{u1} V₁ (SeminormedAddCommGroup.toHasNorm.{u1} V₁ _inst_2) x))))))
+  forall {V₁ : Type.{u1}} {V₂ : Type.{u2}} [_inst_2 : SeminormedAddCommGroup.{u1} V₁] [_inst_3 : SeminormedAddCommGroup.{u2} V₂] (f : NormedAddGroupHom.{u1, u2} V₁ V₂ _inst_2 _inst_3), Eq.{1} Real (Norm.norm.{max u1 u2} (NormedAddGroupHom.{u1, u2} V₁ V₂ _inst_2 _inst_3) (NormedAddGroupHom.hasOpNorm.{u1, u2} V₁ V₂ _inst_2 _inst_3) f) (InfSet.sInf.{0} Real Real.hasInf (setOf.{0} Real (fun (c : Real) => And (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) c) (forall (x : V₁), LE.le.{0} Real Real.hasLe (Norm.norm.{u2} V₂ (SeminormedAddCommGroup.toHasNorm.{u2} V₂ _inst_3) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (NormedAddGroupHom.{u1, u2} V₁ V₂ _inst_2 _inst_3) (fun (_x : NormedAddGroupHom.{u1, u2} V₁ V₂ _inst_2 _inst_3) => V₁ -> V₂) (NormedAddGroupHom.hasCoeToFun.{u1, u2} V₁ V₂ _inst_2 _inst_3) f x)) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.hasMul) c (Norm.norm.{u1} V₁ (SeminormedAddCommGroup.toHasNorm.{u1} V₁ _inst_2) x))))))
 but is expected to have type
-  forall {V₁ : Type.{u2}} {V₂ : Type.{u1}} [_inst_2 : SeminormedAddCommGroup.{u2} V₁] [_inst_3 : SeminormedAddCommGroup.{u1} V₂] (f : NormedAddGroupHom.{u2, u1} V₁ V₂ _inst_2 _inst_3), Eq.{1} Real (Norm.norm.{max u2 u1} (NormedAddGroupHom.{u2, u1} V₁ V₂ _inst_2 _inst_3) (NormedAddGroupHom.hasOpNorm.{u2, u1} V₁ V₂ _inst_2 _inst_3) f) (InfSet.infₛ.{0} Real Real.instInfSetReal (setOf.{0} Real (fun (c : Real) => And (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) c) (forall (x : V₁), LE.le.{0} Real Real.instLEReal (Norm.norm.{u1} V₂ (SeminormedAddCommGroup.toNorm.{u1} V₂ _inst_3) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (NormedAddGroupHom.{u2, u1} V₁ V₂ _inst_2 _inst_3) V₁ (fun (_x : V₁) => V₂) (AddHomClass.toFunLike.{max u2 u1, u2, u1} (NormedAddGroupHom.{u2, u1} V₁ V₂ _inst_2 _inst_3) V₁ V₂ (AddZeroClass.toAdd.{u2} V₁ (AddMonoid.toAddZeroClass.{u2} V₁ (SubNegMonoid.toAddMonoid.{u2} V₁ (AddGroup.toSubNegMonoid.{u2} V₁ (SeminormedAddGroup.toAddGroup.{u2} V₁ (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} V₁ _inst_2)))))) (AddZeroClass.toAdd.{u1} V₂ (AddMonoid.toAddZeroClass.{u1} V₂ (SubNegMonoid.toAddMonoid.{u1} V₂ (AddGroup.toSubNegMonoid.{u1} V₂ (SeminormedAddGroup.toAddGroup.{u1} V₂ (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} V₂ _inst_3)))))) (AddMonoidHomClass.toAddHomClass.{max u2 u1, u2, u1} (NormedAddGroupHom.{u2, u1} V₁ V₂ _inst_2 _inst_3) V₁ V₂ (AddMonoid.toAddZeroClass.{u2} V₁ (SubNegMonoid.toAddMonoid.{u2} V₁ (AddGroup.toSubNegMonoid.{u2} V₁ (SeminormedAddGroup.toAddGroup.{u2} V₁ (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} V₁ _inst_2))))) (AddMonoid.toAddZeroClass.{u1} V₂ (SubNegMonoid.toAddMonoid.{u1} V₂ (AddGroup.toSubNegMonoid.{u1} V₂ (SeminormedAddGroup.toAddGroup.{u1} V₂ (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} V₂ _inst_3))))) (NormedAddGroupHom.toAddMonoidHomClass.{u2, u1} V₁ V₂ _inst_2 _inst_3))) f x)) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) c (Norm.norm.{u2} V₁ (SeminormedAddCommGroup.toNorm.{u2} V₁ _inst_2) x))))))
+  forall {V₁ : Type.{u2}} {V₂ : Type.{u1}} [_inst_2 : SeminormedAddCommGroup.{u2} V₁] [_inst_3 : SeminormedAddCommGroup.{u1} V₂] (f : NormedAddGroupHom.{u2, u1} V₁ V₂ _inst_2 _inst_3), Eq.{1} Real (Norm.norm.{max u2 u1} (NormedAddGroupHom.{u2, u1} V₁ V₂ _inst_2 _inst_3) (NormedAddGroupHom.hasOpNorm.{u2, u1} V₁ V₂ _inst_2 _inst_3) f) (InfSet.sInf.{0} Real Real.instInfSetReal (setOf.{0} Real (fun (c : Real) => And (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) c) (forall (x : V₁), LE.le.{0} Real Real.instLEReal (Norm.norm.{u1} V₂ (SeminormedAddCommGroup.toNorm.{u1} V₂ _inst_3) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (NormedAddGroupHom.{u2, u1} V₁ V₂ _inst_2 _inst_3) V₁ (fun (_x : V₁) => V₂) (AddHomClass.toFunLike.{max u2 u1, u2, u1} (NormedAddGroupHom.{u2, u1} V₁ V₂ _inst_2 _inst_3) V₁ V₂ (AddZeroClass.toAdd.{u2} V₁ (AddMonoid.toAddZeroClass.{u2} V₁ (SubNegMonoid.toAddMonoid.{u2} V₁ (AddGroup.toSubNegMonoid.{u2} V₁ (SeminormedAddGroup.toAddGroup.{u2} V₁ (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} V₁ _inst_2)))))) (AddZeroClass.toAdd.{u1} V₂ (AddMonoid.toAddZeroClass.{u1} V₂ (SubNegMonoid.toAddMonoid.{u1} V₂ (AddGroup.toSubNegMonoid.{u1} V₂ (SeminormedAddGroup.toAddGroup.{u1} V₂ (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} V₂ _inst_3)))))) (AddMonoidHomClass.toAddHomClass.{max u2 u1, u2, u1} (NormedAddGroupHom.{u2, u1} V₁ V₂ _inst_2 _inst_3) V₁ V₂ (AddMonoid.toAddZeroClass.{u2} V₁ (SubNegMonoid.toAddMonoid.{u2} V₁ (AddGroup.toSubNegMonoid.{u2} V₁ (SeminormedAddGroup.toAddGroup.{u2} V₁ (SeminormedAddCommGroup.toSeminormedAddGroup.{u2} V₁ _inst_2))))) (AddMonoid.toAddZeroClass.{u1} V₂ (SubNegMonoid.toAddMonoid.{u1} V₂ (AddGroup.toSubNegMonoid.{u1} V₂ (SeminormedAddGroup.toAddGroup.{u1} V₂ (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} V₂ _inst_3))))) (NormedAddGroupHom.toAddMonoidHomClass.{u2, u1} V₁ V₂ _inst_2 _inst_3))) f x)) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) c (Norm.norm.{u2} V₁ (SeminormedAddCommGroup.toNorm.{u2} V₁ _inst_2) x))))))
 Case conversion may be inaccurate. Consider using '#align normed_add_group_hom.norm_def NormedAddGroupHom.norm_defₓ'. -/
-theorem norm_def : ‖f‖ = infₛ { c | 0 ≤ c ∧ ∀ x, ‖f x‖ ≤ c * ‖x‖ } :=
+theorem norm_def : ‖f‖ = sInf { c | 0 ≤ c ∧ ∀ x, ‖f x‖ ≤ c * ‖x‖ } :=
   rfl
 #align normed_add_group_hom.norm_def NormedAddGroupHom.norm_def
 
@@ -380,7 +380,7 @@ but is expected to have type
   forall {V₁ : Type.{u2}} {V₂ : Type.{u1}} [_inst_2 : SeminormedAddCommGroup.{u2} V₁] [_inst_3 : SeminormedAddCommGroup.{u1} V₂] (f : NormedAddGroupHom.{u2, u1} V₁ V₂ _inst_2 _inst_3), LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) (Norm.norm.{max u2 u1} (NormedAddGroupHom.{u2, u1} V₁ V₂ _inst_2 _inst_3) (NormedAddGroupHom.hasOpNorm.{u2, u1} V₁ V₂ _inst_2 _inst_3) f)
 Case conversion may be inaccurate. Consider using '#align normed_add_group_hom.op_norm_nonneg NormedAddGroupHom.opNorm_nonnegₓ'. -/
 theorem opNorm_nonneg : 0 ≤ ‖f‖ :=
-  le_cinfₛ bounds_nonempty fun _ ⟨hx, _⟩ => hx
+  le_csInf bounds_nonempty fun _ ⟨hx, _⟩ => hx
 #align normed_add_group_hom.op_norm_nonneg NormedAddGroupHom.opNorm_nonneg
 
 /- warning: normed_add_group_hom.le_op_norm -> NormedAddGroupHom.le_opNorm is a dubious translation:
@@ -399,7 +399,7 @@ theorem le_opNorm (x : V₁) : ‖f x‖ ≤ ‖f‖ * ‖x‖ :=
   have hlt : 0 < ‖x‖ := lt_of_le_of_ne (norm_nonneg x) (Ne.symm h)
   exact
     (div_le_iff hlt).mp
-      (le_cinfₛ bounds_nonempty fun c ⟨_, hc⟩ => (div_le_iff hlt).mpr <| by apply hc)
+      (le_csInf bounds_nonempty fun c ⟨_, hc⟩ => (div_le_iff hlt).mpr <| by apply hc)
 #align normed_add_group_hom.le_op_norm NormedAddGroupHom.le_opNorm
 
 /- warning: normed_add_group_hom.le_op_norm_of_le -> NormedAddGroupHom.le_opNorm_of_le is a dubious translation:
@@ -475,7 +475,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align normed_add_group_hom.op_norm_le_bound NormedAddGroupHom.opNorm_le_boundₓ'. -/
 /-- If one controls the norm of every `f x`, then one controls the norm of `f`. -/
 theorem opNorm_le_bound {M : ℝ} (hMp : 0 ≤ M) (hM : ∀ x, ‖f x‖ ≤ M * ‖x‖) : ‖f‖ ≤ M :=
-  cinfₛ_le bounds_bddBelow ⟨hMp, hM⟩
+  csInf_le bounds_bddBelow ⟨hMp, hM⟩
 #align normed_add_group_hom.op_norm_le_bound NormedAddGroupHom.opNorm_le_bound
 
 /- warning: normed_add_group_hom.op_norm_eq_of_bounds -> NormedAddGroupHom.opNorm_eq_of_bounds is a dubious translation:
@@ -487,7 +487,7 @@ Case conversion may be inaccurate. Consider using '#align normed_add_group_hom.o
 theorem opNorm_eq_of_bounds {M : ℝ} (M_nonneg : 0 ≤ M) (h_above : ∀ x, ‖f x‖ ≤ M * ‖x‖)
     (h_below : ∀ N ≥ 0, (∀ x, ‖f x‖ ≤ N * ‖x‖) → M ≤ N) : ‖f‖ = M :=
   le_antisymm (f.opNorm_le_bound M_nonneg h_above)
-    ((le_cinfₛ_iff NormedAddGroupHom.bounds_bddBelow ⟨M, M_nonneg, h_above⟩).mpr
+    ((le_csInf_iff NormedAddGroupHom.bounds_bddBelow ⟨M, M_nonneg, h_above⟩).mpr
       fun N ⟨N_nonneg, hN⟩ => h_below N N_nonneg hN)
 #align normed_add_group_hom.op_norm_eq_of_bounds NormedAddGroupHom.opNorm_eq_of_bounds
 
@@ -623,7 +623,7 @@ Case conversion may be inaccurate. Consider using '#align normed_add_group_hom.o
 /-- The norm of the `0` operator is `0`. -/
 theorem opNorm_zero : ‖(0 : NormedAddGroupHom V₁ V₂)‖ = 0 :=
   le_antisymm
-    (cinfₛ_le bounds_bddBelow
+    (csInf_le bounds_bddBelow
       ⟨ge_of_eq rfl, fun _ =>
         le_of_eq
           (by

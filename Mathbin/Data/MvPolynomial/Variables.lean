@@ -219,7 +219,7 @@ theorem degrees_mul (p q : MvPolynomial σ R) : (p * q).degrees ≤ p.degrees + 
   by
   refine' Finset.sup_le fun b hb => _
   have := support_mul p q hb
-  simp only [Finset.mem_bunionᵢ, Finset.mem_singleton] at this
+  simp only [Finset.mem_biUnion, Finset.mem_singleton] at this
   rcases this with ⟨a₁, h₁, a₂, h₂, rfl⟩
   rw [Finsupp.toMultiset_add]
   exact add_le_add (Finset.le_sup h₁) (Finset.le_sup h₂)
@@ -548,20 +548,20 @@ theorem vars_pow (φ : MvPolynomial σ R) (n : ℕ) : (φ ^ n).vars ⊆ φ.vars 
 
 /- warning: mv_polynomial.vars_prod -> MvPolynomial.vars_prod is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} {σ : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] {ι : Type.{u3}} {s : Finset.{u3} ι} (f : ι -> (MvPolynomial.{u2, u1} σ R _inst_1)), HasSubset.Subset.{u2} (Finset.{u2} σ) (Finset.hasSubset.{u2} σ) (MvPolynomial.vars.{u1, u2} R σ _inst_1 (Finset.prod.{max u2 u1, u3} (MvPolynomial.{u2, u1} σ R _inst_1) ι (CommSemiring.toCommMonoid.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1)) s (fun (i : ι) => f i))) (Finset.bunionᵢ.{u3, u2} ι σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u2} σ a b)) s (fun (i : ι) => MvPolynomial.vars.{u1, u2} R σ _inst_1 (f i)))
+  forall {R : Type.{u1}} {σ : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] {ι : Type.{u3}} {s : Finset.{u3} ι} (f : ι -> (MvPolynomial.{u2, u1} σ R _inst_1)), HasSubset.Subset.{u2} (Finset.{u2} σ) (Finset.hasSubset.{u2} σ) (MvPolynomial.vars.{u1, u2} R σ _inst_1 (Finset.prod.{max u2 u1, u3} (MvPolynomial.{u2, u1} σ R _inst_1) ι (CommSemiring.toCommMonoid.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1)) s (fun (i : ι) => f i))) (Finset.biUnion.{u3, u2} ι σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u2} σ a b)) s (fun (i : ι) => MvPolynomial.vars.{u1, u2} R σ _inst_1 (f i)))
 but is expected to have type
-  forall {R : Type.{u3}} {σ : Type.{u1}} [_inst_1 : CommSemiring.{u3} R] {ι : Type.{u2}} {s : Finset.{u2} ι} (f : ι -> (MvPolynomial.{u1, u3} σ R _inst_1)), HasSubset.Subset.{u1} (Finset.{u1} σ) (Finset.instHasSubsetFinset.{u1} σ) (MvPolynomial.vars.{u3, u1} R σ _inst_1 (Finset.prod.{max u3 u1, u2} (MvPolynomial.{u1, u3} σ R _inst_1) ι (CommSemiring.toCommMonoid.{max u3 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R σ _inst_1)) s (fun (i : ι) => f i))) (Finset.bunionᵢ.{u2, u1} ι σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u1} σ a b)) s (fun (i : ι) => MvPolynomial.vars.{u3, u1} R σ _inst_1 (f i)))
+  forall {R : Type.{u3}} {σ : Type.{u1}} [_inst_1 : CommSemiring.{u3} R] {ι : Type.{u2}} {s : Finset.{u2} ι} (f : ι -> (MvPolynomial.{u1, u3} σ R _inst_1)), HasSubset.Subset.{u1} (Finset.{u1} σ) (Finset.instHasSubsetFinset.{u1} σ) (MvPolynomial.vars.{u3, u1} R σ _inst_1 (Finset.prod.{max u3 u1, u2} (MvPolynomial.{u1, u3} σ R _inst_1) ι (CommSemiring.toCommMonoid.{max u3 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R σ _inst_1)) s (fun (i : ι) => f i))) (Finset.biUnion.{u2, u1} ι σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u1} σ a b)) s (fun (i : ι) => MvPolynomial.vars.{u3, u1} R σ _inst_1 (f i)))
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.vars_prod MvPolynomial.vars_prodₓ'. -/
 /-- The variables of the product of a family of polynomials
 are a subset of the union of the sets of variables of each polynomial.
 -/
 theorem vars_prod {ι : Type _} {s : Finset ι} (f : ι → MvPolynomial σ R) :
-    (∏ i in s, f i).vars ⊆ s.bunionᵢ fun i => (f i).vars :=
+    (∏ i in s, f i).vars ⊆ s.biUnion fun i => (f i).vars :=
   by
   apply s.induction_on
   · simp
   · intro a s hs hsub
-    simp only [hs, Finset.bunionᵢ_insert, Finset.prod_insert, not_false_iff]
+    simp only [hs, Finset.biUnion_insert, Finset.prod_insert, not_false_iff]
     apply Finset.Subset.trans (vars_mul _ _)
     exact Finset.union_subset_union (Finset.Subset.refl _) hsub
 #align mv_polynomial.vars_prod MvPolynomial.vars_prod
@@ -596,16 +596,16 @@ variable {ι : Type _} (t : Finset ι) (φ : ι → MvPolynomial σ R)
 
 /- warning: mv_polynomial.vars_sum_subset -> MvPolynomial.vars_sum_subset is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} {σ : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] {ι : Type.{u3}} (t : Finset.{u3} ι) (φ : ι -> (MvPolynomial.{u2, u1} σ R _inst_1)), HasSubset.Subset.{u2} (Finset.{u2} σ) (Finset.hasSubset.{u2} σ) (MvPolynomial.vars.{u1, u2} R σ _inst_1 (Finset.sum.{max u2 u1, u3} (MvPolynomial.{u2, u1} σ R _inst_1) ι (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1))))) t (fun (i : ι) => φ i))) (Finset.bunionᵢ.{u3, u2} ι σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u2} σ a b)) t (fun (i : ι) => MvPolynomial.vars.{u1, u2} R σ _inst_1 (φ i)))
+  forall {R : Type.{u1}} {σ : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] {ι : Type.{u3}} (t : Finset.{u3} ι) (φ : ι -> (MvPolynomial.{u2, u1} σ R _inst_1)), HasSubset.Subset.{u2} (Finset.{u2} σ) (Finset.hasSubset.{u2} σ) (MvPolynomial.vars.{u1, u2} R σ _inst_1 (Finset.sum.{max u2 u1, u3} (MvPolynomial.{u2, u1} σ R _inst_1) ι (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1))))) t (fun (i : ι) => φ i))) (Finset.biUnion.{u3, u2} ι σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u2} σ a b)) t (fun (i : ι) => MvPolynomial.vars.{u1, u2} R σ _inst_1 (φ i)))
 but is expected to have type
-  forall {R : Type.{u3}} {σ : Type.{u2}} [_inst_1 : CommSemiring.{u3} R] {ι : Type.{u1}} (t : Finset.{u1} ι) (φ : ι -> (MvPolynomial.{u2, u3} σ R _inst_1)), HasSubset.Subset.{u2} (Finset.{u2} σ) (Finset.instHasSubsetFinset.{u2} σ) (MvPolynomial.vars.{u3, u2} R σ _inst_1 (Finset.sum.{max u3 u2, u1} (MvPolynomial.{u2, u3} σ R _inst_1) ι (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u3 u2} (MvPolynomial.{u2, u3} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u3 u2} (MvPolynomial.{u2, u3} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u3 u2} (MvPolynomial.{u2, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u3 u2} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1))))) t (fun (i : ι) => φ i))) (Finset.bunionᵢ.{u1, u2} ι σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u2} σ a b)) t (fun (i : ι) => MvPolynomial.vars.{u3, u2} R σ _inst_1 (φ i)))
+  forall {R : Type.{u3}} {σ : Type.{u2}} [_inst_1 : CommSemiring.{u3} R] {ι : Type.{u1}} (t : Finset.{u1} ι) (φ : ι -> (MvPolynomial.{u2, u3} σ R _inst_1)), HasSubset.Subset.{u2} (Finset.{u2} σ) (Finset.instHasSubsetFinset.{u2} σ) (MvPolynomial.vars.{u3, u2} R σ _inst_1 (Finset.sum.{max u3 u2, u1} (MvPolynomial.{u2, u3} σ R _inst_1) ι (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u3 u2} (MvPolynomial.{u2, u3} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u3 u2} (MvPolynomial.{u2, u3} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u3 u2} (MvPolynomial.{u2, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u3 u2} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1))))) t (fun (i : ι) => φ i))) (Finset.biUnion.{u1, u2} ι σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u2} σ a b)) t (fun (i : ι) => MvPolynomial.vars.{u3, u2} R σ _inst_1 (φ i)))
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.vars_sum_subset MvPolynomial.vars_sum_subsetₓ'. -/
-theorem vars_sum_subset : (∑ i in t, φ i).vars ⊆ Finset.bunionᵢ t fun i => (φ i).vars :=
+theorem vars_sum_subset : (∑ i in t, φ i).vars ⊆ Finset.biUnion t fun i => (φ i).vars :=
   by
   apply t.induction_on
   · simp
   · intro a s has hsum
-    rw [Finset.bunionᵢ_insert, Finset.sum_insert has]
+    rw [Finset.biUnion_insert, Finset.sum_insert has]
     refine'
       Finset.Subset.trans (vars_add_subset _ _) (Finset.union_subset_union (Finset.Subset.refl _) _)
     assumption
@@ -613,22 +613,22 @@ theorem vars_sum_subset : (∑ i in t, φ i).vars ⊆ Finset.bunionᵢ t fun i =
 
 /- warning: mv_polynomial.vars_sum_of_disjoint -> MvPolynomial.vars_sum_of_disjoint is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} {σ : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] {ι : Type.{u3}} (t : Finset.{u3} ι) (φ : ι -> (MvPolynomial.{u2, u1} σ R _inst_1)), (Pairwise.{u3} ι (Function.onFun.{succ u3, succ u2, 1} ι (Finset.{u2} σ) Prop (Disjoint.{u2} (Finset.{u2} σ) (Finset.partialOrder.{u2} σ) (Finset.orderBot.{u2} σ)) (fun (i : ι) => MvPolynomial.vars.{u1, u2} R σ _inst_1 (φ i)))) -> (Eq.{succ u2} (Finset.{u2} σ) (MvPolynomial.vars.{u1, u2} R σ _inst_1 (Finset.sum.{max u2 u1, u3} (MvPolynomial.{u2, u1} σ R _inst_1) ι (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1))))) t (fun (i : ι) => φ i))) (Finset.bunionᵢ.{u3, u2} ι σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u2} σ a b)) t (fun (i : ι) => MvPolynomial.vars.{u1, u2} R σ _inst_1 (φ i))))
+  forall {R : Type.{u1}} {σ : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] {ι : Type.{u3}} (t : Finset.{u3} ι) (φ : ι -> (MvPolynomial.{u2, u1} σ R _inst_1)), (Pairwise.{u3} ι (Function.onFun.{succ u3, succ u2, 1} ι (Finset.{u2} σ) Prop (Disjoint.{u2} (Finset.{u2} σ) (Finset.partialOrder.{u2} σ) (Finset.orderBot.{u2} σ)) (fun (i : ι) => MvPolynomial.vars.{u1, u2} R σ _inst_1 (φ i)))) -> (Eq.{succ u2} (Finset.{u2} σ) (MvPolynomial.vars.{u1, u2} R σ _inst_1 (Finset.sum.{max u2 u1, u3} (MvPolynomial.{u2, u1} σ R _inst_1) ι (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1))))) t (fun (i : ι) => φ i))) (Finset.biUnion.{u3, u2} ι σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u2} σ a b)) t (fun (i : ι) => MvPolynomial.vars.{u1, u2} R σ _inst_1 (φ i))))
 but is expected to have type
-  forall {R : Type.{u3}} {σ : Type.{u1}} [_inst_1 : CommSemiring.{u3} R] {ι : Type.{u2}} (t : Finset.{u2} ι) (φ : ι -> (MvPolynomial.{u1, u3} σ R _inst_1)), (Pairwise.{u2} ι (Function.onFun.{succ u2, succ u1, 1} ι (Finset.{u1} σ) Prop (Disjoint.{u1} (Finset.{u1} σ) (Finset.partialOrder.{u1} σ) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} σ)) (fun (i : ι) => MvPolynomial.vars.{u3, u1} R σ _inst_1 (φ i)))) -> (Eq.{succ u1} (Finset.{u1} σ) (MvPolynomial.vars.{u3, u1} R σ _inst_1 (Finset.sum.{max u3 u1, u2} (MvPolynomial.{u1, u3} σ R _inst_1) ι (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u3 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u3 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u3 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u3 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R σ _inst_1))))) t (fun (i : ι) => φ i))) (Finset.bunionᵢ.{u2, u1} ι σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u1} σ a b)) t (fun (i : ι) => MvPolynomial.vars.{u3, u1} R σ _inst_1 (φ i))))
+  forall {R : Type.{u3}} {σ : Type.{u1}} [_inst_1 : CommSemiring.{u3} R] {ι : Type.{u2}} (t : Finset.{u2} ι) (φ : ι -> (MvPolynomial.{u1, u3} σ R _inst_1)), (Pairwise.{u2} ι (Function.onFun.{succ u2, succ u1, 1} ι (Finset.{u1} σ) Prop (Disjoint.{u1} (Finset.{u1} σ) (Finset.partialOrder.{u1} σ) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} σ)) (fun (i : ι) => MvPolynomial.vars.{u3, u1} R σ _inst_1 (φ i)))) -> (Eq.{succ u1} (Finset.{u1} σ) (MvPolynomial.vars.{u3, u1} R σ _inst_1 (Finset.sum.{max u3 u1, u2} (MvPolynomial.{u1, u3} σ R _inst_1) ι (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u3 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u3 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u3 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u3 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R σ _inst_1))))) t (fun (i : ι) => φ i))) (Finset.biUnion.{u2, u1} ι σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u1} σ a b)) t (fun (i : ι) => MvPolynomial.vars.{u3, u1} R σ _inst_1 (φ i))))
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.vars_sum_of_disjoint MvPolynomial.vars_sum_of_disjointₓ'. -/
 theorem vars_sum_of_disjoint (h : Pairwise <| (Disjoint on fun i => (φ i).vars)) :
-    (∑ i in t, φ i).vars = Finset.bunionᵢ t fun i => (φ i).vars :=
+    (∑ i in t, φ i).vars = Finset.biUnion t fun i => (φ i).vars :=
   by
   apply t.induction_on
   · simp
   · intro a s has hsum
-    rw [Finset.bunionᵢ_insert, Finset.sum_insert has, vars_add_of_disjoint, hsum]
+    rw [Finset.biUnion_insert, Finset.sum_insert has, vars_add_of_disjoint, hsum]
     unfold Pairwise on_fun at h
     rw [hsum]
     simp only [Finset.disjoint_iff_ne] at h⊢
     intro v hv v2 hv2
-    rw [Finset.mem_bunionᵢ] at hv2
+    rw [Finset.mem_biUnion] at hv2
     rcases hv2 with ⟨i, his, hi⟩
     refine' h _ _ hv _ hi
     rintro rfl
@@ -675,17 +675,17 @@ theorem vars_monomial_single (i : σ) {e : ℕ} {r : R} (he : e ≠ 0) (hr : r �
   rw [vars_monomial hr, Finsupp.support_single_ne_zero _ he]
 #align mv_polynomial.vars_monomial_single MvPolynomial.vars_monomial_single
 
-/- warning: mv_polynomial.vars_eq_support_bUnion_support -> MvPolynomial.vars_eq_support_bunionᵢ_support is a dubious translation:
+/- warning: mv_polynomial.vars_eq_support_bUnion_support -> MvPolynomial.vars_eq_support_biUnion_support is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} {σ : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] (p : MvPolynomial.{u2, u1} σ R _inst_1), Eq.{succ u2} (Finset.{u2} σ) (MvPolynomial.vars.{u1, u2} R σ _inst_1 p) (Finset.bunionᵢ.{u2, u2} (Finsupp.{u2, 0} σ Nat Nat.hasZero) σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u2} σ a b)) (MvPolynomial.support.{u1, u2} R σ _inst_1 p) (Finsupp.support.{u2, 0} σ Nat Nat.hasZero))
+  forall {R : Type.{u1}} {σ : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] (p : MvPolynomial.{u2, u1} σ R _inst_1), Eq.{succ u2} (Finset.{u2} σ) (MvPolynomial.vars.{u1, u2} R σ _inst_1 p) (Finset.biUnion.{u2, u2} (Finsupp.{u2, 0} σ Nat Nat.hasZero) σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u2} σ a b)) (MvPolynomial.support.{u1, u2} R σ _inst_1 p) (Finsupp.support.{u2, 0} σ Nat Nat.hasZero))
 but is expected to have type
-  forall {R : Type.{u2}} {σ : Type.{u1}} [_inst_1 : CommSemiring.{u2} R] (p : MvPolynomial.{u1, u2} σ R _inst_1), Eq.{succ u1} (Finset.{u1} σ) (MvPolynomial.vars.{u2, u1} R σ _inst_1 p) (Finset.bunionᵢ.{u1, u1} (Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u1} σ a b)) (MvPolynomial.support.{u2, u1} R σ _inst_1 p) (Finsupp.support.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)))
-Case conversion may be inaccurate. Consider using '#align mv_polynomial.vars_eq_support_bUnion_support MvPolynomial.vars_eq_support_bunionᵢ_supportₓ'. -/
-theorem vars_eq_support_bunionᵢ_support : p.vars = p.support.bunionᵢ Finsupp.support :=
+  forall {R : Type.{u2}} {σ : Type.{u1}} [_inst_1 : CommSemiring.{u2} R] (p : MvPolynomial.{u1, u2} σ R _inst_1), Eq.{succ u1} (Finset.{u1} σ) (MvPolynomial.vars.{u2, u1} R σ _inst_1 p) (Finset.biUnion.{u1, u1} (Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u1} σ a b)) (MvPolynomial.support.{u2, u1} R σ _inst_1 p) (Finsupp.support.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)))
+Case conversion may be inaccurate. Consider using '#align mv_polynomial.vars_eq_support_bUnion_support MvPolynomial.vars_eq_support_biUnion_supportₓ'. -/
+theorem vars_eq_support_biUnion_support : p.vars = p.support.biUnion Finsupp.support :=
   by
   ext i
-  rw [mem_vars, Finset.mem_bunionᵢ]
-#align mv_polynomial.vars_eq_support_bUnion_support MvPolynomial.vars_eq_support_bunionᵢ_support
+  rw [mem_vars, Finset.mem_biUnion]
+#align mv_polynomial.vars_eq_support_bUnion_support MvPolynomial.vars_eq_support_biUnion_support
 
 end Map
 
@@ -1008,7 +1008,7 @@ theorem totalDegree_mul (a b : MvPolynomial σ R) :
     (a * b).totalDegree ≤ a.totalDegree + b.totalDegree :=
   Finset.sup_le fun n hn => by
     have := AddMonoidAlgebra.support_mul a b hn
-    simp only [Finset.mem_bunionᵢ, Finset.mem_singleton] at this
+    simp only [Finset.mem_biUnion, Finset.mem_singleton] at this
     rcases this with ⟨a₁, h₁, a₂, h₂, rfl⟩
     rw [Finsupp.sum_add_index']
     · exact add_le_add (Finset.le_sup h₁) (Finset.le_sup h₂)

@@ -334,16 +334,16 @@ theorem bUnion_ptsOfPeriod : (⋃ n > 0, ptsOfPeriod f n) = periodicPts f :=
 #align function.bUnion_pts_of_period Function.bUnion_ptsOfPeriod
 -/
 
-#print Function.unionᵢ_pNat_ptsOfPeriod /-
-theorem unionᵢ_pNat_ptsOfPeriod : (⋃ n : ℕ+, ptsOfPeriod f n) = periodicPts f :=
-  supᵢ_subtype.trans <| bUnion_ptsOfPeriod f
-#align function.Union_pnat_pts_of_period Function.unionᵢ_pNat_ptsOfPeriod
+#print Function.iUnion_pNat_ptsOfPeriod /-
+theorem iUnion_pNat_ptsOfPeriod : (⋃ n : ℕ+, ptsOfPeriod f n) = periodicPts f :=
+  iSup_subtype.trans <| bUnion_ptsOfPeriod f
+#align function.Union_pnat_pts_of_period Function.iUnion_pNat_ptsOfPeriod
 -/
 
 #print Function.bijOn_periodicPts /-
 theorem bijOn_periodicPts : BijOn f (periodicPts f) (periodicPts f) :=
-  unionᵢ_pNat_ptsOfPeriod f ▸
-    bijOn_unionᵢ_of_directed (directed_ptsOfPeriod_pNat f) fun i => bijOn_ptsOfPeriod f i.Pos
+  iUnion_pNat_ptsOfPeriod f ▸
+    bijOn_iUnion_of_directed (directed_ptsOfPeriod_pNat f) fun i => bijOn_ptsOfPeriod f i.Pos
 #align function.bij_on_periodic_pts Function.bijOn_periodicPts
 -/
 

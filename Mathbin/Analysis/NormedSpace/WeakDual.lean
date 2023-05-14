@@ -206,7 +206,7 @@ is used. -/
 theorem isClosed_polar (s : Set E) : IsClosed (polar 𝕜 s) :=
   by
   simp only [polar_def, set_of_forall]
-  exact isClosed_binterᵢ fun x hx => is_closed_Iic.preimage (WeakBilin.eval_continuous _ _).norm
+  exact isClosed_biInter fun x hx => is_closed_Iic.preimage (WeakBilin.eval_continuous _ _).norm
 #align weak_dual.is_closed_polar WeakDual.isClosed_polar
 
 variable {𝕜}

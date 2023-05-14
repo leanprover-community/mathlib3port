@@ -133,10 +133,10 @@ instance (priority := 100) of_subsingleton [Subsingleton M] : IsHausdorff I M :=
 
 variable {I M}
 
-theorem infᵢ_pow_smul (h : IsHausdorff I M) : (⨅ n : ℕ, I ^ n • ⊤ : Submodule R M) = ⊥ :=
+theorem iInf_pow_smul (h : IsHausdorff I M) : (⨅ n : ℕ, I ^ n • ⊤ : Submodule R M) = ⊥ :=
   eq_bot_iff.2 fun x hx =>
-    (mem_bot _).2 <| h.haus x fun n => SModEq.zero.2 <| (mem_infᵢ fun n : ℕ => I ^ n • ⊤).1 hx n
-#align is_Hausdorff.infi_pow_smul IsHausdorff.infᵢ_pow_smul
+    (mem_bot _).2 <| h.haus x fun n => SModEq.zero.2 <| (mem_iInf fun n : ℕ => I ^ n • ⊤).1 hx n
+#align is_Hausdorff.infi_pow_smul IsHausdorff.iInf_pow_smul
 
 end IsHausdorff
 
@@ -161,10 +161,10 @@ instance : IsHausdorff I (Hausdorffification I M) :=
   ⟨fun x =>
     Quotient.inductionOn' x fun x hx =>
       (Quotient.mk_eq_zero _).2 <|
-        (mem_infᵢ _).2 fun n =>
+        (mem_iInf _).2 fun n =>
           by
           have := comap_map_mkq (⨅ n : ℕ, I ^ n • ⊤ : Submodule R M) (I ^ n • ⊤)
-          simp only [sup_of_le_right (infᵢ_le (fun n => (I ^ n • ⊤ : Submodule R M)) n)] at this
+          simp only [sup_of_le_right (iInf_le (fun n => (I ^ n • ⊤ : Submodule R M)) n)] at this
           rw [← this, map_smul'', mem_comap, Submodule.map_top, range_mkq, ← SModEq.zero];
           exact hx n⟩
 
@@ -177,9 +177,9 @@ unique map from the Hausdorffification. -/
 def lift (f : M →ₗ[R] N) : Hausdorffification I M →ₗ[R] N :=
   liftQ _ f <|
     map_le_iff_le_comap.1 <|
-      h.infᵢ_pow_smul ▸
-        le_infᵢ fun n =>
-          le_trans (map_mono <| infᵢ_le _ n) <|
+      h.iInf_pow_smul ▸
+        le_iInf fun n =>
+          le_trans (map_mono <| iInf_le _ n) <|
             by
             rw [map_smul'']
             exact smul_mono le_rfl le_top

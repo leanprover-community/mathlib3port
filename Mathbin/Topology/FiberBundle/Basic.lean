@@ -406,7 +406,7 @@ theorem FiberBundle.exists_trivialization_Icc_subset [ConditionallyCompleteLinea
     have hsb : b ∈ upperBounds s := fun x hx => hx.1.2
     have sbd : BddAbove s := ⟨b, hsb⟩
     set c := Sup s
-    have hsc : IsLUB s c := isLUB_csupₛ sne sbd
+    have hsc : IsLUB s c := isLUB_csSup sne sbd
     have hc : c ∈ Icc a b := ⟨hsc.1 ha, hsc.2 hsb⟩
     obtain ⟨-, ec : Trivialization F (π E), hec : Icc a c ⊆ ec.base_set⟩ : c ∈ s :=
       by
@@ -1138,7 +1138,7 @@ theorem continuous_symm_of_mem_pretrivializationAtlas (he : e ∈ a.pretrivializ
   refine'
     id fun z H =>
       id fun U h => preimage_nhdsWithin_coinduced' H e.open_target (le_def.1 (nhds_mono _) U h)
-  exact le_supᵢ₂ e he
+  exact le_iSup₂ e he
 #align fiber_prebundle.continuous_symm_of_mem_pretrivialization_atlas FiberPrebundle.continuous_symm_of_mem_pretrivializationAtlas
 
 /- warning: fiber_prebundle.is_open_source -> FiberPrebundle.isOpen_source is a dubious translation:

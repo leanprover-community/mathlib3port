@@ -89,7 +89,7 @@ theorem exists_disjoint_subfamily_covering_enlargment (B : ι → Set α) (t : S
     by
     refine' zorn_subset _ fun U UT hU => _
     refine' ⟨⋃₀ U, _, fun s hs => subset_sUnion_of_mem hs⟩
-    simp only [Set.unionₛ_subset_iff, and_imp, exists_prop, forall_exists_index, mem_sUnion,
+    simp only [Set.sUnion_subset_iff, and_imp, exists_prop, forall_exists_index, mem_sUnion,
       Set.mem_setOf_eq]
     refine'
       ⟨fun u hu => (UT hu).1, (pairwise_disjoint_sUnion hU.directed_on).2 fun u hu => (UT hu).2.1,
@@ -120,7 +120,7 @@ theorem exists_disjoint_subfamily_covering_enlargment (B : ι → Set α) (t : S
     exact δle a' ha'.1
   obtain ⟨a', a'A, ha'⟩ : ∃ a' ∈ A, m / τ ≤ δ a' :=
     by
-    have : 0 ≤ m := (δnonneg a hat).trans (le_csupₛ bddA (mem_image_of_mem _ ⟨hat, a_disj⟩))
+    have : 0 ≤ m := (δnonneg a hat).trans (le_csSup bddA (mem_image_of_mem _ ⟨hat, a_disj⟩))
     rcases eq_or_lt_of_le this with (mzero | mpos)
     · refine' ⟨a, ⟨hat, a_disj⟩, _⟩
       simpa only [← mzero, zero_div] using δnonneg a hat
@@ -128,7 +128,7 @@ theorem exists_disjoint_subfamily_covering_enlargment (B : ι → Set α) (t : S
         rw [div_lt_iff (zero_lt_one.trans hτ)]
         conv_lhs => rw [← mul_one m]
         exact (mul_lt_mul_left mpos).2 hτ
-      rcases exists_lt_of_lt_csupₛ (nonempty_image_iff.2 Anonempty) I with ⟨x, xA, hx⟩
+      rcases exists_lt_of_lt_csSup (nonempty_image_iff.2 Anonempty) I with ⟨x, xA, hx⟩
       rcases(mem_image _ _ _).1 xA with ⟨a', ha', rfl⟩
       exact ⟨a', ha', hx.le⟩
   clear hat hu a_disj a
@@ -158,7 +158,7 @@ theorem exists_disjoint_subfamily_covering_enlargment (B : ι → Set α) (t : S
       rcases mem_insert_iff.1 ba'u with (rfl | H')
       · refine' ⟨b, mem_insert _ _, hcb, _⟩
         calc
-          δ c ≤ m := le_csupₛ bddA (mem_image_of_mem _ ⟨ct, H⟩)
+          δ c ≤ m := le_csSup bddA (mem_image_of_mem _ ⟨ct, H⟩)
           _ = τ * (m / τ) := by
             field_simp [(zero_lt_one.trans hτ).ne']
             ring
@@ -309,18 +309,18 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
     · refine' ⟨20 * R x, hRμ x, fun a au hax => _⟩
       refine' (hB a (ut au)).trans _
       apply closed_ball_subset_closed_ball'
-      have : r a ≤ R0 := le_csupₛ R0_bdd (mem_image_of_mem _ ⟨au, hax⟩)
+      have : r a ≤ R0 := le_csSup R0_bdd (mem_image_of_mem _ ⟨au, hax⟩)
       linarith [Idist_v a ⟨au, hax⟩, hR0 x]
     · have R0pos : 0 < R0 := (hR0 x).trans_le H
       have vnonempty : v.nonempty := by
         by_contra
         rw [nonempty_iff_ne_empty, Classical.not_not] at h
-        simp only [h, Real.supₛ_empty, image_empty] at R0_def
+        simp only [h, Real.sSup_empty, image_empty] at R0_def
         exact lt_irrefl _ (R0pos.trans_le (le_of_eq R0_def))
       obtain ⟨a, hav, R0a⟩ : ∃ a ∈ v, R0 / 2 < r a :=
         by
         obtain ⟨r', r'mem, hr'⟩ : ∃ r' ∈ r '' v, R0 / 2 < r' :=
-          exists_lt_of_lt_csupₛ (nonempty_image_iff.2 vnonempty) (half_lt_self R0pos)
+          exists_lt_of_lt_csSup (nonempty_image_iff.2 vnonempty) (half_lt_self R0pos)
         rcases(mem_image _ _ _).1 r'mem with ⟨a, hav, rfl⟩
         exact ⟨a, hav, hr'⟩
       refine' ⟨8 * R0, _, _⟩
@@ -331,7 +331,7 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
       · intro b bu hbx
         refine' (hB b (ut bu)).trans _
         apply closed_ball_subset_closed_ball'
-        have : r b ≤ R0 := le_csupₛ R0_bdd (mem_image_of_mem _ ⟨bu, hbx⟩)
+        have : r b ≤ R0 := le_csSup R0_bdd (mem_image_of_mem _ ⟨bu, hbx⟩)
         linarith [Idist_v b ⟨bu, hbx⟩]
   -- we will show that, in `ball x (R x)`, almost all `s` is covered by the family `u`.
   refine'
@@ -361,7 +361,7 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
     by
     intro z hz
     set k := ⋃ (a : v) (ha : a ∈ w), B a with hk
-    have k_closed : IsClosed k := isClosed_bunionᵢ w.finite_to_set fun i hi => h't _ (ut (vu i.2))
+    have k_closed : IsClosed k := isClosed_biUnion w.finite_to_set fun i hi => h't _ (ut (vu i.2))
     have z_notmem_k : z ∉ k :=
       by
       simp only [not_exists, exists_prop, mem_Union, mem_sep_iff, forall_exists_index,
@@ -397,7 +397,7 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
     -- contrary to `b`
     have b'_notmem_w : b' ∉ w := by
       intro b'w
-      have b'k : B b' ⊆ k := @Finset.subset_set_bunionᵢ_of_mem _ _ _ (fun y : v => B y) _ b'w
+      have b'k : B b' ⊆ k := @Finset.subset_set_biUnion_of_mem _ _ _ (fun y : v => B y) _ b'w
       have : (ball x (R x) \ k ∩ k).Nonempty :=
         by
         apply ab.mono (inter_subset_inter _ b'k)

@@ -98,7 +98,7 @@ theorem IsCountablySpanning.pi {C : ∀ i, Set (Set (α i))} (hC : ∀ i, IsCoun
   cases nonempty_encodable (ι → ℕ)
   let e : ℕ → ι → ℕ := fun n => (decode (ι → ℕ) n).iget
   refine' ⟨fun n => pi univ fun i => s i (e n i), fun n => mem_image_of_mem _ fun i _ => h1s i _, _⟩
-  simp_rw [(surjective_decode_iget (ι → ℕ)).unionᵢ_comp fun x => pi univ fun i => s i (x i),
+  simp_rw [(surjective_decode_iget (ι → ℕ)).iUnion_comp fun x => pi univ fun i => s i (x i),
     Union_univ_pi s, h2s, pi_univ]
 #align is_countably_spanning.pi IsCountablySpanning.pi
 
@@ -109,7 +109,7 @@ theorem generateFrom_pi_eq {C : ∀ i, Set (Set (α i))} (hC : ∀ i, IsCountabl
   by
   cases nonempty_encodable ι
   apply le_antisymm
-  · refine' supᵢ_le _
+  · refine' iSup_le _
     intro i
     rw [comap_generate_from]
     apply generate_from_le
@@ -132,7 +132,7 @@ theorem generateFrom_pi_eq {C : ∀ i, Set (Set (α i))} (hC : ∀ i, IsCountabl
       · rw [← Ne.def] at h
         simp [h]
     rw [this, ← Union_univ_pi]
-    apply MeasurableSet.unionᵢ
+    apply MeasurableSet.iUnion
     intro n
     apply measurable_set_generate_from
     apply mem_image_of_mem
@@ -146,7 +146,7 @@ theorem generateFrom_pi_eq {C : ∀ i, Set (Set (α i))} (hC : ∀ i, IsCountabl
   · apply generate_from_le
     rintro _ ⟨s, hs, rfl⟩
     rw [univ_pi_eq_Inter]
-    apply MeasurableSet.interᵢ
+    apply MeasurableSet.iInter
     intro i
     apply measurable_pi_apply
     exact measurable_set_generate_from (hs i (mem_univ i))
@@ -318,7 +318,7 @@ end Encodable
 theorem pi_caratheodory :
     MeasurableSpace.pi ≤ (OuterMeasure.pi fun i => (μ i).toOuterMeasure).caratheodory :=
   by
-  refine' supᵢ_le _
+  refine' iSup_le _
   intro i s hs
   rw [MeasurableSpace.comap] at hs
   rcases hs with ⟨s, hs, rfl⟩
@@ -390,7 +390,7 @@ def FiniteSpanningSetsIn.pi {C : ∀ i, Set (Set (α i))}
       _ < ∞ := ENNReal.prod_lt_top fun i hi => ((hμ i).Finite _).Ne
       
   ·
-    simp_rw [(surjective_decode_iget (ι → ℕ)).unionᵢ_comp fun x =>
+    simp_rw [(surjective_decode_iget (ι → ℕ)).iUnion_comp fun x =>
         pi univ fun i => (hμ i).Set (x i),
       Union_univ_pi fun i => (hμ i).Set, (hμ _).spanning, Set.pi_univ]
 #align measure_theory.measure.finite_spanning_sets_in.pi MeasureTheory.Measure.FiniteSpanningSetsIn.pi
@@ -496,7 +496,7 @@ theorem tendsto_eval_ae_ae {i : ι} : Tendsto (eval i) (Measure.pi μ).ae (μ i)
 #align measure_theory.measure.tendsto_eval_ae_ae MeasureTheory.Measure.tendsto_eval_ae_ae
 
 theorem ae_pi_le_pi : (Measure.pi μ).ae ≤ Filter.pi fun i => (μ i).ae :=
-  le_infᵢ fun i => tendsto_eval_ae_ae.le_comap
+  le_iInf fun i => tendsto_eval_ae_ae.le_comap
 #align measure_theory.measure.ae_pi_le_pi MeasureTheory.Measure.ae_pi_le_pi
 
 theorem ae_eq_pi {β : ι → Type _} {f f' : ∀ i, α i → β i} (h : ∀ i, f i =ᵐ[μ i] f' i) :

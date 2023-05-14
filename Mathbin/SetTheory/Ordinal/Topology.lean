@@ -109,9 +109,9 @@ theorem isOpen_iff : IsOpen s ↔ ∀ o ∈ s, IsLimit o → ∃ a < o, Set.Ioo 
         split_ifs
         · exact isOpen_Ioo
         · rwa [is_open_singleton_iff]
-      convert isOpen_unionᵢ this
+      convert isOpen_iUnion this
       ext o
-      refine' ⟨fun ho => Set.mem_unionᵢ.2 ⟨⟨o, ho⟩, _⟩, _⟩
+      refine' ⟨fun ho => Set.mem_iUnion.2 ⟨⟨o, ho⟩, _⟩, _⟩
       · split_ifs with ho'
         · refine' ⟨_, lt_succ o⟩
           cases' Classical.choose_spec (h o ho ho') with H

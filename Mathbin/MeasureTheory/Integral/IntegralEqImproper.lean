@@ -334,8 +334,8 @@ variable {α ι : Type _} [Countable ι] [MeasurableSpace α] {μ : Measure α}
 theorem AeCover.bUnion_Iic_aeCover [Preorder ι] {φ : ι → Set α} (hφ : AeCover μ atTop φ) :
     AeCover μ atTop fun n : ι => ⋃ (k) (h : k ∈ Iic n), φ k :=
   { ae_eventually_mem :=
-      hφ.ae_eventually_mem.mono fun x h => h.mono fun i hi => mem_bunionᵢ right_mem_Iic hi
-    Measurable := fun i => MeasurableSet.bunionᵢ (to_countable _) fun n _ => hφ.Measurable n }
+      hφ.ae_eventually_mem.mono fun x h => h.mono fun i hi => mem_biUnion right_mem_Iic hi
+    Measurable := fun i => MeasurableSet.biUnion (to_countable _) fun n _ => hφ.Measurable n }
 #align measure_theory.ae_cover.bUnion_Iic_ae_cover MeasureTheory.AeCover.bUnion_Iic_aeCover
 
 theorem AeCover.bInter_Ici_aeCover [SemilatticeSup ι] [Nonempty ι] {φ : ι → Set α}
@@ -349,7 +349,7 @@ theorem AeCover.bInter_Ici_aeCover [SemilatticeSup ι] [Nonempty ι] {φ : ι �
           use i
           intro j hj
           exact mem_bInter fun k hk => hi k (le_trans hj hk))
-    Measurable := fun i => MeasurableSet.binterᵢ (to_countable _) fun n _ => hφ.Measurable n }
+    Measurable := fun i => MeasurableSet.biInter (to_countable _) fun n _ => hφ.Measurable n }
 #align measure_theory.ae_cover.bInter_Ici_ae_cover MeasureTheory.AeCover.bInter_Ici_aeCover
 
 end AeCoverUnionInterCountable
@@ -397,18 +397,18 @@ theorem AeCover.lintegral_eq_of_tendsto [l.ne_bot] [l.IsCountablyGenerated] {φ 
   tendsto_nhds_unique (hφ.lintegral_tendsto_of_countably_generated hfm) htendsto
 #align measure_theory.ae_cover.lintegral_eq_of_tendsto MeasureTheory.AeCover.lintegral_eq_of_tendsto
 
-theorem AeCover.supᵢ_lintegral_eq_of_countably_generated [Nonempty ι] [l.ne_bot]
+theorem AeCover.iSup_lintegral_eq_of_countably_generated [Nonempty ι] [l.ne_bot]
     [l.IsCountablyGenerated] {φ : ι → Set α} (hφ : AeCover μ l φ) {f : α → ℝ≥0∞}
     (hfm : AEMeasurable f μ) : (⨆ i : ι, ∫⁻ x in φ i, f x ∂μ) = ∫⁻ x, f x ∂μ :=
   by
   have := hφ.lintegral_tendsto_of_countably_generated hfm
   refine'
-    csupᵢ_eq_of_forall_le_of_forall_lt_exists_gt
+    ciSup_eq_of_forall_le_of_forall_lt_exists_gt
       (fun i => lintegral_mono' measure.restrict_le_self le_rfl) fun w hw => _
   rcases exists_between hw with ⟨m, hm₁, hm₂⟩
   rcases(eventually_ge_of_tendsto_gt hm₂ this).exists with ⟨i, hi⟩
   exact ⟨i, lt_of_lt_of_le hm₁ hi⟩
-#align measure_theory.ae_cover.supr_lintegral_eq_of_countably_generated MeasureTheory.AeCover.supᵢ_lintegral_eq_of_countably_generated
+#align measure_theory.ae_cover.supr_lintegral_eq_of_countably_generated MeasureTheory.AeCover.iSup_lintegral_eq_of_countably_generated
 
 end Lintegral
 

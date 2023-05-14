@@ -433,7 +433,7 @@ theorem exists_positive_of_not_mutuallySingular (μ ν : Measure α) [FiniteMeas
   -- set `A` to be the intersection of all the negative parts of obtained Hahn decompositions
   -- and we show that `μ A = 0`
   set A := ⋂ n, f nᶜ with hA₁
-  have hAmeas : MeasurableSet A := MeasurableSet.interᵢ fun n => (hf₁ n).compl
+  have hAmeas : MeasurableSet A := MeasurableSet.iInter fun n => (hf₁ n).compl
   have hA₂ : ∀ n : ℕ, μ.to_signed_measure - ((1 / (n + 1) : ℝ≥0) • ν).toSignedMeasure ≤[A] 0 :=
     by
     intro n
@@ -517,7 +517,7 @@ theorem sup_mem_measurableLe {f g : α → ℝ≥0∞} (hf : f ∈ measurableLe 
     exact measure_inter_add_diff _ (measurableSet_le hf.1 hg.1)
 #align measure_theory.measure.lebesgue_decomposition.sup_mem_measurable_le MeasureTheory.Measure.LebesgueDecomposition.sup_mem_measurableLe
 
-theorem supᵢ_succ_eq_sup {α} (f : ℕ → α → ℝ≥0∞) (m : ℕ) (a : α) :
+theorem iSup_succ_eq_sup {α} (f : ℕ → α → ℝ≥0∞) (m : ℕ) (a : α) :
     (⨆ (k : ℕ) (hk : k ≤ m + 1), f k a) = f m.succ a ⊔ ⨆ (k : ℕ) (hk : k ≤ m), f k a :=
   by
   ext x
@@ -529,16 +529,16 @@ theorem supᵢ_succ_eq_sup {α} (f : ℕ → α → ℝ≥0∞) (m : ℕ) (a : �
     rw [@le_antisymm_iff ℝ≥0∞, hc, hd]
     -- Specifying the type is weirdly necessary
     refine' ⟨_, _⟩
-    · refine' supᵢ₂_le fun n hn => _
+    · refine' iSup₂_le fun n hn => _
       rcases Nat.of_le_succ hn with (h | h)
-      · exact le_sup_of_le_right (le_supᵢ₂ n h)
+      · exact le_sup_of_le_right (le_iSup₂ n h)
       · exact h ▸ le_sup_left
-    · refine' sup_le _ (bsupᵢ_mono fun n hn => hn.trans m.le_succ)
-      convert@le_supᵢ₂ _ _ (fun i => i ≤ m + 1) _ _ m.succ le_rfl
+    · refine' sup_le _ (biSup_mono fun n hn => hn.trans m.le_succ)
+      convert@le_iSup₂ _ _ (fun i => i ≤ m + 1) _ _ m.succ le_rfl
       rfl
-#align measure_theory.measure.lebesgue_decomposition.supr_succ_eq_sup MeasureTheory.Measure.LebesgueDecomposition.supᵢ_succ_eq_sup
+#align measure_theory.measure.lebesgue_decomposition.supr_succ_eq_sup MeasureTheory.Measure.LebesgueDecomposition.iSup_succ_eq_sup
 
-theorem supᵢ_mem_measurableLe (f : ℕ → α → ℝ≥0∞) (hf : ∀ n, f n ∈ measurableLe μ ν) (n : ℕ) :
+theorem iSup_mem_measurableLe (f : ℕ → α → ℝ≥0∞) (hf : ∀ n, f n ∈ measurableLe μ ν) (n : ℕ) :
     (fun x => ⨆ (k) (hk : k ≤ n), f k x) ∈ measurableLe μ ν :=
   by
   induction' n with m hm
@@ -550,35 +550,35 @@ theorem supᵢ_mem_measurableLe (f : ℕ → α → ℝ≥0∞) (hf : ∀ n, f n
       (fun a : α => ⨆ (k : ℕ) (hk : k ≤ m + 1), f k a) = fun a =>
         f m.succ a ⊔ ⨆ (k : ℕ) (hk : k ≤ m), f k a :=
       funext fun _ => supr_succ_eq_sup _ _ _
-    refine' ⟨measurable_supᵢ fun n => Measurable.supᵢ_Prop _ (hf n).1, fun A hA => _⟩
+    refine' ⟨measurable_iSup fun n => Measurable.iSup_Prop _ (hf n).1, fun A hA => _⟩
     rw [this]
     exact (sup_mem_measurable_le (hf m.succ) hm).2 A hA
-#align measure_theory.measure.lebesgue_decomposition.supr_mem_measurable_le MeasureTheory.Measure.LebesgueDecomposition.supᵢ_mem_measurableLe
+#align measure_theory.measure.lebesgue_decomposition.supr_mem_measurable_le MeasureTheory.Measure.LebesgueDecomposition.iSup_mem_measurableLe
 
-theorem supᵢ_mem_measurable_le' (f : ℕ → α → ℝ≥0∞) (hf : ∀ n, f n ∈ measurableLe μ ν) (n : ℕ) :
+theorem iSup_mem_measurable_le' (f : ℕ → α → ℝ≥0∞) (hf : ∀ n, f n ∈ measurableLe μ ν) (n : ℕ) :
     (⨆ (k) (hk : k ≤ n), f k) ∈ measurableLe μ ν :=
   by
   convert supr_mem_measurable_le f hf n
   ext; simp
-#align measure_theory.measure.lebesgue_decomposition.supr_mem_measurable_le' MeasureTheory.Measure.LebesgueDecomposition.supᵢ_mem_measurable_le'
+#align measure_theory.measure.lebesgue_decomposition.supr_mem_measurable_le' MeasureTheory.Measure.LebesgueDecomposition.iSup_mem_measurable_le'
 
 section SuprLemmas
 
 --TODO: these statements should be moved elsewhere
 omit m
 
-theorem supᵢ_monotone {α : Type _} (f : ℕ → α → ℝ≥0∞) :
+theorem iSup_monotone {α : Type _} (f : ℕ → α → ℝ≥0∞) :
     Monotone fun n x => ⨆ (k) (hk : k ≤ n), f k x := fun n m hnm x =>
-  bsupᵢ_mono fun i => ge_trans hnm
-#align measure_theory.measure.lebesgue_decomposition.supr_monotone MeasureTheory.Measure.LebesgueDecomposition.supᵢ_monotone
+  biSup_mono fun i => ge_trans hnm
+#align measure_theory.measure.lebesgue_decomposition.supr_monotone MeasureTheory.Measure.LebesgueDecomposition.iSup_monotone
 
-theorem supᵢ_monotone' {α : Type _} (f : ℕ → α → ℝ≥0∞) (x : α) :
-    Monotone fun n => ⨆ (k) (hk : k ≤ n), f k x := fun n m hnm => supᵢ_monotone f hnm x
-#align measure_theory.measure.lebesgue_decomposition.supr_monotone' MeasureTheory.Measure.LebesgueDecomposition.supᵢ_monotone'
+theorem iSup_monotone' {α : Type _} (f : ℕ → α → ℝ≥0∞) (x : α) :
+    Monotone fun n => ⨆ (k) (hk : k ≤ n), f k x := fun n m hnm => iSup_monotone f hnm x
+#align measure_theory.measure.lebesgue_decomposition.supr_monotone' MeasureTheory.Measure.LebesgueDecomposition.iSup_monotone'
 
-theorem supᵢ_le_le {α : Type _} (f : ℕ → α → ℝ≥0∞) (n k : ℕ) (hk : k ≤ n) :
-    f k ≤ fun x => ⨆ (k) (hk : k ≤ n), f k x := fun x => le_supᵢ₂ k hk
-#align measure_theory.measure.lebesgue_decomposition.supr_le_le MeasureTheory.Measure.LebesgueDecomposition.supᵢ_le_le
+theorem iSup_le_le {α : Type _} (f : ℕ → α → ℝ≥0∞) (n k : ℕ) (hk : k ≤ n) :
+    f k ≤ fun x => ⨆ (k) (hk : k ≤ n), f k x := fun x => le_iSup₂ k hk
+#align measure_theory.measure.lebesgue_decomposition.supr_le_le MeasureTheory.Measure.LebesgueDecomposition.iSup_le_le
 
 end SuprLemmas
 
@@ -603,7 +603,7 @@ theorem haveLebesgueDecomposition_of_finite_measure [FiniteMeasure μ] [FiniteMe
     HaveLebesgueDecomposition μ ν :=
   ⟨by
     have h :=
-      @exists_seq_tendsto_supₛ _ _ _ _ _ (measurable_le_eval ν μ)
+      @exists_seq_tendsto_sSup _ _ _ _ _ (measurable_le_eval ν μ)
         ⟨0, 0, zero_mem_measurable_le, by simp⟩ (OrderTop.bddAbove _)
     choose g hmono hg₂ f hf₁ hf₂ using h
     -- we set `ξ` to be the supremum of an increasing sequence of functions obtained from above
@@ -619,9 +619,9 @@ theorem haveLebesgueDecomposition_of_finite_measure [FiniteMeasure μ] [FiniteMe
         · intro n
           rw [← hf₂ n]
           apply lintegral_mono
-          simp only [supᵢ_apply, supr_le_le f n n le_rfl]
+          simp only [iSup_apply, supr_le_le f n n le_rfl]
         · intro n
-          exact le_supₛ ⟨⨆ (k : ℕ) (hk : k ≤ n), f k, supr_mem_measurable_le' _ hf₁ _, rfl⟩
+          exact le_sSup ⟨⨆ (k : ℕ) (hk : k ≤ n), f k, supr_mem_measurable_le' _ hf₁ _, rfl⟩
       · intro n
         refine' Measurable.aemeasurable _
         convert(supr_mem_measurable_le _ hf₁ n).1
@@ -630,10 +630,10 @@ theorem haveLebesgueDecomposition_of_finite_measure [FiniteMeasure μ] [FiniteMe
       · refine' Filter.eventually_of_forall fun a => _
         simp [supr_monotone' f _]
       · refine' Filter.eventually_of_forall fun a => _
-        simp [tendsto_atTop_supᵢ (supr_monotone' f a)]
+        simp [tendsto_atTop_iSup (supr_monotone' f a)]
     have hξm : Measurable ξ :=
       by
-      convert measurable_supᵢ fun n => (supr_mem_measurable_le _ hf₁ n).1
+      convert measurable_iSup fun n => (supr_mem_measurable_le _ hf₁ n).1
       ext
       simp [hξ]
     -- `ξ` is the `f` in the theorem statement and we set `μ₁` to be `μ - ν.with_density ξ`
@@ -642,9 +642,9 @@ theorem haveLebesgueDecomposition_of_finite_measure [FiniteMeasure μ] [FiniteMe
     have hle : ν.with_density ξ ≤ μ := by
       intro B hB
       rw [hξ, with_density_apply _ hB]
-      simp_rw [supᵢ_apply]
+      simp_rw [iSup_apply]
       rw [lintegral_supr (fun i => (supr_mem_measurable_le _ hf₁ i).1) (supr_monotone _)]
-      exact supᵢ_le fun i => (supr_mem_measurable_le _ hf₁ i).2 B hB
+      exact iSup_le fun i => (supr_mem_measurable_le _ hf₁ i).2 B hB
     have : is_finite_measure (ν.with_density ξ) :=
       by
       refine' is_finite_measure_with_density _
@@ -662,9 +662,9 @@ theorem haveLebesgueDecomposition_of_finite_measure [FiniteMeasure μ] [FiniteMe
         by
         intro A hA
         rw [hξ]
-        simp_rw [supᵢ_apply]
+        simp_rw [iSup_apply]
         rw [lintegral_supr (fun n => (supr_mem_measurable_le _ hf₁ n).1) (supr_monotone _)]
-        exact supᵢ_le fun n => (supr_mem_measurable_le _ hf₁ n).2 A hA
+        exact iSup_le fun n => (supr_mem_measurable_le _ hf₁ n).2 A hA
       -- since `E` is positive, we have `∫⁻ a in A ∩ E, ε + ξ a ∂ν ≤ μ (A ∩ E)` for all `A`
       have hε₂ : ∀ A : Set α, MeasurableSet A → (∫⁻ a in A ∩ E, ε + ξ a ∂ν) ≤ μ (A ∩ E) :=
         by
@@ -700,7 +700,7 @@ theorem haveLebesgueDecomposition_of_finite_measure [FiniteMeasure μ] [FiniteMe
         rw [this, ← measure_inter_add_diff A hE₁]
         exact add_le_add (hε₂ A hA) (hξle (A \ E) (hA.diff hE₁))
       have : (∫⁻ a, ξ a + E.indicator (fun _ => ε) a ∂ν) ≤ Sup (measurable_le_eval ν μ) :=
-        le_supₛ ⟨ξ + E.indicator fun _ => ε, hξε, rfl⟩
+        le_sSup ⟨ξ + E.indicator fun _ => ε, hξε, rfl⟩
       -- but this contradicts the maximality of `∫⁻ x, ξ x ∂ν`
       refine' not_lt.2 this _
       rw [hξ₁, lintegral_add_left hξm, lintegral_indicator _ hE₁, set_lintegral_const]
@@ -758,7 +758,7 @@ instance (priority := 100) haveLebesgueDecomposition_of_sigmaFinite (μ ν : Mea
       simp only [hξ]
       -- We use the set `B := ⋃ j, (S.set j) ∩ A j` where `A n` is the set provided as
       -- `singular_part (μn n) (νn n) ⟂ₘ νn n`
-      refine' ⟨⋃ j, S.set j ∩ A j, MeasurableSet.unionᵢ fun n => (S.set_mem n).inter (hA₁ n), _, _⟩
+      refine' ⟨⋃ j, S.set j ∩ A j, MeasurableSet.iUnion fun n => (S.set_mem n).inter (hA₁ n), _, _⟩
       -- `ξ B = 0` since `ξ B = ∑ i j, singular_part (μn j) (νn j) (S.set i ∩ A i)`
       --                     `= ∑ i, singular_part (μn i) (νn i) (S.set i ∩ A i)`
       --                     `≤ ∑ i, singular_part (μn i) (νn i) (A i) = 0`

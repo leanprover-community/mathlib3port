@@ -147,40 +147,40 @@ section DecidableEq
 
 variable [DecidableEq α] [DecidableEq β]
 
-/- warning: rel.interedges_bUnion_left -> Rel.interedges_bunionᵢ_left is a dubious translation:
+/- warning: rel.interedges_bUnion_left -> Rel.interedges_biUnion_left is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} (r : α -> β -> Prop) [_inst_2 : forall (a : α), DecidablePred.{succ u3} β (r a)] [_inst_3 : DecidableEq.{succ u2} α] [_inst_4 : DecidableEq.{succ u3} β] (s : Finset.{u1} ι) (t : Finset.{u3} β) (f : ι -> (Finset.{u2} α)), Eq.{succ (max u2 u3)} (Finset.{max u2 u3} (Prod.{u2, u3} α β)) (Rel.interedges.{u2, u3} α β r (fun (a : α) (a_1 : β) => _inst_2 a a_1) (Finset.bunionᵢ.{u1, u2} ι α (fun (a : α) (b : α) => _inst_3 a b) s f) t) (Finset.bunionᵢ.{u1, max u2 u3} ι (Prod.{u2, u3} α β) (fun (a : Prod.{u2, u3} α β) (b : Prod.{u2, u3} α β) => Prod.Lex.decidableEq.{u2, u3} α β (fun (a : α) (b : α) => _inst_3 a b) (fun (a : β) (b : β) => _inst_4 a b) a b) s (fun (a : ι) => Rel.interedges.{u2, u3} α β r (fun (a : α) (a_1 : β) => _inst_2 a a_1) (f a) t))
+  forall {ι : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} (r : α -> β -> Prop) [_inst_2 : forall (a : α), DecidablePred.{succ u3} β (r a)] [_inst_3 : DecidableEq.{succ u2} α] [_inst_4 : DecidableEq.{succ u3} β] (s : Finset.{u1} ι) (t : Finset.{u3} β) (f : ι -> (Finset.{u2} α)), Eq.{succ (max u2 u3)} (Finset.{max u2 u3} (Prod.{u2, u3} α β)) (Rel.interedges.{u2, u3} α β r (fun (a : α) (a_1 : β) => _inst_2 a a_1) (Finset.biUnion.{u1, u2} ι α (fun (a : α) (b : α) => _inst_3 a b) s f) t) (Finset.biUnion.{u1, max u2 u3} ι (Prod.{u2, u3} α β) (fun (a : Prod.{u2, u3} α β) (b : Prod.{u2, u3} α β) => Prod.Lex.decidableEq.{u2, u3} α β (fun (a : α) (b : α) => _inst_3 a b) (fun (a : β) (b : β) => _inst_4 a b) a b) s (fun (a : ι) => Rel.interedges.{u2, u3} α β r (fun (a : α) (a_1 : β) => _inst_2 a a_1) (f a) t))
 but is expected to have type
-  forall {ι : Type.{u3}} {α : Type.{u1}} {β : Type.{u2}} (r : α -> β -> Prop) [_inst_2 : forall (a : α), DecidablePred.{succ u2} β (r a)] [_inst_3 : DecidableEq.{succ u1} α] [_inst_4 : DecidableEq.{succ u2} β] (s : Finset.{u3} ι) (t : Finset.{u2} β) (f : ι -> (Finset.{u1} α)), Eq.{max (succ u1) (succ u2)} (Finset.{max u2 u1} (Prod.{u1, u2} α β)) (Rel.interedges.{u1, u2} α β r (fun (a : α) (a_1 : β) => _inst_2 a a_1) (Finset.bunionᵢ.{u3, u1} ι α (fun (a : α) (b : α) => _inst_3 a b) s f) t) (Finset.bunionᵢ.{u3, max u2 u1} ι (Prod.{u1, u2} α β) (fun (a : Prod.{u1, u2} α β) (b : Prod.{u1, u2} α β) => instDecidableEqProd.{u1, u2} α β (fun (a : α) (b : α) => _inst_3 a b) (fun (a : β) (b : β) => _inst_4 a b) a b) s (fun (a : ι) => Rel.interedges.{u1, u2} α β r (fun (a : α) (a_1 : β) => _inst_2 a a_1) (f a) t))
-Case conversion may be inaccurate. Consider using '#align rel.interedges_bUnion_left Rel.interedges_bunionᵢ_leftₓ'. -/
-theorem interedges_bunionᵢ_left (s : Finset ι) (t : Finset β) (f : ι → Finset α) :
-    interedges r (s.bunionᵢ f) t = s.bunionᵢ fun a => interedges r (f a) t :=
+  forall {ι : Type.{u3}} {α : Type.{u1}} {β : Type.{u2}} (r : α -> β -> Prop) [_inst_2 : forall (a : α), DecidablePred.{succ u2} β (r a)] [_inst_3 : DecidableEq.{succ u1} α] [_inst_4 : DecidableEq.{succ u2} β] (s : Finset.{u3} ι) (t : Finset.{u2} β) (f : ι -> (Finset.{u1} α)), Eq.{max (succ u1) (succ u2)} (Finset.{max u2 u1} (Prod.{u1, u2} α β)) (Rel.interedges.{u1, u2} α β r (fun (a : α) (a_1 : β) => _inst_2 a a_1) (Finset.biUnion.{u3, u1} ι α (fun (a : α) (b : α) => _inst_3 a b) s f) t) (Finset.biUnion.{u3, max u2 u1} ι (Prod.{u1, u2} α β) (fun (a : Prod.{u1, u2} α β) (b : Prod.{u1, u2} α β) => instDecidableEqProd.{u1, u2} α β (fun (a : α) (b : α) => _inst_3 a b) (fun (a : β) (b : β) => _inst_4 a b) a b) s (fun (a : ι) => Rel.interedges.{u1, u2} α β r (fun (a : α) (a_1 : β) => _inst_2 a a_1) (f a) t))
+Case conversion may be inaccurate. Consider using '#align rel.interedges_bUnion_left Rel.interedges_biUnion_leftₓ'. -/
+theorem interedges_biUnion_left (s : Finset ι) (t : Finset β) (f : ι → Finset α) :
+    interedges r (s.biUnion f) t = s.biUnion fun a => interedges r (f a) t :=
   ext fun a => by simp only [mem_bUnion, mem_interedges_iff, exists_and_right]
-#align rel.interedges_bUnion_left Rel.interedges_bunionᵢ_left
+#align rel.interedges_bUnion_left Rel.interedges_biUnion_left
 
-/- warning: rel.interedges_bUnion_right -> Rel.interedges_bunionᵢ_right is a dubious translation:
+/- warning: rel.interedges_bUnion_right -> Rel.interedges_biUnion_right is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} (r : α -> β -> Prop) [_inst_2 : forall (a : α), DecidablePred.{succ u3} β (r a)] [_inst_3 : DecidableEq.{succ u2} α] [_inst_4 : DecidableEq.{succ u3} β] (s : Finset.{u2} α) (t : Finset.{u1} ι) (f : ι -> (Finset.{u3} β)), Eq.{succ (max u2 u3)} (Finset.{max u2 u3} (Prod.{u2, u3} α β)) (Rel.interedges.{u2, u3} α β r (fun (a : α) (a_1 : β) => _inst_2 a a_1) s (Finset.bunionᵢ.{u1, u3} ι β (fun (a : β) (b : β) => _inst_4 a b) t f)) (Finset.bunionᵢ.{u1, max u2 u3} ι (Prod.{u2, u3} α β) (fun (a : Prod.{u2, u3} α β) (b : Prod.{u2, u3} α β) => Prod.Lex.decidableEq.{u2, u3} α β (fun (a : α) (b : α) => _inst_3 a b) (fun (a : β) (b : β) => _inst_4 a b) a b) t (fun (b : ι) => Rel.interedges.{u2, u3} α β r (fun (a : α) (a_1 : β) => _inst_2 a a_1) s (f b)))
+  forall {ι : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} (r : α -> β -> Prop) [_inst_2 : forall (a : α), DecidablePred.{succ u3} β (r a)] [_inst_3 : DecidableEq.{succ u2} α] [_inst_4 : DecidableEq.{succ u3} β] (s : Finset.{u2} α) (t : Finset.{u1} ι) (f : ι -> (Finset.{u3} β)), Eq.{succ (max u2 u3)} (Finset.{max u2 u3} (Prod.{u2, u3} α β)) (Rel.interedges.{u2, u3} α β r (fun (a : α) (a_1 : β) => _inst_2 a a_1) s (Finset.biUnion.{u1, u3} ι β (fun (a : β) (b : β) => _inst_4 a b) t f)) (Finset.biUnion.{u1, max u2 u3} ι (Prod.{u2, u3} α β) (fun (a : Prod.{u2, u3} α β) (b : Prod.{u2, u3} α β) => Prod.Lex.decidableEq.{u2, u3} α β (fun (a : α) (b : α) => _inst_3 a b) (fun (a : β) (b : β) => _inst_4 a b) a b) t (fun (b : ι) => Rel.interedges.{u2, u3} α β r (fun (a : α) (a_1 : β) => _inst_2 a a_1) s (f b)))
 but is expected to have type
-  forall {ι : Type.{u2}} {α : Type.{u3}} {β : Type.{u1}} (r : α -> β -> Prop) [_inst_2 : forall (a : α), DecidablePred.{succ u1} β (r a)] [_inst_3 : DecidableEq.{succ u3} α] [_inst_4 : DecidableEq.{succ u1} β] (s : Finset.{u3} α) (t : Finset.{u2} ι) (f : ι -> (Finset.{u1} β)), Eq.{max (succ u3) (succ u1)} (Finset.{max u1 u3} (Prod.{u3, u1} α β)) (Rel.interedges.{u3, u1} α β r (fun (a : α) (a_1 : β) => _inst_2 a a_1) s (Finset.bunionᵢ.{u2, u1} ι β (fun (a : β) (b : β) => _inst_4 a b) t f)) (Finset.bunionᵢ.{u2, max u1 u3} ι (Prod.{u3, u1} α β) (fun (a : Prod.{u3, u1} α β) (b : Prod.{u3, u1} α β) => instDecidableEqProd.{u3, u1} α β (fun (a : α) (b : α) => _inst_3 a b) (fun (a : β) (b : β) => _inst_4 a b) a b) t (fun (b : ι) => Rel.interedges.{u3, u1} α β r (fun (a : α) (a_1 : β) => _inst_2 a a_1) s (f b)))
-Case conversion may be inaccurate. Consider using '#align rel.interedges_bUnion_right Rel.interedges_bunionᵢ_rightₓ'. -/
-theorem interedges_bunionᵢ_right (s : Finset α) (t : Finset ι) (f : ι → Finset β) :
-    interedges r s (t.bunionᵢ f) = t.bunionᵢ fun b => interedges r s (f b) :=
+  forall {ι : Type.{u2}} {α : Type.{u3}} {β : Type.{u1}} (r : α -> β -> Prop) [_inst_2 : forall (a : α), DecidablePred.{succ u1} β (r a)] [_inst_3 : DecidableEq.{succ u3} α] [_inst_4 : DecidableEq.{succ u1} β] (s : Finset.{u3} α) (t : Finset.{u2} ι) (f : ι -> (Finset.{u1} β)), Eq.{max (succ u3) (succ u1)} (Finset.{max u1 u3} (Prod.{u3, u1} α β)) (Rel.interedges.{u3, u1} α β r (fun (a : α) (a_1 : β) => _inst_2 a a_1) s (Finset.biUnion.{u2, u1} ι β (fun (a : β) (b : β) => _inst_4 a b) t f)) (Finset.biUnion.{u2, max u1 u3} ι (Prod.{u3, u1} α β) (fun (a : Prod.{u3, u1} α β) (b : Prod.{u3, u1} α β) => instDecidableEqProd.{u3, u1} α β (fun (a : α) (b : α) => _inst_3 a b) (fun (a : β) (b : β) => _inst_4 a b) a b) t (fun (b : ι) => Rel.interedges.{u3, u1} α β r (fun (a : α) (a_1 : β) => _inst_2 a a_1) s (f b)))
+Case conversion may be inaccurate. Consider using '#align rel.interedges_bUnion_right Rel.interedges_biUnion_rightₓ'. -/
+theorem interedges_biUnion_right (s : Finset α) (t : Finset ι) (f : ι → Finset β) :
+    interedges r s (t.biUnion f) = t.biUnion fun b => interedges r s (f b) :=
   ext fun a => by simp only [mem_interedges_iff, mem_bUnion, ← exists_and_left, ← exists_and_right]
-#align rel.interedges_bUnion_right Rel.interedges_bunionᵢ_right
+#align rel.interedges_bUnion_right Rel.interedges_biUnion_right
 
-/- warning: rel.interedges_bUnion -> Rel.interedges_bunionᵢ is a dubious translation:
+/- warning: rel.interedges_bUnion -> Rel.interedges_biUnion is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {κ : Type.{u2}} {α : Type.{u3}} {β : Type.{u4}} (r : α -> β -> Prop) [_inst_2 : forall (a : α), DecidablePred.{succ u4} β (r a)] [_inst_3 : DecidableEq.{succ u3} α] [_inst_4 : DecidableEq.{succ u4} β] (s : Finset.{u1} ι) (t : Finset.{u2} κ) (f : ι -> (Finset.{u3} α)) (g : κ -> (Finset.{u4} β)), Eq.{succ (max u3 u4)} (Finset.{max u3 u4} (Prod.{u3, u4} α β)) (Rel.interedges.{u3, u4} α β r (fun (a : α) (a_1 : β) => _inst_2 a a_1) (Finset.bunionᵢ.{u1, u3} ι α (fun (a : α) (b : α) => _inst_3 a b) s f) (Finset.bunionᵢ.{u2, u4} κ β (fun (a : β) (b : β) => _inst_4 a b) t g)) (Finset.bunionᵢ.{max u1 u2, max u3 u4} (Prod.{u1, u2} ι κ) (Prod.{u3, u4} α β) (fun (a : Prod.{u3, u4} α β) (b : Prod.{u3, u4} α β) => Prod.Lex.decidableEq.{u3, u4} α β (fun (a : α) (b : α) => _inst_3 a b) (fun (a : β) (b : β) => _inst_4 a b) a b) (Finset.product.{u1, u2} ι κ s t) (fun (ab : Prod.{u1, u2} ι κ) => Rel.interedges.{u3, u4} α β r (fun (a : α) (a_1 : β) => _inst_2 a a_1) (f (Prod.fst.{u1, u2} ι κ ab)) (g (Prod.snd.{u1, u2} ι κ ab))))
+  forall {ι : Type.{u1}} {κ : Type.{u2}} {α : Type.{u3}} {β : Type.{u4}} (r : α -> β -> Prop) [_inst_2 : forall (a : α), DecidablePred.{succ u4} β (r a)] [_inst_3 : DecidableEq.{succ u3} α] [_inst_4 : DecidableEq.{succ u4} β] (s : Finset.{u1} ι) (t : Finset.{u2} κ) (f : ι -> (Finset.{u3} α)) (g : κ -> (Finset.{u4} β)), Eq.{succ (max u3 u4)} (Finset.{max u3 u4} (Prod.{u3, u4} α β)) (Rel.interedges.{u3, u4} α β r (fun (a : α) (a_1 : β) => _inst_2 a a_1) (Finset.biUnion.{u1, u3} ι α (fun (a : α) (b : α) => _inst_3 a b) s f) (Finset.biUnion.{u2, u4} κ β (fun (a : β) (b : β) => _inst_4 a b) t g)) (Finset.biUnion.{max u1 u2, max u3 u4} (Prod.{u1, u2} ι κ) (Prod.{u3, u4} α β) (fun (a : Prod.{u3, u4} α β) (b : Prod.{u3, u4} α β) => Prod.Lex.decidableEq.{u3, u4} α β (fun (a : α) (b : α) => _inst_3 a b) (fun (a : β) (b : β) => _inst_4 a b) a b) (Finset.product.{u1, u2} ι κ s t) (fun (ab : Prod.{u1, u2} ι κ) => Rel.interedges.{u3, u4} α β r (fun (a : α) (a_1 : β) => _inst_2 a a_1) (f (Prod.fst.{u1, u2} ι κ ab)) (g (Prod.snd.{u1, u2} ι κ ab))))
 but is expected to have type
-  forall {ι : Type.{u4}} {κ : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} (r : α -> β -> Prop) [_inst_2 : forall (a : α), DecidablePred.{succ u1} β (r a)] [_inst_3 : DecidableEq.{succ u2} α] [_inst_4 : DecidableEq.{succ u1} β] (s : Finset.{u4} ι) (t : Finset.{u3} κ) (f : ι -> (Finset.{u2} α)) (g : κ -> (Finset.{u1} β)), Eq.{max (succ u2) (succ u1)} (Finset.{max u1 u2} (Prod.{u2, u1} α β)) (Rel.interedges.{u2, u1} α β r (fun (a : α) (a_1 : β) => _inst_2 a a_1) (Finset.bunionᵢ.{u4, u2} ι α (fun (a : α) (b : α) => _inst_3 a b) s f) (Finset.bunionᵢ.{u3, u1} κ β (fun (a : β) (b : β) => _inst_4 a b) t g)) (Finset.bunionᵢ.{max u4 u3, max u1 u2} (Prod.{u4, u3} ι κ) (Prod.{u2, u1} α β) (fun (a : Prod.{u2, u1} α β) (b : Prod.{u2, u1} α β) => instDecidableEqProd.{u2, u1} α β (fun (a : α) (b : α) => _inst_3 a b) (fun (a : β) (b : β) => _inst_4 a b) a b) (Finset.product.{u4, u3} ι κ s t) (fun (ab : Prod.{u4, u3} ι κ) => Rel.interedges.{u2, u1} α β r (fun (a : α) (a_1 : β) => _inst_2 a a_1) (f (Prod.fst.{u4, u3} ι κ ab)) (g (Prod.snd.{u4, u3} ι κ ab))))
-Case conversion may be inaccurate. Consider using '#align rel.interedges_bUnion Rel.interedges_bunionᵢₓ'. -/
+  forall {ι : Type.{u4}} {κ : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} (r : α -> β -> Prop) [_inst_2 : forall (a : α), DecidablePred.{succ u1} β (r a)] [_inst_3 : DecidableEq.{succ u2} α] [_inst_4 : DecidableEq.{succ u1} β] (s : Finset.{u4} ι) (t : Finset.{u3} κ) (f : ι -> (Finset.{u2} α)) (g : κ -> (Finset.{u1} β)), Eq.{max (succ u2) (succ u1)} (Finset.{max u1 u2} (Prod.{u2, u1} α β)) (Rel.interedges.{u2, u1} α β r (fun (a : α) (a_1 : β) => _inst_2 a a_1) (Finset.biUnion.{u4, u2} ι α (fun (a : α) (b : α) => _inst_3 a b) s f) (Finset.biUnion.{u3, u1} κ β (fun (a : β) (b : β) => _inst_4 a b) t g)) (Finset.biUnion.{max u4 u3, max u1 u2} (Prod.{u4, u3} ι κ) (Prod.{u2, u1} α β) (fun (a : Prod.{u2, u1} α β) (b : Prod.{u2, u1} α β) => instDecidableEqProd.{u2, u1} α β (fun (a : α) (b : α) => _inst_3 a b) (fun (a : β) (b : β) => _inst_4 a b) a b) (Finset.product.{u4, u3} ι κ s t) (fun (ab : Prod.{u4, u3} ι κ) => Rel.interedges.{u2, u1} α β r (fun (a : α) (a_1 : β) => _inst_2 a a_1) (f (Prod.fst.{u4, u3} ι κ ab)) (g (Prod.snd.{u4, u3} ι κ ab))))
+Case conversion may be inaccurate. Consider using '#align rel.interedges_bUnion Rel.interedges_biUnionₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem interedges_bunionᵢ (s : Finset ι) (t : Finset κ) (f : ι → Finset α) (g : κ → Finset β) :
-    interedges r (s.bunionᵢ f) (t.bunionᵢ g) =
-      (s ×ˢ t).bunionᵢ fun ab => interedges r (f ab.1) (g ab.2) :=
+theorem interedges_biUnion (s : Finset ι) (t : Finset κ) (f : ι → Finset α) (g : κ → Finset β) :
+    interedges r (s.biUnion f) (t.biUnion g) =
+      (s ×ˢ t).biUnion fun ab => interedges r (f ab.1) (g ab.2) :=
   by simp_rw [product_bUnion, interedges_bUnion_left, interedges_bUnion_right]
-#align rel.interedges_bUnion Rel.interedges_bunionᵢ
+#align rel.interedges_bUnion Rel.interedges_biUnion
 
 end DecidableEq
 
@@ -551,36 +551,36 @@ section DecidableEq
 
 variable [DecidableEq α]
 
-/- warning: simple_graph.interedges_bUnion_left -> SimpleGraph.interedges_bunionᵢ_left is a dubious translation:
+/- warning: simple_graph.interedges_bUnion_left -> SimpleGraph.interedges_biUnion_left is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {α : Type.{u2}} (G : SimpleGraph.{u2} α) [_inst_1 : DecidableRel.{succ u2} α (SimpleGraph.Adj.{u2} α G)] [_inst_2 : DecidableEq.{succ u2} α] (s : Finset.{u1} ι) (t : Finset.{u2} α) (f : ι -> (Finset.{u2} α)), Eq.{succ u2} (Finset.{u2} (Prod.{u2, u2} α α)) (SimpleGraph.interedges.{u2} α G (fun (a : α) (b : α) => _inst_1 a b) (Finset.bunionᵢ.{u1, u2} ι α (fun (a : α) (b : α) => _inst_2 a b) s f) t) (Finset.bunionᵢ.{u1, u2} ι (Prod.{u2, u2} α α) (fun (a : Prod.{u2, u2} α α) (b : Prod.{u2, u2} α α) => Prod.Lex.decidableEq.{u2, u2} α α (fun (a : α) (b : α) => _inst_2 a b) (fun (a : α) (b : α) => _inst_2 a b) a b) s (fun (a : ι) => SimpleGraph.interedges.{u2} α G (fun (a : α) (b : α) => _inst_1 a b) (f a) t))
+  forall {ι : Type.{u1}} {α : Type.{u2}} (G : SimpleGraph.{u2} α) [_inst_1 : DecidableRel.{succ u2} α (SimpleGraph.Adj.{u2} α G)] [_inst_2 : DecidableEq.{succ u2} α] (s : Finset.{u1} ι) (t : Finset.{u2} α) (f : ι -> (Finset.{u2} α)), Eq.{succ u2} (Finset.{u2} (Prod.{u2, u2} α α)) (SimpleGraph.interedges.{u2} α G (fun (a : α) (b : α) => _inst_1 a b) (Finset.biUnion.{u1, u2} ι α (fun (a : α) (b : α) => _inst_2 a b) s f) t) (Finset.biUnion.{u1, u2} ι (Prod.{u2, u2} α α) (fun (a : Prod.{u2, u2} α α) (b : Prod.{u2, u2} α α) => Prod.Lex.decidableEq.{u2, u2} α α (fun (a : α) (b : α) => _inst_2 a b) (fun (a : α) (b : α) => _inst_2 a b) a b) s (fun (a : ι) => SimpleGraph.interedges.{u2} α G (fun (a : α) (b : α) => _inst_1 a b) (f a) t))
 but is expected to have type
-  forall {ι : Type.{u2}} {α : Type.{u1}} (G : SimpleGraph.{u1} α) [_inst_1 : DecidableRel.{succ u1} α (SimpleGraph.Adj.{u1} α G)] [_inst_2 : DecidableEq.{succ u1} α] (s : Finset.{u2} ι) (t : Finset.{u1} α) (f : ι -> (Finset.{u1} α)), Eq.{succ u1} (Finset.{u1} (Prod.{u1, u1} α α)) (SimpleGraph.interedges.{u1} α G (fun (a : α) (b : α) => _inst_1 a b) (Finset.bunionᵢ.{u2, u1} ι α (fun (a : α) (b : α) => _inst_2 a b) s f) t) (Finset.bunionᵢ.{u2, u1} ι (Prod.{u1, u1} α α) (fun (a : Prod.{u1, u1} α α) (b : Prod.{u1, u1} α α) => instDecidableEqProd.{u1, u1} α α (fun (a : α) (b : α) => _inst_2 a b) (fun (a : α) (b : α) => _inst_2 a b) a b) s (fun (a : ι) => SimpleGraph.interedges.{u1} α G (fun (a : α) (b : α) => _inst_1 a b) (f a) t))
-Case conversion may be inaccurate. Consider using '#align simple_graph.interedges_bUnion_left SimpleGraph.interedges_bunionᵢ_leftₓ'. -/
-theorem interedges_bunionᵢ_left (s : Finset ι) (t : Finset α) (f : ι → Finset α) :
-    G.interedges (s.bunionᵢ f) t = s.bunionᵢ fun a => G.interedges (f a) t :=
-  interedges_bunionᵢ_left _ _ _ _
-#align simple_graph.interedges_bUnion_left SimpleGraph.interedges_bunionᵢ_left
+  forall {ι : Type.{u2}} {α : Type.{u1}} (G : SimpleGraph.{u1} α) [_inst_1 : DecidableRel.{succ u1} α (SimpleGraph.Adj.{u1} α G)] [_inst_2 : DecidableEq.{succ u1} α] (s : Finset.{u2} ι) (t : Finset.{u1} α) (f : ι -> (Finset.{u1} α)), Eq.{succ u1} (Finset.{u1} (Prod.{u1, u1} α α)) (SimpleGraph.interedges.{u1} α G (fun (a : α) (b : α) => _inst_1 a b) (Finset.biUnion.{u2, u1} ι α (fun (a : α) (b : α) => _inst_2 a b) s f) t) (Finset.biUnion.{u2, u1} ι (Prod.{u1, u1} α α) (fun (a : Prod.{u1, u1} α α) (b : Prod.{u1, u1} α α) => instDecidableEqProd.{u1, u1} α α (fun (a : α) (b : α) => _inst_2 a b) (fun (a : α) (b : α) => _inst_2 a b) a b) s (fun (a : ι) => SimpleGraph.interedges.{u1} α G (fun (a : α) (b : α) => _inst_1 a b) (f a) t))
+Case conversion may be inaccurate. Consider using '#align simple_graph.interedges_bUnion_left SimpleGraph.interedges_biUnion_leftₓ'. -/
+theorem interedges_biUnion_left (s : Finset ι) (t : Finset α) (f : ι → Finset α) :
+    G.interedges (s.biUnion f) t = s.biUnion fun a => G.interedges (f a) t :=
+  interedges_biUnion_left _ _ _ _
+#align simple_graph.interedges_bUnion_left SimpleGraph.interedges_biUnion_left
 
-#print SimpleGraph.interedges_bunionᵢ_right /-
-theorem interedges_bunionᵢ_right (s : Finset α) (t : Finset ι) (f : ι → Finset α) :
-    G.interedges s (t.bunionᵢ f) = t.bunionᵢ fun b => G.interedges s (f b) :=
-  interedges_bunionᵢ_right _ _ _ _
-#align simple_graph.interedges_bUnion_right SimpleGraph.interedges_bunionᵢ_right
+#print SimpleGraph.interedges_biUnion_right /-
+theorem interedges_biUnion_right (s : Finset α) (t : Finset ι) (f : ι → Finset α) :
+    G.interedges s (t.biUnion f) = t.biUnion fun b => G.interedges s (f b) :=
+  interedges_biUnion_right _ _ _ _
+#align simple_graph.interedges_bUnion_right SimpleGraph.interedges_biUnion_right
 -/
 
-/- warning: simple_graph.interedges_bUnion -> SimpleGraph.interedges_bunionᵢ is a dubious translation:
+/- warning: simple_graph.interedges_bUnion -> SimpleGraph.interedges_biUnion is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {κ : Type.{u2}} {α : Type.{u3}} (G : SimpleGraph.{u3} α) [_inst_1 : DecidableRel.{succ u3} α (SimpleGraph.Adj.{u3} α G)] [_inst_2 : DecidableEq.{succ u3} α] (s : Finset.{u1} ι) (t : Finset.{u2} κ) (f : ι -> (Finset.{u3} α)) (g : κ -> (Finset.{u3} α)), Eq.{succ u3} (Finset.{u3} (Prod.{u3, u3} α α)) (SimpleGraph.interedges.{u3} α G (fun (a : α) (b : α) => _inst_1 a b) (Finset.bunionᵢ.{u1, u3} ι α (fun (a : α) (b : α) => _inst_2 a b) s f) (Finset.bunionᵢ.{u2, u3} κ α (fun (a : α) (b : α) => _inst_2 a b) t g)) (Finset.bunionᵢ.{max u1 u2, u3} (Prod.{u1, u2} ι κ) (Prod.{u3, u3} α α) (fun (a : Prod.{u3, u3} α α) (b : Prod.{u3, u3} α α) => Prod.Lex.decidableEq.{u3, u3} α α (fun (a : α) (b : α) => _inst_2 a b) (fun (a : α) (b : α) => _inst_2 a b) a b) (Finset.product.{u1, u2} ι κ s t) (fun (ab : Prod.{u1, u2} ι κ) => SimpleGraph.interedges.{u3} α G (fun (a : α) (b : α) => _inst_1 a b) (f (Prod.fst.{u1, u2} ι κ ab)) (g (Prod.snd.{u1, u2} ι κ ab))))
+  forall {ι : Type.{u1}} {κ : Type.{u2}} {α : Type.{u3}} (G : SimpleGraph.{u3} α) [_inst_1 : DecidableRel.{succ u3} α (SimpleGraph.Adj.{u3} α G)] [_inst_2 : DecidableEq.{succ u3} α] (s : Finset.{u1} ι) (t : Finset.{u2} κ) (f : ι -> (Finset.{u3} α)) (g : κ -> (Finset.{u3} α)), Eq.{succ u3} (Finset.{u3} (Prod.{u3, u3} α α)) (SimpleGraph.interedges.{u3} α G (fun (a : α) (b : α) => _inst_1 a b) (Finset.biUnion.{u1, u3} ι α (fun (a : α) (b : α) => _inst_2 a b) s f) (Finset.biUnion.{u2, u3} κ α (fun (a : α) (b : α) => _inst_2 a b) t g)) (Finset.biUnion.{max u1 u2, u3} (Prod.{u1, u2} ι κ) (Prod.{u3, u3} α α) (fun (a : Prod.{u3, u3} α α) (b : Prod.{u3, u3} α α) => Prod.Lex.decidableEq.{u3, u3} α α (fun (a : α) (b : α) => _inst_2 a b) (fun (a : α) (b : α) => _inst_2 a b) a b) (Finset.product.{u1, u2} ι κ s t) (fun (ab : Prod.{u1, u2} ι κ) => SimpleGraph.interedges.{u3} α G (fun (a : α) (b : α) => _inst_1 a b) (f (Prod.fst.{u1, u2} ι κ ab)) (g (Prod.snd.{u1, u2} ι κ ab))))
 but is expected to have type
-  forall {ι : Type.{u3}} {κ : Type.{u2}} {α : Type.{u1}} (G : SimpleGraph.{u1} α) [_inst_1 : DecidableRel.{succ u1} α (SimpleGraph.Adj.{u1} α G)] [_inst_2 : DecidableEq.{succ u1} α] (s : Finset.{u3} ι) (t : Finset.{u2} κ) (f : ι -> (Finset.{u1} α)) (g : κ -> (Finset.{u1} α)), Eq.{succ u1} (Finset.{u1} (Prod.{u1, u1} α α)) (SimpleGraph.interedges.{u1} α G (fun (a : α) (b : α) => _inst_1 a b) (Finset.bunionᵢ.{u3, u1} ι α (fun (a : α) (b : α) => _inst_2 a b) s f) (Finset.bunionᵢ.{u2, u1} κ α (fun (a : α) (b : α) => _inst_2 a b) t g)) (Finset.bunionᵢ.{max u3 u2, u1} (Prod.{u3, u2} ι κ) (Prod.{u1, u1} α α) (fun (a : Prod.{u1, u1} α α) (b : Prod.{u1, u1} α α) => instDecidableEqProd.{u1, u1} α α (fun (a : α) (b : α) => _inst_2 a b) (fun (a : α) (b : α) => _inst_2 a b) a b) (Finset.product.{u3, u2} ι κ s t) (fun (ab : Prod.{u3, u2} ι κ) => SimpleGraph.interedges.{u1} α G (fun (a : α) (b : α) => _inst_1 a b) (f (Prod.fst.{u3, u2} ι κ ab)) (g (Prod.snd.{u3, u2} ι κ ab))))
-Case conversion may be inaccurate. Consider using '#align simple_graph.interedges_bUnion SimpleGraph.interedges_bunionᵢₓ'. -/
+  forall {ι : Type.{u3}} {κ : Type.{u2}} {α : Type.{u1}} (G : SimpleGraph.{u1} α) [_inst_1 : DecidableRel.{succ u1} α (SimpleGraph.Adj.{u1} α G)] [_inst_2 : DecidableEq.{succ u1} α] (s : Finset.{u3} ι) (t : Finset.{u2} κ) (f : ι -> (Finset.{u1} α)) (g : κ -> (Finset.{u1} α)), Eq.{succ u1} (Finset.{u1} (Prod.{u1, u1} α α)) (SimpleGraph.interedges.{u1} α G (fun (a : α) (b : α) => _inst_1 a b) (Finset.biUnion.{u3, u1} ι α (fun (a : α) (b : α) => _inst_2 a b) s f) (Finset.biUnion.{u2, u1} κ α (fun (a : α) (b : α) => _inst_2 a b) t g)) (Finset.biUnion.{max u3 u2, u1} (Prod.{u3, u2} ι κ) (Prod.{u1, u1} α α) (fun (a : Prod.{u1, u1} α α) (b : Prod.{u1, u1} α α) => instDecidableEqProd.{u1, u1} α α (fun (a : α) (b : α) => _inst_2 a b) (fun (a : α) (b : α) => _inst_2 a b) a b) (Finset.product.{u3, u2} ι κ s t) (fun (ab : Prod.{u3, u2} ι κ) => SimpleGraph.interedges.{u1} α G (fun (a : α) (b : α) => _inst_1 a b) (f (Prod.fst.{u3, u2} ι κ ab)) (g (Prod.snd.{u3, u2} ι κ ab))))
+Case conversion may be inaccurate. Consider using '#align simple_graph.interedges_bUnion SimpleGraph.interedges_biUnionₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem interedges_bunionᵢ (s : Finset ι) (t : Finset κ) (f : ι → Finset α) (g : κ → Finset α) :
-    G.interedges (s.bunionᵢ f) (t.bunionᵢ g) =
-      (s ×ˢ t).bunionᵢ fun ab => G.interedges (f ab.1) (g ab.2) :=
-  interedges_bunionᵢ _ _ _ _ _
-#align simple_graph.interedges_bUnion SimpleGraph.interedges_bunionᵢ
+theorem interedges_biUnion (s : Finset ι) (t : Finset κ) (f : ι → Finset α) (g : κ → Finset α) :
+    G.interedges (s.biUnion f) (t.biUnion g) =
+      (s ×ˢ t).biUnion fun ab => G.interedges (f ab.1) (g ab.2) :=
+  interedges_biUnion _ _ _ _ _
+#align simple_graph.interedges_bUnion SimpleGraph.interedges_biUnion
 
 /- warning: simple_graph.card_interedges_add_card_interedges_compl -> SimpleGraph.card_interedges_add_card_interedges_compl is a dubious translation:
 lean 3 declaration is

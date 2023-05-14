@@ -124,7 +124,7 @@ instance Closeds.completeSpace [CompleteSpace α] : CompleteSpace (Closeds α) :
     standard criterion. -/
   refine' complete_of_convergent_controlled_sequences B B_pos fun s hs => _
   let t0 := ⋂ n, closure (⋃ m ≥ n, s m : Set α)
-  let t : closeds α := ⟨t0, isClosed_interᵢ fun _ => isClosed_closure⟩
+  let t : closeds α := ⟨t0, isClosed_iInter fun _ => isClosed_closure⟩
   use t
   -- The inequality is written this way to agree with `edist_le_of_edist_le_geometric_of_tendsto₀`
   have I1 : ∀ n, ∀ x ∈ s n, ∃ y ∈ t0, edist x y ≤ 2 * B n :=
@@ -165,8 +165,8 @@ instance Closeds.completeSpace [CompleteSpace α] : CompleteSpace (Closeds α) :
       mem_Inter.2 fun k =>
         mem_closure_of_tendsto y_lim
           (by
-            simp only [exists_prop, Set.mem_unionᵢ, Filter.eventually_atTop, Set.mem_preimage,
-              Set.preimage_unionᵢ]
+            simp only [exists_prop, Set.mem_iUnion, Filter.eventually_atTop, Set.mem_preimage,
+              Set.preimage_iUnion]
             exact ⟨k, fun m hm => ⟨n + m, zero_add k ▸ add_le_add (zero_le n) hm, (z m).2⟩⟩)
     use this
     -- Then, we check that `y` is close to `x = z n`. This follows from the fact that `y`
@@ -185,7 +185,7 @@ instance Closeds.completeSpace [CompleteSpace α] : CompleteSpace (Closeds α) :
     have : x ∈ closure (⋃ m ≥ n, s m : Set α) := by apply mem_Inter.1 xt0 n
     rcases mem_closure_iff.1 this (B n) (B_pos n) with ⟨z, hz, Dxz⟩
     -- z : α,  Dxz : edist x z < B n,
-    simp only [exists_prop, Set.mem_unionᵢ] at hz
+    simp only [exists_prop, Set.mem_iUnion] at hz
     rcases hz with ⟨m, ⟨m_ge_n, hm⟩⟩
     -- m : ℕ, m_ge_n : m ≥ n, hm : z ∈ s m
     have : Hausdorff_edist (s m : Set α) (s n) < B n := hs n m n m_ge_n (le_refl n)

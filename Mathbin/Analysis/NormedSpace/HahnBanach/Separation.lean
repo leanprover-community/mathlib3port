@@ -112,10 +112,10 @@ theorem geometric_hahn_banach_open (hs₁ : Convex ℝ s) (hs₂ : IsOpen s) (ht
   refine' ⟨f, Inf (f '' t), image_subset_iff.1 (_ : f '' s ⊆ Iio (Inf (f '' t))), fun b hb => _⟩
   · rw [← interior_Iic]
     refine' interior_maximal (image_subset_iff.2 fun a ha => _) (f.is_open_map_of_ne_zero _ _ hs₂)
-    · exact le_cinfₛ (nonempty.image _ ⟨_, hb₀⟩) (ball_image_of_ball <| forall_le _ ha)
+    · exact le_csInf (nonempty.image _ ⟨_, hb₀⟩) (ball_image_of_ball <| forall_le _ ha)
     · rintro rfl
       simpa using hf₁
-  · exact cinfₛ_le ⟨f a₀, ball_image_of_ball <| forall_le _ ha₀⟩ (mem_image_of_mem _ hb)
+  · exact csInf_le ⟨f a₀, ball_image_of_ball <| forall_le _ ha₀⟩ (mem_image_of_mem _ hb)
 #align geometric_hahn_banach_open geometric_hahn_banach_open
 
 theorem geometric_hahn_banach_open_point (hs₁ : Convex ℝ s) (hs₂ : IsOpen s) (disj : x ∉ s) :
@@ -208,14 +208,14 @@ theorem geometric_hahn_banach_point_point [T1Space E] (hxy : x ≠ y) : ∃ f : 
 #align geometric_hahn_banach_point_point geometric_hahn_banach_point_point
 
 /-- A closed convex set is the intersection of the halfspaces containing it. -/
-theorem interᵢ_halfspaces_eq (hs₁ : Convex ℝ s) (hs₂ : IsClosed s) :
+theorem iInter_halfspaces_eq (hs₁ : Convex ℝ s) (hs₂ : IsClosed s) :
     (⋂ l : E →L[ℝ] ℝ, { x | ∃ y ∈ s, l x ≤ l y }) = s :=
   by
-  rw [Set.interᵢ_setOf]
+  rw [Set.iInter_setOf]
   refine' Set.Subset.antisymm (fun x hx => _) fun x hx l => ⟨x, hx, le_rfl⟩
   by_contra
   obtain ⟨l, s, hlA, hl⟩ := geometric_hahn_banach_closed_point hs₁ hs₂ h
   obtain ⟨y, hy, hxy⟩ := hx l
   exact ((hxy.trans_lt (hlA y hy)).trans hl).not_le le_rfl
-#align Inter_halfspaces_eq interᵢ_halfspaces_eq
+#align Inter_halfspaces_eq iInter_halfspaces_eq
 

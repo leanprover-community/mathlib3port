@@ -211,15 +211,15 @@ theorem closure_mono {s t : Set F} (H : s ⊆ t) : closure s ⊆ closure t :=
 
 end Field
 
-#print isSubfield_unionᵢ_of_directed /-
-theorem isSubfield_unionᵢ_of_directed {ι : Type _} [hι : Nonempty ι] {s : ι → Set F}
+#print isSubfield_iUnion_of_directed /-
+theorem isSubfield_iUnion_of_directed {ι : Type _} [hι : Nonempty ι] {s : ι → Set F}
     (hs : ∀ i, IsSubfield (s i)) (directed : ∀ i j, ∃ k, s i ⊆ s k ∧ s j ⊆ s k) :
     IsSubfield (⋃ i, s i) :=
   { inv_mem := fun x hx =>
-      let ⟨i, hi⟩ := Set.mem_unionᵢ.1 hx
-      Set.mem_unionᵢ.2 ⟨i, (hs i).inv_mem hi⟩
-    to_isSubring := isSubring_unionᵢ_of_directed (fun i => (hs i).to_isSubring) Directed }
-#align is_subfield_Union_of_directed isSubfield_unionᵢ_of_directed
+      let ⟨i, hi⟩ := Set.mem_iUnion.1 hx
+      Set.mem_iUnion.2 ⟨i, (hs i).inv_mem hi⟩
+    to_isSubring := isSubring_iUnion_of_directed (fun i => (hs i).to_isSubring) Directed }
+#align is_subfield_Union_of_directed isSubfield_iUnion_of_directed
 -/
 
 /- warning: is_subfield.inter -> IsSubfield.inter is a dubious translation:
@@ -234,11 +234,11 @@ theorem IsSubfield.inter {S₁ S₂ : Set F} (hS₁ : IsSubfield S₁) (hS₂ : 
     inv_mem := fun x hx => ⟨hS₁.inv_mem hx.1, hS₂.inv_mem hx.2⟩ }
 #align is_subfield.inter IsSubfield.inter
 
-#print IsSubfield.interᵢ /-
-theorem IsSubfield.interᵢ {ι : Sort _} {S : ι → Set F} (h : ∀ y : ι, IsSubfield (S y)) :
-    IsSubfield (Set.interᵢ S) :=
-  { IsSubring.interᵢ fun y => (h y).to_isSubring with
-    inv_mem := fun x hx => Set.mem_interᵢ.2 fun y => (h y).inv_mem <| Set.mem_interᵢ.1 hx y }
-#align is_subfield.Inter IsSubfield.interᵢ
+#print IsSubfield.iInter /-
+theorem IsSubfield.iInter {ι : Sort _} {S : ι → Set F} (h : ∀ y : ι, IsSubfield (S y)) :
+    IsSubfield (Set.iInter S) :=
+  { IsSubring.iInter fun y => (h y).to_isSubring with
+    inv_mem := fun x hx => Set.mem_iInter.2 fun y => (h y).inv_mem <| Set.mem_iInter.1 hx y }
+#align is_subfield.Inter IsSubfield.iInter
 -/
 

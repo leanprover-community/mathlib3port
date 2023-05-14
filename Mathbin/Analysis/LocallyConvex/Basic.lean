@@ -134,32 +134,32 @@ theorem absorbs_union : Absorbs 𝕜 s (u ∪ v) ↔ Absorbs 𝕜 s u ∧ Absorb
     fun h => h.1.union h.2⟩
 #align absorbs_union absorbs_union
 
-#print absorbs_unionᵢ_finset /-
-theorem absorbs_unionᵢ_finset {ι : Type _} {t : Finset ι} {f : ι → Set E} :
+#print absorbs_iUnion_finset /-
+theorem absorbs_iUnion_finset {ι : Type _} {t : Finset ι} {f : ι → Set E} :
     Absorbs 𝕜 s (⋃ i ∈ t, f i) ↔ ∀ i ∈ t, Absorbs 𝕜 s (f i) := by
   classical
     induction' t using Finset.induction_on with i t ht hi
     ·
-      simp only [Finset.not_mem_empty, Set.unionᵢ_false, Set.unionᵢ_empty, absorbs_empty,
+      simp only [Finset.not_mem_empty, Set.iUnion_false, Set.iUnion_empty, absorbs_empty,
         IsEmpty.forall_iff, imp_true_iff]
-    rw [Finset.set_bunionᵢ_insert, absorbs_union, hi]
+    rw [Finset.set_biUnion_insert, absorbs_union, hi]
     constructor <;> intro h
     · refine' fun _ hi' => (finset.mem_insert.mp hi').elim _ (h.2 _)
       exact fun hi'' => by
         rw [hi'']
         exact h.1
     exact ⟨h i (Finset.mem_insert_self i t), fun i' hi' => h i' (Finset.mem_insert_of_mem hi')⟩
-#align absorbs_Union_finset absorbs_unionᵢ_finset
+#align absorbs_Union_finset absorbs_iUnion_finset
 -/
 
-#print Set.Finite.absorbs_unionᵢ /-
-theorem Set.Finite.absorbs_unionᵢ {ι : Type _} {s : Set E} {t : Set ι} {f : ι → Set E}
+#print Set.Finite.absorbs_iUnion /-
+theorem Set.Finite.absorbs_iUnion {ι : Type _} {s : Set E} {t : Set ι} {f : ι → Set E}
     (hi : t.Finite) : Absorbs 𝕜 s (⋃ i ∈ t, f i) ↔ ∀ i ∈ t, Absorbs 𝕜 s (f i) :=
   by
   lift t to Finset ι using hi
   simp only [Finset.mem_coe]
-  exact absorbs_unionᵢ_finset
-#align set.finite.absorbs_Union Set.Finite.absorbs_unionᵢ
+  exact absorbs_iUnion_finset
+#align set.finite.absorbs_Union Set.Finite.absorbs_iUnion
 -/
 
 variable (𝕜)
@@ -222,7 +222,7 @@ theorem absorbent_iff_nonneg_lt :
 #print Absorbent.absorbs_finite /-
 theorem Absorbent.absorbs_finite {s : Set E} (hs : Absorbent 𝕜 s) {v : Set E} (hv : v.Finite) :
     Absorbs 𝕜 s v := by
-  rw [← Set.bunionᵢ_of_singleton v]
+  rw [← Set.biUnion_of_singleton v]
   exact hv.absorbs_Union.mpr fun _ _ => hs.absorbs
 #align absorbent.absorbs_finite Absorbent.absorbs_finite
 -/
@@ -297,49 +297,49 @@ theorem Balanced.inter (hA : Balanced 𝕜 A) (hB : Balanced 𝕜 B) : Balanced 
   smul_set_inter_subset.trans <| inter_subset_inter (hA _ ha) <| hB _ ha
 #align balanced.inter Balanced.inter
 
-/- warning: balanced_Union -> balanced_unionᵢ is a dubious translation:
+/- warning: balanced_Union -> balanced_iUnion is a dubious translation:
 lean 3 declaration is
-  forall {𝕜 : Type.{u1}} {E : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : SeminormedRing.{u1} 𝕜] [_inst_2 : SMul.{u1, u2} 𝕜 E] {f : ι -> (Set.{u2} E)}, (forall (i : ι), Balanced.{u1, u2} 𝕜 E _inst_1 _inst_2 (f i)) -> (Balanced.{u1, u2} 𝕜 E _inst_1 _inst_2 (Set.unionᵢ.{u2, u3} E ι (fun (i : ι) => f i)))
+  forall {𝕜 : Type.{u1}} {E : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : SeminormedRing.{u1} 𝕜] [_inst_2 : SMul.{u1, u2} 𝕜 E] {f : ι -> (Set.{u2} E)}, (forall (i : ι), Balanced.{u1, u2} 𝕜 E _inst_1 _inst_2 (f i)) -> (Balanced.{u1, u2} 𝕜 E _inst_1 _inst_2 (Set.iUnion.{u2, u3} E ι (fun (i : ι) => f i)))
 but is expected to have type
-  forall {𝕜 : Type.{u2}} {E : Type.{u3}} {ι : Sort.{u1}} [_inst_1 : SeminormedRing.{u2} 𝕜] [_inst_2 : SMul.{u2, u3} 𝕜 E] {f : ι -> (Set.{u3} E)}, (forall (i : ι), Balanced.{u2, u3} 𝕜 E _inst_1 _inst_2 (f i)) -> (Balanced.{u2, u3} 𝕜 E _inst_1 _inst_2 (Set.unionᵢ.{u3, u1} E ι (fun (i : ι) => f i)))
-Case conversion may be inaccurate. Consider using '#align balanced_Union balanced_unionᵢₓ'. -/
-theorem balanced_unionᵢ {f : ι → Set E} (h : ∀ i, Balanced 𝕜 (f i)) : Balanced 𝕜 (⋃ i, f i) :=
-  fun a ha => (smul_set_Union _ _).Subset.trans <| unionᵢ_mono fun _ => h _ _ ha
-#align balanced_Union balanced_unionᵢ
+  forall {𝕜 : Type.{u2}} {E : Type.{u3}} {ι : Sort.{u1}} [_inst_1 : SeminormedRing.{u2} 𝕜] [_inst_2 : SMul.{u2, u3} 𝕜 E] {f : ι -> (Set.{u3} E)}, (forall (i : ι), Balanced.{u2, u3} 𝕜 E _inst_1 _inst_2 (f i)) -> (Balanced.{u2, u3} 𝕜 E _inst_1 _inst_2 (Set.iUnion.{u3, u1} E ι (fun (i : ι) => f i)))
+Case conversion may be inaccurate. Consider using '#align balanced_Union balanced_iUnionₓ'. -/
+theorem balanced_iUnion {f : ι → Set E} (h : ∀ i, Balanced 𝕜 (f i)) : Balanced 𝕜 (⋃ i, f i) :=
+  fun a ha => (smul_set_Union _ _).Subset.trans <| iUnion_mono fun _ => h _ _ ha
+#align balanced_Union balanced_iUnion
 
-/- warning: balanced_Union₂ -> balanced_unionᵢ₂ is a dubious translation:
+/- warning: balanced_Union₂ -> balanced_iUnion₂ is a dubious translation:
 lean 3 declaration is
-  forall {𝕜 : Type.{u1}} {E : Type.{u2}} {ι : Sort.{u3}} {κ : ι -> Sort.{u4}} [_inst_1 : SeminormedRing.{u1} 𝕜] [_inst_2 : SMul.{u1, u2} 𝕜 E] {f : forall (i : ι), (κ i) -> (Set.{u2} E)}, (forall (i : ι) (j : κ i), Balanced.{u1, u2} 𝕜 E _inst_1 _inst_2 (f i j)) -> (Balanced.{u1, u2} 𝕜 E _inst_1 _inst_2 (Set.unionᵢ.{u2, u3} E ι (fun (i : ι) => Set.unionᵢ.{u2, u4} E (κ i) (fun (j : κ i) => f i j))))
+  forall {𝕜 : Type.{u1}} {E : Type.{u2}} {ι : Sort.{u3}} {κ : ι -> Sort.{u4}} [_inst_1 : SeminormedRing.{u1} 𝕜] [_inst_2 : SMul.{u1, u2} 𝕜 E] {f : forall (i : ι), (κ i) -> (Set.{u2} E)}, (forall (i : ι) (j : κ i), Balanced.{u1, u2} 𝕜 E _inst_1 _inst_2 (f i j)) -> (Balanced.{u1, u2} 𝕜 E _inst_1 _inst_2 (Set.iUnion.{u2, u3} E ι (fun (i : ι) => Set.iUnion.{u2, u4} E (κ i) (fun (j : κ i) => f i j))))
 but is expected to have type
-  forall {𝕜 : Type.{u3}} {E : Type.{u4}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : SeminormedRing.{u3} 𝕜] [_inst_2 : SMul.{u3, u4} 𝕜 E] {f : forall (i : ι), (κ i) -> (Set.{u4} E)}, (forall (i : ι) (j : κ i), Balanced.{u3, u4} 𝕜 E _inst_1 _inst_2 (f i j)) -> (Balanced.{u3, u4} 𝕜 E _inst_1 _inst_2 (Set.unionᵢ.{u4, u2} E ι (fun (i : ι) => Set.unionᵢ.{u4, u1} E (κ i) (fun (j : κ i) => f i j))))
-Case conversion may be inaccurate. Consider using '#align balanced_Union₂ balanced_unionᵢ₂ₓ'. -/
+  forall {𝕜 : Type.{u3}} {E : Type.{u4}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : SeminormedRing.{u3} 𝕜] [_inst_2 : SMul.{u3, u4} 𝕜 E] {f : forall (i : ι), (κ i) -> (Set.{u4} E)}, (forall (i : ι) (j : κ i), Balanced.{u3, u4} 𝕜 E _inst_1 _inst_2 (f i j)) -> (Balanced.{u3, u4} 𝕜 E _inst_1 _inst_2 (Set.iUnion.{u4, u2} E ι (fun (i : ι) => Set.iUnion.{u4, u1} E (κ i) (fun (j : κ i) => f i j))))
+Case conversion may be inaccurate. Consider using '#align balanced_Union₂ balanced_iUnion₂ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-theorem balanced_unionᵢ₂ {f : ∀ i, κ i → Set E} (h : ∀ i j, Balanced 𝕜 (f i j)) :
+theorem balanced_iUnion₂ {f : ∀ i, κ i → Set E} (h : ∀ i j, Balanced 𝕜 (f i j)) :
     Balanced 𝕜 (⋃ (i) (j), f i j) :=
-  balanced_unionᵢ fun _ => balanced_unionᵢ <| h _
-#align balanced_Union₂ balanced_unionᵢ₂
+  balanced_iUnion fun _ => balanced_iUnion <| h _
+#align balanced_Union₂ balanced_iUnion₂
 
-/- warning: balanced_Inter -> balanced_interᵢ is a dubious translation:
+/- warning: balanced_Inter -> balanced_iInter is a dubious translation:
 lean 3 declaration is
-  forall {𝕜 : Type.{u1}} {E : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : SeminormedRing.{u1} 𝕜] [_inst_2 : SMul.{u1, u2} 𝕜 E] {f : ι -> (Set.{u2} E)}, (forall (i : ι), Balanced.{u1, u2} 𝕜 E _inst_1 _inst_2 (f i)) -> (Balanced.{u1, u2} 𝕜 E _inst_1 _inst_2 (Set.interᵢ.{u2, u3} E ι (fun (i : ι) => f i)))
+  forall {𝕜 : Type.{u1}} {E : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : SeminormedRing.{u1} 𝕜] [_inst_2 : SMul.{u1, u2} 𝕜 E] {f : ι -> (Set.{u2} E)}, (forall (i : ι), Balanced.{u1, u2} 𝕜 E _inst_1 _inst_2 (f i)) -> (Balanced.{u1, u2} 𝕜 E _inst_1 _inst_2 (Set.iInter.{u2, u3} E ι (fun (i : ι) => f i)))
 but is expected to have type
-  forall {𝕜 : Type.{u2}} {E : Type.{u3}} {ι : Sort.{u1}} [_inst_1 : SeminormedRing.{u2} 𝕜] [_inst_2 : SMul.{u2, u3} 𝕜 E] {f : ι -> (Set.{u3} E)}, (forall (i : ι), Balanced.{u2, u3} 𝕜 E _inst_1 _inst_2 (f i)) -> (Balanced.{u2, u3} 𝕜 E _inst_1 _inst_2 (Set.interᵢ.{u3, u1} E ι (fun (i : ι) => f i)))
-Case conversion may be inaccurate. Consider using '#align balanced_Inter balanced_interᵢₓ'. -/
-theorem balanced_interᵢ {f : ι → Set E} (h : ∀ i, Balanced 𝕜 (f i)) : Balanced 𝕜 (⋂ i, f i) :=
-  fun a ha => (smul_set_interᵢ_subset _ _).trans <| interᵢ_mono fun _ => h _ _ ha
-#align balanced_Inter balanced_interᵢ
+  forall {𝕜 : Type.{u2}} {E : Type.{u3}} {ι : Sort.{u1}} [_inst_1 : SeminormedRing.{u2} 𝕜] [_inst_2 : SMul.{u2, u3} 𝕜 E] {f : ι -> (Set.{u3} E)}, (forall (i : ι), Balanced.{u2, u3} 𝕜 E _inst_1 _inst_2 (f i)) -> (Balanced.{u2, u3} 𝕜 E _inst_1 _inst_2 (Set.iInter.{u3, u1} E ι (fun (i : ι) => f i)))
+Case conversion may be inaccurate. Consider using '#align balanced_Inter balanced_iInterₓ'. -/
+theorem balanced_iInter {f : ι → Set E} (h : ∀ i, Balanced 𝕜 (f i)) : Balanced 𝕜 (⋂ i, f i) :=
+  fun a ha => (smul_set_iInter_subset _ _).trans <| iInter_mono fun _ => h _ _ ha
+#align balanced_Inter balanced_iInter
 
-/- warning: balanced_Inter₂ -> balanced_interᵢ₂ is a dubious translation:
+/- warning: balanced_Inter₂ -> balanced_iInter₂ is a dubious translation:
 lean 3 declaration is
-  forall {𝕜 : Type.{u1}} {E : Type.{u2}} {ι : Sort.{u3}} {κ : ι -> Sort.{u4}} [_inst_1 : SeminormedRing.{u1} 𝕜] [_inst_2 : SMul.{u1, u2} 𝕜 E] {f : forall (i : ι), (κ i) -> (Set.{u2} E)}, (forall (i : ι) (j : κ i), Balanced.{u1, u2} 𝕜 E _inst_1 _inst_2 (f i j)) -> (Balanced.{u1, u2} 𝕜 E _inst_1 _inst_2 (Set.interᵢ.{u2, u3} E ι (fun (i : ι) => Set.interᵢ.{u2, u4} E (κ i) (fun (j : κ i) => f i j))))
+  forall {𝕜 : Type.{u1}} {E : Type.{u2}} {ι : Sort.{u3}} {κ : ι -> Sort.{u4}} [_inst_1 : SeminormedRing.{u1} 𝕜] [_inst_2 : SMul.{u1, u2} 𝕜 E] {f : forall (i : ι), (κ i) -> (Set.{u2} E)}, (forall (i : ι) (j : κ i), Balanced.{u1, u2} 𝕜 E _inst_1 _inst_2 (f i j)) -> (Balanced.{u1, u2} 𝕜 E _inst_1 _inst_2 (Set.iInter.{u2, u3} E ι (fun (i : ι) => Set.iInter.{u2, u4} E (κ i) (fun (j : κ i) => f i j))))
 but is expected to have type
-  forall {𝕜 : Type.{u3}} {E : Type.{u4}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : SeminormedRing.{u3} 𝕜] [_inst_2 : SMul.{u3, u4} 𝕜 E] {f : forall (i : ι), (κ i) -> (Set.{u4} E)}, (forall (i : ι) (j : κ i), Balanced.{u3, u4} 𝕜 E _inst_1 _inst_2 (f i j)) -> (Balanced.{u3, u4} 𝕜 E _inst_1 _inst_2 (Set.interᵢ.{u4, u2} E ι (fun (i : ι) => Set.interᵢ.{u4, u1} E (κ i) (fun (j : κ i) => f i j))))
-Case conversion may be inaccurate. Consider using '#align balanced_Inter₂ balanced_interᵢ₂ₓ'. -/
+  forall {𝕜 : Type.{u3}} {E : Type.{u4}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : SeminormedRing.{u3} 𝕜] [_inst_2 : SMul.{u3, u4} 𝕜 E] {f : forall (i : ι), (κ i) -> (Set.{u4} E)}, (forall (i : ι) (j : κ i), Balanced.{u3, u4} 𝕜 E _inst_1 _inst_2 (f i j)) -> (Balanced.{u3, u4} 𝕜 E _inst_1 _inst_2 (Set.iInter.{u4, u2} E ι (fun (i : ι) => Set.iInter.{u4, u1} E (κ i) (fun (j : κ i) => f i j))))
+Case conversion may be inaccurate. Consider using '#align balanced_Inter₂ balanced_iInter₂ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-theorem balanced_interᵢ₂ {f : ∀ i, κ i → Set E} (h : ∀ i j, Balanced 𝕜 (f i j)) :
+theorem balanced_iInter₂ {f : ∀ i, κ i → Set E} (h : ∀ i j, Balanced 𝕜 (f i j)) :
     Balanced 𝕜 (⋂ (i) (j), f i j) :=
-  balanced_interᵢ fun _ => balanced_interᵢ <| h _
-#align balanced_Inter₂ balanced_interᵢ₂
+  balanced_iInter fun _ => balanced_iInter <| h _
+#align balanced_Inter₂ balanced_iInter₂
 
 variable [SMul 𝕝 E] [SMulCommClass 𝕜 𝕝 E]
 

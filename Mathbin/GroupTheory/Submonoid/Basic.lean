@@ -421,58 +421,58 @@ theorem mem_inf {p p' : Submonoid M} {x : M} : x ∈ p ⊓ p' ↔ x ∈ p ∧ x 
 instance : InfSet (Submonoid M) :=
   ⟨fun s =>
     { carrier := ⋂ t ∈ s, ↑t
-      one_mem' := Set.mem_binterᵢ fun i h => i.one_mem
+      one_mem' := Set.mem_biInter fun i h => i.one_mem
       mul_mem' := fun x y hx hy =>
-        Set.mem_binterᵢ fun i h =>
-          i.mul_mem (by apply Set.mem_interᵢ₂.1 hx i h) (by apply Set.mem_interᵢ₂.1 hy i h) }⟩
+        Set.mem_biInter fun i h =>
+          i.mul_mem (by apply Set.mem_iInter₂.1 hx i h) (by apply Set.mem_iInter₂.1 hy i h) }⟩
 
-/- warning: submonoid.coe_Inf -> Submonoid.coe_infₛ is a dubious translation:
+/- warning: submonoid.coe_Inf -> Submonoid.coe_sInf is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M] (S : Set.{u1} (Submonoid.{u1} M _inst_1)), Eq.{succ u1} (Set.{u1} M) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Submonoid.{u1} M _inst_1) (Set.{u1} M) (HasLiftT.mk.{succ u1, succ u1} (Submonoid.{u1} M _inst_1) (Set.{u1} M) (CoeTCₓ.coe.{succ u1, succ u1} (Submonoid.{u1} M _inst_1) (Set.{u1} M) (SetLike.Set.hasCoeT.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.setLike.{u1} M _inst_1)))) (InfSet.infₛ.{u1} (Submonoid.{u1} M _inst_1) (Submonoid.hasInf.{u1} M _inst_1) S)) (Set.interᵢ.{u1, succ u1} M (Submonoid.{u1} M _inst_1) (fun (s : Submonoid.{u1} M _inst_1) => Set.interᵢ.{u1, 0} M (Membership.Mem.{u1, u1} (Submonoid.{u1} M _inst_1) (Set.{u1} (Submonoid.{u1} M _inst_1)) (Set.hasMem.{u1} (Submonoid.{u1} M _inst_1)) s S) (fun (H : Membership.Mem.{u1, u1} (Submonoid.{u1} M _inst_1) (Set.{u1} (Submonoid.{u1} M _inst_1)) (Set.hasMem.{u1} (Submonoid.{u1} M _inst_1)) s S) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Submonoid.{u1} M _inst_1) (Set.{u1} M) (HasLiftT.mk.{succ u1, succ u1} (Submonoid.{u1} M _inst_1) (Set.{u1} M) (CoeTCₓ.coe.{succ u1, succ u1} (Submonoid.{u1} M _inst_1) (Set.{u1} M) (SetLike.Set.hasCoeT.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.setLike.{u1} M _inst_1)))) s)))
+  forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M] (S : Set.{u1} (Submonoid.{u1} M _inst_1)), Eq.{succ u1} (Set.{u1} M) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Submonoid.{u1} M _inst_1) (Set.{u1} M) (HasLiftT.mk.{succ u1, succ u1} (Submonoid.{u1} M _inst_1) (Set.{u1} M) (CoeTCₓ.coe.{succ u1, succ u1} (Submonoid.{u1} M _inst_1) (Set.{u1} M) (SetLike.Set.hasCoeT.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.setLike.{u1} M _inst_1)))) (InfSet.sInf.{u1} (Submonoid.{u1} M _inst_1) (Submonoid.hasInf.{u1} M _inst_1) S)) (Set.iInter.{u1, succ u1} M (Submonoid.{u1} M _inst_1) (fun (s : Submonoid.{u1} M _inst_1) => Set.iInter.{u1, 0} M (Membership.Mem.{u1, u1} (Submonoid.{u1} M _inst_1) (Set.{u1} (Submonoid.{u1} M _inst_1)) (Set.hasMem.{u1} (Submonoid.{u1} M _inst_1)) s S) (fun (H : Membership.Mem.{u1, u1} (Submonoid.{u1} M _inst_1) (Set.{u1} (Submonoid.{u1} M _inst_1)) (Set.hasMem.{u1} (Submonoid.{u1} M _inst_1)) s S) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Submonoid.{u1} M _inst_1) (Set.{u1} M) (HasLiftT.mk.{succ u1, succ u1} (Submonoid.{u1} M _inst_1) (Set.{u1} M) (CoeTCₓ.coe.{succ u1, succ u1} (Submonoid.{u1} M _inst_1) (Set.{u1} M) (SetLike.Set.hasCoeT.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.setLike.{u1} M _inst_1)))) s)))
 but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M] (S : Set.{u1} (Submonoid.{u1} M _inst_1)), Eq.{succ u1} (Set.{u1} M) (SetLike.coe.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1) (InfSet.infₛ.{u1} (Submonoid.{u1} M _inst_1) (Submonoid.instInfSetSubmonoid.{u1} M _inst_1) S)) (Set.interᵢ.{u1, succ u1} M (Submonoid.{u1} M _inst_1) (fun (s : Submonoid.{u1} M _inst_1) => Set.interᵢ.{u1, 0} M (Membership.mem.{u1, u1} (Submonoid.{u1} M _inst_1) (Set.{u1} (Submonoid.{u1} M _inst_1)) (Set.instMembershipSet.{u1} (Submonoid.{u1} M _inst_1)) s S) (fun (H : Membership.mem.{u1, u1} (Submonoid.{u1} M _inst_1) (Set.{u1} (Submonoid.{u1} M _inst_1)) (Set.instMembershipSet.{u1} (Submonoid.{u1} M _inst_1)) s S) => SetLike.coe.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1) s)))
-Case conversion may be inaccurate. Consider using '#align submonoid.coe_Inf Submonoid.coe_infₛₓ'. -/
+  forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M] (S : Set.{u1} (Submonoid.{u1} M _inst_1)), Eq.{succ u1} (Set.{u1} M) (SetLike.coe.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1) (InfSet.sInf.{u1} (Submonoid.{u1} M _inst_1) (Submonoid.instInfSetSubmonoid.{u1} M _inst_1) S)) (Set.iInter.{u1, succ u1} M (Submonoid.{u1} M _inst_1) (fun (s : Submonoid.{u1} M _inst_1) => Set.iInter.{u1, 0} M (Membership.mem.{u1, u1} (Submonoid.{u1} M _inst_1) (Set.{u1} (Submonoid.{u1} M _inst_1)) (Set.instMembershipSet.{u1} (Submonoid.{u1} M _inst_1)) s S) (fun (H : Membership.mem.{u1, u1} (Submonoid.{u1} M _inst_1) (Set.{u1} (Submonoid.{u1} M _inst_1)) (Set.instMembershipSet.{u1} (Submonoid.{u1} M _inst_1)) s S) => SetLike.coe.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1) s)))
+Case conversion may be inaccurate. Consider using '#align submonoid.coe_Inf Submonoid.coe_sInfₓ'. -/
 @[simp, norm_cast, to_additive]
-theorem coe_infₛ (S : Set (Submonoid M)) : ((infₛ S : Submonoid M) : Set M) = ⋂ s ∈ S, ↑s :=
+theorem coe_sInf (S : Set (Submonoid M)) : ((sInf S : Submonoid M) : Set M) = ⋂ s ∈ S, ↑s :=
   rfl
-#align submonoid.coe_Inf Submonoid.coe_infₛ
-#align add_submonoid.coe_Inf AddSubmonoid.coe_infₛ
+#align submonoid.coe_Inf Submonoid.coe_sInf
+#align add_submonoid.coe_Inf AddSubmonoid.coe_sInf
 
-/- warning: submonoid.mem_Inf -> Submonoid.mem_infₛ is a dubious translation:
+/- warning: submonoid.mem_Inf -> Submonoid.mem_sInf is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M] {S : Set.{u1} (Submonoid.{u1} M _inst_1)} {x : M}, Iff (Membership.Mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.hasMem.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.setLike.{u1} M _inst_1)) x (InfSet.infₛ.{u1} (Submonoid.{u1} M _inst_1) (Submonoid.hasInf.{u1} M _inst_1) S)) (forall (p : Submonoid.{u1} M _inst_1), (Membership.Mem.{u1, u1} (Submonoid.{u1} M _inst_1) (Set.{u1} (Submonoid.{u1} M _inst_1)) (Set.hasMem.{u1} (Submonoid.{u1} M _inst_1)) p S) -> (Membership.Mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.hasMem.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.setLike.{u1} M _inst_1)) x p))
+  forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M] {S : Set.{u1} (Submonoid.{u1} M _inst_1)} {x : M}, Iff (Membership.Mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.hasMem.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.setLike.{u1} M _inst_1)) x (InfSet.sInf.{u1} (Submonoid.{u1} M _inst_1) (Submonoid.hasInf.{u1} M _inst_1) S)) (forall (p : Submonoid.{u1} M _inst_1), (Membership.Mem.{u1, u1} (Submonoid.{u1} M _inst_1) (Set.{u1} (Submonoid.{u1} M _inst_1)) (Set.hasMem.{u1} (Submonoid.{u1} M _inst_1)) p S) -> (Membership.Mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.hasMem.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.setLike.{u1} M _inst_1)) x p))
 but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M] {S : Set.{u1} (Submonoid.{u1} M _inst_1)} {x : M}, Iff (Membership.mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1)) x (InfSet.infₛ.{u1} (Submonoid.{u1} M _inst_1) (Submonoid.instInfSetSubmonoid.{u1} M _inst_1) S)) (forall (p : Submonoid.{u1} M _inst_1), (Membership.mem.{u1, u1} (Submonoid.{u1} M _inst_1) (Set.{u1} (Submonoid.{u1} M _inst_1)) (Set.instMembershipSet.{u1} (Submonoid.{u1} M _inst_1)) p S) -> (Membership.mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1)) x p))
-Case conversion may be inaccurate. Consider using '#align submonoid.mem_Inf Submonoid.mem_infₛₓ'. -/
+  forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M] {S : Set.{u1} (Submonoid.{u1} M _inst_1)} {x : M}, Iff (Membership.mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1)) x (InfSet.sInf.{u1} (Submonoid.{u1} M _inst_1) (Submonoid.instInfSetSubmonoid.{u1} M _inst_1) S)) (forall (p : Submonoid.{u1} M _inst_1), (Membership.mem.{u1, u1} (Submonoid.{u1} M _inst_1) (Set.{u1} (Submonoid.{u1} M _inst_1)) (Set.instMembershipSet.{u1} (Submonoid.{u1} M _inst_1)) p S) -> (Membership.mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1)) x p))
+Case conversion may be inaccurate. Consider using '#align submonoid.mem_Inf Submonoid.mem_sInfₓ'. -/
 @[to_additive]
-theorem mem_infₛ {S : Set (Submonoid M)} {x : M} : x ∈ infₛ S ↔ ∀ p ∈ S, x ∈ p :=
-  Set.mem_interᵢ₂
-#align submonoid.mem_Inf Submonoid.mem_infₛ
-#align add_submonoid.mem_Inf AddSubmonoid.mem_infₛ
+theorem mem_sInf {S : Set (Submonoid M)} {x : M} : x ∈ sInf S ↔ ∀ p ∈ S, x ∈ p :=
+  Set.mem_iInter₂
+#align submonoid.mem_Inf Submonoid.mem_sInf
+#align add_submonoid.mem_Inf AddSubmonoid.mem_sInf
 
-/- warning: submonoid.mem_infi -> Submonoid.mem_infᵢ is a dubious translation:
+/- warning: submonoid.mem_infi -> Submonoid.mem_iInf is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M] {ι : Sort.{u2}} {S : ι -> (Submonoid.{u1} M _inst_1)} {x : M}, Iff (Membership.Mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.hasMem.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.setLike.{u1} M _inst_1)) x (infᵢ.{u1, u2} (Submonoid.{u1} M _inst_1) (Submonoid.hasInf.{u1} M _inst_1) ι (fun (i : ι) => S i))) (forall (i : ι), Membership.Mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.hasMem.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.setLike.{u1} M _inst_1)) x (S i))
+  forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M] {ι : Sort.{u2}} {S : ι -> (Submonoid.{u1} M _inst_1)} {x : M}, Iff (Membership.Mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.hasMem.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.setLike.{u1} M _inst_1)) x (iInf.{u1, u2} (Submonoid.{u1} M _inst_1) (Submonoid.hasInf.{u1} M _inst_1) ι (fun (i : ι) => S i))) (forall (i : ι), Membership.Mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.hasMem.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.setLike.{u1} M _inst_1)) x (S i))
 but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M] {ι : Sort.{u2}} {S : ι -> (Submonoid.{u1} M _inst_1)} {x : M}, Iff (Membership.mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1)) x (infᵢ.{u1, u2} (Submonoid.{u1} M _inst_1) (Submonoid.instInfSetSubmonoid.{u1} M _inst_1) ι (fun (i : ι) => S i))) (forall (i : ι), Membership.mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1)) x (S i))
-Case conversion may be inaccurate. Consider using '#align submonoid.mem_infi Submonoid.mem_infᵢₓ'. -/
+  forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M] {ι : Sort.{u2}} {S : ι -> (Submonoid.{u1} M _inst_1)} {x : M}, Iff (Membership.mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1)) x (iInf.{u1, u2} (Submonoid.{u1} M _inst_1) (Submonoid.instInfSetSubmonoid.{u1} M _inst_1) ι (fun (i : ι) => S i))) (forall (i : ι), Membership.mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1)) x (S i))
+Case conversion may be inaccurate. Consider using '#align submonoid.mem_infi Submonoid.mem_iInfₓ'. -/
 @[to_additive]
-theorem mem_infᵢ {ι : Sort _} {S : ι → Submonoid M} {x : M} : (x ∈ ⨅ i, S i) ↔ ∀ i, x ∈ S i := by
-  simp only [infᵢ, mem_Inf, Set.forall_range_iff]
-#align submonoid.mem_infi Submonoid.mem_infᵢ
-#align add_submonoid.mem_infi AddSubmonoid.mem_infᵢ
+theorem mem_iInf {ι : Sort _} {S : ι → Submonoid M} {x : M} : (x ∈ ⨅ i, S i) ↔ ∀ i, x ∈ S i := by
+  simp only [iInf, mem_Inf, Set.forall_range_iff]
+#align submonoid.mem_infi Submonoid.mem_iInf
+#align add_submonoid.mem_infi AddSubmonoid.mem_iInf
 
-/- warning: submonoid.coe_infi -> Submonoid.coe_infᵢ is a dubious translation:
+/- warning: submonoid.coe_infi -> Submonoid.coe_iInf is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M] {ι : Sort.{u2}} {S : ι -> (Submonoid.{u1} M _inst_1)}, Eq.{succ u1} (Set.{u1} M) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Submonoid.{u1} M _inst_1) (Set.{u1} M) (HasLiftT.mk.{succ u1, succ u1} (Submonoid.{u1} M _inst_1) (Set.{u1} M) (CoeTCₓ.coe.{succ u1, succ u1} (Submonoid.{u1} M _inst_1) (Set.{u1} M) (SetLike.Set.hasCoeT.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.setLike.{u1} M _inst_1)))) (infᵢ.{u1, u2} (Submonoid.{u1} M _inst_1) (Submonoid.hasInf.{u1} M _inst_1) ι (fun (i : ι) => S i))) (Set.interᵢ.{u1, u2} M ι (fun (i : ι) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Submonoid.{u1} M _inst_1) (Set.{u1} M) (HasLiftT.mk.{succ u1, succ u1} (Submonoid.{u1} M _inst_1) (Set.{u1} M) (CoeTCₓ.coe.{succ u1, succ u1} (Submonoid.{u1} M _inst_1) (Set.{u1} M) (SetLike.Set.hasCoeT.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.setLike.{u1} M _inst_1)))) (S i)))
+  forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M] {ι : Sort.{u2}} {S : ι -> (Submonoid.{u1} M _inst_1)}, Eq.{succ u1} (Set.{u1} M) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Submonoid.{u1} M _inst_1) (Set.{u1} M) (HasLiftT.mk.{succ u1, succ u1} (Submonoid.{u1} M _inst_1) (Set.{u1} M) (CoeTCₓ.coe.{succ u1, succ u1} (Submonoid.{u1} M _inst_1) (Set.{u1} M) (SetLike.Set.hasCoeT.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.setLike.{u1} M _inst_1)))) (iInf.{u1, u2} (Submonoid.{u1} M _inst_1) (Submonoid.hasInf.{u1} M _inst_1) ι (fun (i : ι) => S i))) (Set.iInter.{u1, u2} M ι (fun (i : ι) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Submonoid.{u1} M _inst_1) (Set.{u1} M) (HasLiftT.mk.{succ u1, succ u1} (Submonoid.{u1} M _inst_1) (Set.{u1} M) (CoeTCₓ.coe.{succ u1, succ u1} (Submonoid.{u1} M _inst_1) (Set.{u1} M) (SetLike.Set.hasCoeT.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.setLike.{u1} M _inst_1)))) (S i)))
 but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M] {ι : Sort.{u2}} {S : ι -> (Submonoid.{u1} M _inst_1)}, Eq.{succ u1} (Set.{u1} M) (SetLike.coe.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1) (infᵢ.{u1, u2} (Submonoid.{u1} M _inst_1) (Submonoid.instInfSetSubmonoid.{u1} M _inst_1) ι (fun (i : ι) => S i))) (Set.interᵢ.{u1, u2} M ι (fun (i : ι) => SetLike.coe.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1) (S i)))
-Case conversion may be inaccurate. Consider using '#align submonoid.coe_infi Submonoid.coe_infᵢₓ'. -/
+  forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M] {ι : Sort.{u2}} {S : ι -> (Submonoid.{u1} M _inst_1)}, Eq.{succ u1} (Set.{u1} M) (SetLike.coe.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1) (iInf.{u1, u2} (Submonoid.{u1} M _inst_1) (Submonoid.instInfSetSubmonoid.{u1} M _inst_1) ι (fun (i : ι) => S i))) (Set.iInter.{u1, u2} M ι (fun (i : ι) => SetLike.coe.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1) (S i)))
+Case conversion may be inaccurate. Consider using '#align submonoid.coe_infi Submonoid.coe_iInfₓ'. -/
 @[simp, norm_cast, to_additive]
-theorem coe_infᵢ {ι : Sort _} {S : ι → Submonoid M} : (↑(⨅ i, S i) : Set M) = ⋂ i, S i := by
-  simp only [infᵢ, coe_Inf, Set.binterᵢ_range]
-#align submonoid.coe_infi Submonoid.coe_infᵢ
-#align add_submonoid.coe_infi AddSubmonoid.coe_infᵢ
+theorem coe_iInf {ι : Sort _} {S : ι → Submonoid M} : (↑(⨅ i, S i) : Set M) = ⋂ i, S i := by
+  simp only [iInf, coe_Inf, Set.biInter_range]
+#align submonoid.coe_infi Submonoid.coe_iInf
+#align add_submonoid.coe_infi AddSubmonoid.coe_iInf
 
 /-- Submonoids of a monoid form a complete lattice. -/
 @[to_additive "The `add_submonoid`s of an `add_monoid` form a complete lattice."]
@@ -480,7 +480,7 @@ instance : CompleteLattice (Submonoid M) :=
   {
     completeLatticeOfInf (Submonoid M) fun s =>
       IsGLB.of_image (fun S T => show (S : Set M) ≤ T ↔ S ≤ T from SetLike.coe_subset_coe)
-        isGLB_binfᵢ with
+        isGLB_biInf with
     le := (· ≤ ·)
     lt := (· < ·)
     bot := ⊥
@@ -488,7 +488,7 @@ instance : CompleteLattice (Submonoid M) :=
     top := ⊤
     le_top := fun S x hx => mem_top x
     inf := (· ⊓ ·)
-    infₛ := InfSet.infₛ
+    sInf := InfSet.sInf
     le_inf := fun a b c ha hb x hx => ⟨ha hx, hb hx⟩
     inf_le_left := fun a b x => And.left
     inf_le_right := fun a b x => And.right }
@@ -529,7 +529,7 @@ instance [Nontrivial M] : Nontrivial (Submonoid M) :=
 /-- The `submonoid` generated by a set. -/
 @[to_additive "The `add_submonoid` generated by a set"]
 def closure (s : Set M) : Submonoid M :=
-  infₛ { S | s ⊆ S }
+  sInf { S | s ⊆ S }
 #align submonoid.closure Submonoid.closure
 #align add_submonoid.closure AddSubmonoid.closure
 -/
@@ -542,7 +542,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submonoid.mem_closure Submonoid.mem_closureₓ'. -/
 @[to_additive]
 theorem mem_closure {x : M} : x ∈ closure s ↔ ∀ S : Submonoid M, s ⊆ S → x ∈ S :=
-  mem_infₛ
+  mem_sInf
 #align submonoid.mem_closure Submonoid.mem_closure
 #align add_submonoid.mem_closure AddSubmonoid.mem_closure
 
@@ -583,7 +583,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.closure_le S
 /-- A submonoid `S` includes `closure s` if and only if it includes `s`. -/
 @[simp, to_additive "An additive submonoid `S` includes `closure s` if and only if it includes `s`"]
 theorem closure_le : closure s ≤ S ↔ s ⊆ S :=
-  ⟨Subset.trans subset_closure, fun h => infₛ_le h⟩
+  ⟨Subset.trans subset_closure, fun h => sInf_le h⟩
 #align submonoid.closure_le Submonoid.closure_le
 #align add_submonoid.closure_le AddSubmonoid.closure_le
 
@@ -763,17 +763,17 @@ theorem closure_union (s t : Set M) : closure (s ∪ t) = closure s ⊔ closure 
 #align submonoid.closure_union Submonoid.closure_union
 #align add_submonoid.closure_union AddSubmonoid.closure_union
 
-/- warning: submonoid.closure_Union -> Submonoid.closure_unionᵢ is a dubious translation:
+/- warning: submonoid.closure_Union -> Submonoid.closure_iUnion is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M] {ι : Sort.{u2}} (s : ι -> (Set.{u1} M)), Eq.{succ u1} (Submonoid.{u1} M _inst_1) (Submonoid.closure.{u1} M _inst_1 (Set.unionᵢ.{u1, u2} M ι (fun (i : ι) => s i))) (supᵢ.{u1, u2} (Submonoid.{u1} M _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Submonoid.{u1} M _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Submonoid.{u1} M _inst_1) (Submonoid.completeLattice.{u1} M _inst_1))) ι (fun (i : ι) => Submonoid.closure.{u1} M _inst_1 (s i)))
+  forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M] {ι : Sort.{u2}} (s : ι -> (Set.{u1} M)), Eq.{succ u1} (Submonoid.{u1} M _inst_1) (Submonoid.closure.{u1} M _inst_1 (Set.iUnion.{u1, u2} M ι (fun (i : ι) => s i))) (iSup.{u1, u2} (Submonoid.{u1} M _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Submonoid.{u1} M _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Submonoid.{u1} M _inst_1) (Submonoid.completeLattice.{u1} M _inst_1))) ι (fun (i : ι) => Submonoid.closure.{u1} M _inst_1 (s i)))
 but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M] {ι : Sort.{u2}} (s : ι -> (Set.{u1} M)), Eq.{succ u1} (Submonoid.{u1} M _inst_1) (Submonoid.closure.{u1} M _inst_1 (Set.unionᵢ.{u1, u2} M ι (fun (i : ι) => s i))) (supᵢ.{u1, u2} (Submonoid.{u1} M _inst_1) (CompleteLattice.toSupSet.{u1} (Submonoid.{u1} M _inst_1) (Submonoid.instCompleteLatticeSubmonoid.{u1} M _inst_1)) ι (fun (i : ι) => Submonoid.closure.{u1} M _inst_1 (s i)))
-Case conversion may be inaccurate. Consider using '#align submonoid.closure_Union Submonoid.closure_unionᵢₓ'. -/
+  forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M] {ι : Sort.{u2}} (s : ι -> (Set.{u1} M)), Eq.{succ u1} (Submonoid.{u1} M _inst_1) (Submonoid.closure.{u1} M _inst_1 (Set.iUnion.{u1, u2} M ι (fun (i : ι) => s i))) (iSup.{u1, u2} (Submonoid.{u1} M _inst_1) (CompleteLattice.toSupSet.{u1} (Submonoid.{u1} M _inst_1) (Submonoid.instCompleteLatticeSubmonoid.{u1} M _inst_1)) ι (fun (i : ι) => Submonoid.closure.{u1} M _inst_1 (s i)))
+Case conversion may be inaccurate. Consider using '#align submonoid.closure_Union Submonoid.closure_iUnionₓ'. -/
 @[to_additive]
-theorem closure_unionᵢ {ι} (s : ι → Set M) : closure (⋃ i, s i) = ⨆ i, closure (s i) :=
-  (Submonoid.gi M).gc.l_supᵢ
-#align submonoid.closure_Union Submonoid.closure_unionᵢ
-#align add_submonoid.closure_Union AddSubmonoid.closure_unionᵢ
+theorem closure_iUnion {ι} (s : ι → Set M) : closure (⋃ i, s i) = ⨆ i, closure (s i) :=
+  (Submonoid.gi M).gc.l_iSup
+#align submonoid.closure_Union Submonoid.closure_iUnion
+#align add_submonoid.closure_Union AddSubmonoid.closure_iUnion
 
 /- warning: submonoid.closure_singleton_le_iff_mem -> Submonoid.closure_singleton_le_iff_mem is a dubious translation:
 lean 3 declaration is
@@ -787,33 +787,33 @@ theorem closure_singleton_le_iff_mem (m : M) (p : Submonoid M) : closure {m} ≤
 #align submonoid.closure_singleton_le_iff_mem Submonoid.closure_singleton_le_iff_mem
 #align add_submonoid.closure_singleton_le_iff_mem AddSubmonoid.closure_singleton_le_iff_mem
 
-/- warning: submonoid.mem_supr -> Submonoid.mem_supᵢ is a dubious translation:
+/- warning: submonoid.mem_supr -> Submonoid.mem_iSup is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M] {ι : Sort.{u2}} (p : ι -> (Submonoid.{u1} M _inst_1)) {m : M}, Iff (Membership.Mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.hasMem.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.setLike.{u1} M _inst_1)) m (supᵢ.{u1, u2} (Submonoid.{u1} M _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Submonoid.{u1} M _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Submonoid.{u1} M _inst_1) (Submonoid.completeLattice.{u1} M _inst_1))) ι (fun (i : ι) => p i))) (forall (N : Submonoid.{u1} M _inst_1), (forall (i : ι), LE.le.{u1} (Submonoid.{u1} M _inst_1) (Preorder.toLE.{u1} (Submonoid.{u1} M _inst_1) (PartialOrder.toPreorder.{u1} (Submonoid.{u1} M _inst_1) (SetLike.partialOrder.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.setLike.{u1} M _inst_1)))) (p i) N) -> (Membership.Mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.hasMem.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.setLike.{u1} M _inst_1)) m N))
+  forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M] {ι : Sort.{u2}} (p : ι -> (Submonoid.{u1} M _inst_1)) {m : M}, Iff (Membership.Mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.hasMem.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.setLike.{u1} M _inst_1)) m (iSup.{u1, u2} (Submonoid.{u1} M _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Submonoid.{u1} M _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Submonoid.{u1} M _inst_1) (Submonoid.completeLattice.{u1} M _inst_1))) ι (fun (i : ι) => p i))) (forall (N : Submonoid.{u1} M _inst_1), (forall (i : ι), LE.le.{u1} (Submonoid.{u1} M _inst_1) (Preorder.toLE.{u1} (Submonoid.{u1} M _inst_1) (PartialOrder.toPreorder.{u1} (Submonoid.{u1} M _inst_1) (SetLike.partialOrder.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.setLike.{u1} M _inst_1)))) (p i) N) -> (Membership.Mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.hasMem.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.setLike.{u1} M _inst_1)) m N))
 but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M] {ι : Sort.{u2}} (p : ι -> (Submonoid.{u1} M _inst_1)) {m : M}, Iff (Membership.mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1)) m (supᵢ.{u1, u2} (Submonoid.{u1} M _inst_1) (CompleteLattice.toSupSet.{u1} (Submonoid.{u1} M _inst_1) (Submonoid.instCompleteLatticeSubmonoid.{u1} M _inst_1)) ι (fun (i : ι) => p i))) (forall (N : Submonoid.{u1} M _inst_1), (forall (i : ι), LE.le.{u1} (Submonoid.{u1} M _inst_1) (Preorder.toLE.{u1} (Submonoid.{u1} M _inst_1) (PartialOrder.toPreorder.{u1} (Submonoid.{u1} M _inst_1) (CompleteSemilatticeInf.toPartialOrder.{u1} (Submonoid.{u1} M _inst_1) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Submonoid.{u1} M _inst_1) (Submonoid.instCompleteLatticeSubmonoid.{u1} M _inst_1))))) (p i) N) -> (Membership.mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1)) m N))
-Case conversion may be inaccurate. Consider using '#align submonoid.mem_supr Submonoid.mem_supᵢₓ'. -/
+  forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M] {ι : Sort.{u2}} (p : ι -> (Submonoid.{u1} M _inst_1)) {m : M}, Iff (Membership.mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1)) m (iSup.{u1, u2} (Submonoid.{u1} M _inst_1) (CompleteLattice.toSupSet.{u1} (Submonoid.{u1} M _inst_1) (Submonoid.instCompleteLatticeSubmonoid.{u1} M _inst_1)) ι (fun (i : ι) => p i))) (forall (N : Submonoid.{u1} M _inst_1), (forall (i : ι), LE.le.{u1} (Submonoid.{u1} M _inst_1) (Preorder.toLE.{u1} (Submonoid.{u1} M _inst_1) (PartialOrder.toPreorder.{u1} (Submonoid.{u1} M _inst_1) (CompleteSemilatticeInf.toPartialOrder.{u1} (Submonoid.{u1} M _inst_1) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Submonoid.{u1} M _inst_1) (Submonoid.instCompleteLatticeSubmonoid.{u1} M _inst_1))))) (p i) N) -> (Membership.mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1)) m N))
+Case conversion may be inaccurate. Consider using '#align submonoid.mem_supr Submonoid.mem_iSupₓ'. -/
 @[to_additive]
-theorem mem_supᵢ {ι : Sort _} (p : ι → Submonoid M) {m : M} :
+theorem mem_iSup {ι : Sort _} (p : ι → Submonoid M) {m : M} :
     (m ∈ ⨆ i, p i) ↔ ∀ N, (∀ i, p i ≤ N) → m ∈ N :=
   by
-  rw [← closure_singleton_le_iff_mem, le_supᵢ_iff]
+  rw [← closure_singleton_le_iff_mem, le_iSup_iff]
   simp only [closure_singleton_le_iff_mem]
-#align submonoid.mem_supr Submonoid.mem_supᵢ
-#align add_submonoid.mem_supr AddSubmonoid.mem_supᵢ
+#align submonoid.mem_supr Submonoid.mem_iSup
+#align add_submonoid.mem_supr AddSubmonoid.mem_iSup
 
-/- warning: submonoid.supr_eq_closure -> Submonoid.supᵢ_eq_closure is a dubious translation:
+/- warning: submonoid.supr_eq_closure -> Submonoid.iSup_eq_closure is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M] {ι : Sort.{u2}} (p : ι -> (Submonoid.{u1} M _inst_1)), Eq.{succ u1} (Submonoid.{u1} M _inst_1) (supᵢ.{u1, u2} (Submonoid.{u1} M _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Submonoid.{u1} M _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Submonoid.{u1} M _inst_1) (Submonoid.completeLattice.{u1} M _inst_1))) ι (fun (i : ι) => p i)) (Submonoid.closure.{u1} M _inst_1 (Set.unionᵢ.{u1, u2} M ι (fun (i : ι) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Submonoid.{u1} M _inst_1) (Set.{u1} M) (HasLiftT.mk.{succ u1, succ u1} (Submonoid.{u1} M _inst_1) (Set.{u1} M) (CoeTCₓ.coe.{succ u1, succ u1} (Submonoid.{u1} M _inst_1) (Set.{u1} M) (SetLike.Set.hasCoeT.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.setLike.{u1} M _inst_1)))) (p i))))
+  forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M] {ι : Sort.{u2}} (p : ι -> (Submonoid.{u1} M _inst_1)), Eq.{succ u1} (Submonoid.{u1} M _inst_1) (iSup.{u1, u2} (Submonoid.{u1} M _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Submonoid.{u1} M _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Submonoid.{u1} M _inst_1) (Submonoid.completeLattice.{u1} M _inst_1))) ι (fun (i : ι) => p i)) (Submonoid.closure.{u1} M _inst_1 (Set.iUnion.{u1, u2} M ι (fun (i : ι) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Submonoid.{u1} M _inst_1) (Set.{u1} M) (HasLiftT.mk.{succ u1, succ u1} (Submonoid.{u1} M _inst_1) (Set.{u1} M) (CoeTCₓ.coe.{succ u1, succ u1} (Submonoid.{u1} M _inst_1) (Set.{u1} M) (SetLike.Set.hasCoeT.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.setLike.{u1} M _inst_1)))) (p i))))
 but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M] {ι : Sort.{u2}} (p : ι -> (Submonoid.{u1} M _inst_1)), Eq.{succ u1} (Submonoid.{u1} M _inst_1) (supᵢ.{u1, u2} (Submonoid.{u1} M _inst_1) (CompleteLattice.toSupSet.{u1} (Submonoid.{u1} M _inst_1) (Submonoid.instCompleteLatticeSubmonoid.{u1} M _inst_1)) ι (fun (i : ι) => p i)) (Submonoid.closure.{u1} M _inst_1 (Set.unionᵢ.{u1, u2} M ι (fun (i : ι) => SetLike.coe.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1) (p i))))
-Case conversion may be inaccurate. Consider using '#align submonoid.supr_eq_closure Submonoid.supᵢ_eq_closureₓ'. -/
+  forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M] {ι : Sort.{u2}} (p : ι -> (Submonoid.{u1} M _inst_1)), Eq.{succ u1} (Submonoid.{u1} M _inst_1) (iSup.{u1, u2} (Submonoid.{u1} M _inst_1) (CompleteLattice.toSupSet.{u1} (Submonoid.{u1} M _inst_1) (Submonoid.instCompleteLatticeSubmonoid.{u1} M _inst_1)) ι (fun (i : ι) => p i)) (Submonoid.closure.{u1} M _inst_1 (Set.iUnion.{u1, u2} M ι (fun (i : ι) => SetLike.coe.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1) (p i))))
+Case conversion may be inaccurate. Consider using '#align submonoid.supr_eq_closure Submonoid.iSup_eq_closureₓ'. -/
 @[to_additive]
-theorem supᵢ_eq_closure {ι : Sort _} (p : ι → Submonoid M) :
+theorem iSup_eq_closure {ι : Sort _} (p : ι → Submonoid M) :
     (⨆ i, p i) = Submonoid.closure (⋃ i, (p i : Set M)) := by
-  simp_rw [Submonoid.closure_unionᵢ, Submonoid.closure_eq]
-#align submonoid.supr_eq_closure Submonoid.supᵢ_eq_closure
-#align add_submonoid.supr_eq_closure AddSubmonoid.supᵢ_eq_closure
+  simp_rw [Submonoid.closure_iUnion, Submonoid.closure_eq]
+#align submonoid.supr_eq_closure Submonoid.iSup_eq_closure
+#align add_submonoid.supr_eq_closure AddSubmonoid.iSup_eq_closure
 
 /- warning: submonoid.disjoint_def -> Submonoid.disjoint_def is a dubious translation:
 lean 3 declaration is

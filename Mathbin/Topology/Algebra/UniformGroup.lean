@@ -288,44 +288,44 @@ section LatticeOps
 
 variable [Group β]
 
-/- warning: uniform_group_Inf -> uniformGroup_infₛ is a dubious translation:
+/- warning: uniform_group_Inf -> uniformGroup_sInf is a dubious translation:
 lean 3 declaration is
-  forall {β : Type.{u1}} [_inst_4 : Group.{u1} β] {us : Set.{u1} (UniformSpace.{u1} β)}, (forall (u : UniformSpace.{u1} β), (Membership.Mem.{u1, u1} (UniformSpace.{u1} β) (Set.{u1} (UniformSpace.{u1} β)) (Set.hasMem.{u1} (UniformSpace.{u1} β)) u us) -> (UniformGroup.{u1} β u _inst_4)) -> (UniformGroup.{u1} β (InfSet.infₛ.{u1} (UniformSpace.{u1} β) (UniformSpace.hasInf.{u1} β) us) _inst_4)
+  forall {β : Type.{u1}} [_inst_4 : Group.{u1} β] {us : Set.{u1} (UniformSpace.{u1} β)}, (forall (u : UniformSpace.{u1} β), (Membership.Mem.{u1, u1} (UniformSpace.{u1} β) (Set.{u1} (UniformSpace.{u1} β)) (Set.hasMem.{u1} (UniformSpace.{u1} β)) u us) -> (UniformGroup.{u1} β u _inst_4)) -> (UniformGroup.{u1} β (InfSet.sInf.{u1} (UniformSpace.{u1} β) (UniformSpace.hasInf.{u1} β) us) _inst_4)
 but is expected to have type
-  forall {β : Type.{u1}} [_inst_4 : Group.{u1} β] {us : Set.{u1} (UniformSpace.{u1} β)}, (forall (u : UniformSpace.{u1} β), (Membership.mem.{u1, u1} (UniformSpace.{u1} β) (Set.{u1} (UniformSpace.{u1} β)) (Set.instMembershipSet.{u1} (UniformSpace.{u1} β)) u us) -> (UniformGroup.{u1} β u _inst_4)) -> (UniformGroup.{u1} β (InfSet.infₛ.{u1} (UniformSpace.{u1} β) (instInfSetUniformSpace.{u1} β) us) _inst_4)
-Case conversion may be inaccurate. Consider using '#align uniform_group_Inf uniformGroup_infₛₓ'. -/
+  forall {β : Type.{u1}} [_inst_4 : Group.{u1} β] {us : Set.{u1} (UniformSpace.{u1} β)}, (forall (u : UniformSpace.{u1} β), (Membership.mem.{u1, u1} (UniformSpace.{u1} β) (Set.{u1} (UniformSpace.{u1} β)) (Set.instMembershipSet.{u1} (UniformSpace.{u1} β)) u us) -> (UniformGroup.{u1} β u _inst_4)) -> (UniformGroup.{u1} β (InfSet.sInf.{u1} (UniformSpace.{u1} β) (instInfSetUniformSpace.{u1} β) us) _inst_4)
+Case conversion may be inaccurate. Consider using '#align uniform_group_Inf uniformGroup_sInfₓ'. -/
 @[to_additive]
-theorem uniformGroup_infₛ {us : Set (UniformSpace β)} (h : ∀ u ∈ us, @UniformGroup β u _) :
-    @UniformGroup β (infₛ us) _ :=
+theorem uniformGroup_sInf {us : Set (UniformSpace β)} (h : ∀ u ∈ us, @UniformGroup β u _) :
+    @UniformGroup β (sInf us) _ :=
   {
     uniformContinuous_div :=
-      uniformContinuous_infₛ_rng fun u hu =>
-        uniformContinuous_infₛ_dom₂ hu hu (@UniformGroup.uniformContinuous_div β u _ (h u hu)) }
-#align uniform_group_Inf uniformGroup_infₛ
-#align uniform_add_group_Inf uniformAddGroup_infₛ
+      uniformContinuous_sInf_rng fun u hu =>
+        uniformContinuous_sInf_dom₂ hu hu (@UniformGroup.uniformContinuous_div β u _ (h u hu)) }
+#align uniform_group_Inf uniformGroup_sInf
+#align uniform_add_group_Inf uniformAddGroup_sInf
 
-/- warning: uniform_group_infi -> uniformGroup_infᵢ is a dubious translation:
+/- warning: uniform_group_infi -> uniformGroup_iInf is a dubious translation:
 lean 3 declaration is
-  forall {β : Type.{u1}} [_inst_4 : Group.{u1} β] {ι : Sort.{u2}} {us' : ι -> (UniformSpace.{u1} β)}, (forall (i : ι), UniformGroup.{u1} β (us' i) _inst_4) -> (UniformGroup.{u1} β (infᵢ.{u1, u2} (UniformSpace.{u1} β) (UniformSpace.hasInf.{u1} β) ι (fun (i : ι) => us' i)) _inst_4)
+  forall {β : Type.{u1}} [_inst_4 : Group.{u1} β] {ι : Sort.{u2}} {us' : ι -> (UniformSpace.{u1} β)}, (forall (i : ι), UniformGroup.{u1} β (us' i) _inst_4) -> (UniformGroup.{u1} β (iInf.{u1, u2} (UniformSpace.{u1} β) (UniformSpace.hasInf.{u1} β) ι (fun (i : ι) => us' i)) _inst_4)
 but is expected to have type
-  forall {β : Type.{u1}} [_inst_4 : Group.{u1} β] {ι : Sort.{u2}} {us' : ι -> (UniformSpace.{u1} β)}, (forall (i : ι), UniformGroup.{u1} β (us' i) _inst_4) -> (UniformGroup.{u1} β (infᵢ.{u1, u2} (UniformSpace.{u1} β) (instInfSetUniformSpace.{u1} β) ι (fun (i : ι) => us' i)) _inst_4)
-Case conversion may be inaccurate. Consider using '#align uniform_group_infi uniformGroup_infᵢₓ'. -/
+  forall {β : Type.{u1}} [_inst_4 : Group.{u1} β] {ι : Sort.{u2}} {us' : ι -> (UniformSpace.{u1} β)}, (forall (i : ι), UniformGroup.{u1} β (us' i) _inst_4) -> (UniformGroup.{u1} β (iInf.{u1, u2} (UniformSpace.{u1} β) (instInfSetUniformSpace.{u1} β) ι (fun (i : ι) => us' i)) _inst_4)
+Case conversion may be inaccurate. Consider using '#align uniform_group_infi uniformGroup_iInfₓ'. -/
 @[to_additive]
-theorem uniformGroup_infᵢ {ι : Sort _} {us' : ι → UniformSpace β}
+theorem uniformGroup_iInf {ι : Sort _} {us' : ι → UniformSpace β}
     (h' : ∀ i, @UniformGroup β (us' i) _) : @UniformGroup β (⨅ i, us' i) _ :=
   by
-  rw [← infₛ_range]
-  exact uniformGroup_infₛ (set.forall_range_iff.mpr h')
-#align uniform_group_infi uniformGroup_infᵢ
-#align uniform_add_group_infi uniformAddGroup_infᵢ
+  rw [← sInf_range]
+  exact uniformGroup_sInf (set.forall_range_iff.mpr h')
+#align uniform_group_infi uniformGroup_iInf
+#align uniform_add_group_infi uniformAddGroup_iInf
 
 #print uniformGroup_inf /-
 @[to_additive]
 theorem uniformGroup_inf {u₁ u₂ : UniformSpace β} (h₁ : @UniformGroup β u₁ _)
     (h₂ : @UniformGroup β u₂ _) : @UniformGroup β (u₁ ⊓ u₂) _ :=
   by
-  rw [inf_eq_infᵢ]
-  refine' uniformGroup_infᵢ fun b => _
+  rw [inf_eq_iInf]
+  refine' uniformGroup_iInf fun b => _
   cases b <;> assumption
 #align uniform_group_inf uniformGroup_inf
 #align uniform_add_group_inf uniformAddGroup_inf
@@ -689,19 +689,19 @@ theorem CauchySeq.inv {ι : Type _} [SemilatticeSup ι] {u : ι → α} (h : Cau
 #align cauchy_seq.inv CauchySeq.inv
 #align cauchy_seq.neg CauchySeq.neg
 
-/- warning: totally_bounded_iff_subset_finite_Union_nhds_one -> totallyBounded_iff_subset_finite_unionᵢ_nhds_one is a dubious translation:
+/- warning: totally_bounded_iff_subset_finite_Union_nhds_one -> totallyBounded_iff_subset_finite_iUnion_nhds_one is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] {s : Set.{u1} α}, Iff (TotallyBounded.{u1} α _inst_1 s) (forall (U : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) U (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))))))) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Set.Finite.{u1} α t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Set.unionᵢ.{u1, succ u1} α α (fun (y : α) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t) => SMul.smul.{u1, u1} α (Set.{u1} α) (Set.smulSet.{u1, u1} α α (Mul.toSMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) y U)))))))
+  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] {s : Set.{u1} α}, Iff (TotallyBounded.{u1} α _inst_1 s) (forall (U : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) U (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α (MulOneClass.toHasOne.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2))))))))) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Set.Finite.{u1} α t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Set.iUnion.{u1, succ u1} α α (fun (y : α) => Set.iUnion.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t) => SMul.smul.{u1, u1} α (Set.{u1} α) (Set.smulSet.{u1, u1} α α (Mul.toSMul.{u1} α (MulOneClass.toHasMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) y U)))))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] {s : Set.{u1} α}, Iff (TotallyBounded.{u1} α _inst_1 s) (forall (U : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) U (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_2)))))))) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Set.Finite.{u1} α t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Set.unionᵢ.{u1, succ u1} α α (fun (y : α) => Set.unionᵢ.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) => HSMul.hSMul.{u1, u1, u1} α (Set.{u1} α) (Set.{u1} α) (instHSMul.{u1, u1} α (Set.{u1} α) (Set.smulSet.{u1, u1} α α (MulAction.toSMul.{u1, u1} α α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)) (Monoid.toMulAction.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) y U)))))))
-Case conversion may be inaccurate. Consider using '#align totally_bounded_iff_subset_finite_Union_nhds_one totallyBounded_iff_subset_finite_unionᵢ_nhds_oneₓ'. -/
+  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_2 : Group.{u1} α] [_inst_3 : UniformGroup.{u1} α _inst_1 _inst_2] {s : Set.{u1} α}, Iff (TotallyBounded.{u1} α _inst_1 s) (forall (U : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) U (nhds.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_2)))))))) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Set.Finite.{u1} α t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Set.iUnion.{u1, succ u1} α α (fun (y : α) => Set.iUnion.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) => HSMul.hSMul.{u1, u1, u1} α (Set.{u1} α) (Set.{u1} α) (instHSMul.{u1, u1} α (Set.{u1} α) (Set.smulSet.{u1, u1} α α (MulAction.toSMul.{u1, u1} α α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)) (Monoid.toMulAction.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_2)))))) y U)))))))
+Case conversion may be inaccurate. Consider using '#align totally_bounded_iff_subset_finite_Union_nhds_one totallyBounded_iff_subset_finite_iUnion_nhds_oneₓ'. -/
 @[to_additive]
-theorem totallyBounded_iff_subset_finite_unionᵢ_nhds_one {s : Set α} :
+theorem totallyBounded_iff_subset_finite_iUnion_nhds_one {s : Set α} :
     TotallyBounded s ↔ ∀ U ∈ 𝓝 (1 : α), ∃ t : Set α, t.Finite ∧ s ⊆ ⋃ y ∈ t, y • U :=
   (𝓝 (1 : α)).basis_sets.uniformity_of_nhds_one_inv_mul_swapped.totallyBounded_iff.trans <| by
     simp [← preimage_smul_inv, preimage]
-#align totally_bounded_iff_subset_finite_Union_nhds_one totallyBounded_iff_subset_finite_unionᵢ_nhds_one
-#align totally_bounded_iff_subset_finite_Union_nhds_zero totallyBounded_iff_subset_finite_unionᵢ_nhds_zero
+#align totally_bounded_iff_subset_finite_Union_nhds_one totallyBounded_iff_subset_finite_iUnion_nhds_one
+#align totally_bounded_iff_subset_finite_Union_nhds_zero totallyBounded_iff_subset_finite_iUnion_nhds_zero
 
 section UniformConvergence
 

@@ -92,7 +92,7 @@ theorem setOf_liouvilleWith_subset_aux :
 /-- The set of numbers satisfying the Liouville condition with some exponent `p > 2` has Lebesgue
 measure zero. -/
 @[simp]
-theorem volume_unionᵢ_setOf_liouvilleWith :
+theorem volume_iUnion_setOf_liouvilleWith :
     volume (⋃ (p : ℝ) (hp : 2 < p), { x : ℝ | LiouvilleWith p x }) = 0 :=
   by
   simp only [← set_of_exists]
@@ -131,11 +131,11 @@ theorem volume_unionᵢ_setOf_liouvilleWith :
     simp [add_mul, div_eq_mul_inv, NNReal.rpow_neg, NNReal.rpow_sub' _ this, mul_add, mul_left_comm]
   refine' ne_top_of_le_ne_top (ENNReal.tsum_coe_ne_top_iff_summable.2 _) (ENNReal.tsum_le_tsum this)
   refine' (Summable.add _ _).mul_left _ <;> simp only [NNReal.summable_rpow] <;> linarith
-#align volume_Union_set_of_liouville_with volume_unionᵢ_setOf_liouvilleWith
+#align volume_Union_set_of_liouville_with volume_iUnion_setOf_liouvilleWith
 
 theorem ae_not_liouvilleWith : ∀ᵐ x, ∀ p > (2 : ℝ), ¬LiouvilleWith p x := by
   simpa only [ae_iff, not_forall, Classical.not_not, set_of_exists] using
-    volume_unionᵢ_setOf_liouvilleWith
+    volume_iUnion_setOf_liouvilleWith
 #align ae_not_liouville_with ae_not_liouvilleWith
 
 theorem ae_not_liouville : ∀ᵐ x, ¬Liouville x :=

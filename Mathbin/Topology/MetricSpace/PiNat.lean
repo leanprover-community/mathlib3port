@@ -228,13 +228,13 @@ theorem cylinder_eq_cylinder_of_le_firstDiff (x y : ∀ n, E n) {n : ℕ} (hn : 
 #align pi_nat.cylinder_eq_cylinder_of_le_first_diff PiNat.cylinder_eq_cylinder_of_le_firstDiff
 -/
 
-/- warning: pi_nat.Union_cylinder_update -> PiNat.unionᵢ_cylinder_update is a dubious translation:
+/- warning: pi_nat.Union_cylinder_update -> PiNat.iUnion_cylinder_update is a dubious translation:
 lean 3 declaration is
-  forall {E : Nat -> Type.{u1}} (x : forall (n : Nat), E n) (n : Nat), Eq.{succ u1} (Set.{u1} (forall (n : Nat), E n)) (Set.unionᵢ.{u1, succ u1} (forall (n : Nat), E n) (E n) (fun (k : E n) => PiNat.cylinder.{u1} (fun (n : Nat) => E n) (Function.update.{1, succ u1} Nat (fun (n : Nat) => E n) (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) x n k) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) (PiNat.cylinder.{u1} (fun (n : Nat) => E n) x n)
+  forall {E : Nat -> Type.{u1}} (x : forall (n : Nat), E n) (n : Nat), Eq.{succ u1} (Set.{u1} (forall (n : Nat), E n)) (Set.iUnion.{u1, succ u1} (forall (n : Nat), E n) (E n) (fun (k : E n) => PiNat.cylinder.{u1} (fun (n : Nat) => E n) (Function.update.{1, succ u1} Nat (fun (n : Nat) => E n) (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) x n k) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) (PiNat.cylinder.{u1} (fun (n : Nat) => E n) x n)
 but is expected to have type
-  forall {E : Nat -> Type.{u1}} (x : forall (n : Nat), E n) (n : Nat), Eq.{succ u1} (Set.{u1} (forall (n : Nat), E n)) (Set.unionᵢ.{u1, succ u1} (forall (n : Nat), E n) (E n) (fun (k : E n) => PiNat.cylinder.{u1} (fun (n : Nat) => E n) (Function.update.{1, succ u1} Nat (fun (n : Nat) => E n) (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) x n k) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (PiNat.cylinder.{u1} (fun (n : Nat) => E n) x n)
-Case conversion may be inaccurate. Consider using '#align pi_nat.Union_cylinder_update PiNat.unionᵢ_cylinder_updateₓ'. -/
-theorem unionᵢ_cylinder_update (x : ∀ n, E n) (n : ℕ) :
+  forall {E : Nat -> Type.{u1}} (x : forall (n : Nat), E n) (n : Nat), Eq.{succ u1} (Set.{u1} (forall (n : Nat), E n)) (Set.iUnion.{u1, succ u1} (forall (n : Nat), E n) (E n) (fun (k : E n) => PiNat.cylinder.{u1} (fun (n : Nat) => E n) (Function.update.{1, succ u1} Nat (fun (n : Nat) => E n) (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) x n k) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (PiNat.cylinder.{u1} (fun (n : Nat) => E n) x n)
+Case conversion may be inaccurate. Consider using '#align pi_nat.Union_cylinder_update PiNat.iUnion_cylinder_updateₓ'. -/
+theorem iUnion_cylinder_update (x : ∀ n, E n) (n : ℕ) :
     (⋃ k, cylinder (update x n k) (n + 1)) = cylinder x n :=
   by
   ext y
@@ -247,7 +247,7 @@ theorem unionᵢ_cylinder_update (x : ∀ n, E n) (n : ℕ) :
     rcases Nat.lt_succ_iff_lt_or_eq.1 hi with (h'i | rfl)
     · simp [H i h'i, h'i.ne]
     · simp
-#align pi_nat.Union_cylinder_update PiNat.unionᵢ_cylinder_update
+#align pi_nat.Union_cylinder_update PiNat.iUnion_cylinder_update
 
 /- warning: pi_nat.update_mem_cylinder -> PiNat.update_mem_cylinder is a dubious translation:
 lean 3 declaration is
@@ -606,7 +606,7 @@ protected def metricSpaceOfDiscreteUniformity {E : ℕ → Type _} [∀ n, Unifo
       simp [Pi.uniformity, comap_infi, gt_iff_lt, preimage_set_of_eq, comap_principal,
         PseudoMetricSpace.uniformity_dist, h, idRel]
       apply le_antisymm
-      · simp only [le_infᵢ_iff, le_principal_iff]
+      · simp only [le_iInf_iff, le_principal_iff]
         intro ε εpos
         obtain ⟨n, hn⟩ : ∃ n, (1 / 2 : ℝ) ^ n < ε := exists_pow_lt_of_lt_one εpos (by norm_num)
         apply
@@ -619,7 +619,7 @@ protected def metricSpaceOfDiscreteUniformity {E : ℕ → Type _} [∀ n, Unifo
           apply lt_of_le_of_lt _ hn
           rw [← mem_cylinder_iff_dist_le, mem_cylinder_iff]
           exact hxy
-      · simp only [le_infᵢ_iff, le_principal_iff]
+      · simp only [le_iInf_iff, le_principal_iff]
         intro n
         refine' mem_infi_of_mem ((1 / 2) ^ n) _
         refine' mem_infi_of_mem (by positivity) _
@@ -1206,7 +1206,7 @@ protected def metricSpace : MetricSpace (∀ i, F i)
     simp only [Pi.uniformity, comap_infi, gt_iff_lt, preimage_set_of_eq, comap_principal,
       PseudoMetricSpace.uniformity_dist]
     apply le_antisymm
-    · simp only [le_infᵢ_iff, le_principal_iff]
+    · simp only [le_iInf_iff, le_principal_iff]
       intro ε εpos
       obtain ⟨K, hK⟩ :
         ∃ K : Finset ι, (∑' i : { j // j ∉ K }, (1 / 2 : ℝ) ^ encode (i : ι)) < ε / 2 :=
@@ -1253,7 +1253,7 @@ protected def metricSpace : MetricSpace (∀ i, F i)
             (add_le_add_right (by simpa only [Finset.sum_const, nsmul_eq_mul] using hδ) _)
           _ = ε := add_halves _
           
-    · simp only [le_infᵢ_iff, le_principal_iff]
+    · simp only [le_iInf_iff, le_principal_iff]
       intro i ε εpos
       refine' mem_infi_of_mem (min ((1 / 2) ^ encode i) ε) _
       have : 0 < min ((1 / 2) ^ encode i) ε := lt_min (by simp) εpos

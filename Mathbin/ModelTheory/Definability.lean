@@ -174,31 +174,31 @@ theorem definable_finset_sup {ι : Type _} {f : ∀ i : ι, Set (α → M)} (hf 
     exact (hf i).union h
 #align set.definable_finset_sup Set.definable_finset_sup
 
-/- warning: set.definable_finset_bInter -> Set.definable_finset_binterᵢ is a dubious translation:
+/- warning: set.definable_finset_bInter -> Set.definable_finset_biInter is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u3}} {A : Set.{u3} M} {L : FirstOrder.Language.{u1, u2}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] {α : Type.{u4}} {ι : Type.{u5}} {f : ι -> (Set.{max u4 u3} (α -> M))}, (forall (i : ι), Set.Definable.{u1, u2, u3, u4} M A L _inst_1 α (f i)) -> (forall (s : Finset.{u5} ι), Set.Definable.{u1, u2, u3, u4} M A L _inst_1 α (Set.interᵢ.{max u4 u3, succ u5} (α -> M) ι (fun (i : ι) => Set.interᵢ.{max u4 u3, 0} (α -> M) (Membership.Mem.{u5, u5} ι (Finset.{u5} ι) (Finset.hasMem.{u5} ι) i s) (fun (H : Membership.Mem.{u5, u5} ι (Finset.{u5} ι) (Finset.hasMem.{u5} ι) i s) => f i))))
+  forall {M : Type.{u3}} {A : Set.{u3} M} {L : FirstOrder.Language.{u1, u2}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] {α : Type.{u4}} {ι : Type.{u5}} {f : ι -> (Set.{max u4 u3} (α -> M))}, (forall (i : ι), Set.Definable.{u1, u2, u3, u4} M A L _inst_1 α (f i)) -> (forall (s : Finset.{u5} ι), Set.Definable.{u1, u2, u3, u4} M A L _inst_1 α (Set.iInter.{max u4 u3, succ u5} (α -> M) ι (fun (i : ι) => Set.iInter.{max u4 u3, 0} (α -> M) (Membership.Mem.{u5, u5} ι (Finset.{u5} ι) (Finset.hasMem.{u5} ι) i s) (fun (H : Membership.Mem.{u5, u5} ι (Finset.{u5} ι) (Finset.hasMem.{u5} ι) i s) => f i))))
 but is expected to have type
-  forall {M : Type.{u4}} {A : Set.{u4} M} {L : FirstOrder.Language.{u2, u3}} [_inst_1 : FirstOrder.Language.Structure.{u2, u3, u4} L M] {α : Type.{u5}} {ι : Type.{u1}} {f : ι -> (Set.{max u5 u4} (α -> M))}, (forall (i : ι), Set.Definable.{u2, u3, u4, u5} M A L _inst_1 α (f i)) -> (forall (s : Finset.{u1} ι), Set.Definable.{u2, u3, u4, u5} M A L _inst_1 α (Set.interᵢ.{max u4 u5, succ u1} (α -> M) ι (fun (i : ι) => Set.interᵢ.{max u4 u5, 0} (α -> M) (Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i s) (fun (H : Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i s) => f i))))
-Case conversion may be inaccurate. Consider using '#align set.definable_finset_bInter Set.definable_finset_binterᵢₓ'. -/
-theorem definable_finset_binterᵢ {ι : Type _} {f : ∀ i : ι, Set (α → M)}
+  forall {M : Type.{u4}} {A : Set.{u4} M} {L : FirstOrder.Language.{u2, u3}} [_inst_1 : FirstOrder.Language.Structure.{u2, u3, u4} L M] {α : Type.{u5}} {ι : Type.{u1}} {f : ι -> (Set.{max u5 u4} (α -> M))}, (forall (i : ι), Set.Definable.{u2, u3, u4, u5} M A L _inst_1 α (f i)) -> (forall (s : Finset.{u1} ι), Set.Definable.{u2, u3, u4, u5} M A L _inst_1 α (Set.iInter.{max u4 u5, succ u1} (α -> M) ι (fun (i : ι) => Set.iInter.{max u4 u5, 0} (α -> M) (Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i s) (fun (H : Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i s) => f i))))
+Case conversion may be inaccurate. Consider using '#align set.definable_finset_bInter Set.definable_finset_biInterₓ'. -/
+theorem definable_finset_biInter {ι : Type _} {f : ∀ i : ι, Set (α → M)}
     (hf : ∀ i, A.Definable L (f i)) (s : Finset ι) : A.Definable L (⋂ i ∈ s, f i) :=
   by
-  rw [← Finset.inf_set_eq_interᵢ]
+  rw [← Finset.inf_set_eq_iInter]
   exact definable_finset_inf hf s
-#align set.definable_finset_bInter Set.definable_finset_binterᵢ
+#align set.definable_finset_bInter Set.definable_finset_biInter
 
-/- warning: set.definable_finset_bUnion -> Set.definable_finset_bunionᵢ is a dubious translation:
+/- warning: set.definable_finset_bUnion -> Set.definable_finset_biUnion is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u3}} {A : Set.{u3} M} {L : FirstOrder.Language.{u1, u2}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] {α : Type.{u4}} {ι : Type.{u5}} {f : ι -> (Set.{max u4 u3} (α -> M))}, (forall (i : ι), Set.Definable.{u1, u2, u3, u4} M A L _inst_1 α (f i)) -> (forall (s : Finset.{u5} ι), Set.Definable.{u1, u2, u3, u4} M A L _inst_1 α (Set.unionᵢ.{max u4 u3, succ u5} (α -> M) ι (fun (i : ι) => Set.unionᵢ.{max u4 u3, 0} (α -> M) (Membership.Mem.{u5, u5} ι (Finset.{u5} ι) (Finset.hasMem.{u5} ι) i s) (fun (H : Membership.Mem.{u5, u5} ι (Finset.{u5} ι) (Finset.hasMem.{u5} ι) i s) => f i))))
+  forall {M : Type.{u3}} {A : Set.{u3} M} {L : FirstOrder.Language.{u1, u2}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] {α : Type.{u4}} {ι : Type.{u5}} {f : ι -> (Set.{max u4 u3} (α -> M))}, (forall (i : ι), Set.Definable.{u1, u2, u3, u4} M A L _inst_1 α (f i)) -> (forall (s : Finset.{u5} ι), Set.Definable.{u1, u2, u3, u4} M A L _inst_1 α (Set.iUnion.{max u4 u3, succ u5} (α -> M) ι (fun (i : ι) => Set.iUnion.{max u4 u3, 0} (α -> M) (Membership.Mem.{u5, u5} ι (Finset.{u5} ι) (Finset.hasMem.{u5} ι) i s) (fun (H : Membership.Mem.{u5, u5} ι (Finset.{u5} ι) (Finset.hasMem.{u5} ι) i s) => f i))))
 but is expected to have type
-  forall {M : Type.{u4}} {A : Set.{u4} M} {L : FirstOrder.Language.{u2, u3}} [_inst_1 : FirstOrder.Language.Structure.{u2, u3, u4} L M] {α : Type.{u5}} {ι : Type.{u1}} {f : ι -> (Set.{max u5 u4} (α -> M))}, (forall (i : ι), Set.Definable.{u2, u3, u4, u5} M A L _inst_1 α (f i)) -> (forall (s : Finset.{u1} ι), Set.Definable.{u2, u3, u4, u5} M A L _inst_1 α (Set.unionᵢ.{max u4 u5, succ u1} (α -> M) ι (fun (i : ι) => Set.unionᵢ.{max u4 u5, 0} (α -> M) (Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i s) (fun (H : Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i s) => f i))))
-Case conversion may be inaccurate. Consider using '#align set.definable_finset_bUnion Set.definable_finset_bunionᵢₓ'. -/
-theorem definable_finset_bunionᵢ {ι : Type _} {f : ∀ i : ι, Set (α → M)}
+  forall {M : Type.{u4}} {A : Set.{u4} M} {L : FirstOrder.Language.{u2, u3}} [_inst_1 : FirstOrder.Language.Structure.{u2, u3, u4} L M] {α : Type.{u5}} {ι : Type.{u1}} {f : ι -> (Set.{max u5 u4} (α -> M))}, (forall (i : ι), Set.Definable.{u2, u3, u4, u5} M A L _inst_1 α (f i)) -> (forall (s : Finset.{u1} ι), Set.Definable.{u2, u3, u4, u5} M A L _inst_1 α (Set.iUnion.{max u4 u5, succ u1} (α -> M) ι (fun (i : ι) => Set.iUnion.{max u4 u5, 0} (α -> M) (Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i s) (fun (H : Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i s) => f i))))
+Case conversion may be inaccurate. Consider using '#align set.definable_finset_bUnion Set.definable_finset_biUnionₓ'. -/
+theorem definable_finset_biUnion {ι : Type _} {f : ∀ i : ι, Set (α → M)}
     (hf : ∀ i, A.Definable L (f i)) (s : Finset ι) : A.Definable L (⋃ i ∈ s, f i) :=
   by
-  rw [← Finset.sup_set_eq_bunionᵢ]
+  rw [← Finset.sup_set_eq_biUnion]
   exact definable_finset_sup hf s
-#align set.definable_finset_bUnion Set.definable_finset_bunionᵢ
+#align set.definable_finset_bUnion Set.definable_finset_biUnion
 
 /- warning: set.definable.compl -> Set.Definable.compl is a dubious translation:
 lean 3 declaration is

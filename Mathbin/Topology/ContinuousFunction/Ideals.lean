@@ -100,8 +100,8 @@ theorem idealOfSet_closed [LocallyCompactSpace X] [T2Space R] (s : Set X) :
   by
   simp only [ideal_of_set, Submodule.coe_set_mk, Set.setOf_forall]
   exact
-    isClosed_interᵢ fun x =>
-      isClosed_interᵢ fun hx => isClosed_eq (continuous_eval_const' x) continuous_const
+    isClosed_iInter fun x =>
+      isClosed_iInter fun hx => isClosed_eq (continuous_eval_const' x) continuous_const
 #align continuous_map.ideal_of_set_closed ContinuousMap.idealOfSet_closed
 
 variable {R}
@@ -139,8 +139,8 @@ theorem setOfIdeal_open [T2Space R] (I : Ideal C(X, R)) : IsOpen (setOfIdeal I) 
   by
   simp only [set_of_ideal, Set.setOf_forall, isOpen_compl_iff]
   exact
-    isClosed_interᵢ fun f =>
-      isClosed_interᵢ fun hf => isClosed_eq (map_continuous f) continuous_const
+    isClosed_iInter fun f =>
+      isClosed_iInter fun hf => isClosed_eq (map_continuous f) continuous_const
 #align continuous_map.set_of_ideal_open ContinuousMap.setOfIdeal_open
 
 /-- The open set `set_of_ideal I` realized as a term of `opens X`. -/

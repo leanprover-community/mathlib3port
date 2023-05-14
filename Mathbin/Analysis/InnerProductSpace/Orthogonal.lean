@@ -127,7 +127,7 @@ inner product with each of the elements of `K`. -/
 theorem orthogonal_eq_inter : Kᗮ = ⨅ v : K, LinearMap.ker (innerSL 𝕜 (v : E)) :=
   by
   apply le_antisymm
-  · rw [le_infᵢ_iff]
+  · rw [le_iInf_iff]
     rintro ⟨v, hv⟩ w hw
     simpa using hw _ hv
   · intro v hv w hw
@@ -140,7 +140,7 @@ theorem isClosed_orthogonal : IsClosed (Kᗮ : Set E) :=
   by
   rw [orthogonal_eq_inter K]
   have := fun v : K => ContinuousLinearMap.isClosed_ker (innerSL 𝕜 (v : E))
-  convert isClosed_interᵢ this
+  convert isClosed_iInter this
   simp only [infi_coe]
 #align submodule.is_closed_orthogonal Submodule.isClosed_orthogonal
 
@@ -185,13 +185,13 @@ theorem inf_orthogonal (K₁ K₂ : Submodule 𝕜 E) : K₁ᗮ ⊓ K₂ᗮ = (K
 
 /-- The inf of an indexed family of orthogonal subspaces equals the
 subspace orthogonal to the sup. -/
-theorem infᵢ_orthogonal {ι : Type _} (K : ι → Submodule 𝕜 E) : (⨅ i, (K i)ᗮ) = (supᵢ K)ᗮ :=
-  (orthogonal_gc 𝕜 E).l_supᵢ.symm
-#align submodule.infi_orthogonal Submodule.infᵢ_orthogonal
+theorem iInf_orthogonal {ι : Type _} (K : ι → Submodule 𝕜 E) : (⨅ i, (K i)ᗮ) = (iSup K)ᗮ :=
+  (orthogonal_gc 𝕜 E).l_iSup.symm
+#align submodule.infi_orthogonal Submodule.iInf_orthogonal
 
 /-- The inf of a set of orthogonal subspaces equals the subspace orthogonal to the sup. -/
-theorem Inf_orthogonal (s : Set <| Submodule 𝕜 E) : (⨅ K ∈ s, Kᗮ) = (supₛ s)ᗮ :=
-  (orthogonal_gc 𝕜 E).l_supₛ.symm
+theorem Inf_orthogonal (s : Set <| Submodule 𝕜 E) : (⨅ K ∈ s, Kᗮ) = (sSup s)ᗮ :=
+  (orthogonal_gc 𝕜 E).l_sSup.symm
 #align submodule.Inf_orthogonal Submodule.Inf_orthogonal
 
 @[simp]
@@ -362,28 +362,28 @@ theorem isOrtho_sup_right {U V₁ V₂ : Submodule 𝕜 E} : U ⟂ V₁ ⊔ V₂
 #align submodule.is_ortho_sup_right Submodule.isOrtho_sup_right
 
 @[simp]
-theorem isOrtho_supₛ_left {U : Set (Submodule 𝕜 E)} {V : Submodule 𝕜 E} :
-    supₛ U ⟂ V ↔ ∀ Uᵢ ∈ U, Uᵢ ⟂ V :=
-  supₛ_le_iff
-#align submodule.is_ortho_Sup_left Submodule.isOrtho_supₛ_left
+theorem isOrtho_sSup_left {U : Set (Submodule 𝕜 E)} {V : Submodule 𝕜 E} :
+    sSup U ⟂ V ↔ ∀ Uᵢ ∈ U, Uᵢ ⟂ V :=
+  sSup_le_iff
+#align submodule.is_ortho_Sup_left Submodule.isOrtho_sSup_left
 
 @[simp]
-theorem isOrtho_supₛ_right {U : Submodule 𝕜 E} {V : Set (Submodule 𝕜 E)} :
-    U ⟂ supₛ V ↔ ∀ Vᵢ ∈ V, U ⟂ Vᵢ :=
-  isOrtho_comm.trans <| isOrtho_supₛ_left.trans <| by simp_rw [is_ortho_comm]
-#align submodule.is_ortho_Sup_right Submodule.isOrtho_supₛ_right
+theorem isOrtho_sSup_right {U : Submodule 𝕜 E} {V : Set (Submodule 𝕜 E)} :
+    U ⟂ sSup V ↔ ∀ Vᵢ ∈ V, U ⟂ Vᵢ :=
+  isOrtho_comm.trans <| isOrtho_sSup_left.trans <| by simp_rw [is_ortho_comm]
+#align submodule.is_ortho_Sup_right Submodule.isOrtho_sSup_right
 
 @[simp]
-theorem isOrtho_supᵢ_left {ι : Sort _} {U : ι → Submodule 𝕜 E} {V : Submodule 𝕜 E} :
-    supᵢ U ⟂ V ↔ ∀ i, U i ⟂ V :=
-  supᵢ_le_iff
-#align submodule.is_ortho_supr_left Submodule.isOrtho_supᵢ_left
+theorem isOrtho_iSup_left {ι : Sort _} {U : ι → Submodule 𝕜 E} {V : Submodule 𝕜 E} :
+    iSup U ⟂ V ↔ ∀ i, U i ⟂ V :=
+  iSup_le_iff
+#align submodule.is_ortho_supr_left Submodule.isOrtho_iSup_left
 
 @[simp]
-theorem isOrtho_supᵢ_right {ι : Sort _} {U : Submodule 𝕜 E} {V : ι → Submodule 𝕜 E} :
-    U ⟂ supᵢ V ↔ ∀ i, U ⟂ V i :=
-  isOrtho_comm.trans <| isOrtho_supᵢ_left.trans <| by simp_rw [is_ortho_comm]
-#align submodule.is_ortho_supr_right Submodule.isOrtho_supᵢ_right
+theorem isOrtho_iSup_right {ι : Sort _} {U : Submodule 𝕜 E} {V : ι → Submodule 𝕜 E} :
+    U ⟂ iSup V ↔ ∀ i, U ⟂ V i :=
+  isOrtho_comm.trans <| isOrtho_iSup_left.trans <| by simp_rw [is_ortho_comm]
+#align submodule.is_ortho_supr_right Submodule.isOrtho_iSup_right
 
 @[simp]
 theorem isOrtho_span {s t : Set E} :

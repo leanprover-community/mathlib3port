@@ -181,116 +181,116 @@ theorem IsLowerSet.inter (hs : IsLowerSet s) (ht : IsLowerSet t) : IsLowerSet (s
   fun a b h => And.imp (hs h) (ht h)
 #align is_lower_set.inter IsLowerSet.inter
 
-/- warning: is_upper_set_Union -> isUpperSet_unionᵢ is a dubious translation:
+/- warning: is_upper_set_Union -> isUpperSet_iUnion is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : LE.{u1} α] {f : ι -> (Set.{u1} α)}, (forall (i : ι), IsUpperSet.{u1} α _inst_1 (f i)) -> (IsUpperSet.{u1} α _inst_1 (Set.unionᵢ.{u1, u2} α ι (fun (i : ι) => f i)))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : LE.{u1} α] {f : ι -> (Set.{u1} α)}, (forall (i : ι), IsUpperSet.{u1} α _inst_1 (f i)) -> (IsUpperSet.{u1} α _inst_1 (Set.iUnion.{u1, u2} α ι (fun (i : ι) => f i)))
 but is expected to have type
-  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : LE.{u2} α] {f : ι -> (Set.{u2} α)}, (forall (i : ι), IsUpperSet.{u2} α _inst_1 (f i)) -> (IsUpperSet.{u2} α _inst_1 (Set.unionᵢ.{u2, u1} α ι (fun (i : ι) => f i)))
-Case conversion may be inaccurate. Consider using '#align is_upper_set_Union isUpperSet_unionᵢₓ'. -/
-theorem isUpperSet_unionᵢ {f : ι → Set α} (hf : ∀ i, IsUpperSet (f i)) : IsUpperSet (⋃ i, f i) :=
+  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : LE.{u2} α] {f : ι -> (Set.{u2} α)}, (forall (i : ι), IsUpperSet.{u2} α _inst_1 (f i)) -> (IsUpperSet.{u2} α _inst_1 (Set.iUnion.{u2, u1} α ι (fun (i : ι) => f i)))
+Case conversion may be inaccurate. Consider using '#align is_upper_set_Union isUpperSet_iUnionₓ'. -/
+theorem isUpperSet_iUnion {f : ι → Set α} (hf : ∀ i, IsUpperSet (f i)) : IsUpperSet (⋃ i, f i) :=
   fun a b h => Exists₂.imp <| forall_range_iff.2 fun i => hf i h
-#align is_upper_set_Union isUpperSet_unionᵢ
+#align is_upper_set_Union isUpperSet_iUnion
 
-/- warning: is_lower_set_Union -> isLowerSet_unionᵢ is a dubious translation:
+/- warning: is_lower_set_Union -> isLowerSet_iUnion is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : LE.{u1} α] {f : ι -> (Set.{u1} α)}, (forall (i : ι), IsLowerSet.{u1} α _inst_1 (f i)) -> (IsLowerSet.{u1} α _inst_1 (Set.unionᵢ.{u1, u2} α ι (fun (i : ι) => f i)))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : LE.{u1} α] {f : ι -> (Set.{u1} α)}, (forall (i : ι), IsLowerSet.{u1} α _inst_1 (f i)) -> (IsLowerSet.{u1} α _inst_1 (Set.iUnion.{u1, u2} α ι (fun (i : ι) => f i)))
 but is expected to have type
-  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : LE.{u2} α] {f : ι -> (Set.{u2} α)}, (forall (i : ι), IsLowerSet.{u2} α _inst_1 (f i)) -> (IsLowerSet.{u2} α _inst_1 (Set.unionᵢ.{u2, u1} α ι (fun (i : ι) => f i)))
-Case conversion may be inaccurate. Consider using '#align is_lower_set_Union isLowerSet_unionᵢₓ'. -/
-theorem isLowerSet_unionᵢ {f : ι → Set α} (hf : ∀ i, IsLowerSet (f i)) : IsLowerSet (⋃ i, f i) :=
+  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : LE.{u2} α] {f : ι -> (Set.{u2} α)}, (forall (i : ι), IsLowerSet.{u2} α _inst_1 (f i)) -> (IsLowerSet.{u2} α _inst_1 (Set.iUnion.{u2, u1} α ι (fun (i : ι) => f i)))
+Case conversion may be inaccurate. Consider using '#align is_lower_set_Union isLowerSet_iUnionₓ'. -/
+theorem isLowerSet_iUnion {f : ι → Set α} (hf : ∀ i, IsLowerSet (f i)) : IsLowerSet (⋃ i, f i) :=
   fun a b h => Exists₂.imp <| forall_range_iff.2 fun i => hf i h
-#align is_lower_set_Union isLowerSet_unionᵢ
+#align is_lower_set_Union isLowerSet_iUnion
 
-/- warning: is_upper_set_Union₂ -> isUpperSet_unionᵢ₂ is a dubious translation:
+/- warning: is_upper_set_Union₂ -> isUpperSet_iUnion₂ is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} [_inst_1 : LE.{u1} α] {f : forall (i : ι), (κ i) -> (Set.{u1} α)}, (forall (i : ι) (j : κ i), IsUpperSet.{u1} α _inst_1 (f i j)) -> (IsUpperSet.{u1} α _inst_1 (Set.unionᵢ.{u1, u2} α ι (fun (i : ι) => Set.unionᵢ.{u1, u3} α (κ i) (fun (j : κ i) => f i j))))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} [_inst_1 : LE.{u1} α] {f : forall (i : ι), (κ i) -> (Set.{u1} α)}, (forall (i : ι) (j : κ i), IsUpperSet.{u1} α _inst_1 (f i j)) -> (IsUpperSet.{u1} α _inst_1 (Set.iUnion.{u1, u2} α ι (fun (i : ι) => Set.iUnion.{u1, u3} α (κ i) (fun (j : κ i) => f i j))))
 but is expected to have type
-  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : LE.{u3} α] {f : forall (i : ι), (κ i) -> (Set.{u3} α)}, (forall (i : ι) (j : κ i), IsUpperSet.{u3} α _inst_1 (f i j)) -> (IsUpperSet.{u3} α _inst_1 (Set.unionᵢ.{u3, u2} α ι (fun (i : ι) => Set.unionᵢ.{u3, u1} α (κ i) (fun (j : κ i) => f i j))))
-Case conversion may be inaccurate. Consider using '#align is_upper_set_Union₂ isUpperSet_unionᵢ₂ₓ'. -/
+  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : LE.{u3} α] {f : forall (i : ι), (κ i) -> (Set.{u3} α)}, (forall (i : ι) (j : κ i), IsUpperSet.{u3} α _inst_1 (f i j)) -> (IsUpperSet.{u3} α _inst_1 (Set.iUnion.{u3, u2} α ι (fun (i : ι) => Set.iUnion.{u3, u1} α (κ i) (fun (j : κ i) => f i j))))
+Case conversion may be inaccurate. Consider using '#align is_upper_set_Union₂ isUpperSet_iUnion₂ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-theorem isUpperSet_unionᵢ₂ {f : ∀ i, κ i → Set α} (hf : ∀ i j, IsUpperSet (f i j)) :
+theorem isUpperSet_iUnion₂ {f : ∀ i, κ i → Set α} (hf : ∀ i j, IsUpperSet (f i j)) :
     IsUpperSet (⋃ (i) (j), f i j) :=
-  isUpperSet_unionᵢ fun i => isUpperSet_unionᵢ <| hf i
-#align is_upper_set_Union₂ isUpperSet_unionᵢ₂
+  isUpperSet_iUnion fun i => isUpperSet_iUnion <| hf i
+#align is_upper_set_Union₂ isUpperSet_iUnion₂
 
-/- warning: is_lower_set_Union₂ -> isLowerSet_unionᵢ₂ is a dubious translation:
+/- warning: is_lower_set_Union₂ -> isLowerSet_iUnion₂ is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} [_inst_1 : LE.{u1} α] {f : forall (i : ι), (κ i) -> (Set.{u1} α)}, (forall (i : ι) (j : κ i), IsLowerSet.{u1} α _inst_1 (f i j)) -> (IsLowerSet.{u1} α _inst_1 (Set.unionᵢ.{u1, u2} α ι (fun (i : ι) => Set.unionᵢ.{u1, u3} α (κ i) (fun (j : κ i) => f i j))))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} [_inst_1 : LE.{u1} α] {f : forall (i : ι), (κ i) -> (Set.{u1} α)}, (forall (i : ι) (j : κ i), IsLowerSet.{u1} α _inst_1 (f i j)) -> (IsLowerSet.{u1} α _inst_1 (Set.iUnion.{u1, u2} α ι (fun (i : ι) => Set.iUnion.{u1, u3} α (κ i) (fun (j : κ i) => f i j))))
 but is expected to have type
-  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : LE.{u3} α] {f : forall (i : ι), (κ i) -> (Set.{u3} α)}, (forall (i : ι) (j : κ i), IsLowerSet.{u3} α _inst_1 (f i j)) -> (IsLowerSet.{u3} α _inst_1 (Set.unionᵢ.{u3, u2} α ι (fun (i : ι) => Set.unionᵢ.{u3, u1} α (κ i) (fun (j : κ i) => f i j))))
-Case conversion may be inaccurate. Consider using '#align is_lower_set_Union₂ isLowerSet_unionᵢ₂ₓ'. -/
+  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : LE.{u3} α] {f : forall (i : ι), (κ i) -> (Set.{u3} α)}, (forall (i : ι) (j : κ i), IsLowerSet.{u3} α _inst_1 (f i j)) -> (IsLowerSet.{u3} α _inst_1 (Set.iUnion.{u3, u2} α ι (fun (i : ι) => Set.iUnion.{u3, u1} α (κ i) (fun (j : κ i) => f i j))))
+Case conversion may be inaccurate. Consider using '#align is_lower_set_Union₂ isLowerSet_iUnion₂ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-theorem isLowerSet_unionᵢ₂ {f : ∀ i, κ i → Set α} (hf : ∀ i j, IsLowerSet (f i j)) :
+theorem isLowerSet_iUnion₂ {f : ∀ i, κ i → Set α} (hf : ∀ i j, IsLowerSet (f i j)) :
     IsLowerSet (⋃ (i) (j), f i j) :=
-  isLowerSet_unionᵢ fun i => isLowerSet_unionᵢ <| hf i
-#align is_lower_set_Union₂ isLowerSet_unionᵢ₂
+  isLowerSet_iUnion fun i => isLowerSet_iUnion <| hf i
+#align is_lower_set_Union₂ isLowerSet_iUnion₂
 
-#print isUpperSet_unionₛ /-
-theorem isUpperSet_unionₛ {S : Set (Set α)} (hf : ∀ s ∈ S, IsUpperSet s) : IsUpperSet (⋃₀ S) :=
+#print isUpperSet_sUnion /-
+theorem isUpperSet_sUnion {S : Set (Set α)} (hf : ∀ s ∈ S, IsUpperSet s) : IsUpperSet (⋃₀ S) :=
   fun a b h => Exists₂.imp fun s hs => hf s hs h
-#align is_upper_set_sUnion isUpperSet_unionₛ
+#align is_upper_set_sUnion isUpperSet_sUnion
 -/
 
-#print isLowerSet_unionₛ /-
-theorem isLowerSet_unionₛ {S : Set (Set α)} (hf : ∀ s ∈ S, IsLowerSet s) : IsLowerSet (⋃₀ S) :=
+#print isLowerSet_sUnion /-
+theorem isLowerSet_sUnion {S : Set (Set α)} (hf : ∀ s ∈ S, IsLowerSet s) : IsLowerSet (⋃₀ S) :=
   fun a b h => Exists₂.imp fun s hs => hf s hs h
-#align is_lower_set_sUnion isLowerSet_unionₛ
+#align is_lower_set_sUnion isLowerSet_sUnion
 -/
 
-/- warning: is_upper_set_Inter -> isUpperSet_interᵢ is a dubious translation:
+/- warning: is_upper_set_Inter -> isUpperSet_iInter is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : LE.{u1} α] {f : ι -> (Set.{u1} α)}, (forall (i : ι), IsUpperSet.{u1} α _inst_1 (f i)) -> (IsUpperSet.{u1} α _inst_1 (Set.interᵢ.{u1, u2} α ι (fun (i : ι) => f i)))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : LE.{u1} α] {f : ι -> (Set.{u1} α)}, (forall (i : ι), IsUpperSet.{u1} α _inst_1 (f i)) -> (IsUpperSet.{u1} α _inst_1 (Set.iInter.{u1, u2} α ι (fun (i : ι) => f i)))
 but is expected to have type
-  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : LE.{u2} α] {f : ι -> (Set.{u2} α)}, (forall (i : ι), IsUpperSet.{u2} α _inst_1 (f i)) -> (IsUpperSet.{u2} α _inst_1 (Set.interᵢ.{u2, u1} α ι (fun (i : ι) => f i)))
-Case conversion may be inaccurate. Consider using '#align is_upper_set_Inter isUpperSet_interᵢₓ'. -/
-theorem isUpperSet_interᵢ {f : ι → Set α} (hf : ∀ i, IsUpperSet (f i)) : IsUpperSet (⋂ i, f i) :=
+  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : LE.{u2} α] {f : ι -> (Set.{u2} α)}, (forall (i : ι), IsUpperSet.{u2} α _inst_1 (f i)) -> (IsUpperSet.{u2} α _inst_1 (Set.iInter.{u2, u1} α ι (fun (i : ι) => f i)))
+Case conversion may be inaccurate. Consider using '#align is_upper_set_Inter isUpperSet_iInterₓ'. -/
+theorem isUpperSet_iInter {f : ι → Set α} (hf : ∀ i, IsUpperSet (f i)) : IsUpperSet (⋂ i, f i) :=
   fun a b h => forall₂_imp <| forall_range_iff.2 fun i => hf i h
-#align is_upper_set_Inter isUpperSet_interᵢ
+#align is_upper_set_Inter isUpperSet_iInter
 
-/- warning: is_lower_set_Inter -> isLowerSet_interᵢ is a dubious translation:
+/- warning: is_lower_set_Inter -> isLowerSet_iInter is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : LE.{u1} α] {f : ι -> (Set.{u1} α)}, (forall (i : ι), IsLowerSet.{u1} α _inst_1 (f i)) -> (IsLowerSet.{u1} α _inst_1 (Set.interᵢ.{u1, u2} α ι (fun (i : ι) => f i)))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : LE.{u1} α] {f : ι -> (Set.{u1} α)}, (forall (i : ι), IsLowerSet.{u1} α _inst_1 (f i)) -> (IsLowerSet.{u1} α _inst_1 (Set.iInter.{u1, u2} α ι (fun (i : ι) => f i)))
 but is expected to have type
-  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : LE.{u2} α] {f : ι -> (Set.{u2} α)}, (forall (i : ι), IsLowerSet.{u2} α _inst_1 (f i)) -> (IsLowerSet.{u2} α _inst_1 (Set.interᵢ.{u2, u1} α ι (fun (i : ι) => f i)))
-Case conversion may be inaccurate. Consider using '#align is_lower_set_Inter isLowerSet_interᵢₓ'. -/
-theorem isLowerSet_interᵢ {f : ι → Set α} (hf : ∀ i, IsLowerSet (f i)) : IsLowerSet (⋂ i, f i) :=
+  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : LE.{u2} α] {f : ι -> (Set.{u2} α)}, (forall (i : ι), IsLowerSet.{u2} α _inst_1 (f i)) -> (IsLowerSet.{u2} α _inst_1 (Set.iInter.{u2, u1} α ι (fun (i : ι) => f i)))
+Case conversion may be inaccurate. Consider using '#align is_lower_set_Inter isLowerSet_iInterₓ'. -/
+theorem isLowerSet_iInter {f : ι → Set α} (hf : ∀ i, IsLowerSet (f i)) : IsLowerSet (⋂ i, f i) :=
   fun a b h => forall₂_imp <| forall_range_iff.2 fun i => hf i h
-#align is_lower_set_Inter isLowerSet_interᵢ
+#align is_lower_set_Inter isLowerSet_iInter
 
-/- warning: is_upper_set_Inter₂ -> isUpperSet_interᵢ₂ is a dubious translation:
+/- warning: is_upper_set_Inter₂ -> isUpperSet_iInter₂ is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} [_inst_1 : LE.{u1} α] {f : forall (i : ι), (κ i) -> (Set.{u1} α)}, (forall (i : ι) (j : κ i), IsUpperSet.{u1} α _inst_1 (f i j)) -> (IsUpperSet.{u1} α _inst_1 (Set.interᵢ.{u1, u2} α ι (fun (i : ι) => Set.interᵢ.{u1, u3} α (κ i) (fun (j : κ i) => f i j))))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} [_inst_1 : LE.{u1} α] {f : forall (i : ι), (κ i) -> (Set.{u1} α)}, (forall (i : ι) (j : κ i), IsUpperSet.{u1} α _inst_1 (f i j)) -> (IsUpperSet.{u1} α _inst_1 (Set.iInter.{u1, u2} α ι (fun (i : ι) => Set.iInter.{u1, u3} α (κ i) (fun (j : κ i) => f i j))))
 but is expected to have type
-  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : LE.{u3} α] {f : forall (i : ι), (κ i) -> (Set.{u3} α)}, (forall (i : ι) (j : κ i), IsUpperSet.{u3} α _inst_1 (f i j)) -> (IsUpperSet.{u3} α _inst_1 (Set.interᵢ.{u3, u2} α ι (fun (i : ι) => Set.interᵢ.{u3, u1} α (κ i) (fun (j : κ i) => f i j))))
-Case conversion may be inaccurate. Consider using '#align is_upper_set_Inter₂ isUpperSet_interᵢ₂ₓ'. -/
+  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : LE.{u3} α] {f : forall (i : ι), (κ i) -> (Set.{u3} α)}, (forall (i : ι) (j : κ i), IsUpperSet.{u3} α _inst_1 (f i j)) -> (IsUpperSet.{u3} α _inst_1 (Set.iInter.{u3, u2} α ι (fun (i : ι) => Set.iInter.{u3, u1} α (κ i) (fun (j : κ i) => f i j))))
+Case conversion may be inaccurate. Consider using '#align is_upper_set_Inter₂ isUpperSet_iInter₂ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-theorem isUpperSet_interᵢ₂ {f : ∀ i, κ i → Set α} (hf : ∀ i j, IsUpperSet (f i j)) :
+theorem isUpperSet_iInter₂ {f : ∀ i, κ i → Set α} (hf : ∀ i j, IsUpperSet (f i j)) :
     IsUpperSet (⋂ (i) (j), f i j) :=
-  isUpperSet_interᵢ fun i => isUpperSet_interᵢ <| hf i
-#align is_upper_set_Inter₂ isUpperSet_interᵢ₂
+  isUpperSet_iInter fun i => isUpperSet_iInter <| hf i
+#align is_upper_set_Inter₂ isUpperSet_iInter₂
 
-/- warning: is_lower_set_Inter₂ -> isLowerSet_interᵢ₂ is a dubious translation:
+/- warning: is_lower_set_Inter₂ -> isLowerSet_iInter₂ is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} [_inst_1 : LE.{u1} α] {f : forall (i : ι), (κ i) -> (Set.{u1} α)}, (forall (i : ι) (j : κ i), IsLowerSet.{u1} α _inst_1 (f i j)) -> (IsLowerSet.{u1} α _inst_1 (Set.interᵢ.{u1, u2} α ι (fun (i : ι) => Set.interᵢ.{u1, u3} α (κ i) (fun (j : κ i) => f i j))))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} [_inst_1 : LE.{u1} α] {f : forall (i : ι), (κ i) -> (Set.{u1} α)}, (forall (i : ι) (j : κ i), IsLowerSet.{u1} α _inst_1 (f i j)) -> (IsLowerSet.{u1} α _inst_1 (Set.iInter.{u1, u2} α ι (fun (i : ι) => Set.iInter.{u1, u3} α (κ i) (fun (j : κ i) => f i j))))
 but is expected to have type
-  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : LE.{u3} α] {f : forall (i : ι), (κ i) -> (Set.{u3} α)}, (forall (i : ι) (j : κ i), IsLowerSet.{u3} α _inst_1 (f i j)) -> (IsLowerSet.{u3} α _inst_1 (Set.interᵢ.{u3, u2} α ι (fun (i : ι) => Set.interᵢ.{u3, u1} α (κ i) (fun (j : κ i) => f i j))))
-Case conversion may be inaccurate. Consider using '#align is_lower_set_Inter₂ isLowerSet_interᵢ₂ₓ'. -/
+  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : LE.{u3} α] {f : forall (i : ι), (κ i) -> (Set.{u3} α)}, (forall (i : ι) (j : κ i), IsLowerSet.{u3} α _inst_1 (f i j)) -> (IsLowerSet.{u3} α _inst_1 (Set.iInter.{u3, u2} α ι (fun (i : ι) => Set.iInter.{u3, u1} α (κ i) (fun (j : κ i) => f i j))))
+Case conversion may be inaccurate. Consider using '#align is_lower_set_Inter₂ isLowerSet_iInter₂ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-theorem isLowerSet_interᵢ₂ {f : ∀ i, κ i → Set α} (hf : ∀ i j, IsLowerSet (f i j)) :
+theorem isLowerSet_iInter₂ {f : ∀ i, κ i → Set α} (hf : ∀ i j, IsLowerSet (f i j)) :
     IsLowerSet (⋂ (i) (j), f i j) :=
-  isLowerSet_interᵢ fun i => isLowerSet_interᵢ <| hf i
-#align is_lower_set_Inter₂ isLowerSet_interᵢ₂
+  isLowerSet_iInter fun i => isLowerSet_iInter <| hf i
+#align is_lower_set_Inter₂ isLowerSet_iInter₂
 
-#print isUpperSet_interₛ /-
-theorem isUpperSet_interₛ {S : Set (Set α)} (hf : ∀ s ∈ S, IsUpperSet s) : IsUpperSet (⋂₀ S) :=
+#print isUpperSet_sInter /-
+theorem isUpperSet_sInter {S : Set (Set α)} (hf : ∀ s ∈ S, IsUpperSet s) : IsUpperSet (⋂₀ S) :=
   fun a b h => forall₂_imp fun s hs => hf s hs h
-#align is_upper_set_sInter isUpperSet_interₛ
+#align is_upper_set_sInter isUpperSet_sInter
 -/
 
-#print isLowerSet_interₛ /-
-theorem isLowerSet_interₛ {S : Set (Set α)} (hf : ∀ s ∈ S, IsLowerSet s) : IsLowerSet (⋂₀ S) :=
+#print isLowerSet_sInter /-
+theorem isLowerSet_sInter {S : Set (Set α)} (hf : ∀ s ∈ S, IsLowerSet s) : IsLowerSet (⋂₀ S) :=
   fun a b h => forall₂_imp fun s hs => hf s hs h
-#align is_lower_set_sInter isLowerSet_interₛ
+#align is_lower_set_sInter isLowerSet_sInter
 -/
 
 #print isLowerSet_preimage_ofDual_iff /-
@@ -746,10 +746,10 @@ instance : Bot (UpperSet α) :=
   ⟨⟨univ, isUpperSet_univ⟩⟩
 
 instance : SupSet (UpperSet α) :=
-  ⟨fun S => ⟨⋂ s ∈ S, ↑s, isUpperSet_interᵢ₂ fun s _ => s.upper⟩⟩
+  ⟨fun S => ⟨⋂ s ∈ S, ↑s, isUpperSet_iInter₂ fun s _ => s.upper⟩⟩
 
 instance : InfSet (UpperSet α) :=
-  ⟨fun S => ⟨⋃ s ∈ S, ↑s, isUpperSet_unionᵢ₂ fun s _ => s.upper⟩⟩
+  ⟨fun S => ⟨⋃ s ∈ S, ↑s, isUpperSet_iUnion₂ fun s _ => s.upper⟩⟩
 
 instance : CompleteDistribLattice (UpperSet α) :=
   (toDual.Injective.comp <| SetLike.coe_injective).CompleteDistribLattice _ (fun _ _ => rfl)
@@ -817,73 +817,73 @@ theorem coe_inf (s t : UpperSet α) : (↑(s ⊓ t) : Set α) = s ∪ t :=
   rfl
 #align upper_set.coe_inf UpperSet.coe_inf
 
-/- warning: upper_set.coe_Sup -> UpperSet.coe_supₛ is a dubious translation:
+/- warning: upper_set.coe_Sup -> UpperSet.coe_sSup is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] (S : Set.{u1} (UpperSet.{u1} α _inst_1)), Eq.{succ u1} (Set.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (UpperSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)))) (SupSet.supₛ.{u1} (UpperSet.{u1} α _inst_1) (UpperSet.hasSup.{u1} α _inst_1) S)) (Set.interᵢ.{u1, succ u1} α (UpperSet.{u1} α _inst_1) (fun (s : UpperSet.{u1} α _inst_1) => Set.interᵢ.{u1, 0} α (Membership.Mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.hasMem.{u1} (UpperSet.{u1} α _inst_1)) s S) (fun (H : Membership.Mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.hasMem.{u1} (UpperSet.{u1} α _inst_1)) s S) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (UpperSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)))) s)))
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] (S : Set.{u1} (UpperSet.{u1} α _inst_1)), Eq.{succ u1} (Set.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (UpperSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)))) (SupSet.sSup.{u1} (UpperSet.{u1} α _inst_1) (UpperSet.hasSup.{u1} α _inst_1) S)) (Set.iInter.{u1, succ u1} α (UpperSet.{u1} α _inst_1) (fun (s : UpperSet.{u1} α _inst_1) => Set.iInter.{u1, 0} α (Membership.Mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.hasMem.{u1} (UpperSet.{u1} α _inst_1)) s S) (fun (H : Membership.Mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.hasMem.{u1} (UpperSet.{u1} α _inst_1)) s S) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (UpperSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)))) s)))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] (S : Set.{u1} (UpperSet.{u1} α _inst_1)), Eq.{succ u1} (Set.{u1} α) (SetLike.coe.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u1} α _inst_1) (SupSet.supₛ.{u1} (UpperSet.{u1} α _inst_1) (UpperSet.instSupSetUpperSet.{u1} α _inst_1) S)) (Set.interᵢ.{u1, succ u1} α (UpperSet.{u1} α _inst_1) (fun (s : UpperSet.{u1} α _inst_1) => Set.interᵢ.{u1, 0} α (Membership.mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.instMembershipSet.{u1} (UpperSet.{u1} α _inst_1)) s S) (fun (H : Membership.mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.instMembershipSet.{u1} (UpperSet.{u1} α _inst_1)) s S) => SetLike.coe.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u1} α _inst_1) s)))
-Case conversion may be inaccurate. Consider using '#align upper_set.coe_Sup UpperSet.coe_supₛₓ'. -/
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] (S : Set.{u1} (UpperSet.{u1} α _inst_1)), Eq.{succ u1} (Set.{u1} α) (SetLike.coe.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u1} α _inst_1) (SupSet.sSup.{u1} (UpperSet.{u1} α _inst_1) (UpperSet.instSupSetUpperSet.{u1} α _inst_1) S)) (Set.iInter.{u1, succ u1} α (UpperSet.{u1} α _inst_1) (fun (s : UpperSet.{u1} α _inst_1) => Set.iInter.{u1, 0} α (Membership.mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.instMembershipSet.{u1} (UpperSet.{u1} α _inst_1)) s S) (fun (H : Membership.mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.instMembershipSet.{u1} (UpperSet.{u1} α _inst_1)) s S) => SetLike.coe.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u1} α _inst_1) s)))
+Case conversion may be inaccurate. Consider using '#align upper_set.coe_Sup UpperSet.coe_sSupₓ'. -/
 @[simp, norm_cast]
-theorem coe_supₛ (S : Set (UpperSet α)) : (↑(supₛ S) : Set α) = ⋂ s ∈ S, ↑s :=
+theorem coe_sSup (S : Set (UpperSet α)) : (↑(sSup S) : Set α) = ⋂ s ∈ S, ↑s :=
   rfl
-#align upper_set.coe_Sup UpperSet.coe_supₛ
+#align upper_set.coe_Sup UpperSet.coe_sSup
 
-/- warning: upper_set.coe_Inf -> UpperSet.coe_infₛ is a dubious translation:
+/- warning: upper_set.coe_Inf -> UpperSet.coe_sInf is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] (S : Set.{u1} (UpperSet.{u1} α _inst_1)), Eq.{succ u1} (Set.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (UpperSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)))) (InfSet.infₛ.{u1} (UpperSet.{u1} α _inst_1) (UpperSet.hasInf.{u1} α _inst_1) S)) (Set.unionᵢ.{u1, succ u1} α (UpperSet.{u1} α _inst_1) (fun (s : UpperSet.{u1} α _inst_1) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.hasMem.{u1} (UpperSet.{u1} α _inst_1)) s S) (fun (H : Membership.Mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.hasMem.{u1} (UpperSet.{u1} α _inst_1)) s S) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (UpperSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)))) s)))
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] (S : Set.{u1} (UpperSet.{u1} α _inst_1)), Eq.{succ u1} (Set.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (UpperSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)))) (InfSet.sInf.{u1} (UpperSet.{u1} α _inst_1) (UpperSet.hasInf.{u1} α _inst_1) S)) (Set.iUnion.{u1, succ u1} α (UpperSet.{u1} α _inst_1) (fun (s : UpperSet.{u1} α _inst_1) => Set.iUnion.{u1, 0} α (Membership.Mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.hasMem.{u1} (UpperSet.{u1} α _inst_1)) s S) (fun (H : Membership.Mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.hasMem.{u1} (UpperSet.{u1} α _inst_1)) s S) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (UpperSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)))) s)))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] (S : Set.{u1} (UpperSet.{u1} α _inst_1)), Eq.{succ u1} (Set.{u1} α) (SetLike.coe.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u1} α _inst_1) (InfSet.infₛ.{u1} (UpperSet.{u1} α _inst_1) (UpperSet.instInfSetUpperSet.{u1} α _inst_1) S)) (Set.unionᵢ.{u1, succ u1} α (UpperSet.{u1} α _inst_1) (fun (s : UpperSet.{u1} α _inst_1) => Set.unionᵢ.{u1, 0} α (Membership.mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.instMembershipSet.{u1} (UpperSet.{u1} α _inst_1)) s S) (fun (H : Membership.mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.instMembershipSet.{u1} (UpperSet.{u1} α _inst_1)) s S) => SetLike.coe.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u1} α _inst_1) s)))
-Case conversion may be inaccurate. Consider using '#align upper_set.coe_Inf UpperSet.coe_infₛₓ'. -/
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] (S : Set.{u1} (UpperSet.{u1} α _inst_1)), Eq.{succ u1} (Set.{u1} α) (SetLike.coe.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u1} α _inst_1) (InfSet.sInf.{u1} (UpperSet.{u1} α _inst_1) (UpperSet.instInfSetUpperSet.{u1} α _inst_1) S)) (Set.iUnion.{u1, succ u1} α (UpperSet.{u1} α _inst_1) (fun (s : UpperSet.{u1} α _inst_1) => Set.iUnion.{u1, 0} α (Membership.mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.instMembershipSet.{u1} (UpperSet.{u1} α _inst_1)) s S) (fun (H : Membership.mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.instMembershipSet.{u1} (UpperSet.{u1} α _inst_1)) s S) => SetLike.coe.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u1} α _inst_1) s)))
+Case conversion may be inaccurate. Consider using '#align upper_set.coe_Inf UpperSet.coe_sInfₓ'. -/
 @[simp, norm_cast]
-theorem coe_infₛ (S : Set (UpperSet α)) : (↑(infₛ S) : Set α) = ⋃ s ∈ S, ↑s :=
+theorem coe_sInf (S : Set (UpperSet α)) : (↑(sInf S) : Set α) = ⋃ s ∈ S, ↑s :=
   rfl
-#align upper_set.coe_Inf UpperSet.coe_infₛ
+#align upper_set.coe_Inf UpperSet.coe_sInf
 
-/- warning: upper_set.coe_supr -> UpperSet.coe_supᵢ is a dubious translation:
+/- warning: upper_set.coe_supr -> UpperSet.coe_iSup is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : LE.{u1} α] (f : ι -> (UpperSet.{u1} α _inst_1)), Eq.{succ u1} (Set.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (UpperSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)))) (supᵢ.{u1, u2} (UpperSet.{u1} α _inst_1) (UpperSet.hasSup.{u1} α _inst_1) ι (fun (i : ι) => f i))) (Set.interᵢ.{u1, u2} α ι (fun (i : ι) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (UpperSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)))) (f i)))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : LE.{u1} α] (f : ι -> (UpperSet.{u1} α _inst_1)), Eq.{succ u1} (Set.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (UpperSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)))) (iSup.{u1, u2} (UpperSet.{u1} α _inst_1) (UpperSet.hasSup.{u1} α _inst_1) ι (fun (i : ι) => f i))) (Set.iInter.{u1, u2} α ι (fun (i : ι) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (UpperSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)))) (f i)))
 but is expected to have type
-  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : LE.{u2} α] (f : ι -> (UpperSet.{u2} α _inst_1)), Eq.{succ u2} (Set.{u2} α) (SetLike.coe.{u2, u2} (UpperSet.{u2} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u2} α _inst_1) (supᵢ.{u2, u1} (UpperSet.{u2} α _inst_1) (UpperSet.instSupSetUpperSet.{u2} α _inst_1) ι (fun (i : ι) => f i))) (Set.interᵢ.{u2, u1} α ι (fun (i : ι) => SetLike.coe.{u2, u2} (UpperSet.{u2} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u2} α _inst_1) (f i)))
-Case conversion may be inaccurate. Consider using '#align upper_set.coe_supr UpperSet.coe_supᵢₓ'. -/
+  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : LE.{u2} α] (f : ι -> (UpperSet.{u2} α _inst_1)), Eq.{succ u2} (Set.{u2} α) (SetLike.coe.{u2, u2} (UpperSet.{u2} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u2} α _inst_1) (iSup.{u2, u1} (UpperSet.{u2} α _inst_1) (UpperSet.instSupSetUpperSet.{u2} α _inst_1) ι (fun (i : ι) => f i))) (Set.iInter.{u2, u1} α ι (fun (i : ι) => SetLike.coe.{u2, u2} (UpperSet.{u2} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u2} α _inst_1) (f i)))
+Case conversion may be inaccurate. Consider using '#align upper_set.coe_supr UpperSet.coe_iSupₓ'. -/
 @[simp, norm_cast]
-theorem coe_supᵢ (f : ι → UpperSet α) : (↑(⨆ i, f i) : Set α) = ⋂ i, f i := by simp [supᵢ]
-#align upper_set.coe_supr UpperSet.coe_supᵢ
+theorem coe_iSup (f : ι → UpperSet α) : (↑(⨆ i, f i) : Set α) = ⋂ i, f i := by simp [iSup]
+#align upper_set.coe_supr UpperSet.coe_iSup
 
-/- warning: upper_set.coe_infi -> UpperSet.coe_infᵢ is a dubious translation:
+/- warning: upper_set.coe_infi -> UpperSet.coe_iInf is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : LE.{u1} α] (f : ι -> (UpperSet.{u1} α _inst_1)), Eq.{succ u1} (Set.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (UpperSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)))) (infᵢ.{u1, u2} (UpperSet.{u1} α _inst_1) (UpperSet.hasInf.{u1} α _inst_1) ι (fun (i : ι) => f i))) (Set.unionᵢ.{u1, u2} α ι (fun (i : ι) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (UpperSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)))) (f i)))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : LE.{u1} α] (f : ι -> (UpperSet.{u1} α _inst_1)), Eq.{succ u1} (Set.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (UpperSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)))) (iInf.{u1, u2} (UpperSet.{u1} α _inst_1) (UpperSet.hasInf.{u1} α _inst_1) ι (fun (i : ι) => f i))) (Set.iUnion.{u1, u2} α ι (fun (i : ι) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (UpperSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)))) (f i)))
 but is expected to have type
-  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : LE.{u2} α] (f : ι -> (UpperSet.{u2} α _inst_1)), Eq.{succ u2} (Set.{u2} α) (SetLike.coe.{u2, u2} (UpperSet.{u2} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u2} α _inst_1) (infᵢ.{u2, u1} (UpperSet.{u2} α _inst_1) (UpperSet.instInfSetUpperSet.{u2} α _inst_1) ι (fun (i : ι) => f i))) (Set.unionᵢ.{u2, u1} α ι (fun (i : ι) => SetLike.coe.{u2, u2} (UpperSet.{u2} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u2} α _inst_1) (f i)))
-Case conversion may be inaccurate. Consider using '#align upper_set.coe_infi UpperSet.coe_infᵢₓ'. -/
+  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : LE.{u2} α] (f : ι -> (UpperSet.{u2} α _inst_1)), Eq.{succ u2} (Set.{u2} α) (SetLike.coe.{u2, u2} (UpperSet.{u2} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u2} α _inst_1) (iInf.{u2, u1} (UpperSet.{u2} α _inst_1) (UpperSet.instInfSetUpperSet.{u2} α _inst_1) ι (fun (i : ι) => f i))) (Set.iUnion.{u2, u1} α ι (fun (i : ι) => SetLike.coe.{u2, u2} (UpperSet.{u2} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u2} α _inst_1) (f i)))
+Case conversion may be inaccurate. Consider using '#align upper_set.coe_infi UpperSet.coe_iInfₓ'. -/
 @[simp, norm_cast]
-theorem coe_infᵢ (f : ι → UpperSet α) : (↑(⨅ i, f i) : Set α) = ⋃ i, f i := by simp [infᵢ]
-#align upper_set.coe_infi UpperSet.coe_infᵢ
+theorem coe_iInf (f : ι → UpperSet α) : (↑(⨅ i, f i) : Set α) = ⋃ i, f i := by simp [iInf]
+#align upper_set.coe_infi UpperSet.coe_iInf
 
-/- warning: upper_set.coe_supr₂ -> UpperSet.coe_supᵢ₂ is a dubious translation:
+/- warning: upper_set.coe_supr₂ -> UpperSet.coe_iSup₂ is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} [_inst_1 : LE.{u1} α] (f : forall (i : ι), (κ i) -> (UpperSet.{u1} α _inst_1)), Eq.{succ u1} (Set.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (UpperSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)))) (supᵢ.{u1, u2} (UpperSet.{u1} α _inst_1) (UpperSet.hasSup.{u1} α _inst_1) ι (fun (i : ι) => supᵢ.{u1, u3} (UpperSet.{u1} α _inst_1) (UpperSet.hasSup.{u1} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (Set.interᵢ.{u1, u2} α ι (fun (i : ι) => Set.interᵢ.{u1, u3} α (κ i) (fun (j : κ i) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (UpperSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)))) (f i j))))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} [_inst_1 : LE.{u1} α] (f : forall (i : ι), (κ i) -> (UpperSet.{u1} α _inst_1)), Eq.{succ u1} (Set.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (UpperSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)))) (iSup.{u1, u2} (UpperSet.{u1} α _inst_1) (UpperSet.hasSup.{u1} α _inst_1) ι (fun (i : ι) => iSup.{u1, u3} (UpperSet.{u1} α _inst_1) (UpperSet.hasSup.{u1} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (Set.iInter.{u1, u2} α ι (fun (i : ι) => Set.iInter.{u1, u3} α (κ i) (fun (j : κ i) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (UpperSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)))) (f i j))))
 but is expected to have type
-  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : LE.{u3} α] (f : forall (i : ι), (κ i) -> (UpperSet.{u3} α _inst_1)), Eq.{succ u3} (Set.{u3} α) (SetLike.coe.{u3, u3} (UpperSet.{u3} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u3} α _inst_1) (supᵢ.{u3, u2} (UpperSet.{u3} α _inst_1) (UpperSet.instSupSetUpperSet.{u3} α _inst_1) ι (fun (i : ι) => supᵢ.{u3, u1} (UpperSet.{u3} α _inst_1) (UpperSet.instSupSetUpperSet.{u3} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (Set.interᵢ.{u3, u2} α ι (fun (i : ι) => Set.interᵢ.{u3, u1} α (κ i) (fun (j : κ i) => SetLike.coe.{u3, u3} (UpperSet.{u3} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u3} α _inst_1) (f i j))))
-Case conversion may be inaccurate. Consider using '#align upper_set.coe_supr₂ UpperSet.coe_supᵢ₂ₓ'. -/
+  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : LE.{u3} α] (f : forall (i : ι), (κ i) -> (UpperSet.{u3} α _inst_1)), Eq.{succ u3} (Set.{u3} α) (SetLike.coe.{u3, u3} (UpperSet.{u3} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u3} α _inst_1) (iSup.{u3, u2} (UpperSet.{u3} α _inst_1) (UpperSet.instSupSetUpperSet.{u3} α _inst_1) ι (fun (i : ι) => iSup.{u3, u1} (UpperSet.{u3} α _inst_1) (UpperSet.instSupSetUpperSet.{u3} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (Set.iInter.{u3, u2} α ι (fun (i : ι) => Set.iInter.{u3, u1} α (κ i) (fun (j : κ i) => SetLike.coe.{u3, u3} (UpperSet.{u3} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u3} α _inst_1) (f i j))))
+Case conversion may be inaccurate. Consider using '#align upper_set.coe_supr₂ UpperSet.coe_iSup₂ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp, norm_cast]
-theorem coe_supᵢ₂ (f : ∀ i, κ i → UpperSet α) : (↑(⨆ (i) (j), f i j) : Set α) = ⋂ (i) (j), f i j :=
+theorem coe_iSup₂ (f : ∀ i, κ i → UpperSet α) : (↑(⨆ (i) (j), f i j) : Set α) = ⋂ (i) (j), f i j :=
   by simp_rw [coe_supr]
-#align upper_set.coe_supr₂ UpperSet.coe_supᵢ₂
+#align upper_set.coe_supr₂ UpperSet.coe_iSup₂
 
-/- warning: upper_set.coe_infi₂ -> UpperSet.coe_infᵢ₂ is a dubious translation:
+/- warning: upper_set.coe_infi₂ -> UpperSet.coe_iInf₂ is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} [_inst_1 : LE.{u1} α] (f : forall (i : ι), (κ i) -> (UpperSet.{u1} α _inst_1)), Eq.{succ u1} (Set.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (UpperSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)))) (infᵢ.{u1, u2} (UpperSet.{u1} α _inst_1) (UpperSet.hasInf.{u1} α _inst_1) ι (fun (i : ι) => infᵢ.{u1, u3} (UpperSet.{u1} α _inst_1) (UpperSet.hasInf.{u1} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (Set.unionᵢ.{u1, u2} α ι (fun (i : ι) => Set.unionᵢ.{u1, u3} α (κ i) (fun (j : κ i) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (UpperSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)))) (f i j))))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} [_inst_1 : LE.{u1} α] (f : forall (i : ι), (κ i) -> (UpperSet.{u1} α _inst_1)), Eq.{succ u1} (Set.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (UpperSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)))) (iInf.{u1, u2} (UpperSet.{u1} α _inst_1) (UpperSet.hasInf.{u1} α _inst_1) ι (fun (i : ι) => iInf.{u1, u3} (UpperSet.{u1} α _inst_1) (UpperSet.hasInf.{u1} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (Set.iUnion.{u1, u2} α ι (fun (i : ι) => Set.iUnion.{u1, u3} α (κ i) (fun (j : κ i) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (UpperSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (UpperSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)))) (f i j))))
 but is expected to have type
-  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : LE.{u3} α] (f : forall (i : ι), (κ i) -> (UpperSet.{u3} α _inst_1)), Eq.{succ u3} (Set.{u3} α) (SetLike.coe.{u3, u3} (UpperSet.{u3} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u3} α _inst_1) (infᵢ.{u3, u2} (UpperSet.{u3} α _inst_1) (UpperSet.instInfSetUpperSet.{u3} α _inst_1) ι (fun (i : ι) => infᵢ.{u3, u1} (UpperSet.{u3} α _inst_1) (UpperSet.instInfSetUpperSet.{u3} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (Set.unionᵢ.{u3, u2} α ι (fun (i : ι) => Set.unionᵢ.{u3, u1} α (κ i) (fun (j : κ i) => SetLike.coe.{u3, u3} (UpperSet.{u3} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u3} α _inst_1) (f i j))))
-Case conversion may be inaccurate. Consider using '#align upper_set.coe_infi₂ UpperSet.coe_infᵢ₂ₓ'. -/
+  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : LE.{u3} α] (f : forall (i : ι), (κ i) -> (UpperSet.{u3} α _inst_1)), Eq.{succ u3} (Set.{u3} α) (SetLike.coe.{u3, u3} (UpperSet.{u3} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u3} α _inst_1) (iInf.{u3, u2} (UpperSet.{u3} α _inst_1) (UpperSet.instInfSetUpperSet.{u3} α _inst_1) ι (fun (i : ι) => iInf.{u3, u1} (UpperSet.{u3} α _inst_1) (UpperSet.instInfSetUpperSet.{u3} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (Set.iUnion.{u3, u2} α ι (fun (i : ι) => Set.iUnion.{u3, u1} α (κ i) (fun (j : κ i) => SetLike.coe.{u3, u3} (UpperSet.{u3} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u3} α _inst_1) (f i j))))
+Case conversion may be inaccurate. Consider using '#align upper_set.coe_infi₂ UpperSet.coe_iInf₂ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp, norm_cast]
-theorem coe_infᵢ₂ (f : ∀ i, κ i → UpperSet α) : (↑(⨅ (i) (j), f i j) : Set α) = ⋃ (i) (j), f i j :=
+theorem coe_iInf₂ (f : ∀ i, κ i → UpperSet α) : (↑(⨅ (i) (j), f i j) : Set α) = ⋃ (i) (j), f i j :=
   by simp_rw [coe_infi]
-#align upper_set.coe_infi₂ UpperSet.coe_infᵢ₂
+#align upper_set.coe_infi₂ UpperSet.coe_iInf₂
 
 #print UpperSet.not_mem_top /-
 @[simp]
@@ -921,77 +921,77 @@ theorem mem_inf_iff : a ∈ s ⊓ t ↔ a ∈ s ∨ a ∈ t :=
   Iff.rfl
 #align upper_set.mem_inf_iff UpperSet.mem_inf_iff
 
-/- warning: upper_set.mem_Sup_iff -> UpperSet.mem_supₛ_iff is a dubious translation:
+/- warning: upper_set.mem_Sup_iff -> UpperSet.mem_sSup_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] {S : Set.{u1} (UpperSet.{u1} α _inst_1)} {a : α}, Iff (Membership.Mem.{u1, u1} α (UpperSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)) a (SupSet.supₛ.{u1} (UpperSet.{u1} α _inst_1) (UpperSet.hasSup.{u1} α _inst_1) S)) (forall (s : UpperSet.{u1} α _inst_1), (Membership.Mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.hasMem.{u1} (UpperSet.{u1} α _inst_1)) s S) -> (Membership.Mem.{u1, u1} α (UpperSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)) a s))
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] {S : Set.{u1} (UpperSet.{u1} α _inst_1)} {a : α}, Iff (Membership.Mem.{u1, u1} α (UpperSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)) a (SupSet.sSup.{u1} (UpperSet.{u1} α _inst_1) (UpperSet.hasSup.{u1} α _inst_1) S)) (forall (s : UpperSet.{u1} α _inst_1), (Membership.Mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.hasMem.{u1} (UpperSet.{u1} α _inst_1)) s S) -> (Membership.Mem.{u1, u1} α (UpperSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)) a s))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] {S : Set.{u1} (UpperSet.{u1} α _inst_1)} {a : α}, Iff (Membership.mem.{u1, u1} α (UpperSet.{u1} α _inst_1) (SetLike.instMembership.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u1} α _inst_1)) a (SupSet.supₛ.{u1} (UpperSet.{u1} α _inst_1) (UpperSet.instSupSetUpperSet.{u1} α _inst_1) S)) (forall (s : UpperSet.{u1} α _inst_1), (Membership.mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.instMembershipSet.{u1} (UpperSet.{u1} α _inst_1)) s S) -> (Membership.mem.{u1, u1} α (UpperSet.{u1} α _inst_1) (SetLike.instMembership.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u1} α _inst_1)) a s))
-Case conversion may be inaccurate. Consider using '#align upper_set.mem_Sup_iff UpperSet.mem_supₛ_iffₓ'. -/
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] {S : Set.{u1} (UpperSet.{u1} α _inst_1)} {a : α}, Iff (Membership.mem.{u1, u1} α (UpperSet.{u1} α _inst_1) (SetLike.instMembership.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u1} α _inst_1)) a (SupSet.sSup.{u1} (UpperSet.{u1} α _inst_1) (UpperSet.instSupSetUpperSet.{u1} α _inst_1) S)) (forall (s : UpperSet.{u1} α _inst_1), (Membership.mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.instMembershipSet.{u1} (UpperSet.{u1} α _inst_1)) s S) -> (Membership.mem.{u1, u1} α (UpperSet.{u1} α _inst_1) (SetLike.instMembership.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u1} α _inst_1)) a s))
+Case conversion may be inaccurate. Consider using '#align upper_set.mem_Sup_iff UpperSet.mem_sSup_iffₓ'. -/
 @[simp]
-theorem mem_supₛ_iff : a ∈ supₛ S ↔ ∀ s ∈ S, a ∈ s :=
-  mem_interᵢ₂
-#align upper_set.mem_Sup_iff UpperSet.mem_supₛ_iff
+theorem mem_sSup_iff : a ∈ sSup S ↔ ∀ s ∈ S, a ∈ s :=
+  mem_iInter₂
+#align upper_set.mem_Sup_iff UpperSet.mem_sSup_iff
 
-/- warning: upper_set.mem_Inf_iff -> UpperSet.mem_infₛ_iff is a dubious translation:
+/- warning: upper_set.mem_Inf_iff -> UpperSet.mem_sInf_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] {S : Set.{u1} (UpperSet.{u1} α _inst_1)} {a : α}, Iff (Membership.Mem.{u1, u1} α (UpperSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)) a (InfSet.infₛ.{u1} (UpperSet.{u1} α _inst_1) (UpperSet.hasInf.{u1} α _inst_1) S)) (Exists.{succ u1} (UpperSet.{u1} α _inst_1) (fun (s : UpperSet.{u1} α _inst_1) => Exists.{0} (Membership.Mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.hasMem.{u1} (UpperSet.{u1} α _inst_1)) s S) (fun (H : Membership.Mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.hasMem.{u1} (UpperSet.{u1} α _inst_1)) s S) => Membership.Mem.{u1, u1} α (UpperSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)) a s)))
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] {S : Set.{u1} (UpperSet.{u1} α _inst_1)} {a : α}, Iff (Membership.Mem.{u1, u1} α (UpperSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)) a (InfSet.sInf.{u1} (UpperSet.{u1} α _inst_1) (UpperSet.hasInf.{u1} α _inst_1) S)) (Exists.{succ u1} (UpperSet.{u1} α _inst_1) (fun (s : UpperSet.{u1} α _inst_1) => Exists.{0} (Membership.Mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.hasMem.{u1} (UpperSet.{u1} α _inst_1)) s S) (fun (H : Membership.Mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.hasMem.{u1} (UpperSet.{u1} α _inst_1)) s S) => Membership.Mem.{u1, u1} α (UpperSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)) a s)))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] {S : Set.{u1} (UpperSet.{u1} α _inst_1)} {a : α}, Iff (Membership.mem.{u1, u1} α (UpperSet.{u1} α _inst_1) (SetLike.instMembership.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u1} α _inst_1)) a (InfSet.infₛ.{u1} (UpperSet.{u1} α _inst_1) (UpperSet.instInfSetUpperSet.{u1} α _inst_1) S)) (Exists.{succ u1} (UpperSet.{u1} α _inst_1) (fun (s : UpperSet.{u1} α _inst_1) => And (Membership.mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.instMembershipSet.{u1} (UpperSet.{u1} α _inst_1)) s S) (Membership.mem.{u1, u1} α (UpperSet.{u1} α _inst_1) (SetLike.instMembership.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u1} α _inst_1)) a s)))
-Case conversion may be inaccurate. Consider using '#align upper_set.mem_Inf_iff UpperSet.mem_infₛ_iffₓ'. -/
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] {S : Set.{u1} (UpperSet.{u1} α _inst_1)} {a : α}, Iff (Membership.mem.{u1, u1} α (UpperSet.{u1} α _inst_1) (SetLike.instMembership.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u1} α _inst_1)) a (InfSet.sInf.{u1} (UpperSet.{u1} α _inst_1) (UpperSet.instInfSetUpperSet.{u1} α _inst_1) S)) (Exists.{succ u1} (UpperSet.{u1} α _inst_1) (fun (s : UpperSet.{u1} α _inst_1) => And (Membership.mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.instMembershipSet.{u1} (UpperSet.{u1} α _inst_1)) s S) (Membership.mem.{u1, u1} α (UpperSet.{u1} α _inst_1) (SetLike.instMembership.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u1} α _inst_1)) a s)))
+Case conversion may be inaccurate. Consider using '#align upper_set.mem_Inf_iff UpperSet.mem_sInf_iffₓ'. -/
 @[simp]
-theorem mem_infₛ_iff : a ∈ infₛ S ↔ ∃ s ∈ S, a ∈ s :=
-  mem_unionᵢ₂
-#align upper_set.mem_Inf_iff UpperSet.mem_infₛ_iff
+theorem mem_sInf_iff : a ∈ sInf S ↔ ∃ s ∈ S, a ∈ s :=
+  mem_iUnion₂
+#align upper_set.mem_Inf_iff UpperSet.mem_sInf_iff
 
-/- warning: upper_set.mem_supr_iff -> UpperSet.mem_supᵢ_iff is a dubious translation:
+/- warning: upper_set.mem_supr_iff -> UpperSet.mem_iSup_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : LE.{u1} α] {a : α} {f : ι -> (UpperSet.{u1} α _inst_1)}, Iff (Membership.Mem.{u1, u1} α (UpperSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)) a (supᵢ.{u1, u2} (UpperSet.{u1} α _inst_1) (UpperSet.hasSup.{u1} α _inst_1) ι (fun (i : ι) => f i))) (forall (i : ι), Membership.Mem.{u1, u1} α (UpperSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)) a (f i))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : LE.{u1} α] {a : α} {f : ι -> (UpperSet.{u1} α _inst_1)}, Iff (Membership.Mem.{u1, u1} α (UpperSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)) a (iSup.{u1, u2} (UpperSet.{u1} α _inst_1) (UpperSet.hasSup.{u1} α _inst_1) ι (fun (i : ι) => f i))) (forall (i : ι), Membership.Mem.{u1, u1} α (UpperSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)) a (f i))
 but is expected to have type
-  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : LE.{u2} α] {a : α} {f : ι -> (UpperSet.{u2} α _inst_1)}, Iff (Membership.mem.{u2, u2} α (UpperSet.{u2} α _inst_1) (SetLike.instMembership.{u2, u2} (UpperSet.{u2} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u2} α _inst_1)) a (supᵢ.{u2, u1} (UpperSet.{u2} α _inst_1) (UpperSet.instSupSetUpperSet.{u2} α _inst_1) ι (fun (i : ι) => f i))) (forall (i : ι), Membership.mem.{u2, u2} α (UpperSet.{u2} α _inst_1) (SetLike.instMembership.{u2, u2} (UpperSet.{u2} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u2} α _inst_1)) a (f i))
-Case conversion may be inaccurate. Consider using '#align upper_set.mem_supr_iff UpperSet.mem_supᵢ_iffₓ'. -/
+  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : LE.{u2} α] {a : α} {f : ι -> (UpperSet.{u2} α _inst_1)}, Iff (Membership.mem.{u2, u2} α (UpperSet.{u2} α _inst_1) (SetLike.instMembership.{u2, u2} (UpperSet.{u2} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u2} α _inst_1)) a (iSup.{u2, u1} (UpperSet.{u2} α _inst_1) (UpperSet.instSupSetUpperSet.{u2} α _inst_1) ι (fun (i : ι) => f i))) (forall (i : ι), Membership.mem.{u2, u2} α (UpperSet.{u2} α _inst_1) (SetLike.instMembership.{u2, u2} (UpperSet.{u2} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u2} α _inst_1)) a (f i))
+Case conversion may be inaccurate. Consider using '#align upper_set.mem_supr_iff UpperSet.mem_iSup_iffₓ'. -/
 @[simp]
-theorem mem_supᵢ_iff {f : ι → UpperSet α} : (a ∈ ⨆ i, f i) ↔ ∀ i, a ∈ f i :=
+theorem mem_iSup_iff {f : ι → UpperSet α} : (a ∈ ⨆ i, f i) ↔ ∀ i, a ∈ f i :=
   by
   rw [← SetLike.mem_coe, coe_supr]
   exact mem_Inter
-#align upper_set.mem_supr_iff UpperSet.mem_supᵢ_iff
+#align upper_set.mem_supr_iff UpperSet.mem_iSup_iff
 
-/- warning: upper_set.mem_infi_iff -> UpperSet.mem_infᵢ_iff is a dubious translation:
+/- warning: upper_set.mem_infi_iff -> UpperSet.mem_iInf_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : LE.{u1} α] {a : α} {f : ι -> (UpperSet.{u1} α _inst_1)}, Iff (Membership.Mem.{u1, u1} α (UpperSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)) a (infᵢ.{u1, u2} (UpperSet.{u1} α _inst_1) (UpperSet.hasInf.{u1} α _inst_1) ι (fun (i : ι) => f i))) (Exists.{u2} ι (fun (i : ι) => Membership.Mem.{u1, u1} α (UpperSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)) a (f i)))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : LE.{u1} α] {a : α} {f : ι -> (UpperSet.{u1} α _inst_1)}, Iff (Membership.Mem.{u1, u1} α (UpperSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)) a (iInf.{u1, u2} (UpperSet.{u1} α _inst_1) (UpperSet.hasInf.{u1} α _inst_1) ι (fun (i : ι) => f i))) (Exists.{u2} ι (fun (i : ι) => Membership.Mem.{u1, u1} α (UpperSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)) a (f i)))
 but is expected to have type
-  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : LE.{u2} α] {a : α} {f : ι -> (UpperSet.{u2} α _inst_1)}, Iff (Membership.mem.{u2, u2} α (UpperSet.{u2} α _inst_1) (SetLike.instMembership.{u2, u2} (UpperSet.{u2} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u2} α _inst_1)) a (infᵢ.{u2, u1} (UpperSet.{u2} α _inst_1) (UpperSet.instInfSetUpperSet.{u2} α _inst_1) ι (fun (i : ι) => f i))) (Exists.{u1} ι (fun (i : ι) => Membership.mem.{u2, u2} α (UpperSet.{u2} α _inst_1) (SetLike.instMembership.{u2, u2} (UpperSet.{u2} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u2} α _inst_1)) a (f i)))
-Case conversion may be inaccurate. Consider using '#align upper_set.mem_infi_iff UpperSet.mem_infᵢ_iffₓ'. -/
+  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : LE.{u2} α] {a : α} {f : ι -> (UpperSet.{u2} α _inst_1)}, Iff (Membership.mem.{u2, u2} α (UpperSet.{u2} α _inst_1) (SetLike.instMembership.{u2, u2} (UpperSet.{u2} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u2} α _inst_1)) a (iInf.{u2, u1} (UpperSet.{u2} α _inst_1) (UpperSet.instInfSetUpperSet.{u2} α _inst_1) ι (fun (i : ι) => f i))) (Exists.{u1} ι (fun (i : ι) => Membership.mem.{u2, u2} α (UpperSet.{u2} α _inst_1) (SetLike.instMembership.{u2, u2} (UpperSet.{u2} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u2} α _inst_1)) a (f i)))
+Case conversion may be inaccurate. Consider using '#align upper_set.mem_infi_iff UpperSet.mem_iInf_iffₓ'. -/
 @[simp]
-theorem mem_infᵢ_iff {f : ι → UpperSet α} : (a ∈ ⨅ i, f i) ↔ ∃ i, a ∈ f i :=
+theorem mem_iInf_iff {f : ι → UpperSet α} : (a ∈ ⨅ i, f i) ↔ ∃ i, a ∈ f i :=
   by
   rw [← SetLike.mem_coe, coe_infi]
   exact mem_Union
-#align upper_set.mem_infi_iff UpperSet.mem_infᵢ_iff
+#align upper_set.mem_infi_iff UpperSet.mem_iInf_iff
 
-/- warning: upper_set.mem_supr₂_iff -> UpperSet.mem_supᵢ₂_iff is a dubious translation:
+/- warning: upper_set.mem_supr₂_iff -> UpperSet.mem_iSup₂_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} [_inst_1 : LE.{u1} α] {a : α} {f : forall (i : ι), (κ i) -> (UpperSet.{u1} α _inst_1)}, Iff (Membership.Mem.{u1, u1} α (UpperSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)) a (supᵢ.{u1, u2} (UpperSet.{u1} α _inst_1) (UpperSet.hasSup.{u1} α _inst_1) ι (fun (i : ι) => supᵢ.{u1, u3} (UpperSet.{u1} α _inst_1) (UpperSet.hasSup.{u1} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (forall (i : ι) (j : κ i), Membership.Mem.{u1, u1} α (UpperSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)) a (f i j))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} [_inst_1 : LE.{u1} α] {a : α} {f : forall (i : ι), (κ i) -> (UpperSet.{u1} α _inst_1)}, Iff (Membership.Mem.{u1, u1} α (UpperSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)) a (iSup.{u1, u2} (UpperSet.{u1} α _inst_1) (UpperSet.hasSup.{u1} α _inst_1) ι (fun (i : ι) => iSup.{u1, u3} (UpperSet.{u1} α _inst_1) (UpperSet.hasSup.{u1} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (forall (i : ι) (j : κ i), Membership.Mem.{u1, u1} α (UpperSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)) a (f i j))
 but is expected to have type
-  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : LE.{u3} α] {a : α} {f : forall (i : ι), (κ i) -> (UpperSet.{u3} α _inst_1)}, Iff (Membership.mem.{u3, u3} α (UpperSet.{u3} α _inst_1) (SetLike.instMembership.{u3, u3} (UpperSet.{u3} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u3} α _inst_1)) a (supᵢ.{u3, u2} (UpperSet.{u3} α _inst_1) (UpperSet.instSupSetUpperSet.{u3} α _inst_1) ι (fun (i : ι) => supᵢ.{u3, u1} (UpperSet.{u3} α _inst_1) (UpperSet.instSupSetUpperSet.{u3} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (forall (i : ι) (j : κ i), Membership.mem.{u3, u3} α (UpperSet.{u3} α _inst_1) (SetLike.instMembership.{u3, u3} (UpperSet.{u3} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u3} α _inst_1)) a (f i j))
-Case conversion may be inaccurate. Consider using '#align upper_set.mem_supr₂_iff UpperSet.mem_supᵢ₂_iffₓ'. -/
+  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : LE.{u3} α] {a : α} {f : forall (i : ι), (κ i) -> (UpperSet.{u3} α _inst_1)}, Iff (Membership.mem.{u3, u3} α (UpperSet.{u3} α _inst_1) (SetLike.instMembership.{u3, u3} (UpperSet.{u3} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u3} α _inst_1)) a (iSup.{u3, u2} (UpperSet.{u3} α _inst_1) (UpperSet.instSupSetUpperSet.{u3} α _inst_1) ι (fun (i : ι) => iSup.{u3, u1} (UpperSet.{u3} α _inst_1) (UpperSet.instSupSetUpperSet.{u3} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (forall (i : ι) (j : κ i), Membership.mem.{u3, u3} α (UpperSet.{u3} α _inst_1) (SetLike.instMembership.{u3, u3} (UpperSet.{u3} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u3} α _inst_1)) a (f i j))
+Case conversion may be inaccurate. Consider using '#align upper_set.mem_supr₂_iff UpperSet.mem_iSup₂_iffₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
-theorem mem_supᵢ₂_iff {f : ∀ i, κ i → UpperSet α} : (a ∈ ⨆ (i) (j), f i j) ↔ ∀ i j, a ∈ f i j := by
+theorem mem_iSup₂_iff {f : ∀ i, κ i → UpperSet α} : (a ∈ ⨆ (i) (j), f i j) ↔ ∀ i j, a ∈ f i j := by
   simp_rw [mem_supr_iff]
-#align upper_set.mem_supr₂_iff UpperSet.mem_supᵢ₂_iff
+#align upper_set.mem_supr₂_iff UpperSet.mem_iSup₂_iff
 
-/- warning: upper_set.mem_infi₂_iff -> UpperSet.mem_infᵢ₂_iff is a dubious translation:
+/- warning: upper_set.mem_infi₂_iff -> UpperSet.mem_iInf₂_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} [_inst_1 : LE.{u1} α] {a : α} {f : forall (i : ι), (κ i) -> (UpperSet.{u1} α _inst_1)}, Iff (Membership.Mem.{u1, u1} α (UpperSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)) a (infᵢ.{u1, u2} (UpperSet.{u1} α _inst_1) (UpperSet.hasInf.{u1} α _inst_1) ι (fun (i : ι) => infᵢ.{u1, u3} (UpperSet.{u1} α _inst_1) (UpperSet.hasInf.{u1} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (Exists.{u2} ι (fun (i : ι) => Exists.{u3} (κ i) (fun (j : κ i) => Membership.Mem.{u1, u1} α (UpperSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)) a (f i j))))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} [_inst_1 : LE.{u1} α] {a : α} {f : forall (i : ι), (κ i) -> (UpperSet.{u1} α _inst_1)}, Iff (Membership.Mem.{u1, u1} α (UpperSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)) a (iInf.{u1, u2} (UpperSet.{u1} α _inst_1) (UpperSet.hasInf.{u1} α _inst_1) ι (fun (i : ι) => iInf.{u1, u3} (UpperSet.{u1} α _inst_1) (UpperSet.hasInf.{u1} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (Exists.{u2} ι (fun (i : ι) => Exists.{u3} (κ i) (fun (j : κ i) => Membership.Mem.{u1, u1} α (UpperSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (UpperSet.{u1} α _inst_1) α (UpperSet.setLike.{u1} α _inst_1)) a (f i j))))
 but is expected to have type
-  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : LE.{u3} α] {a : α} {f : forall (i : ι), (κ i) -> (UpperSet.{u3} α _inst_1)}, Iff (Membership.mem.{u3, u3} α (UpperSet.{u3} α _inst_1) (SetLike.instMembership.{u3, u3} (UpperSet.{u3} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u3} α _inst_1)) a (infᵢ.{u3, u2} (UpperSet.{u3} α _inst_1) (UpperSet.instInfSetUpperSet.{u3} α _inst_1) ι (fun (i : ι) => infᵢ.{u3, u1} (UpperSet.{u3} α _inst_1) (UpperSet.instInfSetUpperSet.{u3} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (Exists.{u2} ι (fun (i : ι) => Exists.{u1} (κ i) (fun (j : κ i) => Membership.mem.{u3, u3} α (UpperSet.{u3} α _inst_1) (SetLike.instMembership.{u3, u3} (UpperSet.{u3} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u3} α _inst_1)) a (f i j))))
-Case conversion may be inaccurate. Consider using '#align upper_set.mem_infi₂_iff UpperSet.mem_infᵢ₂_iffₓ'. -/
+  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : LE.{u3} α] {a : α} {f : forall (i : ι), (κ i) -> (UpperSet.{u3} α _inst_1)}, Iff (Membership.mem.{u3, u3} α (UpperSet.{u3} α _inst_1) (SetLike.instMembership.{u3, u3} (UpperSet.{u3} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u3} α _inst_1)) a (iInf.{u3, u2} (UpperSet.{u3} α _inst_1) (UpperSet.instInfSetUpperSet.{u3} α _inst_1) ι (fun (i : ι) => iInf.{u3, u1} (UpperSet.{u3} α _inst_1) (UpperSet.instInfSetUpperSet.{u3} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (Exists.{u2} ι (fun (i : ι) => Exists.{u1} (κ i) (fun (j : κ i) => Membership.mem.{u3, u3} α (UpperSet.{u3} α _inst_1) (SetLike.instMembership.{u3, u3} (UpperSet.{u3} α _inst_1) α (UpperSet.instSetLikeUpperSet.{u3} α _inst_1)) a (f i j))))
+Case conversion may be inaccurate. Consider using '#align upper_set.mem_infi₂_iff UpperSet.mem_iInf₂_iffₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
-theorem mem_infᵢ₂_iff {f : ∀ i, κ i → UpperSet α} : (a ∈ ⨅ (i) (j), f i j) ↔ ∃ i j, a ∈ f i j := by
+theorem mem_iInf₂_iff {f : ∀ i, κ i → UpperSet α} : (a ∈ ⨅ (i) (j), f i j) ↔ ∃ i j, a ∈ f i j := by
   simp_rw [mem_infi_iff]
-#align upper_set.mem_infi₂_iff UpperSet.mem_infᵢ₂_iff
+#align upper_set.mem_infi₂_iff UpperSet.mem_iInf₂_iff
 
 /- warning: upper_set.codisjoint_coe -> UpperSet.codisjoint_coe is a dubious translation:
 lean 3 declaration is
@@ -1023,10 +1023,10 @@ instance : Bot (LowerSet α) :=
   ⟨⟨∅, fun a b h => id⟩⟩
 
 instance : SupSet (LowerSet α) :=
-  ⟨fun S => ⟨⋃ s ∈ S, ↑s, isLowerSet_unionᵢ₂ fun s _ => s.lower⟩⟩
+  ⟨fun S => ⟨⋃ s ∈ S, ↑s, isLowerSet_iUnion₂ fun s _ => s.lower⟩⟩
 
 instance : InfSet (LowerSet α) :=
-  ⟨fun S => ⟨⋂ s ∈ S, ↑s, isLowerSet_interᵢ₂ fun s _ => s.lower⟩⟩
+  ⟨fun S => ⟨⋂ s ∈ S, ↑s, isLowerSet_iInter₂ fun s _ => s.lower⟩⟩
 
 instance : CompleteDistribLattice (LowerSet α) :=
   SetLike.coe_injective.CompleteDistribLattice _ (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl)
@@ -1094,75 +1094,75 @@ theorem coe_inf (s t : LowerSet α) : (↑(s ⊓ t) : Set α) = s ∩ t :=
   rfl
 #align lower_set.coe_inf LowerSet.coe_inf
 
-/- warning: lower_set.coe_Sup -> LowerSet.coe_supₛ is a dubious translation:
+/- warning: lower_set.coe_Sup -> LowerSet.coe_sSup is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] (S : Set.{u1} (LowerSet.{u1} α _inst_1)), Eq.{succ u1} (Set.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (LowerSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)))) (SupSet.supₛ.{u1} (LowerSet.{u1} α _inst_1) (LowerSet.hasSup.{u1} α _inst_1) S)) (Set.unionᵢ.{u1, succ u1} α (LowerSet.{u1} α _inst_1) (fun (s : LowerSet.{u1} α _inst_1) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u1, u1} (LowerSet.{u1} α _inst_1) (Set.{u1} (LowerSet.{u1} α _inst_1)) (Set.hasMem.{u1} (LowerSet.{u1} α _inst_1)) s S) (fun (H : Membership.Mem.{u1, u1} (LowerSet.{u1} α _inst_1) (Set.{u1} (LowerSet.{u1} α _inst_1)) (Set.hasMem.{u1} (LowerSet.{u1} α _inst_1)) s S) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (LowerSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)))) s)))
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] (S : Set.{u1} (LowerSet.{u1} α _inst_1)), Eq.{succ u1} (Set.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (LowerSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)))) (SupSet.sSup.{u1} (LowerSet.{u1} α _inst_1) (LowerSet.hasSup.{u1} α _inst_1) S)) (Set.iUnion.{u1, succ u1} α (LowerSet.{u1} α _inst_1) (fun (s : LowerSet.{u1} α _inst_1) => Set.iUnion.{u1, 0} α (Membership.Mem.{u1, u1} (LowerSet.{u1} α _inst_1) (Set.{u1} (LowerSet.{u1} α _inst_1)) (Set.hasMem.{u1} (LowerSet.{u1} α _inst_1)) s S) (fun (H : Membership.Mem.{u1, u1} (LowerSet.{u1} α _inst_1) (Set.{u1} (LowerSet.{u1} α _inst_1)) (Set.hasMem.{u1} (LowerSet.{u1} α _inst_1)) s S) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (LowerSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)))) s)))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] (S : Set.{u1} (LowerSet.{u1} α _inst_1)), Eq.{succ u1} (Set.{u1} α) (SetLike.coe.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u1} α _inst_1) (SupSet.supₛ.{u1} (LowerSet.{u1} α _inst_1) (LowerSet.instSupSetLowerSet.{u1} α _inst_1) S)) (Set.unionᵢ.{u1, succ u1} α (LowerSet.{u1} α _inst_1) (fun (s : LowerSet.{u1} α _inst_1) => Set.unionᵢ.{u1, 0} α (Membership.mem.{u1, u1} (LowerSet.{u1} α _inst_1) (Set.{u1} (LowerSet.{u1} α _inst_1)) (Set.instMembershipSet.{u1} (LowerSet.{u1} α _inst_1)) s S) (fun (H : Membership.mem.{u1, u1} (LowerSet.{u1} α _inst_1) (Set.{u1} (LowerSet.{u1} α _inst_1)) (Set.instMembershipSet.{u1} (LowerSet.{u1} α _inst_1)) s S) => SetLike.coe.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u1} α _inst_1) s)))
-Case conversion may be inaccurate. Consider using '#align lower_set.coe_Sup LowerSet.coe_supₛₓ'. -/
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] (S : Set.{u1} (LowerSet.{u1} α _inst_1)), Eq.{succ u1} (Set.{u1} α) (SetLike.coe.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u1} α _inst_1) (SupSet.sSup.{u1} (LowerSet.{u1} α _inst_1) (LowerSet.instSupSetLowerSet.{u1} α _inst_1) S)) (Set.iUnion.{u1, succ u1} α (LowerSet.{u1} α _inst_1) (fun (s : LowerSet.{u1} α _inst_1) => Set.iUnion.{u1, 0} α (Membership.mem.{u1, u1} (LowerSet.{u1} α _inst_1) (Set.{u1} (LowerSet.{u1} α _inst_1)) (Set.instMembershipSet.{u1} (LowerSet.{u1} α _inst_1)) s S) (fun (H : Membership.mem.{u1, u1} (LowerSet.{u1} α _inst_1) (Set.{u1} (LowerSet.{u1} α _inst_1)) (Set.instMembershipSet.{u1} (LowerSet.{u1} α _inst_1)) s S) => SetLike.coe.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u1} α _inst_1) s)))
+Case conversion may be inaccurate. Consider using '#align lower_set.coe_Sup LowerSet.coe_sSupₓ'. -/
 @[simp, norm_cast]
-theorem coe_supₛ (S : Set (LowerSet α)) : (↑(supₛ S) : Set α) = ⋃ s ∈ S, ↑s :=
+theorem coe_sSup (S : Set (LowerSet α)) : (↑(sSup S) : Set α) = ⋃ s ∈ S, ↑s :=
   rfl
-#align lower_set.coe_Sup LowerSet.coe_supₛ
+#align lower_set.coe_Sup LowerSet.coe_sSup
 
-/- warning: lower_set.coe_Inf -> LowerSet.coe_infₛ is a dubious translation:
+/- warning: lower_set.coe_Inf -> LowerSet.coe_sInf is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] (S : Set.{u1} (LowerSet.{u1} α _inst_1)), Eq.{succ u1} (Set.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (LowerSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)))) (InfSet.infₛ.{u1} (LowerSet.{u1} α _inst_1) (LowerSet.hasInf.{u1} α _inst_1) S)) (Set.interᵢ.{u1, succ u1} α (LowerSet.{u1} α _inst_1) (fun (s : LowerSet.{u1} α _inst_1) => Set.interᵢ.{u1, 0} α (Membership.Mem.{u1, u1} (LowerSet.{u1} α _inst_1) (Set.{u1} (LowerSet.{u1} α _inst_1)) (Set.hasMem.{u1} (LowerSet.{u1} α _inst_1)) s S) (fun (H : Membership.Mem.{u1, u1} (LowerSet.{u1} α _inst_1) (Set.{u1} (LowerSet.{u1} α _inst_1)) (Set.hasMem.{u1} (LowerSet.{u1} α _inst_1)) s S) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (LowerSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)))) s)))
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] (S : Set.{u1} (LowerSet.{u1} α _inst_1)), Eq.{succ u1} (Set.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (LowerSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)))) (InfSet.sInf.{u1} (LowerSet.{u1} α _inst_1) (LowerSet.hasInf.{u1} α _inst_1) S)) (Set.iInter.{u1, succ u1} α (LowerSet.{u1} α _inst_1) (fun (s : LowerSet.{u1} α _inst_1) => Set.iInter.{u1, 0} α (Membership.Mem.{u1, u1} (LowerSet.{u1} α _inst_1) (Set.{u1} (LowerSet.{u1} α _inst_1)) (Set.hasMem.{u1} (LowerSet.{u1} α _inst_1)) s S) (fun (H : Membership.Mem.{u1, u1} (LowerSet.{u1} α _inst_1) (Set.{u1} (LowerSet.{u1} α _inst_1)) (Set.hasMem.{u1} (LowerSet.{u1} α _inst_1)) s S) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (LowerSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)))) s)))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] (S : Set.{u1} (LowerSet.{u1} α _inst_1)), Eq.{succ u1} (Set.{u1} α) (SetLike.coe.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u1} α _inst_1) (InfSet.infₛ.{u1} (LowerSet.{u1} α _inst_1) (LowerSet.instInfSetLowerSet.{u1} α _inst_1) S)) (Set.interᵢ.{u1, succ u1} α (LowerSet.{u1} α _inst_1) (fun (s : LowerSet.{u1} α _inst_1) => Set.interᵢ.{u1, 0} α (Membership.mem.{u1, u1} (LowerSet.{u1} α _inst_1) (Set.{u1} (LowerSet.{u1} α _inst_1)) (Set.instMembershipSet.{u1} (LowerSet.{u1} α _inst_1)) s S) (fun (H : Membership.mem.{u1, u1} (LowerSet.{u1} α _inst_1) (Set.{u1} (LowerSet.{u1} α _inst_1)) (Set.instMembershipSet.{u1} (LowerSet.{u1} α _inst_1)) s S) => SetLike.coe.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u1} α _inst_1) s)))
-Case conversion may be inaccurate. Consider using '#align lower_set.coe_Inf LowerSet.coe_infₛₓ'. -/
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] (S : Set.{u1} (LowerSet.{u1} α _inst_1)), Eq.{succ u1} (Set.{u1} α) (SetLike.coe.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u1} α _inst_1) (InfSet.sInf.{u1} (LowerSet.{u1} α _inst_1) (LowerSet.instInfSetLowerSet.{u1} α _inst_1) S)) (Set.iInter.{u1, succ u1} α (LowerSet.{u1} α _inst_1) (fun (s : LowerSet.{u1} α _inst_1) => Set.iInter.{u1, 0} α (Membership.mem.{u1, u1} (LowerSet.{u1} α _inst_1) (Set.{u1} (LowerSet.{u1} α _inst_1)) (Set.instMembershipSet.{u1} (LowerSet.{u1} α _inst_1)) s S) (fun (H : Membership.mem.{u1, u1} (LowerSet.{u1} α _inst_1) (Set.{u1} (LowerSet.{u1} α _inst_1)) (Set.instMembershipSet.{u1} (LowerSet.{u1} α _inst_1)) s S) => SetLike.coe.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u1} α _inst_1) s)))
+Case conversion may be inaccurate. Consider using '#align lower_set.coe_Inf LowerSet.coe_sInfₓ'. -/
 @[simp, norm_cast]
-theorem coe_infₛ (S : Set (LowerSet α)) : (↑(infₛ S) : Set α) = ⋂ s ∈ S, ↑s :=
+theorem coe_sInf (S : Set (LowerSet α)) : (↑(sInf S) : Set α) = ⋂ s ∈ S, ↑s :=
   rfl
-#align lower_set.coe_Inf LowerSet.coe_infₛ
+#align lower_set.coe_Inf LowerSet.coe_sInf
 
-/- warning: lower_set.coe_supr -> LowerSet.coe_supᵢ is a dubious translation:
+/- warning: lower_set.coe_supr -> LowerSet.coe_iSup is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : LE.{u1} α] (f : ι -> (LowerSet.{u1} α _inst_1)), Eq.{succ u1} (Set.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (LowerSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)))) (supᵢ.{u1, u2} (LowerSet.{u1} α _inst_1) (LowerSet.hasSup.{u1} α _inst_1) ι (fun (i : ι) => f i))) (Set.unionᵢ.{u1, u2} α ι (fun (i : ι) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (LowerSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)))) (f i)))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : LE.{u1} α] (f : ι -> (LowerSet.{u1} α _inst_1)), Eq.{succ u1} (Set.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (LowerSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)))) (iSup.{u1, u2} (LowerSet.{u1} α _inst_1) (LowerSet.hasSup.{u1} α _inst_1) ι (fun (i : ι) => f i))) (Set.iUnion.{u1, u2} α ι (fun (i : ι) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (LowerSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)))) (f i)))
 but is expected to have type
-  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : LE.{u2} α] (f : ι -> (LowerSet.{u2} α _inst_1)), Eq.{succ u2} (Set.{u2} α) (SetLike.coe.{u2, u2} (LowerSet.{u2} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u2} α _inst_1) (supᵢ.{u2, u1} (LowerSet.{u2} α _inst_1) (LowerSet.instSupSetLowerSet.{u2} α _inst_1) ι (fun (i : ι) => f i))) (Set.unionᵢ.{u2, u1} α ι (fun (i : ι) => SetLike.coe.{u2, u2} (LowerSet.{u2} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u2} α _inst_1) (f i)))
-Case conversion may be inaccurate. Consider using '#align lower_set.coe_supr LowerSet.coe_supᵢₓ'. -/
+  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : LE.{u2} α] (f : ι -> (LowerSet.{u2} α _inst_1)), Eq.{succ u2} (Set.{u2} α) (SetLike.coe.{u2, u2} (LowerSet.{u2} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u2} α _inst_1) (iSup.{u2, u1} (LowerSet.{u2} α _inst_1) (LowerSet.instSupSetLowerSet.{u2} α _inst_1) ι (fun (i : ι) => f i))) (Set.iUnion.{u2, u1} α ι (fun (i : ι) => SetLike.coe.{u2, u2} (LowerSet.{u2} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u2} α _inst_1) (f i)))
+Case conversion may be inaccurate. Consider using '#align lower_set.coe_supr LowerSet.coe_iSupₓ'. -/
 @[simp, norm_cast]
-theorem coe_supᵢ (f : ι → LowerSet α) : (↑(⨆ i, f i) : Set α) = ⋃ i, f i := by
-  simp_rw [supᵢ, coe_Sup, mem_range, Union_exists, Union_Union_eq']
-#align lower_set.coe_supr LowerSet.coe_supᵢ
+theorem coe_iSup (f : ι → LowerSet α) : (↑(⨆ i, f i) : Set α) = ⋃ i, f i := by
+  simp_rw [iSup, coe_Sup, mem_range, Union_exists, Union_Union_eq']
+#align lower_set.coe_supr LowerSet.coe_iSup
 
-/- warning: lower_set.coe_infi -> LowerSet.coe_infᵢ is a dubious translation:
+/- warning: lower_set.coe_infi -> LowerSet.coe_iInf is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : LE.{u1} α] (f : ι -> (LowerSet.{u1} α _inst_1)), Eq.{succ u1} (Set.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (LowerSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)))) (infᵢ.{u1, u2} (LowerSet.{u1} α _inst_1) (LowerSet.hasInf.{u1} α _inst_1) ι (fun (i : ι) => f i))) (Set.interᵢ.{u1, u2} α ι (fun (i : ι) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (LowerSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)))) (f i)))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : LE.{u1} α] (f : ι -> (LowerSet.{u1} α _inst_1)), Eq.{succ u1} (Set.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (LowerSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)))) (iInf.{u1, u2} (LowerSet.{u1} α _inst_1) (LowerSet.hasInf.{u1} α _inst_1) ι (fun (i : ι) => f i))) (Set.iInter.{u1, u2} α ι (fun (i : ι) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (LowerSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)))) (f i)))
 but is expected to have type
-  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : LE.{u2} α] (f : ι -> (LowerSet.{u2} α _inst_1)), Eq.{succ u2} (Set.{u2} α) (SetLike.coe.{u2, u2} (LowerSet.{u2} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u2} α _inst_1) (infᵢ.{u2, u1} (LowerSet.{u2} α _inst_1) (LowerSet.instInfSetLowerSet.{u2} α _inst_1) ι (fun (i : ι) => f i))) (Set.interᵢ.{u2, u1} α ι (fun (i : ι) => SetLike.coe.{u2, u2} (LowerSet.{u2} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u2} α _inst_1) (f i)))
-Case conversion may be inaccurate. Consider using '#align lower_set.coe_infi LowerSet.coe_infᵢₓ'. -/
+  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : LE.{u2} α] (f : ι -> (LowerSet.{u2} α _inst_1)), Eq.{succ u2} (Set.{u2} α) (SetLike.coe.{u2, u2} (LowerSet.{u2} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u2} α _inst_1) (iInf.{u2, u1} (LowerSet.{u2} α _inst_1) (LowerSet.instInfSetLowerSet.{u2} α _inst_1) ι (fun (i : ι) => f i))) (Set.iInter.{u2, u1} α ι (fun (i : ι) => SetLike.coe.{u2, u2} (LowerSet.{u2} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u2} α _inst_1) (f i)))
+Case conversion may be inaccurate. Consider using '#align lower_set.coe_infi LowerSet.coe_iInfₓ'. -/
 @[simp, norm_cast]
-theorem coe_infᵢ (f : ι → LowerSet α) : (↑(⨅ i, f i) : Set α) = ⋂ i, f i := by
-  simp_rw [infᵢ, coe_Inf, mem_range, Inter_exists, Inter_Inter_eq']
-#align lower_set.coe_infi LowerSet.coe_infᵢ
+theorem coe_iInf (f : ι → LowerSet α) : (↑(⨅ i, f i) : Set α) = ⋂ i, f i := by
+  simp_rw [iInf, coe_Inf, mem_range, Inter_exists, Inter_Inter_eq']
+#align lower_set.coe_infi LowerSet.coe_iInf
 
-/- warning: lower_set.coe_supr₂ -> LowerSet.coe_supᵢ₂ is a dubious translation:
+/- warning: lower_set.coe_supr₂ -> LowerSet.coe_iSup₂ is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} [_inst_1 : LE.{u1} α] (f : forall (i : ι), (κ i) -> (LowerSet.{u1} α _inst_1)), Eq.{succ u1} (Set.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (LowerSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)))) (supᵢ.{u1, u2} (LowerSet.{u1} α _inst_1) (LowerSet.hasSup.{u1} α _inst_1) ι (fun (i : ι) => supᵢ.{u1, u3} (LowerSet.{u1} α _inst_1) (LowerSet.hasSup.{u1} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (Set.unionᵢ.{u1, u2} α ι (fun (i : ι) => Set.unionᵢ.{u1, u3} α (κ i) (fun (j : κ i) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (LowerSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)))) (f i j))))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} [_inst_1 : LE.{u1} α] (f : forall (i : ι), (κ i) -> (LowerSet.{u1} α _inst_1)), Eq.{succ u1} (Set.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (LowerSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)))) (iSup.{u1, u2} (LowerSet.{u1} α _inst_1) (LowerSet.hasSup.{u1} α _inst_1) ι (fun (i : ι) => iSup.{u1, u3} (LowerSet.{u1} α _inst_1) (LowerSet.hasSup.{u1} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (Set.iUnion.{u1, u2} α ι (fun (i : ι) => Set.iUnion.{u1, u3} α (κ i) (fun (j : κ i) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (LowerSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)))) (f i j))))
 but is expected to have type
-  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : LE.{u3} α] (f : forall (i : ι), (κ i) -> (LowerSet.{u3} α _inst_1)), Eq.{succ u3} (Set.{u3} α) (SetLike.coe.{u3, u3} (LowerSet.{u3} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u3} α _inst_1) (supᵢ.{u3, u2} (LowerSet.{u3} α _inst_1) (LowerSet.instSupSetLowerSet.{u3} α _inst_1) ι (fun (i : ι) => supᵢ.{u3, u1} (LowerSet.{u3} α _inst_1) (LowerSet.instSupSetLowerSet.{u3} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (Set.unionᵢ.{u3, u2} α ι (fun (i : ι) => Set.unionᵢ.{u3, u1} α (κ i) (fun (j : κ i) => SetLike.coe.{u3, u3} (LowerSet.{u3} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u3} α _inst_1) (f i j))))
-Case conversion may be inaccurate. Consider using '#align lower_set.coe_supr₂ LowerSet.coe_supᵢ₂ₓ'. -/
+  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : LE.{u3} α] (f : forall (i : ι), (κ i) -> (LowerSet.{u3} α _inst_1)), Eq.{succ u3} (Set.{u3} α) (SetLike.coe.{u3, u3} (LowerSet.{u3} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u3} α _inst_1) (iSup.{u3, u2} (LowerSet.{u3} α _inst_1) (LowerSet.instSupSetLowerSet.{u3} α _inst_1) ι (fun (i : ι) => iSup.{u3, u1} (LowerSet.{u3} α _inst_1) (LowerSet.instSupSetLowerSet.{u3} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (Set.iUnion.{u3, u2} α ι (fun (i : ι) => Set.iUnion.{u3, u1} α (κ i) (fun (j : κ i) => SetLike.coe.{u3, u3} (LowerSet.{u3} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u3} α _inst_1) (f i j))))
+Case conversion may be inaccurate. Consider using '#align lower_set.coe_supr₂ LowerSet.coe_iSup₂ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp, norm_cast]
-theorem coe_supᵢ₂ (f : ∀ i, κ i → LowerSet α) : (↑(⨆ (i) (j), f i j) : Set α) = ⋃ (i) (j), f i j :=
+theorem coe_iSup₂ (f : ∀ i, κ i → LowerSet α) : (↑(⨆ (i) (j), f i j) : Set α) = ⋃ (i) (j), f i j :=
   by simp_rw [coe_supr]
-#align lower_set.coe_supr₂ LowerSet.coe_supᵢ₂
+#align lower_set.coe_supr₂ LowerSet.coe_iSup₂
 
-/- warning: lower_set.coe_infi₂ -> LowerSet.coe_infᵢ₂ is a dubious translation:
+/- warning: lower_set.coe_infi₂ -> LowerSet.coe_iInf₂ is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} [_inst_1 : LE.{u1} α] (f : forall (i : ι), (κ i) -> (LowerSet.{u1} α _inst_1)), Eq.{succ u1} (Set.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (LowerSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)))) (infᵢ.{u1, u2} (LowerSet.{u1} α _inst_1) (LowerSet.hasInf.{u1} α _inst_1) ι (fun (i : ι) => infᵢ.{u1, u3} (LowerSet.{u1} α _inst_1) (LowerSet.hasInf.{u1} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (Set.interᵢ.{u1, u2} α ι (fun (i : ι) => Set.interᵢ.{u1, u3} α (κ i) (fun (j : κ i) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (LowerSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)))) (f i j))))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} [_inst_1 : LE.{u1} α] (f : forall (i : ι), (κ i) -> (LowerSet.{u1} α _inst_1)), Eq.{succ u1} (Set.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (LowerSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)))) (iInf.{u1, u2} (LowerSet.{u1} α _inst_1) (LowerSet.hasInf.{u1} α _inst_1) ι (fun (i : ι) => iInf.{u1, u3} (LowerSet.{u1} α _inst_1) (LowerSet.hasInf.{u1} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (Set.iInter.{u1, u2} α ι (fun (i : ι) => Set.iInter.{u1, u3} α (κ i) (fun (j : κ i) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (LowerSet.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (LowerSet.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)))) (f i j))))
 but is expected to have type
-  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : LE.{u3} α] (f : forall (i : ι), (κ i) -> (LowerSet.{u3} α _inst_1)), Eq.{succ u3} (Set.{u3} α) (SetLike.coe.{u3, u3} (LowerSet.{u3} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u3} α _inst_1) (infᵢ.{u3, u2} (LowerSet.{u3} α _inst_1) (LowerSet.instInfSetLowerSet.{u3} α _inst_1) ι (fun (i : ι) => infᵢ.{u3, u1} (LowerSet.{u3} α _inst_1) (LowerSet.instInfSetLowerSet.{u3} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (Set.interᵢ.{u3, u2} α ι (fun (i : ι) => Set.interᵢ.{u3, u1} α (κ i) (fun (j : κ i) => SetLike.coe.{u3, u3} (LowerSet.{u3} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u3} α _inst_1) (f i j))))
-Case conversion may be inaccurate. Consider using '#align lower_set.coe_infi₂ LowerSet.coe_infᵢ₂ₓ'. -/
+  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : LE.{u3} α] (f : forall (i : ι), (κ i) -> (LowerSet.{u3} α _inst_1)), Eq.{succ u3} (Set.{u3} α) (SetLike.coe.{u3, u3} (LowerSet.{u3} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u3} α _inst_1) (iInf.{u3, u2} (LowerSet.{u3} α _inst_1) (LowerSet.instInfSetLowerSet.{u3} α _inst_1) ι (fun (i : ι) => iInf.{u3, u1} (LowerSet.{u3} α _inst_1) (LowerSet.instInfSetLowerSet.{u3} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (Set.iInter.{u3, u2} α ι (fun (i : ι) => Set.iInter.{u3, u1} α (κ i) (fun (j : κ i) => SetLike.coe.{u3, u3} (LowerSet.{u3} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u3} α _inst_1) (f i j))))
+Case conversion may be inaccurate. Consider using '#align lower_set.coe_infi₂ LowerSet.coe_iInf₂ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp, norm_cast]
-theorem coe_infᵢ₂ (f : ∀ i, κ i → LowerSet α) : (↑(⨅ (i) (j), f i j) : Set α) = ⋂ (i) (j), f i j :=
+theorem coe_iInf₂ (f : ∀ i, κ i → LowerSet α) : (↑(⨅ (i) (j), f i j) : Set α) = ⋂ (i) (j), f i j :=
   by simp_rw [coe_infi]
-#align lower_set.coe_infi₂ LowerSet.coe_infᵢ₂
+#align lower_set.coe_infi₂ LowerSet.coe_iInf₂
 
 #print LowerSet.mem_top /-
 @[simp]
@@ -1200,77 +1200,77 @@ theorem mem_inf_iff : a ∈ s ⊓ t ↔ a ∈ s ∧ a ∈ t :=
   Iff.rfl
 #align lower_set.mem_inf_iff LowerSet.mem_inf_iff
 
-/- warning: lower_set.mem_Sup_iff -> LowerSet.mem_supₛ_iff is a dubious translation:
+/- warning: lower_set.mem_Sup_iff -> LowerSet.mem_sSup_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] {S : Set.{u1} (LowerSet.{u1} α _inst_1)} {a : α}, Iff (Membership.Mem.{u1, u1} α (LowerSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)) a (SupSet.supₛ.{u1} (LowerSet.{u1} α _inst_1) (LowerSet.hasSup.{u1} α _inst_1) S)) (Exists.{succ u1} (LowerSet.{u1} α _inst_1) (fun (s : LowerSet.{u1} α _inst_1) => Exists.{0} (Membership.Mem.{u1, u1} (LowerSet.{u1} α _inst_1) (Set.{u1} (LowerSet.{u1} α _inst_1)) (Set.hasMem.{u1} (LowerSet.{u1} α _inst_1)) s S) (fun (H : Membership.Mem.{u1, u1} (LowerSet.{u1} α _inst_1) (Set.{u1} (LowerSet.{u1} α _inst_1)) (Set.hasMem.{u1} (LowerSet.{u1} α _inst_1)) s S) => Membership.Mem.{u1, u1} α (LowerSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)) a s)))
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] {S : Set.{u1} (LowerSet.{u1} α _inst_1)} {a : α}, Iff (Membership.Mem.{u1, u1} α (LowerSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)) a (SupSet.sSup.{u1} (LowerSet.{u1} α _inst_1) (LowerSet.hasSup.{u1} α _inst_1) S)) (Exists.{succ u1} (LowerSet.{u1} α _inst_1) (fun (s : LowerSet.{u1} α _inst_1) => Exists.{0} (Membership.Mem.{u1, u1} (LowerSet.{u1} α _inst_1) (Set.{u1} (LowerSet.{u1} α _inst_1)) (Set.hasMem.{u1} (LowerSet.{u1} α _inst_1)) s S) (fun (H : Membership.Mem.{u1, u1} (LowerSet.{u1} α _inst_1) (Set.{u1} (LowerSet.{u1} α _inst_1)) (Set.hasMem.{u1} (LowerSet.{u1} α _inst_1)) s S) => Membership.Mem.{u1, u1} α (LowerSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)) a s)))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] {S : Set.{u1} (LowerSet.{u1} α _inst_1)} {a : α}, Iff (Membership.mem.{u1, u1} α (LowerSet.{u1} α _inst_1) (SetLike.instMembership.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u1} α _inst_1)) a (SupSet.supₛ.{u1} (LowerSet.{u1} α _inst_1) (LowerSet.instSupSetLowerSet.{u1} α _inst_1) S)) (Exists.{succ u1} (LowerSet.{u1} α _inst_1) (fun (s : LowerSet.{u1} α _inst_1) => And (Membership.mem.{u1, u1} (LowerSet.{u1} α _inst_1) (Set.{u1} (LowerSet.{u1} α _inst_1)) (Set.instMembershipSet.{u1} (LowerSet.{u1} α _inst_1)) s S) (Membership.mem.{u1, u1} α (LowerSet.{u1} α _inst_1) (SetLike.instMembership.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u1} α _inst_1)) a s)))
-Case conversion may be inaccurate. Consider using '#align lower_set.mem_Sup_iff LowerSet.mem_supₛ_iffₓ'. -/
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] {S : Set.{u1} (LowerSet.{u1} α _inst_1)} {a : α}, Iff (Membership.mem.{u1, u1} α (LowerSet.{u1} α _inst_1) (SetLike.instMembership.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u1} α _inst_1)) a (SupSet.sSup.{u1} (LowerSet.{u1} α _inst_1) (LowerSet.instSupSetLowerSet.{u1} α _inst_1) S)) (Exists.{succ u1} (LowerSet.{u1} α _inst_1) (fun (s : LowerSet.{u1} α _inst_1) => And (Membership.mem.{u1, u1} (LowerSet.{u1} α _inst_1) (Set.{u1} (LowerSet.{u1} α _inst_1)) (Set.instMembershipSet.{u1} (LowerSet.{u1} α _inst_1)) s S) (Membership.mem.{u1, u1} α (LowerSet.{u1} α _inst_1) (SetLike.instMembership.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u1} α _inst_1)) a s)))
+Case conversion may be inaccurate. Consider using '#align lower_set.mem_Sup_iff LowerSet.mem_sSup_iffₓ'. -/
 @[simp]
-theorem mem_supₛ_iff : a ∈ supₛ S ↔ ∃ s ∈ S, a ∈ s :=
-  mem_unionᵢ₂
-#align lower_set.mem_Sup_iff LowerSet.mem_supₛ_iff
+theorem mem_sSup_iff : a ∈ sSup S ↔ ∃ s ∈ S, a ∈ s :=
+  mem_iUnion₂
+#align lower_set.mem_Sup_iff LowerSet.mem_sSup_iff
 
-/- warning: lower_set.mem_Inf_iff -> LowerSet.mem_infₛ_iff is a dubious translation:
+/- warning: lower_set.mem_Inf_iff -> LowerSet.mem_sInf_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] {S : Set.{u1} (LowerSet.{u1} α _inst_1)} {a : α}, Iff (Membership.Mem.{u1, u1} α (LowerSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)) a (InfSet.infₛ.{u1} (LowerSet.{u1} α _inst_1) (LowerSet.hasInf.{u1} α _inst_1) S)) (forall (s : LowerSet.{u1} α _inst_1), (Membership.Mem.{u1, u1} (LowerSet.{u1} α _inst_1) (Set.{u1} (LowerSet.{u1} α _inst_1)) (Set.hasMem.{u1} (LowerSet.{u1} α _inst_1)) s S) -> (Membership.Mem.{u1, u1} α (LowerSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)) a s))
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] {S : Set.{u1} (LowerSet.{u1} α _inst_1)} {a : α}, Iff (Membership.Mem.{u1, u1} α (LowerSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)) a (InfSet.sInf.{u1} (LowerSet.{u1} α _inst_1) (LowerSet.hasInf.{u1} α _inst_1) S)) (forall (s : LowerSet.{u1} α _inst_1), (Membership.Mem.{u1, u1} (LowerSet.{u1} α _inst_1) (Set.{u1} (LowerSet.{u1} α _inst_1)) (Set.hasMem.{u1} (LowerSet.{u1} α _inst_1)) s S) -> (Membership.Mem.{u1, u1} α (LowerSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)) a s))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] {S : Set.{u1} (LowerSet.{u1} α _inst_1)} {a : α}, Iff (Membership.mem.{u1, u1} α (LowerSet.{u1} α _inst_1) (SetLike.instMembership.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u1} α _inst_1)) a (InfSet.infₛ.{u1} (LowerSet.{u1} α _inst_1) (LowerSet.instInfSetLowerSet.{u1} α _inst_1) S)) (forall (s : LowerSet.{u1} α _inst_1), (Membership.mem.{u1, u1} (LowerSet.{u1} α _inst_1) (Set.{u1} (LowerSet.{u1} α _inst_1)) (Set.instMembershipSet.{u1} (LowerSet.{u1} α _inst_1)) s S) -> (Membership.mem.{u1, u1} α (LowerSet.{u1} α _inst_1) (SetLike.instMembership.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u1} α _inst_1)) a s))
-Case conversion may be inaccurate. Consider using '#align lower_set.mem_Inf_iff LowerSet.mem_infₛ_iffₓ'. -/
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] {S : Set.{u1} (LowerSet.{u1} α _inst_1)} {a : α}, Iff (Membership.mem.{u1, u1} α (LowerSet.{u1} α _inst_1) (SetLike.instMembership.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u1} α _inst_1)) a (InfSet.sInf.{u1} (LowerSet.{u1} α _inst_1) (LowerSet.instInfSetLowerSet.{u1} α _inst_1) S)) (forall (s : LowerSet.{u1} α _inst_1), (Membership.mem.{u1, u1} (LowerSet.{u1} α _inst_1) (Set.{u1} (LowerSet.{u1} α _inst_1)) (Set.instMembershipSet.{u1} (LowerSet.{u1} α _inst_1)) s S) -> (Membership.mem.{u1, u1} α (LowerSet.{u1} α _inst_1) (SetLike.instMembership.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u1} α _inst_1)) a s))
+Case conversion may be inaccurate. Consider using '#align lower_set.mem_Inf_iff LowerSet.mem_sInf_iffₓ'. -/
 @[simp]
-theorem mem_infₛ_iff : a ∈ infₛ S ↔ ∀ s ∈ S, a ∈ s :=
-  mem_interᵢ₂
-#align lower_set.mem_Inf_iff LowerSet.mem_infₛ_iff
+theorem mem_sInf_iff : a ∈ sInf S ↔ ∀ s ∈ S, a ∈ s :=
+  mem_iInter₂
+#align lower_set.mem_Inf_iff LowerSet.mem_sInf_iff
 
-/- warning: lower_set.mem_supr_iff -> LowerSet.mem_supᵢ_iff is a dubious translation:
+/- warning: lower_set.mem_supr_iff -> LowerSet.mem_iSup_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : LE.{u1} α] {a : α} {f : ι -> (LowerSet.{u1} α _inst_1)}, Iff (Membership.Mem.{u1, u1} α (LowerSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)) a (supᵢ.{u1, u2} (LowerSet.{u1} α _inst_1) (LowerSet.hasSup.{u1} α _inst_1) ι (fun (i : ι) => f i))) (Exists.{u2} ι (fun (i : ι) => Membership.Mem.{u1, u1} α (LowerSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)) a (f i)))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : LE.{u1} α] {a : α} {f : ι -> (LowerSet.{u1} α _inst_1)}, Iff (Membership.Mem.{u1, u1} α (LowerSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)) a (iSup.{u1, u2} (LowerSet.{u1} α _inst_1) (LowerSet.hasSup.{u1} α _inst_1) ι (fun (i : ι) => f i))) (Exists.{u2} ι (fun (i : ι) => Membership.Mem.{u1, u1} α (LowerSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)) a (f i)))
 but is expected to have type
-  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : LE.{u2} α] {a : α} {f : ι -> (LowerSet.{u2} α _inst_1)}, Iff (Membership.mem.{u2, u2} α (LowerSet.{u2} α _inst_1) (SetLike.instMembership.{u2, u2} (LowerSet.{u2} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u2} α _inst_1)) a (supᵢ.{u2, u1} (LowerSet.{u2} α _inst_1) (LowerSet.instSupSetLowerSet.{u2} α _inst_1) ι (fun (i : ι) => f i))) (Exists.{u1} ι (fun (i : ι) => Membership.mem.{u2, u2} α (LowerSet.{u2} α _inst_1) (SetLike.instMembership.{u2, u2} (LowerSet.{u2} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u2} α _inst_1)) a (f i)))
-Case conversion may be inaccurate. Consider using '#align lower_set.mem_supr_iff LowerSet.mem_supᵢ_iffₓ'. -/
+  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : LE.{u2} α] {a : α} {f : ι -> (LowerSet.{u2} α _inst_1)}, Iff (Membership.mem.{u2, u2} α (LowerSet.{u2} α _inst_1) (SetLike.instMembership.{u2, u2} (LowerSet.{u2} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u2} α _inst_1)) a (iSup.{u2, u1} (LowerSet.{u2} α _inst_1) (LowerSet.instSupSetLowerSet.{u2} α _inst_1) ι (fun (i : ι) => f i))) (Exists.{u1} ι (fun (i : ι) => Membership.mem.{u2, u2} α (LowerSet.{u2} α _inst_1) (SetLike.instMembership.{u2, u2} (LowerSet.{u2} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u2} α _inst_1)) a (f i)))
+Case conversion may be inaccurate. Consider using '#align lower_set.mem_supr_iff LowerSet.mem_iSup_iffₓ'. -/
 @[simp]
-theorem mem_supᵢ_iff {f : ι → LowerSet α} : (a ∈ ⨆ i, f i) ↔ ∃ i, a ∈ f i :=
+theorem mem_iSup_iff {f : ι → LowerSet α} : (a ∈ ⨆ i, f i) ↔ ∃ i, a ∈ f i :=
   by
   rw [← SetLike.mem_coe, coe_supr]
   exact mem_Union
-#align lower_set.mem_supr_iff LowerSet.mem_supᵢ_iff
+#align lower_set.mem_supr_iff LowerSet.mem_iSup_iff
 
-/- warning: lower_set.mem_infi_iff -> LowerSet.mem_infᵢ_iff is a dubious translation:
+/- warning: lower_set.mem_infi_iff -> LowerSet.mem_iInf_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : LE.{u1} α] {a : α} {f : ι -> (LowerSet.{u1} α _inst_1)}, Iff (Membership.Mem.{u1, u1} α (LowerSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)) a (infᵢ.{u1, u2} (LowerSet.{u1} α _inst_1) (LowerSet.hasInf.{u1} α _inst_1) ι (fun (i : ι) => f i))) (forall (i : ι), Membership.Mem.{u1, u1} α (LowerSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)) a (f i))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : LE.{u1} α] {a : α} {f : ι -> (LowerSet.{u1} α _inst_1)}, Iff (Membership.Mem.{u1, u1} α (LowerSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)) a (iInf.{u1, u2} (LowerSet.{u1} α _inst_1) (LowerSet.hasInf.{u1} α _inst_1) ι (fun (i : ι) => f i))) (forall (i : ι), Membership.Mem.{u1, u1} α (LowerSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)) a (f i))
 but is expected to have type
-  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : LE.{u2} α] {a : α} {f : ι -> (LowerSet.{u2} α _inst_1)}, Iff (Membership.mem.{u2, u2} α (LowerSet.{u2} α _inst_1) (SetLike.instMembership.{u2, u2} (LowerSet.{u2} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u2} α _inst_1)) a (infᵢ.{u2, u1} (LowerSet.{u2} α _inst_1) (LowerSet.instInfSetLowerSet.{u2} α _inst_1) ι (fun (i : ι) => f i))) (forall (i : ι), Membership.mem.{u2, u2} α (LowerSet.{u2} α _inst_1) (SetLike.instMembership.{u2, u2} (LowerSet.{u2} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u2} α _inst_1)) a (f i))
-Case conversion may be inaccurate. Consider using '#align lower_set.mem_infi_iff LowerSet.mem_infᵢ_iffₓ'. -/
+  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : LE.{u2} α] {a : α} {f : ι -> (LowerSet.{u2} α _inst_1)}, Iff (Membership.mem.{u2, u2} α (LowerSet.{u2} α _inst_1) (SetLike.instMembership.{u2, u2} (LowerSet.{u2} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u2} α _inst_1)) a (iInf.{u2, u1} (LowerSet.{u2} α _inst_1) (LowerSet.instInfSetLowerSet.{u2} α _inst_1) ι (fun (i : ι) => f i))) (forall (i : ι), Membership.mem.{u2, u2} α (LowerSet.{u2} α _inst_1) (SetLike.instMembership.{u2, u2} (LowerSet.{u2} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u2} α _inst_1)) a (f i))
+Case conversion may be inaccurate. Consider using '#align lower_set.mem_infi_iff LowerSet.mem_iInf_iffₓ'. -/
 @[simp]
-theorem mem_infᵢ_iff {f : ι → LowerSet α} : (a ∈ ⨅ i, f i) ↔ ∀ i, a ∈ f i :=
+theorem mem_iInf_iff {f : ι → LowerSet α} : (a ∈ ⨅ i, f i) ↔ ∀ i, a ∈ f i :=
   by
   rw [← SetLike.mem_coe, coe_infi]
   exact mem_Inter
-#align lower_set.mem_infi_iff LowerSet.mem_infᵢ_iff
+#align lower_set.mem_infi_iff LowerSet.mem_iInf_iff
 
-/- warning: lower_set.mem_supr₂_iff -> LowerSet.mem_supᵢ₂_iff is a dubious translation:
+/- warning: lower_set.mem_supr₂_iff -> LowerSet.mem_iSup₂_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} [_inst_1 : LE.{u1} α] {a : α} {f : forall (i : ι), (κ i) -> (LowerSet.{u1} α _inst_1)}, Iff (Membership.Mem.{u1, u1} α (LowerSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)) a (supᵢ.{u1, u2} (LowerSet.{u1} α _inst_1) (LowerSet.hasSup.{u1} α _inst_1) ι (fun (i : ι) => supᵢ.{u1, u3} (LowerSet.{u1} α _inst_1) (LowerSet.hasSup.{u1} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (Exists.{u2} ι (fun (i : ι) => Exists.{u3} (κ i) (fun (j : κ i) => Membership.Mem.{u1, u1} α (LowerSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)) a (f i j))))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} [_inst_1 : LE.{u1} α] {a : α} {f : forall (i : ι), (κ i) -> (LowerSet.{u1} α _inst_1)}, Iff (Membership.Mem.{u1, u1} α (LowerSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)) a (iSup.{u1, u2} (LowerSet.{u1} α _inst_1) (LowerSet.hasSup.{u1} α _inst_1) ι (fun (i : ι) => iSup.{u1, u3} (LowerSet.{u1} α _inst_1) (LowerSet.hasSup.{u1} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (Exists.{u2} ι (fun (i : ι) => Exists.{u3} (κ i) (fun (j : κ i) => Membership.Mem.{u1, u1} α (LowerSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)) a (f i j))))
 but is expected to have type
-  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : LE.{u3} α] {a : α} {f : forall (i : ι), (κ i) -> (LowerSet.{u3} α _inst_1)}, Iff (Membership.mem.{u3, u3} α (LowerSet.{u3} α _inst_1) (SetLike.instMembership.{u3, u3} (LowerSet.{u3} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u3} α _inst_1)) a (supᵢ.{u3, u2} (LowerSet.{u3} α _inst_1) (LowerSet.instSupSetLowerSet.{u3} α _inst_1) ι (fun (i : ι) => supᵢ.{u3, u1} (LowerSet.{u3} α _inst_1) (LowerSet.instSupSetLowerSet.{u3} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (Exists.{u2} ι (fun (i : ι) => Exists.{u1} (κ i) (fun (j : κ i) => Membership.mem.{u3, u3} α (LowerSet.{u3} α _inst_1) (SetLike.instMembership.{u3, u3} (LowerSet.{u3} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u3} α _inst_1)) a (f i j))))
-Case conversion may be inaccurate. Consider using '#align lower_set.mem_supr₂_iff LowerSet.mem_supᵢ₂_iffₓ'. -/
+  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : LE.{u3} α] {a : α} {f : forall (i : ι), (κ i) -> (LowerSet.{u3} α _inst_1)}, Iff (Membership.mem.{u3, u3} α (LowerSet.{u3} α _inst_1) (SetLike.instMembership.{u3, u3} (LowerSet.{u3} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u3} α _inst_1)) a (iSup.{u3, u2} (LowerSet.{u3} α _inst_1) (LowerSet.instSupSetLowerSet.{u3} α _inst_1) ι (fun (i : ι) => iSup.{u3, u1} (LowerSet.{u3} α _inst_1) (LowerSet.instSupSetLowerSet.{u3} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (Exists.{u2} ι (fun (i : ι) => Exists.{u1} (κ i) (fun (j : κ i) => Membership.mem.{u3, u3} α (LowerSet.{u3} α _inst_1) (SetLike.instMembership.{u3, u3} (LowerSet.{u3} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u3} α _inst_1)) a (f i j))))
+Case conversion may be inaccurate. Consider using '#align lower_set.mem_supr₂_iff LowerSet.mem_iSup₂_iffₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
-theorem mem_supᵢ₂_iff {f : ∀ i, κ i → LowerSet α} : (a ∈ ⨆ (i) (j), f i j) ↔ ∃ i j, a ∈ f i j := by
+theorem mem_iSup₂_iff {f : ∀ i, κ i → LowerSet α} : (a ∈ ⨆ (i) (j), f i j) ↔ ∃ i j, a ∈ f i j := by
   simp_rw [mem_supr_iff]
-#align lower_set.mem_supr₂_iff LowerSet.mem_supᵢ₂_iff
+#align lower_set.mem_supr₂_iff LowerSet.mem_iSup₂_iff
 
-/- warning: lower_set.mem_infi₂_iff -> LowerSet.mem_infᵢ₂_iff is a dubious translation:
+/- warning: lower_set.mem_infi₂_iff -> LowerSet.mem_iInf₂_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} [_inst_1 : LE.{u1} α] {a : α} {f : forall (i : ι), (κ i) -> (LowerSet.{u1} α _inst_1)}, Iff (Membership.Mem.{u1, u1} α (LowerSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)) a (infᵢ.{u1, u2} (LowerSet.{u1} α _inst_1) (LowerSet.hasInf.{u1} α _inst_1) ι (fun (i : ι) => infᵢ.{u1, u3} (LowerSet.{u1} α _inst_1) (LowerSet.hasInf.{u1} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (forall (i : ι) (j : κ i), Membership.Mem.{u1, u1} α (LowerSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)) a (f i j))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} [_inst_1 : LE.{u1} α] {a : α} {f : forall (i : ι), (κ i) -> (LowerSet.{u1} α _inst_1)}, Iff (Membership.Mem.{u1, u1} α (LowerSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)) a (iInf.{u1, u2} (LowerSet.{u1} α _inst_1) (LowerSet.hasInf.{u1} α _inst_1) ι (fun (i : ι) => iInf.{u1, u3} (LowerSet.{u1} α _inst_1) (LowerSet.hasInf.{u1} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (forall (i : ι) (j : κ i), Membership.Mem.{u1, u1} α (LowerSet.{u1} α _inst_1) (SetLike.hasMem.{u1, u1} (LowerSet.{u1} α _inst_1) α (LowerSet.setLike.{u1} α _inst_1)) a (f i j))
 but is expected to have type
-  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : LE.{u3} α] {a : α} {f : forall (i : ι), (κ i) -> (LowerSet.{u3} α _inst_1)}, Iff (Membership.mem.{u3, u3} α (LowerSet.{u3} α _inst_1) (SetLike.instMembership.{u3, u3} (LowerSet.{u3} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u3} α _inst_1)) a (infᵢ.{u3, u2} (LowerSet.{u3} α _inst_1) (LowerSet.instInfSetLowerSet.{u3} α _inst_1) ι (fun (i : ι) => infᵢ.{u3, u1} (LowerSet.{u3} α _inst_1) (LowerSet.instInfSetLowerSet.{u3} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (forall (i : ι) (j : κ i), Membership.mem.{u3, u3} α (LowerSet.{u3} α _inst_1) (SetLike.instMembership.{u3, u3} (LowerSet.{u3} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u3} α _inst_1)) a (f i j))
-Case conversion may be inaccurate. Consider using '#align lower_set.mem_infi₂_iff LowerSet.mem_infᵢ₂_iffₓ'. -/
+  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : LE.{u3} α] {a : α} {f : forall (i : ι), (κ i) -> (LowerSet.{u3} α _inst_1)}, Iff (Membership.mem.{u3, u3} α (LowerSet.{u3} α _inst_1) (SetLike.instMembership.{u3, u3} (LowerSet.{u3} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u3} α _inst_1)) a (iInf.{u3, u2} (LowerSet.{u3} α _inst_1) (LowerSet.instInfSetLowerSet.{u3} α _inst_1) ι (fun (i : ι) => iInf.{u3, u1} (LowerSet.{u3} α _inst_1) (LowerSet.instInfSetLowerSet.{u3} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (forall (i : ι) (j : κ i), Membership.mem.{u3, u3} α (LowerSet.{u3} α _inst_1) (SetLike.instMembership.{u3, u3} (LowerSet.{u3} α _inst_1) α (LowerSet.instSetLikeLowerSet.{u3} α _inst_1)) a (f i j))
+Case conversion may be inaccurate. Consider using '#align lower_set.mem_infi₂_iff LowerSet.mem_iInf₂_iffₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
-theorem mem_infᵢ₂_iff {f : ∀ i, κ i → LowerSet α} : (a ∈ ⨅ (i) (j), f i j) ↔ ∀ i j, a ∈ f i j := by
+theorem mem_iInf₂_iff {f : ∀ i, κ i → LowerSet α} : (a ∈ ⨅ (i) (j), f i j) ↔ ∀ i j, a ∈ f i j := by
   simp_rw [mem_infi_iff]
-#align lower_set.mem_infi₂_iff LowerSet.mem_infᵢ₂_iff
+#align lower_set.mem_infi₂_iff LowerSet.mem_iInf₂_iff
 
 /- warning: lower_set.disjoint_coe -> LowerSet.disjoint_coe is a dubious translation:
 lean 3 declaration is
@@ -1378,75 +1378,75 @@ protected theorem compl_bot : (⊥ : UpperSet α).compl = ⊥ :=
 #align upper_set.compl_bot UpperSet.compl_bot
 -/
 
-/- warning: upper_set.compl_Sup -> UpperSet.compl_supₛ is a dubious translation:
+/- warning: upper_set.compl_Sup -> UpperSet.compl_sSup is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] (S : Set.{u1} (UpperSet.{u1} α _inst_1)), Eq.{succ u1} (LowerSet.{u1} α _inst_1) (UpperSet.compl.{u1} α _inst_1 (SupSet.supₛ.{u1} (UpperSet.{u1} α _inst_1) (UpperSet.hasSup.{u1} α _inst_1) S)) (supᵢ.{u1, succ u1} (LowerSet.{u1} α _inst_1) (LowerSet.hasSup.{u1} α _inst_1) (UpperSet.{u1} α _inst_1) (fun (s : UpperSet.{u1} α _inst_1) => supᵢ.{u1, 0} (LowerSet.{u1} α _inst_1) (LowerSet.hasSup.{u1} α _inst_1) (Membership.Mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.hasMem.{u1} (UpperSet.{u1} α _inst_1)) s S) (fun (H : Membership.Mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.hasMem.{u1} (UpperSet.{u1} α _inst_1)) s S) => UpperSet.compl.{u1} α _inst_1 s)))
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] (S : Set.{u1} (UpperSet.{u1} α _inst_1)), Eq.{succ u1} (LowerSet.{u1} α _inst_1) (UpperSet.compl.{u1} α _inst_1 (SupSet.sSup.{u1} (UpperSet.{u1} α _inst_1) (UpperSet.hasSup.{u1} α _inst_1) S)) (iSup.{u1, succ u1} (LowerSet.{u1} α _inst_1) (LowerSet.hasSup.{u1} α _inst_1) (UpperSet.{u1} α _inst_1) (fun (s : UpperSet.{u1} α _inst_1) => iSup.{u1, 0} (LowerSet.{u1} α _inst_1) (LowerSet.hasSup.{u1} α _inst_1) (Membership.Mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.hasMem.{u1} (UpperSet.{u1} α _inst_1)) s S) (fun (H : Membership.Mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.hasMem.{u1} (UpperSet.{u1} α _inst_1)) s S) => UpperSet.compl.{u1} α _inst_1 s)))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] (S : Set.{u1} (UpperSet.{u1} α _inst_1)), Eq.{succ u1} (LowerSet.{u1} α _inst_1) (UpperSet.compl.{u1} α _inst_1 (SupSet.supₛ.{u1} (UpperSet.{u1} α _inst_1) (UpperSet.instSupSetUpperSet.{u1} α _inst_1) S)) (supᵢ.{u1, succ u1} (LowerSet.{u1} α _inst_1) (LowerSet.instSupSetLowerSet.{u1} α _inst_1) (UpperSet.{u1} α _inst_1) (fun (s : UpperSet.{u1} α _inst_1) => supᵢ.{u1, 0} (LowerSet.{u1} α _inst_1) (LowerSet.instSupSetLowerSet.{u1} α _inst_1) (Membership.mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.instMembershipSet.{u1} (UpperSet.{u1} α _inst_1)) s S) (fun (H : Membership.mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.instMembershipSet.{u1} (UpperSet.{u1} α _inst_1)) s S) => UpperSet.compl.{u1} α _inst_1 s)))
-Case conversion may be inaccurate. Consider using '#align upper_set.compl_Sup UpperSet.compl_supₛₓ'. -/
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] (S : Set.{u1} (UpperSet.{u1} α _inst_1)), Eq.{succ u1} (LowerSet.{u1} α _inst_1) (UpperSet.compl.{u1} α _inst_1 (SupSet.sSup.{u1} (UpperSet.{u1} α _inst_1) (UpperSet.instSupSetUpperSet.{u1} α _inst_1) S)) (iSup.{u1, succ u1} (LowerSet.{u1} α _inst_1) (LowerSet.instSupSetLowerSet.{u1} α _inst_1) (UpperSet.{u1} α _inst_1) (fun (s : UpperSet.{u1} α _inst_1) => iSup.{u1, 0} (LowerSet.{u1} α _inst_1) (LowerSet.instSupSetLowerSet.{u1} α _inst_1) (Membership.mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.instMembershipSet.{u1} (UpperSet.{u1} α _inst_1)) s S) (fun (H : Membership.mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.instMembershipSet.{u1} (UpperSet.{u1} α _inst_1)) s S) => UpperSet.compl.{u1} α _inst_1 s)))
+Case conversion may be inaccurate. Consider using '#align upper_set.compl_Sup UpperSet.compl_sSupₓ'. -/
 @[simp]
-protected theorem compl_supₛ (S : Set (UpperSet α)) : (supₛ S).compl = ⨆ s ∈ S, UpperSet.compl s :=
-  LowerSet.ext <| by simp only [coe_compl, coe_Sup, compl_Inter₂, LowerSet.coe_supᵢ₂]
-#align upper_set.compl_Sup UpperSet.compl_supₛ
+protected theorem compl_sSup (S : Set (UpperSet α)) : (sSup S).compl = ⨆ s ∈ S, UpperSet.compl s :=
+  LowerSet.ext <| by simp only [coe_compl, coe_Sup, compl_Inter₂, LowerSet.coe_iSup₂]
+#align upper_set.compl_Sup UpperSet.compl_sSup
 
-/- warning: upper_set.compl_Inf -> UpperSet.compl_infₛ is a dubious translation:
+/- warning: upper_set.compl_Inf -> UpperSet.compl_sInf is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] (S : Set.{u1} (UpperSet.{u1} α _inst_1)), Eq.{succ u1} (LowerSet.{u1} α _inst_1) (UpperSet.compl.{u1} α _inst_1 (InfSet.infₛ.{u1} (UpperSet.{u1} α _inst_1) (UpperSet.hasInf.{u1} α _inst_1) S)) (infᵢ.{u1, succ u1} (LowerSet.{u1} α _inst_1) (LowerSet.hasInf.{u1} α _inst_1) (UpperSet.{u1} α _inst_1) (fun (s : UpperSet.{u1} α _inst_1) => infᵢ.{u1, 0} (LowerSet.{u1} α _inst_1) (LowerSet.hasInf.{u1} α _inst_1) (Membership.Mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.hasMem.{u1} (UpperSet.{u1} α _inst_1)) s S) (fun (H : Membership.Mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.hasMem.{u1} (UpperSet.{u1} α _inst_1)) s S) => UpperSet.compl.{u1} α _inst_1 s)))
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] (S : Set.{u1} (UpperSet.{u1} α _inst_1)), Eq.{succ u1} (LowerSet.{u1} α _inst_1) (UpperSet.compl.{u1} α _inst_1 (InfSet.sInf.{u1} (UpperSet.{u1} α _inst_1) (UpperSet.hasInf.{u1} α _inst_1) S)) (iInf.{u1, succ u1} (LowerSet.{u1} α _inst_1) (LowerSet.hasInf.{u1} α _inst_1) (UpperSet.{u1} α _inst_1) (fun (s : UpperSet.{u1} α _inst_1) => iInf.{u1, 0} (LowerSet.{u1} α _inst_1) (LowerSet.hasInf.{u1} α _inst_1) (Membership.Mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.hasMem.{u1} (UpperSet.{u1} α _inst_1)) s S) (fun (H : Membership.Mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.hasMem.{u1} (UpperSet.{u1} α _inst_1)) s S) => UpperSet.compl.{u1} α _inst_1 s)))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] (S : Set.{u1} (UpperSet.{u1} α _inst_1)), Eq.{succ u1} (LowerSet.{u1} α _inst_1) (UpperSet.compl.{u1} α _inst_1 (InfSet.infₛ.{u1} (UpperSet.{u1} α _inst_1) (UpperSet.instInfSetUpperSet.{u1} α _inst_1) S)) (infᵢ.{u1, succ u1} (LowerSet.{u1} α _inst_1) (LowerSet.instInfSetLowerSet.{u1} α _inst_1) (UpperSet.{u1} α _inst_1) (fun (s : UpperSet.{u1} α _inst_1) => infᵢ.{u1, 0} (LowerSet.{u1} α _inst_1) (LowerSet.instInfSetLowerSet.{u1} α _inst_1) (Membership.mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.instMembershipSet.{u1} (UpperSet.{u1} α _inst_1)) s S) (fun (H : Membership.mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.instMembershipSet.{u1} (UpperSet.{u1} α _inst_1)) s S) => UpperSet.compl.{u1} α _inst_1 s)))
-Case conversion may be inaccurate. Consider using '#align upper_set.compl_Inf UpperSet.compl_infₛₓ'. -/
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] (S : Set.{u1} (UpperSet.{u1} α _inst_1)), Eq.{succ u1} (LowerSet.{u1} α _inst_1) (UpperSet.compl.{u1} α _inst_1 (InfSet.sInf.{u1} (UpperSet.{u1} α _inst_1) (UpperSet.instInfSetUpperSet.{u1} α _inst_1) S)) (iInf.{u1, succ u1} (LowerSet.{u1} α _inst_1) (LowerSet.instInfSetLowerSet.{u1} α _inst_1) (UpperSet.{u1} α _inst_1) (fun (s : UpperSet.{u1} α _inst_1) => iInf.{u1, 0} (LowerSet.{u1} α _inst_1) (LowerSet.instInfSetLowerSet.{u1} α _inst_1) (Membership.mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.instMembershipSet.{u1} (UpperSet.{u1} α _inst_1)) s S) (fun (H : Membership.mem.{u1, u1} (UpperSet.{u1} α _inst_1) (Set.{u1} (UpperSet.{u1} α _inst_1)) (Set.instMembershipSet.{u1} (UpperSet.{u1} α _inst_1)) s S) => UpperSet.compl.{u1} α _inst_1 s)))
+Case conversion may be inaccurate. Consider using '#align upper_set.compl_Inf UpperSet.compl_sInfₓ'. -/
 @[simp]
-protected theorem compl_infₛ (S : Set (UpperSet α)) : (infₛ S).compl = ⨅ s ∈ S, UpperSet.compl s :=
-  LowerSet.ext <| by simp only [coe_compl, coe_Inf, compl_Union₂, LowerSet.coe_infᵢ₂]
-#align upper_set.compl_Inf UpperSet.compl_infₛ
+protected theorem compl_sInf (S : Set (UpperSet α)) : (sInf S).compl = ⨅ s ∈ S, UpperSet.compl s :=
+  LowerSet.ext <| by simp only [coe_compl, coe_Inf, compl_Union₂, LowerSet.coe_iInf₂]
+#align upper_set.compl_Inf UpperSet.compl_sInf
 
-/- warning: upper_set.compl_supr -> UpperSet.compl_supᵢ is a dubious translation:
+/- warning: upper_set.compl_supr -> UpperSet.compl_iSup is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : LE.{u1} α] (f : ι -> (UpperSet.{u1} α _inst_1)), Eq.{succ u1} (LowerSet.{u1} α _inst_1) (UpperSet.compl.{u1} α _inst_1 (supᵢ.{u1, u2} (UpperSet.{u1} α _inst_1) (UpperSet.hasSup.{u1} α _inst_1) ι (fun (i : ι) => f i))) (supᵢ.{u1, u2} (LowerSet.{u1} α _inst_1) (LowerSet.hasSup.{u1} α _inst_1) ι (fun (i : ι) => UpperSet.compl.{u1} α _inst_1 (f i)))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : LE.{u1} α] (f : ι -> (UpperSet.{u1} α _inst_1)), Eq.{succ u1} (LowerSet.{u1} α _inst_1) (UpperSet.compl.{u1} α _inst_1 (iSup.{u1, u2} (UpperSet.{u1} α _inst_1) (UpperSet.hasSup.{u1} α _inst_1) ι (fun (i : ι) => f i))) (iSup.{u1, u2} (LowerSet.{u1} α _inst_1) (LowerSet.hasSup.{u1} α _inst_1) ι (fun (i : ι) => UpperSet.compl.{u1} α _inst_1 (f i)))
 but is expected to have type
-  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : LE.{u2} α] (f : ι -> (UpperSet.{u2} α _inst_1)), Eq.{succ u2} (LowerSet.{u2} α _inst_1) (UpperSet.compl.{u2} α _inst_1 (supᵢ.{u2, u1} (UpperSet.{u2} α _inst_1) (UpperSet.instSupSetUpperSet.{u2} α _inst_1) ι (fun (i : ι) => f i))) (supᵢ.{u2, u1} (LowerSet.{u2} α _inst_1) (LowerSet.instSupSetLowerSet.{u2} α _inst_1) ι (fun (i : ι) => UpperSet.compl.{u2} α _inst_1 (f i)))
-Case conversion may be inaccurate. Consider using '#align upper_set.compl_supr UpperSet.compl_supᵢₓ'. -/
+  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : LE.{u2} α] (f : ι -> (UpperSet.{u2} α _inst_1)), Eq.{succ u2} (LowerSet.{u2} α _inst_1) (UpperSet.compl.{u2} α _inst_1 (iSup.{u2, u1} (UpperSet.{u2} α _inst_1) (UpperSet.instSupSetUpperSet.{u2} α _inst_1) ι (fun (i : ι) => f i))) (iSup.{u2, u1} (LowerSet.{u2} α _inst_1) (LowerSet.instSupSetLowerSet.{u2} α _inst_1) ι (fun (i : ι) => UpperSet.compl.{u2} α _inst_1 (f i)))
+Case conversion may be inaccurate. Consider using '#align upper_set.compl_supr UpperSet.compl_iSupₓ'. -/
 @[simp]
-protected theorem compl_supᵢ (f : ι → UpperSet α) : (⨆ i, f i).compl = ⨆ i, (f i).compl :=
-  LowerSet.ext <| by simp only [coe_compl, coe_supr, compl_Inter, LowerSet.coe_supᵢ]
-#align upper_set.compl_supr UpperSet.compl_supᵢ
+protected theorem compl_iSup (f : ι → UpperSet α) : (⨆ i, f i).compl = ⨆ i, (f i).compl :=
+  LowerSet.ext <| by simp only [coe_compl, coe_supr, compl_Inter, LowerSet.coe_iSup]
+#align upper_set.compl_supr UpperSet.compl_iSup
 
-/- warning: upper_set.compl_infi -> UpperSet.compl_infᵢ is a dubious translation:
+/- warning: upper_set.compl_infi -> UpperSet.compl_iInf is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : LE.{u1} α] (f : ι -> (UpperSet.{u1} α _inst_1)), Eq.{succ u1} (LowerSet.{u1} α _inst_1) (UpperSet.compl.{u1} α _inst_1 (infᵢ.{u1, u2} (UpperSet.{u1} α _inst_1) (UpperSet.hasInf.{u1} α _inst_1) ι (fun (i : ι) => f i))) (infᵢ.{u1, u2} (LowerSet.{u1} α _inst_1) (LowerSet.hasInf.{u1} α _inst_1) ι (fun (i : ι) => UpperSet.compl.{u1} α _inst_1 (f i)))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : LE.{u1} α] (f : ι -> (UpperSet.{u1} α _inst_1)), Eq.{succ u1} (LowerSet.{u1} α _inst_1) (UpperSet.compl.{u1} α _inst_1 (iInf.{u1, u2} (UpperSet.{u1} α _inst_1) (UpperSet.hasInf.{u1} α _inst_1) ι (fun (i : ι) => f i))) (iInf.{u1, u2} (LowerSet.{u1} α _inst_1) (LowerSet.hasInf.{u1} α _inst_1) ι (fun (i : ι) => UpperSet.compl.{u1} α _inst_1 (f i)))
 but is expected to have type
-  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : LE.{u2} α] (f : ι -> (UpperSet.{u2} α _inst_1)), Eq.{succ u2} (LowerSet.{u2} α _inst_1) (UpperSet.compl.{u2} α _inst_1 (infᵢ.{u2, u1} (UpperSet.{u2} α _inst_1) (UpperSet.instInfSetUpperSet.{u2} α _inst_1) ι (fun (i : ι) => f i))) (infᵢ.{u2, u1} (LowerSet.{u2} α _inst_1) (LowerSet.instInfSetLowerSet.{u2} α _inst_1) ι (fun (i : ι) => UpperSet.compl.{u2} α _inst_1 (f i)))
-Case conversion may be inaccurate. Consider using '#align upper_set.compl_infi UpperSet.compl_infᵢₓ'. -/
+  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : LE.{u2} α] (f : ι -> (UpperSet.{u2} α _inst_1)), Eq.{succ u2} (LowerSet.{u2} α _inst_1) (UpperSet.compl.{u2} α _inst_1 (iInf.{u2, u1} (UpperSet.{u2} α _inst_1) (UpperSet.instInfSetUpperSet.{u2} α _inst_1) ι (fun (i : ι) => f i))) (iInf.{u2, u1} (LowerSet.{u2} α _inst_1) (LowerSet.instInfSetLowerSet.{u2} α _inst_1) ι (fun (i : ι) => UpperSet.compl.{u2} α _inst_1 (f i)))
+Case conversion may be inaccurate. Consider using '#align upper_set.compl_infi UpperSet.compl_iInfₓ'. -/
 @[simp]
-protected theorem compl_infᵢ (f : ι → UpperSet α) : (⨅ i, f i).compl = ⨅ i, (f i).compl :=
-  LowerSet.ext <| by simp only [coe_compl, coe_infi, compl_Union, LowerSet.coe_infᵢ]
-#align upper_set.compl_infi UpperSet.compl_infᵢ
+protected theorem compl_iInf (f : ι → UpperSet α) : (⨅ i, f i).compl = ⨅ i, (f i).compl :=
+  LowerSet.ext <| by simp only [coe_compl, coe_infi, compl_Union, LowerSet.coe_iInf]
+#align upper_set.compl_infi UpperSet.compl_iInf
 
-/- warning: upper_set.compl_supr₂ -> UpperSet.compl_supᵢ₂ is a dubious translation:
+/- warning: upper_set.compl_supr₂ -> UpperSet.compl_iSup₂ is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} [_inst_1 : LE.{u1} α] (f : forall (i : ι), (κ i) -> (UpperSet.{u1} α _inst_1)), Eq.{succ u1} (LowerSet.{u1} α _inst_1) (UpperSet.compl.{u1} α _inst_1 (supᵢ.{u1, u2} (UpperSet.{u1} α _inst_1) (UpperSet.hasSup.{u1} α _inst_1) ι (fun (i : ι) => supᵢ.{u1, u3} (UpperSet.{u1} α _inst_1) (UpperSet.hasSup.{u1} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (supᵢ.{u1, u2} (LowerSet.{u1} α _inst_1) (LowerSet.hasSup.{u1} α _inst_1) ι (fun (i : ι) => supᵢ.{u1, u3} (LowerSet.{u1} α _inst_1) (LowerSet.hasSup.{u1} α _inst_1) (κ i) (fun (j : κ i) => UpperSet.compl.{u1} α _inst_1 (f i j))))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} [_inst_1 : LE.{u1} α] (f : forall (i : ι), (κ i) -> (UpperSet.{u1} α _inst_1)), Eq.{succ u1} (LowerSet.{u1} α _inst_1) (UpperSet.compl.{u1} α _inst_1 (iSup.{u1, u2} (UpperSet.{u1} α _inst_1) (UpperSet.hasSup.{u1} α _inst_1) ι (fun (i : ι) => iSup.{u1, u3} (UpperSet.{u1} α _inst_1) (UpperSet.hasSup.{u1} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (iSup.{u1, u2} (LowerSet.{u1} α _inst_1) (LowerSet.hasSup.{u1} α _inst_1) ι (fun (i : ι) => iSup.{u1, u3} (LowerSet.{u1} α _inst_1) (LowerSet.hasSup.{u1} α _inst_1) (κ i) (fun (j : κ i) => UpperSet.compl.{u1} α _inst_1 (f i j))))
 but is expected to have type
-  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : LE.{u3} α] (f : forall (i : ι), (κ i) -> (UpperSet.{u3} α _inst_1)), Eq.{succ u3} (LowerSet.{u3} α _inst_1) (UpperSet.compl.{u3} α _inst_1 (supᵢ.{u3, u2} (UpperSet.{u3} α _inst_1) (UpperSet.instSupSetUpperSet.{u3} α _inst_1) ι (fun (i : ι) => supᵢ.{u3, u1} (UpperSet.{u3} α _inst_1) (UpperSet.instSupSetUpperSet.{u3} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (supᵢ.{u3, u2} (LowerSet.{u3} α _inst_1) (LowerSet.instSupSetLowerSet.{u3} α _inst_1) ι (fun (i : ι) => supᵢ.{u3, u1} (LowerSet.{u3} α _inst_1) (LowerSet.instSupSetLowerSet.{u3} α _inst_1) (κ i) (fun (j : κ i) => UpperSet.compl.{u3} α _inst_1 (f i j))))
-Case conversion may be inaccurate. Consider using '#align upper_set.compl_supr₂ UpperSet.compl_supᵢ₂ₓ'. -/
+  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : LE.{u3} α] (f : forall (i : ι), (κ i) -> (UpperSet.{u3} α _inst_1)), Eq.{succ u3} (LowerSet.{u3} α _inst_1) (UpperSet.compl.{u3} α _inst_1 (iSup.{u3, u2} (UpperSet.{u3} α _inst_1) (UpperSet.instSupSetUpperSet.{u3} α _inst_1) ι (fun (i : ι) => iSup.{u3, u1} (UpperSet.{u3} α _inst_1) (UpperSet.instSupSetUpperSet.{u3} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (iSup.{u3, u2} (LowerSet.{u3} α _inst_1) (LowerSet.instSupSetLowerSet.{u3} α _inst_1) ι (fun (i : ι) => iSup.{u3, u1} (LowerSet.{u3} α _inst_1) (LowerSet.instSupSetLowerSet.{u3} α _inst_1) (κ i) (fun (j : κ i) => UpperSet.compl.{u3} α _inst_1 (f i j))))
+Case conversion may be inaccurate. Consider using '#align upper_set.compl_supr₂ UpperSet.compl_iSup₂ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
-theorem compl_supᵢ₂ (f : ∀ i, κ i → UpperSet α) :
-    (⨆ (i) (j), f i j).compl = ⨆ (i) (j), (f i j).compl := by simp_rw [UpperSet.compl_supᵢ]
-#align upper_set.compl_supr₂ UpperSet.compl_supᵢ₂
+theorem compl_iSup₂ (f : ∀ i, κ i → UpperSet α) :
+    (⨆ (i) (j), f i j).compl = ⨆ (i) (j), (f i j).compl := by simp_rw [UpperSet.compl_iSup]
+#align upper_set.compl_supr₂ UpperSet.compl_iSup₂
 
-/- warning: upper_set.compl_infi₂ -> UpperSet.compl_infᵢ₂ is a dubious translation:
+/- warning: upper_set.compl_infi₂ -> UpperSet.compl_iInf₂ is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} [_inst_1 : LE.{u1} α] (f : forall (i : ι), (κ i) -> (UpperSet.{u1} α _inst_1)), Eq.{succ u1} (LowerSet.{u1} α _inst_1) (UpperSet.compl.{u1} α _inst_1 (infᵢ.{u1, u2} (UpperSet.{u1} α _inst_1) (UpperSet.hasInf.{u1} α _inst_1) ι (fun (i : ι) => infᵢ.{u1, u3} (UpperSet.{u1} α _inst_1) (UpperSet.hasInf.{u1} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (infᵢ.{u1, u2} (LowerSet.{u1} α _inst_1) (LowerSet.hasInf.{u1} α _inst_1) ι (fun (i : ι) => infᵢ.{u1, u3} (LowerSet.{u1} α _inst_1) (LowerSet.hasInf.{u1} α _inst_1) (κ i) (fun (j : κ i) => UpperSet.compl.{u1} α _inst_1 (f i j))))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} [_inst_1 : LE.{u1} α] (f : forall (i : ι), (κ i) -> (UpperSet.{u1} α _inst_1)), Eq.{succ u1} (LowerSet.{u1} α _inst_1) (UpperSet.compl.{u1} α _inst_1 (iInf.{u1, u2} (UpperSet.{u1} α _inst_1) (UpperSet.hasInf.{u1} α _inst_1) ι (fun (i : ι) => iInf.{u1, u3} (UpperSet.{u1} α _inst_1) (UpperSet.hasInf.{u1} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (iInf.{u1, u2} (LowerSet.{u1} α _inst_1) (LowerSet.hasInf.{u1} α _inst_1) ι (fun (i : ι) => iInf.{u1, u3} (LowerSet.{u1} α _inst_1) (LowerSet.hasInf.{u1} α _inst_1) (κ i) (fun (j : κ i) => UpperSet.compl.{u1} α _inst_1 (f i j))))
 but is expected to have type
-  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : LE.{u3} α] (f : forall (i : ι), (κ i) -> (UpperSet.{u3} α _inst_1)), Eq.{succ u3} (LowerSet.{u3} α _inst_1) (UpperSet.compl.{u3} α _inst_1 (infᵢ.{u3, u2} (UpperSet.{u3} α _inst_1) (UpperSet.instInfSetUpperSet.{u3} α _inst_1) ι (fun (i : ι) => infᵢ.{u3, u1} (UpperSet.{u3} α _inst_1) (UpperSet.instInfSetUpperSet.{u3} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (infᵢ.{u3, u2} (LowerSet.{u3} α _inst_1) (LowerSet.instInfSetLowerSet.{u3} α _inst_1) ι (fun (i : ι) => infᵢ.{u3, u1} (LowerSet.{u3} α _inst_1) (LowerSet.instInfSetLowerSet.{u3} α _inst_1) (κ i) (fun (j : κ i) => UpperSet.compl.{u3} α _inst_1 (f i j))))
-Case conversion may be inaccurate. Consider using '#align upper_set.compl_infi₂ UpperSet.compl_infᵢ₂ₓ'. -/
+  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : LE.{u3} α] (f : forall (i : ι), (κ i) -> (UpperSet.{u3} α _inst_1)), Eq.{succ u3} (LowerSet.{u3} α _inst_1) (UpperSet.compl.{u3} α _inst_1 (iInf.{u3, u2} (UpperSet.{u3} α _inst_1) (UpperSet.instInfSetUpperSet.{u3} α _inst_1) ι (fun (i : ι) => iInf.{u3, u1} (UpperSet.{u3} α _inst_1) (UpperSet.instInfSetUpperSet.{u3} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (iInf.{u3, u2} (LowerSet.{u3} α _inst_1) (LowerSet.instInfSetLowerSet.{u3} α _inst_1) ι (fun (i : ι) => iInf.{u3, u1} (LowerSet.{u3} α _inst_1) (LowerSet.instInfSetLowerSet.{u3} α _inst_1) (κ i) (fun (j : κ i) => UpperSet.compl.{u3} α _inst_1 (f i j))))
+Case conversion may be inaccurate. Consider using '#align upper_set.compl_infi₂ UpperSet.compl_iInf₂ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
-theorem compl_infᵢ₂ (f : ∀ i, κ i → UpperSet α) :
-    (⨅ (i) (j), f i j).compl = ⨅ (i) (j), (f i j).compl := by simp_rw [UpperSet.compl_infᵢ]
-#align upper_set.compl_infi₂ UpperSet.compl_infᵢ₂
+theorem compl_iInf₂ (f : ∀ i, κ i → UpperSet α) :
+    (⨅ (i) (j), f i j).compl = ⨅ (i) (j), (f i j).compl := by simp_rw [UpperSet.compl_iInf]
+#align upper_set.compl_infi₂ UpperSet.compl_iInf₂
 
 end UpperSet
 
@@ -1522,63 +1522,63 @@ protected theorem compl_bot : (⊥ : LowerSet α).compl = ⊥ :=
 #align lower_set.compl_bot LowerSet.compl_bot
 -/
 
-#print LowerSet.compl_supₛ /-
-protected theorem compl_supₛ (S : Set (LowerSet α)) : (supₛ S).compl = ⨆ s ∈ S, LowerSet.compl s :=
-  UpperSet.ext <| by simp only [coe_compl, coe_Sup, compl_Union₂, UpperSet.coe_supᵢ₂]
-#align lower_set.compl_Sup LowerSet.compl_supₛ
+#print LowerSet.compl_sSup /-
+protected theorem compl_sSup (S : Set (LowerSet α)) : (sSup S).compl = ⨆ s ∈ S, LowerSet.compl s :=
+  UpperSet.ext <| by simp only [coe_compl, coe_Sup, compl_Union₂, UpperSet.coe_iSup₂]
+#align lower_set.compl_Sup LowerSet.compl_sSup
 -/
 
-#print LowerSet.compl_infₛ /-
-protected theorem compl_infₛ (S : Set (LowerSet α)) : (infₛ S).compl = ⨅ s ∈ S, LowerSet.compl s :=
-  UpperSet.ext <| by simp only [coe_compl, coe_Inf, compl_Inter₂, UpperSet.coe_infᵢ₂]
-#align lower_set.compl_Inf LowerSet.compl_infₛ
+#print LowerSet.compl_sInf /-
+protected theorem compl_sInf (S : Set (LowerSet α)) : (sInf S).compl = ⨅ s ∈ S, LowerSet.compl s :=
+  UpperSet.ext <| by simp only [coe_compl, coe_Inf, compl_Inter₂, UpperSet.coe_iInf₂]
+#align lower_set.compl_Inf LowerSet.compl_sInf
 -/
 
-/- warning: lower_set.compl_supr -> LowerSet.compl_supᵢ is a dubious translation:
+/- warning: lower_set.compl_supr -> LowerSet.compl_iSup is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : LE.{u1} α] (f : ι -> (LowerSet.{u1} α _inst_1)), Eq.{succ u1} (UpperSet.{u1} α _inst_1) (LowerSet.compl.{u1} α _inst_1 (supᵢ.{u1, u2} (LowerSet.{u1} α _inst_1) (LowerSet.hasSup.{u1} α _inst_1) ι (fun (i : ι) => f i))) (supᵢ.{u1, u2} (UpperSet.{u1} α _inst_1) (UpperSet.hasSup.{u1} α _inst_1) ι (fun (i : ι) => LowerSet.compl.{u1} α _inst_1 (f i)))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : LE.{u1} α] (f : ι -> (LowerSet.{u1} α _inst_1)), Eq.{succ u1} (UpperSet.{u1} α _inst_1) (LowerSet.compl.{u1} α _inst_1 (iSup.{u1, u2} (LowerSet.{u1} α _inst_1) (LowerSet.hasSup.{u1} α _inst_1) ι (fun (i : ι) => f i))) (iSup.{u1, u2} (UpperSet.{u1} α _inst_1) (UpperSet.hasSup.{u1} α _inst_1) ι (fun (i : ι) => LowerSet.compl.{u1} α _inst_1 (f i)))
 but is expected to have type
-  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : LE.{u2} α] (f : ι -> (LowerSet.{u2} α _inst_1)), Eq.{succ u2} (UpperSet.{u2} α _inst_1) (LowerSet.compl.{u2} α _inst_1 (supᵢ.{u2, u1} (LowerSet.{u2} α _inst_1) (LowerSet.instSupSetLowerSet.{u2} α _inst_1) ι (fun (i : ι) => f i))) (supᵢ.{u2, u1} (UpperSet.{u2} α _inst_1) (UpperSet.instSupSetUpperSet.{u2} α _inst_1) ι (fun (i : ι) => LowerSet.compl.{u2} α _inst_1 (f i)))
-Case conversion may be inaccurate. Consider using '#align lower_set.compl_supr LowerSet.compl_supᵢₓ'. -/
-protected theorem compl_supᵢ (f : ι → LowerSet α) : (⨆ i, f i).compl = ⨆ i, (f i).compl :=
-  UpperSet.ext <| by simp only [coe_compl, coe_supr, compl_Union, UpperSet.coe_supᵢ]
-#align lower_set.compl_supr LowerSet.compl_supᵢ
+  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : LE.{u2} α] (f : ι -> (LowerSet.{u2} α _inst_1)), Eq.{succ u2} (UpperSet.{u2} α _inst_1) (LowerSet.compl.{u2} α _inst_1 (iSup.{u2, u1} (LowerSet.{u2} α _inst_1) (LowerSet.instSupSetLowerSet.{u2} α _inst_1) ι (fun (i : ι) => f i))) (iSup.{u2, u1} (UpperSet.{u2} α _inst_1) (UpperSet.instSupSetUpperSet.{u2} α _inst_1) ι (fun (i : ι) => LowerSet.compl.{u2} α _inst_1 (f i)))
+Case conversion may be inaccurate. Consider using '#align lower_set.compl_supr LowerSet.compl_iSupₓ'. -/
+protected theorem compl_iSup (f : ι → LowerSet α) : (⨆ i, f i).compl = ⨆ i, (f i).compl :=
+  UpperSet.ext <| by simp only [coe_compl, coe_supr, compl_Union, UpperSet.coe_iSup]
+#align lower_set.compl_supr LowerSet.compl_iSup
 
-/- warning: lower_set.compl_infi -> LowerSet.compl_infᵢ is a dubious translation:
+/- warning: lower_set.compl_infi -> LowerSet.compl_iInf is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : LE.{u1} α] (f : ι -> (LowerSet.{u1} α _inst_1)), Eq.{succ u1} (UpperSet.{u1} α _inst_1) (LowerSet.compl.{u1} α _inst_1 (infᵢ.{u1, u2} (LowerSet.{u1} α _inst_1) (LowerSet.hasInf.{u1} α _inst_1) ι (fun (i : ι) => f i))) (infᵢ.{u1, u2} (UpperSet.{u1} α _inst_1) (UpperSet.hasInf.{u1} α _inst_1) ι (fun (i : ι) => LowerSet.compl.{u1} α _inst_1 (f i)))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : LE.{u1} α] (f : ι -> (LowerSet.{u1} α _inst_1)), Eq.{succ u1} (UpperSet.{u1} α _inst_1) (LowerSet.compl.{u1} α _inst_1 (iInf.{u1, u2} (LowerSet.{u1} α _inst_1) (LowerSet.hasInf.{u1} α _inst_1) ι (fun (i : ι) => f i))) (iInf.{u1, u2} (UpperSet.{u1} α _inst_1) (UpperSet.hasInf.{u1} α _inst_1) ι (fun (i : ι) => LowerSet.compl.{u1} α _inst_1 (f i)))
 but is expected to have type
-  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : LE.{u2} α] (f : ι -> (LowerSet.{u2} α _inst_1)), Eq.{succ u2} (UpperSet.{u2} α _inst_1) (LowerSet.compl.{u2} α _inst_1 (infᵢ.{u2, u1} (LowerSet.{u2} α _inst_1) (LowerSet.instInfSetLowerSet.{u2} α _inst_1) ι (fun (i : ι) => f i))) (infᵢ.{u2, u1} (UpperSet.{u2} α _inst_1) (UpperSet.instInfSetUpperSet.{u2} α _inst_1) ι (fun (i : ι) => LowerSet.compl.{u2} α _inst_1 (f i)))
-Case conversion may be inaccurate. Consider using '#align lower_set.compl_infi LowerSet.compl_infᵢₓ'. -/
-protected theorem compl_infᵢ (f : ι → LowerSet α) : (⨅ i, f i).compl = ⨅ i, (f i).compl :=
-  UpperSet.ext <| by simp only [coe_compl, coe_infi, compl_Inter, UpperSet.coe_infᵢ]
-#align lower_set.compl_infi LowerSet.compl_infᵢ
+  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : LE.{u2} α] (f : ι -> (LowerSet.{u2} α _inst_1)), Eq.{succ u2} (UpperSet.{u2} α _inst_1) (LowerSet.compl.{u2} α _inst_1 (iInf.{u2, u1} (LowerSet.{u2} α _inst_1) (LowerSet.instInfSetLowerSet.{u2} α _inst_1) ι (fun (i : ι) => f i))) (iInf.{u2, u1} (UpperSet.{u2} α _inst_1) (UpperSet.instInfSetUpperSet.{u2} α _inst_1) ι (fun (i : ι) => LowerSet.compl.{u2} α _inst_1 (f i)))
+Case conversion may be inaccurate. Consider using '#align lower_set.compl_infi LowerSet.compl_iInfₓ'. -/
+protected theorem compl_iInf (f : ι → LowerSet α) : (⨅ i, f i).compl = ⨅ i, (f i).compl :=
+  UpperSet.ext <| by simp only [coe_compl, coe_infi, compl_Inter, UpperSet.coe_iInf]
+#align lower_set.compl_infi LowerSet.compl_iInf
 
-/- warning: lower_set.compl_supr₂ -> LowerSet.compl_supᵢ₂ is a dubious translation:
+/- warning: lower_set.compl_supr₂ -> LowerSet.compl_iSup₂ is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} [_inst_1 : LE.{u1} α] (f : forall (i : ι), (κ i) -> (LowerSet.{u1} α _inst_1)), Eq.{succ u1} (UpperSet.{u1} α _inst_1) (LowerSet.compl.{u1} α _inst_1 (supᵢ.{u1, u2} (LowerSet.{u1} α _inst_1) (LowerSet.hasSup.{u1} α _inst_1) ι (fun (i : ι) => supᵢ.{u1, u3} (LowerSet.{u1} α _inst_1) (LowerSet.hasSup.{u1} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (supᵢ.{u1, u2} (UpperSet.{u1} α _inst_1) (UpperSet.hasSup.{u1} α _inst_1) ι (fun (i : ι) => supᵢ.{u1, u3} (UpperSet.{u1} α _inst_1) (UpperSet.hasSup.{u1} α _inst_1) (κ i) (fun (j : κ i) => LowerSet.compl.{u1} α _inst_1 (f i j))))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} [_inst_1 : LE.{u1} α] (f : forall (i : ι), (κ i) -> (LowerSet.{u1} α _inst_1)), Eq.{succ u1} (UpperSet.{u1} α _inst_1) (LowerSet.compl.{u1} α _inst_1 (iSup.{u1, u2} (LowerSet.{u1} α _inst_1) (LowerSet.hasSup.{u1} α _inst_1) ι (fun (i : ι) => iSup.{u1, u3} (LowerSet.{u1} α _inst_1) (LowerSet.hasSup.{u1} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (iSup.{u1, u2} (UpperSet.{u1} α _inst_1) (UpperSet.hasSup.{u1} α _inst_1) ι (fun (i : ι) => iSup.{u1, u3} (UpperSet.{u1} α _inst_1) (UpperSet.hasSup.{u1} α _inst_1) (κ i) (fun (j : κ i) => LowerSet.compl.{u1} α _inst_1 (f i j))))
 but is expected to have type
-  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : LE.{u3} α] (f : forall (i : ι), (κ i) -> (LowerSet.{u3} α _inst_1)), Eq.{succ u3} (UpperSet.{u3} α _inst_1) (LowerSet.compl.{u3} α _inst_1 (supᵢ.{u3, u2} (LowerSet.{u3} α _inst_1) (LowerSet.instSupSetLowerSet.{u3} α _inst_1) ι (fun (i : ι) => supᵢ.{u3, u1} (LowerSet.{u3} α _inst_1) (LowerSet.instSupSetLowerSet.{u3} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (supᵢ.{u3, u2} (UpperSet.{u3} α _inst_1) (UpperSet.instSupSetUpperSet.{u3} α _inst_1) ι (fun (i : ι) => supᵢ.{u3, u1} (UpperSet.{u3} α _inst_1) (UpperSet.instSupSetUpperSet.{u3} α _inst_1) (κ i) (fun (j : κ i) => LowerSet.compl.{u3} α _inst_1 (f i j))))
-Case conversion may be inaccurate. Consider using '#align lower_set.compl_supr₂ LowerSet.compl_supᵢ₂ₓ'. -/
+  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : LE.{u3} α] (f : forall (i : ι), (κ i) -> (LowerSet.{u3} α _inst_1)), Eq.{succ u3} (UpperSet.{u3} α _inst_1) (LowerSet.compl.{u3} α _inst_1 (iSup.{u3, u2} (LowerSet.{u3} α _inst_1) (LowerSet.instSupSetLowerSet.{u3} α _inst_1) ι (fun (i : ι) => iSup.{u3, u1} (LowerSet.{u3} α _inst_1) (LowerSet.instSupSetLowerSet.{u3} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (iSup.{u3, u2} (UpperSet.{u3} α _inst_1) (UpperSet.instSupSetUpperSet.{u3} α _inst_1) ι (fun (i : ι) => iSup.{u3, u1} (UpperSet.{u3} α _inst_1) (UpperSet.instSupSetUpperSet.{u3} α _inst_1) (κ i) (fun (j : κ i) => LowerSet.compl.{u3} α _inst_1 (f i j))))
+Case conversion may be inaccurate. Consider using '#align lower_set.compl_supr₂ LowerSet.compl_iSup₂ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
-theorem compl_supᵢ₂ (f : ∀ i, κ i → LowerSet α) :
-    (⨆ (i) (j), f i j).compl = ⨆ (i) (j), (f i j).compl := by simp_rw [LowerSet.compl_supᵢ]
-#align lower_set.compl_supr₂ LowerSet.compl_supᵢ₂
+theorem compl_iSup₂ (f : ∀ i, κ i → LowerSet α) :
+    (⨆ (i) (j), f i j).compl = ⨆ (i) (j), (f i j).compl := by simp_rw [LowerSet.compl_iSup]
+#align lower_set.compl_supr₂ LowerSet.compl_iSup₂
 
-/- warning: lower_set.compl_infi₂ -> LowerSet.compl_infᵢ₂ is a dubious translation:
+/- warning: lower_set.compl_infi₂ -> LowerSet.compl_iInf₂ is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} [_inst_1 : LE.{u1} α] (f : forall (i : ι), (κ i) -> (LowerSet.{u1} α _inst_1)), Eq.{succ u1} (UpperSet.{u1} α _inst_1) (LowerSet.compl.{u1} α _inst_1 (infᵢ.{u1, u2} (LowerSet.{u1} α _inst_1) (LowerSet.hasInf.{u1} α _inst_1) ι (fun (i : ι) => infᵢ.{u1, u3} (LowerSet.{u1} α _inst_1) (LowerSet.hasInf.{u1} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (infᵢ.{u1, u2} (UpperSet.{u1} α _inst_1) (UpperSet.hasInf.{u1} α _inst_1) ι (fun (i : ι) => infᵢ.{u1, u3} (UpperSet.{u1} α _inst_1) (UpperSet.hasInf.{u1} α _inst_1) (κ i) (fun (j : κ i) => LowerSet.compl.{u1} α _inst_1 (f i j))))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} [_inst_1 : LE.{u1} α] (f : forall (i : ι), (κ i) -> (LowerSet.{u1} α _inst_1)), Eq.{succ u1} (UpperSet.{u1} α _inst_1) (LowerSet.compl.{u1} α _inst_1 (iInf.{u1, u2} (LowerSet.{u1} α _inst_1) (LowerSet.hasInf.{u1} α _inst_1) ι (fun (i : ι) => iInf.{u1, u3} (LowerSet.{u1} α _inst_1) (LowerSet.hasInf.{u1} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (iInf.{u1, u2} (UpperSet.{u1} α _inst_1) (UpperSet.hasInf.{u1} α _inst_1) ι (fun (i : ι) => iInf.{u1, u3} (UpperSet.{u1} α _inst_1) (UpperSet.hasInf.{u1} α _inst_1) (κ i) (fun (j : κ i) => LowerSet.compl.{u1} α _inst_1 (f i j))))
 but is expected to have type
-  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : LE.{u3} α] (f : forall (i : ι), (κ i) -> (LowerSet.{u3} α _inst_1)), Eq.{succ u3} (UpperSet.{u3} α _inst_1) (LowerSet.compl.{u3} α _inst_1 (infᵢ.{u3, u2} (LowerSet.{u3} α _inst_1) (LowerSet.instInfSetLowerSet.{u3} α _inst_1) ι (fun (i : ι) => infᵢ.{u3, u1} (LowerSet.{u3} α _inst_1) (LowerSet.instInfSetLowerSet.{u3} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (infᵢ.{u3, u2} (UpperSet.{u3} α _inst_1) (UpperSet.instInfSetUpperSet.{u3} α _inst_1) ι (fun (i : ι) => infᵢ.{u3, u1} (UpperSet.{u3} α _inst_1) (UpperSet.instInfSetUpperSet.{u3} α _inst_1) (κ i) (fun (j : κ i) => LowerSet.compl.{u3} α _inst_1 (f i j))))
-Case conversion may be inaccurate. Consider using '#align lower_set.compl_infi₂ LowerSet.compl_infᵢ₂ₓ'. -/
+  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : LE.{u3} α] (f : forall (i : ι), (κ i) -> (LowerSet.{u3} α _inst_1)), Eq.{succ u3} (UpperSet.{u3} α _inst_1) (LowerSet.compl.{u3} α _inst_1 (iInf.{u3, u2} (LowerSet.{u3} α _inst_1) (LowerSet.instInfSetLowerSet.{u3} α _inst_1) ι (fun (i : ι) => iInf.{u3, u1} (LowerSet.{u3} α _inst_1) (LowerSet.instInfSetLowerSet.{u3} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (iInf.{u3, u2} (UpperSet.{u3} α _inst_1) (UpperSet.instInfSetUpperSet.{u3} α _inst_1) ι (fun (i : ι) => iInf.{u3, u1} (UpperSet.{u3} α _inst_1) (UpperSet.instInfSetUpperSet.{u3} α _inst_1) (κ i) (fun (j : κ i) => LowerSet.compl.{u3} α _inst_1 (f i j))))
+Case conversion may be inaccurate. Consider using '#align lower_set.compl_infi₂ LowerSet.compl_iInf₂ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
-theorem compl_infᵢ₂ (f : ∀ i, κ i → LowerSet α) :
-    (⨅ (i) (j), f i j).compl = ⨅ (i) (j), (f i j).compl := by simp_rw [LowerSet.compl_infᵢ]
-#align lower_set.compl_infi₂ LowerSet.compl_infᵢ₂
+theorem compl_iInf₂ (f : ∀ i, κ i → LowerSet α) :
+    (⨅ (i) (j), f i j).compl = ⨅ (i) (j), (f i j).compl := by simp_rw [LowerSet.compl_iInf]
+#align lower_set.compl_infi₂ LowerSet.compl_iInf₂
 
 end LowerSet
 
@@ -1936,40 +1936,40 @@ section CompleteLattice
 
 variable [CompleteLattice α]
 
-/- warning: upper_set.Ici_Sup -> UpperSet.Ici_supₛ is a dubious translation:
+/- warning: upper_set.Ici_Sup -> UpperSet.Ici_sSup is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] (S : Set.{u1} α), Eq.{succ u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (UpperSet.Ici.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (SupSet.supₛ.{u1} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) S)) (supᵢ.{u1, succ u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (UpperSet.hasSup.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) α (fun (a : α) => supᵢ.{u1, 0} (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (UpperSet.hasSup.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a S) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a S) => UpperSet.Ici.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) a)))
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] (S : Set.{u1} α), Eq.{succ u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (UpperSet.Ici.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (SupSet.sSup.{u1} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) S)) (iSup.{u1, succ u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (UpperSet.hasSup.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) α (fun (a : α) => iSup.{u1, 0} (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (UpperSet.hasSup.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a S) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a S) => UpperSet.Ici.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) a)))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] (S : Set.{u1} α), Eq.{succ u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (UpperSet.Ici.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (SupSet.supₛ.{u1} α (CompleteLattice.toSupSet.{u1} α _inst_1) S)) (supᵢ.{u1, succ u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (UpperSet.instSupSetUpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) α (fun (a : α) => supᵢ.{u1, 0} (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (UpperSet.instSupSetUpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a S) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a S) => UpperSet.Ici.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) a)))
-Case conversion may be inaccurate. Consider using '#align upper_set.Ici_Sup UpperSet.Ici_supₛₓ'. -/
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] (S : Set.{u1} α), Eq.{succ u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (UpperSet.Ici.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (SupSet.sSup.{u1} α (CompleteLattice.toSupSet.{u1} α _inst_1) S)) (iSup.{u1, succ u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (UpperSet.instSupSetUpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) α (fun (a : α) => iSup.{u1, 0} (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (UpperSet.instSupSetUpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a S) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a S) => UpperSet.Ici.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) a)))
+Case conversion may be inaccurate. Consider using '#align upper_set.Ici_Sup UpperSet.Ici_sSupₓ'. -/
 @[simp]
-theorem Ici_supₛ (S : Set α) : Ici (supₛ S) = ⨆ a ∈ S, Ici a :=
-  SetLike.ext fun c => by simp only [mem_Ici_iff, mem_supr_iff, supₛ_le_iff]
-#align upper_set.Ici_Sup UpperSet.Ici_supₛ
+theorem Ici_sSup (S : Set α) : Ici (sSup S) = ⨆ a ∈ S, Ici a :=
+  SetLike.ext fun c => by simp only [mem_Ici_iff, mem_supr_iff, sSup_le_iff]
+#align upper_set.Ici_Sup UpperSet.Ici_sSup
 
-/- warning: upper_set.Ici_supr -> UpperSet.Ici_supᵢ is a dubious translation:
+/- warning: upper_set.Ici_supr -> UpperSet.Ici_iSup is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : CompleteLattice.{u1} α] (f : ι -> α), Eq.{succ u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (UpperSet.Ici.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (supᵢ.{u1, u2} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) ι (fun (i : ι) => f i))) (supᵢ.{u1, u2} (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (UpperSet.hasSup.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) ι (fun (i : ι) => UpperSet.Ici.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (f i)))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : CompleteLattice.{u1} α] (f : ι -> α), Eq.{succ u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (UpperSet.Ici.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (iSup.{u1, u2} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) ι (fun (i : ι) => f i))) (iSup.{u1, u2} (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (UpperSet.hasSup.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) ι (fun (i : ι) => UpperSet.Ici.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (f i)))
 but is expected to have type
-  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : CompleteLattice.{u2} α] (f : ι -> α), Eq.{succ u2} (UpperSet.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1))))) (UpperSet.Ici.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1))) (supᵢ.{u2, u1} α (CompleteLattice.toSupSet.{u2} α _inst_1) ι (fun (i : ι) => f i))) (supᵢ.{u2, u1} (UpperSet.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1))))) (UpperSet.instSupSetUpperSet.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1))))) ι (fun (i : ι) => UpperSet.Ici.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1))) (f i)))
-Case conversion may be inaccurate. Consider using '#align upper_set.Ici_supr UpperSet.Ici_supᵢₓ'. -/
+  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : CompleteLattice.{u2} α] (f : ι -> α), Eq.{succ u2} (UpperSet.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1))))) (UpperSet.Ici.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1))) (iSup.{u2, u1} α (CompleteLattice.toSupSet.{u2} α _inst_1) ι (fun (i : ι) => f i))) (iSup.{u2, u1} (UpperSet.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1))))) (UpperSet.instSupSetUpperSet.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1))))) ι (fun (i : ι) => UpperSet.Ici.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1))) (f i)))
+Case conversion may be inaccurate. Consider using '#align upper_set.Ici_supr UpperSet.Ici_iSupₓ'. -/
 @[simp]
-theorem Ici_supᵢ (f : ι → α) : Ici (⨆ i, f i) = ⨆ i, Ici (f i) :=
-  SetLike.ext fun c => by simp only [mem_Ici_iff, mem_supr_iff, supᵢ_le_iff]
-#align upper_set.Ici_supr UpperSet.Ici_supᵢ
+theorem Ici_iSup (f : ι → α) : Ici (⨆ i, f i) = ⨆ i, Ici (f i) :=
+  SetLike.ext fun c => by simp only [mem_Ici_iff, mem_supr_iff, iSup_le_iff]
+#align upper_set.Ici_supr UpperSet.Ici_iSup
 
-/- warning: upper_set.Ici_supr₂ -> UpperSet.Ici_supᵢ₂ is a dubious translation:
+/- warning: upper_set.Ici_supr₂ -> UpperSet.Ici_iSup₂ is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} [_inst_1 : CompleteLattice.{u1} α] (f : forall (i : ι), (κ i) -> α), Eq.{succ u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (UpperSet.Ici.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (supᵢ.{u1, u2} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) ι (fun (i : ι) => supᵢ.{u1, u3} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) (κ i) (fun (j : κ i) => f i j)))) (supᵢ.{u1, u2} (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (UpperSet.hasSup.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) ι (fun (i : ι) => supᵢ.{u1, u3} (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (UpperSet.hasSup.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (κ i) (fun (j : κ i) => UpperSet.Ici.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (f i j))))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} [_inst_1 : CompleteLattice.{u1} α] (f : forall (i : ι), (κ i) -> α), Eq.{succ u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (UpperSet.Ici.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (iSup.{u1, u2} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) ι (fun (i : ι) => iSup.{u1, u3} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) (κ i) (fun (j : κ i) => f i j)))) (iSup.{u1, u2} (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (UpperSet.hasSup.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) ι (fun (i : ι) => iSup.{u1, u3} (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (UpperSet.hasSup.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (κ i) (fun (j : κ i) => UpperSet.Ici.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (f i j))))
 but is expected to have type
-  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : CompleteLattice.{u3} α] (f : forall (i : ι), (κ i) -> α), Eq.{succ u3} (UpperSet.{u3} α (Preorder.toLE.{u3} α (PartialOrder.toPreorder.{u3} α (CompleteSemilatticeInf.toPartialOrder.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α _inst_1))))) (UpperSet.Ici.{u3} α (PartialOrder.toPreorder.{u3} α (CompleteSemilatticeInf.toPartialOrder.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α _inst_1))) (supᵢ.{u3, u2} α (CompleteLattice.toSupSet.{u3} α _inst_1) ι (fun (i : ι) => supᵢ.{u3, u1} α (CompleteLattice.toSupSet.{u3} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (supᵢ.{u3, u2} (UpperSet.{u3} α (Preorder.toLE.{u3} α (PartialOrder.toPreorder.{u3} α (CompleteSemilatticeInf.toPartialOrder.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α _inst_1))))) (UpperSet.instSupSetUpperSet.{u3} α (Preorder.toLE.{u3} α (PartialOrder.toPreorder.{u3} α (CompleteSemilatticeInf.toPartialOrder.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α _inst_1))))) ι (fun (i : ι) => supᵢ.{u3, u1} (UpperSet.{u3} α (Preorder.toLE.{u3} α (PartialOrder.toPreorder.{u3} α (CompleteSemilatticeInf.toPartialOrder.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α _inst_1))))) (UpperSet.instSupSetUpperSet.{u3} α (Preorder.toLE.{u3} α (PartialOrder.toPreorder.{u3} α (CompleteSemilatticeInf.toPartialOrder.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α _inst_1))))) (κ i) (fun (j : κ i) => UpperSet.Ici.{u3} α (PartialOrder.toPreorder.{u3} α (CompleteSemilatticeInf.toPartialOrder.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α _inst_1))) (f i j))))
-Case conversion may be inaccurate. Consider using '#align upper_set.Ici_supr₂ UpperSet.Ici_supᵢ₂ₓ'. -/
+  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : CompleteLattice.{u3} α] (f : forall (i : ι), (κ i) -> α), Eq.{succ u3} (UpperSet.{u3} α (Preorder.toLE.{u3} α (PartialOrder.toPreorder.{u3} α (CompleteSemilatticeInf.toPartialOrder.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α _inst_1))))) (UpperSet.Ici.{u3} α (PartialOrder.toPreorder.{u3} α (CompleteSemilatticeInf.toPartialOrder.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α _inst_1))) (iSup.{u3, u2} α (CompleteLattice.toSupSet.{u3} α _inst_1) ι (fun (i : ι) => iSup.{u3, u1} α (CompleteLattice.toSupSet.{u3} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (iSup.{u3, u2} (UpperSet.{u3} α (Preorder.toLE.{u3} α (PartialOrder.toPreorder.{u3} α (CompleteSemilatticeInf.toPartialOrder.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α _inst_1))))) (UpperSet.instSupSetUpperSet.{u3} α (Preorder.toLE.{u3} α (PartialOrder.toPreorder.{u3} α (CompleteSemilatticeInf.toPartialOrder.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α _inst_1))))) ι (fun (i : ι) => iSup.{u3, u1} (UpperSet.{u3} α (Preorder.toLE.{u3} α (PartialOrder.toPreorder.{u3} α (CompleteSemilatticeInf.toPartialOrder.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α _inst_1))))) (UpperSet.instSupSetUpperSet.{u3} α (Preorder.toLE.{u3} α (PartialOrder.toPreorder.{u3} α (CompleteSemilatticeInf.toPartialOrder.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α _inst_1))))) (κ i) (fun (j : κ i) => UpperSet.Ici.{u3} α (PartialOrder.toPreorder.{u3} α (CompleteSemilatticeInf.toPartialOrder.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α _inst_1))) (f i j))))
+Case conversion may be inaccurate. Consider using '#align upper_set.Ici_supr₂ UpperSet.Ici_iSup₂ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
-theorem Ici_supᵢ₂ (f : ∀ i, κ i → α) : Ici (⨆ (i) (j), f i j) = ⨆ (i) (j), Ici (f i j) := by
+theorem Ici_iSup₂ (f : ∀ i, κ i → α) : Ici (⨆ (i) (j), f i j) = ⨆ (i) (j), Ici (f i j) := by
   simp_rw [Ici_supr]
-#align upper_set.Ici_supr₂ UpperSet.Ici_supᵢ₂
+#align upper_set.Ici_supr₂ UpperSet.Ici_iSup₂
 
 end CompleteLattice
 
@@ -2095,40 +2095,40 @@ section CompleteLattice
 
 variable [CompleteLattice α]
 
-/- warning: lower_set.Iic_Inf -> LowerSet.Iic_infₛ is a dubious translation:
+/- warning: lower_set.Iic_Inf -> LowerSet.Iic_sInf is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] (S : Set.{u1} α), Eq.{succ u1} (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (LowerSet.Iic.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (InfSet.infₛ.{u1} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) S)) (infᵢ.{u1, succ u1} (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (LowerSet.hasInf.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) α (fun (a : α) => infᵢ.{u1, 0} (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (LowerSet.hasInf.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a S) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a S) => LowerSet.Iic.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) a)))
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] (S : Set.{u1} α), Eq.{succ u1} (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (LowerSet.Iic.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (InfSet.sInf.{u1} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) S)) (iInf.{u1, succ u1} (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (LowerSet.hasInf.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) α (fun (a : α) => iInf.{u1, 0} (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (LowerSet.hasInf.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a S) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a S) => LowerSet.Iic.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) a)))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] (S : Set.{u1} α), Eq.{succ u1} (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (LowerSet.Iic.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (InfSet.infₛ.{u1} α (CompleteLattice.toInfSet.{u1} α _inst_1) S)) (infᵢ.{u1, succ u1} (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (LowerSet.instInfSetLowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) α (fun (a : α) => infᵢ.{u1, 0} (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (LowerSet.instInfSetLowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a S) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a S) => LowerSet.Iic.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) a)))
-Case conversion may be inaccurate. Consider using '#align lower_set.Iic_Inf LowerSet.Iic_infₛₓ'. -/
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] (S : Set.{u1} α), Eq.{succ u1} (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (LowerSet.Iic.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (InfSet.sInf.{u1} α (CompleteLattice.toInfSet.{u1} α _inst_1) S)) (iInf.{u1, succ u1} (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (LowerSet.instInfSetLowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) α (fun (a : α) => iInf.{u1, 0} (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (LowerSet.instInfSetLowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a S) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a S) => LowerSet.Iic.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) a)))
+Case conversion may be inaccurate. Consider using '#align lower_set.Iic_Inf LowerSet.Iic_sInfₓ'. -/
 @[simp]
-theorem Iic_infₛ (S : Set α) : Iic (infₛ S) = ⨅ a ∈ S, Iic a :=
-  SetLike.ext fun c => by simp only [mem_Iic_iff, mem_infi₂_iff, le_infₛ_iff]
-#align lower_set.Iic_Inf LowerSet.Iic_infₛ
+theorem Iic_sInf (S : Set α) : Iic (sInf S) = ⨅ a ∈ S, Iic a :=
+  SetLike.ext fun c => by simp only [mem_Iic_iff, mem_infi₂_iff, le_sInf_iff]
+#align lower_set.Iic_Inf LowerSet.Iic_sInf
 
-/- warning: lower_set.Iic_infi -> LowerSet.Iic_infᵢ is a dubious translation:
+/- warning: lower_set.Iic_infi -> LowerSet.Iic_iInf is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : CompleteLattice.{u1} α] (f : ι -> α), Eq.{succ u1} (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (LowerSet.Iic.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (infᵢ.{u1, u2} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) ι (fun (i : ι) => f i))) (infᵢ.{u1, u2} (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (LowerSet.hasInf.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) ι (fun (i : ι) => LowerSet.Iic.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (f i)))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : CompleteLattice.{u1} α] (f : ι -> α), Eq.{succ u1} (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (LowerSet.Iic.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (iInf.{u1, u2} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) ι (fun (i : ι) => f i))) (iInf.{u1, u2} (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (LowerSet.hasInf.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) ι (fun (i : ι) => LowerSet.Iic.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (f i)))
 but is expected to have type
-  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : CompleteLattice.{u2} α] (f : ι -> α), Eq.{succ u2} (LowerSet.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1))))) (LowerSet.Iic.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1))) (infᵢ.{u2, u1} α (CompleteLattice.toInfSet.{u2} α _inst_1) ι (fun (i : ι) => f i))) (infᵢ.{u2, u1} (LowerSet.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1))))) (LowerSet.instInfSetLowerSet.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1))))) ι (fun (i : ι) => LowerSet.Iic.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1))) (f i)))
-Case conversion may be inaccurate. Consider using '#align lower_set.Iic_infi LowerSet.Iic_infᵢₓ'. -/
+  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : CompleteLattice.{u2} α] (f : ι -> α), Eq.{succ u2} (LowerSet.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1))))) (LowerSet.Iic.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1))) (iInf.{u2, u1} α (CompleteLattice.toInfSet.{u2} α _inst_1) ι (fun (i : ι) => f i))) (iInf.{u2, u1} (LowerSet.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1))))) (LowerSet.instInfSetLowerSet.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1))))) ι (fun (i : ι) => LowerSet.Iic.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1))) (f i)))
+Case conversion may be inaccurate. Consider using '#align lower_set.Iic_infi LowerSet.Iic_iInfₓ'. -/
 @[simp]
-theorem Iic_infᵢ (f : ι → α) : Iic (⨅ i, f i) = ⨅ i, Iic (f i) :=
-  SetLike.ext fun c => by simp only [mem_Iic_iff, mem_infi_iff, le_infᵢ_iff]
-#align lower_set.Iic_infi LowerSet.Iic_infᵢ
+theorem Iic_iInf (f : ι → α) : Iic (⨅ i, f i) = ⨅ i, Iic (f i) :=
+  SetLike.ext fun c => by simp only [mem_Iic_iff, mem_infi_iff, le_iInf_iff]
+#align lower_set.Iic_infi LowerSet.Iic_iInf
 
-/- warning: lower_set.Iic_infi₂ -> LowerSet.Iic_infᵢ₂ is a dubious translation:
+/- warning: lower_set.Iic_infi₂ -> LowerSet.Iic_iInf₂ is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} [_inst_1 : CompleteLattice.{u1} α] (f : forall (i : ι), (κ i) -> α), Eq.{succ u1} (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (LowerSet.Iic.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (infᵢ.{u1, u2} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) ι (fun (i : ι) => infᵢ.{u1, u3} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (κ i) (fun (j : κ i) => f i j)))) (infᵢ.{u1, u2} (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (LowerSet.hasInf.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) ι (fun (i : ι) => infᵢ.{u1, u3} (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (LowerSet.hasInf.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (κ i) (fun (j : κ i) => LowerSet.Iic.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (f i j))))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} [_inst_1 : CompleteLattice.{u1} α] (f : forall (i : ι), (κ i) -> α), Eq.{succ u1} (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (LowerSet.Iic.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (iInf.{u1, u2} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) ι (fun (i : ι) => iInf.{u1, u3} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (κ i) (fun (j : κ i) => f i j)))) (iInf.{u1, u2} (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (LowerSet.hasInf.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) ι (fun (i : ι) => iInf.{u1, u3} (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (LowerSet.hasInf.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (κ i) (fun (j : κ i) => LowerSet.Iic.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (f i j))))
 but is expected to have type
-  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : CompleteLattice.{u3} α] (f : forall (i : ι), (κ i) -> α), Eq.{succ u3} (LowerSet.{u3} α (Preorder.toLE.{u3} α (PartialOrder.toPreorder.{u3} α (CompleteSemilatticeInf.toPartialOrder.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α _inst_1))))) (LowerSet.Iic.{u3} α (PartialOrder.toPreorder.{u3} α (CompleteSemilatticeInf.toPartialOrder.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α _inst_1))) (infᵢ.{u3, u2} α (CompleteLattice.toInfSet.{u3} α _inst_1) ι (fun (i : ι) => infᵢ.{u3, u1} α (CompleteLattice.toInfSet.{u3} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (infᵢ.{u3, u2} (LowerSet.{u3} α (Preorder.toLE.{u3} α (PartialOrder.toPreorder.{u3} α (CompleteSemilatticeInf.toPartialOrder.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α _inst_1))))) (LowerSet.instInfSetLowerSet.{u3} α (Preorder.toLE.{u3} α (PartialOrder.toPreorder.{u3} α (CompleteSemilatticeInf.toPartialOrder.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α _inst_1))))) ι (fun (i : ι) => infᵢ.{u3, u1} (LowerSet.{u3} α (Preorder.toLE.{u3} α (PartialOrder.toPreorder.{u3} α (CompleteSemilatticeInf.toPartialOrder.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α _inst_1))))) (LowerSet.instInfSetLowerSet.{u3} α (Preorder.toLE.{u3} α (PartialOrder.toPreorder.{u3} α (CompleteSemilatticeInf.toPartialOrder.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α _inst_1))))) (κ i) (fun (j : κ i) => LowerSet.Iic.{u3} α (PartialOrder.toPreorder.{u3} α (CompleteSemilatticeInf.toPartialOrder.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α _inst_1))) (f i j))))
-Case conversion may be inaccurate. Consider using '#align lower_set.Iic_infi₂ LowerSet.Iic_infᵢ₂ₓ'. -/
+  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : CompleteLattice.{u3} α] (f : forall (i : ι), (κ i) -> α), Eq.{succ u3} (LowerSet.{u3} α (Preorder.toLE.{u3} α (PartialOrder.toPreorder.{u3} α (CompleteSemilatticeInf.toPartialOrder.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α _inst_1))))) (LowerSet.Iic.{u3} α (PartialOrder.toPreorder.{u3} α (CompleteSemilatticeInf.toPartialOrder.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α _inst_1))) (iInf.{u3, u2} α (CompleteLattice.toInfSet.{u3} α _inst_1) ι (fun (i : ι) => iInf.{u3, u1} α (CompleteLattice.toInfSet.{u3} α _inst_1) (κ i) (fun (j : κ i) => f i j)))) (iInf.{u3, u2} (LowerSet.{u3} α (Preorder.toLE.{u3} α (PartialOrder.toPreorder.{u3} α (CompleteSemilatticeInf.toPartialOrder.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α _inst_1))))) (LowerSet.instInfSetLowerSet.{u3} α (Preorder.toLE.{u3} α (PartialOrder.toPreorder.{u3} α (CompleteSemilatticeInf.toPartialOrder.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α _inst_1))))) ι (fun (i : ι) => iInf.{u3, u1} (LowerSet.{u3} α (Preorder.toLE.{u3} α (PartialOrder.toPreorder.{u3} α (CompleteSemilatticeInf.toPartialOrder.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α _inst_1))))) (LowerSet.instInfSetLowerSet.{u3} α (Preorder.toLE.{u3} α (PartialOrder.toPreorder.{u3} α (CompleteSemilatticeInf.toPartialOrder.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α _inst_1))))) (κ i) (fun (j : κ i) => LowerSet.Iic.{u3} α (PartialOrder.toPreorder.{u3} α (CompleteSemilatticeInf.toPartialOrder.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α _inst_1))) (f i j))))
+Case conversion may be inaccurate. Consider using '#align lower_set.Iic_infi₂ LowerSet.Iic_iInf₂ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
-theorem Iic_infᵢ₂ (f : ∀ i, κ i → α) : Iic (⨅ (i) (j), f i j) = ⨅ (i) (j), Iic (f i j) := by
+theorem Iic_iInf₂ (f : ∀ i, κ i → α) : Iic (⨅ (i) (j), f i j) = ⨅ (i) (j), Iic (f i j) := by
   simp_rw [Iic_infi]
-#align lower_set.Iic_infi₂ LowerSet.Iic_infᵢ₂
+#align lower_set.Iic_infi₂ LowerSet.Iic_iInf₂
 
 end CompleteLattice
 
@@ -2269,26 +2269,26 @@ theorem lowerClosure_image (f : α ≃o β) : lowerClosure (f '' s) = LowerSet.m
   simp [-LowerSet.symm_map, LowerSet.map, OrderIso.symm, ← f.symm_apply_le]
 #align lower_closure_image lowerClosure_image
 
-/- warning: upper_set.infi_Ici -> UpperSet.infᵢ_Ici is a dubious translation:
+/- warning: upper_set.infi_Ici -> UpperSet.iInf_Ici is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (s : Set.{u1} α), Eq.{succ u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) (infᵢ.{u1, succ u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) (UpperSet.hasInf.{u1} α (Preorder.toLE.{u1} α _inst_1)) α (fun (a : α) => infᵢ.{u1, 0} (UpperSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) (UpperSet.hasInf.{u1} α (Preorder.toLE.{u1} α _inst_1)) (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) => UpperSet.Ici.{u1} α _inst_1 a))) (upperClosure.{u1} α _inst_1 s)
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (s : Set.{u1} α), Eq.{succ u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) (iInf.{u1, succ u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) (UpperSet.hasInf.{u1} α (Preorder.toLE.{u1} α _inst_1)) α (fun (a : α) => iInf.{u1, 0} (UpperSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) (UpperSet.hasInf.{u1} α (Preorder.toLE.{u1} α _inst_1)) (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) => UpperSet.Ici.{u1} α _inst_1 a))) (upperClosure.{u1} α _inst_1 s)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (s : Set.{u1} α), Eq.{succ u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) (infᵢ.{u1, succ u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) (UpperSet.instInfSetUpperSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) α (fun (a : α) => infᵢ.{u1, 0} (UpperSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) (UpperSet.instInfSetUpperSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) => UpperSet.Ici.{u1} α _inst_1 a))) (upperClosure.{u1} α _inst_1 s)
-Case conversion may be inaccurate. Consider using '#align upper_set.infi_Ici UpperSet.infᵢ_Iciₓ'. -/
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (s : Set.{u1} α), Eq.{succ u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) (iInf.{u1, succ u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) (UpperSet.instInfSetUpperSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) α (fun (a : α) => iInf.{u1, 0} (UpperSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) (UpperSet.instInfSetUpperSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) => UpperSet.Ici.{u1} α _inst_1 a))) (upperClosure.{u1} α _inst_1 s)
+Case conversion may be inaccurate. Consider using '#align upper_set.infi_Ici UpperSet.iInf_Iciₓ'. -/
 @[simp]
-theorem UpperSet.infᵢ_Ici (s : Set α) : (⨅ a ∈ s, UpperSet.Ici a) = upperClosure s :=
+theorem UpperSet.iInf_Ici (s : Set α) : (⨅ a ∈ s, UpperSet.Ici a) = upperClosure s :=
   by
   ext
   simp
-#align upper_set.infi_Ici UpperSet.infᵢ_Ici
+#align upper_set.infi_Ici UpperSet.iInf_Ici
 
-#print LowerSet.supᵢ_Iic /-
+#print LowerSet.iSup_Iic /-
 @[simp]
-theorem LowerSet.supᵢ_Iic (s : Set α) : (⨆ a ∈ s, LowerSet.Iic a) = lowerClosure s :=
+theorem LowerSet.iSup_Iic (s : Set α) : (⨆ a ∈ s, LowerSet.Iic a) = lowerClosure s :=
   by
   ext
   simp
-#align lower_set.supr_Iic LowerSet.supᵢ_Iic
+#align lower_set.supr_Iic LowerSet.iSup_Iic
 -/
 
 #print gc_upperClosure_coe /-
@@ -2457,48 +2457,48 @@ theorem lowerClosure_union (s t : Set α) : lowerClosure (s ∪ t) = lowerClosur
   simp [or_and_right, exists_or]
 #align lower_closure_union lowerClosure_union
 
-/- warning: upper_closure_Union -> upperClosure_unionᵢ is a dubious translation:
+/- warning: upper_closure_Union -> upperClosure_iUnion is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : Preorder.{u1} α] (f : ι -> (Set.{u1} α)), Eq.{succ u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) (upperClosure.{u1} α _inst_1 (Set.unionᵢ.{u1, u2} α ι (fun (i : ι) => f i))) (infᵢ.{u1, u2} (UpperSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) (UpperSet.hasInf.{u1} α (Preorder.toLE.{u1} α _inst_1)) ι (fun (i : ι) => upperClosure.{u1} α _inst_1 (f i)))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : Preorder.{u1} α] (f : ι -> (Set.{u1} α)), Eq.{succ u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) (upperClosure.{u1} α _inst_1 (Set.iUnion.{u1, u2} α ι (fun (i : ι) => f i))) (iInf.{u1, u2} (UpperSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) (UpperSet.hasInf.{u1} α (Preorder.toLE.{u1} α _inst_1)) ι (fun (i : ι) => upperClosure.{u1} α _inst_1 (f i)))
 but is expected to have type
-  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : Preorder.{u2} α] (f : ι -> (Set.{u2} α)), Eq.{succ u2} (UpperSet.{u2} α (Preorder.toLE.{u2} α _inst_1)) (upperClosure.{u2} α _inst_1 (Set.unionᵢ.{u2, u1} α ι (fun (i : ι) => f i))) (infᵢ.{u2, u1} (UpperSet.{u2} α (Preorder.toLE.{u2} α _inst_1)) (UpperSet.instInfSetUpperSet.{u2} α (Preorder.toLE.{u2} α _inst_1)) ι (fun (i : ι) => upperClosure.{u2} α _inst_1 (f i)))
-Case conversion may be inaccurate. Consider using '#align upper_closure_Union upperClosure_unionᵢₓ'. -/
+  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : Preorder.{u2} α] (f : ι -> (Set.{u2} α)), Eq.{succ u2} (UpperSet.{u2} α (Preorder.toLE.{u2} α _inst_1)) (upperClosure.{u2} α _inst_1 (Set.iUnion.{u2, u1} α ι (fun (i : ι) => f i))) (iInf.{u2, u1} (UpperSet.{u2} α (Preorder.toLE.{u2} α _inst_1)) (UpperSet.instInfSetUpperSet.{u2} α (Preorder.toLE.{u2} α _inst_1)) ι (fun (i : ι) => upperClosure.{u2} α _inst_1 (f i)))
+Case conversion may be inaccurate. Consider using '#align upper_closure_Union upperClosure_iUnionₓ'. -/
 @[simp]
-theorem upperClosure_unionᵢ (f : ι → Set α) : upperClosure (⋃ i, f i) = ⨅ i, upperClosure (f i) :=
+theorem upperClosure_iUnion (f : ι → Set α) : upperClosure (⋃ i, f i) = ⨅ i, upperClosure (f i) :=
   by
   ext
   simp [← exists_and_right, @exists_comm α]
-#align upper_closure_Union upperClosure_unionᵢ
+#align upper_closure_Union upperClosure_iUnion
 
-/- warning: lower_closure_Union -> lowerClosure_unionᵢ is a dubious translation:
+/- warning: lower_closure_Union -> lowerClosure_iUnion is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : Preorder.{u1} α] (f : ι -> (Set.{u1} α)), Eq.{succ u1} (LowerSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) (lowerClosure.{u1} α _inst_1 (Set.unionᵢ.{u1, u2} α ι (fun (i : ι) => f i))) (supᵢ.{u1, u2} (LowerSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LowerSet.hasSup.{u1} α (Preorder.toLE.{u1} α _inst_1)) ι (fun (i : ι) => lowerClosure.{u1} α _inst_1 (f i)))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : Preorder.{u1} α] (f : ι -> (Set.{u1} α)), Eq.{succ u1} (LowerSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) (lowerClosure.{u1} α _inst_1 (Set.iUnion.{u1, u2} α ι (fun (i : ι) => f i))) (iSup.{u1, u2} (LowerSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LowerSet.hasSup.{u1} α (Preorder.toLE.{u1} α _inst_1)) ι (fun (i : ι) => lowerClosure.{u1} α _inst_1 (f i)))
 but is expected to have type
-  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : Preorder.{u2} α] (f : ι -> (Set.{u2} α)), Eq.{succ u2} (LowerSet.{u2} α (Preorder.toLE.{u2} α _inst_1)) (lowerClosure.{u2} α _inst_1 (Set.unionᵢ.{u2, u1} α ι (fun (i : ι) => f i))) (supᵢ.{u2, u1} (LowerSet.{u2} α (Preorder.toLE.{u2} α _inst_1)) (LowerSet.instSupSetLowerSet.{u2} α (Preorder.toLE.{u2} α _inst_1)) ι (fun (i : ι) => lowerClosure.{u2} α _inst_1 (f i)))
-Case conversion may be inaccurate. Consider using '#align lower_closure_Union lowerClosure_unionᵢₓ'. -/
+  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : Preorder.{u2} α] (f : ι -> (Set.{u2} α)), Eq.{succ u2} (LowerSet.{u2} α (Preorder.toLE.{u2} α _inst_1)) (lowerClosure.{u2} α _inst_1 (Set.iUnion.{u2, u1} α ι (fun (i : ι) => f i))) (iSup.{u2, u1} (LowerSet.{u2} α (Preorder.toLE.{u2} α _inst_1)) (LowerSet.instSupSetLowerSet.{u2} α (Preorder.toLE.{u2} α _inst_1)) ι (fun (i : ι) => lowerClosure.{u2} α _inst_1 (f i)))
+Case conversion may be inaccurate. Consider using '#align lower_closure_Union lowerClosure_iUnionₓ'. -/
 @[simp]
-theorem lowerClosure_unionᵢ (f : ι → Set α) : lowerClosure (⋃ i, f i) = ⨆ i, lowerClosure (f i) :=
+theorem lowerClosure_iUnion (f : ι → Set α) : lowerClosure (⋃ i, f i) = ⨆ i, lowerClosure (f i) :=
   by
   ext
   simp [← exists_and_right, @exists_comm α]
-#align lower_closure_Union lowerClosure_unionᵢ
+#align lower_closure_Union lowerClosure_iUnion
 
-/- warning: upper_closure_sUnion -> upperClosure_unionₛ is a dubious translation:
+/- warning: upper_closure_sUnion -> upperClosure_sUnion is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (S : Set.{u1} (Set.{u1} α)), Eq.{succ u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) (upperClosure.{u1} α _inst_1 (Set.unionₛ.{u1} α S)) (infᵢ.{u1, succ u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) (UpperSet.hasInf.{u1} α (Preorder.toLE.{u1} α _inst_1)) (Set.{u1} α) (fun (s : Set.{u1} α) => infᵢ.{u1, 0} (UpperSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) (UpperSet.hasInf.{u1} α (Preorder.toLE.{u1} α _inst_1)) (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) s S) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) s S) => upperClosure.{u1} α _inst_1 s)))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (S : Set.{u1} (Set.{u1} α)), Eq.{succ u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) (upperClosure.{u1} α _inst_1 (Set.sUnion.{u1} α S)) (iInf.{u1, succ u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) (UpperSet.hasInf.{u1} α (Preorder.toLE.{u1} α _inst_1)) (Set.{u1} α) (fun (s : Set.{u1} α) => iInf.{u1, 0} (UpperSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) (UpperSet.hasInf.{u1} α (Preorder.toLE.{u1} α _inst_1)) (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) s S) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) s S) => upperClosure.{u1} α _inst_1 s)))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (S : Set.{u1} (Set.{u1} α)), Eq.{succ u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) (upperClosure.{u1} α _inst_1 (Set.unionₛ.{u1} α S)) (infᵢ.{u1, succ u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) (UpperSet.instInfSetUpperSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) (Set.{u1} α) (fun (s : Set.{u1} α) => infᵢ.{u1, 0} (UpperSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) (UpperSet.instInfSetUpperSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s S) (fun (H : Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s S) => upperClosure.{u1} α _inst_1 s)))
-Case conversion may be inaccurate. Consider using '#align upper_closure_sUnion upperClosure_unionₛₓ'. -/
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (S : Set.{u1} (Set.{u1} α)), Eq.{succ u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) (upperClosure.{u1} α _inst_1 (Set.sUnion.{u1} α S)) (iInf.{u1, succ u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) (UpperSet.instInfSetUpperSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) (Set.{u1} α) (fun (s : Set.{u1} α) => iInf.{u1, 0} (UpperSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) (UpperSet.instInfSetUpperSet.{u1} α (Preorder.toLE.{u1} α _inst_1)) (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s S) (fun (H : Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s S) => upperClosure.{u1} α _inst_1 s)))
+Case conversion may be inaccurate. Consider using '#align upper_closure_sUnion upperClosure_sUnionₓ'. -/
 @[simp]
-theorem upperClosure_unionₛ (S : Set (Set α)) : upperClosure (⋃₀ S) = ⨅ s ∈ S, upperClosure s := by
-  simp_rw [sUnion_eq_bUnion, upperClosure_unionᵢ]
-#align upper_closure_sUnion upperClosure_unionₛ
+theorem upperClosure_sUnion (S : Set (Set α)) : upperClosure (⋃₀ S) = ⨅ s ∈ S, upperClosure s := by
+  simp_rw [sUnion_eq_bUnion, upperClosure_iUnion]
+#align upper_closure_sUnion upperClosure_sUnion
 
-#print lowerClosure_unionₛ /-
+#print lowerClosure_sUnion /-
 @[simp]
-theorem lowerClosure_unionₛ (S : Set (Set α)) : lowerClosure (⋃₀ S) = ⨆ s ∈ S, lowerClosure s := by
-  simp_rw [sUnion_eq_bUnion, lowerClosure_unionᵢ]
-#align lower_closure_sUnion lowerClosure_unionₛ
+theorem lowerClosure_sUnion (S : Set (Set α)) : lowerClosure (⋃₀ S) = ⨆ s ∈ S, lowerClosure s := by
+  simp_rw [sUnion_eq_bUnion, lowerClosure_iUnion]
+#align lower_closure_sUnion lowerClosure_sUnion
 -/
 
 /- warning: set.ord_connected.upper_closure_inter_lower_closure -> Set.OrdConnected.upperClosure_inter_lowerClosure is a dubious translation:

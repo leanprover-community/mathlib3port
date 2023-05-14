@@ -133,12 +133,12 @@ theorem mem_eraseNone {s : Finset (Option α)} {x : α} : x ∈ s.eraseNone ↔ 
 #align finset.mem_erase_none Finset.mem_eraseNone
 -/
 
-#print Finset.eraseNone_eq_bunionᵢ /-
-theorem eraseNone_eq_bunionᵢ [DecidableEq α] (s : Finset (Option α)) :
-    s.eraseNone = s.bunionᵢ Option.toFinset := by
+#print Finset.eraseNone_eq_biUnion /-
+theorem eraseNone_eq_biUnion [DecidableEq α] (s : Finset (Option α)) :
+    s.eraseNone = s.biUnion Option.toFinset := by
   ext
   simp
-#align finset.erase_none_eq_bUnion Finset.eraseNone_eq_bunionᵢ
+#align finset.erase_none_eq_bUnion Finset.eraseNone_eq_biUnion
 -/
 
 #print Finset.eraseNone_map_some /-

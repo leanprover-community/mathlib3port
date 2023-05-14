@@ -115,7 +115,7 @@ instance gradeBy.gradedMonoid [AddMonoid M] [AddMonoid ι] [CommSemiring R] (f :
       rw [h, AddMonoidHom.map_zero]
   mul_mem i j a b ha hb c hc := by
     set h := support_mul a b hc
-    simp only [Finset.mem_bunionᵢ] at h
+    simp only [Finset.mem_biUnion] at h
     rcases h with ⟨ma, ⟨hma, ⟨mb, ⟨hmb, hmc⟩⟩⟩⟩
     rw [← ha ma hma, ← hb mb hmb, finset.mem_singleton.mp hmc]
     apply AddMonoidHom.map_add

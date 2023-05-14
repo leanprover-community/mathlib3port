@@ -618,7 +618,7 @@ noncomputable def liftCover : C(α, β) :=
   have H : (⋃ i, S i) = Set.univ := by
     rw [Set.eq_univ_iff_forall]
     intro x
-    rw [Set.mem_unionᵢ]
+    rw [Set.mem_iUnion]
     obtain ⟨i, hi⟩ := hS x
     exact ⟨i, mem_of_mem_nhds hi⟩
   refine' ⟨Set.liftCover S (fun i => φ i) hφ H, continuous_of_cover_nhds hS fun i => _⟩

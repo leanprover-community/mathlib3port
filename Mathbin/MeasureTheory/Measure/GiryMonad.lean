@@ -52,13 +52,13 @@ instance : MeasurableSpace (Measure α) :=
   ⨆ (s : Set α) (hs : MeasurableSet s), (borel ℝ≥0∞).comap fun μ => μ s
 
 theorem measurable_coe {s : Set α} (hs : MeasurableSet s) : Measurable fun μ : Measure α => μ s :=
-  Measurable.of_comap_le <| le_supᵢ_of_le s <| le_supᵢ_of_le hs <| le_rfl
+  Measurable.of_comap_le <| le_iSup_of_le s <| le_iSup_of_le hs <| le_rfl
 #align measure_theory.measure.measurable_coe MeasureTheory.Measure.measurable_coe
 
 theorem measurable_of_measurable_coe (f : β → Measure α)
     (h : ∀ (s : Set α) (hs : MeasurableSet s), Measurable fun b => f b s) : Measurable f :=
   Measurable.of_le_map <|
-    supᵢ₂_le fun s hs =>
+    iSup₂_le fun s hs =>
       MeasurableSpace.comap_le_iff_le_map.2 <| by rw [MeasurableSpace.map_comp] <;> exact h s hs
 #align measure_theory.measure.measurable_of_measurable_coe MeasureTheory.Measure.measurable_of_measurable_coe
 
@@ -93,7 +93,7 @@ theorem measurable_lintegral {f : α → ℝ≥0∞} (hf : Measurable f) :
     Measurable fun μ : Measure α => ∫⁻ x, f x ∂μ :=
   by
   simp only [lintegral_eq_supr_eapprox_lintegral, hf, simple_func.lintegral]
-  refine' measurable_supᵢ fun n => Finset.measurable_sum _ fun i _ => _
+  refine' measurable_iSup fun n => Finset.measurable_sum _ fun i _ => _
   refine' Measurable.const_mul _ _
   exact measurable_coe ((simple_func.eapprox f n).measurableSet_preimage _)
 #align measure_theory.measure.measurable_lintegral MeasureTheory.Measure.measurable_lintegral

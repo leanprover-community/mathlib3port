@@ -92,7 +92,7 @@ theorem exists_preWeightSpace_zero_le_ker_of_isNoetherian [IsNoetherian R M] (x 
     ∃ k : ℕ, preWeightSpace M (0 : L → R) ≤ (toEndomorphism R L M x ^ k).ker :=
   by
   use (to_endomorphism R L M x).maximalGeneralizedEigenspaceIndex 0
-  simp only [← Module.End.generalizedEigenspace_zero, pre_weight_space, Pi.zero_apply, infᵢ_le, ←
+  simp only [← Module.End.generalizedEigenspace_zero, pre_weight_space, Pi.zero_apply, iInf_le, ←
     (to_endomorphism R L M x).maximalGeneralizedEigenspace_eq]
 #align lie_module.exists_pre_weight_space_zero_le_ker_of_is_noetherian LieModule.exists_preWeightSpace_zero_le_ker_of_isNoetherian
 
@@ -200,7 +200,7 @@ def weightSpace [LieAlgebra.IsNilpotent R L] (χ : L → R) : LieSubmodule R L M
       rw [← zero_add χ]
       refine' lie_mem_pre_weight_space_of_mem_pre_weight_space _ hm
       suffices pre_weight_space L (0 : L → R) = ⊤ by simp only [this, Submodule.mem_top]
-      exact LieAlgebra.infᵢ_max_gen_zero_eigenspace_eq_top_of_nilpotent R L }
+      exact LieAlgebra.iInf_max_gen_zero_eigenspace_eq_top_of_nilpotent R L }
 #align lie_module.weight_space LieModule.weightSpace
 
 theorem mem_weightSpace [LieAlgebra.IsNilpotent R L] (χ : L → R) (m : M) :

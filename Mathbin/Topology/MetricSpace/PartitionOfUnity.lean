@@ -88,8 +88,8 @@ theorem exists_forall_closedBall_subset_aux₂ (y : X) :
   (convex_Ioi _).inter <|
     OrdConnected.convex <|
       OrdConnected.preimage_ennreal_ofReal <|
-        ordConnected_interᵢ fun i =>
-          ordConnected_interᵢ fun hi => ordConnected_setOf_closedBall_subset y (U i)
+        ordConnected_iInter fun i =>
+          ordConnected_iInter fun hi => ordConnected_setOf_closedBall_subset y (U i)
 #align emetric.exists_forall_closed_ball_subset_aux₂ Emetric.exists_forall_closedBall_subset_aux₂
 
 /-- Let `X` be an extended metric space. Let `K : ι → set X` be a locally finite family of closed

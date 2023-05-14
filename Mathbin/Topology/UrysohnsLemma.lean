@@ -296,7 +296,7 @@ protected noncomputable def lim (c : CU X) (x : X) : ℝ :=
 #print Urysohns.CU.tendsto_approx_atTop /-
 theorem tendsto_approx_atTop (c : CU X) (x : X) :
     Tendsto (fun n => c.approx n x) atTop (𝓝 <| c.lim x) :=
-  tendsto_atTop_csupᵢ (c.approx_mono x) ⟨1, fun x ⟨n, hn⟩ => hn ▸ c.approx_le_one _ _⟩
+  tendsto_atTop_ciSup (c.approx_mono x) ⟨1, fun x ⟨n, hn⟩ => hn ▸ c.approx_le_one _ _⟩
 #align urysohns.CU.tendsto_approx_at_top Urysohns.CU.tendsto_approx_atTop
 -/
 
@@ -307,7 +307,7 @@ but is expected to have type
   forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : NormalSpace.{u1} X _inst_1] (c : Urysohns.CU.{u1} X _inst_1) (x : X), (Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) x (Urysohns.CU.C.{u1} X _inst_1 c)) -> (Eq.{1} Real (Urysohns.CU.lim.{u1} X _inst_1 _inst_2 c x) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))
 Case conversion may be inaccurate. Consider using '#align urysohns.CU.lim_of_mem_C Urysohns.CU.lim_of_mem_Cₓ'. -/
 theorem lim_of_mem_C (c : CU X) (x : X) (h : x ∈ c.C) : c.lim x = 0 := by
-  simp only [CU.lim, approx_of_mem_C, h, csupᵢ_const]
+  simp only [CU.lim, approx_of_mem_C, h, ciSup_const]
 #align urysohns.CU.lim_of_mem_C Urysohns.CU.lim_of_mem_C
 
 /- warning: urysohns.CU.lim_of_nmem_U -> Urysohns.CU.lim_of_nmem_U is a dubious translation:
@@ -317,7 +317,7 @@ but is expected to have type
   forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : NormalSpace.{u1} X _inst_1] (c : Urysohns.CU.{u1} X _inst_1) (x : X), (Not (Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) x (Urysohns.CU.U.{u1} X _inst_1 c))) -> (Eq.{1} Real (Urysohns.CU.lim.{u1} X _inst_1 _inst_2 c x) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)))
 Case conversion may be inaccurate. Consider using '#align urysohns.CU.lim_of_nmem_U Urysohns.CU.lim_of_nmem_Uₓ'. -/
 theorem lim_of_nmem_U (c : CU X) (x : X) (h : x ∉ c.U) : c.lim x = 1 := by
-  simp only [CU.lim, approx_of_nmem_U c _ h, csupᵢ_const]
+  simp only [CU.lim, approx_of_nmem_U c _ h, ciSup_const]
 #align urysohns.CU.lim_of_nmem_U Urysohns.CU.lim_of_nmem_U
 
 /- warning: urysohns.CU.lim_eq_midpoint -> Urysohns.CU.lim_eq_midpoint is a dubious translation:
@@ -340,7 +340,7 @@ but is expected to have type
   forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : NormalSpace.{u1} X _inst_1] (c : Urysohns.CU.{u1} X _inst_1) (x : X) (n : Nat), LE.le.{0} Real Real.instLEReal (Urysohns.CU.approx.{u1} X _inst_1 _inst_2 n c x) (Urysohns.CU.lim.{u1} X _inst_1 _inst_2 c x)
 Case conversion may be inaccurate. Consider using '#align urysohns.CU.approx_le_lim Urysohns.CU.approx_le_limₓ'. -/
 theorem approx_le_lim (c : CU X) (x : X) (n : ℕ) : c.approx n x ≤ c.lim x :=
-  le_csupᵢ (c.bddAbove_range_approx x) _
+  le_ciSup (c.bddAbove_range_approx x) _
 #align urysohns.CU.approx_le_lim Urysohns.CU.approx_le_lim
 
 /- warning: urysohns.CU.lim_nonneg -> Urysohns.CU.lim_nonneg is a dubious translation:
@@ -360,7 +360,7 @@ but is expected to have type
   forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : NormalSpace.{u1} X _inst_1] (c : Urysohns.CU.{u1} X _inst_1) (x : X), LE.le.{0} Real Real.instLEReal (Urysohns.CU.lim.{u1} X _inst_1 _inst_2 c x) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))
 Case conversion may be inaccurate. Consider using '#align urysohns.CU.lim_le_one Urysohns.CU.lim_le_oneₓ'. -/
 theorem lim_le_one (c : CU X) (x : X) : c.lim x ≤ 1 :=
-  csupᵢ_le fun n => c.approx_le_one _ _
+  ciSup_le fun n => c.approx_le_one _ _
 #align urysohns.CU.lim_le_one Urysohns.CU.lim_le_one
 
 /- warning: urysohns.CU.lim_mem_Icc -> Urysohns.CU.lim_mem_Icc is a dubious translation:

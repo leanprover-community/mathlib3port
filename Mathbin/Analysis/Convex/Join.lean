@@ -55,13 +55,13 @@ theorem mem_convexJoin : x ∈ convexJoin 𝕜 s t ↔ ∃ a ∈ s, ∃ b ∈ t,
 
 #print convexJoin_comm /-
 theorem convexJoin_comm (s t : Set E) : convexJoin 𝕜 s t = convexJoin 𝕜 t s :=
-  (unionᵢ₂_comm _).trans <| by simp_rw [convexJoin, segment_symm]
+  (iUnion₂_comm _).trans <| by simp_rw [convexJoin, segment_symm]
 #align convex_join_comm convexJoin_comm
 -/
 
 #print convexJoin_mono /-
 theorem convexJoin_mono (hs : s₁ ⊆ s₂) (ht : t₁ ⊆ t₂) : convexJoin 𝕜 s₁ t₁ ⊆ convexJoin 𝕜 s₂ t₂ :=
-  bunionᵢ_mono hs fun x hx => bunionᵢ_mono ht fun y hy => Subset.rfl
+  biUnion_mono hs fun x hx => biUnion_mono ht fun y hy => Subset.rfl
 #align convex_join_mono convexJoin_mono
 -/
 
@@ -133,27 +133,27 @@ theorem convexJoin_union_right (s t₁ t₂ : Set E) :
   simp_rw [convexJoin, mem_union, Union_or, Union_union_distrib]
 #align convex_join_union_right convexJoin_union_right
 
-#print convexJoin_unionᵢ_left /-
+#print convexJoin_iUnion_left /-
 @[simp]
-theorem convexJoin_unionᵢ_left (s : ι → Set E) (t : Set E) :
+theorem convexJoin_iUnion_left (s : ι → Set E) (t : Set E) :
     convexJoin 𝕜 (⋃ i, s i) t = ⋃ i, convexJoin 𝕜 (s i) t :=
   by
   simp_rw [convexJoin, mem_Union, Union_exists]
   exact Union_comm _
-#align convex_join_Union_left convexJoin_unionᵢ_left
+#align convex_join_Union_left convexJoin_iUnion_left
 -/
 
-#print convexJoin_unionᵢ_right /-
+#print convexJoin_iUnion_right /-
 @[simp]
-theorem convexJoin_unionᵢ_right (s : Set E) (t : ι → Set E) :
+theorem convexJoin_iUnion_right (s : Set E) (t : ι → Set E) :
     convexJoin 𝕜 s (⋃ i, t i) = ⋃ i, convexJoin 𝕜 s (t i) := by
-  simp_rw [convexJoin_comm s, convexJoin_unionᵢ_left]
-#align convex_join_Union_right convexJoin_unionᵢ_right
+  simp_rw [convexJoin_comm s, convexJoin_iUnion_left]
+#align convex_join_Union_right convexJoin_iUnion_right
 -/
 
 #print segment_subset_convexJoin /-
 theorem segment_subset_convexJoin (hx : x ∈ s) (hy : y ∈ t) : segment 𝕜 x y ⊆ convexJoin 𝕜 s t :=
-  (subset_unionᵢ₂ y hy).trans (subset_unionᵢ₂ x hx)
+  (subset_iUnion₂ y hy).trans (subset_iUnion₂ x hx)
 #align segment_subset_convex_join segment_subset_convexJoin
 -/
 
@@ -173,7 +173,7 @@ theorem subset_convexJoin_right (h : s.Nonempty) : t ⊆ convexJoin 𝕜 s t := 
 
 #print convexJoin_subset /-
 theorem convexJoin_subset (hs : s ⊆ u) (ht : t ⊆ u) (hu : Convex 𝕜 u) : convexJoin 𝕜 s t ⊆ u :=
-  unionᵢ₂_subset fun x hx => unionᵢ₂_subset fun y hy => hu.segment_subset (hs hx) (ht hy)
+  iUnion₂_subset fun x hx => iUnion₂_subset fun y hy => hu.segment_subset (hs hx) (ht hy)
 #align convex_join_subset convexJoin_subset
 -/
 

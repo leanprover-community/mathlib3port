@@ -106,7 +106,7 @@ theorem eq_of_eqOn {f f' : α → E} {s : Set α} (h : EqOn f f' s) :
 
 theorem sum_le (f : α → E) {s : Set α} (n : ℕ) {u : ℕ → α} (hu : Monotone u) (us : ∀ i, u i ∈ s) :
     (∑ i in Finset.range n, edist (f (u (i + 1))) (f (u i))) ≤ evariationOn f s :=
-  le_supᵢ_of_le ⟨n, u, hu, us⟩ le_rfl
+  le_iSup_of_le ⟨n, u, hu, us⟩ le_rfl
 #align evariation_on.sum_le evariationOn.sum_le
 
 theorem sum_le_of_monotoneOn_Iic (f : α → E) {s : Set α} {n : ℕ} {u : ℕ → α}
@@ -173,7 +173,7 @@ theorem sum_le_of_monotoneOn_Icc (f : α → E) {s : Set α} {m n : ℕ} {u : �
 
 theorem mono (f : α → E) {s t : Set α} (hst : t ⊆ s) : evariationOn f t ≤ evariationOn f s :=
   by
-  apply supᵢ_le _
+  apply iSup_le _
   rintro ⟨n, ⟨u, hu, ut⟩⟩
   exact sum_le f n hu fun i => hst (ut i)
 #align evariation_on.mono evariationOn.mono
@@ -219,7 +219,7 @@ theorem eq_zero_iff (f : α → E) {s : Set α} :
     exact edist_le f xs ys
   · rintro h
     dsimp only [evariationOn]
-    rw [ENNReal.supᵢ_eq_zero]
+    rw [ENNReal.iSup_eq_zero]
     rintro ⟨n, u, um, us⟩
     exact Finset.sum_eq_zero fun i hi => h _ (us i.succ) _ (us i)
 #align evariation_on.eq_zero_iff evariationOn.eq_zero_iff
@@ -501,7 +501,7 @@ theorem add_le_union (f : α → E) {s t : Set α} (h : ∀ x ∈ s, ∀ y ∈ t
   · simp [ht]
   have : Nonempty { u // Monotone u ∧ ∀ i : ℕ, u i ∈ t } :=
     nonempty_monotone_mem (nonempty_iff_ne_empty.2 ht)
-  refine' ENNReal.supᵢ_add_supᵢ_le _
+  refine' ENNReal.iSup_add_iSup_le _
   /- We start from two sequences `u` and `v` along `s` and `t` respectively, and we build a new
     sequence `w` along `s ∪ t` by juxtaposing them. Its variation is larger than the sum of the
     variations. -/
@@ -574,7 +574,7 @@ theorem union (f : α → E) {s t : Set α} {x : α} (hs : IsGreatest s x) (ht :
     evariationOn f (s ∪ t) = evariationOn f s + evariationOn f t := by
   classical
     apply le_antisymm _ (evariationOn.add_le_union f fun a ha b hb => le_trans (hs.2 ha) (ht.2 hb))
-    apply supᵢ_le _
+    apply iSup_le _
     rintro ⟨n, ⟨u, hu, ust⟩⟩
     obtain ⟨v, m, hv, vst, xv, huv⟩ :
       ∃ (v : ℕ → α)(m : ℕ),
@@ -633,19 +633,19 @@ theorem Icc_add_Icc (f : α → E) {s : Set α} {a b c : α} (hab : a ≤ b) (hb
 
 theorem comp_le_of_monotoneOn (f : α → E) {s : Set α} {t : Set β} (φ : β → α) (hφ : MonotoneOn φ t)
     (φst : MapsTo φ t s) : evariationOn (f ∘ φ) t ≤ evariationOn f s :=
-  supᵢ_le fun ⟨n, u, hu, ut⟩ =>
-    le_supᵢ_of_le ⟨n, φ ∘ u, fun x y xy => hφ (ut x) (ut y) (hu xy), fun i => φst (ut i)⟩ le_rfl
+  iSup_le fun ⟨n, u, hu, ut⟩ =>
+    le_iSup_of_le ⟨n, φ ∘ u, fun x y xy => hφ (ut x) (ut y) (hu xy), fun i => φst (ut i)⟩ le_rfl
 #align evariation_on.comp_le_of_monotone_on evariationOn.comp_le_of_monotoneOn
 
 theorem comp_le_of_antitoneOn (f : α → E) {s : Set α} {t : Set β} (φ : β → α) (hφ : AntitoneOn φ t)
     (φst : MapsTo φ t s) : evariationOn (f ∘ φ) t ≤ evariationOn f s :=
   by
-  refine' supᵢ_le _
+  refine' iSup_le _
   rintro ⟨n, u, hu, ut⟩
   rw [← Finset.sum_range_reflect]
   refine'
     (Finset.sum_congr rfl fun x hx => _).trans_le
-      (le_supᵢ_of_le
+      (le_iSup_of_le
         ⟨n, fun i => φ (u <| n - i), fun x y xy => hφ (ut _) (ut _) (hu <| n.sub_le_sub_left xy),
           fun i => φst (ut _)⟩
         le_rfl)
@@ -738,7 +738,7 @@ end evariationOn
 theorem MonotoneOn.evariationOn_le {f : α → ℝ} {s : Set α} (hf : MonotoneOn f s) {a b : α}
     (as : a ∈ s) (bs : b ∈ s) : evariationOn f (s ∩ Icc a b) ≤ ENNReal.ofReal (f b - f a) :=
   by
-  apply supᵢ_le _
+  apply iSup_le _
   rintro ⟨n, ⟨u, hu, us⟩⟩
   calc
     (∑ i in Finset.range n, edist (f (u (i + 1))) (f (u i))) =
@@ -966,7 +966,7 @@ theorem LipschitzOnWith.comp_evariationOn_le {f : E → F} {C : ℝ≥0} {t : Se
     (h : LipschitzOnWith C f t) {g : α → E} {s : Set α} (hg : MapsTo g s t) :
     evariationOn (f ∘ g) s ≤ C * evariationOn g s :=
   by
-  apply supᵢ_le _
+  apply iSup_le _
   rintro ⟨n, ⟨u, hu, us⟩⟩
   calc
     (∑ i in Finset.range n, edist (f (g (u (i + 1)))) (f (g (u i)))) ≤

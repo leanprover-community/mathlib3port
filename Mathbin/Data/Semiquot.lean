@@ -250,7 +250,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align semiquot.bind Semiquot.bindₓ'. -/
 /-- Apply a function returning a `semiquot` to a `semiquot`. -/
 def bind (q : Semiquot α) (f : α → Semiquot β) : Semiquot β :=
-  ⟨⋃ a ∈ q.1, (f a).1, q.2.bind fun a => (f a.1).2.map fun b => ⟨b.1, Set.mem_bunionᵢ a.2 b.2⟩⟩
+  ⟨⋃ a ∈ q.1, (f a).1, q.2.bind fun a => (f a.1).2.map fun b => ⟨b.1, Set.mem_biUnion a.2 b.2⟩⟩
 #align semiquot.bind Semiquot.bind
 
 /- warning: semiquot.mem_bind -> Semiquot.mem_bind is a dubious translation:
@@ -261,7 +261,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align semiquot.mem_bind Semiquot.mem_bindₓ'. -/
 @[simp]
 theorem mem_bind (q : Semiquot α) (f : α → Semiquot β) (b : β) : b ∈ bind q f ↔ ∃ a ∈ q, b ∈ f a :=
-  Set.mem_unionᵢ₂
+  Set.mem_iUnion₂
 #align semiquot.mem_bind Semiquot.mem_bind
 
 instance : Monad Semiquot where

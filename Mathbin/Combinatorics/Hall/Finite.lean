@@ -55,8 +55,8 @@ variable [Fintype ι]
 
 #print HallMarriageTheorem.hall_cond_of_erase /-
 theorem hall_cond_of_erase {x : ι} (a : α)
-    (ha : ∀ s : Finset ι, s.Nonempty → s ≠ univ → s.card < (s.bunionᵢ t).card)
-    (s' : Finset { x' : ι | x' ≠ x }) : s'.card ≤ (s'.bunionᵢ fun x' => (t x').eraseₓ a).card :=
+    (ha : ∀ s : Finset ι, s.Nonempty → s ≠ univ → s.card < (s.biUnion t).card)
+    (s' : Finset { x' : ι | x' ≠ x }) : s'.card ≤ (s'.biUnion fun x' => (t x').eraseₓ a).card :=
   by
   haveI := Classical.decEq ι
   specialize ha (s'.image coe)
@@ -87,13 +87,13 @@ and that the statement of **Hall's Marriage Theorem** is true for all
 `ι'` of cardinality ≤ `n`, then it is true for `ι` of cardinality `n + 1`.
 -/
 theorem hall_hard_inductive_step_A {n : ℕ} (hn : Fintype.card ι = n + 1)
-    (ht : ∀ s : Finset ι, s.card ≤ (s.bunionᵢ t).card)
+    (ht : ∀ s : Finset ι, s.card ≤ (s.biUnion t).card)
     (ih :
       ∀ {ι' : Type u} [Fintype ι'] (t' : ι' → Finset α),
         Fintype.card ι' ≤ n →
-          (∀ s' : Finset ι', s'.card ≤ (s'.bunionᵢ t').card) →
+          (∀ s' : Finset ι', s'.card ≤ (s'.biUnion t').card) →
             ∃ f : ι' → α, Function.Injective f ∧ ∀ x, f x ∈ t' x)
-    (ha : ∀ s : Finset ι, s.Nonempty → s ≠ univ → s.card < (s.bunionᵢ t).card) :
+    (ha : ∀ s : Finset ι, s.Nonempty → s ≠ univ → s.card < (s.biUnion t).card) :
     ∃ f : ι → α, Function.Injective f ∧ ∀ x, f x ∈ t x :=
   by
   haveI : Nonempty ι := fintype.card_pos_iff.mp (hn.symm ▸ Nat.succ_pos _)
@@ -104,8 +104,8 @@ theorem hall_hard_inductive_step_A {n : ℕ} (hn : Fintype.card ι = n + 1)
     rw [← Finset.card_pos]
     calc
       0 < 1 := Nat.one_pos
-      _ ≤ (Finset.bunionᵢ {x} t).card := (ht {x})
-      _ = (t x).card := by rw [Finset.singleton_bunionᵢ]
+      _ ≤ (Finset.biUnion {x} t).card := (ht {x})
+      _ = (t x).card := by rw [Finset.singleton_biUnion]
       
   choose y hy using tx_ne
   -- Restrict to everything except `x` and `y`.
@@ -135,8 +135,8 @@ theorem hall_hard_inductive_step_A {n : ℕ} (hn : Fintype.card ι = n + 1)
 
 #print HallMarriageTheorem.hall_cond_of_restrict /-
 theorem hall_cond_of_restrict {ι : Type u} {t : ι → Finset α} {s : Finset ι}
-    (ht : ∀ s : Finset ι, s.card ≤ (s.bunionᵢ t).card) (s' : Finset (s : Set ι)) :
-    s'.card ≤ (s'.bunionᵢ fun a' => t a').card := by
+    (ht : ∀ s : Finset ι, s.card ≤ (s.biUnion t).card) (s' : Finset (s : Set ι)) :
+    s'.card ≤ (s'.biUnion fun a' => t a').card := by
   classical
     rw [← card_image_of_injective s' Subtype.coe_injective]
     convert ht (s'.image coe) using 1
@@ -148,13 +148,13 @@ theorem hall_cond_of_restrict {ι : Type u} {t : ι → Finset α} {s : Finset �
 
 /- warning: hall_marriage_theorem.hall_cond_of_compl -> HallMarriageTheorem.hall_cond_of_compl is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} α] {ι : Type.{u1}} {t : ι -> (Finset.{u2} α)} {s : Finset.{u1} ι}, (Eq.{1} Nat (Finset.card.{u1} ι s) (Finset.card.{u2} α (Finset.bunionᵢ.{u1, u2} ι α (fun (a : α) (b : α) => _inst_1 a b) s t))) -> (forall (s : Finset.{u1} ι), LE.le.{0} Nat Nat.hasLe (Finset.card.{u1} ι s) (Finset.card.{u2} α (Finset.bunionᵢ.{u1, u2} ι α (fun (a : α) (b : α) => _inst_1 a b) s t))) -> (forall (s' : Finset.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} ι) Type.{u1} (Set.hasCoeToSort.{u1} ι) (HasCompl.compl.{u1} (Set.{u1} ι) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} ι) (Set.booleanAlgebra.{u1} ι)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} ι) (Set.{u1} ι) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (Finset.Set.hasCoeT.{u1} ι))) s)))), LE.le.{0} Nat Nat.hasLe (Finset.card.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} ι) Type.{u1} (Set.hasCoeToSort.{u1} ι) (HasCompl.compl.{u1} (Set.{u1} ι) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} ι) (Set.booleanAlgebra.{u1} ι)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} ι) (Set.{u1} ι) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (Finset.Set.hasCoeT.{u1} ι))) s))) s') (Finset.card.{u2} α (Finset.bunionᵢ.{u1, u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} ι) Type.{u1} (Set.hasCoeToSort.{u1} ι) (HasCompl.compl.{u1} (Set.{u1} ι) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} ι) (Set.booleanAlgebra.{u1} ι)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} ι) (Set.{u1} ι) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (Finset.Set.hasCoeT.{u1} ι))) s))) α (fun (a : α) (b : α) => _inst_1 a b) s' (fun (x' : coeSort.{succ u1, succ (succ u1)} (Set.{u1} ι) Type.{u1} (Set.hasCoeToSort.{u1} ι) (HasCompl.compl.{u1} (Set.{u1} ι) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} ι) (Set.booleanAlgebra.{u1} ι)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} ι) (Set.{u1} ι) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (Finset.Set.hasCoeT.{u1} ι))) s))) => SDiff.sdiff.{u2} (Finset.{u2} α) (Finset.hasSdiff.{u2} α (fun (a : α) (b : α) => _inst_1 a b)) (t ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} ι) Type.{u1} (Set.hasCoeToSort.{u1} ι) (HasCompl.compl.{u1} (Set.{u1} ι) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} ι) (Set.booleanAlgebra.{u1} ι)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} ι) (Set.{u1} ι) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (Finset.Set.hasCoeT.{u1} ι))) s))) ι (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} ι) Type.{u1} (Set.hasCoeToSort.{u1} ι) (HasCompl.compl.{u1} (Set.{u1} ι) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} ι) (Set.booleanAlgebra.{u1} ι)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} ι) (Set.{u1} ι) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (Finset.Set.hasCoeT.{u1} ι))) s))) ι (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} ι) Type.{u1} (Set.hasCoeToSort.{u1} ι) (HasCompl.compl.{u1} (Set.{u1} ι) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} ι) (Set.booleanAlgebra.{u1} ι)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} ι) (Set.{u1} ι) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (Finset.Set.hasCoeT.{u1} ι))) s))) ι (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} ι) Type.{u1} (Set.hasCoeToSort.{u1} ι) (HasCompl.compl.{u1} (Set.{u1} ι) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} ι) (Set.booleanAlgebra.{u1} ι)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} ι) (Set.{u1} ι) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (Finset.Set.hasCoeT.{u1} ι))) s))) ι (coeSubtype.{succ u1} ι (fun (x : ι) => Membership.Mem.{u1, u1} ι (Set.{u1} ι) (Set.hasMem.{u1} ι) x (HasCompl.compl.{u1} (Set.{u1} ι) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} ι) (Set.booleanAlgebra.{u1} ι)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} ι) (Set.{u1} ι) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (Finset.Set.hasCoeT.{u1} ι))) s))))))) x')) (Finset.bunionᵢ.{u1, u2} ι α (fun (a : α) (b : α) => _inst_1 a b) s t)))))
+  forall {α : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} α] {ι : Type.{u1}} {t : ι -> (Finset.{u2} α)} {s : Finset.{u1} ι}, (Eq.{1} Nat (Finset.card.{u1} ι s) (Finset.card.{u2} α (Finset.biUnion.{u1, u2} ι α (fun (a : α) (b : α) => _inst_1 a b) s t))) -> (forall (s : Finset.{u1} ι), LE.le.{0} Nat Nat.hasLe (Finset.card.{u1} ι s) (Finset.card.{u2} α (Finset.biUnion.{u1, u2} ι α (fun (a : α) (b : α) => _inst_1 a b) s t))) -> (forall (s' : Finset.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} ι) Type.{u1} (Set.hasCoeToSort.{u1} ι) (HasCompl.compl.{u1} (Set.{u1} ι) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} ι) (Set.booleanAlgebra.{u1} ι)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} ι) (Set.{u1} ι) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (Finset.Set.hasCoeT.{u1} ι))) s)))), LE.le.{0} Nat Nat.hasLe (Finset.card.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} ι) Type.{u1} (Set.hasCoeToSort.{u1} ι) (HasCompl.compl.{u1} (Set.{u1} ι) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} ι) (Set.booleanAlgebra.{u1} ι)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} ι) (Set.{u1} ι) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (Finset.Set.hasCoeT.{u1} ι))) s))) s') (Finset.card.{u2} α (Finset.biUnion.{u1, u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} ι) Type.{u1} (Set.hasCoeToSort.{u1} ι) (HasCompl.compl.{u1} (Set.{u1} ι) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} ι) (Set.booleanAlgebra.{u1} ι)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} ι) (Set.{u1} ι) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (Finset.Set.hasCoeT.{u1} ι))) s))) α (fun (a : α) (b : α) => _inst_1 a b) s' (fun (x' : coeSort.{succ u1, succ (succ u1)} (Set.{u1} ι) Type.{u1} (Set.hasCoeToSort.{u1} ι) (HasCompl.compl.{u1} (Set.{u1} ι) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} ι) (Set.booleanAlgebra.{u1} ι)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} ι) (Set.{u1} ι) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (Finset.Set.hasCoeT.{u1} ι))) s))) => SDiff.sdiff.{u2} (Finset.{u2} α) (Finset.hasSdiff.{u2} α (fun (a : α) (b : α) => _inst_1 a b)) (t ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} ι) Type.{u1} (Set.hasCoeToSort.{u1} ι) (HasCompl.compl.{u1} (Set.{u1} ι) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} ι) (Set.booleanAlgebra.{u1} ι)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} ι) (Set.{u1} ι) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (Finset.Set.hasCoeT.{u1} ι))) s))) ι (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} ι) Type.{u1} (Set.hasCoeToSort.{u1} ι) (HasCompl.compl.{u1} (Set.{u1} ι) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} ι) (Set.booleanAlgebra.{u1} ι)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} ι) (Set.{u1} ι) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (Finset.Set.hasCoeT.{u1} ι))) s))) ι (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} ι) Type.{u1} (Set.hasCoeToSort.{u1} ι) (HasCompl.compl.{u1} (Set.{u1} ι) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} ι) (Set.booleanAlgebra.{u1} ι)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} ι) (Set.{u1} ι) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (Finset.Set.hasCoeT.{u1} ι))) s))) ι (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} ι) Type.{u1} (Set.hasCoeToSort.{u1} ι) (HasCompl.compl.{u1} (Set.{u1} ι) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} ι) (Set.booleanAlgebra.{u1} ι)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} ι) (Set.{u1} ι) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (Finset.Set.hasCoeT.{u1} ι))) s))) ι (coeSubtype.{succ u1} ι (fun (x : ι) => Membership.Mem.{u1, u1} ι (Set.{u1} ι) (Set.hasMem.{u1} ι) x (HasCompl.compl.{u1} (Set.{u1} ι) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} ι) (Set.booleanAlgebra.{u1} ι)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} ι) (Set.{u1} ι) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} ι) (Set.{u1} ι) (Finset.Set.hasCoeT.{u1} ι))) s))))))) x')) (Finset.biUnion.{u1, u2} ι α (fun (a : α) (b : α) => _inst_1 a b) s t)))))
 but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} α] {ι : Type.{u1}} {t : ι -> (Finset.{u2} α)} {s : Finset.{u1} ι}, (Eq.{1} Nat (Finset.card.{u1} ι s) (Finset.card.{u2} α (Finset.bunionᵢ.{u1, u2} ι α (fun (a : α) (b : α) => _inst_1 a b) s t))) -> (forall (s : Finset.{u1} ι), LE.le.{0} Nat instLENat (Finset.card.{u1} ι s) (Finset.card.{u2} α (Finset.bunionᵢ.{u1, u2} ι α (fun (a : α) (b : α) => _inst_1 a b) s t))) -> (forall (s' : Finset.{u1} (Set.Elem.{u1} ι (HasCompl.compl.{u1} (Set.{u1} ι) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} ι) (Set.instBooleanAlgebraSet.{u1} ι)) (Finset.toSet.{u1} ι s)))), LE.le.{0} Nat instLENat (Finset.card.{u1} (Set.Elem.{u1} ι (HasCompl.compl.{u1} (Set.{u1} ι) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} ι) (Set.instBooleanAlgebraSet.{u1} ι)) (Finset.toSet.{u1} ι s))) s') (Finset.card.{u2} α (Finset.bunionᵢ.{u1, u2} (Set.Elem.{u1} ι (HasCompl.compl.{u1} (Set.{u1} ι) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} ι) (Set.instBooleanAlgebraSet.{u1} ι)) (Finset.toSet.{u1} ι s))) α (fun (a : α) (b : α) => _inst_1 a b) s' (fun (x' : Set.Elem.{u1} ι (HasCompl.compl.{u1} (Set.{u1} ι) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} ι) (Set.instBooleanAlgebraSet.{u1} ι)) (Finset.toSet.{u1} ι s))) => SDiff.sdiff.{u2} (Finset.{u2} α) (Finset.instSDiffFinset.{u2} α (fun (a : α) (b : α) => _inst_1 a b)) (t (Subtype.val.{succ u1} ι (fun (x : ι) => Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) x (HasCompl.compl.{u1} (Set.{u1} ι) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} ι) (Set.instBooleanAlgebraSet.{u1} ι)) (Finset.toSet.{u1} ι s))) x')) (Finset.bunionᵢ.{u1, u2} ι α (fun (a : α) (b : α) => _inst_1 a b) s t)))))
+  forall {α : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} α] {ι : Type.{u1}} {t : ι -> (Finset.{u2} α)} {s : Finset.{u1} ι}, (Eq.{1} Nat (Finset.card.{u1} ι s) (Finset.card.{u2} α (Finset.biUnion.{u1, u2} ι α (fun (a : α) (b : α) => _inst_1 a b) s t))) -> (forall (s : Finset.{u1} ι), LE.le.{0} Nat instLENat (Finset.card.{u1} ι s) (Finset.card.{u2} α (Finset.biUnion.{u1, u2} ι α (fun (a : α) (b : α) => _inst_1 a b) s t))) -> (forall (s' : Finset.{u1} (Set.Elem.{u1} ι (HasCompl.compl.{u1} (Set.{u1} ι) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} ι) (Set.instBooleanAlgebraSet.{u1} ι)) (Finset.toSet.{u1} ι s)))), LE.le.{0} Nat instLENat (Finset.card.{u1} (Set.Elem.{u1} ι (HasCompl.compl.{u1} (Set.{u1} ι) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} ι) (Set.instBooleanAlgebraSet.{u1} ι)) (Finset.toSet.{u1} ι s))) s') (Finset.card.{u2} α (Finset.biUnion.{u1, u2} (Set.Elem.{u1} ι (HasCompl.compl.{u1} (Set.{u1} ι) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} ι) (Set.instBooleanAlgebraSet.{u1} ι)) (Finset.toSet.{u1} ι s))) α (fun (a : α) (b : α) => _inst_1 a b) s' (fun (x' : Set.Elem.{u1} ι (HasCompl.compl.{u1} (Set.{u1} ι) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} ι) (Set.instBooleanAlgebraSet.{u1} ι)) (Finset.toSet.{u1} ι s))) => SDiff.sdiff.{u2} (Finset.{u2} α) (Finset.instSDiffFinset.{u2} α (fun (a : α) (b : α) => _inst_1 a b)) (t (Subtype.val.{succ u1} ι (fun (x : ι) => Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) x (HasCompl.compl.{u1} (Set.{u1} ι) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} ι) (Set.instBooleanAlgebraSet.{u1} ι)) (Finset.toSet.{u1} ι s))) x')) (Finset.biUnion.{u1, u2} ι α (fun (a : α) (b : α) => _inst_1 a b) s t)))))
 Case conversion may be inaccurate. Consider using '#align hall_marriage_theorem.hall_cond_of_compl HallMarriageTheorem.hall_cond_of_complₓ'. -/
 theorem hall_cond_of_compl {ι : Type u} {t : ι → Finset α} {s : Finset ι}
-    (hus : s.card = (s.bunionᵢ t).card) (ht : ∀ s : Finset ι, s.card ≤ (s.bunionᵢ t).card)
-    (s' : Finset (sᶜ : Set ι)) : s'.card ≤ (s'.bunionᵢ fun x' => t x' \ s.bunionᵢ t).card :=
+    (hus : s.card = (s.biUnion t).card) (ht : ∀ s : Finset ι, s.card ≤ (s.biUnion t).card)
+    (s' : Finset (sᶜ : Set ι)) : s'.card ≤ (s'.biUnion fun x' => t x' \ s.biUnion t).card :=
   by
   haveI := Classical.decEq ι
   have disj : Disjoint s (s'.image coe) :=
@@ -186,13 +186,13 @@ and that the statement of **Hall's Marriage Theorem** is true for all
 `ι'` of cardinality ≤ `n`, then it is true for `ι` of cardinality `n + 1`.
 -/
 theorem hall_hard_inductive_step_B {n : ℕ} (hn : Fintype.card ι = n + 1)
-    (ht : ∀ s : Finset ι, s.card ≤ (s.bunionᵢ t).card)
+    (ht : ∀ s : Finset ι, s.card ≤ (s.biUnion t).card)
     (ih :
       ∀ {ι' : Type u} [Fintype ι'] (t' : ι' → Finset α),
         Fintype.card ι' ≤ n →
-          (∀ s' : Finset ι', s'.card ≤ (s'.bunionᵢ t').card) →
+          (∀ s' : Finset ι', s'.card ≤ (s'.biUnion t').card) →
             ∃ f : ι' → α, Function.Injective f ∧ ∀ x, f x ∈ t' x)
-    (s : Finset ι) (hs : s.Nonempty) (hns : s ≠ univ) (hus : s.card = (s.bunionᵢ t).card) :
+    (s : Finset ι) (hs : s.Nonempty) (hns : s ≠ univ) (hus : s.card = (s.biUnion t).card) :
     ∃ f : ι → α, Function.Injective f ∧ ∀ x, f x ∈ t x :=
   by
   haveI := Classical.decEq ι
@@ -251,7 +251,7 @@ variable [Finite ι]
 /-- Here we combine the two inductive steps into a full strong induction proof,
 completing the proof the harder direction of **Hall's Marriage Theorem**.
 -/
-theorem hall_hard_inductive (ht : ∀ s : Finset ι, s.card ≤ (s.bunionᵢ t).card) :
+theorem hall_hard_inductive (ht : ∀ s : Finset ι, s.card ≤ (s.biUnion t).card) :
     ∃ f : ι → α, Function.Injective f ∧ ∀ x, f x ∈ t x :=
   by
   cases nonempty_fintype ι
@@ -262,12 +262,12 @@ theorem hall_hard_inductive (ht : ∀ s : Finset ι, s.card ≤ (s.bunionᵢ t).
   · have ih' :
       ∀ (ι' : Type u) [Fintype ι'] (t' : ι' → Finset α),
         Fintype.card ι' ≤ n →
-          (∀ s' : Finset ι', s'.card ≤ (s'.bunionᵢ t').card) →
+          (∀ s' : Finset ι', s'.card ≤ (s'.biUnion t').card) →
             ∃ f : ι' → α, Function.Injective f ∧ ∀ x, f x ∈ t' x :=
       by
       intro ι' _ _ hι' ht'
       exact ih _ (Nat.lt_succ_of_le hι') ht' _ rfl
-    by_cases h : ∀ s : Finset ι, s.Nonempty → s ≠ univ → s.card < (s.bunionᵢ t).card
+    by_cases h : ∀ s : Finset ι, s.Nonempty → s ≠ univ → s.card < (s.biUnion t).card
     · exact hall_hard_inductive_step_A hn ht ih' h
     · push_neg  at h
       rcases h with ⟨s, sne, snu, sle⟩
@@ -277,12 +277,12 @@ theorem hall_hard_inductive (ht : ∀ s : Finset ι, s.card ≤ (s.bunionᵢ t).
 
 end HallMarriageTheorem
 
-/- warning: finset.all_card_le_bUnion_card_iff_exists_injective' -> Finset.all_card_le_bunionᵢ_card_iff_existsInjective' is a dubious translation:
+/- warning: finset.all_card_le_bUnion_card_iff_exists_injective' -> Finset.all_card_le_biUnion_card_iff_existsInjective' is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : Finite.{succ u1} ι] [_inst_2 : DecidableEq.{succ u2} α] (t : ι -> (Finset.{u2} α)), Iff (forall (s : Finset.{u1} ι), LE.le.{0} Nat Nat.hasLe (Finset.card.{u1} ι s) (Finset.card.{u2} α (Finset.bunionᵢ.{u1, u2} ι α (fun (a : α) (b : α) => _inst_2 a b) s t))) (Exists.{max (succ u1) (succ u2)} (ι -> α) (fun (f : ι -> α) => And (Function.Injective.{succ u1, succ u2} ι α f) (forall (x : ι), Membership.Mem.{u2, u2} α (Finset.{u2} α) (Finset.hasMem.{u2} α) (f x) (t x))))
+  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : Finite.{succ u1} ι] [_inst_2 : DecidableEq.{succ u2} α] (t : ι -> (Finset.{u2} α)), Iff (forall (s : Finset.{u1} ι), LE.le.{0} Nat Nat.hasLe (Finset.card.{u1} ι s) (Finset.card.{u2} α (Finset.biUnion.{u1, u2} ι α (fun (a : α) (b : α) => _inst_2 a b) s t))) (Exists.{max (succ u1) (succ u2)} (ι -> α) (fun (f : ι -> α) => And (Function.Injective.{succ u1, succ u2} ι α f) (forall (x : ι), Membership.Mem.{u2, u2} α (Finset.{u2} α) (Finset.hasMem.{u2} α) (f x) (t x))))
 but is expected to have type
-  forall {ι : Type.{u2}} {α : Type.{u1}} [_inst_1 : Finite.{succ u2} ι] [_inst_2 : DecidableEq.{succ u1} α] (t : ι -> (Finset.{u1} α)), Iff (forall (s : Finset.{u2} ι), LE.le.{0} Nat instLENat (Finset.card.{u2} ι s) (Finset.card.{u1} α (Finset.bunionᵢ.{u2, u1} ι α (fun (a : α) (b : α) => _inst_2 a b) s t))) (Exists.{max (succ u2) (succ u1)} (ι -> α) (fun (f : ι -> α) => And (Function.Injective.{succ u2, succ u1} ι α f) (forall (x : ι), Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) (f x) (t x))))
-Case conversion may be inaccurate. Consider using '#align finset.all_card_le_bUnion_card_iff_exists_injective' Finset.all_card_le_bunionᵢ_card_iff_existsInjective'ₓ'. -/
+  forall {ι : Type.{u2}} {α : Type.{u1}} [_inst_1 : Finite.{succ u2} ι] [_inst_2 : DecidableEq.{succ u1} α] (t : ι -> (Finset.{u1} α)), Iff (forall (s : Finset.{u2} ι), LE.le.{0} Nat instLENat (Finset.card.{u2} ι s) (Finset.card.{u1} α (Finset.biUnion.{u2, u1} ι α (fun (a : α) (b : α) => _inst_2 a b) s t))) (Exists.{max (succ u2) (succ u1)} (ι -> α) (fun (f : ι -> α) => And (Function.Injective.{succ u2, succ u1} ι α f) (forall (x : ι), Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) (f x) (t x))))
+Case conversion may be inaccurate. Consider using '#align finset.all_card_le_bUnion_card_iff_exists_injective' Finset.all_card_le_biUnion_card_iff_existsInjective'ₓ'. -/
 /-- This is the version of **Hall's Marriage Theorem** in terms of indexed
 families of finite sets `t : ι → finset α` with `ι` finite.
 It states that there is a set of distinct representatives if and only
@@ -291,9 +291,9 @@ if every union of `k` of the sets has at least `k` elements.
 See `finset.all_card_le_bUnion_card_iff_exists_injective` for a version
 where the `finite ι` constraint is removed.
 -/
-theorem Finset.all_card_le_bunionᵢ_card_iff_existsInjective' {ι α : Type _} [Finite ι]
+theorem Finset.all_card_le_biUnion_card_iff_existsInjective' {ι α : Type _} [Finite ι]
     [DecidableEq α] (t : ι → Finset α) :
-    (∀ s : Finset ι, s.card ≤ (s.bunionᵢ t).card) ↔
+    (∀ s : Finset ι, s.card ≤ (s.biUnion t).card) ↔
       ∃ f : ι → α, Function.Injective f ∧ ∀ x, f x ∈ t x :=
   by
   constructor
@@ -305,5 +305,5 @@ theorem Finset.all_card_le_bunionᵢ_card_iff_existsInjective' {ι α : Type _} 
     rw [mem_image, mem_bUnion]
     rintro ⟨x, hx, rfl⟩
     exact ⟨x, hx, hf₂ x⟩
-#align finset.all_card_le_bUnion_card_iff_exists_injective' Finset.all_card_le_bunionᵢ_card_iff_existsInjective'
+#align finset.all_card_le_bUnion_card_iff_exists_injective' Finset.all_card_le_biUnion_card_iff_existsInjective'
 

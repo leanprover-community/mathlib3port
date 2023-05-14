@@ -342,8 +342,8 @@ theorem ChainClosure.succ_fixpoint (hc₁ : ChainClosure r c₁) (hc₂ : ChainC
 #print ChainClosure.succ_fixpoint_iff /-
 theorem ChainClosure.succ_fixpoint_iff (hc : ChainClosure r c) :
     SuccChain r c = c ↔ c = maxChain r :=
-  ⟨fun h => (subset_unionₛ_of_mem hc).antisymm <| chainClosure_maxChain.succ_fixpoint hc h, fun h =>
-    subset_succChain.antisymm' <| (subset_unionₛ_of_mem hc.succ).trans h.symm.Subset⟩
+  ⟨fun h => (subset_sUnion_of_mem hc).antisymm <| chainClosure_maxChain.succ_fixpoint hc h, fun h =>
+    subset_succChain.antisymm' <| (subset_sUnion_of_mem hc.succ).trans h.symm.Subset⟩
 #align chain_closure.succ_fixpoint_iff ChainClosure.succ_fixpoint_iff
 -/
 

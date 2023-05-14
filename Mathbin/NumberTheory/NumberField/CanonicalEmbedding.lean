@@ -172,10 +172,10 @@ theorem integerLattice.inter_ball_finite [NumberField K] (r : ℝ) :
 instance [NumberField K] : Countable (integerLattice K) :=
   by
   have : (⋃ n : ℕ, (integer_lattice K : Set E) ∩ closed_ball 0 n).Countable :=
-    Set.countable_unionᵢ fun n => (integer_lattice.inter_ball_finite K n).Countable
+    Set.countable_iUnion fun n => (integer_lattice.inter_ball_finite K n).Countable
   refine' (this.mono _).to_subtype
   rintro _ ⟨x, hx, rfl⟩
-  rw [Set.mem_unionᵢ]
+  rw [Set.mem_iUnion]
   exact ⟨⌈‖canonical_embedding K x‖⌉₊, ⟨x, hx, rfl⟩, mem_closedBall_zero_iff.2 (Nat.le_ceil _)⟩
 
 end NumberField.canonicalEmbedding

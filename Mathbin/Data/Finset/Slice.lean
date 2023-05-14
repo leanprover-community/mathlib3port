@@ -80,31 +80,31 @@ Case conversion may be inaccurate. Consider using '#align set.sized.union Set.si
 alias sized_union ↔ _ sized.union
 #align set.sized.union Set.sized.union
 
-/- warning: set.sized_Union -> Set.sized_unionᵢ is a dubious translation:
+/- warning: set.sized_Union -> Set.sized_iUnion is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {r : Nat} {f : ι -> (Set.{u1} (Finset.{u1} α))}, Iff (Set.Sized.{u1} α r (Set.unionᵢ.{u1, u2} (Finset.{u1} α) ι (fun (i : ι) => f i))) (forall (i : ι), Set.Sized.{u1} α r (f i))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {r : Nat} {f : ι -> (Set.{u1} (Finset.{u1} α))}, Iff (Set.Sized.{u1} α r (Set.iUnion.{u1, u2} (Finset.{u1} α) ι (fun (i : ι) => f i))) (forall (i : ι), Set.Sized.{u1} α r (f i))
 but is expected to have type
-  forall {α : Type.{u2}} {ι : Sort.{u1}} {r : Nat} {f : ι -> (Set.{u2} (Finset.{u2} α))}, Iff (Set.Sized.{u2} α r (Set.unionᵢ.{u2, u1} (Finset.{u2} α) ι (fun (i : ι) => f i))) (forall (i : ι), Set.Sized.{u2} α r (f i))
-Case conversion may be inaccurate. Consider using '#align set.sized_Union Set.sized_unionᵢₓ'. -/
+  forall {α : Type.{u2}} {ι : Sort.{u1}} {r : Nat} {f : ι -> (Set.{u2} (Finset.{u2} α))}, Iff (Set.Sized.{u2} α r (Set.iUnion.{u2, u1} (Finset.{u2} α) ι (fun (i : ι) => f i))) (forall (i : ι), Set.Sized.{u2} α r (f i))
+Case conversion may be inaccurate. Consider using '#align set.sized_Union Set.sized_iUnionₓ'. -/
 --TODO: A `forall_Union` lemma would be handy here.
 @[simp]
-theorem sized_unionᵢ {f : ι → Set (Finset α)} : (⋃ i, f i).Sized r ↔ ∀ i, (f i).Sized r :=
+theorem sized_iUnion {f : ι → Set (Finset α)} : (⋃ i, f i).Sized r ↔ ∀ i, (f i).Sized r :=
   by
-  simp_rw [Set.Sized, Set.mem_unionᵢ, forall_exists_index]
+  simp_rw [Set.Sized, Set.mem_iUnion, forall_exists_index]
   exact forall_swap
-#align set.sized_Union Set.sized_unionᵢ
+#align set.sized_Union Set.sized_iUnion
 
-/- warning: set.sized_Union₂ -> Set.sized_unionᵢ₂ is a dubious translation:
+/- warning: set.sized_Union₂ -> Set.sized_iUnion₂ is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} {r : Nat} {f : forall (i : ι), (κ i) -> (Set.{u1} (Finset.{u1} α))}, Iff (Set.Sized.{u1} α r (Set.unionᵢ.{u1, u2} (Finset.{u1} α) ι (fun (i : ι) => Set.unionᵢ.{u1, u3} (Finset.{u1} α) (κ i) (fun (j : κ i) => f i j)))) (forall (i : ι) (j : κ i), Set.Sized.{u1} α r (f i j))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {κ : ι -> Sort.{u3}} {r : Nat} {f : forall (i : ι), (κ i) -> (Set.{u1} (Finset.{u1} α))}, Iff (Set.Sized.{u1} α r (Set.iUnion.{u1, u2} (Finset.{u1} α) ι (fun (i : ι) => Set.iUnion.{u1, u3} (Finset.{u1} α) (κ i) (fun (j : κ i) => f i j)))) (forall (i : ι) (j : κ i), Set.Sized.{u1} α r (f i j))
 but is expected to have type
-  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} {r : Nat} {f : forall (i : ι), (κ i) -> (Set.{u3} (Finset.{u3} α))}, Iff (Set.Sized.{u3} α r (Set.unionᵢ.{u3, u2} (Finset.{u3} α) ι (fun (i : ι) => Set.unionᵢ.{u3, u1} (Finset.{u3} α) (κ i) (fun (j : κ i) => f i j)))) (forall (i : ι) (j : κ i), Set.Sized.{u3} α r (f i j))
-Case conversion may be inaccurate. Consider using '#align set.sized_Union₂ Set.sized_unionᵢ₂ₓ'. -/
+  forall {α : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} {r : Nat} {f : forall (i : ι), (κ i) -> (Set.{u3} (Finset.{u3} α))}, Iff (Set.Sized.{u3} α r (Set.iUnion.{u3, u2} (Finset.{u3} α) ι (fun (i : ι) => Set.iUnion.{u3, u1} (Finset.{u3} α) (κ i) (fun (j : κ i) => f i j)))) (forall (i : ι) (j : κ i), Set.Sized.{u3} α r (f i j))
+Case conversion may be inaccurate. Consider using '#align set.sized_Union₂ Set.sized_iUnion₂ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
-theorem sized_unionᵢ₂ {f : ∀ i, κ i → Set (Finset α)} :
+theorem sized_iUnion₂ {f : ∀ i, κ i → Set (Finset α)} :
     (⋃ (i) (j), f i j).Sized r ↔ ∀ i j, (f i j).Sized r := by simp_rw [sized_Union]
-#align set.sized_Union₂ Set.sized_unionᵢ₂
+#align set.sized_Union₂ Set.sized_iUnion₂
 
 #print Set.Sized.isAntichain /-
 protected theorem Sized.isAntichain (hA : A.Sized r) : IsAntichain (· ⊆ ·) A :=
@@ -232,12 +232,12 @@ theorem pairwiseDisjoint_slice : (Set.univ : Set ℕ).PairwiseDisjoint (slice �
 
 variable [Fintype α] (𝒜)
 
-#print Finset.bunionᵢ_slice /-
+#print Finset.biUnion_slice /-
 @[simp]
-theorem bunionᵢ_slice [DecidableEq α] : (Iic <| Fintype.card α).bunionᵢ 𝒜.slice = 𝒜 :=
-  Subset.antisymm (bunionᵢ_subset.2 fun r _ => slice_subset) fun s hs =>
-    mem_bunionᵢ.2 ⟨s.card, mem_Iic.2 <| s.card_le_univ, mem_slice.2 <| ⟨hs, rfl⟩⟩
-#align finset.bUnion_slice Finset.bunionᵢ_slice
+theorem biUnion_slice [DecidableEq α] : (Iic <| Fintype.card α).biUnion 𝒜.slice = 𝒜 :=
+  Subset.antisymm (biUnion_subset.2 fun r _ => slice_subset) fun s hs =>
+    mem_biUnion.2 ⟨s.card, mem_Iic.2 <| s.card_le_univ, mem_slice.2 <| ⟨hs, rfl⟩⟩
+#align finset.bUnion_slice Finset.biUnion_slice
 -/
 
 #print Finset.sum_card_slice /-

@@ -485,7 +485,7 @@ theorem range_fromOpenSubsetsGlue : Set.range (fromOpenSubsetsGlue U) = ⋃ i, (
   · rintro ⟨x, rfl⟩
     obtain ⟨i, ⟨x, hx'⟩, rfl⟩ := (of_open_subsets U).ι_jointly_surjective x
     rw [ι_from_open_subsets_glue_apply]
-    exact Set.subset_unionᵢ _ i hx'
+    exact Set.subset_iUnion _ i hx'
   · rintro ⟨_, ⟨i, rfl⟩, hx⟩
     refine' ⟨(of_open_subsets U).toGlueData.ι i ⟨x, hx⟩, ι_from_open_subsets_glue_apply _ _ _⟩
 #align Top.glue_data.range_from_open_subsets_glue TopCat.GlueData.range_fromOpenSubsetsGlue

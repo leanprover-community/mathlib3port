@@ -278,7 +278,7 @@ protected theorem range_linearIsometry [∀ i, CompleteSpace (G i)] :
     refine' mem_supr_of_mem i _
     exact LinearMap.mem_range_self _ (f i)
   · apply topological_closure_minimal
-    · refine' supᵢ_le _
+    · refine' iSup_le _
       rintro i x ⟨x, rfl⟩
       use lp.single 2 i x
       exact hV.linear_isometry_apply_single x
@@ -392,7 +392,7 @@ theorem Orthonormal.isHilbertSum {v : ι → E} (hv : Orthonormal 𝕜 v)
   IsHilbertSum.mk hv.OrthogonalFamily
     (by
       convert hsp
-      simp [← LinearMap.span_singleton_eq_range, ← Submodule.span_unionᵢ])
+      simp [← LinearMap.span_singleton_eq_range, ← Submodule.span_iUnion])
 #align orthonormal.is_hilbert_sum Orthonormal.isHilbertSum
 
 theorem Submodule.isHilbertSumOrthogonal (K : Submodule 𝕜 E) [hK : CompleteSpace K] :
@@ -403,7 +403,7 @@ theorem Submodule.isHilbertSumOrthogonal (K : Submodule 𝕜 E) [hK : CompleteSp
     cases b <;> first |exact orthogonal.complete_space K|assumption
   refine' IsHilbertSum.mkInternal _ K.orthogonal_family_self _
   refine' le_trans _ (Submodule.le_topologicalClosure _)
-  rw [supᵢ_bool_eq, cond, cond]
+  rw [iSup_bool_eq, cond, cond]
   refine' Codisjoint.top_le _
   exact submodule.is_compl_orthogonal_of_complete_space.codisjoint
 #align submodule.is_hilbert_sum_orthogonal Submodule.isHilbertSumOrthogonal
@@ -549,12 +549,12 @@ theorem finite_spans_dense (b : HilbertBasis ι 𝕜 E) :
   eq_top_iff.mpr <|
     b.dense_span.ge.trans
       (by
-        simp_rw [← Submodule.span_unionᵢ]
+        simp_rw [← Submodule.span_iUnion]
         exact
           topological_closure_mono
             (span_mono <|
               set.range_subset_iff.mpr fun i =>
-                Set.mem_unionᵢ_of_mem {i} <|
+                Set.mem_iUnion_of_mem {i} <|
                   finset.mem_coe.mpr <| Finset.mem_image_of_mem _ <| Finset.mem_singleton_self i))
 #align hilbert_basis.finite_spans_dense HilbertBasis.finite_spans_dense
 

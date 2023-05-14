@@ -48,7 +48,7 @@ theorem IndepFun.indepCat_comap_natural_of_lt (hf : ∀ i, StronglyMeasurable (f
   suffices
     indep (⨆ k ∈ {j}, MeasurableSpace.comap (f k) mβ)
       (⨆ k ∈ { k | k ≤ i }, MeasurableSpace.comap (f k) mβ) μ
-    by rwa [supᵢ_singleton] at this
+    by rwa [iSup_singleton] at this
   exact indep_supr_of_disjoint (fun k => (hf k).Measurable.comap_le) hfi (by simpa)
 #align probability_theory.Indep_fun.indep_comap_natural_of_lt ProbabilityTheory.IndepFun.indepCat_comap_natural_of_lt
 

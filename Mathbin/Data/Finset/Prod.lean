@@ -218,47 +218,47 @@ theorem image_swap_product [DecidableEq α] [DecidableEq β] (s : Finset α) (t 
     exact Set.image_swap_prod _ _
 #align finset.image_swap_product Finset.image_swap_product
 
-/- warning: finset.product_eq_bUnion -> Finset.product_eq_bunionᵢ is a dubious translation:
+/- warning: finset.product_eq_bUnion -> Finset.product_eq_biUnion is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : DecidableEq.{succ u2} β] (s : Finset.{u1} α) (t : Finset.{u2} β), Eq.{succ (max u1 u2)} (Finset.{max u1 u2} (Prod.{u1, u2} α β)) (Finset.product.{u1, u2} α β s t) (Finset.bunionᵢ.{u1, max u1 u2} α (Prod.{u1, u2} α β) (fun (a : Prod.{u1, u2} α β) (b : Prod.{u1, u2} α β) => Prod.decidableEq.{u1, u2} α β (fun (a : α) (b : α) => _inst_1 a b) (fun (a : β) (b : β) => _inst_2 a b) a b) s (fun (a : α) => Finset.image.{u2, max u1 u2} β (Prod.{u1, u2} α β) (fun (a : Prod.{u1, u2} α β) (b : Prod.{u1, u2} α β) => Prod.decidableEq.{u1, u2} α β (fun (a : α) (b : α) => _inst_1 a b) (fun (a : β) (b : β) => _inst_2 a b) a b) (fun (b : β) => Prod.mk.{u1, u2} α β a b) t))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : DecidableEq.{succ u2} β] (s : Finset.{u1} α) (t : Finset.{u2} β), Eq.{succ (max u1 u2)} (Finset.{max u1 u2} (Prod.{u1, u2} α β)) (Finset.product.{u1, u2} α β s t) (Finset.biUnion.{u1, max u1 u2} α (Prod.{u1, u2} α β) (fun (a : Prod.{u1, u2} α β) (b : Prod.{u1, u2} α β) => Prod.decidableEq.{u1, u2} α β (fun (a : α) (b : α) => _inst_1 a b) (fun (a : β) (b : β) => _inst_2 a b) a b) s (fun (a : α) => Finset.image.{u2, max u1 u2} β (Prod.{u1, u2} α β) (fun (a : Prod.{u1, u2} α β) (b : Prod.{u1, u2} α β) => Prod.decidableEq.{u1, u2} α β (fun (a : α) (b : α) => _inst_1 a b) (fun (a : β) (b : β) => _inst_2 a b) a b) (fun (b : β) => Prod.mk.{u1, u2} α β a b) t))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{max (succ u2) (succ u1)} (Prod.{u1, u2} α β)] (_inst_2 : Finset.{u1} α) (s : Finset.{u2} β), Eq.{max (succ u1) (succ u2)} (Finset.{max u2 u1} (Prod.{u1, u2} α β)) (Finset.product.{u1, u2} α β _inst_2 s) (Finset.bunionᵢ.{u1, max u2 u1} α (Prod.{u1, u2} α β) (fun (a : Prod.{u1, u2} α β) (b : Prod.{u1, u2} α β) => _inst_1 a b) _inst_2 (fun (a : α) => Finset.image.{u2, max u2 u1} β (Prod.{u1, u2} α β) (fun (a : Prod.{u1, u2} α β) (b : Prod.{u1, u2} α β) => _inst_1 a b) (fun (b : β) => Prod.mk.{u1, u2} α β a b) s))
-Case conversion may be inaccurate. Consider using '#align finset.product_eq_bUnion Finset.product_eq_bunionᵢₓ'. -/
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{max (succ u2) (succ u1)} (Prod.{u1, u2} α β)] (_inst_2 : Finset.{u1} α) (s : Finset.{u2} β), Eq.{max (succ u1) (succ u2)} (Finset.{max u2 u1} (Prod.{u1, u2} α β)) (Finset.product.{u1, u2} α β _inst_2 s) (Finset.biUnion.{u1, max u2 u1} α (Prod.{u1, u2} α β) (fun (a : Prod.{u1, u2} α β) (b : Prod.{u1, u2} α β) => _inst_1 a b) _inst_2 (fun (a : α) => Finset.image.{u2, max u2 u1} β (Prod.{u1, u2} α β) (fun (a : Prod.{u1, u2} α β) (b : Prod.{u1, u2} α β) => _inst_1 a b) (fun (b : β) => Prod.mk.{u1, u2} α β a b) s))
+Case conversion may be inaccurate. Consider using '#align finset.product_eq_bUnion Finset.product_eq_biUnionₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem product_eq_bunionᵢ [DecidableEq α] [DecidableEq β] (s : Finset α) (t : Finset β) :
-    s ×ˢ t = s.bunionᵢ fun a => t.image fun b => (a, b) :=
+theorem product_eq_biUnion [DecidableEq α] [DecidableEq β] (s : Finset α) (t : Finset β) :
+    s ×ˢ t = s.biUnion fun a => t.image fun b => (a, b) :=
   ext fun ⟨x, y⟩ => by
     simp only [mem_product, mem_bUnion, mem_image, exists_prop, Prod.mk.inj_iff, and_left_comm,
       exists_and_left, exists_eq_right, exists_eq_left]
-#align finset.product_eq_bUnion Finset.product_eq_bunionᵢ
+#align finset.product_eq_bUnion Finset.product_eq_biUnion
 
-/- warning: finset.product_eq_bUnion_right -> Finset.product_eq_bunionᵢ_right is a dubious translation:
+/- warning: finset.product_eq_bUnion_right -> Finset.product_eq_biUnion_right is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : DecidableEq.{succ u2} β] (s : Finset.{u1} α) (t : Finset.{u2} β), Eq.{succ (max u1 u2)} (Finset.{max u1 u2} (Prod.{u1, u2} α β)) (Finset.product.{u1, u2} α β s t) (Finset.bunionᵢ.{u2, max u1 u2} β (Prod.{u1, u2} α β) (fun (a : Prod.{u1, u2} α β) (b : Prod.{u1, u2} α β) => Prod.decidableEq.{u1, u2} α β (fun (a : α) (b : α) => _inst_1 a b) (fun (a : β) (b : β) => _inst_2 a b) a b) t (fun (b : β) => Finset.image.{u1, max u1 u2} α (Prod.{u1, u2} α β) (fun (a : Prod.{u1, u2} α β) (b : Prod.{u1, u2} α β) => Prod.decidableEq.{u1, u2} α β (fun (a : α) (b : α) => _inst_1 a b) (fun (a : β) (b : β) => _inst_2 a b) a b) (fun (a : α) => Prod.mk.{u1, u2} α β a b) s))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : DecidableEq.{succ u2} β] (s : Finset.{u1} α) (t : Finset.{u2} β), Eq.{succ (max u1 u2)} (Finset.{max u1 u2} (Prod.{u1, u2} α β)) (Finset.product.{u1, u2} α β s t) (Finset.biUnion.{u2, max u1 u2} β (Prod.{u1, u2} α β) (fun (a : Prod.{u1, u2} α β) (b : Prod.{u1, u2} α β) => Prod.decidableEq.{u1, u2} α β (fun (a : α) (b : α) => _inst_1 a b) (fun (a : β) (b : β) => _inst_2 a b) a b) t (fun (b : β) => Finset.image.{u1, max u1 u2} α (Prod.{u1, u2} α β) (fun (a : Prod.{u1, u2} α β) (b : Prod.{u1, u2} α β) => Prod.decidableEq.{u1, u2} α β (fun (a : α) (b : α) => _inst_1 a b) (fun (a : β) (b : β) => _inst_2 a b) a b) (fun (a : α) => Prod.mk.{u1, u2} α β a b) s))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{max (succ u2) (succ u1)} (Prod.{u1, u2} α β)] (_inst_2 : Finset.{u1} α) (s : Finset.{u2} β), Eq.{max (succ u1) (succ u2)} (Finset.{max u2 u1} (Prod.{u1, u2} α β)) (Finset.product.{u1, u2} α β _inst_2 s) (Finset.bunionᵢ.{u2, max u2 u1} β (Prod.{u1, u2} α β) (fun (a : Prod.{u1, u2} α β) (b : Prod.{u1, u2} α β) => _inst_1 a b) s (fun (b : β) => Finset.image.{u1, max u2 u1} α (Prod.{u1, u2} α β) (fun (a : Prod.{u1, u2} α β) (b : Prod.{u1, u2} α β) => _inst_1 a b) (fun (a : α) => Prod.mk.{u1, u2} α β a b) _inst_2))
-Case conversion may be inaccurate. Consider using '#align finset.product_eq_bUnion_right Finset.product_eq_bunionᵢ_rightₓ'. -/
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{max (succ u2) (succ u1)} (Prod.{u1, u2} α β)] (_inst_2 : Finset.{u1} α) (s : Finset.{u2} β), Eq.{max (succ u1) (succ u2)} (Finset.{max u2 u1} (Prod.{u1, u2} α β)) (Finset.product.{u1, u2} α β _inst_2 s) (Finset.biUnion.{u2, max u2 u1} β (Prod.{u1, u2} α β) (fun (a : Prod.{u1, u2} α β) (b : Prod.{u1, u2} α β) => _inst_1 a b) s (fun (b : β) => Finset.image.{u1, max u2 u1} α (Prod.{u1, u2} α β) (fun (a : Prod.{u1, u2} α β) (b : Prod.{u1, u2} α β) => _inst_1 a b) (fun (a : α) => Prod.mk.{u1, u2} α β a b) _inst_2))
+Case conversion may be inaccurate. Consider using '#align finset.product_eq_bUnion_right Finset.product_eq_biUnion_rightₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem product_eq_bunionᵢ_right [DecidableEq α] [DecidableEq β] (s : Finset α) (t : Finset β) :
-    s ×ˢ t = t.bunionᵢ fun b => s.image fun a => (a, b) :=
+theorem product_eq_biUnion_right [DecidableEq α] [DecidableEq β] (s : Finset α) (t : Finset β) :
+    s ×ˢ t = t.biUnion fun b => s.image fun a => (a, b) :=
   ext fun ⟨x, y⟩ => by
     simp only [mem_product, mem_bUnion, mem_image, exists_prop, Prod.mk.inj_iff, and_left_comm,
       exists_and_left, exists_eq_right, exists_eq_left]
-#align finset.product_eq_bUnion_right Finset.product_eq_bunionᵢ_right
+#align finset.product_eq_bUnion_right Finset.product_eq_biUnion_right
 
-/- warning: finset.product_bUnion -> Finset.product_bunionᵢ is a dubious translation:
+/- warning: finset.product_bUnion -> Finset.product_biUnion is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : DecidableEq.{succ u3} γ] (s : Finset.{u1} α) (t : Finset.{u2} β) (f : (Prod.{u1, u2} α β) -> (Finset.{u3} γ)), Eq.{succ u3} (Finset.{u3} γ) (Finset.bunionᵢ.{max u1 u2, u3} (Prod.{u1, u2} α β) γ (fun (a : γ) (b : γ) => _inst_1 a b) (Finset.product.{u1, u2} α β s t) f) (Finset.bunionᵢ.{u1, u3} α γ (fun (a : γ) (b : γ) => _inst_1 a b) s (fun (a : α) => Finset.bunionᵢ.{u2, u3} β γ (fun (a : γ) (b : γ) => _inst_1 a b) t (fun (b : β) => f (Prod.mk.{u1, u2} α β a b))))
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : DecidableEq.{succ u3} γ] (s : Finset.{u1} α) (t : Finset.{u2} β) (f : (Prod.{u1, u2} α β) -> (Finset.{u3} γ)), Eq.{succ u3} (Finset.{u3} γ) (Finset.biUnion.{max u1 u2, u3} (Prod.{u1, u2} α β) γ (fun (a : γ) (b : γ) => _inst_1 a b) (Finset.product.{u1, u2} α β s t) f) (Finset.biUnion.{u1, u3} α γ (fun (a : γ) (b : γ) => _inst_1 a b) s (fun (a : α) => Finset.biUnion.{u2, u3} β γ (fun (a : γ) (b : γ) => _inst_1 a b) t (fun (b : β) => f (Prod.mk.{u1, u2} α β a b))))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} [_inst_1 : DecidableEq.{succ u3} γ] (s : Finset.{u2} α) (t : Finset.{u1} β) (f : (Prod.{u2, u1} α β) -> (Finset.{u3} γ)), Eq.{succ u3} (Finset.{u3} γ) (Finset.bunionᵢ.{max u2 u1, u3} (Prod.{u2, u1} α β) γ (fun (a : γ) (b : γ) => _inst_1 a b) (Finset.product.{u2, u1} α β s t) f) (Finset.bunionᵢ.{u2, u3} α γ (fun (a : γ) (b : γ) => _inst_1 a b) s (fun (a : α) => Finset.bunionᵢ.{u1, u3} β γ (fun (a : γ) (b : γ) => _inst_1 a b) t (fun (b : β) => f (Prod.mk.{u2, u1} α β a b))))
-Case conversion may be inaccurate. Consider using '#align finset.product_bUnion Finset.product_bunionᵢₓ'. -/
+  forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} [_inst_1 : DecidableEq.{succ u3} γ] (s : Finset.{u2} α) (t : Finset.{u1} β) (f : (Prod.{u2, u1} α β) -> (Finset.{u3} γ)), Eq.{succ u3} (Finset.{u3} γ) (Finset.biUnion.{max u2 u1, u3} (Prod.{u2, u1} α β) γ (fun (a : γ) (b : γ) => _inst_1 a b) (Finset.product.{u2, u1} α β s t) f) (Finset.biUnion.{u2, u3} α γ (fun (a : γ) (b : γ) => _inst_1 a b) s (fun (a : α) => Finset.biUnion.{u1, u3} β γ (fun (a : γ) (b : γ) => _inst_1 a b) t (fun (b : β) => f (Prod.mk.{u2, u1} α β a b))))
+Case conversion may be inaccurate. Consider using '#align finset.product_bUnion Finset.product_biUnionₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- See also `finset.sup_product_left`. -/
 @[simp]
-theorem product_bunionᵢ [DecidableEq γ] (s : Finset α) (t : Finset β) (f : α × β → Finset γ) :
-    (s ×ˢ t).bunionᵢ f = s.bunionᵢ fun a => t.bunionᵢ fun b => f (a, b) := by
+theorem product_biUnion [DecidableEq γ] (s : Finset α) (t : Finset β) (f : α × β → Finset γ) :
+    (s ×ˢ t).biUnion f = s.biUnion fun a => t.biUnion fun b => f (a, b) := by
   classical simp_rw [product_eq_bUnion, bUnion_bUnion, image_bUnion]
-#align finset.product_bUnion Finset.product_bunionᵢ
+#align finset.product_bUnion Finset.product_biUnion
 
 /- warning: finset.card_product -> Finset.card_product is a dubious translation:
 lean 3 declaration is

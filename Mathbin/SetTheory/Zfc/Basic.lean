@@ -630,25 +630,25 @@ theorem mem_powerset : ∀ {x y : PSet}, y ∈ powerset x ↔ y ⊆ x
 #align pSet.mem_powerset PSet.mem_powerset
 -/
 
-#print PSet.unionₛ /-
+#print PSet.sUnion /-
 /-- The pre-set union operator -/
-def unionₛ (a : PSet) : PSet :=
+def sUnion (a : PSet) : PSet :=
   ⟨Σx, (a.Func x).type, fun ⟨x, y⟩ => (a.Func x).Func y⟩
-#align pSet.sUnion PSet.unionₛ
+#align pSet.sUnion PSet.sUnion
 -/
 
 -- mathport name: pSet.sUnion
-prefix:110 "⋃₀ " => PSet.unionₛ
+prefix:110 "⋃₀ " => PSet.sUnion
 
-/- warning: pSet.mem_sUnion -> PSet.mem_unionₛ is a dubious translation:
+/- warning: pSet.mem_sUnion -> PSet.mem_sUnion is a dubious translation:
 lean 3 declaration is
-  forall {x : PSet.{u1}} {y : PSet.{u1}}, Iff (Membership.Mem.{succ u1, succ u1} PSet.{u1} PSet.{u1} PSet.hasMem.{u1} y (PSet.unionₛ.{u1} x)) (Exists.{succ (succ u1)} PSet.{u1} (fun (z : PSet.{u1}) => Exists.{0} (Membership.Mem.{succ u1, succ u1} PSet.{u1} PSet.{u1} PSet.hasMem.{u1} z x) (fun (H : Membership.Mem.{succ u1, succ u1} PSet.{u1} PSet.{u1} PSet.hasMem.{u1} z x) => Membership.Mem.{succ u1, succ u1} PSet.{u1} PSet.{u1} PSet.hasMem.{u1} y z)))
+  forall {x : PSet.{u1}} {y : PSet.{u1}}, Iff (Membership.Mem.{succ u1, succ u1} PSet.{u1} PSet.{u1} PSet.hasMem.{u1} y (PSet.sUnion.{u1} x)) (Exists.{succ (succ u1)} PSet.{u1} (fun (z : PSet.{u1}) => Exists.{0} (Membership.Mem.{succ u1, succ u1} PSet.{u1} PSet.{u1} PSet.hasMem.{u1} z x) (fun (H : Membership.Mem.{succ u1, succ u1} PSet.{u1} PSet.{u1} PSet.hasMem.{u1} z x) => Membership.Mem.{succ u1, succ u1} PSet.{u1} PSet.{u1} PSet.hasMem.{u1} y z)))
 but is expected to have type
-  forall {x : PSet.{u1}} {y : PSet.{u1}}, Iff (Membership.mem.{succ u1, succ u1} PSet.{u1} PSet.{u1} PSet.instMembershipPSetPSet.{u1} y (PSet.unionₛ.{u1} x)) (Exists.{succ (succ u1)} PSet.{u1} (fun (z : PSet.{u1}) => And (Membership.mem.{succ u1, succ u1} PSet.{u1} PSet.{u1} PSet.instMembershipPSetPSet.{u1} z x) (Membership.mem.{succ u1, succ u1} PSet.{u1} PSet.{u1} PSet.instMembershipPSetPSet.{u1} y z)))
-Case conversion may be inaccurate. Consider using '#align pSet.mem_sUnion PSet.mem_unionₛₓ'. -/
+  forall {x : PSet.{u1}} {y : PSet.{u1}}, Iff (Membership.mem.{succ u1, succ u1} PSet.{u1} PSet.{u1} PSet.instMembershipPSetPSet.{u1} y (PSet.sUnion.{u1} x)) (Exists.{succ (succ u1)} PSet.{u1} (fun (z : PSet.{u1}) => And (Membership.mem.{succ u1, succ u1} PSet.{u1} PSet.{u1} PSet.instMembershipPSetPSet.{u1} z x) (Membership.mem.{succ u1, succ u1} PSet.{u1} PSet.{u1} PSet.instMembershipPSetPSet.{u1} y z)))
+Case conversion may be inaccurate. Consider using '#align pSet.mem_sUnion PSet.mem_sUnionₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem mem_unionₛ : ∀ {x y : PSet.{u}}, y ∈ ⋃₀ x ↔ ∃ z ∈ x, y ∈ z
+theorem mem_sUnion : ∀ {x y : PSet.{u}}, y ∈ ⋃₀ x ↔ ∃ z ∈ x, y ∈ z
   | ⟨α, A⟩, y =>
     ⟨fun ⟨⟨a, c⟩, (e : Equiv y ((A a).Func c))⟩ =>
       have : Func (A a) c ∈ mk (A a).type (A a).Func := Mem.mk (A a).Func c
@@ -660,17 +660,17 @@ theorem mem_unionₛ : ∀ {x y : PSet.{u}}, y ∈ ⋃₀ x ↔ ∃ z ∈ x, y �
         let ⟨βt, tβ⟩ := e
         let ⟨c, bc⟩ := βt b
         ⟨⟨a, c⟩, yb.trans bc⟩⟩
-#align pSet.mem_sUnion PSet.mem_unionₛ
+#align pSet.mem_sUnion PSet.mem_sUnion
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print PSet.toSet_unionₛ /-
+#print PSet.toSet_sUnion /-
 @[simp]
-theorem toSet_unionₛ (x : PSet.{u}) : (⋃₀ x).toSet = ⋃₀ (toSet '' x.toSet) :=
+theorem toSet_sUnion (x : PSet.{u}) : (⋃₀ x).toSet = ⋃₀ (toSet '' x.toSet) :=
   by
   ext
   simp
-#align pSet.to_set_sUnion PSet.toSet_unionₛ
+#align pSet.to_set_sUnion PSet.toSet_sUnion
 -/
 
 #print PSet.image /-
@@ -1347,9 +1347,9 @@ theorem mem_powerset {x y : ZFSet.{u}} : y ∈ powerset x ↔ y ⊆ x :=
 #align Set.mem_powerset ZFSet.mem_powerset
 -/
 
-#print ZFSet.unionₛ_lem /-
-theorem unionₛ_lem {α β : Type u} (A : α → PSet) (B : β → PSet) (αβ : ∀ a, ∃ b, Equiv (A a) (B b)) :
-    ∀ a, ∃ b, Equiv ((unionₛ ⟨α, A⟩).Func a) ((unionₛ ⟨β, B⟩).Func b)
+#print ZFSet.sUnion_lem /-
+theorem sUnion_lem {α β : Type u} (A : α → PSet) (B : β → PSet) (αβ : ∀ a, ∃ b, Equiv (A a) (B b)) :
+    ∀ a, ∃ b, Equiv ((sUnion ⟨α, A⟩).Func a) ((sUnion ⟨β, B⟩).Func b)
   | ⟨a, c⟩ => by
     let ⟨b, hb⟩ := αβ a
     induction' ea : A a with γ Γ
@@ -1366,141 +1366,141 @@ theorem unionₛ_lem {α β : Type u} (A : α → PSet) (B : β → PSet) (αβ 
           rw [mk_func]
           exact Eq.ndrec d (Eq.symm eb)⟩,
         this⟩
-#align Set.sUnion_lem ZFSet.unionₛ_lem
+#align Set.sUnion_lem ZFSet.sUnion_lem
 -/
 
-#print ZFSet.unionₛ /-
+#print ZFSet.sUnion /-
 /-- The union operator, the collection of elements of elements of a ZFC set -/
-def unionₛ : ZFSet → ZFSet :=
+def sUnion : ZFSet → ZFSet :=
   Resp.eval 1
-    ⟨PSet.unionₛ, fun ⟨α, A⟩ ⟨β, B⟩ ⟨αβ, βα⟩ =>
-      ⟨unionₛ_lem A B αβ, fun a =>
+    ⟨PSet.sUnion, fun ⟨α, A⟩ ⟨β, B⟩ ⟨αβ, βα⟩ =>
+      ⟨sUnion_lem A B αβ, fun a =>
         Exists.elim
-          (unionₛ_lem B A (fun b => Exists.elim (βα b) fun c hc => ⟨c, PSet.Equiv.symm hc⟩) a)
+          (sUnion_lem B A (fun b => Exists.elim (βα b) fun c hc => ⟨c, PSet.Equiv.symm hc⟩) a)
           fun b hb => ⟨b, PSet.Equiv.symm hb⟩⟩⟩
-#align Set.sUnion ZFSet.unionₛ
+#align Set.sUnion ZFSet.sUnion
 -/
 
 -- mathport name: Set.sUnion
-prefix:110 "⋃₀ " => ZFSet.unionₛ
+prefix:110 "⋃₀ " => ZFSet.sUnion
 
-#print ZFSet.interₛ /-
+#print ZFSet.sInter /-
 /-- The intersection operator, the collection of elements in all of the elements of a ZFC set. We
 special-case `⋂₀ ∅ = ∅`. -/
-noncomputable def interₛ (x : ZFSet) : ZFSet := by
+noncomputable def sInter (x : ZFSet) : ZFSet := by
   classical exact dite x.nonempty (fun h => { y ∈ h.some | ∀ z ∈ x, y ∈ z }) fun _ => ∅
-#align Set.sInter ZFSet.interₛ
+#align Set.sInter ZFSet.sInter
 -/
 
 -- mathport name: Set.sInter
-prefix:110 "⋂₀ " => ZFSet.interₛ
+prefix:110 "⋂₀ " => ZFSet.sInter
 
-/- warning: Set.mem_sUnion -> ZFSet.mem_unionₛ is a dubious translation:
+/- warning: Set.mem_sUnion -> ZFSet.mem_sUnion is a dubious translation:
 lean 3 declaration is
-  forall {x : ZFSet.{u1}} {y : ZFSet.{u1}}, Iff (Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} y (ZFSet.unionₛ.{u1} x)) (Exists.{succ (succ u1)} ZFSet.{u1} (fun (z : ZFSet.{u1}) => Exists.{0} (Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} z x) (fun (H : Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} z x) => Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} y z)))
+  forall {x : ZFSet.{u1}} {y : ZFSet.{u1}}, Iff (Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} y (ZFSet.sUnion.{u1} x)) (Exists.{succ (succ u1)} ZFSet.{u1} (fun (z : ZFSet.{u1}) => Exists.{0} (Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} z x) (fun (H : Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} z x) => Membership.Mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.hasMem.{u1} y z)))
 but is expected to have type
-  forall {x : ZFSet.{u1}} {y : ZFSet.{u1}}, Iff (Membership.mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.instMembershipZFSetZFSet.{u1} y (ZFSet.unionₛ.{u1} x)) (Exists.{succ (succ u1)} ZFSet.{u1} (fun (z : ZFSet.{u1}) => And (Membership.mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.instMembershipZFSetZFSet.{u1} z x) (Membership.mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.instMembershipZFSetZFSet.{u1} y z)))
-Case conversion may be inaccurate. Consider using '#align Set.mem_sUnion ZFSet.mem_unionₛₓ'. -/
+  forall {x : ZFSet.{u1}} {y : ZFSet.{u1}}, Iff (Membership.mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.instMembershipZFSetZFSet.{u1} y (ZFSet.sUnion.{u1} x)) (Exists.{succ (succ u1)} ZFSet.{u1} (fun (z : ZFSet.{u1}) => And (Membership.mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.instMembershipZFSetZFSet.{u1} z x) (Membership.mem.{succ u1, succ u1} ZFSet.{u1} ZFSet.{u1} ZFSet.instMembershipZFSetZFSet.{u1} y z)))
+Case conversion may be inaccurate. Consider using '#align Set.mem_sUnion ZFSet.mem_sUnionₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem mem_unionₛ {x y : ZFSet.{u}} : y ∈ ⋃₀ x ↔ ∃ z ∈ x, y ∈ z :=
+theorem mem_sUnion {x y : ZFSet.{u}} : y ∈ ⋃₀ x ↔ ∃ z ∈ x, y ∈ z :=
   Quotient.induction_on₂ x y fun x y =>
-    Iff.trans mem_unionₛ
+    Iff.trans mem_sUnion
       ⟨fun ⟨z, h⟩ => ⟨⟦z⟧, h⟩, fun ⟨z, h⟩ => Quotient.inductionOn z (fun z h => ⟨z, h⟩) h⟩
-#align Set.mem_sUnion ZFSet.mem_unionₛ
+#align Set.mem_sUnion ZFSet.mem_sUnion
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print ZFSet.mem_interₛ /-
-theorem mem_interₛ {x y : ZFSet} (h : x.Nonempty) : y ∈ ⋂₀ x ↔ ∀ z ∈ x, y ∈ z :=
+#print ZFSet.mem_sInter /-
+theorem mem_sInter {x y : ZFSet} (h : x.Nonempty) : y ∈ ⋂₀ x ↔ ∀ z ∈ x, y ∈ z :=
   by
   rw [sInter, dif_pos h]
   simp only [mem_to_set, mem_sep, and_iff_right_iff_imp]
   exact fun H => H _ h.some_mem
-#align Set.mem_sInter ZFSet.mem_interₛ
+#align Set.mem_sInter ZFSet.mem_sInter
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print ZFSet.unionₛ_empty /-
+#print ZFSet.sUnion_empty /-
 @[simp]
-theorem unionₛ_empty : ⋃₀ (∅ : ZFSet) = ∅ := by
+theorem sUnion_empty : ⋃₀ (∅ : ZFSet) = ∅ := by
   ext
   simp
-#align Set.sUnion_empty ZFSet.unionₛ_empty
+#align Set.sUnion_empty ZFSet.sUnion_empty
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print ZFSet.interₛ_empty /-
+#print ZFSet.sInter_empty /-
 @[simp]
-theorem interₛ_empty : ⋂₀ (∅ : ZFSet) = ∅ :=
+theorem sInter_empty : ⋂₀ (∅ : ZFSet) = ∅ :=
   dif_neg <| by simp
-#align Set.sInter_empty ZFSet.interₛ_empty
+#align Set.sInter_empty ZFSet.sInter_empty
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print ZFSet.mem_of_mem_interₛ /-
-theorem mem_of_mem_interₛ {x y z : ZFSet} (hy : y ∈ ⋂₀ x) (hz : z ∈ x) : y ∈ z :=
+#print ZFSet.mem_of_mem_sInter /-
+theorem mem_of_mem_sInter {x y z : ZFSet} (hy : y ∈ ⋂₀ x) (hz : z ∈ x) : y ∈ z :=
   by
   rcases eq_empty_or_nonempty x with (rfl | hx)
   · exact (not_mem_empty z hz).elim
   · exact (mem_sInter hx).1 hy z hz
-#align Set.mem_of_mem_sInter ZFSet.mem_of_mem_interₛ
+#align Set.mem_of_mem_sInter ZFSet.mem_of_mem_sInter
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print ZFSet.mem_unionₛ_of_mem /-
-theorem mem_unionₛ_of_mem {x y z : ZFSet} (hy : y ∈ z) (hz : z ∈ x) : y ∈ ⋃₀ x :=
-  mem_unionₛ.2 ⟨z, hz, hy⟩
-#align Set.mem_sUnion_of_mem ZFSet.mem_unionₛ_of_mem
+#print ZFSet.mem_sUnion_of_mem /-
+theorem mem_sUnion_of_mem {x y z : ZFSet} (hy : y ∈ z) (hz : z ∈ x) : y ∈ ⋃₀ x :=
+  mem_sUnion.2 ⟨z, hz, hy⟩
+#align Set.mem_sUnion_of_mem ZFSet.mem_sUnion_of_mem
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print ZFSet.not_mem_interₛ_of_not_mem /-
-theorem not_mem_interₛ_of_not_mem {x y z : ZFSet} (hy : ¬y ∈ z) (hz : z ∈ x) : ¬y ∈ ⋂₀ x :=
-  fun hx => hy <| mem_of_mem_interₛ hx hz
-#align Set.not_mem_sInter_of_not_mem ZFSet.not_mem_interₛ_of_not_mem
+#print ZFSet.not_mem_sInter_of_not_mem /-
+theorem not_mem_sInter_of_not_mem {x y z : ZFSet} (hy : ¬y ∈ z) (hz : z ∈ x) : ¬y ∈ ⋂₀ x :=
+  fun hx => hy <| mem_of_mem_sInter hx hz
+#align Set.not_mem_sInter_of_not_mem ZFSet.not_mem_sInter_of_not_mem
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print ZFSet.unionₛ_singleton /-
+#print ZFSet.sUnion_singleton /-
 @[simp]
-theorem unionₛ_singleton {x : ZFSet.{u}} : ⋃₀ ({x} : ZFSet) = x :=
+theorem sUnion_singleton {x : ZFSet.{u}} : ⋃₀ ({x} : ZFSet) = x :=
   ext fun y => by simp_rw [mem_sUnion, exists_prop, mem_singleton, exists_eq_left]
-#align Set.sUnion_singleton ZFSet.unionₛ_singleton
+#align Set.sUnion_singleton ZFSet.sUnion_singleton
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print ZFSet.interₛ_singleton /-
+#print ZFSet.sInter_singleton /-
 @[simp]
-theorem interₛ_singleton {x : ZFSet.{u}} : ⋂₀ ({x} : ZFSet) = x :=
+theorem sInter_singleton {x : ZFSet.{u}} : ⋂₀ ({x} : ZFSet) = x :=
   ext fun y => by simp_rw [mem_sInter (singleton_nonempty x), mem_singleton, forall_eq]
-#align Set.sInter_singleton ZFSet.interₛ_singleton
+#align Set.sInter_singleton ZFSet.sInter_singleton
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print ZFSet.toSet_unionₛ /-
+#print ZFSet.toSet_sUnion /-
 @[simp]
-theorem toSet_unionₛ (x : ZFSet.{u}) : (⋃₀ x).toSet = ⋃₀ (toSet '' x.toSet) :=
+theorem toSet_sUnion (x : ZFSet.{u}) : (⋃₀ x).toSet = ⋃₀ (toSet '' x.toSet) :=
   by
   ext
   simp
-#align Set.to_set_sUnion ZFSet.toSet_unionₛ
+#align Set.to_set_sUnion ZFSet.toSet_sUnion
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print ZFSet.toSet_interₛ /-
-theorem toSet_interₛ {x : ZFSet.{u}} (h : x.Nonempty) : (⋂₀ x).toSet = ⋂₀ (toSet '' x.toSet) :=
+#print ZFSet.toSet_sInter /-
+theorem toSet_sInter {x : ZFSet.{u}} (h : x.Nonempty) : (⋂₀ x).toSet = ⋂₀ (toSet '' x.toSet) :=
   by
   ext
   simp [mem_sInter h]
-#align Set.to_set_sInter ZFSet.toSet_interₛ
+#align Set.to_set_sInter ZFSet.toSet_sInter
 -/
 
 #print ZFSet.singleton_injective /-
 theorem singleton_injective : Function.Injective (@singleton ZFSet ZFSet _) := fun x y H =>
   by
-  let this := congr_arg unionₛ H
+  let this := congr_arg sUnion H
   rwa [sUnion_singleton, sUnion_singleton] at this
 #align Set.singleton_injective ZFSet.singleton_injective
 -/
@@ -1610,9 +1610,9 @@ theorem mem_diff {x y z : ZFSet.{u}} : z ∈ x \ y ↔ z ∈ x ∧ z ∉ y :=
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print ZFSet.unionₛ_pair /-
+#print ZFSet.sUnion_pair /-
 @[simp]
-theorem unionₛ_pair {x y : ZFSet.{u}} : ⋃₀ ({x, y} : ZFSet.{u}) = x ∪ y :=
+theorem sUnion_pair {x y : ZFSet.{u}} : ⋃₀ ({x, y} : ZFSet.{u}) = x ∪ y :=
   by
   ext
   simp_rw [mem_union, mem_sUnion, mem_pair]
@@ -1623,7 +1623,7 @@ theorem unionₛ_pair {x y : ZFSet.{u}} : ⋃₀ ({x, y} : ZFSet.{u}) = x ∪ y 
   · rintro (hz | hz)
     · exact ⟨x, Or.inl rfl, hz⟩
     · exact ⟨y, Or.inr rfl, hz⟩
-#align Set.sUnion_pair ZFSet.unionₛ_pair
+#align Set.sUnion_pair ZFSet.sUnion_pair
 -/
 
 #print ZFSet.mem_wf /-
@@ -2170,21 +2170,23 @@ def powerset (x : Class) : Class :=
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Class.unionₛ /-
+#print Class.sUnion /-
 /-- The union of a class is the class of all members of ZFC sets in the class -/
-def unionₛ (x : Class) : Class :=
+def sUnion (x : Class) : Class :=
   ⋃₀ classToCong x
-#align Class.sUnion Class.unionₛ
+#align Class.sUnion Class.sUnion
 -/
 
 -- mathport name: Class.sUnion
-prefix:110 "⋃₀ " => Class.unionₛ
+prefix:110 "⋃₀ " => Class.sUnion
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Class.sInter /-
 /-- The intersection of a class is the class of all members of ZFC sets in the class -/
 def sInter (x : Class) : Class :=
   ⋂₀ classToCong x
 #align Class.sInter Class.sInter
+-/
 
 -- mathport name: Class.sInter
 prefix:110 "⋂₀ " => Class.sInter
@@ -2295,74 +2297,74 @@ theorem powerset_apply {A : Class.{u}} {x : ZFSet.{u}} : powerset A x ↔ ↑x �
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Class.unionₛ_apply /-
+#print Class.sUnion_apply /-
 @[simp]
-theorem unionₛ_apply {x : Class} {y : ZFSet} : (⋃₀ x) y ↔ ∃ z : ZFSet, x z ∧ y ∈ z :=
+theorem sUnion_apply {x : Class} {y : ZFSet} : (⋃₀ x) y ↔ ∃ z : ZFSet, x z ∧ y ∈ z :=
   by
   constructor
   · rintro ⟨-, ⟨z, rfl, hxz⟩, hyz⟩
     exact ⟨z, hxz, hyz⟩
   · exact fun ⟨z, hxz, hyz⟩ => ⟨_, coe_mem.2 hxz, hyz⟩
-#align Class.sUnion_apply Class.unionₛ_apply
+#align Class.sUnion_apply Class.sUnion_apply
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Class.coe_unionₛ /-
+#print Class.coe_sUnion /-
 @[simp, norm_cast]
-theorem coe_unionₛ (x : ZFSet.{u}) : ↑(⋃₀ x) = ⋃₀ (x : Class.{u}) :=
+theorem coe_sUnion (x : ZFSet.{u}) : ↑(⋃₀ x) = ⋃₀ (x : Class.{u}) :=
   ext fun y =>
-    ZFSet.mem_unionₛ.trans (unionₛ_apply.trans <| by simp_rw [coe_apply, exists_prop]).symm
-#align Class.coe_sUnion Class.coe_unionₛ
+    ZFSet.mem_sUnion.trans (sUnion_apply.trans <| by simp_rw [coe_apply, exists_prop]).symm
+#align Class.coe_sUnion Class.coe_sUnion
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Class.mem_unionₛ /-
+#print Class.mem_sUnion /-
 @[simp]
-theorem mem_unionₛ {x y : Class.{u}} : y ∈ ⋃₀ x ↔ ∃ z, z ∈ x ∧ y ∈ z :=
+theorem mem_sUnion {x y : Class.{u}} : y ∈ ⋃₀ x ↔ ∃ z, z ∈ x ∧ y ∈ z :=
   by
   constructor
   · rintro ⟨w, rfl, z, hzx, hwz⟩
     exact ⟨z, hzx, coe_mem.2 hwz⟩
   · rintro ⟨w, hwx, z, rfl, hwz⟩
     exact ⟨z, rfl, w, hwx, hwz⟩
-#align Class.mem_sUnion Class.mem_unionₛ
+#align Class.mem_sUnion Class.mem_sUnion
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Class.interₛ_apply /-
+#print Class.sInter_apply /-
 @[simp]
-theorem interₛ_apply {x : Class.{u}} {y : ZFSet.{u}} : (⋂₀ x) y ↔ ∀ z : ZFSet.{u}, x z → y ∈ z :=
+theorem sInter_apply {x : Class.{u}} {y : ZFSet.{u}} : (⋂₀ x) y ↔ ∀ z : ZFSet.{u}, x z → y ∈ z :=
   by
   refine' ⟨fun hxy z hxz => hxy _ ⟨z, rfl, hxz⟩, _⟩
   rintro H - ⟨z, rfl, hxz⟩
   exact H _ hxz
-#align Class.sInter_apply Class.interₛ_apply
+#align Class.sInter_apply Class.sInter_apply
 -/
 
-/- warning: Class.coe_sInter clashes with Class.sInter_coe -> Class.coe_interₛ
-Case conversion may be inaccurate. Consider using '#align Class.coe_sInter Class.coe_interₛₓ'. -/
+/- warning: Class.coe_sInter clashes with Class.sInter_coe -> Class.coe_sInter
+Case conversion may be inaccurate. Consider using '#align Class.coe_sInter Class.coe_sInterₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Class.coe_interₛ /-
+#print Class.coe_sInter /-
 @[simp, norm_cast]
-theorem coe_interₛ {x : ZFSet.{u}} (h : x.Nonempty) : ↑(⋂₀ x) = ⋂₀ (x : Class.{u}) :=
-  Set.ext fun y => (ZFSet.mem_interₛ h).trans interₛ_apply.symm
-#align Class.coe_sInter Class.coe_interₛ
+theorem coe_sInter {x : ZFSet.{u}} (h : x.Nonempty) : ↑(⋂₀ x) = ⋂₀ (x : Class.{u}) :=
+  Set.ext fun y => (ZFSet.mem_sInter h).trans sInter_apply.symm
+#align Class.coe_sInter Class.coe_sInter
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Class.mem_of_mem_interₛ /-
-theorem mem_of_mem_interₛ {x y z : Class} (hy : y ∈ ⋂₀ x) (hz : z ∈ x) : y ∈ z :=
+#print Class.mem_of_mem_sInter /-
+theorem mem_of_mem_sInter {x y z : Class} (hy : y ∈ ⋂₀ x) (hz : z ∈ x) : y ∈ z :=
   by
   obtain ⟨w, rfl, hw⟩ := hy
   exact coe_mem.2 (hw z hz)
-#align Class.mem_of_mem_sInter Class.mem_of_mem_interₛ
+#align Class.mem_of_mem_sInter Class.mem_of_mem_sInter
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Class.mem_interₛ /-
-theorem mem_interₛ {x y : Class.{u}} (h : x.Nonempty) : y ∈ ⋂₀ x ↔ ∀ z, z ∈ x → y ∈ z :=
+#print Class.mem_sInter /-
+theorem mem_sInter {x y : Class.{u}} (h : x.Nonempty) : y ∈ ⋂₀ x ↔ ∀ z, z ∈ x → y ∈ z :=
   by
   refine' ⟨fun hy z => mem_of_mem_sInter hy, fun H => _⟩
   simp_rw [mem_def, sInter_apply]
@@ -2370,27 +2372,27 @@ theorem mem_interₛ {x y : Class.{u}} (h : x.Nonempty) : y ∈ ⋂₀ x ↔ ∀
   obtain ⟨y, rfl, hzy⟩ := H z (coe_mem.2 hz)
   refine' ⟨y, rfl, fun w hxw => _⟩
   simpa only [coe_mem, coe_apply] using H w (coe_mem.2 hxw)
-#align Class.mem_sInter Class.mem_interₛ
+#align Class.mem_sInter Class.mem_sInter
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Class.unionₛ_empty /-
+#print Class.sUnion_empty /-
 @[simp]
-theorem unionₛ_empty : ⋃₀ (∅ : Class.{u}) = ∅ :=
+theorem sUnion_empty : ⋃₀ (∅ : Class.{u}) = ∅ :=
   by
   ext
   simp
-#align Class.sUnion_empty Class.unionₛ_empty
+#align Class.sUnion_empty Class.sUnion_empty
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Class.interₛ_empty /-
+#print Class.sInter_empty /-
 @[simp]
-theorem interₛ_empty : ⋂₀ (∅ : Class.{u}) = univ :=
+theorem sInter_empty : ⋂₀ (∅ : Class.{u}) = univ :=
   by
   ext
   simp [sInter, ← univ]
-#align Class.sInter_empty Class.interₛ_empty
+#align Class.sInter_empty Class.sInter_empty
 -/
 
 #print Class.eq_univ_of_powerset_subset /-
@@ -2495,7 +2497,7 @@ theorem choice_mem_aux (y : ZFSet.{u}) (yx : y ∈ x) :
 #print ZFSet.choice_isFunc /-
 theorem choice_isFunc : IsFunc x (⋃₀ x) (choice x) :=
   (@map_isFunc _ (Classical.AllDefinable _) _ _).2 fun y yx =>
-    mem_unionₛ.2 ⟨y, yx, choice_mem_aux x h y yx⟩
+    mem_sUnion.2 ⟨y, yx, choice_mem_aux x h y yx⟩
 #align Set.choice_is_func ZFSet.choice_isFunc
 -/
 

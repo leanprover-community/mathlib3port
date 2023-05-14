@@ -151,10 +151,10 @@ theorem Ideal.isHomogeneous_iff_forall_subset :
   Iff.rfl
 #align ideal.is_homogeneous_iff_forall_subset Ideal.isHomogeneous_iff_forall_subset
 
-theorem Ideal.isHomogeneous_iff_subset_interᵢ :
+theorem Ideal.isHomogeneous_iff_subset_iInter :
     I.Homogeneous 𝒜 ↔ (I : Set A) ⊆ ⋂ i, GradedRing.proj 𝒜 i ⁻¹' ↑I :=
-  subset_interᵢ_iff.symm
-#align ideal.is_homogeneous_iff_subset_Inter Ideal.isHomogeneous_iff_subset_interᵢ
+  subset_iInter_iff.symm
+#align ideal.is_homogeneous_iff_subset_Inter Ideal.isHomogeneous_iff_subset_iInter
 
 theorem Ideal.mul_homogeneous_element_mem_of_mem {I : Ideal A} (r x : A) (hx₁ : Homogeneous 𝒜 x)
     (hx₂ : x ∈ I) (j : ι) : GradedRing.proj 𝒜 j (r * x) ∈ I := by
@@ -292,7 +292,7 @@ protected theorem supr {κ : Sort _} {f : κ → Ideal A} (h : ∀ i, (f i).Homo
   simp_rw [iff_exists] at h⊢
   choose s hs using h
   refine' ⟨⋃ i, s i, _⟩
-  simp_rw [Set.image_unionᵢ, Ideal.span_unionᵢ]
+  simp_rw [Set.image_iUnion, Ideal.span_iUnion]
   congr
   exact funext hs
 #align ideal.is_homogeneous.supr Ideal.IsHomogeneous.supr
@@ -300,7 +300,7 @@ protected theorem supr {κ : Sort _} {f : κ → Ideal A} (h : ∀ i, (f i).Homo
 protected theorem infi {κ : Sort _} {f : κ → Ideal A} (h : ∀ i, (f i).Homogeneous 𝒜) :
     (⨅ i, f i).Homogeneous 𝒜 := by
   intro i x hx
-  simp only [Ideal.mem_infᵢ] at hx⊢
+  simp only [Ideal.mem_iInf] at hx⊢
   exact fun j => h _ _ (hx j)
 #align ideal.is_homogeneous.infi Ideal.IsHomogeneous.infi
 
@@ -319,9 +319,9 @@ theorem infi₂ {κ : Sort _} {κ' : κ → Sort _} {f : ∀ i, κ' i → Ideal 
 /- warning: ideal.is_homogeneous.Sup clashes with ideal.is_homogeneous.sup -> Ideal.IsHomogeneous.sup
 Case conversion may be inaccurate. Consider using '#align ideal.is_homogeneous.Sup Ideal.IsHomogeneous.supₓ'. -/
 #print Ideal.IsHomogeneous.sup /-
-theorem sup {ℐ : Set (Ideal A)} (h : ∀ I ∈ ℐ, Ideal.IsHomogeneous 𝒜 I) : (supₛ ℐ).Homogeneous 𝒜 :=
+theorem sup {ℐ : Set (Ideal A)} (h : ∀ I ∈ ℐ, Ideal.IsHomogeneous 𝒜 I) : (sSup ℐ).Homogeneous 𝒜 :=
   by
-  rw [supₛ_eq_supᵢ]
+  rw [sSup_eq_iSup]
   exact supr₂ h
 #align ideal.is_homogeneous.Sup Ideal.IsHomogeneous.sup
 -/
@@ -329,9 +329,9 @@ theorem sup {ℐ : Set (Ideal A)} (h : ∀ I ∈ ℐ, Ideal.IsHomogeneous 𝒜 I
 /- warning: ideal.is_homogeneous.Inf clashes with ideal.is_homogeneous.inf -> Ideal.IsHomogeneous.inf
 Case conversion may be inaccurate. Consider using '#align ideal.is_homogeneous.Inf Ideal.IsHomogeneous.infₓ'. -/
 #print Ideal.IsHomogeneous.inf /-
-theorem inf {ℐ : Set (Ideal A)} (h : ∀ I ∈ ℐ, Ideal.IsHomogeneous 𝒜 I) : (infₛ ℐ).Homogeneous 𝒜 :=
+theorem inf {ℐ : Set (Ideal A)} (h : ∀ I ∈ ℐ, Ideal.IsHomogeneous 𝒜 I) : (sInf ℐ).Homogeneous 𝒜 :=
   by
-  rw [infₛ_eq_infᵢ]
+  rw [sInf_eq_iInf]
   exact infi₂ h
 #align ideal.is_homogeneous.Inf Ideal.IsHomogeneous.inf
 -/
@@ -404,24 +404,24 @@ theorem toIdeal_inf (I J : HomogeneousIdeal 𝒜) : (I ⊓ J).toIdeal = I.toIdea
 #align homogeneous_ideal.to_ideal_inf HomogeneousIdeal.toIdeal_inf
 
 @[simp]
-theorem toIdeal_supₛ (ℐ : Set (HomogeneousIdeal 𝒜)) : (supₛ ℐ).toIdeal = ⨆ s ∈ ℐ, toIdeal s :=
+theorem toIdeal_sSup (ℐ : Set (HomogeneousIdeal 𝒜)) : (sSup ℐ).toIdeal = ⨆ s ∈ ℐ, toIdeal s :=
   rfl
-#align homogeneous_ideal.to_ideal_Sup HomogeneousIdeal.toIdeal_supₛ
+#align homogeneous_ideal.to_ideal_Sup HomogeneousIdeal.toIdeal_sSup
 
 @[simp]
-theorem toIdeal_infₛ (ℐ : Set (HomogeneousIdeal 𝒜)) : (infₛ ℐ).toIdeal = ⨅ s ∈ ℐ, toIdeal s :=
+theorem toIdeal_sInf (ℐ : Set (HomogeneousIdeal 𝒜)) : (sInf ℐ).toIdeal = ⨅ s ∈ ℐ, toIdeal s :=
   rfl
-#align homogeneous_ideal.to_ideal_Inf HomogeneousIdeal.toIdeal_infₛ
+#align homogeneous_ideal.to_ideal_Inf HomogeneousIdeal.toIdeal_sInf
 
 @[simp]
-theorem toIdeal_supᵢ {κ : Sort _} (s : κ → HomogeneousIdeal 𝒜) :
-    (⨆ i, s i).toIdeal = ⨆ i, (s i).toIdeal := by rw [supᵢ, to_ideal_Sup, supᵢ_range]
-#align homogeneous_ideal.to_ideal_supr HomogeneousIdeal.toIdeal_supᵢ
+theorem toIdeal_iSup {κ : Sort _} (s : κ → HomogeneousIdeal 𝒜) :
+    (⨆ i, s i).toIdeal = ⨆ i, (s i).toIdeal := by rw [iSup, to_ideal_Sup, iSup_range]
+#align homogeneous_ideal.to_ideal_supr HomogeneousIdeal.toIdeal_iSup
 
 @[simp]
-theorem toIdeal_infᵢ {κ : Sort _} (s : κ → HomogeneousIdeal 𝒜) :
-    (⨅ i, s i).toIdeal = ⨅ i, (s i).toIdeal := by rw [infᵢ, to_ideal_Inf, infᵢ_range]
-#align homogeneous_ideal.to_ideal_infi HomogeneousIdeal.toIdeal_infᵢ
+theorem toIdeal_iInf {κ : Sort _} (s : κ → HomogeneousIdeal 𝒜) :
+    (⨅ i, s i).toIdeal = ⨅ i, (s i).toIdeal := by rw [iInf, to_ideal_Inf, iInf_range]
+#align homogeneous_ideal.to_ideal_infi HomogeneousIdeal.toIdeal_iInf
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
@@ -448,7 +448,7 @@ theorem eq_bot_iff (I : HomogeneousIdeal 𝒜) : I = ⊥ ↔ I.toIdeal = ⊥ :=
 #align homogeneous_ideal.eq_bot_iff HomogeneousIdeal.eq_bot_iff
 
 instance : CompleteLattice (HomogeneousIdeal 𝒜) :=
-  toIdeal_injective.CompleteLattice _ toIdeal_sup toIdeal_inf toIdeal_supₛ toIdeal_infₛ toIdeal_top
+  toIdeal_injective.CompleteLattice _ toIdeal_sup toIdeal_inf toIdeal_sSup toIdeal_sInf toIdeal_top
     toIdeal_bot
 
 instance : Add (HomogeneousIdeal 𝒜) :=
@@ -535,15 +535,15 @@ def Ideal.homogeneousCore.gi : GaloisCoinsertion toIdeal (Ideal.homogeneousCore 
   choice_eq I H := le_antisymm H (I.toIdeal_homogeneousCore_le _)
 #align ideal.homogeneous_core.gi Ideal.homogeneousCore.gi
 
-theorem Ideal.homogeneousCore_eq_supₛ :
-    I.homogeneousCore 𝒜 = supₛ { J : HomogeneousIdeal 𝒜 | J.toIdeal ≤ I } :=
-  Eq.symm <| IsLUB.supₛ_eq <| (Ideal.homogeneousCore.gc 𝒜).isGreatest_u.IsLUB
-#align ideal.homogeneous_core_eq_Sup Ideal.homogeneousCore_eq_supₛ
+theorem Ideal.homogeneousCore_eq_sSup :
+    I.homogeneousCore 𝒜 = sSup { J : HomogeneousIdeal 𝒜 | J.toIdeal ≤ I } :=
+  Eq.symm <| IsLUB.sSup_eq <| (Ideal.homogeneousCore.gc 𝒜).isGreatest_u.IsLUB
+#align ideal.homogeneous_core_eq_Sup Ideal.homogeneousCore_eq_sSup
 
-theorem Ideal.homogeneousCore'_eq_supₛ :
-    I.homogeneousCore' 𝒜 = supₛ { J : Ideal A | J.Homogeneous 𝒜 ∧ J ≤ I } :=
+theorem Ideal.homogeneousCore'_eq_sSup :
+    I.homogeneousCore' 𝒜 = sSup { J : Ideal A | J.Homogeneous 𝒜 ∧ J ≤ I } :=
   by
-  refine' (IsLUB.supₛ_eq _).symm
+  refine' (IsLUB.sSup_eq _).symm
   apply IsGreatest.isLUB
   have coe_mono : Monotone (to_ideal : HomogeneousIdeal 𝒜 → Ideal A) := fun x y => id
   convert coe_mono.map_is_greatest (Ideal.homogeneousCore.gc 𝒜).isGreatest_u using 1
@@ -551,7 +551,7 @@ theorem Ideal.homogeneousCore'_eq_supₛ :
   rw [mem_image, mem_set_of_eq]
   refine'
     ⟨fun hI => ⟨⟨x, hI.1⟩, ⟨hI.2, rfl⟩⟩, by rintro ⟨x, ⟨hx, rfl⟩⟩ <;> exact ⟨x.is_homogeneous, hx⟩⟩
-#align ideal.homogeneous_core'_eq_Sup Ideal.homogeneousCore'_eq_supₛ
+#align ideal.homogeneous_core'_eq_Sup Ideal.homogeneousCore'_eq_sSup
 
 end HomogeneousCore
 
@@ -619,17 +619,17 @@ theorem HomogeneousIdeal.homogeneousHull_toIdeal_eq_self (I : HomogeneousIdeal �
 
 variable (I 𝒜)
 
-theorem Ideal.toIdeal_homogeneousHull_eq_supᵢ :
+theorem Ideal.toIdeal_homogeneousHull_eq_iSup :
     (I.homogeneousHull 𝒜).toIdeal = ⨆ i, Ideal.span (GradedRing.proj 𝒜 i '' I) :=
   by
-  rw [← Ideal.span_unionᵢ]
+  rw [← Ideal.span_iUnion]
   apply congr_arg Ideal.span _
   ext1
-  simp only [Set.mem_unionᵢ, Set.mem_image, mem_set_of_eq, GradedRing.proj_apply, SetLike.exists,
+  simp only [Set.mem_iUnion, Set.mem_image, mem_set_of_eq, GradedRing.proj_apply, SetLike.exists,
     exists_prop, Subtype.coe_mk, SetLike.mem_coe]
-#align ideal.to_ideal_homogeneous_hull_eq_supr Ideal.toIdeal_homogeneousHull_eq_supᵢ
+#align ideal.to_ideal_homogeneous_hull_eq_supr Ideal.toIdeal_homogeneousHull_eq_iSup
 
-theorem Ideal.homogeneousHull_eq_supᵢ :
+theorem Ideal.homogeneousHull_eq_iSup :
     I.homogeneousHull 𝒜 =
       ⨆ i,
         ⟨Ideal.span (GradedRing.proj 𝒜 i '' I),
@@ -639,9 +639,9 @@ theorem Ideal.homogeneousHull_eq_supᵢ :
               apply SetLike.homogeneous_coe)⟩ :=
   by
   ext1
-  rw [Ideal.toIdeal_homogeneousHull_eq_supᵢ, to_ideal_supr]
+  rw [Ideal.toIdeal_homogeneousHull_eq_iSup, to_ideal_supr]
   rfl
-#align ideal.homogeneous_hull_eq_supr Ideal.homogeneousHull_eq_supᵢ
+#align ideal.homogeneous_hull_eq_supr Ideal.homogeneousHull_eq_iSup
 
 end HomogeneousHull
 
@@ -670,10 +670,10 @@ def Ideal.homogeneousHull.gi : GaloisInsertion (Ideal.homogeneousHull 𝒜) toId
   choice_eq I H := le_antisymm (I.le_toIdeal_homogeneousHull 𝒜) H
 #align ideal.homogeneous_hull.gi Ideal.homogeneousHull.gi
 
-theorem Ideal.homogeneousHull_eq_infₛ (I : Ideal A) :
-    Ideal.homogeneousHull 𝒜 I = infₛ { J : HomogeneousIdeal 𝒜 | I ≤ J.toIdeal } :=
-  Eq.symm <| IsGLB.infₛ_eq <| (Ideal.homogeneousHull.gc 𝒜).isLeast_l.IsGLB
-#align ideal.homogeneous_hull_eq_Inf Ideal.homogeneousHull_eq_infₛ
+theorem Ideal.homogeneousHull_eq_sInf (I : Ideal A) :
+    Ideal.homogeneousHull 𝒜 I = sInf { J : HomogeneousIdeal 𝒜 | I ≤ J.toIdeal } :=
+  Eq.symm <| IsGLB.sInf_eq <| (Ideal.homogeneousHull.gc 𝒜).isLeast_l.IsGLB
+#align ideal.homogeneous_hull_eq_Inf Ideal.homogeneousHull_eq_sInf
 
 end GaloisConnection
 

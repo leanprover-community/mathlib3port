@@ -477,20 +477,20 @@ variable (α) [CompleteLattice α]
 #print IsAtomistic /-
 /-- A lattice is atomistic iff every element is a `Sup` of a set of atoms. -/
 class IsAtomistic : Prop where
-  eq_supₛ_atoms : ∀ b : α, ∃ s : Set α, b = supₛ s ∧ ∀ a, a ∈ s → IsAtom a
+  eq_sSup_atoms : ∀ b : α, ∃ s : Set α, b = sSup s ∧ ∀ a, a ∈ s → IsAtom a
 #align is_atomistic IsAtomistic
 -/
 
 #print IsCoatomistic /-
 /-- A lattice is coatomistic iff every element is an `Inf` of a set of coatoms. -/
 class IsCoatomistic : Prop where
-  eq_infₛ_coatoms : ∀ b : α, ∃ s : Set α, b = infₛ s ∧ ∀ a, a ∈ s → IsCoatom a
+  eq_sInf_coatoms : ∀ b : α, ∃ s : Set α, b = sInf s ∧ ∀ a, a ∈ s → IsCoatom a
 #align is_coatomistic IsCoatomistic
 -/
 
-export IsAtomistic (eq_supₛ_atoms)
+export IsAtomistic (eq_sSup_atoms)
 
-export IsCoatomistic (eq_infₛ_coatoms)
+export IsCoatomistic (eq_sInf_coatoms)
 
 variable {α}
 
@@ -523,7 +523,7 @@ instance (priority := 100) : IsAtomic α :=
     rcases eq_Sup_atoms b with ⟨s, rfl, hs⟩
     cases' s.eq_empty_or_nonempty with h h
     · simp [h]
-    · exact Or.intro_right _ ⟨h.some, hs _ h.some_spec, le_supₛ h.some_spec⟩⟩
+    · exact Or.intro_right _ ⟨h.some, hs _ h.some_spec, le_sSup h.some_spec⟩⟩
 
 end IsAtomistic
 
@@ -531,38 +531,38 @@ section IsAtomistic
 
 variable [IsAtomistic α]
 
-/- warning: Sup_atoms_le_eq -> supₛ_atoms_le_eq is a dubious translation:
+/- warning: Sup_atoms_le_eq -> sSup_atoms_le_eq is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsAtomistic.{u1} α _inst_1] (b : α), Eq.{succ u1} α (SupSet.supₛ.{u1} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) (setOf.{u1} α (fun (a : α) => And (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) a b)))) b
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsAtomistic.{u1} α _inst_1] (b : α), Eq.{succ u1} α (SupSet.sSup.{u1} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) (setOf.{u1} α (fun (a : α) => And (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) a b)))) b
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsAtomistic.{u1} α _inst_1] (b : α), Eq.{succ u1} α (SupSet.supₛ.{u1} α (CompleteLattice.toSupSet.{u1} α _inst_1) (setOf.{u1} α (fun (a : α) => And (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) a b)))) b
-Case conversion may be inaccurate. Consider using '#align Sup_atoms_le_eq supₛ_atoms_le_eqₓ'. -/
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsAtomistic.{u1} α _inst_1] (b : α), Eq.{succ u1} α (SupSet.sSup.{u1} α (CompleteLattice.toSupSet.{u1} α _inst_1) (setOf.{u1} α (fun (a : α) => And (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) a b)))) b
+Case conversion may be inaccurate. Consider using '#align Sup_atoms_le_eq sSup_atoms_le_eqₓ'. -/
 @[simp]
-theorem supₛ_atoms_le_eq (b : α) : supₛ { a : α | IsAtom a ∧ a ≤ b } = b :=
+theorem sSup_atoms_le_eq (b : α) : sSup { a : α | IsAtom a ∧ a ≤ b } = b :=
   by
   rcases eq_Sup_atoms b with ⟨s, rfl, hs⟩
-  exact le_antisymm (supₛ_le fun _ => And.right) (supₛ_le_supₛ fun a ha => ⟨hs a ha, le_supₛ ha⟩)
-#align Sup_atoms_le_eq supₛ_atoms_le_eq
+  exact le_antisymm (sSup_le fun _ => And.right) (sSup_le_sSup fun a ha => ⟨hs a ha, le_sSup ha⟩)
+#align Sup_atoms_le_eq sSup_atoms_le_eq
 
-/- warning: Sup_atoms_eq_top -> supₛ_atoms_eq_top is a dubious translation:
+/- warning: Sup_atoms_eq_top -> sSup_atoms_eq_top is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsAtomistic.{u1} α _inst_1], Eq.{succ u1} α (SupSet.supₛ.{u1} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) (setOf.{u1} α (fun (a : α) => IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a))) (Top.top.{u1} α (CompleteLattice.toHasTop.{u1} α _inst_1))
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsAtomistic.{u1} α _inst_1], Eq.{succ u1} α (SupSet.sSup.{u1} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) (setOf.{u1} α (fun (a : α) => IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a))) (Top.top.{u1} α (CompleteLattice.toHasTop.{u1} α _inst_1))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsAtomistic.{u1} α _inst_1], Eq.{succ u1} α (SupSet.supₛ.{u1} α (CompleteLattice.toSupSet.{u1} α _inst_1) (setOf.{u1} α (fun (a : α) => IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a))) (Top.top.{u1} α (CompleteLattice.toTop.{u1} α _inst_1))
-Case conversion may be inaccurate. Consider using '#align Sup_atoms_eq_top supₛ_atoms_eq_topₓ'. -/
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsAtomistic.{u1} α _inst_1], Eq.{succ u1} α (SupSet.sSup.{u1} α (CompleteLattice.toSupSet.{u1} α _inst_1) (setOf.{u1} α (fun (a : α) => IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a))) (Top.top.{u1} α (CompleteLattice.toTop.{u1} α _inst_1))
+Case conversion may be inaccurate. Consider using '#align Sup_atoms_eq_top sSup_atoms_eq_topₓ'. -/
 @[simp]
-theorem supₛ_atoms_eq_top : supₛ { a : α | IsAtom a } = ⊤ :=
+theorem sSup_atoms_eq_top : sSup { a : α | IsAtom a } = ⊤ :=
   by
-  refine' Eq.trans (congr rfl (Set.ext fun x => _)) (supₛ_atoms_le_eq ⊤)
+  refine' Eq.trans (congr rfl (Set.ext fun x => _)) (sSup_atoms_le_eq ⊤)
   exact (and_iff_left le_top).symm
-#align Sup_atoms_eq_top supₛ_atoms_eq_top
+#align Sup_atoms_eq_top sSup_atoms_eq_top
 
 #print le_iff_atom_le_imp /-
 theorem le_iff_atom_le_imp {a b : α} : a ≤ b ↔ ∀ c : α, IsAtom c → c ≤ a → c ≤ b :=
   ⟨fun ab c hc ca => le_trans ca ab, fun h =>
     by
-    rw [← supₛ_atoms_le_eq a, ← supₛ_atoms_le_eq b]
-    exact supₛ_le_supₛ fun c hc => ⟨hc.1, h c hc.1 hc.2⟩⟩
+    rw [← sSup_atoms_le_eq a, ← sSup_atoms_le_eq b]
+    exact sSup_le_sSup fun c hc => ⟨hc.1, h c hc.1 hc.2⟩⟩
 #align le_iff_atom_le_imp le_iff_atom_le_imp
 -/
 
@@ -583,7 +583,7 @@ instance (priority := 100) : IsCoatomic α :=
     rcases eq_Inf_coatoms b with ⟨s, rfl, hs⟩
     cases' s.eq_empty_or_nonempty with h h
     · simp [h]
-    · exact Or.intro_right _ ⟨h.some, hs _ h.some_spec, infₛ_le h.some_spec⟩⟩
+    · exact Or.intro_right _ ⟨h.some, hs _ h.some_spec, sInf_le h.some_spec⟩⟩
 
 end IsCoatomistic
 
@@ -836,8 +836,8 @@ protected noncomputable def completeLattice : CompleteLattice α :=
   { (inferInstance : Lattice α),
     (inferInstance :
       BoundedOrder α) with
-    supₛ := fun s => if ⊤ ∈ s then ⊤ else ⊥
-    infₛ := fun s => if ⊥ ∈ s then ⊥ else ⊤
+    sSup := fun s => if ⊤ ∈ s then ⊤ else ⊥
+    sInf := fun s => if ⊥ ∈ s then ⊥ else ⊤
     le_sup := fun s x h => by
       rcases eq_bot_or_eq_top x with (rfl | rfl)
       · exact bot_le
@@ -866,17 +866,17 @@ protected noncomputable def completeLattice : CompleteLattice α :=
 protected noncomputable def completeBooleanAlgebra : CompleteBooleanAlgebra α :=
   { IsSimpleOrder.completeLattice,
     IsSimpleOrder.booleanAlgebra with
-    infᵢ_sup_le_sup_inf := fun x s =>
+    iInf_sup_le_sup_inf := fun x s =>
       by
       rcases eq_bot_or_eq_top x with (rfl | rfl)
-      · simp only [bot_sup_eq, ← infₛ_eq_infᵢ]
+      · simp only [bot_sup_eq, ← sInf_eq_iInf]
         exact le_rfl
       · simp only [top_sup_eq, le_top]
-    inf_sup_le_supᵢ_inf := fun x s =>
+    inf_sup_le_iSup_inf := fun x s =>
       by
       rcases eq_bot_or_eq_top x with (rfl | rfl)
       · simp only [bot_inf_eq, bot_le]
-      · simp only [top_inf_eq, ← supₛ_eq_supᵢ]
+      · simp only [top_inf_eq, ← sSup_eq_iSup]
         exact le_rfl }
 #align is_simple_order.complete_boolean_algebra IsSimpleOrder.completeBooleanAlgebra
 -/
@@ -893,9 +893,9 @@ set_option default_priority 100
 instance : IsAtomistic α :=
   ⟨fun b =>
     (eq_bot_or_eq_top b).elim
-      (fun h => ⟨∅, ⟨h.trans supₛ_empty.symm, fun a ha => False.elim (Set.not_mem_empty _ ha)⟩⟩)
+      (fun h => ⟨∅, ⟨h.trans sSup_empty.symm, fun a ha => False.elim (Set.not_mem_empty _ ha)⟩⟩)
       fun h =>
-      ⟨{⊤}, h.trans supₛ_singleton.symm, fun a ha =>
+      ⟨{⊤}, h.trans sSup_singleton.symm, fun a ha =>
         (Set.mem_singleton_iff.1 ha).symm ▸ isAtom_top⟩⟩
 
 instance : IsCoatomistic α :=
@@ -1317,14 +1317,14 @@ theorem isCoatom_singleton_compl (x : α) : IsCoatom ({x}ᶜ : Set α) :=
 #align set.is_coatom_singleton_compl Set.isCoatom_singleton_compl
 
 instance : IsAtomistic (Set α)
-    where eq_supₛ_atoms s :=
+    where eq_sSup_atoms s :=
     ⟨(fun x => {x}) '' s, by rw [Sup_eq_sUnion, sUnion_image, bUnion_of_singleton],
       by
       rintro - ⟨x, hx, rfl⟩
       exact is_atom_singleton x⟩
 
 instance : IsCoatomistic (Set α)
-    where eq_infₛ_coatoms s :=
+    where eq_sInf_coatoms s :=
     ⟨(fun x => {x}ᶜ) '' sᶜ, by
       rw [Inf_eq_sInter, sInter_image, ← compl_Union₂, bUnion_of_singleton, compl_compl],
       by

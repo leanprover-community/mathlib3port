@@ -238,8 +238,8 @@ theorem isClosed_Ici (a : α) : IsClosed (Ici a) :=
 /-- The upper closure of a finite set is closed in the lower topology. -/
 theorem isClosed_upperClosure (h : s.Finite) : IsClosed (upperClosure s : Set α) :=
   by
-  simp only [← UpperSet.infᵢ_Ici, UpperSet.coe_infᵢ]
-  exact isClosed_bunionᵢ h fun a h₁ => isClosed_Ici a
+  simp only [← UpperSet.iInf_Ici, UpperSet.coe_iInf]
+  exact isClosed_biUnion h fun a h₁ => isClosed_Ici a
 #align lower_topology.is_closed_upper_closure LowerTopology.isClosed_upperClosure
 -/
 
@@ -252,7 +252,7 @@ theorem isLowerSet_of_isOpen (h : IsOpen s) : IsLowerSet s :=
   case basic u h => obtain ⟨a, rfl⟩ := h; exact (isUpperSet_Ici a).compl
   case univ => exact isLowerSet_univ
   case inter u v hu1 hv1 hu2 hv2 => exact hu2.inter hv2
-  case sUnion _ _ ih => exact isLowerSet_unionₛ ih
+  case sUnion _ _ ih => exact isLowerSet_sUnion ih
 #align lower_topology.is_lower_set_of_is_open LowerTopology.isLowerSet_of_isOpen
 -/
 
@@ -322,7 +322,7 @@ instance [Preorder α] [TopologicalSpace α] [LowerTopology α] [OrderBot α] [P
     dsimp
     simp_rw [coe_upperClosure, compl_Union, prod_eq, preimage_Inter, preimage_compl]
     -- Note: `refine` doesn't work here because it tries using `prod.topological_space`.
-    apply (isOpen_binterᵢ hs fun a _ => _).inter (isOpen_binterᵢ ht fun b _ => _)
+    apply (isOpen_biInter hs fun a _ => _).inter (isOpen_biInter ht fun b _ => _)
     · exact generate_open.basic _ ⟨(a, ⊥), by simp [Ici_prod_eq, prod_univ]⟩
     · exact generate_open.basic _ ⟨(⊥, b), by simp [Ici_prod_eq, univ_prod]⟩
     all_goals infer_instance
@@ -332,22 +332,22 @@ section CompleteLattice
 variable [CompleteLattice α] [CompleteLattice β] [TopologicalSpace α] [LowerTopology α]
   [TopologicalSpace β] [LowerTopology β]
 
-/- warning: Inf_hom.continuous -> InfₛHom.continuous is a dubious translation:
+/- warning: Inf_hom.continuous -> sInfHom.continuous is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β] [_inst_3 : TopologicalSpace.{u1} α] [_inst_4 : LowerTopology.{u1} α _inst_3 (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))] [_inst_5 : TopologicalSpace.{u2} β] [_inst_6 : LowerTopology.{u2} β _inst_5 (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2)))] (f : InfₛHom.{u1, u2} α β (ConditionallyCompleteLattice.toHasInf.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (ConditionallyCompleteLattice.toHasInf.{u2} β (CompleteLattice.toConditionallyCompleteLattice.{u2} β _inst_2))), Continuous.{u1, u2} α β _inst_3 _inst_5 (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (InfₛHom.{u1, u2} α β (ConditionallyCompleteLattice.toHasInf.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (ConditionallyCompleteLattice.toHasInf.{u2} β (CompleteLattice.toConditionallyCompleteLattice.{u2} β _inst_2))) (fun (_x : InfₛHom.{u1, u2} α β (ConditionallyCompleteLattice.toHasInf.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (ConditionallyCompleteLattice.toHasInf.{u2} β (CompleteLattice.toConditionallyCompleteLattice.{u2} β _inst_2))) => α -> β) (InfₛHom.hasCoeToFun.{u1, u2} α β (ConditionallyCompleteLattice.toHasInf.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (ConditionallyCompleteLattice.toHasInf.{u2} β (CompleteLattice.toConditionallyCompleteLattice.{u2} β _inst_2))) f)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β] [_inst_3 : TopologicalSpace.{u1} α] [_inst_4 : LowerTopology.{u1} α _inst_3 (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))] [_inst_5 : TopologicalSpace.{u2} β] [_inst_6 : LowerTopology.{u2} β _inst_5 (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2)))] (f : sInfHom.{u1, u2} α β (ConditionallyCompleteLattice.toHasInf.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (ConditionallyCompleteLattice.toHasInf.{u2} β (CompleteLattice.toConditionallyCompleteLattice.{u2} β _inst_2))), Continuous.{u1, u2} α β _inst_3 _inst_5 (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (sInfHom.{u1, u2} α β (ConditionallyCompleteLattice.toHasInf.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (ConditionallyCompleteLattice.toHasInf.{u2} β (CompleteLattice.toConditionallyCompleteLattice.{u2} β _inst_2))) (fun (_x : sInfHom.{u1, u2} α β (ConditionallyCompleteLattice.toHasInf.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (ConditionallyCompleteLattice.toHasInf.{u2} β (CompleteLattice.toConditionallyCompleteLattice.{u2} β _inst_2))) => α -> β) (sInfHom.hasCoeToFun.{u1, u2} α β (ConditionallyCompleteLattice.toHasInf.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (ConditionallyCompleteLattice.toHasInf.{u2} β (CompleteLattice.toConditionallyCompleteLattice.{u2} β _inst_2))) f)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : CompleteLattice.{u2} α] [_inst_2 : CompleteLattice.{u1} β] [_inst_3 : TopologicalSpace.{u2} α] [_inst_4 : LowerTopology.{u2} α _inst_3 (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1)))] [_inst_5 : TopologicalSpace.{u1} β] [_inst_6 : LowerTopology.{u1} β _inst_5 (PartialOrder.toPreorder.{u1} β (CompleteSemilatticeInf.toPartialOrder.{u1} β (CompleteLattice.toCompleteSemilatticeInf.{u1} β _inst_2)))] (f : InfₛHom.{u2, u1} α β (ConditionallyCompleteLattice.toInfSet.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)) (ConditionallyCompleteLattice.toInfSet.{u1} β (CompleteLattice.toConditionallyCompleteLattice.{u1} β _inst_2))), Continuous.{u2, u1} α β _inst_3 _inst_5 (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (InfₛHom.{u2, u1} α β (ConditionallyCompleteLattice.toInfSet.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)) (ConditionallyCompleteLattice.toInfSet.{u1} β (CompleteLattice.toConditionallyCompleteLattice.{u1} β _inst_2))) α (fun (_x : α) => (fun (x._@.Mathlib.Order.Hom.CompleteLattice._hyg.374 : α) => β) _x) (InfₛHomClass.toFunLike.{max u2 u1, u2, u1} (InfₛHom.{u2, u1} α β (ConditionallyCompleteLattice.toInfSet.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)) (ConditionallyCompleteLattice.toInfSet.{u1} β (CompleteLattice.toConditionallyCompleteLattice.{u1} β _inst_2))) α β (ConditionallyCompleteLattice.toInfSet.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)) (ConditionallyCompleteLattice.toInfSet.{u1} β (CompleteLattice.toConditionallyCompleteLattice.{u1} β _inst_2)) (InfₛHom.instInfₛHomClassInfₛHom.{u2, u1} α β (ConditionallyCompleteLattice.toInfSet.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)) (ConditionallyCompleteLattice.toInfSet.{u1} β (CompleteLattice.toConditionallyCompleteLattice.{u1} β _inst_2)))) f)
-Case conversion may be inaccurate. Consider using '#align Inf_hom.continuous InfₛHom.continuousₓ'. -/
-theorem InfₛHom.continuous (f : InfₛHom α β) : Continuous f :=
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : CompleteLattice.{u2} α] [_inst_2 : CompleteLattice.{u1} β] [_inst_3 : TopologicalSpace.{u2} α] [_inst_4 : LowerTopology.{u2} α _inst_3 (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1)))] [_inst_5 : TopologicalSpace.{u1} β] [_inst_6 : LowerTopology.{u1} β _inst_5 (PartialOrder.toPreorder.{u1} β (CompleteSemilatticeInf.toPartialOrder.{u1} β (CompleteLattice.toCompleteSemilatticeInf.{u1} β _inst_2)))] (f : sInfHom.{u2, u1} α β (ConditionallyCompleteLattice.toInfSet.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)) (ConditionallyCompleteLattice.toInfSet.{u1} β (CompleteLattice.toConditionallyCompleteLattice.{u1} β _inst_2))), Continuous.{u2, u1} α β _inst_3 _inst_5 (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (sInfHom.{u2, u1} α β (ConditionallyCompleteLattice.toInfSet.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)) (ConditionallyCompleteLattice.toInfSet.{u1} β (CompleteLattice.toConditionallyCompleteLattice.{u1} β _inst_2))) α (fun (_x : α) => (fun (x._@.Mathlib.Order.Hom.CompleteLattice._hyg.374 : α) => β) _x) (sInfHomClass.toFunLike.{max u2 u1, u2, u1} (sInfHom.{u2, u1} α β (ConditionallyCompleteLattice.toInfSet.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)) (ConditionallyCompleteLattice.toInfSet.{u1} β (CompleteLattice.toConditionallyCompleteLattice.{u1} β _inst_2))) α β (ConditionallyCompleteLattice.toInfSet.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)) (ConditionallyCompleteLattice.toInfSet.{u1} β (CompleteLattice.toConditionallyCompleteLattice.{u1} β _inst_2)) (sInfHom.instSInfHomClassSInfHom.{u2, u1} α β (ConditionallyCompleteLattice.toInfSet.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)) (ConditionallyCompleteLattice.toInfSet.{u1} β (CompleteLattice.toConditionallyCompleteLattice.{u1} β _inst_2)))) f)
+Case conversion may be inaccurate. Consider using '#align Inf_hom.continuous sInfHom.continuousₓ'. -/
+theorem sInfHom.continuous (f : sInfHom α β) : Continuous f :=
   by
   convert continuous_generateFrom _
   · exact LowerTopology.topology_eq_lowerTopology β
   rintro _ ⟨b, rfl⟩
   rw [preimage_compl, isOpen_compl_iff]
   convert LowerTopology.isClosed_Ici (Inf <| f ⁻¹' Ici b)
-  refine' subset_antisymm (fun a => infₛ_le) fun a ha => le_trans _ <| OrderHomClass.mono f ha
+  refine' subset_antisymm (fun a => sInf_le) fun a ha => le_trans _ <| OrderHomClass.mono f ha
   simp [map_Inf]
-#align Inf_hom.continuous InfₛHom.continuous
+#align Inf_hom.continuous sInfHom.continuous
 
 /- warning: lower_topology.to_has_continuous_inf -> LowerTopology.continuousInf is a dubious translation:
 lean 3 declaration is
@@ -357,7 +357,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align lower_topology.to_has_continuous_inf LowerTopology.continuousInfₓ'. -/
 -- see Note [lower instance priority]
 instance (priority := 90) LowerTopology.continuousInf : ContinuousInf α :=
-  ⟨(infInfₛHom : InfₛHom (α × α) α).Continuous⟩
+  ⟨(infsInfHom : sInfHom (α × α) α).Continuous⟩
 #align lower_topology.to_has_continuous_inf LowerTopology.continuousInf
 
 end CompleteLattice

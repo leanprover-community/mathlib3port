@@ -62,19 +62,19 @@ end SemilatticeSup
 variable [CompleteLattice α]
 
 /-- `upper_set.Ici` as a `Sup_hom`. -/
-def iciSupₛHom : SupₛHom α (UpperSet α) :=
-  ⟨Ici, fun s => (Ici_supₛ s).trans supₛ_image.symm⟩
-#align upper_set.Ici_Sup_hom UpperSet.iciSupₛHomₓ
+def icisSupHom : sSupHom α (UpperSet α) :=
+  ⟨Ici, fun s => (Ici_sSup s).trans sSup_image.symm⟩
+#align upper_set.Ici_Sup_hom UpperSet.icisSupHomₓ
 
 @[simp]
-theorem coe_iciSupₛHom : (iciSupₛHom : α → UpperSet α) = Ici :=
+theorem coe_icisSupHom : (icisSupHom : α → UpperSet α) = Ici :=
   rfl
-#align upper_set.coe_Ici_Sup_hom UpperSet.coe_iciSupₛHomₓ
+#align upper_set.coe_Ici_Sup_hom UpperSet.coe_icisSupHomₓ
 
 @[simp]
-theorem iciSupₛHom_apply (a : α) : iciSupₛHom a = Ici a :=
+theorem icisSupHom_apply (a : α) : icisSupHom a = Ici a :=
   rfl
-#align upper_set.Ici_Sup_hom_apply UpperSet.iciSupₛHom_applyₓ
+#align upper_set.Ici_Sup_hom_apply UpperSet.icisSupHom_applyₓ
 
 end UpperSet
 
@@ -114,19 +114,19 @@ end SemilatticeInf
 variable [CompleteLattice α]
 
 /-- `lower_set.Iic` as an `Inf_hom`. -/
-def iicInfₛHom : InfₛHom α (LowerSet α) :=
-  ⟨Iic, fun s => (Iic_infₛ s).trans infₛ_image.symm⟩
-#align lower_set.Iic_Inf_hom LowerSet.iicInfₛHomₓ
+def iicsInfHom : sInfHom α (LowerSet α) :=
+  ⟨Iic, fun s => (Iic_sInf s).trans sInf_image.symm⟩
+#align lower_set.Iic_Inf_hom LowerSet.iicsInfHomₓ
 
 @[simp]
-theorem coe_iicInfₛHom : (iicInfₛHom : α → LowerSet α) = Iic :=
+theorem coe_iicsInfHom : (iicsInfHom : α → LowerSet α) = Iic :=
   rfl
-#align lower_set.coe_Iic_Inf_hom LowerSet.coe_iicInfₛHomₓ
+#align lower_set.coe_Iic_Inf_hom LowerSet.coe_iicsInfHomₓ
 
 @[simp]
-theorem iicInfₛHom_apply (a : α) : iicInfₛHom a = Iic a :=
+theorem iicsInfHom_apply (a : α) : iicsInfHom a = Iic a :=
   rfl
-#align lower_set.Iic_Inf_hom_apply LowerSet.iicInfₛHom_applyₓ
+#align lower_set.Iic_Inf_hom_apply LowerSet.iicsInfHom_applyₓ
 
 end LowerSet
 

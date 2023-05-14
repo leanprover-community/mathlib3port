@@ -114,30 +114,30 @@ theorem IsSubring.inter {S₁ S₂ : Set R} (hS₁ : IsSubring S₁) (hS₂ : Is
     IsSubmonoid.inter hS₁.to_isSubmonoid hS₂.to_isSubmonoid with }
 #align is_subring.inter IsSubring.inter
 
-/- warning: is_subring.Inter -> IsSubring.interᵢ is a dubious translation:
+/- warning: is_subring.Inter -> IsSubring.iInter is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] {ι : Sort.{u2}} {S : ι -> (Set.{u1} R)}, (forall (y : ι), IsSubring.{u1} R _inst_1 (S y)) -> (IsSubring.{u1} R _inst_1 (Set.interᵢ.{u1, u2} R ι S))
+  forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] {ι : Sort.{u2}} {S : ι -> (Set.{u1} R)}, (forall (y : ι), IsSubring.{u1} R _inst_1 (S y)) -> (IsSubring.{u1} R _inst_1 (Set.iInter.{u1, u2} R ι S))
 but is expected to have type
-  forall {R : Type.{u2}} [_inst_1 : Ring.{u2} R] {ι : Sort.{u1}} {S : ι -> (Set.{u2} R)}, (forall (y : ι), IsSubring.{u2} R _inst_1 (S y)) -> (IsSubring.{u2} R _inst_1 (Set.interᵢ.{u2, u1} R ι S))
-Case conversion may be inaccurate. Consider using '#align is_subring.Inter IsSubring.interᵢₓ'. -/
-theorem IsSubring.interᵢ {ι : Sort _} {S : ι → Set R} (h : ∀ y : ι, IsSubring (S y)) :
-    IsSubring (Set.interᵢ S) :=
-  { IsAddSubgroup.interᵢ fun i => (h i).to_isAddSubgroup,
-    IsSubmonoid.interᵢ fun i => (h i).to_isSubmonoid with }
-#align is_subring.Inter IsSubring.interᵢ
+  forall {R : Type.{u2}} [_inst_1 : Ring.{u2} R] {ι : Sort.{u1}} {S : ι -> (Set.{u2} R)}, (forall (y : ι), IsSubring.{u2} R _inst_1 (S y)) -> (IsSubring.{u2} R _inst_1 (Set.iInter.{u2, u1} R ι S))
+Case conversion may be inaccurate. Consider using '#align is_subring.Inter IsSubring.iInterₓ'. -/
+theorem IsSubring.iInter {ι : Sort _} {S : ι → Set R} (h : ∀ y : ι, IsSubring (S y)) :
+    IsSubring (Set.iInter S) :=
+  { IsAddSubgroup.iInter fun i => (h i).to_isAddSubgroup,
+    IsSubmonoid.iInter fun i => (h i).to_isSubmonoid with }
+#align is_subring.Inter IsSubring.iInter
 
-/- warning: is_subring_Union_of_directed -> isSubring_unionᵢ_of_directed is a dubious translation:
+/- warning: is_subring_Union_of_directed -> isSubring_iUnion_of_directed is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] {ι : Type.{u2}} [hι : Nonempty.{succ u2} ι] {s : ι -> (Set.{u1} R)}, (forall (i : ι), IsSubring.{u1} R _inst_1 (s i)) -> (forall (i : ι) (j : ι), Exists.{succ u2} ι (fun (k : ι) => And (HasSubset.Subset.{u1} (Set.{u1} R) (Set.hasSubset.{u1} R) (s i) (s k)) (HasSubset.Subset.{u1} (Set.{u1} R) (Set.hasSubset.{u1} R) (s j) (s k)))) -> (IsSubring.{u1} R _inst_1 (Set.unionᵢ.{u1, succ u2} R ι (fun (i : ι) => s i)))
+  forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] {ι : Type.{u2}} [hι : Nonempty.{succ u2} ι] {s : ι -> (Set.{u1} R)}, (forall (i : ι), IsSubring.{u1} R _inst_1 (s i)) -> (forall (i : ι) (j : ι), Exists.{succ u2} ι (fun (k : ι) => And (HasSubset.Subset.{u1} (Set.{u1} R) (Set.hasSubset.{u1} R) (s i) (s k)) (HasSubset.Subset.{u1} (Set.{u1} R) (Set.hasSubset.{u1} R) (s j) (s k)))) -> (IsSubring.{u1} R _inst_1 (Set.iUnion.{u1, succ u2} R ι (fun (i : ι) => s i)))
 but is expected to have type
-  forall {R : Type.{u2}} [_inst_1 : Ring.{u2} R] {ι : Type.{u1}} [hι : Nonempty.{succ u1} ι] {s : ι -> (Set.{u2} R)}, (forall (i : ι), IsSubring.{u2} R _inst_1 (s i)) -> (forall (i : ι) (j : ι), Exists.{succ u1} ι (fun (k : ι) => And (HasSubset.Subset.{u2} (Set.{u2} R) (Set.instHasSubsetSet.{u2} R) (s i) (s k)) (HasSubset.Subset.{u2} (Set.{u2} R) (Set.instHasSubsetSet.{u2} R) (s j) (s k)))) -> (IsSubring.{u2} R _inst_1 (Set.unionᵢ.{u2, succ u1} R ι (fun (i : ι) => s i)))
-Case conversion may be inaccurate. Consider using '#align is_subring_Union_of_directed isSubring_unionᵢ_of_directedₓ'. -/
-theorem isSubring_unionᵢ_of_directed {ι : Type _} [hι : Nonempty ι] {s : ι → Set R}
+  forall {R : Type.{u2}} [_inst_1 : Ring.{u2} R] {ι : Type.{u1}} [hι : Nonempty.{succ u1} ι] {s : ι -> (Set.{u2} R)}, (forall (i : ι), IsSubring.{u2} R _inst_1 (s i)) -> (forall (i : ι) (j : ι), Exists.{succ u1} ι (fun (k : ι) => And (HasSubset.Subset.{u2} (Set.{u2} R) (Set.instHasSubsetSet.{u2} R) (s i) (s k)) (HasSubset.Subset.{u2} (Set.{u2} R) (Set.instHasSubsetSet.{u2} R) (s j) (s k)))) -> (IsSubring.{u2} R _inst_1 (Set.iUnion.{u2, succ u1} R ι (fun (i : ι) => s i)))
+Case conversion may be inaccurate. Consider using '#align is_subring_Union_of_directed isSubring_iUnion_of_directedₓ'. -/
+theorem isSubring_iUnion_of_directed {ι : Type _} [hι : Nonempty ι] {s : ι → Set R}
     (h : ∀ i, IsSubring (s i)) (directed : ∀ i j, ∃ k, s i ⊆ s k ∧ s j ⊆ s k) :
     IsSubring (⋃ i, s i) :=
-  { to_isAddSubgroup := isAddSubgroup_unionᵢ_of_directed (fun i => (h i).to_isAddSubgroup) Directed
-    to_isSubmonoid := isSubmonoid_unionᵢ_of_directed (fun i => (h i).to_isSubmonoid) Directed }
-#align is_subring_Union_of_directed isSubring_unionᵢ_of_directed
+  { to_isAddSubgroup := isAddSubgroup_iUnion_of_directed (fun i => (h i).to_isAddSubgroup) Directed
+    to_isSubmonoid := isSubmonoid_iUnion_of_directed (fun i => (h i).to_isSubmonoid) Directed }
+#align is_subring_Union_of_directed isSubring_iUnion_of_directed
 
 namespace Ring
 

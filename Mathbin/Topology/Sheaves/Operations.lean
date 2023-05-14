@@ -91,7 +91,7 @@ noncomputable def submonoidPresheafOfStalk (S : ∀ x : X, Submonoid (F.stalk x)
   obj U := ⨅ x : unop U, Submonoid.comap (F.germ x) (S x)
   map U V i := by
     intro s hs
-    simp only [Submonoid.mem_comap, Submonoid.mem_infᵢ] at hs⊢
+    simp only [Submonoid.mem_comap, Submonoid.mem_iInf] at hs⊢
     intro x
     change (F.map i.unop.op ≫ F.germ x) s ∈ _
     rw [F.germ_res]

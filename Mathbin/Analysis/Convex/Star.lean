@@ -159,17 +159,17 @@ theorem StarConvex.inter (hs : StarConvex 𝕜 x s) (ht : StarConvex 𝕜 x t) :
   fun y hy a b ha hb hab => ⟨hs hy.left ha hb hab, ht hy.right ha hb hab⟩
 #align star_convex.inter StarConvex.inter
 
-#print starConvex_interₛ /-
-theorem starConvex_interₛ {S : Set (Set E)} (h : ∀ s ∈ S, StarConvex 𝕜 x s) :
+#print starConvex_sInter /-
+theorem starConvex_sInter {S : Set (Set E)} (h : ∀ s ∈ S, StarConvex 𝕜 x s) :
     StarConvex 𝕜 x (⋂₀ S) := fun y hy a b ha hb hab s hs => h s hs (hy s hs) ha hb hab
-#align star_convex_sInter starConvex_interₛ
+#align star_convex_sInter starConvex_sInter
 -/
 
-#print starConvex_interᵢ /-
-theorem starConvex_interᵢ {ι : Sort _} {s : ι → Set E} (h : ∀ i, StarConvex 𝕜 x (s i)) :
+#print starConvex_iInter /-
+theorem starConvex_iInter {ι : Sort _} {s : ι → Set E} (h : ∀ i, StarConvex 𝕜 x (s i)) :
     StarConvex 𝕜 x (⋂ i, s i) :=
-  interₛ_range s ▸ starConvex_interₛ <| forall_range_iff.2 h
-#align star_convex_Inter starConvex_interᵢ
+  sInter_range s ▸ starConvex_sInter <| forall_range_iff.2 h
+#align star_convex_Inter starConvex_iInter
 -/
 
 /- warning: star_convex.union -> StarConvex.union is a dubious translation:
@@ -185,22 +185,22 @@ theorem StarConvex.union (hs : StarConvex 𝕜 x s) (ht : StarConvex 𝕜 x t) :
   · exact Or.inr (ht hy ha hb hab)
 #align star_convex.union StarConvex.union
 
-#print starConvex_unionᵢ /-
-theorem starConvex_unionᵢ {ι : Sort _} {s : ι → Set E} (hs : ∀ i, StarConvex 𝕜 x (s i)) :
+#print starConvex_iUnion /-
+theorem starConvex_iUnion {ι : Sort _} {s : ι → Set E} (hs : ∀ i, StarConvex 𝕜 x (s i)) :
     StarConvex 𝕜 x (⋃ i, s i) := by
   rintro y hy a b ha hb hab
   rw [mem_Union] at hy⊢
   obtain ⟨i, hy⟩ := hy
   exact ⟨i, hs i hy ha hb hab⟩
-#align star_convex_Union starConvex_unionᵢ
+#align star_convex_Union starConvex_iUnion
 -/
 
-#print starConvex_unionₛ /-
-theorem starConvex_unionₛ {S : Set (Set E)} (hS : ∀ s ∈ S, StarConvex 𝕜 x s) :
+#print starConvex_sUnion /-
+theorem starConvex_sUnion {S : Set (Set E)} (hS : ∀ s ∈ S, StarConvex 𝕜 x s) :
     StarConvex 𝕜 x (⋃₀ S) := by
   rw [sUnion_eq_Union]
-  exact starConvex_unionᵢ fun s => hS _ s.2
-#align star_convex_sUnion starConvex_unionₛ
+  exact starConvex_iUnion fun s => hS _ s.2
+#align star_convex_sUnion starConvex_sUnion
 -/
 
 /- warning: star_convex.prod -> StarConvex.prod is a dubious translation:

@@ -213,15 +213,15 @@ instance : InfSet (Setoid α) :=
       ⟨fun x r hr => r.refl' x, fun _ _ h r hr => r.symm' <| h r hr, fun _ _ _ h1 h2 r hr =>
         r.trans' (h1 r hr) <| h2 r hr⟩⟩⟩
 
-#print Setoid.infₛ_def /-
+#print Setoid.sInf_def /-
 /-- The underlying binary operation of the infimum of a set of equivalence relations
     is the infimum of the set's image under the map to the underlying binary operation. -/
-theorem infₛ_def {s : Set (Setoid α)} : (infₛ s).Rel = infₛ (Rel '' s) :=
+theorem sInf_def {s : Set (Setoid α)} : (sInf s).Rel = sInf (Rel '' s) :=
   by
   ext
-  simp only [infₛ_image, infᵢ_apply, infᵢ_Prop_eq]
+  simp only [sInf_image, iInf_apply, iInf_Prop_eq]
   rfl
-#align setoid.Inf_def Setoid.infₛ_def
+#align setoid.Inf_def Setoid.sInf_def
 -/
 
 instance : PartialOrder (Setoid α) where
@@ -287,12 +287,12 @@ theorem eq_top_iff {s : Setoid α} : s = (⊤ : Setoid α) ↔ ∀ x y : α, s.R
 /-- The inductively defined equivalence closure of a binary relation r is the infimum
     of the set of all equivalence relations containing r. -/
 theorem eqvGen_eq (r : α → α → Prop) :
-    EqvGen.Setoid r = infₛ { s : Setoid α | ∀ ⦃x y⦄, r x y → s.Rel x y } :=
+    EqvGen.Setoid r = sInf { s : Setoid α | ∀ ⦃x y⦄, r x y → s.Rel x y } :=
   le_antisymm
     (fun _ _ H =>
       EqvGen.ndrec (fun _ _ h _ hs => hs h) (refl' _) (fun _ _ _ => symm' _)
         (fun _ _ _ _ _ => trans' _) H)
-    (infₛ_le fun _ _ h => EqvGen.rel _ _ h)
+    (sInf_le fun _ _ h => EqvGen.rel _ _ h)
 #align setoid.eqv_gen_eq Setoid.eqvGen_eq
 -/
 
@@ -323,44 +323,44 @@ theorem sup_def {r s : Setoid α} : r ⊔ s = EqvGen.Setoid (r.Rel ⊔ s.Rel) :=
   rw [sup_eq_eqv_gen] <;> rfl
 #align setoid.sup_def Setoid.sup_def
 
-/- warning: setoid.Sup_eq_eqv_gen -> Setoid.supₛ_eq_eqvGen is a dubious translation:
+/- warning: setoid.Sup_eq_eqv_gen -> Setoid.sSup_eq_eqvGen is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} (S : Set.{u1} (Setoid.{succ u1} α)), Eq.{succ u1} (Setoid.{succ u1} α) (SupSet.supₛ.{u1} (Setoid.{succ u1} α) (CompleteSemilatticeSup.toHasSup.{u1} (Setoid.{succ u1} α) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Setoid.{succ u1} α) (Setoid.completeLattice.{u1} α))) S) (EqvGen.Setoid.{u1} α (fun (x : α) (y : α) => Exists.{succ u1} (Setoid.{succ u1} α) (fun (r : Setoid.{succ u1} α) => And (Membership.Mem.{u1, u1} (Setoid.{succ u1} α) (Set.{u1} (Setoid.{succ u1} α)) (Set.hasMem.{u1} (Setoid.{succ u1} α)) r S) (Setoid.Rel.{u1} α r x y))))
+  forall {α : Type.{u1}} (S : Set.{u1} (Setoid.{succ u1} α)), Eq.{succ u1} (Setoid.{succ u1} α) (SupSet.sSup.{u1} (Setoid.{succ u1} α) (CompleteSemilatticeSup.toHasSup.{u1} (Setoid.{succ u1} α) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Setoid.{succ u1} α) (Setoid.completeLattice.{u1} α))) S) (EqvGen.Setoid.{u1} α (fun (x : α) (y : α) => Exists.{succ u1} (Setoid.{succ u1} α) (fun (r : Setoid.{succ u1} α) => And (Membership.Mem.{u1, u1} (Setoid.{succ u1} α) (Set.{u1} (Setoid.{succ u1} α)) (Set.hasMem.{u1} (Setoid.{succ u1} α)) r S) (Setoid.Rel.{u1} α r x y))))
 but is expected to have type
-  forall {α : Type.{u1}} (S : Set.{u1} (Setoid.{succ u1} α)), Eq.{succ u1} (Setoid.{succ u1} α) (SupSet.supₛ.{u1} (Setoid.{succ u1} α) (CompleteLattice.toSupSet.{u1} (Setoid.{succ u1} α) (Setoid.completeLattice.{u1} α)) S) (EqvGen.Setoid.{u1} α (fun (x : α) (y : α) => Exists.{succ u1} (Setoid.{succ u1} α) (fun (r : Setoid.{succ u1} α) => And (Membership.mem.{u1, u1} (Setoid.{succ u1} α) (Set.{u1} (Setoid.{succ u1} α)) (Set.instMembershipSet.{u1} (Setoid.{succ u1} α)) r S) (Setoid.Rel.{u1} α r x y))))
-Case conversion may be inaccurate. Consider using '#align setoid.Sup_eq_eqv_gen Setoid.supₛ_eq_eqvGenₓ'. -/
+  forall {α : Type.{u1}} (S : Set.{u1} (Setoid.{succ u1} α)), Eq.{succ u1} (Setoid.{succ u1} α) (SupSet.sSup.{u1} (Setoid.{succ u1} α) (CompleteLattice.toSupSet.{u1} (Setoid.{succ u1} α) (Setoid.completeLattice.{u1} α)) S) (EqvGen.Setoid.{u1} α (fun (x : α) (y : α) => Exists.{succ u1} (Setoid.{succ u1} α) (fun (r : Setoid.{succ u1} α) => And (Membership.mem.{u1, u1} (Setoid.{succ u1} α) (Set.{u1} (Setoid.{succ u1} α)) (Set.instMembershipSet.{u1} (Setoid.{succ u1} α)) r S) (Setoid.Rel.{u1} α r x y))))
+Case conversion may be inaccurate. Consider using '#align setoid.Sup_eq_eqv_gen Setoid.sSup_eq_eqvGenₓ'. -/
 /-- The supremum of a set S of equivalence relations is the equivalence closure of the binary
     relation `there exists r ∈ S relating x and y`. -/
-theorem supₛ_eq_eqvGen (S : Set (Setoid α)) :
-    supₛ S = EqvGen.Setoid fun x y => ∃ r : Setoid α, r ∈ S ∧ r.Rel x y :=
+theorem sSup_eq_eqvGen (S : Set (Setoid α)) :
+    sSup S = EqvGen.Setoid fun x y => ∃ r : Setoid α, r ∈ S ∧ r.Rel x y :=
   by
   rw [eqv_gen_eq]
   apply congr_arg Inf
   simp only [upperBounds, le_def, and_imp, exists_imp]
   ext
   exact ⟨fun H x y r hr => H hr, fun H r hr x y => H r hr⟩
-#align setoid.Sup_eq_eqv_gen Setoid.supₛ_eq_eqvGen
+#align setoid.Sup_eq_eqv_gen Setoid.sSup_eq_eqvGen
 
-/- warning: setoid.Sup_def -> Setoid.supₛ_def is a dubious translation:
+/- warning: setoid.Sup_def -> Setoid.sSup_def is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} (Setoid.{succ u1} α)}, Eq.{succ u1} (Setoid.{succ u1} α) (SupSet.supₛ.{u1} (Setoid.{succ u1} α) (CompleteSemilatticeSup.toHasSup.{u1} (Setoid.{succ u1} α) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Setoid.{succ u1} α) (Setoid.completeLattice.{u1} α))) s) (EqvGen.Setoid.{u1} α (SupSet.supₛ.{u1} (α -> α -> Prop) (Pi.supSet.{u1, u1} α (fun (ᾰ : α) => α -> Prop) (fun (i : α) => Pi.supSet.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => CompleteSemilatticeSup.toHasSup.{0} Prop (CompleteLattice.toCompleteSemilatticeSup.{0} Prop Prop.completeLattice)))) (Set.image.{u1, u1} (Setoid.{succ u1} α) (α -> α -> Prop) (Setoid.Rel.{u1} α) s)))
+  forall {α : Type.{u1}} {s : Set.{u1} (Setoid.{succ u1} α)}, Eq.{succ u1} (Setoid.{succ u1} α) (SupSet.sSup.{u1} (Setoid.{succ u1} α) (CompleteSemilatticeSup.toHasSup.{u1} (Setoid.{succ u1} α) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Setoid.{succ u1} α) (Setoid.completeLattice.{u1} α))) s) (EqvGen.Setoid.{u1} α (SupSet.sSup.{u1} (α -> α -> Prop) (Pi.supSet.{u1, u1} α (fun (ᾰ : α) => α -> Prop) (fun (i : α) => Pi.supSet.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => CompleteSemilatticeSup.toHasSup.{0} Prop (CompleteLattice.toCompleteSemilatticeSup.{0} Prop Prop.completeLattice)))) (Set.image.{u1, u1} (Setoid.{succ u1} α) (α -> α -> Prop) (Setoid.Rel.{u1} α) s)))
 but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} (Setoid.{succ u1} α)}, Eq.{succ u1} (Setoid.{succ u1} α) (SupSet.supₛ.{u1} (Setoid.{succ u1} α) (CompleteLattice.toSupSet.{u1} (Setoid.{succ u1} α) (Setoid.completeLattice.{u1} α)) s) (EqvGen.Setoid.{u1} α (SupSet.supₛ.{u1} (α -> α -> Prop) (Pi.supSet.{u1, u1} α (fun (ᾰ : α) => α -> Prop) (fun (i : α) => Pi.supSet.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => CompleteLattice.toSupSet.{0} Prop Prop.completeLattice))) (Set.image.{u1, u1} (Setoid.{succ u1} α) (α -> α -> Prop) (Setoid.Rel.{u1} α) s)))
-Case conversion may be inaccurate. Consider using '#align setoid.Sup_def Setoid.supₛ_defₓ'. -/
+  forall {α : Type.{u1}} {s : Set.{u1} (Setoid.{succ u1} α)}, Eq.{succ u1} (Setoid.{succ u1} α) (SupSet.sSup.{u1} (Setoid.{succ u1} α) (CompleteLattice.toSupSet.{u1} (Setoid.{succ u1} α) (Setoid.completeLattice.{u1} α)) s) (EqvGen.Setoid.{u1} α (SupSet.sSup.{u1} (α -> α -> Prop) (Pi.supSet.{u1, u1} α (fun (ᾰ : α) => α -> Prop) (fun (i : α) => Pi.supSet.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => CompleteLattice.toSupSet.{0} Prop Prop.completeLattice))) (Set.image.{u1, u1} (Setoid.{succ u1} α) (α -> α -> Prop) (Setoid.Rel.{u1} α) s)))
+Case conversion may be inaccurate. Consider using '#align setoid.Sup_def Setoid.sSup_defₓ'. -/
 /-- The supremum of a set of equivalence relations is the equivalence closure of the
     supremum of the set's image under the map to the underlying binary operation. -/
-theorem supₛ_def {s : Set (Setoid α)} : supₛ s = EqvGen.Setoid (supₛ (Rel '' s)) :=
+theorem sSup_def {s : Set (Setoid α)} : sSup s = EqvGen.Setoid (sSup (Rel '' s)) :=
   by
-  rw [Sup_eq_eqv_gen, supₛ_image]
+  rw [Sup_eq_eqv_gen, sSup_image]
   congr with (x y)
-  simp only [supᵢ_apply, supᵢ_Prop_eq, exists_prop]
-#align setoid.Sup_def Setoid.supₛ_def
+  simp only [iSup_apply, iSup_Prop_eq, exists_prop]
+#align setoid.Sup_def Setoid.sSup_def
 
 #print Setoid.eqvGen_of_setoid /-
 /-- The equivalence closure of an equivalence relation r is r. -/
 @[simp]
 theorem eqvGen_of_setoid (r : Setoid α) : EqvGen.Setoid r.R = r :=
-  le_antisymm (by rw [eqv_gen_eq] <;> exact infₛ_le fun _ _ => id) EqvGen.rel
+  le_antisymm (by rw [eqv_gen_eq] <;> exact sInf_le fun _ _ => id) EqvGen.rel
 #align setoid.eqv_gen_of_setoid Setoid.eqvGen_of_setoid
 -/
 
@@ -376,7 +376,7 @@ theorem eqvGen_idem (r : α → α → Prop) : EqvGen.Setoid (EqvGen.Setoid r).R
 /-- The equivalence closure of a binary relation r is contained in any equivalence
     relation containing r. -/
 theorem eqvGen_le {r : α → α → Prop} {s : Setoid α} (h : ∀ x y, r x y → s.Rel x y) :
-    EqvGen.Setoid r ≤ s := by rw [eqv_gen_eq] <;> exact infₛ_le h
+    EqvGen.Setoid r ≤ s := by rw [eqv_gen_eq] <;> exact sInf_le h
 #align setoid.eqv_gen_le Setoid.eqvGen_le
 -/
 

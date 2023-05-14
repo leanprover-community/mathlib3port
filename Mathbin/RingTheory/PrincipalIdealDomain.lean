@@ -727,11 +727,11 @@ theorem nonPrincipals_zorn (c : Set (Ideal R)) (hs : c ⊆ nonPrincipals R)
     (hchain : IsChain (· ≤ ·) c) {K : Ideal R} (hKmem : K ∈ c) :
     ∃ I ∈ nonPrincipals R, ∀ J ∈ c, J ≤ I :=
   by
-  refine' ⟨Sup c, _, fun J hJ => le_supₛ hJ⟩
+  refine' ⟨Sup c, _, fun J hJ => le_sSup hJ⟩
   rintro ⟨x, hx⟩
   have hxmem : x ∈ Sup c := hx.symm ▸ Submodule.mem_span_singleton_self x
-  obtain ⟨J, hJc, hxJ⟩ := (Submodule.mem_supₛ_of_directed ⟨K, hKmem⟩ hchain.directed_on).1 hxmem
-  have hSupJ : Sup c = J := le_antisymm (by simp [hx, Ideal.span_le, hxJ]) (le_supₛ hJc)
+  obtain ⟨J, hJc, hxJ⟩ := (Submodule.mem_sSup_of_directed ⟨K, hKmem⟩ hchain.directed_on).1 hxmem
+  have hSupJ : Sup c = J := le_antisymm (by simp [hx, Ideal.span_le, hxJ]) (le_sSup hJc)
   specialize hs hJc
   rw [← hSupJ, hx, nonPrincipals_def] at hs
   exact hs ⟨⟨x, rfl⟩⟩

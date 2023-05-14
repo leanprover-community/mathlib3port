@@ -114,8 +114,8 @@ theorem sum_left {ι : Type _} [Countable ι] {μ : ι → Measure α} : sum μ 
   by
   refine' ⟨fun h i => h.mono (le_sum _ _) le_rfl, fun H => _⟩
   choose s hsm hsμ hsν using H
-  refine' ⟨⋂ i, s i, MeasurableSet.interᵢ hsm, _, _⟩
-  · rw [sum_apply _ (MeasurableSet.interᵢ hsm), ENNReal.tsum_eq_zero]
+  refine' ⟨⋂ i, s i, MeasurableSet.iInter hsm, _, _⟩
+  · rw [sum_apply _ (MeasurableSet.iInter hsm), ENNReal.tsum_eq_zero]
     exact fun i => measure_mono_null (Inter_subset _ _) (hsμ i)
   · rwa [compl_Inter, measure_Union_null_iff]
 #align measure_theory.measure.mutually_singular.sum_left MeasureTheory.Measure.MutuallySingular.sum_left

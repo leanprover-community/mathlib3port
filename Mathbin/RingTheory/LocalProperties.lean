@@ -552,7 +552,7 @@ theorem finite_ofLocalizationSpan : RingHom.OfLocalizationSpan @RingHom.Finite :
   choose s₁ s₂ using H
   let sf := fun x : s => IsLocalization.finsetIntegerMultiple (Submonoid.powers (f x)) (s₁ x)
   use s.attach.bUnion sf
-  rw [Submodule.span_attach_bunionᵢ, eq_top_iff]
+  rw [Submodule.span_attach_biUnion, eq_top_iff]
   -- It suffices to show that `r ^ n • x ∈ span T` for each `r : s`, since `{ r ^ n }` spans `R`.
   -- This then follows from the fact that each `x : R` is a linear combination of the generating set
   -- of `Sᵣ`. By multiplying a sufficiently large power of `r`, we can cancel out the `r`s in the
@@ -574,7 +574,7 @@ theorem finite_ofLocalizationSpan : RingHom.OfLocalizationSpan @RingHom.Finite :
   rw [Submonoid.smul_def, ← Algebra.smul_def, smul_smul, Subtype.coe_mk, ← pow_add] at hn₂
   simp_rw [Submonoid.map_powers] at hn₂
   use n₂ + n₁
-  exact le_supᵢ (fun x : s => Submodule.span R (sf x : Set S)) r hn₂
+  exact le_iSup (fun x : s => Submodule.span R (sf x : Set S)) r hn₂
 #align finite_of_localization_span finite_ofLocalizationSpan
 
 end Finite
@@ -699,7 +699,7 @@ theorem finiteType_ofLocalizationSpan : RingHom.OfLocalizationSpan @RingHom.Fini
   choose s₁ s₂ using H
   let sf := fun x : s => IsLocalization.finsetIntegerMultiple (Submonoid.powers (f x)) (s₁ x)
   use s.attach.bUnion sf
-  convert(Algebra.adjoin_attach_bunionᵢ sf).trans _
+  convert(Algebra.adjoin_attach_biUnion sf).trans _
   rw [eq_top_iff]
   rintro x -
   apply
@@ -720,7 +720,7 @@ theorem finiteType_ofLocalizationSpan : RingHom.OfLocalizationSpan @RingHom.Fini
   rw [Submonoid.smul_def, ← Algebra.smul_def, smul_smul, Subtype.coe_mk, ← pow_add] at hn₂
   simp_rw [Submonoid.map_powers] at hn₂
   use n₂ + n₁
-  exact le_supᵢ (fun x : s => Algebra.adjoin R (sf x : Set S)) r hn₂
+  exact le_iSup (fun x : s => Algebra.adjoin R (sf x : Set S)) r hn₂
 #align finite_type_of_localization_span finiteType_ofLocalizationSpan
 
 end FiniteType

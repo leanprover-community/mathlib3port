@@ -86,13 +86,13 @@ theorem IsCompact.has_extreme_point (hscomp : IsCompact s) (hsnemp : s.Nonempty)
   · exact ⟨s, ⟨hsnemp, hscomp.is_closed, IsExtreme.rfl⟩, fun _ => False.elim⟩
   refine'
     ⟨⋂₀ F,
-      ⟨_, isClosed_interₛ fun t ht => (hFS ht).2.1,
-        isExtreme_interₛ hFnemp fun t ht => (hFS ht).2.2⟩,
+      ⟨_, isClosed_sInter fun t ht => (hFS ht).2.1,
+        isExtreme_sInter hFnemp fun t ht => (hFS ht).2.2⟩,
       fun t ht => sInter_subset_of_mem ht⟩
   haveI : Nonempty ↥F := hFnemp.to_subtype
   rw [sInter_eq_Inter]
   refine'
-    IsCompact.nonempty_interᵢ_of_directed_nonempty_compact_closed _ (fun t u => _)
+    IsCompact.nonempty_iInter_of_directed_nonempty_compact_closed _ (fun t u => _)
       (fun t => (hFS t.Mem).1)
       (fun t => isCompact_of_isClosed_subset hscomp (hFS t.Mem).2.1 (hFS t.Mem).2.2.1) fun t =>
       (hFS t.Mem).2.1

@@ -95,12 +95,12 @@ theorem hahn_decomposition [FiniteMeasure μ] [FiniteMeasure ν] :
     rw [NNReal.coe_le_coe, ← ENNReal.coe_le_coe, to_nnreal_μ, to_nnreal_μ]
     exact measure_mono (subset_univ _)
   have c_nonempty : c.nonempty := nonempty.image _ ⟨_, MeasurableSet.empty⟩
-  have d_le_γ : ∀ s, MeasurableSet s → d s ≤ γ := fun s hs => le_csupₛ bdd_c ⟨s, hs, rfl⟩
+  have d_le_γ : ∀ s, MeasurableSet s → d s ≤ γ := fun s hs => le_csSup bdd_c ⟨s, hs, rfl⟩
   have : ∀ n : ℕ, ∃ s : Set α, MeasurableSet s ∧ γ - (1 / 2) ^ n < d s :=
     by
     intro n
     have : γ - (1 / 2) ^ n < γ := sub_lt_self γ (pow_pos (half_pos zero_lt_one) n)
-    rcases exists_lt_of_lt_csupₛ c_nonempty this with ⟨r, ⟨s, hs, rfl⟩, hlt⟩
+    rcases exists_lt_of_lt_csSup c_nonempty this with ⟨r, ⟨s, hs, rfl⟩, hlt⟩
     exact ⟨s, hs, hlt⟩
   rcases Classical.axiom_of_choice this with ⟨e, he⟩
   change ℕ → Set α at e
@@ -109,13 +109,13 @@ theorem hahn_decomposition [FiniteMeasure μ] [FiniteMeasure ν] :
   let f : ℕ → ℕ → Set α := fun n m => (Finset.Ico n (m + 1)).inf e
   have hf : ∀ n m, MeasurableSet (f n m) := by
     intro n m
-    simp only [f, Finset.inf_eq_infᵢ]
-    exact MeasurableSet.binterᵢ (to_countable _) fun i _ => he₁ _
+    simp only [f, Finset.inf_eq_iInf]
+    exact MeasurableSet.biInter (to_countable _) fun i _ => he₁ _
   have f_subset_f : ∀ {a b c d}, a ≤ b → c ≤ d → f a d ⊆ f b c :=
     by
     intro a b c d hab hcd
     dsimp only [f]
-    rw [Finset.inf_eq_infᵢ, Finset.inf_eq_infᵢ]
+    rw [Finset.inf_eq_iInf, Finset.inf_eq_iInf]
     exact bInter_subset_bInter_left (Finset.Ico_subset_Ico hab <| Nat.succ_le_succ hcd)
   have f_succ : ∀ n m, n ≤ m → f n (m + 1) = f n m ∩ e (m + 1) :=
     by
@@ -184,7 +184,7 @@ theorem hahn_decomposition [FiniteMeasure μ] [FiniteMeasure ν] :
     change γ - 2 * (1 / 2) ^ m ≤ d (f m n)
     refine' le_trans _ (le_d_f _ _ hmn)
     exact le_add_of_le_of_nonneg le_rfl (pow_nonneg (le_of_lt <| half_pos <| zero_lt_one) _)
-  have hs : MeasurableSet s := MeasurableSet.unionᵢ fun n => MeasurableSet.interᵢ fun m => hf _ _
+  have hs : MeasurableSet s := MeasurableSet.iUnion fun n => MeasurableSet.iInter fun m => hf _ _
   refine' ⟨s, hs, _, _⟩
   · intro t ht hts
     have : 0 ≤ d t :=

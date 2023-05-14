@@ -72,9 +72,9 @@ instance : SecondCountableTopology EReal :=
             by
             ext x
             simpa only [hs, and_comm', exists_prop, mem_Union] using lt_iff_exists_rat_btwn]] <;>
-      · apply isOpen_unionᵢ
+      · apply isOpen_iUnion
         intro q
-        apply isOpen_unionᵢ
+        apply isOpen_iUnion
         intro hq
         apply generate_open.basic
         exact mem_Union.2 ⟨q, by simp⟩⟩
@@ -314,9 +314,9 @@ theorem continuous_coe_ennreal_iff {f : α → ℝ≥0∞} :
 
 /- warning: ereal.nhds_top -> EReal.nhds_top is a dubious translation:
 lean 3 declaration is
-  Eq.{1} (Filter.{0} EReal) (nhds.{0} EReal EReal.topologicalSpace (Top.top.{0} EReal EReal.hasTop)) (infᵢ.{0, 1} (Filter.{0} EReal) (ConditionallyCompleteLattice.toHasInf.{0} (Filter.{0} EReal) (CompleteLattice.toConditionallyCompleteLattice.{0} (Filter.{0} EReal) (Filter.completeLattice.{0} EReal))) EReal (fun (a : EReal) => infᵢ.{0, 0} (Filter.{0} EReal) (ConditionallyCompleteLattice.toHasInf.{0} (Filter.{0} EReal) (CompleteLattice.toConditionallyCompleteLattice.{0} (Filter.{0} EReal) (Filter.completeLattice.{0} EReal))) (Ne.{1} EReal a (Top.top.{0} EReal EReal.hasTop)) (fun (H : Ne.{1} EReal a (Top.top.{0} EReal EReal.hasTop)) => Filter.principal.{0} EReal (Set.Ioi.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder)))) a))))
+  Eq.{1} (Filter.{0} EReal) (nhds.{0} EReal EReal.topologicalSpace (Top.top.{0} EReal EReal.hasTop)) (iInf.{0, 1} (Filter.{0} EReal) (ConditionallyCompleteLattice.toHasInf.{0} (Filter.{0} EReal) (CompleteLattice.toConditionallyCompleteLattice.{0} (Filter.{0} EReal) (Filter.completeLattice.{0} EReal))) EReal (fun (a : EReal) => iInf.{0, 0} (Filter.{0} EReal) (ConditionallyCompleteLattice.toHasInf.{0} (Filter.{0} EReal) (CompleteLattice.toConditionallyCompleteLattice.{0} (Filter.{0} EReal) (Filter.completeLattice.{0} EReal))) (Ne.{1} EReal a (Top.top.{0} EReal EReal.hasTop)) (fun (H : Ne.{1} EReal a (Top.top.{0} EReal EReal.hasTop)) => Filter.principal.{0} EReal (Set.Ioi.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder)))) a))))
 but is expected to have type
-  Eq.{1} (Filter.{0} EReal) (nhds.{0} EReal EReal.instTopologicalSpaceEReal (Top.top.{0} EReal EReal.instTopEReal)) (infᵢ.{0, 1} (Filter.{0} EReal) (ConditionallyCompleteLattice.toInfSet.{0} (Filter.{0} EReal) (CompleteLattice.toConditionallyCompleteLattice.{0} (Filter.{0} EReal) (Filter.instCompleteLatticeFilter.{0} EReal))) EReal (fun (a : EReal) => infᵢ.{0, 0} (Filter.{0} EReal) (ConditionallyCompleteLattice.toInfSet.{0} (Filter.{0} EReal) (CompleteLattice.toConditionallyCompleteLattice.{0} (Filter.{0} EReal) (Filter.instCompleteLatticeFilter.{0} EReal))) (Ne.{1} EReal a (Top.top.{0} EReal EReal.instTopEReal)) (fun (H : Ne.{1} EReal a (Top.top.{0} EReal EReal.instTopEReal)) => Filter.principal.{0} EReal (Set.Ioi.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder) a))))
+  Eq.{1} (Filter.{0} EReal) (nhds.{0} EReal EReal.instTopologicalSpaceEReal (Top.top.{0} EReal EReal.instTopEReal)) (iInf.{0, 1} (Filter.{0} EReal) (ConditionallyCompleteLattice.toInfSet.{0} (Filter.{0} EReal) (CompleteLattice.toConditionallyCompleteLattice.{0} (Filter.{0} EReal) (Filter.instCompleteLatticeFilter.{0} EReal))) EReal (fun (a : EReal) => iInf.{0, 0} (Filter.{0} EReal) (ConditionallyCompleteLattice.toInfSet.{0} (Filter.{0} EReal) (CompleteLattice.toConditionallyCompleteLattice.{0} (Filter.{0} EReal) (Filter.instCompleteLatticeFilter.{0} EReal))) (Ne.{1} EReal a (Top.top.{0} EReal EReal.instTopEReal)) (fun (H : Ne.{1} EReal a (Top.top.{0} EReal EReal.instTopEReal)) => Filter.principal.{0} EReal (Set.Ioi.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder) a))))
 Case conversion may be inaccurate. Consider using '#align ereal.nhds_top EReal.nhds_topₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ≠ » «expr⊤»()) -/
 theorem nhds_top : 𝓝 (⊤ : EReal) = ⨅ (a) (_ : a ≠ ⊤), 𝓟 (Ioi a) :=
@@ -325,19 +325,19 @@ theorem nhds_top : 𝓝 (⊤ : EReal) = ⨅ (a) (_ : a ≠ ⊤), 𝓟 (Ioi a) :=
 
 /- warning: ereal.nhds_top' -> EReal.nhds_top' is a dubious translation:
 lean 3 declaration is
-  Eq.{1} (Filter.{0} EReal) (nhds.{0} EReal EReal.topologicalSpace (Top.top.{0} EReal EReal.hasTop)) (infᵢ.{0, 1} (Filter.{0} EReal) (ConditionallyCompleteLattice.toHasInf.{0} (Filter.{0} EReal) (CompleteLattice.toConditionallyCompleteLattice.{0} (Filter.{0} EReal) (Filter.completeLattice.{0} EReal))) Real (fun (a : Real) => Filter.principal.{0} EReal (Set.Ioi.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder)))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) a))))
+  Eq.{1} (Filter.{0} EReal) (nhds.{0} EReal EReal.topologicalSpace (Top.top.{0} EReal EReal.hasTop)) (iInf.{0, 1} (Filter.{0} EReal) (ConditionallyCompleteLattice.toHasInf.{0} (Filter.{0} EReal) (CompleteLattice.toConditionallyCompleteLattice.{0} (Filter.{0} EReal) (Filter.completeLattice.{0} EReal))) Real (fun (a : Real) => Filter.principal.{0} EReal (Set.Ioi.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder)))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) a))))
 but is expected to have type
-  Eq.{1} (Filter.{0} EReal) (nhds.{0} EReal EReal.instTopologicalSpaceEReal (Top.top.{0} EReal EReal.instTopEReal)) (infᵢ.{0, 1} (Filter.{0} EReal) (ConditionallyCompleteLattice.toInfSet.{0} (Filter.{0} EReal) (CompleteLattice.toConditionallyCompleteLattice.{0} (Filter.{0} EReal) (Filter.instCompleteLatticeFilter.{0} EReal))) Real (fun (a : Real) => Filter.principal.{0} EReal (Set.Ioi.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder) (Real.toEReal a))))
+  Eq.{1} (Filter.{0} EReal) (nhds.{0} EReal EReal.instTopologicalSpaceEReal (Top.top.{0} EReal EReal.instTopEReal)) (iInf.{0, 1} (Filter.{0} EReal) (ConditionallyCompleteLattice.toInfSet.{0} (Filter.{0} EReal) (CompleteLattice.toConditionallyCompleteLattice.{0} (Filter.{0} EReal) (Filter.instCompleteLatticeFilter.{0} EReal))) Real (fun (a : Real) => Filter.principal.{0} EReal (Set.Ioi.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder) (Real.toEReal a))))
 Case conversion may be inaccurate. Consider using '#align ereal.nhds_top' EReal.nhds_top'ₓ'. -/
 theorem nhds_top' : 𝓝 (⊤ : EReal) = ⨅ a : ℝ, 𝓟 (Ioi a) :=
   by
   rw [nhds_top]
   apply le_antisymm
-  · exact infᵢ_mono' fun x => ⟨x, by simp⟩
-  · refine' le_infᵢ fun r => le_infᵢ fun hr => _
+  · exact iInf_mono' fun x => ⟨x, by simp⟩
+  · refine' le_iInf fun r => le_iInf fun hr => _
     induction r using EReal.rec
-    · exact (infᵢ_le _ 0).trans (by simp)
-    · exact infᵢ_le _ _
+    · exact (iInf_le _ 0).trans (by simp)
+    · exact iInf_le _ _
     · simpa using hr
 #align ereal.nhds_top' EReal.nhds_top'
 
@@ -367,9 +367,9 @@ theorem tendsto_nhds_top_iff_real {α : Type _} {m : α → EReal} {f : Filter �
 
 /- warning: ereal.nhds_bot -> EReal.nhds_bot is a dubious translation:
 lean 3 declaration is
-  Eq.{1} (Filter.{0} EReal) (nhds.{0} EReal EReal.topologicalSpace (Bot.bot.{0} EReal EReal.hasBot)) (infᵢ.{0, 1} (Filter.{0} EReal) (ConditionallyCompleteLattice.toHasInf.{0} (Filter.{0} EReal) (CompleteLattice.toConditionallyCompleteLattice.{0} (Filter.{0} EReal) (Filter.completeLattice.{0} EReal))) EReal (fun (a : EReal) => infᵢ.{0, 0} (Filter.{0} EReal) (ConditionallyCompleteLattice.toHasInf.{0} (Filter.{0} EReal) (CompleteLattice.toConditionallyCompleteLattice.{0} (Filter.{0} EReal) (Filter.completeLattice.{0} EReal))) (Ne.{1} EReal a (Bot.bot.{0} EReal EReal.hasBot)) (fun (H : Ne.{1} EReal a (Bot.bot.{0} EReal EReal.hasBot)) => Filter.principal.{0} EReal (Set.Iio.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder)))) a))))
+  Eq.{1} (Filter.{0} EReal) (nhds.{0} EReal EReal.topologicalSpace (Bot.bot.{0} EReal EReal.hasBot)) (iInf.{0, 1} (Filter.{0} EReal) (ConditionallyCompleteLattice.toHasInf.{0} (Filter.{0} EReal) (CompleteLattice.toConditionallyCompleteLattice.{0} (Filter.{0} EReal) (Filter.completeLattice.{0} EReal))) EReal (fun (a : EReal) => iInf.{0, 0} (Filter.{0} EReal) (ConditionallyCompleteLattice.toHasInf.{0} (Filter.{0} EReal) (CompleteLattice.toConditionallyCompleteLattice.{0} (Filter.{0} EReal) (Filter.completeLattice.{0} EReal))) (Ne.{1} EReal a (Bot.bot.{0} EReal EReal.hasBot)) (fun (H : Ne.{1} EReal a (Bot.bot.{0} EReal EReal.hasBot)) => Filter.principal.{0} EReal (Set.Iio.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder)))) a))))
 but is expected to have type
-  Eq.{1} (Filter.{0} EReal) (nhds.{0} EReal EReal.instTopologicalSpaceEReal (Bot.bot.{0} EReal instERealBot)) (infᵢ.{0, 1} (Filter.{0} EReal) (ConditionallyCompleteLattice.toInfSet.{0} (Filter.{0} EReal) (CompleteLattice.toConditionallyCompleteLattice.{0} (Filter.{0} EReal) (Filter.instCompleteLatticeFilter.{0} EReal))) EReal (fun (a : EReal) => infᵢ.{0, 0} (Filter.{0} EReal) (ConditionallyCompleteLattice.toInfSet.{0} (Filter.{0} EReal) (CompleteLattice.toConditionallyCompleteLattice.{0} (Filter.{0} EReal) (Filter.instCompleteLatticeFilter.{0} EReal))) (Ne.{1} EReal a (Bot.bot.{0} EReal instERealBot)) (fun (H : Ne.{1} EReal a (Bot.bot.{0} EReal instERealBot)) => Filter.principal.{0} EReal (Set.Iio.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder) a))))
+  Eq.{1} (Filter.{0} EReal) (nhds.{0} EReal EReal.instTopologicalSpaceEReal (Bot.bot.{0} EReal instERealBot)) (iInf.{0, 1} (Filter.{0} EReal) (ConditionallyCompleteLattice.toInfSet.{0} (Filter.{0} EReal) (CompleteLattice.toConditionallyCompleteLattice.{0} (Filter.{0} EReal) (Filter.instCompleteLatticeFilter.{0} EReal))) EReal (fun (a : EReal) => iInf.{0, 0} (Filter.{0} EReal) (ConditionallyCompleteLattice.toInfSet.{0} (Filter.{0} EReal) (CompleteLattice.toConditionallyCompleteLattice.{0} (Filter.{0} EReal) (Filter.instCompleteLatticeFilter.{0} EReal))) (Ne.{1} EReal a (Bot.bot.{0} EReal instERealBot)) (fun (H : Ne.{1} EReal a (Bot.bot.{0} EReal instERealBot)) => Filter.principal.{0} EReal (Set.Iio.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder) a))))
 Case conversion may be inaccurate. Consider using '#align ereal.nhds_bot EReal.nhds_botₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ≠ » «expr⊥»()) -/
 theorem nhds_bot : 𝓝 (⊥ : EReal) = ⨅ (a) (_ : a ≠ ⊥), 𝓟 (Iio a) :=
@@ -378,20 +378,20 @@ theorem nhds_bot : 𝓝 (⊥ : EReal) = ⨅ (a) (_ : a ≠ ⊥), 𝓟 (Iio a) :=
 
 /- warning: ereal.nhds_bot' -> EReal.nhds_bot' is a dubious translation:
 lean 3 declaration is
-  Eq.{1} (Filter.{0} EReal) (nhds.{0} EReal EReal.topologicalSpace (Bot.bot.{0} EReal EReal.hasBot)) (infᵢ.{0, 1} (Filter.{0} EReal) (ConditionallyCompleteLattice.toHasInf.{0} (Filter.{0} EReal) (CompleteLattice.toConditionallyCompleteLattice.{0} (Filter.{0} EReal) (Filter.completeLattice.{0} EReal))) Real (fun (a : Real) => Filter.principal.{0} EReal (Set.Iio.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder)))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) a))))
+  Eq.{1} (Filter.{0} EReal) (nhds.{0} EReal EReal.topologicalSpace (Bot.bot.{0} EReal EReal.hasBot)) (iInf.{0, 1} (Filter.{0} EReal) (ConditionallyCompleteLattice.toHasInf.{0} (Filter.{0} EReal) (CompleteLattice.toConditionallyCompleteLattice.{0} (Filter.{0} EReal) (Filter.completeLattice.{0} EReal))) Real (fun (a : Real) => Filter.principal.{0} EReal (Set.Iio.{0} EReal (PartialOrder.toPreorder.{0} EReal (CompleteSemilatticeInf.toPartialOrder.{0} EReal (CompleteLattice.toCompleteSemilatticeInf.{0} EReal (CompleteLinearOrder.toCompleteLattice.{0} EReal EReal.completeLinearOrder)))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real EReal (HasLiftT.mk.{1, 1} Real EReal (CoeTCₓ.coe.{1, 1} Real EReal (coeBase.{1, 1} Real EReal EReal.hasCoe))) a))))
 but is expected to have type
-  Eq.{1} (Filter.{0} EReal) (nhds.{0} EReal EReal.instTopologicalSpaceEReal (Bot.bot.{0} EReal instERealBot)) (infᵢ.{0, 1} (Filter.{0} EReal) (ConditionallyCompleteLattice.toInfSet.{0} (Filter.{0} EReal) (CompleteLattice.toConditionallyCompleteLattice.{0} (Filter.{0} EReal) (Filter.instCompleteLatticeFilter.{0} EReal))) Real (fun (a : Real) => Filter.principal.{0} EReal (Set.Iio.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder) (Real.toEReal a))))
+  Eq.{1} (Filter.{0} EReal) (nhds.{0} EReal EReal.instTopologicalSpaceEReal (Bot.bot.{0} EReal instERealBot)) (iInf.{0, 1} (Filter.{0} EReal) (ConditionallyCompleteLattice.toInfSet.{0} (Filter.{0} EReal) (CompleteLattice.toConditionallyCompleteLattice.{0} (Filter.{0} EReal) (Filter.instCompleteLatticeFilter.{0} EReal))) Real (fun (a : Real) => Filter.principal.{0} EReal (Set.Iio.{0} EReal (PartialOrder.toPreorder.{0} EReal instERealPartialOrder) (Real.toEReal a))))
 Case conversion may be inaccurate. Consider using '#align ereal.nhds_bot' EReal.nhds_bot'ₓ'. -/
 theorem nhds_bot' : 𝓝 (⊥ : EReal) = ⨅ a : ℝ, 𝓟 (Iio a) :=
   by
   rw [nhds_bot]
   apply le_antisymm
-  · exact infᵢ_mono' fun x => ⟨x, by simp⟩
-  · refine' le_infᵢ fun r => le_infᵢ fun hr => _
+  · exact iInf_mono' fun x => ⟨x, by simp⟩
+  · refine' le_iInf fun r => le_iInf fun hr => _
     induction r using EReal.rec
     · simpa using hr
-    · exact infᵢ_le _ _
-    · exact (infᵢ_le _ 0).trans (by simp)
+    · exact iInf_le _ _
+    · exact (iInf_le _ 0).trans (by simp)
 #align ereal.nhds_bot' EReal.nhds_bot'
 
 /- warning: ereal.mem_nhds_bot_iff -> EReal.mem_nhds_bot_iff is a dubious translation:

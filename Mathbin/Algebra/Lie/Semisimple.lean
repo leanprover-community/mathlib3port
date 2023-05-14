@@ -65,7 +65,7 @@ class IsSemisimple : Prop where
 
 theorem isSemisimple_iff_no_solvable_ideals :
     IsSemisimple R L ↔ ∀ I : LieIdeal R L, IsSolvable R I → I = ⊥ :=
-  ⟨fun h => supₛ_eq_bot.mp h.semisimple, fun h => ⟨supₛ_eq_bot.mpr h⟩⟩
+  ⟨fun h => sSup_eq_bot.mp h.semisimple, fun h => ⟨sSup_eq_bot.mpr h⟩⟩
 #align lie_algebra.is_semisimple_iff_no_solvable_ideals LieAlgebra.isSemisimple_iff_no_solvable_ideals
 
 theorem isSemisimple_iff_no_abelian_ideals :

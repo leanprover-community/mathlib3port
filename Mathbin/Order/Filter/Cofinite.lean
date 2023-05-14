@@ -136,7 +136,7 @@ Case conversion may be inaccurate. Consider using '#align filter.le_cofinite_iff
 theorem le_cofinite_iff_compl_singleton_mem : l ≤ cofinite ↔ ∀ x, {x}ᶜ ∈ l :=
   by
   refine' ⟨fun h x => h (finite_singleton x).compl_mem_cofinite, fun h s (hs : sᶜ.Finite) => _⟩
-  rw [← compl_compl s, ← bUnion_of_singleton (sᶜ), compl_Union₂, Filter.binterᵢ_mem hs]
+  rw [← compl_compl s, ← bUnion_of_singleton (sᶜ), compl_Union₂, Filter.biInter_mem hs]
   exact fun x _ => h x
 #align filter.le_cofinite_iff_compl_singleton_mem Filter.le_cofinite_iff_compl_singleton_mem
 

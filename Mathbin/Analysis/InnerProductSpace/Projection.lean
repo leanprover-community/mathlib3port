@@ -74,13 +74,13 @@ local notation "absR" => Abs.abs
 Let `u` be a point in a real inner product space, and let `K` be a nonempty complete convex subset.
 Then there exists a (unique) `v` in `K` that minimizes the distance `‖u - v‖` to `u`.
  -/
-theorem exists_norm_eq_infᵢ_of_complete_convex {K : Set F} (ne : K.Nonempty) (h₁ : IsComplete K)
+theorem exists_norm_eq_iInf_of_complete_convex {K : Set F} (ne : K.Nonempty) (h₁ : IsComplete K)
     (h₂ : Convex ℝ K) : ∀ u : F, ∃ v ∈ K, ‖u - v‖ = ⨅ w : K, ‖u - w‖ := fun u =>
   by
   let δ := ⨅ w : K, ‖u - w‖
   letI : Nonempty K := ne.to_subtype
-  have zero_le_δ : 0 ≤ δ := le_cinfᵢ fun _ => norm_nonneg _
-  have δ_le : ∀ w : K, δ ≤ ‖u - w‖ := cinfᵢ_le ⟨0, Set.forall_range_iff.2 fun _ => norm_nonneg _⟩
+  have zero_le_δ : 0 ≤ δ := le_ciInf fun _ => norm_nonneg _
+  have δ_le : ∀ w : K, δ ≤ ‖u - w‖ := ciInf_le ⟨0, Set.forall_range_iff.2 fun _ => norm_nonneg _⟩
   have δ_le' : ∀ w ∈ K, δ ≤ ‖u - w‖ := fun w hw => δ_le ⟨w, hw⟩
   -- Step 1: since `δ` is the infimum, can find a sequence `w : ℕ → K` in `K`
   -- such that `‖u - w n‖ < δ + 1 / (n + 1)` (which implies `‖u - w n‖ --> δ`);
@@ -89,7 +89,7 @@ theorem exists_norm_eq_infᵢ_of_complete_convex {K : Set F} (ne : K.Nonempty) (
     by
     have hδ : ∀ n : ℕ, δ < δ + 1 / (n + 1) := fun n =>
       lt_add_of_le_of_pos le_rfl Nat.one_div_pos_of_nat
-    have h := fun n => exists_lt_of_cinfᵢ_lt (hδ n)
+    have h := fun n => exists_lt_of_ciInf_lt (hδ n)
     let w : ℕ → K := fun n => Classical.choose (h n)
     exact ⟨w, fun n => Classical.choose_spec (h n)⟩
   rcases exists_seq with ⟨w, hw⟩
@@ -215,11 +215,11 @@ theorem exists_norm_eq_infᵢ_of_complete_convex {K : Set F} (ne : K.Nonempty) (
   convert tendsto.comp h_cont.continuous_at w_tendsto
   exact tendsto_nhds_unique this norm_tendsto
   exact Subtype.mem _
-#align exists_norm_eq_infi_of_complete_convex exists_norm_eq_infᵢ_of_complete_convex
+#align exists_norm_eq_infi_of_complete_convex exists_norm_eq_iInf_of_complete_convex
 
 /-- Characterization of minimizers for the projection on a convex set in a real inner product
 space. -/
-theorem norm_eq_infᵢ_iff_real_inner_le_zero {K : Set F} (h : Convex ℝ K) {u : F} {v : F}
+theorem norm_eq_iInf_iff_real_inner_le_zero {K : Set F} (h : Convex ℝ K) {u : F} {v : F}
     (hv : v ∈ K) : (‖u - v‖ = ⨅ w : K, ‖u - w‖) ↔ ∀ w ∈ K, ⟪u - v, w - v⟫_ℝ ≤ 0 :=
   Iff.intro
     (by
@@ -229,12 +229,12 @@ theorem norm_eq_infᵢ_iff_real_inner_le_zero {K : Set F} (h : Convex ℝ K) {u 
       let q := ‖w - v‖ ^ 2
       letI : Nonempty K := ⟨⟨v, hv⟩⟩
       have zero_le_δ : 0 ≤ δ
-      apply le_cinfᵢ
+      apply le_ciInf
       intro
       exact norm_nonneg _
       have δ_le : ∀ w : K, δ ≤ ‖u - w‖
       intro w
-      apply cinfᵢ_le
+      apply ciInf_le
       use (0 : ℝ)
       rintro _ ⟨_, rfl⟩
       exact norm_nonneg _
@@ -308,7 +308,7 @@ theorem norm_eq_infᵢ_iff_real_inner_le_zero {K : Set F} (h : Convex ℝ K) {u 
       intro h
       letI : Nonempty K := ⟨⟨v, hv⟩⟩
       apply le_antisymm
-      · apply le_cinfᵢ
+      · apply le_ciInf
         intro w
         apply nonneg_le_nonneg_of_sq_le_sq (norm_nonneg _)
         have := h w w.2
@@ -326,11 +326,11 @@ theorem norm_eq_infᵢ_iff_real_inner_le_zero {K : Set F} (h : Convex ℝ K) {u 
             rw [this, sq]
           
       · show (⨅ w : K, ‖u - w‖) ≤ (fun w : K => ‖u - w‖) ⟨v, hv⟩
-        apply cinfᵢ_le
+        apply ciInf_le
         use 0
         rintro y ⟨z, rfl⟩
         exact norm_nonneg _)
-#align norm_eq_infi_iff_real_inner_le_zero norm_eq_infᵢ_iff_real_inner_le_zero
+#align norm_eq_infi_iff_real_inner_le_zero norm_eq_iInf_iff_real_inner_le_zero
 
 variable (K : Submodule 𝕜 E)
 
@@ -339,14 +339,14 @@ Let `u` be a point in an inner product space, and let `K` be a nonempty complete
 Then there exists a (unique) `v` in `K` that minimizes the distance `‖u - v‖` to `u`.
 This point `v` is usually called the orthogonal projection of `u` onto `K`.
 -/
-theorem exists_norm_eq_infᵢ_of_complete_subspace (h : IsComplete (↑K : Set E)) :
+theorem exists_norm_eq_iInf_of_complete_subspace (h : IsComplete (↑K : Set E)) :
     ∀ u : E, ∃ v ∈ K, ‖u - v‖ = ⨅ w : (K : Set E), ‖u - w‖ :=
   by
   letI : InnerProductSpace ℝ E := InnerProductSpace.isROrCToReal 𝕜 E
   letI : Module ℝ E := RestrictScalars.module ℝ 𝕜 E
   let K' : Submodule ℝ E := Submodule.restrictScalars ℝ K
-  exact exists_norm_eq_infᵢ_of_complete_convex ⟨0, K'.zero_mem⟩ h K'.convex
-#align exists_norm_eq_infi_of_complete_subspace exists_norm_eq_infᵢ_of_complete_subspace
+  exact exists_norm_eq_iInf_of_complete_convex ⟨0, K'.zero_mem⟩ h K'.convex
+#align exists_norm_eq_infi_of_complete_subspace exists_norm_eq_iInf_of_complete_subspace
 
 /-- Characterization of minimizers in the projection on a subspace, in the real case.
 Let `u` be a point in a real inner product space, and let `K` be a nonempty subspace.
@@ -355,14 +355,14 @@ for all `w ∈ K`, `⟪u - v, w⟫ = 0` (i.e., `u - v` is orthogonal to the subs
 This is superceded by `norm_eq_infi_iff_inner_eq_zero` that gives the same conclusion over
 any `is_R_or_C` field.
 -/
-theorem norm_eq_infᵢ_iff_real_inner_eq_zero (K : Submodule ℝ F) {u : F} {v : F} (hv : v ∈ K) :
+theorem norm_eq_iInf_iff_real_inner_eq_zero (K : Submodule ℝ F) {u : F} {v : F} (hv : v ∈ K) :
     (‖u - v‖ = ⨅ w : (↑K : Set F), ‖u - w‖) ↔ ∀ w ∈ K, ⟪u - v, w⟫_ℝ = 0 :=
   Iff.intro
     (by
       intro h
       have h : ∀ w ∈ K, ⟪u - v, w - v⟫_ℝ ≤ 0 :=
         by
-        rwa [norm_eq_infᵢ_iff_real_inner_le_zero] at h
+        rwa [norm_eq_iInf_iff_real_inner_le_zero] at h
         exacts[K.convex, hv]
       intro w hw
       have le : ⟪u - v, w⟫_ℝ ≤ 0
@@ -390,16 +390,16 @@ theorem norm_eq_infᵢ_iff_real_inner_eq_zero (K : Submodule ℝ F) {u : F} {v :
       have : w' ∈ K := Submodule.sub_mem _ hw hv
       have h₁ := h w' this
       exact le_of_eq h₁
-      rwa [norm_eq_infᵢ_iff_real_inner_le_zero]
+      rwa [norm_eq_iInf_iff_real_inner_le_zero]
       exacts[Submodule.convex _, hv])
-#align norm_eq_infi_iff_real_inner_eq_zero norm_eq_infᵢ_iff_real_inner_eq_zero
+#align norm_eq_infi_iff_real_inner_eq_zero norm_eq_iInf_iff_real_inner_eq_zero
 
 /-- Characterization of minimizers in the projection on a subspace.
 Let `u` be a point in an inner product space, and let `K` be a nonempty subspace.
 Then point `v` minimizes the distance `‖u - v‖` over points in `K` if and only if
 for all `w ∈ K`, `⟪u - v, w⟫ = 0` (i.e., `u - v` is orthogonal to the subspace `K`)
 -/
-theorem norm_eq_infᵢ_iff_inner_eq_zero {u : E} {v : E} (hv : v ∈ K) :
+theorem norm_eq_iInf_iff_inner_eq_zero {u : E} {v : E} (hv : v ∈ K) :
     (‖u - v‖ = ⨅ w : K, ‖u - w‖) ↔ ∀ w ∈ K, ⟪u - v, w⟫ = 0 :=
   by
   letI : InnerProductSpace ℝ E := InnerProductSpace.isROrCToReal 𝕜 E
@@ -407,7 +407,7 @@ theorem norm_eq_infᵢ_iff_inner_eq_zero {u : E} {v : E} (hv : v ∈ K) :
   let K' : Submodule ℝ E := K.restrict_scalars ℝ
   constructor
   · intro H
-    have A : ∀ w ∈ K, re ⟪u - v, w⟫ = 0 := (norm_eq_infᵢ_iff_real_inner_eq_zero K' hv).1 H
+    have A : ∀ w ∈ K, re ⟪u - v, w⟫ = 0 := (norm_eq_iInf_iff_real_inner_eq_zero K' hv).1 H
     intro w hw
     apply ext
     · simp [A w hw]
@@ -423,8 +423,8 @@ theorem norm_eq_infᵢ_iff_inner_eq_zero {u : E} {v : E} (hv : v ∈ K) :
       intro w hw
       rw [real_inner_eq_re_inner, H w hw]
       exact zero_re'
-    exact (norm_eq_infᵢ_iff_real_inner_eq_zero K' hv).2 this
-#align norm_eq_infi_iff_inner_eq_zero norm_eq_infᵢ_iff_inner_eq_zero
+    exact (norm_eq_iInf_iff_real_inner_eq_zero K' hv).2 this
+#align norm_eq_infi_iff_inner_eq_zero norm_eq_iInf_iff_inner_eq_zero
 
 section orthogonalProjection
 
@@ -435,7 +435,7 @@ unbundled function.  This definition is only intended for use in
 setting up the bundled version `orthogonal_projection` and should not
 be used once that is defined. -/
 def orthogonalProjectionFn (v : E) :=
-  (exists_norm_eq_infᵢ_of_complete_subspace K (completeSpace_coe_iff_isComplete.mp ‹_›) v).some
+  (exists_norm_eq_iInf_of_complete_subspace K (completeSpace_coe_iff_isComplete.mp ‹_›) v).some
 #align orthogonal_projection_fn orthogonalProjectionFn
 
 variable {K}
@@ -444,7 +444,7 @@ variable {K}
 This lemma is only intended for use in setting up the bundled version
 and should not be used once that is defined. -/
 theorem orthogonalProjectionFn_mem (v : E) : orthogonalProjectionFn K v ∈ K :=
-  (exists_norm_eq_infᵢ_of_complete_subspace K (completeSpace_coe_iff_isComplete.mp ‹_›)
+  (exists_norm_eq_iInf_of_complete_subspace K (completeSpace_coe_iff_isComplete.mp ‹_›)
         v).choose_spec.some
 #align orthogonal_projection_fn_mem orthogonalProjectionFn_mem
 
@@ -454,9 +454,9 @@ and should not be used once that is defined. -/
 theorem orthogonalProjectionFn_inner_eq_zero (v : E) :
     ∀ w ∈ K, ⟪v - orthogonalProjectionFn K v, w⟫ = 0 :=
   by
-  rw [← norm_eq_infᵢ_iff_inner_eq_zero K (orthogonalProjectionFn_mem v)]
+  rw [← norm_eq_iInf_iff_inner_eq_zero K (orthogonalProjectionFn_mem v)]
   exact
-    (exists_norm_eq_infᵢ_of_complete_subspace K (complete_space_coe_iff_is_complete.mp ‹_›)
+    (exists_norm_eq_iInf_of_complete_subspace K (complete_space_coe_iff_is_complete.mp ‹_›)
           v).choose_spec.choose_spec
 #align orthogonal_projection_fn_inner_eq_zero orthogonalProjectionFn_inner_eq_zero
 
@@ -560,7 +560,7 @@ theorem eq_orthogonalProjection_of_mem_of_inner_eq_zero {u v : E} (hvm : v ∈ K
 theorem orthogonalProjection_minimal {U : Submodule 𝕜 E} [CompleteSpace U] (y : E) :
     ‖y - orthogonalProjection U y‖ = ⨅ x : U, ‖y - x‖ :=
   by
-  rw [norm_eq_infᵢ_iff_inner_eq_zero _ (Submodule.coe_mem _)]
+  rw [norm_eq_iInf_iff_inner_eq_zero _ (Submodule.coe_mem _)]
   exact orthogonalProjection_inner_eq_zero _
 #align orthogonal_projection_minimal orthogonalProjection_minimal
 
@@ -954,7 +954,7 @@ theorem orthogonalProjection_orthogonalProjection_of_le {U V : Submodule 𝕜 E}
 /-- Given a monotone family `U` of complete submodules of `E` and a fixed `x : E`,
 the orthogonal projection of `x` on `U i` tends to the orthogonal projection of `x` on
 `(⨆ i, U i).topological_closure` along `at_top`. -/
-theorem orthogonalProjection_tendsto_closure_supᵢ [CompleteSpace E] {ι : Type _} [SemilatticeSup ι]
+theorem orthogonalProjection_tendsto_closure_iSup [CompleteSpace E] {ι : Type _} [SemilatticeSup ι]
     (U : ι → Submodule 𝕜 E) [∀ i, CompleteSpace (U i)] (hU : Monotone U) (x : E) :
     Filter.Tendsto (fun i => (orthogonalProjection (U i) x : E)) atTop
       (𝓝 (orthogonalProjection (⨆ i, U i).topologicalClosure x : E)) :=
@@ -965,7 +965,7 @@ theorem orthogonalProjection_tendsto_closure_supᵢ [CompleteSpace E] {ι : Type
   let y := (orthogonalProjection (⨆ i, U i).topologicalClosure x : E)
   have proj_x : ∀ i, orthogonalProjection (U i) x = orthogonalProjection (U i) y := fun i =>
     (orthogonalProjection_orthogonalProjection_of_le
-        ((le_supᵢ U i).trans (supᵢ U).le_topologicalClosure) _).symm
+        ((le_iSup U i).trans (iSup U).le_topologicalClosure) _).symm
   suffices ∀ ε > 0, ∃ I, ∀ i ≥ I, ‖(orthogonalProjection (U i) y : E) - y‖ < ε by
     simpa only [proj_x, NormedAddCommGroup.tendsto_atTop] using this
   intro ε hε
@@ -975,13 +975,13 @@ theorem orthogonalProjection_tendsto_closure_supᵢ [CompleteSpace E] {ι : Type
     rw [← SetLike.mem_coe, Submodule.topologicalClosure_coe, Metric.mem_closure_iff] at y_mem
     exact y_mem ε hε
   rw [dist_eq_norm] at hay
-  obtain ⟨I, hI⟩ : ∃ I, a ∈ U I := by rwa [Submodule.mem_supᵢ_of_directed _ hU.directed_le] at ha
+  obtain ⟨I, hI⟩ : ∃ I, a ∈ U I := by rwa [Submodule.mem_iSup_of_directed _ hU.directed_le] at ha
   refine' ⟨I, fun i (hi : I ≤ i) => _⟩
   rw [norm_sub_rev, orthogonalProjection_minimal]
   refine' lt_of_le_of_lt _ hay
   change _ ≤ ‖y - (⟨a, hU hi hI⟩ : U i)‖
-  exact cinfᵢ_le ⟨0, set.forall_range_iff.mpr fun _ => norm_nonneg _⟩ _
-#align orthogonal_projection_tendsto_closure_supr orthogonalProjection_tendsto_closure_supᵢ
+  exact ciInf_le ⟨0, set.forall_range_iff.mpr fun _ => norm_nonneg _⟩ _
+#align orthogonal_projection_tendsto_closure_supr orthogonalProjection_tendsto_closure_iSup
 
 /-- Given a monotone family `U` of complete submodules of `E` with dense span supremum,
 and a fixed `x : E`, the orthogonal projection of `x` on `U i` tends to `x` along `at_top`. -/
@@ -991,7 +991,7 @@ theorem orthogonalProjection_tendsto_self [CompleteSpace E] {ι : Type _} [Semil
     Filter.Tendsto (fun t => (orthogonalProjection (U t) x : E)) atTop (𝓝 x) :=
   by
   rw [← eq_top_iff] at hU'
-  convert orthogonalProjection_tendsto_closure_supᵢ U hU x
+  convert orthogonalProjection_tendsto_closure_iSup U hU x
   rw [orthogonal_projection_eq_self_iff.mpr _]
   rw [hU']
   trivial
@@ -1331,10 +1331,10 @@ they provide an internal direct sum decomposition of `E`) if and only if their s
 orthogonal complement. -/
 theorem OrthogonalFamily.isInternal_iff_of_isComplete [DecidableEq ι] {V : ι → Submodule 𝕜 E}
     (hV : OrthogonalFamily 𝕜 (fun i => V i) fun i => (V i).subtypeₗᵢ)
-    (hc : IsComplete (↑(supᵢ V) : Set E)) : DirectSum.IsInternal V ↔ (supᵢ V)ᗮ = ⊥ :=
+    (hc : IsComplete (↑(iSup V) : Set E)) : DirectSum.IsInternal V ↔ (iSup V)ᗮ = ⊥ :=
   by
-  haveI : CompleteSpace ↥(supᵢ V) := hc.complete_space_coe
-  simp only [DirectSum.isInternal_submodule_iff_independent_and_supᵢ_eq_top, hV.independent,
+  haveI : CompleteSpace ↥(iSup V) := hc.complete_space_coe
+  simp only [DirectSum.isInternal_submodule_iff_independent_and_iSup_eq_top, hV.independent,
     true_and_iff, Submodule.orthogonal_eq_bot_iff]
 #align orthogonal_family.is_internal_iff_of_is_complete OrthogonalFamily.isInternal_iff_of_isComplete
 
@@ -1343,8 +1343,8 @@ they provide an internal direct sum decomposition of `E`) if and only if their s
 orthogonal complement. -/
 theorem OrthogonalFamily.isInternal_iff [DecidableEq ι] [FiniteDimensional 𝕜 E]
     {V : ι → Submodule 𝕜 E} (hV : OrthogonalFamily 𝕜 (fun i => V i) fun i => (V i).subtypeₗᵢ) :
-    DirectSum.IsInternal V ↔ (supᵢ V)ᗮ = ⊥ :=
-  haveI h := FiniteDimensional.proper_isROrC 𝕜 ↥(supᵢ V)
+    DirectSum.IsInternal V ↔ (iSup V)ᗮ = ⊥ :=
+  haveI h := FiniteDimensional.proper_isROrC 𝕜 ↥(iSup V)
   hV.is_internal_iff_of_is_complete (complete_space_coe_iff_is_complete.mp inferInstance)
 #align orthogonal_family.is_internal_iff OrthogonalFamily.isInternal_iff
 

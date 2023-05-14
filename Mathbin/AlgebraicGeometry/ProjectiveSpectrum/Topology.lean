@@ -107,10 +107,10 @@ theorem coe_vanishingIdeal (t : Set (ProjectiveSpectrum 𝒜)) :
       { f | ∀ x : ProjectiveSpectrum 𝒜, x ∈ t → f ∈ x.asHomogeneousIdeal } :=
   by
   ext f
-  rw [vanishing_ideal, SetLike.mem_coe, ← HomogeneousIdeal.mem_iff, HomogeneousIdeal.toIdeal_infᵢ,
-    Submodule.mem_infᵢ]
+  rw [vanishing_ideal, SetLike.mem_coe, ← HomogeneousIdeal.mem_iff, HomogeneousIdeal.toIdeal_iInf,
+    Submodule.mem_iInf]
   apply forall_congr' fun x => _
-  rw [HomogeneousIdeal.toIdeal_infᵢ, Submodule.mem_infᵢ, HomogeneousIdeal.mem_iff]
+  rw [HomogeneousIdeal.toIdeal_iInf, Submodule.mem_iInf, HomogeneousIdeal.mem_iff]
 #align projective_spectrum.coe_vanishing_ideal ProjectiveSpectrum.coe_vanishingIdeal
 
 theorem mem_vanishingIdeal (t : Set (ProjectiveSpectrum 𝒜)) (f : A) :
@@ -254,30 +254,30 @@ theorem vanishingIdeal_union (t t' : Set (ProjectiveSpectrum 𝒜)) :
   ext1 <;> convert(gc_ideal 𝒜).u_inf
 #align projective_spectrum.vanishing_ideal_union ProjectiveSpectrum.vanishingIdeal_union
 
-theorem zeroLocus_supᵢ_ideal {γ : Sort _} (I : γ → Ideal A) :
+theorem zeroLocus_iSup_ideal {γ : Sort _} (I : γ → Ideal A) :
     zeroLocus _ ((⨆ i, I i : Ideal A) : Set A) = ⋂ i, zeroLocus 𝒜 (I i) :=
-  (gc_ideal 𝒜).l_supᵢ
-#align projective_spectrum.zero_locus_supr_ideal ProjectiveSpectrum.zeroLocus_supᵢ_ideal
+  (gc_ideal 𝒜).l_iSup
+#align projective_spectrum.zero_locus_supr_ideal ProjectiveSpectrum.zeroLocus_iSup_ideal
 
-theorem zeroLocus_supᵢ_homogeneousIdeal {γ : Sort _} (I : γ → HomogeneousIdeal 𝒜) :
+theorem zeroLocus_iSup_homogeneousIdeal {γ : Sort _} (I : γ → HomogeneousIdeal 𝒜) :
     zeroLocus _ ((⨆ i, I i : HomogeneousIdeal 𝒜) : Set A) = ⋂ i, zeroLocus 𝒜 (I i) :=
-  (gc_homogeneousIdeal 𝒜).l_supᵢ
-#align projective_spectrum.zero_locus_supr_homogeneous_ideal ProjectiveSpectrum.zeroLocus_supᵢ_homogeneousIdeal
+  (gc_homogeneousIdeal 𝒜).l_iSup
+#align projective_spectrum.zero_locus_supr_homogeneous_ideal ProjectiveSpectrum.zeroLocus_iSup_homogeneousIdeal
 
-theorem zeroLocus_unionᵢ {γ : Sort _} (s : γ → Set A) :
+theorem zeroLocus_iUnion {γ : Sort _} (s : γ → Set A) :
     zeroLocus 𝒜 (⋃ i, s i) = ⋂ i, zeroLocus 𝒜 (s i) :=
-  (gc_set 𝒜).l_supᵢ
-#align projective_spectrum.zero_locus_Union ProjectiveSpectrum.zeroLocus_unionᵢ
+  (gc_set 𝒜).l_iSup
+#align projective_spectrum.zero_locus_Union ProjectiveSpectrum.zeroLocus_iUnion
 
 theorem zeroLocus_bUnion (s : Set (Set A)) :
     zeroLocus 𝒜 (⋃ s' ∈ s, s' : Set A) = ⋂ s' ∈ s, zeroLocus 𝒜 s' := by simp only [zero_locus_Union]
 #align projective_spectrum.zero_locus_bUnion ProjectiveSpectrum.zeroLocus_bUnion
 
-theorem vanishingIdeal_unionᵢ {γ : Sort _} (t : γ → Set (ProjectiveSpectrum 𝒜)) :
+theorem vanishingIdeal_iUnion {γ : Sort _} (t : γ → Set (ProjectiveSpectrum 𝒜)) :
     vanishingIdeal (⋃ i, t i) = ⨅ i, vanishingIdeal (t i) :=
   HomogeneousIdeal.toIdeal_injective <| by
-    convert(gc_ideal 𝒜).u_infᵢ <;> exact HomogeneousIdeal.toIdeal_infᵢ _
-#align projective_spectrum.vanishing_ideal_Union ProjectiveSpectrum.vanishingIdeal_unionᵢ
+    convert(gc_ideal 𝒜).u_iInf <;> exact HomogeneousIdeal.toIdeal_iInf _
+#align projective_spectrum.vanishing_ideal_Union ProjectiveSpectrum.vanishingIdeal_iUnion
 
 theorem zeroLocus_inf (I J : Ideal A) :
     zeroLocus 𝒜 ((I ⊓ J : Ideal A) : Set A) = zeroLocus 𝒜 I ∪ zeroLocus 𝒜 J :=
@@ -334,7 +334,7 @@ instance zariskiTopology : TopologicalSpace (ProjectiveSpectrum 𝒜) :=
   TopologicalSpace.ofClosed (Set.range (ProjectiveSpectrum.zeroLocus 𝒜)) ⟨Set.univ, by simp⟩
     (by
       intro Zs h
-      rw [Set.interₛ_eq_interᵢ]
+      rw [Set.sInter_eq_iInter]
       let f : Zs → Set _ := fun i => Classical.choose (h i.2)
       have hf : ∀ i : Zs, ↑i = zero_locus 𝒜 (f i) := fun i => (Classical.choose_spec (h i.2)).symm
       simp only [hf]
@@ -450,7 +450,7 @@ theorem basicOpen_eq_union_of_projection (f : A) :
     basicOpen 𝒜 f = ⨆ i : ℕ, basicOpen 𝒜 (GradedAlgebra.proj 𝒜 i f) :=
   TopologicalSpace.Opens.ext <|
     Set.ext fun z => by
-      erw [mem_coe_basic_open, TopologicalSpace.Opens.mem_supₛ]
+      erw [mem_coe_basic_open, TopologicalSpace.Opens.mem_sSup]
       constructor <;> intro hz
       · rcases show ∃ i, GradedAlgebra.proj 𝒜 i f ∉ z.as_homogeneous_ideal
             by

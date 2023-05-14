@@ -87,13 +87,13 @@ theorem Ioo_ae_eq_Icc : I.Ioo =ᵐ[volume] I.Icc :=
 
 end Box
 
-theorem Prepartition.measure_unionᵢ_toReal [Finite ι] {I : Box ι} (π : Prepartition I)
+theorem Prepartition.measure_iUnion_toReal [Finite ι] {I : Box ι} (π : Prepartition I)
     (μ : Measure (ι → ℝ)) [LocallyFiniteMeasure μ] :
-    (μ π.unionᵢ).toReal = ∑ J in π.boxes, (μ J).toReal :=
+    (μ π.iUnion).toReal = ∑ J in π.boxes, (μ J).toReal :=
   by
   erw [← ENNReal.toReal_sum, π.Union_def, measure_bUnion_finset π.pairwise_disjoint]
   exacts[fun J hJ => J.measurableSet_coe, fun J hJ => (J.measure_coe_lt_top μ).Ne]
-#align box_integral.prepartition.measure_Union_to_real BoxIntegral.Prepartition.measure_unionᵢ_toReal
+#align box_integral.prepartition.measure_Union_to_real BoxIntegral.Prepartition.measure_iUnion_toReal
 
 end BoxIntegral
 

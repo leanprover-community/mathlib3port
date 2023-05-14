@@ -107,15 +107,15 @@ noncomputable def chainHeight : ℕ∞ :=
 #align set.chain_height Set.chainHeight
 -/
 
-/- warning: set.chain_height_eq_supr_subtype -> Set.chainHeight_eq_supᵢ_subtype is a dubious translation:
+/- warning: set.chain_height_eq_supr_subtype -> Set.chainHeight_eq_iSup_subtype is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] (s : Set.{u1} α), Eq.{1} ENat (Set.chainHeight.{u1} α _inst_1 s) (supᵢ.{0, succ u1} ENat (ConditionallyCompleteLattice.toHasSup.{0} ENat (CompleteLattice.toConditionallyCompleteLattice.{0} ENat (CompleteLinearOrder.toCompleteLattice.{0} ENat ENat.completeLinearOrder))) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (List.{u1} α)) Type.{u1} (Set.hasCoeToSort.{u1} (List.{u1} α)) (Set.subchain.{u1} α _inst_1 s)) (fun (l : coeSort.{succ u1, succ (succ u1)} (Set.{u1} (List.{u1} α)) Type.{u1} (Set.hasCoeToSort.{u1} (List.{u1} α)) (Set.subchain.{u1} α _inst_1 s)) => (fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat ENat (HasLiftT.mk.{1, 1} Nat ENat (CoeTCₓ.coe.{1, 1} Nat ENat ENat.hasCoeT)) (List.length.{u1} α (Subtype.val.{succ u1} (List.{u1} α) (fun (x : List.{u1} α) => Membership.Mem.{u1, u1} (List.{u1} α) (Set.{u1} (List.{u1} α)) (Set.hasMem.{u1} (List.{u1} α)) x (Set.subchain.{u1} α _inst_1 s)) l))))
+  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] (s : Set.{u1} α), Eq.{1} ENat (Set.chainHeight.{u1} α _inst_1 s) (iSup.{0, succ u1} ENat (ConditionallyCompleteLattice.toHasSup.{0} ENat (CompleteLattice.toConditionallyCompleteLattice.{0} ENat (CompleteLinearOrder.toCompleteLattice.{0} ENat ENat.completeLinearOrder))) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (List.{u1} α)) Type.{u1} (Set.hasCoeToSort.{u1} (List.{u1} α)) (Set.subchain.{u1} α _inst_1 s)) (fun (l : coeSort.{succ u1, succ (succ u1)} (Set.{u1} (List.{u1} α)) Type.{u1} (Set.hasCoeToSort.{u1} (List.{u1} α)) (Set.subchain.{u1} α _inst_1 s)) => (fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat ENat (HasLiftT.mk.{1, 1} Nat ENat (CoeTCₓ.coe.{1, 1} Nat ENat ENat.hasCoeT)) (List.length.{u1} α (Subtype.val.{succ u1} (List.{u1} α) (fun (x : List.{u1} α) => Membership.Mem.{u1, u1} (List.{u1} α) (Set.{u1} (List.{u1} α)) (Set.hasMem.{u1} (List.{u1} α)) x (Set.subchain.{u1} α _inst_1 s)) l))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] (s : Set.{u1} α), Eq.{1} ENat (Set.chainHeight.{u1} α _inst_1 s) (supᵢ.{0, succ u1} ENat (ConditionallyCompleteLattice.toSupSet.{0} ENat (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENat (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENat (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENat instCompleteLinearOrderENat)))) (Set.Elem.{u1} (List.{u1} α) (Set.subchain.{u1} α _inst_1 s)) (fun (l : Set.Elem.{u1} (List.{u1} α) (Set.subchain.{u1} α _inst_1 s)) => Nat.cast.{0} ENat (CanonicallyOrderedCommSemiring.toNatCast.{0} ENat instENatCanonicallyOrderedCommSemiring) (List.length.{u1} α (Subtype.val.{succ u1} (List.{u1} α) (fun (x : List.{u1} α) => Membership.mem.{u1, u1} (List.{u1} α) (Set.{u1} (List.{u1} α)) (Set.instMembershipSet.{u1} (List.{u1} α)) x (Set.subchain.{u1} α _inst_1 s)) l))))
-Case conversion may be inaccurate. Consider using '#align set.chain_height_eq_supr_subtype Set.chainHeight_eq_supᵢ_subtypeₓ'. -/
-theorem chainHeight_eq_supᵢ_subtype : s.chainHeight = ⨆ l : s.subchain, l.1.length :=
-  supᵢ_subtype'
-#align set.chain_height_eq_supr_subtype Set.chainHeight_eq_supᵢ_subtype
+  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] (s : Set.{u1} α), Eq.{1} ENat (Set.chainHeight.{u1} α _inst_1 s) (iSup.{0, succ u1} ENat (ConditionallyCompleteLattice.toSupSet.{0} ENat (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENat (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENat (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENat instCompleteLinearOrderENat)))) (Set.Elem.{u1} (List.{u1} α) (Set.subchain.{u1} α _inst_1 s)) (fun (l : Set.Elem.{u1} (List.{u1} α) (Set.subchain.{u1} α _inst_1 s)) => Nat.cast.{0} ENat (CanonicallyOrderedCommSemiring.toNatCast.{0} ENat instENatCanonicallyOrderedCommSemiring) (List.length.{u1} α (Subtype.val.{succ u1} (List.{u1} α) (fun (x : List.{u1} α) => Membership.mem.{u1, u1} (List.{u1} α) (Set.{u1} (List.{u1} α)) (Set.instMembershipSet.{u1} (List.{u1} α)) x (Set.subchain.{u1} α _inst_1 s)) l))))
+Case conversion may be inaccurate. Consider using '#align set.chain_height_eq_supr_subtype Set.chainHeight_eq_iSup_subtypeₓ'. -/
+theorem chainHeight_eq_iSup_subtype : s.chainHeight = ⨆ l : s.subchain, l.1.length :=
+  iSup_subtype'
+#align set.chain_height_eq_supr_subtype Set.chainHeight_eq_iSup_subtype
 
 /- warning: set.exists_chain_of_le_chain_height -> Set.exists_chain_of_le_chainHeight is a dubious translation:
 lean 3 declaration is
@@ -129,16 +129,16 @@ theorem exists_chain_of_le_chainHeight {n : ℕ} (hn : ↑n ≤ s.chainHeight) :
   cases' (le_top : s.chain_height ≤ ⊤).eq_or_lt with ha ha <;>
     rw [chain_height_eq_supr_subtype] at ha
   · obtain ⟨_, ⟨⟨l, h₁, h₂⟩, rfl⟩, h₃⟩ :=
-      not_bdd_above_iff'.mp ((WithTop.supᵢ_coe_eq_top _).mp ha) n
+      not_bdd_above_iff'.mp ((WithTop.iSup_coe_eq_top _).mp ha) n
     exact
       ⟨l.take n, ⟨h₁.take _, fun x h => h₂ _ <| take_subset _ _ h⟩,
         (l.length_take n).trans <| min_eq_left <| le_of_not_ge h₃⟩
-  · rw [WithTop.supᵢ_coe_lt_top] at ha
-    obtain ⟨⟨l, h₁, h₂⟩, e : l.length = _⟩ := Nat.supₛ_mem (Set.range_nonempty _) ha
+  · rw [WithTop.iSup_coe_lt_top] at ha
+    obtain ⟨⟨l, h₁, h₂⟩, e : l.length = _⟩ := Nat.sSup_mem (Set.range_nonempty _) ha
     refine'
       ⟨l.take n, ⟨h₁.take _, fun x h => h₂ _ <| take_subset _ _ h⟩,
         (l.length_take n).trans <| min_eq_left <| _⟩
-    rwa [e, ← WithTop.coe_le_coe, supₛ_range, WithTop.coe_supᵢ _ ha, ← chain_height_eq_supr_subtype]
+    rwa [e, ← WithTop.coe_le_coe, sSup_range, WithTop.coe_iSup _ ha, ← chain_height_eq_supr_subtype]
 #align set.exists_chain_of_le_chain_height Set.exists_chain_of_le_chainHeight
 
 /- warning: set.le_chain_height_tfae -> Set.le_chainHeight_TFAE is a dubious translation:
@@ -156,7 +156,7 @@ theorem le_chainHeight_TFAE (n : ℕ) :
     exact ⟨l, hls, he.ge⟩
   tfae_have 3 → 1;
   · rintro ⟨l, hs, hn⟩
-    exact le_supᵢ₂_of_le l hs (WithTop.coe_le_coe.2 hn)
+    exact le_iSup₂_of_le l hs (WithTop.coe_le_coe.2 hn)
   tfae_finish
 #align set.le_chain_height_tfae Set.le_chainHeight_TFAE
 
@@ -388,40 +388,40 @@ section Preorder
 
 variable (s t : Set α) [Preorder α]
 
-/- warning: set.chain_height_eq_supr_Ici -> Set.chainHeight_eq_supᵢ_Ici is a dubious translation:
+/- warning: set.chain_height_eq_supr_Ici -> Set.chainHeight_eq_iSup_Ici is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} (s : Set.{u1} α) [_inst_1 : Preorder.{u1} α], Eq.{1} ENat (Set.chainHeight.{u1} α (Preorder.toLT.{u1} α _inst_1) s) (supᵢ.{0, succ u1} ENat (ConditionallyCompleteLattice.toHasSup.{0} ENat (CompleteLattice.toConditionallyCompleteLattice.{0} ENat (CompleteLinearOrder.toCompleteLattice.{0} ENat ENat.completeLinearOrder))) α (fun (i : α) => supᵢ.{0, 0} ENat (ConditionallyCompleteLattice.toHasSup.{0} ENat (CompleteLattice.toConditionallyCompleteLattice.{0} ENat (CompleteLinearOrder.toCompleteLattice.{0} ENat ENat.completeLinearOrder))) (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) i s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) i s) => Set.chainHeight.{u1} α (Preorder.toLT.{u1} α _inst_1) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (Set.Ici.{u1} α _inst_1 i)))))
+  forall {α : Type.{u1}} (s : Set.{u1} α) [_inst_1 : Preorder.{u1} α], Eq.{1} ENat (Set.chainHeight.{u1} α (Preorder.toLT.{u1} α _inst_1) s) (iSup.{0, succ u1} ENat (ConditionallyCompleteLattice.toHasSup.{0} ENat (CompleteLattice.toConditionallyCompleteLattice.{0} ENat (CompleteLinearOrder.toCompleteLattice.{0} ENat ENat.completeLinearOrder))) α (fun (i : α) => iSup.{0, 0} ENat (ConditionallyCompleteLattice.toHasSup.{0} ENat (CompleteLattice.toConditionallyCompleteLattice.{0} ENat (CompleteLinearOrder.toCompleteLattice.{0} ENat ENat.completeLinearOrder))) (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) i s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) i s) => Set.chainHeight.{u1} α (Preorder.toLT.{u1} α _inst_1) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (Set.Ici.{u1} α _inst_1 i)))))
 but is expected to have type
-  forall {α : Type.{u1}} (s : Set.{u1} α) [_inst_1 : Preorder.{u1} α], Eq.{1} ENat (Set.chainHeight.{u1} α (Preorder.toLT.{u1} α _inst_1) s) (supᵢ.{0, succ u1} ENat (ConditionallyCompleteLattice.toSupSet.{0} ENat (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENat (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENat (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENat instCompleteLinearOrderENat)))) α (fun (i : α) => supᵢ.{0, 0} ENat (ConditionallyCompleteLattice.toSupSet.{0} ENat (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENat (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENat (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENat instCompleteLinearOrderENat)))) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) i s) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) i s) => Set.chainHeight.{u1} α (Preorder.toLT.{u1} α _inst_1) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (Set.Ici.{u1} α _inst_1 i)))))
-Case conversion may be inaccurate. Consider using '#align set.chain_height_eq_supr_Ici Set.chainHeight_eq_supᵢ_Iciₓ'. -/
-theorem chainHeight_eq_supᵢ_Ici : s.chainHeight = ⨆ i ∈ s, (s ∩ Set.Ici i).chainHeight :=
+  forall {α : Type.{u1}} (s : Set.{u1} α) [_inst_1 : Preorder.{u1} α], Eq.{1} ENat (Set.chainHeight.{u1} α (Preorder.toLT.{u1} α _inst_1) s) (iSup.{0, succ u1} ENat (ConditionallyCompleteLattice.toSupSet.{0} ENat (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENat (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENat (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENat instCompleteLinearOrderENat)))) α (fun (i : α) => iSup.{0, 0} ENat (ConditionallyCompleteLattice.toSupSet.{0} ENat (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENat (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENat (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENat instCompleteLinearOrderENat)))) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) i s) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) i s) => Set.chainHeight.{u1} α (Preorder.toLT.{u1} α _inst_1) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (Set.Ici.{u1} α _inst_1 i)))))
+Case conversion may be inaccurate. Consider using '#align set.chain_height_eq_supr_Ici Set.chainHeight_eq_iSup_Iciₓ'. -/
+theorem chainHeight_eq_iSup_Ici : s.chainHeight = ⨆ i ∈ s, (s ∩ Set.Ici i).chainHeight :=
   by
   apply le_antisymm
-  · refine' supᵢ₂_le _
+  · refine' iSup₂_le _
     rintro (_ | ⟨x, xs⟩) h
     · exact zero_le _
-    · apply le_trans _ (le_supᵢ₂ x (cons_mem_subchain_iff.mp h).1)
+    · apply le_trans _ (le_iSup₂ x (cons_mem_subchain_iff.mp h).1)
       apply length_le_chain_height_of_mem_subchain
       refine' ⟨h.1, fun i hi => ⟨h.2 i hi, _⟩⟩
       cases hi
       · exact hi.symm.le
       cases' chain'_iff_pairwise.mp h.1 with _ _ h'
       exact (h' _ hi).le
-  · exact supᵢ₂_le fun i hi => chain_height_mono <| Set.inter_subset_left _ _
-#align set.chain_height_eq_supr_Ici Set.chainHeight_eq_supᵢ_Ici
+  · exact iSup₂_le fun i hi => chain_height_mono <| Set.inter_subset_left _ _
+#align set.chain_height_eq_supr_Ici Set.chainHeight_eq_iSup_Ici
 
-/- warning: set.chain_height_eq_supr_Iic -> Set.chainHeight_eq_supᵢ_Iic is a dubious translation:
+/- warning: set.chain_height_eq_supr_Iic -> Set.chainHeight_eq_iSup_Iic is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} (s : Set.{u1} α) [_inst_1 : Preorder.{u1} α], Eq.{1} ENat (Set.chainHeight.{u1} α (Preorder.toLT.{u1} α _inst_1) s) (supᵢ.{0, succ u1} ENat (ConditionallyCompleteLattice.toHasSup.{0} ENat (CompleteLattice.toConditionallyCompleteLattice.{0} ENat (CompleteLinearOrder.toCompleteLattice.{0} ENat ENat.completeLinearOrder))) α (fun (i : α) => supᵢ.{0, 0} ENat (ConditionallyCompleteLattice.toHasSup.{0} ENat (CompleteLattice.toConditionallyCompleteLattice.{0} ENat (CompleteLinearOrder.toCompleteLattice.{0} ENat ENat.completeLinearOrder))) (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) i s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) i s) => Set.chainHeight.{u1} α (Preorder.toLT.{u1} α _inst_1) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (Set.Iic.{u1} α _inst_1 i)))))
+  forall {α : Type.{u1}} (s : Set.{u1} α) [_inst_1 : Preorder.{u1} α], Eq.{1} ENat (Set.chainHeight.{u1} α (Preorder.toLT.{u1} α _inst_1) s) (iSup.{0, succ u1} ENat (ConditionallyCompleteLattice.toHasSup.{0} ENat (CompleteLattice.toConditionallyCompleteLattice.{0} ENat (CompleteLinearOrder.toCompleteLattice.{0} ENat ENat.completeLinearOrder))) α (fun (i : α) => iSup.{0, 0} ENat (ConditionallyCompleteLattice.toHasSup.{0} ENat (CompleteLattice.toConditionallyCompleteLattice.{0} ENat (CompleteLinearOrder.toCompleteLattice.{0} ENat ENat.completeLinearOrder))) (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) i s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) i s) => Set.chainHeight.{u1} α (Preorder.toLT.{u1} α _inst_1) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (Set.Iic.{u1} α _inst_1 i)))))
 but is expected to have type
-  forall {α : Type.{u1}} (s : Set.{u1} α) [_inst_1 : Preorder.{u1} α], Eq.{1} ENat (Set.chainHeight.{u1} α (Preorder.toLT.{u1} α _inst_1) s) (supᵢ.{0, succ u1} ENat (ConditionallyCompleteLattice.toSupSet.{0} ENat (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENat (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENat (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENat instCompleteLinearOrderENat)))) α (fun (i : α) => supᵢ.{0, 0} ENat (ConditionallyCompleteLattice.toSupSet.{0} ENat (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENat (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENat (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENat instCompleteLinearOrderENat)))) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) i s) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) i s) => Set.chainHeight.{u1} α (Preorder.toLT.{u1} α _inst_1) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (Set.Iic.{u1} α _inst_1 i)))))
-Case conversion may be inaccurate. Consider using '#align set.chain_height_eq_supr_Iic Set.chainHeight_eq_supᵢ_Iicₓ'. -/
-theorem chainHeight_eq_supᵢ_Iic : s.chainHeight = ⨆ i ∈ s, (s ∩ Set.Iic i).chainHeight :=
+  forall {α : Type.{u1}} (s : Set.{u1} α) [_inst_1 : Preorder.{u1} α], Eq.{1} ENat (Set.chainHeight.{u1} α (Preorder.toLT.{u1} α _inst_1) s) (iSup.{0, succ u1} ENat (ConditionallyCompleteLattice.toSupSet.{0} ENat (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENat (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENat (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENat instCompleteLinearOrderENat)))) α (fun (i : α) => iSup.{0, 0} ENat (ConditionallyCompleteLattice.toSupSet.{0} ENat (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENat (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENat (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENat instCompleteLinearOrderENat)))) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) i s) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) i s) => Set.chainHeight.{u1} α (Preorder.toLT.{u1} α _inst_1) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (Set.Iic.{u1} α _inst_1 i)))))
+Case conversion may be inaccurate. Consider using '#align set.chain_height_eq_supr_Iic Set.chainHeight_eq_iSup_Iicₓ'. -/
+theorem chainHeight_eq_iSup_Iic : s.chainHeight = ⨆ i ∈ s, (s ∩ Set.Iic i).chainHeight :=
   by
   simp_rw [← chain_height_dual (_ ∩ _)]
   rw [← chain_height_dual, chain_height_eq_supr_Ici]
   rfl
-#align set.chain_height_eq_supr_Iic Set.chainHeight_eq_supᵢ_Iic
+#align set.chain_height_eq_supr_Iic Set.chainHeight_eq_iSup_Iic
 
 variable {s t}
 
@@ -476,7 +476,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.chain_height_union_le Set.chainHeight_union_leₓ'. -/
 theorem chainHeight_union_le : (s ∪ t).chainHeight ≤ s.chainHeight + t.chainHeight := by
   classical
-    refine' supᵢ₂_le fun l hl => _
+    refine' iSup₂_le fun l hl => _
     let l₁ := l.filter (· ∈ s)
     let l₂ := l.filter (· ∈ t)
     have hl₁ : ↑l₁.length ≤ s.chain_height :=
@@ -527,7 +527,7 @@ theorem wellFoundedGT_of_chainHeight_ne_top (s : Set α) (hs : s.chainHeight ≠
   refine' ⟨RelEmbedding.wellFounded_iff_no_descending_seq.2 ⟨fun f => _⟩⟩
   refine' n.lt_succ_self.not_le (WithTop.coe_le_coe.1 <| hn.symm ▸ _)
   refine'
-    le_supᵢ₂_of_le _
+    le_iSup₂_of_le _
       ⟨chain'_map_of_chain' coe (fun _ _ => id)
           (chain'_iff_pairwise.2 <| pairwise_of_fn.2 fun i j => f.map_rel_iff.2),
         fun i h => _⟩

@@ -96,10 +96,10 @@ theorem glueDist_glued_points [Nonempty Z] (Φ : Z → X) (Ψ : Z → Y) (ε : �
     by
     have A : ∀ q, 0 ≤ dist (Φ p) (Φ q) + dist (Ψ p) (Ψ q) := fun q => by
       rw [← add_zero (0 : ℝ)] <;> exact add_le_add dist_nonneg dist_nonneg
-    refine' le_antisymm _ (le_cinfᵢ A)
+    refine' le_antisymm _ (le_ciInf A)
     have : 0 = dist (Φ p) (Φ p) + dist (Ψ p) (Ψ p) := by simp
     rw [this]
-    exact cinfᵢ_le ⟨0, forall_range_iff.2 A⟩ p
+    exact ciInf_le ⟨0, forall_range_iff.2 A⟩ p
   rw [glue_dist, this, zero_add]
 #align metric.glue_dist_glued_points Metric.glueDist_glued_points
 -/
@@ -128,14 +128,14 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
       by
       have :
         (⨅ p, dist y (Φ p) + dist x (Ψ p)) + dist y z =
-          infᵢ ((fun t => t + dist y z) ∘ fun p => dist y (Φ p) + dist x (Ψ p)) :=
+          iInf ((fun t => t + dist y z) ∘ fun p => dist y (Φ p) + dist x (Ψ p)) :=
         by
         refine'
-          Monotone.map_cinfᵢ_of_continuousAt (continuous_at_id.add continuousAt_const) _ (B _ _)
+          Monotone.map_ciInf_of_continuousAt (continuous_at_id.add continuousAt_const) _ (B _ _)
         intro x y hx
         simpa
       rw [this, comp]
-      refine' cinfᵢ_mono (B _ _) fun p => _
+      refine' ciInf_mono (B _ _) fun p => _
       calc
         dist z (Φ p) + dist x (Ψ p) ≤ dist y z + dist y (Φ p) + dist x (Ψ p) :=
           add_le_add (dist_triangle_left _ _ _) le_rfl
@@ -151,14 +151,14 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
       by
       have :
         (dist x y + ⨅ p, dist z (Φ p) + dist y (Ψ p)) =
-          infᵢ ((fun t => dist x y + t) ∘ fun p => dist z (Φ p) + dist y (Ψ p)) :=
+          iInf ((fun t => dist x y + t) ∘ fun p => dist z (Φ p) + dist y (Ψ p)) :=
         by
         refine'
-          Monotone.map_cinfᵢ_of_continuousAt (continuous_at_const.add continuousAt_id) _ (B _ _)
+          Monotone.map_ciInf_of_continuousAt (continuous_at_const.add continuousAt_id) _ (B _ _)
         intro x y hx
         simpa
       rw [this, comp]
-      refine' cinfᵢ_mono (B _ _) fun p => _
+      refine' ciInf_mono (B _ _) fun p => _
       calc
         dist z (Φ p) + dist x (Ψ p) ≤ dist z (Φ p) + (dist x y + dist y (Ψ p)) :=
           add_le_add le_rfl (dist_triangle _ _ _)
@@ -174,14 +174,14 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
       by
       have :
         (dist x y + ⨅ p, dist y (Φ p) + dist z (Ψ p)) =
-          infᵢ ((fun t => dist x y + t) ∘ fun p => dist y (Φ p) + dist z (Ψ p)) :=
+          iInf ((fun t => dist x y + t) ∘ fun p => dist y (Φ p) + dist z (Ψ p)) :=
         by
         refine'
-          Monotone.map_cinfᵢ_of_continuousAt (continuous_at_const.add continuousAt_id) _ (B _ _)
+          Monotone.map_ciInf_of_continuousAt (continuous_at_const.add continuousAt_id) _ (B _ _)
         intro x y hx
         simpa
       rw [this, comp]
-      refine' cinfᵢ_mono (B _ _) fun p => _
+      refine' ciInf_mono (B _ _) fun p => _
       calc
         dist x (Φ p) + dist z (Ψ p) ≤ dist x y + dist y (Φ p) + dist z (Ψ p) :=
           add_le_add (dist_triangle _ _ _) le_rfl
@@ -197,14 +197,14 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
       by
       have :
         (⨅ p, dist x (Φ p) + dist y (Ψ p)) + dist y z =
-          infᵢ ((fun t => t + dist y z) ∘ fun p => dist x (Φ p) + dist y (Ψ p)) :=
+          iInf ((fun t => t + dist y z) ∘ fun p => dist x (Φ p) + dist y (Ψ p)) :=
         by
         refine'
-          Monotone.map_cinfᵢ_of_continuousAt (continuous_at_id.add continuousAt_const) _ (B _ _)
+          Monotone.map_ciInf_of_continuousAt (continuous_at_id.add continuousAt_const) _ (B _ _)
         intro x y hx
         simpa
       rw [this, comp]
-      refine' cinfᵢ_mono (B _ _) fun p => _
+      refine' ciInf_mono (B _ _) fun p => _
       calc
         dist x (Φ p) + dist z (Ψ p) ≤ dist x (Φ p) + (dist y z + dist y (Ψ p)) :=
           add_le_add le_rfl (dist_triangle_left _ _ _)
@@ -215,9 +215,9 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
     le_of_forall_pos_le_add fun δ δpos =>
       by
       obtain ⟨p, hp⟩ : ∃ p, dist x (Φ p) + dist y (Ψ p) < (⨅ p, dist x (Φ p) + dist y (Ψ p)) + δ / 2
-      exact exists_lt_of_cinfᵢ_lt (by linarith)
+      exact exists_lt_of_ciInf_lt (by linarith)
       obtain ⟨q, hq⟩ : ∃ q, dist z (Φ q) + dist y (Ψ q) < (⨅ p, dist z (Φ p) + dist y (Ψ p)) + δ / 2
-      exact exists_lt_of_cinfᵢ_lt (by linarith)
+      exact exists_lt_of_ciInf_lt (by linarith)
       have : dist (Φ p) (Φ q) ≤ dist (Ψ p) (Ψ q) + 2 * ε :=
         by
         have := le_trans (le_abs_self _) (H p q)
@@ -235,9 +235,9 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
     le_of_forall_pos_le_add fun δ δpos =>
       by
       obtain ⟨p, hp⟩ : ∃ p, dist y (Φ p) + dist x (Ψ p) < (⨅ p, dist y (Φ p) + dist x (Ψ p)) + δ / 2
-      exact exists_lt_of_cinfᵢ_lt (by linarith)
+      exact exists_lt_of_ciInf_lt (by linarith)
       obtain ⟨q, hq⟩ : ∃ q, dist y (Φ q) + dist z (Ψ q) < (⨅ p, dist y (Φ p) + dist z (Ψ p)) + δ / 2
-      exact exists_lt_of_cinfᵢ_lt (by linarith)
+      exact exists_lt_of_ciInf_lt (by linarith)
       have : dist (Ψ p) (Ψ q) ≤ dist (Φ p) (Φ q) + 2 * ε :=
         by
         have := le_trans (neg_le_abs_self _) (H p q)
@@ -259,14 +259,14 @@ private theorem glue_eq_of_dist_eq_zero (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
   | inl x, inr y, h =>
     by
     have : 0 ≤ ⨅ p, dist x (Φ p) + dist y (Ψ p) :=
-      le_cinfᵢ fun p => by simpa using add_le_add (@dist_nonneg _ _ x _) (@dist_nonneg _ _ y _)
+      le_ciInf fun p => by simpa using add_le_add (@dist_nonneg _ _ x _) (@dist_nonneg _ _ y _)
     have : 0 + ε ≤ glue_dist Φ Ψ ε (inl x) (inr y) := add_le_add this (le_refl ε)
     exfalso
     linarith
   | inr x, inl y, h =>
     by
     have : 0 ≤ ⨅ p, dist y (Φ p) + dist x (Ψ p) :=
-      le_cinfᵢ fun p => by
+      le_ciInf fun p => by
         simpa [add_comm] using add_le_add (@dist_nonneg _ _ x _) (@dist_nonneg _ _ y _)
     have : 0 + ε ≤ glue_dist Φ Ψ ε (inr x) (inl y) := add_le_add this (le_refl ε)
     exfalso
@@ -664,7 +664,7 @@ protected theorem completeSpace [∀ i, CompleteSpace (E i)] : CompleteSpace (Σ
   have hd : ∀ (i j), ∀ x ∈ s i, ∀ y ∈ s j, (x, y) ∈ U → i = j := fun i j x hx y hy hxy =>
     (Eq.symm hx).trans ((fst_eq_of_dist_lt_one _ _ hxy).trans hy)
   refine' completeSpace_of_isComplete_univ _
-  convert isComplete_unionᵢ_separated hc (dist_mem_uniformity zero_lt_one) hd
+  convert isComplete_iUnion_separated hc (dist_mem_uniformity zero_lt_one) hd
   simp [s, ← preimage_Union]
 #align metric.sigma.complete_space Metric.Sigma.completeSpace
 -/

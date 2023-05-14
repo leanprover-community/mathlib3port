@@ -78,21 +78,21 @@ protected theorem IsTransitive.inter (hx : x.IsTransitive) (hy : y.IsTransitive)
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print ZFSet.IsTransitive.unionₛ /-
-protected theorem IsTransitive.unionₛ (h : x.IsTransitive) : (⋃₀ x).IsTransitive := fun y hy z hz =>
+#print ZFSet.IsTransitive.sUnion /-
+protected theorem IsTransitive.sUnion (h : x.IsTransitive) : (⋃₀ x).IsTransitive := fun y hy z hz =>
   by
   rcases mem_sUnion.1 hy with ⟨w, hw, hw'⟩
   exact mem_sUnion_of_mem hz (h.mem_trans hw' hw)
-#align Set.is_transitive.sUnion ZFSet.IsTransitive.unionₛ
+#align Set.is_transitive.sUnion ZFSet.IsTransitive.sUnion
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print ZFSet.IsTransitive.unionₛ' /-
-theorem IsTransitive.unionₛ' (H : ∀ y ∈ x, IsTransitive y) : (⋃₀ x).IsTransitive := fun y hy z hz =>
+#print ZFSet.IsTransitive.sUnion' /-
+theorem IsTransitive.sUnion' (H : ∀ y ∈ x, IsTransitive y) : (⋃₀ x).IsTransitive := fun y hy z hz =>
   by
   rcases mem_sUnion.1 hy with ⟨w, hw, hw'⟩
   exact mem_sUnion_of_mem ((H w hw).mem_trans hz hw') hw
-#align Set.is_transitive.sUnion' ZFSet.IsTransitive.unionₛ'
+#align Set.is_transitive.sUnion' ZFSet.IsTransitive.sUnion'
 -/
 
 #print ZFSet.IsTransitive.union /-
@@ -115,16 +115,16 @@ protected theorem IsTransitive.powerset (h : x.IsTransitive) : (powerset x).IsTr
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print ZFSet.isTransitive_iff_unionₛ_subset /-
-theorem isTransitive_iff_unionₛ_subset : x.IsTransitive ↔ ⋃₀ x ⊆ x :=
+#print ZFSet.isTransitive_iff_sUnion_subset /-
+theorem isTransitive_iff_sUnion_subset : x.IsTransitive ↔ ⋃₀ x ⊆ x :=
   ⟨fun h y hy => by
     rcases mem_sUnion.1 hy with ⟨z, hz, hz'⟩
-    exact h.mem_trans hz' hz, fun H y hy z hz => H <| mem_unionₛ_of_mem hz hy⟩
-#align Set.is_transitive_iff_sUnion_subset ZFSet.isTransitive_iff_unionₛ_subset
+    exact h.mem_trans hz' hz, fun H y hy z hz => H <| mem_sUnion_of_mem hz hy⟩
+#align Set.is_transitive_iff_sUnion_subset ZFSet.isTransitive_iff_sUnion_subset
 -/
 
 alias is_transitive_iff_sUnion_subset ↔ is_transitive.sUnion_subset _
-#align Set.is_transitive.sUnion_subset ZFSet.IsTransitive.unionₛ_subset
+#align Set.is_transitive.sUnion_subset ZFSet.IsTransitive.sUnion_subset
 
 #print ZFSet.isTransitive_iff_subset_powerset /-
 theorem isTransitive_iff_subset_powerset : x.IsTransitive ↔ x ⊆ powerset x :=

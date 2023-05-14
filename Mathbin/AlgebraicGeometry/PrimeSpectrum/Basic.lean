@@ -169,9 +169,9 @@ theorem coe_vanishingIdeal (t : Set (PrimeSpectrum R)) :
     (vanishingIdeal t : Set R) = { f : R | ∀ x : PrimeSpectrum R, x ∈ t → f ∈ x.asIdeal } :=
   by
   ext f
-  rw [vanishing_ideal, SetLike.mem_coe, Submodule.mem_infᵢ]
+  rw [vanishing_ideal, SetLike.mem_coe, Submodule.mem_iInf]
   apply forall_congr'; intro x
-  rw [Submodule.mem_infᵢ]
+  rw [Submodule.mem_iInf]
 #align prime_spectrum.coe_vanishing_ideal PrimeSpectrum.coe_vanishingIdeal
 
 theorem mem_vanishingIdeal (t : Set (PrimeSpectrum R)) (f : R) :
@@ -230,7 +230,7 @@ theorem vanishingIdeal_zeroLocus_eq_radical (I : Ideal R) :
     vanishingIdeal (zeroLocus (I : Set R)) = I.radical :=
   Ideal.ext fun f =>
     by
-    rw [mem_vanishing_ideal, Ideal.radical_eq_infₛ, Submodule.mem_infₛ]
+    rw [mem_vanishing_ideal, Ideal.radical_eq_sInf, Submodule.mem_sInf]
     exact ⟨fun h x hx => h ⟨x, hx.2⟩ hx.1, fun h x hx => h x.1 ⟨hx, x.2⟩⟩
 #align prime_spectrum.vanishing_ideal_zero_locus_eq_radical PrimeSpectrum.vanishingIdeal_zeroLocus_eq_radical
 
@@ -345,24 +345,24 @@ theorem vanishingIdeal_union (t t' : Set (PrimeSpectrum R)) :
   (gc R).u_inf
 #align prime_spectrum.vanishing_ideal_union PrimeSpectrum.vanishingIdeal_union
 
-theorem zeroLocus_supᵢ {ι : Sort _} (I : ι → Ideal R) :
+theorem zeroLocus_iSup {ι : Sort _} (I : ι → Ideal R) :
     zeroLocus ((⨆ i, I i : Ideal R) : Set R) = ⋂ i, zeroLocus (I i) :=
-  (gc R).l_supᵢ
-#align prime_spectrum.zero_locus_supr PrimeSpectrum.zeroLocus_supᵢ
+  (gc R).l_iSup
+#align prime_spectrum.zero_locus_supr PrimeSpectrum.zeroLocus_iSup
 
-theorem zeroLocus_unionᵢ {ι : Sort _} (s : ι → Set R) :
+theorem zeroLocus_iUnion {ι : Sort _} (s : ι → Set R) :
     zeroLocus (⋃ i, s i) = ⋂ i, zeroLocus (s i) :=
-  (gc_set R).l_supᵢ
-#align prime_spectrum.zero_locus_Union PrimeSpectrum.zeroLocus_unionᵢ
+  (gc_set R).l_iSup
+#align prime_spectrum.zero_locus_Union PrimeSpectrum.zeroLocus_iUnion
 
 theorem zeroLocus_bUnion (s : Set (Set R)) :
     zeroLocus (⋃ s' ∈ s, s' : Set R) = ⋂ s' ∈ s, zeroLocus s' := by simp only [zero_locus_Union]
 #align prime_spectrum.zero_locus_bUnion PrimeSpectrum.zeroLocus_bUnion
 
-theorem vanishingIdeal_unionᵢ {ι : Sort _} (t : ι → Set (PrimeSpectrum R)) :
+theorem vanishingIdeal_iUnion {ι : Sort _} (t : ι → Set (PrimeSpectrum R)) :
     vanishingIdeal (⋃ i, t i) = ⨅ i, vanishingIdeal (t i) :=
-  (gc R).u_infᵢ
-#align prime_spectrum.vanishing_ideal_Union PrimeSpectrum.vanishingIdeal_unionᵢ
+  (gc R).u_iInf
+#align prime_spectrum.vanishing_ideal_Union PrimeSpectrum.vanishingIdeal_iUnion
 
 theorem zeroLocus_inf (I J : Ideal R) :
     zeroLocus ((I ⊓ J : Ideal R) : Set R) = zeroLocus I ∪ zeroLocus J :=
@@ -419,7 +419,7 @@ instance zariskiTopology : TopologicalSpace (PrimeSpectrum R) :=
   TopologicalSpace.ofClosed (Set.range PrimeSpectrum.zeroLocus) ⟨Set.univ, by simp⟩
     (by
       intro Zs h
-      rw [Set.interₛ_eq_interᵢ]
+      rw [Set.sInter_eq_iInter]
       choose f hf using fun i : Zs => h i.Prop
       simp only [← hf]
       exact ⟨_, zero_locus_Union _⟩)
@@ -881,7 +881,7 @@ theorem isCompact_basicOpen (f : R) : IsCompact (basicOpen f : Set (PrimeSpectru
       rw [← vanishing_ideal_zero_locus_eq_radical]
       apply vanishing_ideal_anti_mono hZ
       exact subset_vanishing_ideal_zero_locus {f} (Set.mem_singleton f)
-    rcases Submodule.exists_finset_of_mem_supᵢ I hn with ⟨s, hs⟩
+    rcases Submodule.exists_finset_of_mem_iSup I hn with ⟨s, hs⟩
     use s
     -- Using simp_rw here, because `hI` and `zero_locus_supr` need to be applied underneath binders
     simp_rw [basic_open_eq_zero_locus_compl f, Set.inter_comm (zero_locus {f}ᶜ), ← Set.diff_eq,

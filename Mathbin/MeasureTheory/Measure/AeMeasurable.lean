@@ -135,7 +135,7 @@ theorem sum_measure [Countable ι] {μ : ι → Measure α} (h : ∀ i, AEMeasur
     rw [measure_to_measurable]
     exact (h i).ae_eq_mk
   have hsm : MeasurableSet (⋂ i, s i) :=
-    MeasurableSet.interᵢ fun i => measurable_set_to_measurable _ _
+    MeasurableSet.iInter fun i => measurable_set_to_measurable _ _
   have hs : ∀ i x, x ∉ s i → f x = (h i).mk f x :=
     by
     intro i x hx
@@ -150,7 +150,7 @@ theorem sum_measure [Countable ι] {μ : ι → Measure α} (h : ∀ i, AEMeasur
     intro t ht
     refine'
       ⟨⋃ i, (h i).mk f ⁻¹' t ∩ s iᶜ,
-        MeasurableSet.unionᵢ fun i =>
+        MeasurableSet.iUnion fun i =>
           (measurable_mk _ ht).inter (measurable_set_to_measurable _ _).compl,
         _⟩
     ext ⟨x, hx⟩
@@ -206,29 +206,29 @@ theorem add_measure {f : α → β} (hμ : AEMeasurable f μ) (hν : AEMeasurabl
   aemeasurable_add_measure_iff.2 ⟨hμ, hν⟩
 #align ae_measurable.add_measure AEMeasurable.add_measure
 
-/- warning: ae_measurable.Union -> AEMeasurable.unionᵢ is a dubious translation:
+/- warning: ae_measurable.Union -> AEMeasurable.iUnion is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} {m0 : MeasurableSpace.{u2} α} [_inst_1 : MeasurableSpace.{u3} β] {f : α -> β} {μ : MeasureTheory.Measure.{u2} α m0} [_inst_4 : Countable.{succ u1} ι] {s : ι -> (Set.{u2} α)}, (forall (i : ι), AEMeasurable.{u2, u3} α β _inst_1 m0 f (MeasureTheory.Measure.restrict.{u2} α m0 μ (s i))) -> (AEMeasurable.{u2, u3} α β _inst_1 m0 f (MeasureTheory.Measure.restrict.{u2} α m0 μ (Set.unionᵢ.{u2, succ u1} α ι (fun (i : ι) => s i))))
+  forall {ι : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} {m0 : MeasurableSpace.{u2} α} [_inst_1 : MeasurableSpace.{u3} β] {f : α -> β} {μ : MeasureTheory.Measure.{u2} α m0} [_inst_4 : Countable.{succ u1} ι] {s : ι -> (Set.{u2} α)}, (forall (i : ι), AEMeasurable.{u2, u3} α β _inst_1 m0 f (MeasureTheory.Measure.restrict.{u2} α m0 μ (s i))) -> (AEMeasurable.{u2, u3} α β _inst_1 m0 f (MeasureTheory.Measure.restrict.{u2} α m0 μ (Set.iUnion.{u2, succ u1} α ι (fun (i : ι) => s i))))
 but is expected to have type
-  forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} {m0 : MeasurableSpace.{u2} α} [_inst_1 : MeasurableSpace.{u1} β] {f : α -> β} {μ : MeasureTheory.Measure.{u2} α m0} [_inst_4 : Countable.{succ u3} ι] {s : ι -> (Set.{u2} α)}, (forall (i : ι), AEMeasurable.{u2, u1} α β _inst_1 m0 f (MeasureTheory.Measure.restrict.{u2} α m0 μ (s i))) -> (AEMeasurable.{u2, u1} α β _inst_1 m0 f (MeasureTheory.Measure.restrict.{u2} α m0 μ (Set.unionᵢ.{u2, succ u3} α ι (fun (i : ι) => s i))))
-Case conversion may be inaccurate. Consider using '#align ae_measurable.Union AEMeasurable.unionᵢₓ'. -/
+  forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} {m0 : MeasurableSpace.{u2} α} [_inst_1 : MeasurableSpace.{u1} β] {f : α -> β} {μ : MeasureTheory.Measure.{u2} α m0} [_inst_4 : Countable.{succ u3} ι] {s : ι -> (Set.{u2} α)}, (forall (i : ι), AEMeasurable.{u2, u1} α β _inst_1 m0 f (MeasureTheory.Measure.restrict.{u2} α m0 μ (s i))) -> (AEMeasurable.{u2, u1} α β _inst_1 m0 f (MeasureTheory.Measure.restrict.{u2} α m0 μ (Set.iUnion.{u2, succ u3} α ι (fun (i : ι) => s i))))
+Case conversion may be inaccurate. Consider using '#align ae_measurable.Union AEMeasurable.iUnionₓ'. -/
 @[measurability]
-protected theorem unionᵢ [Countable ι] {s : ι → Set α}
+protected theorem iUnion [Countable ι] {s : ι → Set α}
     (h : ∀ i, AEMeasurable f (μ.restrict (s i))) : AEMeasurable f (μ.restrict (⋃ i, s i)) :=
-  (sum_measure h).mono_measure <| restrict_unionᵢ_le
-#align ae_measurable.Union AEMeasurable.unionᵢ
+  (sum_measure h).mono_measure <| restrict_iUnion_le
+#align ae_measurable.Union AEMeasurable.iUnion
 
-/- warning: ae_measurable_Union_iff -> aemeasurable_unionᵢ_iff is a dubious translation:
+/- warning: ae_measurable_Union_iff -> aemeasurable_iUnion_iff is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} {m0 : MeasurableSpace.{u2} α} [_inst_1 : MeasurableSpace.{u3} β] {f : α -> β} {μ : MeasureTheory.Measure.{u2} α m0} [_inst_4 : Countable.{succ u1} ι] {s : ι -> (Set.{u2} α)}, Iff (AEMeasurable.{u2, u3} α β _inst_1 m0 f (MeasureTheory.Measure.restrict.{u2} α m0 μ (Set.unionᵢ.{u2, succ u1} α ι (fun (i : ι) => s i)))) (forall (i : ι), AEMeasurable.{u2, u3} α β _inst_1 m0 f (MeasureTheory.Measure.restrict.{u2} α m0 μ (s i)))
+  forall {ι : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} {m0 : MeasurableSpace.{u2} α} [_inst_1 : MeasurableSpace.{u3} β] {f : α -> β} {μ : MeasureTheory.Measure.{u2} α m0} [_inst_4 : Countable.{succ u1} ι] {s : ι -> (Set.{u2} α)}, Iff (AEMeasurable.{u2, u3} α β _inst_1 m0 f (MeasureTheory.Measure.restrict.{u2} α m0 μ (Set.iUnion.{u2, succ u1} α ι (fun (i : ι) => s i)))) (forall (i : ι), AEMeasurable.{u2, u3} α β _inst_1 m0 f (MeasureTheory.Measure.restrict.{u2} α m0 μ (s i)))
 but is expected to have type
-  forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} {m0 : MeasurableSpace.{u2} α} [_inst_1 : MeasurableSpace.{u1} β] {f : α -> β} {μ : MeasureTheory.Measure.{u2} α m0} [_inst_4 : Countable.{succ u3} ι] {s : ι -> (Set.{u2} α)}, Iff (AEMeasurable.{u2, u1} α β _inst_1 m0 f (MeasureTheory.Measure.restrict.{u2} α m0 μ (Set.unionᵢ.{u2, succ u3} α ι (fun (i : ι) => s i)))) (forall (i : ι), AEMeasurable.{u2, u1} α β _inst_1 m0 f (MeasureTheory.Measure.restrict.{u2} α m0 μ (s i)))
-Case conversion may be inaccurate. Consider using '#align ae_measurable_Union_iff aemeasurable_unionᵢ_iffₓ'. -/
+  forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} {m0 : MeasurableSpace.{u2} α} [_inst_1 : MeasurableSpace.{u1} β] {f : α -> β} {μ : MeasureTheory.Measure.{u2} α m0} [_inst_4 : Countable.{succ u3} ι] {s : ι -> (Set.{u2} α)}, Iff (AEMeasurable.{u2, u1} α β _inst_1 m0 f (MeasureTheory.Measure.restrict.{u2} α m0 μ (Set.iUnion.{u2, succ u3} α ι (fun (i : ι) => s i)))) (forall (i : ι), AEMeasurable.{u2, u1} α β _inst_1 m0 f (MeasureTheory.Measure.restrict.{u2} α m0 μ (s i)))
+Case conversion may be inaccurate. Consider using '#align ae_measurable_Union_iff aemeasurable_iUnion_iffₓ'. -/
 @[simp]
-theorem aemeasurable_unionᵢ_iff [Countable ι] {s : ι → Set α} :
+theorem aemeasurable_iUnion_iff [Countable ι] {s : ι → Set α} :
     AEMeasurable f (μ.restrict (⋃ i, s i)) ↔ ∀ i, AEMeasurable f (μ.restrict (s i)) :=
-  ⟨fun h i => h.mono_measure <| restrict_mono (subset_unionᵢ _ _) le_rfl, AEMeasurable.unionᵢ⟩
-#align ae_measurable_Union_iff aemeasurable_unionᵢ_iff
+  ⟨fun h i => h.mono_measure <| restrict_mono (subset_iUnion _ _) le_rfl, AEMeasurable.iUnion⟩
+#align ae_measurable_Union_iff aemeasurable_iUnion_iff
 
 /- warning: ae_measurable_union_iff -> aemeasurable_union_iff is a dubious translation:
 lean 3 declaration is
@@ -240,7 +240,7 @@ Case conversion may be inaccurate. Consider using '#align ae_measurable_union_if
 theorem aemeasurable_union_iff {s t : Set α} :
     AEMeasurable f (μ.restrict (s ∪ t)) ↔
       AEMeasurable f (μ.restrict s) ∧ AEMeasurable f (μ.restrict t) :=
-  by simp only [union_eq_Union, aemeasurable_unionᵢ_iff, Bool.forall_bool, cond, and_comm]
+  by simp only [union_eq_Union, aemeasurable_iUnion_iff, Bool.forall_bool, cond, and_comm]
 #align ae_measurable_union_iff aemeasurable_union_iff
 
 /- warning: ae_measurable.smul_measure -> AEMeasurable.smul_measure is a dubious translation:
@@ -539,7 +539,7 @@ theorem aemeasurable_Ioi_of_forall_Ioc {β} {mβ : MeasurableSpace β} [LinearOr
     by
     rw [Union_Ioc_eq_Ioi_self_iff.mpr _]
     exact fun y _ => (hu_tendsto.eventually (eventually_ge_at_top y)).exists
-  rw [Ioi_eq_Union, aemeasurable_unionᵢ_iff]
+  rw [Ioi_eq_Union, aemeasurable_iUnion_iff]
   intro n
   cases lt_or_le x (u n)
   · exact g_meas (u n) h

@@ -503,7 +503,7 @@ of commutators. -/
 noncomputable def quotientCenterEmbedding {S : Set G} (hS : closure S = ⊤) :
     G ⧸ center G ↪ S → commutatorSet G :=
   (quotientEquivOfEq (center_eq_infi' S hS)).toEmbedding.trans
-    ((quotientInfᵢEmbedding _).trans
+    ((quotientiInfEmbedding _).trans
       (Function.Embedding.piCongrRight fun g => quotientCentralizerEmbedding g))
 #align subgroup.quotient_center_embedding Subgroup.quotientCenterEmbedding
 

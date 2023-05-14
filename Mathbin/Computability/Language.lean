@@ -285,59 +285,59 @@ theorem le_add_congr {l₁ l₂ m₁ m₂ : Language α} : l₁ ≤ m₁ → l�
   sup_le_sup
 #align language.le_add_congr Language.le_add_congr
 
-/- warning: language.mem_supr -> Language.mem_supᵢ is a dubious translation:
+/- warning: language.mem_supr -> Language.mem_iSup is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u2}} {ι : Sort.{u1}} {l : ι -> (Language.{u2} α)} {x : List.{u2} α}, Iff (Membership.Mem.{u2, u2} (List.{u2} α) (Language.{u2} α) (Language.hasMem.{u2} α) x (supᵢ.{u2, u1} (Language.{u2} α) (Set.hasSup.{u2} (List.{u2} α)) ι (fun (i : ι) => l i))) (Exists.{u1} ι (fun (i : ι) => Membership.Mem.{u2, u2} (List.{u2} α) (Language.{u2} α) (Language.hasMem.{u2} α) x (l i)))
+  forall {α : Type.{u2}} {ι : Sort.{u1}} {l : ι -> (Language.{u2} α)} {x : List.{u2} α}, Iff (Membership.Mem.{u2, u2} (List.{u2} α) (Language.{u2} α) (Language.hasMem.{u2} α) x (iSup.{u2, u1} (Language.{u2} α) (Set.hasSup.{u2} (List.{u2} α)) ι (fun (i : ι) => l i))) (Exists.{u1} ι (fun (i : ι) => Membership.Mem.{u2, u2} (List.{u2} α) (Language.{u2} α) (Language.hasMem.{u2} α) x (l i)))
 but is expected to have type
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {l : ι -> (Language.{u1} α)} {x : List.{u1} α}, Iff (Membership.mem.{u1, u1} (List.{u1} α) (Language.{u1} α) (instMembershipListLanguage.{u1} α) x (supᵢ.{u1, u2} (Language.{u1} α) (CompleteBooleanAlgebra.toSupSet.{u1} (Language.{u1} α) (instCompleteBooleanAlgebraLanguage.{u1} α)) ι (fun (i : ι) => l i))) (Exists.{u2} ι (fun (i : ι) => Membership.mem.{u1, u1} (List.{u1} α) (Language.{u1} α) (instMembershipListLanguage.{u1} α) x (l i)))
-Case conversion may be inaccurate. Consider using '#align language.mem_supr Language.mem_supᵢₓ'. -/
-theorem mem_supᵢ {ι : Sort v} {l : ι → Language α} {x : List α} : (x ∈ ⨆ i, l i) ↔ ∃ i, x ∈ l i :=
-  mem_unionᵢ
-#align language.mem_supr Language.mem_supᵢ
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {l : ι -> (Language.{u1} α)} {x : List.{u1} α}, Iff (Membership.mem.{u1, u1} (List.{u1} α) (Language.{u1} α) (instMembershipListLanguage.{u1} α) x (iSup.{u1, u2} (Language.{u1} α) (CompleteBooleanAlgebra.toSupSet.{u1} (Language.{u1} α) (instCompleteBooleanAlgebraLanguage.{u1} α)) ι (fun (i : ι) => l i))) (Exists.{u2} ι (fun (i : ι) => Membership.mem.{u1, u1} (List.{u1} α) (Language.{u1} α) (instMembershipListLanguage.{u1} α) x (l i)))
+Case conversion may be inaccurate. Consider using '#align language.mem_supr Language.mem_iSupₓ'. -/
+theorem mem_iSup {ι : Sort v} {l : ι → Language α} {x : List α} : (x ∈ ⨆ i, l i) ↔ ∃ i, x ∈ l i :=
+  mem_iUnion
+#align language.mem_supr Language.mem_iSup
 
-/- warning: language.supr_mul -> Language.supᵢ_mul is a dubious translation:
+/- warning: language.supr_mul -> Language.iSup_mul is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u2}} {ι : Sort.{u1}} (l : ι -> (Language.{u2} α)) (m : Language.{u2} α), Eq.{succ u2} (Language.{u2} α) (HMul.hMul.{u2, u2, u2} (Language.{u2} α) (Language.{u2} α) (Language.{u2} α) (instHMul.{u2} (Language.{u2} α) (Language.hasMul.{u2} α)) (supᵢ.{u2, u1} (Language.{u2} α) (Set.hasSup.{u2} (List.{u2} α)) ι (fun (i : ι) => l i)) m) (supᵢ.{u2, u1} (Language.{u2} α) (Set.hasSup.{u2} (List.{u2} α)) ι (fun (i : ι) => HMul.hMul.{u2, u2, u2} (Language.{u2} α) (Language.{u2} α) (Language.{u2} α) (instHMul.{u2} (Language.{u2} α) (Language.hasMul.{u2} α)) (l i) m))
+  forall {α : Type.{u2}} {ι : Sort.{u1}} (l : ι -> (Language.{u2} α)) (m : Language.{u2} α), Eq.{succ u2} (Language.{u2} α) (HMul.hMul.{u2, u2, u2} (Language.{u2} α) (Language.{u2} α) (Language.{u2} α) (instHMul.{u2} (Language.{u2} α) (Language.hasMul.{u2} α)) (iSup.{u2, u1} (Language.{u2} α) (Set.hasSup.{u2} (List.{u2} α)) ι (fun (i : ι) => l i)) m) (iSup.{u2, u1} (Language.{u2} α) (Set.hasSup.{u2} (List.{u2} α)) ι (fun (i : ι) => HMul.hMul.{u2, u2, u2} (Language.{u2} α) (Language.{u2} α) (Language.{u2} α) (instHMul.{u2} (Language.{u2} α) (Language.hasMul.{u2} α)) (l i) m))
 but is expected to have type
-  forall {α : Type.{u1}} {ι : Sort.{u2}} (l : ι -> (Language.{u1} α)) (m : Language.{u1} α), Eq.{succ u1} (Language.{u1} α) (HMul.hMul.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHMul.{u1} (Language.{u1} α) (Language.instMulLanguage.{u1} α)) (supᵢ.{u1, u2} (Language.{u1} α) (CompleteBooleanAlgebra.toSupSet.{u1} (Language.{u1} α) (instCompleteBooleanAlgebraLanguage.{u1} α)) ι (fun (i : ι) => l i)) m) (supᵢ.{u1, u2} (Language.{u1} α) (CompleteBooleanAlgebra.toSupSet.{u1} (Language.{u1} α) (instCompleteBooleanAlgebraLanguage.{u1} α)) ι (fun (i : ι) => HMul.hMul.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHMul.{u1} (Language.{u1} α) (Language.instMulLanguage.{u1} α)) (l i) m))
-Case conversion may be inaccurate. Consider using '#align language.supr_mul Language.supᵢ_mulₓ'. -/
-theorem supᵢ_mul {ι : Sort v} (l : ι → Language α) (m : Language α) :
+  forall {α : Type.{u1}} {ι : Sort.{u2}} (l : ι -> (Language.{u1} α)) (m : Language.{u1} α), Eq.{succ u1} (Language.{u1} α) (HMul.hMul.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHMul.{u1} (Language.{u1} α) (Language.instMulLanguage.{u1} α)) (iSup.{u1, u2} (Language.{u1} α) (CompleteBooleanAlgebra.toSupSet.{u1} (Language.{u1} α) (instCompleteBooleanAlgebraLanguage.{u1} α)) ι (fun (i : ι) => l i)) m) (iSup.{u1, u2} (Language.{u1} α) (CompleteBooleanAlgebra.toSupSet.{u1} (Language.{u1} α) (instCompleteBooleanAlgebraLanguage.{u1} α)) ι (fun (i : ι) => HMul.hMul.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHMul.{u1} (Language.{u1} α) (Language.instMulLanguage.{u1} α)) (l i) m))
+Case conversion may be inaccurate. Consider using '#align language.supr_mul Language.iSup_mulₓ'. -/
+theorem iSup_mul {ι : Sort v} (l : ι → Language α) (m : Language α) :
     (⨆ i, l i) * m = ⨆ i, l i * m :=
-  image2_unionᵢ_left _ _ _
-#align language.supr_mul Language.supᵢ_mul
+  image2_iUnion_left _ _ _
+#align language.supr_mul Language.iSup_mul
 
-/- warning: language.mul_supr -> Language.mul_supᵢ is a dubious translation:
+/- warning: language.mul_supr -> Language.mul_iSup is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u2}} {ι : Sort.{u1}} (l : ι -> (Language.{u2} α)) (m : Language.{u2} α), Eq.{succ u2} (Language.{u2} α) (HMul.hMul.{u2, u2, u2} (Language.{u2} α) (Language.{u2} α) (Language.{u2} α) (instHMul.{u2} (Language.{u2} α) (Language.hasMul.{u2} α)) m (supᵢ.{u2, u1} (Language.{u2} α) (Set.hasSup.{u2} (List.{u2} α)) ι (fun (i : ι) => l i))) (supᵢ.{u2, u1} (Language.{u2} α) (Set.hasSup.{u2} (List.{u2} α)) ι (fun (i : ι) => HMul.hMul.{u2, u2, u2} (Language.{u2} α) (Language.{u2} α) (Language.{u2} α) (instHMul.{u2} (Language.{u2} α) (Language.hasMul.{u2} α)) m (l i)))
+  forall {α : Type.{u2}} {ι : Sort.{u1}} (l : ι -> (Language.{u2} α)) (m : Language.{u2} α), Eq.{succ u2} (Language.{u2} α) (HMul.hMul.{u2, u2, u2} (Language.{u2} α) (Language.{u2} α) (Language.{u2} α) (instHMul.{u2} (Language.{u2} α) (Language.hasMul.{u2} α)) m (iSup.{u2, u1} (Language.{u2} α) (Set.hasSup.{u2} (List.{u2} α)) ι (fun (i : ι) => l i))) (iSup.{u2, u1} (Language.{u2} α) (Set.hasSup.{u2} (List.{u2} α)) ι (fun (i : ι) => HMul.hMul.{u2, u2, u2} (Language.{u2} α) (Language.{u2} α) (Language.{u2} α) (instHMul.{u2} (Language.{u2} α) (Language.hasMul.{u2} α)) m (l i)))
 but is expected to have type
-  forall {α : Type.{u1}} {ι : Sort.{u2}} (l : ι -> (Language.{u1} α)) (m : Language.{u1} α), Eq.{succ u1} (Language.{u1} α) (HMul.hMul.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHMul.{u1} (Language.{u1} α) (Language.instMulLanguage.{u1} α)) m (supᵢ.{u1, u2} (Language.{u1} α) (CompleteBooleanAlgebra.toSupSet.{u1} (Language.{u1} α) (instCompleteBooleanAlgebraLanguage.{u1} α)) ι (fun (i : ι) => l i))) (supᵢ.{u1, u2} (Language.{u1} α) (CompleteBooleanAlgebra.toSupSet.{u1} (Language.{u1} α) (instCompleteBooleanAlgebraLanguage.{u1} α)) ι (fun (i : ι) => HMul.hMul.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHMul.{u1} (Language.{u1} α) (Language.instMulLanguage.{u1} α)) m (l i)))
-Case conversion may be inaccurate. Consider using '#align language.mul_supr Language.mul_supᵢₓ'. -/
-theorem mul_supᵢ {ι : Sort v} (l : ι → Language α) (m : Language α) :
+  forall {α : Type.{u1}} {ι : Sort.{u2}} (l : ι -> (Language.{u1} α)) (m : Language.{u1} α), Eq.{succ u1} (Language.{u1} α) (HMul.hMul.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHMul.{u1} (Language.{u1} α) (Language.instMulLanguage.{u1} α)) m (iSup.{u1, u2} (Language.{u1} α) (CompleteBooleanAlgebra.toSupSet.{u1} (Language.{u1} α) (instCompleteBooleanAlgebraLanguage.{u1} α)) ι (fun (i : ι) => l i))) (iSup.{u1, u2} (Language.{u1} α) (CompleteBooleanAlgebra.toSupSet.{u1} (Language.{u1} α) (instCompleteBooleanAlgebraLanguage.{u1} α)) ι (fun (i : ι) => HMul.hMul.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHMul.{u1} (Language.{u1} α) (Language.instMulLanguage.{u1} α)) m (l i)))
+Case conversion may be inaccurate. Consider using '#align language.mul_supr Language.mul_iSupₓ'. -/
+theorem mul_iSup {ι : Sort v} (l : ι → Language α) (m : Language α) :
     (m * ⨆ i, l i) = ⨆ i, m * l i :=
-  image2_unionᵢ_right _ _ _
-#align language.mul_supr Language.mul_supᵢ
+  image2_iUnion_right _ _ _
+#align language.mul_supr Language.mul_iSup
 
-/- warning: language.supr_add -> Language.supᵢ_add is a dubious translation:
+/- warning: language.supr_add -> Language.iSup_add is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : Nonempty.{u1} ι] (l : ι -> (Language.{u2} α)) (m : Language.{u2} α), Eq.{succ u2} (Language.{u2} α) (HAdd.hAdd.{u2, u2, u2} (Language.{u2} α) (Language.{u2} α) (Language.{u2} α) (instHAdd.{u2} (Language.{u2} α) (Language.hasAdd.{u2} α)) (supᵢ.{u2, u1} (Language.{u2} α) (Set.hasSup.{u2} (List.{u2} α)) ι (fun (i : ι) => l i)) m) (supᵢ.{u2, u1} (Language.{u2} α) (Set.hasSup.{u2} (List.{u2} α)) ι (fun (i : ι) => HAdd.hAdd.{u2, u2, u2} (Language.{u2} α) (Language.{u2} α) (Language.{u2} α) (instHAdd.{u2} (Language.{u2} α) (Language.hasAdd.{u2} α)) (l i) m))
+  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : Nonempty.{u1} ι] (l : ι -> (Language.{u2} α)) (m : Language.{u2} α), Eq.{succ u2} (Language.{u2} α) (HAdd.hAdd.{u2, u2, u2} (Language.{u2} α) (Language.{u2} α) (Language.{u2} α) (instHAdd.{u2} (Language.{u2} α) (Language.hasAdd.{u2} α)) (iSup.{u2, u1} (Language.{u2} α) (Set.hasSup.{u2} (List.{u2} α)) ι (fun (i : ι) => l i)) m) (iSup.{u2, u1} (Language.{u2} α) (Set.hasSup.{u2} (List.{u2} α)) ι (fun (i : ι) => HAdd.hAdd.{u2, u2, u2} (Language.{u2} α) (Language.{u2} α) (Language.{u2} α) (instHAdd.{u2} (Language.{u2} α) (Language.hasAdd.{u2} α)) (l i) m))
 but is expected to have type
-  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : Nonempty.{u2} ι] (l : ι -> (Language.{u1} α)) (m : Language.{u1} α), Eq.{succ u1} (Language.{u1} α) (HAdd.hAdd.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHAdd.{u1} (Language.{u1} α) (Language.instAddLanguage.{u1} α)) (supᵢ.{u1, u2} (Language.{u1} α) (CompleteBooleanAlgebra.toSupSet.{u1} (Language.{u1} α) (instCompleteBooleanAlgebraLanguage.{u1} α)) ι (fun (i : ι) => l i)) m) (supᵢ.{u1, u2} (Language.{u1} α) (CompleteBooleanAlgebra.toSupSet.{u1} (Language.{u1} α) (instCompleteBooleanAlgebraLanguage.{u1} α)) ι (fun (i : ι) => HAdd.hAdd.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHAdd.{u1} (Language.{u1} α) (Language.instAddLanguage.{u1} α)) (l i) m))
-Case conversion may be inaccurate. Consider using '#align language.supr_add Language.supᵢ_addₓ'. -/
-theorem supᵢ_add {ι : Sort v} [Nonempty ι] (l : ι → Language α) (m : Language α) :
+  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : Nonempty.{u2} ι] (l : ι -> (Language.{u1} α)) (m : Language.{u1} α), Eq.{succ u1} (Language.{u1} α) (HAdd.hAdd.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHAdd.{u1} (Language.{u1} α) (Language.instAddLanguage.{u1} α)) (iSup.{u1, u2} (Language.{u1} α) (CompleteBooleanAlgebra.toSupSet.{u1} (Language.{u1} α) (instCompleteBooleanAlgebraLanguage.{u1} α)) ι (fun (i : ι) => l i)) m) (iSup.{u1, u2} (Language.{u1} α) (CompleteBooleanAlgebra.toSupSet.{u1} (Language.{u1} α) (instCompleteBooleanAlgebraLanguage.{u1} α)) ι (fun (i : ι) => HAdd.hAdd.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHAdd.{u1} (Language.{u1} α) (Language.instAddLanguage.{u1} α)) (l i) m))
+Case conversion may be inaccurate. Consider using '#align language.supr_add Language.iSup_addₓ'. -/
+theorem iSup_add {ι : Sort v} [Nonempty ι] (l : ι → Language α) (m : Language α) :
     (⨆ i, l i) + m = ⨆ i, l i + m :=
-  supᵢ_sup
-#align language.supr_add Language.supᵢ_add
+  iSup_sup
+#align language.supr_add Language.iSup_add
 
-/- warning: language.add_supr -> Language.add_supᵢ is a dubious translation:
+/- warning: language.add_supr -> Language.add_iSup is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : Nonempty.{u1} ι] (l : ι -> (Language.{u2} α)) (m : Language.{u2} α), Eq.{succ u2} (Language.{u2} α) (HAdd.hAdd.{u2, u2, u2} (Language.{u2} α) (Language.{u2} α) (Language.{u2} α) (instHAdd.{u2} (Language.{u2} α) (Language.hasAdd.{u2} α)) m (supᵢ.{u2, u1} (Language.{u2} α) (Set.hasSup.{u2} (List.{u2} α)) ι (fun (i : ι) => l i))) (supᵢ.{u2, u1} (Language.{u2} α) (Set.hasSup.{u2} (List.{u2} α)) ι (fun (i : ι) => HAdd.hAdd.{u2, u2, u2} (Language.{u2} α) (Language.{u2} α) (Language.{u2} α) (instHAdd.{u2} (Language.{u2} α) (Language.hasAdd.{u2} α)) m (l i)))
+  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : Nonempty.{u1} ι] (l : ι -> (Language.{u2} α)) (m : Language.{u2} α), Eq.{succ u2} (Language.{u2} α) (HAdd.hAdd.{u2, u2, u2} (Language.{u2} α) (Language.{u2} α) (Language.{u2} α) (instHAdd.{u2} (Language.{u2} α) (Language.hasAdd.{u2} α)) m (iSup.{u2, u1} (Language.{u2} α) (Set.hasSup.{u2} (List.{u2} α)) ι (fun (i : ι) => l i))) (iSup.{u2, u1} (Language.{u2} α) (Set.hasSup.{u2} (List.{u2} α)) ι (fun (i : ι) => HAdd.hAdd.{u2, u2, u2} (Language.{u2} α) (Language.{u2} α) (Language.{u2} α) (instHAdd.{u2} (Language.{u2} α) (Language.hasAdd.{u2} α)) m (l i)))
 but is expected to have type
-  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : Nonempty.{u2} ι] (l : ι -> (Language.{u1} α)) (m : Language.{u1} α), Eq.{succ u1} (Language.{u1} α) (HAdd.hAdd.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHAdd.{u1} (Language.{u1} α) (Language.instAddLanguage.{u1} α)) m (supᵢ.{u1, u2} (Language.{u1} α) (CompleteBooleanAlgebra.toSupSet.{u1} (Language.{u1} α) (instCompleteBooleanAlgebraLanguage.{u1} α)) ι (fun (i : ι) => l i))) (supᵢ.{u1, u2} (Language.{u1} α) (CompleteBooleanAlgebra.toSupSet.{u1} (Language.{u1} α) (instCompleteBooleanAlgebraLanguage.{u1} α)) ι (fun (i : ι) => HAdd.hAdd.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHAdd.{u1} (Language.{u1} α) (Language.instAddLanguage.{u1} α)) m (l i)))
-Case conversion may be inaccurate. Consider using '#align language.add_supr Language.add_supᵢₓ'. -/
-theorem add_supᵢ {ι : Sort v} [Nonempty ι] (l : ι → Language α) (m : Language α) :
+  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : Nonempty.{u2} ι] (l : ι -> (Language.{u1} α)) (m : Language.{u1} α), Eq.{succ u1} (Language.{u1} α) (HAdd.hAdd.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHAdd.{u1} (Language.{u1} α) (Language.instAddLanguage.{u1} α)) m (iSup.{u1, u2} (Language.{u1} α) (CompleteBooleanAlgebra.toSupSet.{u1} (Language.{u1} α) (instCompleteBooleanAlgebraLanguage.{u1} α)) ι (fun (i : ι) => l i))) (iSup.{u1, u2} (Language.{u1} α) (CompleteBooleanAlgebra.toSupSet.{u1} (Language.{u1} α) (instCompleteBooleanAlgebraLanguage.{u1} α)) ι (fun (i : ι) => HAdd.hAdd.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHAdd.{u1} (Language.{u1} α) (Language.instAddLanguage.{u1} α)) m (l i)))
+Case conversion may be inaccurate. Consider using '#align language.add_supr Language.add_iSupₓ'. -/
+theorem add_iSup {ι : Sort v} [Nonempty ι] (l : ι → Language α) (m : Language α) :
     (m + ⨆ i, l i) = ⨆ i, m + l i :=
-  sup_supᵢ
-#align language.add_supr Language.add_supᵢ
+  sup_iSup
+#align language.add_supr Language.add_iSup
 
 /- warning: language.mem_pow -> Language.mem_pow is a dubious translation:
 lean 3 declaration is
@@ -364,13 +364,13 @@ theorem mem_pow {l : Language α} {x : List α} {n : ℕ} :
       exact ⟨a, _, hS.1, ⟨S, rfl, rfl, hS.2⟩, rfl⟩
 #align language.mem_pow Language.mem_pow
 
-/- warning: language.kstar_eq_supr_pow -> Language.kstar_eq_supᵢ_pow is a dubious translation:
+/- warning: language.kstar_eq_supr_pow -> Language.kstar_eq_iSup_pow is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} (l : Language.{u1} α), Eq.{succ u1} (Language.{u1} α) (KStar.kstar.{u1} (Language.{u1} α) (Language.hasKstar.{u1} α) l) (supᵢ.{u1, 1} (Language.{u1} α) (Set.hasSup.{u1} (List.{u1} α)) Nat (fun (i : Nat) => HPow.hPow.{u1, 0, u1} (Language.{u1} α) Nat (Language.{u1} α) (instHPow.{u1, 0} (Language.{u1} α) Nat (Monoid.Pow.{u1} (Language.{u1} α) (MonoidWithZero.toMonoid.{u1} (Language.{u1} α) (Semiring.toMonoidWithZero.{u1} (Language.{u1} α) (Language.semiring.{u1} α))))) l i))
+  forall {α : Type.{u1}} (l : Language.{u1} α), Eq.{succ u1} (Language.{u1} α) (KStar.kstar.{u1} (Language.{u1} α) (Language.hasKstar.{u1} α) l) (iSup.{u1, 1} (Language.{u1} α) (Set.hasSup.{u1} (List.{u1} α)) Nat (fun (i : Nat) => HPow.hPow.{u1, 0, u1} (Language.{u1} α) Nat (Language.{u1} α) (instHPow.{u1, 0} (Language.{u1} α) Nat (Monoid.Pow.{u1} (Language.{u1} α) (MonoidWithZero.toMonoid.{u1} (Language.{u1} α) (Semiring.toMonoidWithZero.{u1} (Language.{u1} α) (Language.semiring.{u1} α))))) l i))
 but is expected to have type
-  forall {α : Type.{u1}} (l : Language.{u1} α), Eq.{succ u1} (Language.{u1} α) (KStar.kstar.{u1} (Language.{u1} α) (Language.instKStarLanguage.{u1} α) l) (supᵢ.{u1, 1} (Language.{u1} α) (CompleteBooleanAlgebra.toSupSet.{u1} (Language.{u1} α) (instCompleteBooleanAlgebraLanguage.{u1} α)) Nat (fun (i : Nat) => HPow.hPow.{u1, 0, u1} (Language.{u1} α) Nat (Language.{u1} α) (instHPow.{u1, 0} (Language.{u1} α) Nat (Monoid.Pow.{u1} (Language.{u1} α) (MonoidWithZero.toMonoid.{u1} (Language.{u1} α) (Semiring.toMonoidWithZero.{u1} (Language.{u1} α) (Language.instSemiringLanguage.{u1} α))))) l i))
-Case conversion may be inaccurate. Consider using '#align language.kstar_eq_supr_pow Language.kstar_eq_supᵢ_powₓ'. -/
-theorem kstar_eq_supᵢ_pow (l : Language α) : l∗ = ⨆ i : ℕ, l ^ i :=
+  forall {α : Type.{u1}} (l : Language.{u1} α), Eq.{succ u1} (Language.{u1} α) (KStar.kstar.{u1} (Language.{u1} α) (Language.instKStarLanguage.{u1} α) l) (iSup.{u1, 1} (Language.{u1} α) (CompleteBooleanAlgebra.toSupSet.{u1} (Language.{u1} α) (instCompleteBooleanAlgebraLanguage.{u1} α)) Nat (fun (i : Nat) => HPow.hPow.{u1, 0, u1} (Language.{u1} α) Nat (Language.{u1} α) (instHPow.{u1, 0} (Language.{u1} α) Nat (Monoid.Pow.{u1} (Language.{u1} α) (MonoidWithZero.toMonoid.{u1} (Language.{u1} α) (Semiring.toMonoidWithZero.{u1} (Language.{u1} α) (Language.instSemiringLanguage.{u1} α))))) l i))
+Case conversion may be inaccurate. Consider using '#align language.kstar_eq_supr_pow Language.kstar_eq_iSup_powₓ'. -/
+theorem kstar_eq_iSup_pow (l : Language α) : l∗ = ⨆ i : ℕ, l ^ i :=
   by
   ext x
   simp only [mem_kstar, mem_supr, mem_pow]
@@ -379,7 +379,7 @@ theorem kstar_eq_supᵢ_pow (l : Language α) : l∗ = ⨆ i : ℕ, l ^ i :=
     exact ⟨_, S, rfl, rfl, hS⟩
   · rintro ⟨_, S, rfl, rfl, hS⟩
     exact ⟨S, rfl, hS⟩
-#align language.kstar_eq_supr_pow Language.kstar_eq_supᵢ_pow
+#align language.kstar_eq_supr_pow Language.kstar_eq_iSup_pow
 
 /- warning: language.map_kstar -> Language.map_kstar is a dubious translation:
 lean 3 declaration is
@@ -411,7 +411,7 @@ Case conversion may be inaccurate. Consider using '#align language.one_add_self_
 theorem one_add_self_mul_kstar_eq_kstar (l : Language α) : 1 + l * l∗ = l∗ :=
   by
   simp only [kstar_eq_supr_pow, mul_supr, ← pow_succ, ← pow_zero l]
-  exact sup_supᵢ_nat_succ _
+  exact sup_iSup_nat_succ _
 #align language.one_add_self_mul_kstar_eq_kstar Language.one_add_self_mul_kstar_eq_kstar
 
 /- warning: language.one_add_kstar_mul_self_eq_kstar -> Language.one_add_kstar_mul_self_eq_kstar is a dubious translation:
@@ -434,7 +434,7 @@ instance : KleeneAlgebra (Language α) :=
     kstar_mul_le_self := fun l m h =>
       by
       rw [kstar_eq_supr_pow, supr_mul]
-      refine' supᵢ_le fun n => _
+      refine' iSup_le fun n => _
       induction' n with n ih
       · simp
       rw [pow_succ', mul_assoc (l ^ n) l m]
@@ -442,7 +442,7 @@ instance : KleeneAlgebra (Language α) :=
     mul_kstar_le_self := fun l m h =>
       by
       rw [kstar_eq_supr_pow, mul_supr]
-      refine' supᵢ_le fun n => _
+      refine' iSup_le fun n => _
       induction' n with n ih
       · simp
       rw [pow_succ, ← mul_assoc m l (l ^ n)]

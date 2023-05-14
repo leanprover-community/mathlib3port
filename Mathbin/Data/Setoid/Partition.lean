@@ -225,26 +225,26 @@ theorem eqv_classes_disjoint {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b �
 
 /- warning: setoid.eqv_classes_of_disjoint_union -> Setoid.eqv_classes_of_disjoint_union is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {c : Set.{u1} (Set.{u1} α)}, (Eq.{succ u1} (Set.{u1} α) (Set.unionₛ.{u1} α c) (Set.univ.{u1} α)) -> (Set.PairwiseDisjoint.{u1, u1} (Set.{u1} α) (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) c (id.{succ u1} (Set.{u1} α))) -> (forall (a : α), ExistsUnique.{succ u1} (Set.{u1} α) (fun (b : Set.{u1} α) => ExistsUnique.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) b c) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) b c) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a b)))
+  forall {α : Type.{u1}} {c : Set.{u1} (Set.{u1} α)}, (Eq.{succ u1} (Set.{u1} α) (Set.sUnion.{u1} α c) (Set.univ.{u1} α)) -> (Set.PairwiseDisjoint.{u1, u1} (Set.{u1} α) (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) c (id.{succ u1} (Set.{u1} α))) -> (forall (a : α), ExistsUnique.{succ u1} (Set.{u1} α) (fun (b : Set.{u1} α) => ExistsUnique.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) b c) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) b c) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a b)))
 but is expected to have type
-  forall {α : Type.{u1}} {c : Set.{u1} (Set.{u1} α)}, (Eq.{succ u1} (Set.{u1} α) (Set.unionₛ.{u1} α c) (Set.univ.{u1} α)) -> (Set.PairwiseDisjoint.{u1, u1} (Set.{u1} α) (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) c (id.{succ u1} (Set.{u1} α))) -> (forall (a : α), ExistsUnique.{succ u1} (Set.{u1} α) (fun (b : Set.{u1} α) => ExistsUnique.{0} (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) b c) (fun (H : Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) b c) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a b)))
+  forall {α : Type.{u1}} {c : Set.{u1} (Set.{u1} α)}, (Eq.{succ u1} (Set.{u1} α) (Set.sUnion.{u1} α c) (Set.univ.{u1} α)) -> (Set.PairwiseDisjoint.{u1, u1} (Set.{u1} α) (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) c (id.{succ u1} (Set.{u1} α))) -> (forall (a : α), ExistsUnique.{succ u1} (Set.{u1} α) (fun (b : Set.{u1} α) => ExistsUnique.{0} (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) b c) (fun (H : Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) b c) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a b)))
 Case conversion may be inaccurate. Consider using '#align setoid.eqv_classes_of_disjoint_union Setoid.eqv_classes_of_disjoint_unionₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (b «expr ∈ » c) -/
 /-- A set of disjoint sets covering α partition α (classical). -/
-theorem eqv_classes_of_disjoint_union {c : Set (Set α)} (hu : Set.unionₛ c = @Set.univ α)
+theorem eqv_classes_of_disjoint_union {c : Set (Set α)} (hu : Set.sUnion c = @Set.univ α)
     (H : c.PairwiseDisjoint id) (a) : ∃! (b : _)(_ : b ∈ c), a ∈ b :=
-  let ⟨b, hc, ha⟩ := Set.mem_unionₛ.1 <| show a ∈ _ by rw [hu] <;> exact Set.mem_univ a
+  let ⟨b, hc, ha⟩ := Set.mem_sUnion.1 <| show a ∈ _ by rw [hu] <;> exact Set.mem_univ a
   ExistsUnique.intro₂ b hc ha fun b' hc' ha' => H.elim_set hc' hc a ha' ha
 #align setoid.eqv_classes_of_disjoint_union Setoid.eqv_classes_of_disjoint_union
 
 /- warning: setoid.setoid_of_disjoint_union -> Setoid.setoidOfDisjointUnion is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {c : Set.{u1} (Set.{u1} α)}, (Eq.{succ u1} (Set.{u1} α) (Set.unionₛ.{u1} α c) (Set.univ.{u1} α)) -> (Set.PairwiseDisjoint.{u1, u1} (Set.{u1} α) (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) c (id.{succ u1} (Set.{u1} α))) -> (Setoid.{succ u1} α)
+  forall {α : Type.{u1}} {c : Set.{u1} (Set.{u1} α)}, (Eq.{succ u1} (Set.{u1} α) (Set.sUnion.{u1} α c) (Set.univ.{u1} α)) -> (Set.PairwiseDisjoint.{u1, u1} (Set.{u1} α) (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) c (id.{succ u1} (Set.{u1} α))) -> (Setoid.{succ u1} α)
 but is expected to have type
-  forall {α : Type.{u1}} {c : Set.{u1} (Set.{u1} α)}, (Eq.{succ u1} (Set.{u1} α) (Set.unionₛ.{u1} α c) (Set.univ.{u1} α)) -> (Set.PairwiseDisjoint.{u1, u1} (Set.{u1} α) (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) c (id.{succ u1} (Set.{u1} α))) -> (Setoid.{succ u1} α)
+  forall {α : Type.{u1}} {c : Set.{u1} (Set.{u1} α)}, (Eq.{succ u1} (Set.{u1} α) (Set.sUnion.{u1} α c) (Set.univ.{u1} α)) -> (Set.PairwiseDisjoint.{u1, u1} (Set.{u1} α) (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) c (id.{succ u1} (Set.{u1} α))) -> (Setoid.{succ u1} α)
 Case conversion may be inaccurate. Consider using '#align setoid.setoid_of_disjoint_union Setoid.setoidOfDisjointUnionₓ'. -/
 /-- Makes an equivalence relation from a set of disjoints sets covering α. -/
-def setoidOfDisjointUnion {c : Set (Set α)} (hu : Set.unionₛ c = @Set.univ α)
+def setoidOfDisjointUnion {c : Set (Set α)} (hu : Set.sUnion c = @Set.univ α)
     (H : c.PairwiseDisjoint id) : Setoid α :=
   Setoid.mkClasses c <| eqv_classes_of_disjoint_union hu H
 #align setoid.setoid_of_disjoint_union Setoid.setoidOfDisjointUnion
@@ -259,11 +259,11 @@ theorem mkClasses_classes (r : Setoid α) : mkClasses r.classes classes_eqv_clas
 #align setoid.mk_classes_classes Setoid.mkClasses_classes
 -/
 
-#print Setoid.unionₛ_classes /-
+#print Setoid.sUnion_classes /-
 @[simp]
-theorem unionₛ_classes (r : Setoid α) : ⋃₀ r.classes = Set.univ :=
-  Set.eq_univ_of_forall fun x => Set.mem_unionₛ.2 ⟨{ y | r.Rel y x }, ⟨x, rfl⟩, Setoid.refl _⟩
-#align setoid.sUnion_classes Setoid.unionₛ_classes
+theorem sUnion_classes (r : Setoid α) : ⋃₀ r.classes = Set.univ :=
+  Set.eq_univ_of_forall fun x => Set.mem_sUnion.2 ⟨{ y | r.Rel y x }, ⟨x, rfl⟩, Setoid.refl _⟩
+#align setoid.sUnion_classes Setoid.sUnion_classes
 -/
 
 section Partition
@@ -302,15 +302,15 @@ theorem IsPartition.pairwiseDisjoint {c : Set (Set α)} (hc : IsPartition c) :
   eqv_classes_disjoint hc.2
 #align setoid.is_partition.pairwise_disjoint Setoid.IsPartition.pairwiseDisjoint
 
-#print Setoid.IsPartition.unionₛ_eq_univ /-
-theorem IsPartition.unionₛ_eq_univ {c : Set (Set α)} (hc : IsPartition c) : ⋃₀ c = Set.univ :=
+#print Setoid.IsPartition.sUnion_eq_univ /-
+theorem IsPartition.sUnion_eq_univ {c : Set (Set α)} (hc : IsPartition c) : ⋃₀ c = Set.univ :=
   Set.eq_univ_of_forall fun x =>
-    Set.mem_unionₛ.2 <|
+    Set.mem_sUnion.2 <|
       let ⟨t, ht⟩ := hc.2 x
       ⟨t, by
         simp only [exists_unique_iff_exists] at ht
         tauto⟩
-#align setoid.is_partition.sUnion_eq_univ Setoid.IsPartition.unionₛ_eq_univ
+#align setoid.is_partition.sUnion_eq_univ Setoid.IsPartition.sUnion_eq_univ
 -/
 
 #print Setoid.exists_of_mem_partition /-
@@ -405,7 +405,7 @@ def IsPartition.finpartition {c : Finset (Set α)} (hc : Setoid.IsPartition (c :
     Finpartition (Set.univ : Set α) where
   parts := c
   SupIndep := Finset.supIndep_iff_pairwiseDisjoint.mpr <| eqv_classes_disjoint hc.2
-  supParts := c.sup_id_set_eq_unionₛ.trans hc.unionₛ_eq_univ
+  supParts := c.sup_id_set_eq_sUnion.trans hc.sUnion_eq_univ
   not_bot_mem := hc.left
 #align setoid.is_partition.finpartition Setoid.IsPartition.finpartition
 
@@ -421,7 +421,7 @@ Case conversion may be inaccurate. Consider using '#align finpartition.is_partit
 theorem Finpartition.isPartition_parts {α} (f : Finpartition (Set.univ : Set α)) :
     Setoid.IsPartition (f.parts : Set (Set α)) :=
   ⟨f.not_bot_mem,
-    Setoid.eqv_classes_of_disjoint_union (f.parts.sup_id_set_eq_unionₛ.symm.trans f.supParts)
+    Setoid.eqv_classes_of_disjoint_union (f.parts.sup_id_set_eq_sUnion.symm.trans f.supParts)
       f.SupIndep.PairwiseDisjoint⟩
 #align finpartition.is_partition_parts Finpartition.isPartition_parts
 
@@ -489,11 +489,11 @@ theorem exists_mem (x : α) : ∃ i, x ∈ s i :=
   ⟨hs.index x, hs.mem_index x⟩
 #align indexed_partition.exists_mem IndexedPartition.exists_mem
 
-#print IndexedPartition.unionᵢ /-
-theorem unionᵢ : (⋃ i, s i) = univ := by
+#print IndexedPartition.iUnion /-
+theorem iUnion : (⋃ i, s i) = univ := by
   ext x
   simp [hs.exists_mem x]
-#align indexed_partition.Union IndexedPartition.unionᵢ
+#align indexed_partition.Union IndexedPartition.iUnion
 -/
 
 /- warning: indexed_partition.disjoint -> IndexedPartition.disjoint is a dubious translation:

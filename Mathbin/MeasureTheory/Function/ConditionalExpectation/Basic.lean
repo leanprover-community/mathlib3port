@@ -1895,7 +1895,7 @@ theorem set_integral_condexpL1Clm (f : α →₁[μ] F') (hs : measurable_set[m]
   have hS_meas0 : ∀ i, MeasurableSet (S i) := fun i => hm _ (hS_meas i)
   have hs_eq : s = ⋃ i, S i ∩ s := by
     simp_rw [Set.inter_comm]
-    rw [← Set.inter_unionᵢ, Union_spanning_sets (μ.trim hm), Set.inter_univ]
+    rw [← Set.inter_iUnion, Union_spanning_sets (μ.trim hm), Set.inter_univ]
   have hS_finite : ∀ i, μ (S i ∩ s) < ∞ :=
     by
     refine' fun i => (measure_mono (Set.inter_subset_left _ _)).trans_lt _

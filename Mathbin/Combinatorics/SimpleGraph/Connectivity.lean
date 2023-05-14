@@ -3157,7 +3157,7 @@ theorem set_walk_length_succ_eq (u v : V) (n : ℕ) :
   cases' p with _ _ w _ huw pwv
   · simp [eq_comm]
   · simp only [Nat.succ_eq_add_one, Set.mem_setOf_eq, walk.length_cons, add_left_inj,
-      Set.mem_unionᵢ, Set.mem_image, exists_prop]
+      Set.mem_iUnion, Set.mem_image, exists_prop]
     constructor
     · rintro rfl
       exact ⟨w, huw, pwv, rfl, rfl, HEq.rfl⟩
@@ -3186,7 +3186,7 @@ def finsetWalkLength : ∀ (n : ℕ) (u v : V), Finset (G.Walk u v)
       exact {walk.nil}
     else ∅
   | n + 1, u, v =>
-    Finset.univ.bunionᵢ fun w : G.neighborSet u =>
+    Finset.univ.biUnion fun w : G.neighborSet u =>
       (finset_walk_length n w v).map ⟨fun p => Walk.cons w.property p, fun p q => by simp⟩
 #align simple_graph.finset_walk_length SimpleGraph.finsetWalkLength
 -/
@@ -3197,11 +3197,11 @@ theorem coe_finsetWalkLength_eq (n : ℕ) (u v : V) :
   by
   induction' n with n ih generalizing u v
   · obtain rfl | huv := eq_or_ne u v <;> simp [finset_walk_length, set_walk_length_zero_eq_of_ne, *]
-  · simp only [finset_walk_length, set_walk_length_succ_eq, Finset.coe_bunionᵢ, Finset.mem_coe,
-      Finset.mem_univ, Set.unionᵢ_true]
+  · simp only [finset_walk_length, set_walk_length_succ_eq, Finset.coe_biUnion, Finset.mem_coe,
+      Finset.mem_univ, Set.iUnion_true]
     ext p
-    simp only [mem_neighbor_set, Finset.coe_map, embedding.coe_fn_mk, Set.unionᵢ_coe_set,
-      Set.mem_unionᵢ, Set.mem_image, Finset.mem_coe, Set.mem_setOf_eq]
+    simp only [mem_neighbor_set, Finset.coe_map, embedding.coe_fn_mk, Set.iUnion_coe_set,
+      Set.mem_iUnion, Set.mem_image, Finset.mem_coe, Set.mem_setOf_eq]
     congr with w
     congr with h
     congr with q

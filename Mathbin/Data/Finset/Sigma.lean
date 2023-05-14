@@ -126,26 +126,26 @@ theorem pairwiseDisjoint_map_sigmaMk :
   exact hij (congr_arg Sigma.fst hz'.symm)
 #align finset.pairwise_disjoint_map_sigma_mk Finset.pairwiseDisjoint_map_sigmaMk
 
-/- warning: finset.disj_Union_map_sigma_mk -> Finset.disjUnionᵢ_map_sigma_mk is a dubious translation:
+/- warning: finset.disj_Union_map_sigma_mk -> Finset.disjiUnion_map_sigma_mk is a dubious translation:
 lean 3 declaration is
   forall {ι : Type.{u1}} {α : ι -> Type.{u2}} {s : Finset.{u1} ι} {t : forall (i : ι), Finset.{u2} (α i)}, Eq.{succ (max u1 u2)} (Finset.{max u1 u2} (Sigma.{u1, u2} ι (fun (x : ι) => α x))) (Finset.disjUnionₓ.{u1, max u1 u2} ι (Sigma.{u1, u2} ι (fun (x : ι) => α x)) s (fun (i : ι) => Finset.map.{u2, max u1 u2} (α i) (Sigma.{u1, u2} ι (fun (x : ι) => α x)) (Function.Embedding.sigmaMk.{u1, u2} ι α i) (t i)) (Finset.pairwiseDisjoint_map_sigmaMk.{u1, u2} ι α s (fun (i : ι) => t i))) (Finset.sigma.{u1, u2} ι (fun (x : ι) => α x) s t)
 but is expected to have type
-  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} {s : Finset.{u2} ι} {t : forall (i : ι), Finset.{u1} (α i)}, Eq.{max (succ u2) (succ u1)} (Finset.{max u2 u1} (Sigma.{u2, u1} ι (fun (x : ι) => α x))) (Finset.disjUnionᵢ.{u2, max u2 u1} ι (Sigma.{u2, u1} ι (fun (x : ι) => α x)) s (fun (i : ι) => Finset.map.{u1, max u2 u1} (α i) (Sigma.{u2, u1} ι (fun (x : ι) => α x)) (Function.Embedding.sigmaMk.{u2, u1} ι (fun (i : ι) => α i) i) (t i)) (Finset.pairwiseDisjoint_map_sigmaMk.{u1, u2} ι (fun (i : ι) => α i) s (fun (i : ι) => t i))) (Finset.sigma.{u2, u1} ι (fun (x : ι) => α x) s t)
-Case conversion may be inaccurate. Consider using '#align finset.disj_Union_map_sigma_mk Finset.disjUnionᵢ_map_sigma_mkₓ'. -/
+  forall {ι : Type.{u2}} {α : ι -> Type.{u1}} {s : Finset.{u2} ι} {t : forall (i : ι), Finset.{u1} (α i)}, Eq.{max (succ u2) (succ u1)} (Finset.{max u2 u1} (Sigma.{u2, u1} ι (fun (x : ι) => α x))) (Finset.disjiUnion.{u2, max u2 u1} ι (Sigma.{u2, u1} ι (fun (x : ι) => α x)) s (fun (i : ι) => Finset.map.{u1, max u2 u1} (α i) (Sigma.{u2, u1} ι (fun (x : ι) => α x)) (Function.Embedding.sigmaMk.{u2, u1} ι (fun (i : ι) => α i) i) (t i)) (Finset.pairwiseDisjoint_map_sigmaMk.{u1, u2} ι (fun (i : ι) => α i) s (fun (i : ι) => t i))) (Finset.sigma.{u2, u1} ι (fun (x : ι) => α x) s t)
+Case conversion may be inaccurate. Consider using '#align finset.disj_Union_map_sigma_mk Finset.disjiUnion_map_sigma_mkₓ'. -/
 @[simp]
-theorem disjUnionᵢ_map_sigma_mk :
+theorem disjiUnion_map_sigma_mk :
     s.disjUnionₓ (fun i => (t i).map (Embedding.sigmaMk i)) pairwiseDisjoint_map_sigmaMk =
       s.Sigma t :=
   rfl
-#align finset.disj_Union_map_sigma_mk Finset.disjUnionᵢ_map_sigma_mk
+#align finset.disj_Union_map_sigma_mk Finset.disjiUnion_map_sigma_mk
 
-#print Finset.sigma_eq_bunionᵢ /-
-theorem sigma_eq_bunionᵢ [DecidableEq (Σi, α i)] (s : Finset ι) (t : ∀ i, Finset (α i)) :
-    s.Sigma t = s.bunionᵢ fun i => (t i).map <| Embedding.sigmaMk i :=
+#print Finset.sigma_eq_biUnion /-
+theorem sigma_eq_biUnion [DecidableEq (Σi, α i)] (s : Finset ι) (t : ∀ i, Finset (α i)) :
+    s.Sigma t = s.biUnion fun i => (t i).map <| Embedding.sigmaMk i :=
   by
   ext ⟨x, y⟩
   simp [and_left_comm]
-#align finset.sigma_eq_bUnion Finset.sigma_eq_bunionᵢ
+#align finset.sigma_eq_bUnion Finset.sigma_eq_biUnion
 -/
 
 variable (s t) (f : (Σi, α i) → β)

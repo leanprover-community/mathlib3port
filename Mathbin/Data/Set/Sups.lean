@@ -279,25 +279,25 @@ theorem sups_inter_subset_right : s ⊻ (t₁ ∩ t₂) ⊆ s ⊻ t₁ ∩ s ⊻
 
 variable (s t u v)
 
-/- warning: set.Union_image_sup_left -> Set.unionᵢ_image_sup_left is a dubious translation:
+/- warning: set.Union_image_sup_left -> Set.iUnion_image_sup_left is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Set.unionᵢ.{u1, succ u1} α α (fun (a : α) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) => Set.image.{u1, u1} α α (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α _inst_1) a) t))) (HasSups.sups.{u1} (Set.{u1} α) (Set.hasSups.{u1} α _inst_1) s t)
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Set.iUnion.{u1, succ u1} α α (fun (a : α) => Set.iUnion.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) => Set.image.{u1, u1} α α (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α _inst_1) a) t))) (HasSups.sups.{u1} (Set.{u1} α) (Set.hasSups.{u1} α _inst_1) s t)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Set.unionᵢ.{u1, succ u1} α α (fun (a : α) => Set.unionᵢ.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) => Set.image.{u1, u1} α α ((fun (x._@.Mathlib.Data.Set.Sups._hyg.2587 : α) (x._@.Mathlib.Data.Set.Sups._hyg.2589 : α) => Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α _inst_1) x._@.Mathlib.Data.Set.Sups._hyg.2587 x._@.Mathlib.Data.Set.Sups._hyg.2589) a) t))) (HasSups.sups.{u1} (Set.{u1} α) (Set.hasSups.{u1} α _inst_1) s t)
-Case conversion may be inaccurate. Consider using '#align set.Union_image_sup_left Set.unionᵢ_image_sup_leftₓ'. -/
-theorem unionᵢ_image_sup_left : (⋃ a ∈ s, (· ⊔ ·) a '' t) = s ⊻ t :=
-  unionᵢ_image_left _
-#align set.Union_image_sup_left Set.unionᵢ_image_sup_left
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Set.iUnion.{u1, succ u1} α α (fun (a : α) => Set.iUnion.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) => Set.image.{u1, u1} α α ((fun (x._@.Mathlib.Data.Set.Sups._hyg.2587 : α) (x._@.Mathlib.Data.Set.Sups._hyg.2589 : α) => Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α _inst_1) x._@.Mathlib.Data.Set.Sups._hyg.2587 x._@.Mathlib.Data.Set.Sups._hyg.2589) a) t))) (HasSups.sups.{u1} (Set.{u1} α) (Set.hasSups.{u1} α _inst_1) s t)
+Case conversion may be inaccurate. Consider using '#align set.Union_image_sup_left Set.iUnion_image_sup_leftₓ'. -/
+theorem iUnion_image_sup_left : (⋃ a ∈ s, (· ⊔ ·) a '' t) = s ⊻ t :=
+  iUnion_image_left _
+#align set.Union_image_sup_left Set.iUnion_image_sup_left
 
-/- warning: set.Union_image_sup_right -> Set.unionᵢ_image_sup_right is a dubious translation:
+/- warning: set.Union_image_sup_right -> Set.iUnion_image_sup_right is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Set.unionᵢ.{u1, succ u1} α α (fun (b : α) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b t) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b t) => Set.image.{u1, u1} α α (fun (_x : α) => Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α _inst_1) _x b) s))) (HasSups.sups.{u1} (Set.{u1} α) (Set.hasSups.{u1} α _inst_1) s t)
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Set.iUnion.{u1, succ u1} α α (fun (b : α) => Set.iUnion.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b t) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b t) => Set.image.{u1, u1} α α (fun (_x : α) => Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α _inst_1) _x b) s))) (HasSups.sups.{u1} (Set.{u1} α) (Set.hasSups.{u1} α _inst_1) s t)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Set.unionᵢ.{u1, succ u1} α α (fun (b : α) => Set.unionᵢ.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b t) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b t) => Set.image.{u1, u1} α α (fun (_x : α) => Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α _inst_1) _x b) s))) (HasSups.sups.{u1} (Set.{u1} α) (Set.hasSups.{u1} α _inst_1) s t)
-Case conversion may be inaccurate. Consider using '#align set.Union_image_sup_right Set.unionᵢ_image_sup_rightₓ'. -/
-theorem unionᵢ_image_sup_right : (⋃ b ∈ t, (· ⊔ b) '' s) = s ⊻ t :=
-  unionᵢ_image_right _
-#align set.Union_image_sup_right Set.unionᵢ_image_sup_right
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Set.iUnion.{u1, succ u1} α α (fun (b : α) => Set.iUnion.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b t) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b t) => Set.image.{u1, u1} α α (fun (_x : α) => Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α _inst_1) _x b) s))) (HasSups.sups.{u1} (Set.{u1} α) (Set.hasSups.{u1} α _inst_1) s t)
+Case conversion may be inaccurate. Consider using '#align set.Union_image_sup_right Set.iUnion_image_sup_rightₓ'. -/
+theorem iUnion_image_sup_right : (⋃ b ∈ t, (· ⊔ b) '' s) = s ⊻ t :=
+  iUnion_image_right _
+#align set.Union_image_sup_right Set.iUnion_image_sup_right
 
 /- warning: set.image_sup_prod -> Set.image_sup_prod is a dubious translation:
 lean 3 declaration is
@@ -557,25 +557,25 @@ theorem infs_inter_subset_right : s ⊼ (t₁ ∩ t₂) ⊆ s ⊼ t₁ ∩ s ⊼
 
 variable (s t u v)
 
-/- warning: set.Union_image_inf_left -> Set.unionᵢ_image_inf_left is a dubious translation:
+/- warning: set.Union_image_inf_left -> Set.iUnion_image_inf_left is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Set.unionᵢ.{u1, succ u1} α α (fun (a : α) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) => Set.image.{u1, u1} α α (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α _inst_1) a) t))) (HasInfs.infs.{u1} (Set.{u1} α) (Set.hasInfs.{u1} α _inst_1) s t)
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Set.iUnion.{u1, succ u1} α α (fun (a : α) => Set.iUnion.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) => Set.image.{u1, u1} α α (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α _inst_1) a) t))) (HasInfs.infs.{u1} (Set.{u1} α) (Set.hasInfs.{u1} α _inst_1) s t)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Set.unionᵢ.{u1, succ u1} α α (fun (a : α) => Set.unionᵢ.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) => Set.image.{u1, u1} α α ((fun (x._@.Mathlib.Data.Set.Sups._hyg.4535 : α) (x._@.Mathlib.Data.Set.Sups._hyg.4537 : α) => Inf.inf.{u1} α (SemilatticeInf.toInf.{u1} α _inst_1) x._@.Mathlib.Data.Set.Sups._hyg.4535 x._@.Mathlib.Data.Set.Sups._hyg.4537) a) t))) (HasInfs.infs.{u1} (Set.{u1} α) (Set.hasInfs.{u1} α _inst_1) s t)
-Case conversion may be inaccurate. Consider using '#align set.Union_image_inf_left Set.unionᵢ_image_inf_leftₓ'. -/
-theorem unionᵢ_image_inf_left : (⋃ a ∈ s, (· ⊓ ·) a '' t) = s ⊼ t :=
-  unionᵢ_image_left _
-#align set.Union_image_inf_left Set.unionᵢ_image_inf_left
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Set.iUnion.{u1, succ u1} α α (fun (a : α) => Set.iUnion.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) => Set.image.{u1, u1} α α ((fun (x._@.Mathlib.Data.Set.Sups._hyg.4535 : α) (x._@.Mathlib.Data.Set.Sups._hyg.4537 : α) => Inf.inf.{u1} α (SemilatticeInf.toInf.{u1} α _inst_1) x._@.Mathlib.Data.Set.Sups._hyg.4535 x._@.Mathlib.Data.Set.Sups._hyg.4537) a) t))) (HasInfs.infs.{u1} (Set.{u1} α) (Set.hasInfs.{u1} α _inst_1) s t)
+Case conversion may be inaccurate. Consider using '#align set.Union_image_inf_left Set.iUnion_image_inf_leftₓ'. -/
+theorem iUnion_image_inf_left : (⋃ a ∈ s, (· ⊓ ·) a '' t) = s ⊼ t :=
+  iUnion_image_left _
+#align set.Union_image_inf_left Set.iUnion_image_inf_left
 
-/- warning: set.Union_image_inf_right -> Set.unionᵢ_image_inf_right is a dubious translation:
+/- warning: set.Union_image_inf_right -> Set.iUnion_image_inf_right is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Set.unionᵢ.{u1, succ u1} α α (fun (b : α) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b t) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b t) => Set.image.{u1, u1} α α (fun (_x : α) => Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α _inst_1) _x b) s))) (HasInfs.infs.{u1} (Set.{u1} α) (Set.hasInfs.{u1} α _inst_1) s t)
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Set.iUnion.{u1, succ u1} α α (fun (b : α) => Set.iUnion.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b t) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b t) => Set.image.{u1, u1} α α (fun (_x : α) => Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α _inst_1) _x b) s))) (HasInfs.infs.{u1} (Set.{u1} α) (Set.hasInfs.{u1} α _inst_1) s t)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Set.unionᵢ.{u1, succ u1} α α (fun (b : α) => Set.unionᵢ.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b t) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b t) => Set.image.{u1, u1} α α (fun (_x : α) => Inf.inf.{u1} α (SemilatticeInf.toInf.{u1} α _inst_1) _x b) s))) (HasInfs.infs.{u1} (Set.{u1} α) (Set.hasInfs.{u1} α _inst_1) s t)
-Case conversion may be inaccurate. Consider using '#align set.Union_image_inf_right Set.unionᵢ_image_inf_rightₓ'. -/
-theorem unionᵢ_image_inf_right : (⋃ b ∈ t, (· ⊓ b) '' s) = s ⊼ t :=
-  unionᵢ_image_right _
-#align set.Union_image_inf_right Set.unionᵢ_image_inf_right
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Set.iUnion.{u1, succ u1} α α (fun (b : α) => Set.iUnion.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b t) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b t) => Set.image.{u1, u1} α α (fun (_x : α) => Inf.inf.{u1} α (SemilatticeInf.toInf.{u1} α _inst_1) _x b) s))) (HasInfs.infs.{u1} (Set.{u1} α) (Set.hasInfs.{u1} α _inst_1) s t)
+Case conversion may be inaccurate. Consider using '#align set.Union_image_inf_right Set.iUnion_image_inf_rightₓ'. -/
+theorem iUnion_image_inf_right : (⋃ b ∈ t, (· ⊓ b) '' s) = s ⊼ t :=
+  iUnion_image_right _
+#align set.Union_image_inf_right Set.iUnion_image_inf_right
 
 /- warning: set.image_inf_prod -> Set.image_inf_prod is a dubious translation:
 lean 3 declaration is

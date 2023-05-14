@@ -77,7 +77,7 @@ variable {α β}
 protected theorem NoetherianSpace.isCompact [NoetherianSpace α] (s : Set α) : IsCompact s :=
   by
   refine' isCompact_iff_finite_subcover.2 fun ι U hUo hs => _
-  rcases((noetherian_space_iff_opens α).mp ‹_› ⟨⋃ i, U i, isOpen_unionᵢ hUo⟩).elim_finite_subcover U
+  rcases((noetherian_space_iff_opens α).mp ‹_› ⟨⋃ i, U i, isOpen_iUnion hUo⟩).elim_finite_subcover U
       hUo Set.Subset.rfl with
     ⟨t, ht⟩
   exact ⟨t, hs.trans ht⟩
@@ -200,16 +200,16 @@ theorem noetherian_univ_iff : NoetherianSpace (Set.univ : Set α) ↔ Noetherian
 #align topological_space.noetherian_univ_iff TopologicalSpace.noetherian_univ_iff
 -/
 
-#print TopologicalSpace.NoetherianSpace.unionᵢ /-
-theorem NoetherianSpace.unionᵢ {ι : Type _} (f : ι → Set α) [Finite ι]
+#print TopologicalSpace.NoetherianSpace.iUnion /-
+theorem NoetherianSpace.iUnion {ι : Type _} (f : ι → Set α) [Finite ι]
     [hf : ∀ i, NoetherianSpace (f i)] : NoetherianSpace (⋃ i, f i) :=
   by
   cases nonempty_fintype ι
   simp_rw [noetherian_space_set_iff] at hf⊢
   intro t ht
-  rw [← set.inter_eq_left_iff_subset.mpr ht, Set.inter_unionᵢ]
-  exact isCompact_unionᵢ fun i => hf i _ (Set.inter_subset_right _ _)
-#align topological_space.noetherian_space.Union TopologicalSpace.NoetherianSpace.unionᵢ
+  rw [← set.inter_eq_left_iff_subset.mpr ht, Set.inter_iUnion]
+  exact isCompact_iUnion fun i => hf i _ (Set.inter_subset_right _ _)
+#align topological_space.noetherian_space.Union TopologicalSpace.NoetherianSpace.iUnion
 -/
 
 #print TopologicalSpace.NoetherianSpace.discrete /-

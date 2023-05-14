@@ -253,14 +253,14 @@ theorem lift_mrange_le {N} [Monoid N] (f : ∀ i, M i →* N) {s : Submonoid N}
     exact s.mul_mem hx hy
 #align free_product.lift_mrange_le FreeProduct.lift_mrange_le
 
-#print FreeProduct.mrange_eq_supᵢ /-
-theorem mrange_eq_supᵢ {N} [Monoid N] (f : ∀ i, M i →* N) : (lift f).mrange = ⨆ i, (f i).mrange :=
+#print FreeProduct.mrange_eq_iSup /-
+theorem mrange_eq_iSup {N} [Monoid N] (f : ∀ i, M i →* N) : (lift f).mrange = ⨆ i, (f i).mrange :=
   by
-  apply le_antisymm (lift_mrange_le f fun i => le_supᵢ _ i)
-  apply supᵢ_le _
+  apply le_antisymm (lift_mrange_le f fun i => le_iSup _ i)
+  apply iSup_le _
   rintro i _ ⟨x, rfl⟩
   exact ⟨of x, by simp only [lift_of]⟩
-#align free_product.mrange_eq_supr FreeProduct.mrange_eq_supᵢ
+#align free_product.mrange_eq_supr FreeProduct.mrange_eq_iSup
 -/
 
 section Group
@@ -316,14 +316,14 @@ theorem lift_range_le {N} [Group N] (f : ∀ i, G i →* N) {s : Subgroup N}
     exact s.mul_mem hx hy
 #align free_product.lift_range_le FreeProduct.lift_range_le
 
-#print FreeProduct.range_eq_supᵢ /-
-theorem range_eq_supᵢ {N} [Group N] (f : ∀ i, G i →* N) : (lift f).range = ⨆ i, (f i).range :=
+#print FreeProduct.range_eq_iSup /-
+theorem range_eq_iSup {N} [Group N] (f : ∀ i, G i →* N) : (lift f).range = ⨆ i, (f i).range :=
   by
-  apply le_antisymm (lift_range_le _ f fun i => le_supᵢ _ i)
-  apply supᵢ_le _
+  apply le_antisymm (lift_range_le _ f fun i => le_iSup _ i)
+  apply iSup_le _
   rintro i _ ⟨x, rfl⟩
   exact ⟨of x, by simp only [lift_of]⟩
-#align free_product.range_eq_supr FreeProduct.range_eq_supᵢ
+#align free_product.range_eq_supr FreeProduct.range_eq_iSup
 -/
 
 end Group

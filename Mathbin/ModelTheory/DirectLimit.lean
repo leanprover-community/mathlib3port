@@ -377,10 +377,10 @@ theorem cG {ι : Type _} [Encodable ι] [Preorder ι] [IsDirected ι (· ≤ ·)
     Structure.CG L (DirectLimit G f) :=
   by
   refine' ⟨⟨⋃ i, direct_limit.of L ι G f i '' Classical.choose (h i).out, _, _⟩⟩
-  · exact Set.countable_unionᵢ fun i => Set.Countable.image (Classical.choose_spec (h i).out).1 _
+  · exact Set.countable_iUnion fun i => Set.Countable.image (Classical.choose_spec (h i).out).1 _
   · rw [eq_top_iff, substructure.closure_Union]
     simp_rw [← embedding.coe_to_hom, substructure.closure_image]
-    rw [le_supᵢ_iff]
+    rw [le_iSup_iff]
     intro S hS x hx
     let out := @Quotient.out _ (direct_limit.setoid G f)
     refine' hS (out x).1 ⟨(out x).2, _, _⟩

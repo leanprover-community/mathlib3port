@@ -142,7 +142,7 @@ def eventualRange (j : J) :=
 
 theorem mem_eventualRange_iff {x : F.obj j} :
     x ∈ F.eventualRange j ↔ ∀ ⦃i⦄ (f : i ⟶ j), x ∈ range (F.map f) :=
-  mem_interᵢ₂
+  mem_iInter₂
 #align category_theory.functor.mem_eventual_range_iff CategoryTheory.Functor.mem_eventualRange_iff
 
 /-- The functor `F : J ⥤ Type v` satisfies the Mittag-Leffler condition if for all `j : J`,
@@ -159,7 +159,7 @@ theorem isMittagLeffler_iff_eventualRange :
     F.IsMittagLeffler ↔ ∀ j : J, ∃ (i : _)(f : i ⟶ j), F.eventualRange j = range (F.map f) :=
   forall_congr' fun j =>
     exists₂_congr fun i f =>
-      ⟨fun h => (interᵢ₂_subset _ _).antisymm <| subset_interᵢ₂ h, fun h => h ▸ interᵢ₂_subset⟩
+      ⟨fun h => (iInter₂_subset _ _).antisymm <| subset_iInter₂ h, fun h => h ▸ iInter₂_subset⟩
 #align category_theory.functor.is_mittag_leffler_iff_eventual_range CategoryTheory.Functor.isMittagLeffler_iff_eventualRange
 
 theorem IsMittagLeffler.subset_image_eventualRange (h : F.IsMittagLeffler) (f : j ⟶ i) :
@@ -311,7 +311,7 @@ def toEventualRangesSectionsEquiv : F.toEventualRanges.sections ≃ F.sections
     where
   toFun s := ⟨_, fun i j f => Subtype.coe_inj.2 <| s.Prop f⟩
   invFun s :=
-    ⟨fun j => ⟨_, mem_interᵢ₂.2 fun i f => ⟨_, s.Prop f⟩⟩, fun i j f => Subtype.ext <| s.Prop f⟩
+    ⟨fun j => ⟨_, mem_iInter₂.2 fun i f => ⟨_, s.Prop f⟩⟩, fun i j f => Subtype.ext <| s.Prop f⟩
   left_inv _ := by
     ext
     rfl

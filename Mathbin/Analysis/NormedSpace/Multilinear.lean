@@ -318,7 +318,7 @@ open Real
 
 /-- The operator norm of a continuous multilinear map is the inf of all its bounds. -/
 def opNorm :=
-  infₛ { c | 0 ≤ (c : ℝ) ∧ ∀ m, ‖f m‖ ≤ c * ∏ i, ‖m i‖ }
+  sInf { c | 0 ≤ (c : ℝ) ∧ ∀ m, ‖f m‖ ≤ c * ∏ i, ‖m i‖ }
 #align continuous_multilinear_map.op_norm ContinuousMultilinearMap.opNorm
 
 instance hasOpNorm : Norm (ContinuousMultilinearMap 𝕜 E G) :=
@@ -331,7 +331,7 @@ instance hasOpNorm' : Norm (ContinuousMultilinearMap 𝕜 (fun i : ι => G) G') 
   ContinuousMultilinearMap.hasOpNorm
 #align continuous_multilinear_map.has_op_norm' ContinuousMultilinearMap.hasOpNorm'
 
-theorem norm_def : ‖f‖ = infₛ { c | 0 ≤ (c : ℝ) ∧ ∀ m, ‖f m‖ ≤ c * ∏ i, ‖m i‖ } :=
+theorem norm_def : ‖f‖ = sInf { c | 0 ≤ (c : ℝ) ∧ ∀ m, ‖f m‖ ≤ c * ∏ i, ‖m i‖ } :=
   rfl
 #align continuous_multilinear_map.norm_def ContinuousMultilinearMap.norm_def
 
@@ -349,7 +349,7 @@ theorem bounds_bddBelow {f : ContinuousMultilinearMap 𝕜 E G} :
 #align continuous_multilinear_map.bounds_bdd_below ContinuousMultilinearMap.bounds_bddBelow
 
 theorem op_norm_nonneg : 0 ≤ ‖f‖ :=
-  le_cinfₛ bounds_nonempty fun _ ⟨hx, _⟩ => hx
+  le_csInf bounds_nonempty fun _ ⟨hx, _⟩ => hx
 #align continuous_multilinear_map.op_norm_nonneg ContinuousMultilinearMap.op_norm_nonneg
 
 /-- The fundamental property of the operator norm of a continuous multilinear map:
@@ -364,7 +364,7 @@ theorem le_op_norm : ‖f m‖ ≤ ‖f‖ * ∏ i, ‖m i‖ :=
     rw [this, norm_zero]
     exact mul_nonneg (op_norm_nonneg f) A
   · rw [← div_le_iff hlt]
-    apply le_cinfₛ bounds_nonempty
+    apply le_csInf bounds_nonempty
     rintro c ⟨_, hc⟩
     rw [div_le_iff hlt]
     apply hc
@@ -394,12 +394,12 @@ theorem unit_le_op_norm (h : ‖m‖ ≤ 1) : ‖f m‖ ≤ ‖f‖ :=
 
 /-- If one controls the norm of every `f x`, then one controls the norm of `f`. -/
 theorem op_norm_le_bound {M : ℝ} (hMp : 0 ≤ M) (hM : ∀ m, ‖f m‖ ≤ M * ∏ i, ‖m i‖) : ‖f‖ ≤ M :=
-  cinfₛ_le bounds_bddBelow ⟨hMp, hM⟩
+  csInf_le bounds_bddBelow ⟨hMp, hM⟩
 #align continuous_multilinear_map.op_norm_le_bound ContinuousMultilinearMap.op_norm_le_bound
 
 /-- The operator norm satisfies the triangle inequality. -/
 theorem op_norm_add_le : ‖f + g‖ ≤ ‖f‖ + ‖g‖ :=
-  cinfₛ_le bounds_bddBelow
+  csInf_le bounds_bddBelow
     ⟨add_nonneg (op_norm_nonneg _) (op_norm_nonneg _), fun x =>
       by
       rw [add_mul]

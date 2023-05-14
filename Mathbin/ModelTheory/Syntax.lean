@@ -100,7 +100,7 @@ open Finset
 @[simp]
 def varFinset [DecidableEq α] : L.term α → Finset α
   | var i => {i}
-  | func f ts => univ.bunionᵢ fun i => (ts i).varFinset
+  | func f ts => univ.biUnion fun i => (ts i).varFinset
 #align first_order.language.term.var_finset FirstOrder.Language.Term.varFinset
 -/
 
@@ -110,7 +110,7 @@ def varFinset [DecidableEq α] : L.term α → Finset α
 def varFinsetLeft [DecidableEq α] : L.term (Sum α β) → Finset α
   | var (Sum.inl i) => {i}
   | var (Sum.inr i) => ∅
-  | func f ts => univ.bunionᵢ fun i => (ts i).varFinsetLeft
+  | func f ts => univ.biUnion fun i => (ts i).varFinsetLeft
 #align first_order.language.term.var_finset_left FirstOrder.Language.Term.varFinsetLeft
 -/
 
@@ -179,7 +179,7 @@ def relabelEquiv (g : α ≃ β) : L.term α ≃ L.term β :=
 def restrictVar [DecidableEq α] : ∀ (t : L.term α) (f : t.varFinset → β), L.term β
   | var a, f => var (f ⟨a, mem_singleton_self a⟩)
   | func F ts, f =>
-    func F fun i => (ts i).restrictVar (f ∘ Set.inclusion (subset_bunionᵢ_of_mem _ (mem_univ i)))
+    func F fun i => (ts i).restrictVar (f ∘ Set.inclusion (subset_biUnion_of_mem _ (mem_univ i)))
 #align first_order.language.term.restrict_var FirstOrder.Language.Term.restrictVar
 -/
 
@@ -191,7 +191,7 @@ def restrictVarLeft [DecidableEq α] {γ : Type _} :
   | var (Sum.inr a), f => var (Sum.inr a)
   | func F ts, f =>
     func F fun i =>
-      (ts i).restrictVarLeft (f ∘ Set.inclusion (subset_bunionᵢ_of_mem _ (mem_univ i)))
+      (ts i).restrictVarLeft (f ∘ Set.inclusion (subset_biUnion_of_mem _ (mem_univ i)))
 #align first_order.language.term.restrict_var_left FirstOrder.Language.Term.restrictVarLeft
 -/
 
@@ -541,7 +541,7 @@ open Finset
 def freeVarFinset [DecidableEq α] : ∀ {n}, L.BoundedFormula α n → Finset α
   | n, falsum => ∅
   | n, equal t₁ t₂ => t₁.varFinsetLeft ∪ t₂.varFinsetLeft
-  | n, Rel R ts => univ.bunionᵢ fun i => (ts i).varFinsetLeft
+  | n, Rel R ts => univ.biUnion fun i => (ts i).varFinsetLeft
   | n, imp f₁ f₂ => f₁.freeVarFinset ∪ f₂.freeVarFinset
   | n, all f => f.freeVarFinset
 #align first_order.language.bounded_formula.free_var_finset FirstOrder.Language.BoundedFormula.freeVarFinset
@@ -609,7 +609,7 @@ def restrictFreeVar [DecidableEq α] :
     equal (t₁.restrictVarLeft (f ∘ Set.inclusion (subset_union_left _ _)))
       (t₂.restrictVarLeft (f ∘ Set.inclusion (subset_union_right _ _)))
   | n, Rel R ts, f =>
-    rel R fun i => (ts i).restrictVarLeft (f ∘ Set.inclusion (subset_bunionᵢ_of_mem _ (mem_univ i)))
+    rel R fun i => (ts i).restrictVarLeft (f ∘ Set.inclusion (subset_biUnion_of_mem _ (mem_univ i)))
   | n, imp φ₁ φ₂, f =>
     (φ₁.restrictFreeVar (f ∘ Set.inclusion (subset_union_left _ _))).imp
       (φ₂.restrictFreeVar (f ∘ Set.inclusion (subset_union_right _ _)))
@@ -1473,8 +1473,8 @@ theorem directed_distinctConstantsTheory :
 #align first_order.language.directed_distinct_constants_theory FirstOrder.Language.directed_distinctConstantsTheory
 -/
 
-#print FirstOrder.Language.distinctConstantsTheory_eq_unionᵢ /-
-theorem distinctConstantsTheory_eq_unionᵢ (s : Set α) :
+#print FirstOrder.Language.distinctConstantsTheory_eq_iUnion /-
+theorem distinctConstantsTheory_eq_iUnion (s : Set α) :
     L.distinctConstantsTheory s =
       ⋃ t : Finset s,
         L.distinctConstantsTheory (t.map (Function.Embedding.subtype fun x => x ∈ s)) :=
@@ -1491,7 +1491,7 @@ theorem distinctConstantsTheory_eq_unionᵢ (s : Set α) :
     · simp
     · rintro ⟨t, ⟨is, _⟩, ⟨js, _⟩⟩
       exact ⟨is, js⟩
-#align first_order.language.distinct_constants_theory_eq_Union FirstOrder.Language.distinctConstantsTheory_eq_unionᵢ
+#align first_order.language.distinct_constants_theory_eq_Union FirstOrder.Language.distinctConstantsTheory_eq_iUnion
 -/
 
 end Cardinality

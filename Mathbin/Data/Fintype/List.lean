@@ -71,7 +71,7 @@ end Multiset
 
 #print fintypeNodupList /-
 instance fintypeNodupList [Fintype α] : Fintype { l : List α // l.Nodup } :=
-  Fintype.subtype ((Finset.univ : Finset α).powerset.bunionᵢ fun s => s.val.lists) fun l =>
+  Fintype.subtype ((Finset.univ : Finset α).powerset.biUnion fun s => s.val.lists) fun l =>
     by
     suffices (∃ a : Finset α, a.val = ↑l) ↔ l.nodup by simpa
     constructor

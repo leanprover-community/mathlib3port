@@ -130,8 +130,8 @@ theorem union_zero_isClosed [T2Space 𝕜] [ContinuousMul 𝕜] : IsClosed (char
   by
   simp only [union_zero, Set.setOf_forall]
   exact
-    isClosed_interᵢ fun x =>
-      isClosed_interᵢ fun y =>
+    isClosed_iInter fun x =>
+      isClosed_iInter fun y =>
         isClosed_eq (eval_continuous _) <| (eval_continuous _).mul (eval_continuous _)
 #align weak_dual.character_space.union_zero_is_closed WeakDual.characterSpace.union_zero_isClosed
 

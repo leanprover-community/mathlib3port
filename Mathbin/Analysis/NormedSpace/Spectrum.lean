@@ -94,7 +94,7 @@ theorem spectralRadius_zero : spectralRadius 𝕜 (0 : A) = 0 :=
 
 theorem mem_resolventSet_of_spectralRadius_lt {a : A} {k : 𝕜} (h : spectralRadius 𝕜 a < ‖k‖₊) :
     k ∈ ρ a :=
-  Classical.not_not.mp fun hn => h.not_le <| le_supᵢ₂ k hn
+  Classical.not_not.mp fun hn => h.not_le <| le_iSup₂ k hn
 #align spectrum.mem_resolvent_set_of_spectral_radius_lt spectrum.mem_resolventSet_of_spectralRadius_lt
 
 variable [CompleteSpace A]
@@ -150,7 +150,7 @@ protected theorem isCompact [ProperSpace 𝕜] (a : A) : IsCompact (σ a) :=
 
 theorem spectralRadius_le_nnnorm [NormOneClass A] (a : A) : spectralRadius 𝕜 a ≤ ‖a‖₊ :=
   by
-  refine' supᵢ₂_le fun k hk => _
+  refine' iSup₂_le fun k hk => _
   exact_mod_cast norm_le_norm_of_mem hk
 #align spectrum.spectral_radius_le_nnnorm spectrum.spectralRadius_le_nnnorm
 
@@ -158,13 +158,13 @@ theorem exists_nnnorm_eq_spectralRadius_of_nonempty [ProperSpace 𝕜] {a : A} (
     ∃ k ∈ σ a, (‖k‖₊ : ℝ≥0∞) = spectralRadius 𝕜 a :=
   by
   obtain ⟨k, hk, h⟩ := (spectrum.isCompact a).exists_forall_ge ha continuous_nnnorm.continuous_on
-  exact ⟨k, hk, le_antisymm (le_supᵢ₂ k hk) (supᵢ₂_le <| by exact_mod_cast h)⟩
+  exact ⟨k, hk, le_antisymm (le_iSup₂ k hk) (iSup₂_le <| by exact_mod_cast h)⟩
 #align spectrum.exists_nnnorm_eq_spectral_radius_of_nonempty spectrum.exists_nnnorm_eq_spectralRadius_of_nonempty
 
 theorem spectralRadius_lt_of_forall_lt_of_nonempty [ProperSpace 𝕜] {a : A} (ha : (σ a).Nonempty)
     {r : ℝ≥0} (hr : ∀ k ∈ σ a, ‖k‖₊ < r) : spectralRadius 𝕜 a < r :=
-  supₛ_image.symm.trans_lt <|
-    ((spectrum.isCompact a).supₛ_lt_iff_of_continuous ha
+  sSup_image.symm.trans_lt <|
+    ((spectrum.isCompact a).sSup_lt_iff_of_continuous ha
           (ENNReal.continuous_coe.comp continuous_nnnorm).ContinuousOn (r : ℝ≥0∞)).mpr
       (by exact_mod_cast hr)
 #align spectrum.spectral_radius_lt_of_forall_lt_of_nonempty spectrum.spectralRadius_lt_of_forall_lt_of_nonempty
@@ -176,7 +176,7 @@ variable (𝕜)
 theorem spectralRadius_le_pow_nnnorm_pow_one_div (a : A) (n : ℕ) :
     spectralRadius 𝕜 a ≤ ‖a ^ (n + 1)‖₊ ^ (1 / (n + 1) : ℝ) * ‖(1 : A)‖₊ ^ (1 / (n + 1) : ℝ) :=
   by
-  refine' supᵢ₂_le fun k hk => _
+  refine' iSup₂_le fun k hk => _
   -- apply easy direction of the spectral mapping theorem for polynomials
   have pow_mem : k ^ (n + 1) ∈ σ (a ^ (n + 1)) := by
     simpa only [one_mul, Algebra.algebraMap_eq_smul_one, one_smul, aeval_monomial, one_mul,
@@ -201,13 +201,13 @@ theorem spectralRadius_le_liminf_pow_nnnorm_pow_one_div (a : A) :
   have hε' : ε⁻¹ ≠ ∞ := fun h' =>
     h (by simpa only [inv_inv, inv_top] using congr_arg (fun x : ℝ≥0∞ => x⁻¹) h')
   simp only [ENNReal.mul_le_iff_le_inv h (hε.trans_le le_top).Ne, mul_comm ε⁻¹,
-    liminf_eq_supr_infi_of_nat', ENNReal.supᵢ_mul, ENNReal.infᵢ_mul hε']
+    liminf_eq_supr_infi_of_nat', ENNReal.iSup_mul, ENNReal.iInf_mul hε']
   rw [← ENNReal.inv_lt_inv, inv_one] at hε
   obtain ⟨N, hN⟩ :=
     eventually_at_top.mp
       (ENNReal.eventually_pow_one_div_le (ENNReal.coe_ne_top : ↑‖(1 : A)‖₊ ≠ ∞) hε)
-  refine' le_trans _ (le_supᵢ _ (N + 1))
-  refine' le_infᵢ fun n => _
+  refine' le_trans _ (le_iSup _ (N + 1))
+  refine' le_iInf fun n => _
   simp only [← add_assoc]
   refine' (spectral_radius_le_pow_nnnorm_pow_one_div 𝕜 a (n + N)).trans _
   norm_cast

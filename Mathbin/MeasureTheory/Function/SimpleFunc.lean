@@ -198,7 +198,7 @@ theorem measurableSet_cut (r : α → β → Prop) (f : α →ₛ β) (h : ∀ b
     exact ⟨fun h => ⟨a, ⟨h, rfl⟩⟩, fun ⟨a', ⟨h', e⟩⟩ => e.symm ▸ h'⟩
   rw [this]
   exact
-    MeasurableSet.bunionᵢ f.finite_range.countable fun b _ =>
+    MeasurableSet.biUnion f.finite_range.countable fun b _ =>
       MeasurableSet.inter (h b) (f.measurable_set_fiber _)
 #align measure_theory.simple_func.measurable_set_cut MeasureTheory.SimpleFunc.measurableSet_cut
 
@@ -287,7 +287,7 @@ then `f.bind g` binds the first argument of `g` to `f`. In other words, `f.bind 
 def bind (f : α →ₛ β) (g : β → α →ₛ γ) : α →ₛ γ :=
   ⟨fun a => g (f a) a, fun c =>
     f.measurableSet_cut (fun a b => g b a = c) fun b => (g b).measurableSet_preimage {c},
-    (f.finite_range.bunionᵢ fun b _ => (g b).finite_range).Subset <| by
+    (f.finite_range.biUnion fun b _ => (g b).finite_range).Subset <| by
       rintro _ ⟨a, rfl⟩ <;> simp <;> exact ⟨a, a, rfl⟩⟩
 #align measure_theory.simple_func.bind MeasureTheory.SimpleFunc.bind
 
@@ -832,22 +832,22 @@ theorem approx_comp [TopologicalSpace β] [OrderClosedTopology β] [MeasurableSp
 
 end
 
-theorem supᵢ_approx_apply [TopologicalSpace β] [CompleteLattice β] [OrderClosedTopology β] [Zero β]
+theorem iSup_approx_apply [TopologicalSpace β] [CompleteLattice β] [OrderClosedTopology β] [Zero β]
     [MeasurableSpace β] [OpensMeasurableSpace β] (i : ℕ → β) (f : α → β) (a : α) (hf : Measurable f)
     (h_zero : (0 : β) = ⊥) : (⨆ n, (approx i f n : α →ₛ β) a) = ⨆ (k) (h : i k ≤ f a), i k :=
   by
-  refine' le_antisymm (supᵢ_le fun n => _) (supᵢ_le fun k => supᵢ_le fun hk => _)
+  refine' le_antisymm (iSup_le fun n => _) (iSup_le fun k => iSup_le fun hk => _)
   · rw [approx_apply a hf, h_zero]
     refine' Finset.sup_le fun k hk => _
     split_ifs
-    exact le_supᵢ_of_le k (le_supᵢ _ h)
+    exact le_iSup_of_le k (le_iSup _ h)
     exact bot_le
-  · refine' le_supᵢ_of_le (k + 1) _
+  · refine' le_iSup_of_le (k + 1) _
     rw [approx_apply a hf]
     have : k ∈ Finset.range (k + 1) := Finset.mem_range.2 (Nat.lt_succ_self _)
     refine' le_trans (le_of_eq _) (Finset.le_sup this)
     rw [if_pos hk]
-#align measure_theory.simple_func.supr_approx_apply MeasureTheory.SimpleFunc.supᵢ_approx_apply
+#align measure_theory.simple_func.supr_approx_apply MeasureTheory.SimpleFunc.iSup_approx_apply
 
 end Approx
 
@@ -888,22 +888,22 @@ theorem monotone_eapprox (f : α → ℝ≥0∞) : Monotone (eapprox f) :=
   monotone_approx _ f
 #align measure_theory.simple_func.monotone_eapprox MeasureTheory.SimpleFunc.monotone_eapprox
 
-theorem supᵢ_eapprox_apply (f : α → ℝ≥0∞) (hf : Measurable f) (a : α) :
+theorem iSup_eapprox_apply (f : α → ℝ≥0∞) (hf : Measurable f) (a : α) :
     (⨆ n, (eapprox f n : α →ₛ ℝ≥0∞) a) = f a :=
   by
   rw [eapprox, supr_approx_apply ennreal_rat_embed f a hf rfl]
-  refine' le_antisymm (supᵢ_le fun i => supᵢ_le fun hi => hi) (le_of_not_gt _)
+  refine' le_antisymm (iSup_le fun i => iSup_le fun hi => hi) (le_of_not_gt _)
   intro h
   rcases ENNReal.lt_iff_exists_rat_btwn.1 h with ⟨q, hq, lt_q, q_lt⟩
   have :
     (Real.toNNReal q : ℝ≥0∞) ≤ ⨆ (k : ℕ) (h : ennreal_rat_embed k ≤ f a), ennreal_rat_embed k :=
     by
-    refine' le_supᵢ_of_le (Encodable.encode q) _
+    refine' le_iSup_of_le (Encodable.encode q) _
     rw [ennreal_rat_embed_encode q]
-    refine' le_supᵢ_of_le (le_of_lt q_lt) _
+    refine' le_iSup_of_le (le_of_lt q_lt) _
     exact le_rfl
   exact lt_irrefl _ (lt_of_le_of_lt this lt_q)
-#align measure_theory.simple_func.supr_eapprox_apply MeasureTheory.SimpleFunc.supᵢ_eapprox_apply
+#align measure_theory.simple_func.supr_eapprox_apply MeasureTheory.SimpleFunc.iSup_eapprox_apply
 
 theorem eapprox_comp [MeasurableSpace γ] {f : γ → ℝ≥0∞} {g : α → γ} {n : ℕ} (hf : Measurable f)
     (hg : Measurable g) : (eapprox (f ∘ g) n : α → ℝ≥0∞) = (eapprox f n : γ →ₛ ℝ≥0∞) ∘ g :=
@@ -933,7 +933,7 @@ theorem sum_eapproxDiff (f : α → ℝ≥0∞) (n : ℕ) (a : α) :
 
 theorem tsum_eapproxDiff (f : α → ℝ≥0∞) (hf : Measurable f) (a : α) :
     (∑' n, (eapproxDiff f n a : ℝ≥0∞)) = f a := by
-  simp_rw [ENNReal.tsum_eq_supᵢ_nat' (tendsto_add_at_top_nat 1), sum_eapprox_diff,
+  simp_rw [ENNReal.tsum_eq_iSup_nat' (tendsto_add_at_top_nat 1), sum_eapprox_diff,
     supr_eapprox_apply f hf a]
 #align measure_theory.simple_func.tsum_eapprox_diff MeasureTheory.SimpleFunc.tsum_eapproxDiff
 
@@ -1171,7 +1171,7 @@ variable {m : MeasurableSpace α} [Zero β] [Zero γ] {μ : Measure α} {f : α 
 theorem measurableSet_support [MeasurableSpace α] (f : α →ₛ β) : MeasurableSet (support f) :=
   by
   rw [f.support_eq]
-  exact Finset.measurableSet_bunionᵢ _ fun y hy => measurable_set_fiber _ _
+  exact Finset.measurableSet_biUnion _ fun y hy => measurable_set_fiber _ _
 #align measure_theory.simple_func.measurable_set_support MeasureTheory.SimpleFunc.measurableSet_support
 
 /-- A `simple_func` has finite measure support if it is equal to `0` outside of a set of finite

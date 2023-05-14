@@ -93,13 +93,13 @@ variable (R) [IsDomain R] (K : Type v) [Field K] [Algebra R K] [IsFractionRing R
 
 /-- An integral domain is equal to the intersection of its localizations at all its maximal ideals
 viewed as subalgebras of its field of fractions. -/
-theorem infᵢ_localization_eq_bot :
+theorem iInf_localization_eq_bot :
     (⨅ v : MaximalSpectrum R,
         Localization.subalgebra.ofField K _ v.asIdeal.primeCompl_le_nonZeroDivisors) =
       ⊥ :=
   by
   ext x
-  rw [Algebra.mem_bot, Algebra.mem_infᵢ]
+  rw [Algebra.mem_bot, Algebra.mem_iInf]
   constructor
   · apply imp_of_not_imp_not
     intro hrange hlocal
@@ -124,7 +124,7 @@ theorem infᵢ_localization_eq_bot :
                 (h ▸ hd) max.zero_mem]⟩
   · rintro ⟨y, rfl⟩ ⟨v, hv⟩
     exact ⟨y, 1, v.ne_top_iff_one.mp hv.ne_top, by rw [map_one, inv_one, mul_one]⟩
-#align maximal_spectrum.infi_localization_eq_bot MaximalSpectrum.infᵢ_localization_eq_bot
+#align maximal_spectrum.infi_localization_eq_bot MaximalSpectrum.iInf_localization_eq_bot
 
 end MaximalSpectrum
 
@@ -134,20 +134,20 @@ variable (R) [IsDomain R] (K : Type v) [Field K] [Algebra R K] [IsFractionRing R
 
 /-- An integral domain is equal to the intersection of its localizations at all its prime ideals
 viewed as subalgebras of its field of fractions. -/
-theorem infᵢ_localization_eq_bot :
+theorem iInf_localization_eq_bot :
     (⨅ v : PrimeSpectrum R,
         Localization.subalgebra.ofField K _ <| v.asIdeal.primeCompl_le_nonZeroDivisors) =
       ⊥ :=
   by
   ext x
-  rw [Algebra.mem_infᵢ]
+  rw [Algebra.mem_iInf]
   constructor
-  · rw [← MaximalSpectrum.infᵢ_localization_eq_bot, Algebra.mem_infᵢ]
+  · rw [← MaximalSpectrum.iInf_localization_eq_bot, Algebra.mem_iInf]
     exact fun hx ⟨v, hv⟩ => hx ⟨v, hv.IsPrime⟩
   · rw [Algebra.mem_bot]
     rintro ⟨y, rfl⟩ ⟨v, hv⟩
     exact ⟨y, 1, v.ne_top_iff_one.mp hv.ne_top, by rw [map_one, inv_one, mul_one]⟩
-#align prime_spectrum.infi_localization_eq_bot PrimeSpectrum.infᵢ_localization_eq_bot
+#align prime_spectrum.infi_localization_eq_bot PrimeSpectrum.iInf_localization_eq_bot
 
 end PrimeSpectrum
 

@@ -230,36 +230,36 @@ section LatticeOps
 
 variable {ι : Sort _} {M X : Type _} [TopologicalSpace M] [SMul M X]
 
-/- warning: has_continuous_smul_Inf -> continuousSMul_infₛ is a dubious translation:
+/- warning: has_continuous_smul_Inf -> continuousSMul_sInf is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} M] [_inst_2 : SMul.{u1, u2} M X] {ts : Set.{u2} (TopologicalSpace.{u2} X)}, (forall (t : TopologicalSpace.{u2} X), (Membership.Mem.{u2, u2} (TopologicalSpace.{u2} X) (Set.{u2} (TopologicalSpace.{u2} X)) (Set.hasMem.{u2} (TopologicalSpace.{u2} X)) t ts) -> (ContinuousSMul.{u1, u2} M X _inst_2 _inst_1 t)) -> (ContinuousSMul.{u1, u2} M X _inst_2 _inst_1 (InfSet.infₛ.{u2} (TopologicalSpace.{u2} X) (ConditionallyCompleteLattice.toHasInf.{u2} (TopologicalSpace.{u2} X) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} X) (TopologicalSpace.completeLattice.{u2} X))) ts))
+  forall {M : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} M] [_inst_2 : SMul.{u1, u2} M X] {ts : Set.{u2} (TopologicalSpace.{u2} X)}, (forall (t : TopologicalSpace.{u2} X), (Membership.Mem.{u2, u2} (TopologicalSpace.{u2} X) (Set.{u2} (TopologicalSpace.{u2} X)) (Set.hasMem.{u2} (TopologicalSpace.{u2} X)) t ts) -> (ContinuousSMul.{u1, u2} M X _inst_2 _inst_1 t)) -> (ContinuousSMul.{u1, u2} M X _inst_2 _inst_1 (InfSet.sInf.{u2} (TopologicalSpace.{u2} X) (ConditionallyCompleteLattice.toHasInf.{u2} (TopologicalSpace.{u2} X) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} X) (TopologicalSpace.completeLattice.{u2} X))) ts))
 but is expected to have type
-  forall {M : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} M] [_inst_2 : SMul.{u1, u2} M X] {ts : Set.{u2} (TopologicalSpace.{u2} X)}, (forall (t : TopologicalSpace.{u2} X), (Membership.mem.{u2, u2} (TopologicalSpace.{u2} X) (Set.{u2} (TopologicalSpace.{u2} X)) (Set.instMembershipSet.{u2} (TopologicalSpace.{u2} X)) t ts) -> (ContinuousSMul.{u1, u2} M X _inst_2 _inst_1 t)) -> (ContinuousSMul.{u1, u2} M X _inst_2 _inst_1 (InfSet.infₛ.{u2} (TopologicalSpace.{u2} X) (ConditionallyCompleteLattice.toInfSet.{u2} (TopologicalSpace.{u2} X) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} X) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u2} X))) ts))
-Case conversion may be inaccurate. Consider using '#align has_continuous_smul_Inf continuousSMul_infₛₓ'. -/
+  forall {M : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} M] [_inst_2 : SMul.{u1, u2} M X] {ts : Set.{u2} (TopologicalSpace.{u2} X)}, (forall (t : TopologicalSpace.{u2} X), (Membership.mem.{u2, u2} (TopologicalSpace.{u2} X) (Set.{u2} (TopologicalSpace.{u2} X)) (Set.instMembershipSet.{u2} (TopologicalSpace.{u2} X)) t ts) -> (ContinuousSMul.{u1, u2} M X _inst_2 _inst_1 t)) -> (ContinuousSMul.{u1, u2} M X _inst_2 _inst_1 (InfSet.sInf.{u2} (TopologicalSpace.{u2} X) (ConditionallyCompleteLattice.toInfSet.{u2} (TopologicalSpace.{u2} X) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} X) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u2} X))) ts))
+Case conversion may be inaccurate. Consider using '#align has_continuous_smul_Inf continuousSMul_sInfₓ'. -/
 @[to_additive]
-theorem continuousSMul_infₛ {ts : Set (TopologicalSpace X)}
-    (h : ∀ t ∈ ts, @ContinuousSMul M X _ _ t) : @ContinuousSMul M X _ _ (infₛ ts) :=
+theorem continuousSMul_sInf {ts : Set (TopologicalSpace X)}
+    (h : ∀ t ∈ ts, @ContinuousSMul M X _ _ t) : @ContinuousSMul M X _ _ (sInf ts) :=
   {
     continuous_smul := by
-      rw [← @infₛ_singleton _ _ ‹TopologicalSpace M›]
+      rw [← @sInf_singleton _ _ ‹TopologicalSpace M›]
       exact
-        continuous_infₛ_rng.2 fun t ht =>
-          continuous_infₛ_dom₂ (Eq.refl _) ht (@ContinuousSMul.continuous_smul _ _ _ _ t (h t ht)) }
-#align has_continuous_smul_Inf continuousSMul_infₛ
-#align has_continuous_vadd_Inf continuousVAdd_infₛ
+        continuous_sInf_rng.2 fun t ht =>
+          continuous_sInf_dom₂ (Eq.refl _) ht (@ContinuousSMul.continuous_smul _ _ _ _ t (h t ht)) }
+#align has_continuous_smul_Inf continuousSMul_sInf
+#align has_continuous_vadd_Inf continuousVAdd_sInf
 
-/- warning: has_continuous_smul_infi -> continuousSMul_infᵢ is a dubious translation:
+/- warning: has_continuous_smul_infi -> continuousSMul_iInf is a dubious translation:
 lean 3 declaration is
-  forall {ι : Sort.{u1}} {M : Type.{u2}} {X : Type.{u3}} [_inst_1 : TopologicalSpace.{u2} M] [_inst_2 : SMul.{u2, u3} M X] {ts' : ι -> (TopologicalSpace.{u3} X)}, (forall (i : ι), ContinuousSMul.{u2, u3} M X _inst_2 _inst_1 (ts' i)) -> (ContinuousSMul.{u2, u3} M X _inst_2 _inst_1 (infᵢ.{u3, u1} (TopologicalSpace.{u3} X) (ConditionallyCompleteLattice.toHasInf.{u3} (TopologicalSpace.{u3} X) (CompleteLattice.toConditionallyCompleteLattice.{u3} (TopologicalSpace.{u3} X) (TopologicalSpace.completeLattice.{u3} X))) ι (fun (i : ι) => ts' i)))
+  forall {ι : Sort.{u1}} {M : Type.{u2}} {X : Type.{u3}} [_inst_1 : TopologicalSpace.{u2} M] [_inst_2 : SMul.{u2, u3} M X] {ts' : ι -> (TopologicalSpace.{u3} X)}, (forall (i : ι), ContinuousSMul.{u2, u3} M X _inst_2 _inst_1 (ts' i)) -> (ContinuousSMul.{u2, u3} M X _inst_2 _inst_1 (iInf.{u3, u1} (TopologicalSpace.{u3} X) (ConditionallyCompleteLattice.toHasInf.{u3} (TopologicalSpace.{u3} X) (CompleteLattice.toConditionallyCompleteLattice.{u3} (TopologicalSpace.{u3} X) (TopologicalSpace.completeLattice.{u3} X))) ι (fun (i : ι) => ts' i)))
 but is expected to have type
-  forall {ι : Sort.{u1}} {M : Type.{u2}} {X : Type.{u3}} [_inst_1 : TopologicalSpace.{u2} M] [_inst_2 : SMul.{u2, u3} M X] {ts' : ι -> (TopologicalSpace.{u3} X)}, (forall (i : ι), ContinuousSMul.{u2, u3} M X _inst_2 _inst_1 (ts' i)) -> (ContinuousSMul.{u2, u3} M X _inst_2 _inst_1 (infᵢ.{u3, u1} (TopologicalSpace.{u3} X) (ConditionallyCompleteLattice.toInfSet.{u3} (TopologicalSpace.{u3} X) (CompleteLattice.toConditionallyCompleteLattice.{u3} (TopologicalSpace.{u3} X) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u3} X))) ι (fun (i : ι) => ts' i)))
-Case conversion may be inaccurate. Consider using '#align has_continuous_smul_infi continuousSMul_infᵢₓ'. -/
+  forall {ι : Sort.{u1}} {M : Type.{u2}} {X : Type.{u3}} [_inst_1 : TopologicalSpace.{u2} M] [_inst_2 : SMul.{u2, u3} M X] {ts' : ι -> (TopologicalSpace.{u3} X)}, (forall (i : ι), ContinuousSMul.{u2, u3} M X _inst_2 _inst_1 (ts' i)) -> (ContinuousSMul.{u2, u3} M X _inst_2 _inst_1 (iInf.{u3, u1} (TopologicalSpace.{u3} X) (ConditionallyCompleteLattice.toInfSet.{u3} (TopologicalSpace.{u3} X) (CompleteLattice.toConditionallyCompleteLattice.{u3} (TopologicalSpace.{u3} X) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u3} X))) ι (fun (i : ι) => ts' i)))
+Case conversion may be inaccurate. Consider using '#align has_continuous_smul_infi continuousSMul_iInfₓ'. -/
 @[to_additive]
-theorem continuousSMul_infᵢ {ts' : ι → TopologicalSpace X}
+theorem continuousSMul_iInf {ts' : ι → TopologicalSpace X}
     (h : ∀ i, @ContinuousSMul M X _ _ (ts' i)) : @ContinuousSMul M X _ _ (⨅ i, ts' i) :=
-  continuousSMul_infₛ <| Set.forall_range_iff.mpr h
-#align has_continuous_smul_infi continuousSMul_infᵢ
-#align has_continuous_vadd_infi continuousVAdd_infᵢ
+  continuousSMul_sInf <| Set.forall_range_iff.mpr h
+#align has_continuous_smul_infi continuousSMul_iInf
+#align has_continuous_vadd_infi continuousVAdd_iInf
 
 /- warning: has_continuous_smul_inf -> continuousSMul_inf is a dubious translation:
 lean 3 declaration is
@@ -271,8 +271,8 @@ Case conversion may be inaccurate. Consider using '#align has_continuous_smul_in
 theorem continuousSMul_inf {t₁ t₂ : TopologicalSpace X} [@ContinuousSMul M X _ _ t₁]
     [@ContinuousSMul M X _ _ t₂] : @ContinuousSMul M X _ _ (t₁ ⊓ t₂) :=
   by
-  rw [inf_eq_infᵢ]
-  refine' continuousSMul_infᵢ fun b => _
+  rw [inf_eq_iInf]
+  refine' continuousSMul_iInf fun b => _
   cases b <;> assumption
 #align has_continuous_smul_inf continuousSMul_inf
 #align has_continuous_vadd_inf continuousVAdd_inf

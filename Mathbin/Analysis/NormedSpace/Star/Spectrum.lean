@@ -154,7 +154,7 @@ theorem nnnorm_apply_le (a : A) : ‖(φ a : B)‖₊ ≤ ‖a‖₊ :=
     simpa only [hs.spectral_radius_eq_nnnorm, (hs.star_hom_apply φ).spectralRadius_eq_nnnorm,
       coe_le_coe] using
       show spectralRadius ℂ (φ s) ≤ spectralRadius ℂ s from
-        supᵢ_le_supᵢ_of_subset (AlgHom.spectrum_apply_subset φ s)
+        iSup_le_iSup_of_subset (AlgHom.spectrum_apply_subset φ s)
 #align star_alg_hom.nnnorm_apply_le StarAlgHom.nnnorm_apply_le
 
 /-- A star algebra homomorphism of complex C⋆-algebras is norm contractive. -/

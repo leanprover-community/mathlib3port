@@ -70,7 +70,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align emetric.inf_edist_empty EMetric.infEdist_emptyₓ'. -/
 @[simp]
 theorem infEdist_empty : infEdist x ∅ = ∞ :=
-  infᵢ_emptyset
+  iInf_emptyset
 #align emetric.inf_edist_empty EMetric.infEdist_empty
 
 /- warning: emetric.le_inf_edist -> EMetric.le_infEdist is a dubious translation:
@@ -80,33 +80,33 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] {x : α} {s : Set.{u1} α} {d : ENNReal}, Iff (LE.le.{0} ENNReal (Preorder.toLE.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OmegaCompletePartialOrder.toPartialOrder.{0} ENNReal (CompleteLattice.instOmegaCompletePartialOrder.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) d (EMetric.infEdist.{u1} α _inst_1 x s)) (forall (y : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y s) -> (LE.le.{0} ENNReal (Preorder.toLE.{0} ENNReal (PartialOrder.toPreorder.{0} ENNReal (OmegaCompletePartialOrder.toPartialOrder.{0} ENNReal (CompleteLattice.instOmegaCompletePartialOrder.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal))))) d (EDist.edist.{u1} α (PseudoEMetricSpace.toEDist.{u1} α _inst_1) x y)))
 Case conversion may be inaccurate. Consider using '#align emetric.le_inf_edist EMetric.le_infEdistₓ'. -/
 theorem le_infEdist {d} : d ≤ infEdist x s ↔ ∀ y ∈ s, d ≤ edist x y := by
-  simp only [inf_edist, le_infᵢ_iff]
+  simp only [inf_edist, le_iInf_iff]
 #align emetric.le_inf_edist EMetric.le_infEdist
 
 #print EMetric.infEdist_union /-
 /-- The edist to a union is the minimum of the edists -/
 @[simp]
 theorem infEdist_union : infEdist x (s ∪ t) = infEdist x s ⊓ infEdist x t :=
-  infᵢ_union
+  iInf_union
 #align emetric.inf_edist_union EMetric.infEdist_union
 -/
 
-/- warning: emetric.inf_edist_Union -> EMetric.infEdist_unionᵢ is a dubious translation:
+/- warning: emetric.inf_edist_Union -> EMetric.infEdist_iUnion is a dubious translation:
 lean 3 declaration is
-  forall {ι : Sort.{u2}} {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] (f : ι -> (Set.{u1} α)) (x : α), Eq.{1} ENNReal (EMetric.infEdist.{u1} α _inst_1 x (Set.unionᵢ.{u1, u2} α ι (fun (i : ι) => f i))) (infᵢ.{0, u2} ENNReal (ConditionallyCompleteLattice.toHasInf.{0} ENNReal (CompleteLattice.toConditionallyCompleteLattice.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))) ι (fun (i : ι) => EMetric.infEdist.{u1} α _inst_1 x (f i)))
+  forall {ι : Sort.{u2}} {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] (f : ι -> (Set.{u1} α)) (x : α), Eq.{1} ENNReal (EMetric.infEdist.{u1} α _inst_1 x (Set.iUnion.{u1, u2} α ι (fun (i : ι) => f i))) (iInf.{0, u2} ENNReal (ConditionallyCompleteLattice.toHasInf.{0} ENNReal (CompleteLattice.toConditionallyCompleteLattice.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))) ι (fun (i : ι) => EMetric.infEdist.{u1} α _inst_1 x (f i)))
 but is expected to have type
-  forall {ι : Sort.{u1}} {α : Type.{u2}} [_inst_1 : PseudoEMetricSpace.{u2} α] (f : ι -> (Set.{u2} α)) (x : α), Eq.{1} ENNReal (EMetric.infEdist.{u2} α _inst_1 x (Set.unionᵢ.{u2, u1} α ι (fun (i : ι) => f i))) (infᵢ.{0, u1} ENNReal (ConditionallyCompleteLattice.toInfSet.{0} ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) ι (fun (i : ι) => EMetric.infEdist.{u2} α _inst_1 x (f i)))
-Case conversion may be inaccurate. Consider using '#align emetric.inf_edist_Union EMetric.infEdist_unionᵢₓ'. -/
+  forall {ι : Sort.{u1}} {α : Type.{u2}} [_inst_1 : PseudoEMetricSpace.{u2} α] (f : ι -> (Set.{u2} α)) (x : α), Eq.{1} ENNReal (EMetric.infEdist.{u2} α _inst_1 x (Set.iUnion.{u2, u1} α ι (fun (i : ι) => f i))) (iInf.{0, u1} ENNReal (ConditionallyCompleteLattice.toInfSet.{0} ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) ι (fun (i : ι) => EMetric.infEdist.{u2} α _inst_1 x (f i)))
+Case conversion may be inaccurate. Consider using '#align emetric.inf_edist_Union EMetric.infEdist_iUnionₓ'. -/
 @[simp]
-theorem infEdist_unionᵢ (f : ι → Set α) (x : α) : infEdist x (⋃ i, f i) = ⨅ i, infEdist x (f i) :=
-  infᵢ_unionᵢ f _
-#align emetric.inf_edist_Union EMetric.infEdist_unionᵢ
+theorem infEdist_iUnion (f : ι → Set α) (x : α) : infEdist x (⋃ i, f i) = ⨅ i, infEdist x (f i) :=
+  iInf_iUnion f _
+#align emetric.inf_edist_Union EMetric.infEdist_iUnion
 
 #print EMetric.infEdist_singleton /-
 /-- The edist to a singleton is the edistance to the single point of this singleton -/
 @[simp]
 theorem infEdist_singleton : infEdist x {y} = edist x y :=
-  infᵢ_singleton
+  iInf_singleton
 #align emetric.inf_edist_singleton EMetric.infEdist_singleton
 -/
 
@@ -118,7 +118,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align emetric.inf_edist_le_edist_of_mem EMetric.infEdist_le_edist_of_memₓ'. -/
 /-- The edist to a set is bounded above by the edist to any of its points -/
 theorem infEdist_le_edist_of_mem (h : y ∈ s) : infEdist x s ≤ edist x y :=
-  infᵢ₂_le _ h
+  iInf₂_le _ h
 #align emetric.inf_edist_le_edist_of_mem EMetric.infEdist_le_edist_of_mem
 
 /- warning: emetric.inf_edist_zero_of_mem -> EMetric.infEdist_zero_of_mem is a dubious translation:
@@ -140,7 +140,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align emetric.inf_edist_anti EMetric.infEdist_antiₓ'. -/
 /-- The edist is antitone with respect to inclusion. -/
 theorem infEdist_anti (h : s ⊆ t) : infEdist x t ≤ infEdist x s :=
-  infᵢ_le_infᵢ_of_subset h
+  iInf_le_iInf_of_subset h
 #align emetric.inf_edist_anti EMetric.infEdist_anti
 
 /- warning: emetric.inf_edist_lt_iff -> EMetric.infEdist_lt_iff is a dubious translation:
@@ -151,7 +151,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align emetric.inf_edist_lt_iff EMetric.infEdist_lt_iffₓ'. -/
 /-- The edist to a set is `< r` iff there exists a point in the set at edistance `< r` -/
 theorem infEdist_lt_iff {r : ℝ≥0∞} : infEdist x s < r ↔ ∃ y ∈ s, edist x y < r := by
-  simp_rw [inf_edist, infᵢ_lt_iff]
+  simp_rw [inf_edist, iInf_lt_iff]
 #align emetric.inf_edist_lt_iff EMetric.infEdist_lt_iff
 
 /- warning: emetric.inf_edist_le_inf_edist_add_edist -> EMetric.infEdist_le_infEdist_add_edist is a dubious translation:
@@ -165,8 +165,8 @@ the edist from `x` to `y` -/
 theorem infEdist_le_infEdist_add_edist : infEdist x s ≤ infEdist y s + edist x y :=
   calc
     (⨅ z ∈ s, edist x z) ≤ ⨅ z ∈ s, edist y z + edist x y :=
-      infᵢ₂_mono fun z hz => (edist_triangle _ _ _).trans_eq (add_comm _ _)
-    _ = (⨅ z ∈ s, edist y z) + edist x y := by simp only [ENNReal.infᵢ_add]
+      iInf₂_mono fun z hz => (edist_triangle _ _ _).trans_eq (add_comm _ _)
+    _ = (⨅ z ∈ s, edist y z) + edist x y := by simp only [ENNReal.iInf_add]
     
 #align emetric.inf_edist_le_inf_edist_add_edist EMetric.infEdist_le_infEdist_add_edist
 
@@ -190,8 +190,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align emetric.edist_le_inf_edist_add_ediam EMetric.edist_le_infEdist_add_ediamₓ'. -/
 theorem edist_le_infEdist_add_ediam (hy : y ∈ s) : edist x y ≤ infEdist x s + diam s :=
   by
-  simp_rw [inf_edist, ENNReal.infᵢ_add]
-  refine' le_infᵢ fun i => le_infᵢ fun hi => _
+  simp_rw [inf_edist, ENNReal.iInf_add]
+  refine' le_iInf fun i => le_iInf fun hi => _
   calc
     edist x y ≤ edist x i + edist i y := edist_triangle _ _ _
     _ ≤ edist x i + diam s := add_le_add le_rfl (edist_le_diam_of_mem hi hy)
@@ -318,17 +318,17 @@ theorem disjoint_closedBall_of_lt_infEdist {r : ℝ≥0∞} (h : r < infEdist x 
 #print EMetric.infEdist_image /-
 /-- The infimum edistance is invariant under isometries -/
 theorem infEdist_image (hΦ : Isometry Φ) : infEdist (Φ x) (Φ '' t) = infEdist x t := by
-  simp only [inf_edist, infᵢ_image, hΦ.edist_eq]
+  simp only [inf_edist, iInf_image, hΦ.edist_eq]
 #align emetric.inf_edist_image EMetric.infEdist_image
 -/
 
-/- warning: is_open.exists_Union_is_closed -> IsOpen.exists_unionᵢ_isClosed is a dubious translation:
+/- warning: is_open.exists_Union_is_closed -> IsOpen.exists_iUnion_isClosed is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] {U : Set.{u1} α}, (IsOpen.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoEMetricSpace.toUniformSpace.{u1} α _inst_1)) U) -> (Exists.{succ u1} (Nat -> (Set.{u1} α)) (fun (F : Nat -> (Set.{u1} α)) => And (forall (n : Nat), IsClosed.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoEMetricSpace.toUniformSpace.{u1} α _inst_1)) (F n)) (And (forall (n : Nat), HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (F n) U) (And (Eq.{succ u1} (Set.{u1} α) (Set.unionᵢ.{u1, 1} α Nat (fun (n : Nat) => F n)) U) (Monotone.{0, u1} Nat (Set.{u1} α) (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α))))))) F)))))
+  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] {U : Set.{u1} α}, (IsOpen.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoEMetricSpace.toUniformSpace.{u1} α _inst_1)) U) -> (Exists.{succ u1} (Nat -> (Set.{u1} α)) (fun (F : Nat -> (Set.{u1} α)) => And (forall (n : Nat), IsClosed.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoEMetricSpace.toUniformSpace.{u1} α _inst_1)) (F n)) (And (forall (n : Nat), HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (F n) U) (And (Eq.{succ u1} (Set.{u1} α) (Set.iUnion.{u1, 1} α Nat (fun (n : Nat) => F n)) U) (Monotone.{0, u1} Nat (Set.{u1} α) (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α))))))) F)))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] {U : Set.{u1} α}, (IsOpen.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoEMetricSpace.toUniformSpace.{u1} α _inst_1)) U) -> (Exists.{succ u1} (Nat -> (Set.{u1} α)) (fun (F : Nat -> (Set.{u1} α)) => And (forall (n : Nat), IsClosed.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoEMetricSpace.toUniformSpace.{u1} α _inst_1)) (F n)) (And (forall (n : Nat), HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (F n) U) (And (Eq.{succ u1} (Set.{u1} α) (Set.unionᵢ.{u1, 1} α Nat (fun (n : Nat) => F n)) U) (Monotone.{0, u1} Nat (Set.{u1} α) (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (OmegaCompletePartialOrder.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.instOmegaCompletePartialOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α))))))) F)))))
-Case conversion may be inaccurate. Consider using '#align is_open.exists_Union_is_closed IsOpen.exists_unionᵢ_isClosedₓ'. -/
-theorem IsOpen.exists_unionᵢ_isClosed {U : Set α} (hU : IsOpen U) :
+  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] {U : Set.{u1} α}, (IsOpen.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoEMetricSpace.toUniformSpace.{u1} α _inst_1)) U) -> (Exists.{succ u1} (Nat -> (Set.{u1} α)) (fun (F : Nat -> (Set.{u1} α)) => And (forall (n : Nat), IsClosed.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoEMetricSpace.toUniformSpace.{u1} α _inst_1)) (F n)) (And (forall (n : Nat), HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (F n) U) (And (Eq.{succ u1} (Set.{u1} α) (Set.iUnion.{u1, 1} α Nat (fun (n : Nat) => F n)) U) (Monotone.{0, u1} Nat (Set.{u1} α) (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (OmegaCompletePartialOrder.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.instOmegaCompletePartialOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α))))))) F)))))
+Case conversion may be inaccurate. Consider using '#align is_open.exists_Union_is_closed IsOpen.exists_iUnion_isClosedₓ'. -/
+theorem IsOpen.exists_iUnion_isClosed {U : Set α} (hU : IsOpen U) :
     ∃ F : ℕ → Set α, (∀ n, IsClosed (F n)) ∧ (∀ n, F n ⊆ U) ∧ (⋃ n, F n) = U ∧ Monotone F :=
   by
   obtain ⟨a, a_pos, a_lt_one⟩ : ∃ a : ℝ≥0∞, 0 < a ∧ a < 1 := exists_between zero_lt_one
@@ -353,7 +353,7 @@ theorem IsOpen.exists_unionᵢ_isClosed {U : Set α} (hU : IsOpen U) :
     rcases((tendsto_order.1 this).2 _ B).exists with ⟨n, hn⟩
     simp only [mem_Union, mem_Ici, mem_preimage]
     exact ⟨n, hn.le⟩
-#align is_open.exists_Union_is_closed IsOpen.exists_unionᵢ_isClosed
+#align is_open.exists_Union_is_closed IsOpen.exists_iUnion_isClosed
 
 /- warning: is_compact.exists_inf_edist_eq_edist -> IsCompact.exists_infEdist_eq_edist is a dubious translation:
 lean 3 declaration is
@@ -406,9 +406,9 @@ irreducible_def hausdorffEdist {α : Type u} [PseudoEMetricSpace α] (s t : Set 
 
 /- warning: emetric.Hausdorff_edist_def -> EMetric.hausdorffEdist_def is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α), Eq.{1} ENNReal (EMetric.hausdorffEdist.{u1} α _inst_1 s t) (Sup.sup.{0} ENNReal (SemilatticeSup.toHasSup.{0} ENNReal ENNReal.semilatticeSup) (supᵢ.{0, succ u1} ENNReal (ConditionallyCompleteLattice.toHasSup.{0} ENNReal (CompleteLattice.toConditionallyCompleteLattice.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))) α (fun (x : α) => supᵢ.{0, 0} ENNReal (ConditionallyCompleteLattice.toHasSup.{0} ENNReal (CompleteLattice.toConditionallyCompleteLattice.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))) (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) => EMetric.infEdist.{u1} α _inst_1 x t))) (supᵢ.{0, succ u1} ENNReal (ConditionallyCompleteLattice.toHasSup.{0} ENNReal (CompleteLattice.toConditionallyCompleteLattice.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))) α (fun (y : α) => supᵢ.{0, 0} ENNReal (ConditionallyCompleteLattice.toHasSup.{0} ENNReal (CompleteLattice.toConditionallyCompleteLattice.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))) (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t) => EMetric.infEdist.{u1} α _inst_1 y s))))
+  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α), Eq.{1} ENNReal (EMetric.hausdorffEdist.{u1} α _inst_1 s t) (Sup.sup.{0} ENNReal (SemilatticeSup.toHasSup.{0} ENNReal ENNReal.semilatticeSup) (iSup.{0, succ u1} ENNReal (ConditionallyCompleteLattice.toHasSup.{0} ENNReal (CompleteLattice.toConditionallyCompleteLattice.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))) α (fun (x : α) => iSup.{0, 0} ENNReal (ConditionallyCompleteLattice.toHasSup.{0} ENNReal (CompleteLattice.toConditionallyCompleteLattice.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))) (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) => EMetric.infEdist.{u1} α _inst_1 x t))) (iSup.{0, succ u1} ENNReal (ConditionallyCompleteLattice.toHasSup.{0} ENNReal (CompleteLattice.toConditionallyCompleteLattice.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))) α (fun (y : α) => iSup.{0, 0} ENNReal (ConditionallyCompleteLattice.toHasSup.{0} ENNReal (CompleteLattice.toConditionallyCompleteLattice.{0} ENNReal (CompleteLinearOrder.toCompleteLattice.{0} ENNReal ENNReal.completeLinearOrder))) (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t) => EMetric.infEdist.{u1} α _inst_1 y s))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α), Eq.{1} ENNReal (EMetric.hausdorffEdist.{u1} α _inst_1 s t) (Sup.sup.{0} ENNReal (SemilatticeSup.toSup.{0} ENNReal instENNRealSemilatticeSup) (supᵢ.{0, succ u1} ENNReal (ConditionallyCompleteLattice.toSupSet.{0} ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) α (fun (x : α) => supᵢ.{0, 0} ENNReal (ConditionallyCompleteLattice.toSupSet.{0} ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) => EMetric.infEdist.{u1} α _inst_1 x t))) (supᵢ.{0, succ u1} ENNReal (ConditionallyCompleteLattice.toSupSet.{0} ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) α (fun (y : α) => supᵢ.{0, 0} ENNReal (ConditionallyCompleteLattice.toSupSet.{0} ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) => EMetric.infEdist.{u1} α _inst_1 y s))))
+  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α), Eq.{1} ENNReal (EMetric.hausdorffEdist.{u1} α _inst_1 s t) (Sup.sup.{0} ENNReal (SemilatticeSup.toSup.{0} ENNReal instENNRealSemilatticeSup) (iSup.{0, succ u1} ENNReal (ConditionallyCompleteLattice.toSupSet.{0} ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) α (fun (x : α) => iSup.{0, 0} ENNReal (ConditionallyCompleteLattice.toSupSet.{0} ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) => EMetric.infEdist.{u1} α _inst_1 x t))) (iSup.{0, succ u1} ENNReal (ConditionallyCompleteLattice.toSupSet.{0} ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) α (fun (y : α) => iSup.{0, 0} ENNReal (ConditionallyCompleteLattice.toSupSet.{0} ENNReal (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{0} ENNReal (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{0} ENNReal (CompleteLinearOrder.toConditionallyCompleteLinearOrderBot.{0} ENNReal ENNReal.instCompleteLinearOrderENNReal)))) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) => EMetric.infEdist.{u1} α _inst_1 y s))))
 Case conversion may be inaccurate. Consider using '#align emetric.Hausdorff_edist_def EMetric.hausdorffEdist_defₓ'. -/
 theorem hausdorffEdist_def {α : Type u} [PseudoEMetricSpace α] (s t : Set α) :
     hausdorffEdist s t = (⨆ x ∈ s, infEdist x t) ⊔ ⨆ y ∈ t, infEdist y s := by rw [Hausdorff_edist]
@@ -428,7 +428,7 @@ Case conversion may be inaccurate. Consider using '#align emetric.Hausdorff_edis
 @[simp]
 theorem hausdorffEdist_self : hausdorffEdist s s = 0 :=
   by
-  simp only [Hausdorff_edist_def, sup_idem, ENNReal.supᵢ_eq_zero]
+  simp only [Hausdorff_edist_def, sup_idem, ENNReal.iSup_eq_zero]
   exact fun x hx => inf_edist_zero_of_mem hx
 #align emetric.Hausdorff_edist_self EMetric.hausdorffEdist_self
 
@@ -450,7 +450,7 @@ in each set to the other set -/
 theorem hausdorffEdist_le_of_infEdist {r : ℝ≥0∞} (H1 : ∀ x ∈ s, infEdist x t ≤ r)
     (H2 : ∀ x ∈ t, infEdist x s ≤ r) : hausdorffEdist s t ≤ r :=
   by
-  simp only [Hausdorff_edist, sup_le_iff, supᵢ_le_iff]
+  simp only [Hausdorff_edist, sup_le_iff, iSup_le_iff]
   exact ⟨H1, H2⟩
 #align emetric.Hausdorff_edist_le_of_inf_edist EMetric.hausdorffEdist_le_of_infEdist
 
@@ -485,7 +485,7 @@ theorem infEdist_le_hausdorffEdist_of_mem (h : x ∈ s) : infEdist x t ≤ hausd
   by
   rw [Hausdorff_edist_def]
   refine' le_trans _ le_sup_left
-  exact le_supᵢ₂ x h
+  exact le_iSup₂ x h
 #align emetric.inf_edist_le_Hausdorff_edist_of_mem EMetric.infEdist_le_hausdorffEdist_of_mem
 
 /- warning: emetric.exists_edist_lt_of_Hausdorff_edist_lt -> EMetric.exists_edist_lt_of_hausdorffEdist_lt is a dubious translation:
@@ -539,7 +539,7 @@ theorem infEdist_le_infEdist_add_hausdorffEdist :
 /-- The Hausdorff edistance is invariant under eisometries -/
 theorem hausdorffEdist_image (h : Isometry Φ) :
     hausdorffEdist (Φ '' s) (Φ '' t) = hausdorffEdist s t := by
-  simp only [Hausdorff_edist_def, supᵢ_image, inf_edist_image h]
+  simp only [Hausdorff_edist_def, iSup_image, inf_edist_image h]
 #align emetric.Hausdorff_edist_image EMetric.hausdorffEdist_image
 -/
 
@@ -572,7 +572,7 @@ Case conversion may be inaccurate. Consider using '#align emetric.Hausdorff_edis
 theorem hausdorffEdist_triangle : hausdorffEdist s u ≤ hausdorffEdist s t + hausdorffEdist t u :=
   by
   rw [Hausdorff_edist_def]
-  simp only [sup_le_iff, supᵢ_le_iff]
+  simp only [sup_le_iff, iSup_le_iff]
   constructor
   show ∀ x ∈ s, inf_edist x u ≤ Hausdorff_edist s t + Hausdorff_edist t u;
   exact fun x xs =>
@@ -604,7 +604,7 @@ theorem hausdorffEdist_zero_iff_closure_eq_closure :
     hausdorffEdist s t = 0 ↔ closure s = closure t :=
   calc
     hausdorffEdist s t = 0 ↔ s ⊆ closure t ∧ t ⊆ closure s := by
-      simp only [Hausdorff_edist_def, ENNReal.sup_eq_zero, ENNReal.supᵢ_eq_zero, ←
+      simp only [Hausdorff_edist_def, ENNReal.sup_eq_zero, ENNReal.iSup_eq_zero, ←
         mem_closure_iff_inf_edist_zero, subset_def]
     _ ↔ closure s = closure t :=
       ⟨fun h =>
@@ -747,19 +747,19 @@ def infDist (x : α) (s : Set α) : ℝ :=
 #align metric.inf_dist Metric.infDist
 -/
 
-/- warning: metric.inf_dist_eq_infi -> Metric.infDist_eq_infᵢ is a dubious translation:
+/- warning: metric.inf_dist_eq_infi -> Metric.infDist_eq_iInf is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} {x : α}, Eq.{1} Real (Metric.infDist.{u1} α _inst_1 x s) (infᵢ.{0, succ u1} Real Real.hasInf (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) (fun (y : coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) => Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s))))) y)))
+  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} {x : α}, Eq.{1} Real (Metric.infDist.{u1} α _inst_1 x s) (iInf.{0, succ u1} Real Real.hasInf (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) (fun (y : coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) => Dist.dist.{u1} α (PseudoMetricSpace.toHasDist.{u1} α _inst_1) x ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s))))) y)))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} {x : α}, Eq.{1} Real (Metric.infDist.{u1} α _inst_1 x s) (infᵢ.{0, succ u1} Real Real.instInfSetReal (Set.Elem.{u1} α s) (fun (y : Set.Elem.{u1} α s) => Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x (Subtype.val.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) y)))
-Case conversion may be inaccurate. Consider using '#align metric.inf_dist_eq_infi Metric.infDist_eq_infᵢₓ'. -/
-theorem infDist_eq_infᵢ : infDist x s = ⨅ y : s, dist x y :=
+  forall {α : Type.{u1}} [_inst_1 : PseudoMetricSpace.{u1} α] {s : Set.{u1} α} {x : α}, Eq.{1} Real (Metric.infDist.{u1} α _inst_1 x s) (iInf.{0, succ u1} Real Real.instInfSetReal (Set.Elem.{u1} α s) (fun (y : Set.Elem.{u1} α s) => Dist.dist.{u1} α (PseudoMetricSpace.toDist.{u1} α _inst_1) x (Subtype.val.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) y)))
+Case conversion may be inaccurate. Consider using '#align metric.inf_dist_eq_infi Metric.infDist_eq_iInfₓ'. -/
+theorem infDist_eq_iInf : infDist x s = ⨅ y : s, dist x y :=
   by
-  rw [inf_dist, inf_edist, infᵢ_subtype', ENNReal.toReal_infᵢ]
+  rw [inf_dist, inf_edist, iInf_subtype', ENNReal.toReal_iInf]
   · simp only [dist_edist]
     rfl
   · exact fun _ => edist_ne_top _ _
-#align metric.inf_dist_eq_infi Metric.infDist_eq_infᵢ
+#align metric.inf_dist_eq_infi Metric.infDist_eq_iInf
 
 /- warning: metric.inf_dist_nonneg -> Metric.infDist_nonneg is a dubious translation:
 lean 3 declaration is
@@ -1668,15 +1668,15 @@ theorem ball_subset_thickening {x : X} {E : Set X} (hx : x ∈ E) (δ : ℝ) :
 #align metric.ball_subset_thickening Metric.ball_subset_thickening
 -/
 
-#print Metric.thickening_eq_bunionᵢ_ball /-
+#print Metric.thickening_eq_biUnion_ball /-
 /-- The (open) `δ`-thickening `thickening δ E` of a subset `E` in a metric space equals the
 union of balls of radius `δ` centered at points of `E`. -/
-theorem thickening_eq_bunionᵢ_ball {δ : ℝ} {E : Set X} : thickening δ E = ⋃ x ∈ E, ball x δ :=
+theorem thickening_eq_biUnion_ball {δ : ℝ} {E : Set X} : thickening δ E = ⋃ x ∈ E, ball x δ :=
   by
   ext x
   rw [mem_Union₂]
   exact mem_thickening_iff
-#align metric.thickening_eq_bUnion_ball Metric.thickening_eq_bunionᵢ_ball
+#align metric.thickening_eq_bUnion_ball Metric.thickening_eq_biUnion_ball
 -/
 
 #print Metric.Bounded.thickening /-
@@ -2003,17 +2003,17 @@ theorem cthickening_union (δ : ℝ) (s t : Set α) :
 #align metric.cthickening_union Metric.cthickening_union
 -/
 
-/- warning: metric.thickening_Union -> Metric.thickening_unionᵢ is a dubious translation:
+/- warning: metric.thickening_Union -> Metric.thickening_iUnion is a dubious translation:
 lean 3 declaration is
-  forall {ι : Sort.{u2}} {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] (δ : Real) (f : ι -> (Set.{u1} α)), Eq.{succ u1} (Set.{u1} α) (Metric.thickening.{u1} α _inst_1 δ (Set.unionᵢ.{u1, u2} α ι (fun (i : ι) => f i))) (Set.unionᵢ.{u1, u2} α ι (fun (i : ι) => Metric.thickening.{u1} α _inst_1 δ (f i)))
+  forall {ι : Sort.{u2}} {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] (δ : Real) (f : ι -> (Set.{u1} α)), Eq.{succ u1} (Set.{u1} α) (Metric.thickening.{u1} α _inst_1 δ (Set.iUnion.{u1, u2} α ι (fun (i : ι) => f i))) (Set.iUnion.{u1, u2} α ι (fun (i : ι) => Metric.thickening.{u1} α _inst_1 δ (f i)))
 but is expected to have type
-  forall {ι : Sort.{u1}} {α : Type.{u2}} [_inst_1 : PseudoEMetricSpace.{u2} α] (δ : Real) (f : ι -> (Set.{u2} α)), Eq.{succ u2} (Set.{u2} α) (Metric.thickening.{u2} α _inst_1 δ (Set.unionᵢ.{u2, u1} α ι (fun (i : ι) => f i))) (Set.unionᵢ.{u2, u1} α ι (fun (i : ι) => Metric.thickening.{u2} α _inst_1 δ (f i)))
-Case conversion may be inaccurate. Consider using '#align metric.thickening_Union Metric.thickening_unionᵢₓ'. -/
+  forall {ι : Sort.{u1}} {α : Type.{u2}} [_inst_1 : PseudoEMetricSpace.{u2} α] (δ : Real) (f : ι -> (Set.{u2} α)), Eq.{succ u2} (Set.{u2} α) (Metric.thickening.{u2} α _inst_1 δ (Set.iUnion.{u2, u1} α ι (fun (i : ι) => f i))) (Set.iUnion.{u2, u1} α ι (fun (i : ι) => Metric.thickening.{u2} α _inst_1 δ (f i)))
+Case conversion may be inaccurate. Consider using '#align metric.thickening_Union Metric.thickening_iUnionₓ'. -/
 @[simp]
-theorem thickening_unionᵢ (δ : ℝ) (f : ι → Set α) :
+theorem thickening_iUnion (δ : ℝ) (f : ι → Set α) :
     thickening δ (⋃ i, f i) = ⋃ i, thickening δ (f i) := by
-  simp_rw [thickening, inf_edist_Union, infᵢ_lt_iff, set_of_exists]
-#align metric.thickening_Union Metric.thickening_unionᵢ
+  simp_rw [thickening, inf_edist_Union, iInf_lt_iff, set_of_exists]
+#align metric.thickening_Union Metric.thickening_iUnion
 
 /- warning: metric.ediam_cthickening_le -> Metric.ediam_cthickening_le is a dubious translation:
 lean 3 declaration is
@@ -2198,13 +2198,13 @@ theorem hasBasis_nhdsSet_cthickening {K : Set α} (hK : IsCompact K) :
     fun _ => cthickening_mem_nhdsSet K
 #align metric.has_basis_nhds_set_cthickening Metric.hasBasis_nhdsSet_cthickening
 
-/- warning: metric.cthickening_eq_Inter_cthickening' -> Metric.cthickening_eq_interᵢ_cthickening' is a dubious translation:
+/- warning: metric.cthickening_eq_Inter_cthickening' -> Metric.cthickening_eq_iInter_cthickening' is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] {δ : Real} (s : Set.{0} Real), (HasSubset.Subset.{0} (Set.{0} Real) (Set.hasSubset.{0} Real) s (Set.Ioi.{0} Real Real.preorder δ)) -> (forall (ε : Real), (LT.lt.{0} Real Real.hasLt δ ε) -> (Set.Nonempty.{0} Real (Inter.inter.{0} (Set.{0} Real) (Set.hasInter.{0} Real) s (Set.Ioc.{0} Real Real.preorder δ ε)))) -> (forall (E : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Metric.cthickening.{u1} α _inst_1 δ E) (Set.interᵢ.{u1, 1} α Real (fun (ε : Real) => Set.interᵢ.{u1, 0} α (Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) ε s) (fun (H : Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) ε s) => Metric.cthickening.{u1} α _inst_1 ε E))))
+  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] {δ : Real} (s : Set.{0} Real), (HasSubset.Subset.{0} (Set.{0} Real) (Set.hasSubset.{0} Real) s (Set.Ioi.{0} Real Real.preorder δ)) -> (forall (ε : Real), (LT.lt.{0} Real Real.hasLt δ ε) -> (Set.Nonempty.{0} Real (Inter.inter.{0} (Set.{0} Real) (Set.hasInter.{0} Real) s (Set.Ioc.{0} Real Real.preorder δ ε)))) -> (forall (E : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Metric.cthickening.{u1} α _inst_1 δ E) (Set.iInter.{u1, 1} α Real (fun (ε : Real) => Set.iInter.{u1, 0} α (Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) ε s) (fun (H : Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) ε s) => Metric.cthickening.{u1} α _inst_1 ε E))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] {δ : Real} (s : Set.{0} Real), (HasSubset.Subset.{0} (Set.{0} Real) (Set.instHasSubsetSet.{0} Real) s (Set.Ioi.{0} Real Real.instPreorderReal δ)) -> (forall (ε : Real), (LT.lt.{0} Real Real.instLTReal δ ε) -> (Set.Nonempty.{0} Real (Inter.inter.{0} (Set.{0} Real) (Set.instInterSet.{0} Real) s (Set.Ioc.{0} Real Real.instPreorderReal δ ε)))) -> (forall (E : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Metric.cthickening.{u1} α _inst_1 δ E) (Set.interᵢ.{u1, 1} α Real (fun (ε : Real) => Set.interᵢ.{u1, 0} α (Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) ε s) (fun (H : Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) ε s) => Metric.cthickening.{u1} α _inst_1 ε E))))
-Case conversion may be inaccurate. Consider using '#align metric.cthickening_eq_Inter_cthickening' Metric.cthickening_eq_interᵢ_cthickening'ₓ'. -/
-theorem cthickening_eq_interᵢ_cthickening' {δ : ℝ} (s : Set ℝ) (hsδ : s ⊆ Ioi δ)
+  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] {δ : Real} (s : Set.{0} Real), (HasSubset.Subset.{0} (Set.{0} Real) (Set.instHasSubsetSet.{0} Real) s (Set.Ioi.{0} Real Real.instPreorderReal δ)) -> (forall (ε : Real), (LT.lt.{0} Real Real.instLTReal δ ε) -> (Set.Nonempty.{0} Real (Inter.inter.{0} (Set.{0} Real) (Set.instInterSet.{0} Real) s (Set.Ioc.{0} Real Real.instPreorderReal δ ε)))) -> (forall (E : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Metric.cthickening.{u1} α _inst_1 δ E) (Set.iInter.{u1, 1} α Real (fun (ε : Real) => Set.iInter.{u1, 0} α (Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) ε s) (fun (H : Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) ε s) => Metric.cthickening.{u1} α _inst_1 ε E))))
+Case conversion may be inaccurate. Consider using '#align metric.cthickening_eq_Inter_cthickening' Metric.cthickening_eq_iInter_cthickening'ₓ'. -/
+theorem cthickening_eq_iInter_cthickening' {δ : ℝ} (s : Set ℝ) (hsδ : s ⊆ Ioi δ)
     (hs : ∀ ε, δ < ε → (s ∩ Ioc δ ε).Nonempty) (E : Set α) :
     cthickening δ E = ⋂ ε ∈ s, cthickening ε E :=
   by
@@ -2219,29 +2219,29 @@ theorem cthickening_eq_interᵢ_cthickening' {δ : ℝ} (s : Set ℝ) (hsδ : s 
     apply ((hx ε hsε).trans (ENNReal.ofReal_le_ofReal hε.2)).trans
     rw [ENNReal.coe_nnreal_eq η]
     exact ENNReal.ofReal_add_le
-#align metric.cthickening_eq_Inter_cthickening' Metric.cthickening_eq_interᵢ_cthickening'
+#align metric.cthickening_eq_Inter_cthickening' Metric.cthickening_eq_iInter_cthickening'
 
-/- warning: metric.cthickening_eq_Inter_cthickening -> Metric.cthickening_eq_interᵢ_cthickening is a dubious translation:
+/- warning: metric.cthickening_eq_Inter_cthickening -> Metric.cthickening_eq_iInter_cthickening is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] {δ : Real} (E : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Metric.cthickening.{u1} α _inst_1 δ E) (Set.interᵢ.{u1, 1} α Real (fun (ε : Real) => Set.interᵢ.{u1, 0} α (LT.lt.{0} Real Real.hasLt δ ε) (fun (h : LT.lt.{0} Real Real.hasLt δ ε) => Metric.cthickening.{u1} α _inst_1 ε E)))
+  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] {δ : Real} (E : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Metric.cthickening.{u1} α _inst_1 δ E) (Set.iInter.{u1, 1} α Real (fun (ε : Real) => Set.iInter.{u1, 0} α (LT.lt.{0} Real Real.hasLt δ ε) (fun (h : LT.lt.{0} Real Real.hasLt δ ε) => Metric.cthickening.{u1} α _inst_1 ε E)))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] {δ : Real} (E : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Metric.cthickening.{u1} α _inst_1 δ E) (Set.interᵢ.{u1, 1} α Real (fun (ε : Real) => Set.interᵢ.{u1, 0} α (LT.lt.{0} Real Real.instLTReal δ ε) (fun (h : LT.lt.{0} Real Real.instLTReal δ ε) => Metric.cthickening.{u1} α _inst_1 ε E)))
-Case conversion may be inaccurate. Consider using '#align metric.cthickening_eq_Inter_cthickening Metric.cthickening_eq_interᵢ_cthickeningₓ'. -/
-theorem cthickening_eq_interᵢ_cthickening {δ : ℝ} (E : Set α) :
+  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] {δ : Real} (E : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Metric.cthickening.{u1} α _inst_1 δ E) (Set.iInter.{u1, 1} α Real (fun (ε : Real) => Set.iInter.{u1, 0} α (LT.lt.{0} Real Real.instLTReal δ ε) (fun (h : LT.lt.{0} Real Real.instLTReal δ ε) => Metric.cthickening.{u1} α _inst_1 ε E)))
+Case conversion may be inaccurate. Consider using '#align metric.cthickening_eq_Inter_cthickening Metric.cthickening_eq_iInter_cthickeningₓ'. -/
+theorem cthickening_eq_iInter_cthickening {δ : ℝ} (E : Set α) :
     cthickening δ E = ⋂ (ε : ℝ) (h : δ < ε), cthickening ε E :=
   by
   apply cthickening_eq_Inter_cthickening' (Ioi δ) rfl.subset
   simp_rw [inter_eq_right_iff_subset.mpr Ioc_subset_Ioi_self]
   exact fun _ hε => nonempty_Ioc.mpr hε
-#align metric.cthickening_eq_Inter_cthickening Metric.cthickening_eq_interᵢ_cthickening
+#align metric.cthickening_eq_Inter_cthickening Metric.cthickening_eq_iInter_cthickening
 
-/- warning: metric.cthickening_eq_Inter_thickening' -> Metric.cthickening_eq_interᵢ_thickening' is a dubious translation:
+/- warning: metric.cthickening_eq_Inter_thickening' -> Metric.cthickening_eq_iInter_thickening' is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] {δ : Real}, (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) δ) -> (forall (s : Set.{0} Real), (HasSubset.Subset.{0} (Set.{0} Real) (Set.hasSubset.{0} Real) s (Set.Ioi.{0} Real Real.preorder δ)) -> (forall (ε : Real), (LT.lt.{0} Real Real.hasLt δ ε) -> (Set.Nonempty.{0} Real (Inter.inter.{0} (Set.{0} Real) (Set.hasInter.{0} Real) s (Set.Ioc.{0} Real Real.preorder δ ε)))) -> (forall (E : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Metric.cthickening.{u1} α _inst_1 δ E) (Set.interᵢ.{u1, 1} α Real (fun (ε : Real) => Set.interᵢ.{u1, 0} α (Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) ε s) (fun (H : Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) ε s) => Metric.thickening.{u1} α _inst_1 ε E)))))
+  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] {δ : Real}, (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) δ) -> (forall (s : Set.{0} Real), (HasSubset.Subset.{0} (Set.{0} Real) (Set.hasSubset.{0} Real) s (Set.Ioi.{0} Real Real.preorder δ)) -> (forall (ε : Real), (LT.lt.{0} Real Real.hasLt δ ε) -> (Set.Nonempty.{0} Real (Inter.inter.{0} (Set.{0} Real) (Set.hasInter.{0} Real) s (Set.Ioc.{0} Real Real.preorder δ ε)))) -> (forall (E : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Metric.cthickening.{u1} α _inst_1 δ E) (Set.iInter.{u1, 1} α Real (fun (ε : Real) => Set.iInter.{u1, 0} α (Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) ε s) (fun (H : Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) ε s) => Metric.thickening.{u1} α _inst_1 ε E)))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] {δ : Real}, (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) δ) -> (forall (s : Set.{0} Real), (HasSubset.Subset.{0} (Set.{0} Real) (Set.instHasSubsetSet.{0} Real) s (Set.Ioi.{0} Real Real.instPreorderReal δ)) -> (forall (ε : Real), (LT.lt.{0} Real Real.instLTReal δ ε) -> (Set.Nonempty.{0} Real (Inter.inter.{0} (Set.{0} Real) (Set.instInterSet.{0} Real) s (Set.Ioc.{0} Real Real.instPreorderReal δ ε)))) -> (forall (E : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Metric.cthickening.{u1} α _inst_1 δ E) (Set.interᵢ.{u1, 1} α Real (fun (ε : Real) => Set.interᵢ.{u1, 0} α (Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) ε s) (fun (H : Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) ε s) => Metric.thickening.{u1} α _inst_1 ε E)))))
-Case conversion may be inaccurate. Consider using '#align metric.cthickening_eq_Inter_thickening' Metric.cthickening_eq_interᵢ_thickening'ₓ'. -/
-theorem cthickening_eq_interᵢ_thickening' {δ : ℝ} (δ_nn : 0 ≤ δ) (s : Set ℝ) (hsδ : s ⊆ Ioi δ)
+  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] {δ : Real}, (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) δ) -> (forall (s : Set.{0} Real), (HasSubset.Subset.{0} (Set.{0} Real) (Set.instHasSubsetSet.{0} Real) s (Set.Ioi.{0} Real Real.instPreorderReal δ)) -> (forall (ε : Real), (LT.lt.{0} Real Real.instLTReal δ ε) -> (Set.Nonempty.{0} Real (Inter.inter.{0} (Set.{0} Real) (Set.instInterSet.{0} Real) s (Set.Ioc.{0} Real Real.instPreorderReal δ ε)))) -> (forall (E : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Metric.cthickening.{u1} α _inst_1 δ E) (Set.iInter.{u1, 1} α Real (fun (ε : Real) => Set.iInter.{u1, 0} α (Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) ε s) (fun (H : Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) ε s) => Metric.thickening.{u1} α _inst_1 ε E)))))
+Case conversion may be inaccurate. Consider using '#align metric.cthickening_eq_Inter_thickening' Metric.cthickening_eq_iInter_thickening'ₓ'. -/
+theorem cthickening_eq_iInter_thickening' {δ : ℝ} (δ_nn : 0 ≤ δ) (s : Set ℝ) (hsδ : s ⊆ Ioi δ)
     (hs : ∀ ε, δ < ε → (s ∩ Ioc δ ε).Nonempty) (E : Set α) :
     cthickening δ E = ⋂ ε ∈ s, thickening ε E :=
   by
@@ -2251,44 +2251,44 @@ theorem cthickening_eq_interᵢ_thickening' {δ : ℝ} (δ_nn : 0 ≤ δ) (s : S
     exact ss.trans (thickening_mono hε'.2 E)
   · rw [cthickening_eq_Inter_cthickening' s hsδ hs E]
     exact Inter₂_mono fun ε hε => thickening_subset_cthickening ε E
-#align metric.cthickening_eq_Inter_thickening' Metric.cthickening_eq_interᵢ_thickening'
+#align metric.cthickening_eq_Inter_thickening' Metric.cthickening_eq_iInter_thickening'
 
-/- warning: metric.cthickening_eq_Inter_thickening -> Metric.cthickening_eq_interᵢ_thickening is a dubious translation:
+/- warning: metric.cthickening_eq_Inter_thickening -> Metric.cthickening_eq_iInter_thickening is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] {δ : Real}, (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) δ) -> (forall (E : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Metric.cthickening.{u1} α _inst_1 δ E) (Set.interᵢ.{u1, 1} α Real (fun (ε : Real) => Set.interᵢ.{u1, 0} α (LT.lt.{0} Real Real.hasLt δ ε) (fun (h : LT.lt.{0} Real Real.hasLt δ ε) => Metric.thickening.{u1} α _inst_1 ε E))))
+  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] {δ : Real}, (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) δ) -> (forall (E : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Metric.cthickening.{u1} α _inst_1 δ E) (Set.iInter.{u1, 1} α Real (fun (ε : Real) => Set.iInter.{u1, 0} α (LT.lt.{0} Real Real.hasLt δ ε) (fun (h : LT.lt.{0} Real Real.hasLt δ ε) => Metric.thickening.{u1} α _inst_1 ε E))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] {δ : Real}, (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) δ) -> (forall (E : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Metric.cthickening.{u1} α _inst_1 δ E) (Set.interᵢ.{u1, 1} α Real (fun (ε : Real) => Set.interᵢ.{u1, 0} α (LT.lt.{0} Real Real.instLTReal δ ε) (fun (h : LT.lt.{0} Real Real.instLTReal δ ε) => Metric.thickening.{u1} α _inst_1 ε E))))
-Case conversion may be inaccurate. Consider using '#align metric.cthickening_eq_Inter_thickening Metric.cthickening_eq_interᵢ_thickeningₓ'. -/
-theorem cthickening_eq_interᵢ_thickening {δ : ℝ} (δ_nn : 0 ≤ δ) (E : Set α) :
+  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] {δ : Real}, (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) δ) -> (forall (E : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Metric.cthickening.{u1} α _inst_1 δ E) (Set.iInter.{u1, 1} α Real (fun (ε : Real) => Set.iInter.{u1, 0} α (LT.lt.{0} Real Real.instLTReal δ ε) (fun (h : LT.lt.{0} Real Real.instLTReal δ ε) => Metric.thickening.{u1} α _inst_1 ε E))))
+Case conversion may be inaccurate. Consider using '#align metric.cthickening_eq_Inter_thickening Metric.cthickening_eq_iInter_thickeningₓ'. -/
+theorem cthickening_eq_iInter_thickening {δ : ℝ} (δ_nn : 0 ≤ δ) (E : Set α) :
     cthickening δ E = ⋂ (ε : ℝ) (h : δ < ε), thickening ε E :=
   by
   apply cthickening_eq_Inter_thickening' δ_nn (Ioi δ) rfl.subset
   simp_rw [inter_eq_right_iff_subset.mpr Ioc_subset_Ioi_self]
   exact fun _ hε => nonempty_Ioc.mpr hε
-#align metric.cthickening_eq_Inter_thickening Metric.cthickening_eq_interᵢ_thickening
+#align metric.cthickening_eq_Inter_thickening Metric.cthickening_eq_iInter_thickening
 
-/- warning: metric.cthickening_eq_Inter_thickening'' -> Metric.cthickening_eq_interᵢ_thickening'' is a dubious translation:
+/- warning: metric.cthickening_eq_Inter_thickening'' -> Metric.cthickening_eq_iInter_thickening'' is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] (δ : Real) (E : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Metric.cthickening.{u1} α _inst_1 δ E) (Set.interᵢ.{u1, 1} α Real (fun (ε : Real) => Set.interᵢ.{u1, 0} α (LT.lt.{0} Real Real.hasLt (LinearOrder.max.{0} Real Real.linearOrder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) δ) ε) (fun (h : LT.lt.{0} Real Real.hasLt (LinearOrder.max.{0} Real Real.linearOrder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) δ) ε) => Metric.thickening.{u1} α _inst_1 ε E)))
+  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] (δ : Real) (E : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Metric.cthickening.{u1} α _inst_1 δ E) (Set.iInter.{u1, 1} α Real (fun (ε : Real) => Set.iInter.{u1, 0} α (LT.lt.{0} Real Real.hasLt (LinearOrder.max.{0} Real Real.linearOrder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) δ) ε) (fun (h : LT.lt.{0} Real Real.hasLt (LinearOrder.max.{0} Real Real.linearOrder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) δ) ε) => Metric.thickening.{u1} α _inst_1 ε E)))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] (δ : Real) (E : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Metric.cthickening.{u1} α _inst_1 δ E) (Set.interᵢ.{u1, 1} α Real (fun (ε : Real) => Set.interᵢ.{u1, 0} α (LT.lt.{0} Real Real.instLTReal (Max.max.{0} Real (LinearOrderedRing.toMax.{0} Real Real.instLinearOrderedRingReal) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) δ) ε) (fun (h : LT.lt.{0} Real Real.instLTReal (Max.max.{0} Real (LinearOrderedRing.toMax.{0} Real Real.instLinearOrderedRingReal) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) δ) ε) => Metric.thickening.{u1} α _inst_1 ε E)))
-Case conversion may be inaccurate. Consider using '#align metric.cthickening_eq_Inter_thickening'' Metric.cthickening_eq_interᵢ_thickening''ₓ'. -/
-theorem cthickening_eq_interᵢ_thickening'' (δ : ℝ) (E : Set α) :
+  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] (δ : Real) (E : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Metric.cthickening.{u1} α _inst_1 δ E) (Set.iInter.{u1, 1} α Real (fun (ε : Real) => Set.iInter.{u1, 0} α (LT.lt.{0} Real Real.instLTReal (Max.max.{0} Real (LinearOrderedRing.toMax.{0} Real Real.instLinearOrderedRingReal) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) δ) ε) (fun (h : LT.lt.{0} Real Real.instLTReal (Max.max.{0} Real (LinearOrderedRing.toMax.{0} Real Real.instLinearOrderedRingReal) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) δ) ε) => Metric.thickening.{u1} α _inst_1 ε E)))
+Case conversion may be inaccurate. Consider using '#align metric.cthickening_eq_Inter_thickening'' Metric.cthickening_eq_iInter_thickening''ₓ'. -/
+theorem cthickening_eq_iInter_thickening'' (δ : ℝ) (E : Set α) :
     cthickening δ E = ⋂ (ε : ℝ) (h : max 0 δ < ε), thickening ε E :=
   by
   rw [← cthickening_max_zero, cthickening_eq_Inter_thickening]
   exact le_max_left _ _
-#align metric.cthickening_eq_Inter_thickening'' Metric.cthickening_eq_interᵢ_thickening''
+#align metric.cthickening_eq_Inter_thickening'' Metric.cthickening_eq_iInter_thickening''
 
-/- warning: metric.closure_eq_Inter_cthickening' -> Metric.closure_eq_interᵢ_cthickening' is a dubious translation:
+/- warning: metric.closure_eq_Inter_cthickening' -> Metric.closure_eq_iInter_cthickening' is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] (E : Set.{u1} α) (s : Set.{0} Real), (forall (ε : Real), (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) ε) -> (Set.Nonempty.{0} Real (Inter.inter.{0} (Set.{0} Real) (Set.hasInter.{0} Real) s (Set.Ioc.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) ε)))) -> (Eq.{succ u1} (Set.{u1} α) (closure.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoEMetricSpace.toUniformSpace.{u1} α _inst_1)) E) (Set.interᵢ.{u1, 1} α Real (fun (δ : Real) => Set.interᵢ.{u1, 0} α (Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) δ s) (fun (H : Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) δ s) => Metric.cthickening.{u1} α _inst_1 δ E))))
+  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] (E : Set.{u1} α) (s : Set.{0} Real), (forall (ε : Real), (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) ε) -> (Set.Nonempty.{0} Real (Inter.inter.{0} (Set.{0} Real) (Set.hasInter.{0} Real) s (Set.Ioc.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) ε)))) -> (Eq.{succ u1} (Set.{u1} α) (closure.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoEMetricSpace.toUniformSpace.{u1} α _inst_1)) E) (Set.iInter.{u1, 1} α Real (fun (δ : Real) => Set.iInter.{u1, 0} α (Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) δ s) (fun (H : Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) δ s) => Metric.cthickening.{u1} α _inst_1 δ E))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] (E : Set.{u1} α) (s : Set.{0} Real), (forall (ε : Real), (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) ε) -> (Set.Nonempty.{0} Real (Inter.inter.{0} (Set.{0} Real) (Set.instInterSet.{0} Real) s (Set.Ioc.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) ε)))) -> (Eq.{succ u1} (Set.{u1} α) (closure.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoEMetricSpace.toUniformSpace.{u1} α _inst_1)) E) (Set.interᵢ.{u1, 1} α Real (fun (δ : Real) => Set.interᵢ.{u1, 0} α (Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) δ s) (fun (H : Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) δ s) => Metric.cthickening.{u1} α _inst_1 δ E))))
-Case conversion may be inaccurate. Consider using '#align metric.closure_eq_Inter_cthickening' Metric.closure_eq_interᵢ_cthickening'ₓ'. -/
+  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] (E : Set.{u1} α) (s : Set.{0} Real), (forall (ε : Real), (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) ε) -> (Set.Nonempty.{0} Real (Inter.inter.{0} (Set.{0} Real) (Set.instInterSet.{0} Real) s (Set.Ioc.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) ε)))) -> (Eq.{succ u1} (Set.{u1} α) (closure.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoEMetricSpace.toUniformSpace.{u1} α _inst_1)) E) (Set.iInter.{u1, 1} α Real (fun (δ : Real) => Set.iInter.{u1, 0} α (Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) δ s) (fun (H : Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) δ s) => Metric.cthickening.{u1} α _inst_1 δ E))))
+Case conversion may be inaccurate. Consider using '#align metric.closure_eq_Inter_cthickening' Metric.closure_eq_iInter_cthickening'ₓ'. -/
 /-- The closure of a set equals the intersection of its closed thickenings of positive radii
 accumulating at zero. -/
-theorem closure_eq_interᵢ_cthickening' (E : Set α) (s : Set ℝ)
+theorem closure_eq_iInter_cthickening' (E : Set α) (s : Set ℝ)
     (hs : ∀ ε, 0 < ε → (s ∩ Ioc 0 ε).Nonempty) : closure E = ⋂ δ ∈ s, cthickening δ E :=
   by
   by_cases hs₀ : s ⊆ Ioi 0
@@ -2300,50 +2300,50 @@ theorem closure_eq_interᵢ_cthickening' (E : Set α) (s : Set ℝ)
   · exact subset_Inter₂ fun ε _ => closure_subset_cthickening ε E
   · rw [← cthickening_of_nonpos δ_nonpos E]
     exact bInter_subset_of_mem hδs
-#align metric.closure_eq_Inter_cthickening' Metric.closure_eq_interᵢ_cthickening'
+#align metric.closure_eq_Inter_cthickening' Metric.closure_eq_iInter_cthickening'
 
-/- warning: metric.closure_eq_Inter_cthickening -> Metric.closure_eq_interᵢ_cthickening is a dubious translation:
+/- warning: metric.closure_eq_Inter_cthickening -> Metric.closure_eq_iInter_cthickening is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] (E : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (closure.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoEMetricSpace.toUniformSpace.{u1} α _inst_1)) E) (Set.interᵢ.{u1, 1} α Real (fun (δ : Real) => Set.interᵢ.{u1, 0} α (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) δ) (fun (h : LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) δ) => Metric.cthickening.{u1} α _inst_1 δ E)))
+  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] (E : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (closure.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoEMetricSpace.toUniformSpace.{u1} α _inst_1)) E) (Set.iInter.{u1, 1} α Real (fun (δ : Real) => Set.iInter.{u1, 0} α (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) δ) (fun (h : LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) δ) => Metric.cthickening.{u1} α _inst_1 δ E)))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] (E : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (closure.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoEMetricSpace.toUniformSpace.{u1} α _inst_1)) E) (Set.interᵢ.{u1, 1} α Real (fun (δ : Real) => Set.interᵢ.{u1, 0} α (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) δ) (fun (h : LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) δ) => Metric.cthickening.{u1} α _inst_1 δ E)))
-Case conversion may be inaccurate. Consider using '#align metric.closure_eq_Inter_cthickening Metric.closure_eq_interᵢ_cthickeningₓ'. -/
+  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] (E : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (closure.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoEMetricSpace.toUniformSpace.{u1} α _inst_1)) E) (Set.iInter.{u1, 1} α Real (fun (δ : Real) => Set.iInter.{u1, 0} α (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) δ) (fun (h : LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) δ) => Metric.cthickening.{u1} α _inst_1 δ E)))
+Case conversion may be inaccurate. Consider using '#align metric.closure_eq_Inter_cthickening Metric.closure_eq_iInter_cthickeningₓ'. -/
 /-- The closure of a set equals the intersection of its closed thickenings of positive radii. -/
-theorem closure_eq_interᵢ_cthickening (E : Set α) :
+theorem closure_eq_iInter_cthickening (E : Set α) :
     closure E = ⋂ (δ : ℝ) (h : 0 < δ), cthickening δ E :=
   by
   rw [← cthickening_zero]
   exact cthickening_eq_Inter_cthickening E
-#align metric.closure_eq_Inter_cthickening Metric.closure_eq_interᵢ_cthickening
+#align metric.closure_eq_Inter_cthickening Metric.closure_eq_iInter_cthickening
 
-/- warning: metric.closure_eq_Inter_thickening' -> Metric.closure_eq_interᵢ_thickening' is a dubious translation:
+/- warning: metric.closure_eq_Inter_thickening' -> Metric.closure_eq_iInter_thickening' is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] (E : Set.{u1} α) (s : Set.{0} Real), (HasSubset.Subset.{0} (Set.{0} Real) (Set.hasSubset.{0} Real) s (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))) -> (forall (ε : Real), (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) ε) -> (Set.Nonempty.{0} Real (Inter.inter.{0} (Set.{0} Real) (Set.hasInter.{0} Real) s (Set.Ioc.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) ε)))) -> (Eq.{succ u1} (Set.{u1} α) (closure.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoEMetricSpace.toUniformSpace.{u1} α _inst_1)) E) (Set.interᵢ.{u1, 1} α Real (fun (δ : Real) => Set.interᵢ.{u1, 0} α (Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) δ s) (fun (H : Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) δ s) => Metric.thickening.{u1} α _inst_1 δ E))))
+  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] (E : Set.{u1} α) (s : Set.{0} Real), (HasSubset.Subset.{0} (Set.{0} Real) (Set.hasSubset.{0} Real) s (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))) -> (forall (ε : Real), (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) ε) -> (Set.Nonempty.{0} Real (Inter.inter.{0} (Set.{0} Real) (Set.hasInter.{0} Real) s (Set.Ioc.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) ε)))) -> (Eq.{succ u1} (Set.{u1} α) (closure.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoEMetricSpace.toUniformSpace.{u1} α _inst_1)) E) (Set.iInter.{u1, 1} α Real (fun (δ : Real) => Set.iInter.{u1, 0} α (Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) δ s) (fun (H : Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) δ s) => Metric.thickening.{u1} α _inst_1 δ E))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] (E : Set.{u1} α) (s : Set.{0} Real), (HasSubset.Subset.{0} (Set.{0} Real) (Set.instHasSubsetSet.{0} Real) s (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) -> (forall (ε : Real), (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) ε) -> (Set.Nonempty.{0} Real (Inter.inter.{0} (Set.{0} Real) (Set.instInterSet.{0} Real) s (Set.Ioc.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) ε)))) -> (Eq.{succ u1} (Set.{u1} α) (closure.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoEMetricSpace.toUniformSpace.{u1} α _inst_1)) E) (Set.interᵢ.{u1, 1} α Real (fun (δ : Real) => Set.interᵢ.{u1, 0} α (Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) δ s) (fun (H : Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) δ s) => Metric.thickening.{u1} α _inst_1 δ E))))
-Case conversion may be inaccurate. Consider using '#align metric.closure_eq_Inter_thickening' Metric.closure_eq_interᵢ_thickening'ₓ'. -/
+  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] (E : Set.{u1} α) (s : Set.{0} Real), (HasSubset.Subset.{0} (Set.{0} Real) (Set.instHasSubsetSet.{0} Real) s (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) -> (forall (ε : Real), (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) ε) -> (Set.Nonempty.{0} Real (Inter.inter.{0} (Set.{0} Real) (Set.instInterSet.{0} Real) s (Set.Ioc.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) ε)))) -> (Eq.{succ u1} (Set.{u1} α) (closure.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoEMetricSpace.toUniformSpace.{u1} α _inst_1)) E) (Set.iInter.{u1, 1} α Real (fun (δ : Real) => Set.iInter.{u1, 0} α (Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) δ s) (fun (H : Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) δ s) => Metric.thickening.{u1} α _inst_1 δ E))))
+Case conversion may be inaccurate. Consider using '#align metric.closure_eq_Inter_thickening' Metric.closure_eq_iInter_thickening'ₓ'. -/
 /-- The closure of a set equals the intersection of its open thickenings of positive radii
 accumulating at zero. -/
-theorem closure_eq_interᵢ_thickening' (E : Set α) (s : Set ℝ) (hs₀ : s ⊆ Ioi 0)
+theorem closure_eq_iInter_thickening' (E : Set α) (s : Set ℝ) (hs₀ : s ⊆ Ioi 0)
     (hs : ∀ ε, 0 < ε → (s ∩ Ioc 0 ε).Nonempty) : closure E = ⋂ δ ∈ s, thickening δ E :=
   by
   rw [← cthickening_zero]
   apply cthickening_eq_Inter_thickening' le_rfl _ hs₀ hs
-#align metric.closure_eq_Inter_thickening' Metric.closure_eq_interᵢ_thickening'
+#align metric.closure_eq_Inter_thickening' Metric.closure_eq_iInter_thickening'
 
-/- warning: metric.closure_eq_Inter_thickening -> Metric.closure_eq_interᵢ_thickening is a dubious translation:
+/- warning: metric.closure_eq_Inter_thickening -> Metric.closure_eq_iInter_thickening is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] (E : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (closure.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoEMetricSpace.toUniformSpace.{u1} α _inst_1)) E) (Set.interᵢ.{u1, 1} α Real (fun (δ : Real) => Set.interᵢ.{u1, 0} α (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) δ) (fun (h : LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) δ) => Metric.thickening.{u1} α _inst_1 δ E)))
+  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] (E : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (closure.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoEMetricSpace.toUniformSpace.{u1} α _inst_1)) E) (Set.iInter.{u1, 1} α Real (fun (δ : Real) => Set.iInter.{u1, 0} α (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) δ) (fun (h : LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) δ) => Metric.thickening.{u1} α _inst_1 δ E)))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] (E : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (closure.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoEMetricSpace.toUniformSpace.{u1} α _inst_1)) E) (Set.interᵢ.{u1, 1} α Real (fun (δ : Real) => Set.interᵢ.{u1, 0} α (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) δ) (fun (h : LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) δ) => Metric.thickening.{u1} α _inst_1 δ E)))
-Case conversion may be inaccurate. Consider using '#align metric.closure_eq_Inter_thickening Metric.closure_eq_interᵢ_thickeningₓ'. -/
+  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] (E : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (closure.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoEMetricSpace.toUniformSpace.{u1} α _inst_1)) E) (Set.iInter.{u1, 1} α Real (fun (δ : Real) => Set.iInter.{u1, 0} α (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) δ) (fun (h : LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) δ) => Metric.thickening.{u1} α _inst_1 δ E)))
+Case conversion may be inaccurate. Consider using '#align metric.closure_eq_Inter_thickening Metric.closure_eq_iInter_thickeningₓ'. -/
 /-- The closure of a set equals the intersection of its (open) thickenings of positive radii. -/
-theorem closure_eq_interᵢ_thickening (E : Set α) :
+theorem closure_eq_iInter_thickening (E : Set α) :
     closure E = ⋂ (δ : ℝ) (h : 0 < δ), thickening δ E :=
   by
   rw [← cthickening_zero]
   exact cthickening_eq_Inter_thickening rfl.ge E
-#align metric.closure_eq_Inter_thickening Metric.closure_eq_interᵢ_thickening
+#align metric.closure_eq_Inter_thickening Metric.closure_eq_iInter_thickening
 
 #print Metric.frontier_cthickening_subset /-
 /-- The frontier of the closed thickening of a set is contained in an `inf_edist` level set. -/
@@ -2364,31 +2364,31 @@ theorem closedBall_subset_cthickening {α : Type _} [PseudoMetricSpace α] {x : 
 #align metric.closed_ball_subset_cthickening Metric.closedBall_subset_cthickening
 -/
 
-/- warning: metric.cthickening_subset_Union_closed_ball_of_lt -> Metric.cthickening_subset_unionᵢ_closedBall_of_lt is a dubious translation:
+/- warning: metric.cthickening_subset_Union_closed_ball_of_lt -> Metric.cthickening_subset_iUnion_closedBall_of_lt is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} α] (E : Set.{u1} α) {δ : Real} {δ' : Real}, (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) δ') -> (LT.lt.{0} Real Real.hasLt δ δ') -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Metric.cthickening.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_2) δ E) (Set.unionᵢ.{u1, succ u1} α α (fun (x : α) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x E) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x E) => Metric.closedBall.{u1} α _inst_2 x δ'))))
+  forall {α : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} α] (E : Set.{u1} α) {δ : Real} {δ' : Real}, (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) δ') -> (LT.lt.{0} Real Real.hasLt δ δ') -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Metric.cthickening.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_2) δ E) (Set.iUnion.{u1, succ u1} α α (fun (x : α) => Set.iUnion.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x E) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x E) => Metric.closedBall.{u1} α _inst_2 x δ'))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} α] (E : Set.{u1} α) {δ : Real} {δ' : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) δ') -> (LT.lt.{0} Real Real.instLTReal δ δ') -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Metric.cthickening.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_2) δ E) (Set.unionᵢ.{u1, succ u1} α α (fun (x : α) => Set.unionᵢ.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x E) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x E) => Metric.closedBall.{u1} α _inst_2 x δ'))))
-Case conversion may be inaccurate. Consider using '#align metric.cthickening_subset_Union_closed_ball_of_lt Metric.cthickening_subset_unionᵢ_closedBall_of_ltₓ'. -/
-theorem cthickening_subset_unionᵢ_closedBall_of_lt {α : Type _} [PseudoMetricSpace α] (E : Set α)
+  forall {α : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} α] (E : Set.{u1} α) {δ : Real} {δ' : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) δ') -> (LT.lt.{0} Real Real.instLTReal δ δ') -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Metric.cthickening.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_2) δ E) (Set.iUnion.{u1, succ u1} α α (fun (x : α) => Set.iUnion.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x E) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x E) => Metric.closedBall.{u1} α _inst_2 x δ'))))
+Case conversion may be inaccurate. Consider using '#align metric.cthickening_subset_Union_closed_ball_of_lt Metric.cthickening_subset_iUnion_closedBall_of_ltₓ'. -/
+theorem cthickening_subset_iUnion_closedBall_of_lt {α : Type _} [PseudoMetricSpace α] (E : Set α)
     {δ δ' : ℝ} (hδ₀ : 0 < δ') (hδδ' : δ < δ') : cthickening δ E ⊆ ⋃ x ∈ E, closedBall x δ' :=
   by
   refine' (cthickening_subset_thickening' hδ₀ hδδ' E).trans fun x hx => _
   obtain ⟨y, hy₁, hy₂⟩ := mem_thickening_iff.mp hx
   exact mem_Union₂.mpr ⟨y, hy₁, hy₂.le⟩
-#align metric.cthickening_subset_Union_closed_ball_of_lt Metric.cthickening_subset_unionᵢ_closedBall_of_lt
+#align metric.cthickening_subset_Union_closed_ball_of_lt Metric.cthickening_subset_iUnion_closedBall_of_lt
 
-/- warning: is_compact.cthickening_eq_bUnion_closed_ball -> IsCompact.cthickening_eq_bunionᵢ_closedBall is a dubious translation:
+/- warning: is_compact.cthickening_eq_bUnion_closed_ball -> IsCompact.cthickening_eq_biUnion_closedBall is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} α] {δ : Real} {E : Set.{u1} α}, (IsCompact.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_2)) E) -> (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) δ) -> (Eq.{succ u1} (Set.{u1} α) (Metric.cthickening.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_2) δ E) (Set.unionᵢ.{u1, succ u1} α α (fun (x : α) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x E) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x E) => Metric.closedBall.{u1} α _inst_2 x δ))))
+  forall {α : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} α] {δ : Real} {E : Set.{u1} α}, (IsCompact.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_2)) E) -> (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) δ) -> (Eq.{succ u1} (Set.{u1} α) (Metric.cthickening.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_2) δ E) (Set.iUnion.{u1, succ u1} α α (fun (x : α) => Set.iUnion.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x E) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x E) => Metric.closedBall.{u1} α _inst_2 x δ))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} α] {δ : Real} {E : Set.{u1} α}, (IsCompact.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_2)) E) -> (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) δ) -> (Eq.{succ u1} (Set.{u1} α) (Metric.cthickening.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_2) δ E) (Set.unionᵢ.{u1, succ u1} α α (fun (x : α) => Set.unionᵢ.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x E) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x E) => Metric.closedBall.{u1} α _inst_2 x δ))))
-Case conversion may be inaccurate. Consider using '#align is_compact.cthickening_eq_bUnion_closed_ball IsCompact.cthickening_eq_bunionᵢ_closedBallₓ'. -/
+  forall {α : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} α] {δ : Real} {E : Set.{u1} α}, (IsCompact.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_2)) E) -> (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) δ) -> (Eq.{succ u1} (Set.{u1} α) (Metric.cthickening.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_2) δ E) (Set.iUnion.{u1, succ u1} α α (fun (x : α) => Set.iUnion.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x E) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x E) => Metric.closedBall.{u1} α _inst_2 x δ))))
+Case conversion may be inaccurate. Consider using '#align is_compact.cthickening_eq_bUnion_closed_ball IsCompact.cthickening_eq_biUnion_closedBallₓ'. -/
 /-- The closed thickening of a compact set `E` is the union of the balls `closed_ball x δ` over
 `x ∈ E`.
 
 See also `metric.cthickening_eq_bUnion_closed_ball`. -/
-theorem IsCompact.cthickening_eq_bunionᵢ_closedBall {α : Type _} [PseudoMetricSpace α] {δ : ℝ}
+theorem IsCompact.cthickening_eq_biUnion_closedBall {α : Type _} [PseudoMetricSpace α] {δ : ℝ}
     {E : Set α} (hE : IsCompact E) (hδ : 0 ≤ δ) : cthickening δ E = ⋃ x ∈ E, closedBall x δ :=
   by
   rcases eq_empty_or_nonempty E with (rfl | hne)
@@ -2401,15 +2401,15 @@ theorem IsCompact.cthickening_eq_bunionᵢ_closedBall {α : Type _} [PseudoMetri
     rw [edist_dist] at D1
     exact (ENNReal.ofReal_le_ofReal_iff hδ).1 D1
   exact mem_bUnion yE D2
-#align is_compact.cthickening_eq_bUnion_closed_ball IsCompact.cthickening_eq_bunionᵢ_closedBall
+#align is_compact.cthickening_eq_bUnion_closed_ball IsCompact.cthickening_eq_biUnion_closedBall
 
-/- warning: metric.cthickening_eq_bUnion_closed_ball -> Metric.cthickening_eq_bunionᵢ_closedBall is a dubious translation:
+/- warning: metric.cthickening_eq_bUnion_closed_ball -> Metric.cthickening_eq_biUnion_closedBall is a dubious translation:
 lean 3 declaration is
-  forall {δ : Real} {α : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} α] [_inst_3 : ProperSpace.{u1} α _inst_2] (E : Set.{u1} α), (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) δ) -> (Eq.{succ u1} (Set.{u1} α) (Metric.cthickening.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_2) δ E) (Set.unionᵢ.{u1, succ u1} α α (fun (x : α) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (closure.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_2)) E)) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (closure.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_2)) E)) => Metric.closedBall.{u1} α _inst_2 x δ))))
+  forall {δ : Real} {α : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} α] [_inst_3 : ProperSpace.{u1} α _inst_2] (E : Set.{u1} α), (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) δ) -> (Eq.{succ u1} (Set.{u1} α) (Metric.cthickening.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_2) δ E) (Set.iUnion.{u1, succ u1} α α (fun (x : α) => Set.iUnion.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (closure.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_2)) E)) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (closure.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_2)) E)) => Metric.closedBall.{u1} α _inst_2 x δ))))
 but is expected to have type
-  forall {δ : Real} {α : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} α] [_inst_3 : ProperSpace.{u1} α _inst_2] (E : Set.{u1} α), (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) δ) -> (Eq.{succ u1} (Set.{u1} α) (Metric.cthickening.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_2) δ E) (Set.unionᵢ.{u1, succ u1} α α (fun (x : α) => Set.unionᵢ.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (closure.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_2)) E)) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (closure.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_2)) E)) => Metric.closedBall.{u1} α _inst_2 x δ))))
-Case conversion may be inaccurate. Consider using '#align metric.cthickening_eq_bUnion_closed_ball Metric.cthickening_eq_bunionᵢ_closedBallₓ'. -/
-theorem cthickening_eq_bunionᵢ_closedBall {α : Type _} [PseudoMetricSpace α] [ProperSpace α]
+  forall {δ : Real} {α : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} α] [_inst_3 : ProperSpace.{u1} α _inst_2] (E : Set.{u1} α), (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) δ) -> (Eq.{succ u1} (Set.{u1} α) (Metric.cthickening.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_2) δ E) (Set.iUnion.{u1, succ u1} α α (fun (x : α) => Set.iUnion.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (closure.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_2)) E)) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (closure.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_2)) E)) => Metric.closedBall.{u1} α _inst_2 x δ))))
+Case conversion may be inaccurate. Consider using '#align metric.cthickening_eq_bUnion_closed_ball Metric.cthickening_eq_biUnion_closedBallₓ'. -/
+theorem cthickening_eq_biUnion_closedBall {α : Type _} [PseudoMetricSpace α] [ProperSpace α]
     (E : Set α) (hδ : 0 ≤ δ) : cthickening δ E = ⋃ x ∈ closure E, closedBall x δ :=
   by
   rcases eq_empty_or_nonempty E with (rfl | hne)
@@ -2423,19 +2423,19 @@ theorem cthickening_eq_bunionᵢ_closedBall {α : Type _} [PseudoMetricSpace α]
     (ENNReal.ofReal_le_ofReal_iff hδ).mp
       (((congr_arg ENNReal.ofReal hy.symm).le.trans ENNReal.ofReal_toReal_le).trans hx)
   exact mem_bUnion yE hy
-#align metric.cthickening_eq_bUnion_closed_ball Metric.cthickening_eq_bunionᵢ_closedBall
+#align metric.cthickening_eq_bUnion_closed_ball Metric.cthickening_eq_biUnion_closedBall
 
-/- warning: is_closed.cthickening_eq_bUnion_closed_ball -> IsClosed.cthickening_eq_bunionᵢ_closedBall is a dubious translation:
+/- warning: is_closed.cthickening_eq_bUnion_closed_ball -> IsClosed.cthickening_eq_biUnion_closedBall is a dubious translation:
 lean 3 declaration is
-  forall {δ : Real} {α : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} α] [_inst_3 : ProperSpace.{u1} α _inst_2] {E : Set.{u1} α}, (IsClosed.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_2)) E) -> (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) δ) -> (Eq.{succ u1} (Set.{u1} α) (Metric.cthickening.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_2) δ E) (Set.unionᵢ.{u1, succ u1} α α (fun (x : α) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x E) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x E) => Metric.closedBall.{u1} α _inst_2 x δ))))
+  forall {δ : Real} {α : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} α] [_inst_3 : ProperSpace.{u1} α _inst_2] {E : Set.{u1} α}, (IsClosed.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_2)) E) -> (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) δ) -> (Eq.{succ u1} (Set.{u1} α) (Metric.cthickening.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_2) δ E) (Set.iUnion.{u1, succ u1} α α (fun (x : α) => Set.iUnion.{u1, 0} α (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x E) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x E) => Metric.closedBall.{u1} α _inst_2 x δ))))
 but is expected to have type
-  forall {δ : Real} {α : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} α] [_inst_3 : ProperSpace.{u1} α _inst_2] {E : Set.{u1} α}, (IsClosed.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_2)) E) -> (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) δ) -> (Eq.{succ u1} (Set.{u1} α) (Metric.cthickening.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_2) δ E) (Set.unionᵢ.{u1, succ u1} α α (fun (x : α) => Set.unionᵢ.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x E) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x E) => Metric.closedBall.{u1} α _inst_2 x δ))))
-Case conversion may be inaccurate. Consider using '#align is_closed.cthickening_eq_bUnion_closed_ball IsClosed.cthickening_eq_bunionᵢ_closedBallₓ'. -/
-theorem IsClosed.cthickening_eq_bunionᵢ_closedBall {α : Type _} [PseudoMetricSpace α]
+  forall {δ : Real} {α : Type.{u1}} [_inst_2 : PseudoMetricSpace.{u1} α] [_inst_3 : ProperSpace.{u1} α _inst_2] {E : Set.{u1} α}, (IsClosed.{u1} α (UniformSpace.toTopologicalSpace.{u1} α (PseudoMetricSpace.toUniformSpace.{u1} α _inst_2)) E) -> (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) δ) -> (Eq.{succ u1} (Set.{u1} α) (Metric.cthickening.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α _inst_2) δ E) (Set.iUnion.{u1, succ u1} α α (fun (x : α) => Set.iUnion.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x E) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x E) => Metric.closedBall.{u1} α _inst_2 x δ))))
+Case conversion may be inaccurate. Consider using '#align is_closed.cthickening_eq_bUnion_closed_ball IsClosed.cthickening_eq_biUnion_closedBallₓ'. -/
+theorem IsClosed.cthickening_eq_biUnion_closedBall {α : Type _} [PseudoMetricSpace α]
     [ProperSpace α] {E : Set α} (hE : IsClosed E) (hδ : 0 ≤ δ) :
     cthickening δ E = ⋃ x ∈ E, closedBall x δ := by
   rw [cthickening_eq_bUnion_closed_ball E hδ, hE.closure_eq]
-#align is_closed.cthickening_eq_bUnion_closed_ball IsClosed.cthickening_eq_bunionᵢ_closedBall
+#align is_closed.cthickening_eq_bUnion_closed_ball IsClosed.cthickening_eq_biUnion_closedBall
 
 /- warning: metric.inf_edist_le_inf_edist_cthickening_add -> Metric.infEdist_le_infEdist_cthickening_add is a dubious translation:
 lean 3 declaration is

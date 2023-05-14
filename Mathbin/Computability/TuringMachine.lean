@@ -1881,7 +1881,7 @@ Case conversion may be inaccurate. Consider using '#align turing.TM1.stmts Turin
 /-- The set of all statements in a turing machine, plus one extra value `none` representing the
 halt state. This is used in the TM1 to TM0 reduction. -/
 noncomputable def stmts (M : Λ → stmt) (S : Finset Λ) : Finset (Option stmt) :=
-  (S.bunionᵢ fun q => stmts₁ (M q)).insertNone
+  (S.biUnion fun q => stmts₁ (M q)).insertNone
 #align turing.TM1.stmts Turing.TM1.stmts
 
 /- warning: turing.TM1.stmts_trans -> Turing.TM1.stmts_trans is a dubious translation:
@@ -1892,7 +1892,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align turing.TM1.stmts_trans Turing.TM1.stmts_transₓ'. -/
 theorem stmts_trans {M : Λ → stmt} {S q₁ q₂} (h₁ : q₁ ∈ stmts₁ q₂) :
     some q₂ ∈ stmts M S → some q₁ ∈ stmts M S := by
-  simp only [stmts, Finset.mem_insertNone, Finset.mem_bunionᵢ, Option.mem_def, forall_eq',
+  simp only [stmts, Finset.mem_insertNone, Finset.mem_biUnion, Option.mem_def, forall_eq',
       exists_imp] <;>
     exact fun l ls h₂ => ⟨_, ls, stmts₁_trans h₂ h₁⟩
 #align turing.TM1.stmts_trans Turing.TM1.stmts_trans
@@ -1920,7 +1920,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align turing.TM1.stmts_supports_stmt Turing.TM1.stmts_supportsStmtₓ'. -/
 theorem stmts_supportsStmt {M : Λ → stmt} {S q} (ss : supports M S) :
     some q ∈ stmts M S → supports_stmt S q := by
-  simp only [stmts, Finset.mem_insertNone, Finset.mem_bunionᵢ, Option.mem_def, forall_eq',
+  simp only [stmts, Finset.mem_insertNone, Finset.mem_biUnion, Option.mem_def, forall_eq',
       exists_imp] <;>
     exact fun l ls h => stmts₁_supports_stmt_mono h (ss.2 _ ls)
 #align turing.TM1.stmts_supports_stmt Turing.TM1.stmts_supportsStmt
@@ -2138,7 +2138,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align turing.TM1to0.tr_supports Turing.TM1to0.tr_supportsₓ'. -/
 theorem tr_supports {S : Finset Λ} (ss : TM1.Supports M S) : TM0.Supports tr ↑(tr_stmts S) :=
   ⟨Finset.mem_product.2
-      ⟨Finset.some_mem_insertNone.2 (Finset.mem_bunionᵢ.2 ⟨_, ss.1, TM1.stmts₁_self⟩),
+      ⟨Finset.some_mem_insertNone.2 (Finset.mem_biUnion.2 ⟨_, ss.1, TM1.stmts₁_self⟩),
         Finset.mem_univ _⟩,
     fun q a q' s h₁ h₂ => by
     rcases q with ⟨_ | q, v⟩; · cases h₁
@@ -2171,7 +2171,7 @@ theorem tr_supports {S : Finset Λ} (ss : TM1.Supports M S) : TM0.Supports tr �
         unfold TM1.stmts₁
         exact Finset.mem_insert_of_mem (Finset.mem_union_left _ TM1.stmts₁_self)
     case goto l => cases h₁;
-      exact Finset.some_mem_insertNone.2 (Finset.mem_bunionᵢ.2 ⟨_, hs _ _, TM1.stmts₁_self⟩)
+      exact Finset.some_mem_insertNone.2 (Finset.mem_biUnion.2 ⟨_, hs _ _, TM1.stmts₁_self⟩)
     case halt => cases h₁⟩
 #align turing.TM1to0.tr_supports Turing.TM1to0.tr_supports
 
@@ -2641,7 +2641,7 @@ Case conversion may be inaccurate. Consider using '#align turing.TM1to1.tr_supp 
 /-- The set of accessible machine states, assuming that the input machine is supported on `S`,
 are the normal states embedded from `S`, plus all write states accessible from these states. -/
 noncomputable def trSupp (S : Finset Λ) : Finset Λ' :=
-  S.bunionᵢ fun l => insert (Λ'.normal l) (writes (M l))
+  S.biUnion fun l => insert (Λ'.normal l) (writes (M l))
 #align turing.TM1to1.tr_supp Turing.TM1to1.trSupp
 
 /- warning: turing.TM1to1.tr_supports -> Turing.TM1to1.tr_supports is a dubious translation:
@@ -2651,7 +2651,7 @@ but is expected to have type
   forall {Γ : Type.{u2}} {_inst_1 : Type.{u3}} [Λ : Inhabited.{succ u3} _inst_1] {_inst_2 : Type.{u1}} {σ : Nat} {_inst_3 : Γ -> (Vector.{0} Bool σ)} (n : (Vector.{0} Bool σ) -> Γ) (enc : _inst_1 -> (Turing.TM1.Stmt.{u2, u3, u1} Γ _inst_1 _inst_2)) [dec : Fintype.{u2} Γ] {M : Finset.{u3} _inst_1}, (Turing.TM1.Supports.{u2, u3, u1} Γ _inst_1 _inst_2 Λ enc M) -> (Turing.TM1.Supports.{0, max (max u1 u3) u2, u1} Bool (Turing.TM1to1.Λ'.{u2, u3, u1} Γ _inst_1 _inst_2) _inst_2 (Turing.TM1to1.instInhabitedΛ'.{u2, u3, u1} Γ _inst_1 Λ _inst_2) (Turing.TM1to1.tr.{u2, u3, u1} Γ _inst_1 _inst_2 σ _inst_3 n enc) (Turing.TM1to1.trSupp.{u2, u3, u1} Γ _inst_1 _inst_2 enc dec M))
 Case conversion may be inaccurate. Consider using '#align turing.TM1to1.tr_supports Turing.TM1to1.tr_supportsₓ'. -/
 theorem tr_supports {S} (ss : Supports M S) : Supports tr (tr_supp S) :=
-  ⟨Finset.mem_bunionᵢ.2 ⟨_, ss.1, Finset.mem_insert_self _ _⟩, fun q h =>
+  ⟨Finset.mem_biUnion.2 ⟨_, ss.1, Finset.mem_insert_self _ _⟩, fun q h =>
     by
     suffices
       ∀ q,
@@ -2660,9 +2660,9 @@ theorem tr_supports {S} (ss : Supports M S) : Supports tr (tr_supp S) :=
             supports_stmt (tr_supp M S) (tr_normal dec q) ∧
               ∀ q' ∈ writes q, supports_stmt (tr_supp M S) (tr enc dec M q')
       by
-      rcases Finset.mem_bunionᵢ.1 h with ⟨l, hl, h⟩
+      rcases Finset.mem_biUnion.1 h with ⟨l, hl, h⟩
       have :=
-        this _ (ss.2 _ hl) fun q' hq => Finset.mem_bunionᵢ.2 ⟨_, hl, Finset.mem_insert_of_mem hq⟩
+        this _ (ss.2 _ hl) fun q' hq => Finset.mem_biUnion.2 ⟨_, hl, Finset.mem_insert_of_mem hq⟩
       rcases Finset.mem_insert.1 h with (rfl | h)
       exacts[this.1, this.2 _ h]
     intro q hs hw
@@ -2693,7 +2693,7 @@ theorem tr_supports {S} (ss : Supports M S) : Supports tr (tr_supp S) :=
     case goto l =>
       refine' ⟨_, fun _ => False.elim⟩
       refine' supports_stmt_read _ fun a _ s => _
-      exact Finset.mem_bunionᵢ.2 ⟨_, hs _ _, Finset.mem_insert_self _ _⟩
+      exact Finset.mem_biUnion.2 ⟨_, hs _ _, Finset.mem_insert_self _ _⟩
     case halt =>
       refine' ⟨_, fun _ => False.elim⟩
       simp only [supports_stmt, supports_stmt_move, tr_normal]⟩
@@ -3045,7 +3045,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align turing.TM2.stmts Turing.TM2.stmtsₓ'. -/
 /-- The set of statements accessible from initial set `S` of labels. -/
 noncomputable def stmts (M : Λ → stmt) (S : Finset Λ) : Finset (Option stmt) :=
-  (S.bunionᵢ fun q => stmts₁ (M q)).insertNone
+  (S.biUnion fun q => stmts₁ (M q)).insertNone
 #align turing.TM2.stmts Turing.TM2.stmts
 
 /- warning: turing.TM2.stmts_trans -> Turing.TM2.stmts_trans is a dubious translation:
@@ -3056,7 +3056,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align turing.TM2.stmts_trans Turing.TM2.stmts_transₓ'. -/
 theorem stmts_trans {M : Λ → stmt} {S q₁ q₂} (h₁ : q₁ ∈ stmts₁ q₂) :
     some q₂ ∈ stmts M S → some q₁ ∈ stmts M S := by
-  simp only [stmts, Finset.mem_insertNone, Finset.mem_bunionᵢ, Option.mem_def, forall_eq',
+  simp only [stmts, Finset.mem_insertNone, Finset.mem_biUnion, Option.mem_def, forall_eq',
       exists_imp] <;>
     exact fun l ls h₂ => ⟨_, ls, stmts₁_trans h₂ h₁⟩
 #align turing.TM2.stmts_trans Turing.TM2.stmts_trans
@@ -3083,7 +3083,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align turing.TM2.stmts_supports_stmt Turing.TM2.stmts_supportsStmtₓ'. -/
 theorem stmts_supportsStmt {M : Λ → stmt} {S q} (ss : supports M S) :
     some q ∈ stmts M S → supports_stmt S q := by
-  simp only [stmts, Finset.mem_insertNone, Finset.mem_bunionᵢ, Option.mem_def, forall_eq',
+  simp only [stmts, Finset.mem_insertNone, Finset.mem_biUnion, Option.mem_def, forall_eq',
       exists_imp] <;>
     exact fun l ls h => stmts₁_supports_stmt_mono h (ss.2 _ ls)
 #align turing.TM2.stmts_supports_stmt Turing.TM2.stmts_supportsStmt
@@ -3829,7 +3829,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align turing.TM2to1.tr_supp Turing.TM2to1.trSuppₓ'. -/
 /-- The support of a set of TM2 states in the TM2 emulator. -/
 noncomputable def trSupp (S : Finset Λ) : Finset Λ' :=
-  S.bunionᵢ fun l => insert (normal l) (tr_stmts₁ (M l))
+  S.biUnion fun l => insert (normal l) (tr_stmts₁ (M l))
 #align turing.TM2to1.tr_supp Turing.TM2to1.trSupp
 
 /- warning: turing.TM2to1.tr_supports -> Turing.TM2to1.tr_supports is a dubious translation:
@@ -3839,16 +3839,16 @@ but is expected to have type
   forall {K : Type.{u3}} [_inst_1 : DecidableEq.{succ u3} K] {Γ : K -> Type.{u2}} {Λ : Type.{u4}} [_inst_2 : Inhabited.{succ u4} Λ] {σ : Type.{u1}} (_inst_3 : Λ -> (Turing.TM2.Stmt.{u3, u2, u4, u1} K Γ Λ σ)) {M : Finset.{u4} Λ}, (Turing.TM2.Supports.{u3, u2, u4, u1} K Γ Λ σ _inst_2 _inst_3 M) -> (Turing.TM1.Supports.{max u2 u3, max (max (max u1 u4) u2) u3, u1} (Turing.TM2to1.Γ'.{u3, u2} K Γ) (Turing.TM2to1.Λ'.{u3, u2, u4, u1} K Γ Λ σ) σ (Turing.TM2to1.Λ'.inhabited.{u3, u2, u4, u1} K Γ Λ _inst_2 σ) (Turing.TM2to1.tr.{u3, u2, u4, u1} K (fun (a : K) (b : K) => _inst_1 a b) Γ Λ σ _inst_3) (Turing.TM2to1.trSupp.{u3, u2, u4, u1} K Γ Λ σ _inst_3 M))
 Case conversion may be inaccurate. Consider using '#align turing.TM2to1.tr_supports Turing.TM2to1.tr_supportsₓ'. -/
 theorem tr_supports {S} (ss : TM2.Supports M S) : TM1.Supports tr (tr_supp S) :=
-  ⟨Finset.mem_bunionᵢ.2 ⟨_, ss.1, Finset.mem_insert.2 <| Or.inl rfl⟩, fun l' h =>
+  ⟨Finset.mem_biUnion.2 ⟨_, ss.1, Finset.mem_insert.2 <| Or.inl rfl⟩, fun l' h =>
     by
     suffices
       ∀ (q) (ss' : TM2.supports_stmt S q) (sub : ∀ x ∈ tr_stmts₁ q, x ∈ tr_supp M S),
         TM1.supports_stmt (tr_supp M S) (tr_normal q) ∧
           ∀ l' ∈ tr_stmts₁ q, TM1.supports_stmt (tr_supp M S) (tr M l')
       by
-      rcases Finset.mem_bunionᵢ.1 h with ⟨l, lS, h⟩
+      rcases Finset.mem_biUnion.1 h with ⟨l, lS, h⟩
       have :=
-        this _ (ss.2 l lS) fun x hx => Finset.mem_bunionᵢ.2 ⟨_, lS, Finset.mem_insert_of_mem hx⟩
+        this _ (ss.2 l lS) fun x hx => Finset.mem_biUnion.2 ⟨_, lS, Finset.mem_insert_of_mem hx⟩
       rcases Finset.mem_insert.1 h with (rfl | h) <;> [exact this.1, exact this.2 _ h]
     clear h l'
     refine' stmt_st_rec _ _ _ _ _ <;> intros
@@ -3888,7 +3888,7 @@ theorem tr_supports {S} (ss : TM2.Supports M S) : TM1.Supports tr (tr_supp S) :=
       unfold TM2to1.tr_normal TM1.supports_stmt
       unfold TM2.supports_stmt at ss'
       exact
-        ⟨fun _ v => Finset.mem_bunionᵢ.2 ⟨_, ss' v, Finset.mem_insert_self _ _⟩, fun _ =>
+        ⟨fun _ v => Finset.mem_biUnion.2 ⟨_, ss' v, Finset.mem_insert_self _ _⟩, fun _ =>
           False.elim⟩
     · exact ⟨trivial, fun _ => False.elim⟩⟩
 #align turing.TM2to1.tr_supports Turing.TM2to1.tr_supports

@@ -96,7 +96,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ε_NFA.mem_step_set_iff εNFA.mem_stepSet_iffₓ'. -/
 @[simp]
 theorem mem_stepSet_iff : s ∈ M.stepSet S a ↔ ∃ t ∈ S, s ∈ M.εClosure (M.step t a) :=
-  mem_unionᵢ₂
+  mem_iUnion₂
 #align ε_NFA.mem_step_set_iff εNFA.mem_stepSet_iff
 
 #print εNFA.stepSet_empty /-
@@ -264,7 +264,7 @@ theorem toεNFA_evalFrom_match (M : NFA α σ) (start : Set σ) :
   rw [eval_from, εNFA.evalFrom, to_ε_NFA_ε_closure]
   congr
   ext (S s)
-  simp only [step_set, εNFA.stepSet, exists_prop, Set.mem_unionᵢ]
+  simp only [step_set, εNFA.stepSet, exists_prop, Set.mem_iUnion]
   apply exists_congr
   simp only [and_congr_right_iff]
   intro t ht

@@ -39,7 +39,7 @@ Specifically, note that if you have `α = {1,2}`, and  `μ {1} = 2`, `μ {2} = 0
 `ν {2} = 2`, `ν {1} = 0`, then `(μ - ν) {1, 2} = 2`. However, if `μ ≤ ν`, and
 `ν univ ≠ ∞`, then `(μ - ν) + ν = μ`. -/
 noncomputable instance hasSub {α : Type _} [MeasurableSpace α] : Sub (Measure α) :=
-  ⟨fun μ ν => infₛ { τ | μ ≤ τ + ν }⟩
+  ⟨fun μ ν => sInf { τ | μ ≤ τ + ν }⟩
 #align measure_theory.measure.has_sub MeasureTheory.Measure.hasSub
 -/
 
@@ -47,17 +47,17 @@ variable {α : Type _} {m : MeasurableSpace α} {μ ν : Measure α} {s : Set α
 
 /- warning: measure_theory.measure.sub_def -> MeasureTheory.Measure.sub_def is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {ν : MeasureTheory.Measure.{u1} α m}, Eq.{succ u1} (MeasureTheory.Measure.{u1} α m) (HSub.hSub.{u1, u1, u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.{u1} α m) (instHSub.{u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.hasSub.{u1} α m)) μ ν) (InfSet.infₛ.{u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.hasInf.{u1} α m) (setOf.{u1} (MeasureTheory.Measure.{u1} α m) (fun (d : MeasureTheory.Measure.{u1} α m) => LE.le.{u1} (MeasureTheory.Measure.{u1} α m) (Preorder.toLE.{u1} (MeasureTheory.Measure.{u1} α m) (PartialOrder.toPreorder.{u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.instPartialOrder.{u1} α m))) μ (HAdd.hAdd.{u1, u1, u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.{u1} α m) (instHAdd.{u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.instAdd.{u1} α m)) d ν))))
+  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {ν : MeasureTheory.Measure.{u1} α m}, Eq.{succ u1} (MeasureTheory.Measure.{u1} α m) (HSub.hSub.{u1, u1, u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.{u1} α m) (instHSub.{u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.hasSub.{u1} α m)) μ ν) (InfSet.sInf.{u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.hasInf.{u1} α m) (setOf.{u1} (MeasureTheory.Measure.{u1} α m) (fun (d : MeasureTheory.Measure.{u1} α m) => LE.le.{u1} (MeasureTheory.Measure.{u1} α m) (Preorder.toLE.{u1} (MeasureTheory.Measure.{u1} α m) (PartialOrder.toPreorder.{u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.instPartialOrder.{u1} α m))) μ (HAdd.hAdd.{u1, u1, u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.{u1} α m) (instHAdd.{u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.instAdd.{u1} α m)) d ν))))
 but is expected to have type
-  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {ν : MeasureTheory.Measure.{u1} α m}, Eq.{succ u1} (MeasureTheory.Measure.{u1} α m) (HSub.hSub.{u1, u1, u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.{u1} α m) (instHSub.{u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.hasSub.{u1} α m)) μ ν) (InfSet.infₛ.{u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.instInfSetMeasure.{u1} α m) (setOf.{u1} (MeasureTheory.Measure.{u1} α m) (fun (d : MeasureTheory.Measure.{u1} α m) => LE.le.{u1} (MeasureTheory.Measure.{u1} α m) (Preorder.toLE.{u1} (MeasureTheory.Measure.{u1} α m) (PartialOrder.toPreorder.{u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.instPartialOrder.{u1} α m))) μ (HAdd.hAdd.{u1, u1, u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.{u1} α m) (instHAdd.{u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.instAdd.{u1} α m)) d ν))))
+  forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {ν : MeasureTheory.Measure.{u1} α m}, Eq.{succ u1} (MeasureTheory.Measure.{u1} α m) (HSub.hSub.{u1, u1, u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.{u1} α m) (instHSub.{u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.hasSub.{u1} α m)) μ ν) (InfSet.sInf.{u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.instInfSetMeasure.{u1} α m) (setOf.{u1} (MeasureTheory.Measure.{u1} α m) (fun (d : MeasureTheory.Measure.{u1} α m) => LE.le.{u1} (MeasureTheory.Measure.{u1} α m) (Preorder.toLE.{u1} (MeasureTheory.Measure.{u1} α m) (PartialOrder.toPreorder.{u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.instPartialOrder.{u1} α m))) μ (HAdd.hAdd.{u1, u1, u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.{u1} α m) (instHAdd.{u1} (MeasureTheory.Measure.{u1} α m) (MeasureTheory.Measure.instAdd.{u1} α m)) d ν))))
 Case conversion may be inaccurate. Consider using '#align measure_theory.measure.sub_def MeasureTheory.Measure.sub_defₓ'. -/
-theorem sub_def : μ - ν = infₛ { d | μ ≤ d + ν } :=
+theorem sub_def : μ - ν = sInf { d | μ ≤ d + ν } :=
   rfl
 #align measure_theory.measure.sub_def MeasureTheory.Measure.sub_def
 
 #print MeasureTheory.Measure.sub_le_of_le_add /-
 theorem sub_le_of_le_add {d} (h : μ ≤ d + ν) : μ - ν ≤ d :=
-  infₛ_le h
+  sInf_le h
 #align measure_theory.measure.sub_le_of_le_add MeasureTheory.Measure.sub_le_of_le_add
 -/
 
@@ -110,7 +110,7 @@ theorem sub_apply [FiniteMeasure ν] (h₁ : MeasurableSet s) (h₂ : ν ≤ μ)
       (fun (t : Set α) (h_t_measurable_set : MeasurableSet t) => μ t - ν t) (by simp)
       (by
         intro g h_meas h_disj; simp only; rw [ENNReal.tsum_sub]
-        repeat' rw [← MeasureTheory.measure_unionᵢ h_disj h_meas]
+        repeat' rw [← MeasureTheory.measure_iUnion h_disj h_meas]
         exacts[MeasureTheory.measure_ne_top _ _, fun i => h₂ _ (h_meas _)])
   -- Now, we demonstrate `μ - ν = measure_sub`, and apply it.
   · have h_measure_sub_add : ν + measure_sub = μ :=
@@ -123,9 +123,9 @@ theorem sub_apply [FiniteMeasure ν] (h₁ : MeasurableSet s) (h₂ : ν ≤ μ)
       by
       rw [MeasureTheory.Measure.sub_def]
       apply le_antisymm
-      · apply @infₛ_le (Measure α) measure.complete_semilattice_Inf
+      · apply @sInf_le (Measure α) measure.complete_semilattice_Inf
         simp [le_refl, add_comm, h_measure_sub_add]
-      apply @le_infₛ (Measure α) measure.complete_semilattice_Inf
+      apply @le_sInf (Measure α) measure.complete_semilattice_Inf
       intro d h_d
       rw [← h_measure_sub_add, mem_set_of_eq, add_comm d] at h_d
       apply measure.le_of_add_le_add_left h_d
@@ -149,7 +149,7 @@ theorem restrict_sub_eq_restrict_sub_restrict (h_meas_s : MeasurableSet s) :
   have h_nonempty : { d | μ ≤ d + ν }.Nonempty := ⟨μ, measure.le_add_right le_rfl⟩
   rw [restrict_Inf_eq_Inf_restrict h_nonempty h_meas_s]
   apply le_antisymm
-  · refine' infₛ_le_infₛ_of_forall_exists_le _
+  · refine' sInf_le_sInf_of_forall_exists_le _
     intro ν' h_ν'_in
     rw [mem_set_of_eq] at h_ν'_in
     refine' ⟨ν'.restrict s, _, restrict_le_self⟩
@@ -169,7 +169,7 @@ theorem restrict_sub_eq_restrict_sub_restrict (h_meas_s : MeasurableSet s) :
         exact measure.le_iff'.1 h_mu_le_add_top _
     · ext1 t h_meas_t
       simp [restrict_apply h_meas_t, restrict_apply (h_meas_t.inter h_meas_s), inter_assoc]
-  · refine' infₛ_le_infₛ_of_forall_exists_le _
+  · refine' sInf_le_sInf_of_forall_exists_le _
     refine' ball_image_iff.2 fun t h_t_in => ⟨t.restrict s, _, le_rfl⟩
     rw [Set.mem_setOf_eq, ← restrict_add]
     exact restrict_mono subset.rfl h_t_in

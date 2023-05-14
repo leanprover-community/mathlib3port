@@ -168,7 +168,7 @@ theorem Measurable.lintegral_kernel_prod_right {f : α → β → ℝ≥0∞} (h
     · exact fun n => (F n).Measurable.comp measurable_prod_mk_left
     · exact fun i j hij b => simple_func.monotone_eapprox (uncurry f) hij _
   simp_rw [this]
-  refine' measurable_supᵢ fun n => simple_func.induction _ _ (F n)
+  refine' measurable_iSup fun n => simple_func.induction _ _ (F n)
   · intro c t ht
     simp only [simple_func.const_zero, simple_func.coe_piecewise, simple_func.coe_const,
       simple_func.coe_zero, Set.piecewise_eq_indicator]

@@ -155,15 +155,15 @@ variable {ι : Sort _} {𝕜 E F : Type _} [OrderedSemiring 𝕜] [AddCommMonoid
   [AddCommMonoid F] [Module 𝕜 F]
 
 theorem locallyConvexSpaceInf {ts : Set (TopologicalSpace E)}
-    (h : ∀ t ∈ ts, @LocallyConvexSpace 𝕜 E _ _ _ t) : @LocallyConvexSpace 𝕜 E _ _ _ (infₛ ts) :=
+    (h : ∀ t ∈ ts, @LocallyConvexSpace 𝕜 E _ _ _ t) : @LocallyConvexSpace 𝕜 E _ _ _ (sInf ts) :=
   by
   letI : TopologicalSpace E := Inf ts
   refine'
     LocallyConvexSpace.ofBases 𝕜 E (fun x => fun If : Set ts × (ts → Set E) => ⋂ i ∈ If.1, If.2 i)
       (fun x => fun If : Set ts × (ts → Set E) =>
         If.1.Finite ∧ ∀ i ∈ If.1, If.2 i ∈ @nhds _ (↑i) x ∧ Convex 𝕜 (If.2 i))
-      (fun x => _) fun x If hif => convex_interᵢ fun i => convex_interᵢ fun hi => (hif.2 i hi).2
-  rw [nhds_infₛ, ← infᵢ_subtype'']
+      (fun x => _) fun x If hif => convex_iInter fun i => convex_iInter fun hi => (hif.2 i hi).2
+  rw [nhds_sInf, ← iInf_subtype'']
   exact has_basis_infi' fun i : ts => (@locallyConvexSpace_iff 𝕜 E _ _ _ ↑i).mp (h (↑i) i.2) x
 #align locally_convex_space_Inf locallyConvexSpaceInf
 
@@ -181,7 +181,7 @@ Case conversion may be inaccurate. Consider using '#align locally_convex_space_i
 theorem locallyConvexSpaceInf {t₁ t₂ : TopologicalSpace E} (h₁ : @LocallyConvexSpace 𝕜 E _ _ _ t₁)
     (h₂ : @LocallyConvexSpace 𝕜 E _ _ _ t₂) : @LocallyConvexSpace 𝕜 E _ _ _ (t₁ ⊓ t₂) :=
   by
-  rw [inf_eq_infᵢ]
+  rw [inf_eq_iInf]
   refine' locallyConvexSpaceInfi fun b => _
   cases b <;> assumption
 #align locally_convex_space_inf locallyConvexSpaceInf

@@ -77,9 +77,9 @@ theorem nhdsSet_diagonal_eq_uniformity [CompactSpace α] : 𝓝ˢ (diagonal α) 
 
 /- warning: compact_space_uniformity -> compactSpace_uniformity is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_3 : CompactSpace.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1)], Eq.{succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (uniformity.{u1} α _inst_1) (supᵢ.{u1, succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (ConditionallyCompleteLattice.toHasSup.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.completeLattice.{u1} (Prod.{u1, u1} α α)))) α (fun (x : α) => nhds.{u1} (Prod.{u1, u1} α α) (Prod.topologicalSpace.{u1, u1} α α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1)) (Prod.mk.{u1, u1} α α x x)))
+  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_3 : CompactSpace.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1)], Eq.{succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (uniformity.{u1} α _inst_1) (iSup.{u1, succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (ConditionallyCompleteLattice.toHasSup.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.completeLattice.{u1} (Prod.{u1, u1} α α)))) α (fun (x : α) => nhds.{u1} (Prod.{u1, u1} α α) (Prod.topologicalSpace.{u1, u1} α α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1)) (Prod.mk.{u1, u1} α α x x)))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_3 : CompactSpace.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1)], Eq.{succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (uniformity.{u1} α _inst_1) (supᵢ.{u1, succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (ConditionallyCompleteLattice.toSupSet.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.instCompleteLatticeFilter.{u1} (Prod.{u1, u1} α α)))) α (fun (x : α) => nhds.{u1} (Prod.{u1, u1} α α) (instTopologicalSpaceProd.{u1, u1} α α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1)) (Prod.mk.{u1, u1} α α x x)))
+  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] [_inst_3 : CompactSpace.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_1)], Eq.{succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (uniformity.{u1} α _inst_1) (iSup.{u1, succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (ConditionallyCompleteLattice.toSupSet.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.instCompleteLatticeFilter.{u1} (Prod.{u1, u1} α α)))) α (fun (x : α) => nhds.{u1} (Prod.{u1, u1} α α) (instTopologicalSpaceProd.{u1, u1} α α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1)) (Prod.mk.{u1, u1} α α x x)))
 Case conversion may be inaccurate. Consider using '#align compact_space_uniformity compactSpace_uniformityₓ'. -/
 /-- On a compact uniform space, the topology determines the uniform structure, entourages are
 exactly the neighborhoods of the diagonal. -/
@@ -188,7 +188,7 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
       simp_rw [isOpen_fold, isOpen_iff_mem_nhds, ← mem_comap_prod_mk, this]
     intro x
     simp_rw [nhdsSet_diagonal, comap_supr, nhds_prod_eq, comap_prod, (· ∘ ·), comap_id']
-    rw [supᵢ_split_single _ x, comap_const_of_mem fun V => mem_of_mem_nhds]
+    rw [iSup_split_single _ x, comap_const_of_mem fun V => mem_of_mem_nhds]
     suffices ∀ (y) (_ : y ≠ x), comap (fun y : γ => x) (𝓝 y) ⊓ 𝓝 y ≤ 𝓝 x by simpa
     intro y hxy
     simp [comap_const_of_not_mem (compl_singleton_mem_nhds hxy) (Classical.not_not.2 rfl)]
@@ -248,7 +248,7 @@ theorem IsCompact.uniformContinuousAt_of_continuousAt {r : Set (β × β)} {s : 
   obtain ⟨fs, hsU⟩ := hs.elim_nhds_subcover' U hU
   apply mem_of_superset ((bInter_finset_mem fs).2 fun a _ => hT a a.2)
   rintro ⟨a₁, a₂⟩ h h₁
-  obtain ⟨a, ha, haU⟩ := Set.mem_unionᵢ₂.1 (hsU h₁)
+  obtain ⟨a, ha, haU⟩ := Set.mem_iUnion₂.1 (hsU h₁)
   apply htr
   refine' ⟨f a, htsymm.mk_mem_comm.1 (hb _ _ _ haU _), hb _ _ _ haU _⟩
   exacts[mem_ball_self _ (hT a a.2), mem_Inter₂.1 h a ha]

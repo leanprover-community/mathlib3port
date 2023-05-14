@@ -964,13 +964,13 @@ theorem TendstoLocallyUniformlyOn.mono (h : TendstoLocallyUniformlyOn F f p s) (
 #align tendsto_locally_uniformly_on.mono TendstoLocallyUniformlyOn.mono
 -/
 
-/- warning: tendsto_locally_uniformly_on_Union -> tendstoLocallyUniformlyOn_unionᵢ is a dubious translation:
+/- warning: tendsto_locally_uniformly_on_Union -> tendstoLocallyUniformlyOn_iUnion is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {ι : Type.{u4}} [_inst_1 : UniformSpace.{u2} β] {F : ι -> α -> β} {f : α -> β} {p : Filter.{u4} ι} [_inst_2 : TopologicalSpace.{u1} α] {S : γ -> (Set.{u1} α)}, (forall (i : γ), IsOpen.{u1} α _inst_2 (S i)) -> (forall (i : γ), TendstoLocallyUniformlyOn.{u1, u2, u4} α β ι _inst_1 _inst_2 F f p (S i)) -> (TendstoLocallyUniformlyOn.{u1, u2, u4} α β ι _inst_1 _inst_2 F f p (Set.unionᵢ.{u1, succ u3} α γ (fun (i : γ) => S i)))
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {ι : Type.{u4}} [_inst_1 : UniformSpace.{u2} β] {F : ι -> α -> β} {f : α -> β} {p : Filter.{u4} ι} [_inst_2 : TopologicalSpace.{u1} α] {S : γ -> (Set.{u1} α)}, (forall (i : γ), IsOpen.{u1} α _inst_2 (S i)) -> (forall (i : γ), TendstoLocallyUniformlyOn.{u1, u2, u4} α β ι _inst_1 _inst_2 F f p (S i)) -> (TendstoLocallyUniformlyOn.{u1, u2, u4} α β ι _inst_1 _inst_2 F f p (Set.iUnion.{u1, succ u3} α γ (fun (i : γ) => S i)))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} {γ : Type.{u4}} [ι : UniformSpace.{u3} β] {_inst_1 : γ -> α -> β} {F : α -> β} {f : Filter.{u4} γ} [p : TopologicalSpace.{u2} α] {_inst_2 : Sort.{u1}} {S : _inst_2 -> (Set.{u2} α)}, (forall (i : _inst_2), IsOpen.{u2} α p (S i)) -> (forall (i : _inst_2), TendstoLocallyUniformlyOn.{u2, u3, u4} α β γ ι p _inst_1 F f (S i)) -> (TendstoLocallyUniformlyOn.{u2, u3, u4} α β γ ι p _inst_1 F f (Set.unionᵢ.{u2, u1} α _inst_2 (fun (i : _inst_2) => S i)))
-Case conversion may be inaccurate. Consider using '#align tendsto_locally_uniformly_on_Union tendstoLocallyUniformlyOn_unionᵢₓ'. -/
-theorem tendstoLocallyUniformlyOn_unionᵢ {S : γ → Set α} (hS : ∀ i, IsOpen (S i))
+  forall {α : Type.{u2}} {β : Type.{u3}} {γ : Type.{u4}} [ι : UniformSpace.{u3} β] {_inst_1 : γ -> α -> β} {F : α -> β} {f : Filter.{u4} γ} [p : TopologicalSpace.{u2} α] {_inst_2 : Sort.{u1}} {S : _inst_2 -> (Set.{u2} α)}, (forall (i : _inst_2), IsOpen.{u2} α p (S i)) -> (forall (i : _inst_2), TendstoLocallyUniformlyOn.{u2, u3, u4} α β γ ι p _inst_1 F f (S i)) -> (TendstoLocallyUniformlyOn.{u2, u3, u4} α β γ ι p _inst_1 F f (Set.iUnion.{u2, u1} α _inst_2 (fun (i : _inst_2) => S i)))
+Case conversion may be inaccurate. Consider using '#align tendsto_locally_uniformly_on_Union tendstoLocallyUniformlyOn_iUnionₓ'. -/
+theorem tendstoLocallyUniformlyOn_iUnion {S : γ → Set α} (hS : ∀ i, IsOpen (S i))
     (h : ∀ i, TendstoLocallyUniformlyOn F f p (S i)) : TendstoLocallyUniformlyOn F f p (⋃ i, S i) :=
   by
   rintro v hv x ⟨_, ⟨i, rfl⟩, hi : x ∈ S i⟩
@@ -978,25 +978,25 @@ theorem tendstoLocallyUniformlyOn_unionᵢ {S : γ → Set α} (hS : ∀ i, IsOp
   refine' ⟨t, _, ht'⟩
   rw [(hS _).nhdsWithin_eq hi] at ht
   exact mem_nhdsWithin_of_mem_nhds ht
-#align tendsto_locally_uniformly_on_Union tendstoLocallyUniformlyOn_unionᵢ
+#align tendsto_locally_uniformly_on_Union tendstoLocallyUniformlyOn_iUnion
 
-#print tendstoLocallyUniformlyOn_bunionᵢ /-
-theorem tendstoLocallyUniformlyOn_bunionᵢ {s : Set γ} {S : γ → Set α} (hS : ∀ i ∈ s, IsOpen (S i))
+#print tendstoLocallyUniformlyOn_biUnion /-
+theorem tendstoLocallyUniformlyOn_biUnion {s : Set γ} {S : γ → Set α} (hS : ∀ i ∈ s, IsOpen (S i))
     (h : ∀ i ∈ s, TendstoLocallyUniformlyOn F f p (S i)) :
     TendstoLocallyUniformlyOn F f p (⋃ i ∈ s, S i) :=
   by
   rw [bUnion_eq_Union]
-  exact tendstoLocallyUniformlyOn_unionᵢ (fun i => hS _ i.2) fun i => h _ i.2
-#align tendsto_locally_uniformly_on_bUnion tendstoLocallyUniformlyOn_bunionᵢ
+  exact tendstoLocallyUniformlyOn_iUnion (fun i => hS _ i.2) fun i => h _ i.2
+#align tendsto_locally_uniformly_on_bUnion tendstoLocallyUniformlyOn_biUnion
 -/
 
-#print tendstoLocallyUniformlyOn_unionₛ /-
-theorem tendstoLocallyUniformlyOn_unionₛ (S : Set (Set α)) (hS : ∀ s ∈ S, IsOpen s)
+#print tendstoLocallyUniformlyOn_sUnion /-
+theorem tendstoLocallyUniformlyOn_sUnion (S : Set (Set α)) (hS : ∀ s ∈ S, IsOpen s)
     (h : ∀ s ∈ S, TendstoLocallyUniformlyOn F f p s) : TendstoLocallyUniformlyOn F f p (⋃₀ S) :=
   by
   rw [sUnion_eq_bUnion]
-  exact tendstoLocallyUniformlyOn_bunionᵢ hS h
-#align tendsto_locally_uniformly_on_sUnion tendstoLocallyUniformlyOn_unionₛ
+  exact tendstoLocallyUniformlyOn_biUnion hS h
+#align tendsto_locally_uniformly_on_sUnion tendstoLocallyUniformlyOn_sUnion
 -/
 
 /- warning: tendsto_locally_uniformly_on.union -> TendstoLocallyUniformlyOn.union is a dubious translation:
@@ -1010,7 +1010,7 @@ theorem TendstoLocallyUniformlyOn.union {s₁ s₂ : Set α} (hs₁ : IsOpen s�
     TendstoLocallyUniformlyOn F f p (s₁ ∪ s₂) :=
   by
   rw [← sUnion_pair]
-  refine' tendstoLocallyUniformlyOn_unionₛ _ _ _ <;> simp [*]
+  refine' tendstoLocallyUniformlyOn_sUnion _ _ _ <;> simp [*]
 #align tendsto_locally_uniformly_on.union TendstoLocallyUniformlyOn.union
 
 #print tendstoLocallyUniformlyOn_univ /-

@@ -169,7 +169,7 @@ theorem exists_idempotent_ultrafilter_le_FP {M} [Semigroup M] (a : Stream' M) :
   · refine' ⟨U, U_idem, _⟩
     convert set.mem_Inter.mp hU 0
   · exact Ultrafilter.continuous_mul_left
-  · apply IsCompact.nonempty_interᵢ_of_sequence_nonempty_compact_closed
+  · apply IsCompact.nonempty_iInter_of_sequence_nonempty_compact_closed
     · intro n U hU
       apply eventually.mono hU
       rw [add_comm, ← Stream'.drop_drop, ← Stream'.tail_eq_drop]
@@ -179,9 +179,9 @@ theorem exists_idempotent_ultrafilter_le_FP {M} [Semigroup M] (a : Stream' M) :
     · exact (ultrafilter_isClosed_basic _).IsCompact
     · intro n
       apply ultrafilter_isClosed_basic
-  · exact IsClosed.isCompact (isClosed_interᵢ fun i => ultrafilter_isClosed_basic _)
+  · exact IsClosed.isCompact (isClosed_iInter fun i => ultrafilter_isClosed_basic _)
   · intro U hU V hV
-    rw [Set.mem_interᵢ] at *
+    rw [Set.mem_iInter] at *
     intro n
     rw [Set.mem_setOf_eq, Ultrafilter.eventually_mul]
     apply eventually.mono (hU n)
@@ -242,9 +242,9 @@ theorem exists_FP_of_large {M} [Semigroup M] (U : Ultrafilter M) (U_idem : U * U
 
 /- warning: hindman.FP_partition_regular -> Hindman.FP_partition_regular is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Semigroup.{u1} M] (a : Stream'.{u1} M) (s : Set.{u1} (Set.{u1} M)), (Set.Finite.{u1} (Set.{u1} M) s) -> (HasSubset.Subset.{u1} (Set.{u1} M) (Set.hasSubset.{u1} M) (Hindman.FP.{u1} M _inst_1 a) (Set.unionₛ.{u1} M s)) -> (Exists.{succ u1} (Set.{u1} M) (fun (c : Set.{u1} M) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} M) (Set.{u1} (Set.{u1} M)) (Set.hasMem.{u1} (Set.{u1} M)) c s) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} M) (Set.{u1} (Set.{u1} M)) (Set.hasMem.{u1} (Set.{u1} M)) c s) => Exists.{succ u1} (Stream'.{u1} M) (fun (b : Stream'.{u1} M) => HasSubset.Subset.{u1} (Set.{u1} M) (Set.hasSubset.{u1} M) (Hindman.FP.{u1} M _inst_1 b) c))))
+  forall {M : Type.{u1}} [_inst_1 : Semigroup.{u1} M] (a : Stream'.{u1} M) (s : Set.{u1} (Set.{u1} M)), (Set.Finite.{u1} (Set.{u1} M) s) -> (HasSubset.Subset.{u1} (Set.{u1} M) (Set.hasSubset.{u1} M) (Hindman.FP.{u1} M _inst_1 a) (Set.sUnion.{u1} M s)) -> (Exists.{succ u1} (Set.{u1} M) (fun (c : Set.{u1} M) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} M) (Set.{u1} (Set.{u1} M)) (Set.hasMem.{u1} (Set.{u1} M)) c s) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} M) (Set.{u1} (Set.{u1} M)) (Set.hasMem.{u1} (Set.{u1} M)) c s) => Exists.{succ u1} (Stream'.{u1} M) (fun (b : Stream'.{u1} M) => HasSubset.Subset.{u1} (Set.{u1} M) (Set.hasSubset.{u1} M) (Hindman.FP.{u1} M _inst_1 b) c))))
 but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Semigroup.{u1} M] (a : Stream'.{u1} M) (s : Set.{u1} (Set.{u1} M)), (Set.Finite.{u1} (Set.{u1} M) s) -> (HasSubset.Subset.{u1} (Set.{u1} M) (Set.instHasSubsetSet.{u1} M) (Hindman.FP.{u1} M _inst_1 a) (Set.unionₛ.{u1} M s)) -> (Exists.{succ u1} (Set.{u1} M) (fun (c : Set.{u1} M) => And (Membership.mem.{u1, u1} (Set.{u1} M) (Set.{u1} (Set.{u1} M)) (Set.instMembershipSet.{u1} (Set.{u1} M)) c s) (Exists.{succ u1} (Stream'.{u1} M) (fun (b : Stream'.{u1} M) => HasSubset.Subset.{u1} (Set.{u1} M) (Set.instHasSubsetSet.{u1} M) (Hindman.FP.{u1} M _inst_1 b) c))))
+  forall {M : Type.{u1}} [_inst_1 : Semigroup.{u1} M] (a : Stream'.{u1} M) (s : Set.{u1} (Set.{u1} M)), (Set.Finite.{u1} (Set.{u1} M) s) -> (HasSubset.Subset.{u1} (Set.{u1} M) (Set.instHasSubsetSet.{u1} M) (Hindman.FP.{u1} M _inst_1 a) (Set.sUnion.{u1} M s)) -> (Exists.{succ u1} (Set.{u1} M) (fun (c : Set.{u1} M) => And (Membership.mem.{u1, u1} (Set.{u1} M) (Set.{u1} (Set.{u1} M)) (Set.instMembershipSet.{u1} (Set.{u1} M)) c s) (Exists.{succ u1} (Stream'.{u1} M) (fun (b : Stream'.{u1} M) => HasSubset.Subset.{u1} (Set.{u1} M) (Set.instHasSubsetSet.{u1} M) (Hindman.FP.{u1} M _inst_1 b) c))))
 Case conversion may be inaccurate. Consider using '#align hindman.FP_partition_regular Hindman.FP_partition_regularₓ'. -/
 /-- The strong form of **Hindman's theorem**: in any finite cover of an FP-set, one the parts
 contains an FP-set. -/
@@ -253,16 +253,16 @@ contains an FP-set. -/
 theorem FP_partition_regular {M} [Semigroup M] (a : Stream' M) (s : Set (Set M)) (sfin : s.Finite)
     (scov : FP a ⊆ ⋃₀ s) : ∃ c ∈ s, ∃ b : Stream' M, FP b ⊆ c :=
   let ⟨U, idem, aU⟩ := exists_idempotent_ultrafilter_le_FP a
-  let ⟨c, cs, hc⟩ := (Ultrafilter.finite_unionₛ_mem_iff sfin).mp (mem_of_superset aU scov)
+  let ⟨c, cs, hc⟩ := (Ultrafilter.finite_sUnion_mem_iff sfin).mp (mem_of_superset aU scov)
   ⟨c, cs, exists_FP_of_large U idem c hc⟩
 #align hindman.FP_partition_regular Hindman.FP_partition_regular
 #align hindman.FS_partition_regular Hindman.FS_partition_regular
 
 /- warning: hindman.exists_FP_of_finite_cover -> Hindman.exists_FP_of_finite_cover is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Semigroup.{u1} M] [_inst_2 : Nonempty.{succ u1} M] (s : Set.{u1} (Set.{u1} M)), (Set.Finite.{u1} (Set.{u1} M) s) -> (HasSubset.Subset.{u1} (Set.{u1} M) (Set.hasSubset.{u1} M) (Top.top.{u1} (Set.{u1} M) (CompleteLattice.toHasTop.{u1} (Set.{u1} M) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} M) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} M) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} M) (Set.completeBooleanAlgebra.{u1} M)))))) (Set.unionₛ.{u1} M s)) -> (Exists.{succ u1} (Set.{u1} M) (fun (c : Set.{u1} M) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} M) (Set.{u1} (Set.{u1} M)) (Set.hasMem.{u1} (Set.{u1} M)) c s) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} M) (Set.{u1} (Set.{u1} M)) (Set.hasMem.{u1} (Set.{u1} M)) c s) => Exists.{succ u1} (Stream'.{u1} M) (fun (a : Stream'.{u1} M) => HasSubset.Subset.{u1} (Set.{u1} M) (Set.hasSubset.{u1} M) (Hindman.FP.{u1} M _inst_1 a) c))))
+  forall {M : Type.{u1}} [_inst_1 : Semigroup.{u1} M] [_inst_2 : Nonempty.{succ u1} M] (s : Set.{u1} (Set.{u1} M)), (Set.Finite.{u1} (Set.{u1} M) s) -> (HasSubset.Subset.{u1} (Set.{u1} M) (Set.hasSubset.{u1} M) (Top.top.{u1} (Set.{u1} M) (CompleteLattice.toHasTop.{u1} (Set.{u1} M) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} M) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} M) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} M) (Set.completeBooleanAlgebra.{u1} M)))))) (Set.sUnion.{u1} M s)) -> (Exists.{succ u1} (Set.{u1} M) (fun (c : Set.{u1} M) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} M) (Set.{u1} (Set.{u1} M)) (Set.hasMem.{u1} (Set.{u1} M)) c s) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} M) (Set.{u1} (Set.{u1} M)) (Set.hasMem.{u1} (Set.{u1} M)) c s) => Exists.{succ u1} (Stream'.{u1} M) (fun (a : Stream'.{u1} M) => HasSubset.Subset.{u1} (Set.{u1} M) (Set.hasSubset.{u1} M) (Hindman.FP.{u1} M _inst_1 a) c))))
 but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Semigroup.{u1} M] [_inst_2 : Nonempty.{succ u1} M] (s : Set.{u1} (Set.{u1} M)), (Set.Finite.{u1} (Set.{u1} M) s) -> (HasSubset.Subset.{u1} (Set.{u1} M) (Set.instHasSubsetSet.{u1} M) (Top.top.{u1} (Set.{u1} M) (CompleteLattice.toTop.{u1} (Set.{u1} M) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} M) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} M) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} M) (Set.instCompleteBooleanAlgebraSet.{u1} M)))))) (Set.unionₛ.{u1} M s)) -> (Exists.{succ u1} (Set.{u1} M) (fun (c : Set.{u1} M) => And (Membership.mem.{u1, u1} (Set.{u1} M) (Set.{u1} (Set.{u1} M)) (Set.instMembershipSet.{u1} (Set.{u1} M)) c s) (Exists.{succ u1} (Stream'.{u1} M) (fun (a : Stream'.{u1} M) => HasSubset.Subset.{u1} (Set.{u1} M) (Set.instHasSubsetSet.{u1} M) (Hindman.FP.{u1} M _inst_1 a) c))))
+  forall {M : Type.{u1}} [_inst_1 : Semigroup.{u1} M] [_inst_2 : Nonempty.{succ u1} M] (s : Set.{u1} (Set.{u1} M)), (Set.Finite.{u1} (Set.{u1} M) s) -> (HasSubset.Subset.{u1} (Set.{u1} M) (Set.instHasSubsetSet.{u1} M) (Top.top.{u1} (Set.{u1} M) (CompleteLattice.toTop.{u1} (Set.{u1} M) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} M) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} M) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} M) (Set.instCompleteBooleanAlgebraSet.{u1} M)))))) (Set.sUnion.{u1} M s)) -> (Exists.{succ u1} (Set.{u1} M) (fun (c : Set.{u1} M) => And (Membership.mem.{u1, u1} (Set.{u1} M) (Set.{u1} (Set.{u1} M)) (Set.instMembershipSet.{u1} (Set.{u1} M)) c s) (Exists.{succ u1} (Stream'.{u1} M) (fun (a : Stream'.{u1} M) => HasSubset.Subset.{u1} (Set.{u1} M) (Set.instHasSubsetSet.{u1} M) (Hindman.FP.{u1} M _inst_1 a) c))))
 Case conversion may be inaccurate. Consider using '#align hindman.exists_FP_of_finite_cover Hindman.exists_FP_of_finite_coverₓ'. -/
 /-- The weak form of **Hindman's theorem**: in any finite cover of a nonempty semigroup, one of the
 parts contains an FP-set. -/
@@ -272,7 +272,7 @@ theorem exists_FP_of_finite_cover {M} [Semigroup M] [Nonempty M] (s : Set (Set M
     (scov : ⊤ ⊆ ⋃₀ s) : ∃ c ∈ s, ∃ a : Stream' M, FP a ⊆ c :=
   let ⟨U, hU⟩ :=
     exists_idempotent_of_compact_t2_of_continuous_mul_left (@Ultrafilter.continuous_mul_left M _)
-  let ⟨c, c_s, hc⟩ := (Ultrafilter.finite_unionₛ_mem_iff sfin).mp (mem_of_superset univ_mem scov)
+  let ⟨c, c_s, hc⟩ := (Ultrafilter.finite_sUnion_mem_iff sfin).mp (mem_of_superset univ_mem scov)
   ⟨c, c_s, exists_FP_of_large U hU c hc⟩
 #align hindman.exists_FP_of_finite_cover Hindman.exists_FP_of_finite_cover
 #align hindman.exists_FS_of_finite_cover Hindman.exists_FS_of_finite_cover

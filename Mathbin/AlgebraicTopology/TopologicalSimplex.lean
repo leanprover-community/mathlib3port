@@ -70,11 +70,11 @@ def toTopMap {x y : SimplexCategory} (f : x ⟶ y) : x.toTopObj → y.toTopObj :
   ⟨fun i => ∑ j in Finset.univ.filterₓ fun k => f k = i, g j,
     by
     simp only [[anonymous], Finset.sum_congr, to_Top_obj, Set.mem_setOf]
-    rw [← Finset.sum_bunionᵢ]
+    rw [← Finset.sum_biUnion]
     convert g.2
     · rw [Finset.eq_univ_iff_forall]
       intro i
-      rw [Finset.mem_bunionᵢ]
+      rw [Finset.mem_biUnion]
       exact ⟨f i, by simp, by simp⟩
     · intro i hi j hj h
       rw [Function.onFun, disjoint_iff_inf_le]
@@ -127,7 +127,7 @@ def toTop : SimplexCategory ⥤ TopCat
     intro x y z f g
     ext (h i) : 3
     dsimp
-    erw [← Finset.sum_bunionᵢ]
+    erw [← Finset.sum_biUnion]
     apply Finset.sum_congr
     · exact Finset.ext fun j => ⟨fun hj => by simpa using hj, fun hj => by simpa using hj⟩
     · tauto

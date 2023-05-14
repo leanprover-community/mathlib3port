@@ -75,7 +75,7 @@ variable (α)
 /-- A compactness property for a complete lattice is that any `sup`-closed non-empty subset
 contains its `Sup`. -/
 def IsSupClosedCompact : Prop :=
-  ∀ (s : Set α) (h : s.Nonempty), (∀ (a) (_ : a ∈ s) (b) (_ : b ∈ s), a ⊔ b ∈ s) → supₛ s ∈ s
+  ∀ (s : Set α) (h : s.Nonempty), (∀ (a) (_ : a ∈ s) (b) (_ : b ∈ s), a ⊔ b ∈ s) → sSup s ∈ s
 #align complete_lattice.is_sup_closed_compact CompleteLattice.IsSupClosedCompact
 -/
 
@@ -83,7 +83,7 @@ def IsSupClosedCompact : Prop :=
 /-- A compactness property for a complete lattice is that any subset has a finite subset with the
 same `Sup`. -/
 def IsSupFiniteCompact : Prop :=
-  ∀ s : Set α, ∃ t : Finset α, ↑t ⊆ s ∧ supₛ s = t.sup id
+  ∀ s : Set α, ∃ t : Finset α, ↑t ⊆ s ∧ sSup s = t.sup id
 #align complete_lattice.is_Sup_finite_compact CompleteLattice.IsSupFiniteCompact
 -/
 
@@ -92,19 +92,19 @@ def IsSupFiniteCompact : Prop :=
 above `k` has a finite subset with `Sup` above `k`.  Such an element is also called
 "finite" or "S-compact". -/
 def IsCompactElement {α : Type _} [CompleteLattice α] (k : α) :=
-  ∀ s : Set α, k ≤ supₛ s → ∃ t : Finset α, ↑t ⊆ s ∧ k ≤ t.sup id
+  ∀ s : Set α, k ≤ sSup s → ∃ t : Finset α, ↑t ⊆ s ∧ k ≤ t.sup id
 #align complete_lattice.is_compact_element CompleteLattice.IsCompactElement
 -/
 
 /- warning: complete_lattice.is_compact_element_iff -> CompleteLattice.isCompactElement_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_2 : CompleteLattice.{u1} α] (k : α), Iff (CompleteLattice.IsCompactElement.{u1} α _inst_2 k) (forall (ι : Type.{u1}) (s : ι -> α), (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_2)))) k (supᵢ.{u1, succ u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_2)) ι s)) -> (Exists.{succ u1} (Finset.{u1} ι) (fun (t : Finset.{u1} ι) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_2)))) k (Finset.sup.{u1, u1} α ι (Lattice.toSemilatticeSup.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_2))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α (Lattice.toSemilatticeSup.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_2)))))) (CompleteLattice.toBoundedOrder.{u1} α _inst_2)) t s))))
+  forall {α : Type.{u1}} [_inst_2 : CompleteLattice.{u1} α] (k : α), Iff (CompleteLattice.IsCompactElement.{u1} α _inst_2 k) (forall (ι : Type.{u1}) (s : ι -> α), (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_2)))) k (iSup.{u1, succ u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_2)) ι s)) -> (Exists.{succ u1} (Finset.{u1} ι) (fun (t : Finset.{u1} ι) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_2)))) k (Finset.sup.{u1, u1} α ι (Lattice.toSemilatticeSup.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_2))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α (Lattice.toSemilatticeSup.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_2)))))) (CompleteLattice.toBoundedOrder.{u1} α _inst_2)) t s))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_2 : CompleteLattice.{u1} α] (k : α), Iff (CompleteLattice.IsCompactElement.{u1} α _inst_2 k) (forall (ι : Type.{u1}) (s : ι -> α), (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_2)))) k (supᵢ.{u1, succ u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_2)) ι s)) -> (Exists.{succ u1} (Finset.{u1} ι) (fun (t : Finset.{u1} ι) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_2)))) k (Finset.sup.{u1, u1} α ι (Lattice.toSemilatticeSup.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_2))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α (Lattice.toSemilatticeSup.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_2)))))) (CompleteLattice.toBoundedOrder.{u1} α _inst_2)) t s))))
+  forall {α : Type.{u1}} [_inst_2 : CompleteLattice.{u1} α] (k : α), Iff (CompleteLattice.IsCompactElement.{u1} α _inst_2 k) (forall (ι : Type.{u1}) (s : ι -> α), (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_2)))) k (iSup.{u1, succ u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_2)) ι s)) -> (Exists.{succ u1} (Finset.{u1} ι) (fun (t : Finset.{u1} ι) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_2)))) k (Finset.sup.{u1, u1} α ι (Lattice.toSemilatticeSup.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_2))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α (Lattice.toSemilatticeSup.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_2)))))) (CompleteLattice.toBoundedOrder.{u1} α _inst_2)) t s))))
 Case conversion may be inaccurate. Consider using '#align complete_lattice.is_compact_element_iff CompleteLattice.isCompactElement_iffₓ'. -/
 theorem isCompactElement_iff.{u} {α : Type u} [CompleteLattice α] (k : α) :
     CompleteLattice.IsCompactElement k ↔
-      ∀ (ι : Type u) (s : ι → α), k ≤ supᵢ s → ∃ t : Finset ι, k ≤ t.sup s :=
+      ∀ (ι : Type u) (s : ι → α), k ≤ iSup s → ∃ t : Finset ι, k ≤ t.sup s :=
   by
   classical
     constructor
@@ -121,24 +121,24 @@ theorem isCompactElement_iff.{u} {α : Type u} [CompleteLattice α] (k : α) :
       obtain ⟨t, ht⟩ :=
         H s coe
           (by
-            delta supᵢ
+            delta iSup
             rwa [Subtype.range_coe])
       refine' ⟨t.image coe, by simp, ht.trans _⟩
       rw [Finset.sup_le_iff]
       exact fun x hx => @Finset.le_sup _ _ _ _ _ id _ (Finset.mem_image_of_mem coe hx)
 #align complete_lattice.is_compact_element_iff CompleteLattice.isCompactElement_iff
 
-/- warning: complete_lattice.is_compact_element_iff_le_of_directed_Sup_le -> CompleteLattice.isCompactElement_iff_le_of_directed_supₛ_le is a dubious translation:
+/- warning: complete_lattice.is_compact_element_iff_le_of_directed_Sup_le -> CompleteLattice.isCompactElement_iff_le_of_directed_sSup_le is a dubious translation:
 lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_1 : CompleteLattice.{u1} α] (k : α), Iff (CompleteLattice.IsCompactElement.{u1} α _inst_1 k) (forall (s : Set.{u1} α), (Set.Nonempty.{u1} α s) -> (DirectedOn.{u1} α (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) k (SupSet.supₛ.{u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) s)) -> (Exists.{succ u1} α (fun (x : α) => And (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) k x))))
+  forall (α : Type.{u1}) [_inst_1 : CompleteLattice.{u1} α] (k : α), Iff (CompleteLattice.IsCompactElement.{u1} α _inst_1 k) (forall (s : Set.{u1} α), (Set.Nonempty.{u1} α s) -> (DirectedOn.{u1} α (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) k (SupSet.sSup.{u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) s)) -> (Exists.{succ u1} α (fun (x : α) => And (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) k x))))
 but is expected to have type
-  forall (α : Type.{u1}) [_inst_1 : CompleteLattice.{u1} α] (k : α), Iff (CompleteLattice.IsCompactElement.{u1} α _inst_1 k) (forall (s : Set.{u1} α), (Set.Nonempty.{u1} α s) -> (DirectedOn.{u1} α (fun (x._@.Mathlib.Order.CompactlyGenerated._hyg.541 : α) (x._@.Mathlib.Order.CompactlyGenerated._hyg.543 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) x._@.Mathlib.Order.CompactlyGenerated._hyg.541 x._@.Mathlib.Order.CompactlyGenerated._hyg.543) s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) k (SupSet.supₛ.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) s)) -> (Exists.{succ u1} α (fun (x : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) k x))))
-Case conversion may be inaccurate. Consider using '#align complete_lattice.is_compact_element_iff_le_of_directed_Sup_le CompleteLattice.isCompactElement_iff_le_of_directed_supₛ_leₓ'. -/
+  forall (α : Type.{u1}) [_inst_1 : CompleteLattice.{u1} α] (k : α), Iff (CompleteLattice.IsCompactElement.{u1} α _inst_1 k) (forall (s : Set.{u1} α), (Set.Nonempty.{u1} α s) -> (DirectedOn.{u1} α (fun (x._@.Mathlib.Order.CompactlyGenerated._hyg.541 : α) (x._@.Mathlib.Order.CompactlyGenerated._hyg.543 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) x._@.Mathlib.Order.CompactlyGenerated._hyg.541 x._@.Mathlib.Order.CompactlyGenerated._hyg.543) s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) k (SupSet.sSup.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) s)) -> (Exists.{succ u1} α (fun (x : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) k x))))
+Case conversion may be inaccurate. Consider using '#align complete_lattice.is_compact_element_iff_le_of_directed_Sup_le CompleteLattice.isCompactElement_iff_le_of_directed_sSup_leₓ'. -/
 /-- An element `k` is compact if and only if any directed set with `Sup` above
 `k` already got above `k` at some point in the set. -/
-theorem isCompactElement_iff_le_of_directed_supₛ_le (k : α) :
+theorem isCompactElement_iff_le_of_directed_sSup_le (k : α) :
     IsCompactElement k ↔
-      ∀ s : Set α, s.Nonempty → DirectedOn (· ≤ ·) s → k ≤ supₛ s → ∃ x : α, x ∈ s ∧ k ≤ x :=
+      ∀ s : Set α, s.Nonempty → DirectedOn (· ≤ ·) s → k ≤ sSup s → ∃ x : α, x ∈ s ∧ k ≤ x :=
   by
   classical
     constructor
@@ -163,7 +163,7 @@ theorem isCompactElement_iff_le_of_directed_supₛ_le (k : α) :
           · simp only [hc.right, hd.right, Finset.sup_union]
         simp only [and_self_iff, le_sup_left, le_sup_right]
       have sup_S : Sup s ≤ Sup S := by
-        apply supₛ_le_supₛ
+        apply sSup_le_sSup
         intro x hx
         use {x}
         simpa only [and_true_iff, id.def, Finset.coe_singleton, eq_self_iff_true,
@@ -179,15 +179,15 @@ theorem isCompactElement_iff_le_of_directed_supₛ_le (k : α) :
       obtain ⟨t, ⟨htS, htsup⟩⟩ := hjS
       use t
       exact ⟨htS, by rwa [← htsup]⟩
-#align complete_lattice.is_compact_element_iff_le_of_directed_Sup_le CompleteLattice.isCompactElement_iff_le_of_directed_supₛ_le
+#align complete_lattice.is_compact_element_iff_le_of_directed_Sup_le CompleteLattice.isCompactElement_iff_le_of_directed_sSup_le
 
-/- warning: complete_lattice.is_compact_element.exists_finset_of_le_supr -> CompleteLattice.IsCompactElement.exists_finset_of_le_supᵢ is a dubious translation:
+/- warning: complete_lattice.is_compact_element.exists_finset_of_le_supr -> CompleteLattice.IsCompactElement.exists_finset_of_le_iSup is a dubious translation:
 lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_1 : CompleteLattice.{u1} α] {k : α}, (CompleteLattice.IsCompactElement.{u1} α _inst_1 k) -> (forall {ι : Type.{u2}} (f : ι -> α), (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) k (supᵢ.{u1, succ u2} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) ι (fun (i : ι) => f i))) -> (Exists.{succ u2} (Finset.{u2} ι) (fun (s : Finset.{u2} ι) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) k (supᵢ.{u1, succ u2} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) ι (fun (i : ι) => supᵢ.{u1, 0} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i s) (fun (H : Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i s) => f i))))))
+  forall (α : Type.{u1}) [_inst_1 : CompleteLattice.{u1} α] {k : α}, (CompleteLattice.IsCompactElement.{u1} α _inst_1 k) -> (forall {ι : Type.{u2}} (f : ι -> α), (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) k (iSup.{u1, succ u2} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) ι (fun (i : ι) => f i))) -> (Exists.{succ u2} (Finset.{u2} ι) (fun (s : Finset.{u2} ι) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) k (iSup.{u1, succ u2} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) ι (fun (i : ι) => iSup.{u1, 0} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i s) (fun (H : Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i s) => f i))))))
 but is expected to have type
-  forall (α : Type.{u2}) [_inst_1 : CompleteLattice.{u2} α] {k : α}, (CompleteLattice.IsCompactElement.{u2} α _inst_1 k) -> (forall {ι : Type.{u1}} (f : ι -> α), (LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1)))) k (supᵢ.{u2, succ u1} α (ConditionallyCompleteLattice.toSupSet.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)) ι (fun (i : ι) => f i))) -> (Exists.{succ u1} (Finset.{u1} ι) (fun (s : Finset.{u1} ι) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1)))) k (supᵢ.{u2, succ u1} α (ConditionallyCompleteLattice.toSupSet.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)) ι (fun (i : ι) => supᵢ.{u2, 0} α (ConditionallyCompleteLattice.toSupSet.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)) (Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i s) (fun (H : Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i s) => f i))))))
-Case conversion may be inaccurate. Consider using '#align complete_lattice.is_compact_element.exists_finset_of_le_supr CompleteLattice.IsCompactElement.exists_finset_of_le_supᵢₓ'. -/
-theorem IsCompactElement.exists_finset_of_le_supᵢ {k : α} (hk : IsCompactElement k) {ι : Type _}
+  forall (α : Type.{u2}) [_inst_1 : CompleteLattice.{u2} α] {k : α}, (CompleteLattice.IsCompactElement.{u2} α _inst_1 k) -> (forall {ι : Type.{u1}} (f : ι -> α), (LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1)))) k (iSup.{u2, succ u1} α (ConditionallyCompleteLattice.toSupSet.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)) ι (fun (i : ι) => f i))) -> (Exists.{succ u1} (Finset.{u1} ι) (fun (s : Finset.{u1} ι) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1)))) k (iSup.{u2, succ u1} α (ConditionallyCompleteLattice.toSupSet.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)) ι (fun (i : ι) => iSup.{u2, 0} α (ConditionallyCompleteLattice.toSupSet.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)) (Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i s) (fun (H : Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i s) => f i))))))
+Case conversion may be inaccurate. Consider using '#align complete_lattice.is_compact_element.exists_finset_of_le_supr CompleteLattice.IsCompactElement.exists_finset_of_le_iSupₓ'. -/
+theorem IsCompactElement.exists_finset_of_le_iSup {k : α} (hk : IsCompactElement k) {ι : Type _}
     (f : ι → α) (h : k ≤ ⨆ i, f i) : ∃ s : Finset ι, k ≤ ⨆ i ∈ s, f i := by
   classical
     let g : Finset ι → α := fun s => ⨆ i ∈ s, f i
@@ -195,39 +195,39 @@ theorem IsCompactElement.exists_finset_of_le_supᵢ {k : α} (hk : IsCompactElem
       by
       rintro - ⟨s, rfl⟩ - ⟨t, rfl⟩
       exact
-        ⟨g (s ∪ t), ⟨s ∪ t, rfl⟩, supᵢ_le_supᵢ_of_subset (Finset.subset_union_left s t),
-          supᵢ_le_supᵢ_of_subset (Finset.subset_union_right s t)⟩
+        ⟨g (s ∪ t), ⟨s ∪ t, rfl⟩, iSup_le_iSup_of_subset (Finset.subset_union_left s t),
+          iSup_le_iSup_of_subset (Finset.subset_union_right s t)⟩
     have h2 : k ≤ Sup (Set.range g) :=
       h.trans
-        (supᵢ_le fun i =>
-          le_supₛ_of_le ⟨{i}, rfl⟩
-            (le_supᵢ_of_le i (le_supᵢ_of_le (Finset.mem_singleton_self i) le_rfl)))
+        (iSup_le fun i =>
+          le_sSup_of_le ⟨{i}, rfl⟩
+            (le_iSup_of_le i (le_iSup_of_le (Finset.mem_singleton_self i) le_rfl)))
     obtain ⟨-, ⟨s, rfl⟩, hs⟩ :=
       (is_compact_element_iff_le_of_directed_Sup_le α k).mp hk (Set.range g) (Set.range_nonempty g)
         h1 h2
     exact ⟨s, hs⟩
-#align complete_lattice.is_compact_element.exists_finset_of_le_supr CompleteLattice.IsCompactElement.exists_finset_of_le_supᵢ
+#align complete_lattice.is_compact_element.exists_finset_of_le_supr CompleteLattice.IsCompactElement.exists_finset_of_le_iSup
 
-/- warning: complete_lattice.is_compact_element.directed_Sup_lt_of_lt -> CompleteLattice.IsCompactElement.directed_supₛ_lt_of_lt is a dubious translation:
+/- warning: complete_lattice.is_compact_element.directed_Sup_lt_of_lt -> CompleteLattice.IsCompactElement.directed_sSup_lt_of_lt is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_2 : CompleteLattice.{u1} α] {k : α}, (CompleteLattice.IsCompactElement.{u1} α _inst_2 k) -> (forall {s : Set.{u1} α}, (Set.Nonempty.{u1} α s) -> (DirectedOn.{u1} α (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_2))))) s) -> (forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_2)))) x k)) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_2)))) (SupSet.supₛ.{u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_2)) s) k))
+  forall {α : Type.{u1}} [_inst_2 : CompleteLattice.{u1} α] {k : α}, (CompleteLattice.IsCompactElement.{u1} α _inst_2 k) -> (forall {s : Set.{u1} α}, (Set.Nonempty.{u1} α s) -> (DirectedOn.{u1} α (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_2))))) s) -> (forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_2)))) x k)) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_2)))) (SupSet.sSup.{u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_2)) s) k))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_2 : CompleteLattice.{u1} α] {k : α}, (CompleteLattice.IsCompactElement.{u1} α _inst_2 k) -> (forall {s : Set.{u1} α}, (Set.Nonempty.{u1} α s) -> (DirectedOn.{u1} α (fun (x._@.Mathlib.Order.CompactlyGenerated._hyg.1395 : α) (x._@.Mathlib.Order.CompactlyGenerated._hyg.1397 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_2)))) x._@.Mathlib.Order.CompactlyGenerated._hyg.1395 x._@.Mathlib.Order.CompactlyGenerated._hyg.1397) s) -> (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_2)))) x k)) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_2)))) (SupSet.supₛ.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_2)) s) k))
-Case conversion may be inaccurate. Consider using '#align complete_lattice.is_compact_element.directed_Sup_lt_of_lt CompleteLattice.IsCompactElement.directed_supₛ_lt_of_ltₓ'. -/
+  forall {α : Type.{u1}} [_inst_2 : CompleteLattice.{u1} α] {k : α}, (CompleteLattice.IsCompactElement.{u1} α _inst_2 k) -> (forall {s : Set.{u1} α}, (Set.Nonempty.{u1} α s) -> (DirectedOn.{u1} α (fun (x._@.Mathlib.Order.CompactlyGenerated._hyg.1395 : α) (x._@.Mathlib.Order.CompactlyGenerated._hyg.1397 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_2)))) x._@.Mathlib.Order.CompactlyGenerated._hyg.1395 x._@.Mathlib.Order.CompactlyGenerated._hyg.1397) s) -> (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_2)))) x k)) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_2)))) (SupSet.sSup.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_2)) s) k))
+Case conversion may be inaccurate. Consider using '#align complete_lattice.is_compact_element.directed_Sup_lt_of_lt CompleteLattice.IsCompactElement.directed_sSup_lt_of_ltₓ'. -/
 /-- A compact element `k` has the property that any directed set lying strictly below `k` has
 its Sup strictly below `k`. -/
-theorem IsCompactElement.directed_supₛ_lt_of_lt {α : Type _} [CompleteLattice α] {k : α}
+theorem IsCompactElement.directed_sSup_lt_of_lt {α : Type _} [CompleteLattice α] {k : α}
     (hk : IsCompactElement k) {s : Set α} (hemp : s.Nonempty) (hdir : DirectedOn (· ≤ ·) s)
-    (hbelow : ∀ x ∈ s, x < k) : supₛ s < k :=
+    (hbelow : ∀ x ∈ s, x < k) : sSup s < k :=
   by
   rw [is_compact_element_iff_le_of_directed_Sup_le] at hk
   by_contra
-  have sSup : Sup s ≤ k := supₛ_le fun s hs => (hbelow s hs).le
+  have sSup : Sup s ≤ k := sSup_le fun s hs => (hbelow s hs).le
   replace sSup : Sup s = k := eq_iff_le_not_lt.mpr ⟨sSup, h⟩
   obtain ⟨x, hxs, hkx⟩ := hk s hemp hdir sSup.symm.le
   obtain hxk := hbelow x hxs
   exact hxk.ne (hxk.le.antisymm hkx)
-#align complete_lattice.is_compact_element.directed_Sup_lt_of_lt CompleteLattice.IsCompactElement.directed_supₛ_lt_of_lt
+#align complete_lattice.is_compact_element.directed_Sup_lt_of_lt CompleteLattice.IsCompactElement.directed_sSup_lt_of_lt
 
 /- warning: complete_lattice.finset_sup_compact_of_compact -> CompleteLattice.finset_sup_compact_of_compact is a dubious translation:
 lean 3 declaration is
@@ -258,14 +258,14 @@ theorem WellFounded.isSupFiniteCompact (h : WellFounded ((· > ·) : α → α �
   obtain ⟨m, ⟨t, ⟨ht₁, rfl⟩⟩, hm⟩ :=
     well_founded.well_founded_iff_has_min.mp h { x | ∃ t : Finset α, ↑t ⊆ s ∧ t.sup id = x }
       ⟨⊥, ∅, by simp⟩
-  refine' ⟨t, ht₁, (supₛ_le fun y hy => _).antisymm _⟩
+  refine' ⟨t, ht₁, (sSup_le fun y hy => _).antisymm _⟩
   ·
     classical
       rw [eq_of_le_of_not_lt (Finset.sup_mono (t.subset_insert y))
           (hm _ ⟨insert y t, by simp [Set.insert_subset, hy, ht₁]⟩)]
       simp
-  · rw [Finset.sup_id_eq_supₛ]
-    exact supₛ_le_supₛ ht₁
+  · rw [Finset.sup_id_eq_sSup]
+    exact sSup_le_sSup ht₁
 #align complete_lattice.well_founded.is_Sup_finite_compact CompleteLattice.WellFounded.isSupFiniteCompact
 -/
 
@@ -277,7 +277,7 @@ theorem IsSupFiniteCompact.isSupClosedCompact (h : IsSupFiniteCompact α) : IsSu
   · subst h
     rw [Finset.sup_empty] at ht₂
     rw [ht₂]
-    simp [eq_singleton_bot_of_supₛ_eq_bot_of_nonempty ht₂ hne]
+    simp [eq_singleton_bot_of_sSup_eq_bot_of_nonempty ht₂ hne]
   · rw [ht₂]
     exact t.sup_closed_of_sup_closed h ht₁ hsc
 #align complete_lattice.is_Sup_finite_compact.is_sup_closed_compact CompleteLattice.IsSupFiniteCompact.isSupClosedCompact
@@ -297,7 +297,7 @@ theorem IsSupClosedCompact.wellFounded (h : IsSupClosedCompact α) :
       simp [← hn, a.map_rel_iff]
     apply lt_irrefl (a (n + 1))
     apply lt_of_le_of_lt _ h'
-    apply le_supₛ
+    apply le_sSup
     apply Set.mem_range_self
   apply h (Set.range a)
   · use a 37
@@ -323,7 +323,7 @@ theorem isSupFiniteCompact_iff_all_elements_compact :
       suffices t.sup id ≤ Sup s by apply le_antisymm <;> assumption
       simp only [id.def, Finset.sup_le_iff]
       intro x hx
-      exact le_supₛ (hts hx)
+      exact le_sSup (hts hx)
     use t, hts, this
 #align complete_lattice.is_Sup_finite_compact_iff_all_elements_compact CompleteLattice.isSupFiniteCompact_iff_all_elements_compact
 -/
@@ -390,7 +390,7 @@ theorem WellFounded.finite_of_setIndependent (h : WellFounded ((· > ·) : α �
       simpa [Disjoint, hx₂, ← t.sup_id_eq_Sup, ← ht₂] using this.eq_bot
     apply hx₁
     rw [← hs, eq_comm, inf_eq_left]
-    exact le_supₛ hx₀
+    exact le_sSup hx₀
 #align complete_lattice.well_founded.finite_of_set_independent CompleteLattice.WellFounded.finite_of_setIndependent
 -/
 
@@ -412,7 +412,7 @@ end CompleteLattice
 /-- A complete lattice is said to be compactly generated if any
 element is the `Sup` of compact elements. -/
 class IsCompactlyGenerated (α : Type _) [CompleteLattice α] : Prop where
-  exists_supₛ_eq : ∀ x : α, ∃ s : Set α, (∀ x ∈ s, CompleteLattice.IsCompactElement x) ∧ supₛ s = x
+  exists_sSup_eq : ∀ x : α, ∃ s : Set α, (∀ x ∈ s, CompleteLattice.IsCompactElement x) ∧ sSup s = x
 #align is_compactly_generated IsCompactlyGenerated
 -/
 
@@ -420,158 +420,158 @@ section
 
 variable {α} [IsCompactlyGenerated α] {a b : α} {s : Set α}
 
-/- warning: Sup_compact_le_eq -> supₛ_compact_le_eq is a dubious translation:
+/- warning: Sup_compact_le_eq -> sSup_compact_le_eq is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsCompactlyGenerated.{u1} α _inst_1] (b : α), Eq.{succ u1} α (SupSet.supₛ.{u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (setOf.{u1} α (fun (c : α) => And (CompleteLattice.IsCompactElement.{u1} α _inst_1 c) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) c b)))) b
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsCompactlyGenerated.{u1} α _inst_1] (b : α), Eq.{succ u1} α (SupSet.sSup.{u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (setOf.{u1} α (fun (c : α) => And (CompleteLattice.IsCompactElement.{u1} α _inst_1 c) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) c b)))) b
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsCompactlyGenerated.{u1} α _inst_1] (b : α), Eq.{succ u1} α (SupSet.supₛ.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (setOf.{u1} α (fun (c : α) => And (CompleteLattice.IsCompactElement.{u1} α _inst_1 c) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) c b)))) b
-Case conversion may be inaccurate. Consider using '#align Sup_compact_le_eq supₛ_compact_le_eqₓ'. -/
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsCompactlyGenerated.{u1} α _inst_1] (b : α), Eq.{succ u1} α (SupSet.sSup.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (setOf.{u1} α (fun (c : α) => And (CompleteLattice.IsCompactElement.{u1} α _inst_1 c) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) c b)))) b
+Case conversion may be inaccurate. Consider using '#align Sup_compact_le_eq sSup_compact_le_eqₓ'. -/
 @[simp]
-theorem supₛ_compact_le_eq (b) : supₛ { c : α | CompleteLattice.IsCompactElement c ∧ c ≤ b } = b :=
+theorem sSup_compact_le_eq (b) : sSup { c : α | CompleteLattice.IsCompactElement c ∧ c ≤ b } = b :=
   by
-  rcases IsCompactlyGenerated.exists_supₛ_eq b with ⟨s, hs, rfl⟩
-  exact le_antisymm (supₛ_le fun c hc => hc.2) (supₛ_le_supₛ fun c cs => ⟨hs c cs, le_supₛ cs⟩)
-#align Sup_compact_le_eq supₛ_compact_le_eq
+  rcases IsCompactlyGenerated.exists_sSup_eq b with ⟨s, hs, rfl⟩
+  exact le_antisymm (sSup_le fun c hc => hc.2) (sSup_le_sSup fun c cs => ⟨hs c cs, le_sSup cs⟩)
+#align Sup_compact_le_eq sSup_compact_le_eq
 
-/- warning: Sup_compact_eq_top -> supₛ_compact_eq_top is a dubious translation:
+/- warning: Sup_compact_eq_top -> sSup_compact_eq_top is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsCompactlyGenerated.{u1} α _inst_1], Eq.{succ u1} α (SupSet.supₛ.{u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (setOf.{u1} α (fun (a : α) => CompleteLattice.IsCompactElement.{u1} α _inst_1 a))) (Top.top.{u1} α (CompleteLattice.toHasTop.{u1} α _inst_1))
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsCompactlyGenerated.{u1} α _inst_1], Eq.{succ u1} α (SupSet.sSup.{u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (setOf.{u1} α (fun (a : α) => CompleteLattice.IsCompactElement.{u1} α _inst_1 a))) (Top.top.{u1} α (CompleteLattice.toHasTop.{u1} α _inst_1))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsCompactlyGenerated.{u1} α _inst_1], Eq.{succ u1} α (SupSet.supₛ.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (setOf.{u1} α (fun (a : α) => CompleteLattice.IsCompactElement.{u1} α _inst_1 a))) (Top.top.{u1} α (CompleteLattice.toTop.{u1} α _inst_1))
-Case conversion may be inaccurate. Consider using '#align Sup_compact_eq_top supₛ_compact_eq_topₓ'. -/
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsCompactlyGenerated.{u1} α _inst_1], Eq.{succ u1} α (SupSet.sSup.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (setOf.{u1} α (fun (a : α) => CompleteLattice.IsCompactElement.{u1} α _inst_1 a))) (Top.top.{u1} α (CompleteLattice.toTop.{u1} α _inst_1))
+Case conversion may be inaccurate. Consider using '#align Sup_compact_eq_top sSup_compact_eq_topₓ'. -/
 @[simp]
-theorem supₛ_compact_eq_top : supₛ { a : α | CompleteLattice.IsCompactElement a } = ⊤ :=
+theorem sSup_compact_eq_top : sSup { a : α | CompleteLattice.IsCompactElement a } = ⊤ :=
   by
-  refine' Eq.trans (congr rfl (Set.ext fun x => _)) (supₛ_compact_le_eq ⊤)
+  refine' Eq.trans (congr rfl (Set.ext fun x => _)) (sSup_compact_le_eq ⊤)
   exact (and_iff_left le_top).symm
-#align Sup_compact_eq_top supₛ_compact_eq_top
+#align Sup_compact_eq_top sSup_compact_eq_top
 
 #print le_iff_compact_le_imp /-
 theorem le_iff_compact_le_imp {a b : α} :
     a ≤ b ↔ ∀ c : α, CompleteLattice.IsCompactElement c → c ≤ a → c ≤ b :=
   ⟨fun ab c hc ca => le_trans ca ab, fun h =>
     by
-    rw [← supₛ_compact_le_eq a, ← supₛ_compact_le_eq b]
-    exact supₛ_le_supₛ fun c hc => ⟨hc.1, h c hc.1 hc.2⟩⟩
+    rw [← sSup_compact_le_eq a, ← sSup_compact_le_eq b]
+    exact sSup_le_sSup fun c hc => ⟨hc.1, h c hc.1 hc.2⟩⟩
 #align le_iff_compact_le_imp le_iff_compact_le_imp
 -/
 
-/- warning: directed_on.inf_Sup_eq -> DirectedOn.inf_supₛ_eq is a dubious translation:
+/- warning: directed_on.inf_Sup_eq -> DirectedOn.inf_sSup_eq is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsCompactlyGenerated.{u1} α _inst_1] {a : α} {s : Set.{u1} α}, (DirectedOn.{u1} α (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) s) -> (Eq.{succ u1} α (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)))) a (SupSet.supₛ.{u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) s)) (supᵢ.{u1, succ u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) α (fun (b : α) => supᵢ.{u1, 0} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) => Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)))) a b))))
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsCompactlyGenerated.{u1} α _inst_1] {a : α} {s : Set.{u1} α}, (DirectedOn.{u1} α (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) s) -> (Eq.{succ u1} α (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)))) a (SupSet.sSup.{u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) s)) (iSup.{u1, succ u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) α (fun (b : α) => iSup.{u1, 0} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) => Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)))) a b))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsCompactlyGenerated.{u1} α _inst_1] {a : α} {s : Set.{u1} α}, (DirectedOn.{u1} α (fun (x._@.Mathlib.Order.CompactlyGenerated._hyg.6526 : α) (x._@.Mathlib.Order.CompactlyGenerated._hyg.6528 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) x._@.Mathlib.Order.CompactlyGenerated._hyg.6526 x._@.Mathlib.Order.CompactlyGenerated._hyg.6528) s) -> (Eq.{succ u1} α (Inf.inf.{u1} α (Lattice.toInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1))) a (SupSet.supₛ.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) s)) (supᵢ.{u1, succ u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) α (fun (b : α) => supᵢ.{u1, 0} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) => Inf.inf.{u1} α (Lattice.toInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1))) a b))))
-Case conversion may be inaccurate. Consider using '#align directed_on.inf_Sup_eq DirectedOn.inf_supₛ_eqₓ'. -/
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsCompactlyGenerated.{u1} α _inst_1] {a : α} {s : Set.{u1} α}, (DirectedOn.{u1} α (fun (x._@.Mathlib.Order.CompactlyGenerated._hyg.6526 : α) (x._@.Mathlib.Order.CompactlyGenerated._hyg.6528 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) x._@.Mathlib.Order.CompactlyGenerated._hyg.6526 x._@.Mathlib.Order.CompactlyGenerated._hyg.6528) s) -> (Eq.{succ u1} α (Inf.inf.{u1} α (Lattice.toInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1))) a (SupSet.sSup.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) s)) (iSup.{u1, succ u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) α (fun (b : α) => iSup.{u1, 0} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) => Inf.inf.{u1} α (Lattice.toInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1))) a b))))
+Case conversion may be inaccurate. Consider using '#align directed_on.inf_Sup_eq DirectedOn.inf_sSup_eqₓ'. -/
 /-- This property is sometimes referred to as `α` being upper continuous. -/
-theorem DirectedOn.inf_supₛ_eq (h : DirectedOn (· ≤ ·) s) : a ⊓ supₛ s = ⨆ b ∈ s, a ⊓ b :=
+theorem DirectedOn.inf_sSup_eq (h : DirectedOn (· ≤ ·) s) : a ⊓ sSup s = ⨆ b ∈ s, a ⊓ b :=
   le_antisymm
     (by
       rw [le_iff_compact_le_imp]
       by_cases hs : s.nonempty
       · intro c hc hcinf
         rw [le_inf_iff] at hcinf
-        rw [CompleteLattice.isCompactElement_iff_le_of_directed_supₛ_le] at hc
+        rw [CompleteLattice.isCompactElement_iff_le_of_directed_sSup_le] at hc
         rcases hc s hs h hcinf.2 with ⟨d, ds, cd⟩
-        exact (le_inf hcinf.1 cd).trans (le_supᵢ₂ d ds)
+        exact (le_inf hcinf.1 cd).trans (le_iSup₂ d ds)
       · rw [Set.not_nonempty_iff_eq_empty] at hs
         simp [hs])
-    supᵢ_inf_le_inf_supₛ
-#align directed_on.inf_Sup_eq DirectedOn.inf_supₛ_eq
+    iSup_inf_le_inf_sSup
+#align directed_on.inf_Sup_eq DirectedOn.inf_sSup_eq
 
-/- warning: directed_on.Sup_inf_eq -> DirectedOn.supₛ_inf_eq is a dubious translation:
+/- warning: directed_on.Sup_inf_eq -> DirectedOn.sSup_inf_eq is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsCompactlyGenerated.{u1} α _inst_1] {a : α} {s : Set.{u1} α}, (DirectedOn.{u1} α (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) s) -> (Eq.{succ u1} α (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)))) (SupSet.supₛ.{u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) s) a) (supᵢ.{u1, succ u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) α (fun (b : α) => supᵢ.{u1, 0} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) => Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)))) b a))))
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsCompactlyGenerated.{u1} α _inst_1] {a : α} {s : Set.{u1} α}, (DirectedOn.{u1} α (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) s) -> (Eq.{succ u1} α (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)))) (SupSet.sSup.{u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) s) a) (iSup.{u1, succ u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) α (fun (b : α) => iSup.{u1, 0} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) => Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)))) b a))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsCompactlyGenerated.{u1} α _inst_1] {a : α} {s : Set.{u1} α}, (DirectedOn.{u1} α (fun (x._@.Mathlib.Order.CompactlyGenerated._hyg.6794 : α) (x._@.Mathlib.Order.CompactlyGenerated._hyg.6796 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) x._@.Mathlib.Order.CompactlyGenerated._hyg.6794 x._@.Mathlib.Order.CompactlyGenerated._hyg.6796) s) -> (Eq.{succ u1} α (Inf.inf.{u1} α (Lattice.toInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1))) (SupSet.supₛ.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) s) a) (supᵢ.{u1, succ u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) α (fun (b : α) => supᵢ.{u1, 0} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) => Inf.inf.{u1} α (Lattice.toInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1))) b a))))
-Case conversion may be inaccurate. Consider using '#align directed_on.Sup_inf_eq DirectedOn.supₛ_inf_eqₓ'. -/
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsCompactlyGenerated.{u1} α _inst_1] {a : α} {s : Set.{u1} α}, (DirectedOn.{u1} α (fun (x._@.Mathlib.Order.CompactlyGenerated._hyg.6794 : α) (x._@.Mathlib.Order.CompactlyGenerated._hyg.6796 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) x._@.Mathlib.Order.CompactlyGenerated._hyg.6794 x._@.Mathlib.Order.CompactlyGenerated._hyg.6796) s) -> (Eq.{succ u1} α (Inf.inf.{u1} α (Lattice.toInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1))) (SupSet.sSup.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) s) a) (iSup.{u1, succ u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) α (fun (b : α) => iSup.{u1, 0} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) => Inf.inf.{u1} α (Lattice.toInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1))) b a))))
+Case conversion may be inaccurate. Consider using '#align directed_on.Sup_inf_eq DirectedOn.sSup_inf_eqₓ'. -/
 /-- This property is sometimes referred to as `α` being upper continuous. -/
-protected theorem DirectedOn.supₛ_inf_eq (h : DirectedOn (· ≤ ·) s) : supₛ s ⊓ a = ⨆ b ∈ s, b ⊓ a :=
+protected theorem DirectedOn.sSup_inf_eq (h : DirectedOn (· ≤ ·) s) : sSup s ⊓ a = ⨆ b ∈ s, b ⊓ a :=
   by simp_rw [@inf_comm _ _ _ a, h.inf_Sup_eq]
-#align directed_on.Sup_inf_eq DirectedOn.supₛ_inf_eq
+#align directed_on.Sup_inf_eq DirectedOn.sSup_inf_eq
 
-/- warning: directed.inf_supr_eq -> Directed.inf_supᵢ_eq is a dubious translation:
+/- warning: directed.inf_supr_eq -> Directed.inf_iSup_eq is a dubious translation:
 lean 3 declaration is
-  forall {ι : Sort.{u1}} {α : Type.{u2}} [_inst_1 : CompleteLattice.{u2} α] {f : ι -> α} [_inst_2 : IsCompactlyGenerated.{u2} α _inst_1] {a : α}, (Directed.{u2, u1} α ι (LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1))))) f) -> (Eq.{succ u2} α (Inf.inf.{u2} α (SemilatticeInf.toHasInf.{u2} α (Lattice.toSemilatticeInf.{u2} α (ConditionallyCompleteLattice.toLattice.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)))) a (supᵢ.{u2, u1} α (ConditionallyCompleteLattice.toHasSup.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)) ι (fun (i : ι) => f i))) (supᵢ.{u2, u1} α (ConditionallyCompleteLattice.toHasSup.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)) ι (fun (i : ι) => Inf.inf.{u2} α (SemilatticeInf.toHasInf.{u2} α (Lattice.toSemilatticeInf.{u2} α (ConditionallyCompleteLattice.toLattice.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)))) a (f i))))
+  forall {ι : Sort.{u1}} {α : Type.{u2}} [_inst_1 : CompleteLattice.{u2} α] {f : ι -> α} [_inst_2 : IsCompactlyGenerated.{u2} α _inst_1] {a : α}, (Directed.{u2, u1} α ι (LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1))))) f) -> (Eq.{succ u2} α (Inf.inf.{u2} α (SemilatticeInf.toHasInf.{u2} α (Lattice.toSemilatticeInf.{u2} α (ConditionallyCompleteLattice.toLattice.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)))) a (iSup.{u2, u1} α (ConditionallyCompleteLattice.toHasSup.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)) ι (fun (i : ι) => f i))) (iSup.{u2, u1} α (ConditionallyCompleteLattice.toHasSup.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)) ι (fun (i : ι) => Inf.inf.{u2} α (SemilatticeInf.toHasInf.{u2} α (Lattice.toSemilatticeInf.{u2} α (ConditionallyCompleteLattice.toLattice.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)))) a (f i))))
 but is expected to have type
-  forall {ι : Sort.{u1}} {α : Type.{u2}} {_inst_1 : ι -> α} [f : CompleteLattice.{u2} α] [_inst_2 : IsCompactlyGenerated.{u2} α f] {a : α}, (Directed.{u2, u1} α ι (fun (x._@.Mathlib.Order.CompactlyGenerated._hyg.6885 : α) (x._@.Mathlib.Order.CompactlyGenerated._hyg.6887 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α f)))) x._@.Mathlib.Order.CompactlyGenerated._hyg.6885 x._@.Mathlib.Order.CompactlyGenerated._hyg.6887) _inst_1) -> (Eq.{succ u2} α (Inf.inf.{u2} α (Lattice.toInf.{u2} α (ConditionallyCompleteLattice.toLattice.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α f))) a (supᵢ.{u2, u1} α (ConditionallyCompleteLattice.toSupSet.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α f)) ι (fun (i : ι) => _inst_1 i))) (supᵢ.{u2, u1} α (ConditionallyCompleteLattice.toSupSet.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α f)) ι (fun (i : ι) => Inf.inf.{u2} α (Lattice.toInf.{u2} α (ConditionallyCompleteLattice.toLattice.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α f))) a (_inst_1 i))))
-Case conversion may be inaccurate. Consider using '#align directed.inf_supr_eq Directed.inf_supᵢ_eqₓ'. -/
-protected theorem Directed.inf_supᵢ_eq (h : Directed (· ≤ ·) f) : (a ⊓ ⨆ i, f i) = ⨆ i, a ⊓ f i :=
-  by rw [supᵢ, h.directed_on_range.inf_Sup_eq, supᵢ_range]
-#align directed.inf_supr_eq Directed.inf_supᵢ_eq
+  forall {ι : Sort.{u1}} {α : Type.{u2}} {_inst_1 : ι -> α} [f : CompleteLattice.{u2} α] [_inst_2 : IsCompactlyGenerated.{u2} α f] {a : α}, (Directed.{u2, u1} α ι (fun (x._@.Mathlib.Order.CompactlyGenerated._hyg.6885 : α) (x._@.Mathlib.Order.CompactlyGenerated._hyg.6887 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α f)))) x._@.Mathlib.Order.CompactlyGenerated._hyg.6885 x._@.Mathlib.Order.CompactlyGenerated._hyg.6887) _inst_1) -> (Eq.{succ u2} α (Inf.inf.{u2} α (Lattice.toInf.{u2} α (ConditionallyCompleteLattice.toLattice.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α f))) a (iSup.{u2, u1} α (ConditionallyCompleteLattice.toSupSet.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α f)) ι (fun (i : ι) => _inst_1 i))) (iSup.{u2, u1} α (ConditionallyCompleteLattice.toSupSet.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α f)) ι (fun (i : ι) => Inf.inf.{u2} α (Lattice.toInf.{u2} α (ConditionallyCompleteLattice.toLattice.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α f))) a (_inst_1 i))))
+Case conversion may be inaccurate. Consider using '#align directed.inf_supr_eq Directed.inf_iSup_eqₓ'. -/
+protected theorem Directed.inf_iSup_eq (h : Directed (· ≤ ·) f) : (a ⊓ ⨆ i, f i) = ⨆ i, a ⊓ f i :=
+  by rw [iSup, h.directed_on_range.inf_Sup_eq, iSup_range]
+#align directed.inf_supr_eq Directed.inf_iSup_eq
 
-/- warning: directed.supr_inf_eq -> Directed.supᵢ_inf_eq is a dubious translation:
+/- warning: directed.supr_inf_eq -> Directed.iSup_inf_eq is a dubious translation:
 lean 3 declaration is
-  forall {ι : Sort.{u1}} {α : Type.{u2}} [_inst_1 : CompleteLattice.{u2} α] {f : ι -> α} [_inst_2 : IsCompactlyGenerated.{u2} α _inst_1] {a : α}, (Directed.{u2, u1} α ι (LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1))))) f) -> (Eq.{succ u2} α (Inf.inf.{u2} α (SemilatticeInf.toHasInf.{u2} α (Lattice.toSemilatticeInf.{u2} α (ConditionallyCompleteLattice.toLattice.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)))) (supᵢ.{u2, u1} α (ConditionallyCompleteLattice.toHasSup.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)) ι (fun (i : ι) => f i)) a) (supᵢ.{u2, u1} α (ConditionallyCompleteLattice.toHasSup.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)) ι (fun (i : ι) => Inf.inf.{u2} α (SemilatticeInf.toHasInf.{u2} α (Lattice.toSemilatticeInf.{u2} α (ConditionallyCompleteLattice.toLattice.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)))) (f i) a)))
+  forall {ι : Sort.{u1}} {α : Type.{u2}} [_inst_1 : CompleteLattice.{u2} α] {f : ι -> α} [_inst_2 : IsCompactlyGenerated.{u2} α _inst_1] {a : α}, (Directed.{u2, u1} α ι (LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1))))) f) -> (Eq.{succ u2} α (Inf.inf.{u2} α (SemilatticeInf.toHasInf.{u2} α (Lattice.toSemilatticeInf.{u2} α (ConditionallyCompleteLattice.toLattice.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)))) (iSup.{u2, u1} α (ConditionallyCompleteLattice.toHasSup.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)) ι (fun (i : ι) => f i)) a) (iSup.{u2, u1} α (ConditionallyCompleteLattice.toHasSup.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)) ι (fun (i : ι) => Inf.inf.{u2} α (SemilatticeInf.toHasInf.{u2} α (Lattice.toSemilatticeInf.{u2} α (ConditionallyCompleteLattice.toLattice.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)))) (f i) a)))
 but is expected to have type
-  forall {ι : Sort.{u1}} {α : Type.{u2}} {_inst_1 : ι -> α} [f : CompleteLattice.{u2} α] [_inst_2 : IsCompactlyGenerated.{u2} α f] {a : α}, (Directed.{u2, u1} α ι (fun (x._@.Mathlib.Order.CompactlyGenerated._hyg.7000 : α) (x._@.Mathlib.Order.CompactlyGenerated._hyg.7002 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α f)))) x._@.Mathlib.Order.CompactlyGenerated._hyg.7000 x._@.Mathlib.Order.CompactlyGenerated._hyg.7002) _inst_1) -> (Eq.{succ u2} α (Inf.inf.{u2} α (Lattice.toInf.{u2} α (ConditionallyCompleteLattice.toLattice.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α f))) (supᵢ.{u2, u1} α (ConditionallyCompleteLattice.toSupSet.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α f)) ι (fun (i : ι) => _inst_1 i)) a) (supᵢ.{u2, u1} α (ConditionallyCompleteLattice.toSupSet.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α f)) ι (fun (i : ι) => Inf.inf.{u2} α (Lattice.toInf.{u2} α (ConditionallyCompleteLattice.toLattice.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α f))) (_inst_1 i) a)))
-Case conversion may be inaccurate. Consider using '#align directed.supr_inf_eq Directed.supᵢ_inf_eqₓ'. -/
-protected theorem Directed.supᵢ_inf_eq (h : Directed (· ≤ ·) f) : (⨆ i, f i) ⊓ a = ⨆ i, f i ⊓ a :=
-  by rw [supᵢ, h.directed_on_range.Sup_inf_eq, supᵢ_range]
-#align directed.supr_inf_eq Directed.supᵢ_inf_eq
+  forall {ι : Sort.{u1}} {α : Type.{u2}} {_inst_1 : ι -> α} [f : CompleteLattice.{u2} α] [_inst_2 : IsCompactlyGenerated.{u2} α f] {a : α}, (Directed.{u2, u1} α ι (fun (x._@.Mathlib.Order.CompactlyGenerated._hyg.7000 : α) (x._@.Mathlib.Order.CompactlyGenerated._hyg.7002 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α f)))) x._@.Mathlib.Order.CompactlyGenerated._hyg.7000 x._@.Mathlib.Order.CompactlyGenerated._hyg.7002) _inst_1) -> (Eq.{succ u2} α (Inf.inf.{u2} α (Lattice.toInf.{u2} α (ConditionallyCompleteLattice.toLattice.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α f))) (iSup.{u2, u1} α (ConditionallyCompleteLattice.toSupSet.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α f)) ι (fun (i : ι) => _inst_1 i)) a) (iSup.{u2, u1} α (ConditionallyCompleteLattice.toSupSet.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α f)) ι (fun (i : ι) => Inf.inf.{u2} α (Lattice.toInf.{u2} α (ConditionallyCompleteLattice.toLattice.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α f))) (_inst_1 i) a)))
+Case conversion may be inaccurate. Consider using '#align directed.supr_inf_eq Directed.iSup_inf_eqₓ'. -/
+protected theorem Directed.iSup_inf_eq (h : Directed (· ≤ ·) f) : (⨆ i, f i) ⊓ a = ⨆ i, f i ⊓ a :=
+  by rw [iSup, h.directed_on_range.Sup_inf_eq, iSup_range]
+#align directed.supr_inf_eq Directed.iSup_inf_eq
 
-/- warning: directed_on.disjoint_Sup_right -> DirectedOn.disjoint_supₛ_right is a dubious translation:
+/- warning: directed_on.disjoint_Sup_right -> DirectedOn.disjoint_sSup_right is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsCompactlyGenerated.{u1} α _inst_1] {a : α} {s : Set.{u1} α}, (DirectedOn.{u1} α (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) s) -> (Iff (Disjoint.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a (SupSet.supₛ.{u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) s)) (forall {{b : α}}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) -> (Disjoint.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a b)))
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsCompactlyGenerated.{u1} α _inst_1] {a : α} {s : Set.{u1} α}, (DirectedOn.{u1} α (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) s) -> (Iff (Disjoint.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a (SupSet.sSup.{u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) s)) (forall {{b : α}}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) -> (Disjoint.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a b)))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsCompactlyGenerated.{u1} α _inst_1] {a : α} {s : Set.{u1} α}, (DirectedOn.{u1} α (fun (x._@.Mathlib.Order.CompactlyGenerated._hyg.7117 : α) (x._@.Mathlib.Order.CompactlyGenerated._hyg.7119 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) x._@.Mathlib.Order.CompactlyGenerated._hyg.7117 x._@.Mathlib.Order.CompactlyGenerated._hyg.7119) s) -> (Iff (Disjoint.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a (SupSet.supₛ.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) s)) (forall {{b : α}}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) -> (Disjoint.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a b)))
-Case conversion may be inaccurate. Consider using '#align directed_on.disjoint_Sup_right DirectedOn.disjoint_supₛ_rightₓ'. -/
-protected theorem DirectedOn.disjoint_supₛ_right (h : DirectedOn (· ≤ ·) s) :
-    Disjoint a (supₛ s) ↔ ∀ ⦃b⦄, b ∈ s → Disjoint a b := by
-  simp_rw [disjoint_iff, h.inf_Sup_eq, supᵢ_eq_bot]
-#align directed_on.disjoint_Sup_right DirectedOn.disjoint_supₛ_right
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsCompactlyGenerated.{u1} α _inst_1] {a : α} {s : Set.{u1} α}, (DirectedOn.{u1} α (fun (x._@.Mathlib.Order.CompactlyGenerated._hyg.7117 : α) (x._@.Mathlib.Order.CompactlyGenerated._hyg.7119 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) x._@.Mathlib.Order.CompactlyGenerated._hyg.7117 x._@.Mathlib.Order.CompactlyGenerated._hyg.7119) s) -> (Iff (Disjoint.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a (SupSet.sSup.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) s)) (forall {{b : α}}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) -> (Disjoint.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a b)))
+Case conversion may be inaccurate. Consider using '#align directed_on.disjoint_Sup_right DirectedOn.disjoint_sSup_rightₓ'. -/
+protected theorem DirectedOn.disjoint_sSup_right (h : DirectedOn (· ≤ ·) s) :
+    Disjoint a (sSup s) ↔ ∀ ⦃b⦄, b ∈ s → Disjoint a b := by
+  simp_rw [disjoint_iff, h.inf_Sup_eq, iSup_eq_bot]
+#align directed_on.disjoint_Sup_right DirectedOn.disjoint_sSup_right
 
-/- warning: directed_on.disjoint_Sup_left -> DirectedOn.disjoint_supₛ_left is a dubious translation:
+/- warning: directed_on.disjoint_Sup_left -> DirectedOn.disjoint_sSup_left is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsCompactlyGenerated.{u1} α _inst_1] {a : α} {s : Set.{u1} α}, (DirectedOn.{u1} α (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) s) -> (Iff (Disjoint.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) (SupSet.supₛ.{u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) s) a) (forall {{b : α}}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) -> (Disjoint.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) b a)))
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsCompactlyGenerated.{u1} α _inst_1] {a : α} {s : Set.{u1} α}, (DirectedOn.{u1} α (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) s) -> (Iff (Disjoint.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) (SupSet.sSup.{u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) s) a) (forall {{b : α}}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) -> (Disjoint.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) b a)))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsCompactlyGenerated.{u1} α _inst_1] {a : α} {s : Set.{u1} α}, (DirectedOn.{u1} α (fun (x._@.Mathlib.Order.CompactlyGenerated._hyg.7188 : α) (x._@.Mathlib.Order.CompactlyGenerated._hyg.7190 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) x._@.Mathlib.Order.CompactlyGenerated._hyg.7188 x._@.Mathlib.Order.CompactlyGenerated._hyg.7190) s) -> (Iff (Disjoint.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) (SupSet.supₛ.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) s) a) (forall {{b : α}}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) -> (Disjoint.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) b a)))
-Case conversion may be inaccurate. Consider using '#align directed_on.disjoint_Sup_left DirectedOn.disjoint_supₛ_leftₓ'. -/
-protected theorem DirectedOn.disjoint_supₛ_left (h : DirectedOn (· ≤ ·) s) :
-    Disjoint (supₛ s) a ↔ ∀ ⦃b⦄, b ∈ s → Disjoint b a := by
-  simp_rw [disjoint_iff, h.Sup_inf_eq, supᵢ_eq_bot]
-#align directed_on.disjoint_Sup_left DirectedOn.disjoint_supₛ_left
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsCompactlyGenerated.{u1} α _inst_1] {a : α} {s : Set.{u1} α}, (DirectedOn.{u1} α (fun (x._@.Mathlib.Order.CompactlyGenerated._hyg.7188 : α) (x._@.Mathlib.Order.CompactlyGenerated._hyg.7190 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) x._@.Mathlib.Order.CompactlyGenerated._hyg.7188 x._@.Mathlib.Order.CompactlyGenerated._hyg.7190) s) -> (Iff (Disjoint.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) (SupSet.sSup.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) s) a) (forall {{b : α}}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) -> (Disjoint.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) b a)))
+Case conversion may be inaccurate. Consider using '#align directed_on.disjoint_Sup_left DirectedOn.disjoint_sSup_leftₓ'. -/
+protected theorem DirectedOn.disjoint_sSup_left (h : DirectedOn (· ≤ ·) s) :
+    Disjoint (sSup s) a ↔ ∀ ⦃b⦄, b ∈ s → Disjoint b a := by
+  simp_rw [disjoint_iff, h.Sup_inf_eq, iSup_eq_bot]
+#align directed_on.disjoint_Sup_left DirectedOn.disjoint_sSup_left
 
-/- warning: directed.disjoint_supr_right -> Directed.disjoint_supᵢ_right is a dubious translation:
+/- warning: directed.disjoint_supr_right -> Directed.disjoint_iSup_right is a dubious translation:
 lean 3 declaration is
-  forall {ι : Sort.{u1}} {α : Type.{u2}} [_inst_1 : CompleteLattice.{u2} α] {f : ι -> α} [_inst_2 : IsCompactlyGenerated.{u2} α _inst_1] {a : α}, (Directed.{u2, u1} α ι (LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1))))) f) -> (Iff (Disjoint.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1)) (BoundedOrder.toOrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u2} α _inst_1)) a (supᵢ.{u2, u1} α (ConditionallyCompleteLattice.toHasSup.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)) ι (fun (i : ι) => f i))) (forall (i : ι), Disjoint.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1)) (BoundedOrder.toOrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u2} α _inst_1)) a (f i)))
+  forall {ι : Sort.{u1}} {α : Type.{u2}} [_inst_1 : CompleteLattice.{u2} α] {f : ι -> α} [_inst_2 : IsCompactlyGenerated.{u2} α _inst_1] {a : α}, (Directed.{u2, u1} α ι (LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1))))) f) -> (Iff (Disjoint.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1)) (BoundedOrder.toOrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u2} α _inst_1)) a (iSup.{u2, u1} α (ConditionallyCompleteLattice.toHasSup.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)) ι (fun (i : ι) => f i))) (forall (i : ι), Disjoint.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1)) (BoundedOrder.toOrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u2} α _inst_1)) a (f i)))
 but is expected to have type
-  forall {ι : Sort.{u1}} {α : Type.{u2}} {_inst_1 : ι -> α} [f : CompleteLattice.{u2} α] [_inst_2 : IsCompactlyGenerated.{u2} α f] {a : α}, (Directed.{u2, u1} α ι (fun (x._@.Mathlib.Order.CompactlyGenerated._hyg.7259 : α) (x._@.Mathlib.Order.CompactlyGenerated._hyg.7261 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α f)))) x._@.Mathlib.Order.CompactlyGenerated._hyg.7259 x._@.Mathlib.Order.CompactlyGenerated._hyg.7261) _inst_1) -> (Iff (Disjoint.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α f)) (BoundedOrder.toOrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α f)))) (CompleteLattice.toBoundedOrder.{u2} α f)) a (supᵢ.{u2, u1} α (ConditionallyCompleteLattice.toSupSet.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α f)) ι (fun (i : ι) => _inst_1 i))) (forall (i : ι), Disjoint.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α f)) (BoundedOrder.toOrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α f)))) (CompleteLattice.toBoundedOrder.{u2} α f)) a (_inst_1 i)))
-Case conversion may be inaccurate. Consider using '#align directed.disjoint_supr_right Directed.disjoint_supᵢ_rightₓ'. -/
-protected theorem Directed.disjoint_supᵢ_right (h : Directed (· ≤ ·) f) :
+  forall {ι : Sort.{u1}} {α : Type.{u2}} {_inst_1 : ι -> α} [f : CompleteLattice.{u2} α] [_inst_2 : IsCompactlyGenerated.{u2} α f] {a : α}, (Directed.{u2, u1} α ι (fun (x._@.Mathlib.Order.CompactlyGenerated._hyg.7259 : α) (x._@.Mathlib.Order.CompactlyGenerated._hyg.7261 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α f)))) x._@.Mathlib.Order.CompactlyGenerated._hyg.7259 x._@.Mathlib.Order.CompactlyGenerated._hyg.7261) _inst_1) -> (Iff (Disjoint.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α f)) (BoundedOrder.toOrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α f)))) (CompleteLattice.toBoundedOrder.{u2} α f)) a (iSup.{u2, u1} α (ConditionallyCompleteLattice.toSupSet.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α f)) ι (fun (i : ι) => _inst_1 i))) (forall (i : ι), Disjoint.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α f)) (BoundedOrder.toOrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α f)))) (CompleteLattice.toBoundedOrder.{u2} α f)) a (_inst_1 i)))
+Case conversion may be inaccurate. Consider using '#align directed.disjoint_supr_right Directed.disjoint_iSup_rightₓ'. -/
+protected theorem Directed.disjoint_iSup_right (h : Directed (· ≤ ·) f) :
     Disjoint a (⨆ i, f i) ↔ ∀ i, Disjoint a (f i) := by
-  simp_rw [disjoint_iff, h.inf_supr_eq, supᵢ_eq_bot]
-#align directed.disjoint_supr_right Directed.disjoint_supᵢ_right
+  simp_rw [disjoint_iff, h.inf_supr_eq, iSup_eq_bot]
+#align directed.disjoint_supr_right Directed.disjoint_iSup_right
 
-/- warning: directed.disjoint_supr_left -> Directed.disjoint_supᵢ_left is a dubious translation:
+/- warning: directed.disjoint_supr_left -> Directed.disjoint_iSup_left is a dubious translation:
 lean 3 declaration is
-  forall {ι : Sort.{u1}} {α : Type.{u2}} [_inst_1 : CompleteLattice.{u2} α] {f : ι -> α} [_inst_2 : IsCompactlyGenerated.{u2} α _inst_1] {a : α}, (Directed.{u2, u1} α ι (LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1))))) f) -> (Iff (Disjoint.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1)) (BoundedOrder.toOrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u2} α _inst_1)) (supᵢ.{u2, u1} α (ConditionallyCompleteLattice.toHasSup.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)) ι (fun (i : ι) => f i)) a) (forall (i : ι), Disjoint.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1)) (BoundedOrder.toOrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u2} α _inst_1)) (f i) a))
+  forall {ι : Sort.{u1}} {α : Type.{u2}} [_inst_1 : CompleteLattice.{u2} α] {f : ι -> α} [_inst_2 : IsCompactlyGenerated.{u2} α _inst_1] {a : α}, (Directed.{u2, u1} α ι (LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1))))) f) -> (Iff (Disjoint.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1)) (BoundedOrder.toOrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u2} α _inst_1)) (iSup.{u2, u1} α (ConditionallyCompleteLattice.toHasSup.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)) ι (fun (i : ι) => f i)) a) (forall (i : ι), Disjoint.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1)) (BoundedOrder.toOrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u2} α _inst_1)) (f i) a))
 but is expected to have type
-  forall {ι : Sort.{u1}} {α : Type.{u2}} {_inst_1 : ι -> α} [f : CompleteLattice.{u2} α] [_inst_2 : IsCompactlyGenerated.{u2} α f] {a : α}, (Directed.{u2, u1} α ι (fun (x._@.Mathlib.Order.CompactlyGenerated._hyg.7343 : α) (x._@.Mathlib.Order.CompactlyGenerated._hyg.7345 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α f)))) x._@.Mathlib.Order.CompactlyGenerated._hyg.7343 x._@.Mathlib.Order.CompactlyGenerated._hyg.7345) _inst_1) -> (Iff (Disjoint.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α f)) (BoundedOrder.toOrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α f)))) (CompleteLattice.toBoundedOrder.{u2} α f)) (supᵢ.{u2, u1} α (ConditionallyCompleteLattice.toSupSet.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α f)) ι (fun (i : ι) => _inst_1 i)) a) (forall (i : ι), Disjoint.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α f)) (BoundedOrder.toOrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α f)))) (CompleteLattice.toBoundedOrder.{u2} α f)) (_inst_1 i) a))
-Case conversion may be inaccurate. Consider using '#align directed.disjoint_supr_left Directed.disjoint_supᵢ_leftₓ'. -/
-protected theorem Directed.disjoint_supᵢ_left (h : Directed (· ≤ ·) f) :
+  forall {ι : Sort.{u1}} {α : Type.{u2}} {_inst_1 : ι -> α} [f : CompleteLattice.{u2} α] [_inst_2 : IsCompactlyGenerated.{u2} α f] {a : α}, (Directed.{u2, u1} α ι (fun (x._@.Mathlib.Order.CompactlyGenerated._hyg.7343 : α) (x._@.Mathlib.Order.CompactlyGenerated._hyg.7345 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α f)))) x._@.Mathlib.Order.CompactlyGenerated._hyg.7343 x._@.Mathlib.Order.CompactlyGenerated._hyg.7345) _inst_1) -> (Iff (Disjoint.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α f)) (BoundedOrder.toOrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α f)))) (CompleteLattice.toBoundedOrder.{u2} α f)) (iSup.{u2, u1} α (ConditionallyCompleteLattice.toSupSet.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α f)) ι (fun (i : ι) => _inst_1 i)) a) (forall (i : ι), Disjoint.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α f)) (BoundedOrder.toOrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α f)))) (CompleteLattice.toBoundedOrder.{u2} α f)) (_inst_1 i) a))
+Case conversion may be inaccurate. Consider using '#align directed.disjoint_supr_left Directed.disjoint_iSup_leftₓ'. -/
+protected theorem Directed.disjoint_iSup_left (h : Directed (· ≤ ·) f) :
     Disjoint (⨆ i, f i) a ↔ ∀ i, Disjoint (f i) a := by
-  simp_rw [disjoint_iff, h.supr_inf_eq, supᵢ_eq_bot]
-#align directed.disjoint_supr_left Directed.disjoint_supᵢ_left
+  simp_rw [disjoint_iff, h.supr_inf_eq, iSup_eq_bot]
+#align directed.disjoint_supr_left Directed.disjoint_iSup_left
 
-/- warning: inf_Sup_eq_supr_inf_sup_finset -> inf_supₛ_eq_supᵢ_inf_sup_finset is a dubious translation:
+/- warning: inf_Sup_eq_supr_inf_sup_finset -> inf_sSup_eq_iSup_inf_sup_finset is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsCompactlyGenerated.{u1} α _inst_1] {a : α} {s : Set.{u1} α}, Eq.{succ u1} α (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)))) a (SupSet.supₛ.{u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) s)) (supᵢ.{u1, succ u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (Finset.{u1} α) (fun (t : Finset.{u1} α) => supᵢ.{u1, 0} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) t) s) (fun (H : HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) t) s) => Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)))) a (Finset.sup.{u1, u1} α α (Lattice.toSemilatticeSup.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α (Lattice.toSemilatticeSup.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)))))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) t (id.{succ u1} α)))))
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsCompactlyGenerated.{u1} α _inst_1] {a : α} {s : Set.{u1} α}, Eq.{succ u1} α (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)))) a (SupSet.sSup.{u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) s)) (iSup.{u1, succ u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (Finset.{u1} α) (fun (t : Finset.{u1} α) => iSup.{u1, 0} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) t) s) (fun (H : HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) t) s) => Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)))) a (Finset.sup.{u1, u1} α α (Lattice.toSemilatticeSup.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α (Lattice.toSemilatticeSup.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)))))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) t (id.{succ u1} α)))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsCompactlyGenerated.{u1} α _inst_1] {a : α} {s : Set.{u1} α}, Eq.{succ u1} α (Inf.inf.{u1} α (Lattice.toInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1))) a (SupSet.supₛ.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) s)) (supᵢ.{u1, succ u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (Finset.{u1} α) (fun (t : Finset.{u1} α) => supᵢ.{u1, 0} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Finset.toSet.{u1} α t) s) (fun (H : HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Finset.toSet.{u1} α t) s) => Inf.inf.{u1} α (Lattice.toInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1))) a (Finset.sup.{u1, u1} α α (Lattice.toSemilatticeSup.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α (Lattice.toSemilatticeSup.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)))))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) t (id.{succ u1} α)))))
-Case conversion may be inaccurate. Consider using '#align inf_Sup_eq_supr_inf_sup_finset inf_supₛ_eq_supᵢ_inf_sup_finsetₓ'. -/
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsCompactlyGenerated.{u1} α _inst_1] {a : α} {s : Set.{u1} α}, Eq.{succ u1} α (Inf.inf.{u1} α (Lattice.toInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1))) a (SupSet.sSup.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) s)) (iSup.{u1, succ u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (Finset.{u1} α) (fun (t : Finset.{u1} α) => iSup.{u1, 0} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Finset.toSet.{u1} α t) s) (fun (H : HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Finset.toSet.{u1} α t) s) => Inf.inf.{u1} α (Lattice.toInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1))) a (Finset.sup.{u1, u1} α α (Lattice.toSemilatticeSup.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α (Lattice.toSemilatticeSup.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)))))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) t (id.{succ u1} α)))))
+Case conversion may be inaccurate. Consider using '#align inf_Sup_eq_supr_inf_sup_finset inf_sSup_eq_iSup_inf_sup_finsetₓ'. -/
 /-- This property is equivalent to `α` being upper continuous. -/
-theorem inf_supₛ_eq_supᵢ_inf_sup_finset :
-    a ⊓ supₛ s = ⨆ (t : Finset α) (H : ↑t ⊆ s), a ⊓ t.sup id :=
+theorem inf_sSup_eq_iSup_inf_sup_finset :
+    a ⊓ sSup s = ⨆ (t : Finset α) (H : ↑t ⊆ s), a ⊓ t.sup id :=
   le_antisymm
     (by
       rw [le_iff_compact_le_imp]
       intro c hc hcinf
       rw [le_inf_iff] at hcinf
       rcases hc s hcinf.2 with ⟨t, ht1, ht2⟩
-      exact (le_inf hcinf.1 ht2).trans (le_supᵢ₂ t ht1))
-    (supᵢ_le fun t =>
-      supᵢ_le fun h => inf_le_inf_left _ ((Finset.sup_id_eq_supₛ t).symm ▸ supₛ_le_supₛ h))
-#align inf_Sup_eq_supr_inf_sup_finset inf_supₛ_eq_supᵢ_inf_sup_finset
+      exact (le_inf hcinf.1 ht2).trans (le_iSup₂ t ht1))
+    (iSup_le fun t =>
+      iSup_le fun h => inf_le_inf_left _ ((Finset.sup_id_eq_sSup t).symm ▸ sSup_le_sSup h))
+#align inf_Sup_eq_supr_inf_sup_finset inf_sSup_eq_iSup_inf_sup_finset
 
 #print CompleteLattice.setIndependent_iff_finite /-
 theorem CompleteLattice.setIndependent_iff_finite {s : Set α} :
@@ -579,9 +579,9 @@ theorem CompleteLattice.setIndependent_iff_finite {s : Set α} :
       ∀ t : Finset α, ↑t ⊆ s → CompleteLattice.SetIndependent (↑t : Set α) :=
   ⟨fun hs t ht => hs.mono ht, fun h a ha =>
     by
-    rw [disjoint_iff, inf_supₛ_eq_supᵢ_inf_sup_finset, supᵢ_eq_bot]
+    rw [disjoint_iff, inf_sSup_eq_iSup_inf_sup_finset, iSup_eq_bot]
     intro t
-    rw [supᵢ_eq_bot, Finset.sup_id_eq_supₛ]
+    rw [iSup_eq_bot, Finset.sup_id_eq_sSup]
     intro ht
     classical
       have h' := (h (insert a t) _ (t.mem_insert_self a)).eq_bot
@@ -592,8 +592,8 @@ theorem CompleteLattice.setIndependent_iff_finite {s : Set α} :
 #align complete_lattice.set_independent_iff_finite CompleteLattice.setIndependent_iff_finite
 -/
 
-#print CompleteLattice.setIndependent_unionᵢ_of_directed /-
-theorem CompleteLattice.setIndependent_unionᵢ_of_directed {η : Type _} {s : η → Set α}
+#print CompleteLattice.setIndependent_iUnion_of_directed /-
+theorem CompleteLattice.setIndependent_iUnion_of_directed {η : Type _} {s : η → Set α}
     (hs : Directed (· ⊆ ·) s) (h : ∀ i, CompleteLattice.SetIndependent (s i)) :
     CompleteLattice.SetIndependent (⋃ i, s i) :=
   by
@@ -601,23 +601,23 @@ theorem CompleteLattice.setIndependent_unionᵢ_of_directed {η : Type _} {s : �
   · skip
     rw [CompleteLattice.setIndependent_iff_finite]
     intro t ht
-    obtain ⟨I, fi, hI⟩ := Set.finite_subset_unionᵢ t.finite_to_set ht
+    obtain ⟨I, fi, hI⟩ := Set.finite_subset_iUnion t.finite_to_set ht
     obtain ⟨i, hi⟩ := hs.finset_le fi.to_finset
     exact
       (h i).mono
-        (Set.Subset.trans hI <| Set.unionᵢ₂_subset fun j hj => hi j (fi.mem_to_finset.2 hj))
+        (Set.Subset.trans hI <| Set.iUnion₂_subset fun j hj => hi j (fi.mem_to_finset.2 hj))
   · rintro a ⟨_, ⟨i, _⟩, _⟩
     exfalso
     exact hη ⟨i⟩
-#align complete_lattice.set_independent_Union_of_directed CompleteLattice.setIndependent_unionᵢ_of_directed
+#align complete_lattice.set_independent_Union_of_directed CompleteLattice.setIndependent_iUnion_of_directed
 -/
 
-#print CompleteLattice.independent_unionₛ_of_directed /-
-theorem CompleteLattice.independent_unionₛ_of_directed {s : Set (Set α)} (hs : DirectedOn (· ⊆ ·) s)
+#print CompleteLattice.independent_sUnion_of_directed /-
+theorem CompleteLattice.independent_sUnion_of_directed {s : Set (Set α)} (hs : DirectedOn (· ⊆ ·) s)
     (h : ∀ a ∈ s, CompleteLattice.SetIndependent a) : CompleteLattice.SetIndependent (⋃₀ s) := by
-  rw [Set.unionₛ_eq_unionᵢ] <;>
-    exact CompleteLattice.setIndependent_unionᵢ_of_directed hs.directed_coe (by simpa using h)
-#align complete_lattice.independent_sUnion_of_directed CompleteLattice.independent_unionₛ_of_directed
+  rw [Set.sUnion_eq_iUnion] <;>
+    exact CompleteLattice.setIndependent_iUnion_of_directed hs.directed_coe (by simpa using h)
+#align complete_lattice.independent_sUnion_of_directed CompleteLattice.independent_sUnion_of_directed
 -/
 
 end
@@ -630,7 +630,7 @@ theorem isCompactlyGenerated_of_wellFounded (h : WellFounded ((· > ·) : α →
   by
   rw [well_founded_iff_is_Sup_finite_compact, is_Sup_finite_compact_iff_all_elements_compact] at h
   -- x is the join of the set of compact elements {x}
-  exact ⟨fun x => ⟨{x}, ⟨fun x _ => h x, supₛ_singleton⟩⟩⟩
+  exact ⟨fun x => ⟨{x}, ⟨fun x _ => h x, sSup_singleton⟩⟩⟩
 #align complete_lattice.compactly_generated_of_well_founded CompleteLattice.isCompactlyGenerated_of_wellFounded
 -/
 
@@ -650,7 +650,7 @@ theorem Iic_coatomic_of_compact_element {k : α} (h : IsCompactElement k) : IsCo
       exact lt_irrefl _ hck
     · intro S SC cC I IS
       by_cases hS : S.nonempty
-      · exact ⟨Sup S, h.directed_Sup_lt_of_lt hS cC.directed_on SC, fun _ => le_supₛ⟩
+      · exact ⟨Sup S, h.directed_Sup_lt_of_lt hS cC.directed_on SC, fun _ => le_sSup⟩
       exact
         ⟨b, lt_of_le_of_ne hbk htriv, by
           simp only [set.not_nonempty_iff_eq_empty.mp hS, Set.mem_empty_iff_false, forall_const,
@@ -679,7 +679,7 @@ instance (priority := 100) isAtomic_of_complementedLattice [ComplementedLattice 
   ⟨fun b => by
     by_cases h : { c : α | CompleteLattice.IsCompactElement c ∧ c ≤ b } ⊆ {⊥}
     · left
-      rw [← supₛ_compact_le_eq b, supₛ_eq_bot]
+      rw [← sSup_compact_le_eq b, sSup_eq_bot]
       exact h
     · rcases Set.not_subset.1 h with ⟨c, ⟨hc, hcb⟩, hcbot⟩
       right
@@ -703,7 +703,7 @@ instance (priority := 100) isAtomistic_of_complementedLattice [ComplementedLatti
   ⟨fun b =>
     ⟨{ a | IsAtom a ∧ a ≤ b }, by
       symm
-      have hle : Sup { a : α | IsAtom a ∧ a ≤ b } ≤ b := supₛ_le fun _ => And.right
+      have hle : Sup { a : α | IsAtom a ∧ a ≤ b } ≤ b := sSup_le fun _ => And.right
       apply (lt_or_eq_of_le hle).resolve_left fun con => _
       obtain ⟨c, hc⟩ := exists_is_compl (⟨Sup { a : α | IsAtom a ∧ a ≤ b }, hle⟩ : Set.Iic b)
       obtain rfl | ⟨a, ha, hac⟩ := eq_bot_or_exists_atom_le c
@@ -712,7 +712,7 @@ instance (priority := 100) isAtomistic_of_complementedLattice [ComplementedLatti
         rw [eq_bot_iff]
         apply le_trans (le_inf _ hac) hc.disjoint.le_bot
         rw [← Subtype.coe_le_coe, Subtype.coe_mk]
-        exact le_supₛ ⟨ha.of_is_atom_coe_Iic, a.2⟩, fun _ => And.left⟩⟩
+        exact le_sSup ⟨ha.of_is_atom_coe_Iic, a.2⟩, fun _ => And.left⟩⟩
 #align is_atomistic_of_complemented_lattice isAtomistic_of_complementedLattice
 -/
 
@@ -722,38 +722,38 @@ Most explicitly, every element is the complement of a supremum of indepedendent 
 -/
 
 
-/- warning: exists_set_independent_is_compl_Sup_atoms -> exists_setIndependent_isCompl_supₛ_atoms is a dubious translation:
+/- warning: exists_set_independent_is_compl_Sup_atoms -> exists_setIndependent_isCompl_sSup_atoms is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsModularLattice.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1))] [_inst_3 : IsCompactlyGenerated.{u1} α _inst_1], (Eq.{succ u1} α (SupSet.supₛ.{u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (setOf.{u1} α (fun (a : α) => IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a))) (Top.top.{u1} α (CompleteLattice.toHasTop.{u1} α _inst_1))) -> (forall (b : α), Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (CompleteLattice.SetIndependent.{u1} α _inst_1 s) (And (IsCompl.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (CompleteLattice.toBoundedOrder.{u1} α _inst_1) b (SupSet.supₛ.{u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) s)) (forall {{a : α}}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) -> (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a)))))
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsModularLattice.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1))] [_inst_3 : IsCompactlyGenerated.{u1} α _inst_1], (Eq.{succ u1} α (SupSet.sSup.{u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (setOf.{u1} α (fun (a : α) => IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a))) (Top.top.{u1} α (CompleteLattice.toHasTop.{u1} α _inst_1))) -> (forall (b : α), Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (CompleteLattice.SetIndependent.{u1} α _inst_1 s) (And (IsCompl.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (CompleteLattice.toBoundedOrder.{u1} α _inst_1) b (SupSet.sSup.{u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) s)) (forall {{a : α}}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) -> (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a)))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsModularLattice.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1))] [_inst_3 : IsCompactlyGenerated.{u1} α _inst_1], (Eq.{succ u1} α (SupSet.supₛ.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (setOf.{u1} α (fun (a : α) => IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a))) (Top.top.{u1} α (CompleteLattice.toTop.{u1} α _inst_1))) -> (forall (b : α), Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (CompleteLattice.SetIndependent.{u1} α _inst_1 s) (And (IsCompl.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (CompleteLattice.toBoundedOrder.{u1} α _inst_1) b (SupSet.supₛ.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) s)) (forall {{a : α}}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) -> (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a)))))
-Case conversion may be inaccurate. Consider using '#align exists_set_independent_is_compl_Sup_atoms exists_setIndependent_isCompl_supₛ_atomsₓ'. -/
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsModularLattice.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1))] [_inst_3 : IsCompactlyGenerated.{u1} α _inst_1], (Eq.{succ u1} α (SupSet.sSup.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (setOf.{u1} α (fun (a : α) => IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a))) (Top.top.{u1} α (CompleteLattice.toTop.{u1} α _inst_1))) -> (forall (b : α), Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (CompleteLattice.SetIndependent.{u1} α _inst_1 s) (And (IsCompl.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (CompleteLattice.toBoundedOrder.{u1} α _inst_1) b (SupSet.sSup.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) s)) (forall {{a : α}}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) -> (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a)))))
+Case conversion may be inaccurate. Consider using '#align exists_set_independent_is_compl_Sup_atoms exists_setIndependent_isCompl_sSup_atomsₓ'. -/
 /-- In an atomic lattice, every element `b` has a complement of the form `Sup s`, where each element
 of `s` is an atom. See also `complemented_lattice_of_Sup_atoms_eq_top`. -/
-theorem exists_setIndependent_isCompl_supₛ_atoms (h : supₛ { a : α | IsAtom a } = ⊤) (b : α) :
-    ∃ s : Set α, CompleteLattice.SetIndependent s ∧ IsCompl b (supₛ s) ∧ ∀ ⦃a⦄, a ∈ s → IsAtom a :=
+theorem exists_setIndependent_isCompl_sSup_atoms (h : sSup { a : α | IsAtom a } = ⊤) (b : α) :
+    ∃ s : Set α, CompleteLattice.SetIndependent s ∧ IsCompl b (sSup s) ∧ ∀ ⦃a⦄, a ∈ s → IsAtom a :=
   by
   obtain ⟨s, ⟨s_ind, b_inf_Sup_s, s_atoms⟩, s_max⟩ :=
     zorn_subset
       { s : Set α | CompleteLattice.SetIndependent s ∧ Disjoint b (Sup s) ∧ ∀ a ∈ s, IsAtom a }
       fun c hc1 hc2 =>
       ⟨⋃₀ c,
-        ⟨CompleteLattice.independent_unionₛ_of_directed hc2.DirectedOn fun s hs => (hc1 hs).1, _,
+        ⟨CompleteLattice.independent_sUnion_of_directed hc2.DirectedOn fun s hs => (hc1 hs).1, _,
           fun a ⟨s, sc, as⟩ => (hc1 sc).2.2 a as⟩,
-        fun _ => Set.subset_unionₛ_of_mem⟩
+        fun _ => Set.subset_sUnion_of_mem⟩
   swap
-  · rw [supₛ_unionₛ, ← supₛ_image, DirectedOn.disjoint_supₛ_right]
+  · rw [sSup_sUnion, ← sSup_image, DirectedOn.disjoint_sSup_right]
     · rintro _ ⟨s, hs, rfl⟩
       exact (hc1 hs).2.1
     · rw [directedOn_image]
-      exact hc2.directed_on.mono fun s t => supₛ_le_supₛ
+      exact hc2.directed_on.mono fun s t => sSup_le_sSup
   refine' ⟨s, s_ind, ⟨b_inf_Sup_s, _⟩, s_atoms⟩
-  rw [codisjoint_iff_le_sup, ← h, supₛ_le_iff]
+  rw [codisjoint_iff_le_sup, ← h, sSup_le_iff]
   intro a ha
   rw [← inf_eq_left]
   refine' (ha.le_iff.mp inf_le_left).resolve_left fun con => ha.1 _
   rw [← Con, eq_comm, inf_eq_left]
-  refine' (le_supₛ _).trans le_sup_right
+  refine' (le_sSup _).trans le_sup_right
   rw [← disjoint_iff] at con
   have a_dis_Sup_s : Disjoint a (Sup s) := con.mono_right le_sup_right
   rw [← s_max (s ∪ {a}) ⟨fun x hx => _, ⟨_, fun x hx => _⟩⟩ (Set.subset_union_left _ _)]
@@ -761,56 +761,56 @@ theorem exists_setIndependent_isCompl_supₛ_atoms (h : supₛ { a : α | IsAtom
   · rw [Set.mem_union, Set.mem_singleton_iff] at hx
     obtain rfl | xa := eq_or_ne x a
     · simp only [Set.mem_singleton, Set.insert_diff_of_mem, Set.union_singleton]
-      exact con.mono_right ((supₛ_le_supₛ <| Set.diff_subset _ _).trans le_sup_right)
+      exact con.mono_right ((sSup_le_sSup <| Set.diff_subset _ _).trans le_sup_right)
     · have h : (s ∪ {a}) \ {x} = s \ {x} ∪ {a} :=
         by
         simp only [Set.union_singleton]
         rw [Set.insert_diff_of_not_mem]
         rw [Set.mem_singleton_iff]
         exact Ne.symm xa
-      rw [h, supₛ_union, supₛ_singleton]
+      rw [h, sSup_union, sSup_singleton]
       apply
         (s_ind (hx.resolve_right xa)).disjoint_sup_right_of_disjoint_sup_left
           (a_dis_Sup_s.mono_right _).symm
-      rw [← supₛ_insert, Set.insert_diff_singleton, Set.insert_eq_of_mem (hx.resolve_right xa)]
-  · rw [supₛ_union, supₛ_singleton]
+      rw [← sSup_insert, Set.insert_diff_singleton, Set.insert_eq_of_mem (hx.resolve_right xa)]
+  · rw [sSup_union, sSup_singleton]
     exact b_inf_Sup_s.disjoint_sup_right_of_disjoint_sup_left Con.symm
   · rw [Set.mem_union, Set.mem_singleton_iff] at hx
     obtain hx | rfl := hx
     · exact s_atoms x hx
     · exact ha
-#align exists_set_independent_is_compl_Sup_atoms exists_setIndependent_isCompl_supₛ_atoms
+#align exists_set_independent_is_compl_Sup_atoms exists_setIndependent_isCompl_sSup_atoms
 
-/- warning: exists_set_independent_of_Sup_atoms_eq_top -> exists_setIndependent_of_supₛ_atoms_eq_top is a dubious translation:
+/- warning: exists_set_independent_of_Sup_atoms_eq_top -> exists_setIndependent_of_sSup_atoms_eq_top is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsModularLattice.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1))] [_inst_3 : IsCompactlyGenerated.{u1} α _inst_1], (Eq.{succ u1} α (SupSet.supₛ.{u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (setOf.{u1} α (fun (a : α) => IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a))) (Top.top.{u1} α (CompleteLattice.toHasTop.{u1} α _inst_1))) -> (Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (CompleteLattice.SetIndependent.{u1} α _inst_1 s) (And (Eq.{succ u1} α (SupSet.supₛ.{u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) s) (Top.top.{u1} α (CompleteLattice.toHasTop.{u1} α _inst_1))) (forall {{a : α}}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) -> (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a)))))
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsModularLattice.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1))] [_inst_3 : IsCompactlyGenerated.{u1} α _inst_1], (Eq.{succ u1} α (SupSet.sSup.{u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (setOf.{u1} α (fun (a : α) => IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a))) (Top.top.{u1} α (CompleteLattice.toHasTop.{u1} α _inst_1))) -> (Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (CompleteLattice.SetIndependent.{u1} α _inst_1 s) (And (Eq.{succ u1} α (SupSet.sSup.{u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) s) (Top.top.{u1} α (CompleteLattice.toHasTop.{u1} α _inst_1))) (forall {{a : α}}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) -> (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a)))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsModularLattice.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1))] [_inst_3 : IsCompactlyGenerated.{u1} α _inst_1], (Eq.{succ u1} α (SupSet.supₛ.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (setOf.{u1} α (fun (a : α) => IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a))) (Top.top.{u1} α (CompleteLattice.toTop.{u1} α _inst_1))) -> (Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (CompleteLattice.SetIndependent.{u1} α _inst_1 s) (And (Eq.{succ u1} α (SupSet.supₛ.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) s) (Top.top.{u1} α (CompleteLattice.toTop.{u1} α _inst_1))) (forall {{a : α}}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) -> (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a)))))
-Case conversion may be inaccurate. Consider using '#align exists_set_independent_of_Sup_atoms_eq_top exists_setIndependent_of_supₛ_atoms_eq_topₓ'. -/
-theorem exists_setIndependent_of_supₛ_atoms_eq_top (h : supₛ { a : α | IsAtom a } = ⊤) :
-    ∃ s : Set α, CompleteLattice.SetIndependent s ∧ supₛ s = ⊤ ∧ ∀ ⦃a⦄, a ∈ s → IsAtom a :=
-  let ⟨s, s_ind, s_top, s_atoms⟩ := exists_setIndependent_isCompl_supₛ_atoms h ⊥
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsModularLattice.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1))] [_inst_3 : IsCompactlyGenerated.{u1} α _inst_1], (Eq.{succ u1} α (SupSet.sSup.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (setOf.{u1} α (fun (a : α) => IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a))) (Top.top.{u1} α (CompleteLattice.toTop.{u1} α _inst_1))) -> (Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (CompleteLattice.SetIndependent.{u1} α _inst_1 s) (And (Eq.{succ u1} α (SupSet.sSup.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) s) (Top.top.{u1} α (CompleteLattice.toTop.{u1} α _inst_1))) (forall {{a : α}}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) -> (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a)))))
+Case conversion may be inaccurate. Consider using '#align exists_set_independent_of_Sup_atoms_eq_top exists_setIndependent_of_sSup_atoms_eq_topₓ'. -/
+theorem exists_setIndependent_of_sSup_atoms_eq_top (h : sSup { a : α | IsAtom a } = ⊤) :
+    ∃ s : Set α, CompleteLattice.SetIndependent s ∧ sSup s = ⊤ ∧ ∀ ⦃a⦄, a ∈ s → IsAtom a :=
+  let ⟨s, s_ind, s_top, s_atoms⟩ := exists_setIndependent_isCompl_sSup_atoms h ⊥
   ⟨s, s_ind, eq_top_of_isCompl_bot s_top.symm, s_atoms⟩
-#align exists_set_independent_of_Sup_atoms_eq_top exists_setIndependent_of_supₛ_atoms_eq_top
+#align exists_set_independent_of_Sup_atoms_eq_top exists_setIndependent_of_sSup_atoms_eq_top
 
-/- warning: complemented_lattice_of_Sup_atoms_eq_top -> complementedLattice_of_supₛ_atoms_eq_top is a dubious translation:
+/- warning: complemented_lattice_of_Sup_atoms_eq_top -> complementedLattice_of_sSup_atoms_eq_top is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsModularLattice.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1))] [_inst_3 : IsCompactlyGenerated.{u1} α _inst_1], (Eq.{succ u1} α (SupSet.supₛ.{u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (setOf.{u1} α (fun (a : α) => IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a))) (Top.top.{u1} α (CompleteLattice.toHasTop.{u1} α _inst_1))) -> (ComplementedLattice.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (CompleteLattice.toBoundedOrder.{u1} α _inst_1))
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsModularLattice.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1))] [_inst_3 : IsCompactlyGenerated.{u1} α _inst_1], (Eq.{succ u1} α (SupSet.sSup.{u1} α (ConditionallyCompleteLattice.toHasSup.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (setOf.{u1} α (fun (a : α) => IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a))) (Top.top.{u1} α (CompleteLattice.toHasTop.{u1} α _inst_1))) -> (ComplementedLattice.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (CompleteLattice.toBoundedOrder.{u1} α _inst_1))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsModularLattice.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1))] [_inst_3 : IsCompactlyGenerated.{u1} α _inst_1], (Eq.{succ u1} α (SupSet.supₛ.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (setOf.{u1} α (fun (a : α) => IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a))) (Top.top.{u1} α (CompleteLattice.toTop.{u1} α _inst_1))) -> (ComplementedLattice.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (CompleteLattice.toBoundedOrder.{u1} α _inst_1))
-Case conversion may be inaccurate. Consider using '#align complemented_lattice_of_Sup_atoms_eq_top complementedLattice_of_supₛ_atoms_eq_topₓ'. -/
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsModularLattice.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1))] [_inst_3 : IsCompactlyGenerated.{u1} α _inst_1], (Eq.{succ u1} α (SupSet.sSup.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (setOf.{u1} α (fun (a : α) => IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a))) (Top.top.{u1} α (CompleteLattice.toTop.{u1} α _inst_1))) -> (ComplementedLattice.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (CompleteLattice.toBoundedOrder.{u1} α _inst_1))
+Case conversion may be inaccurate. Consider using '#align complemented_lattice_of_Sup_atoms_eq_top complementedLattice_of_sSup_atoms_eq_topₓ'. -/
 /-- See [Theorem 6.6][calugareanu]. -/
-theorem complementedLattice_of_supₛ_atoms_eq_top (h : supₛ { a : α | IsAtom a } = ⊤) :
+theorem complementedLattice_of_sSup_atoms_eq_top (h : sSup { a : α | IsAtom a } = ⊤) :
     ComplementedLattice α :=
   ⟨fun b =>
-    let ⟨s, _, s_top, s_atoms⟩ := exists_setIndependent_isCompl_supₛ_atoms h b
-    ⟨supₛ s, s_top⟩⟩
-#align complemented_lattice_of_Sup_atoms_eq_top complementedLattice_of_supₛ_atoms_eq_top
+    let ⟨s, _, s_top, s_atoms⟩ := exists_setIndependent_isCompl_sSup_atoms h b
+    ⟨sSup s, s_top⟩⟩
+#align complemented_lattice_of_Sup_atoms_eq_top complementedLattice_of_sSup_atoms_eq_top
 
 #print complementedLattice_of_isAtomistic /-
 /-- See [Theorem 6.6][calugareanu]. -/
 theorem complementedLattice_of_isAtomistic [IsAtomistic α] : ComplementedLattice α :=
-  complementedLattice_of_supₛ_atoms_eq_top supₛ_atoms_eq_top
+  complementedLattice_of_sSup_atoms_eq_top sSup_atoms_eq_top
 #align complemented_lattice_of_is_atomistic complementedLattice_of_isAtomistic
 -/
 

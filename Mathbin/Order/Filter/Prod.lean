@@ -365,31 +365,31 @@ theorem tendsto_diag : Tendsto (fun i => (i, i)) f (f ×ᶠ f) :=
 #align filter.tendsto_diag Filter.tendsto_diag
 -/
 
-/- warning: filter.prod_infi_left -> Filter.prod_infᵢ_left is a dubious translation:
+/- warning: filter.prod_infi_left -> Filter.prod_iInf_left is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : Nonempty.{u3} ι] {f : ι -> (Filter.{u1} α)} {g : Filter.{u2} β}, Eq.{succ (max u1 u2)} (Filter.{max u1 u2} (Prod.{u1, u2} α β)) (Filter.prod.{u1, u2} α β (infᵢ.{u1, u3} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι (fun (i : ι) => f i)) g) (infᵢ.{max u1 u2, u3} (Filter.{max u1 u2} (Prod.{u1, u2} α β)) (ConditionallyCompleteLattice.toHasInf.{max u1 u2} (Filter.{max u1 u2} (Prod.{u1, u2} α β)) (CompleteLattice.toConditionallyCompleteLattice.{max u1 u2} (Filter.{max u1 u2} (Prod.{u1, u2} α β)) (Filter.completeLattice.{max u1 u2} (Prod.{u1, u2} α β)))) ι (fun (i : ι) => Filter.prod.{u1, u2} α β (f i) g))
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : Nonempty.{u3} ι] {f : ι -> (Filter.{u1} α)} {g : Filter.{u2} β}, Eq.{succ (max u1 u2)} (Filter.{max u1 u2} (Prod.{u1, u2} α β)) (Filter.prod.{u1, u2} α β (iInf.{u1, u3} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι (fun (i : ι) => f i)) g) (iInf.{max u1 u2, u3} (Filter.{max u1 u2} (Prod.{u1, u2} α β)) (ConditionallyCompleteLattice.toHasInf.{max u1 u2} (Filter.{max u1 u2} (Prod.{u1, u2} α β)) (CompleteLattice.toConditionallyCompleteLattice.{max u1 u2} (Filter.{max u1 u2} (Prod.{u1, u2} α β)) (Filter.completeLattice.{max u1 u2} (Prod.{u1, u2} α β)))) ι (fun (i : ι) => Filter.prod.{u1, u2} α β (f i) g))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {ι : Sort.{u3}} [_inst_1 : Nonempty.{u3} ι] {f : ι -> (Filter.{u2} α)} {g : Filter.{u1} β}, Eq.{max (succ u2) (succ u1)} (Filter.{max u1 u2} (Prod.{u2, u1} α β)) (Filter.prod.{u2, u1} α β (infᵢ.{u2, u3} (Filter.{u2} α) (CompleteLattice.toInfSet.{u2} (Filter.{u2} α) (Filter.instCompleteLatticeFilter.{u2} α)) ι (fun (i : ι) => f i)) g) (infᵢ.{max u1 u2, u3} (Filter.{max u1 u2} (Prod.{u2, u1} α β)) (CompleteLattice.toInfSet.{max u2 u1} (Filter.{max u1 u2} (Prod.{u2, u1} α β)) (Filter.instCompleteLatticeFilter.{max u2 u1} (Prod.{u2, u1} α β))) ι (fun (i : ι) => Filter.prod.{u2, u1} α β (f i) g))
-Case conversion may be inaccurate. Consider using '#align filter.prod_infi_left Filter.prod_infᵢ_leftₓ'. -/
-theorem prod_infᵢ_left [Nonempty ι] {f : ι → Filter α} {g : Filter β} :
+  forall {α : Type.{u2}} {β : Type.{u1}} {ι : Sort.{u3}} [_inst_1 : Nonempty.{u3} ι] {f : ι -> (Filter.{u2} α)} {g : Filter.{u1} β}, Eq.{max (succ u2) (succ u1)} (Filter.{max u1 u2} (Prod.{u2, u1} α β)) (Filter.prod.{u2, u1} α β (iInf.{u2, u3} (Filter.{u2} α) (CompleteLattice.toInfSet.{u2} (Filter.{u2} α) (Filter.instCompleteLatticeFilter.{u2} α)) ι (fun (i : ι) => f i)) g) (iInf.{max u1 u2, u3} (Filter.{max u1 u2} (Prod.{u2, u1} α β)) (CompleteLattice.toInfSet.{max u2 u1} (Filter.{max u1 u2} (Prod.{u2, u1} α β)) (Filter.instCompleteLatticeFilter.{max u2 u1} (Prod.{u2, u1} α β))) ι (fun (i : ι) => Filter.prod.{u2, u1} α β (f i) g))
+Case conversion may be inaccurate. Consider using '#align filter.prod_infi_left Filter.prod_iInf_leftₓ'. -/
+theorem prod_iInf_left [Nonempty ι] {f : ι → Filter α} {g : Filter β} :
     (⨅ i, f i) ×ᶠ g = ⨅ i, f i ×ᶠ g :=
   by
-  rw [Filter.prod, comap_infi, infᵢ_inf]
+  rw [Filter.prod, comap_infi, iInf_inf]
   simp only [Filter.prod, eq_self_iff_true]
-#align filter.prod_infi_left Filter.prod_infᵢ_left
+#align filter.prod_infi_left Filter.prod_iInf_left
 
-/- warning: filter.prod_infi_right -> Filter.prod_infᵢ_right is a dubious translation:
+/- warning: filter.prod_infi_right -> Filter.prod_iInf_right is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : Nonempty.{u3} ι] {f : Filter.{u1} α} {g : ι -> (Filter.{u2} β)}, Eq.{succ (max u1 u2)} (Filter.{max u1 u2} (Prod.{u1, u2} α β)) (Filter.prod.{u1, u2} α β f (infᵢ.{u2, u3} (Filter.{u2} β) (ConditionallyCompleteLattice.toHasInf.{u2} (Filter.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β))) ι (fun (i : ι) => g i))) (infᵢ.{max u1 u2, u3} (Filter.{max u1 u2} (Prod.{u1, u2} α β)) (ConditionallyCompleteLattice.toHasInf.{max u1 u2} (Filter.{max u1 u2} (Prod.{u1, u2} α β)) (CompleteLattice.toConditionallyCompleteLattice.{max u1 u2} (Filter.{max u1 u2} (Prod.{u1, u2} α β)) (Filter.completeLattice.{max u1 u2} (Prod.{u1, u2} α β)))) ι (fun (i : ι) => Filter.prod.{u1, u2} α β f (g i)))
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : Nonempty.{u3} ι] {f : Filter.{u1} α} {g : ι -> (Filter.{u2} β)}, Eq.{succ (max u1 u2)} (Filter.{max u1 u2} (Prod.{u1, u2} α β)) (Filter.prod.{u1, u2} α β f (iInf.{u2, u3} (Filter.{u2} β) (ConditionallyCompleteLattice.toHasInf.{u2} (Filter.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} β) (Filter.completeLattice.{u2} β))) ι (fun (i : ι) => g i))) (iInf.{max u1 u2, u3} (Filter.{max u1 u2} (Prod.{u1, u2} α β)) (ConditionallyCompleteLattice.toHasInf.{max u1 u2} (Filter.{max u1 u2} (Prod.{u1, u2} α β)) (CompleteLattice.toConditionallyCompleteLattice.{max u1 u2} (Filter.{max u1 u2} (Prod.{u1, u2} α β)) (Filter.completeLattice.{max u1 u2} (Prod.{u1, u2} α β)))) ι (fun (i : ι) => Filter.prod.{u1, u2} α β f (g i)))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {ι : Sort.{u3}} [_inst_1 : Nonempty.{u3} ι] {f : Filter.{u2} α} {g : ι -> (Filter.{u1} β)}, Eq.{max (succ u2) (succ u1)} (Filter.{max u1 u2} (Prod.{u2, u1} α β)) (Filter.prod.{u2, u1} α β f (infᵢ.{u1, u3} (Filter.{u1} β) (CompleteLattice.toInfSet.{u1} (Filter.{u1} β) (Filter.instCompleteLatticeFilter.{u1} β)) ι (fun (i : ι) => g i))) (infᵢ.{max u1 u2, u3} (Filter.{max u1 u2} (Prod.{u2, u1} α β)) (CompleteLattice.toInfSet.{max u2 u1} (Filter.{max u1 u2} (Prod.{u2, u1} α β)) (Filter.instCompleteLatticeFilter.{max u2 u1} (Prod.{u2, u1} α β))) ι (fun (i : ι) => Filter.prod.{u2, u1} α β f (g i)))
-Case conversion may be inaccurate. Consider using '#align filter.prod_infi_right Filter.prod_infᵢ_rightₓ'. -/
-theorem prod_infᵢ_right [Nonempty ι] {f : Filter α} {g : ι → Filter β} :
+  forall {α : Type.{u2}} {β : Type.{u1}} {ι : Sort.{u3}} [_inst_1 : Nonempty.{u3} ι] {f : Filter.{u2} α} {g : ι -> (Filter.{u1} β)}, Eq.{max (succ u2) (succ u1)} (Filter.{max u1 u2} (Prod.{u2, u1} α β)) (Filter.prod.{u2, u1} α β f (iInf.{u1, u3} (Filter.{u1} β) (CompleteLattice.toInfSet.{u1} (Filter.{u1} β) (Filter.instCompleteLatticeFilter.{u1} β)) ι (fun (i : ι) => g i))) (iInf.{max u1 u2, u3} (Filter.{max u1 u2} (Prod.{u2, u1} α β)) (CompleteLattice.toInfSet.{max u2 u1} (Filter.{max u1 u2} (Prod.{u2, u1} α β)) (Filter.instCompleteLatticeFilter.{max u2 u1} (Prod.{u2, u1} α β))) ι (fun (i : ι) => Filter.prod.{u2, u1} α β f (g i)))
+Case conversion may be inaccurate. Consider using '#align filter.prod_infi_right Filter.prod_iInf_rightₓ'. -/
+theorem prod_iInf_right [Nonempty ι] {f : Filter α} {g : ι → Filter β} :
     (f ×ᶠ ⨅ i, g i) = ⨅ i, f ×ᶠ g i :=
   by
-  rw [Filter.prod, comap_infi, inf_infᵢ]
+  rw [Filter.prod, comap_infi, inf_iInf]
   simp only [Filter.prod, eq_self_iff_true]
-#align filter.prod_infi_right Filter.prod_infᵢ_right
+#align filter.prod_infi_right Filter.prod_iInf_right
 
 /- warning: filter.prod_mono -> Filter.prod_mono is a dubious translation:
 lean 3 declaration is

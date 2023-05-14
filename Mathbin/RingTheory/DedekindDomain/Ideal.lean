@@ -1088,13 +1088,13 @@ variable (R K)
 
 /-- A Dedekind domain is equal to the intersection of its localizations at all its height one
 non-zero prime ideals viewed as subalgebras of its field of fractions. -/
-theorem infᵢ_localization_eq_bot [Algebra R K] [hK : IsFractionRing R K] :
+theorem iInf_localization_eq_bot [Algebra R K] [hK : IsFractionRing R K] :
     (⨅ v : HeightOneSpectrum R,
         Localization.subalgebra.ofField K _ v.asIdeal.primeCompl_le_nonZeroDivisors) =
       ⊥ :=
   by
   ext x
-  rw [Algebra.mem_infᵢ]
+  rw [Algebra.mem_iInf]
   constructor
   by_cases hR : IsField R
   · rcases function.bijective_iff_has_inverse.mp
@@ -1102,10 +1102,10 @@ theorem infᵢ_localization_eq_bot [Algebra R K] [hK : IsFractionRing R K] :
       ⟨algebra_map_inv, _, algebra_map_right_inv⟩
     exact fun _ => algebra.mem_bot.mpr ⟨algebra_map_inv x, algebra_map_right_inv x⟩
     exact hK
-  all_goals rw [← MaximalSpectrum.infᵢ_localization_eq_bot, Algebra.mem_infᵢ]
+  all_goals rw [← MaximalSpectrum.iInf_localization_eq_bot, Algebra.mem_iInf]
   · exact fun hx ⟨v, hv⟩ => hx ((equiv_maximal_spectrum hR).symm ⟨v, hv⟩)
   · exact fun hx ⟨v, hv, hbot⟩ => hx ⟨v, dimension_le_one v hbot hv⟩
-#align is_dedekind_domain.height_one_spectrum.infi_localization_eq_bot IsDedekindDomain.HeightOneSpectrum.infᵢ_localization_eq_bot
+#align is_dedekind_domain.height_one_spectrum.infi_localization_eq_bot IsDedekindDomain.HeightOneSpectrum.iInf_localization_eq_bot
 
 end HeightOneSpectrum
 
@@ -1397,7 +1397,7 @@ noncomputable def IsDedekindDomain.quotientEquivPiOfProdEq {ι : Type _} [Fintyp
     (prod_eq : (∏ i, P i ^ e i) = I) : R ⧸ I ≃+* ∀ i, R ⧸ P i ^ e i :=
   (Ideal.quotEquivOfEq
         (by
-          simp only [← prod_eq, Finset.inf_eq_infᵢ, Finset.mem_univ, cinfᵢ_pos, ←
+          simp only [← prod_eq, Finset.inf_eq_iInf, Finset.mem_univ, ciInf_pos, ←
             IsDedekindDomain.inf_prime_pow_eq_prod _ _ _ (fun i _ => Prime i) fun i _ j _ =>
               coprime i j])).trans <|
     Ideal.quotientInfRingEquivPiQuotient _ fun i j hij =>

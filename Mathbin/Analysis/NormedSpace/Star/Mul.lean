@@ -31,7 +31,7 @@ norm equal to the norm of `a`. -/
 theorem op_nnnorm_mul : ‖mul 𝕜 E a‖₊ = ‖a‖₊ :=
   by
   rw [← Sup_closed_unit_ball_eq_nnnorm]
-  refine' csupₛ_eq_of_forall_le_of_forall_lt_exists_gt _ _ fun r hr => _
+  refine' csSup_eq_of_forall_le_of_forall_lt_exists_gt _ _ fun r hr => _
   · exact (metric.nonempty_closed_ball.mpr zero_le_one).image _
   · rintro - ⟨x, hx, rfl⟩
     exact

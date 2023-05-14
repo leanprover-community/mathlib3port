@@ -79,7 +79,7 @@ def rightRes : piOpens F U ⟶ piInters.{v'} F U :=
 /-- The morphism `F.obj U ⟶ Π F.obj (U i)` whose components
 are given by the restriction maps from `U j` to `U i ⊓ U j`.
 -/
-def res : F.obj (op (supᵢ U)) ⟶ piOpens.{v'} F U :=
+def res : F.obj (op (iSup U)) ⟶ piOpens.{v'} F U :=
   Pi.lift fun i : ι => F.map (TopologicalSpace.Opens.leSupr U i).op
 #align Top.presheaf.sheaf_condition_equalizer_products.res TopCat.Presheaf.SheafConditionEqualizerProducts.res
 
@@ -114,7 +114,7 @@ def fork : Fork.{v} (leftRes F U) (rightRes F U) :=
 #align Top.presheaf.sheaf_condition_equalizer_products.fork TopCat.Presheaf.SheafConditionEqualizerProducts.fork
 
 @[simp]
-theorem fork_pt : (fork F U).pt = F.obj (op (supᵢ U)) :=
+theorem fork_pt : (fork F U).pt = F.obj (op (iSup U)) :=
   rfl
 #align Top.presheaf.sheaf_condition_equalizer_products.fork_X TopCat.Presheaf.SheafConditionEqualizerProducts.fork_pt
 

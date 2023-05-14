@@ -282,16 +282,16 @@ theorem mem_split_iff' :
   by simp [mem_split_iff, ← box.with_bot_coe_inj]
 #align box_integral.prepartition.mem_split_iff' BoxIntegral.Prepartition.mem_split_iff'
 
-#print BoxIntegral.Prepartition.unionᵢ_split /-
+#print BoxIntegral.Prepartition.iUnion_split /-
 @[simp]
-theorem unionᵢ_split (I : Box ι) (i : ι) (x : ℝ) : (split I i x).unionᵢ = I := by
+theorem iUnion_split (I : Box ι) (i : ι) (x : ℝ) : (split I i x).iUnion = I := by
   simp [split, ← inter_union_distrib_left, ← set_of_or, le_or_lt]
-#align box_integral.prepartition.Union_split BoxIntegral.Prepartition.unionᵢ_split
+#align box_integral.prepartition.Union_split BoxIntegral.Prepartition.iUnion_split
 -/
 
 #print BoxIntegral.Prepartition.isPartitionSplit /-
 theorem isPartitionSplit (I : Box ι) (i : ι) (x : ℝ) : IsPartition (split I i x) :=
-  isPartition_iff_unionᵢ_eq.2 <| unionᵢ_split I i x
+  isPartition_iff_iUnion_eq.2 <| iUnion_split I i x
 #align box_integral.prepartition.is_partition_split BoxIntegral.Prepartition.isPartitionSplit
 -/
 
@@ -365,8 +365,8 @@ theorem restrict_split (h : I ≤ J) (i : ι) (x : ℝ) : (split J i x).restrict
 
 #print BoxIntegral.Prepartition.inf_split /-
 theorem inf_split (π : Prepartition I) (i : ι) (x : ℝ) :
-    π ⊓ split I i x = π.bunionᵢ fun J => split J i x :=
-  bunionᵢ_congr_of_le rfl fun J hJ => restrict_split hJ i x
+    π ⊓ split I i x = π.biUnion fun J => split J i x :=
+  biUnion_congr_of_le rfl fun J hJ => restrict_split hJ i x
 #align box_integral.prepartition.inf_split BoxIntegral.Prepartition.inf_split
 -/
 
@@ -415,16 +415,16 @@ theorem isPartition_splitMany (I : Box ι) (s : Finset (ι × ℝ)) : IsPartitio
 #align box_integral.prepartition.is_partition_split_many BoxIntegral.Prepartition.isPartition_splitMany
 -/
 
-#print BoxIntegral.Prepartition.unionᵢ_splitMany /-
+#print BoxIntegral.Prepartition.iUnion_splitMany /-
 @[simp]
-theorem unionᵢ_splitMany (I : Box ι) (s : Finset (ι × ℝ)) : (splitMany I s).unionᵢ = I :=
-  (isPartition_splitMany I s).unionᵢ_eq
-#align box_integral.prepartition.Union_split_many BoxIntegral.Prepartition.unionᵢ_splitMany
+theorem iUnion_splitMany (I : Box ι) (s : Finset (ι × ℝ)) : (splitMany I s).iUnion = I :=
+  (isPartition_splitMany I s).iUnion_eq
+#align box_integral.prepartition.Union_split_many BoxIntegral.Prepartition.iUnion_splitMany
 -/
 
 #print BoxIntegral.Prepartition.inf_splitMany /-
 theorem inf_splitMany {I : Box ι} (π : Prepartition I) (s : Finset (ι × ℝ)) :
-    π ⊓ splitMany I s = π.bunionᵢ fun J => splitMany J s :=
+    π ⊓ splitMany I s = π.biUnion fun J => splitMany J s :=
   by
   induction' s using Finset.induction_on with p s hp ihp
   · simp
@@ -484,13 +484,13 @@ theorem eventually_not_disjoint_imp_le_of_mem_splitMany (s : Finset (Box ι)) :
       ⟨s.bUnion fun J => finset.univ.bUnion fun i => {(i, J i), (i, J.upper i)},
         fun t ht I J hJ J' hJ' => not_disjoint_imp_le_of_subset_of_mem_split_many (fun i => _) hJ'⟩
   exact fun p hp =>
-    ht (Finset.mem_bunionᵢ.2 ⟨J, hJ, Finset.mem_bunionᵢ.2 ⟨i, Finset.mem_univ _, hp⟩⟩)
+    ht (Finset.mem_biUnion.2 ⟨J, hJ, Finset.mem_biUnion.2 ⟨i, Finset.mem_univ _, hp⟩⟩)
 #align box_integral.prepartition.eventually_not_disjoint_imp_le_of_mem_split_many BoxIntegral.Prepartition.eventually_not_disjoint_imp_le_of_mem_splitMany
 
 #print BoxIntegral.Prepartition.eventually_splitMany_inf_eq_filter /-
 theorem eventually_splitMany_inf_eq_filter (π : Prepartition I) :
     ∀ᶠ t : Finset (ι × ℝ) in atTop,
-      π ⊓ splitMany I t = (splitMany I t).filterₓ fun J => ↑J ⊆ π.unionᵢ :=
+      π ⊓ splitMany I t = (splitMany I t).filterₓ fun J => ↑J ⊆ π.iUnion :=
   by
   refine' (eventually_not_disjoint_imp_le_of_mem_split_many π.boxes).mono fun t ht => _
   refine' le_antisymm ((bUnion_le_iff _).2 fun J hJ => _) (le_inf (fun J hJ => _) (filter_le _ _))
@@ -500,7 +500,7 @@ theorem eventually_splitMany_inf_eq_filter (π : Prepartition I) :
     refine' ⟨_, ⟨J₁, ⟨h₁, subset.trans _ (π.subset_Union hJ)⟩, rfl⟩, le_rfl⟩
     exact ht I J hJ J₁ h₁ (mt disjoint_iff.1 hne)
   · rw [mem_filter] at hJ
-    rcases Set.mem_unionᵢ₂.1 (hJ.2 J.upper_mem) with ⟨J', hJ', hmem⟩
+    rcases Set.mem_iUnion₂.1 (hJ.2 J.upper_mem) with ⟨J', hJ', hmem⟩
     refine' ⟨J', hJ', ht I _ hJ' _ hJ.1 <| box.not_disjoint_coe_iff_nonempty_inter.2 _⟩
     exact ⟨J.upper, hmem, J.upper_mem⟩
 #align box_integral.prepartition.eventually_split_many_inf_eq_filter BoxIntegral.Prepartition.eventually_splitMany_inf_eq_filter
@@ -509,7 +509,7 @@ theorem eventually_splitMany_inf_eq_filter (π : Prepartition I) :
 #print BoxIntegral.Prepartition.exists_splitMany_inf_eq_filter_of_finite /-
 theorem exists_splitMany_inf_eq_filter_of_finite (s : Set (Prepartition I)) (hs : s.Finite) :
     ∃ t : Finset (ι × ℝ),
-      ∀ π ∈ s, π ⊓ splitMany I t = (splitMany I t).filterₓ fun J => ↑J ⊆ π.unionᵢ :=
+      ∀ π ∈ s, π ⊓ splitMany I t = (splitMany I t).filterₓ fun J => ↑J ⊆ π.iUnion :=
   haveI := fun π (hπ : π ∈ s) => eventually_split_many_inf_eq_filter π
   (hs.eventually_all.2 this).exists
 #align box_integral.prepartition.exists_split_many_inf_eq_filter_of_finite BoxIntegral.Prepartition.exists_splitMany_inf_eq_filter_of_finite
@@ -531,45 +531,45 @@ theorem IsPartition.exists_splitMany_le {I : Box ι} {π : Prepartition I} (h : 
     exact fun J hJ => le_of_mem _ hJ
 #align box_integral.prepartition.is_partition.exists_split_many_le BoxIntegral.Prepartition.IsPartition.exists_splitMany_le
 
-/- warning: box_integral.prepartition.exists_Union_eq_diff -> BoxIntegral.Prepartition.exists_unionᵢ_eq_diff is a dubious translation:
+/- warning: box_integral.prepartition.exists_Union_eq_diff -> BoxIntegral.Prepartition.exists_iUnion_eq_diff is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} [_inst_1 : Finite.{succ u1} ι] (π : BoxIntegral.Prepartition.{u1} ι I), Exists.{succ u1} (BoxIntegral.Prepartition.{u1} ι I) (fun (π' : BoxIntegral.Prepartition.{u1} ι I) => Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π') (SDiff.sdiff.{u1} (Set.{u1} (ι -> Real)) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} (ι -> Real)) (Set.booleanAlgebra.{u1} (ι -> Real))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.Set.hasCoeT.{u1} ι))) I) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π)))
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} [_inst_1 : Finite.{succ u1} ι] (π : BoxIntegral.Prepartition.{u1} ι I), Exists.{succ u1} (BoxIntegral.Prepartition.{u1} ι I) (fun (π' : BoxIntegral.Prepartition.{u1} ι I) => Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Prepartition.iUnion.{u1} ι I π') (SDiff.sdiff.{u1} (Set.{u1} (ι -> Real)) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} (ι -> Real)) (Set.booleanAlgebra.{u1} (ι -> Real))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.Set.hasCoeT.{u1} ι))) I) (BoxIntegral.Prepartition.iUnion.{u1} ι I π)))
 but is expected to have type
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} [_inst_1 : Finite.{succ u1} ι] (π : BoxIntegral.Prepartition.{u1} ι I), Exists.{succ u1} (BoxIntegral.Prepartition.{u1} ι I) (fun (π' : BoxIntegral.Prepartition.{u1} ι I) => Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π') (SDiff.sdiff.{u1} (Set.{u1} (ι -> Real)) (Set.instSDiffSet.{u1} (ι -> Real)) (BoxIntegral.Box.toSet.{u1} ι I) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π)))
-Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.exists_Union_eq_diff BoxIntegral.Prepartition.exists_unionᵢ_eq_diffₓ'. -/
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} [_inst_1 : Finite.{succ u1} ι] (π : BoxIntegral.Prepartition.{u1} ι I), Exists.{succ u1} (BoxIntegral.Prepartition.{u1} ι I) (fun (π' : BoxIntegral.Prepartition.{u1} ι I) => Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Prepartition.iUnion.{u1} ι I π') (SDiff.sdiff.{u1} (Set.{u1} (ι -> Real)) (Set.instSDiffSet.{u1} (ι -> Real)) (BoxIntegral.Box.toSet.{u1} ι I) (BoxIntegral.Prepartition.iUnion.{u1} ι I π)))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.exists_Union_eq_diff BoxIntegral.Prepartition.exists_iUnion_eq_diffₓ'. -/
 /-- For every prepartition `π` of `I` there exists a prepartition that covers exactly
 `I \ π.Union`. -/
-theorem exists_unionᵢ_eq_diff (π : Prepartition I) :
-    ∃ π' : Prepartition I, π'.unionᵢ = I \ π.unionᵢ :=
+theorem exists_iUnion_eq_diff (π : Prepartition I) :
+    ∃ π' : Prepartition I, π'.iUnion = I \ π.iUnion :=
   by
   rcases π.eventually_split_many_inf_eq_filter.exists with ⟨s, hs⟩
   use (split_many I s).filterₓ fun J => ¬(J : Set (ι → ℝ)) ⊆ π.Union
   simp [← hs]
-#align box_integral.prepartition.exists_Union_eq_diff BoxIntegral.Prepartition.exists_unionᵢ_eq_diff
+#align box_integral.prepartition.exists_Union_eq_diff BoxIntegral.Prepartition.exists_iUnion_eq_diff
 
 #print BoxIntegral.Prepartition.compl /-
 /-- If `π` is a prepartition of `I`, then `π.compl` is a prepartition of `I`
 such that `π.compl.Union = I \ π.Union`. -/
 def compl (π : Prepartition I) : Prepartition I :=
-  π.exists_unionᵢ_eq_diff.some
+  π.exists_iUnion_eq_diff.some
 #align box_integral.prepartition.compl BoxIntegral.Prepartition.compl
 -/
 
-/- warning: box_integral.prepartition.Union_compl -> BoxIntegral.Prepartition.unionᵢ_compl is a dubious translation:
+/- warning: box_integral.prepartition.Union_compl -> BoxIntegral.Prepartition.iUnion_compl is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} [_inst_1 : Finite.{succ u1} ι] (π : BoxIntegral.Prepartition.{u1} ι I), Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I (BoxIntegral.Prepartition.compl.{u1} ι I _inst_1 π)) (SDiff.sdiff.{u1} (Set.{u1} (ι -> Real)) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} (ι -> Real)) (Set.booleanAlgebra.{u1} (ι -> Real))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.Set.hasCoeT.{u1} ι))) I) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π))
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} [_inst_1 : Finite.{succ u1} ι] (π : BoxIntegral.Prepartition.{u1} ι I), Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Prepartition.iUnion.{u1} ι I (BoxIntegral.Prepartition.compl.{u1} ι I _inst_1 π)) (SDiff.sdiff.{u1} (Set.{u1} (ι -> Real)) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} (ι -> Real)) (Set.booleanAlgebra.{u1} (ι -> Real))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.Set.hasCoeT.{u1} ι))) I) (BoxIntegral.Prepartition.iUnion.{u1} ι I π))
 but is expected to have type
-  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} [_inst_1 : Finite.{succ u1} ι] (π : BoxIntegral.Prepartition.{u1} ι I), Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I (BoxIntegral.Prepartition.compl.{u1} ι I _inst_1 π)) (SDiff.sdiff.{u1} (Set.{u1} (ι -> Real)) (Set.instSDiffSet.{u1} (ι -> Real)) (BoxIntegral.Box.toSet.{u1} ι I) (BoxIntegral.Prepartition.unionᵢ.{u1} ι I π))
-Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.Union_compl BoxIntegral.Prepartition.unionᵢ_complₓ'. -/
+  forall {ι : Type.{u1}} {I : BoxIntegral.Box.{u1} ι} [_inst_1 : Finite.{succ u1} ι] (π : BoxIntegral.Prepartition.{u1} ι I), Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Prepartition.iUnion.{u1} ι I (BoxIntegral.Prepartition.compl.{u1} ι I _inst_1 π)) (SDiff.sdiff.{u1} (Set.{u1} (ι -> Real)) (Set.instSDiffSet.{u1} (ι -> Real)) (BoxIntegral.Box.toSet.{u1} ι I) (BoxIntegral.Prepartition.iUnion.{u1} ι I π))
+Case conversion may be inaccurate. Consider using '#align box_integral.prepartition.Union_compl BoxIntegral.Prepartition.iUnion_complₓ'. -/
 @[simp]
-theorem unionᵢ_compl (π : Prepartition I) : π.compl.unionᵢ = I \ π.unionᵢ :=
-  π.exists_unionᵢ_eq_diff.choose_spec
-#align box_integral.prepartition.Union_compl BoxIntegral.Prepartition.unionᵢ_compl
+theorem iUnion_compl (π : Prepartition I) : π.compl.iUnion = I \ π.iUnion :=
+  π.exists_iUnion_eq_diff.choose_spec
+#align box_integral.prepartition.Union_compl BoxIntegral.Prepartition.iUnion_compl
 
 #print BoxIntegral.Prepartition.compl_congr /-
 /-- Since the definition of `box_integral.prepartition.compl` uses `Exists.some`,
 the result depends only on `π.Union`. -/
-theorem compl_congr {π₁ π₂ : Prepartition I} (h : π₁.unionᵢ = π₂.unionᵢ) : π₁.compl = π₂.compl :=
+theorem compl_congr {π₁ π₂ : Prepartition I} (h : π₁.iUnion = π₂.iUnion) : π₁.compl = π₂.compl :=
   by
   dsimp only [compl]
   congr 1

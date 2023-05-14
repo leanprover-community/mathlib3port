@@ -206,10 +206,10 @@ theorem fourier_add {m n : ℤ} {x : AddCircle T} : fourier (m + n) x = fourier 
 
 theorem fourier_norm [Fact (0 < T)] (n : ℤ) : ‖@fourier T n‖ = 1 :=
   by
-  rw [ContinuousMap.norm_eq_supᵢ_norm]
+  rw [ContinuousMap.norm_eq_iSup_norm]
   have : ∀ x : AddCircle T, ‖fourier n x‖ = 1 := fun x => abs_coe_circle _
   simp_rw [this]
-  exact @csupᵢ_const _ _ _ Zero.nonempty _
+  exact @ciSup_const _ _ _ Zero.nonempty _
 #align fourier_norm fourier_norm
 
 /-- For `n ≠ 0`, a translation by `T / 2 / n` negates the function `fourier n`. -/

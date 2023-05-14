@@ -176,12 +176,12 @@ theorem Ideal.IsPrime.homogeneousCore {I : Ideal A} (h : I.IsPrime) :
 #align ideal.is_prime.homogeneous_core Ideal.IsPrime.homogeneousCore
 
 theorem Ideal.IsHomogeneous.radical_eq {I : Ideal A} (hI : I.Homogeneous 𝒜) :
-    I.radical = infₛ { J | J.Homogeneous 𝒜 ∧ I ≤ J ∧ J.IsPrime } :=
+    I.radical = sInf { J | J.Homogeneous 𝒜 ∧ I ≤ J ∧ J.IsPrime } :=
   by
-  rw [Ideal.radical_eq_infₛ]
+  rw [Ideal.radical_eq_sInf]
   apply le_antisymm
-  · exact infₛ_le_infₛ fun J => And.right
-  · refine' infₛ_le_infₛ_of_forall_exists_le _
+  · exact sInf_le_sInf fun J => And.right
+  · refine' sInf_le_sInf_of_forall_exists_le _
     rintro J ⟨HJ₁, HJ₂⟩
     refine' ⟨(J.homogeneous_core 𝒜).toIdeal, _, J.to_ideal_homogeneous_core_le _⟩
     refine' ⟨HomogeneousIdeal.isHomogeneous _, _, HJ₂.homogeneous_core⟩

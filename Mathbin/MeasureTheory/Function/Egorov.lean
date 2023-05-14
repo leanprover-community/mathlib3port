@@ -57,7 +57,7 @@ theorem mem_notConvergentSeq_iff [Preorder ι] {x : α} :
 #align measure_theory.egorov.mem_not_convergent_seq_iff MeasureTheory.Egorov.mem_notConvergentSeq_iff
 
 theorem notConvergentSeq_antitone [Preorder ι] : Antitone (notConvergentSeq f g n) := fun j k hjk =>
-  unionᵢ₂_mono' fun l hl => ⟨l, le_trans hjk hl, Subset.rfl⟩
+  iUnion₂_mono' fun l hl => ⟨l, le_trans hjk hl, Subset.rfl⟩
 #align measure_theory.egorov.not_convergent_seq_antitone MeasureTheory.Egorov.notConvergentSeq_antitone
 
 theorem measure_inter_notConvergentSeq_eq_zero [SemilatticeSup ι] [Nonempty ι]
@@ -78,8 +78,8 @@ theorem measure_inter_notConvergentSeq_eq_zero [SemilatticeSup ι] [Nonempty ι]
 theorem notConvergentSeq_measurableSet [Preorder ι] [Countable ι]
     (hf : ∀ n, strongly_measurable[m] (f n)) (hg : StronglyMeasurable g) :
     MeasurableSet (notConvergentSeq f g n j) :=
-  MeasurableSet.unionᵢ fun k =>
-    MeasurableSet.unionᵢ fun hk =>
+  MeasurableSet.iUnion fun k =>
+    MeasurableSet.iUnion fun hk =>
       StronglyMeasurable.measurableSet_lt stronglyMeasurable_const <| (hf k).dist hg
 #align measure_theory.egorov.not_convergent_seq_measurable_set MeasureTheory.Egorov.notConvergentSeq_measurableSet
 
@@ -149,7 +149,7 @@ theorem unionNotConvergentSeq_measurableSet (hε : 0 < ε) (hf : ∀ n, Strongly
     (hg : StronglyMeasurable g) (hsm : MeasurableSet s) (hs : μ s ≠ ∞)
     (hfg : ∀ᵐ x ∂μ, x ∈ s → Tendsto (fun n => f n x) atTop (𝓝 (g x))) :
     MeasurableSet <| unionNotConvergentSeq hε hf hg hsm hs hfg :=
-  MeasurableSet.unionᵢ fun n => hsm.inter <| notConvergentSeq_measurableSet hf hg
+  MeasurableSet.iUnion fun n => hsm.inter <| notConvergentSeq_measurableSet hf hg
 #align measure_theory.egorov.Union_not_convergent_seq_measurable_set MeasureTheory.Egorov.unionNotConvergentSeq_measurableSet
 
 theorem measure_unionNotConvergentSeq (hε : 0 < ε) (hf : ∀ n, StronglyMeasurable (f n))

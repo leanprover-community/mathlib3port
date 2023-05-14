@@ -136,35 +136,35 @@ theorem exists_mem_basis {ι' : Sort _} (hf : LocallyFinite f) {p : ι' → Prop
   ⟨i, hpi, hi Subset.rfl⟩
 #align locally_finite.exists_mem_basis LocallyFinite.exists_mem_basis
 
-/- warning: locally_finite.nhds_within_Union -> LocallyFinite.nhdsWithin_unionᵢ is a dubious translation:
+/- warning: locally_finite.nhds_within_Union -> LocallyFinite.nhdsWithin_iUnion is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} X] {f : ι -> (Set.{u2} X)}, (LocallyFinite.{u1, u2} ι X _inst_1 f) -> (forall (a : X), Eq.{succ u2} (Filter.{u2} X) (nhdsWithin.{u2} X _inst_1 a (Set.unionᵢ.{u2, succ u1} X ι (fun (i : ι) => f i))) (supᵢ.{u2, succ u1} (Filter.{u2} X) (ConditionallyCompleteLattice.toHasSup.{u2} (Filter.{u2} X) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} X) (Filter.completeLattice.{u2} X))) ι (fun (i : ι) => nhdsWithin.{u2} X _inst_1 a (f i))))
+  forall {ι : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} X] {f : ι -> (Set.{u2} X)}, (LocallyFinite.{u1, u2} ι X _inst_1 f) -> (forall (a : X), Eq.{succ u2} (Filter.{u2} X) (nhdsWithin.{u2} X _inst_1 a (Set.iUnion.{u2, succ u1} X ι (fun (i : ι) => f i))) (iSup.{u2, succ u1} (Filter.{u2} X) (ConditionallyCompleteLattice.toHasSup.{u2} (Filter.{u2} X) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} X) (Filter.completeLattice.{u2} X))) ι (fun (i : ι) => nhdsWithin.{u2} X _inst_1 a (f i))))
 but is expected to have type
-  forall {ι : Type.{u2}} {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] {f : ι -> (Set.{u1} X)}, (LocallyFinite.{u2, u1} ι X _inst_1 f) -> (forall (a : X), Eq.{succ u1} (Filter.{u1} X) (nhdsWithin.{u1} X _inst_1 a (Set.unionᵢ.{u1, succ u2} X ι (fun (i : ι) => f i))) (supᵢ.{u1, succ u2} (Filter.{u1} X) (ConditionallyCompleteLattice.toSupSet.{u1} (Filter.{u1} X) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} X) (Filter.instCompleteLatticeFilter.{u1} X))) ι (fun (i : ι) => nhdsWithin.{u1} X _inst_1 a (f i))))
-Case conversion may be inaccurate. Consider using '#align locally_finite.nhds_within_Union LocallyFinite.nhdsWithin_unionᵢₓ'. -/
-protected theorem nhdsWithin_unionᵢ (hf : LocallyFinite f) (a : X) :
+  forall {ι : Type.{u2}} {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] {f : ι -> (Set.{u1} X)}, (LocallyFinite.{u2, u1} ι X _inst_1 f) -> (forall (a : X), Eq.{succ u1} (Filter.{u1} X) (nhdsWithin.{u1} X _inst_1 a (Set.iUnion.{u1, succ u2} X ι (fun (i : ι) => f i))) (iSup.{u1, succ u2} (Filter.{u1} X) (ConditionallyCompleteLattice.toSupSet.{u1} (Filter.{u1} X) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} X) (Filter.instCompleteLatticeFilter.{u1} X))) ι (fun (i : ι) => nhdsWithin.{u1} X _inst_1 a (f i))))
+Case conversion may be inaccurate. Consider using '#align locally_finite.nhds_within_Union LocallyFinite.nhdsWithin_iUnionₓ'. -/
+protected theorem nhdsWithin_iUnion (hf : LocallyFinite f) (a : X) :
     𝓝[⋃ i, f i] a = ⨆ i, 𝓝[f i] a :=
   by
   rcases hf a with ⟨U, haU, hfin⟩
-  refine' le_antisymm _ (supᵢ_le fun i => nhdsWithin_mono _ (subset_Union _ _))
+  refine' le_antisymm _ (iSup_le fun i => nhdsWithin_mono _ (subset_Union _ _))
   calc
     𝓝[⋃ i, f i] a = 𝓝[⋃ i, f i ∩ U] a := by
       rw [← Union_inter, ← nhdsWithin_inter_of_mem' (nhdsWithin_le_nhds haU)]
     _ = 𝓝[⋃ i ∈ { j | (f j ∩ U).Nonempty }, f i ∩ U] a := by
       simp only [mem_set_of_eq, Union_nonempty_self]
-    _ = ⨆ i ∈ { j | (f j ∩ U).Nonempty }, 𝓝[f i ∩ U] a := (nhdsWithin_bunionᵢ hfin _ _)
-    _ ≤ ⨆ i, 𝓝[f i ∩ U] a := (supᵢ₂_le_supᵢ _ _)
-    _ ≤ ⨆ i, 𝓝[f i] a := supᵢ_mono fun i => nhdsWithin_mono _ <| inter_subset_left _ _
+    _ = ⨆ i ∈ { j | (f j ∩ U).Nonempty }, 𝓝[f i ∩ U] a := (nhdsWithin_biUnion hfin _ _)
+    _ ≤ ⨆ i, 𝓝[f i ∩ U] a := (iSup₂_le_iSup _ _)
+    _ ≤ ⨆ i, 𝓝[f i] a := iSup_mono fun i => nhdsWithin_mono _ <| inter_subset_left _ _
     
-#align locally_finite.nhds_within_Union LocallyFinite.nhdsWithin_unionᵢ
+#align locally_finite.nhds_within_Union LocallyFinite.nhdsWithin_iUnion
 
-/- warning: locally_finite.continuous_on_Union' -> LocallyFinite.continuousOn_unionᵢ' is a dubious translation:
+/- warning: locally_finite.continuous_on_Union' -> LocallyFinite.continuousOn_iUnion' is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {X : Type.{u2}} {Y : Type.{u3}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : TopologicalSpace.{u3} Y] {f : ι -> (Set.{u2} X)} {g : X -> Y}, (LocallyFinite.{u1, u2} ι X _inst_1 f) -> (forall (i : ι) (x : X), (Membership.Mem.{u2, u2} X (Set.{u2} X) (Set.hasMem.{u2} X) x (closure.{u2} X _inst_1 (f i))) -> (ContinuousWithinAt.{u2, u3} X Y _inst_1 _inst_2 g (f i) x)) -> (ContinuousOn.{u2, u3} X Y _inst_1 _inst_2 g (Set.unionᵢ.{u2, succ u1} X ι (fun (i : ι) => f i)))
+  forall {ι : Type.{u1}} {X : Type.{u2}} {Y : Type.{u3}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : TopologicalSpace.{u3} Y] {f : ι -> (Set.{u2} X)} {g : X -> Y}, (LocallyFinite.{u1, u2} ι X _inst_1 f) -> (forall (i : ι) (x : X), (Membership.Mem.{u2, u2} X (Set.{u2} X) (Set.hasMem.{u2} X) x (closure.{u2} X _inst_1 (f i))) -> (ContinuousWithinAt.{u2, u3} X Y _inst_1 _inst_2 g (f i) x)) -> (ContinuousOn.{u2, u3} X Y _inst_1 _inst_2 g (Set.iUnion.{u2, succ u1} X ι (fun (i : ι) => f i)))
 but is expected to have type
-  forall {ι : Type.{u3}} {X : Type.{u2}} {Y : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : TopologicalSpace.{u1} Y] {f : ι -> (Set.{u2} X)} {g : X -> Y}, (LocallyFinite.{u3, u2} ι X _inst_1 f) -> (forall (i : ι) (x : X), (Membership.mem.{u2, u2} X (Set.{u2} X) (Set.instMembershipSet.{u2} X) x (closure.{u2} X _inst_1 (f i))) -> (ContinuousWithinAt.{u2, u1} X Y _inst_1 _inst_2 g (f i) x)) -> (ContinuousOn.{u2, u1} X Y _inst_1 _inst_2 g (Set.unionᵢ.{u2, succ u3} X ι (fun (i : ι) => f i)))
-Case conversion may be inaccurate. Consider using '#align locally_finite.continuous_on_Union' LocallyFinite.continuousOn_unionᵢ'ₓ'. -/
-theorem continuousOn_unionᵢ' {g : X → Y} (hf : LocallyFinite f)
+  forall {ι : Type.{u3}} {X : Type.{u2}} {Y : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : TopologicalSpace.{u1} Y] {f : ι -> (Set.{u2} X)} {g : X -> Y}, (LocallyFinite.{u3, u2} ι X _inst_1 f) -> (forall (i : ι) (x : X), (Membership.mem.{u2, u2} X (Set.{u2} X) (Set.instMembershipSet.{u2} X) x (closure.{u2} X _inst_1 (f i))) -> (ContinuousWithinAt.{u2, u1} X Y _inst_1 _inst_2 g (f i) x)) -> (ContinuousOn.{u2, u1} X Y _inst_1 _inst_2 g (Set.iUnion.{u2, succ u3} X ι (fun (i : ι) => f i)))
+Case conversion may be inaccurate. Consider using '#align locally_finite.continuous_on_Union' LocallyFinite.continuousOn_iUnion'ₓ'. -/
+theorem continuousOn_iUnion' {g : X → Y} (hf : LocallyFinite f)
     (hc : ∀ i x, x ∈ closure (f i) → ContinuousWithinAt g (f i) x) : ContinuousOn g (⋃ i, f i) :=
   by
   rintro x -
@@ -175,39 +175,39 @@ theorem continuousOn_unionᵢ' {g : X → Y} (hf : LocallyFinite f)
   · rw [mem_closure_iff_nhdsWithin_neBot, not_ne_bot] at hx
     rw [hx]
     exact tendsto_bot
-#align locally_finite.continuous_on_Union' LocallyFinite.continuousOn_unionᵢ'
+#align locally_finite.continuous_on_Union' LocallyFinite.continuousOn_iUnion'
 
-/- warning: locally_finite.continuous_on_Union -> LocallyFinite.continuousOn_unionᵢ is a dubious translation:
+/- warning: locally_finite.continuous_on_Union -> LocallyFinite.continuousOn_iUnion is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {X : Type.{u2}} {Y : Type.{u3}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : TopologicalSpace.{u3} Y] {f : ι -> (Set.{u2} X)} {g : X -> Y}, (LocallyFinite.{u1, u2} ι X _inst_1 f) -> (forall (i : ι), IsClosed.{u2} X _inst_1 (f i)) -> (forall (i : ι), ContinuousOn.{u2, u3} X Y _inst_1 _inst_2 g (f i)) -> (ContinuousOn.{u2, u3} X Y _inst_1 _inst_2 g (Set.unionᵢ.{u2, succ u1} X ι (fun (i : ι) => f i)))
+  forall {ι : Type.{u1}} {X : Type.{u2}} {Y : Type.{u3}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : TopologicalSpace.{u3} Y] {f : ι -> (Set.{u2} X)} {g : X -> Y}, (LocallyFinite.{u1, u2} ι X _inst_1 f) -> (forall (i : ι), IsClosed.{u2} X _inst_1 (f i)) -> (forall (i : ι), ContinuousOn.{u2, u3} X Y _inst_1 _inst_2 g (f i)) -> (ContinuousOn.{u2, u3} X Y _inst_1 _inst_2 g (Set.iUnion.{u2, succ u1} X ι (fun (i : ι) => f i)))
 but is expected to have type
-  forall {ι : Type.{u3}} {X : Type.{u2}} {Y : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : TopologicalSpace.{u1} Y] {f : ι -> (Set.{u2} X)} {g : X -> Y}, (LocallyFinite.{u3, u2} ι X _inst_1 f) -> (forall (i : ι), IsClosed.{u2} X _inst_1 (f i)) -> (forall (i : ι), ContinuousOn.{u2, u1} X Y _inst_1 _inst_2 g (f i)) -> (ContinuousOn.{u2, u1} X Y _inst_1 _inst_2 g (Set.unionᵢ.{u2, succ u3} X ι (fun (i : ι) => f i)))
-Case conversion may be inaccurate. Consider using '#align locally_finite.continuous_on_Union LocallyFinite.continuousOn_unionᵢₓ'. -/
-theorem continuousOn_unionᵢ {g : X → Y} (hf : LocallyFinite f) (h_cl : ∀ i, IsClosed (f i))
+  forall {ι : Type.{u3}} {X : Type.{u2}} {Y : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : TopologicalSpace.{u1} Y] {f : ι -> (Set.{u2} X)} {g : X -> Y}, (LocallyFinite.{u3, u2} ι X _inst_1 f) -> (forall (i : ι), IsClosed.{u2} X _inst_1 (f i)) -> (forall (i : ι), ContinuousOn.{u2, u1} X Y _inst_1 _inst_2 g (f i)) -> (ContinuousOn.{u2, u1} X Y _inst_1 _inst_2 g (Set.iUnion.{u2, succ u3} X ι (fun (i : ι) => f i)))
+Case conversion may be inaccurate. Consider using '#align locally_finite.continuous_on_Union LocallyFinite.continuousOn_iUnionₓ'. -/
+theorem continuousOn_iUnion {g : X → Y} (hf : LocallyFinite f) (h_cl : ∀ i, IsClosed (f i))
     (h_cont : ∀ i, ContinuousOn g (f i)) : ContinuousOn g (⋃ i, f i) :=
-  hf.continuousOn_unionᵢ' fun i x hx => h_cont i x <| (h_cl i).closure_subset hx
-#align locally_finite.continuous_on_Union LocallyFinite.continuousOn_unionᵢ
+  hf.continuousOn_iUnion' fun i x hx => h_cont i x <| (h_cl i).closure_subset hx
+#align locally_finite.continuous_on_Union LocallyFinite.continuousOn_iUnion
 
 /- warning: locally_finite.continuous' -> LocallyFinite.continuous' is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {X : Type.{u2}} {Y : Type.{u3}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : TopologicalSpace.{u3} Y] {f : ι -> (Set.{u2} X)} {g : X -> Y}, (LocallyFinite.{u1, u2} ι X _inst_1 f) -> (Eq.{succ u2} (Set.{u2} X) (Set.unionᵢ.{u2, succ u1} X ι (fun (i : ι) => f i)) (Set.univ.{u2} X)) -> (forall (i : ι) (x : X), (Membership.Mem.{u2, u2} X (Set.{u2} X) (Set.hasMem.{u2} X) x (closure.{u2} X _inst_1 (f i))) -> (ContinuousWithinAt.{u2, u3} X Y _inst_1 _inst_2 g (f i) x)) -> (Continuous.{u2, u3} X Y _inst_1 _inst_2 g)
+  forall {ι : Type.{u1}} {X : Type.{u2}} {Y : Type.{u3}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : TopologicalSpace.{u3} Y] {f : ι -> (Set.{u2} X)} {g : X -> Y}, (LocallyFinite.{u1, u2} ι X _inst_1 f) -> (Eq.{succ u2} (Set.{u2} X) (Set.iUnion.{u2, succ u1} X ι (fun (i : ι) => f i)) (Set.univ.{u2} X)) -> (forall (i : ι) (x : X), (Membership.Mem.{u2, u2} X (Set.{u2} X) (Set.hasMem.{u2} X) x (closure.{u2} X _inst_1 (f i))) -> (ContinuousWithinAt.{u2, u3} X Y _inst_1 _inst_2 g (f i) x)) -> (Continuous.{u2, u3} X Y _inst_1 _inst_2 g)
 but is expected to have type
-  forall {ι : Type.{u3}} {X : Type.{u2}} {Y : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : TopologicalSpace.{u1} Y] {f : ι -> (Set.{u2} X)} {g : X -> Y}, (LocallyFinite.{u3, u2} ι X _inst_1 f) -> (Eq.{succ u2} (Set.{u2} X) (Set.unionᵢ.{u2, succ u3} X ι (fun (i : ι) => f i)) (Set.univ.{u2} X)) -> (forall (i : ι) (x : X), (Membership.mem.{u2, u2} X (Set.{u2} X) (Set.instMembershipSet.{u2} X) x (closure.{u2} X _inst_1 (f i))) -> (ContinuousWithinAt.{u2, u1} X Y _inst_1 _inst_2 g (f i) x)) -> (Continuous.{u2, u1} X Y _inst_1 _inst_2 g)
+  forall {ι : Type.{u3}} {X : Type.{u2}} {Y : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : TopologicalSpace.{u1} Y] {f : ι -> (Set.{u2} X)} {g : X -> Y}, (LocallyFinite.{u3, u2} ι X _inst_1 f) -> (Eq.{succ u2} (Set.{u2} X) (Set.iUnion.{u2, succ u3} X ι (fun (i : ι) => f i)) (Set.univ.{u2} X)) -> (forall (i : ι) (x : X), (Membership.mem.{u2, u2} X (Set.{u2} X) (Set.instMembershipSet.{u2} X) x (closure.{u2} X _inst_1 (f i))) -> (ContinuousWithinAt.{u2, u1} X Y _inst_1 _inst_2 g (f i) x)) -> (Continuous.{u2, u1} X Y _inst_1 _inst_2 g)
 Case conversion may be inaccurate. Consider using '#align locally_finite.continuous' LocallyFinite.continuous'ₓ'. -/
 protected theorem continuous' {g : X → Y} (hf : LocallyFinite f) (h_cov : (⋃ i, f i) = univ)
     (hc : ∀ i x, x ∈ closure (f i) → ContinuousWithinAt g (f i) x) : Continuous g :=
-  continuous_iff_continuousOn_univ.2 <| h_cov ▸ hf.continuousOn_unionᵢ' hc
+  continuous_iff_continuousOn_univ.2 <| h_cov ▸ hf.continuousOn_iUnion' hc
 #align locally_finite.continuous' LocallyFinite.continuous'
 
 /- warning: locally_finite.continuous -> LocallyFinite.continuous is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {X : Type.{u2}} {Y : Type.{u3}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : TopologicalSpace.{u3} Y] {f : ι -> (Set.{u2} X)} {g : X -> Y}, (LocallyFinite.{u1, u2} ι X _inst_1 f) -> (Eq.{succ u2} (Set.{u2} X) (Set.unionᵢ.{u2, succ u1} X ι (fun (i : ι) => f i)) (Set.univ.{u2} X)) -> (forall (i : ι), IsClosed.{u2} X _inst_1 (f i)) -> (forall (i : ι), ContinuousOn.{u2, u3} X Y _inst_1 _inst_2 g (f i)) -> (Continuous.{u2, u3} X Y _inst_1 _inst_2 g)
+  forall {ι : Type.{u1}} {X : Type.{u2}} {Y : Type.{u3}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : TopologicalSpace.{u3} Y] {f : ι -> (Set.{u2} X)} {g : X -> Y}, (LocallyFinite.{u1, u2} ι X _inst_1 f) -> (Eq.{succ u2} (Set.{u2} X) (Set.iUnion.{u2, succ u1} X ι (fun (i : ι) => f i)) (Set.univ.{u2} X)) -> (forall (i : ι), IsClosed.{u2} X _inst_1 (f i)) -> (forall (i : ι), ContinuousOn.{u2, u3} X Y _inst_1 _inst_2 g (f i)) -> (Continuous.{u2, u3} X Y _inst_1 _inst_2 g)
 but is expected to have type
-  forall {ι : Type.{u3}} {X : Type.{u2}} {Y : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : TopologicalSpace.{u1} Y] {f : ι -> (Set.{u2} X)} {g : X -> Y}, (LocallyFinite.{u3, u2} ι X _inst_1 f) -> (Eq.{succ u2} (Set.{u2} X) (Set.unionᵢ.{u2, succ u3} X ι (fun (i : ι) => f i)) (Set.univ.{u2} X)) -> (forall (i : ι), IsClosed.{u2} X _inst_1 (f i)) -> (forall (i : ι), ContinuousOn.{u2, u1} X Y _inst_1 _inst_2 g (f i)) -> (Continuous.{u2, u1} X Y _inst_1 _inst_2 g)
+  forall {ι : Type.{u3}} {X : Type.{u2}} {Y : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : TopologicalSpace.{u1} Y] {f : ι -> (Set.{u2} X)} {g : X -> Y}, (LocallyFinite.{u3, u2} ι X _inst_1 f) -> (Eq.{succ u2} (Set.{u2} X) (Set.iUnion.{u2, succ u3} X ι (fun (i : ι) => f i)) (Set.univ.{u2} X)) -> (forall (i : ι), IsClosed.{u2} X _inst_1 (f i)) -> (forall (i : ι), ContinuousOn.{u2, u1} X Y _inst_1 _inst_2 g (f i)) -> (Continuous.{u2, u1} X Y _inst_1 _inst_2 g)
 Case conversion may be inaccurate. Consider using '#align locally_finite.continuous LocallyFinite.continuousₓ'. -/
 protected theorem continuous {g : X → Y} (hf : LocallyFinite f) (h_cov : (⋃ i, f i) = univ)
     (h_cl : ∀ i, IsClosed (f i)) (h_cont : ∀ i, ContinuousOn g (f i)) : Continuous g :=
-  continuous_iff_continuousOn_univ.2 <| h_cov ▸ hf.continuousOn_unionᵢ h_cl h_cont
+  continuous_iff_continuousOn_univ.2 <| h_cov ▸ hf.continuousOn_iUnion h_cl h_cont
 #align locally_finite.continuous LocallyFinite.continuous
 
 /- warning: locally_finite.closure -> LocallyFinite.closure is a dubious translation:
@@ -226,44 +226,44 @@ protected theorem closure (hf : LocallyFinite f) : LocallyFinite fun i => closur
       (inter_subset_inter_right _ interior_subset)
 #align locally_finite.closure LocallyFinite.closure
 
-/- warning: locally_finite.closure_Union -> LocallyFinite.closure_unionᵢ is a dubious translation:
+/- warning: locally_finite.closure_Union -> LocallyFinite.closure_iUnion is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} X] {f : ι -> (Set.{u2} X)}, (LocallyFinite.{u1, u2} ι X _inst_1 f) -> (Eq.{succ u2} (Set.{u2} X) (closure.{u2} X _inst_1 (Set.unionᵢ.{u2, succ u1} X ι (fun (i : ι) => f i))) (Set.unionᵢ.{u2, succ u1} X ι (fun (i : ι) => closure.{u2} X _inst_1 (f i))))
+  forall {ι : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} X] {f : ι -> (Set.{u2} X)}, (LocallyFinite.{u1, u2} ι X _inst_1 f) -> (Eq.{succ u2} (Set.{u2} X) (closure.{u2} X _inst_1 (Set.iUnion.{u2, succ u1} X ι (fun (i : ι) => f i))) (Set.iUnion.{u2, succ u1} X ι (fun (i : ι) => closure.{u2} X _inst_1 (f i))))
 but is expected to have type
-  forall {ι : Type.{u2}} {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] {f : ι -> (Set.{u1} X)}, (LocallyFinite.{u2, u1} ι X _inst_1 f) -> (Eq.{succ u1} (Set.{u1} X) (closure.{u1} X _inst_1 (Set.unionᵢ.{u1, succ u2} X ι (fun (i : ι) => f i))) (Set.unionᵢ.{u1, succ u2} X ι (fun (i : ι) => closure.{u1} X _inst_1 (f i))))
-Case conversion may be inaccurate. Consider using '#align locally_finite.closure_Union LocallyFinite.closure_unionᵢₓ'. -/
-theorem closure_unionᵢ (h : LocallyFinite f) : closure (⋃ i, f i) = ⋃ i, closure (f i) :=
+  forall {ι : Type.{u2}} {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] {f : ι -> (Set.{u1} X)}, (LocallyFinite.{u2, u1} ι X _inst_1 f) -> (Eq.{succ u1} (Set.{u1} X) (closure.{u1} X _inst_1 (Set.iUnion.{u1, succ u2} X ι (fun (i : ι) => f i))) (Set.iUnion.{u1, succ u2} X ι (fun (i : ι) => closure.{u1} X _inst_1 (f i))))
+Case conversion may be inaccurate. Consider using '#align locally_finite.closure_Union LocallyFinite.closure_iUnionₓ'. -/
+theorem closure_iUnion (h : LocallyFinite f) : closure (⋃ i, f i) = ⋃ i, closure (f i) :=
   by
   ext x
   simp only [mem_closure_iff_nhdsWithin_neBot, h.nhds_within_Union, supr_ne_bot, mem_Union]
-#align locally_finite.closure_Union LocallyFinite.closure_unionᵢ
+#align locally_finite.closure_Union LocallyFinite.closure_iUnion
 
-/- warning: locally_finite.is_closed_Union -> LocallyFinite.isClosed_unionᵢ is a dubious translation:
+/- warning: locally_finite.is_closed_Union -> LocallyFinite.isClosed_iUnion is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} X] {f : ι -> (Set.{u2} X)}, (LocallyFinite.{u1, u2} ι X _inst_1 f) -> (forall (i : ι), IsClosed.{u2} X _inst_1 (f i)) -> (IsClosed.{u2} X _inst_1 (Set.unionᵢ.{u2, succ u1} X ι (fun (i : ι) => f i)))
+  forall {ι : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} X] {f : ι -> (Set.{u2} X)}, (LocallyFinite.{u1, u2} ι X _inst_1 f) -> (forall (i : ι), IsClosed.{u2} X _inst_1 (f i)) -> (IsClosed.{u2} X _inst_1 (Set.iUnion.{u2, succ u1} X ι (fun (i : ι) => f i)))
 but is expected to have type
-  forall {ι : Type.{u2}} {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] {f : ι -> (Set.{u1} X)}, (LocallyFinite.{u2, u1} ι X _inst_1 f) -> (forall (i : ι), IsClosed.{u1} X _inst_1 (f i)) -> (IsClosed.{u1} X _inst_1 (Set.unionᵢ.{u1, succ u2} X ι (fun (i : ι) => f i)))
-Case conversion may be inaccurate. Consider using '#align locally_finite.is_closed_Union LocallyFinite.isClosed_unionᵢₓ'. -/
-theorem isClosed_unionᵢ (hf : LocallyFinite f) (hc : ∀ i, IsClosed (f i)) : IsClosed (⋃ i, f i) :=
+  forall {ι : Type.{u2}} {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] {f : ι -> (Set.{u1} X)}, (LocallyFinite.{u2, u1} ι X _inst_1 f) -> (forall (i : ι), IsClosed.{u1} X _inst_1 (f i)) -> (IsClosed.{u1} X _inst_1 (Set.iUnion.{u1, succ u2} X ι (fun (i : ι) => f i)))
+Case conversion may be inaccurate. Consider using '#align locally_finite.is_closed_Union LocallyFinite.isClosed_iUnionₓ'. -/
+theorem isClosed_iUnion (hf : LocallyFinite f) (hc : ∀ i, IsClosed (f i)) : IsClosed (⋃ i, f i) :=
   by simp only [← closure_eq_iff_isClosed, hf.closure_Union, (hc _).closure_eq]
-#align locally_finite.is_closed_Union LocallyFinite.isClosed_unionᵢ
+#align locally_finite.is_closed_Union LocallyFinite.isClosed_iUnion
 
-/- warning: locally_finite.Inter_compl_mem_nhds -> LocallyFinite.interᵢ_compl_mem_nhds is a dubious translation:
+/- warning: locally_finite.Inter_compl_mem_nhds -> LocallyFinite.iInter_compl_mem_nhds is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} X] {f : ι -> (Set.{u2} X)}, (LocallyFinite.{u1, u2} ι X _inst_1 f) -> (forall (i : ι), IsClosed.{u2} X _inst_1 (f i)) -> (forall (x : X), Membership.Mem.{u2, u2} (Set.{u2} X) (Filter.{u2} X) (Filter.hasMem.{u2} X) (Set.interᵢ.{u2, succ u1} X ι (fun (i : ι) => Set.interᵢ.{u2, 0} X (Not (Membership.Mem.{u2, u2} X (Set.{u2} X) (Set.hasMem.{u2} X) x (f i))) (fun (hi : Not (Membership.Mem.{u2, u2} X (Set.{u2} X) (Set.hasMem.{u2} X) x (f i))) => HasCompl.compl.{u2} (Set.{u2} X) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} X) (Set.booleanAlgebra.{u2} X)) (f i)))) (nhds.{u2} X _inst_1 x))
+  forall {ι : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} X] {f : ι -> (Set.{u2} X)}, (LocallyFinite.{u1, u2} ι X _inst_1 f) -> (forall (i : ι), IsClosed.{u2} X _inst_1 (f i)) -> (forall (x : X), Membership.Mem.{u2, u2} (Set.{u2} X) (Filter.{u2} X) (Filter.hasMem.{u2} X) (Set.iInter.{u2, succ u1} X ι (fun (i : ι) => Set.iInter.{u2, 0} X (Not (Membership.Mem.{u2, u2} X (Set.{u2} X) (Set.hasMem.{u2} X) x (f i))) (fun (hi : Not (Membership.Mem.{u2, u2} X (Set.{u2} X) (Set.hasMem.{u2} X) x (f i))) => HasCompl.compl.{u2} (Set.{u2} X) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} X) (Set.booleanAlgebra.{u2} X)) (f i)))) (nhds.{u2} X _inst_1 x))
 but is expected to have type
-  forall {ι : Type.{u2}} {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] {f : ι -> (Set.{u1} X)}, (LocallyFinite.{u2, u1} ι X _inst_1 f) -> (forall (i : ι), IsClosed.{u1} X _inst_1 (f i)) -> (forall (x : X), Membership.mem.{u1, u1} (Set.{u1} X) (Filter.{u1} X) (instMembershipSetFilter.{u1} X) (Set.interᵢ.{u1, succ u2} X ι (fun (i : ι) => Set.interᵢ.{u1, 0} X (Not (Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) x (f i))) (fun (hi : Not (Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) x (f i))) => HasCompl.compl.{u1} (Set.{u1} X) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} X) (Set.instBooleanAlgebraSet.{u1} X)) (f i)))) (nhds.{u1} X _inst_1 x))
-Case conversion may be inaccurate. Consider using '#align locally_finite.Inter_compl_mem_nhds LocallyFinite.interᵢ_compl_mem_nhdsₓ'. -/
+  forall {ι : Type.{u2}} {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] {f : ι -> (Set.{u1} X)}, (LocallyFinite.{u2, u1} ι X _inst_1 f) -> (forall (i : ι), IsClosed.{u1} X _inst_1 (f i)) -> (forall (x : X), Membership.mem.{u1, u1} (Set.{u1} X) (Filter.{u1} X) (instMembershipSetFilter.{u1} X) (Set.iInter.{u1, succ u2} X ι (fun (i : ι) => Set.iInter.{u1, 0} X (Not (Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) x (f i))) (fun (hi : Not (Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) x (f i))) => HasCompl.compl.{u1} (Set.{u1} X) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} X) (Set.instBooleanAlgebraSet.{u1} X)) (f i)))) (nhds.{u1} X _inst_1 x))
+Case conversion may be inaccurate. Consider using '#align locally_finite.Inter_compl_mem_nhds LocallyFinite.iInter_compl_mem_nhdsₓ'. -/
 /-- If `f : β → set α` is a locally finite family of closed sets, then for any `x : α`, the
 intersection of the complements to `f i`, `x ∉ f i`, is a neighbourhood of `x`. -/
-theorem interᵢ_compl_mem_nhds (hf : LocallyFinite f) (hc : ∀ i, IsClosed (f i)) (x : X) :
+theorem iInter_compl_mem_nhds (hf : LocallyFinite f) (hc : ∀ i, IsClosed (f i)) (x : X) :
     (⋂ (i) (hi : x ∉ f i), f iᶜ) ∈ 𝓝 x :=
   by
   refine' IsOpen.mem_nhds _ (mem_Inter₂.2 fun i => id)
   suffices IsClosed (⋃ i : { i // x ∉ f i }, f i) by
     rwa [← isOpen_compl_iff, compl_Union, Inter_subtype] at this
-  exact (hf.comp_injective Subtype.coe_injective).isClosed_unionᵢ fun i => hc _
-#align locally_finite.Inter_compl_mem_nhds LocallyFinite.interᵢ_compl_mem_nhds
+  exact (hf.comp_injective Subtype.coe_injective).isClosed_iUnion fun i => hc _
+#align locally_finite.Inter_compl_mem_nhds LocallyFinite.iInter_compl_mem_nhds
 
 #print LocallyFinite.exists_forall_eventually_eq_prod /-
 /-- Let `f : ℕ → Π a, β a` be a sequence of (dependent) functions on a topological space. Suppose

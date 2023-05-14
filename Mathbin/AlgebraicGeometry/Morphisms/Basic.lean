@@ -206,7 +206,7 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
         simp_rw [← P.to_property_apply] at H⊢
         exact (hP.1.arrow_mk_iso_iff (morphism_restrict_restrict_basic_open f _ r)).mpr (H ⟨r, hr'⟩)
     · rw [Set.eq_univ_iff_forall]
-      simp only [Set.mem_unionᵢ]
+      simp only [Set.mem_iUnion]
       intro x
       exact ⟨⟨_, ⟨𝒰.f x, rfl⟩⟩, 𝒰.covers x⟩
     · rintro ⟨_, i, rfl⟩
@@ -224,7 +224,7 @@ theorem AffineTargetMorphismProperty.IsLocal.affine_openCover_tFAE
           P (pullback.snd : (𝒰.pullback_cover f).obj i ⟶ 𝒰.obj i),
         ∀ {U : Scheme} (g : U ⟶ Y) [IsAffine U] [IsOpenImmersion g],
           P (pullback.snd : pullback f g ⟶ U),
-        ∃ (ι : Type u)(U : ι → Opens Y.carrier)(hU : supᵢ U = ⊤)(hU' : ∀ i, IsAffineOpen (U i)),
+        ∃ (ι : Type u)(U : ι → Opens Y.carrier)(hU : iSup U = ⊤)(hU' : ∀ i, IsAffineOpen (U i)),
           ∀ i, @P (f ∣_ U i) (hU' i)] :=
   by
   tfae_have 1 → 4
@@ -387,7 +387,7 @@ theorem PropertyIsLocalAtTarget.openCover_tFAE {P : MorphismProperty Scheme}
           P (pullback.snd : (𝒰.pullbackCover f).obj i ⟶ 𝒰.obj i),
         ∀ U : Opens Y.carrier, P (f ∣_ U),
         ∀ {U : Scheme} (g : U ⟶ Y) [IsOpenImmersion g], P (pullback.snd : pullback f g ⟶ U),
-        ∃ (ι : Type u)(U : ι → Opens Y.carrier)(hU : supᵢ U = ⊤), ∀ i, P (f ∣_ U i)] :=
+        ∃ (ι : Type u)(U : ι → Opens Y.carrier)(hU : iSup U = ⊤), ∀ i, P (f ∣_ U i)] :=
   by
   tfae_have 2 → 1
   · rintro ⟨𝒰, H⟩
@@ -412,7 +412,7 @@ theorem PropertyIsLocalAtTarget.openCover_tFAE {P : MorphismProperty Scheme}
     apply H
   tfae_have 4 → 6
   · intro H
-    exact ⟨PUnit, fun _ => ⊤, csupᵢ_const, fun _ => H _⟩
+    exact ⟨PUnit, fun _ => ⊤, ciSup_const, fun _ => H _⟩
   tfae_have 6 → 2
   · rintro ⟨ι, U, hU, H⟩
     refine' ⟨Y.open_cover_of_supr_eq_top U hU, _⟩
@@ -638,7 +638,7 @@ theorem universallyIsLocalAtTarget (P : MorphismProperty Scheme)
 theorem universallyIsLocalAtTargetOfMorphismRestrict (P : MorphismProperty Scheme)
     (hP₁ : P.RespectsIso)
     (hP₂ :
-      ∀ {X Y : Scheme.{u}} (f : X ⟶ Y) {ι : Type u} (U : ι → Opens Y.carrier) (hU : supᵢ U = ⊤),
+      ∀ {X Y : Scheme.{u}} (f : X ⟶ Y) {ι : Type u} (U : ι → Opens Y.carrier) (hU : iSup U = ⊤),
         (∀ i, P (f ∣_ U i)) → P f) :
     PropertyIsLocalAtTarget P.universally :=
   universallyIsLocalAtTarget P

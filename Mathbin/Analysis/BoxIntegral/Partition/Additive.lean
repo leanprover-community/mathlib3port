@@ -170,7 +170,7 @@ def map (f : ι →ᵇᵃ[I₀] M) (g : M →+ N) : ι →ᵇᵃ[I₀] N
 /-- If `f` is a box additive function on subboxes of `I` and `π₁`, `π₂` are two prepartitions of
 `I` that cover the same part of `I`, then `∑ J in π₁.boxes, f J = ∑ J in π₂.boxes, f J`. -/
 theorem sum_boxes_congr [Finite ι] (f : ι →ᵇᵃ[I₀] M) (hI : ↑I ≤ I₀) {π₁ π₂ : Prepartition I}
-    (h : π₁.unionᵢ = π₂.unionᵢ) : (∑ J in π₁.boxes, f J) = ∑ J in π₂.boxes, f J :=
+    (h : π₁.iUnion = π₂.iUnion) : (∑ J in π₁.boxes, f J) = ∑ J in π₂.boxes, f J :=
   by
   rcases exists_split_many_inf_eq_filter_of_finite {π₁, π₂} ((finite_singleton _).insert _) with
     ⟨s, hs⟩

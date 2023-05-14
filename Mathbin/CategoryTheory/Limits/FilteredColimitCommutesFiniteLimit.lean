@@ -232,9 +232,9 @@ theorem colimitLimitToLimitColimit_surjective :
       finset.mem_union.mpr
         (Or.inl
           (by
-            rw [Finset.mem_bunionᵢ]
+            rw [Finset.mem_biUnion]
             refine' ⟨j, Finset.mem_univ j, _⟩
-            rw [Finset.mem_bunionᵢ]
+            rw [Finset.mem_biUnion]
             refine' ⟨j', Finset.mem_univ j', _⟩
             rw [Finset.mem_image]
             refine' ⟨f, Finset.mem_univ _, _⟩
@@ -256,18 +256,18 @@ theorem colimitLimitToLimitColimit_surjective :
       swap
       exact k'O
       swap
-      · rw [Finset.mem_bunionᵢ]
+      · rw [Finset.mem_biUnion]
         refine' ⟨j₁, Finset.mem_univ _, _⟩
-        rw [Finset.mem_bunionᵢ]
+        rw [Finset.mem_biUnion]
         refine' ⟨j₂, Finset.mem_univ _, _⟩
-        rw [Finset.mem_bunionᵢ]
+        rw [Finset.mem_biUnion]
         refine' ⟨f, Finset.mem_univ _, _⟩
         simp only [true_or_iff, eq_self_iff_true, and_self_iff, Finset.mem_insert, heq_iff_eq]
-      · rw [Finset.mem_bunionᵢ]
+      · rw [Finset.mem_biUnion]
         refine' ⟨j₃, Finset.mem_univ _, _⟩
-        rw [Finset.mem_bunionᵢ]
+        rw [Finset.mem_biUnion]
         refine' ⟨j₄, Finset.mem_univ _, _⟩
-        rw [Finset.mem_bunionᵢ]
+        rw [Finset.mem_biUnion]
         refine' ⟨f', Finset.mem_univ _, _⟩
         simp only [eq_self_iff_true, or_true_iff, and_self_iff, Finset.mem_insert,
           Finset.mem_singleton, heq_iff_eq]

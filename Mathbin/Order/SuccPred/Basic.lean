@@ -736,20 +736,20 @@ section CompleteLattice
 
 variable [CompleteLattice α] [SuccOrder α]
 
-/- warning: order.succ_eq_infi -> Order.succ_eq_infᵢ is a dubious translation:
+/- warning: order.succ_eq_infi -> Order.succ_eq_iInf is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))] (a : α), Eq.{succ u1} α (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) _inst_2 a) (infᵢ.{u1, succ u1} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) α (fun (b : α) => infᵢ.{u1, 0} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) a b) (fun (h : LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) a b) => b)))
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))] (a : α), Eq.{succ u1} α (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) _inst_2 a) (iInf.{u1, succ u1} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) α (fun (b : α) => iInf.{u1, 0} α (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) a b) (fun (h : LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) a b) => b)))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))] (a : α), Eq.{succ u1} α (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) _inst_2 a) (infᵢ.{u1, succ u1} α (CompleteLattice.toInfSet.{u1} α _inst_1) α (fun (b : α) => infᵢ.{u1, 0} α (CompleteLattice.toInfSet.{u1} α _inst_1) (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) a b) (fun (h : LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) a b) => b)))
-Case conversion may be inaccurate. Consider using '#align order.succ_eq_infi Order.succ_eq_infᵢₓ'. -/
-theorem succ_eq_infᵢ (a : α) : succ a = ⨅ (b) (h : a < b), b :=
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))] (a : α), Eq.{succ u1} α (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) _inst_2 a) (iInf.{u1, succ u1} α (CompleteLattice.toInfSet.{u1} α _inst_1) α (fun (b : α) => iInf.{u1, 0} α (CompleteLattice.toInfSet.{u1} α _inst_1) (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) a b) (fun (h : LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) a b) => b)))
+Case conversion may be inaccurate. Consider using '#align order.succ_eq_infi Order.succ_eq_iInfₓ'. -/
+theorem succ_eq_iInf (a : α) : succ a = ⨅ (b) (h : a < b), b :=
   by
-  refine' le_antisymm (le_infᵢ fun b => le_infᵢ succ_le_of_lt) _
+  refine' le_antisymm (le_iInf fun b => le_iInf succ_le_of_lt) _
   obtain rfl | ha := eq_or_ne a ⊤
   · rw [succ_top]
     exact le_top
-  exact infᵢ₂_le _ (lt_succ_iff_ne_top.2 ha)
-#align order.succ_eq_infi Order.succ_eq_infᵢ
+  exact iInf₂_le _ (lt_succ_iff_ne_top.2 ha)
+#align order.succ_eq_infi Order.succ_eq_iInf
 
 end CompleteLattice
 
@@ -1245,20 +1245,20 @@ section CompleteLattice
 
 variable [CompleteLattice α] [PredOrder α]
 
-/- warning: order.pred_eq_supr -> Order.pred_eq_supᵢ is a dubious translation:
+/- warning: order.pred_eq_supr -> Order.pred_eq_iSup is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))] (a : α), Eq.{succ u1} α (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) _inst_2 a) (supᵢ.{u1, succ u1} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) α (fun (b : α) => supᵢ.{u1, 0} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) b a) (fun (h : LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) b a) => b)))
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))] (a : α), Eq.{succ u1} α (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) _inst_2 a) (iSup.{u1, succ u1} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) α (fun (b : α) => iSup.{u1, 0} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) b a) (fun (h : LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) b a) => b)))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))] (a : α), Eq.{succ u1} α (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) _inst_2 a) (supᵢ.{u1, succ u1} α (CompleteLattice.toSupSet.{u1} α _inst_1) α (fun (b : α) => supᵢ.{u1, 0} α (CompleteLattice.toSupSet.{u1} α _inst_1) (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) b a) (fun (h : LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) b a) => b)))
-Case conversion may be inaccurate. Consider using '#align order.pred_eq_supr Order.pred_eq_supᵢₓ'. -/
-theorem pred_eq_supᵢ (a : α) : pred a = ⨆ (b) (h : b < a), b :=
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))] (a : α), Eq.{succ u1} α (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) _inst_2 a) (iSup.{u1, succ u1} α (CompleteLattice.toSupSet.{u1} α _inst_1) α (fun (b : α) => iSup.{u1, 0} α (CompleteLattice.toSupSet.{u1} α _inst_1) (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) b a) (fun (h : LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) b a) => b)))
+Case conversion may be inaccurate. Consider using '#align order.pred_eq_supr Order.pred_eq_iSupₓ'. -/
+theorem pred_eq_iSup (a : α) : pred a = ⨆ (b) (h : b < a), b :=
   by
-  refine' le_antisymm _ (supᵢ_le fun b => supᵢ_le le_pred_of_lt)
+  refine' le_antisymm _ (iSup_le fun b => iSup_le le_pred_of_lt)
   obtain rfl | ha := eq_or_ne a ⊥
   · rw [pred_bot]
     exact bot_le
-  · exact @le_supᵢ₂ _ _ (fun b => b < a) _ (fun a _ => a) (pred a) (pred_lt_iff_ne_bot.2 ha)
-#align order.pred_eq_supr Order.pred_eq_supᵢ
+  · exact @le_iSup₂ _ _ (fun b => b < a) _ (fun a _ => a) (pred a) (pred_lt_iff_ne_bot.2 ha)
+#align order.pred_eq_supr Order.pred_eq_iSup
 
 end CompleteLattice
 

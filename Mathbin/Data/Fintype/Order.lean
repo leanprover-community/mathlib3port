@@ -106,8 +106,8 @@ open Classical
 noncomputable def toCompleteLattice [Lattice α] [BoundedOrder α] : CompleteLattice α :=
   { ‹Lattice α›,
     ‹BoundedOrder α› with
-    supₛ := fun s => s.toFinset.sup id
-    infₛ := fun s => s.toFinset.inf id
+    sSup := fun s => s.toFinset.sup id
+    sInf := fun s => s.toFinset.inf id
     le_sup := fun _ _ ha => Finset.le_sup (Set.mem_toFinset.mpr ha)
     sup_le := fun s _ ha => Finset.sup_le fun b hb => ha _ <| Set.mem_toFinset.mp hb
     inf_le := fun _ _ ha => Finset.inf_le (Set.mem_toFinset.mpr ha)
@@ -124,16 +124,16 @@ noncomputable def toCompleteDistribLattice [DistribLattice α] [BoundedOrder α]
   {
     toCompleteLattice
       α with
-    infᵢ_sup_le_sup_inf := fun a s =>
+    iInf_sup_le_sup_inf := fun a s =>
       by
       convert(Finset.inf_sup_distrib_left _ _ _).ge
-      convert(Finset.inf_eq_infᵢ _ _).symm
+      convert(Finset.inf_eq_iInf _ _).symm
       simp_rw [Set.mem_toFinset]
       rfl
-    inf_sup_le_supᵢ_inf := fun a s =>
+    inf_sup_le_iSup_inf := fun a s =>
       by
       convert(Finset.sup_inf_distrib_left _ _ _).le
-      convert(Finset.sup_eq_supᵢ _ _).symm
+      convert(Finset.sup_eq_iSup _ _).symm
       simp_rw [Set.mem_toFinset]
       rfl }
 #align fintype.to_complete_distrib_lattice Fintype.toCompleteDistribLattice

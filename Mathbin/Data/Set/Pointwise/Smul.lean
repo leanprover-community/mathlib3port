@@ -322,129 +322,129 @@ theorem union_smul_inter_subset_union : (s₁ ∪ s₂) • (t₁ ∩ t₂) ⊆ 
 #align set.union_smul_inter_subset_union Set.union_smul_inter_subset_union
 #align set.union_vadd_inter_subset_union Set.union_vadd_inter_subset_union
 
-#print Set.unionᵢ_smul_left_image /-
+#print Set.iUnion_smul_left_image /-
 @[to_additive]
-theorem unionᵢ_smul_left_image : (⋃ a ∈ s, a • t) = s • t :=
-  unionᵢ_image_left _
-#align set.Union_smul_left_image Set.unionᵢ_smul_left_image
-#align set.Union_vadd_left_image Set.unionᵢ_vadd_left_image
+theorem iUnion_smul_left_image : (⋃ a ∈ s, a • t) = s • t :=
+  iUnion_image_left _
+#align set.Union_smul_left_image Set.iUnion_smul_left_image
+#align set.Union_vadd_left_image Set.iUnion_vadd_left_image
 -/
 
-#print Set.unionᵢ_smul_right_image /-
+#print Set.iUnion_smul_right_image /-
 @[to_additive]
-theorem unionᵢ_smul_right_image : (⋃ a ∈ t, (· • a) '' s) = s • t :=
-  unionᵢ_image_right _
-#align set.Union_smul_right_image Set.unionᵢ_smul_right_image
-#align set.Union_vadd_right_image Set.unionᵢ_vadd_right_image
+theorem iUnion_smul_right_image : (⋃ a ∈ t, (· • a) '' s) = s • t :=
+  iUnion_image_right _
+#align set.Union_smul_right_image Set.iUnion_smul_right_image
+#align set.Union_vadd_right_image Set.iUnion_vadd_right_image
 -/
 
-/- warning: set.Union_smul -> Set.unionᵢ_smul is a dubious translation:
+/- warning: set.Union_smul -> Set.iUnion_smul is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : SMul.{u1, u2} α β] (s : ι -> (Set.{u1} α)) (t : Set.{u2} β), Eq.{succ u2} (Set.{u2} β) (SMul.smul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β _inst_1) (Set.unionᵢ.{u1, u3} α ι (fun (i : ι) => s i)) t) (Set.unionᵢ.{u2, u3} β ι (fun (i : ι) => SMul.smul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β _inst_1) (s i) t))
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : SMul.{u1, u2} α β] (s : ι -> (Set.{u1} α)) (t : Set.{u2} β), Eq.{succ u2} (Set.{u2} β) (SMul.smul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β _inst_1) (Set.iUnion.{u1, u3} α ι (fun (i : ι) => s i)) t) (Set.iUnion.{u2, u3} β ι (fun (i : ι) => SMul.smul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β _inst_1) (s i) t))
 but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : SMul.{u3, u2} α β] (s : ι -> (Set.{u3} α)) (t : Set.{u2} β), Eq.{succ u2} (Set.{u2} β) (HSMul.hSMul.{u3, u2, u2} (Set.{u3} α) (Set.{u2} β) (Set.{u2} β) (instHSMul.{u3, u2} (Set.{u3} α) (Set.{u2} β) (Set.smul.{u3, u2} α β _inst_1)) (Set.unionᵢ.{u3, u1} α ι (fun (i : ι) => s i)) t) (Set.unionᵢ.{u2, u1} β ι (fun (i : ι) => HSMul.hSMul.{u3, u2, u2} (Set.{u3} α) (Set.{u2} β) (Set.{u2} β) (instHSMul.{u3, u2} (Set.{u3} α) (Set.{u2} β) (Set.smul.{u3, u2} α β _inst_1)) (s i) t))
-Case conversion may be inaccurate. Consider using '#align set.Union_smul Set.unionᵢ_smulₓ'. -/
+  forall {α : Type.{u3}} {β : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : SMul.{u3, u2} α β] (s : ι -> (Set.{u3} α)) (t : Set.{u2} β), Eq.{succ u2} (Set.{u2} β) (HSMul.hSMul.{u3, u2, u2} (Set.{u3} α) (Set.{u2} β) (Set.{u2} β) (instHSMul.{u3, u2} (Set.{u3} α) (Set.{u2} β) (Set.smul.{u3, u2} α β _inst_1)) (Set.iUnion.{u3, u1} α ι (fun (i : ι) => s i)) t) (Set.iUnion.{u2, u1} β ι (fun (i : ι) => HSMul.hSMul.{u3, u2, u2} (Set.{u3} α) (Set.{u2} β) (Set.{u2} β) (instHSMul.{u3, u2} (Set.{u3} α) (Set.{u2} β) (Set.smul.{u3, u2} α β _inst_1)) (s i) t))
+Case conversion may be inaccurate. Consider using '#align set.Union_smul Set.iUnion_smulₓ'. -/
 @[to_additive]
-theorem unionᵢ_smul (s : ι → Set α) (t : Set β) : (⋃ i, s i) • t = ⋃ i, s i • t :=
-  image2_unionᵢ_left _ _ _
-#align set.Union_smul Set.unionᵢ_smul
-#align set.Union_vadd Set.unionᵢ_vadd
+theorem iUnion_smul (s : ι → Set α) (t : Set β) : (⋃ i, s i) • t = ⋃ i, s i • t :=
+  image2_iUnion_left _ _ _
+#align set.Union_smul Set.iUnion_smul
+#align set.Union_vadd Set.iUnion_vadd
 
-/- warning: set.smul_Union -> Set.smul_unionᵢ is a dubious translation:
+/- warning: set.smul_Union -> Set.smul_iUnion is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : SMul.{u1, u2} α β] (s : Set.{u1} α) (t : ι -> (Set.{u2} β)), Eq.{succ u2} (Set.{u2} β) (SMul.smul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β _inst_1) s (Set.unionᵢ.{u2, u3} β ι (fun (i : ι) => t i))) (Set.unionᵢ.{u2, u3} β ι (fun (i : ι) => SMul.smul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β _inst_1) s (t i)))
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : SMul.{u1, u2} α β] (s : Set.{u1} α) (t : ι -> (Set.{u2} β)), Eq.{succ u2} (Set.{u2} β) (SMul.smul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β _inst_1) s (Set.iUnion.{u2, u3} β ι (fun (i : ι) => t i))) (Set.iUnion.{u2, u3} β ι (fun (i : ι) => SMul.smul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β _inst_1) s (t i)))
 but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : SMul.{u3, u2} α β] (s : Set.{u3} α) (t : ι -> (Set.{u2} β)), Eq.{succ u2} (Set.{u2} β) (HSMul.hSMul.{u3, u2, u2} (Set.{u3} α) (Set.{u2} β) (Set.{u2} β) (instHSMul.{u3, u2} (Set.{u3} α) (Set.{u2} β) (Set.smul.{u3, u2} α β _inst_1)) s (Set.unionᵢ.{u2, u1} β ι (fun (i : ι) => t i))) (Set.unionᵢ.{u2, u1} β ι (fun (i : ι) => HSMul.hSMul.{u3, u2, u2} (Set.{u3} α) (Set.{u2} β) (Set.{u2} β) (instHSMul.{u3, u2} (Set.{u3} α) (Set.{u2} β) (Set.smul.{u3, u2} α β _inst_1)) s (t i)))
-Case conversion may be inaccurate. Consider using '#align set.smul_Union Set.smul_unionᵢₓ'. -/
+  forall {α : Type.{u3}} {β : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : SMul.{u3, u2} α β] (s : Set.{u3} α) (t : ι -> (Set.{u2} β)), Eq.{succ u2} (Set.{u2} β) (HSMul.hSMul.{u3, u2, u2} (Set.{u3} α) (Set.{u2} β) (Set.{u2} β) (instHSMul.{u3, u2} (Set.{u3} α) (Set.{u2} β) (Set.smul.{u3, u2} α β _inst_1)) s (Set.iUnion.{u2, u1} β ι (fun (i : ι) => t i))) (Set.iUnion.{u2, u1} β ι (fun (i : ι) => HSMul.hSMul.{u3, u2, u2} (Set.{u3} α) (Set.{u2} β) (Set.{u2} β) (instHSMul.{u3, u2} (Set.{u3} α) (Set.{u2} β) (Set.smul.{u3, u2} α β _inst_1)) s (t i)))
+Case conversion may be inaccurate. Consider using '#align set.smul_Union Set.smul_iUnionₓ'. -/
 @[to_additive]
-theorem smul_unionᵢ (s : Set α) (t : ι → Set β) : (s • ⋃ i, t i) = ⋃ i, s • t i :=
-  image2_unionᵢ_right _ _ _
-#align set.smul_Union Set.smul_unionᵢ
-#align set.vadd_Union Set.vadd_unionᵢ
+theorem smul_iUnion (s : Set α) (t : ι → Set β) : (s • ⋃ i, t i) = ⋃ i, s • t i :=
+  image2_iUnion_right _ _ _
+#align set.smul_Union Set.smul_iUnion
+#align set.vadd_Union Set.vadd_iUnion
 
-/- warning: set.Union₂_smul -> Set.unionᵢ₂_smul is a dubious translation:
+/- warning: set.Union₂_smul -> Set.iUnion₂_smul is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {κ : ι -> Sort.{u4}} [_inst_1 : SMul.{u1, u2} α β] (s : forall (i : ι), (κ i) -> (Set.{u1} α)) (t : Set.{u2} β), Eq.{succ u2} (Set.{u2} β) (SMul.smul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β _inst_1) (Set.unionᵢ.{u1, u3} α ι (fun (i : ι) => Set.unionᵢ.{u1, u4} α (κ i) (fun (j : κ i) => s i j))) t) (Set.unionᵢ.{u2, u3} β ι (fun (i : ι) => Set.unionᵢ.{u2, u4} β (κ i) (fun (j : κ i) => SMul.smul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β _inst_1) (s i j) t)))
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {κ : ι -> Sort.{u4}} [_inst_1 : SMul.{u1, u2} α β] (s : forall (i : ι), (κ i) -> (Set.{u1} α)) (t : Set.{u2} β), Eq.{succ u2} (Set.{u2} β) (SMul.smul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β _inst_1) (Set.iUnion.{u1, u3} α ι (fun (i : ι) => Set.iUnion.{u1, u4} α (κ i) (fun (j : κ i) => s i j))) t) (Set.iUnion.{u2, u3} β ι (fun (i : ι) => Set.iUnion.{u2, u4} β (κ i) (fun (j : κ i) => SMul.smul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β _inst_1) (s i j) t)))
 but is expected to have type
-  forall {α : Type.{u4}} {β : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : SMul.{u4, u3} α β] (s : forall (i : ι), (κ i) -> (Set.{u4} α)) (t : Set.{u3} β), Eq.{succ u3} (Set.{u3} β) (HSMul.hSMul.{u4, u3, u3} (Set.{u4} α) (Set.{u3} β) (Set.{u3} β) (instHSMul.{u4, u3} (Set.{u4} α) (Set.{u3} β) (Set.smul.{u4, u3} α β _inst_1)) (Set.unionᵢ.{u4, u2} α ι (fun (i : ι) => Set.unionᵢ.{u4, u1} α (κ i) (fun (j : κ i) => s i j))) t) (Set.unionᵢ.{u3, u2} β ι (fun (i : ι) => Set.unionᵢ.{u3, u1} β (κ i) (fun (j : κ i) => HSMul.hSMul.{u4, u3, u3} (Set.{u4} α) (Set.{u3} β) (Set.{u3} β) (instHSMul.{u4, u3} (Set.{u4} α) (Set.{u3} β) (Set.smul.{u4, u3} α β _inst_1)) (s i j) t)))
-Case conversion may be inaccurate. Consider using '#align set.Union₂_smul Set.unionᵢ₂_smulₓ'. -/
+  forall {α : Type.{u4}} {β : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : SMul.{u4, u3} α β] (s : forall (i : ι), (κ i) -> (Set.{u4} α)) (t : Set.{u3} β), Eq.{succ u3} (Set.{u3} β) (HSMul.hSMul.{u4, u3, u3} (Set.{u4} α) (Set.{u3} β) (Set.{u3} β) (instHSMul.{u4, u3} (Set.{u4} α) (Set.{u3} β) (Set.smul.{u4, u3} α β _inst_1)) (Set.iUnion.{u4, u2} α ι (fun (i : ι) => Set.iUnion.{u4, u1} α (κ i) (fun (j : κ i) => s i j))) t) (Set.iUnion.{u3, u2} β ι (fun (i : ι) => Set.iUnion.{u3, u1} β (κ i) (fun (j : κ i) => HSMul.hSMul.{u4, u3, u3} (Set.{u4} α) (Set.{u3} β) (Set.{u3} β) (instHSMul.{u4, u3} (Set.{u4} α) (Set.{u3} β) (Set.smul.{u4, u3} α β _inst_1)) (s i j) t)))
+Case conversion may be inaccurate. Consider using '#align set.Union₂_smul Set.iUnion₂_smulₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[to_additive]
-theorem unionᵢ₂_smul (s : ∀ i, κ i → Set α) (t : Set β) :
+theorem iUnion₂_smul (s : ∀ i, κ i → Set α) (t : Set β) :
     (⋃ (i) (j), s i j) • t = ⋃ (i) (j), s i j • t :=
-  image2_unionᵢ₂_left _ _ _
-#align set.Union₂_smul Set.unionᵢ₂_smul
-#align set.Union₂_vadd Set.unionᵢ₂_vadd
+  image2_iUnion₂_left _ _ _
+#align set.Union₂_smul Set.iUnion₂_smul
+#align set.Union₂_vadd Set.iUnion₂_vadd
 
-/- warning: set.smul_Union₂ -> Set.smul_unionᵢ₂ is a dubious translation:
+/- warning: set.smul_Union₂ -> Set.smul_iUnion₂ is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {κ : ι -> Sort.{u4}} [_inst_1 : SMul.{u1, u2} α β] (s : Set.{u1} α) (t : forall (i : ι), (κ i) -> (Set.{u2} β)), Eq.{succ u2} (Set.{u2} β) (SMul.smul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β _inst_1) s (Set.unionᵢ.{u2, u3} β ι (fun (i : ι) => Set.unionᵢ.{u2, u4} β (κ i) (fun (j : κ i) => t i j)))) (Set.unionᵢ.{u2, u3} β ι (fun (i : ι) => Set.unionᵢ.{u2, u4} β (κ i) (fun (j : κ i) => SMul.smul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β _inst_1) s (t i j))))
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {κ : ι -> Sort.{u4}} [_inst_1 : SMul.{u1, u2} α β] (s : Set.{u1} α) (t : forall (i : ι), (κ i) -> (Set.{u2} β)), Eq.{succ u2} (Set.{u2} β) (SMul.smul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β _inst_1) s (Set.iUnion.{u2, u3} β ι (fun (i : ι) => Set.iUnion.{u2, u4} β (κ i) (fun (j : κ i) => t i j)))) (Set.iUnion.{u2, u3} β ι (fun (i : ι) => Set.iUnion.{u2, u4} β (κ i) (fun (j : κ i) => SMul.smul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β _inst_1) s (t i j))))
 but is expected to have type
-  forall {α : Type.{u4}} {β : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : SMul.{u4, u3} α β] (s : Set.{u4} α) (t : forall (i : ι), (κ i) -> (Set.{u3} β)), Eq.{succ u3} (Set.{u3} β) (HSMul.hSMul.{u4, u3, u3} (Set.{u4} α) (Set.{u3} β) (Set.{u3} β) (instHSMul.{u4, u3} (Set.{u4} α) (Set.{u3} β) (Set.smul.{u4, u3} α β _inst_1)) s (Set.unionᵢ.{u3, u2} β ι (fun (i : ι) => Set.unionᵢ.{u3, u1} β (κ i) (fun (j : κ i) => t i j)))) (Set.unionᵢ.{u3, u2} β ι (fun (i : ι) => Set.unionᵢ.{u3, u1} β (κ i) (fun (j : κ i) => HSMul.hSMul.{u4, u3, u3} (Set.{u4} α) (Set.{u3} β) (Set.{u3} β) (instHSMul.{u4, u3} (Set.{u4} α) (Set.{u3} β) (Set.smul.{u4, u3} α β _inst_1)) s (t i j))))
-Case conversion may be inaccurate. Consider using '#align set.smul_Union₂ Set.smul_unionᵢ₂ₓ'. -/
+  forall {α : Type.{u4}} {β : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : SMul.{u4, u3} α β] (s : Set.{u4} α) (t : forall (i : ι), (κ i) -> (Set.{u3} β)), Eq.{succ u3} (Set.{u3} β) (HSMul.hSMul.{u4, u3, u3} (Set.{u4} α) (Set.{u3} β) (Set.{u3} β) (instHSMul.{u4, u3} (Set.{u4} α) (Set.{u3} β) (Set.smul.{u4, u3} α β _inst_1)) s (Set.iUnion.{u3, u2} β ι (fun (i : ι) => Set.iUnion.{u3, u1} β (κ i) (fun (j : κ i) => t i j)))) (Set.iUnion.{u3, u2} β ι (fun (i : ι) => Set.iUnion.{u3, u1} β (κ i) (fun (j : κ i) => HSMul.hSMul.{u4, u3, u3} (Set.{u4} α) (Set.{u3} β) (Set.{u3} β) (instHSMul.{u4, u3} (Set.{u4} α) (Set.{u3} β) (Set.smul.{u4, u3} α β _inst_1)) s (t i j))))
+Case conversion may be inaccurate. Consider using '#align set.smul_Union₂ Set.smul_iUnion₂ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[to_additive]
-theorem smul_unionᵢ₂ (s : Set α) (t : ∀ i, κ i → Set β) :
+theorem smul_iUnion₂ (s : Set α) (t : ∀ i, κ i → Set β) :
     (s • ⋃ (i) (j), t i j) = ⋃ (i) (j), s • t i j :=
-  image2_unionᵢ₂_right _ _ _
-#align set.smul_Union₂ Set.smul_unionᵢ₂
-#align set.vadd_Union₂ Set.vadd_unionᵢ₂
+  image2_iUnion₂_right _ _ _
+#align set.smul_Union₂ Set.smul_iUnion₂
+#align set.vadd_Union₂ Set.vadd_iUnion₂
 
-/- warning: set.Inter_smul_subset -> Set.interᵢ_smul_subset is a dubious translation:
+/- warning: set.Inter_smul_subset -> Set.iInter_smul_subset is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : SMul.{u1, u2} α β] (s : ι -> (Set.{u1} α)) (t : Set.{u2} β), HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) (SMul.smul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β _inst_1) (Set.interᵢ.{u1, u3} α ι (fun (i : ι) => s i)) t) (Set.interᵢ.{u2, u3} β ι (fun (i : ι) => SMul.smul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β _inst_1) (s i) t))
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : SMul.{u1, u2} α β] (s : ι -> (Set.{u1} α)) (t : Set.{u2} β), HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) (SMul.smul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β _inst_1) (Set.iInter.{u1, u3} α ι (fun (i : ι) => s i)) t) (Set.iInter.{u2, u3} β ι (fun (i : ι) => SMul.smul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β _inst_1) (s i) t))
 but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : SMul.{u3, u2} α β] (s : ι -> (Set.{u3} α)) (t : Set.{u2} β), HasSubset.Subset.{u2} (Set.{u2} β) (Set.instHasSubsetSet.{u2} β) (HSMul.hSMul.{u3, u2, u2} (Set.{u3} α) (Set.{u2} β) (Set.{u2} β) (instHSMul.{u3, u2} (Set.{u3} α) (Set.{u2} β) (Set.smul.{u3, u2} α β _inst_1)) (Set.interᵢ.{u3, u1} α ι (fun (i : ι) => s i)) t) (Set.interᵢ.{u2, u1} β ι (fun (i : ι) => HSMul.hSMul.{u3, u2, u2} (Set.{u3} α) (Set.{u2} β) (Set.{u2} β) (instHSMul.{u3, u2} (Set.{u3} α) (Set.{u2} β) (Set.smul.{u3, u2} α β _inst_1)) (s i) t))
-Case conversion may be inaccurate. Consider using '#align set.Inter_smul_subset Set.interᵢ_smul_subsetₓ'. -/
+  forall {α : Type.{u3}} {β : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : SMul.{u3, u2} α β] (s : ι -> (Set.{u3} α)) (t : Set.{u2} β), HasSubset.Subset.{u2} (Set.{u2} β) (Set.instHasSubsetSet.{u2} β) (HSMul.hSMul.{u3, u2, u2} (Set.{u3} α) (Set.{u2} β) (Set.{u2} β) (instHSMul.{u3, u2} (Set.{u3} α) (Set.{u2} β) (Set.smul.{u3, u2} α β _inst_1)) (Set.iInter.{u3, u1} α ι (fun (i : ι) => s i)) t) (Set.iInter.{u2, u1} β ι (fun (i : ι) => HSMul.hSMul.{u3, u2, u2} (Set.{u3} α) (Set.{u2} β) (Set.{u2} β) (instHSMul.{u3, u2} (Set.{u3} α) (Set.{u2} β) (Set.smul.{u3, u2} α β _inst_1)) (s i) t))
+Case conversion may be inaccurate. Consider using '#align set.Inter_smul_subset Set.iInter_smul_subsetₓ'. -/
 @[to_additive]
-theorem interᵢ_smul_subset (s : ι → Set α) (t : Set β) : (⋂ i, s i) • t ⊆ ⋂ i, s i • t :=
-  image2_interᵢ_subset_left _ _ _
-#align set.Inter_smul_subset Set.interᵢ_smul_subset
-#align set.Inter_vadd_subset Set.interᵢ_vadd_subset
+theorem iInter_smul_subset (s : ι → Set α) (t : Set β) : (⋂ i, s i) • t ⊆ ⋂ i, s i • t :=
+  image2_iInter_subset_left _ _ _
+#align set.Inter_smul_subset Set.iInter_smul_subset
+#align set.Inter_vadd_subset Set.iInter_vadd_subset
 
-/- warning: set.smul_Inter_subset -> Set.smul_interᵢ_subset is a dubious translation:
+/- warning: set.smul_Inter_subset -> Set.smul_iInter_subset is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : SMul.{u1, u2} α β] (s : Set.{u1} α) (t : ι -> (Set.{u2} β)), HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) (SMul.smul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β _inst_1) s (Set.interᵢ.{u2, u3} β ι (fun (i : ι) => t i))) (Set.interᵢ.{u2, u3} β ι (fun (i : ι) => SMul.smul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β _inst_1) s (t i)))
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : SMul.{u1, u2} α β] (s : Set.{u1} α) (t : ι -> (Set.{u2} β)), HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) (SMul.smul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β _inst_1) s (Set.iInter.{u2, u3} β ι (fun (i : ι) => t i))) (Set.iInter.{u2, u3} β ι (fun (i : ι) => SMul.smul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β _inst_1) s (t i)))
 but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : SMul.{u3, u2} α β] (s : Set.{u3} α) (t : ι -> (Set.{u2} β)), HasSubset.Subset.{u2} (Set.{u2} β) (Set.instHasSubsetSet.{u2} β) (HSMul.hSMul.{u3, u2, u2} (Set.{u3} α) (Set.{u2} β) (Set.{u2} β) (instHSMul.{u3, u2} (Set.{u3} α) (Set.{u2} β) (Set.smul.{u3, u2} α β _inst_1)) s (Set.interᵢ.{u2, u1} β ι (fun (i : ι) => t i))) (Set.interᵢ.{u2, u1} β ι (fun (i : ι) => HSMul.hSMul.{u3, u2, u2} (Set.{u3} α) (Set.{u2} β) (Set.{u2} β) (instHSMul.{u3, u2} (Set.{u3} α) (Set.{u2} β) (Set.smul.{u3, u2} α β _inst_1)) s (t i)))
-Case conversion may be inaccurate. Consider using '#align set.smul_Inter_subset Set.smul_interᵢ_subsetₓ'. -/
+  forall {α : Type.{u3}} {β : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : SMul.{u3, u2} α β] (s : Set.{u3} α) (t : ι -> (Set.{u2} β)), HasSubset.Subset.{u2} (Set.{u2} β) (Set.instHasSubsetSet.{u2} β) (HSMul.hSMul.{u3, u2, u2} (Set.{u3} α) (Set.{u2} β) (Set.{u2} β) (instHSMul.{u3, u2} (Set.{u3} α) (Set.{u2} β) (Set.smul.{u3, u2} α β _inst_1)) s (Set.iInter.{u2, u1} β ι (fun (i : ι) => t i))) (Set.iInter.{u2, u1} β ι (fun (i : ι) => HSMul.hSMul.{u3, u2, u2} (Set.{u3} α) (Set.{u2} β) (Set.{u2} β) (instHSMul.{u3, u2} (Set.{u3} α) (Set.{u2} β) (Set.smul.{u3, u2} α β _inst_1)) s (t i)))
+Case conversion may be inaccurate. Consider using '#align set.smul_Inter_subset Set.smul_iInter_subsetₓ'. -/
 @[to_additive]
-theorem smul_interᵢ_subset (s : Set α) (t : ι → Set β) : (s • ⋂ i, t i) ⊆ ⋂ i, s • t i :=
-  image2_interᵢ_subset_right _ _ _
-#align set.smul_Inter_subset Set.smul_interᵢ_subset
-#align set.vadd_Inter_subset Set.vadd_interᵢ_subset
+theorem smul_iInter_subset (s : Set α) (t : ι → Set β) : (s • ⋂ i, t i) ⊆ ⋂ i, s • t i :=
+  image2_iInter_subset_right _ _ _
+#align set.smul_Inter_subset Set.smul_iInter_subset
+#align set.vadd_Inter_subset Set.vadd_iInter_subset
 
-/- warning: set.Inter₂_smul_subset -> Set.interᵢ₂_smul_subset is a dubious translation:
+/- warning: set.Inter₂_smul_subset -> Set.iInter₂_smul_subset is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {κ : ι -> Sort.{u4}} [_inst_1 : SMul.{u1, u2} α β] (s : forall (i : ι), (κ i) -> (Set.{u1} α)) (t : Set.{u2} β), HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) (SMul.smul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β _inst_1) (Set.interᵢ.{u1, u3} α ι (fun (i : ι) => Set.interᵢ.{u1, u4} α (κ i) (fun (j : κ i) => s i j))) t) (Set.interᵢ.{u2, u3} β ι (fun (i : ι) => Set.interᵢ.{u2, u4} β (κ i) (fun (j : κ i) => SMul.smul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β _inst_1) (s i j) t)))
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {κ : ι -> Sort.{u4}} [_inst_1 : SMul.{u1, u2} α β] (s : forall (i : ι), (κ i) -> (Set.{u1} α)) (t : Set.{u2} β), HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) (SMul.smul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β _inst_1) (Set.iInter.{u1, u3} α ι (fun (i : ι) => Set.iInter.{u1, u4} α (κ i) (fun (j : κ i) => s i j))) t) (Set.iInter.{u2, u3} β ι (fun (i : ι) => Set.iInter.{u2, u4} β (κ i) (fun (j : κ i) => SMul.smul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β _inst_1) (s i j) t)))
 but is expected to have type
-  forall {α : Type.{u4}} {β : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : SMul.{u4, u3} α β] (s : forall (i : ι), (κ i) -> (Set.{u4} α)) (t : Set.{u3} β), HasSubset.Subset.{u3} (Set.{u3} β) (Set.instHasSubsetSet.{u3} β) (HSMul.hSMul.{u4, u3, u3} (Set.{u4} α) (Set.{u3} β) (Set.{u3} β) (instHSMul.{u4, u3} (Set.{u4} α) (Set.{u3} β) (Set.smul.{u4, u3} α β _inst_1)) (Set.interᵢ.{u4, u2} α ι (fun (i : ι) => Set.interᵢ.{u4, u1} α (κ i) (fun (j : κ i) => s i j))) t) (Set.interᵢ.{u3, u2} β ι (fun (i : ι) => Set.interᵢ.{u3, u1} β (κ i) (fun (j : κ i) => HSMul.hSMul.{u4, u3, u3} (Set.{u4} α) (Set.{u3} β) (Set.{u3} β) (instHSMul.{u4, u3} (Set.{u4} α) (Set.{u3} β) (Set.smul.{u4, u3} α β _inst_1)) (s i j) t)))
-Case conversion may be inaccurate. Consider using '#align set.Inter₂_smul_subset Set.interᵢ₂_smul_subsetₓ'. -/
+  forall {α : Type.{u4}} {β : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : SMul.{u4, u3} α β] (s : forall (i : ι), (κ i) -> (Set.{u4} α)) (t : Set.{u3} β), HasSubset.Subset.{u3} (Set.{u3} β) (Set.instHasSubsetSet.{u3} β) (HSMul.hSMul.{u4, u3, u3} (Set.{u4} α) (Set.{u3} β) (Set.{u3} β) (instHSMul.{u4, u3} (Set.{u4} α) (Set.{u3} β) (Set.smul.{u4, u3} α β _inst_1)) (Set.iInter.{u4, u2} α ι (fun (i : ι) => Set.iInter.{u4, u1} α (κ i) (fun (j : κ i) => s i j))) t) (Set.iInter.{u3, u2} β ι (fun (i : ι) => Set.iInter.{u3, u1} β (κ i) (fun (j : κ i) => HSMul.hSMul.{u4, u3, u3} (Set.{u4} α) (Set.{u3} β) (Set.{u3} β) (instHSMul.{u4, u3} (Set.{u4} α) (Set.{u3} β) (Set.smul.{u4, u3} α β _inst_1)) (s i j) t)))
+Case conversion may be inaccurate. Consider using '#align set.Inter₂_smul_subset Set.iInter₂_smul_subsetₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[to_additive]
-theorem interᵢ₂_smul_subset (s : ∀ i, κ i → Set α) (t : Set β) :
+theorem iInter₂_smul_subset (s : ∀ i, κ i → Set α) (t : Set β) :
     (⋂ (i) (j), s i j) • t ⊆ ⋂ (i) (j), s i j • t :=
-  image2_interᵢ₂_subset_left _ _ _
-#align set.Inter₂_smul_subset Set.interᵢ₂_smul_subset
-#align set.Inter₂_vadd_subset Set.interᵢ₂_vadd_subset
+  image2_iInter₂_subset_left _ _ _
+#align set.Inter₂_smul_subset Set.iInter₂_smul_subset
+#align set.Inter₂_vadd_subset Set.iInter₂_vadd_subset
 
-/- warning: set.smul_Inter₂_subset -> Set.smul_interᵢ₂_subset is a dubious translation:
+/- warning: set.smul_Inter₂_subset -> Set.smul_iInter₂_subset is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {κ : ι -> Sort.{u4}} [_inst_1 : SMul.{u1, u2} α β] (s : Set.{u1} α) (t : forall (i : ι), (κ i) -> (Set.{u2} β)), HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) (SMul.smul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β _inst_1) s (Set.interᵢ.{u2, u3} β ι (fun (i : ι) => Set.interᵢ.{u2, u4} β (κ i) (fun (j : κ i) => t i j)))) (Set.interᵢ.{u2, u3} β ι (fun (i : ι) => Set.interᵢ.{u2, u4} β (κ i) (fun (j : κ i) => SMul.smul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β _inst_1) s (t i j))))
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {κ : ι -> Sort.{u4}} [_inst_1 : SMul.{u1, u2} α β] (s : Set.{u1} α) (t : forall (i : ι), (κ i) -> (Set.{u2} β)), HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) (SMul.smul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β _inst_1) s (Set.iInter.{u2, u3} β ι (fun (i : ι) => Set.iInter.{u2, u4} β (κ i) (fun (j : κ i) => t i j)))) (Set.iInter.{u2, u3} β ι (fun (i : ι) => Set.iInter.{u2, u4} β (κ i) (fun (j : κ i) => SMul.smul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β _inst_1) s (t i j))))
 but is expected to have type
-  forall {α : Type.{u4}} {β : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : SMul.{u4, u3} α β] (s : Set.{u4} α) (t : forall (i : ι), (κ i) -> (Set.{u3} β)), HasSubset.Subset.{u3} (Set.{u3} β) (Set.instHasSubsetSet.{u3} β) (HSMul.hSMul.{u4, u3, u3} (Set.{u4} α) (Set.{u3} β) (Set.{u3} β) (instHSMul.{u4, u3} (Set.{u4} α) (Set.{u3} β) (Set.smul.{u4, u3} α β _inst_1)) s (Set.interᵢ.{u3, u2} β ι (fun (i : ι) => Set.interᵢ.{u3, u1} β (κ i) (fun (j : κ i) => t i j)))) (Set.interᵢ.{u3, u2} β ι (fun (i : ι) => Set.interᵢ.{u3, u1} β (κ i) (fun (j : κ i) => HSMul.hSMul.{u4, u3, u3} (Set.{u4} α) (Set.{u3} β) (Set.{u3} β) (instHSMul.{u4, u3} (Set.{u4} α) (Set.{u3} β) (Set.smul.{u4, u3} α β _inst_1)) s (t i j))))
-Case conversion may be inaccurate. Consider using '#align set.smul_Inter₂_subset Set.smul_interᵢ₂_subsetₓ'. -/
+  forall {α : Type.{u4}} {β : Type.{u3}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : SMul.{u4, u3} α β] (s : Set.{u4} α) (t : forall (i : ι), (κ i) -> (Set.{u3} β)), HasSubset.Subset.{u3} (Set.{u3} β) (Set.instHasSubsetSet.{u3} β) (HSMul.hSMul.{u4, u3, u3} (Set.{u4} α) (Set.{u3} β) (Set.{u3} β) (instHSMul.{u4, u3} (Set.{u4} α) (Set.{u3} β) (Set.smul.{u4, u3} α β _inst_1)) s (Set.iInter.{u3, u2} β ι (fun (i : ι) => Set.iInter.{u3, u1} β (κ i) (fun (j : κ i) => t i j)))) (Set.iInter.{u3, u2} β ι (fun (i : ι) => Set.iInter.{u3, u1} β (κ i) (fun (j : κ i) => HSMul.hSMul.{u4, u3, u3} (Set.{u4} α) (Set.{u3} β) (Set.{u3} β) (instHSMul.{u4, u3} (Set.{u4} α) (Set.{u3} β) (Set.smul.{u4, u3} α β _inst_1)) s (t i j))))
+Case conversion may be inaccurate. Consider using '#align set.smul_Inter₂_subset Set.smul_iInter₂_subsetₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[to_additive]
-theorem smul_interᵢ₂_subset (s : Set α) (t : ∀ i, κ i → Set β) :
+theorem smul_iInter₂_subset (s : Set α) (t : ∀ i, κ i → Set β) :
     (s • ⋂ (i) (j), t i j) ⊆ ⋂ (i) (j), s • t i j :=
-  image2_interᵢ₂_subset_right _ _ _
-#align set.smul_Inter₂_subset Set.smul_interᵢ₂_subset
-#align set.vadd_Inter₂_subset Set.vadd_interᵢ₂_subset
+  image2_iInter₂_subset_right _ _ _
+#align set.smul_Inter₂_subset Set.smul_iInter₂_subset
+#align set.vadd_Inter₂_subset Set.vadd_iInter₂_subset
 
 /- warning: set.smul_set_subset_smul -> Set.smul_set_subset_smul is a dubious translation:
 lean 3 declaration is
@@ -458,17 +458,17 @@ theorem smul_set_subset_smul {s : Set α} : a ∈ s → a • t ⊆ s • t :=
 #align set.smul_set_subset_smul Set.smul_set_subset_smul
 #align set.vadd_set_subset_vadd Set.vadd_set_subset_vadd
 
-/- warning: set.bUnion_smul_set -> Set.unionᵢ_smul_set is a dubious translation:
+/- warning: set.bUnion_smul_set -> Set.iUnion_smul_set is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u2} α β] (s : Set.{u1} α) (t : Set.{u2} β), Eq.{succ u2} (Set.{u2} β) (Set.unionᵢ.{u2, succ u1} β α (fun (a : α) => Set.unionᵢ.{u2, 0} β (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) => SMul.smul.{u1, u2} α (Set.{u2} β) (Set.smulSet.{u1, u2} α β _inst_1) a t))) (SMul.smul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β _inst_1) s t)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u2} α β] (s : Set.{u1} α) (t : Set.{u2} β), Eq.{succ u2} (Set.{u2} β) (Set.iUnion.{u2, succ u1} β α (fun (a : α) => Set.iUnion.{u2, 0} β (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) => SMul.smul.{u1, u2} α (Set.{u2} β) (Set.smulSet.{u1, u2} α β _inst_1) a t))) (SMul.smul.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.smul.{u1, u2} α β _inst_1) s t)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : SMul.{u2, u1} α β] (s : Set.{u2} α) (t : Set.{u1} β), Eq.{succ u1} (Set.{u1} β) (Set.unionᵢ.{u1, succ u2} β α (fun (a : α) => Set.unionᵢ.{u1, 0} β (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s) (fun (H : Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s) => HSMul.hSMul.{u2, u1, u1} α (Set.{u1} β) (Set.{u1} β) (instHSMul.{u2, u1} α (Set.{u1} β) (Set.smulSet.{u2, u1} α β _inst_1)) a t))) (HSMul.hSMul.{u2, u1, u1} (Set.{u2} α) (Set.{u1} β) (Set.{u1} β) (instHSMul.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Set.smul.{u2, u1} α β _inst_1)) s t)
-Case conversion may be inaccurate. Consider using '#align set.bUnion_smul_set Set.unionᵢ_smul_setₓ'. -/
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : SMul.{u2, u1} α β] (s : Set.{u2} α) (t : Set.{u1} β), Eq.{succ u1} (Set.{u1} β) (Set.iUnion.{u1, succ u2} β α (fun (a : α) => Set.iUnion.{u1, 0} β (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s) (fun (H : Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s) => HSMul.hSMul.{u2, u1, u1} α (Set.{u1} β) (Set.{u1} β) (instHSMul.{u2, u1} α (Set.{u1} β) (Set.smulSet.{u2, u1} α β _inst_1)) a t))) (HSMul.hSMul.{u2, u1, u1} (Set.{u2} α) (Set.{u1} β) (Set.{u1} β) (instHSMul.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Set.smul.{u2, u1} α β _inst_1)) s t)
+Case conversion may be inaccurate. Consider using '#align set.bUnion_smul_set Set.iUnion_smul_setₓ'. -/
 @[simp, to_additive]
-theorem unionᵢ_smul_set (s : Set α) (t : Set β) : (⋃ a ∈ s, a • t) = s • t :=
-  unionᵢ_image_left _
-#align set.bUnion_smul_set Set.unionᵢ_smul_set
-#align set.bUnion_vadd_set Set.unionᵢ_vadd_set
+theorem iUnion_smul_set (s : Set α) (t : Set β) : (⋃ a ∈ s, a • t) = s • t :=
+  iUnion_image_left _
+#align set.bUnion_smul_set Set.iUnion_smul_set
+#align set.bUnion_vadd_set Set.iUnion_vadd_set
 
 end SMul
 
@@ -574,57 +574,57 @@ theorem smul_set_inter_subset : a • (t₁ ∩ t₂) ⊆ a • t₁ ∩ a • t
 
 /- warning: set.smul_set_Union -> Set.smul_set_Union is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : SMul.{u1, u2} α β] (a : α) (s : ι -> (Set.{u2} β)), Eq.{succ u2} (Set.{u2} β) (SMul.smul.{u1, u2} α (Set.{u2} β) (Set.smulSet.{u1, u2} α β _inst_1) a (Set.unionᵢ.{u2, u3} β ι (fun (i : ι) => s i))) (Set.unionᵢ.{u2, u3} β ι (fun (i : ι) => SMul.smul.{u1, u2} α (Set.{u2} β) (Set.smulSet.{u1, u2} α β _inst_1) a (s i)))
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : SMul.{u1, u2} α β] (a : α) (s : ι -> (Set.{u2} β)), Eq.{succ u2} (Set.{u2} β) (SMul.smul.{u1, u2} α (Set.{u2} β) (Set.smulSet.{u1, u2} α β _inst_1) a (Set.iUnion.{u2, u3} β ι (fun (i : ι) => s i))) (Set.iUnion.{u2, u3} β ι (fun (i : ι) => SMul.smul.{u1, u2} α (Set.{u2} β) (Set.smulSet.{u1, u2} α β _inst_1) a (s i)))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} {ι : Sort.{u1}} [_inst_1 : SMul.{u2, u3} α β] (a : α) (s : ι -> (Set.{u3} β)), Eq.{succ u3} (Set.{u3} β) (HSMul.hSMul.{u2, u3, u3} α (Set.{u3} β) (Set.{u3} β) (instHSMul.{u2, u3} α (Set.{u3} β) (Set.smulSet.{u2, u3} α β _inst_1)) a (Set.unionᵢ.{u3, u1} β ι (fun (i : ι) => s i))) (Set.unionᵢ.{u3, u1} β ι (fun (i : ι) => HSMul.hSMul.{u2, u3, u3} α (Set.{u3} β) (Set.{u3} β) (instHSMul.{u2, u3} α (Set.{u3} β) (Set.smulSet.{u2, u3} α β _inst_1)) a (s i)))
+  forall {α : Type.{u2}} {β : Type.{u3}} {ι : Sort.{u1}} [_inst_1 : SMul.{u2, u3} α β] (a : α) (s : ι -> (Set.{u3} β)), Eq.{succ u3} (Set.{u3} β) (HSMul.hSMul.{u2, u3, u3} α (Set.{u3} β) (Set.{u3} β) (instHSMul.{u2, u3} α (Set.{u3} β) (Set.smulSet.{u2, u3} α β _inst_1)) a (Set.iUnion.{u3, u1} β ι (fun (i : ι) => s i))) (Set.iUnion.{u3, u1} β ι (fun (i : ι) => HSMul.hSMul.{u2, u3, u3} α (Set.{u3} β) (Set.{u3} β) (instHSMul.{u2, u3} α (Set.{u3} β) (Set.smulSet.{u2, u3} α β _inst_1)) a (s i)))
 Case conversion may be inaccurate. Consider using '#align set.smul_set_Union Set.smul_set_Unionₓ'. -/
 @[to_additive]
 theorem smul_set_Union (a : α) (s : ι → Set β) : (a • ⋃ i, s i) = ⋃ i, a • s i :=
-  image_unionᵢ
+  image_iUnion
 #align set.smul_set_Union Set.smul_set_Union
 #align set.vadd_set_Union Set.vadd_set_Union
 
-/- warning: set.smul_set_Union₂ -> Set.smul_set_unionᵢ₂ is a dubious translation:
+/- warning: set.smul_set_Union₂ -> Set.smul_set_iUnion₂ is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {κ : ι -> Sort.{u4}} [_inst_1 : SMul.{u1, u2} α β] (a : α) (s : forall (i : ι), (κ i) -> (Set.{u2} β)), Eq.{succ u2} (Set.{u2} β) (SMul.smul.{u1, u2} α (Set.{u2} β) (Set.smulSet.{u1, u2} α β _inst_1) a (Set.unionᵢ.{u2, u3} β ι (fun (i : ι) => Set.unionᵢ.{u2, u4} β (κ i) (fun (j : κ i) => s i j)))) (Set.unionᵢ.{u2, u3} β ι (fun (i : ι) => Set.unionᵢ.{u2, u4} β (κ i) (fun (j : κ i) => SMul.smul.{u1, u2} α (Set.{u2} β) (Set.smulSet.{u1, u2} α β _inst_1) a (s i j))))
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {κ : ι -> Sort.{u4}} [_inst_1 : SMul.{u1, u2} α β] (a : α) (s : forall (i : ι), (κ i) -> (Set.{u2} β)), Eq.{succ u2} (Set.{u2} β) (SMul.smul.{u1, u2} α (Set.{u2} β) (Set.smulSet.{u1, u2} α β _inst_1) a (Set.iUnion.{u2, u3} β ι (fun (i : ι) => Set.iUnion.{u2, u4} β (κ i) (fun (j : κ i) => s i j)))) (Set.iUnion.{u2, u3} β ι (fun (i : ι) => Set.iUnion.{u2, u4} β (κ i) (fun (j : κ i) => SMul.smul.{u1, u2} α (Set.{u2} β) (Set.smulSet.{u1, u2} α β _inst_1) a (s i j))))
 but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u4}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : SMul.{u3, u4} α β] (a : α) (s : forall (i : ι), (κ i) -> (Set.{u4} β)), Eq.{succ u4} (Set.{u4} β) (HSMul.hSMul.{u3, u4, u4} α (Set.{u4} β) (Set.{u4} β) (instHSMul.{u3, u4} α (Set.{u4} β) (Set.smulSet.{u3, u4} α β _inst_1)) a (Set.unionᵢ.{u4, u2} β ι (fun (i : ι) => Set.unionᵢ.{u4, u1} β (κ i) (fun (j : κ i) => s i j)))) (Set.unionᵢ.{u4, u2} β ι (fun (i : ι) => Set.unionᵢ.{u4, u1} β (κ i) (fun (j : κ i) => HSMul.hSMul.{u3, u4, u4} α (Set.{u4} β) (Set.{u4} β) (instHSMul.{u3, u4} α (Set.{u4} β) (Set.smulSet.{u3, u4} α β _inst_1)) a (s i j))))
-Case conversion may be inaccurate. Consider using '#align set.smul_set_Union₂ Set.smul_set_unionᵢ₂ₓ'. -/
+  forall {α : Type.{u3}} {β : Type.{u4}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : SMul.{u3, u4} α β] (a : α) (s : forall (i : ι), (κ i) -> (Set.{u4} β)), Eq.{succ u4} (Set.{u4} β) (HSMul.hSMul.{u3, u4, u4} α (Set.{u4} β) (Set.{u4} β) (instHSMul.{u3, u4} α (Set.{u4} β) (Set.smulSet.{u3, u4} α β _inst_1)) a (Set.iUnion.{u4, u2} β ι (fun (i : ι) => Set.iUnion.{u4, u1} β (κ i) (fun (j : κ i) => s i j)))) (Set.iUnion.{u4, u2} β ι (fun (i : ι) => Set.iUnion.{u4, u1} β (κ i) (fun (j : κ i) => HSMul.hSMul.{u3, u4, u4} α (Set.{u4} β) (Set.{u4} β) (instHSMul.{u3, u4} α (Set.{u4} β) (Set.smulSet.{u3, u4} α β _inst_1)) a (s i j))))
+Case conversion may be inaccurate. Consider using '#align set.smul_set_Union₂ Set.smul_set_iUnion₂ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[to_additive]
-theorem smul_set_unionᵢ₂ (a : α) (s : ∀ i, κ i → Set β) :
+theorem smul_set_iUnion₂ (a : α) (s : ∀ i, κ i → Set β) :
     (a • ⋃ (i) (j), s i j) = ⋃ (i) (j), a • s i j :=
-  image_unionᵢ₂ _ _
-#align set.smul_set_Union₂ Set.smul_set_unionᵢ₂
-#align set.vadd_set_Union₂ Set.vadd_set_unionᵢ₂
+  image_iUnion₂ _ _
+#align set.smul_set_Union₂ Set.smul_set_iUnion₂
+#align set.vadd_set_Union₂ Set.vadd_set_iUnion₂
 
-/- warning: set.smul_set_Inter_subset -> Set.smul_set_interᵢ_subset is a dubious translation:
+/- warning: set.smul_set_Inter_subset -> Set.smul_set_iInter_subset is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : SMul.{u1, u2} α β] (a : α) (t : ι -> (Set.{u2} β)), HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) (SMul.smul.{u1, u2} α (Set.{u2} β) (Set.smulSet.{u1, u2} α β _inst_1) a (Set.interᵢ.{u2, u3} β ι (fun (i : ι) => t i))) (Set.interᵢ.{u2, u3} β ι (fun (i : ι) => SMul.smul.{u1, u2} α (Set.{u2} β) (Set.smulSet.{u1, u2} α β _inst_1) a (t i)))
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : SMul.{u1, u2} α β] (a : α) (t : ι -> (Set.{u2} β)), HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) (SMul.smul.{u1, u2} α (Set.{u2} β) (Set.smulSet.{u1, u2} α β _inst_1) a (Set.iInter.{u2, u3} β ι (fun (i : ι) => t i))) (Set.iInter.{u2, u3} β ι (fun (i : ι) => SMul.smul.{u1, u2} α (Set.{u2} β) (Set.smulSet.{u1, u2} α β _inst_1) a (t i)))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} {ι : Sort.{u1}} [_inst_1 : SMul.{u2, u3} α β] (a : α) (t : ι -> (Set.{u3} β)), HasSubset.Subset.{u3} (Set.{u3} β) (Set.instHasSubsetSet.{u3} β) (HSMul.hSMul.{u2, u3, u3} α (Set.{u3} β) (Set.{u3} β) (instHSMul.{u2, u3} α (Set.{u3} β) (Set.smulSet.{u2, u3} α β _inst_1)) a (Set.interᵢ.{u3, u1} β ι (fun (i : ι) => t i))) (Set.interᵢ.{u3, u1} β ι (fun (i : ι) => HSMul.hSMul.{u2, u3, u3} α (Set.{u3} β) (Set.{u3} β) (instHSMul.{u2, u3} α (Set.{u3} β) (Set.smulSet.{u2, u3} α β _inst_1)) a (t i)))
-Case conversion may be inaccurate. Consider using '#align set.smul_set_Inter_subset Set.smul_set_interᵢ_subsetₓ'. -/
+  forall {α : Type.{u2}} {β : Type.{u3}} {ι : Sort.{u1}} [_inst_1 : SMul.{u2, u3} α β] (a : α) (t : ι -> (Set.{u3} β)), HasSubset.Subset.{u3} (Set.{u3} β) (Set.instHasSubsetSet.{u3} β) (HSMul.hSMul.{u2, u3, u3} α (Set.{u3} β) (Set.{u3} β) (instHSMul.{u2, u3} α (Set.{u3} β) (Set.smulSet.{u2, u3} α β _inst_1)) a (Set.iInter.{u3, u1} β ι (fun (i : ι) => t i))) (Set.iInter.{u3, u1} β ι (fun (i : ι) => HSMul.hSMul.{u2, u3, u3} α (Set.{u3} β) (Set.{u3} β) (instHSMul.{u2, u3} α (Set.{u3} β) (Set.smulSet.{u2, u3} α β _inst_1)) a (t i)))
+Case conversion may be inaccurate. Consider using '#align set.smul_set_Inter_subset Set.smul_set_iInter_subsetₓ'. -/
 @[to_additive]
-theorem smul_set_interᵢ_subset (a : α) (t : ι → Set β) : (a • ⋂ i, t i) ⊆ ⋂ i, a • t i :=
-  image_interᵢ_subset _ _
-#align set.smul_set_Inter_subset Set.smul_set_interᵢ_subset
-#align set.vadd_set_Inter_subset Set.vadd_set_interᵢ_subset
+theorem smul_set_iInter_subset (a : α) (t : ι → Set β) : (a • ⋂ i, t i) ⊆ ⋂ i, a • t i :=
+  image_iInter_subset _ _
+#align set.smul_set_Inter_subset Set.smul_set_iInter_subset
+#align set.vadd_set_Inter_subset Set.vadd_set_iInter_subset
 
-/- warning: set.smul_set_Inter₂_subset -> Set.smul_set_interᵢ₂_subset is a dubious translation:
+/- warning: set.smul_set_Inter₂_subset -> Set.smul_set_iInter₂_subset is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {κ : ι -> Sort.{u4}} [_inst_1 : SMul.{u1, u2} α β] (a : α) (t : forall (i : ι), (κ i) -> (Set.{u2} β)), HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) (SMul.smul.{u1, u2} α (Set.{u2} β) (Set.smulSet.{u1, u2} α β _inst_1) a (Set.interᵢ.{u2, u3} β ι (fun (i : ι) => Set.interᵢ.{u2, u4} β (κ i) (fun (j : κ i) => t i j)))) (Set.interᵢ.{u2, u3} β ι (fun (i : ι) => Set.interᵢ.{u2, u4} β (κ i) (fun (j : κ i) => SMul.smul.{u1, u2} α (Set.{u2} β) (Set.smulSet.{u1, u2} α β _inst_1) a (t i j))))
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {κ : ι -> Sort.{u4}} [_inst_1 : SMul.{u1, u2} α β] (a : α) (t : forall (i : ι), (κ i) -> (Set.{u2} β)), HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) (SMul.smul.{u1, u2} α (Set.{u2} β) (Set.smulSet.{u1, u2} α β _inst_1) a (Set.iInter.{u2, u3} β ι (fun (i : ι) => Set.iInter.{u2, u4} β (κ i) (fun (j : κ i) => t i j)))) (Set.iInter.{u2, u3} β ι (fun (i : ι) => Set.iInter.{u2, u4} β (κ i) (fun (j : κ i) => SMul.smul.{u1, u2} α (Set.{u2} β) (Set.smulSet.{u1, u2} α β _inst_1) a (t i j))))
 but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u4}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : SMul.{u3, u4} α β] (a : α) (t : forall (i : ι), (κ i) -> (Set.{u4} β)), HasSubset.Subset.{u4} (Set.{u4} β) (Set.instHasSubsetSet.{u4} β) (HSMul.hSMul.{u3, u4, u4} α (Set.{u4} β) (Set.{u4} β) (instHSMul.{u3, u4} α (Set.{u4} β) (Set.smulSet.{u3, u4} α β _inst_1)) a (Set.interᵢ.{u4, u2} β ι (fun (i : ι) => Set.interᵢ.{u4, u1} β (κ i) (fun (j : κ i) => t i j)))) (Set.interᵢ.{u4, u2} β ι (fun (i : ι) => Set.interᵢ.{u4, u1} β (κ i) (fun (j : κ i) => HSMul.hSMul.{u3, u4, u4} α (Set.{u4} β) (Set.{u4} β) (instHSMul.{u3, u4} α (Set.{u4} β) (Set.smulSet.{u3, u4} α β _inst_1)) a (t i j))))
-Case conversion may be inaccurate. Consider using '#align set.smul_set_Inter₂_subset Set.smul_set_interᵢ₂_subsetₓ'. -/
+  forall {α : Type.{u3}} {β : Type.{u4}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : SMul.{u3, u4} α β] (a : α) (t : forall (i : ι), (κ i) -> (Set.{u4} β)), HasSubset.Subset.{u4} (Set.{u4} β) (Set.instHasSubsetSet.{u4} β) (HSMul.hSMul.{u3, u4, u4} α (Set.{u4} β) (Set.{u4} β) (instHSMul.{u3, u4} α (Set.{u4} β) (Set.smulSet.{u3, u4} α β _inst_1)) a (Set.iInter.{u4, u2} β ι (fun (i : ι) => Set.iInter.{u4, u1} β (κ i) (fun (j : κ i) => t i j)))) (Set.iInter.{u4, u2} β ι (fun (i : ι) => Set.iInter.{u4, u1} β (κ i) (fun (j : κ i) => HSMul.hSMul.{u3, u4, u4} α (Set.{u4} β) (Set.{u4} β) (instHSMul.{u3, u4} α (Set.{u4} β) (Set.smulSet.{u3, u4} α β _inst_1)) a (t i j))))
+Case conversion may be inaccurate. Consider using '#align set.smul_set_Inter₂_subset Set.smul_set_iInter₂_subsetₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[to_additive]
-theorem smul_set_interᵢ₂_subset (a : α) (t : ∀ i, κ i → Set β) :
+theorem smul_set_iInter₂_subset (a : α) (t : ∀ i, κ i → Set β) :
     (a • ⋂ (i) (j), t i j) ⊆ ⋂ (i) (j), a • t i j :=
-  image_interᵢ₂_subset _ _
-#align set.smul_set_Inter₂_subset Set.smul_set_interᵢ₂_subset
-#align set.vadd_set_Inter₂_subset Set.vadd_set_interᵢ₂_subset
+  image_iInter₂_subset _ _
+#align set.smul_set_Inter₂_subset Set.smul_set_iInter₂_subset
+#align set.vadd_set_Inter₂_subset Set.vadd_set_iInter₂_subset
 
 #print Set.Nonempty.smul_set /-
 @[to_additive]
@@ -648,12 +648,12 @@ theorem op_smul_set_subset_mul : a ∈ t → op a • s ⊆ s * t :=
 #align set.op_vadd_set_subset_add Set.op_vadd_set_subset_add
 -/
 
-#print Set.unionᵢ_op_smul_set /-
+#print Set.iUnion_op_smul_set /-
 @[simp, to_additive]
-theorem unionᵢ_op_smul_set (s t : Set α) : (⋃ a ∈ t, op a • s) = s * t :=
-  unionᵢ_image_right _
-#align set.bUnion_op_smul_set Set.unionᵢ_op_smul_set
-#align set.bUnion_op_vadd_set Set.unionᵢ_op_vadd_set
+theorem iUnion_op_smul_set (s t : Set α) : (⋃ a ∈ t, op a • s) = s * t :=
+  iUnion_image_right _
+#align set.bUnion_op_smul_set Set.iUnion_op_smul_set
+#align set.bUnion_op_vadd_set Set.iUnion_op_vadd_set
 -/
 
 #print Set.mul_subset_iff_left /-
@@ -1091,117 +1091,117 @@ theorem union_vsub_inter_subset_union : s₁ ∪ s₂ -ᵥ t₁ ∩ t₂ ⊆ s�
   image2_union_inter_subset_union
 #align set.union_vsub_inter_subset_union Set.union_vsub_inter_subset_union
 
-/- warning: set.Union_vsub_left_image -> Set.unionᵢ_vsub_left_image is a dubious translation:
+/- warning: set.Union_vsub_left_image -> Set.iUnion_vsub_left_image is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : VSub.{u1, u2} α β] {s : Set.{u2} β} {t : Set.{u2} β}, Eq.{succ u1} (Set.{u1} α) (Set.unionᵢ.{u1, succ u2} α β (fun (a : β) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) a s) (fun (H : Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) a s) => Set.image.{u2, u1} β α (VSub.vsub.{u1, u2} α β _inst_1 a) t))) (VSub.vsub.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.vsub.{u1, u2} α β _inst_1) s t)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : VSub.{u1, u2} α β] {s : Set.{u2} β} {t : Set.{u2} β}, Eq.{succ u1} (Set.{u1} α) (Set.iUnion.{u1, succ u2} α β (fun (a : β) => Set.iUnion.{u1, 0} α (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) a s) (fun (H : Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) a s) => Set.image.{u2, u1} β α (VSub.vsub.{u1, u2} α β _inst_1 a) t))) (VSub.vsub.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.vsub.{u1, u2} α β _inst_1) s t)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : VSub.{u2, u1} α β] {s : Set.{u1} β} {t : Set.{u1} β}, Eq.{succ u2} (Set.{u2} α) (Set.unionᵢ.{u2, succ u1} α β (fun (a : β) => Set.unionᵢ.{u2, 0} α (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) a s) (fun (H : Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) a s) => Set.image.{u1, u2} β α ((fun (x._@.Mathlib.Data.Set.Pointwise.SMul._hyg.6862 : β) (x._@.Mathlib.Data.Set.Pointwise.SMul._hyg.6864 : β) => VSub.vsub.{u2, u1} α β _inst_1 x._@.Mathlib.Data.Set.Pointwise.SMul._hyg.6862 x._@.Mathlib.Data.Set.Pointwise.SMul._hyg.6864) a) t))) (VSub.vsub.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Set.vsub.{u2, u1} α β _inst_1) s t)
-Case conversion may be inaccurate. Consider using '#align set.Union_vsub_left_image Set.unionᵢ_vsub_left_imageₓ'. -/
-theorem unionᵢ_vsub_left_image : (⋃ a ∈ s, (· -ᵥ ·) a '' t) = s -ᵥ t :=
-  unionᵢ_image_left _
-#align set.Union_vsub_left_image Set.unionᵢ_vsub_left_image
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : VSub.{u2, u1} α β] {s : Set.{u1} β} {t : Set.{u1} β}, Eq.{succ u2} (Set.{u2} α) (Set.iUnion.{u2, succ u1} α β (fun (a : β) => Set.iUnion.{u2, 0} α (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) a s) (fun (H : Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) a s) => Set.image.{u1, u2} β α ((fun (x._@.Mathlib.Data.Set.Pointwise.SMul._hyg.6862 : β) (x._@.Mathlib.Data.Set.Pointwise.SMul._hyg.6864 : β) => VSub.vsub.{u2, u1} α β _inst_1 x._@.Mathlib.Data.Set.Pointwise.SMul._hyg.6862 x._@.Mathlib.Data.Set.Pointwise.SMul._hyg.6864) a) t))) (VSub.vsub.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Set.vsub.{u2, u1} α β _inst_1) s t)
+Case conversion may be inaccurate. Consider using '#align set.Union_vsub_left_image Set.iUnion_vsub_left_imageₓ'. -/
+theorem iUnion_vsub_left_image : (⋃ a ∈ s, (· -ᵥ ·) a '' t) = s -ᵥ t :=
+  iUnion_image_left _
+#align set.Union_vsub_left_image Set.iUnion_vsub_left_image
 
-/- warning: set.Union_vsub_right_image -> Set.unionᵢ_vsub_right_image is a dubious translation:
+/- warning: set.Union_vsub_right_image -> Set.iUnion_vsub_right_image is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : VSub.{u1, u2} α β] {s : Set.{u2} β} {t : Set.{u2} β}, Eq.{succ u1} (Set.{u1} α) (Set.unionᵢ.{u1, succ u2} α β (fun (a : β) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) a t) (fun (H : Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) a t) => Set.image.{u2, u1} β α (fun (_x : β) => VSub.vsub.{u1, u2} α β _inst_1 _x a) s))) (VSub.vsub.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.vsub.{u1, u2} α β _inst_1) s t)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : VSub.{u1, u2} α β] {s : Set.{u2} β} {t : Set.{u2} β}, Eq.{succ u1} (Set.{u1} α) (Set.iUnion.{u1, succ u2} α β (fun (a : β) => Set.iUnion.{u1, 0} α (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) a t) (fun (H : Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) a t) => Set.image.{u2, u1} β α (fun (_x : β) => VSub.vsub.{u1, u2} α β _inst_1 _x a) s))) (VSub.vsub.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.vsub.{u1, u2} α β _inst_1) s t)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : VSub.{u2, u1} α β] {s : Set.{u1} β} {t : Set.{u1} β}, Eq.{succ u2} (Set.{u2} α) (Set.unionᵢ.{u2, succ u1} α β (fun (a : β) => Set.unionᵢ.{u2, 0} α (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) a t) (fun (H : Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) a t) => Set.image.{u1, u2} β α (fun (_x : β) => VSub.vsub.{u2, u1} α β _inst_1 _x a) s))) (VSub.vsub.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Set.vsub.{u2, u1} α β _inst_1) s t)
-Case conversion may be inaccurate. Consider using '#align set.Union_vsub_right_image Set.unionᵢ_vsub_right_imageₓ'. -/
-theorem unionᵢ_vsub_right_image : (⋃ a ∈ t, (· -ᵥ a) '' s) = s -ᵥ t :=
-  unionᵢ_image_right _
-#align set.Union_vsub_right_image Set.unionᵢ_vsub_right_image
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : VSub.{u2, u1} α β] {s : Set.{u1} β} {t : Set.{u1} β}, Eq.{succ u2} (Set.{u2} α) (Set.iUnion.{u2, succ u1} α β (fun (a : β) => Set.iUnion.{u2, 0} α (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) a t) (fun (H : Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) a t) => Set.image.{u1, u2} β α (fun (_x : β) => VSub.vsub.{u2, u1} α β _inst_1 _x a) s))) (VSub.vsub.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Set.vsub.{u2, u1} α β _inst_1) s t)
+Case conversion may be inaccurate. Consider using '#align set.Union_vsub_right_image Set.iUnion_vsub_right_imageₓ'. -/
+theorem iUnion_vsub_right_image : (⋃ a ∈ t, (· -ᵥ a) '' s) = s -ᵥ t :=
+  iUnion_image_right _
+#align set.Union_vsub_right_image Set.iUnion_vsub_right_image
 
-/- warning: set.Union_vsub -> Set.unionᵢ_vsub is a dubious translation:
+/- warning: set.Union_vsub -> Set.iUnion_vsub is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : VSub.{u1, u2} α β] (s : ι -> (Set.{u2} β)) (t : Set.{u2} β), Eq.{succ u1} (Set.{u1} α) (VSub.vsub.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.vsub.{u1, u2} α β _inst_1) (Set.unionᵢ.{u2, u3} β ι (fun (i : ι) => s i)) t) (Set.unionᵢ.{u1, u3} α ι (fun (i : ι) => VSub.vsub.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.vsub.{u1, u2} α β _inst_1) (s i) t))
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : VSub.{u1, u2} α β] (s : ι -> (Set.{u2} β)) (t : Set.{u2} β), Eq.{succ u1} (Set.{u1} α) (VSub.vsub.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.vsub.{u1, u2} α β _inst_1) (Set.iUnion.{u2, u3} β ι (fun (i : ι) => s i)) t) (Set.iUnion.{u1, u3} α ι (fun (i : ι) => VSub.vsub.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.vsub.{u1, u2} α β _inst_1) (s i) t))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} {ι : Sort.{u1}} [_inst_1 : VSub.{u2, u3} α β] (s : ι -> (Set.{u3} β)) (t : Set.{u3} β), Eq.{succ u2} (Set.{u2} α) (VSub.vsub.{u2, u3} (Set.{u2} α) (Set.{u3} β) (Set.vsub.{u2, u3} α β _inst_1) (Set.unionᵢ.{u3, u1} β ι (fun (i : ι) => s i)) t) (Set.unionᵢ.{u2, u1} α ι (fun (i : ι) => VSub.vsub.{u2, u3} (Set.{u2} α) (Set.{u3} β) (Set.vsub.{u2, u3} α β _inst_1) (s i) t))
-Case conversion may be inaccurate. Consider using '#align set.Union_vsub Set.unionᵢ_vsubₓ'. -/
-theorem unionᵢ_vsub (s : ι → Set β) (t : Set β) : (⋃ i, s i) -ᵥ t = ⋃ i, s i -ᵥ t :=
-  image2_unionᵢ_left _ _ _
-#align set.Union_vsub Set.unionᵢ_vsub
+  forall {α : Type.{u2}} {β : Type.{u3}} {ι : Sort.{u1}} [_inst_1 : VSub.{u2, u3} α β] (s : ι -> (Set.{u3} β)) (t : Set.{u3} β), Eq.{succ u2} (Set.{u2} α) (VSub.vsub.{u2, u3} (Set.{u2} α) (Set.{u3} β) (Set.vsub.{u2, u3} α β _inst_1) (Set.iUnion.{u3, u1} β ι (fun (i : ι) => s i)) t) (Set.iUnion.{u2, u1} α ι (fun (i : ι) => VSub.vsub.{u2, u3} (Set.{u2} α) (Set.{u3} β) (Set.vsub.{u2, u3} α β _inst_1) (s i) t))
+Case conversion may be inaccurate. Consider using '#align set.Union_vsub Set.iUnion_vsubₓ'. -/
+theorem iUnion_vsub (s : ι → Set β) (t : Set β) : (⋃ i, s i) -ᵥ t = ⋃ i, s i -ᵥ t :=
+  image2_iUnion_left _ _ _
+#align set.Union_vsub Set.iUnion_vsub
 
-/- warning: set.vsub_Union -> Set.vsub_unionᵢ is a dubious translation:
+/- warning: set.vsub_Union -> Set.vsub_iUnion is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : VSub.{u1, u2} α β] (s : Set.{u2} β) (t : ι -> (Set.{u2} β)), Eq.{succ u1} (Set.{u1} α) (VSub.vsub.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.vsub.{u1, u2} α β _inst_1) s (Set.unionᵢ.{u2, u3} β ι (fun (i : ι) => t i))) (Set.unionᵢ.{u1, u3} α ι (fun (i : ι) => VSub.vsub.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.vsub.{u1, u2} α β _inst_1) s (t i)))
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : VSub.{u1, u2} α β] (s : Set.{u2} β) (t : ι -> (Set.{u2} β)), Eq.{succ u1} (Set.{u1} α) (VSub.vsub.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.vsub.{u1, u2} α β _inst_1) s (Set.iUnion.{u2, u3} β ι (fun (i : ι) => t i))) (Set.iUnion.{u1, u3} α ι (fun (i : ι) => VSub.vsub.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.vsub.{u1, u2} α β _inst_1) s (t i)))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} {ι : Sort.{u1}} [_inst_1 : VSub.{u2, u3} α β] (s : Set.{u3} β) (t : ι -> (Set.{u3} β)), Eq.{succ u2} (Set.{u2} α) (VSub.vsub.{u2, u3} (Set.{u2} α) (Set.{u3} β) (Set.vsub.{u2, u3} α β _inst_1) s (Set.unionᵢ.{u3, u1} β ι (fun (i : ι) => t i))) (Set.unionᵢ.{u2, u1} α ι (fun (i : ι) => VSub.vsub.{u2, u3} (Set.{u2} α) (Set.{u3} β) (Set.vsub.{u2, u3} α β _inst_1) s (t i)))
-Case conversion may be inaccurate. Consider using '#align set.vsub_Union Set.vsub_unionᵢₓ'. -/
-theorem vsub_unionᵢ (s : Set β) (t : ι → Set β) : (s -ᵥ ⋃ i, t i) = ⋃ i, s -ᵥ t i :=
-  image2_unionᵢ_right _ _ _
-#align set.vsub_Union Set.vsub_unionᵢ
+  forall {α : Type.{u2}} {β : Type.{u3}} {ι : Sort.{u1}} [_inst_1 : VSub.{u2, u3} α β] (s : Set.{u3} β) (t : ι -> (Set.{u3} β)), Eq.{succ u2} (Set.{u2} α) (VSub.vsub.{u2, u3} (Set.{u2} α) (Set.{u3} β) (Set.vsub.{u2, u3} α β _inst_1) s (Set.iUnion.{u3, u1} β ι (fun (i : ι) => t i))) (Set.iUnion.{u2, u1} α ι (fun (i : ι) => VSub.vsub.{u2, u3} (Set.{u2} α) (Set.{u3} β) (Set.vsub.{u2, u3} α β _inst_1) s (t i)))
+Case conversion may be inaccurate. Consider using '#align set.vsub_Union Set.vsub_iUnionₓ'. -/
+theorem vsub_iUnion (s : Set β) (t : ι → Set β) : (s -ᵥ ⋃ i, t i) = ⋃ i, s -ᵥ t i :=
+  image2_iUnion_right _ _ _
+#align set.vsub_Union Set.vsub_iUnion
 
-/- warning: set.Union₂_vsub -> Set.unionᵢ₂_vsub is a dubious translation:
+/- warning: set.Union₂_vsub -> Set.iUnion₂_vsub is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {κ : ι -> Sort.{u4}} [_inst_1 : VSub.{u1, u2} α β] (s : forall (i : ι), (κ i) -> (Set.{u2} β)) (t : Set.{u2} β), Eq.{succ u1} (Set.{u1} α) (VSub.vsub.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.vsub.{u1, u2} α β _inst_1) (Set.unionᵢ.{u2, u3} β ι (fun (i : ι) => Set.unionᵢ.{u2, u4} β (κ i) (fun (j : κ i) => s i j))) t) (Set.unionᵢ.{u1, u3} α ι (fun (i : ι) => Set.unionᵢ.{u1, u4} α (κ i) (fun (j : κ i) => VSub.vsub.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.vsub.{u1, u2} α β _inst_1) (s i j) t)))
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {κ : ι -> Sort.{u4}} [_inst_1 : VSub.{u1, u2} α β] (s : forall (i : ι), (κ i) -> (Set.{u2} β)) (t : Set.{u2} β), Eq.{succ u1} (Set.{u1} α) (VSub.vsub.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.vsub.{u1, u2} α β _inst_1) (Set.iUnion.{u2, u3} β ι (fun (i : ι) => Set.iUnion.{u2, u4} β (κ i) (fun (j : κ i) => s i j))) t) (Set.iUnion.{u1, u3} α ι (fun (i : ι) => Set.iUnion.{u1, u4} α (κ i) (fun (j : κ i) => VSub.vsub.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.vsub.{u1, u2} α β _inst_1) (s i j) t)))
 but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u4}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : VSub.{u3, u4} α β] (s : forall (i : ι), (κ i) -> (Set.{u4} β)) (t : Set.{u4} β), Eq.{succ u3} (Set.{u3} α) (VSub.vsub.{u3, u4} (Set.{u3} α) (Set.{u4} β) (Set.vsub.{u3, u4} α β _inst_1) (Set.unionᵢ.{u4, u2} β ι (fun (i : ι) => Set.unionᵢ.{u4, u1} β (κ i) (fun (j : κ i) => s i j))) t) (Set.unionᵢ.{u3, u2} α ι (fun (i : ι) => Set.unionᵢ.{u3, u1} α (κ i) (fun (j : κ i) => VSub.vsub.{u3, u4} (Set.{u3} α) (Set.{u4} β) (Set.vsub.{u3, u4} α β _inst_1) (s i j) t)))
-Case conversion may be inaccurate. Consider using '#align set.Union₂_vsub Set.unionᵢ₂_vsubₓ'. -/
+  forall {α : Type.{u3}} {β : Type.{u4}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : VSub.{u3, u4} α β] (s : forall (i : ι), (κ i) -> (Set.{u4} β)) (t : Set.{u4} β), Eq.{succ u3} (Set.{u3} α) (VSub.vsub.{u3, u4} (Set.{u3} α) (Set.{u4} β) (Set.vsub.{u3, u4} α β _inst_1) (Set.iUnion.{u4, u2} β ι (fun (i : ι) => Set.iUnion.{u4, u1} β (κ i) (fun (j : κ i) => s i j))) t) (Set.iUnion.{u3, u2} α ι (fun (i : ι) => Set.iUnion.{u3, u1} α (κ i) (fun (j : κ i) => VSub.vsub.{u3, u4} (Set.{u3} α) (Set.{u4} β) (Set.vsub.{u3, u4} α β _inst_1) (s i j) t)))
+Case conversion may be inaccurate. Consider using '#align set.Union₂_vsub Set.iUnion₂_vsubₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-theorem unionᵢ₂_vsub (s : ∀ i, κ i → Set β) (t : Set β) :
+theorem iUnion₂_vsub (s : ∀ i, κ i → Set β) (t : Set β) :
     (⋃ (i) (j), s i j) -ᵥ t = ⋃ (i) (j), s i j -ᵥ t :=
-  image2_unionᵢ₂_left _ _ _
-#align set.Union₂_vsub Set.unionᵢ₂_vsub
+  image2_iUnion₂_left _ _ _
+#align set.Union₂_vsub Set.iUnion₂_vsub
 
-/- warning: set.vsub_Union₂ -> Set.vsub_unionᵢ₂ is a dubious translation:
+/- warning: set.vsub_Union₂ -> Set.vsub_iUnion₂ is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {κ : ι -> Sort.{u4}} [_inst_1 : VSub.{u1, u2} α β] (s : Set.{u2} β) (t : forall (i : ι), (κ i) -> (Set.{u2} β)), Eq.{succ u1} (Set.{u1} α) (VSub.vsub.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.vsub.{u1, u2} α β _inst_1) s (Set.unionᵢ.{u2, u3} β ι (fun (i : ι) => Set.unionᵢ.{u2, u4} β (κ i) (fun (j : κ i) => t i j)))) (Set.unionᵢ.{u1, u3} α ι (fun (i : ι) => Set.unionᵢ.{u1, u4} α (κ i) (fun (j : κ i) => VSub.vsub.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.vsub.{u1, u2} α β _inst_1) s (t i j))))
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {κ : ι -> Sort.{u4}} [_inst_1 : VSub.{u1, u2} α β] (s : Set.{u2} β) (t : forall (i : ι), (κ i) -> (Set.{u2} β)), Eq.{succ u1} (Set.{u1} α) (VSub.vsub.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.vsub.{u1, u2} α β _inst_1) s (Set.iUnion.{u2, u3} β ι (fun (i : ι) => Set.iUnion.{u2, u4} β (κ i) (fun (j : κ i) => t i j)))) (Set.iUnion.{u1, u3} α ι (fun (i : ι) => Set.iUnion.{u1, u4} α (κ i) (fun (j : κ i) => VSub.vsub.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.vsub.{u1, u2} α β _inst_1) s (t i j))))
 but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u4}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : VSub.{u3, u4} α β] (s : Set.{u4} β) (t : forall (i : ι), (κ i) -> (Set.{u4} β)), Eq.{succ u3} (Set.{u3} α) (VSub.vsub.{u3, u4} (Set.{u3} α) (Set.{u4} β) (Set.vsub.{u3, u4} α β _inst_1) s (Set.unionᵢ.{u4, u2} β ι (fun (i : ι) => Set.unionᵢ.{u4, u1} β (κ i) (fun (j : κ i) => t i j)))) (Set.unionᵢ.{u3, u2} α ι (fun (i : ι) => Set.unionᵢ.{u3, u1} α (κ i) (fun (j : κ i) => VSub.vsub.{u3, u4} (Set.{u3} α) (Set.{u4} β) (Set.vsub.{u3, u4} α β _inst_1) s (t i j))))
-Case conversion may be inaccurate. Consider using '#align set.vsub_Union₂ Set.vsub_unionᵢ₂ₓ'. -/
+  forall {α : Type.{u3}} {β : Type.{u4}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : VSub.{u3, u4} α β] (s : Set.{u4} β) (t : forall (i : ι), (κ i) -> (Set.{u4} β)), Eq.{succ u3} (Set.{u3} α) (VSub.vsub.{u3, u4} (Set.{u3} α) (Set.{u4} β) (Set.vsub.{u3, u4} α β _inst_1) s (Set.iUnion.{u4, u2} β ι (fun (i : ι) => Set.iUnion.{u4, u1} β (κ i) (fun (j : κ i) => t i j)))) (Set.iUnion.{u3, u2} α ι (fun (i : ι) => Set.iUnion.{u3, u1} α (κ i) (fun (j : κ i) => VSub.vsub.{u3, u4} (Set.{u3} α) (Set.{u4} β) (Set.vsub.{u3, u4} α β _inst_1) s (t i j))))
+Case conversion may be inaccurate. Consider using '#align set.vsub_Union₂ Set.vsub_iUnion₂ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-theorem vsub_unionᵢ₂ (s : Set β) (t : ∀ i, κ i → Set β) :
+theorem vsub_iUnion₂ (s : Set β) (t : ∀ i, κ i → Set β) :
     (s -ᵥ ⋃ (i) (j), t i j) = ⋃ (i) (j), s -ᵥ t i j :=
-  image2_unionᵢ₂_right _ _ _
-#align set.vsub_Union₂ Set.vsub_unionᵢ₂
+  image2_iUnion₂_right _ _ _
+#align set.vsub_Union₂ Set.vsub_iUnion₂
 
-/- warning: set.Inter_vsub_subset -> Set.interᵢ_vsub_subset is a dubious translation:
+/- warning: set.Inter_vsub_subset -> Set.iInter_vsub_subset is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : VSub.{u1, u2} α β] (s : ι -> (Set.{u2} β)) (t : Set.{u2} β), HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (VSub.vsub.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.vsub.{u1, u2} α β _inst_1) (Set.interᵢ.{u2, u3} β ι (fun (i : ι) => s i)) t) (Set.interᵢ.{u1, u3} α ι (fun (i : ι) => VSub.vsub.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.vsub.{u1, u2} α β _inst_1) (s i) t))
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : VSub.{u1, u2} α β] (s : ι -> (Set.{u2} β)) (t : Set.{u2} β), HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (VSub.vsub.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.vsub.{u1, u2} α β _inst_1) (Set.iInter.{u2, u3} β ι (fun (i : ι) => s i)) t) (Set.iInter.{u1, u3} α ι (fun (i : ι) => VSub.vsub.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.vsub.{u1, u2} α β _inst_1) (s i) t))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} {ι : Sort.{u1}} [_inst_1 : VSub.{u2, u3} α β] (s : ι -> (Set.{u3} β)) (t : Set.{u3} β), HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) (VSub.vsub.{u2, u3} (Set.{u2} α) (Set.{u3} β) (Set.vsub.{u2, u3} α β _inst_1) (Set.interᵢ.{u3, u1} β ι (fun (i : ι) => s i)) t) (Set.interᵢ.{u2, u1} α ι (fun (i : ι) => VSub.vsub.{u2, u3} (Set.{u2} α) (Set.{u3} β) (Set.vsub.{u2, u3} α β _inst_1) (s i) t))
-Case conversion may be inaccurate. Consider using '#align set.Inter_vsub_subset Set.interᵢ_vsub_subsetₓ'. -/
-theorem interᵢ_vsub_subset (s : ι → Set β) (t : Set β) : (⋂ i, s i) -ᵥ t ⊆ ⋂ i, s i -ᵥ t :=
-  image2_interᵢ_subset_left _ _ _
-#align set.Inter_vsub_subset Set.interᵢ_vsub_subset
+  forall {α : Type.{u2}} {β : Type.{u3}} {ι : Sort.{u1}} [_inst_1 : VSub.{u2, u3} α β] (s : ι -> (Set.{u3} β)) (t : Set.{u3} β), HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) (VSub.vsub.{u2, u3} (Set.{u2} α) (Set.{u3} β) (Set.vsub.{u2, u3} α β _inst_1) (Set.iInter.{u3, u1} β ι (fun (i : ι) => s i)) t) (Set.iInter.{u2, u1} α ι (fun (i : ι) => VSub.vsub.{u2, u3} (Set.{u2} α) (Set.{u3} β) (Set.vsub.{u2, u3} α β _inst_1) (s i) t))
+Case conversion may be inaccurate. Consider using '#align set.Inter_vsub_subset Set.iInter_vsub_subsetₓ'. -/
+theorem iInter_vsub_subset (s : ι → Set β) (t : Set β) : (⋂ i, s i) -ᵥ t ⊆ ⋂ i, s i -ᵥ t :=
+  image2_iInter_subset_left _ _ _
+#align set.Inter_vsub_subset Set.iInter_vsub_subset
 
-/- warning: set.vsub_Inter_subset -> Set.vsub_interᵢ_subset is a dubious translation:
+/- warning: set.vsub_Inter_subset -> Set.vsub_iInter_subset is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : VSub.{u1, u2} α β] (s : Set.{u2} β) (t : ι -> (Set.{u2} β)), HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (VSub.vsub.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.vsub.{u1, u2} α β _inst_1) s (Set.interᵢ.{u2, u3} β ι (fun (i : ι) => t i))) (Set.interᵢ.{u1, u3} α ι (fun (i : ι) => VSub.vsub.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.vsub.{u1, u2} α β _inst_1) s (t i)))
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : VSub.{u1, u2} α β] (s : Set.{u2} β) (t : ι -> (Set.{u2} β)), HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (VSub.vsub.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.vsub.{u1, u2} α β _inst_1) s (Set.iInter.{u2, u3} β ι (fun (i : ι) => t i))) (Set.iInter.{u1, u3} α ι (fun (i : ι) => VSub.vsub.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.vsub.{u1, u2} α β _inst_1) s (t i)))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} {ι : Sort.{u1}} [_inst_1 : VSub.{u2, u3} α β] (s : Set.{u3} β) (t : ι -> (Set.{u3} β)), HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) (VSub.vsub.{u2, u3} (Set.{u2} α) (Set.{u3} β) (Set.vsub.{u2, u3} α β _inst_1) s (Set.interᵢ.{u3, u1} β ι (fun (i : ι) => t i))) (Set.interᵢ.{u2, u1} α ι (fun (i : ι) => VSub.vsub.{u2, u3} (Set.{u2} α) (Set.{u3} β) (Set.vsub.{u2, u3} α β _inst_1) s (t i)))
-Case conversion may be inaccurate. Consider using '#align set.vsub_Inter_subset Set.vsub_interᵢ_subsetₓ'. -/
-theorem vsub_interᵢ_subset (s : Set β) (t : ι → Set β) : (s -ᵥ ⋂ i, t i) ⊆ ⋂ i, s -ᵥ t i :=
-  image2_interᵢ_subset_right _ _ _
-#align set.vsub_Inter_subset Set.vsub_interᵢ_subset
+  forall {α : Type.{u2}} {β : Type.{u3}} {ι : Sort.{u1}} [_inst_1 : VSub.{u2, u3} α β] (s : Set.{u3} β) (t : ι -> (Set.{u3} β)), HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) (VSub.vsub.{u2, u3} (Set.{u2} α) (Set.{u3} β) (Set.vsub.{u2, u3} α β _inst_1) s (Set.iInter.{u3, u1} β ι (fun (i : ι) => t i))) (Set.iInter.{u2, u1} α ι (fun (i : ι) => VSub.vsub.{u2, u3} (Set.{u2} α) (Set.{u3} β) (Set.vsub.{u2, u3} α β _inst_1) s (t i)))
+Case conversion may be inaccurate. Consider using '#align set.vsub_Inter_subset Set.vsub_iInter_subsetₓ'. -/
+theorem vsub_iInter_subset (s : Set β) (t : ι → Set β) : (s -ᵥ ⋂ i, t i) ⊆ ⋂ i, s -ᵥ t i :=
+  image2_iInter_subset_right _ _ _
+#align set.vsub_Inter_subset Set.vsub_iInter_subset
 
-/- warning: set.Inter₂_vsub_subset -> Set.interᵢ₂_vsub_subset is a dubious translation:
+/- warning: set.Inter₂_vsub_subset -> Set.iInter₂_vsub_subset is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {κ : ι -> Sort.{u4}} [_inst_1 : VSub.{u1, u2} α β] (s : forall (i : ι), (κ i) -> (Set.{u2} β)) (t : Set.{u2} β), HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (VSub.vsub.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.vsub.{u1, u2} α β _inst_1) (Set.interᵢ.{u2, u3} β ι (fun (i : ι) => Set.interᵢ.{u2, u4} β (κ i) (fun (j : κ i) => s i j))) t) (Set.interᵢ.{u1, u3} α ι (fun (i : ι) => Set.interᵢ.{u1, u4} α (κ i) (fun (j : κ i) => VSub.vsub.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.vsub.{u1, u2} α β _inst_1) (s i j) t)))
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {κ : ι -> Sort.{u4}} [_inst_1 : VSub.{u1, u2} α β] (s : forall (i : ι), (κ i) -> (Set.{u2} β)) (t : Set.{u2} β), HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (VSub.vsub.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.vsub.{u1, u2} α β _inst_1) (Set.iInter.{u2, u3} β ι (fun (i : ι) => Set.iInter.{u2, u4} β (κ i) (fun (j : κ i) => s i j))) t) (Set.iInter.{u1, u3} α ι (fun (i : ι) => Set.iInter.{u1, u4} α (κ i) (fun (j : κ i) => VSub.vsub.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.vsub.{u1, u2} α β _inst_1) (s i j) t)))
 but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u4}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : VSub.{u3, u4} α β] (s : forall (i : ι), (κ i) -> (Set.{u4} β)) (t : Set.{u4} β), HasSubset.Subset.{u3} (Set.{u3} α) (Set.instHasSubsetSet.{u3} α) (VSub.vsub.{u3, u4} (Set.{u3} α) (Set.{u4} β) (Set.vsub.{u3, u4} α β _inst_1) (Set.interᵢ.{u4, u2} β ι (fun (i : ι) => Set.interᵢ.{u4, u1} β (κ i) (fun (j : κ i) => s i j))) t) (Set.interᵢ.{u3, u2} α ι (fun (i : ι) => Set.interᵢ.{u3, u1} α (κ i) (fun (j : κ i) => VSub.vsub.{u3, u4} (Set.{u3} α) (Set.{u4} β) (Set.vsub.{u3, u4} α β _inst_1) (s i j) t)))
-Case conversion may be inaccurate. Consider using '#align set.Inter₂_vsub_subset Set.interᵢ₂_vsub_subsetₓ'. -/
+  forall {α : Type.{u3}} {β : Type.{u4}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : VSub.{u3, u4} α β] (s : forall (i : ι), (κ i) -> (Set.{u4} β)) (t : Set.{u4} β), HasSubset.Subset.{u3} (Set.{u3} α) (Set.instHasSubsetSet.{u3} α) (VSub.vsub.{u3, u4} (Set.{u3} α) (Set.{u4} β) (Set.vsub.{u3, u4} α β _inst_1) (Set.iInter.{u4, u2} β ι (fun (i : ι) => Set.iInter.{u4, u1} β (κ i) (fun (j : κ i) => s i j))) t) (Set.iInter.{u3, u2} α ι (fun (i : ι) => Set.iInter.{u3, u1} α (κ i) (fun (j : κ i) => VSub.vsub.{u3, u4} (Set.{u3} α) (Set.{u4} β) (Set.vsub.{u3, u4} α β _inst_1) (s i j) t)))
+Case conversion may be inaccurate. Consider using '#align set.Inter₂_vsub_subset Set.iInter₂_vsub_subsetₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-theorem interᵢ₂_vsub_subset (s : ∀ i, κ i → Set β) (t : Set β) :
+theorem iInter₂_vsub_subset (s : ∀ i, κ i → Set β) (t : Set β) :
     (⋂ (i) (j), s i j) -ᵥ t ⊆ ⋂ (i) (j), s i j -ᵥ t :=
-  image2_interᵢ₂_subset_left _ _ _
-#align set.Inter₂_vsub_subset Set.interᵢ₂_vsub_subset
+  image2_iInter₂_subset_left _ _ _
+#align set.Inter₂_vsub_subset Set.iInter₂_vsub_subset
 
-/- warning: set.vsub_Inter₂_subset -> Set.vsub_interᵢ₂_subset is a dubious translation:
+/- warning: set.vsub_Inter₂_subset -> Set.vsub_iInter₂_subset is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {κ : ι -> Sort.{u4}} [_inst_1 : VSub.{u1, u2} α β] (s : Set.{u2} β) (t : forall (i : ι), (κ i) -> (Set.{u2} β)), HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (VSub.vsub.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.vsub.{u1, u2} α β _inst_1) s (Set.interᵢ.{u2, u3} β ι (fun (i : ι) => Set.interᵢ.{u2, u4} β (κ i) (fun (j : κ i) => t i j)))) (Set.interᵢ.{u1, u3} α ι (fun (i : ι) => Set.interᵢ.{u1, u4} α (κ i) (fun (j : κ i) => VSub.vsub.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.vsub.{u1, u2} α β _inst_1) s (t i j))))
+  forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {κ : ι -> Sort.{u4}} [_inst_1 : VSub.{u1, u2} α β] (s : Set.{u2} β) (t : forall (i : ι), (κ i) -> (Set.{u2} β)), HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (VSub.vsub.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.vsub.{u1, u2} α β _inst_1) s (Set.iInter.{u2, u3} β ι (fun (i : ι) => Set.iInter.{u2, u4} β (κ i) (fun (j : κ i) => t i j)))) (Set.iInter.{u1, u3} α ι (fun (i : ι) => Set.iInter.{u1, u4} α (κ i) (fun (j : κ i) => VSub.vsub.{u1, u2} (Set.{u1} α) (Set.{u2} β) (Set.vsub.{u1, u2} α β _inst_1) s (t i j))))
 but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u4}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : VSub.{u3, u4} α β] (s : Set.{u4} β) (t : forall (i : ι), (κ i) -> (Set.{u4} β)), HasSubset.Subset.{u3} (Set.{u3} α) (Set.instHasSubsetSet.{u3} α) (VSub.vsub.{u3, u4} (Set.{u3} α) (Set.{u4} β) (Set.vsub.{u3, u4} α β _inst_1) s (Set.interᵢ.{u4, u2} β ι (fun (i : ι) => Set.interᵢ.{u4, u1} β (κ i) (fun (j : κ i) => t i j)))) (Set.interᵢ.{u3, u2} α ι (fun (i : ι) => Set.interᵢ.{u3, u1} α (κ i) (fun (j : κ i) => VSub.vsub.{u3, u4} (Set.{u3} α) (Set.{u4} β) (Set.vsub.{u3, u4} α β _inst_1) s (t i j))))
-Case conversion may be inaccurate. Consider using '#align set.vsub_Inter₂_subset Set.vsub_interᵢ₂_subsetₓ'. -/
+  forall {α : Type.{u3}} {β : Type.{u4}} {ι : Sort.{u2}} {κ : ι -> Sort.{u1}} [_inst_1 : VSub.{u3, u4} α β] (s : Set.{u4} β) (t : forall (i : ι), (κ i) -> (Set.{u4} β)), HasSubset.Subset.{u3} (Set.{u3} α) (Set.instHasSubsetSet.{u3} α) (VSub.vsub.{u3, u4} (Set.{u3} α) (Set.{u4} β) (Set.vsub.{u3, u4} α β _inst_1) s (Set.iInter.{u4, u2} β ι (fun (i : ι) => Set.iInter.{u4, u1} β (κ i) (fun (j : κ i) => t i j)))) (Set.iInter.{u3, u2} α ι (fun (i : ι) => Set.iInter.{u3, u1} α (κ i) (fun (j : κ i) => VSub.vsub.{u3, u4} (Set.{u3} α) (Set.{u4} β) (Set.vsub.{u3, u4} α β _inst_1) s (t i j))))
+Case conversion may be inaccurate. Consider using '#align set.vsub_Inter₂_subset Set.vsub_iInter₂_subsetₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-theorem vsub_interᵢ₂_subset (s : Set β) (t : ∀ i, κ i → Set β) :
+theorem vsub_iInter₂_subset (s : Set β) (t : ∀ i, κ i → Set β) :
     (s -ᵥ ⋂ (i) (j), t i j) ⊆ ⋂ (i) (j), s -ᵥ t i j :=
-  image2_interᵢ₂_subset_right _ _ _
-#align set.vsub_Inter₂_subset Set.vsub_interᵢ₂_subset
+  image2_iInter₂_subset_right _ _ _
+#align set.vsub_Inter₂_subset Set.vsub_iInter₂_subset
 
 end Vsub
 
@@ -1596,24 +1596,24 @@ theorem op_smul_inter_ne_empty_iff {s t : Set α} {x : αᵐᵒᵖ} :
 #align set.op_smul_inter_ne_empty_iff Set.op_smul_inter_ne_empty_iff
 #align set.op_vadd_inter_ne_empty_iff Set.op_vadd_inter_ne_empty_iff
 
-/- warning: set.Union_inv_smul -> Set.unionᵢ_inv_smul is a dubious translation:
+/- warning: set.Union_inv_smul -> Set.iUnion_inv_smul is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Group.{u1} α] [_inst_2 : MulAction.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))] {s : Set.{u2} β}, Eq.{succ u2} (Set.{u2} β) (Set.unionᵢ.{u2, succ u1} β α (fun (g : α) => SMul.smul.{u1, u2} α (Set.{u2} β) (Set.smulSet.{u1, u2} α β (MulAction.toHasSmul.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) _inst_2)) (Inv.inv.{u1} α (DivInvMonoid.toHasInv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) g) s)) (Set.unionᵢ.{u2, succ u1} β α (fun (g : α) => SMul.smul.{u1, u2} α (Set.{u2} β) (Set.smulSet.{u1, u2} α β (MulAction.toHasSmul.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) _inst_2)) g s))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Group.{u1} α] [_inst_2 : MulAction.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))] {s : Set.{u2} β}, Eq.{succ u2} (Set.{u2} β) (Set.iUnion.{u2, succ u1} β α (fun (g : α) => SMul.smul.{u1, u2} α (Set.{u2} β) (Set.smulSet.{u1, u2} α β (MulAction.toHasSmul.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) _inst_2)) (Inv.inv.{u1} α (DivInvMonoid.toHasInv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) g) s)) (Set.iUnion.{u2, succ u1} β α (fun (g : α) => SMul.smul.{u1, u2} α (Set.{u2} β) (Set.smulSet.{u1, u2} α β (MulAction.toHasSmul.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) _inst_2)) g s))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Group.{u1} α] [_inst_2 : MulAction.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))] {s : Set.{u2} β}, Eq.{succ u2} (Set.{u2} β) (Set.unionᵢ.{u2, succ u1} β α (fun (g : α) => HSMul.hSMul.{u1, u2, u2} α (Set.{u2} β) (Set.{u2} β) (instHSMul.{u1, u2} α (Set.{u2} β) (Set.smulSet.{u1, u2} α β (MulAction.toSMul.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) _inst_2))) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1)))) g) s)) (Set.unionᵢ.{u2, succ u1} β α (fun (g : α) => HSMul.hSMul.{u1, u2, u2} α (Set.{u2} β) (Set.{u2} β) (instHSMul.{u1, u2} α (Set.{u2} β) (Set.smulSet.{u1, u2} α β (MulAction.toSMul.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) _inst_2))) g s))
-Case conversion may be inaccurate. Consider using '#align set.Union_inv_smul Set.unionᵢ_inv_smulₓ'. -/
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Group.{u1} α] [_inst_2 : MulAction.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))] {s : Set.{u2} β}, Eq.{succ u2} (Set.{u2} β) (Set.iUnion.{u2, succ u1} β α (fun (g : α) => HSMul.hSMul.{u1, u2, u2} α (Set.{u2} β) (Set.{u2} β) (instHSMul.{u1, u2} α (Set.{u2} β) (Set.smulSet.{u1, u2} α β (MulAction.toSMul.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) _inst_2))) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1)))) g) s)) (Set.iUnion.{u2, succ u1} β α (fun (g : α) => HSMul.hSMul.{u1, u2, u2} α (Set.{u2} β) (Set.{u2} β) (instHSMul.{u1, u2} α (Set.{u2} β) (Set.smulSet.{u1, u2} α β (MulAction.toSMul.{u1, u2} α β (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)) _inst_2))) g s))
+Case conversion may be inaccurate. Consider using '#align set.Union_inv_smul Set.iUnion_inv_smulₓ'. -/
 @[simp, to_additive]
-theorem unionᵢ_inv_smul : (⋃ g : α, g⁻¹ • s) = ⋃ g : α, g • s :=
-  Function.Surjective.supᵢ_congr _ inv_surjective fun g => rfl
-#align set.Union_inv_smul Set.unionᵢ_inv_smul
-#align set.Union_neg_vadd Set.unionᵢ_neg_vadd
+theorem iUnion_inv_smul : (⋃ g : α, g⁻¹ • s) = ⋃ g : α, g • s :=
+  Function.Surjective.iSup_congr _ inv_surjective fun g => rfl
+#align set.Union_inv_smul Set.iUnion_inv_smul
+#align set.Union_neg_vadd Set.iUnion_neg_vadd
 
-#print Set.unionᵢ_smul_eq_setOf_exists /-
+#print Set.iUnion_smul_eq_setOf_exists /-
 @[to_additive]
-theorem unionᵢ_smul_eq_setOf_exists {s : Set β} : (⋃ g : α, g • s) = { a | ∃ g : α, g • a ∈ s } :=
+theorem iUnion_smul_eq_setOf_exists {s : Set β} : (⋃ g : α, g • s) = { a | ∃ g : α, g • a ∈ s } :=
   by simp_rw [← Union_set_of, ← Union_inv_smul, ← preimage_smul, preimage]
-#align set.Union_smul_eq_set_of_exists Set.unionᵢ_smul_eq_setOf_exists
-#align set.Union_vadd_eq_set_of_exists Set.unionᵢ_vadd_eq_setOf_exists
+#align set.Union_smul_eq_set_of_exists Set.iUnion_smul_eq_setOf_exists
+#align set.Union_vadd_eq_set_of_exists Set.iUnion_vadd_eq_setOf_exists
 -/
 
 end Group

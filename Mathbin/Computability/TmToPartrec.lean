@@ -1910,7 +1910,7 @@ theorem tr_eval (c v) : eval (TM2.step tr) (init c v) = halt <$> Code.eval c v :
 def trStmts₁ : Λ' → Finset Λ'
   | Q@(Λ'.move p k₁ k₂ q) => insert Q <| tr_stmts₁ q
   | Q@(Λ'.push k f q) => insert Q <| tr_stmts₁ q
-  | Q@(Λ'.read q) => insert Q <| Finset.univ.bunionᵢ fun s => tr_stmts₁ (q s)
+  | Q@(Λ'.read q) => insert Q <| Finset.univ.biUnion fun s => tr_stmts₁ (q s)
   | Q@(Λ'.clear p k q) => insert Q <| tr_stmts₁ q
   | Q@(Λ'.copy q) => insert Q <| tr_stmts₁ q
   | Q@(Λ'.succ q) => insert Q <| insert (unrev q) <| tr_stmts₁ q
@@ -2168,16 +2168,16 @@ theorem supports_union {K₁ K₂ S} : Supports (K₁ ∪ K₂) S ↔ Supports K
 #align turing.partrec_to_TM2.supports_union Turing.PartrecToTM2.supports_union
 -/
 
-/- warning: turing.partrec_to_TM2.supports_bUnion -> Turing.PartrecToTM2.supports_bunionᵢ is a dubious translation:
+/- warning: turing.partrec_to_TM2.supports_bUnion -> Turing.PartrecToTM2.supports_biUnion is a dubious translation:
 lean 3 declaration is
-  forall {K : (Option.{0} Turing.PartrecToTM2.Γ') -> (Finset.{0} Turing.PartrecToTM2.Λ')} {S : Finset.{0} Turing.PartrecToTM2.Λ'}, Iff (Turing.PartrecToTM2.Supports (Finset.bunionᵢ.{0, 0} (Option.{0} Turing.PartrecToTM2.Γ') Turing.PartrecToTM2.Λ' (fun (a : Turing.PartrecToTM2.Λ') (b : Turing.PartrecToTM2.Λ') => Turing.PartrecToTM2.Λ'.instDecidableEq a b) (Finset.univ.{0} (Option.{0} Turing.PartrecToTM2.Γ') (Option.fintype.{0} Turing.PartrecToTM2.Γ' Turing.PartrecToTM2.Γ'.fintype)) K) S) (forall (a : Option.{0} Turing.PartrecToTM2.Γ'), Turing.PartrecToTM2.Supports (K a) S)
+  forall {K : (Option.{0} Turing.PartrecToTM2.Γ') -> (Finset.{0} Turing.PartrecToTM2.Λ')} {S : Finset.{0} Turing.PartrecToTM2.Λ'}, Iff (Turing.PartrecToTM2.Supports (Finset.biUnion.{0, 0} (Option.{0} Turing.PartrecToTM2.Γ') Turing.PartrecToTM2.Λ' (fun (a : Turing.PartrecToTM2.Λ') (b : Turing.PartrecToTM2.Λ') => Turing.PartrecToTM2.Λ'.instDecidableEq a b) (Finset.univ.{0} (Option.{0} Turing.PartrecToTM2.Γ') (Option.fintype.{0} Turing.PartrecToTM2.Γ' Turing.PartrecToTM2.Γ'.fintype)) K) S) (forall (a : Option.{0} Turing.PartrecToTM2.Γ'), Turing.PartrecToTM2.Supports (K a) S)
 but is expected to have type
-  forall {K : (Option.{0} Turing.PartrecToTM2.Γ') -> (Finset.{0} Turing.PartrecToTM2.Λ')} {S : Finset.{0} Turing.PartrecToTM2.Λ'}, Iff (Turing.PartrecToTM2.Supports (Finset.bunionᵢ.{0, 0} (Option.{0} Turing.PartrecToTM2.Γ') Turing.PartrecToTM2.Λ' (fun (a : Turing.PartrecToTM2.Λ') (b : Turing.PartrecToTM2.Λ') => Turing.PartrecToTM2.Λ'.instDecidableEq a b) (Finset.univ.{0} (Option.{0} Turing.PartrecToTM2.Γ') (instFintypeOption.{0} Turing.PartrecToTM2.Γ' Turing.PartrecToTM2.instFintypeΓ')) K) S) (forall (a : Option.{0} Turing.PartrecToTM2.Γ'), Turing.PartrecToTM2.Supports (K a) S)
-Case conversion may be inaccurate. Consider using '#align turing.partrec_to_TM2.supports_bUnion Turing.PartrecToTM2.supports_bunionᵢₓ'. -/
-theorem supports_bunionᵢ {K : Option Γ' → Finset Λ'} {S} :
-    Supports (Finset.univ.bunionᵢ K) S ↔ ∀ a, Supports (K a) S := by
+  forall {K : (Option.{0} Turing.PartrecToTM2.Γ') -> (Finset.{0} Turing.PartrecToTM2.Λ')} {S : Finset.{0} Turing.PartrecToTM2.Λ'}, Iff (Turing.PartrecToTM2.Supports (Finset.biUnion.{0, 0} (Option.{0} Turing.PartrecToTM2.Γ') Turing.PartrecToTM2.Λ' (fun (a : Turing.PartrecToTM2.Λ') (b : Turing.PartrecToTM2.Λ') => Turing.PartrecToTM2.Λ'.instDecidableEq a b) (Finset.univ.{0} (Option.{0} Turing.PartrecToTM2.Γ') (instFintypeOption.{0} Turing.PartrecToTM2.Γ' Turing.PartrecToTM2.instFintypeΓ')) K) S) (forall (a : Option.{0} Turing.PartrecToTM2.Γ'), Turing.PartrecToTM2.Supports (K a) S)
+Case conversion may be inaccurate. Consider using '#align turing.partrec_to_TM2.supports_bUnion Turing.PartrecToTM2.supports_biUnionₓ'. -/
+theorem supports_biUnion {K : Option Γ' → Finset Λ'} {S} :
+    Supports (Finset.univ.biUnion K) S ↔ ∀ a, Supports (K a) S := by
   simp [supports] <;> apply forall_swap
-#align turing.partrec_to_TM2.supports_bUnion Turing.PartrecToTM2.supports_bunionᵢ
+#align turing.partrec_to_TM2.supports_bUnion Turing.PartrecToTM2.supports_biUnion
 
 #print Turing.PartrecToTM2.head_supports /-
 theorem head_supports {S k q} (H : (q : Λ').Supports S) : (head k q).Supports S := fun _ => by

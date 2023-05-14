@@ -454,11 +454,11 @@ finpartition of `a` obtained by juxtaposing all the subpartitions. -/
 @[simps]
 def bind (P : Finpartition a) (Q : ∀ i ∈ P.parts, Finpartition i) : Finpartition a
     where
-  parts := P.parts.attach.bunionᵢ fun i => (Q i.1 i.2).parts
+  parts := P.parts.attach.biUnion fun i => (Q i.1 i.2).parts
   SupIndep := by
     rw [sup_indep_iff_pairwise_disjoint]
     rintro a ha b hb h
-    rw [Finset.mem_coe, Finset.mem_bunionᵢ] at ha hb
+    rw [Finset.mem_coe, Finset.mem_biUnion] at ha hb
     obtain ⟨⟨A, hA⟩, -, ha⟩ := ha
     obtain ⟨⟨B, hB⟩, -, hb⟩ := hb
     obtain rfl | hAB := eq_or_ne A B
@@ -469,7 +469,7 @@ def bind (P : Finpartition a) (Q : ∀ i ∈ P.parts, Finpartition i) : Finparti
     rw [eq_comm, ← Finset.sup_attach]
     exact sup_congr rfl fun b hb => (Q b.1 b.2).supParts.symm
   not_bot_mem h := by
-    rw [Finset.mem_bunionᵢ] at h
+    rw [Finset.mem_biUnion] at h
     obtain ⟨⟨A, hA⟩, -, h⟩ := h
     exact (Q A hA).not_bot_mem h
 #align finpartition.bind Finpartition.bind
@@ -602,15 +602,15 @@ theorem exists_mem {a : α} (ha : a ∈ s) : ∃ t ∈ P.parts, a ∈ t :=
   exact mem_sup.1 ha
 #align finpartition.exists_mem Finpartition.exists_mem
 
-/- warning: finpartition.bUnion_parts -> Finpartition.bunionᵢ_parts is a dubious translation:
+/- warning: finpartition.bUnion_parts -> Finpartition.biUnion_parts is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} (P : Finpartition.{u1} (Finset.{u1} α) (Finset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.orderBot.{u1} α) s), Eq.{succ u1} (Finset.{u1} α) (Finset.bunionᵢ.{u1, u1} (Finset.{u1} α) α (fun (a : α) (b : α) => _inst_1 a b) (Finpartition.parts.{u1} (Finset.{u1} α) (Finset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.orderBot.{u1} α) s P) (id.{succ u1} (Finset.{u1} α))) s
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} (P : Finpartition.{u1} (Finset.{u1} α) (Finset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.orderBot.{u1} α) s), Eq.{succ u1} (Finset.{u1} α) (Finset.biUnion.{u1, u1} (Finset.{u1} α) α (fun (a : α) (b : α) => _inst_1 a b) (Finpartition.parts.{u1} (Finset.{u1} α) (Finset.lattice.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.orderBot.{u1} α) s P) (id.{succ u1} (Finset.{u1} α))) s
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} (P : Finpartition.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s), Eq.{succ u1} (Finset.{u1} α) (Finset.bunionᵢ.{u1, u1} (Finset.{u1} α) α (fun (a : α) (b : α) => _inst_1 a b) (Finpartition.parts.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s P) (id.{succ u1} (Finset.{u1} α))) s
-Case conversion may be inaccurate. Consider using '#align finpartition.bUnion_parts Finpartition.bunionᵢ_partsₓ'. -/
-theorem bunionᵢ_parts : P.parts.bunionᵢ id = s :=
-  (sup_eq_bunionᵢ _ _).symm.trans P.supParts
-#align finpartition.bUnion_parts Finpartition.bunionᵢ_parts
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} (P : Finpartition.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s), Eq.{succ u1} (Finset.{u1} α) (Finset.biUnion.{u1, u1} (Finset.{u1} α) α (fun (a : α) (b : α) => _inst_1 a b) (Finpartition.parts.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s P) (id.{succ u1} (Finset.{u1} α))) s
+Case conversion may be inaccurate. Consider using '#align finpartition.bUnion_parts Finpartition.biUnion_partsₓ'. -/
+theorem biUnion_parts : P.parts.biUnion id = s :=
+  (sup_eq_biUnion _ _).symm.trans P.supParts
+#align finpartition.bUnion_parts Finpartition.biUnion_parts
 
 /- warning: finpartition.sum_card_parts -> Finpartition.sum_card_parts is a dubious translation:
 lean 3 declaration is
@@ -744,9 +744,9 @@ theorem card_atomise_le : (atomise s F).parts.card ≤ 2 ^ F.card :=
 #align finpartition.card_atomise_le Finpartition.card_atomise_le
 -/
 
-#print Finpartition.bunionᵢ_filter_atomise /-
-theorem bunionᵢ_filter_atomise (ht : t ∈ F) (hts : t ⊆ s) :
-    ((atomise s F).parts.filterₓ fun u => u ⊆ t ∧ u.Nonempty).bunionᵢ id = t :=
+#print Finpartition.biUnion_filter_atomise /-
+theorem biUnion_filter_atomise (ht : t ∈ F) (hts : t ⊆ s) :
+    ((atomise s F).parts.filterₓ fun u => u ⊆ t ∧ u.Nonempty).biUnion id = t :=
   by
   ext a
   refine' mem_bUnion.trans ⟨fun ⟨u, hu, ha⟩ => (mem_filter.1 hu).2.1 ha, fun ha => _⟩
@@ -755,7 +755,7 @@ theorem bunionᵢ_filter_atomise (ht : t ∈ F) (hts : t ⊆ s) :
   obtain ⟨Q, hQ, rfl⟩ := (mem_atomise.1 hu).2
   rw [mem_filter] at hau hb
   rwa [← hb.2 _ ht, hau.2 _ ht]
-#align finpartition.bUnion_filter_atomise Finpartition.bunionᵢ_filter_atomise
+#align finpartition.bUnion_filter_atomise Finpartition.biUnion_filter_atomise
 -/
 
 #print Finpartition.card_filter_atomise_le_two_pow /-

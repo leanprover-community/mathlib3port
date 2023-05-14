@@ -294,56 +294,56 @@ instance : InfSet (Subsemigroup M) :=
   ⟨fun s =>
     { carrier := ⋂ t ∈ s, ↑t
       mul_mem' := fun x y hx hy =>
-        Set.mem_binterᵢ fun i h =>
-          i.mul_mem (by apply Set.mem_interᵢ₂.1 hx i h) (by apply Set.mem_interᵢ₂.1 hy i h) }⟩
+        Set.mem_biInter fun i h =>
+          i.mul_mem (by apply Set.mem_iInter₂.1 hx i h) (by apply Set.mem_iInter₂.1 hy i h) }⟩
 
-/- warning: subsemigroup.coe_Inf -> Subsemigroup.coe_infₛ is a dubious translation:
+/- warning: subsemigroup.coe_Inf -> Subsemigroup.coe_sInf is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] (S : Set.{u1} (Subsemigroup.{u1} M _inst_1)), Eq.{succ u1} (Set.{u1} M) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subsemigroup.{u1} M _inst_1) (Set.{u1} M) (HasLiftT.mk.{succ u1, succ u1} (Subsemigroup.{u1} M _inst_1) (Set.{u1} M) (CoeTCₓ.coe.{succ u1, succ u1} (Subsemigroup.{u1} M _inst_1) (Set.{u1} M) (SetLike.Set.hasCoeT.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.setLike.{u1} M _inst_1)))) (InfSet.infₛ.{u1} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.hasInf.{u1} M _inst_1) S)) (Set.interᵢ.{u1, succ u1} M (Subsemigroup.{u1} M _inst_1) (fun (s : Subsemigroup.{u1} M _inst_1) => Set.interᵢ.{u1, 0} M (Membership.Mem.{u1, u1} (Subsemigroup.{u1} M _inst_1) (Set.{u1} (Subsemigroup.{u1} M _inst_1)) (Set.hasMem.{u1} (Subsemigroup.{u1} M _inst_1)) s S) (fun (H : Membership.Mem.{u1, u1} (Subsemigroup.{u1} M _inst_1) (Set.{u1} (Subsemigroup.{u1} M _inst_1)) (Set.hasMem.{u1} (Subsemigroup.{u1} M _inst_1)) s S) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subsemigroup.{u1} M _inst_1) (Set.{u1} M) (HasLiftT.mk.{succ u1, succ u1} (Subsemigroup.{u1} M _inst_1) (Set.{u1} M) (CoeTCₓ.coe.{succ u1, succ u1} (Subsemigroup.{u1} M _inst_1) (Set.{u1} M) (SetLike.Set.hasCoeT.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.setLike.{u1} M _inst_1)))) s)))
+  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] (S : Set.{u1} (Subsemigroup.{u1} M _inst_1)), Eq.{succ u1} (Set.{u1} M) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subsemigroup.{u1} M _inst_1) (Set.{u1} M) (HasLiftT.mk.{succ u1, succ u1} (Subsemigroup.{u1} M _inst_1) (Set.{u1} M) (CoeTCₓ.coe.{succ u1, succ u1} (Subsemigroup.{u1} M _inst_1) (Set.{u1} M) (SetLike.Set.hasCoeT.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.setLike.{u1} M _inst_1)))) (InfSet.sInf.{u1} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.hasInf.{u1} M _inst_1) S)) (Set.iInter.{u1, succ u1} M (Subsemigroup.{u1} M _inst_1) (fun (s : Subsemigroup.{u1} M _inst_1) => Set.iInter.{u1, 0} M (Membership.Mem.{u1, u1} (Subsemigroup.{u1} M _inst_1) (Set.{u1} (Subsemigroup.{u1} M _inst_1)) (Set.hasMem.{u1} (Subsemigroup.{u1} M _inst_1)) s S) (fun (H : Membership.Mem.{u1, u1} (Subsemigroup.{u1} M _inst_1) (Set.{u1} (Subsemigroup.{u1} M _inst_1)) (Set.hasMem.{u1} (Subsemigroup.{u1} M _inst_1)) s S) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subsemigroup.{u1} M _inst_1) (Set.{u1} M) (HasLiftT.mk.{succ u1, succ u1} (Subsemigroup.{u1} M _inst_1) (Set.{u1} M) (CoeTCₓ.coe.{succ u1, succ u1} (Subsemigroup.{u1} M _inst_1) (Set.{u1} M) (SetLike.Set.hasCoeT.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.setLike.{u1} M _inst_1)))) s)))
 but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] (S : Set.{u1} (Subsemigroup.{u1} M _inst_1)), Eq.{succ u1} (Set.{u1} M) (SetLike.coe.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.instSetLikeSubsemigroup.{u1} M _inst_1) (InfSet.infₛ.{u1} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.instInfSetSubsemigroup.{u1} M _inst_1) S)) (Set.interᵢ.{u1, succ u1} M (Subsemigroup.{u1} M _inst_1) (fun (s : Subsemigroup.{u1} M _inst_1) => Set.interᵢ.{u1, 0} M (Membership.mem.{u1, u1} (Subsemigroup.{u1} M _inst_1) (Set.{u1} (Subsemigroup.{u1} M _inst_1)) (Set.instMembershipSet.{u1} (Subsemigroup.{u1} M _inst_1)) s S) (fun (H : Membership.mem.{u1, u1} (Subsemigroup.{u1} M _inst_1) (Set.{u1} (Subsemigroup.{u1} M _inst_1)) (Set.instMembershipSet.{u1} (Subsemigroup.{u1} M _inst_1)) s S) => SetLike.coe.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.instSetLikeSubsemigroup.{u1} M _inst_1) s)))
-Case conversion may be inaccurate. Consider using '#align subsemigroup.coe_Inf Subsemigroup.coe_infₛₓ'. -/
+  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] (S : Set.{u1} (Subsemigroup.{u1} M _inst_1)), Eq.{succ u1} (Set.{u1} M) (SetLike.coe.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.instSetLikeSubsemigroup.{u1} M _inst_1) (InfSet.sInf.{u1} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.instInfSetSubsemigroup.{u1} M _inst_1) S)) (Set.iInter.{u1, succ u1} M (Subsemigroup.{u1} M _inst_1) (fun (s : Subsemigroup.{u1} M _inst_1) => Set.iInter.{u1, 0} M (Membership.mem.{u1, u1} (Subsemigroup.{u1} M _inst_1) (Set.{u1} (Subsemigroup.{u1} M _inst_1)) (Set.instMembershipSet.{u1} (Subsemigroup.{u1} M _inst_1)) s S) (fun (H : Membership.mem.{u1, u1} (Subsemigroup.{u1} M _inst_1) (Set.{u1} (Subsemigroup.{u1} M _inst_1)) (Set.instMembershipSet.{u1} (Subsemigroup.{u1} M _inst_1)) s S) => SetLike.coe.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.instSetLikeSubsemigroup.{u1} M _inst_1) s)))
+Case conversion may be inaccurate. Consider using '#align subsemigroup.coe_Inf Subsemigroup.coe_sInfₓ'. -/
 @[simp, norm_cast, to_additive]
-theorem coe_infₛ (S : Set (Subsemigroup M)) : ((infₛ S : Subsemigroup M) : Set M) = ⋂ s ∈ S, ↑s :=
+theorem coe_sInf (S : Set (Subsemigroup M)) : ((sInf S : Subsemigroup M) : Set M) = ⋂ s ∈ S, ↑s :=
   rfl
-#align subsemigroup.coe_Inf Subsemigroup.coe_infₛ
-#align add_subsemigroup.coe_Inf AddSubsemigroup.coe_infₛ
+#align subsemigroup.coe_Inf Subsemigroup.coe_sInf
+#align add_subsemigroup.coe_Inf AddSubsemigroup.coe_sInf
 
-/- warning: subsemigroup.mem_Inf -> Subsemigroup.mem_infₛ is a dubious translation:
+/- warning: subsemigroup.mem_Inf -> Subsemigroup.mem_sInf is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] {S : Set.{u1} (Subsemigroup.{u1} M _inst_1)} {x : M}, Iff (Membership.Mem.{u1, u1} M (Subsemigroup.{u1} M _inst_1) (SetLike.hasMem.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.setLike.{u1} M _inst_1)) x (InfSet.infₛ.{u1} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.hasInf.{u1} M _inst_1) S)) (forall (p : Subsemigroup.{u1} M _inst_1), (Membership.Mem.{u1, u1} (Subsemigroup.{u1} M _inst_1) (Set.{u1} (Subsemigroup.{u1} M _inst_1)) (Set.hasMem.{u1} (Subsemigroup.{u1} M _inst_1)) p S) -> (Membership.Mem.{u1, u1} M (Subsemigroup.{u1} M _inst_1) (SetLike.hasMem.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.setLike.{u1} M _inst_1)) x p))
+  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] {S : Set.{u1} (Subsemigroup.{u1} M _inst_1)} {x : M}, Iff (Membership.Mem.{u1, u1} M (Subsemigroup.{u1} M _inst_1) (SetLike.hasMem.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.setLike.{u1} M _inst_1)) x (InfSet.sInf.{u1} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.hasInf.{u1} M _inst_1) S)) (forall (p : Subsemigroup.{u1} M _inst_1), (Membership.Mem.{u1, u1} (Subsemigroup.{u1} M _inst_1) (Set.{u1} (Subsemigroup.{u1} M _inst_1)) (Set.hasMem.{u1} (Subsemigroup.{u1} M _inst_1)) p S) -> (Membership.Mem.{u1, u1} M (Subsemigroup.{u1} M _inst_1) (SetLike.hasMem.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.setLike.{u1} M _inst_1)) x p))
 but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] {S : Set.{u1} (Subsemigroup.{u1} M _inst_1)} {x : M}, Iff (Membership.mem.{u1, u1} M (Subsemigroup.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.instSetLikeSubsemigroup.{u1} M _inst_1)) x (InfSet.infₛ.{u1} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.instInfSetSubsemigroup.{u1} M _inst_1) S)) (forall (p : Subsemigroup.{u1} M _inst_1), (Membership.mem.{u1, u1} (Subsemigroup.{u1} M _inst_1) (Set.{u1} (Subsemigroup.{u1} M _inst_1)) (Set.instMembershipSet.{u1} (Subsemigroup.{u1} M _inst_1)) p S) -> (Membership.mem.{u1, u1} M (Subsemigroup.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.instSetLikeSubsemigroup.{u1} M _inst_1)) x p))
-Case conversion may be inaccurate. Consider using '#align subsemigroup.mem_Inf Subsemigroup.mem_infₛₓ'. -/
+  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] {S : Set.{u1} (Subsemigroup.{u1} M _inst_1)} {x : M}, Iff (Membership.mem.{u1, u1} M (Subsemigroup.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.instSetLikeSubsemigroup.{u1} M _inst_1)) x (InfSet.sInf.{u1} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.instInfSetSubsemigroup.{u1} M _inst_1) S)) (forall (p : Subsemigroup.{u1} M _inst_1), (Membership.mem.{u1, u1} (Subsemigroup.{u1} M _inst_1) (Set.{u1} (Subsemigroup.{u1} M _inst_1)) (Set.instMembershipSet.{u1} (Subsemigroup.{u1} M _inst_1)) p S) -> (Membership.mem.{u1, u1} M (Subsemigroup.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.instSetLikeSubsemigroup.{u1} M _inst_1)) x p))
+Case conversion may be inaccurate. Consider using '#align subsemigroup.mem_Inf Subsemigroup.mem_sInfₓ'. -/
 @[to_additive]
-theorem mem_infₛ {S : Set (Subsemigroup M)} {x : M} : x ∈ infₛ S ↔ ∀ p ∈ S, x ∈ p :=
-  Set.mem_interᵢ₂
-#align subsemigroup.mem_Inf Subsemigroup.mem_infₛ
-#align add_subsemigroup.mem_Inf AddSubsemigroup.mem_infₛ
+theorem mem_sInf {S : Set (Subsemigroup M)} {x : M} : x ∈ sInf S ↔ ∀ p ∈ S, x ∈ p :=
+  Set.mem_iInter₂
+#align subsemigroup.mem_Inf Subsemigroup.mem_sInf
+#align add_subsemigroup.mem_Inf AddSubsemigroup.mem_sInf
 
-/- warning: subsemigroup.mem_infi -> Subsemigroup.mem_infᵢ is a dubious translation:
+/- warning: subsemigroup.mem_infi -> Subsemigroup.mem_iInf is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] {ι : Sort.{u2}} {S : ι -> (Subsemigroup.{u1} M _inst_1)} {x : M}, Iff (Membership.Mem.{u1, u1} M (Subsemigroup.{u1} M _inst_1) (SetLike.hasMem.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.setLike.{u1} M _inst_1)) x (infᵢ.{u1, u2} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.hasInf.{u1} M _inst_1) ι (fun (i : ι) => S i))) (forall (i : ι), Membership.Mem.{u1, u1} M (Subsemigroup.{u1} M _inst_1) (SetLike.hasMem.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.setLike.{u1} M _inst_1)) x (S i))
+  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] {ι : Sort.{u2}} {S : ι -> (Subsemigroup.{u1} M _inst_1)} {x : M}, Iff (Membership.Mem.{u1, u1} M (Subsemigroup.{u1} M _inst_1) (SetLike.hasMem.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.setLike.{u1} M _inst_1)) x (iInf.{u1, u2} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.hasInf.{u1} M _inst_1) ι (fun (i : ι) => S i))) (forall (i : ι), Membership.Mem.{u1, u1} M (Subsemigroup.{u1} M _inst_1) (SetLike.hasMem.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.setLike.{u1} M _inst_1)) x (S i))
 but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] {ι : Sort.{u2}} {S : ι -> (Subsemigroup.{u1} M _inst_1)} {x : M}, Iff (Membership.mem.{u1, u1} M (Subsemigroup.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.instSetLikeSubsemigroup.{u1} M _inst_1)) x (infᵢ.{u1, u2} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.instInfSetSubsemigroup.{u1} M _inst_1) ι (fun (i : ι) => S i))) (forall (i : ι), Membership.mem.{u1, u1} M (Subsemigroup.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.instSetLikeSubsemigroup.{u1} M _inst_1)) x (S i))
-Case conversion may be inaccurate. Consider using '#align subsemigroup.mem_infi Subsemigroup.mem_infᵢₓ'. -/
+  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] {ι : Sort.{u2}} {S : ι -> (Subsemigroup.{u1} M _inst_1)} {x : M}, Iff (Membership.mem.{u1, u1} M (Subsemigroup.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.instSetLikeSubsemigroup.{u1} M _inst_1)) x (iInf.{u1, u2} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.instInfSetSubsemigroup.{u1} M _inst_1) ι (fun (i : ι) => S i))) (forall (i : ι), Membership.mem.{u1, u1} M (Subsemigroup.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.instSetLikeSubsemigroup.{u1} M _inst_1)) x (S i))
+Case conversion may be inaccurate. Consider using '#align subsemigroup.mem_infi Subsemigroup.mem_iInfₓ'. -/
 @[to_additive]
-theorem mem_infᵢ {ι : Sort _} {S : ι → Subsemigroup M} {x : M} : (x ∈ ⨅ i, S i) ↔ ∀ i, x ∈ S i := by
-  simp only [infᵢ, mem_Inf, Set.forall_range_iff]
-#align subsemigroup.mem_infi Subsemigroup.mem_infᵢ
-#align add_subsemigroup.mem_infi AddSubsemigroup.mem_infᵢ
+theorem mem_iInf {ι : Sort _} {S : ι → Subsemigroup M} {x : M} : (x ∈ ⨅ i, S i) ↔ ∀ i, x ∈ S i := by
+  simp only [iInf, mem_Inf, Set.forall_range_iff]
+#align subsemigroup.mem_infi Subsemigroup.mem_iInf
+#align add_subsemigroup.mem_infi AddSubsemigroup.mem_iInf
 
-/- warning: subsemigroup.coe_infi -> Subsemigroup.coe_infᵢ is a dubious translation:
+/- warning: subsemigroup.coe_infi -> Subsemigroup.coe_iInf is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] {ι : Sort.{u2}} {S : ι -> (Subsemigroup.{u1} M _inst_1)}, Eq.{succ u1} (Set.{u1} M) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subsemigroup.{u1} M _inst_1) (Set.{u1} M) (HasLiftT.mk.{succ u1, succ u1} (Subsemigroup.{u1} M _inst_1) (Set.{u1} M) (CoeTCₓ.coe.{succ u1, succ u1} (Subsemigroup.{u1} M _inst_1) (Set.{u1} M) (SetLike.Set.hasCoeT.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.setLike.{u1} M _inst_1)))) (infᵢ.{u1, u2} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.hasInf.{u1} M _inst_1) ι (fun (i : ι) => S i))) (Set.interᵢ.{u1, u2} M ι (fun (i : ι) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subsemigroup.{u1} M _inst_1) (Set.{u1} M) (HasLiftT.mk.{succ u1, succ u1} (Subsemigroup.{u1} M _inst_1) (Set.{u1} M) (CoeTCₓ.coe.{succ u1, succ u1} (Subsemigroup.{u1} M _inst_1) (Set.{u1} M) (SetLike.Set.hasCoeT.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.setLike.{u1} M _inst_1)))) (S i)))
+  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] {ι : Sort.{u2}} {S : ι -> (Subsemigroup.{u1} M _inst_1)}, Eq.{succ u1} (Set.{u1} M) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subsemigroup.{u1} M _inst_1) (Set.{u1} M) (HasLiftT.mk.{succ u1, succ u1} (Subsemigroup.{u1} M _inst_1) (Set.{u1} M) (CoeTCₓ.coe.{succ u1, succ u1} (Subsemigroup.{u1} M _inst_1) (Set.{u1} M) (SetLike.Set.hasCoeT.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.setLike.{u1} M _inst_1)))) (iInf.{u1, u2} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.hasInf.{u1} M _inst_1) ι (fun (i : ι) => S i))) (Set.iInter.{u1, u2} M ι (fun (i : ι) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subsemigroup.{u1} M _inst_1) (Set.{u1} M) (HasLiftT.mk.{succ u1, succ u1} (Subsemigroup.{u1} M _inst_1) (Set.{u1} M) (CoeTCₓ.coe.{succ u1, succ u1} (Subsemigroup.{u1} M _inst_1) (Set.{u1} M) (SetLike.Set.hasCoeT.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.setLike.{u1} M _inst_1)))) (S i)))
 but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] {ι : Sort.{u2}} {S : ι -> (Subsemigroup.{u1} M _inst_1)}, Eq.{succ u1} (Set.{u1} M) (SetLike.coe.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.instSetLikeSubsemigroup.{u1} M _inst_1) (infᵢ.{u1, u2} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.instInfSetSubsemigroup.{u1} M _inst_1) ι (fun (i : ι) => S i))) (Set.interᵢ.{u1, u2} M ι (fun (i : ι) => SetLike.coe.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.instSetLikeSubsemigroup.{u1} M _inst_1) (S i)))
-Case conversion may be inaccurate. Consider using '#align subsemigroup.coe_infi Subsemigroup.coe_infᵢₓ'. -/
+  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] {ι : Sort.{u2}} {S : ι -> (Subsemigroup.{u1} M _inst_1)}, Eq.{succ u1} (Set.{u1} M) (SetLike.coe.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.instSetLikeSubsemigroup.{u1} M _inst_1) (iInf.{u1, u2} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.instInfSetSubsemigroup.{u1} M _inst_1) ι (fun (i : ι) => S i))) (Set.iInter.{u1, u2} M ι (fun (i : ι) => SetLike.coe.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.instSetLikeSubsemigroup.{u1} M _inst_1) (S i)))
+Case conversion may be inaccurate. Consider using '#align subsemigroup.coe_infi Subsemigroup.coe_iInfₓ'. -/
 @[simp, norm_cast, to_additive]
-theorem coe_infᵢ {ι : Sort _} {S : ι → Subsemigroup M} : (↑(⨅ i, S i) : Set M) = ⋂ i, S i := by
-  simp only [infᵢ, coe_Inf, Set.binterᵢ_range]
-#align subsemigroup.coe_infi Subsemigroup.coe_infᵢ
-#align add_subsemigroup.coe_infi AddSubsemigroup.coe_infᵢ
+theorem coe_iInf {ι : Sort _} {S : ι → Subsemigroup M} : (↑(⨅ i, S i) : Set M) = ⋂ i, S i := by
+  simp only [iInf, coe_Inf, Set.biInter_range]
+#align subsemigroup.coe_infi Subsemigroup.coe_iInf
+#align add_subsemigroup.coe_infi AddSubsemigroup.coe_iInf
 
 /-- subsemigroups of a monoid form a complete lattice. -/
 @[to_additive "The `add_subsemigroup`s of an `add_monoid` form a complete lattice."]
@@ -351,7 +351,7 @@ instance : CompleteLattice (Subsemigroup M) :=
   {
     completeLatticeOfInf (Subsemigroup M) fun s =>
       IsGLB.of_image (fun S T => show (S : Set M) ≤ T ↔ S ≤ T from SetLike.coe_subset_coe)
-        isGLB_binfᵢ with
+        isGLB_biInf with
     le := (· ≤ ·)
     lt := (· < ·)
     bot := ⊥
@@ -359,7 +359,7 @@ instance : CompleteLattice (Subsemigroup M) :=
     top := ⊤
     le_top := fun S x hx => mem_top x
     inf := (· ⊓ ·)
-    infₛ := InfSet.infₛ
+    sInf := InfSet.sInf
     le_inf := fun a b c ha hb x hx => ⟨ha hx, hb hx⟩
     inf_le_left := fun a b x => And.left
     inf_le_right := fun a b x => And.right }
@@ -386,7 +386,7 @@ instance [hn : Nonempty M] : Nontrivial (Subsemigroup M) :=
 /-- The `subsemigroup` generated by a set. -/
 @[to_additive "The `add_subsemigroup` generated by a set"]
 def closure (s : Set M) : Subsemigroup M :=
-  infₛ { S | s ⊆ S }
+  sInf { S | s ⊆ S }
 #align subsemigroup.closure Subsemigroup.closure
 #align add_subsemigroup.closure AddSubsemigroup.closure
 -/
@@ -394,7 +394,7 @@ def closure (s : Set M) : Subsemigroup M :=
 #print Subsemigroup.mem_closure /-
 @[to_additive]
 theorem mem_closure {x : M} : x ∈ closure s ↔ ∀ S : Subsemigroup M, s ⊆ S → x ∈ S :=
-  mem_infₛ
+  mem_sInf
 #align subsemigroup.mem_closure Subsemigroup.mem_closure
 #align add_subsemigroup.mem_closure AddSubsemigroup.mem_closure
 -/
@@ -429,7 +429,7 @@ Case conversion may be inaccurate. Consider using '#align subsemigroup.closure_l
 @[simp,
   to_additive "An additive subsemigroup `S` includes `closure s`\nif and only if it includes `s`"]
 theorem closure_le : closure s ≤ S ↔ s ⊆ S :=
-  ⟨Subset.trans subset_closure, fun h => infₛ_le h⟩
+  ⟨Subset.trans subset_closure, fun h => sInf_le h⟩
 #align subsemigroup.closure_le Subsemigroup.closure_le
 #align add_subsemigroup.closure_le AddSubsemigroup.closure_le
 
@@ -579,17 +579,17 @@ theorem closure_union (s t : Set M) : closure (s ∪ t) = closure s ⊔ closure 
 #align subsemigroup.closure_union Subsemigroup.closure_union
 #align add_subsemigroup.closure_union AddSubsemigroup.closure_union
 
-/- warning: subsemigroup.closure_Union -> Subsemigroup.closure_unionᵢ is a dubious translation:
+/- warning: subsemigroup.closure_Union -> Subsemigroup.closure_iUnion is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] {ι : Sort.{u2}} (s : ι -> (Set.{u1} M)), Eq.{succ u1} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.closure.{u1} M _inst_1 (Set.unionᵢ.{u1, u2} M ι (fun (i : ι) => s i))) (supᵢ.{u1, u2} (Subsemigroup.{u1} M _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Subsemigroup.{u1} M _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.completeLattice.{u1} M _inst_1))) ι (fun (i : ι) => Subsemigroup.closure.{u1} M _inst_1 (s i)))
+  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] {ι : Sort.{u2}} (s : ι -> (Set.{u1} M)), Eq.{succ u1} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.closure.{u1} M _inst_1 (Set.iUnion.{u1, u2} M ι (fun (i : ι) => s i))) (iSup.{u1, u2} (Subsemigroup.{u1} M _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Subsemigroup.{u1} M _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.completeLattice.{u1} M _inst_1))) ι (fun (i : ι) => Subsemigroup.closure.{u1} M _inst_1 (s i)))
 but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] {ι : Sort.{u2}} (s : ι -> (Set.{u1} M)), Eq.{succ u1} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.closure.{u1} M _inst_1 (Set.unionᵢ.{u1, u2} M ι (fun (i : ι) => s i))) (supᵢ.{u1, u2} (Subsemigroup.{u1} M _inst_1) (CompleteLattice.toSupSet.{u1} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.instCompleteLatticeSubsemigroup.{u1} M _inst_1)) ι (fun (i : ι) => Subsemigroup.closure.{u1} M _inst_1 (s i)))
-Case conversion may be inaccurate. Consider using '#align subsemigroup.closure_Union Subsemigroup.closure_unionᵢₓ'. -/
+  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] {ι : Sort.{u2}} (s : ι -> (Set.{u1} M)), Eq.{succ u1} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.closure.{u1} M _inst_1 (Set.iUnion.{u1, u2} M ι (fun (i : ι) => s i))) (iSup.{u1, u2} (Subsemigroup.{u1} M _inst_1) (CompleteLattice.toSupSet.{u1} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.instCompleteLatticeSubsemigroup.{u1} M _inst_1)) ι (fun (i : ι) => Subsemigroup.closure.{u1} M _inst_1 (s i)))
+Case conversion may be inaccurate. Consider using '#align subsemigroup.closure_Union Subsemigroup.closure_iUnionₓ'. -/
 @[to_additive]
-theorem closure_unionᵢ {ι} (s : ι → Set M) : closure (⋃ i, s i) = ⨆ i, closure (s i) :=
-  (Subsemigroup.gi M).gc.l_supᵢ
-#align subsemigroup.closure_Union Subsemigroup.closure_unionᵢ
-#align add_subsemigroup.closure_Union AddSubsemigroup.closure_unionᵢ
+theorem closure_iUnion {ι} (s : ι → Set M) : closure (⋃ i, s i) = ⨆ i, closure (s i) :=
+  (Subsemigroup.gi M).gc.l_iSup
+#align subsemigroup.closure_Union Subsemigroup.closure_iUnion
+#align add_subsemigroup.closure_Union AddSubsemigroup.closure_iUnion
 
 /- warning: subsemigroup.closure_singleton_le_iff_mem -> Subsemigroup.closure_singleton_le_iff_mem is a dubious translation:
 lean 3 declaration is
@@ -603,33 +603,33 @@ theorem closure_singleton_le_iff_mem (m : M) (p : Subsemigroup M) : closure {m} 
 #align subsemigroup.closure_singleton_le_iff_mem Subsemigroup.closure_singleton_le_iff_mem
 #align add_subsemigroup.closure_singleton_le_iff_mem AddSubsemigroup.closure_singleton_le_iff_mem
 
-/- warning: subsemigroup.mem_supr -> Subsemigroup.mem_supᵢ is a dubious translation:
+/- warning: subsemigroup.mem_supr -> Subsemigroup.mem_iSup is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] {ι : Sort.{u2}} (p : ι -> (Subsemigroup.{u1} M _inst_1)) {m : M}, Iff (Membership.Mem.{u1, u1} M (Subsemigroup.{u1} M _inst_1) (SetLike.hasMem.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.setLike.{u1} M _inst_1)) m (supᵢ.{u1, u2} (Subsemigroup.{u1} M _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Subsemigroup.{u1} M _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.completeLattice.{u1} M _inst_1))) ι (fun (i : ι) => p i))) (forall (N : Subsemigroup.{u1} M _inst_1), (forall (i : ι), LE.le.{u1} (Subsemigroup.{u1} M _inst_1) (Preorder.toLE.{u1} (Subsemigroup.{u1} M _inst_1) (PartialOrder.toPreorder.{u1} (Subsemigroup.{u1} M _inst_1) (SetLike.partialOrder.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.setLike.{u1} M _inst_1)))) (p i) N) -> (Membership.Mem.{u1, u1} M (Subsemigroup.{u1} M _inst_1) (SetLike.hasMem.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.setLike.{u1} M _inst_1)) m N))
+  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] {ι : Sort.{u2}} (p : ι -> (Subsemigroup.{u1} M _inst_1)) {m : M}, Iff (Membership.Mem.{u1, u1} M (Subsemigroup.{u1} M _inst_1) (SetLike.hasMem.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.setLike.{u1} M _inst_1)) m (iSup.{u1, u2} (Subsemigroup.{u1} M _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Subsemigroup.{u1} M _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.completeLattice.{u1} M _inst_1))) ι (fun (i : ι) => p i))) (forall (N : Subsemigroup.{u1} M _inst_1), (forall (i : ι), LE.le.{u1} (Subsemigroup.{u1} M _inst_1) (Preorder.toLE.{u1} (Subsemigroup.{u1} M _inst_1) (PartialOrder.toPreorder.{u1} (Subsemigroup.{u1} M _inst_1) (SetLike.partialOrder.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.setLike.{u1} M _inst_1)))) (p i) N) -> (Membership.Mem.{u1, u1} M (Subsemigroup.{u1} M _inst_1) (SetLike.hasMem.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.setLike.{u1} M _inst_1)) m N))
 but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] {ι : Sort.{u2}} (p : ι -> (Subsemigroup.{u1} M _inst_1)) {m : M}, Iff (Membership.mem.{u1, u1} M (Subsemigroup.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.instSetLikeSubsemigroup.{u1} M _inst_1)) m (supᵢ.{u1, u2} (Subsemigroup.{u1} M _inst_1) (CompleteLattice.toSupSet.{u1} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.instCompleteLatticeSubsemigroup.{u1} M _inst_1)) ι (fun (i : ι) => p i))) (forall (N : Subsemigroup.{u1} M _inst_1), (forall (i : ι), LE.le.{u1} (Subsemigroup.{u1} M _inst_1) (Preorder.toLE.{u1} (Subsemigroup.{u1} M _inst_1) (PartialOrder.toPreorder.{u1} (Subsemigroup.{u1} M _inst_1) (CompleteSemilatticeInf.toPartialOrder.{u1} (Subsemigroup.{u1} M _inst_1) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.instCompleteLatticeSubsemigroup.{u1} M _inst_1))))) (p i) N) -> (Membership.mem.{u1, u1} M (Subsemigroup.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.instSetLikeSubsemigroup.{u1} M _inst_1)) m N))
-Case conversion may be inaccurate. Consider using '#align subsemigroup.mem_supr Subsemigroup.mem_supᵢₓ'. -/
+  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] {ι : Sort.{u2}} (p : ι -> (Subsemigroup.{u1} M _inst_1)) {m : M}, Iff (Membership.mem.{u1, u1} M (Subsemigroup.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.instSetLikeSubsemigroup.{u1} M _inst_1)) m (iSup.{u1, u2} (Subsemigroup.{u1} M _inst_1) (CompleteLattice.toSupSet.{u1} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.instCompleteLatticeSubsemigroup.{u1} M _inst_1)) ι (fun (i : ι) => p i))) (forall (N : Subsemigroup.{u1} M _inst_1), (forall (i : ι), LE.le.{u1} (Subsemigroup.{u1} M _inst_1) (Preorder.toLE.{u1} (Subsemigroup.{u1} M _inst_1) (PartialOrder.toPreorder.{u1} (Subsemigroup.{u1} M _inst_1) (CompleteSemilatticeInf.toPartialOrder.{u1} (Subsemigroup.{u1} M _inst_1) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.instCompleteLatticeSubsemigroup.{u1} M _inst_1))))) (p i) N) -> (Membership.mem.{u1, u1} M (Subsemigroup.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.instSetLikeSubsemigroup.{u1} M _inst_1)) m N))
+Case conversion may be inaccurate. Consider using '#align subsemigroup.mem_supr Subsemigroup.mem_iSupₓ'. -/
 @[to_additive]
-theorem mem_supᵢ {ι : Sort _} (p : ι → Subsemigroup M) {m : M} :
+theorem mem_iSup {ι : Sort _} (p : ι → Subsemigroup M) {m : M} :
     (m ∈ ⨆ i, p i) ↔ ∀ N, (∀ i, p i ≤ N) → m ∈ N :=
   by
-  rw [← closure_singleton_le_iff_mem, le_supᵢ_iff]
+  rw [← closure_singleton_le_iff_mem, le_iSup_iff]
   simp only [closure_singleton_le_iff_mem]
-#align subsemigroup.mem_supr Subsemigroup.mem_supᵢ
-#align add_subsemigroup.mem_supr AddSubsemigroup.mem_supᵢ
+#align subsemigroup.mem_supr Subsemigroup.mem_iSup
+#align add_subsemigroup.mem_supr AddSubsemigroup.mem_iSup
 
-/- warning: subsemigroup.supr_eq_closure -> Subsemigroup.supᵢ_eq_closure is a dubious translation:
+/- warning: subsemigroup.supr_eq_closure -> Subsemigroup.iSup_eq_closure is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] {ι : Sort.{u2}} (p : ι -> (Subsemigroup.{u1} M _inst_1)), Eq.{succ u1} (Subsemigroup.{u1} M _inst_1) (supᵢ.{u1, u2} (Subsemigroup.{u1} M _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Subsemigroup.{u1} M _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.completeLattice.{u1} M _inst_1))) ι (fun (i : ι) => p i)) (Subsemigroup.closure.{u1} M _inst_1 (Set.unionᵢ.{u1, u2} M ι (fun (i : ι) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subsemigroup.{u1} M _inst_1) (Set.{u1} M) (HasLiftT.mk.{succ u1, succ u1} (Subsemigroup.{u1} M _inst_1) (Set.{u1} M) (CoeTCₓ.coe.{succ u1, succ u1} (Subsemigroup.{u1} M _inst_1) (Set.{u1} M) (SetLike.Set.hasCoeT.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.setLike.{u1} M _inst_1)))) (p i))))
+  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] {ι : Sort.{u2}} (p : ι -> (Subsemigroup.{u1} M _inst_1)), Eq.{succ u1} (Subsemigroup.{u1} M _inst_1) (iSup.{u1, u2} (Subsemigroup.{u1} M _inst_1) (CompleteSemilatticeSup.toHasSup.{u1} (Subsemigroup.{u1} M _inst_1) (CompleteLattice.toCompleteSemilatticeSup.{u1} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.completeLattice.{u1} M _inst_1))) ι (fun (i : ι) => p i)) (Subsemigroup.closure.{u1} M _inst_1 (Set.iUnion.{u1, u2} M ι (fun (i : ι) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Subsemigroup.{u1} M _inst_1) (Set.{u1} M) (HasLiftT.mk.{succ u1, succ u1} (Subsemigroup.{u1} M _inst_1) (Set.{u1} M) (CoeTCₓ.coe.{succ u1, succ u1} (Subsemigroup.{u1} M _inst_1) (Set.{u1} M) (SetLike.Set.hasCoeT.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.setLike.{u1} M _inst_1)))) (p i))))
 but is expected to have type
-  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] {ι : Sort.{u2}} (p : ι -> (Subsemigroup.{u1} M _inst_1)), Eq.{succ u1} (Subsemigroup.{u1} M _inst_1) (supᵢ.{u1, u2} (Subsemigroup.{u1} M _inst_1) (CompleteLattice.toSupSet.{u1} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.instCompleteLatticeSubsemigroup.{u1} M _inst_1)) ι (fun (i : ι) => p i)) (Subsemigroup.closure.{u1} M _inst_1 (Set.unionᵢ.{u1, u2} M ι (fun (i : ι) => SetLike.coe.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.instSetLikeSubsemigroup.{u1} M _inst_1) (p i))))
-Case conversion may be inaccurate. Consider using '#align subsemigroup.supr_eq_closure Subsemigroup.supᵢ_eq_closureₓ'. -/
+  forall {M : Type.{u1}} [_inst_1 : Mul.{u1} M] {ι : Sort.{u2}} (p : ι -> (Subsemigroup.{u1} M _inst_1)), Eq.{succ u1} (Subsemigroup.{u1} M _inst_1) (iSup.{u1, u2} (Subsemigroup.{u1} M _inst_1) (CompleteLattice.toSupSet.{u1} (Subsemigroup.{u1} M _inst_1) (Subsemigroup.instCompleteLatticeSubsemigroup.{u1} M _inst_1)) ι (fun (i : ι) => p i)) (Subsemigroup.closure.{u1} M _inst_1 (Set.iUnion.{u1, u2} M ι (fun (i : ι) => SetLike.coe.{u1, u1} (Subsemigroup.{u1} M _inst_1) M (Subsemigroup.instSetLikeSubsemigroup.{u1} M _inst_1) (p i))))
+Case conversion may be inaccurate. Consider using '#align subsemigroup.supr_eq_closure Subsemigroup.iSup_eq_closureₓ'. -/
 @[to_additive]
-theorem supᵢ_eq_closure {ι : Sort _} (p : ι → Subsemigroup M) :
+theorem iSup_eq_closure {ι : Sort _} (p : ι → Subsemigroup M) :
     (⨆ i, p i) = Subsemigroup.closure (⋃ i, (p i : Set M)) := by
-  simp_rw [Subsemigroup.closure_unionᵢ, Subsemigroup.closure_eq]
-#align subsemigroup.supr_eq_closure Subsemigroup.supᵢ_eq_closure
-#align add_subsemigroup.supr_eq_closure AddSubsemigroup.supᵢ_eq_closure
+  simp_rw [Subsemigroup.closure_iUnion, Subsemigroup.closure_eq]
+#align subsemigroup.supr_eq_closure Subsemigroup.iSup_eq_closure
+#align add_subsemigroup.supr_eq_closure AddSubsemigroup.iSup_eq_closure
 
 end Subsemigroup
 

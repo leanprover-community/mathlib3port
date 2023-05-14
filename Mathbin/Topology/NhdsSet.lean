@@ -42,7 +42,7 @@ variable {α β : Type _} [TopologicalSpace α] [TopologicalSpace β] {s t s₁ 
 #print nhdsSet /-
 /-- The filter of neighborhoods of a set in a topological space. -/
 def nhdsSet (s : Set α) : Filter α :=
-  supₛ (nhds '' s)
+  sSup (nhds '' s)
 #align nhds_set nhdsSet
 -/
 
@@ -51,9 +51,9 @@ scoped[Topology] notation "𝓝ˢ" => nhdsSet
 
 /- warning: nhds_set_diagonal -> nhdsSet_diagonal is a dubious translation:
 lean 3 declaration is
-  forall (α : Type.{u1}) [_inst_3 : TopologicalSpace.{u1} (Prod.{u1, u1} α α)], Eq.{succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (nhdsSet.{u1} (Prod.{u1, u1} α α) _inst_3 (Set.diagonal.{u1} α)) (supᵢ.{u1, succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (ConditionallyCompleteLattice.toHasSup.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.completeLattice.{u1} (Prod.{u1, u1} α α)))) α (fun (x : α) => nhds.{u1} (Prod.{u1, u1} α α) _inst_3 (Prod.mk.{u1, u1} α α x x)))
+  forall (α : Type.{u1}) [_inst_3 : TopologicalSpace.{u1} (Prod.{u1, u1} α α)], Eq.{succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (nhdsSet.{u1} (Prod.{u1, u1} α α) _inst_3 (Set.diagonal.{u1} α)) (iSup.{u1, succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (ConditionallyCompleteLattice.toHasSup.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.completeLattice.{u1} (Prod.{u1, u1} α α)))) α (fun (x : α) => nhds.{u1} (Prod.{u1, u1} α α) _inst_3 (Prod.mk.{u1, u1} α α x x)))
 but is expected to have type
-  forall (α : Type.{u1}) [_inst_3 : TopologicalSpace.{u1} (Prod.{u1, u1} α α)], Eq.{succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (nhdsSet.{u1} (Prod.{u1, u1} α α) _inst_3 (Set.diagonal.{u1} α)) (supᵢ.{u1, succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (ConditionallyCompleteLattice.toSupSet.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.instCompleteLatticeFilter.{u1} (Prod.{u1, u1} α α)))) α (fun (x : α) => nhds.{u1} (Prod.{u1, u1} α α) _inst_3 (Prod.mk.{u1, u1} α α x x)))
+  forall (α : Type.{u1}) [_inst_3 : TopologicalSpace.{u1} (Prod.{u1, u1} α α)], Eq.{succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (nhdsSet.{u1} (Prod.{u1, u1} α α) _inst_3 (Set.diagonal.{u1} α)) (iSup.{u1, succ u1} (Filter.{u1} (Prod.{u1, u1} α α)) (ConditionallyCompleteLattice.toSupSet.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Prod.{u1, u1} α α)) (Filter.instCompleteLatticeFilter.{u1} (Prod.{u1, u1} α α)))) α (fun (x : α) => nhds.{u1} (Prod.{u1, u1} α α) _inst_3 (Prod.mk.{u1, u1} α α x x)))
 Case conversion may be inaccurate. Consider using '#align nhds_set_diagonal nhdsSet_diagonalₓ'. -/
 theorem nhdsSet_diagonal (α) [TopologicalSpace (α × α)] : 𝓝ˢ (diagonal α) = ⨆ x, 𝓝 (x, x) :=
   by
@@ -63,13 +63,13 @@ theorem nhdsSet_diagonal (α) [TopologicalSpace (α × α)] : 𝓝ˢ (diagonal �
 
 #print mem_nhdsSet_iff_forall /-
 theorem mem_nhdsSet_iff_forall : s ∈ 𝓝ˢ t ↔ ∀ x : α, x ∈ t → s ∈ 𝓝 x := by
-  simp_rw [nhdsSet, Filter.mem_supₛ, ball_image_iff]
+  simp_rw [nhdsSet, Filter.mem_sSup, ball_image_iff]
 #align mem_nhds_set_iff_forall mem_nhdsSet_iff_forall
 -/
 
 #print bUnion_mem_nhdsSet /-
 theorem bUnion_mem_nhdsSet {t : α → Set α} (h : ∀ x ∈ s, t x ∈ 𝓝 x) : (⋃ x ∈ s, t x) ∈ 𝓝ˢ s :=
-  mem_nhdsSet_iff_forall.2 fun x hx => mem_of_superset (h x hx) (subset_unionᵢ₂ x hx)
+  mem_nhdsSet_iff_forall.2 fun x hx => mem_of_superset (h x hx) (subset_iUnion₂ x hx)
 #align bUnion_mem_nhds_set bUnion_mem_nhdsSet
 -/
 
@@ -172,7 +172,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align nhds_set_mono nhdsSet_monoₓ'. -/
 @[mono]
 theorem nhdsSet_mono (h : s ⊆ t) : 𝓝ˢ s ≤ 𝓝ˢ t :=
-  supₛ_le_supₛ <| image_subset _ h
+  sSup_le_sSup <| image_subset _ h
 #align nhds_set_mono nhdsSet_mono
 
 /- warning: monotone_nhds_set -> monotone_nhdsSet is a dubious translation:
@@ -191,7 +191,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {x : α}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (nhds.{u1} α _inst_1 x) (nhdsSet.{u1} α _inst_1 s))
 Case conversion may be inaccurate. Consider using '#align nhds_le_nhds_set nhds_le_nhdsSetₓ'. -/
 theorem nhds_le_nhdsSet (h : x ∈ s) : 𝓝 x ≤ 𝓝ˢ s :=
-  le_supₛ <| mem_image_of_mem _ h
+  le_sSup <| mem_image_of_mem _ h
 #align nhds_le_nhds_set nhds_le_nhdsSet
 
 /- warning: nhds_set_union -> nhdsSet_union is a dubious translation:
@@ -202,7 +202,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align nhds_set_union nhdsSet_unionₓ'. -/
 @[simp]
 theorem nhdsSet_union (s t : Set α) : 𝓝ˢ (s ∪ t) = 𝓝ˢ s ⊔ 𝓝ˢ t := by
-  simp only [nhdsSet, image_union, supₛ_union]
+  simp only [nhdsSet, image_union, sSup_union]
 #align nhds_set_union nhdsSet_union
 
 /- warning: union_mem_nhds_set -> union_mem_nhdsSet is a dubious translation:

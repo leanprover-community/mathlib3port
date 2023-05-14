@@ -424,23 +424,23 @@ protected theorem mono : Monotone (@UniformFun.uniformSpace α γ) := fun u₁ u
   (UniformFun.gc α γ).monotone_u hu
 #align uniform_fun.mono UniformFun.mono
 
-/- warning: uniform_fun.infi_eq -> UniformFun.infᵢ_eq is a dubious translation:
+/- warning: uniform_fun.infi_eq -> UniformFun.iInf_eq is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {γ : Type.{u2}} {ι : Type.{u3}} {u : ι -> (UniformSpace.{u2} γ)}, Eq.{succ (max u1 u2)} (UniformSpace.{max u1 u2} (UniformFun.{u1, u2} α γ)) (UniformFun.uniformSpace.{u1, u2} α γ (infᵢ.{u2, succ u3} (UniformSpace.{u2} γ) (UniformSpace.hasInf.{u2} γ) ι (fun (i : ι) => u i))) (infᵢ.{max u1 u2, succ u3} (UniformSpace.{max u1 u2} (UniformFun.{u1, u2} α γ)) (UniformSpace.hasInf.{max u1 u2} (UniformFun.{u1, u2} α γ)) ι (fun (i : ι) => UniformFun.uniformSpace.{u1, u2} α γ (u i)))
+  forall {α : Type.{u1}} {γ : Type.{u2}} {ι : Type.{u3}} {u : ι -> (UniformSpace.{u2} γ)}, Eq.{succ (max u1 u2)} (UniformSpace.{max u1 u2} (UniformFun.{u1, u2} α γ)) (UniformFun.uniformSpace.{u1, u2} α γ (iInf.{u2, succ u3} (UniformSpace.{u2} γ) (UniformSpace.hasInf.{u2} γ) ι (fun (i : ι) => u i))) (iInf.{max u1 u2, succ u3} (UniformSpace.{max u1 u2} (UniformFun.{u1, u2} α γ)) (UniformSpace.hasInf.{max u1 u2} (UniformFun.{u1, u2} α γ)) ι (fun (i : ι) => UniformFun.uniformSpace.{u1, u2} α γ (u i)))
 but is expected to have type
-  forall {α : Type.{u2}} {γ : Type.{u3}} {ι : Type.{u1}} {u : ι -> (UniformSpace.{u3} γ)}, Eq.{max (succ u2) (succ u3)} (UniformSpace.{max u3 u2} (UniformFun.{u2, u3} α γ)) (UniformFun.uniformSpace.{u2, u3} α γ (infᵢ.{u3, succ u1} (UniformSpace.{u3} γ) (instInfSetUniformSpace.{u3} γ) ι (fun (i : ι) => u i))) (infᵢ.{max u2 u3, succ u1} (UniformSpace.{max u3 u2} (UniformFun.{u2, u3} α γ)) (instInfSetUniformSpace.{max u2 u3} (UniformFun.{u2, u3} α γ)) ι (fun (i : ι) => UniformFun.uniformSpace.{u2, u3} α γ (u i)))
-Case conversion may be inaccurate. Consider using '#align uniform_fun.infi_eq UniformFun.infᵢ_eqₓ'. -/
+  forall {α : Type.{u2}} {γ : Type.{u3}} {ι : Type.{u1}} {u : ι -> (UniformSpace.{u3} γ)}, Eq.{max (succ u2) (succ u3)} (UniformSpace.{max u3 u2} (UniformFun.{u2, u3} α γ)) (UniformFun.uniformSpace.{u2, u3} α γ (iInf.{u3, succ u1} (UniformSpace.{u3} γ) (instInfSetUniformSpace.{u3} γ) ι (fun (i : ι) => u i))) (iInf.{max u2 u3, succ u1} (UniformSpace.{max u3 u2} (UniformFun.{u2, u3} α γ)) (instInfSetUniformSpace.{max u2 u3} (UniformFun.{u2, u3} α γ)) ι (fun (i : ι) => UniformFun.uniformSpace.{u2, u3} α γ (u i)))
+Case conversion may be inaccurate. Consider using '#align uniform_fun.infi_eq UniformFun.iInf_eqₓ'. -/
 /-- If `u` is a family of uniform structures on `γ`, then
 `𝒰(α, γ, (⨅ i, u i)) = ⨅ i, 𝒰(α, γ, u i)`. -/
-protected theorem infᵢ_eq {u : ι → UniformSpace γ} : 𝒰(α, γ, ⨅ i, u i) = ⨅ i, 𝒰(α, γ, u i) :=
+protected theorem iInf_eq {u : ι → UniformSpace γ} : 𝒰(α, γ, ⨅ i, u i) = ⨅ i, 𝒰(α, γ, u i) :=
   by
   -- This follows directly from the fact that the upper adjoint in a Galois connection maps
   -- infimas to infimas.
   ext : 1
   change UniformFun.filter α γ 𝓤[⨅ i, u i] = 𝓤[⨅ i, 𝒰(α, γ, u i)]
-  rw [infᵢ_uniformity, infᵢ_uniformity]
-  exact (UniformFun.gc α γ).u_infᵢ
-#align uniform_fun.infi_eq UniformFun.infᵢ_eq
+  rw [iInf_uniformity, iInf_uniformity]
+  exact (UniformFun.gc α γ).u_iInf
+#align uniform_fun.infi_eq UniformFun.iInf_eq
 
 #print UniformFun.inf_eq /-
 /-- If `u₁` and `u₂` are two uniform structures on `γ`, then
@@ -449,8 +449,8 @@ protected theorem inf_eq {u₁ u₂ : UniformSpace γ} : 𝒰(α, γ, u₁ ⊓ u
   by
   -- This follows directly from the fact that the upper adjoint in a Galois connection maps
   -- infimas to infimas.
-  rw [inf_eq_infᵢ, inf_eq_infᵢ, UniformFun.infᵢ_eq]
-  refine' infᵢ_congr fun i => _
+  rw [inf_eq_iInf, inf_eq_iInf, UniformFun.iInf_eq]
+  refine' iInf_congr fun i => _
   cases i <;> rfl
 #align uniform_fun.inf_eq UniformFun.inf_eq
 -/
@@ -659,8 +659,8 @@ protected def uniformEquivPiComm : UniformEquiv (α →ᵤ ∀ i, δ i) (∀ i, 
       rw [← uniformity_comap]
       congr
       rw [Pi.uniformSpace, UniformSpace.ofCoreEq_toCore, Pi.uniformSpace,
-        UniformSpace.ofCoreEq_toCore, UniformSpace.comap_infᵢ, UniformFun.infᵢ_eq]
-      refine' infᵢ_congr fun i => _
+        UniformSpace.ofCoreEq_toCore, UniformSpace.comap_iInf, UniformFun.iInf_eq]
+      refine' iInf_congr fun i => _
       rw [← UniformSpace.comap_comap, UniformFun.comap_eq])
 #align uniform_fun.uniform_equiv_Pi_comm UniformFun.uniformEquivPiComm
 -/
@@ -758,9 +758,9 @@ instance : TopologicalSpace (α →ᵤ[𝔖] β) :=
 
 /- warning: uniform_on_fun.topological_space_eq -> UniformOnFun.topologicalSpace_eq is a dubious translation:
 lean 3 declaration is
-  forall (α : Type.{u1}) (β : Type.{u2}) [_inst_1 : UniformSpace.{u2} β] (𝔖 : Set.{u1} (Set.{u1} α)), Eq.{succ (max u1 u2)} (TopologicalSpace.{max u1 u2} (UniformOnFun.{u1, u2} α β 𝔖)) (UniformOnFun.topologicalSpace.{u1, u2} α β _inst_1 𝔖) (infᵢ.{max u1 u2, succ u1} (TopologicalSpace.{max u1 u2} (UniformOnFun.{u1, u2} α β 𝔖)) (ConditionallyCompleteLattice.toHasInf.{max u1 u2} (TopologicalSpace.{max u1 u2} (UniformOnFun.{u1, u2} α β 𝔖)) (CompleteLattice.toConditionallyCompleteLattice.{max u1 u2} (TopologicalSpace.{max u1 u2} (UniformOnFun.{u1, u2} α β 𝔖)) (TopologicalSpace.completeLattice.{max u1 u2} (UniformOnFun.{u1, u2} α β 𝔖)))) (Set.{u1} α) (fun (s : Set.{u1} α) => infᵢ.{max u1 u2, 0} (TopologicalSpace.{max u1 u2} (UniformOnFun.{u1, u2} α β 𝔖)) (ConditionallyCompleteLattice.toHasInf.{max u1 u2} (TopologicalSpace.{max u1 u2} (UniformOnFun.{u1, u2} α β 𝔖)) (CompleteLattice.toConditionallyCompleteLattice.{max u1 u2} (TopologicalSpace.{max u1 u2} (UniformOnFun.{u1, u2} α β 𝔖)) (TopologicalSpace.completeLattice.{max u1 u2} (UniformOnFun.{u1, u2} α β 𝔖)))) (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) s 𝔖) (fun (hs : Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) s 𝔖) => TopologicalSpace.induced.{max u1 u2, max u1 u2} (UniformOnFun.{u1, u2} α β 𝔖) ((coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) -> β) (Set.restrict.{u1, u2} α (fun (ᾰ : α) => β) s) (UniformFun.topologicalSpace.{u1, u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) β _inst_1))))
+  forall (α : Type.{u1}) (β : Type.{u2}) [_inst_1 : UniformSpace.{u2} β] (𝔖 : Set.{u1} (Set.{u1} α)), Eq.{succ (max u1 u2)} (TopologicalSpace.{max u1 u2} (UniformOnFun.{u1, u2} α β 𝔖)) (UniformOnFun.topologicalSpace.{u1, u2} α β _inst_1 𝔖) (iInf.{max u1 u2, succ u1} (TopologicalSpace.{max u1 u2} (UniformOnFun.{u1, u2} α β 𝔖)) (ConditionallyCompleteLattice.toHasInf.{max u1 u2} (TopologicalSpace.{max u1 u2} (UniformOnFun.{u1, u2} α β 𝔖)) (CompleteLattice.toConditionallyCompleteLattice.{max u1 u2} (TopologicalSpace.{max u1 u2} (UniformOnFun.{u1, u2} α β 𝔖)) (TopologicalSpace.completeLattice.{max u1 u2} (UniformOnFun.{u1, u2} α β 𝔖)))) (Set.{u1} α) (fun (s : Set.{u1} α) => iInf.{max u1 u2, 0} (TopologicalSpace.{max u1 u2} (UniformOnFun.{u1, u2} α β 𝔖)) (ConditionallyCompleteLattice.toHasInf.{max u1 u2} (TopologicalSpace.{max u1 u2} (UniformOnFun.{u1, u2} α β 𝔖)) (CompleteLattice.toConditionallyCompleteLattice.{max u1 u2} (TopologicalSpace.{max u1 u2} (UniformOnFun.{u1, u2} α β 𝔖)) (TopologicalSpace.completeLattice.{max u1 u2} (UniformOnFun.{u1, u2} α β 𝔖)))) (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) s 𝔖) (fun (hs : Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) s 𝔖) => TopologicalSpace.induced.{max u1 u2, max u1 u2} (UniformOnFun.{u1, u2} α β 𝔖) ((coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) -> β) (Set.restrict.{u1, u2} α (fun (ᾰ : α) => β) s) (UniformFun.topologicalSpace.{u1, u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) β _inst_1))))
 but is expected to have type
-  forall (α : Type.{u2}) (β : Type.{u1}) [_inst_1 : UniformSpace.{u1} β] (𝔖 : Set.{u2} (Set.{u2} α)), Eq.{max (succ u2) (succ u1)} (TopologicalSpace.{max u1 u2} (UniformOnFun.{u2, u1} α β 𝔖)) (UniformOnFun.topologicalSpace.{u2, u1} α β _inst_1 𝔖) (infᵢ.{max u1 u2, succ u2} (TopologicalSpace.{max u1 u2} (UniformFun.{u2, u1} α β)) (ConditionallyCompleteLattice.toInfSet.{max u2 u1} (TopologicalSpace.{max u1 u2} (UniformFun.{u2, u1} α β)) (CompleteLattice.toConditionallyCompleteLattice.{max u2 u1} (TopologicalSpace.{max u1 u2} (UniformFun.{u2, u1} α β)) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{max u2 u1} (UniformFun.{u2, u1} α β)))) (Set.{u2} α) (fun (s : Set.{u2} α) => infᵢ.{max u1 u2, 0} (TopologicalSpace.{max u1 u2} (UniformFun.{u2, u1} α β)) (ConditionallyCompleteLattice.toInfSet.{max u2 u1} (TopologicalSpace.{max u1 u2} (UniformFun.{u2, u1} α β)) (CompleteLattice.toConditionallyCompleteLattice.{max u2 u1} (TopologicalSpace.{max u1 u2} (UniformFun.{u2, u1} α β)) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{max u2 u1} (UniformFun.{u2, u1} α β)))) (Membership.mem.{u2, u2} (Set.{u2} α) (Set.{u2} (Set.{u2} α)) (Set.instMembershipSet.{u2} (Set.{u2} α)) s 𝔖) (fun (hs : Membership.mem.{u2, u2} (Set.{u2} α) (Set.{u2} (Set.{u2} α)) (Set.instMembershipSet.{u2} (Set.{u2} α)) s 𝔖) => TopologicalSpace.induced.{max u1 u2, max u2 u1} (UniformFun.{u2, u1} α β) ((Set.Elem.{u2} α s) -> β) (Function.comp.{succ (max u1 u2), max (succ u2) (succ u1), succ (max u2 u1)} (UniformFun.{u2, u1} α β) (α -> β) ((Set.Elem.{u2} α s) -> β) (Set.restrict.{u2, u1} α (fun (a._@.Mathlib.Data.Set.Function._hyg.24 : α) => β) s) (FunLike.coe.{max (succ u1) (succ u2), max (succ u1) (succ u2), max (succ u1) (succ u2)} (Equiv.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (UniformFun.{u2, u1} α β) (α -> β)) (UniformFun.{u2, u1} α β) (fun (a : UniformFun.{u2, u1} α β) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : UniformFun.{u2, u1} α β) => α -> β) a) (Equiv.instFunLikeEquiv.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (UniformFun.{u2, u1} α β) (α -> β)) (UniformFun.toFun.{u2, u1} α β))) (UniformFun.topologicalSpace.{u2, u1} (Set.Elem.{u2} α s) β _inst_1))))
+  forall (α : Type.{u2}) (β : Type.{u1}) [_inst_1 : UniformSpace.{u1} β] (𝔖 : Set.{u2} (Set.{u2} α)), Eq.{max (succ u2) (succ u1)} (TopologicalSpace.{max u1 u2} (UniformOnFun.{u2, u1} α β 𝔖)) (UniformOnFun.topologicalSpace.{u2, u1} α β _inst_1 𝔖) (iInf.{max u1 u2, succ u2} (TopologicalSpace.{max u1 u2} (UniformFun.{u2, u1} α β)) (ConditionallyCompleteLattice.toInfSet.{max u2 u1} (TopologicalSpace.{max u1 u2} (UniformFun.{u2, u1} α β)) (CompleteLattice.toConditionallyCompleteLattice.{max u2 u1} (TopologicalSpace.{max u1 u2} (UniformFun.{u2, u1} α β)) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{max u2 u1} (UniformFun.{u2, u1} α β)))) (Set.{u2} α) (fun (s : Set.{u2} α) => iInf.{max u1 u2, 0} (TopologicalSpace.{max u1 u2} (UniformFun.{u2, u1} α β)) (ConditionallyCompleteLattice.toInfSet.{max u2 u1} (TopologicalSpace.{max u1 u2} (UniformFun.{u2, u1} α β)) (CompleteLattice.toConditionallyCompleteLattice.{max u2 u1} (TopologicalSpace.{max u1 u2} (UniformFun.{u2, u1} α β)) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{max u2 u1} (UniformFun.{u2, u1} α β)))) (Membership.mem.{u2, u2} (Set.{u2} α) (Set.{u2} (Set.{u2} α)) (Set.instMembershipSet.{u2} (Set.{u2} α)) s 𝔖) (fun (hs : Membership.mem.{u2, u2} (Set.{u2} α) (Set.{u2} (Set.{u2} α)) (Set.instMembershipSet.{u2} (Set.{u2} α)) s 𝔖) => TopologicalSpace.induced.{max u1 u2, max u2 u1} (UniformFun.{u2, u1} α β) ((Set.Elem.{u2} α s) -> β) (Function.comp.{succ (max u1 u2), max (succ u2) (succ u1), succ (max u2 u1)} (UniformFun.{u2, u1} α β) (α -> β) ((Set.Elem.{u2} α s) -> β) (Set.restrict.{u2, u1} α (fun (a._@.Mathlib.Data.Set.Function._hyg.24 : α) => β) s) (FunLike.coe.{max (succ u1) (succ u2), max (succ u1) (succ u2), max (succ u1) (succ u2)} (Equiv.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (UniformFun.{u2, u1} α β) (α -> β)) (UniformFun.{u2, u1} α β) (fun (a : UniformFun.{u2, u1} α β) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : UniformFun.{u2, u1} α β) => α -> β) a) (Equiv.instFunLikeEquiv.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (UniformFun.{u2, u1} α β) (α -> β)) (UniformFun.toFun.{u2, u1} α β))) (UniformFun.topologicalSpace.{u2, u1} (Set.Elem.{u2} α s) β _inst_1))))
 Case conversion may be inaccurate. Consider using '#align uniform_on_fun.topological_space_eq UniformOnFun.topologicalSpace_eqₓ'. -/
 /-- The topology of `𝔖`-convergence is the infimum, for `S ∈ 𝔖`, of topology induced by the map
 of `S.restrict : (α →ᵤ[𝔖] β) → (↥S →ᵤ β)` of restriction to `S`, where `↥S →ᵤ β` is endowed with
@@ -770,7 +770,7 @@ protected theorem topologicalSpace_eq :
       ⨅ (s : Set α) (hs : s ∈ 𝔖),
         TopologicalSpace.induced s.restrict (UniformFun.topologicalSpace s β) :=
   by
-  simp only [UniformOnFun.topologicalSpace, toTopologicalSpace_infᵢ, toTopologicalSpace_infᵢ,
+  simp only [UniformOnFun.topologicalSpace, toTopologicalSpace_iInf, toTopologicalSpace_iInf,
     toTopologicalSpace_comap]
   rfl
 #align uniform_on_fun.topological_space_eq UniformOnFun.topologicalSpace_eq
@@ -822,7 +822,7 @@ protected theorem hasBasis_uniformity_of_basis (h : 𝔖.Nonempty) (h' : Directe
     (𝓤 (α →ᵤ[𝔖] β)).HasBasis (fun Si : Set α × ι => Si.1 ∈ 𝔖 ∧ p Si.2) fun Si =>
       UniformOnFun.gen 𝔖 Si.1 (s Si.2) :=
   by
-  simp only [infᵢ_uniformity]
+  simp only [iInf_uniformity]
   exact
     has_basis_binfi_of_directed h (fun S => UniformOnFun.gen 𝔖 S ∘ s) _
       (fun S hS => UniformOnFun.hasBasis_uniformity_of_basis_aux₁ α β 𝔖 hb S)
@@ -886,8 +886,8 @@ protected theorem uniformContinuous_restrict (h : s ∈ 𝔖) :
     UniformContinuous (UniformFun.ofFun ∘ (s.restrict : (α → β) → s → β) ∘ toFun 𝔖) :=
   by
   change _ ≤ _
-  simp only [UniformOnFun.uniformSpace, map_le_iff_le_comap, infᵢ_uniformity]
-  exact infᵢ₂_le s h
+  simp only [UniformOnFun.uniformSpace, map_le_iff_le_comap, iInf_uniformity]
+  exact iInf₂_le s h
 #align uniform_on_fun.uniform_continuous_restrict UniformOnFun.uniformContinuous_restrict
 
 variable {α}
@@ -903,8 +903,8 @@ Case conversion may be inaccurate. Consider using '#align uniform_on_fun.mono Un
 protected theorem mono ⦃u₁ u₂ : UniformSpace γ⦄ (hu : u₁ ≤ u₂) ⦃𝔖₁ 𝔖₂ : Set (Set α)⦄
     (h𝔖 : 𝔖₂ ⊆ 𝔖₁) : 𝒱(α, γ, 𝔖₁, u₁) ≤ 𝒱(α, γ, 𝔖₂, u₂) :=
   calc
-    𝒱(α, γ, 𝔖₁, u₁) ≤ 𝒱(α, γ, 𝔖₂, u₁) := infᵢ_le_infᵢ_of_subset h𝔖
-    _ ≤ 𝒱(α, γ, 𝔖₂, u₂) := infᵢ₂_mono fun i hi => UniformSpace.comap_mono <| UniformFun.mono hu
+    𝒱(α, γ, 𝔖₁, u₁) ≤ 𝒱(α, γ, 𝔖₂, u₁) := iInf_le_iInf_of_subset h𝔖
+    _ ≤ 𝒱(α, γ, 𝔖₂, u₂) := iInf₂_mono fun i hi => UniformSpace.comap_mono <| UniformFun.mono hu
     
 #align uniform_on_fun.mono UniformOnFun.mono
 
@@ -924,20 +924,20 @@ theorem uniformContinuous_eval_of_mem {x : α} (hxs : x ∈ s) (hs : s ∈ 𝔖)
 
 variable {β} {𝔖}
 
-/- warning: uniform_on_fun.infi_eq -> UniformOnFun.infᵢ_eq is a dubious translation:
+/- warning: uniform_on_fun.infi_eq -> UniformOnFun.iInf_eq is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {γ : Type.{u2}} {ι : Type.{u3}} {𝔖 : Set.{u1} (Set.{u1} α)} {u : ι -> (UniformSpace.{u2} γ)}, Eq.{succ (max u1 u2)} (UniformSpace.{max u1 u2} (UniformOnFun.{u1, u2} α γ 𝔖)) (UniformOnFun.uniformSpace.{u1, u2} α γ (infᵢ.{u2, succ u3} (UniformSpace.{u2} γ) (UniformSpace.hasInf.{u2} γ) ι (fun (i : ι) => u i)) 𝔖) (infᵢ.{max u1 u2, succ u3} (UniformSpace.{max u1 u2} (UniformOnFun.{u1, u2} α γ 𝔖)) (UniformSpace.hasInf.{max u1 u2} (UniformOnFun.{u1, u2} α γ 𝔖)) ι (fun (i : ι) => UniformOnFun.uniformSpace.{u1, u2} α γ (u i) 𝔖))
+  forall {α : Type.{u1}} {γ : Type.{u2}} {ι : Type.{u3}} {𝔖 : Set.{u1} (Set.{u1} α)} {u : ι -> (UniformSpace.{u2} γ)}, Eq.{succ (max u1 u2)} (UniformSpace.{max u1 u2} (UniformOnFun.{u1, u2} α γ 𝔖)) (UniformOnFun.uniformSpace.{u1, u2} α γ (iInf.{u2, succ u3} (UniformSpace.{u2} γ) (UniformSpace.hasInf.{u2} γ) ι (fun (i : ι) => u i)) 𝔖) (iInf.{max u1 u2, succ u3} (UniformSpace.{max u1 u2} (UniformOnFun.{u1, u2} α γ 𝔖)) (UniformSpace.hasInf.{max u1 u2} (UniformOnFun.{u1, u2} α γ 𝔖)) ι (fun (i : ι) => UniformOnFun.uniformSpace.{u1, u2} α γ (u i) 𝔖))
 but is expected to have type
-  forall {α : Type.{u2}} {γ : Type.{u3}} {ι : Type.{u1}} {𝔖 : Set.{u2} (Set.{u2} α)} {u : ι -> (UniformSpace.{u3} γ)}, Eq.{max (succ u2) (succ u3)} (UniformSpace.{max u3 u2} (UniformOnFun.{u2, u3} α γ 𝔖)) (UniformOnFun.uniformSpace.{u2, u3} α γ (infᵢ.{u3, succ u1} (UniformSpace.{u3} γ) (instInfSetUniformSpace.{u3} γ) ι (fun (i : ι) => u i)) 𝔖) (infᵢ.{max u2 u3, succ u1} (UniformSpace.{max u3 u2} (UniformOnFun.{u2, u3} α γ 𝔖)) (instInfSetUniformSpace.{max u2 u3} (UniformOnFun.{u2, u3} α γ 𝔖)) ι (fun (i : ι) => UniformOnFun.uniformSpace.{u2, u3} α γ (u i) 𝔖))
-Case conversion may be inaccurate. Consider using '#align uniform_on_fun.infi_eq UniformOnFun.infᵢ_eqₓ'. -/
+  forall {α : Type.{u2}} {γ : Type.{u3}} {ι : Type.{u1}} {𝔖 : Set.{u2} (Set.{u2} α)} {u : ι -> (UniformSpace.{u3} γ)}, Eq.{max (succ u2) (succ u3)} (UniformSpace.{max u3 u2} (UniformOnFun.{u2, u3} α γ 𝔖)) (UniformOnFun.uniformSpace.{u2, u3} α γ (iInf.{u3, succ u1} (UniformSpace.{u3} γ) (instInfSetUniformSpace.{u3} γ) ι (fun (i : ι) => u i)) 𝔖) (iInf.{max u2 u3, succ u1} (UniformSpace.{max u3 u2} (UniformOnFun.{u2, u3} α γ 𝔖)) (instInfSetUniformSpace.{max u2 u3} (UniformOnFun.{u2, u3} α γ 𝔖)) ι (fun (i : ι) => UniformOnFun.uniformSpace.{u2, u3} α γ (u i) 𝔖))
+Case conversion may be inaccurate. Consider using '#align uniform_on_fun.infi_eq UniformOnFun.iInf_eqₓ'. -/
 /-- If `u` is a family of uniform structures on `γ`, then
 `𝒱(α, γ, 𝔖, (⨅ i, u i)) = ⨅ i, 𝒱(α, γ, 𝔖, u i)`. -/
-protected theorem infᵢ_eq {u : ι → UniformSpace γ} : 𝒱(α, γ, 𝔖, ⨅ i, u i) = ⨅ i, 𝒱(α, γ, 𝔖, u i) :=
+protected theorem iInf_eq {u : ι → UniformSpace γ} : 𝒱(α, γ, 𝔖, ⨅ i, u i) = ⨅ i, 𝒱(α, γ, 𝔖, u i) :=
   by
-  simp_rw [UniformOnFun.uniformSpace, UniformFun.infᵢ_eq, UniformSpace.comap_infᵢ]
-  rw [infᵢ_comm]
-  exact infᵢ_congr fun s => infᵢ_comm
-#align uniform_on_fun.infi_eq UniformOnFun.infᵢ_eq
+  simp_rw [UniformOnFun.uniformSpace, UniformFun.iInf_eq, UniformSpace.comap_iInf]
+  rw [iInf_comm]
+  exact iInf_congr fun s => iInf_comm
+#align uniform_on_fun.infi_eq UniformOnFun.iInf_eq
 
 #print UniformOnFun.inf_eq /-
 /-- If `u₁` and `u₂` are two uniform structures on `γ`, then
@@ -945,8 +945,8 @@ protected theorem infᵢ_eq {u : ι → UniformSpace γ} : 𝒱(α, γ, 𝔖, �
 protected theorem inf_eq {u₁ u₂ : UniformSpace γ} :
     𝒱(α, γ, 𝔖, u₁ ⊓ u₂) = 𝒱(α, γ, 𝔖, u₁) ⊓ 𝒱(α, γ, 𝔖, u₂) :=
   by
-  rw [inf_eq_infᵢ, inf_eq_infᵢ, UniformOnFun.infᵢ_eq]
-  refine' infᵢ_congr fun i => _
+  rw [inf_eq_iInf, inf_eq_iInf, UniformOnFun.iInf_eq]
+  refine' iInf_congr fun i => _
   cases i <;> rfl
 #align uniform_on_fun.inf_eq UniformOnFun.inf_eq
 -/
@@ -964,7 +964,7 @@ protected theorem comap_eq {f : γ → β} :
   by
   -- We reduce this to `uniform_convergence.comap_eq` using the fact that `comap` distributes
   -- on `infi`.
-  simp_rw [UniformOnFun.uniformSpace, UniformSpace.comap_infᵢ, UniformFun.comap_eq, ←
+  simp_rw [UniformOnFun.uniformSpace, UniformSpace.comap_iInf, UniformFun.comap_eq, ←
     UniformSpace.comap_comap]
   rfl
 #align uniform_on_fun.comap_eq UniformOnFun.comap_eq
@@ -1038,11 +1038,11 @@ protected theorem precomp_uniformContinuous {𝔗 : Set (Set γ)} {f : γ → α
   by
   -- Since `comap` distributes on `infi`, it suffices to prove that
   -- `⨅ s ∈ 𝔖, comap s.restrict 𝒰(↥s, β, uβ) ≤ ⨅ t ∈ 𝔗, comap (t.restrict ∘ (— ∘ f)) 𝒰(↥t, β, uβ)`.
-  simp_rw [uniformContinuous_iff, UniformOnFun.uniformSpace, UniformSpace.comap_infᵢ, ←
+  simp_rw [uniformContinuous_iff, UniformOnFun.uniformSpace, UniformSpace.comap_iInf, ←
     UniformSpace.comap_comap]
   -- For any `t ∈ 𝔗`, note `s := f '' t ∈ 𝔖`.
   -- We will show that `comap s.restrict 𝒰(↥s, β, uβ) ≤ comap (t.restrict ∘ (— ∘ f)) 𝒰(↥t, β, uβ)`.
-  refine' le_infᵢ₂ fun t ht => infᵢ_le_of_le (f '' t) <| infᵢ_le_of_le (hf ht) _
+  refine' le_iInf₂ fun t ht => iInf_le_of_le (f '' t) <| iInf_le_of_le (hf ht) _
   -- Let `f'` be the map from `t` to `f '' t` induced by `f`.
   let f' : t → f '' t := (maps_to_image f t).restrict f t (f '' t)
   -- By definition `t.restrict ∘ (— ∘ f) = (— ∘ f') ∘ (f '' t).restrict`.
@@ -1094,9 +1094,9 @@ theorem t2Space_of_covering [T2Space β] (h : ⋃₀ 𝔖 = univ) : T2Space (α 
 
 /- warning: uniform_on_fun.uniform_continuous_to_fun -> UniformOnFun.uniformContinuous_toFun is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u2} β] {𝔖 : Set.{u1} (Set.{u1} α)}, (Eq.{succ u1} (Set.{u1} α) (Set.unionₛ.{u1} α 𝔖) (Set.univ.{u1} α)) -> (UniformContinuous.{max u1 u2, max u1 u2} (UniformOnFun.{u1, u2} α β 𝔖) (α -> β) (UniformOnFun.uniformSpace.{u1, u2} α β _inst_1 𝔖) (Pi.uniformSpace.{u2, u1} α (fun (ᾰ : α) => β) (fun (i : α) => _inst_1)) (coeFn.{max 1 (succ u1) (succ u2), max (succ u1) (succ u2)} (Equiv.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (UniformOnFun.{u1, u2} α β 𝔖) (α -> β)) (fun (_x : Equiv.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (UniformOnFun.{u1, u2} α β 𝔖) (α -> β)) => (UniformOnFun.{u1, u2} α β 𝔖) -> α -> β) (Equiv.hasCoeToFun.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (UniformOnFun.{u1, u2} α β 𝔖) (α -> β)) (UniformOnFun.toFun.{u1, u2} α β 𝔖)))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : UniformSpace.{u2} β] {𝔖 : Set.{u1} (Set.{u1} α)}, (Eq.{succ u1} (Set.{u1} α) (Set.sUnion.{u1} α 𝔖) (Set.univ.{u1} α)) -> (UniformContinuous.{max u1 u2, max u1 u2} (UniformOnFun.{u1, u2} α β 𝔖) (α -> β) (UniformOnFun.uniformSpace.{u1, u2} α β _inst_1 𝔖) (Pi.uniformSpace.{u2, u1} α (fun (ᾰ : α) => β) (fun (i : α) => _inst_1)) (coeFn.{max 1 (succ u1) (succ u2), max (succ u1) (succ u2)} (Equiv.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (UniformOnFun.{u1, u2} α β 𝔖) (α -> β)) (fun (_x : Equiv.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (UniformOnFun.{u1, u2} α β 𝔖) (α -> β)) => (UniformOnFun.{u1, u2} α β 𝔖) -> α -> β) (Equiv.hasCoeToFun.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (UniformOnFun.{u1, u2} α β 𝔖) (α -> β)) (UniformOnFun.toFun.{u1, u2} α β 𝔖)))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : UniformSpace.{u1} β] {𝔖 : Set.{u2} (Set.{u2} α)}, (Eq.{succ u2} (Set.{u2} α) (Set.unionₛ.{u2} α 𝔖) (Set.univ.{u2} α)) -> (UniformContinuous.{max u2 u1, max u2 u1} (UniformOnFun.{u2, u1} α β 𝔖) (α -> β) (UniformOnFun.uniformSpace.{u2, u1} α β _inst_1 𝔖) (Pi.uniformSpace.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => _inst_1)) (FunLike.coe.{max (succ u2) (succ u1), max (succ u2) (succ u1), max (succ u2) (succ u1)} (Equiv.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (UniformOnFun.{u2, u1} α β 𝔖) (α -> β)) (UniformOnFun.{u2, u1} α β 𝔖) (fun (_x : UniformOnFun.{u2, u1} α β 𝔖) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : UniformOnFun.{u2, u1} α β 𝔖) => α -> β) _x) (Equiv.instFunLikeEquiv.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (UniformOnFun.{u2, u1} α β 𝔖) (α -> β)) (UniformOnFun.toFun.{u2, u1} α β 𝔖)))
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : UniformSpace.{u1} β] {𝔖 : Set.{u2} (Set.{u2} α)}, (Eq.{succ u2} (Set.{u2} α) (Set.sUnion.{u2} α 𝔖) (Set.univ.{u2} α)) -> (UniformContinuous.{max u2 u1, max u2 u1} (UniformOnFun.{u2, u1} α β 𝔖) (α -> β) (UniformOnFun.uniformSpace.{u2, u1} α β _inst_1 𝔖) (Pi.uniformSpace.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => _inst_1)) (FunLike.coe.{max (succ u2) (succ u1), max (succ u2) (succ u1), max (succ u2) (succ u1)} (Equiv.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (UniformOnFun.{u2, u1} α β 𝔖) (α -> β)) (UniformOnFun.{u2, u1} α β 𝔖) (fun (_x : UniformOnFun.{u2, u1} α β 𝔖) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : UniformOnFun.{u2, u1} α β 𝔖) => α -> β) _x) (Equiv.instFunLikeEquiv.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (UniformOnFun.{u2, u1} α β 𝔖) (α -> β)) (UniformOnFun.toFun.{u2, u1} α β 𝔖)))
 Case conversion may be inaccurate. Consider using '#align uniform_on_fun.uniform_continuous_to_fun UniformOnFun.uniformContinuous_toFunₓ'. -/
 /-- If `𝔖` covers `α`, the natural map `uniform_on_fun.to_fun` from `α →ᵤ[𝔖] β` to `α → β` is
 uniformly continuous.
@@ -1123,9 +1123,9 @@ of `tendsto_uniformly_on`) for all `S ∈ 𝔖`. -/
 protected theorem tendsto_iff_tendstoUniformlyOn {F : ι → α →ᵤ[𝔖] β} {f : α →ᵤ[𝔖] β} :
     Tendsto F p (𝓝 f) ↔ ∀ s ∈ 𝔖, TendstoUniformlyOn F f p s :=
   by
-  rw [UniformOnFun.topologicalSpace_eq, nhds_infᵢ, tendsto_infi]
+  rw [UniformOnFun.topologicalSpace_eq, nhds_iInf, tendsto_infi]
   refine' forall_congr' fun s => _
-  rw [nhds_infᵢ, tendsto_infi]
+  rw [nhds_iInf, tendsto_infi]
   refine' forall_congr' fun hs => _
   rw [nhds_induced, tendsto_comap_iff, tendstoUniformlyOn_iff_tendstoUniformly_comp_coe,
     UniformFun.tendsto_iff_tendstoUniformly]
@@ -1178,8 +1178,8 @@ protected def uniformEquivPiComm : (α →ᵤ[𝔖] ∀ i, δ i) ≃ᵤ ∀ i, �
       rw [← uniformity_comap]
       congr
       rw [Pi.uniformSpace, UniformSpace.ofCoreEq_toCore, Pi.uniformSpace,
-        UniformSpace.ofCoreEq_toCore, UniformSpace.comap_infᵢ, UniformOnFun.infᵢ_eq]
-      refine' infᵢ_congr fun i => _
+        UniformSpace.ofCoreEq_toCore, UniformSpace.comap_iInf, UniformOnFun.iInf_eq]
+      refine' iInf_congr fun i => _
       rw [← UniformSpace.comap_comap, UniformOnFun.comap_eq])
 #align uniform_on_fun.uniform_equiv_Pi_comm UniformOnFun.uniformEquivPiComm
 -/

@@ -849,7 +849,7 @@ theorem toBasicOpen_surjective (f : R) : Function.Surjective (toBasicOpen R f) :
       (fun i => is_open_basic_open) fun x hx => _
   swap
   · -- Here, we need to show that our basic opens actually form a cover of `basic_open f`
-    rw [Set.mem_unionᵢ]
+    rw [Set.mem_iUnion]
     exact ⟨⟨x, hx⟩, hxDh' ⟨x, hx⟩⟩
   simp only [← opens.coe_supr, SetLike.coe_subset_coe] at ht_cover'
   -- We use the normalization lemma from above to obtain the relation `a i * h j = h i * a j`
@@ -864,8 +864,8 @@ theorem toBasicOpen_surjective (f : R) : Function.Surjective (toBasicOpen R f) :
     simp only [basic_open_eq_zero_locus_compl] at ht_cover
     rw [Set.compl_subset_comm] at ht_cover
     -- Why doesn't `simp_rw` do this?
-    simp_rw [Set.compl_unionᵢ, compl_compl, ← zero_locus_Union, ← Finset.set_bunionᵢ_coe, ←
-      Set.image_eq_unionᵢ] at ht_cover
+    simp_rw [Set.compl_iUnion, compl_compl, ← zero_locus_Union, ← Finset.set_biUnion_coe, ←
+      Set.image_eq_iUnion] at ht_cover
     apply vanishing_ideal_anti_mono ht_cover
     exact subset_vanishing_ideal_zero_locus {f} (Set.mem_singleton f)
   replace hn := Ideal.mul_mem_left _ f hn
@@ -890,9 +890,9 @@ theorem toBasicOpen_surjective (f : R) : Function.Surjective (toBasicOpen R f) :
     -- Unfortunately, `ht_cover` uses a bounded union over the set `t`, while here we have the
     -- Union indexed by the type `tt`, so we need some boilerplate to translate one to the other
     intro x hx
-    erw [TopologicalSpace.Opens.mem_supᵢ]
+    erw [TopologicalSpace.Opens.mem_iSup]
     have := ht_cover hx
-    rw [← Finset.set_bunionᵢ_coe, Set.mem_unionᵢ₂] at this
+    rw [← Finset.set_biUnion_coe, Set.mem_iUnion₂] at this
     rcases this with ⟨i, i_mem, x_mem⟩
     use i, i_mem
   rintro ⟨i, hi⟩

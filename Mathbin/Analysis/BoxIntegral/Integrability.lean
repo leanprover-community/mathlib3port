@@ -77,7 +77,7 @@ theorem hasIntegralIndicatorConst (l : IntegrationParams) (hl : l.bRiemann = fal
     sum_indicator_eq_sum_filter, ← sum_smul, ← sub_smul, norm_smul, Real.norm_eq_abs, ←
     prepartition.filter_boxes, ← prepartition.measure_Union_to_real]
   refine' mul_le_mul_of_nonneg_right _ (norm_nonneg y)
-  set t := (π.to_prepartition.filter fun J => π.tag J ∈ s).unionᵢ
+  set t := (π.to_prepartition.filter fun J => π.tag J ∈ s).iUnion
   change abs ((μ t).toReal - (μ (s ∩ I)).toReal) ≤ ε
   have htU : t ⊆ U ∩ I :=
     by
@@ -94,7 +94,7 @@ theorem hasIntegralIndicatorConst (l : IntegrationParams) (hl : l.bRiemann = fal
     refine' le_measure_diff.trans ((measure_mono _).trans hμF.le)
     rintro x ⟨⟨hxs, hxI⟩, hxt⟩
     refine' ⟨⟨hxs, box.coe_subset_Icc hxI⟩, fun hxF => hxt _⟩
-    simp only [t, prepartition.Union_def, prepartition.mem_filter, Set.mem_unionᵢ, exists_prop]
+    simp only [t, prepartition.Union_def, prepartition.mem_filter, Set.mem_iUnion, exists_prop]
     rcases hπp x hxI with ⟨J, hJπ, hxJ⟩
     refine' ⟨J, ⟨hJπ, _⟩, hxJ⟩
     contrapose hxF
@@ -150,7 +150,7 @@ theorem hasIntegralZeroOfAeEqZero {l : IntegrationParams} {I : Box ι} {f : (ι 
   refine' (norm_sum_le_of_le _ this).trans _
   clear this
   rw [← sum_mul, ← prepartition.measure_Union_to_real]
-  generalize hm : μ (π.filter fun J => N (π.tag J) = n).unionᵢ = m
+  generalize hm : μ (π.filter fun J => N (π.tag J) = n).iUnion = m
   have : m < δ n / n :=
     by
     simp only [measure.restrict_apply (hUo _).MeasurableSet] at hμU

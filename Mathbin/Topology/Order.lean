@@ -77,7 +77,7 @@ def generateFrom (g : Set (Set α)) : TopologicalSpace α
   IsOpen := GenerateOpen g
   isOpen_univ := GenerateOpen.univ
   isOpen_inter := GenerateOpen.inter
-  isOpen_unionₛ := GenerateOpen.unionₛ
+  isOpen_sUnion := GenerateOpen.sUnion
 #align topological_space.generate_from TopologicalSpace.generateFrom
 -/
 
@@ -90,18 +90,18 @@ theorem isOpen_generateFrom_of_mem {g : Set (Set α)} {s : Set α} (hs : s ∈ g
 
 /- warning: topological_space.nhds_generate_from -> TopologicalSpace.nhds_generateFrom is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {g : Set.{u1} (Set.{u1} α)} {a : α}, Eq.{succ u1} (Filter.{u1} α) (nhds.{u1} α (TopologicalSpace.generateFrom.{u1} α g) a) (infᵢ.{u1, succ u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (Set.{u1} α) (fun (s : Set.{u1} α) => infᵢ.{u1, 0} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) s (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) s g)))) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) s (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) s g)))) => Filter.principal.{u1} α s)))
+  forall {α : Type.{u1}} {g : Set.{u1} (Set.{u1} α)} {a : α}, Eq.{succ u1} (Filter.{u1} α) (nhds.{u1} α (TopologicalSpace.generateFrom.{u1} α g) a) (iInf.{u1, succ u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (Set.{u1} α) (fun (s : Set.{u1} α) => iInf.{u1, 0} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) s (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) s g)))) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) s (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) s g)))) => Filter.principal.{u1} α s)))
 but is expected to have type
-  forall {α : Type.{u1}} {g : Set.{u1} (Set.{u1} α)} {a : α}, Eq.{succ u1} (Filter.{u1} α) (nhds.{u1} α (TopologicalSpace.generateFrom.{u1} α g) a) (infᵢ.{u1, succ u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toInfSet.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) (Set.{u1} α) (fun (s : Set.{u1} α) => infᵢ.{u1, 0} (Filter.{u1} α) (ConditionallyCompleteLattice.toInfSet.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s g)))) (fun (H : Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s g)))) => Filter.principal.{u1} α s)))
+  forall {α : Type.{u1}} {g : Set.{u1} (Set.{u1} α)} {a : α}, Eq.{succ u1} (Filter.{u1} α) (nhds.{u1} α (TopologicalSpace.generateFrom.{u1} α g) a) (iInf.{u1, succ u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toInfSet.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) (Set.{u1} α) (fun (s : Set.{u1} α) => iInf.{u1, 0} (Filter.{u1} α) (ConditionallyCompleteLattice.toInfSet.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s g)))) (fun (H : Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s g)))) => Filter.principal.{u1} α s)))
 Case conversion may be inaccurate. Consider using '#align topological_space.nhds_generate_from TopologicalSpace.nhds_generateFromₓ'. -/
 theorem nhds_generateFrom {g : Set (Set α)} {a : α} :
     @nhds α (generateFrom g) a = ⨅ s ∈ { s | a ∈ s ∧ s ∈ g }, 𝓟 s :=
   by
   rw [nhds_def]
-  refine' le_antisymm (binfᵢ_mono fun s ⟨as, sg⟩ => ⟨as, generate_open.basic _ sg⟩) _
-  refine' le_infᵢ₂ fun s hs => _; cases' hs with ha hs
+  refine' le_antisymm (biInf_mono fun s ⟨as, sg⟩ => ⟨as, generate_open.basic _ sg⟩) _
+  refine' le_iInf₂ fun s hs => _; cases' hs with ha hs
   induction hs
-  case basic s hs => exact infᵢ₂_le _ ⟨ha, hs⟩
+  case basic s hs => exact iInf₂_le _ ⟨ha, hs⟩
   case univ => exact le_top.trans_eq principal_univ.symm
   case inter s t hs' ht' hs ht => exact (le_inf (hs ha.1) (ht ha.2)).trans_eq inf_principal
   case sUnion S hS' hS =>
@@ -129,8 +129,8 @@ protected def mkOfNhds (n : α → Filter α) : TopologicalSpace α
   IsOpen s := ∀ a ∈ s, s ∈ n a
   isOpen_univ x h := univ_mem
   isOpen_inter := fun s t hs ht x ⟨hxs, hxt⟩ => inter_mem (hs x hxs) (ht x hxt)
-  isOpen_unionₛ := fun s hs a ⟨x, hx, hxa⟩ =>
-    mem_of_superset (hs x hx _ hxa) (Set.subset_unionₛ_of_mem hx)
+  isOpen_sUnion := fun s hs a ⟨x, hx, hxa⟩ =>
+    mem_of_superset (hs x hx _ hxa) (Set.subset_sUnion_of_mem hx)
 #align topological_space.mk_of_nhds TopologicalSpace.mkOfNhds
 -/
 
@@ -226,7 +226,7 @@ theorem le_generateFrom_iff_subset_isOpen {g : Set (Set α)} {t : TopologicalSpa
     t ≤ TopologicalSpace.generateFrom g ↔ g ⊆ { s | is_open[t] s } :=
   ⟨fun ht s hs => ht _ <| GenerateOpen.basic s hs, fun hg s hs =>
     hs.recOn (fun v hv => hg hv) t.isOpen_univ (fun u v _ _ => t.isOpen_inter u v) fun k _ =>
-      t.isOpen_unionₛ k⟩
+      t.isOpen_sUnion k⟩
 #align topological_space.le_generate_from_iff_subset_is_open TopologicalSpace.le_generateFrom_iff_subset_isOpen
 
 #print TopologicalSpace.mkOfClosure /-
@@ -237,7 +237,7 @@ protected def mkOfClosure (s : Set (Set α)) (hs : { u | GenerateOpen s u } = s)
   IsOpen u := u ∈ s
   isOpen_univ := hs ▸ TopologicalSpace.GenerateOpen.univ
   isOpen_inter := hs ▸ TopologicalSpace.GenerateOpen.inter
-  isOpen_unionₛ := hs ▸ TopologicalSpace.GenerateOpen.unionₛ
+  isOpen_sUnion := hs ▸ TopologicalSpace.GenerateOpen.sUnion
 #align topological_space.mk_of_closure TopologicalSpace.mkOfClosure
 -/
 
@@ -470,7 +470,7 @@ but is expected to have type
   forall {α : Type.{u1}} {t : TopologicalSpace.{u1} α}, (forall (x : α), IsOpen.{u1} α t (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) x)) -> (Eq.{succ u1} (TopologicalSpace.{u1} α) t (Bot.bot.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toBot.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} α))))
 Case conversion may be inaccurate. Consider using '#align eq_bot_of_singletons_open eq_bot_of_singletons_openₓ'. -/
 theorem eq_bot_of_singletons_open {t : TopologicalSpace α} (h : ∀ x, is_open[t] {x}) : t = ⊥ :=
-  bot_unique fun s hs => bunionᵢ_of_singleton s ▸ isOpen_bunionᵢ fun x _ => h x
+  bot_unique fun s hs => biUnion_of_singleton s ▸ isOpen_biUnion fun x _ => h x
 #align eq_bot_of_singletons_open eq_bot_of_singletons_open
 
 #print forall_open_iff_discrete /-
@@ -531,14 +531,14 @@ def TopologicalSpace.induced {α : Type u} {β : Type v} (f : α → β) (t : To
   isOpen_inter := by
     rintro s₁ s₂ ⟨s'₁, hs₁, rfl⟩ ⟨s'₂, hs₂, rfl⟩ <;>
       exact ⟨s'₁ ∩ s'₂, hs₁.inter hs₂, preimage_inter⟩
-  isOpen_unionₛ s h := by
+  isOpen_sUnion s h := by
     simp only [Classical.skolem] at h
     cases' h with f hf
     apply Exists.intro (⋃ (x : Set α) (h : x ∈ s), f x h)
     simp only [sUnion_eq_bUnion, preimage_Union, fun x h => (hf x h).right]; refine' ⟨_, rfl⟩
     exact
-      @isOpen_unionᵢ β _ t _ fun i =>
-        show IsOpen (⋃ h, f i h) from @isOpen_unionᵢ β _ t _ fun h => (hf i h).left
+      @isOpen_iUnion β _ t _ fun i =>
+        show IsOpen (⋃ h, f i h) from @isOpen_iUnion β _ t _ fun h => (hf i h).left
 #align topological_space.induced TopologicalSpace.induced
 -/
 
@@ -567,7 +567,7 @@ def TopologicalSpace.coinduced {α : Type u} {β : Type v} (f : α → β) (t : 
   IsOpen s := is_open[t] (f ⁻¹' s)
   isOpen_univ := t.isOpen_univ
   isOpen_inter _ _ h₁ h₂ := h₁.inter h₂
-  isOpen_unionₛ s h := by simpa only [preimage_sUnion] using isOpen_bunionᵢ h
+  isOpen_sUnion s h := by simpa only [preimage_sUnion] using isOpen_biUnion h
 #align topological_space.coinduced TopologicalSpace.coinduced
 -/
 
@@ -682,17 +682,17 @@ theorem induced_inf : (t₁ ⊓ t₂).induced g = t₁.induced g ⊓ t₂.induce
   (gc_coinduced_induced g).u_inf
 #align induced_inf induced_inf
 
-/- warning: induced_infi -> induced_infᵢ is a dubious translation:
+/- warning: induced_infi -> induced_iInf is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u2}} {β : Type.{u3}} {g : β -> α} {ι : Sort.{u1}} {t : ι -> (TopologicalSpace.{u2} α)}, Eq.{succ u3} (TopologicalSpace.{u3} β) (TopologicalSpace.induced.{u3, u2} β α g (infᵢ.{u2, u1} (TopologicalSpace.{u2} α) (ConditionallyCompleteLattice.toHasInf.{u2} (TopologicalSpace.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} α) (TopologicalSpace.completeLattice.{u2} α))) ι (fun (i : ι) => t i))) (infᵢ.{u3, u1} (TopologicalSpace.{u3} β) (ConditionallyCompleteLattice.toHasInf.{u3} (TopologicalSpace.{u3} β) (CompleteLattice.toConditionallyCompleteLattice.{u3} (TopologicalSpace.{u3} β) (TopologicalSpace.completeLattice.{u3} β))) ι (fun (i : ι) => TopologicalSpace.induced.{u3, u2} β α g (t i)))
+  forall {α : Type.{u2}} {β : Type.{u3}} {g : β -> α} {ι : Sort.{u1}} {t : ι -> (TopologicalSpace.{u2} α)}, Eq.{succ u3} (TopologicalSpace.{u3} β) (TopologicalSpace.induced.{u3, u2} β α g (iInf.{u2, u1} (TopologicalSpace.{u2} α) (ConditionallyCompleteLattice.toHasInf.{u2} (TopologicalSpace.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} α) (TopologicalSpace.completeLattice.{u2} α))) ι (fun (i : ι) => t i))) (iInf.{u3, u1} (TopologicalSpace.{u3} β) (ConditionallyCompleteLattice.toHasInf.{u3} (TopologicalSpace.{u3} β) (CompleteLattice.toConditionallyCompleteLattice.{u3} (TopologicalSpace.{u3} β) (TopologicalSpace.completeLattice.{u3} β))) ι (fun (i : ι) => TopologicalSpace.induced.{u3, u2} β α g (t i)))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {g : β -> α} {ι : Sort.{u3}} {t : ι -> (TopologicalSpace.{u2} α)}, Eq.{succ u1} (TopologicalSpace.{u1} β) (TopologicalSpace.induced.{u1, u2} β α g (infᵢ.{u2, u3} (TopologicalSpace.{u2} α) (ConditionallyCompleteLattice.toInfSet.{u2} (TopologicalSpace.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u2} α))) ι (fun (i : ι) => t i))) (infᵢ.{u1, u3} (TopologicalSpace.{u1} β) (ConditionallyCompleteLattice.toInfSet.{u1} (TopologicalSpace.{u1} β) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} β) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} β))) ι (fun (i : ι) => TopologicalSpace.induced.{u1, u2} β α g (t i)))
-Case conversion may be inaccurate. Consider using '#align induced_infi induced_infᵢₓ'. -/
+  forall {α : Type.{u2}} {β : Type.{u1}} {g : β -> α} {ι : Sort.{u3}} {t : ι -> (TopologicalSpace.{u2} α)}, Eq.{succ u1} (TopologicalSpace.{u1} β) (TopologicalSpace.induced.{u1, u2} β α g (iInf.{u2, u3} (TopologicalSpace.{u2} α) (ConditionallyCompleteLattice.toInfSet.{u2} (TopologicalSpace.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u2} α))) ι (fun (i : ι) => t i))) (iInf.{u1, u3} (TopologicalSpace.{u1} β) (ConditionallyCompleteLattice.toInfSet.{u1} (TopologicalSpace.{u1} β) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} β) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} β))) ι (fun (i : ι) => TopologicalSpace.induced.{u1, u2} β α g (t i)))
+Case conversion may be inaccurate. Consider using '#align induced_infi induced_iInfₓ'. -/
 @[simp]
-theorem induced_infᵢ {ι : Sort w} {t : ι → TopologicalSpace α} :
+theorem induced_iInf {ι : Sort w} {t : ι → TopologicalSpace α} :
     (⨅ i, t i).induced g = ⨅ i, (t i).induced g :=
-  (gc_coinduced_induced g).u_infᵢ
-#align induced_infi induced_infᵢ
+  (gc_coinduced_induced g).u_iInf
+#align induced_infi induced_iInf
 
 /- warning: coinduced_bot -> coinduced_bot is a dubious translation:
 lean 3 declaration is
@@ -716,17 +716,17 @@ theorem coinduced_sup : (t₁ ⊔ t₂).coinduced f = t₁.coinduced f ⊔ t₂.
   (gc_coinduced_induced f).l_sup
 #align coinduced_sup coinduced_sup
 
-/- warning: coinduced_supr -> coinduced_supᵢ is a dubious translation:
+/- warning: coinduced_supr -> coinduced_iSup is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u2}} {β : Type.{u3}} {f : α -> β} {ι : Sort.{u1}} {t : ι -> (TopologicalSpace.{u2} α)}, Eq.{succ u3} (TopologicalSpace.{u3} β) (TopologicalSpace.coinduced.{u2, u3} α β f (supᵢ.{u2, u1} (TopologicalSpace.{u2} α) (ConditionallyCompleteLattice.toHasSup.{u2} (TopologicalSpace.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} α) (TopologicalSpace.completeLattice.{u2} α))) ι (fun (i : ι) => t i))) (supᵢ.{u3, u1} (TopologicalSpace.{u3} β) (ConditionallyCompleteLattice.toHasSup.{u3} (TopologicalSpace.{u3} β) (CompleteLattice.toConditionallyCompleteLattice.{u3} (TopologicalSpace.{u3} β) (TopologicalSpace.completeLattice.{u3} β))) ι (fun (i : ι) => TopologicalSpace.coinduced.{u2, u3} α β f (t i)))
+  forall {α : Type.{u2}} {β : Type.{u3}} {f : α -> β} {ι : Sort.{u1}} {t : ι -> (TopologicalSpace.{u2} α)}, Eq.{succ u3} (TopologicalSpace.{u3} β) (TopologicalSpace.coinduced.{u2, u3} α β f (iSup.{u2, u1} (TopologicalSpace.{u2} α) (ConditionallyCompleteLattice.toHasSup.{u2} (TopologicalSpace.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} α) (TopologicalSpace.completeLattice.{u2} α))) ι (fun (i : ι) => t i))) (iSup.{u3, u1} (TopologicalSpace.{u3} β) (ConditionallyCompleteLattice.toHasSup.{u3} (TopologicalSpace.{u3} β) (CompleteLattice.toConditionallyCompleteLattice.{u3} (TopologicalSpace.{u3} β) (TopologicalSpace.completeLattice.{u3} β))) ι (fun (i : ι) => TopologicalSpace.coinduced.{u2, u3} α β f (t i)))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {ι : Sort.{u3}} {t : ι -> (TopologicalSpace.{u2} α)}, Eq.{succ u1} (TopologicalSpace.{u1} β) (TopologicalSpace.coinduced.{u2, u1} α β f (supᵢ.{u2, u3} (TopologicalSpace.{u2} α) (ConditionallyCompleteLattice.toSupSet.{u2} (TopologicalSpace.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u2} α))) ι (fun (i : ι) => t i))) (supᵢ.{u1, u3} (TopologicalSpace.{u1} β) (ConditionallyCompleteLattice.toSupSet.{u1} (TopologicalSpace.{u1} β) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} β) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} β))) ι (fun (i : ι) => TopologicalSpace.coinduced.{u2, u1} α β f (t i)))
-Case conversion may be inaccurate. Consider using '#align coinduced_supr coinduced_supᵢₓ'. -/
+  forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {ι : Sort.{u3}} {t : ι -> (TopologicalSpace.{u2} α)}, Eq.{succ u1} (TopologicalSpace.{u1} β) (TopologicalSpace.coinduced.{u2, u1} α β f (iSup.{u2, u3} (TopologicalSpace.{u2} α) (ConditionallyCompleteLattice.toSupSet.{u2} (TopologicalSpace.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u2} α))) ι (fun (i : ι) => t i))) (iSup.{u1, u3} (TopologicalSpace.{u1} β) (ConditionallyCompleteLattice.toSupSet.{u1} (TopologicalSpace.{u1} β) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} β) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} β))) ι (fun (i : ι) => TopologicalSpace.coinduced.{u2, u1} α β f (t i)))
+Case conversion may be inaccurate. Consider using '#align coinduced_supr coinduced_iSupₓ'. -/
 @[simp]
-theorem coinduced_supᵢ {ι : Sort w} {t : ι → TopologicalSpace α} :
+theorem coinduced_iSup {ι : Sort w} {t : ι → TopologicalSpace α} :
     (⨆ i, t i).coinduced f = ⨆ i, (t i).coinduced f :=
-  (gc_coinduced_induced f).l_supᵢ
-#align coinduced_supr coinduced_supᵢ
+  (gc_coinduced_induced f).l_iSup
+#align coinduced_supr coinduced_iSup
 
 #print induced_id /-
 theorem induced_id [t : TopologicalSpace α] : t.induced id = t :=
@@ -939,7 +939,7 @@ def nhdsAdjoint (a : α) (f : Filter α) : TopologicalSpace α
   IsOpen s := a ∈ s → s ∈ f
   isOpen_univ s := univ_mem
   isOpen_inter := fun s t hs ht ⟨has, hat⟩ => inter_mem (hs has) (ht hat)
-  isOpen_unionₛ := fun k hk ⟨u, hu, hau⟩ => mem_of_superset (hk u hu hau) (subset_unionₛ_of_mem hu)
+  isOpen_sUnion := fun k hk ⟨u, hu, hau⟩ => mem_of_superset (hk u hu hau) (subset_sUnion_of_mem hu)
 #align nhds_adjoint nhdsAdjoint
 -/
 
@@ -1059,27 +1059,27 @@ theorem le_nhdsAdjoint_iff {α : Type _} (a : α) (f : Filter α) (t : Topologic
   rw [@isOpen_singleton_iff_nhds_eq_pure α t b]
 #align le_nhds_adjoint_iff le_nhdsAdjoint_iff
 
-/- warning: nhds_infi -> nhds_infᵢ is a dubious translation:
+/- warning: nhds_infi -> nhds_iInf is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {t : ι -> (TopologicalSpace.{u1} α)} {a : α}, Eq.{succ u1} (Filter.{u1} α) (nhds.{u1} α (infᵢ.{u1, u2} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) ι t) a) (infᵢ.{u1, u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι (fun (i : ι) => nhds.{u1} α (t i) a))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {t : ι -> (TopologicalSpace.{u1} α)} {a : α}, Eq.{succ u1} (Filter.{u1} α) (nhds.{u1} α (iInf.{u1, u2} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) ι t) a) (iInf.{u1, u2} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) ι (fun (i : ι) => nhds.{u1} α (t i) a))
 but is expected to have type
-  forall {α : Type.{u2}} {ι : Sort.{u1}} {t : ι -> (TopologicalSpace.{u2} α)} {a : α}, Eq.{succ u2} (Filter.{u2} α) (nhds.{u2} α (infᵢ.{u2, u1} (TopologicalSpace.{u2} α) (ConditionallyCompleteLattice.toInfSet.{u2} (TopologicalSpace.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u2} α))) ι t) a) (infᵢ.{u2, u1} (Filter.{u2} α) (ConditionallyCompleteLattice.toInfSet.{u2} (Filter.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} α) (Filter.instCompleteLatticeFilter.{u2} α))) ι (fun (i : ι) => nhds.{u2} α (t i) a))
-Case conversion may be inaccurate. Consider using '#align nhds_infi nhds_infᵢₓ'. -/
-theorem nhds_infᵢ {ι : Sort _} {t : ι → TopologicalSpace α} {a : α} :
-    @nhds α (infᵢ t) a = ⨅ i, @nhds α (t i) a :=
-  (gc_nhds a).u_infᵢ
-#align nhds_infi nhds_infᵢ
+  forall {α : Type.{u2}} {ι : Sort.{u1}} {t : ι -> (TopologicalSpace.{u2} α)} {a : α}, Eq.{succ u2} (Filter.{u2} α) (nhds.{u2} α (iInf.{u2, u1} (TopologicalSpace.{u2} α) (ConditionallyCompleteLattice.toInfSet.{u2} (TopologicalSpace.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u2} α))) ι t) a) (iInf.{u2, u1} (Filter.{u2} α) (ConditionallyCompleteLattice.toInfSet.{u2} (Filter.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} α) (Filter.instCompleteLatticeFilter.{u2} α))) ι (fun (i : ι) => nhds.{u2} α (t i) a))
+Case conversion may be inaccurate. Consider using '#align nhds_infi nhds_iInfₓ'. -/
+theorem nhds_iInf {ι : Sort _} {t : ι → TopologicalSpace α} {a : α} :
+    @nhds α (iInf t) a = ⨅ i, @nhds α (t i) a :=
+  (gc_nhds a).u_iInf
+#align nhds_infi nhds_iInf
 
-/- warning: nhds_Inf -> nhds_infₛ is a dubious translation:
+/- warning: nhds_Inf -> nhds_sInf is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} (TopologicalSpace.{u1} α)} {a : α}, Eq.{succ u1} (Filter.{u1} α) (nhds.{u1} α (InfSet.infₛ.{u1} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) s) a) (infᵢ.{u1, succ u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (TopologicalSpace.{u1} α) (fun (t : TopologicalSpace.{u1} α) => infᵢ.{u1, 0} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (Membership.Mem.{u1, u1} (TopologicalSpace.{u1} α) (Set.{u1} (TopologicalSpace.{u1} α)) (Set.hasMem.{u1} (TopologicalSpace.{u1} α)) t s) (fun (H : Membership.Mem.{u1, u1} (TopologicalSpace.{u1} α) (Set.{u1} (TopologicalSpace.{u1} α)) (Set.hasMem.{u1} (TopologicalSpace.{u1} α)) t s) => nhds.{u1} α t a)))
+  forall {α : Type.{u1}} {s : Set.{u1} (TopologicalSpace.{u1} α)} {a : α}, Eq.{succ u1} (Filter.{u1} α) (nhds.{u1} α (InfSet.sInf.{u1} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) s) a) (iInf.{u1, succ u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (TopologicalSpace.{u1} α) (fun (t : TopologicalSpace.{u1} α) => iInf.{u1, 0} (Filter.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (Membership.Mem.{u1, u1} (TopologicalSpace.{u1} α) (Set.{u1} (TopologicalSpace.{u1} α)) (Set.hasMem.{u1} (TopologicalSpace.{u1} α)) t s) (fun (H : Membership.Mem.{u1, u1} (TopologicalSpace.{u1} α) (Set.{u1} (TopologicalSpace.{u1} α)) (Set.hasMem.{u1} (TopologicalSpace.{u1} α)) t s) => nhds.{u1} α t a)))
 but is expected to have type
-  forall {α : Type.{u1}} {s : Set.{u1} (TopologicalSpace.{u1} α)} {a : α}, Eq.{succ u1} (Filter.{u1} α) (nhds.{u1} α (InfSet.infₛ.{u1} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toInfSet.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} α))) s) a) (infᵢ.{u1, succ u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toInfSet.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) (TopologicalSpace.{u1} α) (fun (t : TopologicalSpace.{u1} α) => infᵢ.{u1, 0} (Filter.{u1} α) (ConditionallyCompleteLattice.toInfSet.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) (Membership.mem.{u1, u1} (TopologicalSpace.{u1} α) (Set.{u1} (TopologicalSpace.{u1} α)) (Set.instMembershipSet.{u1} (TopologicalSpace.{u1} α)) t s) (fun (H : Membership.mem.{u1, u1} (TopologicalSpace.{u1} α) (Set.{u1} (TopologicalSpace.{u1} α)) (Set.instMembershipSet.{u1} (TopologicalSpace.{u1} α)) t s) => nhds.{u1} α t a)))
-Case conversion may be inaccurate. Consider using '#align nhds_Inf nhds_infₛₓ'. -/
-theorem nhds_infₛ {s : Set (TopologicalSpace α)} {a : α} :
-    @nhds α (infₛ s) a = ⨅ t ∈ s, @nhds α t a :=
-  (gc_nhds a).u_infₛ
-#align nhds_Inf nhds_infₛ
+  forall {α : Type.{u1}} {s : Set.{u1} (TopologicalSpace.{u1} α)} {a : α}, Eq.{succ u1} (Filter.{u1} α) (nhds.{u1} α (InfSet.sInf.{u1} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toInfSet.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} α))) s) a) (iInf.{u1, succ u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toInfSet.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) (TopologicalSpace.{u1} α) (fun (t : TopologicalSpace.{u1} α) => iInf.{u1, 0} (Filter.{u1} α) (ConditionallyCompleteLattice.toInfSet.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) (Membership.mem.{u1, u1} (TopologicalSpace.{u1} α) (Set.{u1} (TopologicalSpace.{u1} α)) (Set.instMembershipSet.{u1} (TopologicalSpace.{u1} α)) t s) (fun (H : Membership.mem.{u1, u1} (TopologicalSpace.{u1} α) (Set.{u1} (TopologicalSpace.{u1} α)) (Set.instMembershipSet.{u1} (TopologicalSpace.{u1} α)) t s) => nhds.{u1} α t a)))
+Case conversion may be inaccurate. Consider using '#align nhds_Inf nhds_sInfₓ'. -/
+theorem nhds_sInf {s : Set (TopologicalSpace α)} {a : α} :
+    @nhds α (sInf s) a = ⨅ t ∈ s, @nhds α t a :=
+  (gc_nhds a).u_sInf
+#align nhds_Inf nhds_sInf
 
 /- warning: nhds_inf -> nhds_inf is a dubious translation:
 lean 3 declaration is
@@ -1252,49 +1252,49 @@ theorem continuous_sup_rng_right {t₁ : tspace α} {t₃ t₂ : tspace β} :
   continuous_le_rng le_sup_right
 #align continuous_sup_rng_right continuous_sup_rng_right
 
-/- warning: continuous_Sup_dom -> continuous_supₛ_dom is a dubious translation:
+/- warning: continuous_Sup_dom -> continuous_sSup_dom is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {T : Set.{u1} (TopologicalSpace.{u1} α)} {t₂ : TopologicalSpace.{u2} β}, Iff (Continuous.{u1, u2} α β (SupSet.supₛ.{u1} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) T) t₂ f) (forall (t : TopologicalSpace.{u1} α), (Membership.Mem.{u1, u1} (TopologicalSpace.{u1} α) (Set.{u1} (TopologicalSpace.{u1} α)) (Set.hasMem.{u1} (TopologicalSpace.{u1} α)) t T) -> (Continuous.{u1, u2} α β t t₂ f))
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {T : Set.{u1} (TopologicalSpace.{u1} α)} {t₂ : TopologicalSpace.{u2} β}, Iff (Continuous.{u1, u2} α β (SupSet.sSup.{u1} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) T) t₂ f) (forall (t : TopologicalSpace.{u1} α), (Membership.Mem.{u1, u1} (TopologicalSpace.{u1} α) (Set.{u1} (TopologicalSpace.{u1} α)) (Set.hasMem.{u1} (TopologicalSpace.{u1} α)) t T) -> (Continuous.{u1, u2} α β t t₂ f))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {T : Set.{u1} (TopologicalSpace.{u1} α)} {t₂ : TopologicalSpace.{u2} β}, Iff (Continuous.{u1, u2} α β (SupSet.supₛ.{u1} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toSupSet.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} α))) T) t₂ f) (forall (t : TopologicalSpace.{u1} α), (Membership.mem.{u1, u1} (TopologicalSpace.{u1} α) (Set.{u1} (TopologicalSpace.{u1} α)) (Set.instMembershipSet.{u1} (TopologicalSpace.{u1} α)) t T) -> (Continuous.{u1, u2} α β t t₂ f))
-Case conversion may be inaccurate. Consider using '#align continuous_Sup_dom continuous_supₛ_domₓ'. -/
-theorem continuous_supₛ_dom {T : Set (tspace α)} {t₂ : tspace β} :
-    cont (supₛ T) t₂ f ↔ ∀ t ∈ T, cont t t₂ f := by
-  simp only [continuous_iff_le_induced, supₛ_le_iff]
-#align continuous_Sup_dom continuous_supₛ_dom
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {T : Set.{u1} (TopologicalSpace.{u1} α)} {t₂ : TopologicalSpace.{u2} β}, Iff (Continuous.{u1, u2} α β (SupSet.sSup.{u1} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toSupSet.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} α))) T) t₂ f) (forall (t : TopologicalSpace.{u1} α), (Membership.mem.{u1, u1} (TopologicalSpace.{u1} α) (Set.{u1} (TopologicalSpace.{u1} α)) (Set.instMembershipSet.{u1} (TopologicalSpace.{u1} α)) t T) -> (Continuous.{u1, u2} α β t t₂ f))
+Case conversion may be inaccurate. Consider using '#align continuous_Sup_dom continuous_sSup_domₓ'. -/
+theorem continuous_sSup_dom {T : Set (tspace α)} {t₂ : tspace β} :
+    cont (sSup T) t₂ f ↔ ∀ t ∈ T, cont t t₂ f := by
+  simp only [continuous_iff_le_induced, sSup_le_iff]
+#align continuous_Sup_dom continuous_sSup_dom
 
-/- warning: continuous_Sup_rng -> continuous_supₛ_rng is a dubious translation:
+/- warning: continuous_Sup_rng -> continuous_sSup_rng is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {t₁ : TopologicalSpace.{u1} α} {t₂ : Set.{u2} (TopologicalSpace.{u2} β)} {t : TopologicalSpace.{u2} β}, (Membership.Mem.{u2, u2} (TopologicalSpace.{u2} β) (Set.{u2} (TopologicalSpace.{u2} β)) (Set.hasMem.{u2} (TopologicalSpace.{u2} β)) t t₂) -> (Continuous.{u1, u2} α β t₁ t f) -> (Continuous.{u1, u2} α β t₁ (SupSet.supₛ.{u2} (TopologicalSpace.{u2} β) (ConditionallyCompleteLattice.toHasSup.{u2} (TopologicalSpace.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} β) (TopologicalSpace.completeLattice.{u2} β))) t₂) f)
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {t₁ : TopologicalSpace.{u1} α} {t₂ : Set.{u2} (TopologicalSpace.{u2} β)} {t : TopologicalSpace.{u2} β}, (Membership.Mem.{u2, u2} (TopologicalSpace.{u2} β) (Set.{u2} (TopologicalSpace.{u2} β)) (Set.hasMem.{u2} (TopologicalSpace.{u2} β)) t t₂) -> (Continuous.{u1, u2} α β t₁ t f) -> (Continuous.{u1, u2} α β t₁ (SupSet.sSup.{u2} (TopologicalSpace.{u2} β) (ConditionallyCompleteLattice.toHasSup.{u2} (TopologicalSpace.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} β) (TopologicalSpace.completeLattice.{u2} β))) t₂) f)
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {t₁ : TopologicalSpace.{u1} α} {t₂ : Set.{u2} (TopologicalSpace.{u2} β)} {t : TopologicalSpace.{u2} β}, (Membership.mem.{u2, u2} (TopologicalSpace.{u2} β) (Set.{u2} (TopologicalSpace.{u2} β)) (Set.instMembershipSet.{u2} (TopologicalSpace.{u2} β)) t t₂) -> (Continuous.{u1, u2} α β t₁ t f) -> (Continuous.{u1, u2} α β t₁ (SupSet.supₛ.{u2} (TopologicalSpace.{u2} β) (ConditionallyCompleteLattice.toSupSet.{u2} (TopologicalSpace.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} β) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u2} β))) t₂) f)
-Case conversion may be inaccurate. Consider using '#align continuous_Sup_rng continuous_supₛ_rngₓ'. -/
-theorem continuous_supₛ_rng {t₁ : tspace α} {t₂ : Set (tspace β)} {t : tspace β} (h₁ : t ∈ t₂)
-    (hf : cont t₁ t f) : cont t₁ (supₛ t₂) f :=
-  continuous_iff_coinduced_le.2 <| le_supₛ_of_le h₁ <| continuous_iff_coinduced_le.1 hf
-#align continuous_Sup_rng continuous_supₛ_rng
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {t₁ : TopologicalSpace.{u1} α} {t₂ : Set.{u2} (TopologicalSpace.{u2} β)} {t : TopologicalSpace.{u2} β}, (Membership.mem.{u2, u2} (TopologicalSpace.{u2} β) (Set.{u2} (TopologicalSpace.{u2} β)) (Set.instMembershipSet.{u2} (TopologicalSpace.{u2} β)) t t₂) -> (Continuous.{u1, u2} α β t₁ t f) -> (Continuous.{u1, u2} α β t₁ (SupSet.sSup.{u2} (TopologicalSpace.{u2} β) (ConditionallyCompleteLattice.toSupSet.{u2} (TopologicalSpace.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} β) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u2} β))) t₂) f)
+Case conversion may be inaccurate. Consider using '#align continuous_Sup_rng continuous_sSup_rngₓ'. -/
+theorem continuous_sSup_rng {t₁ : tspace α} {t₂ : Set (tspace β)} {t : tspace β} (h₁ : t ∈ t₂)
+    (hf : cont t₁ t f) : cont t₁ (sSup t₂) f :=
+  continuous_iff_coinduced_le.2 <| le_sSup_of_le h₁ <| continuous_iff_coinduced_le.1 hf
+#align continuous_Sup_rng continuous_sSup_rng
 
-/- warning: continuous_supr_dom -> continuous_supᵢ_dom is a dubious translation:
+/- warning: continuous_supr_dom -> continuous_iSup_dom is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {ι : Sort.{u3}} {t₁ : ι -> (TopologicalSpace.{u1} α)} {t₂ : TopologicalSpace.{u2} β}, Iff (Continuous.{u1, u2} α β (supᵢ.{u1, u3} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) ι t₁) t₂ f) (forall (i : ι), Continuous.{u1, u2} α β (t₁ i) t₂ f)
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {ι : Sort.{u3}} {t₁ : ι -> (TopologicalSpace.{u1} α)} {t₂ : TopologicalSpace.{u2} β}, Iff (Continuous.{u1, u2} α β (iSup.{u1, u3} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) ι t₁) t₂ f) (forall (i : ι), Continuous.{u1, u2} α β (t₁ i) t₂ f)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} {f : α -> β} {ι : Sort.{u1}} {t₁ : ι -> (TopologicalSpace.{u2} α)} {t₂ : TopologicalSpace.{u3} β}, Iff (Continuous.{u2, u3} α β (supᵢ.{u2, u1} (TopologicalSpace.{u2} α) (ConditionallyCompleteLattice.toSupSet.{u2} (TopologicalSpace.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u2} α))) ι t₁) t₂ f) (forall (i : ι), Continuous.{u2, u3} α β (t₁ i) t₂ f)
-Case conversion may be inaccurate. Consider using '#align continuous_supr_dom continuous_supᵢ_domₓ'. -/
-theorem continuous_supᵢ_dom {t₁ : ι → tspace α} {t₂ : tspace β} :
-    cont (supᵢ t₁) t₂ f ↔ ∀ i, cont (t₁ i) t₂ f := by
-  simp only [continuous_iff_le_induced, supᵢ_le_iff]
-#align continuous_supr_dom continuous_supᵢ_dom
+  forall {α : Type.{u2}} {β : Type.{u3}} {f : α -> β} {ι : Sort.{u1}} {t₁ : ι -> (TopologicalSpace.{u2} α)} {t₂ : TopologicalSpace.{u3} β}, Iff (Continuous.{u2, u3} α β (iSup.{u2, u1} (TopologicalSpace.{u2} α) (ConditionallyCompleteLattice.toSupSet.{u2} (TopologicalSpace.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u2} α))) ι t₁) t₂ f) (forall (i : ι), Continuous.{u2, u3} α β (t₁ i) t₂ f)
+Case conversion may be inaccurate. Consider using '#align continuous_supr_dom continuous_iSup_domₓ'. -/
+theorem continuous_iSup_dom {t₁ : ι → tspace α} {t₂ : tspace β} :
+    cont (iSup t₁) t₂ f ↔ ∀ i, cont (t₁ i) t₂ f := by
+  simp only [continuous_iff_le_induced, iSup_le_iff]
+#align continuous_supr_dom continuous_iSup_dom
 
-/- warning: continuous_supr_rng -> continuous_supᵢ_rng is a dubious translation:
+/- warning: continuous_supr_rng -> continuous_iSup_rng is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {ι : Sort.{u3}} {t₁ : TopologicalSpace.{u1} α} {t₂ : ι -> (TopologicalSpace.{u2} β)} {i : ι}, (Continuous.{u1, u2} α β t₁ (t₂ i) f) -> (Continuous.{u1, u2} α β t₁ (supᵢ.{u2, u3} (TopologicalSpace.{u2} β) (ConditionallyCompleteLattice.toHasSup.{u2} (TopologicalSpace.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} β) (TopologicalSpace.completeLattice.{u2} β))) ι t₂) f)
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {ι : Sort.{u3}} {t₁ : TopologicalSpace.{u1} α} {t₂ : ι -> (TopologicalSpace.{u2} β)} {i : ι}, (Continuous.{u1, u2} α β t₁ (t₂ i) f) -> (Continuous.{u1, u2} α β t₁ (iSup.{u2, u3} (TopologicalSpace.{u2} β) (ConditionallyCompleteLattice.toHasSup.{u2} (TopologicalSpace.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} β) (TopologicalSpace.completeLattice.{u2} β))) ι t₂) f)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} {f : α -> β} {ι : Sort.{u1}} {t₁ : TopologicalSpace.{u2} α} {t₂ : ι -> (TopologicalSpace.{u3} β)} {i : ι}, (Continuous.{u2, u3} α β t₁ (t₂ i) f) -> (Continuous.{u2, u3} α β t₁ (supᵢ.{u3, u1} (TopologicalSpace.{u3} β) (ConditionallyCompleteLattice.toSupSet.{u3} (TopologicalSpace.{u3} β) (CompleteLattice.toConditionallyCompleteLattice.{u3} (TopologicalSpace.{u3} β) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u3} β))) ι t₂) f)
-Case conversion may be inaccurate. Consider using '#align continuous_supr_rng continuous_supᵢ_rngₓ'. -/
-theorem continuous_supᵢ_rng {t₁ : tspace α} {t₂ : ι → tspace β} {i : ι} (h : cont t₁ (t₂ i) f) :
-    cont t₁ (supᵢ t₂) f :=
-  continuous_supₛ_rng ⟨i, rfl⟩ h
-#align continuous_supr_rng continuous_supᵢ_rng
+  forall {α : Type.{u2}} {β : Type.{u3}} {f : α -> β} {ι : Sort.{u1}} {t₁ : TopologicalSpace.{u2} α} {t₂ : ι -> (TopologicalSpace.{u3} β)} {i : ι}, (Continuous.{u2, u3} α β t₁ (t₂ i) f) -> (Continuous.{u2, u3} α β t₁ (iSup.{u3, u1} (TopologicalSpace.{u3} β) (ConditionallyCompleteLattice.toSupSet.{u3} (TopologicalSpace.{u3} β) (CompleteLattice.toConditionallyCompleteLattice.{u3} (TopologicalSpace.{u3} β) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u3} β))) ι t₂) f)
+Case conversion may be inaccurate. Consider using '#align continuous_supr_rng continuous_iSup_rngₓ'. -/
+theorem continuous_iSup_rng {t₁ : tspace α} {t₂ : ι → tspace β} {i : ι} (h : cont t₁ (t₂ i) f) :
+    cont t₁ (iSup t₂) f :=
+  continuous_sSup_rng ⟨i, rfl⟩ h
+#align continuous_supr_rng continuous_iSup_rng
 
 /- warning: continuous_inf_rng -> continuous_inf_rng is a dubious translation:
 lean 3 declaration is
@@ -1329,49 +1329,49 @@ theorem continuous_inf_dom_right {t₁ t₂ : tspace α} {t₃ : tspace β} :
   continuous_le_dom inf_le_right
 #align continuous_inf_dom_right continuous_inf_dom_right
 
-/- warning: continuous_Inf_dom -> continuous_infₛ_dom is a dubious translation:
+/- warning: continuous_Inf_dom -> continuous_sInf_dom is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {t₁ : Set.{u1} (TopologicalSpace.{u1} α)} {t₂ : TopologicalSpace.{u2} β} {t : TopologicalSpace.{u1} α}, (Membership.Mem.{u1, u1} (TopologicalSpace.{u1} α) (Set.{u1} (TopologicalSpace.{u1} α)) (Set.hasMem.{u1} (TopologicalSpace.{u1} α)) t t₁) -> (Continuous.{u1, u2} α β t t₂ f) -> (Continuous.{u1, u2} α β (InfSet.infₛ.{u1} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) t₁) t₂ f)
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {t₁ : Set.{u1} (TopologicalSpace.{u1} α)} {t₂ : TopologicalSpace.{u2} β} {t : TopologicalSpace.{u1} α}, (Membership.Mem.{u1, u1} (TopologicalSpace.{u1} α) (Set.{u1} (TopologicalSpace.{u1} α)) (Set.hasMem.{u1} (TopologicalSpace.{u1} α)) t t₁) -> (Continuous.{u1, u2} α β t t₂ f) -> (Continuous.{u1, u2} α β (InfSet.sInf.{u1} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) t₁) t₂ f)
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {t₁ : Set.{u1} (TopologicalSpace.{u1} α)} {t₂ : TopologicalSpace.{u2} β} {t : TopologicalSpace.{u1} α}, (Membership.mem.{u1, u1} (TopologicalSpace.{u1} α) (Set.{u1} (TopologicalSpace.{u1} α)) (Set.instMembershipSet.{u1} (TopologicalSpace.{u1} α)) t t₁) -> (Continuous.{u1, u2} α β t t₂ f) -> (Continuous.{u1, u2} α β (InfSet.infₛ.{u1} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toInfSet.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} α))) t₁) t₂ f)
-Case conversion may be inaccurate. Consider using '#align continuous_Inf_dom continuous_infₛ_domₓ'. -/
-theorem continuous_infₛ_dom {t₁ : Set (tspace α)} {t₂ : tspace β} {t : tspace α} (h₁ : t ∈ t₁) :
-    cont t t₂ f → cont (infₛ t₁) t₂ f :=
-  continuous_le_dom <| infₛ_le h₁
-#align continuous_Inf_dom continuous_infₛ_dom
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {t₁ : Set.{u1} (TopologicalSpace.{u1} α)} {t₂ : TopologicalSpace.{u2} β} {t : TopologicalSpace.{u1} α}, (Membership.mem.{u1, u1} (TopologicalSpace.{u1} α) (Set.{u1} (TopologicalSpace.{u1} α)) (Set.instMembershipSet.{u1} (TopologicalSpace.{u1} α)) t t₁) -> (Continuous.{u1, u2} α β t t₂ f) -> (Continuous.{u1, u2} α β (InfSet.sInf.{u1} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toInfSet.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} α))) t₁) t₂ f)
+Case conversion may be inaccurate. Consider using '#align continuous_Inf_dom continuous_sInf_domₓ'. -/
+theorem continuous_sInf_dom {t₁ : Set (tspace α)} {t₂ : tspace β} {t : tspace α} (h₁ : t ∈ t₁) :
+    cont t t₂ f → cont (sInf t₁) t₂ f :=
+  continuous_le_dom <| sInf_le h₁
+#align continuous_Inf_dom continuous_sInf_dom
 
-/- warning: continuous_Inf_rng -> continuous_infₛ_rng is a dubious translation:
+/- warning: continuous_Inf_rng -> continuous_sInf_rng is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {t₁ : TopologicalSpace.{u1} α} {T : Set.{u2} (TopologicalSpace.{u2} β)}, Iff (Continuous.{u1, u2} α β t₁ (InfSet.infₛ.{u2} (TopologicalSpace.{u2} β) (ConditionallyCompleteLattice.toHasInf.{u2} (TopologicalSpace.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} β) (TopologicalSpace.completeLattice.{u2} β))) T) f) (forall (t : TopologicalSpace.{u2} β), (Membership.Mem.{u2, u2} (TopologicalSpace.{u2} β) (Set.{u2} (TopologicalSpace.{u2} β)) (Set.hasMem.{u2} (TopologicalSpace.{u2} β)) t T) -> (Continuous.{u1, u2} α β t₁ t f))
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {t₁ : TopologicalSpace.{u1} α} {T : Set.{u2} (TopologicalSpace.{u2} β)}, Iff (Continuous.{u1, u2} α β t₁ (InfSet.sInf.{u2} (TopologicalSpace.{u2} β) (ConditionallyCompleteLattice.toHasInf.{u2} (TopologicalSpace.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} β) (TopologicalSpace.completeLattice.{u2} β))) T) f) (forall (t : TopologicalSpace.{u2} β), (Membership.Mem.{u2, u2} (TopologicalSpace.{u2} β) (Set.{u2} (TopologicalSpace.{u2} β)) (Set.hasMem.{u2} (TopologicalSpace.{u2} β)) t T) -> (Continuous.{u1, u2} α β t₁ t f))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {t₁ : TopologicalSpace.{u1} α} {T : Set.{u2} (TopologicalSpace.{u2} β)}, Iff (Continuous.{u1, u2} α β t₁ (InfSet.infₛ.{u2} (TopologicalSpace.{u2} β) (ConditionallyCompleteLattice.toInfSet.{u2} (TopologicalSpace.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} β) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u2} β))) T) f) (forall (t : TopologicalSpace.{u2} β), (Membership.mem.{u2, u2} (TopologicalSpace.{u2} β) (Set.{u2} (TopologicalSpace.{u2} β)) (Set.instMembershipSet.{u2} (TopologicalSpace.{u2} β)) t T) -> (Continuous.{u1, u2} α β t₁ t f))
-Case conversion may be inaccurate. Consider using '#align continuous_Inf_rng continuous_infₛ_rngₓ'. -/
-theorem continuous_infₛ_rng {t₁ : tspace α} {T : Set (tspace β)} :
-    cont t₁ (infₛ T) f ↔ ∀ t ∈ T, cont t₁ t f := by
-  simp only [continuous_iff_coinduced_le, le_infₛ_iff]
-#align continuous_Inf_rng continuous_infₛ_rng
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {t₁ : TopologicalSpace.{u1} α} {T : Set.{u2} (TopologicalSpace.{u2} β)}, Iff (Continuous.{u1, u2} α β t₁ (InfSet.sInf.{u2} (TopologicalSpace.{u2} β) (ConditionallyCompleteLattice.toInfSet.{u2} (TopologicalSpace.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} β) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u2} β))) T) f) (forall (t : TopologicalSpace.{u2} β), (Membership.mem.{u2, u2} (TopologicalSpace.{u2} β) (Set.{u2} (TopologicalSpace.{u2} β)) (Set.instMembershipSet.{u2} (TopologicalSpace.{u2} β)) t T) -> (Continuous.{u1, u2} α β t₁ t f))
+Case conversion may be inaccurate. Consider using '#align continuous_Inf_rng continuous_sInf_rngₓ'. -/
+theorem continuous_sInf_rng {t₁ : tspace α} {T : Set (tspace β)} :
+    cont t₁ (sInf T) f ↔ ∀ t ∈ T, cont t₁ t f := by
+  simp only [continuous_iff_coinduced_le, le_sInf_iff]
+#align continuous_Inf_rng continuous_sInf_rng
 
-/- warning: continuous_infi_dom -> continuous_infᵢ_dom is a dubious translation:
+/- warning: continuous_infi_dom -> continuous_iInf_dom is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {ι : Sort.{u3}} {t₁ : ι -> (TopologicalSpace.{u1} α)} {t₂ : TopologicalSpace.{u2} β} {i : ι}, (Continuous.{u1, u2} α β (t₁ i) t₂ f) -> (Continuous.{u1, u2} α β (infᵢ.{u1, u3} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) ι t₁) t₂ f)
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {ι : Sort.{u3}} {t₁ : ι -> (TopologicalSpace.{u1} α)} {t₂ : TopologicalSpace.{u2} β} {i : ι}, (Continuous.{u1, u2} α β (t₁ i) t₂ f) -> (Continuous.{u1, u2} α β (iInf.{u1, u3} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) ι t₁) t₂ f)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} {f : α -> β} {ι : Sort.{u1}} {t₁ : ι -> (TopologicalSpace.{u2} α)} {t₂ : TopologicalSpace.{u3} β} {i : ι}, (Continuous.{u2, u3} α β (t₁ i) t₂ f) -> (Continuous.{u2, u3} α β (infᵢ.{u2, u1} (TopologicalSpace.{u2} α) (ConditionallyCompleteLattice.toInfSet.{u2} (TopologicalSpace.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u2} α))) ι t₁) t₂ f)
-Case conversion may be inaccurate. Consider using '#align continuous_infi_dom continuous_infᵢ_domₓ'. -/
-theorem continuous_infᵢ_dom {t₁ : ι → tspace α} {t₂ : tspace β} {i : ι} :
-    cont (t₁ i) t₂ f → cont (infᵢ t₁) t₂ f :=
-  continuous_le_dom <| infᵢ_le _ _
-#align continuous_infi_dom continuous_infᵢ_dom
+  forall {α : Type.{u2}} {β : Type.{u3}} {f : α -> β} {ι : Sort.{u1}} {t₁ : ι -> (TopologicalSpace.{u2} α)} {t₂ : TopologicalSpace.{u3} β} {i : ι}, (Continuous.{u2, u3} α β (t₁ i) t₂ f) -> (Continuous.{u2, u3} α β (iInf.{u2, u1} (TopologicalSpace.{u2} α) (ConditionallyCompleteLattice.toInfSet.{u2} (TopologicalSpace.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u2} α))) ι t₁) t₂ f)
+Case conversion may be inaccurate. Consider using '#align continuous_infi_dom continuous_iInf_domₓ'. -/
+theorem continuous_iInf_dom {t₁ : ι → tspace α} {t₂ : tspace β} {i : ι} :
+    cont (t₁ i) t₂ f → cont (iInf t₁) t₂ f :=
+  continuous_le_dom <| iInf_le _ _
+#align continuous_infi_dom continuous_iInf_dom
 
-/- warning: continuous_infi_rng -> continuous_infᵢ_rng is a dubious translation:
+/- warning: continuous_infi_rng -> continuous_iInf_rng is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {ι : Sort.{u3}} {t₁ : TopologicalSpace.{u1} α} {t₂ : ι -> (TopologicalSpace.{u2} β)}, Iff (Continuous.{u1, u2} α β t₁ (infᵢ.{u2, u3} (TopologicalSpace.{u2} β) (ConditionallyCompleteLattice.toHasInf.{u2} (TopologicalSpace.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} β) (TopologicalSpace.completeLattice.{u2} β))) ι t₂) f) (forall (i : ι), Continuous.{u1, u2} α β t₁ (t₂ i) f)
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {ι : Sort.{u3}} {t₁ : TopologicalSpace.{u1} α} {t₂ : ι -> (TopologicalSpace.{u2} β)}, Iff (Continuous.{u1, u2} α β t₁ (iInf.{u2, u3} (TopologicalSpace.{u2} β) (ConditionallyCompleteLattice.toHasInf.{u2} (TopologicalSpace.{u2} β) (CompleteLattice.toConditionallyCompleteLattice.{u2} (TopologicalSpace.{u2} β) (TopologicalSpace.completeLattice.{u2} β))) ι t₂) f) (forall (i : ι), Continuous.{u1, u2} α β t₁ (t₂ i) f)
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u3}} {f : α -> β} {ι : Sort.{u1}} {t₁ : TopologicalSpace.{u2} α} {t₂ : ι -> (TopologicalSpace.{u3} β)}, Iff (Continuous.{u2, u3} α β t₁ (infᵢ.{u3, u1} (TopologicalSpace.{u3} β) (ConditionallyCompleteLattice.toInfSet.{u3} (TopologicalSpace.{u3} β) (CompleteLattice.toConditionallyCompleteLattice.{u3} (TopologicalSpace.{u3} β) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u3} β))) ι t₂) f) (forall (i : ι), Continuous.{u2, u3} α β t₁ (t₂ i) f)
-Case conversion may be inaccurate. Consider using '#align continuous_infi_rng continuous_infᵢ_rngₓ'. -/
-theorem continuous_infᵢ_rng {t₁ : tspace α} {t₂ : ι → tspace β} :
-    cont t₁ (infᵢ t₂) f ↔ ∀ i, cont t₁ (t₂ i) f := by
-  simp only [continuous_iff_coinduced_le, le_infᵢ_iff]
-#align continuous_infi_rng continuous_infᵢ_rng
+  forall {α : Type.{u2}} {β : Type.{u3}} {f : α -> β} {ι : Sort.{u1}} {t₁ : TopologicalSpace.{u2} α} {t₂ : ι -> (TopologicalSpace.{u3} β)}, Iff (Continuous.{u2, u3} α β t₁ (iInf.{u3, u1} (TopologicalSpace.{u3} β) (ConditionallyCompleteLattice.toInfSet.{u3} (TopologicalSpace.{u3} β) (CompleteLattice.toConditionallyCompleteLattice.{u3} (TopologicalSpace.{u3} β) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u3} β))) ι t₂) f) (forall (i : ι), Continuous.{u2, u3} α β t₁ (t₂ i) f)
+Case conversion may be inaccurate. Consider using '#align continuous_infi_rng continuous_iInf_rngₓ'. -/
+theorem continuous_iInf_rng {t₁ : tspace α} {t₂ : ι → tspace β} :
+    cont t₁ (iInf t₂) f ↔ ∀ i, cont t₁ (t₂ i) f := by
+  simp only [continuous_iff_coinduced_le, le_iInf_iff]
+#align continuous_infi_rng continuous_iInf_rng
 
 /- warning: continuous_bot -> continuous_bot is a dubious translation:
 lean 3 declaration is
@@ -1559,7 +1559,7 @@ theorem isOpen_iff_continuous_mem {s : Set α} : IsOpen s ↔ Continuous fun x =
 
 end Sierpinski
 
-section infᵢ
+section iInf
 
 variable {α : Type u} {ι : Sort v}
 
@@ -1586,49 +1586,49 @@ theorem setOf_isOpen_sup (t₁ t₂ : TopologicalSpace α) :
   rfl
 #align set_of_is_open_sup setOf_isOpen_sup
 
-/- warning: generate_from_Union -> generateFrom_unionᵢ is a dubious translation:
+/- warning: generate_from_Union -> generateFrom_iUnion is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {f : ι -> (Set.{u1} (Set.{u1} α))}, Eq.{succ u1} (TopologicalSpace.{u1} α) (TopologicalSpace.generateFrom.{u1} α (Set.unionᵢ.{u1, u2} (Set.{u1} α) ι (fun (i : ι) => f i))) (infᵢ.{u1, u2} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) ι (fun (i : ι) => TopologicalSpace.generateFrom.{u1} α (f i)))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {f : ι -> (Set.{u1} (Set.{u1} α))}, Eq.{succ u1} (TopologicalSpace.{u1} α) (TopologicalSpace.generateFrom.{u1} α (Set.iUnion.{u1, u2} (Set.{u1} α) ι (fun (i : ι) => f i))) (iInf.{u1, u2} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) ι (fun (i : ι) => TopologicalSpace.generateFrom.{u1} α (f i)))
 but is expected to have type
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {f : ι -> (Set.{u1} (Set.{u1} α))}, Eq.{succ u1} (TopologicalSpace.{u1} α) (TopologicalSpace.generateFrom.{u1} α (Set.unionᵢ.{u1, u2} (Set.{u1} α) ι (fun (i : ι) => f i))) (infᵢ.{u1, u2} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toInfSet.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} α))) ι (fun (i : ι) => TopologicalSpace.generateFrom.{u1} α (f i)))
-Case conversion may be inaccurate. Consider using '#align generate_from_Union generateFrom_unionᵢₓ'. -/
-theorem generateFrom_unionᵢ {f : ι → Set (Set α)} :
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {f : ι -> (Set.{u1} (Set.{u1} α))}, Eq.{succ u1} (TopologicalSpace.{u1} α) (TopologicalSpace.generateFrom.{u1} α (Set.iUnion.{u1, u2} (Set.{u1} α) ι (fun (i : ι) => f i))) (iInf.{u1, u2} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toInfSet.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} α))) ι (fun (i : ι) => TopologicalSpace.generateFrom.{u1} α (f i)))
+Case conversion may be inaccurate. Consider using '#align generate_from_Union generateFrom_iUnionₓ'. -/
+theorem generateFrom_iUnion {f : ι → Set (Set α)} :
     TopologicalSpace.generateFrom (⋃ i, f i) = ⨅ i, TopologicalSpace.generateFrom (f i) :=
-  (TopologicalSpace.gc_generateFrom α).u_infᵢ
-#align generate_from_Union generateFrom_unionᵢ
+  (TopologicalSpace.gc_generateFrom α).u_iInf
+#align generate_from_Union generateFrom_iUnion
 
-/- warning: set_of_is_open_supr -> setOf_isOpen_supᵢ is a dubious translation:
+/- warning: set_of_is_open_supr -> setOf_isOpen_iSup is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {t : ι -> (TopologicalSpace.{u1} α)}, Eq.{succ u1} (Set.{u1} (Set.{u1} α)) (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => IsOpen.{u1} α (supᵢ.{u1, u2} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) ι (fun (i : ι) => t i)) s)) (Set.interᵢ.{u1, u2} (Set.{u1} α) ι (fun (i : ι) => setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => IsOpen.{u1} α (t i) s)))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {t : ι -> (TopologicalSpace.{u1} α)}, Eq.{succ u1} (Set.{u1} (Set.{u1} α)) (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => IsOpen.{u1} α (iSup.{u1, u2} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) ι (fun (i : ι) => t i)) s)) (Set.iInter.{u1, u2} (Set.{u1} α) ι (fun (i : ι) => setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => IsOpen.{u1} α (t i) s)))
 but is expected to have type
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {t : ι -> (TopologicalSpace.{u1} α)}, Eq.{succ u1} (Set.{u1} (Set.{u1} α)) (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => IsOpen.{u1} α (supᵢ.{u1, u2} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toSupSet.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} α))) ι (fun (i : ι) => t i)) s)) (Set.interᵢ.{u1, u2} (Set.{u1} α) ι (fun (i : ι) => setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => IsOpen.{u1} α (t i) s)))
-Case conversion may be inaccurate. Consider using '#align set_of_is_open_supr setOf_isOpen_supᵢₓ'. -/
-theorem setOf_isOpen_supᵢ {t : ι → TopologicalSpace α} :
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {t : ι -> (TopologicalSpace.{u1} α)}, Eq.{succ u1} (Set.{u1} (Set.{u1} α)) (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => IsOpen.{u1} α (iSup.{u1, u2} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toSupSet.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} α))) ι (fun (i : ι) => t i)) s)) (Set.iInter.{u1, u2} (Set.{u1} α) ι (fun (i : ι) => setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => IsOpen.{u1} α (t i) s)))
+Case conversion may be inaccurate. Consider using '#align set_of_is_open_supr setOf_isOpen_iSupₓ'. -/
+theorem setOf_isOpen_iSup {t : ι → TopologicalSpace α} :
     { s | is_open[⨆ i, t i] s } = ⋂ i, { s | is_open[t i] s } :=
-  (TopologicalSpace.gc_generateFrom α).l_supᵢ
-#align set_of_is_open_supr setOf_isOpen_supᵢ
+  (TopologicalSpace.gc_generateFrom α).l_iSup
+#align set_of_is_open_supr setOf_isOpen_iSup
 
-/- warning: generate_from_sUnion -> generateFrom_unionₛ is a dubious translation:
+/- warning: generate_from_sUnion -> generateFrom_sUnion is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {S : Set.{u1} (Set.{u1} (Set.{u1} α))}, Eq.{succ u1} (TopologicalSpace.{u1} α) (TopologicalSpace.generateFrom.{u1} α (Set.unionₛ.{u1} (Set.{u1} α) S)) (infᵢ.{u1, succ u1} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) (Set.{u1} (Set.{u1} α)) (fun (s : Set.{u1} (Set.{u1} α)) => infᵢ.{u1, 0} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) (Membership.Mem.{u1, u1} (Set.{u1} (Set.{u1} α)) (Set.{u1} (Set.{u1} (Set.{u1} α))) (Set.hasMem.{u1} (Set.{u1} (Set.{u1} α))) s S) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} (Set.{u1} α)) (Set.{u1} (Set.{u1} (Set.{u1} α))) (Set.hasMem.{u1} (Set.{u1} (Set.{u1} α))) s S) => TopologicalSpace.generateFrom.{u1} α s)))
+  forall {α : Type.{u1}} {S : Set.{u1} (Set.{u1} (Set.{u1} α))}, Eq.{succ u1} (TopologicalSpace.{u1} α) (TopologicalSpace.generateFrom.{u1} α (Set.sUnion.{u1} (Set.{u1} α) S)) (iInf.{u1, succ u1} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) (Set.{u1} (Set.{u1} α)) (fun (s : Set.{u1} (Set.{u1} α)) => iInf.{u1, 0} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) (Membership.Mem.{u1, u1} (Set.{u1} (Set.{u1} α)) (Set.{u1} (Set.{u1} (Set.{u1} α))) (Set.hasMem.{u1} (Set.{u1} (Set.{u1} α))) s S) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} (Set.{u1} α)) (Set.{u1} (Set.{u1} (Set.{u1} α))) (Set.hasMem.{u1} (Set.{u1} (Set.{u1} α))) s S) => TopologicalSpace.generateFrom.{u1} α s)))
 but is expected to have type
-  forall {α : Type.{u1}} {S : Set.{u1} (Set.{u1} (Set.{u1} α))}, Eq.{succ u1} (TopologicalSpace.{u1} α) (TopologicalSpace.generateFrom.{u1} α (Set.unionₛ.{u1} (Set.{u1} α) S)) (infᵢ.{u1, succ u1} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toInfSet.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} α))) (Set.{u1} (Set.{u1} α)) (fun (s : Set.{u1} (Set.{u1} α)) => infᵢ.{u1, 0} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toInfSet.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} α))) (Membership.mem.{u1, u1} (Set.{u1} (Set.{u1} α)) (Set.{u1} (Set.{u1} (Set.{u1} α))) (Set.instMembershipSet.{u1} (Set.{u1} (Set.{u1} α))) s S) (fun (H : Membership.mem.{u1, u1} (Set.{u1} (Set.{u1} α)) (Set.{u1} (Set.{u1} (Set.{u1} α))) (Set.instMembershipSet.{u1} (Set.{u1} (Set.{u1} α))) s S) => TopologicalSpace.generateFrom.{u1} α s)))
-Case conversion may be inaccurate. Consider using '#align generate_from_sUnion generateFrom_unionₛₓ'. -/
-theorem generateFrom_unionₛ {S : Set (Set (Set α))} :
+  forall {α : Type.{u1}} {S : Set.{u1} (Set.{u1} (Set.{u1} α))}, Eq.{succ u1} (TopologicalSpace.{u1} α) (TopologicalSpace.generateFrom.{u1} α (Set.sUnion.{u1} (Set.{u1} α) S)) (iInf.{u1, succ u1} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toInfSet.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} α))) (Set.{u1} (Set.{u1} α)) (fun (s : Set.{u1} (Set.{u1} α)) => iInf.{u1, 0} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toInfSet.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} α))) (Membership.mem.{u1, u1} (Set.{u1} (Set.{u1} α)) (Set.{u1} (Set.{u1} (Set.{u1} α))) (Set.instMembershipSet.{u1} (Set.{u1} (Set.{u1} α))) s S) (fun (H : Membership.mem.{u1, u1} (Set.{u1} (Set.{u1} α)) (Set.{u1} (Set.{u1} (Set.{u1} α))) (Set.instMembershipSet.{u1} (Set.{u1} (Set.{u1} α))) s S) => TopologicalSpace.generateFrom.{u1} α s)))
+Case conversion may be inaccurate. Consider using '#align generate_from_sUnion generateFrom_sUnionₓ'. -/
+theorem generateFrom_sUnion {S : Set (Set (Set α))} :
     TopologicalSpace.generateFrom (⋃₀ S) = ⨅ s ∈ S, TopologicalSpace.generateFrom s :=
-  (TopologicalSpace.gc_generateFrom α).u_infₛ
-#align generate_from_sUnion generateFrom_unionₛ
+  (TopologicalSpace.gc_generateFrom α).u_sInf
+#align generate_from_sUnion generateFrom_sUnion
 
-/- warning: set_of_is_open_Sup -> setOf_isOpen_supₛ is a dubious translation:
+/- warning: set_of_is_open_Sup -> setOf_isOpen_sSup is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {T : Set.{u1} (TopologicalSpace.{u1} α)}, Eq.{succ u1} (Set.{u1} (Set.{u1} α)) (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => IsOpen.{u1} α (SupSet.supₛ.{u1} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) T) s)) (Set.interᵢ.{u1, succ u1} (Set.{u1} α) (TopologicalSpace.{u1} α) (fun (t : TopologicalSpace.{u1} α) => Set.interᵢ.{u1, 0} (Set.{u1} α) (Membership.Mem.{u1, u1} (TopologicalSpace.{u1} α) (Set.{u1} (TopologicalSpace.{u1} α)) (Set.hasMem.{u1} (TopologicalSpace.{u1} α)) t T) (fun (H : Membership.Mem.{u1, u1} (TopologicalSpace.{u1} α) (Set.{u1} (TopologicalSpace.{u1} α)) (Set.hasMem.{u1} (TopologicalSpace.{u1} α)) t T) => setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => IsOpen.{u1} α t s))))
+  forall {α : Type.{u1}} {T : Set.{u1} (TopologicalSpace.{u1} α)}, Eq.{succ u1} (Set.{u1} (Set.{u1} α)) (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => IsOpen.{u1} α (SupSet.sSup.{u1} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) T) s)) (Set.iInter.{u1, succ u1} (Set.{u1} α) (TopologicalSpace.{u1} α) (fun (t : TopologicalSpace.{u1} α) => Set.iInter.{u1, 0} (Set.{u1} α) (Membership.Mem.{u1, u1} (TopologicalSpace.{u1} α) (Set.{u1} (TopologicalSpace.{u1} α)) (Set.hasMem.{u1} (TopologicalSpace.{u1} α)) t T) (fun (H : Membership.Mem.{u1, u1} (TopologicalSpace.{u1} α) (Set.{u1} (TopologicalSpace.{u1} α)) (Set.hasMem.{u1} (TopologicalSpace.{u1} α)) t T) => setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => IsOpen.{u1} α t s))))
 but is expected to have type
-  forall {α : Type.{u1}} {T : Set.{u1} (TopologicalSpace.{u1} α)}, Eq.{succ u1} (Set.{u1} (Set.{u1} α)) (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => IsOpen.{u1} α (SupSet.supₛ.{u1} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toSupSet.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} α))) T) s)) (Set.interᵢ.{u1, succ u1} (Set.{u1} α) (TopologicalSpace.{u1} α) (fun (t : TopologicalSpace.{u1} α) => Set.interᵢ.{u1, 0} (Set.{u1} α) (Membership.mem.{u1, u1} (TopologicalSpace.{u1} α) (Set.{u1} (TopologicalSpace.{u1} α)) (Set.instMembershipSet.{u1} (TopologicalSpace.{u1} α)) t T) (fun (H : Membership.mem.{u1, u1} (TopologicalSpace.{u1} α) (Set.{u1} (TopologicalSpace.{u1} α)) (Set.instMembershipSet.{u1} (TopologicalSpace.{u1} α)) t T) => setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => IsOpen.{u1} α t s))))
-Case conversion may be inaccurate. Consider using '#align set_of_is_open_Sup setOf_isOpen_supₛₓ'. -/
-theorem setOf_isOpen_supₛ {T : Set (TopologicalSpace α)} :
-    { s | is_open[supₛ T] s } = ⋂ t ∈ T, { s | is_open[t] s } :=
-  (TopologicalSpace.gc_generateFrom α).l_supₛ
-#align set_of_is_open_Sup setOf_isOpen_supₛ
+  forall {α : Type.{u1}} {T : Set.{u1} (TopologicalSpace.{u1} α)}, Eq.{succ u1} (Set.{u1} (Set.{u1} α)) (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => IsOpen.{u1} α (SupSet.sSup.{u1} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toSupSet.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} α))) T) s)) (Set.iInter.{u1, succ u1} (Set.{u1} α) (TopologicalSpace.{u1} α) (fun (t : TopologicalSpace.{u1} α) => Set.iInter.{u1, 0} (Set.{u1} α) (Membership.mem.{u1, u1} (TopologicalSpace.{u1} α) (Set.{u1} (TopologicalSpace.{u1} α)) (Set.instMembershipSet.{u1} (TopologicalSpace.{u1} α)) t T) (fun (H : Membership.mem.{u1, u1} (TopologicalSpace.{u1} α) (Set.{u1} (TopologicalSpace.{u1} α)) (Set.instMembershipSet.{u1} (TopologicalSpace.{u1} α)) t T) => setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => IsOpen.{u1} α t s))))
+Case conversion may be inaccurate. Consider using '#align set_of_is_open_Sup setOf_isOpen_sSupₓ'. -/
+theorem setOf_isOpen_sSup {T : Set (TopologicalSpace α)} :
+    { s | is_open[sSup T] s } = ⋂ t ∈ T, { s | is_open[t] s } :=
+  (TopologicalSpace.gc_generateFrom α).l_sSup
+#align set_of_is_open_Sup setOf_isOpen_sSup
 
 /- warning: generate_from_union_is_open -> generateFrom_union_isOpen is a dubious translation:
 lean 3 declaration is
@@ -1641,16 +1641,16 @@ theorem generateFrom_union_isOpen (a b : TopologicalSpace α) :
   (TopologicalSpace.gciGenerateFrom α).u_inf_l a b
 #align generate_from_union_is_open generateFrom_union_isOpen
 
-/- warning: generate_from_Union_is_open -> generateFrom_unionᵢ_isOpen is a dubious translation:
+/- warning: generate_from_Union_is_open -> generateFrom_iUnion_isOpen is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} (f : ι -> (TopologicalSpace.{u1} α)), Eq.{succ u1} (TopologicalSpace.{u1} α) (TopologicalSpace.generateFrom.{u1} α (Set.unionᵢ.{u1, u2} (Set.{u1} α) ι (fun (i : ι) => setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => IsOpen.{u1} α (f i) s)))) (infᵢ.{u1, u2} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) ι (fun (i : ι) => f i))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} (f : ι -> (TopologicalSpace.{u1} α)), Eq.{succ u1} (TopologicalSpace.{u1} α) (TopologicalSpace.generateFrom.{u1} α (Set.iUnion.{u1, u2} (Set.{u1} α) ι (fun (i : ι) => setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => IsOpen.{u1} α (f i) s)))) (iInf.{u1, u2} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasInf.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) ι (fun (i : ι) => f i))
 but is expected to have type
-  forall {α : Type.{u1}} {ι : Sort.{u2}} (f : ι -> (TopologicalSpace.{u1} α)), Eq.{succ u1} (TopologicalSpace.{u1} α) (TopologicalSpace.generateFrom.{u1} α (Set.unionᵢ.{u1, u2} (Set.{u1} α) ι (fun (i : ι) => setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => IsOpen.{u1} α (f i) s)))) (infᵢ.{u1, u2} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toInfSet.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} α))) ι (fun (i : ι) => f i))
-Case conversion may be inaccurate. Consider using '#align generate_from_Union_is_open generateFrom_unionᵢ_isOpenₓ'. -/
-theorem generateFrom_unionᵢ_isOpen (f : ι → TopologicalSpace α) :
+  forall {α : Type.{u1}} {ι : Sort.{u2}} (f : ι -> (TopologicalSpace.{u1} α)), Eq.{succ u1} (TopologicalSpace.{u1} α) (TopologicalSpace.generateFrom.{u1} α (Set.iUnion.{u1, u2} (Set.{u1} α) ι (fun (i : ι) => setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => IsOpen.{u1} α (f i) s)))) (iInf.{u1, u2} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toInfSet.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} α))) ι (fun (i : ι) => f i))
+Case conversion may be inaccurate. Consider using '#align generate_from_Union_is_open generateFrom_iUnion_isOpenₓ'. -/
+theorem generateFrom_iUnion_isOpen (f : ι → TopologicalSpace α) :
     TopologicalSpace.generateFrom (⋃ i, { s | is_open[f i] s }) = ⨅ i, f i :=
-  (TopologicalSpace.gciGenerateFrom α).u_infᵢ_l f
-#align generate_from_Union_is_open generateFrom_unionᵢ_isOpen
+  (TopologicalSpace.gciGenerateFrom α).u_iInf_l f
+#align generate_from_Union_is_open generateFrom_iUnion_isOpen
 
 /- warning: generate_from_inter -> generateFrom_inter is a dubious translation:
 lean 3 declaration is
@@ -1663,51 +1663,51 @@ theorem generateFrom_inter (a b : TopologicalSpace α) :
   (TopologicalSpace.gciGenerateFrom α).u_sup_l a b
 #align generate_from_inter generateFrom_inter
 
-/- warning: generate_from_Inter -> generateFrom_interᵢ is a dubious translation:
+/- warning: generate_from_Inter -> generateFrom_iInter is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} (f : ι -> (TopologicalSpace.{u1} α)), Eq.{succ u1} (TopologicalSpace.{u1} α) (TopologicalSpace.generateFrom.{u1} α (Set.interᵢ.{u1, u2} (Set.{u1} α) ι (fun (i : ι) => setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => IsOpen.{u1} α (f i) s)))) (supᵢ.{u1, u2} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) ι (fun (i : ι) => f i))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} (f : ι -> (TopologicalSpace.{u1} α)), Eq.{succ u1} (TopologicalSpace.{u1} α) (TopologicalSpace.generateFrom.{u1} α (Set.iInter.{u1, u2} (Set.{u1} α) ι (fun (i : ι) => setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => IsOpen.{u1} α (f i) s)))) (iSup.{u1, u2} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) ι (fun (i : ι) => f i))
 but is expected to have type
-  forall {α : Type.{u1}} {ι : Sort.{u2}} (f : ι -> (TopologicalSpace.{u1} α)), Eq.{succ u1} (TopologicalSpace.{u1} α) (TopologicalSpace.generateFrom.{u1} α (Set.interᵢ.{u1, u2} (Set.{u1} α) ι (fun (i : ι) => setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => IsOpen.{u1} α (f i) s)))) (supᵢ.{u1, u2} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toSupSet.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} α))) ι (fun (i : ι) => f i))
-Case conversion may be inaccurate. Consider using '#align generate_from_Inter generateFrom_interᵢₓ'. -/
-theorem generateFrom_interᵢ (f : ι → TopologicalSpace α) :
+  forall {α : Type.{u1}} {ι : Sort.{u2}} (f : ι -> (TopologicalSpace.{u1} α)), Eq.{succ u1} (TopologicalSpace.{u1} α) (TopologicalSpace.generateFrom.{u1} α (Set.iInter.{u1, u2} (Set.{u1} α) ι (fun (i : ι) => setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => IsOpen.{u1} α (f i) s)))) (iSup.{u1, u2} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toSupSet.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} α))) ι (fun (i : ι) => f i))
+Case conversion may be inaccurate. Consider using '#align generate_from_Inter generateFrom_iInterₓ'. -/
+theorem generateFrom_iInter (f : ι → TopologicalSpace α) :
     TopologicalSpace.generateFrom (⋂ i, { s | is_open[f i] s }) = ⨆ i, f i :=
-  (TopologicalSpace.gciGenerateFrom α).u_supᵢ_l f
-#align generate_from_Inter generateFrom_interᵢ
+  (TopologicalSpace.gciGenerateFrom α).u_iSup_l f
+#align generate_from_Inter generateFrom_iInter
 
-/- warning: generate_from_Inter_of_generate_from_eq_self -> generateFrom_interᵢ_of_generateFrom_eq_self is a dubious translation:
+/- warning: generate_from_Inter_of_generate_from_eq_self -> generateFrom_iInter_of_generateFrom_eq_self is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} (f : ι -> (Set.{u1} (Set.{u1} α))), (forall (i : ι), Eq.{succ u1} (Set.{u1} (Set.{u1} α)) (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => IsOpen.{u1} α (TopologicalSpace.generateFrom.{u1} α (f i)) s)) (f i)) -> (Eq.{succ u1} (TopologicalSpace.{u1} α) (TopologicalSpace.generateFrom.{u1} α (Set.interᵢ.{u1, u2} (Set.{u1} α) ι (fun (i : ι) => f i))) (supᵢ.{u1, u2} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) ι (fun (i : ι) => TopologicalSpace.generateFrom.{u1} α (f i))))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} (f : ι -> (Set.{u1} (Set.{u1} α))), (forall (i : ι), Eq.{succ u1} (Set.{u1} (Set.{u1} α)) (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => IsOpen.{u1} α (TopologicalSpace.generateFrom.{u1} α (f i)) s)) (f i)) -> (Eq.{succ u1} (TopologicalSpace.{u1} α) (TopologicalSpace.generateFrom.{u1} α (Set.iInter.{u1, u2} (Set.{u1} α) ι (fun (i : ι) => f i))) (iSup.{u1, u2} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) ι (fun (i : ι) => TopologicalSpace.generateFrom.{u1} α (f i))))
 but is expected to have type
-  forall {α : Type.{u1}} {ι : Sort.{u2}} (f : ι -> (Set.{u1} (Set.{u1} α))), (forall (i : ι), Eq.{succ u1} (Set.{u1} (Set.{u1} α)) (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => IsOpen.{u1} α (TopologicalSpace.generateFrom.{u1} α (f i)) s)) (f i)) -> (Eq.{succ u1} (TopologicalSpace.{u1} α) (TopologicalSpace.generateFrom.{u1} α (Set.interᵢ.{u1, u2} (Set.{u1} α) ι (fun (i : ι) => f i))) (supᵢ.{u1, u2} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toSupSet.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} α))) ι (fun (i : ι) => TopologicalSpace.generateFrom.{u1} α (f i))))
-Case conversion may be inaccurate. Consider using '#align generate_from_Inter_of_generate_from_eq_self generateFrom_interᵢ_of_generateFrom_eq_selfₓ'. -/
-theorem generateFrom_interᵢ_of_generateFrom_eq_self (f : ι → Set (Set α))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} (f : ι -> (Set.{u1} (Set.{u1} α))), (forall (i : ι), Eq.{succ u1} (Set.{u1} (Set.{u1} α)) (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => IsOpen.{u1} α (TopologicalSpace.generateFrom.{u1} α (f i)) s)) (f i)) -> (Eq.{succ u1} (TopologicalSpace.{u1} α) (TopologicalSpace.generateFrom.{u1} α (Set.iInter.{u1, u2} (Set.{u1} α) ι (fun (i : ι) => f i))) (iSup.{u1, u2} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toSupSet.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} α))) ι (fun (i : ι) => TopologicalSpace.generateFrom.{u1} α (f i))))
+Case conversion may be inaccurate. Consider using '#align generate_from_Inter_of_generate_from_eq_self generateFrom_iInter_of_generateFrom_eq_selfₓ'. -/
+theorem generateFrom_iInter_of_generateFrom_eq_self (f : ι → Set (Set α))
     (hf : ∀ i, { s | is_open[TopologicalSpace.generateFrom (f i)] s } = f i) :
     TopologicalSpace.generateFrom (⋂ i, f i) = ⨆ i, TopologicalSpace.generateFrom (f i) :=
-  (TopologicalSpace.gciGenerateFrom α).u_supᵢ_of_lu_eq_self f hf
-#align generate_from_Inter_of_generate_from_eq_self generateFrom_interᵢ_of_generateFrom_eq_self
+  (TopologicalSpace.gciGenerateFrom α).u_iSup_of_lu_eq_self f hf
+#align generate_from_Inter_of_generate_from_eq_self generateFrom_iInter_of_generateFrom_eq_self
 
 variable {t : ι → TopologicalSpace α}
 
-/- warning: is_open_supr_iff -> isOpen_supᵢ_iff is a dubious translation:
+/- warning: is_open_supr_iff -> isOpen_iSup_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {t : ι -> (TopologicalSpace.{u1} α)} {s : Set.{u1} α}, Iff (IsOpen.{u1} α (supᵢ.{u1, u2} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) ι (fun (i : ι) => t i)) s) (forall (i : ι), IsOpen.{u1} α (t i) s)
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {t : ι -> (TopologicalSpace.{u1} α)} {s : Set.{u1} α}, Iff (IsOpen.{u1} α (iSup.{u1, u2} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) ι (fun (i : ι) => t i)) s) (forall (i : ι), IsOpen.{u1} α (t i) s)
 but is expected to have type
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {t : ι -> (TopologicalSpace.{u1} α)} {s : Set.{u1} α}, Iff (IsOpen.{u1} α (supᵢ.{u1, u2} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toSupSet.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} α))) ι (fun (i : ι) => t i)) s) (forall (i : ι), IsOpen.{u1} α (t i) s)
-Case conversion may be inaccurate. Consider using '#align is_open_supr_iff isOpen_supᵢ_iffₓ'. -/
-theorem isOpen_supᵢ_iff {s : Set α} : is_open[⨆ i, t i] s ↔ ∀ i, is_open[t i] s :=
-  show s ∈ setOf is_open[supᵢ t] ↔ s ∈ { x : Set α | ∀ i : ι, is_open[t i] x } by
-    simp [setOf_isOpen_supᵢ]
-#align is_open_supr_iff isOpen_supᵢ_iff
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {t : ι -> (TopologicalSpace.{u1} α)} {s : Set.{u1} α}, Iff (IsOpen.{u1} α (iSup.{u1, u2} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toSupSet.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} α))) ι (fun (i : ι) => t i)) s) (forall (i : ι), IsOpen.{u1} α (t i) s)
+Case conversion may be inaccurate. Consider using '#align is_open_supr_iff isOpen_iSup_iffₓ'. -/
+theorem isOpen_iSup_iff {s : Set α} : is_open[⨆ i, t i] s ↔ ∀ i, is_open[t i] s :=
+  show s ∈ setOf is_open[iSup t] ↔ s ∈ { x : Set α | ∀ i : ι, is_open[t i] x } by
+    simp [setOf_isOpen_iSup]
+#align is_open_supr_iff isOpen_iSup_iff
 
-/- warning: is_closed_supr_iff -> isClosed_supᵢ_iff is a dubious translation:
+/- warning: is_closed_supr_iff -> isClosed_iSup_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {t : ι -> (TopologicalSpace.{u1} α)} {s : Set.{u1} α}, Iff (IsClosed.{u1} α (supᵢ.{u1, u2} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) ι (fun (i : ι) => t i)) s) (forall (i : ι), IsClosed.{u1} α (t i) s)
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {t : ι -> (TopologicalSpace.{u1} α)} {s : Set.{u1} α}, Iff (IsClosed.{u1} α (iSup.{u1, u2} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.completeLattice.{u1} α))) ι (fun (i : ι) => t i)) s) (forall (i : ι), IsClosed.{u1} α (t i) s)
 but is expected to have type
-  forall {α : Type.{u1}} {ι : Sort.{u2}} {t : ι -> (TopologicalSpace.{u1} α)} {s : Set.{u1} α}, Iff (IsClosed.{u1} α (supᵢ.{u1, u2} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toSupSet.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} α))) ι (fun (i : ι) => t i)) s) (forall (i : ι), IsClosed.{u1} α (t i) s)
-Case conversion may be inaccurate. Consider using '#align is_closed_supr_iff isClosed_supᵢ_iffₓ'. -/
-theorem isClosed_supᵢ_iff {s : Set α} : is_closed[⨆ i, t i] s ↔ ∀ i, is_closed[t i] s := by
-  simp [← isOpen_compl_iff, isOpen_supᵢ_iff]
-#align is_closed_supr_iff isClosed_supᵢ_iff
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {t : ι -> (TopologicalSpace.{u1} α)} {s : Set.{u1} α}, Iff (IsClosed.{u1} α (iSup.{u1, u2} (TopologicalSpace.{u1} α) (ConditionallyCompleteLattice.toSupSet.{u1} (TopologicalSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instCompleteLatticeTopologicalSpace.{u1} α))) ι (fun (i : ι) => t i)) s) (forall (i : ι), IsClosed.{u1} α (t i) s)
+Case conversion may be inaccurate. Consider using '#align is_closed_supr_iff isClosed_iSup_iffₓ'. -/
+theorem isClosed_iSup_iff {s : Set α} : is_closed[⨆ i, t i] s ↔ ∀ i, is_closed[t i] s := by
+  simp [← isOpen_compl_iff, isOpen_iSup_iff]
+#align is_closed_supr_iff isClosed_iSup_iff
 
-end infᵢ
+end iInf
 

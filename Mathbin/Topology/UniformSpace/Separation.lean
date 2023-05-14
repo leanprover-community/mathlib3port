@@ -240,7 +240,7 @@ theorem separationRel_comap {f : α → β}
   by
   subst h
   dsimp [separationRel]
-  simp_rw [uniformity_comap, (Filter.comap_hasBasis (Prod.map f f) (𝓤 β)).interₛ_sets, ←
+  simp_rw [uniformity_comap, (Filter.comap_hasBasis (Prod.map f f) (𝓤 β)).sInter_sets, ←
     preimage_Inter, sInter_eq_bInter]
   rfl
 #align separation_rel_comap separationRel_comap
@@ -248,9 +248,9 @@ theorem separationRel_comap {f : α → β}
 
 /- warning: filter.has_basis.separation_rel -> Filter.HasBasis.separationRel is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {ι : Sort.{u2}} {p : ι -> Prop} {s : ι -> (Set.{u1} (Prod.{u1, u1} α α))}, (Filter.HasBasis.{u1, u2} (Prod.{u1, u1} α α) ι (uniformity.{u1} α _inst_1) p s) -> (Eq.{succ u1} (Set.{u1} (Prod.{u1, u1} α α)) (separationRel.{u1} α _inst_1) (Set.interᵢ.{u1, u2} (Prod.{u1, u1} α α) ι (fun (i : ι) => Set.interᵢ.{u1, 0} (Prod.{u1, u1} α α) (p i) (fun (hi : p i) => s i))))
+  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {ι : Sort.{u2}} {p : ι -> Prop} {s : ι -> (Set.{u1} (Prod.{u1, u1} α α))}, (Filter.HasBasis.{u1, u2} (Prod.{u1, u1} α α) ι (uniformity.{u1} α _inst_1) p s) -> (Eq.{succ u1} (Set.{u1} (Prod.{u1, u1} α α)) (separationRel.{u1} α _inst_1) (Set.iInter.{u1, u2} (Prod.{u1, u1} α α) ι (fun (i : ι) => Set.iInter.{u1, 0} (Prod.{u1, u1} α α) (p i) (fun (hi : p i) => s i))))
 but is expected to have type
-  forall {α : Type.{u2}} [_inst_1 : UniformSpace.{u2} α] {ι : Sort.{u1}} {p : ι -> Prop} {s : ι -> (Set.{u2} (Prod.{u2, u2} α α))}, (Filter.HasBasis.{u2, u1} (Prod.{u2, u2} α α) ι (uniformity.{u2} α _inst_1) p s) -> (Eq.{succ u2} (Set.{u2} (Prod.{u2, u2} α α)) (separationRel.{u2} α _inst_1) (Set.interᵢ.{u2, u1} (Prod.{u2, u2} α α) ι (fun (i : ι) => Set.interᵢ.{u2, 0} (Prod.{u2, u2} α α) (p i) (fun (hi : p i) => s i))))
+  forall {α : Type.{u2}} [_inst_1 : UniformSpace.{u2} α] {ι : Sort.{u1}} {p : ι -> Prop} {s : ι -> (Set.{u2} (Prod.{u2, u2} α α))}, (Filter.HasBasis.{u2, u1} (Prod.{u2, u2} α α) ι (uniformity.{u2} α _inst_1) p s) -> (Eq.{succ u2} (Set.{u2} (Prod.{u2, u2} α α)) (separationRel.{u2} α _inst_1) (Set.iInter.{u2, u1} (Prod.{u2, u2} α α) ι (fun (i : ι) => Set.iInter.{u2, 0} (Prod.{u2, u2} α α) (p i) (fun (hi : p i) => s i))))
 Case conversion may be inaccurate. Consider using '#align filter.has_basis.separation_rel Filter.HasBasis.separationRelₓ'. -/
 protected theorem Filter.HasBasis.separationRel {ι : Sort _} {p : ι → Prop} {s : ι → Set (α × α)}
     (h : HasBasis (𝓤 α) p s) : 𝓢 α = ⋂ (i) (hi : p i), s i :=
@@ -261,9 +261,9 @@ protected theorem Filter.HasBasis.separationRel {ι : Sort _} {p : ι → Prop} 
 
 /- warning: separation_rel_eq_inter_closure -> separationRel_eq_inter_closure is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α], Eq.{succ u1} (Set.{u1} (Prod.{u1, u1} α α)) (separationRel.{u1} α _inst_1) (Set.interₛ.{u1} (Prod.{u1, u1} α α) (Set.image.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Set.{u1} (Prod.{u1, u1} α α)) (closure.{u1} (Prod.{u1, u1} α α) (Prod.topologicalSpace.{u1, u1} α α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1))) (Filter.sets.{u1} (Prod.{u1, u1} α α) (uniformity.{u1} α _inst_1))))
+  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α], Eq.{succ u1} (Set.{u1} (Prod.{u1, u1} α α)) (separationRel.{u1} α _inst_1) (Set.sInter.{u1} (Prod.{u1, u1} α α) (Set.image.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Set.{u1} (Prod.{u1, u1} α α)) (closure.{u1} (Prod.{u1, u1} α α) (Prod.topologicalSpace.{u1, u1} α α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1))) (Filter.sets.{u1} (Prod.{u1, u1} α α) (uniformity.{u1} α _inst_1))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α], Eq.{succ u1} (Set.{u1} (Prod.{u1, u1} α α)) (separationRel.{u1} α _inst_1) (Set.interₛ.{u1} (Prod.{u1, u1} α α) (Set.image.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Set.{u1} (Prod.{u1, u1} α α)) (closure.{u1} (Prod.{u1, u1} α α) (instTopologicalSpaceProd.{u1, u1} α α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1))) (Filter.sets.{u1} (Prod.{u1, u1} α α) (uniformity.{u1} α _inst_1))))
+  forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α], Eq.{succ u1} (Set.{u1} (Prod.{u1, u1} α α)) (separationRel.{u1} α _inst_1) (Set.sInter.{u1} (Prod.{u1, u1} α α) (Set.image.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Set.{u1} (Prod.{u1, u1} α α)) (closure.{u1} (Prod.{u1, u1} α α) (instTopologicalSpaceProd.{u1, u1} α α (UniformSpace.toTopologicalSpace.{u1} α _inst_1) (UniformSpace.toTopologicalSpace.{u1} α _inst_1))) (Filter.sets.{u1} (Prod.{u1, u1} α α) (uniformity.{u1} α _inst_1))))
 Case conversion may be inaccurate. Consider using '#align separation_rel_eq_inter_closure separationRel_eq_inter_closureₓ'. -/
 theorem separationRel_eq_inter_closure : 𝓢 α = ⋂₀ (closure '' (𝓤 α).sets) := by
   simp [uniformity_has_basis_closure.separation_rel]
@@ -278,7 +278,7 @@ Case conversion may be inaccurate. Consider using '#align is_closed_separation_r
 theorem isClosed_separationRel : IsClosed (𝓢 α) :=
   by
   rw [separationRel_eq_inter_closure]
-  apply isClosed_interₛ
+  apply isClosed_sInter
   rintro _ ⟨t, t_in, rfl⟩
   exact isClosed_closure
 #align is_closed_separation_rel isClosed_separationRel
@@ -403,7 +403,7 @@ instance separationSetoid.uniformSpace {α : Type u} [u : UniformSpace α] :
         let ⟨t, ht, hts⟩ := comp_mem_uniformity_sets h
         have hts : ∀ {a₁ a₂}, (a, a₁) ∈ t → (a₁, a₂) ∈ t → ⟦a₂⟧ ∈ s := fun a₁ a₂ ha₁ ha₂ =>
           @hts (a, a₂) ⟨a₁, ha₁, ha₂⟩ rfl
-        have ht' : ∀ {a₁ a₂}, a₁ ≈ a₂ → (a₁, a₂) ∈ t := fun a₁ a₂ h => interₛ_subset_of_mem ht h
+        have ht' : ∀ {a₁ a₂}, a₁ ≈ a₂ → (a₁, a₂) ∈ t := fun a₁ a₂ h => sInter_subset_of_mem ht h
         u.uniformity.sets_of_superset ht fun ⟨a₁, a₂⟩ h₁ h₂ => hts (ht' <| Setoid.symm h₂) h₁,
         fun h => u.uniformity.sets_of_superset h <| by simp (config := { contextual := true })⟩
     simp only [isOpen_coinduced, isOpen_uniformity, uniformity, forall_quotient_iff, mem_preimage,

@@ -42,7 +42,7 @@ theorem banach_steinhaus {ι : Type _} [CompleteSpace E] {g : ι → E →SL[σ�
   let e : ℕ → Set E := fun n => ⋂ i : ι, { x : E | ‖g i x‖ ≤ n }
   -- each of these sets is closed
   have hc : ∀ n : ℕ, IsClosed (e n) := fun i =>
-    isClosed_interᵢ fun i => isClosed_le (Continuous.norm (g i).cont) continuous_const
+    isClosed_iInter fun i => isClosed_le (Continuous.norm (g i).cont) continuous_const
   -- the union is the entire space; this is where we use `h`
   have hU : (⋃ n : ℕ, e n) = univ :=
     by
@@ -51,14 +51,14 @@ theorem banach_steinhaus {ι : Type _} [CompleteSpace E] {g : ι → E →SL[σ�
     obtain ⟨m, hm⟩ := exists_nat_ge C
     exact ⟨e m, mem_range_self m, mem_Inter.mpr fun i => le_trans (hC i) hm⟩
   -- apply the Baire category theorem to conclude that for some `m : ℕ`, `e m` contains some `x`
-  rcases nonempty_interior_of_unionᵢ_of_closed hc hU with ⟨m, x, hx⟩
+  rcases nonempty_interior_of_iUnion_of_closed hc hU with ⟨m, x, hx⟩
   rcases metric.is_open_iff.mp isOpen_interior x hx with ⟨ε, ε_pos, hε⟩
   obtain ⟨k, hk⟩ := NormedField.exists_one_lt_norm 𝕜
   -- show all elements in the ball have norm bounded by `m` after applying any `g i`
   have real_norm_le : ∀ z : E, z ∈ Metric.ball x ε → ∀ i : ι, ‖g i z‖ ≤ m :=
     by
     intro z hz i
-    replace hz := mem_Inter.mp (interior_interᵢ_subset _ (hε hz)) i
+    replace hz := mem_Inter.mp (interior_iInter_subset _ (hε hz)) i
     apply interior_subset hz
   have εk_pos : 0 < ε / ‖k‖ := div_pos ε_pos (zero_lt_one.trans hk)
   refine' ⟨(m + m : ℕ) / (ε / ‖k‖), fun i => ContinuousLinearMap.op_norm_le_of_shell ε_pos _ hk _⟩
@@ -84,7 +84,7 @@ open ENNReal
 
 /-- This version of Banach-Steinhaus is stated in terms of suprema of `↑‖⬝‖₊ : ℝ≥0∞`
 for convenience. -/
-theorem banach_steinhaus_supᵢ_nnnorm {ι : Type _} [CompleteSpace E] {g : ι → E →SL[σ₁₂] F}
+theorem banach_steinhaus_iSup_nnnorm {ι : Type _} [CompleteSpace E] {g : ι → E →SL[σ₁₂] F}
     (h : ∀ x, (⨆ i, ↑‖g i x‖₊) < ∞) : (⨆ i, ↑‖g i‖₊) < ∞ :=
   by
   have h' : ∀ x : E, ∃ C : ℝ, ∀ i : ι, ‖g i x‖ ≤ C :=
@@ -94,14 +94,14 @@ theorem banach_steinhaus_supᵢ_nnnorm {ι : Type _} [CompleteSpace E] {g : ι �
     refine' ⟨p, fun i => _⟩
     exact_mod_cast
       calc
-        (‖g i x‖₊ : ℝ≥0∞) ≤ ⨆ j, ‖g j x‖₊ := le_supᵢ _ i
+        (‖g i x‖₊ : ℝ≥0∞) ≤ ⨆ j, ‖g j x‖₊ := le_iSup _ i
         _ = p := hp₁
         
   cases' banach_steinhaus h' with C' hC'
-  refine' (supᵢ_le fun i => _).trans_lt (@coe_lt_top C'.to_nnreal)
+  refine' (iSup_le fun i => _).trans_lt (@coe_lt_top C'.to_nnreal)
   rw [← norm_toNNReal]
   exact coe_mono (Real.toNNReal_le_toNNReal <| hC' i)
-#align banach_steinhaus_supr_nnnorm banach_steinhaus_supᵢ_nnnorm
+#align banach_steinhaus_supr_nnnorm banach_steinhaus_iSup_nnnorm
 
 open Topology
 

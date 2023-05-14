@@ -376,8 +376,8 @@ theorem pairwise_disjoint_powersetLen (s : Finset α) :
     hij <| (mem_powersetLen.mp hi).2.symm.trans (mem_powersetLen.mp hj).2
 #align finset.pairwise_disjoint_powerset_len Finset.pairwise_disjoint_powersetLen
 
-#print Finset.powerset_card_disjUnionᵢ /-
-theorem powerset_card_disjUnionᵢ (s : Finset α) :
+#print Finset.powerset_card_disjiUnion /-
+theorem powerset_card_disjiUnion (s : Finset α) :
     Finset.powerset s =
       (range (s.card + 1)).disjUnionₓ (fun i => powersetLen i s)
         (s.pairwise_disjoint_powersetLen.set_pairwise _) :=
@@ -389,14 +389,14 @@ theorem powerset_card_disjUnionᵢ (s : Finset α) :
         mem_powerset_len.mpr ⟨mem_powerset.mp ha, rfl⟩⟩
   · rcases mem_disj_Union.mp ha with ⟨i, hi, ha⟩
     exact mem_powerset.mpr (mem_powerset_len.mp ha).1
-#align finset.powerset_card_disj_Union Finset.powerset_card_disjUnionᵢ
+#align finset.powerset_card_disj_Union Finset.powerset_card_disjiUnion
 -/
 
-#print Finset.powerset_card_bunionᵢ /-
-theorem powerset_card_bunionᵢ [DecidableEq (Finset α)] (s : Finset α) :
-    Finset.powerset s = (range (s.card + 1)).bunionᵢ fun i => powersetLen i s := by
+#print Finset.powerset_card_biUnion /-
+theorem powerset_card_biUnion [DecidableEq (Finset α)] (s : Finset α) :
+    Finset.powerset s = (range (s.card + 1)).biUnion fun i => powersetLen i s := by
   simpa only [disj_Union_eq_bUnion] using powerset_card_disj_Union s
-#align finset.powerset_card_bUnion Finset.powerset_card_bunionᵢ
+#align finset.powerset_card_bUnion Finset.powerset_card_biUnion
 -/
 
 /- warning: finset.powerset_len_sup -> Finset.powerset_len_sup is a dubious translation:

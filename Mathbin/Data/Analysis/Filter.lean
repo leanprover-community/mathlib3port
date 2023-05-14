@@ -464,7 +464,7 @@ protected def bind {f : Filter α} {m : α → Filter β} (F : f.Realizer) (G : 
 -/
 
 /-- Construct a realizer for indexed supremum -/
-protected def supᵢ {f : α → Filter β} (F : ∀ i, (f i).Realizer) : (⨆ i, f i).Realizer :=
+protected def iSup {f : α → Filter β} (F : ∀ i, (f i).Realizer) : (⨆ i, f i).Realizer :=
   let F' : (⨆ i, f i).Realizer :=
     (Realizer.bind Realizer.top F).of_eq <|
       filter_eq <| Set.ext <| by simp [Filter.bind, eq_univ_iff_forall, supr_sets_eq]
@@ -472,7 +472,7 @@ protected def supᵢ {f : α → Filter β} (F : ∀ i, (f i).Realizer) : (⨆ i
     show (Σu : Unit, ∀ i : α, True → (F i).σ) ≃ ∀ i, (F i).σ from
       ⟨fun ⟨_, f⟩ i => f i ⟨⟩, fun f => ⟨(), fun i _ => f i⟩, fun ⟨⟨⟩, f⟩ => by
         dsimp <;> congr <;> simp, fun f => rfl⟩
-#align filter.realizer.Sup Filter.Realizer.supᵢₓ
+#align filter.realizer.Sup Filter.Realizer.iSupₓ
 
 #print Filter.Realizer.prod /-
 /-- Construct a realizer for the product of filters -/

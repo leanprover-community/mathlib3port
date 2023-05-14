@@ -177,13 +177,13 @@ theorem with_gaugeSeminormFamily : WithSeminorms (gaugeSeminormFamily 𝕜 E) :=
   refine' ⟨s, ⟨_, rfl.subset⟩⟩
   rw [SeminormFamily.basisSets_iff] at hs
   rcases hs with ⟨t, r, hr, rfl⟩
-  rw [Seminorm.ball_finset_sup_eq_interᵢ _ _ _ hr]
+  rw [Seminorm.ball_finset_sup_eq_iInter _ _ _ hr]
   -- We have to show that the intersection contains zero, is open, balanced, and convex
   refine'
     ⟨mem_Inter₂.mpr fun _ _ => by simp [Seminorm.mem_ball_zero, hr],
-      isOpen_binterᵢ (to_finite _) fun S _ => _,
-      balanced_interᵢ₂ fun _ _ => Seminorm.balanced_ball_zero _ _,
-      convex_interᵢ₂ fun _ _ => Seminorm.convex_ball _ _ _⟩
+      isOpen_biInter (to_finite _) fun S _ => _,
+      balanced_iInter₂ fun _ _ => Seminorm.balanced_ball_zero _ _,
+      convex_iInter₂ fun _ _ => Seminorm.convex_ball _ _ _⟩
   -- The only nontrivial part is to show that the ball is open
   have hr' : r = ‖(r : 𝕜)‖ * 1 := by simp [abs_of_pos hr]
   have hr'' : (r : 𝕜) ≠ 0 := by simp [hr.ne']

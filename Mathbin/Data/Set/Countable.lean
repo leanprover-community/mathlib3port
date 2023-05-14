@@ -205,36 +205,36 @@ protected theorem Countable.preimage {s : Set β} (hs : s.Countable) {f : α →
 #align set.countable.preimage Set.Countable.preimage
 -/
 
-/- warning: set.exists_seq_supr_eq_top_iff_countable -> Set.exists_seq_supᵢ_eq_top_iff_countable is a dubious translation:
+/- warning: set.exists_seq_supr_eq_top_iff_countable -> Set.exists_seq_iSup_eq_top_iff_countable is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] {p : α -> Prop}, (Exists.{succ u1} α (fun (x : α) => p x)) -> (Iff (Exists.{succ u1} (Nat -> α) (fun (s : Nat -> α) => And (forall (n : Nat), p (s n)) (Eq.{succ u1} α (supᵢ.{u1, 1} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) Nat (fun (n : Nat) => s n)) (Top.top.{u1} α (CompleteLattice.toHasTop.{u1} α _inst_1))))) (Exists.{succ u1} (Set.{u1} α) (fun (S : Set.{u1} α) => And (Set.Countable.{u1} α S) (And (forall (s : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) s S) -> (p s)) (Eq.{succ u1} α (SupSet.supₛ.{u1} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) S) (Top.top.{u1} α (CompleteLattice.toHasTop.{u1} α _inst_1)))))))
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] {p : α -> Prop}, (Exists.{succ u1} α (fun (x : α) => p x)) -> (Iff (Exists.{succ u1} (Nat -> α) (fun (s : Nat -> α) => And (forall (n : Nat), p (s n)) (Eq.{succ u1} α (iSup.{u1, 1} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) Nat (fun (n : Nat) => s n)) (Top.top.{u1} α (CompleteLattice.toHasTop.{u1} α _inst_1))))) (Exists.{succ u1} (Set.{u1} α) (fun (S : Set.{u1} α) => And (Set.Countable.{u1} α S) (And (forall (s : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) s S) -> (p s)) (Eq.{succ u1} α (SupSet.sSup.{u1} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) S) (Top.top.{u1} α (CompleteLattice.toHasTop.{u1} α _inst_1)))))))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] {p : α -> Prop}, (Exists.{succ u1} α (fun (x : α) => p x)) -> (Iff (Exists.{succ u1} (Nat -> α) (fun (s : Nat -> α) => And (forall (n : Nat), p (s n)) (Eq.{succ u1} α (supᵢ.{u1, 1} α (CompleteLattice.toSupSet.{u1} α _inst_1) Nat (fun (n : Nat) => s n)) (Top.top.{u1} α (CompleteLattice.toTop.{u1} α _inst_1))))) (Exists.{succ u1} (Set.{u1} α) (fun (S : Set.{u1} α) => And (Set.Countable.{u1} α S) (And (forall (s : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) s S) -> (p s)) (Eq.{succ u1} α (SupSet.supₛ.{u1} α (CompleteLattice.toSupSet.{u1} α _inst_1) S) (Top.top.{u1} α (CompleteLattice.toTop.{u1} α _inst_1)))))))
-Case conversion may be inaccurate. Consider using '#align set.exists_seq_supr_eq_top_iff_countable Set.exists_seq_supᵢ_eq_top_iff_countableₓ'. -/
-theorem exists_seq_supᵢ_eq_top_iff_countable [CompleteLattice α] {p : α → Prop} (h : ∃ x, p x) :
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] {p : α -> Prop}, (Exists.{succ u1} α (fun (x : α) => p x)) -> (Iff (Exists.{succ u1} (Nat -> α) (fun (s : Nat -> α) => And (forall (n : Nat), p (s n)) (Eq.{succ u1} α (iSup.{u1, 1} α (CompleteLattice.toSupSet.{u1} α _inst_1) Nat (fun (n : Nat) => s n)) (Top.top.{u1} α (CompleteLattice.toTop.{u1} α _inst_1))))) (Exists.{succ u1} (Set.{u1} α) (fun (S : Set.{u1} α) => And (Set.Countable.{u1} α S) (And (forall (s : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) s S) -> (p s)) (Eq.{succ u1} α (SupSet.sSup.{u1} α (CompleteLattice.toSupSet.{u1} α _inst_1) S) (Top.top.{u1} α (CompleteLattice.toTop.{u1} α _inst_1)))))))
+Case conversion may be inaccurate. Consider using '#align set.exists_seq_supr_eq_top_iff_countable Set.exists_seq_iSup_eq_top_iff_countableₓ'. -/
+theorem exists_seq_iSup_eq_top_iff_countable [CompleteLattice α] {p : α → Prop} (h : ∃ x, p x) :
     (∃ s : ℕ → α, (∀ n, p (s n)) ∧ (⨆ n, s n) = ⊤) ↔
-      ∃ S : Set α, S.Countable ∧ (∀ s ∈ S, p s) ∧ supₛ S = ⊤ :=
+      ∃ S : Set α, S.Countable ∧ (∀ s ∈ S, p s) ∧ sSup S = ⊤ :=
   by
   constructor
   · rintro ⟨s, hps, hs⟩
     refine' ⟨range s, countable_range s, forall_range_iff.2 hps, _⟩
-    rwa [supₛ_range]
+    rwa [sSup_range]
   · rintro ⟨S, hSc, hps, hS⟩
     rcases eq_empty_or_nonempty S with (rfl | hne)
-    · rw [supₛ_empty] at hS
+    · rw [sSup_empty] at hS
       haveI := subsingleton_of_bot_eq_top hS
       rcases h with ⟨x, hx⟩
       exact ⟨fun n => x, fun n => hx, Subsingleton.elim _ _⟩
     · rcases(Set.countable_iff_exists_surjective hne).1 hSc with ⟨s, hs⟩
       refine' ⟨fun n => s n, fun n => hps _ (s n).coe_prop, _⟩
-      rwa [hs.supr_comp, ← supₛ_eq_supᵢ']
-#align set.exists_seq_supr_eq_top_iff_countable Set.exists_seq_supᵢ_eq_top_iff_countable
+      rwa [hs.supr_comp, ← sSup_eq_iSup']
+#align set.exists_seq_supr_eq_top_iff_countable Set.exists_seq_iSup_eq_top_iff_countable
 
 #print Set.exists_seq_cover_iff_countable /-
 theorem exists_seq_cover_iff_countable {p : Set α → Prop} (h : ∃ s, p s) :
     (∃ s : ℕ → Set α, (∀ n, p (s n)) ∧ (⋃ n, s n) = univ) ↔
       ∃ S : Set (Set α), S.Countable ∧ (∀ s ∈ S, p s) ∧ ⋃₀ S = univ :=
-  exists_seq_supᵢ_eq_top_iff_countable h
+  exists_seq_iSup_eq_top_iff_countable h
 #align set.exists_seq_cover_iff_countable Set.exists_seq_cover_iff_countable
 -/
 
@@ -246,43 +246,43 @@ theorem countable_of_injective_of_countable_image {s : Set α} {f : α → β} (
 #align set.countable_of_injective_of_countable_image Set.countable_of_injective_of_countable_image
 -/
 
-#print Set.countable_unionᵢ /-
-theorem countable_unionᵢ {t : ι → Set α} [Countable ι] (ht : ∀ i, (t i).Countable) :
+#print Set.countable_iUnion /-
+theorem countable_iUnion {t : ι → Set α} [Countable ι] (ht : ∀ i, (t i).Countable) :
     (⋃ i, t i).Countable := by
   haveI := fun a => (ht a).to_subtype
   rw [Union_eq_range_psigma]
   apply countable_range
-#align set.countable_Union Set.countable_unionᵢ
+#align set.countable_Union Set.countable_iUnion
 -/
 
-#print Set.countable_unionᵢ_iff /-
+#print Set.countable_iUnion_iff /-
 @[simp]
-theorem countable_unionᵢ_iff [Countable ι] {t : ι → Set α} :
+theorem countable_iUnion_iff [Countable ι] {t : ι → Set α} :
     (⋃ i, t i).Countable ↔ ∀ i, (t i).Countable :=
-  ⟨fun h i => h.mono <| subset_unionᵢ _ _, countable_unionᵢ⟩
-#align set.countable_Union_iff Set.countable_unionᵢ_iff
+  ⟨fun h i => h.mono <| subset_iUnion _ _, countable_iUnion⟩
+#align set.countable_Union_iff Set.countable_iUnion_iff
 -/
 
-#print Set.Countable.bunionᵢ_iff /-
-theorem Countable.bunionᵢ_iff {s : Set α} {t : ∀ a ∈ s, Set β} (hs : s.Countable) :
+#print Set.Countable.biUnion_iff /-
+theorem Countable.biUnion_iff {s : Set α} {t : ∀ a ∈ s, Set β} (hs : s.Countable) :
     (⋃ a ∈ s, t a ‹_›).Countable ↔ ∀ a ∈ s, (t a ‹_›).Countable :=
   by
   haveI := hs.to_subtype
   rw [bUnion_eq_Union, countable_Union_iff, SetCoe.forall']
-#align set.countable.bUnion_iff Set.Countable.bunionᵢ_iff
+#align set.countable.bUnion_iff Set.Countable.biUnion_iff
 -/
 
-#print Set.Countable.unionₛ_iff /-
-theorem Countable.unionₛ_iff {s : Set (Set α)} (hs : s.Countable) :
+#print Set.Countable.sUnion_iff /-
+theorem Countable.sUnion_iff {s : Set (Set α)} (hs : s.Countable) :
     (⋃₀ s).Countable ↔ ∀ a ∈ s, (a : _).Countable := by rw [sUnion_eq_bUnion, hs.bUnion_iff]
-#align set.countable.sUnion_iff Set.Countable.unionₛ_iff
+#align set.countable.sUnion_iff Set.Countable.sUnion_iff
 -/
 
 alias countable.bUnion_iff ↔ _ countable.bUnion
-#align set.countable.bUnion Set.Countable.bunionᵢ
+#align set.countable.bUnion Set.Countable.biUnion
 
 alias countable.sUnion_iff ↔ _ countable.sUnion
-#align set.countable.sUnion Set.Countable.unionₛ
+#align set.countable.sUnion Set.Countable.sUnion
 
 /- warning: set.countable_union -> Set.countable_union is a dubious translation:
 lean 3 declaration is
