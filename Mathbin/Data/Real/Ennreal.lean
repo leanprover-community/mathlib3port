@@ -5142,7 +5142,7 @@ theorem toNNReal_supᵢ (hf : ∀ i, f i ≠ ∞) : (supᵢ f).toNNReal = ⨆ i,
   simp_rw [to_nnreal_coe]
   by_cases h : BddAbove (range f)
   · rw [← coe_supr h, to_nnreal_coe]
-  · rw [NNReal.supᵢ_of_not_bddAbove h, (WithTop.supr_coe_eq_top f).mpr h, top_to_nnreal]
+  · rw [NNReal.supᵢ_of_not_bddAbove h, (WithTop.supᵢ_coe_eq_top f).mpr h, top_to_nnreal]
 #align ennreal.to_nnreal_supr ENNReal.toNNReal_supᵢ
 
 theorem toNNReal_supₛ (s : Set ℝ≥0∞) (hs : ∀ r ∈ s, r ≠ ∞) :

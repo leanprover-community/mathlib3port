@@ -156,28 +156,28 @@ theorem WithTop.coe_supᵢ [Preorder α] [SupSet α] (f : ι → α) (h : BddAbo
     ↑(⨆ i, f i) = (⨆ i, f i : WithTop α) := by rw [supᵢ, supᵢ, WithTop.coe_supₛ' h, range_comp]
 #align with_top.coe_supr WithTop.coe_supᵢ
 
-/- warning: with_bot.cSup_empty -> WithBot.supₛ_empty is a dubious translation:
+/- warning: with_bot.cSup_empty -> WithBot.csupₛ_empty is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : SupSet.{u1} α], Eq.{succ u1} (WithBot.{u1} α) (SupSet.supₛ.{u1} (WithBot.{u1} α) (WithBot.hasSup.{u1} α _inst_1) (EmptyCollection.emptyCollection.{u1} (Set.{u1} (WithBot.{u1} α)) (Set.hasEmptyc.{u1} (WithBot.{u1} α)))) (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.hasBot.{u1} α))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : SupSet.{u1} α], Eq.{succ u1} (WithBot.{u1} α) (SupSet.supₛ.{u1} (WithBot.{u1} α) (instSupSetWithBot.{u1} α _inst_1) (EmptyCollection.emptyCollection.{u1} (Set.{u1} (WithBot.{u1} α)) (Set.instEmptyCollectionSet.{u1} (WithBot.{u1} α)))) (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.bot.{u1} α))
-Case conversion may be inaccurate. Consider using '#align with_bot.cSup_empty WithBot.supₛ_emptyₓ'. -/
+Case conversion may be inaccurate. Consider using '#align with_bot.cSup_empty WithBot.csupₛ_emptyₓ'. -/
 @[simp]
-theorem WithBot.supₛ_empty {α : Type _} [SupSet α] : supₛ (∅ : Set (WithBot α)) = ⊥ :=
+theorem WithBot.csupₛ_empty {α : Type _} [SupSet α] : supₛ (∅ : Set (WithBot α)) = ⊥ :=
   if_pos <| Set.empty_subset _
-#align with_bot.cSup_empty WithBot.supₛ_empty
+#align with_bot.cSup_empty WithBot.csupₛ_empty
 
-/- warning: with_bot.csupr_empty -> WithBot.supᵢ_empty is a dubious translation:
+/- warning: with_bot.csupr_empty -> WithBot.csupᵢ_empty is a dubious translation:
 lean 3 declaration is
   forall {ι : Sort.{u1}} {α : Type.{u2}} [_inst_1 : IsEmpty.{u1} ι] [_inst_2 : SupSet.{u2} α] (f : ι -> (WithBot.{u2} α)), Eq.{succ u2} (WithBot.{u2} α) (supᵢ.{u2, u1} (WithBot.{u2} α) (WithBot.hasSup.{u2} α _inst_2) ι (fun (i : ι) => f i)) (Bot.bot.{u2} (WithBot.{u2} α) (WithBot.hasBot.{u2} α))
 but is expected to have type
   forall {ι : Sort.{u1}} {α : Type.{u2}} [_inst_1 : IsEmpty.{u1} ι] [_inst_2 : SupSet.{u2} α] (f : ι -> (WithBot.{u2} α)), Eq.{succ u2} (WithBot.{u2} α) (supᵢ.{u2, u1} (WithBot.{u2} α) (instSupSetWithBot.{u2} α _inst_2) ι (fun (i : ι) => f i)) (Bot.bot.{u2} (WithBot.{u2} α) (WithBot.bot.{u2} α))
-Case conversion may be inaccurate. Consider using '#align with_bot.csupr_empty WithBot.supᵢ_emptyₓ'. -/
+Case conversion may be inaccurate. Consider using '#align with_bot.csupr_empty WithBot.csupᵢ_emptyₓ'. -/
 @[simp]
-theorem WithBot.supᵢ_empty {α : Type _} [IsEmpty ι] [SupSet α] (f : ι → WithBot α) :
+theorem WithBot.csupᵢ_empty {α : Type _} [IsEmpty ι] [SupSet α] (f : ι → WithBot α) :
     (⨆ i, f i) = ⊥ :=
   @WithTop.infᵢ_empty _ αᵒᵈ _ _ _
-#align with_bot.csupr_empty WithBot.supᵢ_empty
+#align with_bot.csupr_empty WithBot.csupᵢ_empty
 
 /- warning: with_bot.coe_Sup' -> WithBot.coe_supₛ' is a dubious translation:
 lean 3 declaration is
@@ -276,7 +276,7 @@ boundedness.-/
 class ConditionallyCompleteLinearOrderBot (α : Type _) extends ConditionallyCompleteLinearOrder α,
   Bot α where
   bot_le : ∀ x : α, ⊥ ≤ x
-  supₛ_empty : Sup ∅ = ⊥
+  csupₛ_empty : Sup ∅ = ⊥
 #align conditionally_complete_linear_order_bot ConditionallyCompleteLinearOrderBot
 -/
 
@@ -309,7 +309,7 @@ instance (priority := 100) CompleteLattice.toConditionallyCompleteLattice [Compl
 instance (priority := 100) CompleteLinearOrder.toConditionallyCompleteLinearOrderBot {α : Type _}
     [CompleteLinearOrder α] : ConditionallyCompleteLinearOrderBot α :=
   { CompleteLattice.toConditionallyCompleteLattice, ‹CompleteLinearOrder α› with
-    supₛ_empty := supₛ_empty }
+    csupₛ_empty := supₛ_empty }
 #align complete_linear_order.to_conditionally_complete_linear_order_bot CompleteLinearOrder.toConditionallyCompleteLinearOrderBot
 -/
 
@@ -342,7 +342,7 @@ noncomputable def IsWellOrder.conditionallyCompleteLinearOrderBot (α : Type _) 
       have h's : (upperBounds s).Nonempty := ⟨a, has⟩
       simp only [h's, dif_pos]
       simpa using h.wf.not_lt_min _ h's has
-    supₛ_empty := by simpa using eq_bot_iff.2 (not_lt.1 <| h.wf.not_lt_min _ _ <| mem_univ ⊥) }
+    csupₛ_empty := by simpa using eq_bot_iff.2 (not_lt.1 <| h.wf.not_lt_min _ _ <| mem_univ ⊥) }
 #align is_well_order.conditionally_complete_linear_order_bot IsWellOrder.conditionallyCompleteLinearOrderBot
 -/
 
@@ -2458,7 +2458,7 @@ noncomputable instance WithTop.WithBot.completeLattice {α : Type _}
         · rw [h] at h_1
           cases h_1
         · convert bot_le
-          convert WithBot.supₛ_empty
+          convert WithBot.csupₛ_empty
           rw [h]
           rfl
         · exfalso
@@ -2510,13 +2510,13 @@ noncomputable instance WithBot.WithTop.completeLinearOrder {α : Type _}
 #align with_bot.with_top.complete_linear_order WithBot.WithTop.completeLinearOrder
 -/
 
-/- warning: with_top.supr_coe_eq_top -> WithTop.supr_coe_eq_top is a dubious translation:
+/- warning: with_top.supr_coe_eq_top -> WithTop.supᵢ_coe_eq_top is a dubious translation:
 lean 3 declaration is
   forall {ι : Sort.{u1}} {α : Type.{u2}} [_inst_1 : ConditionallyCompleteLinearOrderBot.{u2} α] (f : ι -> α), Iff (Eq.{succ u2} (WithTop.{u2} α) (supᵢ.{u2, u1} (WithTop.{u2} α) (WithTop.hasSup.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (ConditionallyCompleteLattice.toLattice.{u2} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} α (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u2} α _inst_1)))))) (ConditionallyCompleteLattice.toHasSup.{u2} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} α (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u2} α _inst_1)))) ι (fun (x : ι) => (fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) α (WithTop.{u2} α) (HasLiftT.mk.{succ u2, succ u2} α (WithTop.{u2} α) (CoeTCₓ.coe.{succ u2, succ u2} α (WithTop.{u2} α) (WithTop.hasCoeT.{u2} α))) (f x))) (Top.top.{u2} (WithTop.{u2} α) (WithTop.hasTop.{u2} α))) (Not (BddAbove.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (ConditionallyCompleteLattice.toLattice.{u2} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} α (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u2} α _inst_1)))))) (Set.range.{u2, u1} α ι f)))
 but is expected to have type
   forall {ι : Sort.{u2}} {α : Type.{u1}} [_inst_1 : ConditionallyCompleteLinearOrderBot.{u1} α] (f : ι -> α), Iff (Eq.{succ u1} (WithTop.{u1} α) (supᵢ.{u1, u2} (WithTop.{u1} α) (instSupSetWithTop.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u1} α _inst_1)))))) (ConditionallyCompleteLattice.toSupSet.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u1} α _inst_1)))) ι (fun (x : ι) => WithTop.some.{u1} α (f x))) (Top.top.{u1} (WithTop.{u1} α) (WithTop.top.{u1} α))) (Not (BddAbove.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u1} α _inst_1)))))) (Set.range.{u1, u2} α ι f)))
-Case conversion may be inaccurate. Consider using '#align with_top.supr_coe_eq_top WithTop.supr_coe_eq_topₓ'. -/
-theorem WithTop.supr_coe_eq_top {ι : Sort _} {α : Type _} [ConditionallyCompleteLinearOrderBot α]
+Case conversion may be inaccurate. Consider using '#align with_top.supr_coe_eq_top WithTop.supᵢ_coe_eq_topₓ'. -/
+theorem WithTop.supᵢ_coe_eq_top {ι : Sort _} {α : Type _} [ConditionallyCompleteLinearOrderBot α]
     (f : ι → α) : (⨆ x, (f x : WithTop α)) = ⊤ ↔ ¬BddAbove (Set.range f) :=
   by
   rw [supᵢ_eq_top, not_bddAbove_iff]
@@ -2525,18 +2525,18 @@ theorem WithTop.supr_coe_eq_top {ι : Sort _} {α : Type _} [ConditionallyComple
     exact ⟨f i, ⟨i, rfl⟩, with_top.coe_lt_coe.mp hi⟩
   · rcases hf (a.untop ha.ne) with ⟨-, ⟨i, rfl⟩, hi⟩
     exact ⟨i, by simpa only [WithTop.coe_untop _ ha.ne] using with_top.coe_lt_coe.mpr hi⟩
-#align with_top.supr_coe_eq_top WithTop.supr_coe_eq_top
+#align with_top.supr_coe_eq_top WithTop.supᵢ_coe_eq_top
 
-/- warning: with_top.supr_coe_lt_top -> WithTop.supr_coe_lt_top is a dubious translation:
+/- warning: with_top.supr_coe_lt_top -> WithTop.supᵢ_coe_lt_top is a dubious translation:
 lean 3 declaration is
   forall {ι : Sort.{u1}} {α : Type.{u2}} [_inst_1 : ConditionallyCompleteLinearOrderBot.{u2} α] (f : ι -> α), Iff (LT.lt.{u2} (WithTop.{u2} α) (Preorder.toLT.{u2} (WithTop.{u2} α) (WithTop.preorder.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (ConditionallyCompleteLattice.toLattice.{u2} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} α (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u2} α _inst_1)))))))) (supᵢ.{u2, u1} (WithTop.{u2} α) (WithTop.hasSup.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (ConditionallyCompleteLattice.toLattice.{u2} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} α (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u2} α _inst_1)))))) (ConditionallyCompleteLattice.toHasSup.{u2} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} α (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u2} α _inst_1)))) ι (fun (x : ι) => (fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) α (WithTop.{u2} α) (HasLiftT.mk.{succ u2, succ u2} α (WithTop.{u2} α) (CoeTCₓ.coe.{succ u2, succ u2} α (WithTop.{u2} α) (WithTop.hasCoeT.{u2} α))) (f x))) (Top.top.{u2} (WithTop.{u2} α) (WithTop.hasTop.{u2} α))) (BddAbove.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (ConditionallyCompleteLattice.toLattice.{u2} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u2} α (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u2} α _inst_1)))))) (Set.range.{u2, u1} α ι f))
 but is expected to have type
   forall {ι : Sort.{u2}} {α : Type.{u1}} [_inst_1 : ConditionallyCompleteLinearOrderBot.{u1} α] (f : ι -> α), Iff (LT.lt.{u1} (WithTop.{u1} α) (Preorder.toLT.{u1} (WithTop.{u1} α) (WithTop.preorder.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u1} α _inst_1)))))))) (supᵢ.{u1, u2} (WithTop.{u1} α) (instSupSetWithTop.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u1} α _inst_1)))))) (ConditionallyCompleteLattice.toSupSet.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u1} α _inst_1)))) ι (fun (x : ι) => WithTop.some.{u1} α (f x))) (Top.top.{u1} (WithTop.{u1} α) (WithTop.top.{u1} α))) (BddAbove.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α (ConditionallyCompleteLinearOrderBot.toConditionallyCompleteLinearOrder.{u1} α _inst_1)))))) (Set.range.{u1, u2} α ι f))
-Case conversion may be inaccurate. Consider using '#align with_top.supr_coe_lt_top WithTop.supr_coe_lt_topₓ'. -/
-theorem WithTop.supr_coe_lt_top {ι : Sort _} {α : Type _} [ConditionallyCompleteLinearOrderBot α]
+Case conversion may be inaccurate. Consider using '#align with_top.supr_coe_lt_top WithTop.supᵢ_coe_lt_topₓ'. -/
+theorem WithTop.supᵢ_coe_lt_top {ι : Sort _} {α : Type _} [ConditionallyCompleteLinearOrderBot α]
     (f : ι → α) : (⨆ x, (f x : WithTop α)) < ⊤ ↔ BddAbove (Set.range f) :=
-  lt_top_iff_ne_top.trans <| (WithTop.supr_coe_eq_top f).Not.trans Classical.not_not
-#align with_top.supr_coe_lt_top WithTop.supr_coe_lt_top
+  lt_top_iff_ne_top.trans <| (WithTop.supᵢ_coe_eq_top f).Not.trans Classical.not_not
+#align with_top.supr_coe_lt_top WithTop.supᵢ_coe_lt_top
 
 end WithTopBot
 
