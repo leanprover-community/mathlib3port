@@ -942,7 +942,7 @@ instance IsLocalization.to_stalk (p : PrimeSpectrum R) :
     IsLocalization.AtPrime ((structureSheaf R).Presheaf.stalk p) p.asIdeal :=
   by
   convert(IsLocalization.isLocalization_iff_of_ringEquiv _
-          (stalk_iso R p).symm.commRingIsoToRingEquiv).mp
+          (stalk_iso R p).symm.commRingCatIsoToRingEquiv).mp
       Localization.isLocalization
   apply Algebra.algebra_ext
   intro
@@ -967,7 +967,7 @@ instance IsLocalization.to_basicOpen (r : R) :
     IsLocalization.Away r ((structureSheaf R).val.obj (op <| basicOpen r)) :=
   by
   convert(IsLocalization.isLocalization_iff_of_ringEquiv _
-          (basic_open_iso R r).symm.commRingIsoToRingEquiv).mp
+          (basic_open_iso R r).symm.commRingCatIsoToRingEquiv).mp
       Localization.isLocalization
   apply Algebra.algebra_ext
   intro x
@@ -999,7 +999,7 @@ instance isIso_to_global : IsIso (toOpen R ⊤) :=
   by
   let hom := CommRingCat.ofHom (algebraMap R (Localization.Away (1 : R)))
   haveI : is_iso hom :=
-    is_iso.of_iso (IsLocalization.atOne R (Localization.Away (1 : R))).toRingEquiv.toCommRingIso
+    is_iso.of_iso (IsLocalization.atOne R (Localization.Away (1 : R))).toRingEquiv.toCommRingCatIso
   rw [to_global_factors R]
   infer_instance
 #align algebraic_geometry.structure_sheaf.is_iso_to_global AlgebraicGeometry.StructureSheaf.isIso_to_global

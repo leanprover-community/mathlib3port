@@ -289,12 +289,12 @@ theorem source_affine_locally_of_source_open_cover_aux (h₁ : RingHom.RespectsI
   rintro ⟨s, r, hr, hs⟩
   have :=
     (@Localization.algEquiv _ _ _ _ _
-          (@AlgebraicGeometry.Γ_restrict_is_localization _ U.2 s)).toRingEquiv.toCommRingIso
+          (@AlgebraicGeometry.Γ_restrict_is_localization _ U.2 s)).toRingEquiv.toCommRingCatIso
   refine'
     (h₁.cancel_right_is_iso _
           (@Localization.algEquiv _ _ _ _ _
                   (@AlgebraicGeometry.Γ_restrict_is_localization _ U.2
-                    s)).toRingEquiv.toCommRingIso.Hom).mp
+                    s)).toRingEquiv.toCommRingCatIso.Hom).mp
       _
   subst hs
   rw [CommRingCat.comp_eq_ring_hom_comp, ← RingHom.comp_assoc]

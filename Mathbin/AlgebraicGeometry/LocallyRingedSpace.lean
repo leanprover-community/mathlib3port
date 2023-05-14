@@ -231,7 +231,7 @@ def restrict {U : TopCat} (X : LocallyRingedSpace) {f : U ⟶ X.toTopCat} (h : O
     dsimp at *
     -- We show that the stalk of the restriction is isomorphic to the original stalk,
     apply @RingEquiv.localRing _ _ _ (X.local_ring (f x))
-    exact (X.to_PresheafedSpace.restrict_stalk_iso h x).symm.commRingIsoToRingEquiv
+    exact (X.to_PresheafedSpace.restrict_stalk_iso h x).symm.commRingCatIsoToRingEquiv
   toSheafedSpace := X.toSheafedSpace.restrict h
 #align algebraic_geometry.LocallyRingedSpace.restrict AlgebraicGeometry.LocallyRingedSpace.restrict
 

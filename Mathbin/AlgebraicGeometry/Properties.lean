@@ -99,7 +99,7 @@ theorem isReduced_of_open_immersion {X Y : Scheme} (f : X ⟶ Y) [H : IsOpenImme
   exact
     isReduced_of_injective (inv <| f.1.c.app (op <| H.base_open.is_open_map.functor.obj U))
       (as_iso <| f.1.c.app (op <| H.base_open.is_open_map.functor.obj U) :
-              Y.presheaf.obj _ ≅ _).symm.commRingIsoToRingEquiv.Injective
+              Y.presheaf.obj _ ≅ _).symm.commRingCatIsoToRingEquiv.Injective
 #align algebraic_geometry.is_reduced_of_open_immersion AlgebraicGeometry.isReduced_of_open_immersion
 
 instance {R : CommRingCat} [H : IsReduced R] : IsReduced (Scheme.spec.obj <| op R) :=
@@ -113,7 +113,7 @@ instance {R : CommRingCat} [H : IsReduced R] : IsReduced (Scheme.spec.obj <| op 
     infer_instance
   exact
     isReduced_of_injective (structure_sheaf.stalk_iso R x).Hom
-      (structure_sheaf.stalk_iso R x).commRingIsoToRingEquiv.Injective
+      (structure_sheaf.stalk_iso R x).commRingCatIsoToRingEquiv.Injective
 
 theorem affine_isReduced_iff (R : CommRingCat) :
     IsReduced (Scheme.spec.obj <| op R) ↔ IsReduced R :=
@@ -127,7 +127,7 @@ theorem affine_isReduced_iff (R : CommRingCat) :
     change _root_.is_reduced ((Scheme.Spec.obj <| op R).Presheaf.obj <| op ⊤)
     infer_instance
   exact
-    isReduced_of_injective (to_Spec_Γ R) (as_iso <| to_Spec_Γ R).commRingIsoToRingEquiv.Injective
+    isReduced_of_injective (to_Spec_Γ R) (as_iso <| to_Spec_Γ R).commRingCatIsoToRingEquiv.Injective
 #align algebraic_geometry.affine_is_reduced_iff AlgebraicGeometry.affine_isReduced_iff
 
 theorem isReduced_of_isAffine_isReduced [IsAffine X] [h : IsReduced (X.Presheaf.obj (op ⊤))] :
@@ -335,7 +335,7 @@ theorem isIntegral_of_open_immersion {X Y : Scheme} (f : X ⟶ Y) [H : IsOpenImm
     refine' ⟨⟨_, _, hU.some.prop, rfl⟩⟩
   exact
     (as_iso <| f.1.c.app (op <| H.base_open.is_open_map.functor.obj U) :
-              Y.presheaf.obj _ ≅ _).symm.commRingIsoToRingEquiv.IsDomain
+              Y.presheaf.obj _ ≅ _).symm.commRingCatIsoToRingEquiv.IsDomain
       _
 #align algebraic_geometry.is_integral_of_open_immersion AlgebraicGeometry.isIntegral_of_open_immersion
 
@@ -350,7 +350,7 @@ theorem affine_isIntegral_iff (R : CommRingCat) :
     IsIntegral (Scheme.spec.obj <| op R) ↔ IsDomain R :=
   ⟨fun h =>
     RingEquiv.isDomain ((Scheme.Spec.obj <| op R).Presheaf.obj _)
-      (as_iso <| to_Spec_Γ R).commRingIsoToRingEquiv,
+      (as_iso <| to_Spec_Γ R).commRingCatIsoToRingEquiv,
     fun h => inferInstance⟩
 #align algebraic_geometry.affine_is_integral_iff AlgebraicGeometry.affine_isIntegral_iff
 

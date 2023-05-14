@@ -504,7 +504,7 @@ theorem is_localization_basicOpen {X : Scheme} {U : Opens X.carrier} (hU : IsAff
         (as_iso <|
             basic_open_sections_to_affine hU f ≫
               (Scheme.Spec.obj _).Presheaf.map
-                (eq_to_hom (basic_open_eq_of_affine _).symm).op).commRingIsoToRingEquiv).mpr
+                (eq_to_hom (basic_open_eq_of_affine _).symm).op).commRingCatIsoToRingEquiv).mpr
   convert structure_sheaf.is_localization.to_basic_open _ f
   change _ ≫ basic_open_sections_to_affine hU f ≫ _ = _
   delta basic_open_sections_to_affine
@@ -635,7 +635,7 @@ theorem IsAffineOpen.is_localization_stalk {X : Scheme} {U : Opens X.carrier} (h
   subst this
   apply
     (IsLocalization.isLocalization_iff_of_ringEquiv _
-        (as_iso <| PresheafedSpace.stalk_map hU.from_Spec.1 y).commRingIsoToRingEquiv).mpr
+        (as_iso <| PresheafedSpace.stalk_map hU.from_Spec.1 y).commRingCatIsoToRingEquiv).mpr
   convert structure_sheaf.is_localization.to_stalk _ _ using 1
   delta structure_sheaf.stalk_algebra
   congr 1

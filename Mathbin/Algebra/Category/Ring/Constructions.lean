@@ -154,7 +154,7 @@ instance commRingCat_hasStrictTerminalObjects : HasStrictTerminalObjects CommRin
 #align CommRing.CommRing_has_strict_terminal_objects CommRingCat.commRingCat_hasStrictTerminalObjects
 
 theorem subsingleton_of_isTerminal {X : CommRingCat} (hX : IsTerminal X) : Subsingleton X :=
-  (hX.uniqueUpToIso punitIsTerminal).commRingIsoToRingEquiv.toEquiv.subsingleton_congr.mpr
+  (hX.uniqueUpToIso punitIsTerminal).commRingCatIsoToRingEquiv.toEquiv.subsingleton_congr.mpr
     (show Subsingleton PUnit by infer_instance)
 #align CommRing.subsingleton_of_is_terminal CommRingCat.subsingleton_of_isTerminal
 

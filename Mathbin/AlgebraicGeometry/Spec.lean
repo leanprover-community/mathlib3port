@@ -195,7 +195,7 @@ def Spec.locallyRingedSpaceObj (R : CommRingCat) : LocallyRingedSpace :=
   { Spec.sheafedSpaceObj R with
     LocalRing := fun x =>
       @RingEquiv.localRing _ (show LocalRing (Localization.AtPrime _) by infer_instance) _
-        (Iso.commRingIsoToRingEquiv <| stalkIso R x).symm }
+        (Iso.commRingCatIsoToRingEquiv <| stalkIso R x).symm }
 #align algebraic_geometry.Spec.LocallyRingedSpace_obj AlgebraicGeometry.Spec.locallyRingedSpaceObj
 
 @[elementwise]
@@ -325,7 +325,7 @@ theorem Spec_map_localization_isIso (R : CommRingCat) (M : Submonoid R)
     show
       is_iso
         (IsLocalization.localizationLocalizationAtPrimeIsoLocalization M
-                x.as_ideal).toRingEquiv.toCommRingIso.Hom
+                x.as_ideal).toRingEquiv.toCommRingCatIso.Hom
       by infer_instance
   infer_instance
 #align algebraic_geometry.Spec_map_localization_is_iso AlgebraicGeometry.Spec_map_localization_isIso

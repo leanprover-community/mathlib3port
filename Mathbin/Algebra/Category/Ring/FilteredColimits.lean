@@ -43,20 +43,20 @@ open AddMonCat.FilteredColimits (colimit_zero_eq colimit_add_mk_eq)
 
 open MonCat.FilteredColimits (colimit_one_eq colimit_mul_mk_eq)
 
-namespace SemiRing.FilteredColimits
+namespace SemiRingCat.FilteredColimits
 
 section
 
 -- We use parameters here, mainly so we can have the abbreviations `R` and `R.mk` below, without
 -- passing around `F` all the time.
-parameter {J : Type v}[SmallCategory J](F : J ⥤ SemiRing.{max v u})
+parameter {J : Type v}[SmallCategory J](F : J ⥤ SemiRingCat.{max v u})
 
 -- This instance is needed below in `colimit_semiring`, during the verification of the
 -- semiring axioms.
 instance semiringObj (j : J) :
-    Semiring (((F ⋙ forget₂ SemiRing MonCat.{max v u}) ⋙ forget MonCat).obj j) :=
+    Semiring (((F ⋙ forget₂ SemiRingCat MonCat.{max v u}) ⋙ forget MonCat).obj j) :=
   show Semiring (F.obj j) by infer_instance
-#align SemiRing.filtered_colimits.semiring_obj SemiRing.FilteredColimits.semiringObj
+#align SemiRing.filtered_colimits.semiring_obj SemiRingCat.FilteredColimits.semiringObj
 
 variable [IsFiltered J]
 
@@ -64,14 +64,14 @@ variable [IsFiltered J]
 In the following, we will show that this has the structure of a semiring.
 -/
 abbrev r : MonCat :=
-  MonCat.FilteredColimits.colimit (F ⋙ forget₂ SemiRing MonCat.{max v u})
-#align SemiRing.filtered_colimits.R SemiRing.FilteredColimits.r
+  MonCat.FilteredColimits.colimit (F ⋙ forget₂ SemiRingCat MonCat.{max v u})
+#align SemiRing.filtered_colimits.R SemiRingCat.FilteredColimits.r
 
 instance colimitSemiring : Semiring R :=
   { R.Monoid,
     AddCommMonCat.FilteredColimits.colimitAddCommMonoid
       (F ⋙
-        forget₂ SemiRing
+        forget₂ SemiRingCat
           AddCommMonCat.{max v
               u}) with
     mul_zero := fun x => by
@@ -112,131 +112,136 @@ instance colimitSemiring : Semiring R :=
       simp only [CategoryTheory.Functor.map_id, id_apply]
       erw [right_distrib (F.map f x) (F.map g y) (F.map h z)]
       rfl }
-#align SemiRing.filtered_colimits.colimit_semiring SemiRing.FilteredColimits.colimitSemiring
+#align SemiRing.filtered_colimits.colimit_semiring SemiRingCat.FilteredColimits.colimitSemiring
 
 /-- The bundled semiring giving the filtered colimit of a diagram. -/
-def colimit : SemiRing :=
-  SemiRing.of R
-#align SemiRing.filtered_colimits.colimit SemiRing.FilteredColimits.colimit
+def colimit : SemiRingCat :=
+  SemiRingCat.of R
+#align SemiRing.filtered_colimits.colimit SemiRingCat.FilteredColimits.colimit
 
 /-- The cocone over the proposed colimit semiring. -/
 def colimitCocone : cocone F where
   pt := colimit
   ι :=
     { app := fun j =>
-        { (MonCat.FilteredColimits.colimitCocone (F ⋙ forget₂ SemiRing MonCat.{max v u})).ι.app j,
+        {
+          (MonCat.FilteredColimits.colimitCocone (F ⋙ forget₂ SemiRingCat MonCat.{max v u})).ι.app
+            j,
           (AddCommMonCat.FilteredColimits.colimitCocone
-                  (F ⋙ forget₂ SemiRing AddCommMonCat.{max v u})).ι.app
+                  (F ⋙ forget₂ SemiRingCat AddCommMonCat.{max v u})).ι.app
             j with }
       naturality' := fun j j' f =>
-        RingHom.coe_inj ((Types.colimitCocone (F ⋙ forget SemiRing)).ι.naturality f) }
-#align SemiRing.filtered_colimits.colimit_cocone SemiRing.FilteredColimits.colimitCocone
+        RingHom.coe_inj ((Types.colimitCocone (F ⋙ forget SemiRingCat)).ι.naturality f) }
+#align SemiRing.filtered_colimits.colimit_cocone SemiRingCat.FilteredColimits.colimitCocone
 
 /-- The proposed colimit cocone is a colimit in `SemiRing`. -/
 def colimitCoconeIsColimit : IsColimit colimit_cocone
     where
   desc t :=
     {
-      (MonCat.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ SemiRing MonCat.{max v u})).desc
-        ((forget₂ SemiRing MonCat.{max v u}).mapCocone t),
+      (MonCat.FilteredColimits.colimitCoconeIsColimit
+            (F ⋙ forget₂ SemiRingCat MonCat.{max v u})).desc
+        ((forget₂ SemiRingCat MonCat.{max v u}).mapCocone t),
       (AddCommMonCat.FilteredColimits.colimitCoconeIsColimit
-            (F ⋙ forget₂ SemiRing AddCommMonCat.{max v u})).desc
-        ((forget₂ SemiRing AddCommMonCat.{max v u}).mapCocone t) with }
+            (F ⋙ forget₂ SemiRingCat AddCommMonCat.{max v u})).desc
+        ((forget₂ SemiRingCat AddCommMonCat.{max v u}).mapCocone t) with }
   fac t j :=
     RingHom.coe_inj <|
-      (Types.colimitCoconeIsColimit (F ⋙ forget SemiRing)).fac ((forget SemiRing).mapCocone t) j
+      (Types.colimitCoconeIsColimit (F ⋙ forget SemiRingCat)).fac ((forget SemiRingCat).mapCocone t)
+        j
   uniq t m h :=
     RingHom.coe_inj <|
-      (Types.colimitCoconeIsColimit (F ⋙ forget SemiRing)).uniq ((forget SemiRing).mapCocone t) m
-        fun j => funext fun x => RingHom.congr_fun (h j) x
-#align SemiRing.filtered_colimits.colimit_cocone_is_colimit SemiRing.FilteredColimits.colimitCoconeIsColimit
+      (Types.colimitCoconeIsColimit (F ⋙ forget SemiRingCat)).uniq
+        ((forget SemiRingCat).mapCocone t) m fun j => funext fun x => RingHom.congr_fun (h j) x
+#align SemiRing.filtered_colimits.colimit_cocone_is_colimit SemiRingCat.FilteredColimits.colimitCoconeIsColimit
 
 instance forget₂MonPreservesFilteredColimits :
-    PreservesFilteredColimits (forget₂ SemiRing MonCat.{u})
+    PreservesFilteredColimits (forget₂ SemiRingCat MonCat.{u})
     where PreservesFilteredColimits J _ _ :=
     {
       PreservesColimit := fun F =>
         preserves_colimit_of_preserves_colimit_cocone (colimitCoconeIsColimit.{u, u} F)
-          (MonCat.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ SemiRing MonCat.{u})) }
-#align SemiRing.filtered_colimits.forget₂_Mon_preserves_filtered_colimits SemiRing.FilteredColimits.forget₂MonPreservesFilteredColimits
+          (MonCat.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ SemiRingCat MonCat.{u})) }
+#align SemiRing.filtered_colimits.forget₂_Mon_preserves_filtered_colimits SemiRingCat.FilteredColimits.forget₂MonPreservesFilteredColimits
 
-instance forgetPreservesFilteredColimits : PreservesFilteredColimits (forget SemiRing.{u}) :=
-  Limits.compPreservesFilteredColimits (forget₂ SemiRing MonCat) (forget MonCat.{u})
-#align SemiRing.filtered_colimits.forget_preserves_filtered_colimits SemiRing.FilteredColimits.forgetPreservesFilteredColimits
+instance forgetPreservesFilteredColimits : PreservesFilteredColimits (forget SemiRingCat.{u}) :=
+  Limits.compPreservesFilteredColimits (forget₂ SemiRingCat MonCat) (forget MonCat.{u})
+#align SemiRing.filtered_colimits.forget_preserves_filtered_colimits SemiRingCat.FilteredColimits.forgetPreservesFilteredColimits
 
 end
 
-end SemiRing.FilteredColimits
+end SemiRingCat.FilteredColimits
 
-namespace CommSemiRing.FilteredColimits
+namespace CommSemiRingCat.FilteredColimits
 
 section
 
 -- We use parameters here, mainly so we can have the abbreviation `R` below, without
 -- passing around `F` all the time.
-parameter {J : Type v}[SmallCategory J][IsFiltered J](F : J ⥤ CommSemiRing.{max v u})
+parameter {J : Type v}[SmallCategory J][IsFiltered J](F : J ⥤ CommSemiRingCat.{max v u})
 
 /-- The colimit of `F ⋙ forget₂ CommSemiRing SemiRing` in the category `SemiRing`.
 In the following, we will show that this has the structure of a _commutative_ semiring.
 -/
-abbrev r : SemiRing :=
-  SemiRing.FilteredColimits.colimit (F ⋙ forget₂ CommSemiRing SemiRing.{max v u})
-#align CommSemiRing.filtered_colimits.R CommSemiRing.FilteredColimits.r
+abbrev r : SemiRingCat :=
+  SemiRingCat.FilteredColimits.colimit (F ⋙ forget₂ CommSemiRingCat SemiRingCat.{max v u})
+#align CommSemiRing.filtered_colimits.R CommSemiRingCat.FilteredColimits.r
 
 instance colimitCommSemiring : CommSemiring R :=
   { R.Semiring,
     CommMonCat.FilteredColimits.colimitCommMonoid
-      (F ⋙ forget₂ CommSemiRing CommMonCat.{max v u}) with }
-#align CommSemiRing.filtered_colimits.colimit_comm_semiring CommSemiRing.FilteredColimits.colimitCommSemiring
+      (F ⋙ forget₂ CommSemiRingCat CommMonCat.{max v u}) with }
+#align CommSemiRing.filtered_colimits.colimit_comm_semiring CommSemiRingCat.FilteredColimits.colimitCommSemiring
 
 /-- The bundled commutative semiring giving the filtered colimit of a diagram. -/
-def colimit : CommSemiRing :=
+def colimit : CommSemiRingCat :=
   CommSemiRing.of R
-#align CommSemiRing.filtered_colimits.colimit CommSemiRing.FilteredColimits.colimit
+#align CommSemiRing.filtered_colimits.colimit CommSemiRingCat.FilteredColimits.colimit
 
 /-- The cocone over the proposed colimit commutative semiring. -/
 def colimitCocone : cocone F where
   pt := colimit
   ι :=
     {
-      (SemiRing.FilteredColimits.colimitCocone
-          (F ⋙ forget₂ CommSemiRing SemiRing.{max v u})).ι with }
-#align CommSemiRing.filtered_colimits.colimit_cocone CommSemiRing.FilteredColimits.colimitCocone
+      (SemiRingCat.FilteredColimits.colimitCocone
+          (F ⋙ forget₂ CommSemiRingCat SemiRingCat.{max v u})).ι with }
+#align CommSemiRing.filtered_colimits.colimit_cocone CommSemiRingCat.FilteredColimits.colimitCocone
 
 /-- The proposed colimit cocone is a colimit in `CommSemiRing`. -/
 def colimitCoconeIsColimit : IsColimit colimit_cocone
     where
   desc t :=
-    (SemiRing.FilteredColimits.colimitCoconeIsColimit
-          (F ⋙ forget₂ CommSemiRing SemiRing.{max v u})).desc
-      ((forget₂ CommSemiRing SemiRing).mapCocone t)
+    (SemiRingCat.FilteredColimits.colimitCoconeIsColimit
+          (F ⋙ forget₂ CommSemiRingCat SemiRingCat.{max v u})).desc
+      ((forget₂ CommSemiRingCat SemiRingCat).mapCocone t)
   fac t j :=
     RingHom.coe_inj <|
-      (Types.colimitCoconeIsColimit (F ⋙ forget CommSemiRing)).fac
-        ((forget CommSemiRing).mapCocone t) j
+      (Types.colimitCoconeIsColimit (F ⋙ forget CommSemiRingCat)).fac
+        ((forget CommSemiRingCat).mapCocone t) j
   uniq t m h :=
     RingHom.coe_inj <|
-      (Types.colimitCoconeIsColimit (F ⋙ forget CommSemiRing)).uniq
-        ((forget CommSemiRing).mapCocone t) m fun j => funext fun x => RingHom.congr_fun (h j) x
-#align CommSemiRing.filtered_colimits.colimit_cocone_is_colimit CommSemiRing.FilteredColimits.colimitCoconeIsColimit
+      (Types.colimitCoconeIsColimit (F ⋙ forget CommSemiRingCat)).uniq
+        ((forget CommSemiRingCat).mapCocone t) m fun j => funext fun x => RingHom.congr_fun (h j) x
+#align CommSemiRing.filtered_colimits.colimit_cocone_is_colimit CommSemiRingCat.FilteredColimits.colimitCoconeIsColimit
 
 instance forget₂SemiRingPreservesFilteredColimits :
-    PreservesFilteredColimits (forget₂ CommSemiRing SemiRing.{u})
+    PreservesFilteredColimits (forget₂ CommSemiRingCat SemiRingCat.{u})
     where PreservesFilteredColimits J _ _ :=
     {
       PreservesColimit := fun F =>
         preserves_colimit_of_preserves_colimit_cocone (colimitCoconeIsColimit.{u, u} F)
-          (SemiRing.FilteredColimits.colimitCoconeIsColimit
-            (F ⋙ forget₂ CommSemiRing SemiRing.{u})) }
-#align CommSemiRing.filtered_colimits.forget₂_SemiRing_preserves_filtered_colimits CommSemiRing.FilteredColimits.forget₂SemiRingPreservesFilteredColimits
+          (SemiRingCat.FilteredColimits.colimitCoconeIsColimit
+            (F ⋙ forget₂ CommSemiRingCat SemiRingCat.{u})) }
+#align CommSemiRing.filtered_colimits.forget₂_SemiRing_preserves_filtered_colimits CommSemiRingCat.FilteredColimits.forget₂SemiRingPreservesFilteredColimits
 
-instance forgetPreservesFilteredColimits : PreservesFilteredColimits (forget CommSemiRing.{u}) :=
-  Limits.compPreservesFilteredColimits (forget₂ CommSemiRing SemiRing) (forget SemiRing.{u})
-#align CommSemiRing.filtered_colimits.forget_preserves_filtered_colimits CommSemiRing.FilteredColimits.forgetPreservesFilteredColimits
+instance forgetPreservesFilteredColimits : PreservesFilteredColimits (forget CommSemiRingCat.{u}) :=
+  Limits.compPreservesFilteredColimits (forget₂ CommSemiRingCat SemiRingCat)
+    (forget SemiRingCat.{u})
+#align CommSemiRing.filtered_colimits.forget_preserves_filtered_colimits CommSemiRingCat.FilteredColimits.forgetPreservesFilteredColimits
 
 end
 
-end CommSemiRing.FilteredColimits
+end CommSemiRingCat.FilteredColimits
 
 namespace RingCat.FilteredColimits
 
@@ -249,8 +254,8 @@ parameter {J : Type v}[SmallCategory J][IsFiltered J](F : J ⥤ RingCat.{max v u
 /-- The colimit of `F ⋙ forget₂ Ring SemiRing` in the category `SemiRing`.
 In the following, we will show that this has the structure of a ring.
 -/
-abbrev r : SemiRing :=
-  SemiRing.FilteredColimits.colimit (F ⋙ forget₂ RingCat SemiRing.{max v u})
+abbrev r : SemiRingCat :=
+  SemiRingCat.FilteredColimits.colimit (F ⋙ forget₂ RingCat SemiRingCat.{max v u})
 #align Ring.filtered_colimits.R RingCat.FilteredColimits.r
 
 instance colimitRing : Ring R :=
@@ -267,15 +272,19 @@ def colimit : RingCat :=
 /-- The cocone over the proposed colimit ring. -/
 def colimitCocone : cocone F where
   pt := colimit
-  ι := { (SemiRing.FilteredColimits.colimitCocone (F ⋙ forget₂ RingCat SemiRing.{max v u})).ι with }
+  ι :=
+    {
+      (SemiRingCat.FilteredColimits.colimitCocone
+          (F ⋙ forget₂ RingCat SemiRingCat.{max v u})).ι with }
 #align Ring.filtered_colimits.colimit_cocone RingCat.FilteredColimits.colimitCocone
 
 /-- The proposed colimit cocone is a colimit in `Ring`. -/
 def colimitCoconeIsColimit : IsColimit colimit_cocone
     where
   desc t :=
-    (SemiRing.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ RingCat SemiRing.{max v u})).desc
-      ((forget₂ RingCat SemiRing).mapCocone t)
+    (SemiRingCat.FilteredColimits.colimitCoconeIsColimit
+          (F ⋙ forget₂ RingCat SemiRingCat.{max v u})).desc
+      ((forget₂ RingCat SemiRingCat).mapCocone t)
   fac t j :=
     RingHom.coe_inj <|
       (Types.colimitCoconeIsColimit (F ⋙ forget RingCat)).fac ((forget RingCat).mapCocone t) j
@@ -286,16 +295,17 @@ def colimitCoconeIsColimit : IsColimit colimit_cocone
 #align Ring.filtered_colimits.colimit_cocone_is_colimit RingCat.FilteredColimits.colimitCoconeIsColimit
 
 instance forget₂SemiRingPreservesFilteredColimits :
-    PreservesFilteredColimits (forget₂ RingCat SemiRing.{u})
+    PreservesFilteredColimits (forget₂ RingCat SemiRingCat.{u})
     where PreservesFilteredColimits J _ _ :=
     {
       PreservesColimit := fun F =>
         preserves_colimit_of_preserves_colimit_cocone (colimitCoconeIsColimit.{u, u} F)
-          (SemiRing.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ RingCat SemiRing.{u})) }
+          (SemiRingCat.FilteredColimits.colimitCoconeIsColimit
+            (F ⋙ forget₂ RingCat SemiRingCat.{u})) }
 #align Ring.filtered_colimits.forget₂_SemiRing_preserves_filtered_colimits RingCat.FilteredColimits.forget₂SemiRingPreservesFilteredColimits
 
 instance forgetPreservesFilteredColimits : PreservesFilteredColimits (forget RingCat.{u}) :=
-  Limits.compPreservesFilteredColimits (forget₂ RingCat SemiRing) (forget SemiRing.{u})
+  Limits.compPreservesFilteredColimits (forget₂ RingCat SemiRingCat) (forget SemiRingCat.{u})
 #align Ring.filtered_colimits.forget_preserves_filtered_colimits RingCat.FilteredColimits.forgetPreservesFilteredColimits
 
 end
@@ -319,8 +329,8 @@ abbrev r : RingCat :=
 
 instance colimitCommRing : CommRing R :=
   { R.Ring,
-    CommSemiRing.FilteredColimits.colimitCommSemiring
-      (F ⋙ forget₂ CommRingCat CommSemiRing.{max v u}) with }
+    CommSemiRingCat.FilteredColimits.colimitCommSemiring
+      (F ⋙ forget₂ CommRingCat CommSemiRingCat.{max v u}) with }
 #align CommRing.filtered_colimits.colimit_comm_ring CommRingCat.FilteredColimits.colimitCommRing
 
 /-- The bundled commutative ring giving the filtered colimit of a diagram. -/

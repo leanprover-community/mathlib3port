@@ -665,7 +665,7 @@ def toLocallyRingedSpace : LocallyRingedSpace
   toSheafedSpace := toSheafedSpace Y.toSheafedSpace f
   LocalRing x :=
     haveI : LocalRing (Y.to_SheafedSpace.to_PresheafedSpace.stalk (f.base x)) := Y.local_ring _
-    (as_iso (stalk_map f x)).commRingIsoToRingEquiv.LocalRing
+    (as_iso (stalk_map f x)).commRingCatIsoToRingEquiv.LocalRing
 #align algebraic_geometry.PresheafedSpace.is_open_immersion.to_LocallyRingedSpace AlgebraicGeometry.PresheafedSpace.IsOpenImmersion.toLocallyRingedSpace
 
 @[simp]

@@ -53,8 +53,8 @@ instance algebraObj (F : J ⥤ AlgebraCat.{max v w} R) (j) :
 -/
 def sectionsSubalgebra (F : J ⥤ AlgebraCat.{max v w} R) : Subalgebra R (∀ j, F.obj j) :=
   {
-    SemiRing.sectionsSubsemiring
-      (F ⋙ forget₂ (AlgebraCat R) RingCat.{max v w} ⋙ forget₂ RingCat SemiRing.{max v w}) with
+    SemiRingCat.sectionsSubsemiring
+      (F ⋙ forget₂ (AlgebraCat R) RingCat.{max v w} ⋙ forget₂ RingCat SemiRingCat.{max v w}) with
     algebraMap_mem' := fun r j j' f => (F.map f).commutes r }
 #align Algebra.sections_subalgebra AlgebraCat.sectionsSubalgebra
 
@@ -81,8 +81,8 @@ def limitπAlgHom (F : J ⥤ AlgebraCat.{max v w} R) (j) :
     (Types.limitCone (F ⋙ forget (AlgebraCat R))).pt →ₐ[R]
       (F ⋙ forget (AlgebraCat.{max v w} R)).obj j :=
   {
-    SemiRing.limitπRingHom
-      (F ⋙ forget₂ (AlgebraCat R) RingCat.{max v w} ⋙ forget₂ RingCat SemiRing.{max v w}) j with
+    SemiRingCat.limitπRingHom
+      (F ⋙ forget₂ (AlgebraCat R) RingCat.{max v w} ⋙ forget₂ RingCat SemiRingCat.{max v w}) j with
     commutes' := fun r => rfl }
 #align Algebra.limit_π_alg_hom AlgebraCat.limitπAlgHom
 

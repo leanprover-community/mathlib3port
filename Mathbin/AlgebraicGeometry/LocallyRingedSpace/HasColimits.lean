@@ -74,7 +74,7 @@ noncomputable def coproduct : LocallyRingedSpace
     exact
       (as_iso
               (PresheafedSpace.stalk_map (colimit.ι (F ⋙ forget_to_SheafedSpace) i : _)
-                y)).symm.commRingIsoToRingEquiv.LocalRing
+                y)).symm.commRingCatIsoToRingEquiv.LocalRing
 #align algebraic_geometry.LocallyRingedSpace.coproduct AlgebraicGeometry.LocallyRingedSpace.coproduct
 
 /-- The explicit coproduct cofan for `F : discrete ι ⥤ LocallyRingedSpace`. -/

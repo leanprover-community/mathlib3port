@@ -54,16 +54,16 @@ variable {P}
 theorem RespectsIso.cancel_left_isIso (hP : RespectsIso @P) {R S T : CommRingCat} (f : R ⟶ S)
     (g : S ⟶ T) [IsIso f] : P (f ≫ g) ↔ P g :=
   ⟨fun H => by
-    convert hP.2 (f ≫ g) (as_iso f).symm.commRingIsoToRingEquiv H
-    exact (is_iso.inv_hom_id_assoc _ _).symm, hP.2 g (asIso f).commRingIsoToRingEquiv⟩
+    convert hP.2 (f ≫ g) (as_iso f).symm.commRingCatIsoToRingEquiv H
+    exact (is_iso.inv_hom_id_assoc _ _).symm, hP.2 g (asIso f).commRingCatIsoToRingEquiv⟩
 #align ring_hom.respects_iso.cancel_left_is_iso RingHom.RespectsIso.cancel_left_isIso
 
 theorem RespectsIso.cancel_right_isIso (hP : RespectsIso @P) {R S T : CommRingCat} (f : R ⟶ S)
     (g : S ⟶ T) [IsIso g] : P (f ≫ g) ↔ P f :=
   ⟨fun H => by
-    convert hP.1 (f ≫ g) (as_iso g).symm.commRingIsoToRingEquiv H
+    convert hP.1 (f ≫ g) (as_iso g).symm.commRingCatIsoToRingEquiv H
     change f = f ≫ g ≫ inv g
-    simp, hP.1 f (asIso g).commRingIsoToRingEquiv⟩
+    simp, hP.1 f (asIso g).commRingCatIsoToRingEquiv⟩
 #align ring_hom.respects_iso.cancel_right_is_iso RingHom.RespectsIso.cancel_right_isIso
 
 theorem RespectsIso.is_localization_away_iff (hP : RingHom.RespectsIso @P) {R S : Type _}

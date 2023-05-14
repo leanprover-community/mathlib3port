@@ -21,7 +21,7 @@ open CategoryTheory
 
 instance localization_unit_isIso (R : CommRingCat) :
     IsIso (CommRingCat.ofHom <| algebraMap R (Localization.Away (1 : R))) :=
-  IsIso.of_iso (IsLocalization.atOne R (Localization.Away (1 : R))).toRingEquiv.toCommRingIso
+  IsIso.of_iso (IsLocalization.atOne R (Localization.Away (1 : R))).toRingEquiv.toCommRingCatIso
 #align localization_unit_is_iso localization_unit_isIso
 
 instance localization_unit_is_iso' (R : CommRingCat) :
