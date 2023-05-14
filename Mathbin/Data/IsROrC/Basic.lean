@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module data.is_R_or_C.basic
-! leanprover-community/mathlib commit 3f655f5297b030a87d641ad4e825af8d9679eb0b
+! leanprover-community/mathlib commit 6cf5900728239efa287df7761ec2a1ac9cf39b29
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Analysis.NormedSpace.ContinuousLinearMap
 
 /-!
 # `is_R_or_C`: a typeclass for ℝ or ℂ
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines the typeclass `is_R_or_C` intended to have only two instances:
 ℝ and ℂ. It is meant for definitions and theorems which hold for both the real and the complex case,

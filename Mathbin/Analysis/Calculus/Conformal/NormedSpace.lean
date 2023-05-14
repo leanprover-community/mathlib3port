@@ -4,12 +4,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yourong Zang
 
 ! This file was ported from Lean 3 source module analysis.calculus.conformal.normed_space
-! leanprover-community/mathlib commit df78eae582aad2f545024bf6c7249191d2723074
+! leanprover-community/mathlib commit e3fb84046afd187b710170887195d50bada934ee
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.NormedSpace.ConformalLinearMap
-import Mathbin.Analysis.Calculus.Fderiv
+import Mathbin.Analysis.Calculus.Fderiv.Add
+import Mathbin.Analysis.Calculus.Fderiv.Mul
+import Mathbin.Analysis.Calculus.Fderiv.Equiv
+import Mathbin.Analysis.Calculus.Fderiv.RestrictScalars
 
 /-!
 # Conformal Maps

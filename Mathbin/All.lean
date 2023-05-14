@@ -518,7 +518,15 @@ import Mathbin.Analysis.Calculus.Deriv
 import Mathbin.Analysis.Calculus.DiffContOnCl
 import Mathbin.Analysis.Calculus.Dslope
 import Mathbin.Analysis.Calculus.ExtendDeriv
-import Mathbin.Analysis.Calculus.Fderiv
+import Mathbin.Analysis.Calculus.Fderiv.Add
+import Mathbin.Analysis.Calculus.Fderiv.Basic
+import Mathbin.Analysis.Calculus.Fderiv.Bilinear
+import Mathbin.Analysis.Calculus.Fderiv.Comp
+import Mathbin.Analysis.Calculus.Fderiv.Equiv
+import Mathbin.Analysis.Calculus.Fderiv.Linear
+import Mathbin.Analysis.Calculus.Fderiv.Mul
+import Mathbin.Analysis.Calculus.Fderiv.Prod
+import Mathbin.Analysis.Calculus.Fderiv.RestrictScalars
 import Mathbin.Analysis.Calculus.FderivAnalytic
 import Mathbin.Analysis.Calculus.FderivMeasurable
 import Mathbin.Analysis.Calculus.FderivSymmetric

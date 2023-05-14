@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module model_theory.order
-! leanprover-community/mathlib commit 1ed3a113dbc6f5b33eae3b96211d4e26ca3a5e9d
+! leanprover-community/mathlib commit 6cf5900728239efa287df7761ec2a1ac9cf39b29
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.ModelTheory.Semantics
 
 /-!
 # Ordered First-Ordered Structures
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 This file defines ordered first-order languages and structures, as well as their theories.
 
 ## Main Definitions

@@ -4,11 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gabriel Ebner, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.deriv
-! leanprover-community/mathlib commit f81174bd8aa3896304e8e1c1cb1d11cb0e0a05df
+! leanprover-community/mathlib commit e3fb84046afd187b710170887195d50bada934ee
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Analysis.Calculus.Fderiv
+import Mathbin.Analysis.Calculus.Fderiv.Add
+import Mathbin.Analysis.Calculus.Fderiv.Mul
+import Mathbin.Analysis.Calculus.Fderiv.Equiv
+import Mathbin.Analysis.Calculus.Fderiv.RestrictScalars
 import Mathbin.Data.Polynomial.AlgebraMap
 import Mathbin.Data.Polynomial.Derivative
 import Mathbin.LinearAlgebra.AffineSpace.Slope

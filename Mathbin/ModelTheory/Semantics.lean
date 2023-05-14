@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jesse Michael Han, Floris van Doorn
 
 ! This file was ported from Lean 3 source module model_theory.semantics
-! leanprover-community/mathlib commit d565b3df44619c1498326936be16f1a935df0728
+! leanprover-community/mathlib commit 6cf5900728239efa287df7761ec2a1ac9cf39b29
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.ModelTheory.Syntax
 
 /-!
 # Basics on First-Order Semantics
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 This file defines the interpretations of first-order terms, formulas, sentences, and theories
 in a style inspired by the [Flypitch project](https://flypitch.github.io/).
 

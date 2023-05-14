@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bryan Gin-ge Chen, Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.ring.boolean_ring
-! leanprover-community/mathlib commit e8638a0fcaf73e4500469f368ef9494e495099b3
+! leanprover-community/mathlib commit 6cf5900728239efa287df7761ec2a1ac9cf39b29
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Order.Hom.Lattice
 
 /-!
 # Boolean rings
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A Boolean ring is a ring where multiplication is idempotent. They are equivalent to Boolean
 algebras.

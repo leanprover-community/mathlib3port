@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.sites.dense_subsite
-! leanprover-community/mathlib commit 14b69e9f3c16630440a2cbd46f1ddad0d561dee7
+! leanprover-community/mathlib commit 1d650c2e131f500f3c17f33b4d19d2ea15987f2c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -151,8 +151,6 @@ theorem sheaf_eq_amalgamation (ℱ : Sheaf K A) {X : A} {U : D} {T : Sieve U} (h
   (ℱ.cond X T hT).IsSeparatedFor x t _ h ((ℱ.cond X T hT).IsAmalgamation hx)
 #align category_theory.cover_dense.sheaf_eq_amalgamation CategoryTheory.CoverDense.sheaf_eq_amalgamation
 
-include H
-
 variable [Full G]
 
 namespace Types
@@ -168,9 +166,10 @@ noncomputable def pushforwardFamily {X} (x : ℱ.obj (op X)) :
   ℱ'.val.map hf.some.lift.op <| α.app (op _) (ℱ.map hf.some.map.op x : _)
 #align category_theory.cover_dense.types.pushforward_family CategoryTheory.CoverDense.Types.pushforwardFamily
 
+include H
+
 /-- (Implementation). The `pushforward_family` defined is compatible. -/
-theorem pushforwardFamily_compatible {X} (x : ℱ.obj (op X)) :
-    (pushforwardFamily H α x).Compatible :=
+theorem pushforwardFamily_compatible {X} (x : ℱ.obj (op X)) : (pushforwardFamily α x).Compatible :=
   by
   intro Y₁ Y₂ Z g₁ g₂ f₁ f₂ h₁ h₂ e
   apply H.ext
@@ -188,15 +187,16 @@ theorem pushforwardFamily_compatible {X} (x : ℱ.obj (op X)) :
   simp [e]
 #align category_theory.cover_dense.types.pushforward_family_compatible CategoryTheory.CoverDense.Types.pushforwardFamily_compatible
 
+omit H
+
 /-- (Implementation). The morphism `ℱ(X) ⟶ ℱ'(X)` given by gluing the `pushforward_family`. -/
 noncomputable def appHom (X : D) : ℱ.obj (op X) ⟶ ℱ'.val.obj (op X) := fun x =>
-  (ℱ'.cond _ (H.is_cover X)).amalgamate (pushforwardFamily H α x)
-    (pushforwardFamily_compatible H α x)
+  (ℱ'.cond _ (H.is_cover X)).amalgamate (pushforwardFamily α x) (pushforwardFamily_compatible H α x)
 #align category_theory.cover_dense.types.app_hom CategoryTheory.CoverDense.Types.appHom
 
 @[simp]
 theorem pushforwardFamily_apply {X} (x : ℱ.obj (op X)) {Y : C} (f : G.obj Y ⟶ X) :
-    pushforwardFamily H α x f (Presieve.in_coverByImage G f) = α.app (op Y) (ℱ.map f.op x) :=
+    pushforwardFamily α x f (Presieve.in_coverByImage G f) = α.app (op Y) (ℱ.map f.op x) :=
   by
   unfold pushforward_family
   refine' congr_fun _ x
@@ -320,6 +320,8 @@ noncomputable def sheafCoyonedaHom (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) :
     simp
 #align category_theory.cover_dense.sheaf_coyoneda_hom CategoryTheory.CoverDense.sheafCoyonedaHom
 
+include H
+
 /--
 (Implementation). `sheaf_coyoneda_hom` but the order of the arguments of the functor are swapped.
 -/
@@ -338,6 +340,8 @@ noncomputable def sheafYonedaHom (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) : ℱ
     exact congr_fun ((α.app X).naturality i) x
 #align category_theory.cover_dense.sheaf_yoneda_hom CategoryTheory.CoverDense.sheafYonedaHom
 
+omit H
+
 /-- Given an natural transformation `G ⋙ ℱ ⟶ G ⋙ ℱ'` between presheaves of arbitrary category,
 where `G` is full and cover-dense, and `ℱ'` is a sheaf, we may obtain a natural transformation
 between presheaves.
@@ -347,6 +351,8 @@ noncomputable def sheafHom (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) : ℱ ⟶ �
   { app := fun X => yoneda.preimage (α'.app X)
     naturality' := fun X Y f => yoneda.map_injective (by simpa using α'.naturality f) }
 #align category_theory.cover_dense.sheaf_hom CategoryTheory.CoverDense.sheafHom
+
+include H
 
 /-- Given an natural isomorphism `G ⋙ ℱ ≅ G ⋙ ℱ'` between presheaves of arbitrary category,
 where `G` is full and cover-dense, and `ℱ', ℱ` are sheaves,
@@ -369,6 +375,8 @@ noncomputable def presheafIso {ℱ ℱ' : Sheaf K A} (i : G.op ⋙ ℱ.val ≅ G
   haveI : is_iso (sheaf_hom H i.hom) := by apply nat_iso.is_iso_of_is_iso_app
   apply as_iso (sheaf_hom H i.hom)
 #align category_theory.cover_dense.presheaf_iso CategoryTheory.CoverDense.presheafIso
+
+omit H
 
 /-- Given an natural isomorphism `G ⋙ ℱ ≅ G ⋙ ℱ'` between presheaves of arbitrary category,
 where `G` is full and cover-dense, and `ℱ', ℱ` are sheaves,
@@ -441,6 +449,8 @@ noncomputable def restrictHomEquivHom : (G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) ≃
   right_inv := sheafHom_eq H
 #align category_theory.cover_dense.restrict_hom_equiv_hom CategoryTheory.CoverDense.restrictHomEquivHom
 
+include H
+
 /-- Given a full and cover-dense functor `G` and a natural transformation of sheaves `α : ℱ ⟶ ℱ'`,
 if the pullback of `α` along `G` is iso, then `α` is also iso.
 -/
@@ -466,6 +476,8 @@ theorem compatiblePreserving [Faithful G] : CompatiblePreserving K G :=
   apply G.map_injective
   simp [Eq]
 #align category_theory.cover_dense.compatible_preserving CategoryTheory.CoverDense.compatiblePreserving
+
+omit H
 
 noncomputable instance Sites.Pullback.full [Faithful G] (Hp : CoverPreserving J K G) :
     Full (Sites.pullback A H.CompatiblePreserving Hp)
