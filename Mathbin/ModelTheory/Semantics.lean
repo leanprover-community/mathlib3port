@@ -1150,10 +1150,10 @@ theorem model_iff_subset_completeTheory : M ⊨ T ↔ T ⊆ L.completeTheory M :
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print FirstOrder.Language.Theory.CompleteTheory.subset /-
-theorem CompleteTheory.subset [MT : M ⊨ T] : T ⊆ L.completeTheory M :=
+#print FirstOrder.Language.Theory.completeTheory.subset /-
+theorem completeTheory.subset [MT : M ⊨ T] : T ⊆ L.completeTheory M :=
   model_iff_subset_completeTheory.1 MT
-#align first_order.language.Theory.complete_theory.subset FirstOrder.Language.Theory.CompleteTheory.subset
+#align first_order.language.Theory.complete_theory.subset FirstOrder.Language.Theory.completeTheory.subset
 -/
 
 end Theory

@@ -222,7 +222,7 @@ theorem toENNReal_max (m n : ℕ∞) : ↑(max m n) = (max m n : ℝ≥0∞) :=
 lean 3 declaration is
   forall (m : ENat) (n : ENat), Eq.{1} ENNReal ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENat ENNReal (HasLiftT.mk.{1, 1} ENat ENNReal (CoeTCₓ.coe.{1, 1} ENat ENNReal ENat.hasCoeENNReal)) (HSub.hSub.{0, 0, 0} ENat ENat ENat (instHSub.{0} ENat ENat.hasSub) m n)) (HSub.hSub.{0, 0, 0} ENNReal ENNReal ENNReal (instHSub.{0} ENNReal ENNReal.hasSub) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENat ENNReal (HasLiftT.mk.{1, 1} ENat ENNReal (CoeTCₓ.coe.{1, 1} ENat ENNReal ENat.hasCoeENNReal)) m) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) ENat ENNReal (HasLiftT.mk.{1, 1} ENat ENNReal (CoeTCₓ.coe.{1, 1} ENat ENNReal ENat.hasCoeENNReal)) n))
 but is expected to have type
-  forall (m : ENat) (n : ENat), Eq.{1} ENNReal (ENat.toENNReal (HSub.hSub.{0, 0, 0} ENat ENat ENat (instHSub.{0} ENat instENatSub) m n)) (HSub.hSub.{0, 0, 0} ENNReal ENNReal ENNReal (instHSub.{0} ENNReal ENNReal.instSubENNReal) (ENat.toENNReal m) (ENat.toENNReal n))
+  forall (m : ENat) (n : ENat), Eq.{1} ENNReal (ENat.toENNReal (HSub.hSub.{0, 0, 0} ENat ENat ENat (instHSub.{0} ENat instENatSub) m n)) (HSub.hSub.{0, 0, 0} ENNReal ENNReal ENNReal (instHSub.{0} ENNReal ENNReal.instSub) (ENat.toENNReal m) (ENat.toENNReal n))
 Case conversion may be inaccurate. Consider using '#align enat.coe_ennreal_sub ENat.toENNReal_subₓ'. -/
 @[simp]
 theorem toENNReal_sub (m n : ℕ∞) : ↑(m - n) = (m - n : ℝ≥0∞) :=

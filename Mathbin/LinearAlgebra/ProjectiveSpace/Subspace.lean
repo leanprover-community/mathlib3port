@@ -152,23 +152,25 @@ theorem span_coe (W : Subspace K V) : span ↑W = W :=
   GaloisInsertion.l_u_eq gi W
 #align projectivization.subspace.span_coe Projectivization.Subspace.span_coe
 
-#print Projectivization.Subspace.hasInf /-
+#print Projectivization.Subspace.instInf /-
 /-- The infimum of two subspaces exists. -/
-instance hasInf : Inf (Subspace K V) :=
+instance instInf : Inf (Subspace K V) :=
   ⟨fun A B =>
     ⟨A ⊓ B, fun v w hv hw hvw h1 h2 =>
       ⟨A.mem_add _ _ hv hw _ h1.1 h2.1, B.mem_add _ _ hv hw _ h1.2 h2.2⟩⟩⟩
-#align projectivization.subspace.has_inf Projectivization.Subspace.hasInf
+#align projectivization.subspace.has_inf Projectivization.Subspace.instInf
 -/
 
+#print Projectivization.Subspace.instInfSet /-
 /-- Infimums of arbitrary collections of subspaces exist. -/
-instance hasInf : InfSet (Subspace K V) :=
+instance instInfSet : InfSet (Subspace K V) :=
   ⟨fun A =>
     ⟨sInf (coe '' A), fun v w hv hw hvw h1 h2 t =>
       by
       rintro ⟨s, hs, rfl⟩
       exact s.mem_add v w hv hw _ (h1 s ⟨s, hs, rfl⟩) (h2 s ⟨s, hs, rfl⟩)⟩⟩
-#align projectivization.subspace.has_Inf Projectivization.Subspace.hasInfₓ
+#align projectivization.subspace.has_Inf Projectivization.Subspace.instInfSet
+-/
 
 /-- The subspaces of a projective space form a complete lattice. -/
 instance : CompleteLattice (Subspace K V) :=
@@ -301,12 +303,7 @@ theorem mem_span {S : Set (ℙ K V)} (u : ℙ K V) : u ∈ span S ↔ ∀ W : Su
 #align projectivization.subspace.mem_span Projectivization.Subspace.mem_span
 -/
 
-/- warning: projectivization.subspace.span_eq_Inf -> Projectivization.Subspace.span_eq_sInf is a dubious translation:
-lean 3 declaration is
-  forall {K : Type.{u1}} {V : Type.{u2}} [_inst_1 : Field.{u1} K] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} K V (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K (Field.toDivisionRing.{u1} K _inst_1))) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)] {S : Set.{u2} (Projectivization.{u1, u2} K V (Field.toDivisionRing.{u1} K _inst_1) _inst_2 _inst_3)}, Eq.{succ u2} (Projectivization.Subspace.{u1, u2} K V _inst_1 _inst_2 _inst_3) (Projectivization.Subspace.span.{u1, u2} K V _inst_1 _inst_2 _inst_3 S) (InfSet.sInf.{u2} (Projectivization.Subspace.{u1, u2} K V _inst_1 _inst_2 _inst_3) (Projectivization.Subspace.hasInfₓ.{u1, u2} K V _inst_1 _inst_2 _inst_3) (setOf.{u2} (Projectivization.Subspace.{u1, u2} K V _inst_1 _inst_2 _inst_3) (fun (W : Projectivization.Subspace.{u1, u2} K V _inst_1 _inst_2 _inst_3) => HasSubset.Subset.{u2} (Set.{u2} (Projectivization.{u1, u2} K V (Field.toDivisionRing.{u1} K _inst_1) _inst_2 _inst_3)) (Set.hasSubset.{u2} (Projectivization.{u1, u2} K V (Field.toDivisionRing.{u1} K _inst_1) _inst_2 _inst_3)) S ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Projectivization.Subspace.{u1, u2} K V _inst_1 _inst_2 _inst_3) (Set.{u2} (Projectivization.{u1, u2} K V (Field.toDivisionRing.{u1} K _inst_1) _inst_2 _inst_3)) (HasLiftT.mk.{succ u2, succ u2} (Projectivization.Subspace.{u1, u2} K V _inst_1 _inst_2 _inst_3) (Set.{u2} (Projectivization.{u1, u2} K V (Field.toDivisionRing.{u1} K _inst_1) _inst_2 _inst_3)) (CoeTCₓ.coe.{succ u2, succ u2} (Projectivization.Subspace.{u1, u2} K V _inst_1 _inst_2 _inst_3) (Set.{u2} (Projectivization.{u1, u2} K V (Field.toDivisionRing.{u1} K _inst_1) _inst_2 _inst_3)) (SetLike.Set.hasCoeT.{u2, u2} (Projectivization.Subspace.{u1, u2} K V _inst_1 _inst_2 _inst_3) (Projectivization.{u1, u2} K V (Field.toDivisionRing.{u1} K _inst_1) _inst_2 _inst_3) (Projectivization.Subspace.Projectivization.setLike.{u1, u2} K V _inst_1 _inst_2 _inst_3)))) W))))
-but is expected to have type
-  forall {K : Type.{u1}} {V : Type.{u2}} [_inst_1 : Field.{u1} K] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} K V (DivisionSemiring.toSemiring.{u1} K (Semifield.toDivisionSemiring.{u1} K (Field.toSemifield.{u1} K _inst_1))) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)] {S : Set.{u2} (Projectivization.{u1, u2} K V (Field.toDivisionRing.{u1} K _inst_1) _inst_2 _inst_3)}, Eq.{succ u2} (Projectivization.Subspace.{u1, u2} K V _inst_1 _inst_2 _inst_3) (Projectivization.Subspace.span.{u1, u2} K V _inst_1 _inst_2 _inst_3 S) (InfSet.sInf.{u2} (Projectivization.Subspace.{u1, u2} K V _inst_1 _inst_2 _inst_3) (Projectivization.Subspace.instInfSetSubspace.{u1, u2} K V _inst_1 _inst_2 _inst_3) (setOf.{u2} (Projectivization.Subspace.{u1, u2} K V _inst_1 _inst_2 _inst_3) (fun (W : Projectivization.Subspace.{u1, u2} K V _inst_1 _inst_2 _inst_3) => HasSubset.Subset.{u2} (Set.{u2} (Projectivization.{u1, u2} K V (Field.toDivisionRing.{u1} K _inst_1) _inst_2 _inst_3)) (Set.instHasSubsetSet.{u2} (Projectivization.{u1, u2} K V (Field.toDivisionRing.{u1} K _inst_1) _inst_2 _inst_3)) S (SetLike.coe.{u2, u2} (Projectivization.Subspace.{u1, u2} K V _inst_1 _inst_2 _inst_3) (Projectivization.{u1, u2} K V (Field.toDivisionRing.{u1} K _inst_1) _inst_2 _inst_3) (Projectivization.Subspace.instSetLikeSubspaceProjectivizationToDivisionRing.{u1, u2} K V _inst_1 _inst_2 _inst_3) W))))
-Case conversion may be inaccurate. Consider using '#align projectivization.subspace.span_eq_Inf Projectivization.Subspace.span_eq_sInfₓ'. -/
+#print Projectivization.Subspace.span_eq_sInf /-
 /-- The span of a set of points in a projective space is equal to the infimum of the collection of
 subspaces which contain the set. -/
 theorem span_eq_sInf {S : Set (ℙ K V)} : span S = sInf { W | S ⊆ W } :=
@@ -318,6 +315,7 @@ theorem span_eq_sInf {S : Set (ℙ K V)} : span S = sInf { W | S ⊆ W } :=
     exact hx T hT
   · exact (@sInf_le _ _ { W : Subspace K V | S ⊆ ↑W } W hW) x hx
 #align projectivization.subspace.span_eq_Inf Projectivization.Subspace.span_eq_sInf
+-/
 
 /- warning: projectivization.subspace.span_eq_of_le -> Projectivization.Subspace.span_eq_of_le is a dubious translation:
 lean 3 declaration is

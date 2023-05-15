@@ -28,55 +28,72 @@ universe u
 
 open CategoryTheory Opposite Order TopologicalSpace
 
+#print FrmCat /-
 /-- The category of frames. -/
-def Frm :=
+def FrmCat :=
   Bundled Frame
-#align Frm Frm
+#align Frm FrmCat
+-/
 
-namespace Frm
+namespace FrmCat
 
-instance : CoeSort Frm (Type _) :=
+instance : CoeSort FrmCat (Type _) :=
   Bundled.hasCoeToSort
 
-instance (X : Frm) : Frame X :=
+instance (X : FrmCat) : Frame X :=
   X.str
 
+#print FrmCat.of /-
 /-- Construct a bundled `Frm` from a `frame`. -/
-def of (α : Type _) [Frame α] : Frm :=
+def of (α : Type _) [Frame α] : FrmCat :=
   Bundled.of α
-#align Frm.of Frm.of
+#align Frm.of FrmCat.of
+-/
 
+#print FrmCat.coe_of /-
 @[simp]
 theorem coe_of (α : Type _) [Frame α] : ↥(of α) = α :=
   rfl
-#align Frm.coe_of Frm.coe_of
+#align Frm.coe_of FrmCat.coe_of
+-/
 
-instance : Inhabited Frm :=
+instance : Inhabited FrmCat :=
   ⟨of PUnit⟩
 
+#print FrmCat.Hom /-
 /-- An abbreviation of `frame_hom` that assumes `frame` instead of the weaker `complete_lattice`.
 Necessary for the category theory machinery. -/
 abbrev Hom (α β : Type _) [Frame α] [Frame β] : Type _ :=
   FrameHom α β
-#align Frm.hom Frm.Hom
+#align Frm.hom FrmCat.Hom
+-/
 
+#print FrmCat.bundledHom /-
 instance bundledHom : BundledHom Hom :=
   ⟨fun α β [Frame α] [Frame β] => (coeFn : FrameHom α β → α → β), fun α [Frame α] => FrameHom.id α,
     fun α β γ [Frame α] [Frame β] [Frame γ] => FrameHom.comp, fun α β [Frame α] [Frame β] =>
     FunLike.coe_injective⟩
-#align Frm.bundled_hom Frm.bundledHom
+#align Frm.bundled_hom FrmCat.bundledHom
+-/
 
-deriving instance LargeCategory, ConcreteCategory for Frm
+deriving instance LargeCategory, ConcreteCategory for FrmCat
 
-instance hasForgetToLat : HasForget₂ Frm LatCat
+/- warning: Frm.has_forget_to_Lat -> FrmCat.hasForgetToLat is a dubious translation:
+lean 3 declaration is
+  CategoryTheory.HasForget₂.{succ u1, succ u1, u1, u1, u1} FrmCat.{u1} LatCat.{u1} FrmCat.largeCategory.{u1} FrmCat.concreteCategory.{u1} LatCat.CategoryTheory.largeCategory.{u1} LatCat.CategoryTheory.concreteCategory.{u1}
+but is expected to have type
+  CategoryTheory.HasForget₂.{succ u1, succ u1, u1, u1, u1} FrmCat.{u1} LatCat.{u1} instFrmCatCategory.{u1} FrmCat.instConcreteCategoryFrmCatInstFrmCatCategory.{u1} LatCat.instLargeCategoryLatCat.{u1} LatCat.instConcreteCategoryLatCatInstLargeCategoryLatCat.{u1}
+Case conversion may be inaccurate. Consider using '#align Frm.has_forget_to_Lat FrmCat.hasForgetToLatₓ'. -/
+instance hasForgetToLat : HasForget₂ FrmCat LatCat
     where forget₂ :=
     { obj := fun X => ⟨X⟩
       map := fun X Y => FrameHom.toLatticeHom }
-#align Frm.has_forget_to_Lat Frm.hasForgetToLat
+#align Frm.has_forget_to_Lat FrmCat.hasForgetToLat
 
+#print FrmCat.Iso.mk /-
 /-- Constructs an isomorphism of frames from an order isomorphism between them. -/
 @[simps]
-def Iso.mk {α β : Frm.{u}} (e : α ≃o β) : α ≅ β
+def Iso.mk {α β : FrmCat.{u}} (e : α ≃o β) : α ≅ β
     where
   Hom := e
   inv := e.symm
@@ -86,21 +103,26 @@ def Iso.mk {α β : Frm.{u}} (e : α ≃o β) : α ≅ β
   inv_hom_id' := by
     ext
     exact e.apply_symm_apply _
-#align Frm.iso.mk Frm.Iso.mk
+#align Frm.iso.mk FrmCat.Iso.mk
+-/
 
-end Frm
+end FrmCat
 
+#print topCatOpToFrameCat /-
 /-- The forgetful functor from `Topᵒᵖ` to `Frm`. -/
 @[simps]
-def topOpToFrame : TopCatᵒᵖ ⥤ Frm
+def topCatOpToFrameCat : TopCatᵒᵖ ⥤ FrmCat
     where
-  obj X := Frm.of (Opens (unop X : TopCat))
+  obj X := FrmCat.of (Opens (unop X : TopCat))
   map X Y f := Opens.comap <| Quiver.Hom.unop f
   map_id' X := Opens.comap_id
-#align Top_op_to_Frame topOpToFrame
+#align Top_op_to_Frame topCatOpToFrameCat
+-/
 
+#print CompHausOpToFrame.faithful /-
 -- Note, `CompHaus` is too strong. We only need `t0_space`.
-instance CompHausOpToFrame.faithful : Faithful (compHausToTop.op ⋙ topOpToFrame.{u}) :=
+instance CompHausOpToFrame.faithful : Faithful (compHausToTop.op ⋙ topCatOpToFrameCat.{u}) :=
   ⟨fun X Y f g h => Quiver.Hom.unop_inj <| Opens.comap_injective h⟩
 #align CompHaus_op_to_Frame.faithful CompHausOpToFrame.faithful
+-/
 

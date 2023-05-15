@@ -23,7 +23,7 @@ open CategoryTheory Opposite Order TopologicalSpace
 
 /-- The category of locales. -/
 def Locale :=
-  Frmᵒᵖderiving LargeCategory
+  FrmCatᵒᵖderiving LargeCategory
 #align Locale Locale
 
 namespace Locale
@@ -36,7 +36,7 @@ instance (X : Locale) : Frame X :=
 
 /-- Construct a bundled `Locale` from a `frame`. -/
 def of (α : Type _) [Frame α] : Locale :=
-  op <| Frm.of α
+  op <| FrmCat.of α
 #align Locale.of Locale.of
 
 @[simp]
@@ -53,7 +53,7 @@ end Locale
 -/
 @[simps]
 def topToLocale : TopCat ⥤ Locale :=
-  topOpToFrame.rightOp
+  topCatOpToFrameCat.rightOp
 #align Top_to_Locale topToLocale
 
 -- Note, `CompHaus` is too strong. We only need `t0_space`.

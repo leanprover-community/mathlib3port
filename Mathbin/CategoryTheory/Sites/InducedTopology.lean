@@ -49,6 +49,7 @@ variable {J : GrothendieckTopology C} {K : GrothendieckTopology D}
 
 variable (A : Type v) [Category.{u} A]
 
+#print CategoryTheory.LocallyCoverDense /-
 -- variables (A) [full G] [faithful G]
 /-- We say that a functor `C ⥤ D` into a site is "locally dense" if
 for each covering sieve `T` in `D`, `T ∩ mor(C)` generates a covering sieve in `D`.
@@ -56,6 +57,7 @@ for each covering sieve `T` in `D`, `T ∩ mor(C)` generates a covering sieve in
 def LocallyCoverDense (K : GrothendieckTopology D) (G : C ⥤ D) : Prop :=
   ∀ ⦃X⦄ (T : K (G.obj X)), (T.val.functorPullback G).functorPushforward G ∈ K (G.obj X)
 #align category_theory.locally_cover_dense CategoryTheory.LocallyCoverDense
+-/
 
 namespace LocallyCoverDense
 
@@ -63,6 +65,12 @@ variable [Full G] [Faithful G] (Hld : LocallyCoverDense K G)
 
 include Hld
 
+/- warning: category_theory.locally_cover_dense.pushforward_cover_iff_cover_pullback -> CategoryTheory.LocallyCoverDense.pushforward_cover_iff_cover_pullback is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] {D : Type.{u3}} [_inst_2 : CategoryTheory.Category.{u4, u3} D] {G : CategoryTheory.Functor.{u2, u4, u1, u3} C _inst_1 D _inst_2} {K : CategoryTheory.GrothendieckTopology.{u4, u3} D _inst_2} [_inst_4 : CategoryTheory.Full.{u2, u4, u1, u3} C _inst_1 D _inst_2 G] [_inst_5 : CategoryTheory.Faithful.{u2, u4, u1, u3} C _inst_1 D _inst_2 G], (CategoryTheory.LocallyCoverDense.{u1, u2, u3, u4} C _inst_1 D _inst_2 K G) -> (forall {X : C} (S : CategoryTheory.Sieve.{u2, u1} C _inst_1 X), Iff (coeFn.{max (succ u3) (succ u4), max (succ u3) (succ (max u3 u4))} (CategoryTheory.GrothendieckTopology.{u4, u3} D _inst_2) (fun (_x : CategoryTheory.GrothendieckTopology.{u4, u3} D _inst_2) => forall (X : D), Set.{max u3 u4} (CategoryTheory.Sieve.{u4, u3} D _inst_2 X)) (CategoryTheory.GrothendieckTopology.hasCoeToFun.{u4, u3} D _inst_2) K (CategoryTheory.Functor.obj.{u2, u4, u1, u3} C _inst_1 D _inst_2 G X) (CategoryTheory.Sieve.functorPushforward.{u2, u4, u1, u3} C _inst_1 D _inst_2 G X S)) (Exists.{succ (max u3 u4)} (coeSort.{succ (max u3 u4), succ (succ (max u3 u4))} (Set.{max u3 u4} (CategoryTheory.Sieve.{u4, u3} D _inst_2 (CategoryTheory.Functor.obj.{u2, u4, u1, u3} C _inst_1 D _inst_2 G X))) Type.{max u3 u4} (Set.hasCoeToSort.{max u3 u4} (CategoryTheory.Sieve.{u4, u3} D _inst_2 (CategoryTheory.Functor.obj.{u2, u4, u1, u3} C _inst_1 D _inst_2 G X))) (coeFn.{max (succ u3) (succ u4), max (succ u3) (succ (max u3 u4))} (CategoryTheory.GrothendieckTopology.{u4, u3} D _inst_2) (fun (_x : CategoryTheory.GrothendieckTopology.{u4, u3} D _inst_2) => forall (X : D), Set.{max u3 u4} (CategoryTheory.Sieve.{u4, u3} D _inst_2 X)) (CategoryTheory.GrothendieckTopology.hasCoeToFun.{u4, u3} D _inst_2) K (CategoryTheory.Functor.obj.{u2, u4, u1, u3} C _inst_1 D _inst_2 G X))) (fun (T : coeSort.{succ (max u3 u4), succ (succ (max u3 u4))} (Set.{max u3 u4} (CategoryTheory.Sieve.{u4, u3} D _inst_2 (CategoryTheory.Functor.obj.{u2, u4, u1, u3} C _inst_1 D _inst_2 G X))) Type.{max u3 u4} (Set.hasCoeToSort.{max u3 u4} (CategoryTheory.Sieve.{u4, u3} D _inst_2 (CategoryTheory.Functor.obj.{u2, u4, u1, u3} C _inst_1 D _inst_2 G X))) (coeFn.{max (succ u3) (succ u4), max (succ u3) (succ (max u3 u4))} (CategoryTheory.GrothendieckTopology.{u4, u3} D _inst_2) (fun (_x : CategoryTheory.GrothendieckTopology.{u4, u3} D _inst_2) => forall (X : D), Set.{max u3 u4} (CategoryTheory.Sieve.{u4, u3} D _inst_2 X)) (CategoryTheory.GrothendieckTopology.hasCoeToFun.{u4, u3} D _inst_2) K (CategoryTheory.Functor.obj.{u2, u4, u1, u3} C _inst_1 D _inst_2 G X))) => Eq.{max (succ u1) (succ u2)} (CategoryTheory.Sieve.{u2, u1} C _inst_1 X) (CategoryTheory.Sieve.functorPullback.{u2, u4, u1, u3} C _inst_1 D _inst_2 G X (Subtype.val.{succ (max u3 u4)} (CategoryTheory.Sieve.{u4, u3} D _inst_2 (CategoryTheory.Functor.obj.{u2, u4, u1, u3} C _inst_1 D _inst_2 G X)) (fun (x : CategoryTheory.Sieve.{u4, u3} D _inst_2 (CategoryTheory.Functor.obj.{u2, u4, u1, u3} C _inst_1 D _inst_2 G X)) => Membership.Mem.{max u3 u4, max u3 u4} (CategoryTheory.Sieve.{u4, u3} D _inst_2 (CategoryTheory.Functor.obj.{u2, u4, u1, u3} C _inst_1 D _inst_2 G X)) (Set.{max u3 u4} (CategoryTheory.Sieve.{u4, u3} D _inst_2 (CategoryTheory.Functor.obj.{u2, u4, u1, u3} C _inst_1 D _inst_2 G X))) (Set.hasMem.{max u3 u4} (CategoryTheory.Sieve.{u4, u3} D _inst_2 (CategoryTheory.Functor.obj.{u2, u4, u1, u3} C _inst_1 D _inst_2 G X))) x (coeFn.{max (succ u3) (succ u4), max (succ u3) (succ (max u3 u4))} (CategoryTheory.GrothendieckTopology.{u4, u3} D _inst_2) (fun (_x : CategoryTheory.GrothendieckTopology.{u4, u3} D _inst_2) => forall (X : D), Set.{max u3 u4} (CategoryTheory.Sieve.{u4, u3} D _inst_2 X)) (CategoryTheory.GrothendieckTopology.hasCoeToFun.{u4, u3} D _inst_2) K (CategoryTheory.Functor.obj.{u2, u4, u1, u3} C _inst_1 D _inst_2 G X))) T)) S)))
+but is expected to have type
+  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u4, u3} C] {D : Type.{u1}} [_inst_2 : CategoryTheory.Category.{u2, u1} D] {G : CategoryTheory.Functor.{u4, u2, u3, u1} C _inst_1 D _inst_2} {K : CategoryTheory.GrothendieckTopology.{u2, u1} D _inst_2} [_inst_4 : CategoryTheory.Full.{u4, u2, u3, u1} C _inst_1 D _inst_2 G] [_inst_5 : CategoryTheory.Faithful.{u4, u2, u3, u1} C _inst_1 D _inst_2 G], (CategoryTheory.LocallyCoverDense.{u3, u4, u1, u2} C _inst_1 D _inst_2 K G) -> (forall {X : C} (S : CategoryTheory.Sieve.{u4, u3} C _inst_1 X), Iff (CategoryTheory.GrothendieckTopology.sieves.{u2, u1} D _inst_2 K (Prefunctor.obj.{succ u4, succ u2, u3, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u4, u3} C (CategoryTheory.Category.toCategoryStruct.{u4, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} D (CategoryTheory.Category.toCategoryStruct.{u2, u1} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u4, u2, u3, u1} C _inst_1 D _inst_2 G) X) (CategoryTheory.Sieve.functorPushforward.{u4, u2, u3, u1} C _inst_1 D _inst_2 G X S)) (Exists.{max (succ u1) (succ u2)} (Set.Elem.{max u1 u2} (CategoryTheory.Sieve.{u2, u1} D _inst_2 (Prefunctor.obj.{succ u4, succ u2, u3, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u4, u3} C (CategoryTheory.Category.toCategoryStruct.{u4, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} D (CategoryTheory.Category.toCategoryStruct.{u2, u1} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u4, u2, u3, u1} C _inst_1 D _inst_2 G) X)) (CategoryTheory.GrothendieckTopology.sieves.{u2, u1} D _inst_2 K (Prefunctor.obj.{succ u4, succ u2, u3, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u4, u3} C (CategoryTheory.Category.toCategoryStruct.{u4, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} D (CategoryTheory.Category.toCategoryStruct.{u2, u1} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u4, u2, u3, u1} C _inst_1 D _inst_2 G) X))) (fun (T : Set.Elem.{max u1 u2} (CategoryTheory.Sieve.{u2, u1} D _inst_2 (Prefunctor.obj.{succ u4, succ u2, u3, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u4, u3} C (CategoryTheory.Category.toCategoryStruct.{u4, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} D (CategoryTheory.Category.toCategoryStruct.{u2, u1} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u4, u2, u3, u1} C _inst_1 D _inst_2 G) X)) (CategoryTheory.GrothendieckTopology.sieves.{u2, u1} D _inst_2 K (Prefunctor.obj.{succ u4, succ u2, u3, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u4, u3} C (CategoryTheory.Category.toCategoryStruct.{u4, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} D (CategoryTheory.Category.toCategoryStruct.{u2, u1} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u4, u2, u3, u1} C _inst_1 D _inst_2 G) X))) => Eq.{max (succ u3) (succ u4)} (CategoryTheory.Sieve.{u4, u3} C _inst_1 X) (CategoryTheory.Sieve.functorPullback.{u4, u2, u3, u1} C _inst_1 D _inst_2 G X (Subtype.val.{max (succ u1) (succ u2)} (CategoryTheory.Sieve.{u2, u1} D _inst_2 (Prefunctor.obj.{succ u4, succ u2, u3, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u4, u3} C (CategoryTheory.Category.toCategoryStruct.{u4, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} D (CategoryTheory.Category.toCategoryStruct.{u2, u1} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u4, u2, u3, u1} C _inst_1 D _inst_2 G) X)) (fun (x : CategoryTheory.Sieve.{u2, u1} D _inst_2 (Prefunctor.obj.{succ u4, succ u2, u3, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u4, u3} C (CategoryTheory.Category.toCategoryStruct.{u4, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} D (CategoryTheory.Category.toCategoryStruct.{u2, u1} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u4, u2, u3, u1} C _inst_1 D _inst_2 G) X)) => Membership.mem.{max u1 u2, max u1 u2} (CategoryTheory.Sieve.{u2, u1} D _inst_2 (Prefunctor.obj.{succ u4, succ u2, u3, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u4, u3} C (CategoryTheory.Category.toCategoryStruct.{u4, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} D (CategoryTheory.Category.toCategoryStruct.{u2, u1} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u4, u2, u3, u1} C _inst_1 D _inst_2 G) X)) (Set.{max u1 u2} (CategoryTheory.Sieve.{u2, u1} D _inst_2 (Prefunctor.obj.{succ u4, succ u2, u3, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u4, u3} C (CategoryTheory.Category.toCategoryStruct.{u4, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} D (CategoryTheory.Category.toCategoryStruct.{u2, u1} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u4, u2, u3, u1} C _inst_1 D _inst_2 G) X))) (Set.instMembershipSet.{max u1 u2} (CategoryTheory.Sieve.{u2, u1} D _inst_2 (Prefunctor.obj.{succ u4, succ u2, u3, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u4, u3} C (CategoryTheory.Category.toCategoryStruct.{u4, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} D (CategoryTheory.Category.toCategoryStruct.{u2, u1} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u4, u2, u3, u1} C _inst_1 D _inst_2 G) X))) x (CategoryTheory.GrothendieckTopology.sieves.{u2, u1} D _inst_2 K (Prefunctor.obj.{succ u4, succ u2, u3, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u4, u3} C (CategoryTheory.Category.toCategoryStruct.{u4, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} D (CategoryTheory.Category.toCategoryStruct.{u2, u1} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u4, u2, u3, u1} C _inst_1 D _inst_2 G) X))) T)) S)))
+Case conversion may be inaccurate. Consider using '#align category_theory.locally_cover_dense.pushforward_cover_iff_cover_pullback CategoryTheory.LocallyCoverDense.pushforward_cover_iff_cover_pullbackₓ'. -/
 theorem pushforward_cover_iff_cover_pullback {X : C} (S : Sieve X) :
     K _ (S.functorPushforward G) ↔ ∃ T : K (G.obj X), T.val.functorPullback G = S :=
   by
@@ -73,6 +81,7 @@ theorem pushforward_cover_iff_cover_pullback {X : C} (S : Sieve X) :
     exact Hld T
 #align category_theory.locally_cover_dense.pushforward_cover_iff_cover_pullback CategoryTheory.LocallyCoverDense.pushforward_cover_iff_cover_pullback
 
+#print CategoryTheory.LocallyCoverDense.inducedTopology /-
 /-- If a functor `G : C ⥤ (D, K)` is fully faithful and locally dense,
 then the set `{ T ∩ mor(C) | T ∈ K }` is a grothendieck topology of `C`.
 -/
@@ -104,12 +113,25 @@ def inducedTopology : GrothendieckTopology C
     rintro W _ ⟨Z', g', i', hg, rfl⟩
     use ⟨Z', g' ≫ g, i', hg, by simp⟩
 #align category_theory.locally_cover_dense.induced_topology CategoryTheory.LocallyCoverDense.inducedTopology
+-/
 
+/- warning: category_theory.locally_cover_dense.induced_topology_cover_lifting -> CategoryTheory.LocallyCoverDense.inducedTopology_coverLifting is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] {D : Type.{u3}} [_inst_2 : CategoryTheory.Category.{u4, u3} D] {G : CategoryTheory.Functor.{u2, u4, u1, u3} C _inst_1 D _inst_2} {K : CategoryTheory.GrothendieckTopology.{u4, u3} D _inst_2} [_inst_4 : CategoryTheory.Full.{u2, u4, u1, u3} C _inst_1 D _inst_2 G] [_inst_5 : CategoryTheory.Faithful.{u2, u4, u1, u3} C _inst_1 D _inst_2 G] (Hld : CategoryTheory.LocallyCoverDense.{u1, u2, u3, u4} C _inst_1 D _inst_2 K G), CategoryTheory.CoverLifting.{u1, u2, u3, u4} C _inst_1 D _inst_2 (CategoryTheory.LocallyCoverDense.inducedTopology.{u1, u2, u3, u4} C _inst_1 D _inst_2 G K _inst_4 _inst_5 Hld) K G
+but is expected to have type
+  forall {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u3, u4} C] {D : Type.{u2}} [_inst_2 : CategoryTheory.Category.{u1, u2} D] {G : CategoryTheory.Functor.{u3, u1, u4, u2} C _inst_1 D _inst_2} {K : CategoryTheory.GrothendieckTopology.{u1, u2} D _inst_2} [_inst_4 : CategoryTheory.Full.{u3, u1, u4, u2} C _inst_1 D _inst_2 G] [_inst_5 : CategoryTheory.Faithful.{u3, u1, u4, u2} C _inst_1 D _inst_2 G] (Hld : CategoryTheory.LocallyCoverDense.{u4, u3, u2, u1} C _inst_1 D _inst_2 K G), CategoryTheory.CoverLifting.{u4, u3, u2, u1} C _inst_1 D _inst_2 (CategoryTheory.LocallyCoverDense.inducedTopology.{u4, u3, u2, u1} C _inst_1 D _inst_2 G K _inst_4 _inst_5 Hld) K G
+Case conversion may be inaccurate. Consider using '#align category_theory.locally_cover_dense.induced_topology_cover_lifting CategoryTheory.LocallyCoverDense.inducedTopology_coverLiftingₓ'. -/
 /-- `G` is cover-lifting wrt the induced topology. -/
 theorem inducedTopology_coverLifting : CoverLifting Hld.inducedTopology K G :=
   ⟨fun _ S hS => Hld ⟨S, hS⟩⟩
 #align category_theory.locally_cover_dense.induced_topology_cover_lifting CategoryTheory.LocallyCoverDense.inducedTopology_coverLifting
 
+/- warning: category_theory.locally_cover_dense.induced_topology_cover_preserving -> CategoryTheory.LocallyCoverDense.inducedTopology_coverPreserving is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] {D : Type.{u3}} [_inst_2 : CategoryTheory.Category.{u4, u3} D] {G : CategoryTheory.Functor.{u2, u4, u1, u3} C _inst_1 D _inst_2} {K : CategoryTheory.GrothendieckTopology.{u4, u3} D _inst_2} [_inst_4 : CategoryTheory.Full.{u2, u4, u1, u3} C _inst_1 D _inst_2 G] [_inst_5 : CategoryTheory.Faithful.{u2, u4, u1, u3} C _inst_1 D _inst_2 G] (Hld : CategoryTheory.LocallyCoverDense.{u1, u2, u3, u4} C _inst_1 D _inst_2 K G), CategoryTheory.CoverPreserving.{u2, u4, u1, u3} C _inst_1 D _inst_2 (CategoryTheory.LocallyCoverDense.inducedTopology.{u1, u2, u3, u4} C _inst_1 D _inst_2 G K _inst_4 _inst_5 Hld) K G
+but is expected to have type
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u4, u2} C] {D : Type.{u1}} [_inst_2 : CategoryTheory.Category.{u3, u1} D] {G : CategoryTheory.Functor.{u4, u3, u2, u1} C _inst_1 D _inst_2} {K : CategoryTheory.GrothendieckTopology.{u3, u1} D _inst_2} [_inst_4 : CategoryTheory.Full.{u4, u3, u2, u1} C _inst_1 D _inst_2 G] [_inst_5 : CategoryTheory.Faithful.{u4, u3, u2, u1} C _inst_1 D _inst_2 G] (Hld : CategoryTheory.LocallyCoverDense.{u2, u4, u1, u3} C _inst_1 D _inst_2 K G), CategoryTheory.CoverPreserving.{u4, u3, u2, u1} C _inst_1 D _inst_2 (CategoryTheory.LocallyCoverDense.inducedTopology.{u2, u4, u1, u3} C _inst_1 D _inst_2 G K _inst_4 _inst_5 Hld) K G
+Case conversion may be inaccurate. Consider using '#align category_theory.locally_cover_dense.induced_topology_cover_preserving CategoryTheory.LocallyCoverDense.inducedTopology_coverPreservingₓ'. -/
 /-- `G` is cover-preserving wrt the induced topology. -/
 theorem inducedTopology_coverPreserving : CoverPreserving Hld.inducedTopology K G :=
   ⟨fun _ S hS => hS⟩
@@ -117,6 +139,12 @@ theorem inducedTopology_coverPreserving : CoverPreserving Hld.inducedTopology K 
 
 end LocallyCoverDense
 
+/- warning: category_theory.cover_dense.locally_cover_dense -> CategoryTheory.CoverDense.locallyCoverDense is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] {D : Type.{u3}} [_inst_2 : CategoryTheory.Category.{u4, u3} D] {G : CategoryTheory.Functor.{u2, u4, u1, u3} C _inst_1 D _inst_2} {K : CategoryTheory.GrothendieckTopology.{u4, u3} D _inst_2} [_inst_4 : CategoryTheory.Full.{u2, u4, u1, u3} C _inst_1 D _inst_2 G], (CategoryTheory.CoverDense.{u1, u2, u3, u4} C _inst_1 D _inst_2 K G) -> (CategoryTheory.LocallyCoverDense.{u1, u2, u3, u4} C _inst_1 D _inst_2 K G)
+but is expected to have type
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u4, u2} C] {D : Type.{u1}} [_inst_2 : CategoryTheory.Category.{u3, u1} D] {G : CategoryTheory.Functor.{u4, u3, u2, u1} C _inst_1 D _inst_2} {K : CategoryTheory.GrothendieckTopology.{u3, u1} D _inst_2} [_inst_4 : CategoryTheory.Full.{u4, u3, u2, u1} C _inst_1 D _inst_2 G], (CategoryTheory.CoverDense.{u2, u4, u1, u3} C _inst_1 D _inst_2 K G) -> (CategoryTheory.LocallyCoverDense.{u2, u4, u1, u3} C _inst_1 D _inst_2 K G)
+Case conversion may be inaccurate. Consider using '#align category_theory.cover_dense.locally_cover_dense CategoryTheory.CoverDense.locallyCoverDenseₓ'. -/
 theorem CoverDense.locallyCoverDense [Full G] (H : CoverDense K G) : LocallyCoverDense K G :=
   by
   intro X T
@@ -128,15 +156,23 @@ theorem CoverDense.locallyCoverDense [Full G] (H : CoverDense K G) : LocallyCove
   simp
 #align category_theory.cover_dense.locally_cover_dense CategoryTheory.CoverDense.locallyCoverDense
 
+#print CategoryTheory.CoverDense.inducedTopology /-
 /-- Given a fully faithful cover-dense functor `G : C ⥤ (D, K)`, we may induce a topology on `C`.
 -/
 abbrev CoverDense.inducedTopology [Full G] [Faithful G] (H : CoverDense K G) :
     GrothendieckTopology C :=
   H.LocallyCoverDense.inducedTopology
 #align category_theory.cover_dense.induced_topology CategoryTheory.CoverDense.inducedTopology
+-/
 
 variable (J)
 
+/- warning: category_theory.over_forget_locally_cover_dense -> CategoryTheory.over_forget_locallyCoverDense is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] (J : CategoryTheory.GrothendieckTopology.{u2, u1} C _inst_1) (X : C), CategoryTheory.LocallyCoverDense.{max u1 u2, u2, u1, u2} (CategoryTheory.Over.{u2, u1} C _inst_1 X) (CategoryTheory.commaCategory.{u2, u2, u2, u1, u2, u1} C _inst_1 (CategoryTheory.Discrete.{u2} PUnit.{succ u2}) (CategoryTheory.discreteCategory.{u2} PUnit.{succ u2}) C _inst_1 (CategoryTheory.Functor.id.{u2, u1} C _inst_1) (CategoryTheory.Functor.fromPUnit.{u2, u1} C _inst_1 X)) C _inst_1 J (CategoryTheory.Over.forget.{u2, u1} C _inst_1 X)
+but is expected to have type
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] (J : CategoryTheory.GrothendieckTopology.{u1, u2} C _inst_1) (X : C), CategoryTheory.LocallyCoverDense.{max u2 u1, u1, u2, u1} (CategoryTheory.Over.{u1, u2} C _inst_1 X) (CategoryTheory.instCategoryOver.{u1, u2} C _inst_1 X) C _inst_1 J (CategoryTheory.Over.forget.{u1, u2} C _inst_1 X)
+Case conversion may be inaccurate. Consider using '#align category_theory.over_forget_locally_cover_dense CategoryTheory.over_forget_locallyCoverDenseₓ'. -/
 theorem over_forget_locallyCoverDense (X : C) : LocallyCoverDense J (Over.forget X) :=
   by
   intro Y T
@@ -159,6 +195,12 @@ variable {J : GrothendieckTopology C} {K : GrothendieckTopology D}
 
 variable (A : Type u) [Category.{v} A]
 
+/- warning: category_theory.cover_dense.Sheaf_equiv -> CategoryTheory.CoverDense.sheafEquiv is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.SmallCategory.{u1} C] {D : Type.{u1}} [_inst_2 : CategoryTheory.SmallCategory.{u1} D] {G : CategoryTheory.Functor.{u1, u1, u1, u1} C _inst_1 D _inst_2} {K : CategoryTheory.GrothendieckTopology.{u1, u1} D _inst_2} (A : Type.{u2}) [_inst_3 : CategoryTheory.Category.{u1, u2} A] [_inst_4 : CategoryTheory.Full.{u1, u1, u1, u1} C _inst_1 D _inst_2 G] [_inst_5 : CategoryTheory.Faithful.{u1, u1, u1, u1} C _inst_1 D _inst_2 G] (H : CategoryTheory.CoverDense.{u1, u1, u1, u1} C _inst_1 D _inst_2 K G) [_inst_6 : CategoryTheory.Limits.HasLimits.{u1, u2} A _inst_3], CategoryTheory.Equivalence.{u1, u1, max u2 u1, max u2 u1} (CategoryTheory.Sheaf.{u1, u1, u1, u2} C _inst_1 (CategoryTheory.CoverDense.inducedTopology.{u1, u1, u1, u1} C _inst_1 D _inst_2 G K _inst_4 _inst_5 H) A _inst_3) (CategoryTheory.Sheaf.CategoryTheory.category.{u1, u1, u1, u2} C _inst_1 (CategoryTheory.CoverDense.inducedTopology.{u1, u1, u1, u1} C _inst_1 D _inst_2 G K _inst_4 _inst_5 H) A _inst_3) (CategoryTheory.Sheaf.{u1, u1, u1, u2} D _inst_2 K A _inst_3) (CategoryTheory.Sheaf.CategoryTheory.category.{u1, u1, u1, u2} D _inst_2 K A _inst_3)
+but is expected to have type
+  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.SmallCategory.{u1} C] {D : Type.{u1}} [_inst_2 : CategoryTheory.SmallCategory.{u1} D] {G : CategoryTheory.Functor.{u1, u1, u1, u1} C _inst_1 D _inst_2} {K : CategoryTheory.GrothendieckTopology.{u1, u1} D _inst_2} (A : Type.{u2}) [_inst_3 : CategoryTheory.Category.{u1, u2} A] [_inst_4 : CategoryTheory.Full.{u1, u1, u1, u1} C _inst_1 D _inst_2 G] [_inst_5 : CategoryTheory.Faithful.{u1, u1, u1, u1} C _inst_1 D _inst_2 G] (H : CategoryTheory.CoverDense.{u1, u1, u1, u1} C _inst_1 D _inst_2 K G) [_inst_6 : CategoryTheory.Limits.HasLimits.{u1, u2} A _inst_3], CategoryTheory.Equivalence.{u1, u1, max u2 u1, max u2 u1} (CategoryTheory.Sheaf.{u1, u1, u1, u2} C _inst_1 (CategoryTheory.CoverDense.inducedTopology.{u1, u1, u1, u1} C _inst_1 D _inst_2 G K _inst_4 _inst_5 H) A _inst_3) (CategoryTheory.Sheaf.{u1, u1, u1, u2} D _inst_2 K A _inst_3) (CategoryTheory.Sheaf.instCategorySheaf.{u1, u1, u1, u2} C _inst_1 (CategoryTheory.CoverDense.inducedTopology.{u1, u1, u1, u1} C _inst_1 D _inst_2 G K _inst_4 _inst_5 H) A _inst_3) (CategoryTheory.Sheaf.instCategorySheaf.{u1, u1, u1, u2} D _inst_2 K A _inst_3)
+Case conversion may be inaccurate. Consider using '#align category_theory.cover_dense.Sheaf_equiv CategoryTheory.CoverDense.sheafEquivₓ'. -/
 /-- Cover-dense functors induces an equivalence of categories of sheaves.
 
 This is known as the comparison lemma. It requires that the sites are small and the value category
