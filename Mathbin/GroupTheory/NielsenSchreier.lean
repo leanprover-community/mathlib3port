@@ -62,6 +62,7 @@ universe v u
 /- ./././Mathport/Syntax/Translate/Command.lean:229:11: unsupported: unusual advanced open style -/
 open CategoryTheory CategoryTheory.ActionCategory CategoryTheory.SingleObj Quiver
 
+#print IsFreeGroupoid.Generators /-
 /-- `is_free_groupoid.generators G` is a type synonym for `G`. We think of this as
 the vertices of the generating quiver of `G` when `G` is free. We can't use `G` directly,
 since `G` already has a quiver instance from being a groupoid. -/
@@ -69,7 +70,9 @@ since `G` already has a quiver instance from being a groupoid. -/
 def IsFreeGroupoid.Generators (G) [Groupoid G] :=
   G
 #align is_free_groupoid.generators IsFreeGroupoid.Generators
+-/
 
+#print IsFreeGroupoid /-
 /-- A groupoid `G` is free when we have the following data:
  - a quiver on `is_free_groupoid.generators G` (a type synonym for `G`)
  - a function `of` taking a generating arrow to a morphism in `G`
@@ -85,11 +88,18 @@ class IsFreeGroupoid (G) [Groupoid.{v} G] where
     ∀ {X : Type v} [Group X] (f : Labelling (IsFreeGroupoid.Generators G) X),
       ∃! F : G ⥤ CategoryTheory.SingleObj X, ∀ (a b) (g : a ⟶ b), F.map (of g) = f g
 #align is_free_groupoid IsFreeGroupoid
+-/
 
 namespace IsFreeGroupoid
 
 attribute [instance] quiver_generators
 
+/- warning: is_free_groupoid.ext_functor -> IsFreeGroupoid.ext_functor is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u2}} [_inst_1 : CategoryTheory.Groupoid.{u1, u2} G] [_inst_2 : IsFreeGroupoid.{u1, u2} G _inst_1] {X : Type.{u1}} [_inst_3 : Group.{u1} X] (f : CategoryTheory.Functor.{u1, u1, u2, 0} G (CategoryTheory.Groupoid.toCategory.{u1, u2} G _inst_1) (CategoryTheory.SingleObj.{u1} X) (CategoryTheory.SingleObj.category.{u1} X (DivInvMonoid.toMonoid.{u1} X (Group.toDivInvMonoid.{u1} X _inst_3)))) (g : CategoryTheory.Functor.{u1, u1, u2, 0} G (CategoryTheory.Groupoid.toCategory.{u1, u2} G _inst_1) (CategoryTheory.SingleObj.{u1} X) (CategoryTheory.SingleObj.category.{u1} X (DivInvMonoid.toMonoid.{u1} X (Group.toDivInvMonoid.{u1} X _inst_3)))), (forall (a : IsFreeGroupoid.Generators.{u2, u1} G _inst_1) (b : IsFreeGroupoid.Generators.{u2, u1} G _inst_1) (e : Quiver.Hom.{succ u1, u2} (IsFreeGroupoid.Generators.{u2, u1} G _inst_1) (IsFreeGroupoid.quiverGenerators.{u1, u2} G _inst_1 _inst_2) a b), Eq.{succ u1} (Quiver.Hom.{succ u1, 0} (CategoryTheory.SingleObj.{u1} X) (CategoryTheory.CategoryStruct.toQuiver.{u1, 0} (CategoryTheory.SingleObj.{u1} X) (CategoryTheory.Category.toCategoryStruct.{u1, 0} (CategoryTheory.SingleObj.{u1} X) (CategoryTheory.SingleObj.category.{u1} X (DivInvMonoid.toMonoid.{u1} X (Group.toDivInvMonoid.{u1} X _inst_3))))) (CategoryTheory.Functor.obj.{u1, u1, u2, 0} G (CategoryTheory.Groupoid.toCategory.{u1, u2} G _inst_1) (CategoryTheory.SingleObj.{u1} X) (CategoryTheory.SingleObj.category.{u1} X (DivInvMonoid.toMonoid.{u1} X (Group.toDivInvMonoid.{u1} X _inst_3))) f ((fun (this : G) => this) a)) (CategoryTheory.Functor.obj.{u1, u1, u2, 0} G (CategoryTheory.Groupoid.toCategory.{u1, u2} G _inst_1) (CategoryTheory.SingleObj.{u1} X) (CategoryTheory.SingleObj.category.{u1} X (DivInvMonoid.toMonoid.{u1} X (Group.toDivInvMonoid.{u1} X _inst_3))) f b)) (CategoryTheory.Functor.map.{u1, u1, u2, 0} G (CategoryTheory.Groupoid.toCategory.{u1, u2} G _inst_1) (CategoryTheory.SingleObj.{u1} X) (CategoryTheory.SingleObj.category.{u1} X (DivInvMonoid.toMonoid.{u1} X (Group.toDivInvMonoid.{u1} X _inst_3))) f ((fun (this : G) => this) a) b (IsFreeGroupoid.of.{u1, u2} G _inst_1 _inst_2 a b e)) (CategoryTheory.Functor.map.{u1, u1, u2, 0} G (CategoryTheory.Groupoid.toCategory.{u1, u2} G _inst_1) (CategoryTheory.SingleObj.{u1} X) (CategoryTheory.SingleObj.category.{u1} X (DivInvMonoid.toMonoid.{u1} X (Group.toDivInvMonoid.{u1} X _inst_3))) g ((fun (this : G) => this) a) b (IsFreeGroupoid.of.{u1, u2} G _inst_1 _inst_2 a b e))) -> (Eq.{succ (max u1 u2)} (CategoryTheory.Functor.{u1, u1, u2, 0} G (CategoryTheory.Groupoid.toCategory.{u1, u2} G _inst_1) (CategoryTheory.SingleObj.{u1} X) (CategoryTheory.SingleObj.category.{u1} X (DivInvMonoid.toMonoid.{u1} X (Group.toDivInvMonoid.{u1} X _inst_3)))) f g)
+but is expected to have type
+  forall {G : Type.{u1}} [_inst_1 : CategoryTheory.Groupoid.{u2, u1} G] [_inst_2 : IsFreeGroupoid.{u2, u1} G _inst_1] {X : Type.{u2}} [_inst_3 : Group.{u2} X] (f : CategoryTheory.Functor.{u2, u2, u1, 0} G (CategoryTheory.Groupoid.toCategory.{u2, u1} G _inst_1) (CategoryTheory.SingleObj.{u2} X) (CategoryTheory.SingleObj.category.{u2} X (DivInvMonoid.toMonoid.{u2} X (Group.toDivInvMonoid.{u2} X _inst_3)))) (g : CategoryTheory.Functor.{u2, u2, u1, 0} G (CategoryTheory.Groupoid.toCategory.{u2, u1} G _inst_1) (CategoryTheory.SingleObj.{u2} X) (CategoryTheory.SingleObj.category.{u2} X (DivInvMonoid.toMonoid.{u2} X (Group.toDivInvMonoid.{u2} X _inst_3)))), (forall (a : IsFreeGroupoid.Generators.{u1, u2} G _inst_1) (b : IsFreeGroupoid.Generators.{u1, u2} G _inst_1) (e : Quiver.Hom.{succ u2, u1} (IsFreeGroupoid.Generators.{u1, u2} G _inst_1) (IsFreeGroupoid.quiverGenerators.{u2, u1} G _inst_1 _inst_2) a b), Eq.{succ u2} (Quiver.Hom.{succ u2, 0} (CategoryTheory.SingleObj.{u2} X) (CategoryTheory.CategoryStruct.toQuiver.{u2, 0} (CategoryTheory.SingleObj.{u2} X) (CategoryTheory.Category.toCategoryStruct.{u2, 0} (CategoryTheory.SingleObj.{u2} X) (CategoryTheory.SingleObj.category.{u2} X (DivInvMonoid.toMonoid.{u2} X (Group.toDivInvMonoid.{u2} X _inst_3))))) (Prefunctor.obj.{succ u2, succ u2, u1, 0} G (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} G (CategoryTheory.Category.toCategoryStruct.{u2, u1} G (CategoryTheory.Groupoid.toCategory.{u2, u1} G _inst_1))) (CategoryTheory.SingleObj.{u2} X) (CategoryTheory.CategoryStruct.toQuiver.{u2, 0} (CategoryTheory.SingleObj.{u2} X) (CategoryTheory.Category.toCategoryStruct.{u2, 0} (CategoryTheory.SingleObj.{u2} X) (CategoryTheory.SingleObj.category.{u2} X (DivInvMonoid.toMonoid.{u2} X (Group.toDivInvMonoid.{u2} X _inst_3))))) (CategoryTheory.Functor.toPrefunctor.{u2, u2, u1, 0} G (CategoryTheory.Groupoid.toCategory.{u2, u1} G _inst_1) (CategoryTheory.SingleObj.{u2} X) (CategoryTheory.SingleObj.category.{u2} X (DivInvMonoid.toMonoid.{u2} X (Group.toDivInvMonoid.{u2} X _inst_3))) f) ([mdata let_fun:1 (fun (this : G) => this) a])) (Prefunctor.obj.{succ u2, succ u2, u1, 0} G (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} G (CategoryTheory.Category.toCategoryStruct.{u2, u1} G (CategoryTheory.Groupoid.toCategory.{u2, u1} G _inst_1))) (CategoryTheory.SingleObj.{u2} X) (CategoryTheory.CategoryStruct.toQuiver.{u2, 0} (CategoryTheory.SingleObj.{u2} X) (CategoryTheory.Category.toCategoryStruct.{u2, 0} (CategoryTheory.SingleObj.{u2} X) (CategoryTheory.SingleObj.category.{u2} X (DivInvMonoid.toMonoid.{u2} X (Group.toDivInvMonoid.{u2} X _inst_3))))) (CategoryTheory.Functor.toPrefunctor.{u2, u2, u1, 0} G (CategoryTheory.Groupoid.toCategory.{u2, u1} G _inst_1) (CategoryTheory.SingleObj.{u2} X) (CategoryTheory.SingleObj.category.{u2} X (DivInvMonoid.toMonoid.{u2} X (Group.toDivInvMonoid.{u2} X _inst_3))) f) b)) (Prefunctor.map.{succ u2, succ u2, u1, 0} G (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} G (CategoryTheory.Category.toCategoryStruct.{u2, u1} G (CategoryTheory.Groupoid.toCategory.{u2, u1} G _inst_1))) (CategoryTheory.SingleObj.{u2} X) (CategoryTheory.CategoryStruct.toQuiver.{u2, 0} (CategoryTheory.SingleObj.{u2} X) (CategoryTheory.Category.toCategoryStruct.{u2, 0} (CategoryTheory.SingleObj.{u2} X) (CategoryTheory.SingleObj.category.{u2} X (DivInvMonoid.toMonoid.{u2} X (Group.toDivInvMonoid.{u2} X _inst_3))))) (CategoryTheory.Functor.toPrefunctor.{u2, u2, u1, 0} G (CategoryTheory.Groupoid.toCategory.{u2, u1} G _inst_1) (CategoryTheory.SingleObj.{u2} X) (CategoryTheory.SingleObj.category.{u2} X (DivInvMonoid.toMonoid.{u2} X (Group.toDivInvMonoid.{u2} X _inst_3))) f) ([mdata let_fun:1 (fun (this : G) => this) a]) b (IsFreeGroupoid.of.{u2, u1} G _inst_1 _inst_2 a b e)) (Prefunctor.map.{succ u2, succ u2, u1, 0} G (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} G (CategoryTheory.Category.toCategoryStruct.{u2, u1} G (CategoryTheory.Groupoid.toCategory.{u2, u1} G _inst_1))) (CategoryTheory.SingleObj.{u2} X) (CategoryTheory.CategoryStruct.toQuiver.{u2, 0} (CategoryTheory.SingleObj.{u2} X) (CategoryTheory.Category.toCategoryStruct.{u2, 0} (CategoryTheory.SingleObj.{u2} X) (CategoryTheory.SingleObj.category.{u2} X (DivInvMonoid.toMonoid.{u2} X (Group.toDivInvMonoid.{u2} X _inst_3))))) (CategoryTheory.Functor.toPrefunctor.{u2, u2, u1, 0} G (CategoryTheory.Groupoid.toCategory.{u2, u1} G _inst_1) (CategoryTheory.SingleObj.{u2} X) (CategoryTheory.SingleObj.category.{u2} X (DivInvMonoid.toMonoid.{u2} X (Group.toDivInvMonoid.{u2} X _inst_3))) g) ([mdata let_fun:1 (fun (this : G) => this) a]) b (IsFreeGroupoid.of.{u2, u1} G _inst_1 _inst_2 a b e))) -> (Eq.{max (succ u2) (succ u1)} (CategoryTheory.Functor.{u2, u2, u1, 0} G (CategoryTheory.Groupoid.toCategory.{u2, u1} G _inst_1) (CategoryTheory.SingleObj.{u2} X) (CategoryTheory.SingleObj.category.{u2} X (DivInvMonoid.toMonoid.{u2} X (Group.toDivInvMonoid.{u2} X _inst_3)))) f g)
+Case conversion may be inaccurate. Consider using '#align is_free_groupoid.ext_functor IsFreeGroupoid.ext_functorₓ'. -/
 /-- Two functors from a free groupoid to a group are equal when they agree on the generating
 quiver. -/
 @[ext]
@@ -100,6 +110,7 @@ theorem ext_functor {G} [Groupoid.{v} G] [IsFreeGroupoid G] {X : Type v} [Group 
   trans (u _ h) (u _ fun _ _ _ => rfl).symm
 #align is_free_groupoid.ext_functor IsFreeGroupoid.ext_functor
 
+#print IsFreeGroupoid.actionGroupoidIsFree /-
 /-- An action groupoid over a free group is free. More generally, one could show that the groupoid
 of elements over a free groupoid is free, but this version is easier to prove and suffices for our
 purposes.
@@ -143,6 +154,7 @@ instance actionGroupoidIsFree {G A : Type u} [Group G] [IsFreeGroup G] [MulActio
         intros
         simp only [← this, uncurry_map, curry_apply_left, coe_back, hom_of_pair.val]
 #align is_free_groupoid.action_groupoid_is_free IsFreeGroupoid.actionGroupoidIsFree
+-/
 
 namespace SpanningTree
 
@@ -158,6 +170,7 @@ private def root' : G :=
   show T from root T
 #align is_free_groupoid.spanning_tree.root' is_free_groupoid.spanning_tree.root'
 
+#print IsFreeGroupoid.SpanningTree.homOfPath /-
 -- this has to be marked noncomputable, see issue #451.
 -- It might be nicer to define this in terms of `compose_path`
 /-- A path in the tree gives a hom, by composition. -/
@@ -165,30 +178,40 @@ noncomputable def homOfPath : ∀ {a : G}, Path (root T) a → (root' T ⟶ a)
   | _, path.nil => 𝟙 _
   | a, path.cons p f => hom_of_path p ≫ Sum.recOn f.val (fun e => of e) fun e => inv (of e)
 #align is_free_groupoid.spanning_tree.hom_of_path IsFreeGroupoid.SpanningTree.homOfPath
+-/
 
+#print IsFreeGroupoid.SpanningTree.treeHom /-
 /-- For every vertex `a`, there is a canonical hom from the root, given by the path in the tree. -/
 def treeHom (a : G) : root' T ⟶ a :=
   homOfPath T default
 #align is_free_groupoid.spanning_tree.tree_hom IsFreeGroupoid.SpanningTree.treeHom
+-/
 
+#print IsFreeGroupoid.SpanningTree.treeHom_eq /-
 /-- Any path to `a` gives `tree_hom T a`, since paths in the tree are unique. -/
 theorem treeHom_eq {a : G} (p : Path (root T) a) : treeHom T a = homOfPath T p := by
   rw [tree_hom, Unique.default_eq]
 #align is_free_groupoid.spanning_tree.tree_hom_eq IsFreeGroupoid.SpanningTree.treeHom_eq
+-/
 
+#print IsFreeGroupoid.SpanningTree.treeHom_root /-
 @[simp]
 theorem treeHom_root : treeHom T (root' T) = 𝟙 _ :=
   -- this should just be `tree_hom_eq T path.nil`, but Lean treats `hom_of_path` with suspicion.
     trans
     (treeHom_eq T Path.nil) rfl
 #align is_free_groupoid.spanning_tree.tree_hom_root IsFreeGroupoid.SpanningTree.treeHom_root
+-/
 
+#print IsFreeGroupoid.SpanningTree.loopOfHom /-
 /-- Any hom in `G` can be made into a loop, by conjugating with `tree_hom`s. -/
 def loopOfHom {a b : G} (p : a ⟶ b) : End (root' T) :=
   treeHom T a ≫ p ≫ inv (treeHom T b)
 #align is_free_groupoid.spanning_tree.loop_of_hom IsFreeGroupoid.SpanningTree.loopOfHom
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (e «expr ∈ » wide_subquiver_symmetrify[quiver.wide_subquiver_symmetrify] T a b) -/
+#print IsFreeGroupoid.SpanningTree.loopOfHom_eq_id /-
 /-- Turning an edge in the spanning tree into a loop gives the indentity loop. -/
 theorem loopOfHom_eq_id {a b : Generators G} (e) (_ : e ∈ wideSubquiverSymmetrify T a b) :
     loopOfHom T (of e) = 𝟙 (root' T) :=
@@ -200,7 +223,9 @@ theorem loopOfHom_eq_id {a b : Generators G} (e) (_ : e ∈ wideSubquiverSymmetr
   · rw [tree_hom_eq T (path.cons default ⟨Sum.inr e, H⟩), hom_of_path]
     simp only [is_iso.inv_hom_id, category.comp_id, category.assoc, tree_hom]
 #align is_free_groupoid.spanning_tree.loop_of_hom_eq_id IsFreeGroupoid.SpanningTree.loopOfHom_eq_id
+-/
 
+#print IsFreeGroupoid.SpanningTree.functorOfMonoidHom /-
 /-- Since a hom gives a loop, any homomorphism from the vertex group at the root
     extends to a functor on the whole groupoid. -/
 @[simps]
@@ -216,7 +241,9 @@ def functorOfMonoidHom {X} [Monoid X] (f : End (root' T) →* X) : G ⥤ Categor
     rw [comp_as_mul, ← f.map_mul]
     simp only [is_iso.inv_hom_id_assoc, loop_of_hom, End.mul_def, category.assoc]
 #align is_free_groupoid.spanning_tree.functor_of_monoid_hom IsFreeGroupoid.SpanningTree.functorOfMonoidHom
+-/
 
+#print IsFreeGroupoid.SpanningTree.endIsFree /-
 /-- Given a free groupoid and an arborescence of its generating quiver, the vertex
     group at the root is freely generated by loops coming from generating arrows
     in the complement of the tree. -/
@@ -260,6 +287,7 @@ def endIsFree : IsFreeGroup (End (root' T)) :=
         · rw [loop_of_hom_eq_id T e h, ← End.one_def, E.map_one]
         · exact hE ⟨⟨a, b, e⟩, h⟩)
 #align is_free_groupoid.spanning_tree.End_is_free IsFreeGroupoid.SpanningTree.endIsFree
+-/
 
 end SpanningTree
 
@@ -269,6 +297,7 @@ private def symgen {G : Type u} [Groupoid.{v} G] [IsFreeGroupoid G] :
   id
 #align is_free_groupoid.symgen is_free_groupoid.symgen
 
+#print IsFreeGroupoid.path_nonempty_of_hom /-
 /-- If there exists a morphism `a → b` in a free groupoid, then there also exists a zigzag
 from `a` to `b` in the generating quiver. -/
 theorem path_nonempty_of_hom {G} [Groupoid.{u, u} G] [IsFreeGroupoid G] {a b : G} :
@@ -287,22 +316,33 @@ theorem path_nonempty_of_hom {G} [Groupoid.{u, u} G] [IsFreeGroupoid G] {a b : G
   apply (weakly_connected_component.eq _ _).mpr
   exact ⟨hom.to_path (Sum.inr e)⟩
 #align is_free_groupoid.path_nonempty_of_hom IsFreeGroupoid.path_nonempty_of_hom
+-/
 
+#print IsFreeGroupoid.generators_connected /-
 /-- Given a connected free groupoid, its generating quiver is rooted-connected. -/
 instance generators_connected (G) [Groupoid.{u, u} G] [IsConnected G] [IsFreeGroupoid G] (r : G) :
     RootedConnected (symgen r) :=
   ⟨fun b => path_nonempty_of_hom (CategoryTheory.nonempty_hom_of_connected_groupoid r b)⟩
 #align is_free_groupoid.generators_connected IsFreeGroupoid.generators_connected
+-/
 
+#print IsFreeGroupoid.endIsFreeOfConnectedFree /-
 /-- A vertex group in a free connected groupoid is free. With some work one could drop the
 connectedness assumption, by looking at connected components. -/
 instance endIsFreeOfConnectedFree {G} [Groupoid G] [IsConnected G] [IsFreeGroupoid G] (r : G) :
     IsFreeGroup (End r) :=
   SpanningTree.endIsFree <| geodesicSubtree (symgen r)
 #align is_free_groupoid.End_is_free_of_connected_free IsFreeGroupoid.endIsFreeOfConnectedFree
+-/
 
 end IsFreeGroupoid
 
+/- warning: subgroup_is_free_of_is_free -> subgroupIsFreeOfIsFree is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] [_inst_2 : IsFreeGroup.{u1} G _inst_1] (H : Subgroup.{u1} G _inst_1), IsFreeGroup.{u1} (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) H) (Subgroup.toGroup.{u1} G _inst_1 H)
+but is expected to have type
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] [_inst_2 : IsFreeGroup.{u1} G _inst_1] (H : Subgroup.{u1} G _inst_1), IsFreeGroup.{u1} (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x H)) (Subgroup.toGroup.{u1} G _inst_1 H)
+Case conversion may be inaccurate. Consider using '#align subgroup_is_free_of_is_free subgroupIsFreeOfIsFreeₓ'. -/
 /-- The Nielsen-Schreier theorem: a subgroup of a free group is free. -/
 instance subgroupIsFreeOfIsFree {G : Type u} [Group G] [IsFreeGroup G] (H : Subgroup G) :
     IsFreeGroup H :=
