@@ -38,6 +38,12 @@ open CategoryTheory
 variable (R : Type _) [Ring R] (C : Type _) [Category C] [Abelian C] [Linear R C]
   [EnoughProjectives C]
 
+/- warning: Ext -> ext is a dubious translation:
+lean 3 declaration is
+  forall (R : Type.{u_1}) [_inst_1 : Ring.{u_1} R] (C : Type.{u_2}) [_inst_2 : CategoryTheory.Category.{u_3, u_2} C] [_inst_3 : CategoryTheory.Abelian.{u_3, u_2} C _inst_2] [_inst_4 : CategoryTheory.Linear.{u_1, u_3, u_2} R (Ring.toSemiring.{u_1} R _inst_1) C _inst_2 (CategoryTheory.Abelian.toPreadditive.{u_3, u_2} C _inst_2 _inst_3)] [_inst_5 : CategoryTheory.EnoughProjectives.{u_3, u_2} C _inst_2], Nat -> (CategoryTheory.Functor.{u_3, max u_2 u_3, u_2, max u_3 u_2 u_1 (succ u_3)} (Opposite.{succ u_2} C) (CategoryTheory.Category.opposite.{u_3, u_2} C _inst_2) (CategoryTheory.Functor.{u_3, u_3, u_2, max u_1 (succ u_3)} C _inst_2 (ModuleCat.{u_3, u_1} R _inst_1) (ModuleCat.moduleCategory.{u_3, u_1} R _inst_1)) (CategoryTheory.Functor.category.{u_3, u_3, u_2, max u_1 (succ u_3)} C _inst_2 (ModuleCat.{u_3, u_1} R _inst_1) (ModuleCat.moduleCategory.{u_3, u_1} R _inst_1)))
+but is expected to have type
+  forall {R : Type.{u_1}} [_inst_1 : Semiring.{u_1} R] {C : LaurentPolynomial.{u_1} R _inst_1} {_inst_2 : LaurentPolynomial.{u_1} R _inst_1}, (forall (a : Int), Eq.{succ u_1} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : Int) => R) a) (FunLike.coe.{succ u_1, 1, succ u_1} (Finsupp.{0, u_1} Int R (MonoidWithZero.toZero.{u_1} R (Semiring.toMonoidWithZero.{u_1} R _inst_1))) Int (fun (a : Int) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : Int) => R) a) (Finsupp.funLike.{0, u_1} Int R (MonoidWithZero.toZero.{u_1} R (Semiring.toMonoidWithZero.{u_1} R _inst_1))) C a) (FunLike.coe.{succ u_1, 1, succ u_1} (Finsupp.{0, u_1} Int R (MonoidWithZero.toZero.{u_1} R (Semiring.toMonoidWithZero.{u_1} R _inst_1))) Int (fun (a : Int) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : Int) => R) a) (Finsupp.funLike.{0, u_1} Int R (MonoidWithZero.toZero.{u_1} R (Semiring.toMonoidWithZero.{u_1} R _inst_1))) _inst_2 a)) -> (Eq.{succ u_1} (LaurentPolynomial.{u_1} R _inst_1) C _inst_2)
+Case conversion may be inaccurate. Consider using '#align Ext extₓ'. -/
 /-- `Ext R C n` is defined by deriving in the first argument of `(X, Y) ↦ Module.of R (unop X ⟶ Y)`
 (which is the second argument of `linear_yoneda`).
 -/
