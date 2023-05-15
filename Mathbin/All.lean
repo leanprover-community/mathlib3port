@@ -731,7 +731,9 @@ import Mathbin.Analysis.SpecialFunctions.Complex.LogDeriv
 import Mathbin.Analysis.SpecialFunctions.Exp
 import Mathbin.Analysis.SpecialFunctions.ExpDeriv
 import Mathbin.Analysis.SpecialFunctions.Exponential
-import Mathbin.Analysis.SpecialFunctions.Gamma
+import Mathbin.Analysis.SpecialFunctions.Gamma.Basic
+import Mathbin.Analysis.SpecialFunctions.Gamma.Beta
+import Mathbin.Analysis.SpecialFunctions.Gamma.BohrMollerup
 import Mathbin.Analysis.SpecialFunctions.Gaussian
 import Mathbin.Analysis.SpecialFunctions.ImproperIntegrals
 import Mathbin.Analysis.SpecialFunctions.Integrals
