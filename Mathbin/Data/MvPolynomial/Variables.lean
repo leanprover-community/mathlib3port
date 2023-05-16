@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Johan Commelin, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.variables
-! leanprover-community/mathlib commit 1dac236edca9b4b6f5f00b1ad831e35f89472837
+! leanprover-community/mathlib commit 2f5b500a507264de86d666a5f87ddb976e2d8de4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,8 +64,6 @@ This will give rise to a monomial in `mv_polynomial σ R` which mathematicians m
 
 noncomputable section
 
-open Classical BigOperators
-
 open Set Function Finsupp AddMonoidAlgebra
 
 open BigOperators
@@ -93,9 +91,14 @@ section Degrees
 (For example, `degrees (x^2 * y + y^3)` would be `{x, x, y, y, y}`.)
 -/
 def degrees (p : MvPolynomial σ R) : Multiset σ :=
+  letI := Classical.decEq σ
   p.support.sup fun s : σ →₀ ℕ => s.toMultiset
 #align mv_polynomial.degrees MvPolynomial.degrees
 -/
+
+theorem degrees_def [DecidableEq σ] (p : MvPolynomial σ R) :
+    p.degrees = p.support.sup fun s : σ →₀ ℕ => s.toMultiset := by convert rfl
+#align mv_polynomial.degrees_def MvPolynomial.degrees_def
 
 /- warning: mv_polynomial.degrees_monomial -> MvPolynomial.degrees_monomial is a dubious translation:
 lean 3 declaration is
@@ -103,8 +106,9 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u2}} {σ : Type.{u1}} [_inst_1 : CommSemiring.{u2} R] (s : Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (a : R), LE.le.{u1} (Multiset.{u1} σ) (Preorder.toLE.{u1} (Multiset.{u1} σ) (PartialOrder.toPreorder.{u1} (Multiset.{u1} σ) (Multiset.instPartialOrderMultiset.{u1} σ))) (MvPolynomial.degrees.{u2, u1} R σ _inst_1 (FunLike.coe.{max (succ u1) (succ u2), succ u2, max (succ u1) (succ u2)} (LinearMap.{u2, u2, u2, max u2 u1} R R (CommSemiring.toSemiring.{u2} R _inst_1) (CommSemiring.toSemiring.{u2} R _inst_1) (RingHom.id.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1))) R (MvPolynomial.{u1, u2} σ R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1))))) (Semiring.toModule.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (MvPolynomial.module.{u2, u2, u1} R R σ (CommSemiring.toSemiring.{u2} R _inst_1) _inst_1 (Semiring.toModule.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)))) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Module.LinearMap._hyg.6190 : R) => MvPolynomial.{u1, u2} σ R _inst_1) _x) (LinearMap.instFunLikeLinearMap.{u2, u2, u2, max u1 u2} R R R (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{u2} R _inst_1) (CommSemiring.toSemiring.{u2} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1))))) (Semiring.toModule.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (MvPolynomial.module.{u2, u2, u1} R R σ (CommSemiring.toSemiring.{u2} R _inst_1) _inst_1 (Semiring.toModule.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1))) (RingHom.id.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)))) (MvPolynomial.monomial.{u2, u1} R σ _inst_1 s) a)) (FunLike.coe.{succ u1, succ u1, succ u1} (AddEquiv.{u1, u1} (Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Multiset.{u1} σ) (Finsupp.add.{u1, 0} σ Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.instAddMultiset.{u1} σ)) (Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (fun (_x : Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) => Multiset.{u1} σ) _x) (AddHomClass.toFunLike.{u1, u1, u1} (AddEquiv.{u1, u1} (Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Multiset.{u1} σ) (Finsupp.add.{u1, 0} σ Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.instAddMultiset.{u1} σ)) (Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Multiset.{u1} σ) (AddZeroClass.toAdd.{u1} (Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Finsupp.addZeroClass.{u1, 0} σ Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid))) (AddZeroClass.toAdd.{u1} (Multiset.{u1} σ) (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} σ) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} σ) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} σ) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} σ) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} σ) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} σ))))))) (AddMonoidHomClass.toAddHomClass.{u1, u1, u1} (AddEquiv.{u1, u1} (Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Multiset.{u1} σ) (Finsupp.add.{u1, 0} σ Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.instAddMultiset.{u1} σ)) (Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Multiset.{u1} σ) (Finsupp.addZeroClass.{u1, 0} σ Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} σ) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} σ) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} σ) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} σ) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} σ) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} σ)))))) (AddEquivClass.instAddMonoidHomClass.{u1, u1, u1} (AddEquiv.{u1, u1} (Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Multiset.{u1} σ) (Finsupp.add.{u1, 0} σ Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.instAddMultiset.{u1} σ)) (Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Multiset.{u1} σ) (Finsupp.addZeroClass.{u1, 0} σ Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} σ) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} σ) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} σ) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} σ) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} σ) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} σ)))))) (AddEquiv.instAddEquivClassAddEquiv.{u1, u1} (Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Multiset.{u1} σ) (Finsupp.add.{u1, 0} σ Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.instAddMultiset.{u1} σ))))) (Finsupp.toMultiset.{u1} σ) s)
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.degrees_monomial MvPolynomial.degrees_monomialₓ'. -/
-theorem degrees_monomial (s : σ →₀ ℕ) (a : R) : degrees (monomial s a) ≤ s.toMultiset :=
-  Finset.sup_le fun t h => by
+theorem degrees_monomial (s : σ →₀ ℕ) (a : R) : degrees (monomial s a) ≤ s.toMultiset := by
+  classical
+    refine' Finset.sup_le fun t h => _
     have := Finsupp.support_single_subset h
     rw [Finset.mem_singleton] at this
     rw [this]
@@ -117,9 +121,10 @@ but is expected to have type
   forall {R : Type.{u2}} {σ : Type.{u1}} [_inst_1 : CommSemiring.{u2} R] (s : Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (a : R), (Ne.{succ u2} R a (OfNat.ofNat.{u2} R 0 (Zero.toOfNat0.{u2} R (CommMonoidWithZero.toZero.{u2} R (CommSemiring.toCommMonoidWithZero.{u2} R _inst_1))))) -> (Eq.{succ u1} (Multiset.{u1} σ) (MvPolynomial.degrees.{u2, u1} R σ _inst_1 (FunLike.coe.{max (succ u1) (succ u2), succ u2, max (succ u1) (succ u2)} (LinearMap.{u2, u2, u2, max u2 u1} R R (CommSemiring.toSemiring.{u2} R _inst_1) (CommSemiring.toSemiring.{u2} R _inst_1) (RingHom.id.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1))) R (MvPolynomial.{u1, u2} σ R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1))))) (Semiring.toModule.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (MvPolynomial.module.{u2, u2, u1} R R σ (CommSemiring.toSemiring.{u2} R _inst_1) _inst_1 (Semiring.toModule.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)))) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Module.LinearMap._hyg.6190 : R) => MvPolynomial.{u1, u2} σ R _inst_1) _x) (LinearMap.instFunLikeLinearMap.{u2, u2, u2, max u1 u2} R R R (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{u2} R _inst_1) (CommSemiring.toSemiring.{u2} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)))) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1))))) (Semiring.toModule.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)) (MvPolynomial.module.{u2, u2, u1} R R σ (CommSemiring.toSemiring.{u2} R _inst_1) _inst_1 (Semiring.toModule.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1))) (RingHom.id.{u2} R (Semiring.toNonAssocSemiring.{u2} R (CommSemiring.toSemiring.{u2} R _inst_1)))) (MvPolynomial.monomial.{u2, u1} R σ _inst_1 s) a)) (FunLike.coe.{succ u1, succ u1, succ u1} (AddEquiv.{u1, u1} (Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Multiset.{u1} σ) (Finsupp.add.{u1, 0} σ Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.instAddMultiset.{u1} σ)) (Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (fun (_x : Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) => Multiset.{u1} σ) _x) (AddHomClass.toFunLike.{u1, u1, u1} (AddEquiv.{u1, u1} (Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Multiset.{u1} σ) (Finsupp.add.{u1, 0} σ Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.instAddMultiset.{u1} σ)) (Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Multiset.{u1} σ) (AddZeroClass.toAdd.{u1} (Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Finsupp.addZeroClass.{u1, 0} σ Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid))) (AddZeroClass.toAdd.{u1} (Multiset.{u1} σ) (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} σ) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} σ) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} σ) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} σ) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} σ) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} σ))))))) (AddMonoidHomClass.toAddHomClass.{u1, u1, u1} (AddEquiv.{u1, u1} (Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Multiset.{u1} σ) (Finsupp.add.{u1, 0} σ Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.instAddMultiset.{u1} σ)) (Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Multiset.{u1} σ) (Finsupp.addZeroClass.{u1, 0} σ Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} σ) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} σ) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} σ) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} σ) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} σ) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} σ)))))) (AddEquivClass.instAddMonoidHomClass.{u1, u1, u1} (AddEquiv.{u1, u1} (Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Multiset.{u1} σ) (Finsupp.add.{u1, 0} σ Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.instAddMultiset.{u1} σ)) (Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Multiset.{u1} σ) (Finsupp.addZeroClass.{u1, 0} σ Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} σ) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} σ) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} σ) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} σ) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} σ) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} σ)))))) (AddEquiv.instAddEquivClassAddEquiv.{u1, u1} (Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Multiset.{u1} σ) (Finsupp.add.{u1, 0} σ Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.instAddMultiset.{u1} σ))))) (Finsupp.toMultiset.{u1} σ) s))
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.degrees_monomial_eq MvPolynomial.degrees_monomial_eqₓ'. -/
 theorem degrees_monomial_eq (s : σ →₀ ℕ) (a : R) (ha : a ≠ 0) :
-    degrees (monomial s a) = s.toMultiset :=
-  le_antisymm (degrees_monomial s a) <|
-    Finset.le_sup <| by rw [support_monomial, if_neg ha, Finset.mem_singleton]
+    degrees (monomial s a) = s.toMultiset := by
+  classical
+    refine' le_antisymm (degrees_monomial s a) <| Finset.le_sup <| _
+    rw [support_monomial, if_neg ha, Finset.mem_singleton]
 #align mv_polynomial.degrees_monomial_eq MvPolynomial.degrees_monomial_eq
 
 /- warning: mv_polynomial.degrees_C -> MvPolynomial.degrees_C is a dubious translation:
@@ -179,34 +184,37 @@ theorem degrees_one : degrees (1 : MvPolynomial σ R) = 0 :=
 
 /- warning: mv_polynomial.degrees_add -> MvPolynomial.degrees_add is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} {σ : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] (p : MvPolynomial.{u2, u1} σ R _inst_1) (q : MvPolynomial.{u2, u1} σ R _inst_1), LE.le.{u2} (Multiset.{u2} σ) (Preorder.toLE.{u2} (Multiset.{u2} σ) (PartialOrder.toPreorder.{u2} (Multiset.{u2} σ) (Multiset.partialOrder.{u2} σ))) (MvPolynomial.degrees.{u1, u2} R σ _inst_1 (HAdd.hAdd.{max u2 u1, max u2 u1, max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.{u2, u1} σ R _inst_1) (instHAdd.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (Distrib.toHasAdd.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (NonUnitalNonAssocSemiring.toDistrib.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1))))))) p q)) (Sup.sup.{u2} (Multiset.{u2} σ) (SemilatticeSup.toHasSup.{u2} (Multiset.{u2} σ) (Lattice.toSemilatticeSup.{u2} (Multiset.{u2} σ) (Multiset.lattice.{u2} σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u2} σ a b))))) (MvPolynomial.degrees.{u1, u2} R σ _inst_1 p) (MvPolynomial.degrees.{u1, u2} R σ _inst_1 q))
+  forall {R : Type.{u1}} {σ : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : DecidableEq.{succ u2} σ] (p : MvPolynomial.{u2, u1} σ R _inst_1) (q : MvPolynomial.{u2, u1} σ R _inst_1), LE.le.{u2} (Multiset.{u2} σ) (Preorder.toLE.{u2} (Multiset.{u2} σ) (PartialOrder.toPreorder.{u2} (Multiset.{u2} σ) (Multiset.partialOrder.{u2} σ))) (MvPolynomial.degrees.{u1, u2} R σ _inst_1 (HAdd.hAdd.{max u2 u1, max u2 u1, max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.{u2, u1} σ R _inst_1) (instHAdd.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (Distrib.toHasAdd.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (NonUnitalNonAssocSemiring.toDistrib.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1))))))) p q)) (Sup.sup.{u2} (Multiset.{u2} σ) (SemilatticeSup.toHasSup.{u2} (Multiset.{u2} σ) (Lattice.toSemilatticeSup.{u2} (Multiset.{u2} σ) (Multiset.lattice.{u2} σ (fun (a : σ) (b : σ) => _inst_2 a b)))) (MvPolynomial.degrees.{u1, u2} R σ _inst_1 p) (MvPolynomial.degrees.{u1, u2} R σ _inst_1 q))
 but is expected to have type
-  forall {R : Type.{u2}} {σ : Type.{u1}} [_inst_1 : CommSemiring.{u2} R] (p : MvPolynomial.{u1, u2} σ R _inst_1) (q : MvPolynomial.{u1, u2} σ R _inst_1), LE.le.{u1} (Multiset.{u1} σ) (Preorder.toLE.{u1} (Multiset.{u1} σ) (PartialOrder.toPreorder.{u1} (Multiset.{u1} σ) (Multiset.instPartialOrderMultiset.{u1} σ))) (MvPolynomial.degrees.{u2, u1} R σ _inst_1 (HAdd.hAdd.{max u2 u1, max u2 u1, max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, u2} σ R _inst_1) (instHAdd.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (Distrib.toAdd.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (NonUnitalNonAssocSemiring.toDistrib.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1))))))) p q)) (Sup.sup.{u1} (Multiset.{u1} σ) (SemilatticeSup.toSup.{u1} (Multiset.{u1} σ) (Lattice.toSemilatticeSup.{u1} (Multiset.{u1} σ) (Multiset.instLatticeMultiset.{u1} σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u1} σ a b))))) (MvPolynomial.degrees.{u2, u1} R σ _inst_1 p) (MvPolynomial.degrees.{u2, u1} R σ _inst_1 q))
+  forall {R : Type.{u2}} {σ : Type.{u1}} [_inst_1 : CommSemiring.{u2} R] (_inst_2 : MvPolynomial.{u1, u2} σ R _inst_1) (p : MvPolynomial.{u1, u2} σ R _inst_1), LE.le.{u1} (Multiset.{u1} σ) (Preorder.toLE.{u1} (Multiset.{u1} σ) (PartialOrder.toPreorder.{u1} (Multiset.{u1} σ) (Multiset.instPartialOrderMultiset.{u1} σ))) (MvPolynomial.degrees.{u2, u1} R σ _inst_1 (HAdd.hAdd.{max u2 u1, max u2 u1, max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, u2} σ R _inst_1) (instHAdd.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (Distrib.toAdd.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (NonUnitalNonAssocSemiring.toDistrib.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1))))))) _inst_2 p)) (Sup.sup.{u1} (Multiset.{u1} σ) (SemilatticeSup.toSup.{u1} (Multiset.{u1} σ) (Lattice.toSemilatticeSup.{u1} (Multiset.{u1} σ) (Multiset.instLatticeMultiset.{u1} σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u1} σ a b))))) (MvPolynomial.degrees.{u2, u1} R σ _inst_1 _inst_2) (MvPolynomial.degrees.{u2, u1} R σ _inst_1 p))
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.degrees_add MvPolynomial.degrees_addₓ'. -/
-theorem degrees_add (p q : MvPolynomial σ R) : (p + q).degrees ≤ p.degrees ⊔ q.degrees :=
-  by
-  refine' Finset.sup_le fun b hb => _
-  have := Finsupp.support_add hb; rw [Finset.mem_union] at this
-  cases this
-  · exact le_sup_of_le_left (Finset.le_sup this)
-  · exact le_sup_of_le_right (Finset.le_sup this)
+theorem degrees_add [DecidableEq σ] (p q : MvPolynomial σ R) :
+    (p + q).degrees ≤ p.degrees ⊔ q.degrees := by
+  classical
+    simp_rw [degrees_def]
+    refine' Finset.sup_le fun b hb => _
+    have := Finsupp.support_add hb
+    rw [Finset.mem_union] at this
+    cases this
+    · exact le_sup_of_le_left (Finset.le_sup this)
+    · exact le_sup_of_le_right (Finset.le_sup this)
 #align mv_polynomial.degrees_add MvPolynomial.degrees_add
 
 /- warning: mv_polynomial.degrees_sum -> MvPolynomial.degrees_sum is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} {σ : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] {ι : Type.{u3}} (s : Finset.{u3} ι) (f : ι -> (MvPolynomial.{u2, u1} σ R _inst_1)), LE.le.{u2} (Multiset.{u2} σ) (Preorder.toLE.{u2} (Multiset.{u2} σ) (PartialOrder.toPreorder.{u2} (Multiset.{u2} σ) (Multiset.partialOrder.{u2} σ))) (MvPolynomial.degrees.{u1, u2} R σ _inst_1 (Finset.sum.{max u2 u1, u3} (MvPolynomial.{u2, u1} σ R _inst_1) ι (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1))))) s (fun (i : ι) => f i))) (Finset.sup.{u2, u3} (Multiset.{u2} σ) ι (Lattice.toSemilatticeSup.{u2} (Multiset.{u2} σ) (Multiset.lattice.{u2} σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u2} σ a b)))) (Multiset.orderBot.{u2} σ) s (fun (i : ι) => MvPolynomial.degrees.{u1, u2} R σ _inst_1 (f i)))
+  forall {R : Type.{u1}} {σ : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] {ι : Type.{u3}} [_inst_2 : DecidableEq.{succ u2} σ] (s : Finset.{u3} ι) (f : ι -> (MvPolynomial.{u2, u1} σ R _inst_1)), LE.le.{u2} (Multiset.{u2} σ) (Preorder.toLE.{u2} (Multiset.{u2} σ) (PartialOrder.toPreorder.{u2} (Multiset.{u2} σ) (Multiset.partialOrder.{u2} σ))) (MvPolynomial.degrees.{u1, u2} R σ _inst_1 (Finset.sum.{max u2 u1, u3} (MvPolynomial.{u2, u1} σ R _inst_1) ι (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1))))) s (fun (i : ι) => f i))) (Finset.sup.{u2, u3} (Multiset.{u2} σ) ι (Lattice.toSemilatticeSup.{u2} (Multiset.{u2} σ) (Multiset.lattice.{u2} σ (fun (a : σ) (b : σ) => _inst_2 a b))) (Multiset.orderBot.{u2} σ) s (fun (i : ι) => MvPolynomial.degrees.{u1, u2} R σ _inst_1 (f i)))
 but is expected to have type
-  forall {R : Type.{u3}} {σ : Type.{u1}} [_inst_1 : CommSemiring.{u3} R] {ι : Type.{u2}} (s : Finset.{u2} ι) (f : ι -> (MvPolynomial.{u1, u3} σ R _inst_1)), LE.le.{u1} (Multiset.{u1} σ) (Preorder.toLE.{u1} (Multiset.{u1} σ) (PartialOrder.toPreorder.{u1} (Multiset.{u1} σ) (Multiset.instPartialOrderMultiset.{u1} σ))) (MvPolynomial.degrees.{u3, u1} R σ _inst_1 (Finset.sum.{max u3 u1, u2} (MvPolynomial.{u1, u3} σ R _inst_1) ι (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u3 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u3 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u3 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u3 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R σ _inst_1))))) s (fun (i : ι) => f i))) (Finset.sup.{u1, u2} (Multiset.{u1} σ) ι (Lattice.toSemilatticeSup.{u1} (Multiset.{u1} σ) (Multiset.instLatticeMultiset.{u1} σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u1} σ a b)))) (Multiset.instOrderBotMultisetToLEToPreorderInstPartialOrderMultiset.{u1} σ) s (fun (i : ι) => MvPolynomial.degrees.{u3, u1} R σ _inst_1 (f i)))
+  forall {R : Type.{u3}} {σ : Type.{u1}} [_inst_1 : CommSemiring.{u3} R] {ι : Type.{u2}} (_inst_2 : Finset.{u2} ι) (s : ι -> (MvPolynomial.{u1, u3} σ R _inst_1)), LE.le.{u1} (Multiset.{u1} σ) (Preorder.toLE.{u1} (Multiset.{u1} σ) (PartialOrder.toPreorder.{u1} (Multiset.{u1} σ) (Multiset.instPartialOrderMultiset.{u1} σ))) (MvPolynomial.degrees.{u3, u1} R σ _inst_1 (Finset.sum.{max u3 u1, u2} (MvPolynomial.{u1, u3} σ R _inst_1) ι (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u3 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u3 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u3 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u3 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R σ _inst_1))))) _inst_2 (fun (i : ι) => s i))) (Finset.sup.{u1, u2} (Multiset.{u1} σ) ι (Lattice.toSemilatticeSup.{u1} (Multiset.{u1} σ) (Multiset.instLatticeMultiset.{u1} σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u1} σ a b)))) (Multiset.instOrderBotMultisetToLEToPreorderInstPartialOrderMultiset.{u1} σ) _inst_2 (fun (i : ι) => MvPolynomial.degrees.{u3, u1} R σ _inst_1 (s i)))
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.degrees_sum MvPolynomial.degrees_sumₓ'. -/
-theorem degrees_sum {ι : Type _} (s : Finset ι) (f : ι → MvPolynomial σ R) :
-    (∑ i in s, f i).degrees ≤ s.sup fun i => (f i).degrees :=
-  by
-  refine' s.induction _ _
-  · simp only [Finset.sum_empty, Finset.sup_empty, degrees_zero]
-    exact le_rfl
-  · intro i s his ih
-    rw [Finset.sup_insert, Finset.sum_insert his]
-    exact le_trans (degrees_add _ _) (sup_le_sup_left ih _)
+theorem degrees_sum {ι : Type _} [DecidableEq σ] (s : Finset ι) (f : ι → MvPolynomial σ R) :
+    (∑ i in s, f i).degrees ≤ s.sup fun i => (f i).degrees := by
+  classical
+    refine' s.induction _ _
+    · simp only [Finset.sum_empty, Finset.sup_empty, degrees_zero]
+      exact le_rfl
+    · intro i s his ih
+      rw [Finset.sup_insert, Finset.sum_insert his]
+      exact le_trans (degrees_add _ _) (sup_le_sup_left ih _)
 #align mv_polynomial.degrees_sum MvPolynomial.degrees_sum
 
 /- warning: mv_polynomial.degrees_mul -> MvPolynomial.degrees_mul is a dubious translation:
@@ -215,14 +223,14 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u2}} {σ : Type.{u1}} [_inst_1 : CommSemiring.{u2} R] (p : MvPolynomial.{u1, u2} σ R _inst_1) (q : MvPolynomial.{u1, u2} σ R _inst_1), LE.le.{u1} (Multiset.{u1} σ) (Preorder.toLE.{u1} (Multiset.{u1} σ) (PartialOrder.toPreorder.{u1} (Multiset.{u1} σ) (Multiset.instPartialOrderMultiset.{u1} σ))) (MvPolynomial.degrees.{u2, u1} R σ _inst_1 (HMul.hMul.{max u2 u1, max u2 u1, max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, u2} σ R _inst_1) (instHMul.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (NonUnitalNonAssocSemiring.toMul.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1)))))) p q)) (HAdd.hAdd.{u1, u1, u1} (Multiset.{u1} σ) (Multiset.{u1} σ) (Multiset.{u1} σ) (instHAdd.{u1} (Multiset.{u1} σ) (Multiset.instAddMultiset.{u1} σ)) (MvPolynomial.degrees.{u2, u1} R σ _inst_1 p) (MvPolynomial.degrees.{u2, u1} R σ _inst_1 q))
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.degrees_mul MvPolynomial.degrees_mulₓ'. -/
-theorem degrees_mul (p q : MvPolynomial σ R) : (p * q).degrees ≤ p.degrees + q.degrees :=
-  by
-  refine' Finset.sup_le fun b hb => _
-  have := support_mul p q hb
-  simp only [Finset.mem_biUnion, Finset.mem_singleton] at this
-  rcases this with ⟨a₁, h₁, a₂, h₂, rfl⟩
-  rw [Finsupp.toMultiset_add]
-  exact add_le_add (Finset.le_sup h₁) (Finset.le_sup h₂)
+theorem degrees_mul (p q : MvPolynomial σ R) : (p * q).degrees ≤ p.degrees + q.degrees := by
+  classical
+    refine' Finset.sup_le fun b hb => _
+    have := support_mul p q hb
+    simp only [Finset.mem_biUnion, Finset.mem_singleton] at this
+    rcases this with ⟨a₁, h₁, a₂, h₂, rfl⟩
+    rw [Finsupp.toMultiset_add]
+    exact add_le_add (Finset.le_sup h₁) (Finset.le_sup h₂)
 #align mv_polynomial.degrees_mul MvPolynomial.degrees_mul
 
 /- warning: mv_polynomial.degrees_prod -> MvPolynomial.degrees_prod is a dubious translation:
@@ -232,13 +240,13 @@ but is expected to have type
   forall {R : Type.{u3}} {σ : Type.{u1}} [_inst_1 : CommSemiring.{u3} R] {ι : Type.{u2}} (s : Finset.{u2} ι) (f : ι -> (MvPolynomial.{u1, u3} σ R _inst_1)), LE.le.{u1} (Multiset.{u1} σ) (Preorder.toLE.{u1} (Multiset.{u1} σ) (PartialOrder.toPreorder.{u1} (Multiset.{u1} σ) (Multiset.instPartialOrderMultiset.{u1} σ))) (MvPolynomial.degrees.{u3, u1} R σ _inst_1 (Finset.prod.{max u3 u1, u2} (MvPolynomial.{u1, u3} σ R _inst_1) ι (CommSemiring.toCommMonoid.{max u3 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R σ _inst_1)) s (fun (i : ι) => f i))) (Finset.sum.{u1, u2} (Multiset.{u1} σ) ι (OrderedCancelAddCommMonoid.toAddCommMonoid.{u1} (Multiset.{u1} σ) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} σ)) s (fun (i : ι) => MvPolynomial.degrees.{u3, u1} R σ _inst_1 (f i)))
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.degrees_prod MvPolynomial.degrees_prodₓ'. -/
 theorem degrees_prod {ι : Type _} (s : Finset ι) (f : ι → MvPolynomial σ R) :
-    (∏ i in s, f i).degrees ≤ ∑ i in s, (f i).degrees :=
-  by
-  refine' s.induction _ _
-  · simp only [Finset.prod_empty, Finset.sum_empty, degrees_one]
-  · intro i s his ih
-    rw [Finset.prod_insert his, Finset.sum_insert his]
-    exact le_trans (degrees_mul _ _) (add_le_add_left ih _)
+    (∏ i in s, f i).degrees ≤ ∑ i in s, (f i).degrees := by
+  classical
+    refine' s.induction _ _
+    · simp only [Finset.prod_empty, Finset.sum_empty, degrees_one]
+    · intro i s his ih
+      rw [Finset.prod_insert his, Finset.sum_insert his]
+      exact le_trans (degrees_mul _ _) (add_le_add_left ih _)
 #align mv_polynomial.degrees_prod MvPolynomial.degrees_prod
 
 /- warning: mv_polynomial.degrees_pow -> MvPolynomial.degrees_pow is a dubious translation:
@@ -273,33 +281,34 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.le_degrees_add MvPolynomial.le_degrees_addₓ'. -/
 theorem le_degrees_add {p q : MvPolynomial σ R} (h : p.degrees.Disjoint q.degrees) :
     p.degrees ≤ (p + q).degrees := by
-  apply Finset.sup_le
-  intro d hd
-  rw [Multiset.disjoint_iff_ne] at h
-  rw [Multiset.le_iff_count]
-  intro i
-  rw [degrees, Multiset.count_finset_sup]
-  simp only [Finsupp.count_toMultiset]
-  by_cases h0 : d = 0
-  · simp only [h0, zero_le, Finsupp.zero_apply]
-  · refine' @Finset.le_sup _ _ _ _ (p + q).support _ d _
-    rw [mem_support_iff, coeff_add]
-    suffices q.coeff d = 0 by rwa [this, add_zero, coeff, ← Finsupp.mem_support_iff]
-    rw [← Finsupp.support_eq_empty, ← Ne.def, ← Finset.nonempty_iff_ne_empty] at h0
-    obtain ⟨j, hj⟩ := h0
-    contrapose! h
-    rw [mem_support_iff] at hd
-    refine' ⟨j, _, j, _, rfl⟩
-    all_goals rw [mem_degrees]; refine' ⟨d, _, hj⟩; assumption
+  classical
+    apply Finset.sup_le
+    intro d hd
+    rw [Multiset.disjoint_iff_ne] at h
+    rw [Multiset.le_iff_count]
+    intro i
+    rw [degrees, Multiset.count_finset_sup]
+    simp only [Finsupp.count_toMultiset]
+    by_cases h0 : d = 0
+    · simp only [h0, zero_le, Finsupp.zero_apply]
+    · refine' @Finset.le_sup _ _ _ _ (p + q).support _ d _
+      rw [mem_support_iff, coeff_add]
+      suffices q.coeff d = 0 by rwa [this, add_zero, coeff, ← Finsupp.mem_support_iff]
+      rw [← Finsupp.support_eq_empty, ← Ne.def, ← Finset.nonempty_iff_ne_empty] at h0
+      obtain ⟨j, hj⟩ := h0
+      contrapose! h
+      rw [mem_support_iff] at hd
+      refine' ⟨j, _, j, _, rfl⟩
+      all_goals rw [mem_degrees]; refine' ⟨d, _, hj⟩; assumption
 #align mv_polynomial.le_degrees_add MvPolynomial.le_degrees_add
 
 /- warning: mv_polynomial.degrees_add_of_disjoint -> MvPolynomial.degrees_add_of_disjoint is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} {σ : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] {p : MvPolynomial.{u2, u1} σ R _inst_1} {q : MvPolynomial.{u2, u1} σ R _inst_1}, (Multiset.Disjoint.{u2} σ (MvPolynomial.degrees.{u1, u2} R σ _inst_1 p) (MvPolynomial.degrees.{u1, u2} R σ _inst_1 q)) -> (Eq.{succ u2} (Multiset.{u2} σ) (MvPolynomial.degrees.{u1, u2} R σ _inst_1 (HAdd.hAdd.{max u2 u1, max u2 u1, max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.{u2, u1} σ R _inst_1) (instHAdd.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (Distrib.toHasAdd.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (NonUnitalNonAssocSemiring.toDistrib.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1))))))) p q)) (Union.union.{u2} (Multiset.{u2} σ) (Multiset.hasUnion.{u2} σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u2} σ a b))) (MvPolynomial.degrees.{u1, u2} R σ _inst_1 p) (MvPolynomial.degrees.{u1, u2} R σ _inst_1 q)))
+  forall {R : Type.{u1}} {σ : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : DecidableEq.{succ u2} σ] {p : MvPolynomial.{u2, u1} σ R _inst_1} {q : MvPolynomial.{u2, u1} σ R _inst_1}, (Multiset.Disjoint.{u2} σ (MvPolynomial.degrees.{u1, u2} R σ _inst_1 p) (MvPolynomial.degrees.{u1, u2} R σ _inst_1 q)) -> (Eq.{succ u2} (Multiset.{u2} σ) (MvPolynomial.degrees.{u1, u2} R σ _inst_1 (HAdd.hAdd.{max u2 u1, max u2 u1, max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.{u2, u1} σ R _inst_1) (instHAdd.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (Distrib.toHasAdd.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (NonUnitalNonAssocSemiring.toDistrib.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1))))))) p q)) (Union.union.{u2} (Multiset.{u2} σ) (Multiset.hasUnion.{u2} σ (fun (a : σ) (b : σ) => _inst_2 a b)) (MvPolynomial.degrees.{u1, u2} R σ _inst_1 p) (MvPolynomial.degrees.{u1, u2} R σ _inst_1 q)))
 but is expected to have type
-  forall {R : Type.{u2}} {σ : Type.{u1}} [_inst_1 : CommSemiring.{u2} R] {p : MvPolynomial.{u1, u2} σ R _inst_1} {q : MvPolynomial.{u1, u2} σ R _inst_1}, (Multiset.Disjoint.{u1} σ (MvPolynomial.degrees.{u2, u1} R σ _inst_1 p) (MvPolynomial.degrees.{u2, u1} R σ _inst_1 q)) -> (Eq.{succ u1} (Multiset.{u1} σ) (MvPolynomial.degrees.{u2, u1} R σ _inst_1 (HAdd.hAdd.{max u2 u1, max u2 u1, max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, u2} σ R _inst_1) (instHAdd.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (Distrib.toAdd.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (NonUnitalNonAssocSemiring.toDistrib.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1))))))) p q)) (Union.union.{u1} (Multiset.{u1} σ) (Multiset.instUnionMultiset.{u1} σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u1} σ a b))) (MvPolynomial.degrees.{u2, u1} R σ _inst_1 p) (MvPolynomial.degrees.{u2, u1} R σ _inst_1 q)))
+  forall {R : Type.{u2}} {σ : Type.{u1}} [_inst_1 : CommSemiring.{u2} R] {_inst_2 : MvPolynomial.{u1, u2} σ R _inst_1} {p : MvPolynomial.{u1, u2} σ R _inst_1}, (Multiset.Disjoint.{u1} σ (MvPolynomial.degrees.{u2, u1} R σ _inst_1 _inst_2) (MvPolynomial.degrees.{u2, u1} R σ _inst_1 p)) -> (Eq.{succ u1} (Multiset.{u1} σ) (MvPolynomial.degrees.{u2, u1} R σ _inst_1 (HAdd.hAdd.{max u2 u1, max u2 u1, max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, u2} σ R _inst_1) (instHAdd.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (Distrib.toAdd.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (NonUnitalNonAssocSemiring.toDistrib.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1))))))) _inst_2 p)) (Union.union.{u1} (Multiset.{u1} σ) (Multiset.instUnionMultiset.{u1} σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u1} σ a b))) (MvPolynomial.degrees.{u2, u1} R σ _inst_1 _inst_2) (MvPolynomial.degrees.{u2, u1} R σ _inst_1 p)))
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.degrees_add_of_disjoint MvPolynomial.degrees_add_of_disjointₓ'. -/
-theorem degrees_add_of_disjoint {p q : MvPolynomial σ R}
+theorem degrees_add_of_disjoint [DecidableEq σ] {p q : MvPolynomial σ R}
     (h : Multiset.Disjoint p.degrees q.degrees) : (p + q).degrees = p.degrees ∪ q.degrees :=
   by
   apply le_antisymm
@@ -332,18 +341,19 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.degrees_rename MvPolynomial.degrees_renameₓ'. -/
 theorem degrees_rename (f : σ → τ) (φ : MvPolynomial σ R) :
     (rename f φ).degrees ⊆ φ.degrees.map f := by
-  intro i
-  rw [mem_degrees, Multiset.mem_map]
-  rintro ⟨d, hd, hi⟩
-  obtain ⟨x, rfl, hx⟩ := coeff_rename_ne_zero _ _ _ hd
-  simp only [map_domain, Finsupp.mem_support_iff] at hi
-  rw [sum_apply, Finsupp.sum] at hi
-  contrapose! hi
-  rw [Finset.sum_eq_zero]
-  intro j hj
-  simp only [exists_prop, mem_degrees] at hi
-  specialize hi j ⟨x, hx, hj⟩
-  rw [single_apply, if_neg hi]
+  classical
+    intro i
+    rw [mem_degrees, Multiset.mem_map]
+    rintro ⟨d, hd, hi⟩
+    obtain ⟨x, rfl, hx⟩ := coeff_rename_ne_zero _ _ _ hd
+    simp only [map_domain, Finsupp.mem_support_iff] at hi
+    rw [sum_apply, Finsupp.sum] at hi
+    contrapose! hi
+    rw [Finset.sum_eq_zero]
+    intro j hj
+    simp only [exists_prop, mem_degrees] at hi
+    specialize hi j ⟨x, hx, hj⟩
+    rw [single_apply, if_neg hi]
 #align mv_polynomial.degrees_rename MvPolynomial.degrees_rename
 
 /- warning: mv_polynomial.degrees_map_of_injective -> MvPolynomial.degrees_map_of_injective is a dubious translation:
@@ -364,12 +374,12 @@ but is expected to have type
   forall {R : Type.{u3}} {σ : Type.{u2}} {τ : Type.{u1}} [_inst_1 : CommSemiring.{u3} R] {p : MvPolynomial.{u2, u3} σ R _inst_1} {f : σ -> τ}, (Function.Injective.{succ u2, succ u1} σ τ f) -> (Eq.{succ u1} (Multiset.{u1} τ) (MvPolynomial.degrees.{u3, u1} R τ _inst_1 (FunLike.coe.{max (max (succ u2) (succ u1)) (succ u3), max (succ u2) (succ u3), max (succ u1) (succ u3)} (AlgHom.{u3, max u3 u2, max u3 u1} R (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.{u1, u3} τ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)) (MvPolynomial.algebra.{u3, u3, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)) (MvPolynomial.algebra.{u3, u3, u1} R R τ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1))) (MvPolynomial.{u2, u3} σ R _inst_1) (fun (_x : MvPolynomial.{u2, u3} σ R _inst_1) => (fun (x._@.Mathlib.Algebra.Hom.GroupAction._hyg.2186 : MvPolynomial.{u2, u3} σ R _inst_1) => MvPolynomial.{u1, u3} τ R _inst_1) _x) (SMulHomClass.toFunLike.{max (max u2 u1) u3, u3, max u2 u3, max u1 u3} (AlgHom.{u3, max u3 u2, max u3 u1} R (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.{u1, u3} τ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)) (MvPolynomial.algebra.{u3, u3, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)) (MvPolynomial.algebra.{u3, u3, u1} R R τ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1))) R (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.{u1, u3} τ R _inst_1) (SMulZeroClass.toSMul.{u3, max u2 u3} R (MvPolynomial.{u2, u3} σ R _inst_1) (AddMonoid.toZero.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (AddCommMonoid.toAddMonoid.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1))))))) (DistribSMul.toSMulZeroClass.{u3, max u2 u3} R (MvPolynomial.{u2, u3} σ R _inst_1) (AddMonoid.toAddZeroClass.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (AddCommMonoid.toAddMonoid.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1))))))) (DistribMulAction.toDistribSMul.{u3, max u2 u3} R (MvPolynomial.{u2, u3} σ R _inst_1) (MonoidWithZero.toMonoid.{u3} R (Semiring.toMonoidWithZero.{u3} R (CommSemiring.toSemiring.{u3} R _inst_1))) (AddCommMonoid.toAddMonoid.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)))))) (Module.toDistribMulAction.{u3, max u2 u3} R (MvPolynomial.{u2, u3} σ R _inst_1) (CommSemiring.toSemiring.{u3} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1))))) (Algebra.toModule.{u3, max u2 u3} R (MvPolynomial.{u2, u3} σ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)) (MvPolynomial.algebra.{u3, u3, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1))))))) (SMulZeroClass.toSMul.{u3, max u1 u3} R (MvPolynomial.{u1, u3} τ R _inst_1) (AddMonoid.toZero.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (AddCommMonoid.toAddMonoid.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1))))))) (DistribSMul.toSMulZeroClass.{u3, max u1 u3} R (MvPolynomial.{u1, u3} τ R _inst_1) (AddMonoid.toAddZeroClass.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (AddCommMonoid.toAddMonoid.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1))))))) (DistribMulAction.toDistribSMul.{u3, max u1 u3} R (MvPolynomial.{u1, u3} τ R _inst_1) (MonoidWithZero.toMonoid.{u3} R (Semiring.toMonoidWithZero.{u3} R (CommSemiring.toSemiring.{u3} R _inst_1))) (AddCommMonoid.toAddMonoid.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)))))) (Module.toDistribMulAction.{u3, max u1 u3} R (MvPolynomial.{u1, u3} τ R _inst_1) (CommSemiring.toSemiring.{u3} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1))))) (Algebra.toModule.{u3, max u1 u3} R (MvPolynomial.{u1, u3} τ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)) (MvPolynomial.algebra.{u3, u3, u1} R R τ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1))))))) (DistribMulActionHomClass.toSMulHomClass.{max (max u2 u1) u3, u3, max u2 u3, max u1 u3} (AlgHom.{u3, max u3 u2, max u3 u1} R (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.{u1, u3} τ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)) (MvPolynomial.algebra.{u3, u3, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)) (MvPolynomial.algebra.{u3, u3, u1} R R τ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1))) R (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.{u1, u3} τ R _inst_1) (MonoidWithZero.toMonoid.{u3} R (Semiring.toMonoidWithZero.{u3} R (CommSemiring.toSemiring.{u3} R _inst_1))) (AddCommMonoid.toAddMonoid.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)))))) (AddCommMonoid.toAddMonoid.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)))))) (Module.toDistribMulAction.{u3, max u2 u3} R (MvPolynomial.{u2, u3} σ R _inst_1) (CommSemiring.toSemiring.{u3} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1))))) (Algebra.toModule.{u3, max u2 u3} R (MvPolynomial.{u2, u3} σ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)) (MvPolynomial.algebra.{u3, u3, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)))) (Module.toDistribMulAction.{u3, max u1 u3} R (MvPolynomial.{u1, u3} τ R _inst_1) (CommSemiring.toSemiring.{u3} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1))))) (Algebra.toModule.{u3, max u1 u3} R (MvPolynomial.{u1, u3} τ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)) (MvPolynomial.algebra.{u3, u3, u1} R R τ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)))) (NonUnitalAlgHomClass.toDistribMulActionHomClass.{max (max u2 u1) u3, u3, max u2 u3, max u1 u3} (AlgHom.{u3, max u3 u2, max u3 u1} R (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.{u1, u3} τ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)) (MvPolynomial.algebra.{u3, u3, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)) (MvPolynomial.algebra.{u3, u3, u1} R R τ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1))) R (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.{u1, u3} τ R _inst_1) (MonoidWithZero.toMonoid.{u3} R (Semiring.toMonoidWithZero.{u3} R (CommSemiring.toSemiring.{u3} R _inst_1))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)))) (Module.toDistribMulAction.{u3, max u2 u3} R (MvPolynomial.{u2, u3} σ R _inst_1) (CommSemiring.toSemiring.{u3} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1))))) (Algebra.toModule.{u3, max u2 u3} R (MvPolynomial.{u2, u3} σ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)) (MvPolynomial.algebra.{u3, u3, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)))) (Module.toDistribMulAction.{u3, max u1 u3} R (MvPolynomial.{u1, u3} τ R _inst_1) (CommSemiring.toSemiring.{u3} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1))))) (Algebra.toModule.{u3, max u1 u3} R (MvPolynomial.{u1, u3} τ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)) (MvPolynomial.algebra.{u3, u3, u1} R R τ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)))) (AlgHom.instNonUnitalAlgHomClassToMonoidToMonoidWithZeroToSemiringToNonUnitalNonAssocSemiringToNonAssocSemiringToNonUnitalNonAssocSemiringToNonAssocSemiringToDistribMulActionToAddCommMonoidToModuleToDistribMulActionToAddCommMonoidToModule.{u3, max u2 u3, max u1 u3, max (max u2 u1) u3} R (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.{u1, u3} τ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)) (MvPolynomial.algebra.{u3, u3, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)) (MvPolynomial.algebra.{u3, u3, u1} R R τ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)) (AlgHom.{u3, max u3 u2, max u3 u1} R (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.{u1, u3} τ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)) (MvPolynomial.algebra.{u3, u3, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)) (MvPolynomial.algebra.{u3, u3, u1} R R τ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1))) (AlgHom.algHomClass.{u3, max u2 u3, max u1 u3} R (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.{u1, u3} τ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)) (MvPolynomial.algebra.{u3, u3, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)) (MvPolynomial.algebra.{u3, u3, u1} R R τ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1))))))) (MvPolynomial.rename.{u2, u1, u3} σ τ R _inst_1 f) p)) (Multiset.map.{u2, u1} σ τ f (MvPolynomial.degrees.{u3, u2} R σ _inst_1 p)))
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.degrees_rename_of_injective MvPolynomial.degrees_rename_of_injectiveₓ'. -/
 theorem degrees_rename_of_injective {p : MvPolynomial σ R} {f : σ → τ} (h : Function.Injective f) :
-    degrees (rename f p) = (degrees p).map f :=
-  by
-  simp only [degrees, Multiset.map_finset_sup p.support Finsupp.toMultiset f h,
-    support_rename_of_injective h, Finset.sup_image]
-  refine' Finset.sup_congr rfl fun x hx => _
-  exact (Finsupp.toMultiset_map _ _).symm
+    degrees (rename f p) = (degrees p).map f := by
+  classical
+    simp only [degrees, Multiset.map_finset_sup p.support Finsupp.toMultiset f h,
+      support_rename_of_injective h, Finset.sup_image]
+    refine' Finset.sup_congr rfl fun x hx => _
+    exact (Finsupp.toMultiset_map _ _).symm
 #align mv_polynomial.degrees_rename_of_injective MvPolynomial.degrees_rename_of_injective
 
 end Degrees
@@ -382,9 +392,14 @@ section Vars
 #print MvPolynomial.vars /-
 /-- `vars p` is the set of variables appearing in the polynomial `p` -/
 def vars (p : MvPolynomial σ R) : Finset σ :=
-  p.degrees.toFinset
+  letI := Classical.decEq σ
+  p.degrees.to_finset
 #align mv_polynomial.vars MvPolynomial.vars
 -/
+
+theorem vars_def [DecidableEq σ] (p : MvPolynomial σ R) : p.vars = p.degrees.toFinset := by
+  convert rfl
+#align mv_polynomial.vars_def MvPolynomial.vars_def
 
 /- warning: mv_polynomial.vars_0 -> MvPolynomial.vars_0 is a dubious translation:
 lean 3 declaration is
@@ -394,7 +409,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.vars_0 MvPolynomial.vars_0ₓ'. -/
 @[simp]
 theorem vars_0 : (0 : MvPolynomial σ R).vars = ∅ := by
-  rw [vars, degrees_zero, Multiset.toFinset_zero]
+  classical rw [vars_def, degrees_zero, Multiset.toFinset_zero]
 #align mv_polynomial.vars_0 MvPolynomial.vars_0
 
 /- warning: mv_polynomial.vars_monomial -> MvPolynomial.vars_monomial is a dubious translation:
@@ -405,7 +420,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.vars_monomial MvPolynomial.vars_monomialₓ'. -/
 @[simp]
 theorem vars_monomial (h : r ≠ 0) : (monomial s r).vars = s.support := by
-  rw [vars, degrees_monomial_eq _ _ h, Finsupp.toFinset_toMultiset]
+  classical rw [vars_def, degrees_monomial_eq _ _ h, Finsupp.toFinset_toMultiset]
 #align mv_polynomial.vars_monomial MvPolynomial.vars_monomial
 
 /- warning: mv_polynomial.vars_C -> MvPolynomial.vars_C is a dubious translation:
@@ -416,7 +431,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.vars_C MvPolynomial.vars_Cₓ'. -/
 @[simp]
 theorem vars_C : (C r : MvPolynomial σ R).vars = ∅ := by
-  rw [vars, degrees_C, Multiset.toFinset_zero]
+  classical rw [vars_def, degrees_C, Multiset.toFinset_zero]
 #align mv_polynomial.vars_C MvPolynomial.vars_C
 
 /- warning: mv_polynomial.vars_X -> MvPolynomial.vars_X is a dubious translation:
@@ -449,10 +464,11 @@ Case conversion may be inaccurate. Consider using '#align mv_polynomial.mem_supp
 theorem mem_support_not_mem_vars_zero {f : MvPolynomial σ R} {x : σ →₀ ℕ} (H : x ∈ f.support)
     {v : σ} (h : v ∉ vars f) : x v = 0 :=
   by
-  rw [vars, Multiset.mem_toFinset] at h
+  letI := Classical.decEq σ
+  rw [vars_def, Multiset.mem_toFinset] at h
   rw [← Finsupp.not_mem_support_iff]
   contrapose! h
-  unfold degrees
+  rw [degrees_def]
   rw [show f.support = insert x f.support from Eq.symm <| Finset.insert_eq_of_mem H]
   rw [Finset.sup_insert]
   simp only [Multiset.mem_union, Multiset.sup_eq_union]
@@ -462,11 +478,11 @@ theorem mem_support_not_mem_vars_zero {f : MvPolynomial σ R} {x : σ →₀ ℕ
 
 /- warning: mv_polynomial.vars_add_subset -> MvPolynomial.vars_add_subset is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} {σ : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] (p : MvPolynomial.{u2, u1} σ R _inst_1) (q : MvPolynomial.{u2, u1} σ R _inst_1), HasSubset.Subset.{u2} (Finset.{u2} σ) (Finset.hasSubset.{u2} σ) (MvPolynomial.vars.{u1, u2} R σ _inst_1 (HAdd.hAdd.{max u2 u1, max u2 u1, max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.{u2, u1} σ R _inst_1) (instHAdd.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (Distrib.toHasAdd.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (NonUnitalNonAssocSemiring.toDistrib.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1))))))) p q)) (Union.union.{u2} (Finset.{u2} σ) (Finset.hasUnion.{u2} σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u2} σ a b))) (MvPolynomial.vars.{u1, u2} R σ _inst_1 p) (MvPolynomial.vars.{u1, u2} R σ _inst_1 q))
+  forall {R : Type.{u1}} {σ : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : DecidableEq.{succ u2} σ] (p : MvPolynomial.{u2, u1} σ R _inst_1) (q : MvPolynomial.{u2, u1} σ R _inst_1), HasSubset.Subset.{u2} (Finset.{u2} σ) (Finset.hasSubset.{u2} σ) (MvPolynomial.vars.{u1, u2} R σ _inst_1 (HAdd.hAdd.{max u2 u1, max u2 u1, max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.{u2, u1} σ R _inst_1) (instHAdd.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (Distrib.toHasAdd.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (NonUnitalNonAssocSemiring.toDistrib.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1))))))) p q)) (Union.union.{u2} (Finset.{u2} σ) (Finset.hasUnion.{u2} σ (fun (a : σ) (b : σ) => _inst_2 a b)) (MvPolynomial.vars.{u1, u2} R σ _inst_1 p) (MvPolynomial.vars.{u1, u2} R σ _inst_1 q))
 but is expected to have type
-  forall {R : Type.{u2}} {σ : Type.{u1}} [_inst_1 : CommSemiring.{u2} R] (p : MvPolynomial.{u1, u2} σ R _inst_1) (q : MvPolynomial.{u1, u2} σ R _inst_1), HasSubset.Subset.{u1} (Finset.{u1} σ) (Finset.instHasSubsetFinset.{u1} σ) (MvPolynomial.vars.{u2, u1} R σ _inst_1 (HAdd.hAdd.{max u2 u1, max u2 u1, max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, u2} σ R _inst_1) (instHAdd.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (Distrib.toAdd.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (NonUnitalNonAssocSemiring.toDistrib.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1))))))) p q)) (Union.union.{u1} (Finset.{u1} σ) (Finset.instUnionFinset.{u1} σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u1} σ a b))) (MvPolynomial.vars.{u2, u1} R σ _inst_1 p) (MvPolynomial.vars.{u2, u1} R σ _inst_1 q))
+  forall {R : Type.{u2}} {σ : Type.{u1}} [_inst_1 : CommSemiring.{u2} R] (_inst_2 : MvPolynomial.{u1, u2} σ R _inst_1) (p : MvPolynomial.{u1, u2} σ R _inst_1), HasSubset.Subset.{u1} (Finset.{u1} σ) (Finset.instHasSubsetFinset.{u1} σ) (MvPolynomial.vars.{u2, u1} R σ _inst_1 (HAdd.hAdd.{max u2 u1, max u2 u1, max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, u2} σ R _inst_1) (instHAdd.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (Distrib.toAdd.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (NonUnitalNonAssocSemiring.toDistrib.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1))))))) _inst_2 p)) (Union.union.{u1} (Finset.{u1} σ) (Finset.instUnionFinset.{u1} σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u1} σ a b))) (MvPolynomial.vars.{u2, u1} R σ _inst_1 _inst_2) (MvPolynomial.vars.{u2, u1} R σ _inst_1 p))
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.vars_add_subset MvPolynomial.vars_add_subsetₓ'. -/
-theorem vars_add_subset (p q : MvPolynomial σ R) : (p + q).vars ⊆ p.vars ∪ q.vars :=
+theorem vars_add_subset [DecidableEq σ] (p q : MvPolynomial σ R) : (p + q).vars ⊆ p.vars ∪ q.vars :=
   by
   intro x hx
   simp only [vars, Finset.mem_union, Multiset.mem_toFinset] at hx⊢
@@ -475,15 +491,16 @@ theorem vars_add_subset (p q : MvPolynomial σ R) : (p + q).vars ⊆ p.vars ∪ 
 
 /- warning: mv_polynomial.vars_add_of_disjoint -> MvPolynomial.vars_add_of_disjoint is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} {σ : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] {p : MvPolynomial.{u2, u1} σ R _inst_1} {q : MvPolynomial.{u2, u1} σ R _inst_1}, (Disjoint.{u2} (Finset.{u2} σ) (Finset.partialOrder.{u2} σ) (Finset.orderBot.{u2} σ) (MvPolynomial.vars.{u1, u2} R σ _inst_1 p) (MvPolynomial.vars.{u1, u2} R σ _inst_1 q)) -> (Eq.{succ u2} (Finset.{u2} σ) (MvPolynomial.vars.{u1, u2} R σ _inst_1 (HAdd.hAdd.{max u2 u1, max u2 u1, max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.{u2, u1} σ R _inst_1) (instHAdd.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (Distrib.toHasAdd.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (NonUnitalNonAssocSemiring.toDistrib.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1))))))) p q)) (Union.union.{u2} (Finset.{u2} σ) (Finset.hasUnion.{u2} σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u2} σ a b))) (MvPolynomial.vars.{u1, u2} R σ _inst_1 p) (MvPolynomial.vars.{u1, u2} R σ _inst_1 q)))
+  forall {R : Type.{u1}} {σ : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] {p : MvPolynomial.{u2, u1} σ R _inst_1} {q : MvPolynomial.{u2, u1} σ R _inst_1} [_inst_2 : DecidableEq.{succ u2} σ], (Disjoint.{u2} (Finset.{u2} σ) (Finset.partialOrder.{u2} σ) (Finset.orderBot.{u2} σ) (MvPolynomial.vars.{u1, u2} R σ _inst_1 p) (MvPolynomial.vars.{u1, u2} R σ _inst_1 q)) -> (Eq.{succ u2} (Finset.{u2} σ) (MvPolynomial.vars.{u1, u2} R σ _inst_1 (HAdd.hAdd.{max u2 u1, max u2 u1, max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.{u2, u1} σ R _inst_1) (instHAdd.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (Distrib.toHasAdd.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (NonUnitalNonAssocSemiring.toDistrib.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1))))))) p q)) (Union.union.{u2} (Finset.{u2} σ) (Finset.hasUnion.{u2} σ (fun (a : σ) (b : σ) => _inst_2 a b)) (MvPolynomial.vars.{u1, u2} R σ _inst_1 p) (MvPolynomial.vars.{u1, u2} R σ _inst_1 q)))
 but is expected to have type
   forall {R : Type.{u2}} {σ : Type.{u1}} [_inst_1 : CommSemiring.{u2} R] {p : MvPolynomial.{u1, u2} σ R _inst_1} {q : MvPolynomial.{u1, u2} σ R _inst_1}, (Disjoint.{u1} (Finset.{u1} σ) (Finset.partialOrder.{u1} σ) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} σ) (MvPolynomial.vars.{u2, u1} R σ _inst_1 p) (MvPolynomial.vars.{u2, u1} R σ _inst_1 q)) -> (Eq.{succ u1} (Finset.{u1} σ) (MvPolynomial.vars.{u2, u1} R σ _inst_1 (HAdd.hAdd.{max u2 u1, max u2 u1, max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, u2} σ R _inst_1) (instHAdd.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (Distrib.toAdd.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (NonUnitalNonAssocSemiring.toDistrib.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1))))))) p q)) (Union.union.{u1} (Finset.{u1} σ) (Finset.instUnionFinset.{u1} σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u1} σ a b))) (MvPolynomial.vars.{u2, u1} R σ _inst_1 p) (MvPolynomial.vars.{u2, u1} R σ _inst_1 q)))
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.vars_add_of_disjoint MvPolynomial.vars_add_of_disjointₓ'. -/
-theorem vars_add_of_disjoint (h : Disjoint p.vars q.vars) : (p + q).vars = p.vars ∪ q.vars :=
+theorem vars_add_of_disjoint [DecidableEq σ] (h : Disjoint p.vars q.vars) :
+    (p + q).vars = p.vars ∪ q.vars :=
   by
   apply Finset.Subset.antisymm (vars_add_subset p q)
   intro x hx
-  simp only [vars, Multiset.disjoint_toFinset] at h hx⊢
+  simp only [vars_def, Multiset.disjoint_toFinset] at h hx⊢
   rw [degrees_add_of_disjoint h, Multiset.toFinset_union]
   exact hx
 #align mv_polynomial.vars_add_of_disjoint MvPolynomial.vars_add_of_disjoint
@@ -492,11 +509,11 @@ section Mul
 
 /- warning: mv_polynomial.vars_mul -> MvPolynomial.vars_mul is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} {σ : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] (φ : MvPolynomial.{u2, u1} σ R _inst_1) (ψ : MvPolynomial.{u2, u1} σ R _inst_1), HasSubset.Subset.{u2} (Finset.{u2} σ) (Finset.hasSubset.{u2} σ) (MvPolynomial.vars.{u1, u2} R σ _inst_1 (HMul.hMul.{max u2 u1, max u2 u1, max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.{u2, u1} σ R _inst_1) (instHMul.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (Distrib.toHasMul.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (NonUnitalNonAssocSemiring.toDistrib.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1))))))) φ ψ)) (Union.union.{u2} (Finset.{u2} σ) (Finset.hasUnion.{u2} σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u2} σ a b))) (MvPolynomial.vars.{u1, u2} R σ _inst_1 φ) (MvPolynomial.vars.{u1, u2} R σ _inst_1 ψ))
+  forall {R : Type.{u1}} {σ : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : DecidableEq.{succ u2} σ] (φ : MvPolynomial.{u2, u1} σ R _inst_1) (ψ : MvPolynomial.{u2, u1} σ R _inst_1), HasSubset.Subset.{u2} (Finset.{u2} σ) (Finset.hasSubset.{u2} σ) (MvPolynomial.vars.{u1, u2} R σ _inst_1 (HMul.hMul.{max u2 u1, max u2 u1, max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.{u2, u1} σ R _inst_1) (instHMul.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (Distrib.toHasMul.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (NonUnitalNonAssocSemiring.toDistrib.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1))))))) φ ψ)) (Union.union.{u2} (Finset.{u2} σ) (Finset.hasUnion.{u2} σ (fun (a : σ) (b : σ) => _inst_2 a b)) (MvPolynomial.vars.{u1, u2} R σ _inst_1 φ) (MvPolynomial.vars.{u1, u2} R σ _inst_1 ψ))
 but is expected to have type
-  forall {R : Type.{u2}} {σ : Type.{u1}} [_inst_1 : CommSemiring.{u2} R] (φ : MvPolynomial.{u1, u2} σ R _inst_1) (ψ : MvPolynomial.{u1, u2} σ R _inst_1), HasSubset.Subset.{u1} (Finset.{u1} σ) (Finset.instHasSubsetFinset.{u1} σ) (MvPolynomial.vars.{u2, u1} R σ _inst_1 (HMul.hMul.{max u2 u1, max u2 u1, max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, u2} σ R _inst_1) (instHMul.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (NonUnitalNonAssocSemiring.toMul.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1)))))) φ ψ)) (Union.union.{u1} (Finset.{u1} σ) (Finset.instUnionFinset.{u1} σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u1} σ a b))) (MvPolynomial.vars.{u2, u1} R σ _inst_1 φ) (MvPolynomial.vars.{u2, u1} R σ _inst_1 ψ))
+  forall {R : Type.{u2}} {σ : Type.{u1}} [_inst_1 : CommSemiring.{u2} R] (_inst_2 : MvPolynomial.{u1, u2} σ R _inst_1) (φ : MvPolynomial.{u1, u2} σ R _inst_1), HasSubset.Subset.{u1} (Finset.{u1} σ) (Finset.instHasSubsetFinset.{u1} σ) (MvPolynomial.vars.{u2, u1} R σ _inst_1 (HMul.hMul.{max u2 u1, max u2 u1, max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, u2} σ R _inst_1) (instHMul.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (NonUnitalNonAssocSemiring.toMul.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1)))))) _inst_2 φ)) (Union.union.{u1} (Finset.{u1} σ) (Finset.instUnionFinset.{u1} σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u1} σ a b))) (MvPolynomial.vars.{u2, u1} R σ _inst_1 _inst_2) (MvPolynomial.vars.{u2, u1} R σ _inst_1 φ))
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.vars_mul MvPolynomial.vars_mulₓ'. -/
-theorem vars_mul (φ ψ : MvPolynomial σ R) : (φ * ψ).vars ⊆ φ.vars ∪ ψ.vars :=
+theorem vars_mul [DecidableEq σ] (φ ψ : MvPolynomial σ R) : (φ * ψ).vars ⊆ φ.vars ∪ ψ.vars :=
   by
   intro i
   simp only [mem_vars, Finset.mem_union]
@@ -537,33 +554,34 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u2}} {σ : Type.{u1}} [_inst_1 : CommSemiring.{u2} R] (φ : MvPolynomial.{u1, u2} σ R _inst_1) (n : Nat), HasSubset.Subset.{u1} (Finset.{u1} σ) (Finset.instHasSubsetFinset.{u1} σ) (MvPolynomial.vars.{u2, u1} R σ _inst_1 (HPow.hPow.{max u2 u1, 0, max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) Nat (MvPolynomial.{u1, u2} σ R _inst_1) (instHPow.{max u2 u1, 0} (MvPolynomial.{u1, u2} σ R _inst_1) Nat (Monoid.Pow.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (MonoidWithZero.toMonoid.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (Semiring.toMonoidWithZero.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1)))))) φ n)) (MvPolynomial.vars.{u2, u1} R σ _inst_1 φ)
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.vars_pow MvPolynomial.vars_powₓ'. -/
-theorem vars_pow (φ : MvPolynomial σ R) (n : ℕ) : (φ ^ n).vars ⊆ φ.vars :=
-  by
-  induction' n with n ih
-  · simp
-  · rw [pow_succ]
-    apply Finset.Subset.trans (vars_mul _ _)
-    exact Finset.union_subset (Finset.Subset.refl _) ih
+theorem vars_pow (φ : MvPolynomial σ R) (n : ℕ) : (φ ^ n).vars ⊆ φ.vars := by
+  classical
+    simp_rw [vars_def]
+    induction' n with n ih
+    · simp
+    · rw [pow_succ]
+      apply Finset.Subset.trans (vars_mul _ _)
+      exact Finset.union_subset (Finset.Subset.refl _) ih
 #align mv_polynomial.vars_pow MvPolynomial.vars_pow
 
 /- warning: mv_polynomial.vars_prod -> MvPolynomial.vars_prod is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} {σ : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] {ι : Type.{u3}} {s : Finset.{u3} ι} (f : ι -> (MvPolynomial.{u2, u1} σ R _inst_1)), HasSubset.Subset.{u2} (Finset.{u2} σ) (Finset.hasSubset.{u2} σ) (MvPolynomial.vars.{u1, u2} R σ _inst_1 (Finset.prod.{max u2 u1, u3} (MvPolynomial.{u2, u1} σ R _inst_1) ι (CommSemiring.toCommMonoid.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1)) s (fun (i : ι) => f i))) (Finset.biUnion.{u3, u2} ι σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u2} σ a b)) s (fun (i : ι) => MvPolynomial.vars.{u1, u2} R σ _inst_1 (f i)))
+  forall {R : Type.{u1}} {σ : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] {ι : Type.{u3}} [_inst_2 : DecidableEq.{succ u2} σ] {s : Finset.{u3} ι} (f : ι -> (MvPolynomial.{u2, u1} σ R _inst_1)), HasSubset.Subset.{u2} (Finset.{u2} σ) (Finset.hasSubset.{u2} σ) (MvPolynomial.vars.{u1, u2} R σ _inst_1 (Finset.prod.{max u2 u1, u3} (MvPolynomial.{u2, u1} σ R _inst_1) ι (CommSemiring.toCommMonoid.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1)) s (fun (i : ι) => f i))) (Finset.biUnion.{u3, u2} ι σ (fun (a : σ) (b : σ) => _inst_2 a b) s (fun (i : ι) => MvPolynomial.vars.{u1, u2} R σ _inst_1 (f i)))
 but is expected to have type
-  forall {R : Type.{u3}} {σ : Type.{u1}} [_inst_1 : CommSemiring.{u3} R] {ι : Type.{u2}} {s : Finset.{u2} ι} (f : ι -> (MvPolynomial.{u1, u3} σ R _inst_1)), HasSubset.Subset.{u1} (Finset.{u1} σ) (Finset.instHasSubsetFinset.{u1} σ) (MvPolynomial.vars.{u3, u1} R σ _inst_1 (Finset.prod.{max u3 u1, u2} (MvPolynomial.{u1, u3} σ R _inst_1) ι (CommSemiring.toCommMonoid.{max u3 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R σ _inst_1)) s (fun (i : ι) => f i))) (Finset.biUnion.{u2, u1} ι σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u1} σ a b)) s (fun (i : ι) => MvPolynomial.vars.{u3, u1} R σ _inst_1 (f i)))
+  forall {R : Type.{u3}} {σ : Type.{u1}} [_inst_1 : CommSemiring.{u3} R] {ι : Type.{u2}} {_inst_2 : Finset.{u2} ι} (s : ι -> (MvPolynomial.{u1, u3} σ R _inst_1)), HasSubset.Subset.{u1} (Finset.{u1} σ) (Finset.instHasSubsetFinset.{u1} σ) (MvPolynomial.vars.{u3, u1} R σ _inst_1 (Finset.prod.{max u3 u1, u2} (MvPolynomial.{u1, u3} σ R _inst_1) ι (CommSemiring.toCommMonoid.{max u3 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R σ _inst_1)) _inst_2 (fun (i : ι) => s i))) (Finset.biUnion.{u2, u1} ι σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u1} σ a b)) _inst_2 (fun (i : ι) => MvPolynomial.vars.{u3, u1} R σ _inst_1 (s i)))
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.vars_prod MvPolynomial.vars_prodₓ'. -/
 /-- The variables of the product of a family of polynomials
 are a subset of the union of the sets of variables of each polynomial.
 -/
-theorem vars_prod {ι : Type _} {s : Finset ι} (f : ι → MvPolynomial σ R) :
-    (∏ i in s, f i).vars ⊆ s.biUnion fun i => (f i).vars :=
-  by
-  apply s.induction_on
-  · simp
-  · intro a s hs hsub
-    simp only [hs, Finset.biUnion_insert, Finset.prod_insert, not_false_iff]
-    apply Finset.Subset.trans (vars_mul _ _)
-    exact Finset.union_subset_union (Finset.Subset.refl _) hsub
+theorem vars_prod {ι : Type _} [DecidableEq σ] {s : Finset ι} (f : ι → MvPolynomial σ R) :
+    (∏ i in s, f i).vars ⊆ s.biUnion fun i => (f i).vars := by
+  classical
+    apply s.induction_on
+    · simp
+    · intro a s hs hsub
+      simp only [hs, Finset.biUnion_insert, Finset.prod_insert, not_false_iff]
+      apply Finset.Subset.trans (vars_mul _ _)
+      exact Finset.union_subset_union (Finset.Subset.refl _) hsub
 #align mv_polynomial.vars_prod MvPolynomial.vars_prod
 
 section IsDomain
@@ -596,43 +614,45 @@ variable {ι : Type _} (t : Finset ι) (φ : ι → MvPolynomial σ R)
 
 /- warning: mv_polynomial.vars_sum_subset -> MvPolynomial.vars_sum_subset is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} {σ : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] {ι : Type.{u3}} (t : Finset.{u3} ι) (φ : ι -> (MvPolynomial.{u2, u1} σ R _inst_1)), HasSubset.Subset.{u2} (Finset.{u2} σ) (Finset.hasSubset.{u2} σ) (MvPolynomial.vars.{u1, u2} R σ _inst_1 (Finset.sum.{max u2 u1, u3} (MvPolynomial.{u2, u1} σ R _inst_1) ι (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1))))) t (fun (i : ι) => φ i))) (Finset.biUnion.{u3, u2} ι σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u2} σ a b)) t (fun (i : ι) => MvPolynomial.vars.{u1, u2} R σ _inst_1 (φ i)))
+  forall {R : Type.{u1}} {σ : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] {ι : Type.{u3}} (t : Finset.{u3} ι) (φ : ι -> (MvPolynomial.{u2, u1} σ R _inst_1)) [_inst_2 : DecidableEq.{succ u2} σ], HasSubset.Subset.{u2} (Finset.{u2} σ) (Finset.hasSubset.{u2} σ) (MvPolynomial.vars.{u1, u2} R σ _inst_1 (Finset.sum.{max u2 u1, u3} (MvPolynomial.{u2, u1} σ R _inst_1) ι (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1))))) t (fun (i : ι) => φ i))) (Finset.biUnion.{u3, u2} ι σ (fun (a : σ) (b : σ) => _inst_2 a b) t (fun (i : ι) => MvPolynomial.vars.{u1, u2} R σ _inst_1 (φ i)))
 but is expected to have type
   forall {R : Type.{u3}} {σ : Type.{u2}} [_inst_1 : CommSemiring.{u3} R] {ι : Type.{u1}} (t : Finset.{u1} ι) (φ : ι -> (MvPolynomial.{u2, u3} σ R _inst_1)), HasSubset.Subset.{u2} (Finset.{u2} σ) (Finset.instHasSubsetFinset.{u2} σ) (MvPolynomial.vars.{u3, u2} R σ _inst_1 (Finset.sum.{max u3 u2, u1} (MvPolynomial.{u2, u3} σ R _inst_1) ι (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u3 u2} (MvPolynomial.{u2, u3} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u3 u2} (MvPolynomial.{u2, u3} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u3 u2} (MvPolynomial.{u2, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u3 u2} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1))))) t (fun (i : ι) => φ i))) (Finset.biUnion.{u1, u2} ι σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u2} σ a b)) t (fun (i : ι) => MvPolynomial.vars.{u3, u2} R σ _inst_1 (φ i)))
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.vars_sum_subset MvPolynomial.vars_sum_subsetₓ'. -/
-theorem vars_sum_subset : (∑ i in t, φ i).vars ⊆ Finset.biUnion t fun i => (φ i).vars :=
-  by
-  apply t.induction_on
-  · simp
-  · intro a s has hsum
-    rw [Finset.biUnion_insert, Finset.sum_insert has]
-    refine'
-      Finset.Subset.trans (vars_add_subset _ _) (Finset.union_subset_union (Finset.Subset.refl _) _)
-    assumption
+theorem vars_sum_subset [DecidableEq σ] :
+    (∑ i in t, φ i).vars ⊆ Finset.biUnion t fun i => (φ i).vars := by
+  classical
+    apply t.induction_on
+    · simp
+    · intro a s has hsum
+      rw [Finset.biUnion_insert, Finset.sum_insert has]
+      refine'
+        Finset.Subset.trans (vars_add_subset _ _)
+          (Finset.union_subset_union (Finset.Subset.refl _) _)
+      assumption
 #align mv_polynomial.vars_sum_subset MvPolynomial.vars_sum_subset
 
 /- warning: mv_polynomial.vars_sum_of_disjoint -> MvPolynomial.vars_sum_of_disjoint is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} {σ : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] {ι : Type.{u3}} (t : Finset.{u3} ι) (φ : ι -> (MvPolynomial.{u2, u1} σ R _inst_1)), (Pairwise.{u3} ι (Function.onFun.{succ u3, succ u2, 1} ι (Finset.{u2} σ) Prop (Disjoint.{u2} (Finset.{u2} σ) (Finset.partialOrder.{u2} σ) (Finset.orderBot.{u2} σ)) (fun (i : ι) => MvPolynomial.vars.{u1, u2} R σ _inst_1 (φ i)))) -> (Eq.{succ u2} (Finset.{u2} σ) (MvPolynomial.vars.{u1, u2} R σ _inst_1 (Finset.sum.{max u2 u1, u3} (MvPolynomial.{u2, u1} σ R _inst_1) ι (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1))))) t (fun (i : ι) => φ i))) (Finset.biUnion.{u3, u2} ι σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u2} σ a b)) t (fun (i : ι) => MvPolynomial.vars.{u1, u2} R σ _inst_1 (φ i))))
+  forall {R : Type.{u1}} {σ : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] {ι : Type.{u3}} (t : Finset.{u3} ι) (φ : ι -> (MvPolynomial.{u2, u1} σ R _inst_1)) [_inst_2 : DecidableEq.{succ u2} σ], (Pairwise.{u3} ι (Function.onFun.{succ u3, succ u2, 1} ι (Finset.{u2} σ) Prop (Disjoint.{u2} (Finset.{u2} σ) (Finset.partialOrder.{u2} σ) (Finset.orderBot.{u2} σ)) (fun (i : ι) => MvPolynomial.vars.{u1, u2} R σ _inst_1 (φ i)))) -> (Eq.{succ u2} (Finset.{u2} σ) (MvPolynomial.vars.{u1, u2} R σ _inst_1 (Finset.sum.{max u2 u1, u3} (MvPolynomial.{u2, u1} σ R _inst_1) ι (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1))))) t (fun (i : ι) => φ i))) (Finset.biUnion.{u3, u2} ι σ (fun (a : σ) (b : σ) => _inst_2 a b) t (fun (i : ι) => MvPolynomial.vars.{u1, u2} R σ _inst_1 (φ i))))
 but is expected to have type
   forall {R : Type.{u3}} {σ : Type.{u1}} [_inst_1 : CommSemiring.{u3} R] {ι : Type.{u2}} (t : Finset.{u2} ι) (φ : ι -> (MvPolynomial.{u1, u3} σ R _inst_1)), (Pairwise.{u2} ι (Function.onFun.{succ u2, succ u1, 1} ι (Finset.{u1} σ) Prop (Disjoint.{u1} (Finset.{u1} σ) (Finset.partialOrder.{u1} σ) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} σ)) (fun (i : ι) => MvPolynomial.vars.{u3, u1} R σ _inst_1 (φ i)))) -> (Eq.{succ u1} (Finset.{u1} σ) (MvPolynomial.vars.{u3, u1} R σ _inst_1 (Finset.sum.{max u3 u1, u2} (MvPolynomial.{u1, u3} σ R _inst_1) ι (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u3 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u3 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u3 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u3 u1} (MvPolynomial.{u1, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R σ _inst_1))))) t (fun (i : ι) => φ i))) (Finset.biUnion.{u2, u1} ι σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u1} σ a b)) t (fun (i : ι) => MvPolynomial.vars.{u3, u1} R σ _inst_1 (φ i))))
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.vars_sum_of_disjoint MvPolynomial.vars_sum_of_disjointₓ'. -/
-theorem vars_sum_of_disjoint (h : Pairwise <| (Disjoint on fun i => (φ i).vars)) :
-    (∑ i in t, φ i).vars = Finset.biUnion t fun i => (φ i).vars :=
-  by
-  apply t.induction_on
-  · simp
-  · intro a s has hsum
-    rw [Finset.biUnion_insert, Finset.sum_insert has, vars_add_of_disjoint, hsum]
-    unfold Pairwise on_fun at h
-    rw [hsum]
-    simp only [Finset.disjoint_iff_ne] at h⊢
-    intro v hv v2 hv2
-    rw [Finset.mem_biUnion] at hv2
-    rcases hv2 with ⟨i, his, hi⟩
-    refine' h _ _ hv _ hi
-    rintro rfl
-    contradiction
+theorem vars_sum_of_disjoint [DecidableEq σ] (h : Pairwise <| (Disjoint on fun i => (φ i).vars)) :
+    (∑ i in t, φ i).vars = Finset.biUnion t fun i => (φ i).vars := by
+  classical
+    apply t.induction_on
+    · simp
+    · intro a s has hsum
+      rw [Finset.biUnion_insert, Finset.sum_insert has, vars_add_of_disjoint, hsum]
+      unfold Pairwise on_fun at h
+      rw [hsum]
+      simp only [Finset.disjoint_iff_ne] at h⊢
+      intro v hv v2 hv2
+      rw [Finset.mem_biUnion] at hv2
+      rcases hv2 with ⟨i, his, hi⟩
+      refine' h _ _ hv _ hi
+      rintro rfl
+      contradiction
 #align mv_polynomial.vars_sum_of_disjoint MvPolynomial.vars_sum_of_disjoint
 
 end Sum
@@ -677,11 +697,12 @@ theorem vars_monomial_single (i : σ) {e : ℕ} {r : R} (he : e ≠ 0) (hr : r �
 
 /- warning: mv_polynomial.vars_eq_support_bUnion_support -> MvPolynomial.vars_eq_support_biUnion_support is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} {σ : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] (p : MvPolynomial.{u2, u1} σ R _inst_1), Eq.{succ u2} (Finset.{u2} σ) (MvPolynomial.vars.{u1, u2} R σ _inst_1 p) (Finset.biUnion.{u2, u2} (Finsupp.{u2, 0} σ Nat Nat.hasZero) σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u2} σ a b)) (MvPolynomial.support.{u1, u2} R σ _inst_1 p) (Finsupp.support.{u2, 0} σ Nat Nat.hasZero))
+  forall {R : Type.{u1}} {σ : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] (p : MvPolynomial.{u2, u1} σ R _inst_1) [_inst_3 : DecidableEq.{succ u2} σ], Eq.{succ u2} (Finset.{u2} σ) (MvPolynomial.vars.{u1, u2} R σ _inst_1 p) (Finset.biUnion.{u2, u2} (Finsupp.{u2, 0} σ Nat Nat.hasZero) σ (fun (a : σ) (b : σ) => _inst_3 a b) (MvPolynomial.support.{u1, u2} R σ _inst_1 p) (Finsupp.support.{u2, 0} σ Nat Nat.hasZero))
 but is expected to have type
   forall {R : Type.{u2}} {σ : Type.{u1}} [_inst_1 : CommSemiring.{u2} R] (p : MvPolynomial.{u1, u2} σ R _inst_1), Eq.{succ u1} (Finset.{u1} σ) (MvPolynomial.vars.{u2, u1} R σ _inst_1 p) (Finset.biUnion.{u1, u1} (Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) σ (fun (a : σ) (b : σ) => Classical.propDecidable (Eq.{succ u1} σ a b)) (MvPolynomial.support.{u2, u1} R σ _inst_1 p) (Finsupp.support.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)))
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.vars_eq_support_bUnion_support MvPolynomial.vars_eq_support_biUnion_supportₓ'. -/
-theorem vars_eq_support_biUnion_support : p.vars = p.support.biUnion Finsupp.support :=
+theorem vars_eq_support_biUnion_support [DecidableEq σ] :
+    p.vars = p.support.biUnion Finsupp.support :=
   by
   ext i
   rw [mem_vars, Finset.mem_biUnion]
@@ -699,9 +720,14 @@ section DegreeOf
 #print MvPolynomial.degreeOf /-
 /-- `degree_of n p` gives the highest power of X_n that appears in `p` -/
 def degreeOf (n : σ) (p : MvPolynomial σ R) : ℕ :=
+  letI := Classical.decEq σ
   p.degrees.count n
 #align mv_polynomial.degree_of MvPolynomial.degreeOf
 -/
+
+theorem degreeOf_def [DecidableEq σ] (n : σ) (p : MvPolynomial σ R) :
+    p.degreeOf n = p.degrees.count n := by convert rfl
+#align mv_polynomial.degree_of_def MvPolynomial.degreeOf_def
 
 /- warning: mv_polynomial.degree_of_eq_sup -> MvPolynomial.degreeOf_eq_sup is a dubious translation:
 lean 3 declaration is
@@ -710,12 +736,12 @@ but is expected to have type
   forall {R : Type.{u2}} {σ : Type.{u1}} [_inst_1 : CommSemiring.{u2} R] (n : σ) (f : MvPolynomial.{u1, u2} σ R _inst_1), Eq.{1} Nat (MvPolynomial.degreeOf.{u2, u1} R σ _inst_1 n f) (Finset.sup.{0, u1} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : σ) => Nat) n) (Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (Lattice.toSemilatticeSup.{0} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : σ) => Nat) n) Nat.instLatticeNat) Nat.orderBot (MvPolynomial.support.{u2, u1} R σ _inst_1 f) (fun (m : Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) => FunLike.coe.{succ u1, succ u1, 1} (Finsupp.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) σ (fun (_x : σ) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : σ) => Nat) _x) (Finsupp.funLike.{u1, 0} σ Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) m n))
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.degree_of_eq_sup MvPolynomial.degreeOf_eq_supₓ'. -/
 theorem degreeOf_eq_sup (n : σ) (f : MvPolynomial σ R) :
-    degreeOf n f = f.support.sup fun m => m n :=
-  by
-  rw [degree_of, degrees, Multiset.count_finset_sup]
-  congr
-  ext
-  simp
+    degreeOf n f = f.support.sup fun m => m n := by
+  classical
+    rw [degree_of_def, degrees_def, Multiset.count_finset_sup]
+    congr
+    ext
+    simp
 #align mv_polynomial.degree_of_eq_sup MvPolynomial.degreeOf_eq_sup
 
 /- warning: mv_polynomial.degree_of_lt_iff -> MvPolynomial.degreeOf_lt_iff is a dubious translation:
@@ -753,11 +779,11 @@ theorem degreeOf_C (a : R) (x : σ) : degreeOf x (C a : MvPolynomial σ R) = 0 :
 
 /- warning: mv_polynomial.degree_of_X -> MvPolynomial.degreeOf_X is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} {σ : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] (i : σ) (j : σ) [_inst_2 : Nontrivial.{u1} R], Eq.{1} Nat (MvPolynomial.degreeOf.{u1, u2} R σ _inst_1 i (MvPolynomial.X.{u1, u2} R σ _inst_1 j)) (ite.{1} Nat (Eq.{succ u2} σ i j) (Classical.propDecidable (Eq.{succ u2} σ i j)) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))))
+  forall {R : Type.{u1}} {σ : Type.{u2}} [_inst_1 : CommSemiring.{u1} R] [_inst_2 : DecidableEq.{succ u2} σ] (i : σ) (j : σ) [_inst_3 : Nontrivial.{u1} R], Eq.{1} Nat (MvPolynomial.degreeOf.{u1, u2} R σ _inst_1 i (MvPolynomial.X.{u1, u2} R σ _inst_1 j)) (ite.{1} Nat (Eq.{succ u2} σ i j) (_inst_2 i j) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))))
 but is expected to have type
-  forall {R : Type.{u2}} {σ : Type.{u1}} [_inst_1 : CommSemiring.{u2} R] (i : σ) (j : σ) [_inst_2 : Nontrivial.{u2} R], Eq.{1} Nat (MvPolynomial.degreeOf.{u2, u1} R σ _inst_1 i (MvPolynomial.X.{u2, u1} R σ _inst_1 j)) (ite.{1} Nat (Eq.{succ u1} σ i j) (Classical.propDecidable (Eq.{succ u1} σ i j)) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))
+  forall {R : Type.{u2}} {σ : Type.{u1}} [_inst_1 : CommSemiring.{u2} R] (_inst_2 : σ) (i : σ) [j : Nontrivial.{u2} R], Eq.{1} Nat (MvPolynomial.degreeOf.{u2, u1} R σ _inst_1 _inst_2 (MvPolynomial.X.{u2, u1} R σ _inst_1 i)) (ite.{1} Nat (Eq.{succ u1} σ _inst_2 i) (Classical.propDecidable (Eq.{succ u1} σ _inst_2 i)) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.degree_of_X MvPolynomial.degreeOf_Xₓ'. -/
-theorem degreeOf_X (i j : σ) [Nontrivial R] :
+theorem degreeOf_X [DecidableEq σ] (i j : σ) [Nontrivial R] :
     degreeOf i (X j : MvPolynomial σ R) = if i = j then 1 else 0 :=
   by
   by_cases c : i = j
@@ -772,12 +798,12 @@ but is expected to have type
   forall {R : Type.{u2}} {σ : Type.{u1}} [_inst_1 : CommSemiring.{u2} R] (n : σ) (f : MvPolynomial.{u1, u2} σ R _inst_1) (g : MvPolynomial.{u1, u2} σ R _inst_1), LE.le.{0} Nat instLENat (MvPolynomial.degreeOf.{u2, u1} R σ _inst_1 n (HAdd.hAdd.{max u2 u1, max u2 u1, max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, u2} σ R _inst_1) (instHAdd.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (Distrib.toAdd.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (NonUnitalNonAssocSemiring.toDistrib.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1))))))) f g)) (Max.max.{0} Nat Nat.instMaxNat (MvPolynomial.degreeOf.{u2, u1} R σ _inst_1 n f) (MvPolynomial.degreeOf.{u2, u1} R σ _inst_1 n g))
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.degree_of_add_le MvPolynomial.degreeOf_add_leₓ'. -/
 theorem degreeOf_add_le (n : σ) (f g : MvPolynomial σ R) :
-    degreeOf n (f + g) ≤ max (degreeOf n f) (degreeOf n g) :=
-  by
-  repeat' rw [degree_of]
-  apply (Multiset.count_le_of_le n (degrees_add f g)).trans
-  dsimp
-  rw [Multiset.count_union]
+    degreeOf n (f + g) ≤ max (degreeOf n f) (degreeOf n g) := by
+  classical
+    repeat' rw [degree_of_def]
+    apply (Multiset.count_le_of_le n (degrees_add f g)).trans
+    dsimp
+    rw [Multiset.count_union]
 #align mv_polynomial.degree_of_add_le MvPolynomial.degreeOf_add_le
 
 /- warning: mv_polynomial.monomial_le_degree_of -> MvPolynomial.monomial_le_degreeOf is a dubious translation:
@@ -800,11 +826,11 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.degree_of_mul_le MvPolynomial.degreeOf_mul_leₓ'. -/
 -- TODO we can prove equality here if R is a domain
 theorem degreeOf_mul_le (i : σ) (f g : MvPolynomial σ R) :
-    degreeOf i (f * g) ≤ degreeOf i f + degreeOf i g :=
-  by
-  repeat' rw [degree_of]
-  convert Multiset.count_le_of_le i (degrees_mul f g)
-  rw [Multiset.count_add]
+    degreeOf i (f * g) ≤ degreeOf i f + degreeOf i g := by
+  classical
+    repeat' rw [degree_of_def]
+    convert Multiset.count_le_of_le i (degrees_mul f g)
+    rw [Multiset.count_add]
 #align mv_polynomial.degree_of_mul_le MvPolynomial.degreeOf_mul_le
 
 /- warning: mv_polynomial.degree_of_mul_X_ne -> MvPolynomial.degreeOf_mul_X_ne is a dubious translation:
@@ -814,15 +840,15 @@ but is expected to have type
   forall {R : Type.{u2}} {σ : Type.{u1}} [_inst_1 : CommSemiring.{u2} R] {i : σ} {j : σ} (f : MvPolynomial.{u1, u2} σ R _inst_1), (Ne.{succ u1} σ i j) -> (Eq.{1} Nat (MvPolynomial.degreeOf.{u2, u1} R σ _inst_1 i (HMul.hMul.{max u2 u1, max u1 u2, max u1 u2} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.{u1, u2} σ R _inst_1) (instHMul.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (NonUnitalNonAssocSemiring.toMul.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1)))))) f (MvPolynomial.X.{u2, u1} R σ _inst_1 j))) (MvPolynomial.degreeOf.{u2, u1} R σ _inst_1 i f))
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.degree_of_mul_X_ne MvPolynomial.degreeOf_mul_X_neₓ'. -/
 theorem degreeOf_mul_X_ne {i j : σ} (f : MvPolynomial σ R) (h : i ≠ j) :
-    degreeOf i (f * X j) = degreeOf i f :=
-  by
-  repeat' rw [degree_of_eq_sup i]
-  rw [support_mul_X]
-  simp only [Finset.sup_map]
-  congr
-  ext
-  simp only [single, Nat.one_ne_zero, add_right_eq_self, addRightEmbedding_apply, coe_mk,
-    Pi.add_apply, comp_app, ite_eq_right_iff, Finsupp.coe_add, Pi.single_eq_of_ne h]
+    degreeOf i (f * X j) = degreeOf i f := by
+  classical
+    repeat' rw [degree_of_eq_sup i]
+    rw [support_mul_X]
+    simp only [Finset.sup_map]
+    congr
+    ext
+    simp only [single, Nat.one_ne_zero, add_right_eq_self, addRightEmbedding_apply, coe_mk,
+      Pi.add_apply, comp_app, ite_eq_right_iff, Finsupp.coe_add, Pi.single_eq_of_ne h]
 #align mv_polynomial.degree_of_mul_X_ne MvPolynomial.degreeOf_mul_X_ne
 
 /- warning: mv_polynomial.degree_of_mul_X_eq -> MvPolynomial.degreeOf_mul_X_eq is a dubious translation:
@@ -833,13 +859,13 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.degree_of_mul_X_eq MvPolynomial.degreeOf_mul_X_eqₓ'. -/
 -- TODO in the following we have equality iff f ≠ 0
 theorem degreeOf_mul_X_eq (j : σ) (f : MvPolynomial σ R) :
-    degreeOf j (f * X j) ≤ degreeOf j f + 1 :=
-  by
-  repeat' rw [degree_of]
-  apply (Multiset.count_le_of_le j (degrees_mul f (X j))).trans
-  simp only [Multiset.count_add, add_le_add_iff_left]
-  convert Multiset.count_le_of_le j (degrees_X' j)
-  rw [Multiset.count_singleton_self]
+    degreeOf j (f * X j) ≤ degreeOf j f + 1 := by
+  classical
+    repeat' rw [degree_of_def]
+    apply (Multiset.count_le_of_le j (degrees_mul f (X j))).trans
+    simp only [Multiset.count_add, add_le_add_iff_left]
+    convert Multiset.count_le_of_le j (degrees_X' j)
+    rw [Multiset.count_singleton_self]
 #align mv_polynomial.degree_of_mul_X_eq MvPolynomial.degreeOf_mul_X_eq
 
 /- warning: mv_polynomial.degree_of_rename_of_injective -> MvPolynomial.degreeOf_rename_of_injective is a dubious translation:
@@ -850,7 +876,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.degree_of_rename_of_injective MvPolynomial.degreeOf_rename_of_injectiveₓ'. -/
 theorem degreeOf_rename_of_injective {p : MvPolynomial σ R} {f : σ → τ} (h : Function.Injective f)
     (i : σ) : degreeOf (f i) (rename f p) = degreeOf i p := by
-  simp only [degree_of, degrees_rename_of_injective h, Multiset.count_map_eq_count' f p.degrees h]
+  classical simp only [degree_of_def, degrees_rename_of_injective h,
+      Multiset.count_map_eq_count' f p.degrees h]
 #align mv_polynomial.degree_of_rename_of_injective MvPolynomial.degreeOf_rename_of_injective
 
 end DegreeOf
@@ -887,10 +914,10 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u2}} {σ : Type.{u1}} [_inst_1 : CommSemiring.{u2} R] (p : MvPolynomial.{u1, u2} σ R _inst_1), LE.le.{0} Nat instLENat (MvPolynomial.totalDegree.{u2, u1} R σ _inst_1 p) (FunLike.coe.{succ u1, succ u1, 1} (AddMonoidHom.{u1, 0} (Multiset.{u1} σ) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} σ) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} σ) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} σ) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} σ) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} σ) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} σ)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} σ) (fun (_x : Multiset.{u1} σ) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.403 : Multiset.{u1} σ) => Nat) _x) (AddHomClass.toFunLike.{u1, u1, 0} (AddMonoidHom.{u1, 0} (Multiset.{u1} σ) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} σ) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} σ) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} σ) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} σ) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} σ) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} σ)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} σ) Nat (AddZeroClass.toAdd.{u1} (Multiset.{u1} σ) (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} σ) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} σ) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} σ) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} σ) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} σ) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} σ))))))) (AddZeroClass.toAdd.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (AddMonoidHomClass.toAddHomClass.{u1, u1, 0} (AddMonoidHom.{u1, 0} (Multiset.{u1} σ) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} σ) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} σ) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} σ) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} σ) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} σ) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} σ)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} σ) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} σ) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} σ) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} σ) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} σ) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} σ) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} σ)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid) (AddMonoidHom.addMonoidHomClass.{u1, 0} (Multiset.{u1} σ) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} σ) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} σ) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} σ) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} σ) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} σ) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} σ)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)))) (Multiset.card.{u1} σ) (MvPolynomial.degrees.{u2, u1} R σ _inst_1 p))
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.total_degree_le_degrees_card MvPolynomial.totalDegree_le_degrees_cardₓ'. -/
-theorem totalDegree_le_degrees_card (p : MvPolynomial σ R) : p.totalDegree ≤ p.degrees.card :=
-  by
-  rw [total_degree_eq]
-  exact Finset.sup_le fun s hs => Multiset.card_le_of_le <| Finset.le_sup hs
+theorem totalDegree_le_degrees_card (p : MvPolynomial σ R) : p.totalDegree ≤ p.degrees.card := by
+  classical
+    rw [total_degree_eq]
+    exact Finset.sup_le fun s hs => Multiset.card_le_of_le <| Finset.le_sup hs
 #align mv_polynomial.total_degree_le_degrees_card MvPolynomial.totalDegree_le_degrees_card
 
 /- warning: mv_polynomial.total_degree_C -> MvPolynomial.totalDegree_C is a dubious translation:
@@ -950,11 +977,12 @@ Case conversion may be inaccurate. Consider using '#align mv_polynomial.total_de
 theorem totalDegree_add (a b : MvPolynomial σ R) :
     (a + b).totalDegree ≤ max a.totalDegree b.totalDegree :=
   Finset.sup_le fun n hn => by
-    have := Finsupp.support_add hn
-    rw [Finset.mem_union] at this
-    cases this
-    · exact le_max_of_le_left (Finset.le_sup this)
-    · exact le_max_of_le_right (Finset.le_sup this)
+    classical
+      have := Finsupp.support_add hn
+      rw [Finset.mem_union] at this
+      cases this
+      · exact le_max_of_le_left (Finset.le_sup this)
+      · exact le_max_of_le_right (Finset.le_sup this)
 #align mv_polynomial.total_degree_add MvPolynomial.totalDegree_add
 
 /- warning: mv_polynomial.total_degree_add_eq_left_of_total_degree_lt -> MvPolynomial.totalDegree_add_eq_left_of_totalDegree_lt is a dubious translation:
@@ -1007,15 +1035,16 @@ Case conversion may be inaccurate. Consider using '#align mv_polynomial.total_de
 theorem totalDegree_mul (a b : MvPolynomial σ R) :
     (a * b).totalDegree ≤ a.totalDegree + b.totalDegree :=
   Finset.sup_le fun n hn => by
-    have := AddMonoidAlgebra.support_mul a b hn
-    simp only [Finset.mem_biUnion, Finset.mem_singleton] at this
-    rcases this with ⟨a₁, h₁, a₂, h₂, rfl⟩
-    rw [Finsupp.sum_add_index']
-    · exact add_le_add (Finset.le_sup h₁) (Finset.le_sup h₂)
-    · intro a
-      rfl
-    · intro a b₁ b₂
-      rfl
+    classical
+      have := AddMonoidAlgebra.support_mul a b hn
+      simp only [Finset.mem_biUnion, Finset.mem_singleton] at this
+      rcases this with ⟨a₁, h₁, a₂, h₂, rfl⟩
+      rw [Finsupp.sum_add_index']
+      · exact add_le_add (Finset.le_sup h₁) (Finset.le_sup h₂)
+      · intro a
+        rfl
+      · intro a b₁ b₂
+        rfl
 #align mv_polynomial.total_degree_mul MvPolynomial.totalDegree_mul
 
 /- warning: mv_polynomial.total_degree_smul_le -> MvPolynomial.totalDegree_smul_le is a dubious translation:
@@ -1056,7 +1085,7 @@ Case conversion may be inaccurate. Consider using '#align mv_polynomial.total_de
 @[simp]
 theorem totalDegree_monomial (s : σ →₀ ℕ) {c : R} (hc : c ≠ 0) :
     (monomial s c : MvPolynomial σ R).totalDegree = s.Sum fun _ e => e := by
-  simp [total_degree, support_monomial, if_neg hc]
+  classical simp [total_degree, support_monomial, if_neg hc]
 #align mv_polynomial.total_degree_monomial MvPolynomial.totalDegree_monomial
 
 /- warning: mv_polynomial.total_degree_X_pow -> MvPolynomial.totalDegree_X_pow is a dubious translation:
@@ -1178,13 +1207,14 @@ theorem totalDegree_rename_le (f : σ → τ) (p : MvPolynomial σ R) :
   Finset.sup_le fun b => by
     intro h
     rw [rename_eq] at h
-    have h' := Finsupp.mapDomain_support h
-    rw [Finset.mem_image] at h'
-    rcases h' with ⟨s, hs, rfl⟩
-    rw [Finsupp.sum_mapDomain_index]
-    exact le_trans le_rfl (Finset.le_sup hs)
-    exact fun _ => rfl
-    exact fun _ _ _ => rfl
+    classical
+      have h' := Finsupp.mapDomain_support h
+      rw [Finset.mem_image] at h'
+      rcases h' with ⟨s, hs, rfl⟩
+      rw [Finsupp.sum_mapDomain_index]
+      exact le_trans le_rfl (Finset.le_sup hs)
+      exact fun _ => rfl
+      exact fun _ _ _ => rfl
 #align mv_polynomial.total_degree_rename_le MvPolynomial.totalDegree_rename_le
 
 end TotalDegree
@@ -1311,12 +1341,12 @@ theorem exists_rename_eq_of_vars_subset_range (p : MvPolynomial σ R) (f : τ �
 
 /- warning: mv_polynomial.vars_rename -> MvPolynomial.vars_rename is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u1}} {σ : Type.{u2}} {τ : Type.{u3}} [_inst_1 : CommSemiring.{u1} R] (f : σ -> τ) (φ : MvPolynomial.{u2, u1} σ R _inst_1), HasSubset.Subset.{u3} (Finset.{u3} τ) (Finset.hasSubset.{u3} τ) (MvPolynomial.vars.{u1, u3} R τ _inst_1 (coeFn.{max (succ (max u2 u1)) (succ (max u3 u1)), max (succ (max u2 u1)) (succ (max u3 u1))} (AlgHom.{u1, max u2 u1, max u3 u1} R (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.{u3, u1} τ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1)) (CommSemiring.toSemiring.{max u3 u1} (MvPolynomial.{u3, u1} τ R _inst_1) (MvPolynomial.commSemiring.{u1, u3} R τ _inst_1)) (MvPolynomial.algebra.{u1, u1, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u1} R _inst_1)) (MvPolynomial.algebra.{u1, u1, u3} R R τ _inst_1 _inst_1 (Algebra.id.{u1} R _inst_1))) (fun (_x : AlgHom.{u1, max u2 u1, max u3 u1} R (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.{u3, u1} τ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1)) (CommSemiring.toSemiring.{max u3 u1} (MvPolynomial.{u3, u1} τ R _inst_1) (MvPolynomial.commSemiring.{u1, u3} R τ _inst_1)) (MvPolynomial.algebra.{u1, u1, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u1} R _inst_1)) (MvPolynomial.algebra.{u1, u1, u3} R R τ _inst_1 _inst_1 (Algebra.id.{u1} R _inst_1))) => (MvPolynomial.{u2, u1} σ R _inst_1) -> (MvPolynomial.{u3, u1} τ R _inst_1)) ([anonymous].{u1, max u2 u1, max u3 u1} R (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.{u3, u1} τ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1)) (CommSemiring.toSemiring.{max u3 u1} (MvPolynomial.{u3, u1} τ R _inst_1) (MvPolynomial.commSemiring.{u1, u3} R τ _inst_1)) (MvPolynomial.algebra.{u1, u1, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u1} R _inst_1)) (MvPolynomial.algebra.{u1, u1, u3} R R τ _inst_1 _inst_1 (Algebra.id.{u1} R _inst_1))) (MvPolynomial.rename.{u2, u3, u1} σ τ R _inst_1 f) φ)) (Finset.image.{u2, u3} σ τ (fun (a : τ) (b : τ) => Classical.propDecidable (Eq.{succ u3} τ a b)) f (MvPolynomial.vars.{u1, u2} R σ _inst_1 φ))
+  forall {R : Type.{u1}} {σ : Type.{u2}} {τ : Type.{u3}} [_inst_1 : CommSemiring.{u1} R] [_inst_3 : DecidableEq.{succ u3} τ] (f : σ -> τ) (φ : MvPolynomial.{u2, u1} σ R _inst_1), HasSubset.Subset.{u3} (Finset.{u3} τ) (Finset.hasSubset.{u3} τ) (MvPolynomial.vars.{u1, u3} R τ _inst_1 (coeFn.{max (succ (max u2 u1)) (succ (max u3 u1)), max (succ (max u2 u1)) (succ (max u3 u1))} (AlgHom.{u1, max u2 u1, max u3 u1} R (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.{u3, u1} τ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1)) (CommSemiring.toSemiring.{max u3 u1} (MvPolynomial.{u3, u1} τ R _inst_1) (MvPolynomial.commSemiring.{u1, u3} R τ _inst_1)) (MvPolynomial.algebra.{u1, u1, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u1} R _inst_1)) (MvPolynomial.algebra.{u1, u1, u3} R R τ _inst_1 _inst_1 (Algebra.id.{u1} R _inst_1))) (fun (_x : AlgHom.{u1, max u2 u1, max u3 u1} R (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.{u3, u1} τ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1)) (CommSemiring.toSemiring.{max u3 u1} (MvPolynomial.{u3, u1} τ R _inst_1) (MvPolynomial.commSemiring.{u1, u3} R τ _inst_1)) (MvPolynomial.algebra.{u1, u1, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u1} R _inst_1)) (MvPolynomial.algebra.{u1, u1, u3} R R τ _inst_1 _inst_1 (Algebra.id.{u1} R _inst_1))) => (MvPolynomial.{u2, u1} σ R _inst_1) -> (MvPolynomial.{u3, u1} τ R _inst_1)) ([anonymous].{u1, max u2 u1, max u3 u1} R (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.{u3, u1} τ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u2, u1} σ R _inst_1) (MvPolynomial.commSemiring.{u1, u2} R σ _inst_1)) (CommSemiring.toSemiring.{max u3 u1} (MvPolynomial.{u3, u1} τ R _inst_1) (MvPolynomial.commSemiring.{u1, u3} R τ _inst_1)) (MvPolynomial.algebra.{u1, u1, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u1} R _inst_1)) (MvPolynomial.algebra.{u1, u1, u3} R R τ _inst_1 _inst_1 (Algebra.id.{u1} R _inst_1))) (MvPolynomial.rename.{u2, u3, u1} σ τ R _inst_1 f) φ)) (Finset.image.{u2, u3} σ τ (fun (a : τ) (b : τ) => _inst_3 a b) f (MvPolynomial.vars.{u1, u2} R σ _inst_1 φ))
 but is expected to have type
-  forall {R : Type.{u3}} {σ : Type.{u2}} {τ : Type.{u1}} [_inst_1 : CommSemiring.{u3} R] (f : σ -> τ) (φ : MvPolynomial.{u2, u3} σ R _inst_1), HasSubset.Subset.{u1} (Finset.{u1} τ) (Finset.instHasSubsetFinset.{u1} τ) (MvPolynomial.vars.{u3, u1} R τ _inst_1 (FunLike.coe.{max (max (succ u2) (succ u1)) (succ u3), max (succ u2) (succ u3), max (succ u1) (succ u3)} (AlgHom.{u3, max u3 u2, max u3 u1} R (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.{u1, u3} τ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)) (MvPolynomial.algebra.{u3, u3, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)) (MvPolynomial.algebra.{u3, u3, u1} R R τ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1))) (MvPolynomial.{u2, u3} σ R _inst_1) (fun (_x : MvPolynomial.{u2, u3} σ R _inst_1) => (fun (x._@.Mathlib.Algebra.Hom.GroupAction._hyg.2186 : MvPolynomial.{u2, u3} σ R _inst_1) => MvPolynomial.{u1, u3} τ R _inst_1) _x) (SMulHomClass.toFunLike.{max (max u2 u1) u3, u3, max u2 u3, max u1 u3} (AlgHom.{u3, max u3 u2, max u3 u1} R (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.{u1, u3} τ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)) (MvPolynomial.algebra.{u3, u3, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)) (MvPolynomial.algebra.{u3, u3, u1} R R τ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1))) R (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.{u1, u3} τ R _inst_1) (SMulZeroClass.toSMul.{u3, max u2 u3} R (MvPolynomial.{u2, u3} σ R _inst_1) (AddMonoid.toZero.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (AddCommMonoid.toAddMonoid.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1))))))) (DistribSMul.toSMulZeroClass.{u3, max u2 u3} R (MvPolynomial.{u2, u3} σ R _inst_1) (AddMonoid.toAddZeroClass.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (AddCommMonoid.toAddMonoid.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1))))))) (DistribMulAction.toDistribSMul.{u3, max u2 u3} R (MvPolynomial.{u2, u3} σ R _inst_1) (MonoidWithZero.toMonoid.{u3} R (Semiring.toMonoidWithZero.{u3} R (CommSemiring.toSemiring.{u3} R _inst_1))) (AddCommMonoid.toAddMonoid.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)))))) (Module.toDistribMulAction.{u3, max u2 u3} R (MvPolynomial.{u2, u3} σ R _inst_1) (CommSemiring.toSemiring.{u3} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1))))) (Algebra.toModule.{u3, max u2 u3} R (MvPolynomial.{u2, u3} σ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)) (MvPolynomial.algebra.{u3, u3, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1))))))) (SMulZeroClass.toSMul.{u3, max u1 u3} R (MvPolynomial.{u1, u3} τ R _inst_1) (AddMonoid.toZero.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (AddCommMonoid.toAddMonoid.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1))))))) (DistribSMul.toSMulZeroClass.{u3, max u1 u3} R (MvPolynomial.{u1, u3} τ R _inst_1) (AddMonoid.toAddZeroClass.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (AddCommMonoid.toAddMonoid.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1))))))) (DistribMulAction.toDistribSMul.{u3, max u1 u3} R (MvPolynomial.{u1, u3} τ R _inst_1) (MonoidWithZero.toMonoid.{u3} R (Semiring.toMonoidWithZero.{u3} R (CommSemiring.toSemiring.{u3} R _inst_1))) (AddCommMonoid.toAddMonoid.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)))))) (Module.toDistribMulAction.{u3, max u1 u3} R (MvPolynomial.{u1, u3} τ R _inst_1) (CommSemiring.toSemiring.{u3} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1))))) (Algebra.toModule.{u3, max u1 u3} R (MvPolynomial.{u1, u3} τ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)) (MvPolynomial.algebra.{u3, u3, u1} R R τ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1))))))) (DistribMulActionHomClass.toSMulHomClass.{max (max u2 u1) u3, u3, max u2 u3, max u1 u3} (AlgHom.{u3, max u3 u2, max u3 u1} R (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.{u1, u3} τ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)) (MvPolynomial.algebra.{u3, u3, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)) (MvPolynomial.algebra.{u3, u3, u1} R R τ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1))) R (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.{u1, u3} τ R _inst_1) (MonoidWithZero.toMonoid.{u3} R (Semiring.toMonoidWithZero.{u3} R (CommSemiring.toSemiring.{u3} R _inst_1))) (AddCommMonoid.toAddMonoid.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)))))) (AddCommMonoid.toAddMonoid.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)))))) (Module.toDistribMulAction.{u3, max u2 u3} R (MvPolynomial.{u2, u3} σ R _inst_1) (CommSemiring.toSemiring.{u3} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1))))) (Algebra.toModule.{u3, max u2 u3} R (MvPolynomial.{u2, u3} σ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)) (MvPolynomial.algebra.{u3, u3, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)))) (Module.toDistribMulAction.{u3, max u1 u3} R (MvPolynomial.{u1, u3} τ R _inst_1) (CommSemiring.toSemiring.{u3} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1))))) (Algebra.toModule.{u3, max u1 u3} R (MvPolynomial.{u1, u3} τ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)) (MvPolynomial.algebra.{u3, u3, u1} R R τ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)))) (NonUnitalAlgHomClass.toDistribMulActionHomClass.{max (max u2 u1) u3, u3, max u2 u3, max u1 u3} (AlgHom.{u3, max u3 u2, max u3 u1} R (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.{u1, u3} τ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)) (MvPolynomial.algebra.{u3, u3, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)) (MvPolynomial.algebra.{u3, u3, u1} R R τ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1))) R (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.{u1, u3} τ R _inst_1) (MonoidWithZero.toMonoid.{u3} R (Semiring.toMonoidWithZero.{u3} R (CommSemiring.toSemiring.{u3} R _inst_1))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)))) (Module.toDistribMulAction.{u3, max u2 u3} R (MvPolynomial.{u2, u3} σ R _inst_1) (CommSemiring.toSemiring.{u3} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1))))) (Algebra.toModule.{u3, max u2 u3} R (MvPolynomial.{u2, u3} σ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)) (MvPolynomial.algebra.{u3, u3, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)))) (Module.toDistribMulAction.{u3, max u1 u3} R (MvPolynomial.{u1, u3} τ R _inst_1) (CommSemiring.toSemiring.{u3} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1))))) (Algebra.toModule.{u3, max u1 u3} R (MvPolynomial.{u1, u3} τ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)) (MvPolynomial.algebra.{u3, u3, u1} R R τ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)))) (AlgHom.instNonUnitalAlgHomClassToMonoidToMonoidWithZeroToSemiringToNonUnitalNonAssocSemiringToNonAssocSemiringToNonUnitalNonAssocSemiringToNonAssocSemiringToDistribMulActionToAddCommMonoidToModuleToDistribMulActionToAddCommMonoidToModule.{u3, max u2 u3, max u1 u3, max (max u2 u1) u3} R (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.{u1, u3} τ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)) (MvPolynomial.algebra.{u3, u3, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)) (MvPolynomial.algebra.{u3, u3, u1} R R τ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)) (AlgHom.{u3, max u3 u2, max u3 u1} R (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.{u1, u3} τ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)) (MvPolynomial.algebra.{u3, u3, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)) (MvPolynomial.algebra.{u3, u3, u1} R R τ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1))) (AlgHom.algHomClass.{u3, max u2 u3, max u1 u3} R (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.{u1, u3} τ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)) (MvPolynomial.algebra.{u3, u3, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)) (MvPolynomial.algebra.{u3, u3, u1} R R τ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1))))))) (MvPolynomial.rename.{u2, u1, u3} σ τ R _inst_1 f) φ)) (Finset.image.{u2, u1} σ τ (fun (a : τ) (b : τ) => Classical.propDecidable (Eq.{succ u1} τ a b)) f (MvPolynomial.vars.{u3, u2} R σ _inst_1 φ))
+  forall {R : Type.{u3}} {σ : Type.{u2}} {τ : Type.{u1}} [_inst_1 : CommSemiring.{u3} R] (_inst_3 : σ -> τ) (f : MvPolynomial.{u2, u3} σ R _inst_1), HasSubset.Subset.{u1} (Finset.{u1} τ) (Finset.instHasSubsetFinset.{u1} τ) (MvPolynomial.vars.{u3, u1} R τ _inst_1 (FunLike.coe.{max (max (succ u2) (succ u1)) (succ u3), max (succ u2) (succ u3), max (succ u1) (succ u3)} (AlgHom.{u3, max u3 u2, max u3 u1} R (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.{u1, u3} τ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)) (MvPolynomial.algebra.{u3, u3, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)) (MvPolynomial.algebra.{u3, u3, u1} R R τ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1))) (MvPolynomial.{u2, u3} σ R _inst_1) (fun (a : MvPolynomial.{u2, u3} σ R _inst_1) => (fun (x._@.Mathlib.Algebra.Hom.GroupAction._hyg.2186 : MvPolynomial.{u2, u3} σ R _inst_1) => MvPolynomial.{u1, u3} τ R _inst_1) a) (SMulHomClass.toFunLike.{max (max u2 u1) u3, u3, max u2 u3, max u1 u3} (AlgHom.{u3, max u3 u2, max u3 u1} R (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.{u1, u3} τ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)) (MvPolynomial.algebra.{u3, u3, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)) (MvPolynomial.algebra.{u3, u3, u1} R R τ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1))) R (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.{u1, u3} τ R _inst_1) (SMulZeroClass.toSMul.{u3, max u2 u3} R (MvPolynomial.{u2, u3} σ R _inst_1) (AddMonoid.toZero.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (AddCommMonoid.toAddMonoid.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1))))))) (DistribSMul.toSMulZeroClass.{u3, max u2 u3} R (MvPolynomial.{u2, u3} σ R _inst_1) (AddMonoid.toAddZeroClass.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (AddCommMonoid.toAddMonoid.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1))))))) (DistribMulAction.toDistribSMul.{u3, max u2 u3} R (MvPolynomial.{u2, u3} σ R _inst_1) (MonoidWithZero.toMonoid.{u3} R (Semiring.toMonoidWithZero.{u3} R (CommSemiring.toSemiring.{u3} R _inst_1))) (AddCommMonoid.toAddMonoid.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)))))) (Module.toDistribMulAction.{u3, max u2 u3} R (MvPolynomial.{u2, u3} σ R _inst_1) (CommSemiring.toSemiring.{u3} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1))))) (Algebra.toModule.{u3, max u2 u3} R (MvPolynomial.{u2, u3} σ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)) (MvPolynomial.algebra.{u3, u3, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1))))))) (SMulZeroClass.toSMul.{u3, max u1 u3} R (MvPolynomial.{u1, u3} τ R _inst_1) (AddMonoid.toZero.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (AddCommMonoid.toAddMonoid.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1))))))) (DistribSMul.toSMulZeroClass.{u3, max u1 u3} R (MvPolynomial.{u1, u3} τ R _inst_1) (AddMonoid.toAddZeroClass.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (AddCommMonoid.toAddMonoid.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1))))))) (DistribMulAction.toDistribSMul.{u3, max u1 u3} R (MvPolynomial.{u1, u3} τ R _inst_1) (MonoidWithZero.toMonoid.{u3} R (Semiring.toMonoidWithZero.{u3} R (CommSemiring.toSemiring.{u3} R _inst_1))) (AddCommMonoid.toAddMonoid.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)))))) (Module.toDistribMulAction.{u3, max u1 u3} R (MvPolynomial.{u1, u3} τ R _inst_1) (CommSemiring.toSemiring.{u3} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1))))) (Algebra.toModule.{u3, max u1 u3} R (MvPolynomial.{u1, u3} τ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)) (MvPolynomial.algebra.{u3, u3, u1} R R τ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1))))))) (DistribMulActionHomClass.toSMulHomClass.{max (max u2 u1) u3, u3, max u2 u3, max u1 u3} (AlgHom.{u3, max u3 u2, max u3 u1} R (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.{u1, u3} τ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)) (MvPolynomial.algebra.{u3, u3, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)) (MvPolynomial.algebra.{u3, u3, u1} R R τ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1))) R (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.{u1, u3} τ R _inst_1) (MonoidWithZero.toMonoid.{u3} R (Semiring.toMonoidWithZero.{u3} R (CommSemiring.toSemiring.{u3} R _inst_1))) (AddCommMonoid.toAddMonoid.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)))))) (AddCommMonoid.toAddMonoid.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)))))) (Module.toDistribMulAction.{u3, max u2 u3} R (MvPolynomial.{u2, u3} σ R _inst_1) (CommSemiring.toSemiring.{u3} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1))))) (Algebra.toModule.{u3, max u2 u3} R (MvPolynomial.{u2, u3} σ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)) (MvPolynomial.algebra.{u3, u3, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)))) (Module.toDistribMulAction.{u3, max u1 u3} R (MvPolynomial.{u1, u3} τ R _inst_1) (CommSemiring.toSemiring.{u3} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1))))) (Algebra.toModule.{u3, max u1 u3} R (MvPolynomial.{u1, u3} τ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)) (MvPolynomial.algebra.{u3, u3, u1} R R τ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)))) (NonUnitalAlgHomClass.toDistribMulActionHomClass.{max (max u2 u1) u3, u3, max u2 u3, max u1 u3} (AlgHom.{u3, max u3 u2, max u3 u1} R (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.{u1, u3} τ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)) (MvPolynomial.algebra.{u3, u3, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)) (MvPolynomial.algebra.{u3, u3, u1} R R τ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1))) R (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.{u1, u3} τ R _inst_1) (MonoidWithZero.toMonoid.{u3} R (Semiring.toMonoidWithZero.{u3} R (CommSemiring.toSemiring.{u3} R _inst_1))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)))) (Module.toDistribMulAction.{u3, max u2 u3} R (MvPolynomial.{u2, u3} σ R _inst_1) (CommSemiring.toSemiring.{u3} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (Semiring.toNonAssocSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1))))) (Algebra.toModule.{u3, max u2 u3} R (MvPolynomial.{u2, u3} σ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)) (MvPolynomial.algebra.{u3, u3, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)))) (Module.toDistribMulAction.{u3, max u1 u3} R (MvPolynomial.{u1, u3} τ R _inst_1) (CommSemiring.toSemiring.{u3} R _inst_1) (NonUnitalNonAssocSemiring.toAddCommMonoid.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (Semiring.toNonAssocSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1))))) (Algebra.toModule.{u3, max u1 u3} R (MvPolynomial.{u1, u3} τ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)) (MvPolynomial.algebra.{u3, u3, u1} R R τ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)))) (AlgHom.instNonUnitalAlgHomClassToMonoidToMonoidWithZeroToSemiringToNonUnitalNonAssocSemiringToNonAssocSemiringToNonUnitalNonAssocSemiringToNonAssocSemiringToDistribMulActionToAddCommMonoidToModuleToDistribMulActionToAddCommMonoidToModule.{u3, max u2 u3, max u1 u3, max (max u2 u1) u3} R (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.{u1, u3} τ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)) (MvPolynomial.algebra.{u3, u3, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)) (MvPolynomial.algebra.{u3, u3, u1} R R τ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)) (AlgHom.{u3, max u3 u2, max u3 u1} R (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.{u1, u3} τ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)) (MvPolynomial.algebra.{u3, u3, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)) (MvPolynomial.algebra.{u3, u3, u1} R R τ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1))) (AlgHom.algHomClass.{u3, max u2 u3, max u1 u3} R (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.{u1, u3} τ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u3} (MvPolynomial.{u2, u3} σ R _inst_1) (MvPolynomial.commSemiring.{u3, u2} R σ _inst_1)) (CommSemiring.toSemiring.{max u1 u3} (MvPolynomial.{u1, u3} τ R _inst_1) (MvPolynomial.commSemiring.{u3, u1} R τ _inst_1)) (MvPolynomial.algebra.{u3, u3, u2} R R σ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1)) (MvPolynomial.algebra.{u3, u3, u1} R R τ _inst_1 _inst_1 (Algebra.id.{u3} R _inst_1))))))) (MvPolynomial.rename.{u2, u1, u3} σ τ R _inst_1 _inst_3) f)) (Finset.image.{u2, u1} σ τ (fun (a : τ) (b : τ) => Classical.propDecidable (Eq.{succ u1} τ a b)) _inst_3 (MvPolynomial.vars.{u3, u2} R σ _inst_1 f))
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.vars_rename MvPolynomial.vars_renameₓ'. -/
-theorem vars_rename (f : σ → τ) (φ : MvPolynomial σ R) : (rename f φ).vars ⊆ φ.vars.image f :=
-  by
+theorem vars_rename [DecidableEq τ] (f : σ → τ) (φ : MvPolynomial σ R) :
+    (rename f φ).vars ⊆ φ.vars.image f := by
   intro i hi
   simp only [vars, exists_prop, Multiset.mem_toFinset, Finset.mem_image] at hi⊢
   simpa only [Multiset.mem_map] using degrees_rename _ _ hi
@@ -1330,7 +1360,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.mem_vars_rename MvPolynomial.mem_vars_renameₓ'. -/
 theorem mem_vars_rename (f : σ → τ) (φ : MvPolynomial σ R) {j : τ} (h : j ∈ (rename f φ).vars) :
     ∃ i : σ, i ∈ φ.vars ∧ f i = j := by
-  simpa only [exists_prop, Finset.mem_image] using vars_rename f φ h
+  classical simpa only [exists_prop, Finset.mem_image] using vars_rename f φ h
 #align mv_polynomial.mem_vars_rename MvPolynomial.mem_vars_rename
 
 end EvalVars

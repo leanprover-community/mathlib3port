@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.integral.set_integral
-! leanprover-community/mathlib commit 8b8ba04e2f326f3f7cf24ad129beda58531ada61
+! leanprover-community/mathlib commit 24e0c85412ff6adbeca08022c25ba4876eedf37a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,6 +53,8 @@ but we reference them here because all theorems about set integrals are in this 
 
 -/
 
+
+assert_not_exists inner_product_space
 
 noncomputable section
 
@@ -1285,37 +1287,6 @@ theorem integral_smul_const {𝕜 : Type _} [IsROrC 𝕜] [NormedSpace 𝕜 E] (
     rw [integral_undef hf, integral_undef, zero_smul]
     simp_rw [integrable_smul_const hc, hf, not_false_iff]
 #align integral_smul_const integral_smul_const
-
-section Inner
-
-variable {E' : Type _}
-
-variable [NormedAddCommGroup E'] [InnerProductSpace 𝕜 E']
-
-variable [CompleteSpace E'] [NormedSpace ℝ E']
-
--- mathport name: «expr⟪ , ⟫»
-local notation "⟪" x ", " y "⟫" => @inner 𝕜 E' _ x y
-
-theorem integral_inner {f : α → E'} (hf : Integrable f μ) (c : E') :
-    (∫ x, ⟪c, f x⟫ ∂μ) = ⟪c, ∫ x, f x ∂μ⟫ :=
-  ((innerSL 𝕜 c).restrictScalars ℝ).integral_comp_comm hf
-#align integral_inner integral_inner
-
-variable (𝕜)
-
--- mathport name: inner_with_explicit
--- variable binder update doesn't work for lemmas which refer to `𝕜` only via the notation
-local notation "⟪" x ", " y "⟫" => @inner 𝕜 E' _ x y
-
-theorem integral_eq_zero_of_forall_integral_inner_eq_zero (f : α → E') (hf : Integrable f μ)
-    (hf_int : ∀ c : E', (∫ x, ⟪c, f x⟫ ∂μ) = 0) : (∫ x, f x ∂μ) = 0 :=
-  by
-  specialize hf_int (∫ x, f x ∂μ)
-  rwa [integral_inner hf, inner_self_eq_zero] at hf_int
-#align integral_eq_zero_of_forall_integral_inner_eq_zero integral_eq_zero_of_forall_integral_inner_eq_zero
-
-end Inner
 
 theorem integral_withDensity_eq_integral_smul {f : α → ℝ≥0} (f_meas : Measurable f) (g : α → E) :
     (∫ a, g a ∂μ.withDensity fun x => f x) = ∫ a, f a • g a ∂μ :=

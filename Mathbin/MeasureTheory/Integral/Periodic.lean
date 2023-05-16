@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Alex Kontorovich, Heather Macbeth
 
 ! This file was ported from Lean 3 source module measure_theory.integral.periodic
-! leanprover-community/mathlib commit f0c8bf9245297a541f468be517f1bde6195105e9
+! leanprover-community/mathlib commit bf6a01357ff5684b1ebcd0f1a13be314fc82c0bf
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,6 +34,19 @@ open Set Function MeasureTheory MeasureTheory.Measure TopologicalSpace AddSubgro
 open MeasureTheory NNReal ENNReal
 
 attribute [-instance] QuotientAddGroup.measurableSpace Quotient.instMeasurableSpace
+
+noncomputable instance AddCircle.measurableSpace {a : ℝ} : MeasurableSpace (AddCircle a) :=
+  borel (AddCircle a)
+#align add_circle.measurable_space AddCircle.measurableSpace
+
+instance AddCircle.borelSpace {a : ℝ} : BorelSpace (AddCircle a) :=
+  ⟨rfl⟩
+#align add_circle.borel_space AddCircle.borelSpace
+
+@[measurability]
+protected theorem AddCircle.measurable_mk' {a : ℝ} : Measurable (coe : ℝ → AddCircle a) :=
+  Continuous.measurable <| AddCircle.continuous_mk' a
+#align add_circle.measurable_mk' AddCircle.measurable_mk'
 
 theorem isAddFundamentalDomain_Ioc {T : ℝ} (hT : 0 < T) (t : ℝ)
     (μ : Measure ℝ := by exact MeasureTheory.MeasureSpace.volume) :

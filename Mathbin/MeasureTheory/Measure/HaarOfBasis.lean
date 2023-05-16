@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.measure.haar_of_basis
-! leanprover-community/mathlib commit f0c8bf9245297a541f468be517f1bde6195105e9
+! leanprover-community/mathlib commit 4b884eff88bf72d32496b0bc7cc0bfccce77f2fa
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -196,7 +196,7 @@ end AddCommGroup
 
 section NormedSpace
 
-variable [NormedAddCommGroup E] [NormedSpace ℝ E]
+variable [NormedAddCommGroup E] [NormedAddCommGroup F] [NormedSpace ℝ E] [NormedSpace ℝ F]
 
 /-- The parallelepiped spanned by a basis, as a compact set with nonempty interior. -/
 def Basis.parallelepiped (b : Basis ι ℝ E) : PositiveCompacts E
@@ -220,6 +220,29 @@ def Basis.parallelepiped (b : Basis ι ℝ E) : PositiveCompacts E
         zero_lt_one, imp_true_iff]
     rwa [← Homeomorph.image_interior, nonempty_image_iff]
 #align basis.parallelepiped Basis.parallelepiped
+
+@[simp]
+theorem Basis.coe_parallelepiped (b : Basis ι ℝ E) :
+    (b.parallelepiped : Set E) = parallelepiped b :=
+  rfl
+#align basis.coe_parallelepiped Basis.coe_parallelepiped
+
+@[simp]
+theorem Basis.parallelepiped_reindex (b : Basis ι ℝ E) (e : ι ≃ ι') :
+    (b.reindex e).parallelepiped = b.parallelepiped :=
+  PositiveCompacts.ext <|
+    (congr_arg parallelepiped (b.coe_reindex _)).trans (parallelepiped_comp_equiv b e.symm)
+#align basis.parallelepiped_reindex Basis.parallelepiped_reindex
+
+theorem Basis.parallelepiped_map (b : Basis ι ℝ E) (e : E ≃ₗ[ℝ] F) :
+    (b.map e).parallelepiped =
+      b.parallelepiped.map e
+        (haveI := FiniteDimensional.of_fintype_basis b
+        e.to_linear_map.continuous_of_finite_dimensional)
+        haveI := FiniteDimensional.of_fintype_basis (b.map e)
+        e.to_linear_map.is_open_map_of_finite_dimensional e.surjective :=
+  PositiveCompacts.ext (image_parallelepiped e.toLinearMap _).symm
+#align basis.parallelepiped_map Basis.parallelepiped_map
 
 variable [MeasurableSpace E] [BorelSpace E]
 

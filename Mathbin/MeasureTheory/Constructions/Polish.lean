@@ -4,13 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Felix Weilacher
 
 ! This file was ported from Lean 3 source module measure_theory.constructions.polish
-! leanprover-community/mathlib commit 3905fa80e62c0898131285baab35559fbc4e5cda
+! leanprover-community/mathlib commit bf6a01357ff5684b1ebcd0f1a13be314fc82c0bf
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Data.Real.Cardinality
 import Mathbin.Topology.Perfect
-import Mathbin.MeasureTheory.Constructions.BorelSpace
+import Mathbin.MeasureTheory.Constructions.BorelSpace.Basic
 
 /-!
 # The Borel sigma-algebra on Polish spaces

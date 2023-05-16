@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module analysis.convex.gauge
-! leanprover-community/mathlib commit 3f655f5297b030a87d641ad4e825af8d9679eb0b
+! leanprover-community/mathlib commit dbdf71cee7bb20367cb7e37279c08b0c218cf967
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.Tactic.Congrm
 
 /-!
 # The Minkowksi functional
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines the Minkowski functional, aka gauge.
 

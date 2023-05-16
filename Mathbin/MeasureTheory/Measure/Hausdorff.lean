@@ -4,12 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.measure.hausdorff
-! leanprover-community/mathlib commit 343e80208d29d2d15f8050b929aa50fe4ce71b55
+! leanprover-community/mathlib commit 0b9eaaa7686280fad8cce467f5c3c57ee6ce77f8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Analysis.SpecialFunctions.Pow
-import Mathbin.MeasureTheory.Constructions.BorelSpace
+import Mathbin.MeasureTheory.Constructions.BorelSpace.Basic
 import Mathbin.MeasureTheory.Measure.Lebesgue
 import Mathbin.Topology.MetricSpace.Holder
 import Mathbin.Topology.MetricSpace.MetricSeparated

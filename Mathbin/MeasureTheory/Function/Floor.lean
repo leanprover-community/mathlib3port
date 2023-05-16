@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.function.floor
-! leanprover-community/mathlib commit d003c55042c3cd08aefd1ae9a42ef89441cdaaf3
+! leanprover-community/mathlib commit bf6a01357ff5684b1ebcd0f1a13be314fc82c0bf
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.MeasureTheory.Constructions.BorelSpace
+import Mathbin.MeasureTheory.Constructions.BorelSpace.Basic
 
 /-!
 # Measurability of `⌊x⌋` etc

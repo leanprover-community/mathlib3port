@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.mul_coeff
-! leanprover-community/mathlib commit 43a289b563d533cfb00f58b812d222371f6f6fac
+! leanprover-community/mathlib commit 2f5b500a507264de86d666a5f87ddb976e2d8de4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,8 +63,8 @@ theorem wittPolyProd_vars (n : ℕ) : (wittPolyProd p n).vars ⊆ univ ×ˢ rang
   by
   rw [witt_poly_prod]
   apply subset.trans (vars_mul _ _)
-  apply union_subset <;>
-    · apply subset.trans (vars_rename _ _)
+  refine' union_subset _ _ <;>
+    · refine' subset.trans (vars_rename _ _) _
       simp [wittPolynomial_vars, image_subset_iff]
 #align witt_vector.witt_poly_prod_vars WittVector.wittPolyProd_vars
 
@@ -77,11 +77,11 @@ def wittPolyProdRemainder (n : ℕ) : MvPolynomial (Fin 2 × ℕ) ℤ :=
 theorem wittPolyProdRemainder_vars (n : ℕ) : (wittPolyProdRemainder p n).vars ⊆ univ ×ˢ range n :=
   by
   rw [witt_poly_prod_remainder]
-  apply subset.trans (vars_sum_subset _ _)
+  refine' subset.trans (vars_sum_subset _ _) _
   rw [bUnion_subset]
   intro x hx
   apply subset.trans (vars_mul _ _)
-  apply union_subset
+  refine' union_subset _ _
   · apply subset.trans (vars_pow _ _)
     have : (p : MvPolynomial (Fin 2 × ℕ) ℤ) = C (p : ℤ) := by simp only [Int.cast_ofNat, eq_intCast]
     rw [this, vars_C]
@@ -113,8 +113,8 @@ theorem remainder_vars (n : ℕ) : (remainder p n).vars ⊆ univ ×ˢ range (n +
   by
   rw [remainder]
   apply subset.trans (vars_mul _ _)
-  apply union_subset <;>
-    · apply subset.trans (vars_sum_subset _ _)
+  refine' union_subset _ _ <;>
+    · refine' subset.trans (vars_sum_subset _ _) _
       rw [bUnion_subset]
       intro x hx
       rw [rename_monomial, vars_monomial, Finsupp.mapDomain_single]
@@ -220,7 +220,7 @@ theorem mul_polyOfInterest_vars (n : ℕ) :
   by
   rw [mul_poly_of_interest_aux5]
   apply subset.trans (vars_sub_subset _ _)
-  apply union_subset
+  refine' union_subset _ _
   · apply remainder_vars
   · apply witt_poly_prod_remainder_vars
 #align witt_vector.mul_poly_of_interest_vars WittVector.mul_polyOfInterest_vars

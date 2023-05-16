@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.function.lp_space
-! leanprover-community/mathlib commit 52932b3a083d4142e78a15dc928084a22fea9ba0
+! leanprover-community/mathlib commit 24e0c85412ff6adbeca08022c25ba4876eedf37a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,7 +13,6 @@ import Mathbin.Analysis.Normed.Group.Hom
 import Mathbin.MeasureTheory.Function.EssSup
 import Mathbin.MeasureTheory.Function.AeEqFun
 import Mathbin.MeasureTheory.Integral.MeanInequalities
-import Mathbin.MeasureTheory.Function.StronglyMeasurable.Inner
 import Mathbin.Topology.ContinuousFunction.Compact
 
 /-!
@@ -1562,47 +1561,26 @@ section IsROrC
 variable {𝕜 : Type _} [IsROrC 𝕜] {f : α → 𝕜}
 
 theorem Memℒp.re (hf : Memℒp f p μ) : Memℒp (fun x => IsROrC.re (f x)) p μ :=
-  haveI : ∀ x, ‖IsROrC.re (f x)‖ ≤ 1 * ‖f x‖ :=
-    by
+  by
+  have : ∀ x, ‖IsROrC.re (f x)‖ ≤ 1 * ‖f x‖ := by
     intro x
     rw [one_mul]
     exact IsROrC.norm_re_le_norm (f x)
-  hf.of_le_mul hf.1.re (eventually_of_forall this)
+  refine' hf.of_le_mul _ (eventually_of_forall this)
+  exact is_R_or_C.continuous_re.comp_ae_strongly_measurable hf.1
 #align measure_theory.mem_ℒp.re MeasureTheory.Memℒp.re
 
 theorem Memℒp.im (hf : Memℒp f p μ) : Memℒp (fun x => IsROrC.im (f x)) p μ :=
-  haveI : ∀ x, ‖IsROrC.im (f x)‖ ≤ 1 * ‖f x‖ :=
-    by
+  by
+  have : ∀ x, ‖IsROrC.im (f x)‖ ≤ 1 * ‖f x‖ := by
     intro x
     rw [one_mul]
     exact IsROrC.norm_im_le_norm (f x)
-  hf.of_le_mul hf.1.im (eventually_of_forall this)
+  refine' hf.of_le_mul _ (eventually_of_forall this)
+  exact is_R_or_C.continuous_im.comp_ae_strongly_measurable hf.1
 #align measure_theory.mem_ℒp.im MeasureTheory.Memℒp.im
 
 end IsROrC
-
-section InnerProduct
-
-variable {E' 𝕜 : Type _} [IsROrC 𝕜] [NormedAddCommGroup E'] [InnerProductSpace 𝕜 E']
-
--- mathport name: «expr⟪ , ⟫»
-local notation "⟪" x ", " y "⟫" => @inner 𝕜 E' _ x y
-
-theorem Memℒp.const_inner (c : E') {f : α → E'} (hf : Memℒp f p μ) :
-    Memℒp (fun a => ⟪c, f a⟫) p μ :=
-  hf.of_le_mul (AeStronglyMeasurable.inner aeStronglyMeasurable_const hf.1)
-    (eventually_of_forall fun x => norm_inner_le_norm _ _)
-#align measure_theory.mem_ℒp.const_inner MeasureTheory.Memℒp.const_inner
-
-theorem Memℒp.inner_const {f : α → E'} (hf : Memℒp f p μ) (c : E') :
-    Memℒp (fun a => ⟪f a, c⟫) p μ :=
-  hf.of_le_mul (AeStronglyMeasurable.inner hf.1 aeStronglyMeasurable_const)
-    (eventually_of_forall fun x => by
-      rw [mul_comm]
-      exact norm_inner_le_norm _ _)
-#align measure_theory.mem_ℒp.inner_const MeasureTheory.Memℒp.inner_const
-
-end InnerProduct
 
 section Liminf
 

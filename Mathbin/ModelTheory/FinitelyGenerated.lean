@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module model_theory.finitely_generated
-! leanprover-community/mathlib commit 0602c59878ff3d5f71dea69c2d32ccf2e93e5398
+! leanprover-community/mathlib commit dbdf71cee7bb20367cb7e37279c08b0c218cf967
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.ModelTheory.Substructures
 
 /-!
 # Finitely Generated First-Order Structures
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 This file defines what it means for a first-order (sub)structure to be finitely or countably
 generated, similarly to other finitely-generated objects in the algebra library.
 

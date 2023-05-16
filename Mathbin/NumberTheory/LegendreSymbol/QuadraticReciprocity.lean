@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Michael Stoll
 
 ! This file was ported from Lean 3 source module number_theory.legendre_symbol.quadratic_reciprocity
-! leanprover-community/mathlib commit 2196ab363eb097c008d4497125e0dde23fb36db2
+! leanprover-community/mathlib commit 74a27133cf29446a0983779e37c8f829a85368f3
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -236,6 +236,71 @@ theorem card_sqrts (hp : p ≠ 2) (a : ℤ) :
 end legendreSym
 
 end Legendre
+
+section QuadraticForm
+
+/-!
+### Applications to binary quadratic forms
+-/
+
+
+namespace legendreSym
+
+/-- The Legendre symbol `legendre_sym p a = 1` if there is a solution in `ℤ/pℤ`
+of the equation `x^2 - a*y^2 = 0` with `y ≠ 0`. -/
+theorem eq_one_of_sq_sub_mul_sq_eq_zero {p : ℕ} [Fact p.Prime] {a : ℤ} (ha : (a : ZMod p) ≠ 0)
+    {x y : ZMod p} (hy : y ≠ 0) (hxy : x ^ 2 - a * y ^ 2 = 0) : legendreSym p a = 1 :=
+  by
+  apply_fun (· * y⁻¹ ^ 2)  at hxy
+  simp only [MulZeroClass.zero_mul] at hxy
+  rw [(by ring : (x ^ 2 - ↑a * y ^ 2) * y⁻¹ ^ 2 = (x * y⁻¹) ^ 2 - a * (y * y⁻¹) ^ 2),
+    mul_inv_cancel hy, one_pow, mul_one, sub_eq_zero, pow_two] at hxy
+  exact (eq_one_iff p ha).mpr ⟨x * y⁻¹, hxy.symm⟩
+#align legendre_sym.eq_one_of_sq_sub_mul_sq_eq_zero legendreSym.eq_one_of_sq_sub_mul_sq_eq_zero
+
+/-- The Legendre symbol `legendre_sym p a = 1` if there is a solution in `ℤ/pℤ`
+of the equation `x^2 - a*y^2 = 0` with `x ≠ 0`. -/
+theorem eq_one_of_sq_sub_mul_sq_eq_zero' {p : ℕ} [Fact p.Prime] {a : ℤ} (ha : (a : ZMod p) ≠ 0)
+    {x y : ZMod p} (hx : x ≠ 0) (hxy : x ^ 2 - a * y ^ 2 = 0) : legendreSym p a = 1 :=
+  haveI hy : y ≠ 0 := by
+    rintro rfl
+    rw [zero_pow' 2 (by norm_num), MulZeroClass.mul_zero, sub_zero,
+      pow_eq_zero_iff (by norm_num : 0 < 2)] at hxy
+    exacts[hx hxy, inferInstance]
+  -- why is the instance not inferred automatically?
+    eq_one_of_sq_sub_mul_sq_eq_zero
+    ha hy hxy
+#align legendre_sym.eq_one_of_sq_sub_mul_sq_eq_zero' legendreSym.eq_one_of_sq_sub_mul_sq_eq_zero'
+
+/-- If `legendre_sym p a = -1`, then the only solution of `x^2 - a*y^2 = 0` in `ℤ/pℤ`
+is the trivial one. -/
+theorem eq_zero_mod_of_eq_neg_one {p : ℕ} [Fact p.Prime] {a : ℤ} (h : legendreSym p a = -1)
+    {x y : ZMod p} (hxy : x ^ 2 - a * y ^ 2 = 0) : x = 0 ∧ y = 0 :=
+  by
+  have ha : (a : ZMod p) ≠ 0 := by
+    intro hf
+    rw [(eq_zero_iff p a).mpr hf] at h
+    exact Int.zero_ne_neg_of_ne zero_ne_one h
+  by_contra hf
+  cases' not_and_distrib.mp hf with hx hy
+  · rw [eq_one_of_sq_sub_mul_sq_eq_zero' ha hx hxy, eq_neg_self_iff] at h
+    exact one_ne_zero h
+  · rw [eq_one_of_sq_sub_mul_sq_eq_zero ha hy hxy, eq_neg_self_iff] at h
+    exact one_ne_zero h
+#align legendre_sym.eq_zero_mod_of_eq_neg_one legendreSym.eq_zero_mod_of_eq_neg_one
+
+/-- If `legendre_sym p a = -1` and `p` divides `x^2 - a*y^2`, then `p` must divide `x` and `y`. -/
+theorem prime_dvd_of_eq_neg_one {p : ℕ} [Fact p.Prime] {a : ℤ} (h : legendreSym p a = -1) {x y : ℤ}
+    (hxy : ↑p ∣ x ^ 2 - a * y ^ 2) : ↑p ∣ x ∧ ↑p ∣ y :=
+  by
+  simp_rw [← ZMod.int_cast_zmod_eq_zero_iff_dvd] at hxy⊢
+  push_cast at hxy
+  exact eq_zero_mod_of_eq_neg_one h hxy
+#align legendre_sym.prime_dvd_of_eq_neg_one legendreSym.prime_dvd_of_eq_neg_one
+
+end legendreSym
+
+end QuadraticForm
 
 section Values
 

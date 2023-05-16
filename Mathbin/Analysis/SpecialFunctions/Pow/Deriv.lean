@@ -4,12 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Sébastien Gouëzel,
   Rémy Degenne
 
-! This file was ported from Lean 3 source module analysis.special_functions.pow_deriv
-! leanprover-community/mathlib commit da1d134ab55eb58347924920695d8200f4740694
+! This file was ported from Lean 3 source module analysis.special_functions.pow.deriv
+! leanprover-community/mathlib commit 0b9eaaa7686280fad8cce467f5c3c57ee6ce77f8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Analysis.SpecialFunctions.Pow
+import Mathbin.Analysis.SpecialFunctions.Pow.Continuity
 import Mathbin.Analysis.SpecialFunctions.Complex.LogDeriv
 import Mathbin.Analysis.Calculus.ExtendDeriv
 import Mathbin.Analysis.SpecialFunctions.Log.Deriv

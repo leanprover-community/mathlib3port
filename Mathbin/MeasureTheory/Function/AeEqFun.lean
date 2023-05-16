@@ -416,7 +416,7 @@ theorem comp₂Measurable_toGerm [PseudoMetrizableSpace β] [SecondCountableTopo
 /-- Given a predicate `p` and an equivalence class `[f]`, return true if `p` holds of `f a`
     for almost all `a` -/
 def LiftPred (p : β → Prop) (f : α →ₘ[μ] β) : Prop :=
-  f.toGerm.lift_pred p
+  f.toGerm.LiftPred p
 #align measure_theory.ae_eq_fun.lift_pred MeasureTheory.AeEqFun.LiftPred
 
 /-- Given a relation `r` and equivalence class `[f]` and `[g]`, return true if `r` holds of

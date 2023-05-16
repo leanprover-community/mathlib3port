@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.fourier.poisson_summation
-! leanprover-community/mathlib commit 38f16f960f5006c6c0c2bac7b0aba5273188f4e5
+! leanprover-community/mathlib commit 0b9eaaa7686280fad8cce467f5c3c57ee6ce77f8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,7 @@ import Mathbin.Analysis.Fourier.AddCircle
 import Mathbin.Analysis.Fourier.FourierTransform
 import Mathbin.Analysis.PSeries
 import Mathbin.Analysis.SchwartzSpace
+import Mathbin.Analysis.SpecialFunctions.Pow.Tactic
 
 /-!
 # Poisson's summation formula

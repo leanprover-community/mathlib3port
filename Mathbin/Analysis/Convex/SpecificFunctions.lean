@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.convex.specific_functions
-! leanprover-community/mathlib commit 74e62ed9b580509201110ae830a9f0b3e9660dbe
+! leanprover-community/mathlib commit 0b9eaaa7686280fad8cce467f5c3c57ee6ce77f8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Analysis.SpecialFunctions.PowDeriv
+import Mathbin.Analysis.SpecialFunctions.Pow.Deriv
 import Mathbin.Analysis.SpecialFunctions.Sqrt
 
 /-!

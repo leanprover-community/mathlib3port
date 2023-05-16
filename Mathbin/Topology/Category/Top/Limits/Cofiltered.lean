@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Scott Morrison, Mario Carneiro, Andrew Yang
 
 ! This file was ported from Lean 3 source module topology.category.Top.limits.cofiltered
-! leanprover-community/mathlib commit 178a32653e369dce2da68dc6b2694e385d484ef1
+! leanprover-community/mathlib commit dbdf71cee7bb20367cb7e37279c08b0c218cf967
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Topology.Category.Top.Limits.Basic
 
 /-!
 # Cofiltered limits in Top.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Given a *compatible* collection of topological bases for the factors in a cofiltered limit
 which contain `set.univ` and are closed under intersections, the induced *naive* collection

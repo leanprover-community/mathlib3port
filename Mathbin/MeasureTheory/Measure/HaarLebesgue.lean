@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.measure.haar_lebesgue
-! leanprover-community/mathlib commit ef093414afad9796939469de466cc3c206e18223
+! leanprover-community/mathlib commit 1fd85189f32d02924c7c6aec50838953e6b797c9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

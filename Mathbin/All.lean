@@ -745,8 +745,13 @@ import Mathbin.Analysis.SpecialFunctions.Log.Monotone
 import Mathbin.Analysis.SpecialFunctions.NonIntegrable
 import Mathbin.Analysis.SpecialFunctions.PolarCoord
 import Mathbin.Analysis.SpecialFunctions.Polynomials
-import Mathbin.Analysis.SpecialFunctions.Pow
-import Mathbin.Analysis.SpecialFunctions.PowDeriv
+import Mathbin.Analysis.SpecialFunctions.Pow.Asymptotics
+import Mathbin.Analysis.SpecialFunctions.Pow.Complex
+import Mathbin.Analysis.SpecialFunctions.Pow.Continuity
+import Mathbin.Analysis.SpecialFunctions.Pow.Deriv
+import Mathbin.Analysis.SpecialFunctions.Pow.Nnreal
+import Mathbin.Analysis.SpecialFunctions.Pow.Real
+import Mathbin.Analysis.SpecialFunctions.Pow.Tactic
 import Mathbin.Analysis.SpecialFunctions.Sqrt
 import Mathbin.Analysis.SpecialFunctions.Stirling
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.Angle
@@ -2101,7 +2106,10 @@ import Mathbin.Logic.Small.List
 import Mathbin.Logic.Unique
 import Mathbin.MeasureTheory.CardMeasurableSpace
 import Mathbin.MeasureTheory.Category.Meas
-import Mathbin.MeasureTheory.Constructions.BorelSpace
+import Mathbin.MeasureTheory.Constructions.BorelSpace.Basic
+import Mathbin.MeasureTheory.Constructions.BorelSpace.Complex
+import Mathbin.MeasureTheory.Constructions.BorelSpace.ContinuousLinearMap
+import Mathbin.MeasureTheory.Constructions.BorelSpace.Metrizable
 import Mathbin.MeasureTheory.Constructions.Pi
 import Mathbin.MeasureTheory.Constructions.Polish
 import Mathbin.MeasureTheory.Constructions.Prod
@@ -2169,6 +2177,7 @@ import Mathbin.MeasureTheory.Integral.IntervalAverage
 import Mathbin.MeasureTheory.Integral.IntervalIntegral
 import Mathbin.MeasureTheory.Integral.Layercake
 import Mathbin.MeasureTheory.Integral.Lebesgue
+import Mathbin.MeasureTheory.Integral.LebesgueNormedSpace
 import Mathbin.MeasureTheory.Integral.MeanInequalities
 import Mathbin.MeasureTheory.Integral.PeakFunction
 import Mathbin.MeasureTheory.Integral.Periodic

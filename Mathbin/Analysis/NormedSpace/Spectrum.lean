@@ -4,12 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.spectrum
-! leanprover-community/mathlib commit 3f655f5297b030a87d641ad4e825af8d9679eb0b
+! leanprover-community/mathlib commit 0b9eaaa7686280fad8cce467f5c3c57ee6ce77f8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Algebra.Spectrum
-import Mathbin.Analysis.SpecialFunctions.Pow
 import Mathbin.Analysis.Complex.Liouville
 import Mathbin.Analysis.Complex.Polynomial
 import Mathbin.Analysis.Analytic.RadiusLiminf

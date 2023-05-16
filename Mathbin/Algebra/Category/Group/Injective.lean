@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 
 ! This file was ported from Lean 3 source module algebra.category.Group.injective
-! leanprover-community/mathlib commit 70fd9563a21e7b963887c9360bd29b2393e6225a
+! leanprover-community/mathlib commit dbdf71cee7bb20367cb7e37279c08b0c218cf967
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -17,6 +17,9 @@ import Mathbin.RingTheory.PrincipalIdealDomain
 
 /-!
 # Injective objects in the category of abelian groups
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we prove that divisible groups are injective object in category of (additive) abelian
 groups.

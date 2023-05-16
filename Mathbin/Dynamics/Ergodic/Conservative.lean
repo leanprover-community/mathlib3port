@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module dynamics.ergodic.conservative
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit bf6a01357ff5684b1ebcd0f1a13be314fc82c0bf
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.MeasureTheory.Constructions.BorelSpace
+import Mathbin.MeasureTheory.Constructions.BorelSpace.Basic
 import Mathbin.Dynamics.Ergodic.MeasurePreserving
 import Mathbin.Combinatorics.Pigeonhole
 

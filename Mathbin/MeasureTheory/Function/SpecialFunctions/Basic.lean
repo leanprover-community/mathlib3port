@@ -4,13 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.function.special_functions.basic
-! leanprover-community/mathlib commit 468b141b14016d54b479eb7a0fff1e360b7e3cf6
+! leanprover-community/mathlib commit 0b9eaaa7686280fad8cce467f5c3c57ee6ce77f8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Analysis.SpecialFunctions.Pow
+import Mathbin.Analysis.SpecialFunctions.Pow.Nnreal
 import Mathbin.Data.IsROrC.Lemmas
-import Mathbin.MeasureTheory.Constructions.BorelSpace
+import Mathbin.MeasureTheory.Constructions.BorelSpace.Complex
 
 /-!
 # Measurability of real and complex functions

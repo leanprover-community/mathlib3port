@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.category.Ring.basic
-! leanprover-community/mathlib commit 34b2a989ad80bce3a5de749d935a4f23726e26e9
+! leanprover-community/mathlib commit dbdf71cee7bb20367cb7e37279c08b0c218cf967
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Algebra.Ring.Equiv
 
 /-!
 # Category instances for semiring, ring, comm_semiring, and comm_ring.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We introduce the bundled categories:
 * `SemiRing`

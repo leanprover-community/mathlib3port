@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.supported
-! leanprover-community/mathlib commit 1dac236edca9b4b6f5f00b1ad831e35f89472837
+! leanprover-community/mathlib commit 2f5b500a507264de86d666a5f87ddb976e2d8de4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,8 +49,6 @@ noncomputable def supported (s : Set σ) : Subalgebra R (MvPolynomial σ R) :=
 -/
 
 variable {σ R}
-
-open Classical
 
 open Algebra
 
@@ -110,15 +108,15 @@ lean 3 declaration is
 but is expected to have type
   forall {σ : Type.{u1}} {R : Type.{u2}} [_inst_1 : CommSemiring.{u2} R] {p : MvPolynomial.{u1, u2} σ R _inst_1} {s : Set.{u1} σ}, Iff (Membership.mem.{max u2 u1, max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (Subalgebra.{u2, max u2 u1} R (MvPolynomial.{u1, u2} σ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1)) (MvPolynomial.algebra.{u2, u2, u1} R R σ _inst_1 _inst_1 (Algebra.id.{u2} R _inst_1))) (SetLike.instMembership.{max u2 u1, max u2 u1} (Subalgebra.{u2, max u2 u1} R (MvPolynomial.{u1, u2} σ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1)) (MvPolynomial.algebra.{u2, u2, u1} R R σ _inst_1 _inst_1 (Algebra.id.{u2} R _inst_1))) (MvPolynomial.{u1, u2} σ R _inst_1) (Subalgebra.instSetLikeSubalgebra.{u2, max u2 u1} R (MvPolynomial.{u1, u2} σ R _inst_1) _inst_1 (CommSemiring.toSemiring.{max u2 u1} (MvPolynomial.{u1, u2} σ R _inst_1) (MvPolynomial.commSemiring.{u2, u1} R σ _inst_1)) (MvPolynomial.algebra.{u2, u2, u1} R R σ _inst_1 _inst_1 (Algebra.id.{u2} R _inst_1)))) p (MvPolynomial.supported.{u2, u1} σ R _inst_1 s)) (HasSubset.Subset.{u1} (Set.{u1} σ) (Set.instHasSubsetSet.{u1} σ) (Finset.toSet.{u1} σ (MvPolynomial.vars.{u2, u1} R σ _inst_1 p)) s)
 Case conversion may be inaccurate. Consider using '#align mv_polynomial.mem_supported MvPolynomial.mem_supportedₓ'. -/
-theorem mem_supported : p ∈ supported R s ↔ ↑p.vars ⊆ s :=
-  by
-  rw [supported_eq_range_rename, AlgHom.mem_range]
-  constructor
-  · rintro ⟨p, rfl⟩
-    refine' trans (Finset.coe_subset.2 (vars_rename _ _)) _
-    simp
-  · intro hs
-    exact exists_rename_eq_of_vars_subset_range p (coe : s → σ) Subtype.val_injective (by simpa)
+theorem mem_supported : p ∈ supported R s ↔ ↑p.vars ⊆ s := by
+  classical
+    rw [supported_eq_range_rename, AlgHom.mem_range]
+    constructor
+    · rintro ⟨p, rfl⟩
+      refine' trans (Finset.coe_subset.2 (vars_rename _ _)) _
+      simp
+    · intro hs
+      exact exists_rename_eq_of_vars_subset_range p (coe : s → σ) Subtype.val_injective (by simpa)
 #align mv_polynomial.mem_supported MvPolynomial.mem_supported
 
 /- warning: mv_polynomial.supported_eq_vars_subset -> MvPolynomial.supported_eq_vars_subset is a dubious translation:

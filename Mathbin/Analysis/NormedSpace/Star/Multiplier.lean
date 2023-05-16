@@ -4,14 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux, Jon Bannon
 
 ! This file was ported from Lean 3 source module analysis.normed_space.star.multiplier
-! leanprover-community/mathlib commit d3af0609f6db8691dffdc3e1fb7feb7da72698f2
+! leanprover-community/mathlib commit 0b9eaaa7686280fad8cce467f5c3c57ee6ce77f8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Star.StarAlgHom
 import Mathbin.Analysis.NormedSpace.Star.Basic
 import Mathbin.Analysis.NormedSpace.OperatorNorm
-import Mathbin.Analysis.SpecialFunctions.Pow
+import Mathbin.Analysis.SpecialFunctions.Pow.Nnreal
 import Mathbin.Analysis.NormedSpace.Star.Mul
 
 /-!

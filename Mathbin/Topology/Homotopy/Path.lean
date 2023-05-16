@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam
 
 ! This file was ported from Lean 3 source module topology.homotopy.path
-! leanprover-community/mathlib commit bb9d1c5085e0b7ea619806a68c5021927cecb2a6
+! leanprover-community/mathlib commit dbdf71cee7bb20367cb7e37279c08b0c218cf967
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Analysis.Convex.Basic
 
 /-!
 # Homotopy between paths
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file, we define a `homotopy` between two `path`s. In addition, we define a relation
 `homotopic` on `path`s, and prove that it is an equivalence relation.

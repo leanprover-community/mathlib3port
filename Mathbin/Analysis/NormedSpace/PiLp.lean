@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.pi_Lp
-! leanprover-community/mathlib commit 2fd0de23fbbf0f8a84dbb7bc2e7a2da45de67f8b
+! leanprover-community/mathlib commit e9f2a838ee9090764d63f65168bb11d6ac732145
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -861,13 +861,22 @@ theorem norm_equiv_symm_one {β} [SeminormedAddCommGroup β] (hp : p ≠ ∞) [O
 
 variable (𝕜 p)
 
-/-- `pi_Lp.equiv` as a linear map. -/
+/-- `pi_Lp.equiv` as a linear equivalence. -/
 @[simps (config := { fullyApplied := false })]
 protected def linearEquiv : PiLp p β ≃ₗ[𝕜] ∀ i, β i :=
   { LinearEquiv.refl _ _ with
     toFun := PiLp.equiv _ _
     invFun := (PiLp.equiv _ _).symm }
 #align pi_Lp.linear_equiv PiLp.linearEquiv
+
+/-- `pi_Lp.equiv` as a continuous linear equivalence. -/
+@[simps (config := { fullyApplied := false })]
+protected def continuousLinearEquiv : PiLp p β ≃L[𝕜] ∀ i, β i
+    where
+  toLinearEquiv := PiLp.linearEquiv _ _ _
+  continuous_toFun := continuous_equiv _ _
+  continuous_invFun := continuous_equiv_symm _ _
+#align pi_Lp.continuous_linear_equiv PiLp.continuousLinearEquiv
 
 section Basis
 

@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.function.l2_space
-! leanprover-community/mathlib commit 3f655f5297b030a87d641ad4e825af8d9679eb0b
+! leanprover-community/mathlib commit 24e0c85412ff6adbeca08022c25ba4876eedf37a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Analysis.InnerProductSpace.Basic
+import Mathbin.MeasureTheory.Function.StronglyMeasurable.Inner
 import Mathbin.MeasureTheory.Integral.SetIntegral
 
 /-! # `L^2` space
@@ -29,7 +29,7 @@ is also an inner product space, with inner product defined as `inner f g = ∫ a
 
 noncomputable section
 
-open TopologicalSpace MeasureTheory MeasureTheory.lp
+open TopologicalSpace MeasureTheory MeasureTheory.lp Filter
 
 open NNReal ENNReal MeasureTheory
 
@@ -61,6 +61,63 @@ theorem memℒp_two_iff_integrable_sq {f : α → ℝ} (hf : AeStronglyMeasurabl
 #align measure_theory.mem_ℒp_two_iff_integrable_sq MeasureTheory.memℒp_two_iff_integrable_sq
 
 end
+
+section InnerProductSpace
+
+variable {α : Type _} {m : MeasurableSpace α} {p : ℝ≥0∞} {μ : Measure α}
+
+variable {E 𝕜 : Type _} [IsROrC 𝕜] [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+
+-- mathport name: «expr⟪ , ⟫»
+local notation "⟪" x ", " y "⟫" => @inner 𝕜 E _ x y
+
+theorem Memℒp.const_inner (c : E) {f : α → E} (hf : Memℒp f p μ) : Memℒp (fun a => ⟪c, f a⟫) p μ :=
+  hf.of_le_mul (AeStronglyMeasurable.inner aeStronglyMeasurable_const hf.1)
+    (eventually_of_forall fun x => norm_inner_le_norm _ _)
+#align measure_theory.mem_ℒp.const_inner MeasureTheory.Memℒp.const_inner
+
+theorem Memℒp.inner_const {f : α → E} (hf : Memℒp f p μ) (c : E) : Memℒp (fun a => ⟪f a, c⟫) p μ :=
+  hf.of_le_mul (AeStronglyMeasurable.inner hf.1 aeStronglyMeasurable_const)
+    (eventually_of_forall fun x => by
+      rw [mul_comm]
+      exact norm_inner_le_norm _ _)
+#align measure_theory.mem_ℒp.inner_const MeasureTheory.Memℒp.inner_const
+
+variable {f : α → E}
+
+theorem Integrable.const_inner (c : E) (hf : Integrable f μ) : Integrable (fun x => ⟪c, f x⟫) μ :=
+  by
+  rw [← mem_ℒp_one_iff_integrable] at hf⊢
+  exact hf.const_inner c
+#align measure_theory.integrable.const_inner MeasureTheory.Integrable.const_inner
+
+theorem Integrable.inner_const (hf : Integrable f μ) (c : E) : Integrable (fun x => ⟪f x, c⟫) μ :=
+  by
+  rw [← mem_ℒp_one_iff_integrable] at hf⊢
+  exact hf.inner_const c
+#align measure_theory.integrable.inner_const MeasureTheory.Integrable.inner_const
+
+variable [CompleteSpace E] [NormedSpace ℝ E]
+
+theorem integral_inner {f : α → E} (hf : Integrable f μ) (c : E) :
+    (∫ x, ⟪c, f x⟫ ∂μ) = ⟪c, ∫ x, f x ∂μ⟫ :=
+  ((innerSL 𝕜 c).restrictScalars ℝ).integral_comp_comm hf
+#align integral_inner integral_inner
+
+variable (𝕜)
+
+-- mathport name: inner_with_explicit
+-- variable binder update doesn't work for lemmas which refer to `𝕜` only via the notation
+local notation "⟪" x ", " y "⟫" => @inner 𝕜 E _ x y
+
+theorem integral_eq_zero_of_forall_integral_inner_eq_zero (f : α → E) (hf : Integrable f μ)
+    (hf_int : ∀ c : E, (∫ x, ⟪c, f x⟫ ∂μ) = 0) : (∫ x, f x ∂μ) = 0 :=
+  by
+  specialize hf_int (∫ x, f x ∂μ)
+  rwa [integral_inner hf, inner_self_eq_zero] at hf_int
+#align integral_eq_zero_of_forall_integral_inner_eq_zero integral_eq_zero_of_forall_integral_inner_eq_zero
+
+end InnerProductSpace
 
 namespace L2
 
@@ -178,7 +235,7 @@ instance innerProductSpace : InnerProductSpace 𝕜 (α →₂[μ] E)
     where
   norm_sq_eq_inner := norm_sq_eq_inner'
   conj_symm _ _ := by simp_rw [inner_def, ← integral_conj, inner_conj_symm]
-  add_left := add_left'
+  addLeft := add_left'
   smul_left := smul_left'
 #align measure_theory.L2.inner_product_space MeasureTheory.L2.innerProductSpace
 

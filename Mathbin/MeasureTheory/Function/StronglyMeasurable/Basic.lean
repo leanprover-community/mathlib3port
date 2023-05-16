@@ -4,12 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.function.strongly_measurable.basic
-! leanprover-community/mathlib commit 7317149f12f55affbc900fc873d0d422485122b9
+! leanprover-community/mathlib commit bf6a01357ff5684b1ebcd0f1a13be314fc82c0bf
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.Analysis.NormedSpace.FiniteDimension
 import Mathbin.Analysis.NormedSpace.BoundedLinearMaps
-import Mathbin.Topology.MetricSpace.Metrizable
+import Mathbin.MeasureTheory.Constructions.BorelSpace.Metrizable
 import Mathbin.MeasureTheory.Integral.Lebesgue
 import Mathbin.MeasureTheory.Function.SimpleFuncDense
 

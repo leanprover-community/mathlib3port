@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou
 
 ! This file was ported from Lean 3 source module measure_theory.function.l1_space
-! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
+! leanprover-community/mathlib commit 24e0c85412ff6adbeca08022c25ba4876eedf37a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1161,29 +1161,6 @@ theorem Integrable.im (hf : Integrable f μ) : Integrable (fun x => IsROrC.im (f
 #align measure_theory.integrable.im MeasureTheory.Integrable.im
 
 end IsROrC
-
-section InnerProduct
-
-variable {𝕜 E : Type _}
-
-variable [IsROrC 𝕜] [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] {f : α → E}
-
--- mathport name: «expr⟪ , ⟫»
-local notation "⟪" x ", " y "⟫" => @inner 𝕜 E _ x y
-
-theorem Integrable.const_inner (c : E) (hf : Integrable f μ) : Integrable (fun x => ⟪c, f x⟫) μ :=
-  by
-  rw [← mem_ℒp_one_iff_integrable] at hf⊢
-  exact hf.const_inner c
-#align measure_theory.integrable.const_inner MeasureTheory.Integrable.const_inner
-
-theorem Integrable.inner_const (hf : Integrable f μ) (c : E) : Integrable (fun x => ⟪f x, c⟫) μ :=
-  by
-  rw [← mem_ℒp_one_iff_integrable] at hf⊢
-  exact hf.inner_const c
-#align measure_theory.integrable.inner_const MeasureTheory.Integrable.inner_const
-
-end InnerProduct
 
 section Trim
 

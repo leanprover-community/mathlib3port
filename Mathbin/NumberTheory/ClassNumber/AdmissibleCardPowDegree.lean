@@ -4,20 +4,20 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module number_theory.class_number.admissible_card_pow_degree
-! leanprover-community/mathlib commit 6155d4351090a6fad236e3d2e4e0e4e7342668e8
+! leanprover-community/mathlib commit 0b9eaaa7686280fad8cce467f5c3c57ee6ce77f8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.NumberTheory.ClassNumber.AdmissibleAbsoluteValue
-import Mathbin.Analysis.SpecialFunctions.Pow
+import Mathbin.Analysis.SpecialFunctions.Pow.Real
 import Mathbin.RingTheory.Ideal.LocalRing
 import Mathbin.Data.Polynomial.Degree.CardPowDegree
 
 /-!
 # Admissible absolute values on polynomials
-This file defines an admissible absolute value
-`polynomial.card_pow_degree_is_admissible` which we use to show the class number
-of the ring of integers of a function field is finite.
+
+This file defines an admissible absolute value `polynomial.card_pow_degree_is_admissible` which we
+use to show the class number of the ring of integers of a function field is finite.
 
 ## Main results
 

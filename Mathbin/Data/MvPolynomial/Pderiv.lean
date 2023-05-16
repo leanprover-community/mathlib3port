@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.pderiv
-! leanprover-community/mathlib commit 67dcdef25397eedde255db0876b9c55eab2a62a2
+! leanprover-community/mathlib commit 2f5b500a507264de86d666a5f87ddb976e2d8de4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,7 +52,7 @@ namespace MvPolynomial
 
 open Set Function Finsupp AddMonoidAlgebra
 
-open Classical BigOperators
+open BigOperators
 
 variable {R : Type u} {σ : Type v} {a a' a₁ a₂ : R} {s : σ →₀ ℕ}
 
@@ -62,19 +62,25 @@ variable {R} [CommSemiring R]
 
 /-- `pderiv i p` is the partial derivative of `p` with respect to `i` -/
 def pderiv (i : σ) : Derivation R (MvPolynomial σ R) (MvPolynomial σ R) :=
-  mkDerivation R <| Pi.single i 1
+  letI := Classical.decEq σ
+  mk_derivation R <| Pi.single i 1
 #align mv_polynomial.pderiv MvPolynomial.pderiv
+
+theorem pderiv_def [DecidableEq σ] (i : σ) : pderiv i = mkDerivation R (Pi.single i 1) := by
+  convert rfl
+#align mv_polynomial.pderiv_def MvPolynomial.pderiv_def
 
 @[simp]
 theorem pderiv_monomial {i : σ} : pderiv i (monomial s a) = monomial (s - single i 1) (a * s i) :=
   by
-  simp only [pderiv, mk_derivation_monomial, Finsupp.smul_sum, smul_eq_mul, ← smul_mul_assoc, ←
-    (monomial _).map_smul]
-  refine' (Finset.sum_eq_single i (fun j hj hne => _) fun hi => _).trans _
-  · simp [Pi.single_eq_of_ne hne]
-  · rw [Finsupp.not_mem_support_iff] at hi
-    simp [hi]
-  · simp
+  classical
+    simp only [pderiv_def, mk_derivation_monomial, Finsupp.smul_sum, smul_eq_mul, ← smul_mul_assoc,
+      ← (monomial _).map_smul]
+    refine' (Finset.sum_eq_single i (fun j hj hne => _) fun hi => _).trans _
+    · simp [Pi.single_eq_of_ne hne]
+    · rw [Finsupp.not_mem_support_iff] at hi
+      simp [hi]
+    · simp
 #align mv_polynomial.pderiv_monomial MvPolynomial.pderiv_monomial
 
 theorem pderiv_c {i : σ} : pderiv i (C a) = 0 :=
@@ -86,17 +92,18 @@ theorem pderiv_one {i : σ} : pderiv i (1 : MvPolynomial σ R) = 0 :=
 #align mv_polynomial.pderiv_one MvPolynomial.pderiv_one
 
 @[simp]
-theorem pderiv_x [d : DecidableEq σ] (i j : σ) :
-    pderiv i (X j : MvPolynomial σ R) = @Pi.single σ _ d _ i 1 j :=
-  (mkDerivation_x _ _ _).trans (by congr )
+theorem pderiv_x [DecidableEq σ] (i j : σ) :
+    pderiv i (X j : MvPolynomial σ R) = @Pi.single _ _ _ _ i 1 j := by
+  rw [pderiv_def, mk_derivation_X]
 #align mv_polynomial.pderiv_X MvPolynomial.pderiv_x
 
 @[simp]
-theorem pderiv_x_self (i : σ) : pderiv i (X i : MvPolynomial σ R) = 1 := by simp
+theorem pderiv_x_self (i : σ) : pderiv i (X i : MvPolynomial σ R) = 1 := by classical simp
 #align mv_polynomial.pderiv_X_self MvPolynomial.pderiv_x_self
 
 @[simp]
-theorem pderiv_x_of_ne {i j : σ} (h : j ≠ i) : pderiv i (X j : MvPolynomial σ R) = 0 := by simp [h]
+theorem pderiv_x_of_ne {i j : σ} (h : j ≠ i) : pderiv i (X j : MvPolynomial σ R) = 0 := by
+  classical simp [h]
 #align mv_polynomial.pderiv_X_of_ne MvPolynomial.pderiv_x_of_ne
 
 theorem pderiv_eq_zero_of_not_mem_vars {i : σ} {f : MvPolynomial σ R} (h : i ∉ f.vars) :

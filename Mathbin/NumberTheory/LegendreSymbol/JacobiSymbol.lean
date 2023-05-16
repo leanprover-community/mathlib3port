@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 
 ! This file was ported from Lean 3 source module number_theory.legendre_symbol.jacobi_symbol
-! leanprover-community/mathlib commit 8631e2d5ea77f6c13054d9151d82b83069680cb1
+! leanprover-community/mathlib commit 74a27133cf29446a0983779e37c8f829a85368f3
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -239,6 +239,52 @@ theorem mod_left (a : ℤ) (b : ℕ) : J(a | b) = J(a % b | b) :=
 theorem mod_left' {a₁ a₂ : ℤ} {b : ℕ} (h : a₁ % b = a₂ % b) : J(a₁ | b) = J(a₂ | b) := by
   rw [mod_left, h, ← mod_left]
 #align jacobi_sym.mod_left' jacobiSym.mod_left'
+
+/-- If `p` is prime, `J(a | p) = -1` and `p` divides `x^2 - a*y^2`, then `p` must divide
+`x` and `y`. -/
+theorem prime_dvd_of_eq_neg_one {p : ℕ} [Fact p.Prime] {a : ℤ} (h : J(a | p) = -1) {x y : ℤ}
+    (hxy : ↑p ∣ x ^ 2 - a * y ^ 2) : ↑p ∣ x ∧ ↑p ∣ y :=
+  by
+  rw [← legendreSym.to_jacobiSym] at h
+  exact legendreSym.prime_dvd_of_eq_neg_one h hxy
+#align jacobi_sym.prime_dvd_of_eq_neg_one jacobiSym.prime_dvd_of_eq_neg_one
+
+/-- We can pull out a product over a list in the first argument of the Jacobi symbol. -/
+theorem list_prod_left {l : List ℤ} {n : ℕ} : J(l.Prod | n) = (l.map fun a => J(a | n)).Prod :=
+  by
+  induction' l with n l' ih
+  · simp only [List.prod_nil, List.map_nil, one_left]
+  · rw [List.map, List.prod_cons, List.prod_cons, mul_left, ih]
+#align jacobi_sym.list_prod_left jacobiSym.list_prod_left
+
+/-- We can pull out a product over a list in the second argument of the Jacobi symbol. -/
+theorem list_prod_right {a : ℤ} {l : List ℕ} (hl : ∀ n ∈ l, n ≠ 0) :
+    J(a | l.Prod) = (l.map fun n => J(a | n)).Prod :=
+  by
+  induction' l with n l' ih
+  · simp only [List.prod_nil, one_right, List.map_nil]
+  · have hn := hl n (List.mem_cons_self n l')
+    -- `n ≠ 0`
+    have hl' := List.prod_ne_zero fun hf => hl 0 (List.mem_cons_of_mem _ hf) rfl
+    -- `l'.prod ≠ 0`
+    have h := fun m hm => hl m (List.mem_cons_of_mem _ hm)
+    -- `∀ (m : ℕ), m ∈ l' → m ≠ 0`
+    rw [List.map, List.prod_cons, List.prod_cons, mul_right' a hn hl', ih h]
+#align jacobi_sym.list_prod_right jacobiSym.list_prod_right
+
+/-- If `J(a | n) = -1`, then `n` has a prime divisor `p` such that `J(a | p) = -1`. -/
+theorem eq_neg_one_at_prime_divisor_of_eq_neg_one {a : ℤ} {n : ℕ} (h : J(a | n) = -1) :
+    ∃ (p : ℕ)(hp : p.Prime), p ∣ n ∧ J(a | p) = -1 :=
+  by
+  have hn₀ : n ≠ 0 := by
+    rintro rfl
+    rw [zero_right, eq_neg_self_iff] at h
+    exact one_ne_zero h
+  have hf₀ : ∀ p ∈ n.factors, p ≠ 0 := fun p hp => (Nat.pos_of_mem_factors hp).Ne.symm
+  rw [← Nat.prod_factors hn₀, list_prod_right hf₀] at h
+  obtain ⟨p, hmem, hj⟩ := list.mem_map.mp (List.neg_one_mem_of_prod_eq_neg_one h)
+  exact ⟨p, Nat.prime_of_mem_factors hmem, Nat.dvd_of_mem_factors hmem, hj⟩
+#align jacobi_sym.eq_neg_one_at_prime_divisor_of_eq_neg_one jacobiSym.eq_neg_one_at_prime_divisor_of_eq_neg_one
 
 end jacobiSym
 

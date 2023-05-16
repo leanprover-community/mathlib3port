@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.subterminal
-! leanprover-community/mathlib commit bb103f356534a9a7d3596a672097e375290a4c3a
+! leanprover-community/mathlib commit dbdf71cee7bb20367cb7e37279c08b0c218cf967
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.CategoryTheory.Subobject.MonoOver
 
 /-!
 # Subterminal objects
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Subterminal objects are the objects which can be thought of as subobjects of the terminal object.
 In fact, the definition can be constructed to not require a terminal object, by defining `A` to be

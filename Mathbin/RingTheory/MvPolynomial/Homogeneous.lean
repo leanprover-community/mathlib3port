@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Eric Wieser
 
 ! This file was ported from Lean 3 source module ring_theory.mv_polynomial.homogeneous
-! leanprover-community/mathlib commit 70fd9563a21e7b963887c9360bd29b2393e6225a
+! leanprover-community/mathlib commit 2f5b500a507264de86d666a5f87ddb976e2d8de4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -250,8 +250,6 @@ section
 
 noncomputable section
 
-open Classical
-
 open Finset
 
 /-- `homogeneous_component n φ` is the part of `φ` that is homogeneous of degree `n`.
@@ -291,8 +289,8 @@ theorem homogeneousComponent_zero : homogeneousComponent 0 φ = C (coeff 0 φ) :
   ext1 d
   rcases em (d = 0) with (rfl | hd)
   ·
-    simp only [coeff_homogeneous_component, sum_eq_zero_iff, Finsupp.zero_apply, if_true, coeff_C,
-      eq_self_iff_true, forall_true_iff]
+    classical simp only [coeff_homogeneous_component, sum_eq_zero_iff, Finsupp.zero_apply, if_true,
+        coeff_C, eq_self_iff_true, forall_true_iff]
   · rw [coeff_homogeneous_component, if_neg, coeff_C, if_neg (Ne.symm hd)]
     simp only [Finsupp.ext_iff, Finsupp.zero_apply] at hd
     simp [hd]

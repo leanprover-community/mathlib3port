@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.function.jacobian
-! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
+! leanprover-community/mathlib commit bf6a01357ff5684b1ebcd0f1a13be314fc82c0bf
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.MeasureTheory.Constructions.BorelSpace.ContinuousLinearMap
 import Mathbin.MeasureTheory.Covering.BesicovitchVectorSpace
 import Mathbin.MeasureTheory.Measure.HaarLebesgue
 import Mathbin.Analysis.NormedSpace.Pointwise

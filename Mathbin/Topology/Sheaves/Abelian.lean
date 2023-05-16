@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz, Jujian Zhang
 
 ! This file was ported from Lean 3 source module topology.sheaves.abelian
-! leanprover-community/mathlib commit ac3ae212f394f508df43e37aa093722fa9b65d31
+! leanprover-community/mathlib commit dbdf71cee7bb20367cb7e37279c08b0c218cf967
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.CategoryTheory.Sites.LeftExact
 
 /-!
 # Category of sheaves is abelian
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 Let `C, D` be categories and `J` be a grothendieck topology on `C`, when `D` is abelian and
 sheafification is possible in `C`, `Sheaf J D` is abelian as well (`Sheaf_is_abelian`).
 

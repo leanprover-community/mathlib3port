@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Johan Commelin, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.equiv
-! leanprover-community/mathlib commit cb3ceec8485239a61ed51d944cb9a95b68c6bafc
+! leanprover-community/mathlib commit 2f5b500a507264de86d666a5f87ddb976e2d8de4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,7 +50,7 @@ equivalence, isomorphism, morphism, ring hom, hom
 
 noncomputable section
 
-open Classical BigOperators Polynomial
+open BigOperators Polynomial
 
 open Set Function Finsupp AddMonoidAlgebra
 
