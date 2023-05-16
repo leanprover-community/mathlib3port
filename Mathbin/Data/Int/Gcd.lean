@@ -785,6 +785,12 @@ namespace Tactic
 
 namespace NormNum
 
+/- warning: tactic.norm_num.int_gcd_helper' -> Tactic.NormNum.int_gcd_helper' is a dubious translation:
+lean 3 declaration is
+  forall {d : Nat} {x : Int} {y : Int} {a : Int} {b : Int}, (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d) x) -> (Dvd.Dvd.{0} Int (semigroupDvd.{0} Int Int.semigroup) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d) y) -> (Eq.{1} Int (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) x a) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) y b)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) d)) -> (Eq.{1} Nat (Int.gcd x y) d)
+but is expected to have type
+  forall {d : Nat} {x : Int} {y : Int} (a : Int) (b : Int), (Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int instNatCastInt d) x) -> (Dvd.dvd.{0} Int Int.instDvdInt (Nat.cast.{0} Int instNatCastInt d) y) -> (Eq.{1} Int (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) x a) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) y b)) (Nat.cast.{0} Int instNatCastInt d)) -> (Eq.{1} Nat (Int.gcd x y) d)
+Case conversion may be inaccurate. Consider using '#align tactic.norm_num.int_gcd_helper' Tactic.NormNum.int_gcd_helper'ₓ'. -/
 theorem int_gcd_helper' {d : ℕ} {x y a b : ℤ} (h₁ : (d : ℤ) ∣ x) (h₂ : (d : ℤ) ∣ y)
     (h₃ : x * a + y * b = d) : Int.gcd x y = d :=
   by
@@ -795,14 +801,32 @@ theorem int_gcd_helper' {d : ℕ} {x y a b : ℤ} (h₁ : (d : ℤ) ∣ x) (h₂
   · exact (Int.gcd_dvd_right _ _).mul_right _
 #align tactic.norm_num.int_gcd_helper' Tactic.NormNum.int_gcd_helper'
 
+/- warning: tactic.norm_num.nat_gcd_helper_dvd_left -> Tactic.NormNum.nat_gcd_helper_dvd_left is a dubious translation:
+lean 3 declaration is
+  forall (x : Nat) (y : Nat) (a : Nat), (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) x a) y) -> (Eq.{1} Nat (Nat.gcd x y) x)
+but is expected to have type
+  forall (x : Nat) (y : Nat), (Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) y x) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Eq.{1} Nat (Nat.gcd x y) x)
+Case conversion may be inaccurate. Consider using '#align tactic.norm_num.nat_gcd_helper_dvd_left Tactic.NormNum.nat_gcd_helper_dvd_leftₓ'. -/
 theorem nat_gcd_helper_dvd_left (x y a : ℕ) (h : x * a = y) : Nat.gcd x y = x :=
   Nat.gcd_eq_left ⟨a, h.symm⟩
 #align tactic.norm_num.nat_gcd_helper_dvd_left Tactic.NormNum.nat_gcd_helper_dvd_left
 
+/- warning: tactic.norm_num.nat_gcd_helper_dvd_right -> Tactic.NormNum.nat_gcd_helper_dvd_right is a dubious translation:
+lean 3 declaration is
+  forall (x : Nat) (y : Nat) (a : Nat), (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) y a) x) -> (Eq.{1} Nat (Nat.gcd x y) y)
+but is expected to have type
+  forall (x : Nat) (y : Nat), (Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) x y) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Eq.{1} Nat (Nat.gcd x y) y)
+Case conversion may be inaccurate. Consider using '#align tactic.norm_num.nat_gcd_helper_dvd_right Tactic.NormNum.nat_gcd_helper_dvd_rightₓ'. -/
 theorem nat_gcd_helper_dvd_right (x y a : ℕ) (h : y * a = x) : Nat.gcd x y = y :=
   Nat.gcd_eq_right ⟨a, h.symm⟩
 #align tactic.norm_num.nat_gcd_helper_dvd_right Tactic.NormNum.nat_gcd_helper_dvd_right
 
+/- warning: tactic.norm_num.nat_gcd_helper_2 -> Tactic.NormNum.nat_gcd_helper_2 is a dubious translation:
+lean 3 declaration is
+  forall (d : Nat) (x : Nat) (y : Nat) (a : Nat) (b : Nat) (u : Nat) (v : Nat) (tx : Nat) (ty : Nat), (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) d u) x) -> (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) d v) y) -> (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) x a) tx) -> (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) y b) ty) -> (Eq.{1} Nat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) ty d) tx) -> (Eq.{1} Nat (Nat.gcd x y) d)
+but is expected to have type
+  forall (d : Nat) (x : Nat) (y : Nat) (a : Nat) (b : Nat), (Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) x d) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) y d) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) x a) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) y b) d)) -> (Eq.{1} Nat (Nat.gcd x y) d)
+Case conversion may be inaccurate. Consider using '#align tactic.norm_num.nat_gcd_helper_2 Tactic.NormNum.nat_gcd_helper_2ₓ'. -/
 theorem nat_gcd_helper_2 (d x y a b u v tx ty : ℕ) (hu : d * u = x) (hv : d * v = y)
     (hx : x * a = tx) (hy : y * b = ty) (h : ty + d = tx) : Nat.gcd x y = d :=
   by
@@ -813,11 +837,23 @@ theorem nat_gcd_helper_2 (d x y a b u v tx ty : ℕ) (hu : d * u = x) (hv : d * 
   norm_cast; rw [hx, hy, h]
 #align tactic.norm_num.nat_gcd_helper_2 Tactic.NormNum.nat_gcd_helper_2
 
+/- warning: tactic.norm_num.nat_gcd_helper_1 -> Tactic.NormNum.nat_gcd_helper_1 is a dubious translation:
+lean 3 declaration is
+  forall (d : Nat) (x : Nat) (y : Nat) (a : Nat) (b : Nat) (u : Nat) (v : Nat) (tx : Nat) (ty : Nat), (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) d u) x) -> (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) d v) y) -> (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) x a) tx) -> (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) y b) ty) -> (Eq.{1} Nat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) tx d) ty) -> (Eq.{1} Nat (Nat.gcd x y) d)
+but is expected to have type
+  forall (d : Nat) (x : Nat) (y : Nat) (a : Nat) (b : Nat), (Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) x d) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Eq.{1} Nat (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) y d) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) y b) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) x a) d)) -> (Eq.{1} Nat (Nat.gcd x y) d)
+Case conversion may be inaccurate. Consider using '#align tactic.norm_num.nat_gcd_helper_1 Tactic.NormNum.nat_gcd_helper_1ₓ'. -/
 theorem nat_gcd_helper_1 (d x y a b u v tx ty : ℕ) (hu : d * u = x) (hv : d * v = y)
     (hx : x * a = tx) (hy : y * b = ty) (h : tx + d = ty) : Nat.gcd x y = d :=
   (Nat.gcd_comm _ _).trans <| nat_gcd_helper_2 _ _ _ _ _ _ _ _ _ hv hu hy hx h
 #align tactic.norm_num.nat_gcd_helper_1 Tactic.NormNum.nat_gcd_helper_1
 
+/- warning: tactic.norm_num.nat_lcm_helper -> Tactic.NormNum.nat_lcm_helper is a dubious translation:
+lean 3 declaration is
+  forall (x : Nat) (y : Nat) (d : Nat) (m : Nat) (n : Nat), (Eq.{1} Nat (Nat.gcd x y) d) -> (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) d) -> (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) x y) n) -> (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) d m) n) -> (Eq.{1} Nat (Nat.lcm x y) m)
+but is expected to have type
+  forall (x : Nat) (y : Nat) (d : Nat) (m : Nat), (Eq.{1} Nat (Nat.gcd x y) d) -> (Eq.{1} Bool (Nat.beq d (OfNat.ofNat.{0} ([mdata borrowed:1 Nat]) 0 (instOfNatNat 0))) Bool.false) -> (Eq.{1} Nat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) x y) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) d m)) -> (Eq.{1} Nat (Nat.lcm x y) m)
+Case conversion may be inaccurate. Consider using '#align tactic.norm_num.nat_lcm_helper Tactic.NormNum.nat_lcm_helperₓ'. -/
 theorem nat_lcm_helper (x y d m n : ℕ) (hd : Nat.gcd x y = d) (d0 : 0 < d) (xy : x * y = n)
     (dm : d * m = n) : Nat.lcm x y = m :=
   mul_right_injective₀ d0.ne' <| by rw [dm, ← xy, ← hd, Nat.gcd_mul_lcm]
@@ -846,6 +882,12 @@ theorem nat_not_coprime_helper (d x y u v : ℕ) (hu : d * u = x) (hv : d * v = 
   Nat.not_coprime_of_dvd_of_dvd h ⟨_, hu.symm⟩ ⟨_, hv.symm⟩
 #align tactic.norm_num.nat_not_coprime_helper Tactic.NormNum.nat_not_coprime_helper
 
+/- warning: tactic.norm_num.int_gcd_helper -> Tactic.NormNum.int_gcd_helper is a dubious translation:
+lean 3 declaration is
+  forall (x : Int) (y : Int) (nx : Nat) (ny : Nat) (d : Nat), (Eq.{1} Int ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) nx) x) -> (Eq.{1} Int ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) ny) y) -> (Eq.{1} Nat (Nat.gcd nx ny) d) -> (Eq.{1} Nat (Int.gcd x y) d)
+but is expected to have type
+  forall {x : Int} {y : Int} {nx : Nat} {ny : Nat} {d : Nat}, (Eq.{1} Nat (Int.natAbs x) nx) -> (Eq.{1} Nat (Int.natAbs y) ny) -> (Eq.{1} Nat (Nat.gcd nx ny) d) -> (Eq.{1} Nat (Int.gcd x y) d)
+Case conversion may be inaccurate. Consider using '#align tactic.norm_num.int_gcd_helper Tactic.NormNum.int_gcd_helperₓ'. -/
 theorem int_gcd_helper (x y : ℤ) (nx ny d : ℕ) (hx : (nx : ℤ) = x) (hy : (ny : ℤ) = y)
     (h : Nat.gcd nx ny = d) : Int.gcd x y = d := by rwa [← hx, ← hy, Int.coe_nat_gcd]
 #align tactic.norm_num.int_gcd_helper Tactic.NormNum.int_gcd_helper
@@ -858,6 +900,12 @@ theorem int_gcd_helper_neg_right (x y : ℤ) (d : ℕ) (h : Int.gcd x y = d) : I
   rw [Int.gcd] at h⊢ <;> rwa [Int.natAbs_neg]
 #align tactic.norm_num.int_gcd_helper_neg_right Tactic.NormNum.int_gcd_helper_neg_right
 
+/- warning: tactic.norm_num.int_lcm_helper -> Tactic.NormNum.int_lcm_helper is a dubious translation:
+lean 3 declaration is
+  forall (x : Int) (y : Int) (nx : Nat) (ny : Nat) (d : Nat), (Eq.{1} Int ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) nx) x) -> (Eq.{1} Int ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) ny) y) -> (Eq.{1} Nat (Nat.lcm nx ny) d) -> (Eq.{1} Nat (Int.lcm x y) d)
+but is expected to have type
+  forall {x : Int} {y : Int} {nx : Nat} {ny : Nat} {d : Nat}, (Eq.{1} Nat (Int.natAbs x) nx) -> (Eq.{1} Nat (Int.natAbs y) ny) -> (Eq.{1} Nat (Nat.lcm nx ny) d) -> (Eq.{1} Nat (Int.lcm x y) d)
+Case conversion may be inaccurate. Consider using '#align tactic.norm_num.int_lcm_helper Tactic.NormNum.int_lcm_helperₓ'. -/
 theorem int_lcm_helper (x y : ℤ) (nx ny d : ℕ) (hx : (nx : ℤ) = x) (hy : (ny : ℤ) = y)
     (h : Nat.lcm nx ny = d) : Int.lcm x y = d := by rwa [← hx, ← hy, Int.coe_nat_lcm]
 #align tactic.norm_num.int_lcm_helper Tactic.NormNum.int_lcm_helper
