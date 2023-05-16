@@ -1043,7 +1043,7 @@ theorem coe_fn_toEquiv (f : r ≃r s) : (f.toEquiv : α → β) = f :=
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {r : α -> α -> Prop} {s : β -> β -> Prop}, Function.Injective.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RelIso.{u1, u2} α β r s) (α -> β) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RelIso.{u1, u2} α β r s) (fun (ᾰ : RelIso.{u1, u2} α β r s) => α -> β) (RelIso.hasCoeToFun.{u1, u2} α β r s))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {s : β -> β -> Prop}, Function.Injective.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (RelIso.{u2, u1} α β r s) (α -> β) (fun (f : RelIso.{u2, u1} α β r s) => FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RelIso.{u2, u1} α β r s) α (fun (a._@.Mathlib.Order.RelIso.Basic._hyg.8776 : α) => β) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (RelIso.{u2, u1} α β r s) α β r s (RelIso.instRelHomClassRelIso.{u2, u1} α β r s)) f)
+  forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {s : β -> β -> Prop}, Function.Injective.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (RelIso.{u2, u1} α β r s) (α -> β) (fun (f : RelIso.{u2, u1} α β r s) => FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RelIso.{u2, u1} α β r s) α (fun (a._@.Mathlib.Order.RelIso.Basic._hyg.8777 : α) => β) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (RelIso.{u2, u1} α β r s) α β r s (RelIso.instRelHomClassRelIso.{u2, u1} α β r s)) f)
 Case conversion may be inaccurate. Consider using '#align rel_iso.coe_fn_injective RelIso.coe_fn_injectiveₓ'. -/
 /-- The map `coe_fn : (r ≃r s) → (α → β)` is injective. Lean fails to parse
 `function.injective (λ e : r ≃r s, (e : α → β))`, so we use a trick to say the same. -/
