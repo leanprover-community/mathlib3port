@@ -341,10 +341,10 @@ theorem rCond_of_bRiemann_eq_false {ι} (l : IntegrationParams) (hl : l.bRiemann
     {r : (ι → ℝ) → Ioi (0 : ℝ)} : l.RCond r := by simp [r_cond, hl]
 #align box_integral.integration_params.r_cond_of_bRiemann_eq_ff BoxIntegral.IntegrationParams.rCond_of_bRiemann_eq_false
 
-theorem toFilter_inf_union_eq (l : IntegrationParams) (I : Box ι) (π₀ : Prepartition I) :
+theorem toFilter_inf_iUnion_eq (l : IntegrationParams) (I : Box ι) (π₀ : Prepartition I) :
     l.toFilter I ⊓ 𝓟 { π | π.iUnion = π₀.iUnion } = l.toFilterUnion I π₀ :=
   (iSup_inf_principal _ _).symm
-#align box_integral.integration_params.to_filter_inf_Union_eq BoxIntegral.IntegrationParams.toFilter_inf_union_eq
+#align box_integral.integration_params.to_filter_inf_Union_eq BoxIntegral.IntegrationParams.toFilter_inf_iUnion_eq
 
 theorem MemBaseSet.mono' (I : Box ι) (h : l₁ ≤ l₂) (hc : c₁ ≤ c₂) {π : TaggedPrepartition I}
     (hr : ∀ J ∈ π, r₁ (π.Tag J) ≤ r₂ (π.Tag J)) (hπ : l₁.MemBaseSet I c₁ r₁ π) :
@@ -411,9 +411,9 @@ protected theorem MemBaseSet.filter (hπ : l.MemBaseSet I c r π) (p : Box ι �
     simpa [hc]
 #align box_integral.integration_params.mem_base_set.filter BoxIntegral.IntegrationParams.MemBaseSet.filter
 
-theorem bUnionTagged_memBaseSet {π : Prepartition I} {πi : ∀ J, TaggedPrepartition J}
+theorem bUnionTaggedMemBaseSet {π : Prepartition I} {πi : ∀ J, TaggedPrepartition J}
     (h : ∀ J ∈ π, l.MemBaseSet J c r (πi J)) (hp : ∀ J ∈ π, (πi J).IsPartition)
-    (hc : l.bDistortion → π.compl.distortion ≤ c) : l.MemBaseSet I c r (π.bUnionTagged πi) :=
+    (hc : l.bDistortion → π.compl.distortion ≤ c) : l.MemBaseSet I c r (π.biUnionTagged πi) :=
   by
   refine'
     ⟨tagged_prepartition.is_subordinate_bUnion_tagged.2 fun J hJ => (h J hJ).1, fun hH =>
@@ -424,7 +424,7 @@ theorem bUnionTagged_memBaseSet {π : Prepartition I} {πi : ∀ J, TaggedPrepar
   · refine' ⟨_, _, hc hD⟩
     rw [π.Union_compl, ← π.Union_bUnion_partition hp]
     rfl
-#align box_integral.integration_params.bUnion_tagged_mem_base_set BoxIntegral.IntegrationParams.bUnionTagged_memBaseSet
+#align box_integral.integration_params.bUnion_tagged_mem_base_set BoxIntegral.IntegrationParams.bUnionTaggedMemBaseSet
 
 @[mono]
 theorem RCond.mono {ι : Type _} {r : (ι → ℝ) → Ioi (0 : ℝ)} (h : l₁ ≤ l₂) (hr : l₂.RCond r) :
@@ -518,14 +518,14 @@ theorem tendsto_embedBox_toFilterUnion_top (l : IntegrationParams) (h : I ≤ J)
   · exact hπ.2.trans (prepartition.Union_single _).symm
 #align box_integral.integration_params.tendsto_embed_box_to_filter_Union_top BoxIntegral.IntegrationParams.tendsto_embedBox_toFilterUnion_top
 
-theorem exists_memBaseSet_le_union_eq (l : IntegrationParams) (π₀ : Prepartition I)
+theorem exists_memBaseSet_le_iUnion_eq (l : IntegrationParams) (π₀ : Prepartition I)
     (hc₁ : π₀.distortion ≤ c) (hc₂ : π₀.compl.distortion ≤ c) (r : (ι → ℝ) → Ioi (0 : ℝ)) :
     ∃ π, l.MemBaseSet I c r π ∧ π.toPrepartition ≤ π₀ ∧ π.iUnion = π₀.iUnion :=
   by
   rcases π₀.exists_tagged_le_is_Henstock_is_subordinate_Union_eq r with ⟨π, hle, hH, hr, hd, hU⟩
   refine' ⟨π, ⟨hr, fun _ => hH, fun _ => hd.trans_le hc₁, fun hD => ⟨π₀.compl, _, hc₂⟩⟩, ⟨hle, hU⟩⟩
   exact prepartition.compl_congr hU ▸ π.to_prepartition.Union_compl
-#align box_integral.integration_params.exists_mem_base_set_le_Union_eq BoxIntegral.IntegrationParams.exists_memBaseSet_le_union_eq
+#align box_integral.integration_params.exists_mem_base_set_le_Union_eq BoxIntegral.IntegrationParams.exists_memBaseSet_le_iUnion_eq
 
 theorem exists_memBaseSet_isPartition (l : IntegrationParams) (I : Box ι) (hc : I.distortion ≤ c)
     (r : (ι → ℝ) → Ioi (0 : ℝ)) : ∃ π, l.MemBaseSet I c r π ∧ π.IsPartition :=
@@ -539,7 +539,7 @@ theorem toFilterDistortionUnion_neBot (l : IntegrationParams) (I : Box ι) (π�
     (hc₁ : π₀.distortion ≤ c) (hc₂ : π₀.compl.distortion ≤ c) :
     (l.toFilterDistortionUnion I c π₀).ne_bot :=
   ((l.hasBasis_toFilterDistortion I _).inf_principal _).neBot_iff.2 fun r hr =>
-    (l.exists_memBaseSet_le_union_eq π₀ hc₁ hc₂ r).imp fun π hπ => ⟨hπ.1, hπ.2.2⟩
+    (l.exists_memBaseSet_le_iUnion_eq π₀ hc₁ hc₂ r).imp fun π hπ => ⟨hπ.1, hπ.2.2⟩
 #align box_integral.integration_params.to_filter_distortion_Union_ne_bot BoxIntegral.IntegrationParams.toFilterDistortionUnion_neBot
 
 instance toFilterDistortionUnion_ne_bot' (l : IntegrationParams) (I : Box ι) (π₀ : Prepartition I) :

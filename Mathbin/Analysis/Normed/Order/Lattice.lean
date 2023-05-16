@@ -48,19 +48,33 @@ local notation "|" a "|" => abs a
 
 section SolidNorm
 
+#print HasSolidNorm /-
 /-- Let `α` be an `add_comm_group` with a `lattice` structure. A norm on `α` is *solid* if, for `a`
 and `b` in `α`, with absolute values `|a|` and `|b|` respectively, `|a| ≤ |b|` implies `‖a‖ ≤ ‖b‖`.
 -/
 class HasSolidNorm (α : Type _) [NormedAddCommGroup α] [Lattice α] : Prop where
   solid : ∀ ⦃x y : α⦄, |x| ≤ |y| → ‖x‖ ≤ ‖y‖
 #align has_solid_norm HasSolidNorm
+-/
 
 variable {α : Type _} [NormedAddCommGroup α] [Lattice α] [HasSolidNorm α]
 
+/- warning: norm_le_norm_of_abs_le_abs -> norm_le_norm_of_abs_le_abs is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : NormedAddCommGroup.{u1} α] [_inst_2 : Lattice.{u1} α] [_inst_3 : HasSolidNorm.{u1} α _inst_1 _inst_2] {a : α} {b : α}, (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_2)))) (Abs.abs.{u1} α (Neg.toHasAbs.{u1} α (SubNegMonoid.toHasNeg.{u1} α (AddGroup.toSubNegMonoid.{u1} α (NormedAddGroup.toAddGroup.{u1} α (NormedAddCommGroup.toNormedAddGroup.{u1} α _inst_1)))) (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α _inst_2))) a) (Abs.abs.{u1} α (Neg.toHasAbs.{u1} α (SubNegMonoid.toHasNeg.{u1} α (AddGroup.toSubNegMonoid.{u1} α (NormedAddGroup.toAddGroup.{u1} α (NormedAddCommGroup.toNormedAddGroup.{u1} α _inst_1)))) (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α _inst_2))) b)) -> (LE.le.{0} Real Real.hasLe (Norm.norm.{u1} α (NormedAddCommGroup.toHasNorm.{u1} α _inst_1) a) (Norm.norm.{u1} α (NormedAddCommGroup.toHasNorm.{u1} α _inst_1) b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : NormedAddCommGroup.{u1} α] [_inst_2 : Lattice.{u1} α] [_inst_3 : HasSolidNorm.{u1} α _inst_1 _inst_2] {a : α} {b : α}, (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_2)))) (Abs.abs.{u1} α (Neg.toHasAbs.{u1} α (NegZeroClass.toNeg.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (SubtractionCommMonoid.toSubtractionMonoid.{u1} α (AddCommGroup.toDivisionAddCommMonoid.{u1} α (NormedAddCommGroup.toAddCommGroup.{u1} α _inst_1)))))) (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α _inst_2))) a) (Abs.abs.{u1} α (Neg.toHasAbs.{u1} α (NegZeroClass.toNeg.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (SubtractionCommMonoid.toSubtractionMonoid.{u1} α (AddCommGroup.toDivisionAddCommMonoid.{u1} α (NormedAddCommGroup.toAddCommGroup.{u1} α _inst_1)))))) (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α _inst_2))) b)) -> (LE.le.{0} Real Real.instLEReal (Norm.norm.{u1} α (NormedAddCommGroup.toNorm.{u1} α _inst_1) a) (Norm.norm.{u1} α (NormedAddCommGroup.toNorm.{u1} α _inst_1) b))
+Case conversion may be inaccurate. Consider using '#align norm_le_norm_of_abs_le_abs norm_le_norm_of_abs_le_absₓ'. -/
 theorem norm_le_norm_of_abs_le_abs {a b : α} (h : |a| ≤ |b|) : ‖a‖ ≤ ‖b‖ :=
   HasSolidNorm.solid h
 #align norm_le_norm_of_abs_le_abs norm_le_norm_of_abs_le_abs
 
+/- warning: lattice_ordered_add_comm_group.is_solid_ball -> LatticeOrderedAddCommGroup.isSolid_ball is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : NormedAddCommGroup.{u1} α] [_inst_2 : Lattice.{u1} α] [_inst_3 : HasSolidNorm.{u1} α _inst_1 _inst_2] (r : Real), LatticeOrderedAddCommGroup.IsSolid.{u1} α _inst_2 (NormedAddCommGroup.toAddCommGroup.{u1} α _inst_1) (Metric.ball.{u1} α (SeminormedAddCommGroup.toPseudoMetricSpace.{u1} α (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} α _inst_1)) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (AddZeroClass.toHasZero.{u1} α (AddMonoid.toAddZeroClass.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α (NormedAddGroup.toAddGroup.{u1} α (NormedAddCommGroup.toNormedAddGroup.{u1} α _inst_1))))))))) r)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : NormedAddCommGroup.{u1} α] [_inst_2 : Lattice.{u1} α] [_inst_3 : HasSolidNorm.{u1} α _inst_1 _inst_2] (r : Real), LatticeOrderedAddCommGroup.IsSolid.{u1} α _inst_2 (NormedAddCommGroup.toAddCommGroup.{u1} α _inst_1) (Metric.ball.{u1} α (SeminormedAddCommGroup.toPseudoMetricSpace.{u1} α (NormedAddCommGroup.toSeminormedAddCommGroup.{u1} α _inst_1)) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (NegZeroClass.toZero.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (SubtractionCommMonoid.toSubtractionMonoid.{u1} α (AddCommGroup.toDivisionAddCommMonoid.{u1} α (NormedAddCommGroup.toAddCommGroup.{u1} α _inst_1)))))))) r)
+Case conversion may be inaccurate. Consider using '#align lattice_ordered_add_comm_group.is_solid_ball LatticeOrderedAddCommGroup.isSolid_ballₓ'. -/
 /-- If `α` has a solid norm, then the balls centered at the origin of `α` are solid sets. -/
 theorem LatticeOrderedAddCommGroup.isSolid_ball (r : ℝ) :
     LatticeOrderedAddCommGroup.IsSolid (Metric.ball (0 : α) r) := fun _ hx _ hxy =>

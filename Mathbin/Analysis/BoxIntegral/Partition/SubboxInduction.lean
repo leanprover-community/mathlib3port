@@ -124,14 +124,14 @@ theorem exists_tagged_partition_isHenstock_isSubordinate_homothetic (I : Box ι)
   refine' subbox_induction_on I (fun J hle hJ => _) fun z hz => _
   · choose! πi hP hHen hr Hn Hd using hJ
     choose! n hn using Hn
-    have hP : ((split_center J).bUnionTagged πi).IsPartition :=
-      (is_partition_split_center _).bUnionTagged hP
+    have hP : ((split_center J).biUnionTagged πi).IsPartition :=
+      (is_partition_split_center _).biUnionTagged hP
     have hsub :
-      ∀ J' ∈ (split_center J).bUnionTagged πi,
+      ∀ J' ∈ (split_center J).biUnionTagged πi,
         ∃ n : ℕ, ∀ i, (J' : _).upper i - J'.lower i = (J.upper i - J.lower i) / 2 ^ n :=
       by
       intro J' hJ'
-      rcases(split_center J).mem_bUnionTagged.1 hJ' with ⟨J₁, h₁, h₂⟩
+      rcases(split_center J).mem_biUnionTagged.1 hJ' with ⟨J₁, h₁, h₂⟩
       refine' ⟨n J₁ J' + 1, fun i => _⟩
       simp only [hn J₁ h₁ J' h₂, upper_sub_lower_of_mem_split_center h₁, pow_succ, div_div]
     refine' ⟨_, hP, is_Henstock_bUnion_tagged.2 hHen, is_subordinate_bUnion_tagged.2 hr, hsub, _⟩
@@ -166,7 +166,7 @@ exists a tagged prepartition `π'` of `I` such that
 * `π'` covers exactly the same part of `I` as `π`;
 * the distortion of `π'` is equal to the distortion of `π`.
 -/
-theorem exists_tagged_le_isHenstock_isSubordinate_union_eq {I : Box ι} (r : (ι → ℝ) → Ioi (0 : ℝ))
+theorem exists_tagged_le_isHenstock_isSubordinate_iUnion_eq {I : Box ι} (r : (ι → ℝ) → Ioi (0 : ℝ))
     (π : Prepartition I) :
     ∃ π' : TaggedPrepartition I,
       π'.toPrepartition ≤ π ∧
@@ -179,7 +179,7 @@ theorem exists_tagged_le_isHenstock_isSubordinate_union_eq {I : Box ι} (r : (ι
       is_subordinate_bUnion_tagged.2 fun J _ => πir J, _, π.Union_bUnion_partition fun J _ => πip J⟩
   rw [distortion_bUnion_tagged]
   exact sup_congr rfl fun J _ => πid J
-#align box_integral.prepartition.exists_tagged_le_is_Henstock_is_subordinate_Union_eq BoxIntegral.Prepartition.exists_tagged_le_isHenstock_isSubordinate_union_eq
+#align box_integral.prepartition.exists_tagged_le_is_Henstock_is_subordinate_Union_eq BoxIntegral.Prepartition.exists_tagged_le_isHenstock_isSubordinate_iUnion_eq
 
 /-- Given a prepartition `π` of a box `I` and a function `r : ℝⁿ → (0, ∞)`, `π.to_subordinate r`
 is a tagged partition `π'` such that
@@ -191,35 +191,35 @@ is a tagged partition `π'` such that
 * the distortion of `π'` is equal to the distortion of `π`.
 -/
 def toSubordinate (π : Prepartition I) (r : (ι → ℝ) → Ioi (0 : ℝ)) : TaggedPrepartition I :=
-  (π.exists_tagged_le_isHenstock_isSubordinate_union_eq r).some
+  (π.exists_tagged_le_isHenstock_isSubordinate_iUnion_eq r).some
 #align box_integral.prepartition.to_subordinate BoxIntegral.Prepartition.toSubordinate
 
 theorem toSubordinate_toPrepartition_le (π : Prepartition I) (r : (ι → ℝ) → Ioi (0 : ℝ)) :
     (π.toSubordinate r).toPrepartition ≤ π :=
-  (π.exists_tagged_le_isHenstock_isSubordinate_union_eq r).choose_spec.1
+  (π.exists_tagged_le_isHenstock_isSubordinate_iUnion_eq r).choose_spec.1
 #align box_integral.prepartition.to_subordinate_to_prepartition_le BoxIntegral.Prepartition.toSubordinate_toPrepartition_le
 
 theorem isHenstock_toSubordinate (π : Prepartition I) (r : (ι → ℝ) → Ioi (0 : ℝ)) :
     (π.toSubordinate r).IsHenstock :=
-  (π.exists_tagged_le_isHenstock_isSubordinate_union_eq r).choose_spec.2.1
+  (π.exists_tagged_le_isHenstock_isSubordinate_iUnion_eq r).choose_spec.2.1
 #align box_integral.prepartition.is_Henstock_to_subordinate BoxIntegral.Prepartition.isHenstock_toSubordinate
 
 theorem isSubordinate_toSubordinate (π : Prepartition I) (r : (ι → ℝ) → Ioi (0 : ℝ)) :
     (π.toSubordinate r).IsSubordinate r :=
-  (π.exists_tagged_le_isHenstock_isSubordinate_union_eq r).choose_spec.2.2.1
+  (π.exists_tagged_le_isHenstock_isSubordinate_iUnion_eq r).choose_spec.2.2.1
 #align box_integral.prepartition.is_subordinate_to_subordinate BoxIntegral.Prepartition.isSubordinate_toSubordinate
 
 @[simp]
 theorem distortion_toSubordinate (π : Prepartition I) (r : (ι → ℝ) → Ioi (0 : ℝ)) :
     (π.toSubordinate r).distortion = π.distortion :=
-  (π.exists_tagged_le_isHenstock_isSubordinate_union_eq r).choose_spec.2.2.2.1
+  (π.exists_tagged_le_isHenstock_isSubordinate_iUnion_eq r).choose_spec.2.2.2.1
 #align box_integral.prepartition.distortion_to_subordinate BoxIntegral.Prepartition.distortion_toSubordinate
 
 @[simp]
-theorem union_toSubordinate (π : Prepartition I) (r : (ι → ℝ) → Ioi (0 : ℝ)) :
+theorem iUnion_toSubordinate (π : Prepartition I) (r : (ι → ℝ) → Ioi (0 : ℝ)) :
     (π.toSubordinate r).iUnion = π.iUnion :=
-  (π.exists_tagged_le_isHenstock_isSubordinate_union_eq r).choose_spec.2.2.2.2
-#align box_integral.prepartition.Union_to_subordinate BoxIntegral.Prepartition.union_toSubordinate
+  (π.exists_tagged_le_isHenstock_isSubordinate_iUnion_eq r).choose_spec.2.2.2.2
+#align box_integral.prepartition.Union_to_subordinate BoxIntegral.Prepartition.iUnion_toSubordinate
 
 end Prepartition
 
@@ -239,13 +239,13 @@ a function `r : ℝⁿ → (0, ∞)`, returns the union of `π₁` and `π₂.to
 def unionComplToSubordinate (π₁ : TaggedPrepartition I) (π₂ : Prepartition I)
     (hU : π₂.iUnion = I \ π₁.iUnion) (r : (ι → ℝ) → Ioi (0 : ℝ)) : TaggedPrepartition I :=
   π₁.disjUnion (π₂.toSubordinate r)
-    (((π₂.union_toSubordinate r).trans hU).symm ▸ disjoint_sdiff_self_right)
+    (((π₂.iUnion_toSubordinate r).trans hU).symm ▸ disjoint_sdiff_self_right)
 #align box_integral.tagged_prepartition.union_compl_to_subordinate BoxIntegral.TaggedPrepartition.unionComplToSubordinate
 
 theorem isPartition_unionComplToSubordinate (π₁ : TaggedPrepartition I) (π₂ : Prepartition I)
     (hU : π₂.iUnion = I \ π₁.iUnion) (r : (ι → ℝ) → Ioi (0 : ℝ)) :
     IsPartition (π₁.unionComplToSubordinate π₂ hU r) :=
-  Prepartition.isPartitionDisjUnionOfEqDiff ((π₂.union_toSubordinate r).trans hU)
+  Prepartition.isPartitionDisjUnionOfEqDiff ((π₂.iUnion_toSubordinate r).trans hU)
 #align box_integral.tagged_prepartition.is_partition_union_compl_to_subordinate BoxIntegral.TaggedPrepartition.isPartition_unionComplToSubordinate
 
 @[simp]

@@ -930,28 +930,36 @@ namespace LatticeOrderedAddCommGroup
 
 variable {β : Type u} [Lattice β] [AddCommGroup β]
 
-section solid
+section Solid
 
+#print LatticeOrderedAddCommGroup.IsSolid /-
 /-- A subset `s ⊆ β`, with `β` an `add_comm_group` with a `lattice` structure, is solid if for
 all `x ∈ s` and all `y ∈ β` such that `|y| ≤ |x|`, then `y ∈ s`. -/
 def IsSolid (s : Set β) : Prop :=
   ∀ ⦃x⦄, x ∈ s → ∀ ⦃y⦄, |y| ≤ |x| → y ∈ s
 #align lattice_ordered_add_comm_group.is_solid LatticeOrderedAddCommGroup.IsSolid
+-/
 
+#print LatticeOrderedAddCommGroup.solidClosure /-
 /-- The solid closure of a subset `s` is the smallest superset of `s` that is solid. -/
 def solidClosure (s : Set β) : Set β :=
   { y | ∃ x ∈ s, |y| ≤ |x| }
 #align lattice_ordered_add_comm_group.solid_closure LatticeOrderedAddCommGroup.solidClosure
+-/
 
+#print LatticeOrderedAddCommGroup.isSolid_solidClosure /-
 theorem isSolid_solidClosure (s : Set β) : IsSolid (solidClosure s) := fun x ⟨y, hy, hxy⟩ z hzx =>
   ⟨y, hy, hzx.trans hxy⟩
 #align lattice_ordered_add_comm_group.is_solid_solid_closure LatticeOrderedAddCommGroup.isSolid_solidClosure
+-/
 
+#print LatticeOrderedAddCommGroup.solidClosure_min /-
 theorem solidClosure_min (s t : Set β) (h1 : s ⊆ t) (h2 : IsSolid t) : solidClosure s ⊆ t :=
   fun _ ⟨_, hy, hxy⟩ => h2 (h1 hy) hxy
 #align lattice_ordered_add_comm_group.solid_closure_min LatticeOrderedAddCommGroup.solidClosure_min
+-/
 
-end solid
+end Solid
 
 end LatticeOrderedAddCommGroup
 

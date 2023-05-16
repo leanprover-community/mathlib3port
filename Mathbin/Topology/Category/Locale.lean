@@ -21,10 +21,12 @@ universe u
 
 open CategoryTheory Opposite Order TopologicalSpace
 
+#print Locale /-
 /-- The category of locales. -/
 def Locale :=
   FrmCatᵒᵖderiving LargeCategory
 #align Locale Locale
+-/
 
 namespace Locale
 
@@ -34,32 +36,40 @@ instance : CoeSort Locale (Type _) :=
 instance (X : Locale) : Frame X :=
   X.unop.str
 
+#print Locale.of /-
 /-- Construct a bundled `Locale` from a `frame`. -/
 def of (α : Type _) [Frame α] : Locale :=
   op <| FrmCat.of α
 #align Locale.of Locale.of
+-/
 
+#print Locale.coe_of /-
 @[simp]
 theorem coe_of (α : Type _) [Frame α] : ↥(of α) = α :=
   rfl
 #align Locale.coe_of Locale.coe_of
+-/
 
 instance : Inhabited Locale :=
   ⟨of PUnit⟩
 
 end Locale
 
+#print topToLocale /-
 /-- The forgetful functor from `Top` to `Locale` which forgets that the space has "enough points".
 -/
 @[simps]
 def topToLocale : TopCat ⥤ Locale :=
   topCatOpToFrameCat.rightOp
 #align Top_to_Locale topToLocale
+-/
 
+#print CompHausToLocale.faithful /-
 -- Note, `CompHaus` is too strong. We only need `t0_space`.
 instance CompHausToLocale.faithful : Faithful (compHausToTop ⋙ topToLocale.{u}) :=
   ⟨fun X Y f g h => by
     dsimp at h
     exact opens.comap_injective (Quiver.Hom.op_inj h)⟩
 #align CompHaus_to_Locale.faithful CompHausToLocale.faithful
+-/
 

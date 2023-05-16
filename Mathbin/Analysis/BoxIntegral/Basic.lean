@@ -83,17 +83,17 @@ def integralSum (f : ℝⁿ → E) (vol : ι →ᵇᵃ E →L[ℝ] F) (π : Tagg
   ∑ J in π.boxes, vol J (f (π.Tag J))
 #align box_integral.integral_sum BoxIntegral.integralSum
 
-theorem integralSum_bUnionTagged (f : ℝⁿ → E) (vol : ι →ᵇᵃ E →L[ℝ] F) (π : Prepartition I)
+theorem integralSum_biUnionTagged (f : ℝⁿ → E) (vol : ι →ᵇᵃ E →L[ℝ] F) (π : Prepartition I)
     (πi : ∀ J, TaggedPrepartition J) :
-    integralSum f vol (π.bUnionTagged πi) = ∑ J in π.boxes, integralSum f vol (πi J) :=
+    integralSum f vol (π.biUnionTagged πi) = ∑ J in π.boxes, integralSum f vol (πi J) :=
   by
   refine' (π.sum_bUnion_boxes _ _).trans (sum_congr rfl fun J hJ => sum_congr rfl fun J' hJ' => _)
   rw [π.tag_bUnion_tagged hJ hJ']
-#align box_integral.integral_sum_bUnion_tagged BoxIntegral.integralSum_bUnionTagged
+#align box_integral.integral_sum_bUnion_tagged BoxIntegral.integralSum_biUnionTagged
 
 theorem integralSum_bUnion_partition (f : ℝⁿ → E) (vol : ι →ᵇᵃ E →L[ℝ] F) (π : TaggedPrepartition I)
     (πi : ∀ J, Prepartition J) (hπi : ∀ J ∈ π, (πi J).IsPartition) :
-    integralSum f vol (π.bUnionPrepartition πi) = integralSum f vol π :=
+    integralSum f vol (π.biUnionPrepartition πi) = integralSum f vol π :=
   by
   refine' (π.to_prepartition.sum_bUnion_boxes _ _).trans (sum_congr rfl fun J hJ => _)
   calc
@@ -533,7 +533,7 @@ theorem dist_integralSum_le_of_memBaseSet (h : Integrable I l f vol) (hpos₁ : 
 /-- If `f` is integrable on `I` along `l`, then for two sufficiently fine tagged prepartitions
 (in the sense of the filter `box_integral.integration_params.to_filter l I`) such that they cover
 the same part of `I`, the integral sums of `f` over `π₁` and `π₂` are very close to each other.  -/
-theorem tendsto_integralSum_toFilter_prod_self_inf_union_eq_uniformity (h : Integrable I l f vol) :
+theorem tendsto_integralSum_toFilter_prod_self_inf_iUnion_eq_uniformity (h : Integrable I l f vol) :
     Tendsto
       (fun π : TaggedPrepartition I × TaggedPrepartition I =>
         (integralSum f vol π.1, integralSum f vol π.2))
@@ -546,7 +546,7 @@ theorem tendsto_integralSum_toFilter_prod_self_inf_union_eq_uniformity (h : Inte
   use h.convergence_r (ε / 2), h.convergence_r_cond (ε / 2); rintro ⟨π₁, π₂⟩ ⟨⟨h₁, h₂⟩, hU⟩
   rw [← add_halves ε]
   exact h.dist_integral_sum_le_of_mem_base_set ε0 ε0 h₁.some_spec h₂.some_spec hU
-#align box_integral.integrable.tendsto_integral_sum_to_filter_prod_self_inf_Union_eq_uniformity BoxIntegral.Integrable.tendsto_integralSum_toFilter_prod_self_inf_union_eq_uniformity
+#align box_integral.integrable.tendsto_integral_sum_to_filter_prod_self_inf_Union_eq_uniformity BoxIntegral.Integrable.tendsto_integralSum_toFilter_prod_self_inf_iUnion_eq_uniformity
 
 /-- If `f` is integrable on a box `I` along `l`, then for any fixed subset `s` of `I` that can be
 represented as a finite union of boxes, the integral sums of `f` over tagged prepartitions that
@@ -605,7 +605,7 @@ The actual statement
 - takes an extra argument `π₀ : prepartition I` and an assumption `π.Union = π₀.Union` instead of
   using `π.to_prepartition`.
 -/
-theorem dist_integralSum_sum_integral_le_of_memBaseSet_of_union_eq (h : Integrable I l f vol)
+theorem dist_integralSum_sum_integral_le_of_memBaseSet_of_iUnion_eq (h : Integrable I l f vol)
     (h0 : 0 < ε) (hπ : l.MemBaseSet I c (h.convergenceR ε c) π) {π₀ : Prepartition I}
     (hU : π.iUnion = π₀.iUnion) :
     dist (integralSum f vol π) (∑ J in π₀.boxes, integral J l f vol) ≤ ε :=
@@ -662,7 +662,7 @@ theorem dist_integralSum_sum_integral_le_of_memBaseSet_of_union_eq (h : Integrab
       field_simp [H0.ne']
       ring
     
-#align box_integral.integrable.dist_integral_sum_sum_integral_le_of_mem_base_set_of_Union_eq BoxIntegral.Integrable.dist_integralSum_sum_integral_le_of_memBaseSet_of_union_eq
+#align box_integral.integrable.dist_integral_sum_sum_integral_le_of_mem_base_set_of_Union_eq BoxIntegral.Integrable.dist_integralSum_sum_integral_le_of_memBaseSet_of_iUnion_eq
 
 /-- **Henstock-Sacks inequality**. Let `r : ℝⁿ → (0, ∞)` be a function such that for any tagged
 *partition* of `I` subordinate to `r`, the integral sum of `f` over this partition differs from the
@@ -680,7 +680,7 @@ The actual statement
 theorem dist_integralSum_sum_integral_le_of_memBaseSet (h : Integrable I l f vol) (h0 : 0 < ε)
     (hπ : l.MemBaseSet I c (h.convergenceR ε c) π) :
     dist (integralSum f vol π) (∑ J in π.boxes, integral J l f vol) ≤ ε :=
-  h.dist_integralSum_sum_integral_le_of_memBaseSet_of_union_eq h0 hπ rfl
+  h.dist_integralSum_sum_integral_le_of_memBaseSet_of_iUnion_eq h0 hπ rfl
 #align box_integral.integrable.dist_integral_sum_sum_integral_le_of_mem_base_set BoxIntegral.Integrable.dist_integralSum_sum_integral_le_of_memBaseSet
 
 /-- Integral sum of `f` over a tagged prepartition `π` such that `π.Union = π₀.Union` tends to the

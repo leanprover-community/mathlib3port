@@ -405,7 +405,7 @@ theorem is_localized_module_toPushforwardStalkAlgHom_aux (y) :
   congr 1
 #align algebraic_geometry.structure_sheaf.is_localized_module_to_pushforward_stalk_alg_hom_aux AlgebraicGeometry.StructureSheaf.is_localized_module_toPushforwardStalkAlgHom_aux
 
-instance isLocalizedModuleToPushforwardStalkAlgHom :
+instance isLocalizedModule_toPushforwardStalkAlgHom :
     IsLocalizedModule p.asIdeal.primeCompl (toPushforwardStalkAlgHom R S p).toLinearMap :=
   by
   apply IsLocalizedModule.mkOfAlgebra
@@ -437,7 +437,7 @@ instance isLocalizedModuleToPushforwardStalkAlgHom :
     refine' ⟨⟨r, hpr⟩ ^ n, _⟩
     rw [Submonoid.smul_def, Algebra.smul_def, [anonymous], Subtype.coe_mk, map_pow]
     exact e
-#align algebraic_geometry.structure_sheaf.is_localized_module_to_pushforward_stalk_alg_hom AlgebraicGeometry.StructureSheaf.isLocalizedModuleToPushforwardStalkAlgHom
+#align algebraic_geometry.structure_sheaf.is_localized_module_to_pushforward_stalk_alg_hom AlgebraicGeometry.StructureSheaf.isLocalizedModule_toPushforwardStalkAlgHom
 
 end StructureSheaf
 
