@@ -679,14 +679,18 @@ section DisjSups
 
 variable [SemilatticeSup α] [OrderBot α] [@DecidableRel α Disjoint] (s s₁ s₂ t t₁ t₂ u : Finset α)
 
+/- warning: finset.disj_sups -> Finset.disjSups is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)], (Finset.{u1} α) -> (Finset.{u1} α) -> (Finset.{u1} α)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)], (Finset.{u1} α) -> (Finset.{u1} α) -> (Finset.{u1} α)
+Case conversion may be inaccurate. Consider using '#align finset.disj_sups Finset.disjSupsₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Finset.disjSups /-
 /-- The finset of elements of the form `a ⊔ b` where `a ∈ s`, `b ∈ t` and `a` and `b` are disjoint.
 -/
 def disjSups : Finset α :=
   ((s ×ˢ t).filterₓ fun ab : α × α => Disjoint ab.1 ab.2).image fun ab => ab.1 ⊔ ab.2
 #align finset.disj_sups Finset.disjSups
--/
 
 -- mathport name: finset.disj_sups
 scoped[FinsetFamily] infixl:74 " ○ " => Finset.disjSups
@@ -695,7 +699,7 @@ variable {s t u} {a b c : α}
 
 /- warning: finset.mem_disj_sups -> Finset.mem_disjSups is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] {s : Finset.{u1} α} {t : Finset.{u1} α} {c : α}, Iff (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) c (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t)) (Exists.{succ u1} α (fun (a : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s) (fun (H : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s) => Exists.{succ u1} α (fun (b : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) b t) (fun (H : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) b t) => And (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3 a b) (Eq.{succ u1} α (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α _inst_2) a b) c))))))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] {s : Finset.{u1} α} {t : Finset.{u1} α} {c : α}, Iff (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) c (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t)) (Exists.{succ u1} α (fun (a : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s) (fun (H : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s) => Exists.{succ u1} α (fun (b : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) b t) (fun (H : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) b t) => And (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3 a b) (Eq.{succ u1} α (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α _inst_2) a b) c))))))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] {s : Finset.{u1} α} {t : Finset.{u1} α} {c : α}, Iff (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) c (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t)) (Exists.{succ u1} α (fun (a : α) => And (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s) (Exists.{succ u1} α (fun (b : α) => And (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) b t) (And (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3 a b) (Eq.{succ u1} α (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α _inst_2) a b) c))))))
 Case conversion may be inaccurate. Consider using '#align finset.mem_disj_sups Finset.mem_disjSupsₓ'. -/
@@ -704,45 +708,65 @@ theorem mem_disjSups : c ∈ s ○ t ↔ ∃ a ∈ s, ∃ b ∈ t, Disjoint a b 
   simp [disj_sups, and_assoc']
 #align finset.mem_disj_sups Finset.mem_disjSups
 
-#print Finset.disjSups_subset_sups /-
+/- warning: finset.disj_sups_subset_sups -> Finset.disjSups_subset_sups is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] {s : Finset.{u1} α} {t : Finset.{u1} α}, HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t) (HasSups.sups.{u1} (Finset.{u1} α) (Finset.hasSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2) s t)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] {s : Finset.{u1} α} {t : Finset.{u1} α}, HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t) (HasSups.sups.{u1} (Finset.{u1} α) (Finset.hasSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2) s t)
+Case conversion may be inaccurate. Consider using '#align finset.disj_sups_subset_sups Finset.disjSups_subset_supsₓ'. -/
 theorem disjSups_subset_sups : s ○ t ⊆ s ⊻ t :=
   by
   simp_rw [subset_iff, mem_sups, mem_disj_sups]
   exact fun c ⟨a, b, ha, hb, h, hc⟩ => ⟨a, b, ha, hb, hc⟩
 #align finset.disj_sups_subset_sups Finset.disjSups_subset_sups
--/
 
 variable (s t)
 
-#print Finset.card_disjSups_le /-
+/- warning: finset.card_disj_sups_le -> Finset.card_disjSups_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] (s : Finset.{u1} α) (t : Finset.{u1} α), LE.le.{0} Nat Nat.hasLe (Finset.card.{u1} α (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t)) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) (Finset.card.{u1} α s) (Finset.card.{u1} α t))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] (s : Finset.{u1} α) (t : Finset.{u1} α), LE.le.{0} Nat instLENat (Finset.card.{u1} α (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t)) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) (Finset.card.{u1} α s) (Finset.card.{u1} α t))
+Case conversion may be inaccurate. Consider using '#align finset.card_disj_sups_le Finset.card_disjSups_leₓ'. -/
 theorem card_disjSups_le : (s ○ t).card ≤ s.card * t.card :=
   (card_le_of_subset disjSups_subset_sups).trans <| card_sups_le _ _
 #align finset.card_disj_sups_le Finset.card_disjSups_le
--/
 
 variable {s s₁ s₂ t t₁ t₂ u}
 
-#print Finset.disjSups_subset /-
+/- warning: finset.disj_sups_subset -> Finset.disjSups_subset is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] {s₁ : Finset.{u1} α} {s₂ : Finset.{u1} α} {t₁ : Finset.{u1} α} {t₂ : Finset.{u1} α}, (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) s₁ s₂) -> (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) t₁ t₂) -> (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s₁ t₁) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s₂ t₂))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] {s₁ : Finset.{u1} α} {s₂ : Finset.{u1} α} {t₁ : Finset.{u1} α} {t₂ : Finset.{u1} α}, (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) s₁ s₂) -> (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) t₁ t₂) -> (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s₁ t₁) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s₂ t₂))
+Case conversion may be inaccurate. Consider using '#align finset.disj_sups_subset Finset.disjSups_subsetₓ'. -/
 theorem disjSups_subset (hs : s₁ ⊆ s₂) (ht : t₁ ⊆ t₂) : s₁ ○ t₁ ⊆ s₂ ○ t₂ :=
   image_subset_image <| filter_subset_filter _ <| product_subset_product hs ht
 #align finset.disj_sups_subset Finset.disjSups_subset
--/
 
-#print Finset.disjSups_subset_left /-
+/- warning: finset.disj_sups_subset_left -> Finset.disjSups_subset_left is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] {s : Finset.{u1} α} {t₁ : Finset.{u1} α} {t₂ : Finset.{u1} α}, (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) t₁ t₂) -> (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t₁) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t₂))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] {s : Finset.{u1} α} {t₁ : Finset.{u1} α} {t₂ : Finset.{u1} α}, (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) t₁ t₂) -> (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t₁) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t₂))
+Case conversion may be inaccurate. Consider using '#align finset.disj_sups_subset_left Finset.disjSups_subset_leftₓ'. -/
 theorem disjSups_subset_left (ht : t₁ ⊆ t₂) : s ○ t₁ ⊆ s ○ t₂ :=
   disjSups_subset Subset.rfl ht
 #align finset.disj_sups_subset_left Finset.disjSups_subset_left
--/
 
-#print Finset.disjSups_subset_right /-
+/- warning: finset.disj_sups_subset_right -> Finset.disjSups_subset_right is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] {s₁ : Finset.{u1} α} {s₂ : Finset.{u1} α} {t : Finset.{u1} α}, (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) s₁ s₂) -> (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s₁ t) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s₂ t))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] {s₁ : Finset.{u1} α} {s₂ : Finset.{u1} α} {t : Finset.{u1} α}, (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) s₁ s₂) -> (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s₁ t) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s₂ t))
+Case conversion may be inaccurate. Consider using '#align finset.disj_sups_subset_right Finset.disjSups_subset_rightₓ'. -/
 theorem disjSups_subset_right (hs : s₁ ⊆ s₂) : s₁ ○ t ⊆ s₂ ○ t :=
   disjSups_subset hs Subset.rfl
 #align finset.disj_sups_subset_right Finset.disjSups_subset_right
--/
 
 /- warning: finset.forall_disj_sups_iff -> Finset.forall_disjSups_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] {s : Finset.{u1} α} {t : Finset.{u1} α} {p : α -> Prop}, Iff (forall (c : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) c (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t)) -> (p c)) (forall (a : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s) -> (forall (b : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) b t) -> (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3 a b) -> (p (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α _inst_2) a b))))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] {s : Finset.{u1} α} {t : Finset.{u1} α} {p : α -> Prop}, Iff (forall (c : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) c (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t)) -> (p c)) (forall (a : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s) -> (forall (b : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) b t) -> (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3 a b) -> (p (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α _inst_2) a b))))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] {s : Finset.{u1} α} {t : Finset.{u1} α} {p : α -> Prop}, Iff (forall (c : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) c (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t)) -> (p c)) (forall (a : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s) -> (forall (b : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) b t) -> (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3 a b) -> (p (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α _inst_2) a b))))
 Case conversion may be inaccurate. Consider using '#align finset.forall_disj_sups_iff Finset.forall_disjSups_iffₓ'. -/
@@ -757,7 +781,7 @@ theorem forall_disjSups_iff {p : α → Prop} :
 
 /- warning: finset.disj_sups_subset_iff -> Finset.disjSups_subset_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] {s : Finset.{u1} α} {t : Finset.{u1} α} {u : Finset.{u1} α}, Iff (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t) u) (forall (a : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s) -> (forall (b : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) b t) -> (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3 a b) -> (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α _inst_2) a b) u)))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] {s : Finset.{u1} α} {t : Finset.{u1} α} {u : Finset.{u1} α}, Iff (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t) u) (forall (a : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s) -> (forall (b : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) b t) -> (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3 a b) -> (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α _inst_2) a b) u)))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] {s : Finset.{u1} α} {t : Finset.{u1} α} {u : Finset.{u1} α}, Iff (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t) u) (forall (a : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s) -> (forall (b : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) b t) -> (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3 a b) -> (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α _inst_2) a b) u)))
 Case conversion may be inaccurate. Consider using '#align finset.disj_sups_subset_iff Finset.disjSups_subset_iffₓ'. -/
@@ -766,37 +790,53 @@ theorem disjSups_subset_iff : s ○ t ⊆ u ↔ ∀ a ∈ s, ∀ b ∈ t, Disjoi
   forall_disjSups_iff
 #align finset.disj_sups_subset_iff Finset.disjSups_subset_iff
 
-#print Finset.Nonempty.of_disjSups_left /-
+/- warning: finset.nonempty.of_disj_sups_left -> Finset.Nonempty.of_disjSups_left is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] {s : Finset.{u1} α} {t : Finset.{u1} α}, (Finset.Nonempty.{u1} α (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t)) -> (Finset.Nonempty.{u1} α s)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] {s : Finset.{u1} α} {t : Finset.{u1} α}, (Finset.Nonempty.{u1} α (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t)) -> (Finset.Nonempty.{u1} α s)
+Case conversion may be inaccurate. Consider using '#align finset.nonempty.of_disj_sups_left Finset.Nonempty.of_disjSups_leftₓ'. -/
 theorem Nonempty.of_disjSups_left : (s ○ t).Nonempty → s.Nonempty :=
   by
   simp_rw [Finset.Nonempty, mem_disj_sups]
   exact fun ⟨_, a, ha, _⟩ => ⟨a, ha⟩
 #align finset.nonempty.of_disj_sups_left Finset.Nonempty.of_disjSups_left
--/
 
-#print Finset.Nonempty.of_disjSups_right /-
+/- warning: finset.nonempty.of_disj_sups_right -> Finset.Nonempty.of_disjSups_right is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] {s : Finset.{u1} α} {t : Finset.{u1} α}, (Finset.Nonempty.{u1} α (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t)) -> (Finset.Nonempty.{u1} α t)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] {s : Finset.{u1} α} {t : Finset.{u1} α}, (Finset.Nonempty.{u1} α (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t)) -> (Finset.Nonempty.{u1} α t)
+Case conversion may be inaccurate. Consider using '#align finset.nonempty.of_disj_sups_right Finset.Nonempty.of_disjSups_rightₓ'. -/
 theorem Nonempty.of_disjSups_right : (s ○ t).Nonempty → t.Nonempty :=
   by
   simp_rw [Finset.Nonempty, mem_disj_sups]
   exact fun ⟨_, _, _, b, hb, _⟩ => ⟨b, hb⟩
 #align finset.nonempty.of_disj_sups_right Finset.Nonempty.of_disjSups_right
--/
 
-#print Finset.disjSups_empty_left /-
+/- warning: finset.disj_sups_empty_left -> Finset.disjSups_empty_left is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] {t : Finset.{u1} α}, Eq.{succ u1} (Finset.{u1} α) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.hasEmptyc.{u1} α)) t) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.hasEmptyc.{u1} α))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] {t : Finset.{u1} α}, Eq.{succ u1} (Finset.{u1} α) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.instEmptyCollectionFinset.{u1} α)) t) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.instEmptyCollectionFinset.{u1} α))
+Case conversion may be inaccurate. Consider using '#align finset.disj_sups_empty_left Finset.disjSups_empty_leftₓ'. -/
 @[simp]
 theorem disjSups_empty_left : ∅ ○ t = ∅ := by simp [disj_sups]
 #align finset.disj_sups_empty_left Finset.disjSups_empty_left
--/
 
-#print Finset.disjSups_empty_right /-
+/- warning: finset.disj_sups_empty_right -> Finset.disjSups_empty_right is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] {s : Finset.{u1} α}, Eq.{succ u1} (Finset.{u1} α) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.hasEmptyc.{u1} α))) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.hasEmptyc.{u1} α))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] {s : Finset.{u1} α}, Eq.{succ u1} (Finset.{u1} α) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.instEmptyCollectionFinset.{u1} α))) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.instEmptyCollectionFinset.{u1} α))
+Case conversion may be inaccurate. Consider using '#align finset.disj_sups_empty_right Finset.disjSups_empty_rightₓ'. -/
 @[simp]
 theorem disjSups_empty_right : s ○ ∅ = ∅ := by simp [disj_sups]
 #align finset.disj_sups_empty_right Finset.disjSups_empty_right
--/
 
 /- warning: finset.disj_sups_singleton -> Finset.disjSups_singleton is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] {a : α} {b : α}, Eq.{succ u1} (Finset.{u1} α) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.hasSingleton.{u1} α) a) (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.hasSingleton.{u1} α) b)) (ite.{succ u1} (Finset.{u1} α) (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3 a b) (_inst_4 a b) (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.hasSingleton.{u1} α) (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α _inst_2) a b)) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.hasEmptyc.{u1} α)))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] {a : α} {b : α}, Eq.{succ u1} (Finset.{u1} α) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.hasSingleton.{u1} α) a) (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.hasSingleton.{u1} α) b)) (ite.{succ u1} (Finset.{u1} α) (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3 a b) (_inst_4 a b) (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.hasSingleton.{u1} α) (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α _inst_2) a b)) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.hasEmptyc.{u1} α)))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] {a : α} {b : α}, Eq.{succ u1} (Finset.{u1} α) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.instSingletonFinset.{u1} α) a) (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.instSingletonFinset.{u1} α) b)) (ite.{succ u1} (Finset.{u1} α) (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3 a b) (_inst_4 a b) (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.instSingletonFinset.{u1} α) (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α _inst_2) a b)) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.instEmptyCollectionFinset.{u1} α)))
 Case conversion may be inaccurate. Consider using '#align finset.disj_sups_singleton Finset.disjSups_singletonₓ'. -/
@@ -804,39 +844,59 @@ theorem disjSups_singleton : ({a} ○ {b} : Finset α) = if Disjoint a b then {a
   split_ifs <;> simp [disj_sups, filter_singleton, h]
 #align finset.disj_sups_singleton Finset.disjSups_singleton
 
-#print Finset.disjSups_union_left /-
+/- warning: finset.disj_sups_union_left -> Finset.disjSups_union_left is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] {s₁ : Finset.{u1} α} {s₂ : Finset.{u1} α} {t : Finset.{u1} α}, Eq.{succ u1} (Finset.{u1} α) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) (Union.union.{u1} (Finset.{u1} α) (Finset.hasUnion.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s₁ s₂) t) (Union.union.{u1} (Finset.{u1} α) (Finset.hasUnion.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s₁ t) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s₂ t))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] {s₁ : Finset.{u1} α} {s₂ : Finset.{u1} α} {t : Finset.{u1} α}, Eq.{succ u1} (Finset.{u1} α) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) (Union.union.{u1} (Finset.{u1} α) (Finset.instUnionFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s₁ s₂) t) (Union.union.{u1} (Finset.{u1} α) (Finset.instUnionFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s₁ t) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s₂ t))
+Case conversion may be inaccurate. Consider using '#align finset.disj_sups_union_left Finset.disjSups_union_leftₓ'. -/
 theorem disjSups_union_left : (s₁ ∪ s₂) ○ t = s₁ ○ t ∪ s₂ ○ t := by
   simp [disj_sups, filter_union, image_union]
 #align finset.disj_sups_union_left Finset.disjSups_union_left
--/
 
-#print Finset.disjSups_union_right /-
+/- warning: finset.disj_sups_union_right -> Finset.disjSups_union_right is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] {s : Finset.{u1} α} {t₁ : Finset.{u1} α} {t₂ : Finset.{u1} α}, Eq.{succ u1} (Finset.{u1} α) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s (Union.union.{u1} (Finset.{u1} α) (Finset.hasUnion.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) t₁ t₂)) (Union.union.{u1} (Finset.{u1} α) (Finset.hasUnion.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t₁) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t₂))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] {s : Finset.{u1} α} {t₁ : Finset.{u1} α} {t₂ : Finset.{u1} α}, Eq.{succ u1} (Finset.{u1} α) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s (Union.union.{u1} (Finset.{u1} α) (Finset.instUnionFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) t₁ t₂)) (Union.union.{u1} (Finset.{u1} α) (Finset.instUnionFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t₁) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t₂))
+Case conversion may be inaccurate. Consider using '#align finset.disj_sups_union_right Finset.disjSups_union_rightₓ'. -/
 theorem disjSups_union_right : s ○ (t₁ ∪ t₂) = s ○ t₁ ∪ s ○ t₂ := by
   simp [disj_sups, filter_union, image_union]
 #align finset.disj_sups_union_right Finset.disjSups_union_right
--/
 
-#print Finset.disjSups_inter_subset_left /-
+/- warning: finset.disj_sups_inter_subset_left -> Finset.disjSups_inter_subset_left is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] {s₁ : Finset.{u1} α} {s₂ : Finset.{u1} α} {t : Finset.{u1} α}, HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) (Inter.inter.{u1} (Finset.{u1} α) (Finset.hasInter.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s₁ s₂) t) (Inter.inter.{u1} (Finset.{u1} α) (Finset.hasInter.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s₁ t) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s₂ t))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] {s₁ : Finset.{u1} α} {s₂ : Finset.{u1} α} {t : Finset.{u1} α}, HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) (Inter.inter.{u1} (Finset.{u1} α) (Finset.instInterFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s₁ s₂) t) (Inter.inter.{u1} (Finset.{u1} α) (Finset.instInterFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s₁ t) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s₂ t))
+Case conversion may be inaccurate. Consider using '#align finset.disj_sups_inter_subset_left Finset.disjSups_inter_subset_leftₓ'. -/
 theorem disjSups_inter_subset_left : (s₁ ∩ s₂) ○ t ⊆ s₁ ○ t ∩ s₂ ○ t := by
   simpa only [disj_sups, inter_product, filter_inter_distrib] using image_inter_subset _ _ _
 #align finset.disj_sups_inter_subset_left Finset.disjSups_inter_subset_left
--/
 
-#print Finset.disjSups_inter_subset_right /-
+/- warning: finset.disj_sups_inter_subset_right -> Finset.disjSups_inter_subset_right is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] {s : Finset.{u1} α} {t₁ : Finset.{u1} α} {t₂ : Finset.{u1} α}, HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s (Inter.inter.{u1} (Finset.{u1} α) (Finset.hasInter.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) t₁ t₂)) (Inter.inter.{u1} (Finset.{u1} α) (Finset.hasInter.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t₁) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t₂))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] {s : Finset.{u1} α} {t₁ : Finset.{u1} α} {t₂ : Finset.{u1} α}, HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s (Inter.inter.{u1} (Finset.{u1} α) (Finset.instInterFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) t₁ t₂)) (Inter.inter.{u1} (Finset.{u1} α) (Finset.instInterFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t₁) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t₂))
+Case conversion may be inaccurate. Consider using '#align finset.disj_sups_inter_subset_right Finset.disjSups_inter_subset_rightₓ'. -/
 theorem disjSups_inter_subset_right : s ○ (t₁ ∩ t₂) ⊆ s ○ t₁ ∩ s ○ t₂ := by
   simpa only [disj_sups, product_inter, filter_inter_distrib] using image_inter_subset _ _ _
 #align finset.disj_sups_inter_subset_right Finset.disjSups_inter_subset_right
--/
 
 variable (s t)
 
-#print Finset.disjSups_comm /-
+/- warning: finset.disj_sups_comm -> Finset.disjSups_comm is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] (s : Finset.{u1} α) (t : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) t s)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : SemilatticeSup.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2)))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_2) _inst_3)] (s : Finset.{u1} α) (t : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3 (fun (a : α) (b : α) => _inst_4 a b) t s)
+Case conversion may be inaccurate. Consider using '#align finset.disj_sups_comm Finset.disjSups_commₓ'. -/
 theorem disjSups_comm : s ○ t = t ○ s := by
   ext
   rw [mem_disj_sups, exists₂_comm]
   simp [sup_comm, disjoint_comm]
 #align finset.disj_sups_comm Finset.disjSups_comm
--/
 
 end DisjSups
 
@@ -846,7 +906,12 @@ section DistribLattice
 
 variable [DistribLattice α] [OrderBot α] [@DecidableRel α Disjoint] (s t u v : Finset α)
 
-#print Finset.disjSups_assoc /-
+/- warning: finset.disj_sups_assoc -> Finset.disjSups_assoc is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : DistribLattice.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)))))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_2))) _inst_3)] (s : Finset.{u1} α) (t : Finset.{u1} α) (u : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)) _inst_3 (fun (a : α) (b : α) => _inst_4 a b) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)) _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t) u) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)) _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)) _inst_3 (fun (a : α) (b : α) => _inst_4 a b) t u))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : DistribLattice.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)))))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_2))) _inst_3)] (s : Finset.{u1} α) (t : Finset.{u1} α) (u : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)) _inst_3 (fun (a : α) (b : α) => _inst_4 a b) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)) _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t) u) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)) _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)) _inst_3 (fun (a : α) (b : α) => _inst_4 a b) t u))
+Case conversion may be inaccurate. Consider using '#align finset.disj_sups_assoc Finset.disjSups_assocₓ'. -/
 theorem disjSups_assoc : ∀ s t u : Finset α, s ○ t ○ u = s ○ (t ○ u) :=
   by
   refine' associative_of_commutative_of_le disj_sups_comm _
@@ -855,24 +920,35 @@ theorem disjSups_assoc : ∀ s t u : Finset α, s ○ t ○ u = s ○ (t ○ u) 
   rw [disjoint_sup_left] at habc
   exact ⟨a, ha, _, ⟨b, hb, c, hc, habc.2, rfl⟩, hab.sup_right habc.1, sup_assoc.symm⟩
 #align finset.disj_sups_assoc Finset.disjSups_assoc
--/
 
-#print Finset.disjSups_left_comm /-
+/- warning: finset.disj_sups_left_comm -> Finset.disjSups_left_comm is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : DistribLattice.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)))))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_2))) _inst_3)] (s : Finset.{u1} α) (t : Finset.{u1} α) (u : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)) _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)) _inst_3 (fun (a : α) (b : α) => _inst_4 a b) t u)) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)) _inst_3 (fun (a : α) (b : α) => _inst_4 a b) t (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)) _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s u))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : DistribLattice.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)))))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_2))) _inst_3)] (s : Finset.{u1} α) (t : Finset.{u1} α) (u : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)) _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)) _inst_3 (fun (a : α) (b : α) => _inst_4 a b) t u)) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)) _inst_3 (fun (a : α) (b : α) => _inst_4 a b) t (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)) _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s u))
+Case conversion may be inaccurate. Consider using '#align finset.disj_sups_left_comm Finset.disjSups_left_commₓ'. -/
 theorem disjSups_left_comm : s ○ (t ○ u) = t ○ (s ○ u) := by
   simp_rw [← disj_sups_assoc, disj_sups_comm s]
 #align finset.disj_sups_left_comm Finset.disjSups_left_comm
--/
 
-#print Finset.disjSups_right_comm /-
+/- warning: finset.disj_sups_right_comm -> Finset.disjSups_right_comm is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : DistribLattice.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)))))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_2))) _inst_3)] (s : Finset.{u1} α) (t : Finset.{u1} α) (u : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)) _inst_3 (fun (a : α) (b : α) => _inst_4 a b) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)) _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t) u) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)) _inst_3 (fun (a : α) (b : α) => _inst_4 a b) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)) _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s u) t)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : DistribLattice.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)))))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_2))) _inst_3)] (s : Finset.{u1} α) (t : Finset.{u1} α) (u : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)) _inst_3 (fun (a : α) (b : α) => _inst_4 a b) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)) _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t) u) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)) _inst_3 (fun (a : α) (b : α) => _inst_4 a b) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)) _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s u) t)
+Case conversion may be inaccurate. Consider using '#align finset.disj_sups_right_comm Finset.disjSups_right_commₓ'. -/
 theorem disjSups_right_comm : s ○ t ○ u = s ○ u ○ t := by simp_rw [disj_sups_assoc, disj_sups_comm]
 #align finset.disj_sups_right_comm Finset.disjSups_right_comm
--/
 
-#print Finset.disjSups_disjSups_disjSups_comm /-
+/- warning: finset.disj_sups_disj_sups_disj_sups_comm -> Finset.disjSups_disjSups_disjSups_comm is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : DistribLattice.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)))))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_2))) _inst_3)] (s : Finset.{u1} α) (t : Finset.{u1} α) (u : Finset.{u1} α) (v : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)) _inst_3 (fun (a : α) (b : α) => _inst_4 a b) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)) _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)) _inst_3 (fun (a : α) (b : α) => _inst_4 a b) u v)) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)) _inst_3 (fun (a : α) (b : α) => _inst_4 a b) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)) _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s u) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)) _inst_3 (fun (a : α) (b : α) => _inst_4 a b) t v))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : DistribLattice.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)))))] [_inst_4 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α _inst_2))) _inst_3)] (s : Finset.{u1} α) (t : Finset.{u1} α) (u : Finset.{u1} α) (v : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)) _inst_3 (fun (a : α) (b : α) => _inst_4 a b) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)) _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s t) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)) _inst_3 (fun (a : α) (b : α) => _inst_4 a b) u v)) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)) _inst_3 (fun (a : α) (b : α) => _inst_4 a b) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)) _inst_3 (fun (a : α) (b : α) => _inst_4 a b) s u) (Finset.disjSups.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α _inst_2)) _inst_3 (fun (a : α) (b : α) => _inst_4 a b) t v))
+Case conversion may be inaccurate. Consider using '#align finset.disj_sups_disj_sups_disj_sups_comm Finset.disjSups_disjSups_disjSups_commₓ'. -/
 theorem disjSups_disjSups_disjSups_comm : s ○ t ○ (u ○ v) = s ○ u ○ (t ○ v) := by
   simp_rw [← disj_sups_assoc, disj_sups_right_comm]
 #align finset.disj_sups_disj_sups_disj_sups_comm Finset.disjSups_disjSups_disjSups_comm
--/
 
 end DistribLattice
 

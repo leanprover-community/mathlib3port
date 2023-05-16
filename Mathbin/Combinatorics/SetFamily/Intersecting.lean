@@ -43,23 +43,31 @@ section SemilatticeInf
 
 variable [SemilatticeInf α] [OrderBot α] {s t : Set α} {a b c : α}
 
-#print Set.Intersecting /-
+/- warning: set.intersecting -> Set.Intersecting is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))], (Set.{u1} α) -> Prop
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))], (Set.{u1} α) -> Prop
+Case conversion may be inaccurate. Consider using '#align set.intersecting Set.Intersectingₓ'. -/
 /-- A set family is intersecting if every pair of elements is non-disjoint. -/
 def Intersecting (s : Set α) : Prop :=
   ∀ ⦃a⦄, a ∈ s → ∀ ⦃b⦄, b ∈ s → ¬Disjoint a b
 #align set.intersecting Set.Intersecting
--/
 
-#print Set.Intersecting.mono /-
+/- warning: set.intersecting.mono -> Set.Intersecting.mono is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {s : Set.{u1} α} {t : Set.{u1} α}, (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t s) -> (Set.Intersecting.{u1} α _inst_1 _inst_2 s) -> (Set.Intersecting.{u1} α _inst_1 _inst_2 t)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {s : Set.{u1} α} {t : Set.{u1} α}, (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) t s) -> (Set.Intersecting.{u1} α _inst_1 _inst_2 s) -> (Set.Intersecting.{u1} α _inst_1 _inst_2 t)
+Case conversion may be inaccurate. Consider using '#align set.intersecting.mono Set.Intersecting.monoₓ'. -/
 @[mono]
 theorem Intersecting.mono (h : t ⊆ s) (hs : s.Intersecting) : t.Intersecting := fun a ha b hb =>
   hs (h ha) (h hb)
 #align set.intersecting.mono Set.Intersecting.mono
--/
 
 /- warning: set.intersecting.not_bot_mem -> Set.Intersecting.not_bot_mem is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {s : Set.{u1} α}, (Set.Intersecting.{u1} α _inst_1 _inst_2 s) -> (Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) _inst_2)) s))
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {s : Set.{u1} α}, (Set.Intersecting.{u1} α _inst_1 _inst_2 s) -> (Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) _inst_2)) s))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {s : Set.{u1} α}, (Set.Intersecting.{u1} α _inst_1 _inst_2 s) -> (Not (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) _inst_2)) s))
 Case conversion may be inaccurate. Consider using '#align set.intersecting.not_bot_mem Set.Intersecting.not_bot_memₓ'. -/
@@ -68,7 +76,7 @@ theorem Intersecting.not_bot_mem (hs : s.Intersecting) : ⊥ ∉ s := fun h => h
 
 /- warning: set.intersecting.ne_bot -> Set.Intersecting.ne_bot is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {s : Set.{u1} α} {a : α}, (Set.Intersecting.{u1} α _inst_1 _inst_2 s) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) -> (Ne.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) _inst_2)))
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {s : Set.{u1} α} {a : α}, (Set.Intersecting.{u1} α _inst_1 _inst_2 s) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) -> (Ne.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) _inst_2)))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {s : Set.{u1} α} {a : α}, (Set.Intersecting.{u1} α _inst_1 _inst_2 s) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) -> (Ne.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) _inst_2)))
 Case conversion may be inaccurate. Consider using '#align set.intersecting.ne_bot Set.Intersecting.ne_botₓ'. -/
@@ -76,14 +84,18 @@ theorem Intersecting.ne_bot (hs : s.Intersecting) (ha : a ∈ s) : a ≠ ⊥ :=
   ne_of_mem_of_not_mem ha hs.not_bot_mem
 #align set.intersecting.ne_bot Set.Intersecting.ne_bot
 
-#print Set.intersecting_empty /-
+/- warning: set.intersecting_empty -> Set.intersecting_empty is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))], Set.Intersecting.{u1} α _inst_1 _inst_2 (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))], Set.Intersecting.{u1} α _inst_1 _inst_2 (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α))
+Case conversion may be inaccurate. Consider using '#align set.intersecting_empty Set.intersecting_emptyₓ'. -/
 theorem intersecting_empty : (∅ : Set α).Intersecting := fun _ => False.elim
 #align set.intersecting_empty Set.intersecting_empty
--/
 
 /- warning: set.intersecting_singleton -> Set.intersecting_singleton is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {a : α}, Iff (Set.Intersecting.{u1} α _inst_1 _inst_2 (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a)) (Ne.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) _inst_2)))
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {a : α}, Iff (Set.Intersecting.{u1} α _inst_1 _inst_2 (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a)) (Ne.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) _inst_2)))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {a : α}, Iff (Set.Intersecting.{u1} α _inst_1 _inst_2 (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) a)) (Ne.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) _inst_2)))
 Case conversion may be inaccurate. Consider using '#align set.intersecting_singleton Set.intersecting_singletonₓ'. -/
@@ -93,7 +105,7 @@ theorem intersecting_singleton : ({a} : Set α).Intersecting ↔ a ≠ ⊥ := by
 
 /- warning: set.intersecting.insert -> Set.Intersecting.insert is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {s : Set.{u1} α} {a : α}, (Set.Intersecting.{u1} α _inst_1 _inst_2 s) -> (Ne.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) _inst_2))) -> (forall (b : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) -> (Not (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1) _inst_2 a b))) -> (Set.Intersecting.{u1} α _inst_1 _inst_2 (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.hasInsert.{u1} α) a s))
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {s : Set.{u1} α} {a : α}, (Set.Intersecting.{u1} α _inst_1 _inst_2 s) -> (Ne.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) _inst_2))) -> (forall (b : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) -> (Not (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1) _inst_2 a b))) -> (Set.Intersecting.{u1} α _inst_1 _inst_2 (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.hasInsert.{u1} α) a s))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {s : Set.{u1} α} {a : α}, (Set.Intersecting.{u1} α _inst_1 _inst_2 s) -> (Ne.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) _inst_2))) -> (forall (b : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) -> (Not (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1) _inst_2 a b))) -> (Set.Intersecting.{u1} α _inst_1 _inst_2 (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.instInsertSet.{u1} α) a s))
 Case conversion may be inaccurate. Consider using '#align set.intersecting.insert Set.Intersecting.insertₓ'. -/
@@ -108,7 +120,7 @@ theorem Intersecting.insert (hs : s.Intersecting) (ha : a ≠ ⊥) (h : ∀ b �
 
 /- warning: set.intersecting_insert -> Set.intersecting_insert is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {s : Set.{u1} α} {a : α}, Iff (Set.Intersecting.{u1} α _inst_1 _inst_2 (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.hasInsert.{u1} α) a s)) (And (Set.Intersecting.{u1} α _inst_1 _inst_2 s) (And (Ne.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) _inst_2))) (forall (b : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) -> (Not (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1) _inst_2 a b)))))
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {s : Set.{u1} α} {a : α}, Iff (Set.Intersecting.{u1} α _inst_1 _inst_2 (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.hasInsert.{u1} α) a s)) (And (Set.Intersecting.{u1} α _inst_1 _inst_2 s) (And (Ne.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) _inst_2))) (forall (b : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) -> (Not (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1) _inst_2 a b)))))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {s : Set.{u1} α} {a : α}, Iff (Set.Intersecting.{u1} α _inst_1 _inst_2 (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.instInsertSet.{u1} α) a s)) (And (Set.Intersecting.{u1} α _inst_1 _inst_2 s) (And (Ne.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) _inst_2))) (forall (b : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) -> (Not (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1) _inst_2 a b)))))
 Case conversion may be inaccurate. Consider using '#align set.intersecting_insert Set.intersecting_insertₓ'. -/
@@ -122,7 +134,7 @@ theorem intersecting_insert :
 
 /- warning: set.intersecting_iff_pairwise_not_disjoint -> Set.intersecting_iff_pairwise_not_disjoint is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {s : Set.{u1} α}, Iff (Set.Intersecting.{u1} α _inst_1 _inst_2 s) (And (Set.Pairwise.{u1} α s (fun (a : α) (b : α) => Not (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1) _inst_2 a b))) (Ne.{succ u1} (Set.{u1} α) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) _inst_2)))))
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {s : Set.{u1} α}, Iff (Set.Intersecting.{u1} α _inst_1 _inst_2 s) (And (Set.Pairwise.{u1} α s (fun (a : α) (b : α) => Not (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1) _inst_2 a b))) (Ne.{succ u1} (Set.{u1} α) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) _inst_2)))))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {s : Set.{u1} α}, Iff (Set.Intersecting.{u1} α _inst_1 _inst_2 s) (And (Set.Pairwise.{u1} α s (fun (a : α) (b : α) => Not (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1) _inst_2 a b))) (Ne.{succ u1} (Set.{u1} α) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) _inst_2)))))
 Case conversion may be inaccurate. Consider using '#align set.intersecting_iff_pairwise_not_disjoint Set.intersecting_iff_pairwise_not_disjointₓ'. -/
@@ -143,7 +155,7 @@ theorem intersecting_iff_pairwise_not_disjoint :
 
 /- warning: set.subsingleton.intersecting -> Set.Subsingleton.intersecting is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {s : Set.{u1} α}, (Set.Subsingleton.{u1} α s) -> (Iff (Set.Intersecting.{u1} α _inst_1 _inst_2 s) (Ne.{succ u1} (Set.{u1} α) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) _inst_2)))))
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {s : Set.{u1} α}, (Set.Subsingleton.{u1} α s) -> (Iff (Set.Intersecting.{u1} α _inst_1 _inst_2 s) (Ne.{succ u1} (Set.{u1} α) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) _inst_2)))))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {s : Set.{u1} α}, (Set.Subsingleton.{u1} α s) -> (Iff (Set.Intersecting.{u1} α _inst_1 _inst_2 s) (Ne.{succ u1} (Set.{u1} α) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) _inst_2)))))
 Case conversion may be inaccurate. Consider using '#align set.subsingleton.intersecting Set.Subsingleton.intersectingₓ'. -/
@@ -151,7 +163,12 @@ protected theorem Subsingleton.intersecting (hs : s.Subsingleton) : s.Intersecti
   intersecting_iff_pairwise_not_disjoint.trans <| and_iff_right <| hs.Pairwise _
 #align set.subsingleton.intersecting Set.Subsingleton.intersecting
 
-#print Set.intersecting_iff_eq_empty_of_subsingleton /-
+/- warning: set.intersecting_iff_eq_empty_of_subsingleton -> Set.intersecting_iff_eq_empty_of_subsingleton is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] [_inst_3 : Subsingleton.{succ u1} α] (s : Set.{u1} α), Iff (Set.Intersecting.{u1} α _inst_1 _inst_2 s) (Eq.{succ u1} (Set.{u1} α) s (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] [_inst_3 : Subsingleton.{succ u1} α] (s : Set.{u1} α), Iff (Set.Intersecting.{u1} α _inst_1 _inst_2 s) (Eq.{succ u1} (Set.{u1} α) s (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α)))
+Case conversion may be inaccurate. Consider using '#align set.intersecting_iff_eq_empty_of_subsingleton Set.intersecting_iff_eq_empty_of_subsingletonₓ'. -/
 theorem intersecting_iff_eq_empty_of_subsingleton [Subsingleton α] (s : Set α) :
     s.Intersecting ↔ s = ∅ :=
   by
@@ -163,9 +180,13 @@ theorem intersecting_iff_eq_empty_of_subsingleton [Subsingleton α] (s : Set α)
   · rintro rfl
     exact (Set.singleton_nonempty _).ne_empty.symm
 #align set.intersecting_iff_eq_empty_of_subsingleton Set.intersecting_iff_eq_empty_of_subsingleton
--/
 
-#print Set.Intersecting.isUpperSet /-
+/- warning: set.intersecting.is_upper_set -> Set.Intersecting.isUpperSet is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {s : Set.{u1} α}, (Set.Intersecting.{u1} α _inst_1 _inst_2 s) -> (forall (t : Set.{u1} α), (Set.Intersecting.{u1} α _inst_1 _inst_2 t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s t) -> (Eq.{succ u1} (Set.{u1} α) s t)) -> (IsUpperSet.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) s)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {s : Set.{u1} α}, (Set.Intersecting.{u1} α _inst_1 _inst_2 s) -> (forall (t : Set.{u1} α), (Set.Intersecting.{u1} α _inst_1 _inst_2 t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s t) -> (Eq.{succ u1} (Set.{u1} α) s t)) -> (IsUpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) s)
+Case conversion may be inaccurate. Consider using '#align set.intersecting.is_upper_set Set.Intersecting.isUpperSetₓ'. -/
 /-- Maximal intersecting families are upper sets. -/
 protected theorem Intersecting.isUpperSet (hs : s.Intersecting)
     (h : ∀ t : Set α, t.Intersecting → s ⊆ t → s = t) : IsUpperSet s := by
@@ -176,9 +197,13 @@ protected theorem Intersecting.isUpperSet (hs : s.Intersecting)
     exact
       hs.insert (mt (eq_bot_mono hab) <| hs.ne_bot ha) fun c hc hbc => hs ha hc <| hbc.mono_left hab
 #align set.intersecting.is_upper_set Set.Intersecting.isUpperSet
--/
 
-#print Set.Intersecting.isUpperSet' /-
+/- warning: set.intersecting.is_upper_set' -> Set.Intersecting.isUpperSet' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {s : Finset.{u1} α}, (Set.Intersecting.{u1} α _inst_1 _inst_2 ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s)) -> (forall (t : Finset.{u1} α), (Set.Intersecting.{u1} α _inst_1 _inst_2 ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) t)) -> (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) s t) -> (Eq.{succ u1} (Finset.{u1} α) s t)) -> (IsUpperSet.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {s : Finset.{u1} α}, (Set.Intersecting.{u1} α _inst_1 _inst_2 (Finset.toSet.{u1} α s)) -> (forall (t : Finset.{u1} α), (Set.Intersecting.{u1} α _inst_1 _inst_2 (Finset.toSet.{u1} α t)) -> (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) s t) -> (Eq.{succ u1} (Finset.{u1} α) s t)) -> (IsUpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) (Finset.toSet.{u1} α s))
+Case conversion may be inaccurate. Consider using '#align set.intersecting.is_upper_set' Set.Intersecting.isUpperSet'ₓ'. -/
 /-- Maximal intersecting families are upper sets. Finset version. -/
 theorem Intersecting.isUpperSet' {s : Finset α} (hs : (s : Set α).Intersecting)
     (h : ∀ t : Finset α, (t : Set α).Intersecting → s ⊆ t → s = t) : IsUpperSet (s : Set α) := by
@@ -190,7 +215,6 @@ theorem Intersecting.isUpperSet' {s : Finset α} (hs : (s : Set α).Intersecting
     exact
       hs.insert (mt (eq_bot_mono hab) <| hs.ne_bot ha) fun c hc hbc => hs ha hc <| hbc.mono_left hab
 #align set.intersecting.is_upper_set' Set.Intersecting.isUpperSet'
--/
 
 end SemilatticeInf
 

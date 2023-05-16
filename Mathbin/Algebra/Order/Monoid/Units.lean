@@ -28,21 +28,29 @@ namespace Units
 instance [Monoid α] [Preorder α] : Preorder αˣ :=
   Preorder.lift (coe : αˣ → α)
 
-#print Units.val_le_val /-
+/- warning: units.coe_le_coe -> Units.val_le_val is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] [_inst_2 : Preorder.{u1} α] {a : Units.{u1} α _inst_1} {b : Units.{u1} α _inst_1}, Iff (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_2) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} α _inst_1) α (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} α _inst_1) α (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} α _inst_1) α (coeBase.{succ u1, succ u1} (Units.{u1} α _inst_1) α (Units.hasCoe.{u1} α _inst_1)))) a) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} α _inst_1) α (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} α _inst_1) α (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} α _inst_1) α (coeBase.{succ u1, succ u1} (Units.{u1} α _inst_1) α (Units.hasCoe.{u1} α _inst_1)))) b)) (LE.le.{u1} (Units.{u1} α _inst_1) (Preorder.toHasLe.{u1} (Units.{u1} α _inst_1) (Units.preorder.{u1} α _inst_1 _inst_2)) a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] [_inst_2 : Preorder.{u1} α] {a : Units.{u1} α _inst_1} {b : Units.{u1} α _inst_1}, Iff (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_2) (Units.val.{u1} α _inst_1 a) (Units.val.{u1} α _inst_1 b)) (LE.le.{u1} (Units.{u1} α _inst_1) (Preorder.toLE.{u1} (Units.{u1} α _inst_1) (Units.instPreorderUnits.{u1} α _inst_1 _inst_2)) a b)
+Case conversion may be inaccurate. Consider using '#align units.coe_le_coe Units.val_le_valₓ'. -/
 @[simp, norm_cast, to_additive]
 theorem val_le_val [Monoid α] [Preorder α] {a b : αˣ} : (a : α) ≤ b ↔ a ≤ b :=
   Iff.rfl
 #align units.coe_le_coe Units.val_le_val
 #align add_units.coe_le_coe AddUnits.val_le_val
--/
 
-#print Units.val_lt_val /-
+/- warning: units.coe_lt_coe -> Units.val_lt_val is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] [_inst_2 : Preorder.{u1} α] {a : Units.{u1} α _inst_1} {b : Units.{u1} α _inst_1}, Iff (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_2) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} α _inst_1) α (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} α _inst_1) α (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} α _inst_1) α (coeBase.{succ u1, succ u1} (Units.{u1} α _inst_1) α (Units.hasCoe.{u1} α _inst_1)))) a) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} α _inst_1) α (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} α _inst_1) α (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} α _inst_1) α (coeBase.{succ u1, succ u1} (Units.{u1} α _inst_1) α (Units.hasCoe.{u1} α _inst_1)))) b)) (LT.lt.{u1} (Units.{u1} α _inst_1) (Preorder.toHasLt.{u1} (Units.{u1} α _inst_1) (Units.preorder.{u1} α _inst_1 _inst_2)) a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] [_inst_2 : Preorder.{u1} α] {a : Units.{u1} α _inst_1} {b : Units.{u1} α _inst_1}, Iff (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_2) (Units.val.{u1} α _inst_1 a) (Units.val.{u1} α _inst_1 b)) (LT.lt.{u1} (Units.{u1} α _inst_1) (Preorder.toLT.{u1} (Units.{u1} α _inst_1) (Units.instPreorderUnits.{u1} α _inst_1 _inst_2)) a b)
+Case conversion may be inaccurate. Consider using '#align units.coe_lt_coe Units.val_lt_valₓ'. -/
 @[simp, norm_cast, to_additive]
 theorem val_lt_val [Monoid α] [Preorder α] {a b : αˣ} : (a : α) < b ↔ a < b :=
   Iff.rfl
 #align units.coe_lt_coe Units.val_lt_val
 #align add_units.coe_lt_coe AddUnits.val_lt_val
--/
 
 @[to_additive]
 instance [Monoid α] [PartialOrder α] : PartialOrder αˣ :=
@@ -52,7 +60,12 @@ instance [Monoid α] [PartialOrder α] : PartialOrder αˣ :=
 instance [Monoid α] [LinearOrder α] : LinearOrder αˣ :=
   LinearOrder.lift' coe Units.ext
 
-#print Units.orderEmbeddingVal /-
+/- warning: units.order_embedding_coe -> Units.orderEmbeddingVal is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] [_inst_2 : LinearOrder.{u1} α], OrderEmbedding.{u1, u1} (Units.{u1} α _inst_1) α (Preorder.toHasLe.{u1} (Units.{u1} α _inst_1) (Units.preorder.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_2)))))) (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_2)))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] [_inst_2 : LinearOrder.{u1} α], OrderEmbedding.{u1, u1} (Units.{u1} α _inst_1) α (Preorder.toLE.{u1} (Units.{u1} α _inst_1) (Units.instPreorderUnits.{u1} α _inst_1 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2))))))) (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2))))))
+Case conversion may be inaccurate. Consider using '#align units.order_embedding_coe Units.orderEmbeddingValₓ'. -/
 /-- `coe : αˣ → α` as an order embedding. -/
 @[to_additive "`coe : add_units α → α` as an order embedding.",
   simps (config := { fullyApplied := false })]
@@ -60,7 +73,6 @@ def orderEmbeddingVal [Monoid α] [LinearOrder α] : αˣ ↪o α :=
   ⟨⟨coe, ext⟩, fun _ _ => Iff.rfl⟩
 #align units.order_embedding_coe Units.orderEmbeddingVal
 #align add_units.order_embedding_coe AddUnits.orderEmbeddingVal
--/
 
 /- warning: units.max_coe -> Units.max_val is a dubious translation:
 lean 3 declaration is

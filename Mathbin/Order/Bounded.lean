@@ -48,7 +48,7 @@ theorem Unbounded.mono (hst : s ⊆ t) (hs : Unbounded r s) : Unbounded r t := f
 
 /- warning: set.unbounded_le_of_forall_exists_lt -> Set.unbounded_le_of_forall_exists_lt is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : Preorder.{u1} α], (forall (a : α), Exists.{succ u1} α (fun (b : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) a b))) -> (Set.Unbounded.{u1} α (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) s)
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : Preorder.{u1} α], (forall (a : α), Exists.{succ u1} α (fun (b : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) => LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a b))) -> (Set.Unbounded.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) s)
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : Preorder.{u1} α], (forall (a : α), Exists.{succ u1} α (fun (b : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) a b))) -> (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.172 : α) (x._@.Mathlib.Order.Bounded._hyg.174 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.172 x._@.Mathlib.Order.Bounded._hyg.174) s)
 Case conversion may be inaccurate. Consider using '#align set.unbounded_le_of_forall_exists_lt Set.unbounded_le_of_forall_exists_ltₓ'. -/
@@ -60,7 +60,7 @@ theorem unbounded_le_of_forall_exists_lt [Preorder α] (h : ∀ a, ∃ b ∈ s, 
 
 /- warning: set.unbounded_le_iff -> Set.unbounded_le_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α], Iff (Set.Unbounded.{u1} α (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s) (forall (a : α), Exists.{succ u1} α (fun (b : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a b)))
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α], Iff (Set.Unbounded.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s) (forall (a : α), Exists.{succ u1} α (fun (b : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) => LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a b)))
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α], Iff (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.248 : α) (x._@.Mathlib.Order.Bounded._hyg.250 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.Bounded._hyg.248 x._@.Mathlib.Order.Bounded._hyg.250) s) (forall (a : α), Exists.{succ u1} α (fun (b : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) a b)))
 Case conversion may be inaccurate. Consider using '#align set.unbounded_le_iff Set.unbounded_le_iffₓ'. -/
@@ -70,7 +70,7 @@ theorem unbounded_le_iff [LinearOrder α] : Unbounded (· ≤ ·) s ↔ ∀ a, �
 
 /- warning: set.unbounded_lt_of_forall_exists_le -> Set.unbounded_lt_of_forall_exists_le is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : Preorder.{u1} α], (forall (a : α), Exists.{succ u1} α (fun (b : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a b))) -> (Set.Unbounded.{u1} α (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1)) s)
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : Preorder.{u1} α], (forall (a : α), Exists.{succ u1} α (fun (b : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) => LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a b))) -> (Set.Unbounded.{u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1)) s)
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : Preorder.{u1} α], (forall (a : α), Exists.{succ u1} α (fun (b : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a b))) -> (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.336 : α) (x._@.Mathlib.Order.Bounded._hyg.338 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.336 x._@.Mathlib.Order.Bounded._hyg.338) s)
 Case conversion may be inaccurate. Consider using '#align set.unbounded_lt_of_forall_exists_le Set.unbounded_lt_of_forall_exists_leₓ'. -/
@@ -82,7 +82,7 @@ theorem unbounded_lt_of_forall_exists_le [Preorder α] (h : ∀ a, ∃ b ∈ s, 
 
 /- warning: set.unbounded_lt_iff -> Set.unbounded_lt_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α], Iff (Set.Unbounded.{u1} α (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s) (forall (a : α), Exists.{succ u1} α (fun (b : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a b)))
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α], Iff (Set.Unbounded.{u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s) (forall (a : α), Exists.{succ u1} α (fun (b : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) => LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a b)))
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α], Iff (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.412 : α) (x._@.Mathlib.Order.Bounded._hyg.414 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.Bounded._hyg.412 x._@.Mathlib.Order.Bounded._hyg.414) s) (forall (a : α), Exists.{succ u1} α (fun (b : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) a b)))
 Case conversion may be inaccurate. Consider using '#align set.unbounded_lt_iff Set.unbounded_lt_iffₓ'. -/
@@ -92,7 +92,7 @@ theorem unbounded_lt_iff [LinearOrder α] : Unbounded (· < ·) s ↔ ∀ a, ∃
 
 /- warning: set.unbounded_ge_of_forall_exists_gt -> Set.unbounded_ge_of_forall_exists_gt is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : Preorder.{u1} α], (forall (a : α), Exists.{succ u1} α (fun (b : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) b a))) -> (Set.Unbounded.{u1} α (GE.ge.{u1} α (Preorder.toLE.{u1} α _inst_1)) s)
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : Preorder.{u1} α], (forall (a : α), Exists.{succ u1} α (fun (b : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) => LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) b a))) -> (Set.Unbounded.{u1} α (GE.ge.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) s)
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : Preorder.{u1} α], (forall (a : α), Exists.{succ u1} α (fun (b : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) b a))) -> (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.500 : α) (x._@.Mathlib.Order.Bounded._hyg.502 : α) => GE.ge.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.500 x._@.Mathlib.Order.Bounded._hyg.502) s)
 Case conversion may be inaccurate. Consider using '#align set.unbounded_ge_of_forall_exists_gt Set.unbounded_ge_of_forall_exists_gtₓ'. -/
@@ -103,7 +103,7 @@ theorem unbounded_ge_of_forall_exists_gt [Preorder α] (h : ∀ a, ∃ b ∈ s, 
 
 /- warning: set.unbounded_ge_iff -> Set.unbounded_ge_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α], Iff (Set.Unbounded.{u1} α (GE.ge.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s) (forall (a : α), Exists.{succ u1} α (fun (b : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) b a)))
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α], Iff (Set.Unbounded.{u1} α (GE.ge.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s) (forall (a : α), Exists.{succ u1} α (fun (b : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) => LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) b a)))
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α], Iff (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.542 : α) (x._@.Mathlib.Order.Bounded._hyg.544 : α) => GE.ge.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.Bounded._hyg.542 x._@.Mathlib.Order.Bounded._hyg.544) s) (forall (a : α), Exists.{succ u1} α (fun (b : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) b a)))
 Case conversion may be inaccurate. Consider using '#align set.unbounded_ge_iff Set.unbounded_ge_iffₓ'. -/
@@ -116,7 +116,7 @@ theorem unbounded_ge_iff [LinearOrder α] : Unbounded (· ≥ ·) s ↔ ∀ a, �
 
 /- warning: set.unbounded_gt_of_forall_exists_ge -> Set.unbounded_gt_of_forall_exists_ge is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : Preorder.{u1} α], (forall (a : α), Exists.{succ u1} α (fun (b : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) b a))) -> (Set.Unbounded.{u1} α (GT.gt.{u1} α (Preorder.toLT.{u1} α _inst_1)) s)
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : Preorder.{u1} α], (forall (a : α), Exists.{succ u1} α (fun (b : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) => LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) b a))) -> (Set.Unbounded.{u1} α (GT.gt.{u1} α (Preorder.toHasLt.{u1} α _inst_1)) s)
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : Preorder.{u1} α], (forall (a : α), Exists.{succ u1} α (fun (b : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) b a))) -> (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.668 : α) (x._@.Mathlib.Order.Bounded._hyg.670 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.668 x._@.Mathlib.Order.Bounded._hyg.670) s)
 Case conversion may be inaccurate. Consider using '#align set.unbounded_gt_of_forall_exists_ge Set.unbounded_gt_of_forall_exists_geₓ'. -/
@@ -128,7 +128,7 @@ theorem unbounded_gt_of_forall_exists_ge [Preorder α] (h : ∀ a, ∃ b ∈ s, 
 
 /- warning: set.unbounded_gt_iff -> Set.unbounded_gt_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α], Iff (Set.Unbounded.{u1} α (GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s) (forall (a : α), Exists.{succ u1} α (fun (b : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) b a)))
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α], Iff (Set.Unbounded.{u1} α (GT.gt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s) (forall (a : α), Exists.{succ u1} α (fun (b : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) => LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) b a)))
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α], Iff (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.745 : α) (x._@.Mathlib.Order.Bounded._hyg.747 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.Bounded._hyg.745 x._@.Mathlib.Order.Bounded._hyg.747) s) (forall (a : α), Exists.{succ u1} α (fun (b : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) b a)))
 Case conversion may be inaccurate. Consider using '#align set.unbounded_gt_iff Set.unbounded_gt_iffₓ'. -/
@@ -152,11 +152,15 @@ theorem Bounded.rel_mono {r' : α → α → Prop} (h : Bounded r s) (hrr' : r �
 #align set.bounded.rel_mono Set.Bounded.rel_mono
 -/
 
-#print Set.bounded_le_of_bounded_lt /-
+/- warning: set.bounded_le_of_bounded_lt -> Set.bounded_le_of_bounded_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : Preorder.{u1} α], (Set.Bounded.{u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1)) s) -> (Set.Bounded.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) s)
+but is expected to have type
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : Preorder.{u1} α], (Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.909 : α) (x._@.Mathlib.Order.Bounded._hyg.911 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.909 x._@.Mathlib.Order.Bounded._hyg.911) s) -> (Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.926 : α) (x._@.Mathlib.Order.Bounded._hyg.928 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.926 x._@.Mathlib.Order.Bounded._hyg.928) s)
+Case conversion may be inaccurate. Consider using '#align set.bounded_le_of_bounded_lt Set.bounded_le_of_bounded_ltₓ'. -/
 theorem bounded_le_of_bounded_lt [Preorder α] (h : Bounded (· < ·) s) : Bounded (· ≤ ·) s :=
   h.rel_mono fun _ _ => le_of_lt
 #align set.bounded_le_of_bounded_lt Set.bounded_le_of_bounded_lt
--/
 
 #print Set.Unbounded.rel_mono /-
 theorem Unbounded.rel_mono {r' : α → α → Prop} (hr : r' ≤ r) (h : Unbounded r s) : Unbounded r' s :=
@@ -166,13 +170,22 @@ theorem Unbounded.rel_mono {r' : α → α → Prop} (hr : r' ≤ r) (h : Unboun
 #align set.unbounded.rel_mono Set.Unbounded.rel_mono
 -/
 
-#print Set.unbounded_lt_of_unbounded_le /-
+/- warning: set.unbounded_lt_of_unbounded_le -> Set.unbounded_lt_of_unbounded_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : Preorder.{u1} α], (Set.Unbounded.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) s) -> (Set.Unbounded.{u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1)) s)
+but is expected to have type
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : Preorder.{u1} α], (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.1044 : α) (x._@.Mathlib.Order.Bounded._hyg.1046 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.1044 x._@.Mathlib.Order.Bounded._hyg.1046) s) -> (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.1061 : α) (x._@.Mathlib.Order.Bounded._hyg.1063 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.1061 x._@.Mathlib.Order.Bounded._hyg.1063) s)
+Case conversion may be inaccurate. Consider using '#align set.unbounded_lt_of_unbounded_le Set.unbounded_lt_of_unbounded_leₓ'. -/
 theorem unbounded_lt_of_unbounded_le [Preorder α] (h : Unbounded (· ≤ ·) s) : Unbounded (· < ·) s :=
   h.rel_mono fun _ _ => le_of_lt
 #align set.unbounded_lt_of_unbounded_le Set.unbounded_lt_of_unbounded_le
--/
 
-#print Set.bounded_le_iff_bounded_lt /-
+/- warning: set.bounded_le_iff_bounded_lt -> Set.bounded_le_iff_bounded_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : Preorder.{u1} α] [_inst_2 : NoMaxOrder.{u1} α (Preorder.toHasLt.{u1} α _inst_1)], Iff (Set.Bounded.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) s) (Set.Bounded.{u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1)) s)
+but is expected to have type
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : Preorder.{u1} α] [_inst_2 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)], Iff (Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.1107 : α) (x._@.Mathlib.Order.Bounded._hyg.1109 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.1107 x._@.Mathlib.Order.Bounded._hyg.1109) s) (Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.1124 : α) (x._@.Mathlib.Order.Bounded._hyg.1126 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.1124 x._@.Mathlib.Order.Bounded._hyg.1126) s)
+Case conversion may be inaccurate. Consider using '#align set.bounded_le_iff_bounded_lt Set.bounded_le_iff_bounded_ltₓ'. -/
 theorem bounded_le_iff_bounded_lt [Preorder α] [NoMaxOrder α] :
     Bounded (· ≤ ·) s ↔ Bounded (· < ·) s :=
   by
@@ -181,46 +194,65 @@ theorem bounded_le_iff_bounded_lt [Preorder α] [NoMaxOrder α] :
   cases' exists_gt a with b hb
   exact ⟨b, fun c hc => lt_of_le_of_lt (ha c hc) hb⟩
 #align set.bounded_le_iff_bounded_lt Set.bounded_le_iff_bounded_lt
--/
 
-#print Set.unbounded_lt_iff_unbounded_le /-
+/- warning: set.unbounded_lt_iff_unbounded_le -> Set.unbounded_lt_iff_unbounded_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : Preorder.{u1} α] [_inst_2 : NoMaxOrder.{u1} α (Preorder.toHasLt.{u1} α _inst_1)], Iff (Set.Unbounded.{u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1)) s) (Set.Unbounded.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) s)
+but is expected to have type
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : Preorder.{u1} α] [_inst_2 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)], Iff (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.1198 : α) (x._@.Mathlib.Order.Bounded._hyg.1200 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.1198 x._@.Mathlib.Order.Bounded._hyg.1200) s) (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.1215 : α) (x._@.Mathlib.Order.Bounded._hyg.1217 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.1215 x._@.Mathlib.Order.Bounded._hyg.1217) s)
+Case conversion may be inaccurate. Consider using '#align set.unbounded_lt_iff_unbounded_le Set.unbounded_lt_iff_unbounded_leₓ'. -/
 theorem unbounded_lt_iff_unbounded_le [Preorder α] [NoMaxOrder α] :
     Unbounded (· < ·) s ↔ Unbounded (· ≤ ·) s := by
   simp_rw [← not_bounded_iff, bounded_le_iff_bounded_lt]
 #align set.unbounded_lt_iff_unbounded_le Set.unbounded_lt_iff_unbounded_le
--/
 
 /-! #### Greater and greater or equal -/
 
 
-#print Set.bounded_ge_of_bounded_gt /-
+/- warning: set.bounded_ge_of_bounded_gt -> Set.bounded_ge_of_bounded_gt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : Preorder.{u1} α], (Set.Bounded.{u1} α (GT.gt.{u1} α (Preorder.toHasLt.{u1} α _inst_1)) s) -> (Set.Bounded.{u1} α (GE.ge.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) s)
+but is expected to have type
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : Preorder.{u1} α], (Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.1255 : α) (x._@.Mathlib.Order.Bounded._hyg.1257 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.1255 x._@.Mathlib.Order.Bounded._hyg.1257) s) -> (Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.1272 : α) (x._@.Mathlib.Order.Bounded._hyg.1274 : α) => GE.ge.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.1272 x._@.Mathlib.Order.Bounded._hyg.1274) s)
+Case conversion may be inaccurate. Consider using '#align set.bounded_ge_of_bounded_gt Set.bounded_ge_of_bounded_gtₓ'. -/
 theorem bounded_ge_of_bounded_gt [Preorder α] (h : Bounded (· > ·) s) : Bounded (· ≥ ·) s :=
   let ⟨a, ha⟩ := h
   ⟨a, fun b hb => le_of_lt (ha b hb)⟩
 #align set.bounded_ge_of_bounded_gt Set.bounded_ge_of_bounded_gt
--/
 
-#print Set.unbounded_gt_of_unbounded_ge /-
+/- warning: set.unbounded_gt_of_unbounded_ge -> Set.unbounded_gt_of_unbounded_ge is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : Preorder.{u1} α], (Set.Unbounded.{u1} α (GE.ge.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) s) -> (Set.Unbounded.{u1} α (GT.gt.{u1} α (Preorder.toHasLt.{u1} α _inst_1)) s)
+but is expected to have type
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : Preorder.{u1} α], (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.1332 : α) (x._@.Mathlib.Order.Bounded._hyg.1334 : α) => GE.ge.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.1332 x._@.Mathlib.Order.Bounded._hyg.1334) s) -> (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.1349 : α) (x._@.Mathlib.Order.Bounded._hyg.1351 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.1349 x._@.Mathlib.Order.Bounded._hyg.1351) s)
+Case conversion may be inaccurate. Consider using '#align set.unbounded_gt_of_unbounded_ge Set.unbounded_gt_of_unbounded_geₓ'. -/
 theorem unbounded_gt_of_unbounded_ge [Preorder α] (h : Unbounded (· ≥ ·) s) : Unbounded (· > ·) s :=
   fun a =>
   let ⟨b, hb, hba⟩ := h a
   ⟨b, hb, fun hba' => hba (le_of_lt hba')⟩
 #align set.unbounded_gt_of_unbounded_ge Set.unbounded_gt_of_unbounded_ge
--/
 
-#print Set.bounded_ge_iff_bounded_gt /-
+/- warning: set.bounded_ge_iff_bounded_gt -> Set.bounded_ge_iff_bounded_gt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : Preorder.{u1} α] [_inst_2 : NoMinOrder.{u1} α (Preorder.toHasLt.{u1} α _inst_1)], Iff (Set.Bounded.{u1} α (GE.ge.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) s) (Set.Bounded.{u1} α (GT.gt.{u1} α (Preorder.toHasLt.{u1} α _inst_1)) s)
+but is expected to have type
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : Preorder.{u1} α] [_inst_2 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)], Iff (Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.1431 : α) (x._@.Mathlib.Order.Bounded._hyg.1433 : α) => GE.ge.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.1431 x._@.Mathlib.Order.Bounded._hyg.1433) s) (Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.1448 : α) (x._@.Mathlib.Order.Bounded._hyg.1450 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.1448 x._@.Mathlib.Order.Bounded._hyg.1450) s)
+Case conversion may be inaccurate. Consider using '#align set.bounded_ge_iff_bounded_gt Set.bounded_ge_iff_bounded_gtₓ'. -/
 theorem bounded_ge_iff_bounded_gt [Preorder α] [NoMinOrder α] :
     Bounded (· ≥ ·) s ↔ Bounded (· > ·) s :=
   @bounded_le_iff_bounded_lt αᵒᵈ _ _ _
 #align set.bounded_ge_iff_bounded_gt Set.bounded_ge_iff_bounded_gt
--/
 
-#print Set.unbounded_gt_iff_unbounded_ge /-
+/- warning: set.unbounded_gt_iff_unbounded_ge -> Set.unbounded_gt_iff_unbounded_ge is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : Preorder.{u1} α] [_inst_2 : NoMinOrder.{u1} α (Preorder.toHasLt.{u1} α _inst_1)], Iff (Set.Unbounded.{u1} α (GT.gt.{u1} α (Preorder.toHasLt.{u1} α _inst_1)) s) (Set.Unbounded.{u1} α (GE.ge.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) s)
+but is expected to have type
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : Preorder.{u1} α] [_inst_2 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)], Iff (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.1492 : α) (x._@.Mathlib.Order.Bounded._hyg.1494 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.1492 x._@.Mathlib.Order.Bounded._hyg.1494) s) (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.1509 : α) (x._@.Mathlib.Order.Bounded._hyg.1511 : α) => GE.ge.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.1509 x._@.Mathlib.Order.Bounded._hyg.1511) s)
+Case conversion may be inaccurate. Consider using '#align set.unbounded_gt_iff_unbounded_ge Set.unbounded_gt_iff_unbounded_geₓ'. -/
 theorem unbounded_gt_iff_unbounded_ge [Preorder α] [NoMinOrder α] :
     Unbounded (· > ·) s ↔ Unbounded (· ≥ ·) s :=
   @unbounded_lt_iff_unbounded_le αᵒᵈ _ _ _
 #align set.unbounded_gt_iff_unbounded_ge Set.unbounded_gt_iff_unbounded_ge
--/
 
 /-! ### The universal set -/
 
@@ -232,11 +264,15 @@ theorem unbounded_le_univ [LE α] [NoTopOrder α] : Unbounded (· ≤ ·) (@Set.
 #align set.unbounded_le_univ Set.unbounded_le_univ
 -/
 
-#print Set.unbounded_lt_univ /-
+/- warning: set.unbounded_lt_univ -> Set.unbounded_lt_univ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : NoTopOrder.{u1} α (Preorder.toHasLe.{u1} α _inst_1)], Set.Unbounded.{u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1)) (Set.univ.{u1} α)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : NoTopOrder.{u1} α (Preorder.toLE.{u1} α _inst_1)], Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.1621 : α) (x._@.Mathlib.Order.Bounded._hyg.1623 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.1621 x._@.Mathlib.Order.Bounded._hyg.1623) (Set.univ.{u1} α)
+Case conversion may be inaccurate. Consider using '#align set.unbounded_lt_univ Set.unbounded_lt_univₓ'. -/
 theorem unbounded_lt_univ [Preorder α] [NoTopOrder α] : Unbounded (· < ·) (@Set.univ α) :=
   unbounded_lt_of_unbounded_le unbounded_le_univ
 #align set.unbounded_lt_univ Set.unbounded_lt_univ
--/
 
 #print Set.unbounded_ge_univ /-
 theorem unbounded_ge_univ [LE α] [NoBotOrder α] : Unbounded (· ≥ ·) (@Set.univ α) := fun a =>
@@ -245,11 +281,15 @@ theorem unbounded_ge_univ [LE α] [NoBotOrder α] : Unbounded (· ≥ ·) (@Set.
 #align set.unbounded_ge_univ Set.unbounded_ge_univ
 -/
 
-#print Set.unbounded_gt_univ /-
+/- warning: set.unbounded_gt_univ -> Set.unbounded_gt_univ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : NoBotOrder.{u1} α (Preorder.toHasLe.{u1} α _inst_1)], Set.Unbounded.{u1} α (GT.gt.{u1} α (Preorder.toHasLt.{u1} α _inst_1)) (Set.univ.{u1} α)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : NoBotOrder.{u1} α (Preorder.toLE.{u1} α _inst_1)], Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.1731 : α) (x._@.Mathlib.Order.Bounded._hyg.1733 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.1731 x._@.Mathlib.Order.Bounded._hyg.1733) (Set.univ.{u1} α)
+Case conversion may be inaccurate. Consider using '#align set.unbounded_gt_univ Set.unbounded_gt_univₓ'. -/
 theorem unbounded_gt_univ [Preorder α] [NoBotOrder α] : Unbounded (· > ·) (@Set.univ α) :=
   unbounded_gt_of_unbounded_ge unbounded_ge_univ
 #align set.unbounded_gt_univ Set.unbounded_gt_univ
--/
 
 /-! ### Bounded and unbounded intervals -/
 
@@ -263,183 +303,295 @@ theorem bounded_self (a : α) : Bounded r { b | r b a } :=
 /-! #### Half-open bounded intervals -/
 
 
-#print Set.bounded_lt_Iio /-
+/- warning: set.bounded_lt_Iio -> Set.bounded_lt_Iio is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α), Set.Bounded.{u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1)) (Set.Iio.{u1} α _inst_1 a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α), Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.1803 : α) (x._@.Mathlib.Order.Bounded._hyg.1805 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.1803 x._@.Mathlib.Order.Bounded._hyg.1805) (Set.Iio.{u1} α _inst_1 a)
+Case conversion may be inaccurate. Consider using '#align set.bounded_lt_Iio Set.bounded_lt_Iioₓ'. -/
 theorem bounded_lt_Iio [Preorder α] (a : α) : Bounded (· < ·) (Set.Iio a) :=
   bounded_self a
 #align set.bounded_lt_Iio Set.bounded_lt_Iio
--/
 
-#print Set.bounded_le_Iio /-
+/- warning: set.bounded_le_Iio -> Set.bounded_le_Iio is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α), Set.Bounded.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (Set.Iio.{u1} α _inst_1 a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α), Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.1841 : α) (x._@.Mathlib.Order.Bounded._hyg.1843 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.1841 x._@.Mathlib.Order.Bounded._hyg.1843) (Set.Iio.{u1} α _inst_1 a)
+Case conversion may be inaccurate. Consider using '#align set.bounded_le_Iio Set.bounded_le_Iioₓ'. -/
 theorem bounded_le_Iio [Preorder α] (a : α) : Bounded (· ≤ ·) (Set.Iio a) :=
   bounded_le_of_bounded_lt (bounded_lt_Iio a)
 #align set.bounded_le_Iio Set.bounded_le_Iio
--/
 
-#print Set.bounded_le_Iic /-
+/- warning: set.bounded_le_Iic -> Set.bounded_le_Iic is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α), Set.Bounded.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (Set.Iic.{u1} α _inst_1 a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α), Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.1882 : α) (x._@.Mathlib.Order.Bounded._hyg.1884 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.1882 x._@.Mathlib.Order.Bounded._hyg.1884) (Set.Iic.{u1} α _inst_1 a)
+Case conversion may be inaccurate. Consider using '#align set.bounded_le_Iic Set.bounded_le_Iicₓ'. -/
 theorem bounded_le_Iic [Preorder α] (a : α) : Bounded (· ≤ ·) (Set.Iic a) :=
   bounded_self a
 #align set.bounded_le_Iic Set.bounded_le_Iic
--/
 
-#print Set.bounded_lt_Iic /-
+/- warning: set.bounded_lt_Iic -> Set.bounded_lt_Iic is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : NoMaxOrder.{u1} α (Preorder.toHasLt.{u1} α _inst_1)] (a : α), Set.Bounded.{u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1)) (Set.Iic.{u1} α _inst_1 a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)] (a : α), Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.1923 : α) (x._@.Mathlib.Order.Bounded._hyg.1925 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.1923 x._@.Mathlib.Order.Bounded._hyg.1925) (Set.Iic.{u1} α _inst_1 a)
+Case conversion may be inaccurate. Consider using '#align set.bounded_lt_Iic Set.bounded_lt_Iicₓ'. -/
 theorem bounded_lt_Iic [Preorder α] [NoMaxOrder α] (a : α) : Bounded (· < ·) (Set.Iic a) := by
   simp only [← bounded_le_iff_bounded_lt, bounded_le_Iic]
 #align set.bounded_lt_Iic Set.bounded_lt_Iic
--/
 
-#print Set.bounded_gt_Ioi /-
+/- warning: set.bounded_gt_Ioi -> Set.bounded_gt_Ioi is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α), Set.Bounded.{u1} α (GT.gt.{u1} α (Preorder.toHasLt.{u1} α _inst_1)) (Set.Ioi.{u1} α _inst_1 a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α), Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.1963 : α) (x._@.Mathlib.Order.Bounded._hyg.1965 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.1963 x._@.Mathlib.Order.Bounded._hyg.1965) (Set.Ioi.{u1} α _inst_1 a)
+Case conversion may be inaccurate. Consider using '#align set.bounded_gt_Ioi Set.bounded_gt_Ioiₓ'. -/
 theorem bounded_gt_Ioi [Preorder α] (a : α) : Bounded (· > ·) (Set.Ioi a) :=
   bounded_self a
 #align set.bounded_gt_Ioi Set.bounded_gt_Ioi
--/
 
-#print Set.bounded_ge_Ioi /-
+/- warning: set.bounded_ge_Ioi -> Set.bounded_ge_Ioi is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α), Set.Bounded.{u1} α (GE.ge.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (Set.Ioi.{u1} α _inst_1 a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α), Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.2001 : α) (x._@.Mathlib.Order.Bounded._hyg.2003 : α) => GE.ge.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.2001 x._@.Mathlib.Order.Bounded._hyg.2003) (Set.Ioi.{u1} α _inst_1 a)
+Case conversion may be inaccurate. Consider using '#align set.bounded_ge_Ioi Set.bounded_ge_Ioiₓ'. -/
 theorem bounded_ge_Ioi [Preorder α] (a : α) : Bounded (· ≥ ·) (Set.Ioi a) :=
   bounded_ge_of_bounded_gt (bounded_gt_Ioi a)
 #align set.bounded_ge_Ioi Set.bounded_ge_Ioi
--/
 
-#print Set.bounded_ge_Ici /-
+/- warning: set.bounded_ge_Ici -> Set.bounded_ge_Ici is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α), Set.Bounded.{u1} α (GE.ge.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (Set.Ici.{u1} α _inst_1 a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α), Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.2042 : α) (x._@.Mathlib.Order.Bounded._hyg.2044 : α) => GE.ge.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.2042 x._@.Mathlib.Order.Bounded._hyg.2044) (Set.Ici.{u1} α _inst_1 a)
+Case conversion may be inaccurate. Consider using '#align set.bounded_ge_Ici Set.bounded_ge_Iciₓ'. -/
 theorem bounded_ge_Ici [Preorder α] (a : α) : Bounded (· ≥ ·) (Set.Ici a) :=
   bounded_self a
 #align set.bounded_ge_Ici Set.bounded_ge_Ici
--/
 
-#print Set.bounded_gt_Ici /-
+/- warning: set.bounded_gt_Ici -> Set.bounded_gt_Ici is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : NoMinOrder.{u1} α (Preorder.toHasLt.{u1} α _inst_1)] (a : α), Set.Bounded.{u1} α (GT.gt.{u1} α (Preorder.toHasLt.{u1} α _inst_1)) (Set.Ici.{u1} α _inst_1 a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)] (a : α), Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.2083 : α) (x._@.Mathlib.Order.Bounded._hyg.2085 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.2083 x._@.Mathlib.Order.Bounded._hyg.2085) (Set.Ici.{u1} α _inst_1 a)
+Case conversion may be inaccurate. Consider using '#align set.bounded_gt_Ici Set.bounded_gt_Iciₓ'. -/
 theorem bounded_gt_Ici [Preorder α] [NoMinOrder α] (a : α) : Bounded (· > ·) (Set.Ici a) := by
   simp only [← bounded_ge_iff_bounded_gt, bounded_ge_Ici]
 #align set.bounded_gt_Ici Set.bounded_gt_Ici
--/
 
 /-! #### Other bounded intervals -/
 
 
-#print Set.bounded_lt_Ioo /-
+/- warning: set.bounded_lt_Ioo -> Set.bounded_lt_Ioo is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α) (b : α), Set.Bounded.{u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1)) (Set.Ioo.{u1} α _inst_1 a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α) (b : α), Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.2125 : α) (x._@.Mathlib.Order.Bounded._hyg.2127 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.2125 x._@.Mathlib.Order.Bounded._hyg.2127) (Set.Ioo.{u1} α _inst_1 a b)
+Case conversion may be inaccurate. Consider using '#align set.bounded_lt_Ioo Set.bounded_lt_Iooₓ'. -/
 theorem bounded_lt_Ioo [Preorder α] (a b : α) : Bounded (· < ·) (Set.Ioo a b) :=
   (bounded_lt_Iio b).mono Set.Ioo_subset_Iio_self
 #align set.bounded_lt_Ioo Set.bounded_lt_Ioo
--/
 
-#print Set.bounded_lt_Ico /-
+/- warning: set.bounded_lt_Ico -> Set.bounded_lt_Ico is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α) (b : α), Set.Bounded.{u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1)) (Set.Ico.{u1} α _inst_1 a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α) (b : α), Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.2169 : α) (x._@.Mathlib.Order.Bounded._hyg.2171 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.2169 x._@.Mathlib.Order.Bounded._hyg.2171) (Set.Ico.{u1} α _inst_1 a b)
+Case conversion may be inaccurate. Consider using '#align set.bounded_lt_Ico Set.bounded_lt_Icoₓ'. -/
 theorem bounded_lt_Ico [Preorder α] (a b : α) : Bounded (· < ·) (Set.Ico a b) :=
   (bounded_lt_Iio b).mono Set.Ico_subset_Iio_self
 #align set.bounded_lt_Ico Set.bounded_lt_Ico
--/
 
-#print Set.bounded_lt_Ioc /-
+/- warning: set.bounded_lt_Ioc -> Set.bounded_lt_Ioc is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : NoMaxOrder.{u1} α (Preorder.toHasLt.{u1} α _inst_1)] (a : α) (b : α), Set.Bounded.{u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1)) (Set.Ioc.{u1} α _inst_1 a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)] (a : α) (b : α), Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.2216 : α) (x._@.Mathlib.Order.Bounded._hyg.2218 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.2216 x._@.Mathlib.Order.Bounded._hyg.2218) (Set.Ioc.{u1} α _inst_1 a b)
+Case conversion may be inaccurate. Consider using '#align set.bounded_lt_Ioc Set.bounded_lt_Iocₓ'. -/
 theorem bounded_lt_Ioc [Preorder α] [NoMaxOrder α] (a b : α) : Bounded (· < ·) (Set.Ioc a b) :=
   (bounded_lt_Iic b).mono Set.Ioc_subset_Iic_self
 #align set.bounded_lt_Ioc Set.bounded_lt_Ioc
--/
 
-#print Set.bounded_lt_Icc /-
+/- warning: set.bounded_lt_Icc -> Set.bounded_lt_Icc is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : NoMaxOrder.{u1} α (Preorder.toHasLt.{u1} α _inst_1)] (a : α) (b : α), Set.Bounded.{u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1)) (Set.Icc.{u1} α _inst_1 a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)] (a : α) (b : α), Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.2263 : α) (x._@.Mathlib.Order.Bounded._hyg.2265 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.2263 x._@.Mathlib.Order.Bounded._hyg.2265) (Set.Icc.{u1} α _inst_1 a b)
+Case conversion may be inaccurate. Consider using '#align set.bounded_lt_Icc Set.bounded_lt_Iccₓ'. -/
 theorem bounded_lt_Icc [Preorder α] [NoMaxOrder α] (a b : α) : Bounded (· < ·) (Set.Icc a b) :=
   (bounded_lt_Iic b).mono Set.Icc_subset_Iic_self
 #align set.bounded_lt_Icc Set.bounded_lt_Icc
--/
 
-#print Set.bounded_le_Ioo /-
+/- warning: set.bounded_le_Ioo -> Set.bounded_le_Ioo is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α) (b : α), Set.Bounded.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (Set.Ioo.{u1} α _inst_1 a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α) (b : α), Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.2307 : α) (x._@.Mathlib.Order.Bounded._hyg.2309 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.2307 x._@.Mathlib.Order.Bounded._hyg.2309) (Set.Ioo.{u1} α _inst_1 a b)
+Case conversion may be inaccurate. Consider using '#align set.bounded_le_Ioo Set.bounded_le_Iooₓ'. -/
 theorem bounded_le_Ioo [Preorder α] (a b : α) : Bounded (· ≤ ·) (Set.Ioo a b) :=
   (bounded_le_Iio b).mono Set.Ioo_subset_Iio_self
 #align set.bounded_le_Ioo Set.bounded_le_Ioo
--/
 
-#print Set.bounded_le_Ico /-
+/- warning: set.bounded_le_Ico -> Set.bounded_le_Ico is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α) (b : α), Set.Bounded.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (Set.Ico.{u1} α _inst_1 a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α) (b : α), Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.2351 : α) (x._@.Mathlib.Order.Bounded._hyg.2353 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.2351 x._@.Mathlib.Order.Bounded._hyg.2353) (Set.Ico.{u1} α _inst_1 a b)
+Case conversion may be inaccurate. Consider using '#align set.bounded_le_Ico Set.bounded_le_Icoₓ'. -/
 theorem bounded_le_Ico [Preorder α] (a b : α) : Bounded (· ≤ ·) (Set.Ico a b) :=
   (bounded_le_Iio b).mono Set.Ico_subset_Iio_self
 #align set.bounded_le_Ico Set.bounded_le_Ico
--/
 
-#print Set.bounded_le_Ioc /-
+/- warning: set.bounded_le_Ioc -> Set.bounded_le_Ioc is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α) (b : α), Set.Bounded.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (Set.Ioc.{u1} α _inst_1 a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α) (b : α), Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.2395 : α) (x._@.Mathlib.Order.Bounded._hyg.2397 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.2395 x._@.Mathlib.Order.Bounded._hyg.2397) (Set.Ioc.{u1} α _inst_1 a b)
+Case conversion may be inaccurate. Consider using '#align set.bounded_le_Ioc Set.bounded_le_Iocₓ'. -/
 theorem bounded_le_Ioc [Preorder α] (a b : α) : Bounded (· ≤ ·) (Set.Ioc a b) :=
   (bounded_le_Iic b).mono Set.Ioc_subset_Iic_self
 #align set.bounded_le_Ioc Set.bounded_le_Ioc
--/
 
-#print Set.bounded_le_Icc /-
+/- warning: set.bounded_le_Icc -> Set.bounded_le_Icc is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α) (b : α), Set.Bounded.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (Set.Icc.{u1} α _inst_1 a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α) (b : α), Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.2439 : α) (x._@.Mathlib.Order.Bounded._hyg.2441 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.2439 x._@.Mathlib.Order.Bounded._hyg.2441) (Set.Icc.{u1} α _inst_1 a b)
+Case conversion may be inaccurate. Consider using '#align set.bounded_le_Icc Set.bounded_le_Iccₓ'. -/
 theorem bounded_le_Icc [Preorder α] (a b : α) : Bounded (· ≤ ·) (Set.Icc a b) :=
   (bounded_le_Iic b).mono Set.Icc_subset_Iic_self
 #align set.bounded_le_Icc Set.bounded_le_Icc
--/
 
-#print Set.bounded_gt_Ioo /-
+/- warning: set.bounded_gt_Ioo -> Set.bounded_gt_Ioo is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α) (b : α), Set.Bounded.{u1} α (GT.gt.{u1} α (Preorder.toHasLt.{u1} α _inst_1)) (Set.Ioo.{u1} α _inst_1 a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α) (b : α), Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.2483 : α) (x._@.Mathlib.Order.Bounded._hyg.2485 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.2483 x._@.Mathlib.Order.Bounded._hyg.2485) (Set.Ioo.{u1} α _inst_1 a b)
+Case conversion may be inaccurate. Consider using '#align set.bounded_gt_Ioo Set.bounded_gt_Iooₓ'. -/
 theorem bounded_gt_Ioo [Preorder α] (a b : α) : Bounded (· > ·) (Set.Ioo a b) :=
   (bounded_gt_Ioi a).mono Set.Ioo_subset_Ioi_self
 #align set.bounded_gt_Ioo Set.bounded_gt_Ioo
--/
 
-#print Set.bounded_gt_Ioc /-
+/- warning: set.bounded_gt_Ioc -> Set.bounded_gt_Ioc is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α) (b : α), Set.Bounded.{u1} α (GT.gt.{u1} α (Preorder.toHasLt.{u1} α _inst_1)) (Set.Ioc.{u1} α _inst_1 a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α) (b : α), Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.2527 : α) (x._@.Mathlib.Order.Bounded._hyg.2529 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.2527 x._@.Mathlib.Order.Bounded._hyg.2529) (Set.Ioc.{u1} α _inst_1 a b)
+Case conversion may be inaccurate. Consider using '#align set.bounded_gt_Ioc Set.bounded_gt_Iocₓ'. -/
 theorem bounded_gt_Ioc [Preorder α] (a b : α) : Bounded (· > ·) (Set.Ioc a b) :=
   (bounded_gt_Ioi a).mono Set.Ioc_subset_Ioi_self
 #align set.bounded_gt_Ioc Set.bounded_gt_Ioc
--/
 
-#print Set.bounded_gt_Ico /-
+/- warning: set.bounded_gt_Ico -> Set.bounded_gt_Ico is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : NoMinOrder.{u1} α (Preorder.toHasLt.{u1} α _inst_1)] (a : α) (b : α), Set.Bounded.{u1} α (GT.gt.{u1} α (Preorder.toHasLt.{u1} α _inst_1)) (Set.Ico.{u1} α _inst_1 a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)] (a : α) (b : α), Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.2574 : α) (x._@.Mathlib.Order.Bounded._hyg.2576 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.2574 x._@.Mathlib.Order.Bounded._hyg.2576) (Set.Ico.{u1} α _inst_1 a b)
+Case conversion may be inaccurate. Consider using '#align set.bounded_gt_Ico Set.bounded_gt_Icoₓ'. -/
 theorem bounded_gt_Ico [Preorder α] [NoMinOrder α] (a b : α) : Bounded (· > ·) (Set.Ico a b) :=
   (bounded_gt_Ici a).mono Set.Ico_subset_Ici_self
 #align set.bounded_gt_Ico Set.bounded_gt_Ico
--/
 
-#print Set.bounded_gt_Icc /-
+/- warning: set.bounded_gt_Icc -> Set.bounded_gt_Icc is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : NoMinOrder.{u1} α (Preorder.toHasLt.{u1} α _inst_1)] (a : α) (b : α), Set.Bounded.{u1} α (GT.gt.{u1} α (Preorder.toHasLt.{u1} α _inst_1)) (Set.Icc.{u1} α _inst_1 a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)] (a : α) (b : α), Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.2621 : α) (x._@.Mathlib.Order.Bounded._hyg.2623 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.2621 x._@.Mathlib.Order.Bounded._hyg.2623) (Set.Icc.{u1} α _inst_1 a b)
+Case conversion may be inaccurate. Consider using '#align set.bounded_gt_Icc Set.bounded_gt_Iccₓ'. -/
 theorem bounded_gt_Icc [Preorder α] [NoMinOrder α] (a b : α) : Bounded (· > ·) (Set.Icc a b) :=
   (bounded_gt_Ici a).mono Set.Icc_subset_Ici_self
 #align set.bounded_gt_Icc Set.bounded_gt_Icc
--/
 
-#print Set.bounded_ge_Ioo /-
+/- warning: set.bounded_ge_Ioo -> Set.bounded_ge_Ioo is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α) (b : α), Set.Bounded.{u1} α (GE.ge.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (Set.Ioo.{u1} α _inst_1 a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α) (b : α), Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.2665 : α) (x._@.Mathlib.Order.Bounded._hyg.2667 : α) => GE.ge.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.2665 x._@.Mathlib.Order.Bounded._hyg.2667) (Set.Ioo.{u1} α _inst_1 a b)
+Case conversion may be inaccurate. Consider using '#align set.bounded_ge_Ioo Set.bounded_ge_Iooₓ'. -/
 theorem bounded_ge_Ioo [Preorder α] (a b : α) : Bounded (· ≥ ·) (Set.Ioo a b) :=
   (bounded_ge_Ioi a).mono Set.Ioo_subset_Ioi_self
 #align set.bounded_ge_Ioo Set.bounded_ge_Ioo
--/
 
-#print Set.bounded_ge_Ioc /-
+/- warning: set.bounded_ge_Ioc -> Set.bounded_ge_Ioc is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α) (b : α), Set.Bounded.{u1} α (GE.ge.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (Set.Ioc.{u1} α _inst_1 a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α) (b : α), Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.2709 : α) (x._@.Mathlib.Order.Bounded._hyg.2711 : α) => GE.ge.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.2709 x._@.Mathlib.Order.Bounded._hyg.2711) (Set.Ioc.{u1} α _inst_1 a b)
+Case conversion may be inaccurate. Consider using '#align set.bounded_ge_Ioc Set.bounded_ge_Iocₓ'. -/
 theorem bounded_ge_Ioc [Preorder α] (a b : α) : Bounded (· ≥ ·) (Set.Ioc a b) :=
   (bounded_ge_Ioi a).mono Set.Ioc_subset_Ioi_self
 #align set.bounded_ge_Ioc Set.bounded_ge_Ioc
--/
 
-#print Set.bounded_ge_Ico /-
+/- warning: set.bounded_ge_Ico -> Set.bounded_ge_Ico is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α) (b : α), Set.Bounded.{u1} α (GE.ge.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (Set.Ico.{u1} α _inst_1 a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α) (b : α), Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.2753 : α) (x._@.Mathlib.Order.Bounded._hyg.2755 : α) => GE.ge.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.2753 x._@.Mathlib.Order.Bounded._hyg.2755) (Set.Ico.{u1} α _inst_1 a b)
+Case conversion may be inaccurate. Consider using '#align set.bounded_ge_Ico Set.bounded_ge_Icoₓ'. -/
 theorem bounded_ge_Ico [Preorder α] (a b : α) : Bounded (· ≥ ·) (Set.Ico a b) :=
   (bounded_ge_Ici a).mono Set.Ico_subset_Ici_self
 #align set.bounded_ge_Ico Set.bounded_ge_Ico
--/
 
-#print Set.bounded_ge_Icc /-
+/- warning: set.bounded_ge_Icc -> Set.bounded_ge_Icc is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α) (b : α), Set.Bounded.{u1} α (GE.ge.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (Set.Icc.{u1} α _inst_1 a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α) (b : α), Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.2797 : α) (x._@.Mathlib.Order.Bounded._hyg.2799 : α) => GE.ge.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Bounded._hyg.2797 x._@.Mathlib.Order.Bounded._hyg.2799) (Set.Icc.{u1} α _inst_1 a b)
+Case conversion may be inaccurate. Consider using '#align set.bounded_ge_Icc Set.bounded_ge_Iccₓ'. -/
 theorem bounded_ge_Icc [Preorder α] (a b : α) : Bounded (· ≥ ·) (Set.Icc a b) :=
   (bounded_ge_Ici a).mono Set.Icc_subset_Ici_self
 #align set.bounded_ge_Icc Set.bounded_ge_Icc
--/
 
 /-! #### Unbounded intervals -/
 
 
-#print Set.unbounded_le_Ioi /-
+/- warning: set.unbounded_le_Ioi -> Set.unbounded_le_Ioi is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] [_inst_2 : NoMaxOrder.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))] (a : α), Set.Unbounded.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))) (Set.Ioi.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] [_inst_2 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))] (a : α), Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.2844 : α) (x._@.Mathlib.Order.Bounded._hyg.2846 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) x._@.Mathlib.Order.Bounded._hyg.2844 x._@.Mathlib.Order.Bounded._hyg.2846) (Set.Ioi.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) a)
+Case conversion may be inaccurate. Consider using '#align set.unbounded_le_Ioi Set.unbounded_le_Ioiₓ'. -/
 theorem unbounded_le_Ioi [SemilatticeSup α] [NoMaxOrder α] (a : α) :
     Unbounded (· ≤ ·) (Set.Ioi a) := fun b =>
   let ⟨c, hc⟩ := exists_gt (a ⊔ b)
   ⟨c, le_sup_left.trans_lt hc, (le_sup_right.trans_lt hc).not_le⟩
 #align set.unbounded_le_Ioi Set.unbounded_le_Ioi
--/
 
-#print Set.unbounded_le_Ici /-
+/- warning: set.unbounded_le_Ici -> Set.unbounded_le_Ici is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] [_inst_2 : NoMaxOrder.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))] (a : α), Set.Unbounded.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))) (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] [_inst_2 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))] (a : α), Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.2925 : α) (x._@.Mathlib.Order.Bounded._hyg.2927 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) x._@.Mathlib.Order.Bounded._hyg.2925 x._@.Mathlib.Order.Bounded._hyg.2927) (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) a)
+Case conversion may be inaccurate. Consider using '#align set.unbounded_le_Ici Set.unbounded_le_Iciₓ'. -/
 theorem unbounded_le_Ici [SemilatticeSup α] [NoMaxOrder α] (a : α) :
     Unbounded (· ≤ ·) (Set.Ici a) :=
   (unbounded_le_Ioi a).mono Set.Ioi_subset_Ici_self
 #align set.unbounded_le_Ici Set.unbounded_le_Ici
--/
 
-#print Set.unbounded_lt_Ioi /-
+/- warning: set.unbounded_lt_Ioi -> Set.unbounded_lt_Ioi is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] [_inst_2 : NoMaxOrder.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))] (a : α), Set.Unbounded.{u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))) (Set.Ioi.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] [_inst_2 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))] (a : α), Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.2970 : α) (x._@.Mathlib.Order.Bounded._hyg.2972 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) x._@.Mathlib.Order.Bounded._hyg.2970 x._@.Mathlib.Order.Bounded._hyg.2972) (Set.Ioi.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) a)
+Case conversion may be inaccurate. Consider using '#align set.unbounded_lt_Ioi Set.unbounded_lt_Ioiₓ'. -/
 theorem unbounded_lt_Ioi [SemilatticeSup α] [NoMaxOrder α] (a : α) :
     Unbounded (· < ·) (Set.Ioi a) :=
   unbounded_lt_of_unbounded_le (unbounded_le_Ioi a)
 #align set.unbounded_lt_Ioi Set.unbounded_lt_Ioi
--/
 
-#print Set.unbounded_lt_Ici /-
+/- warning: set.unbounded_lt_Ici -> Set.unbounded_lt_Ici is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] (a : α), Set.Unbounded.{u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))) (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] (a : α), Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.3011 : α) (x._@.Mathlib.Order.Bounded._hyg.3013 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) x._@.Mathlib.Order.Bounded._hyg.3011 x._@.Mathlib.Order.Bounded._hyg.3013) (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) a)
+Case conversion may be inaccurate. Consider using '#align set.unbounded_lt_Ici Set.unbounded_lt_Iciₓ'. -/
 theorem unbounded_lt_Ici [SemilatticeSup α] (a : α) : Unbounded (· < ·) (Set.Ici a) := fun b =>
   ⟨a ⊔ b, le_sup_left, le_sup_right.not_lt⟩
 #align set.unbounded_lt_Ici Set.unbounded_lt_Ici
--/
 
 /-! ### Bounded initial segments -/
 
@@ -475,7 +627,7 @@ theorem unbounded_inter_not (H : ∀ a b, ∃ m, ∀ c, r c a ∨ r c b → r c 
 
 /- warning: set.bounded_le_inter_not_le -> Set.bounded_le_inter_not_le is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : SemilatticeSup.{u1} α] (a : α), Iff (Set.Bounded.{u1} α (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => Not (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) b a))))) (Set.Bounded.{u1} α (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))) s)
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : SemilatticeSup.{u1} α] (a : α), Iff (Set.Bounded.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => Not (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) b a))))) (Set.Bounded.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))) s)
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : SemilatticeSup.{u1} α] (a : α), Iff (Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.3249 : α) (x._@.Mathlib.Order.Bounded._hyg.3251 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) x._@.Mathlib.Order.Bounded._hyg.3249 x._@.Mathlib.Order.Bounded._hyg.3251) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (setOf.{u1} α (fun (b : α) => Not (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) b a))))) (Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.3285 : α) (x._@.Mathlib.Order.Bounded._hyg.3287 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) x._@.Mathlib.Order.Bounded._hyg.3285 x._@.Mathlib.Order.Bounded._hyg.3287) s)
 Case conversion may be inaccurate. Consider using '#align set.bounded_le_inter_not_le Set.bounded_le_inter_not_leₓ'. -/
@@ -486,7 +638,7 @@ theorem bounded_le_inter_not_le [SemilatticeSup α] (a : α) :
 
 /- warning: set.unbounded_le_inter_not_le -> Set.unbounded_le_inter_not_le is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : SemilatticeSup.{u1} α] (a : α), Iff (Set.Unbounded.{u1} α (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => Not (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) b a))))) (Set.Unbounded.{u1} α (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))) s)
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : SemilatticeSup.{u1} α] (a : α), Iff (Set.Unbounded.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => Not (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) b a))))) (Set.Unbounded.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))) s)
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : SemilatticeSup.{u1} α] (a : α), Iff (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.3346 : α) (x._@.Mathlib.Order.Bounded._hyg.3348 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) x._@.Mathlib.Order.Bounded._hyg.3346 x._@.Mathlib.Order.Bounded._hyg.3348) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (setOf.{u1} α (fun (b : α) => Not (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) b a))))) (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.3382 : α) (x._@.Mathlib.Order.Bounded._hyg.3384 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) x._@.Mathlib.Order.Bounded._hyg.3382 x._@.Mathlib.Order.Bounded._hyg.3384) s)
 Case conversion may be inaccurate. Consider using '#align set.unbounded_le_inter_not_le Set.unbounded_le_inter_not_leₓ'. -/
@@ -499,7 +651,7 @@ theorem unbounded_le_inter_not_le [SemilatticeSup α] (a : α) :
 
 /- warning: set.bounded_le_inter_lt -> Set.bounded_le_inter_lt is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] (a : α), Iff (Set.Bounded.{u1} α (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a b)))) (Set.Bounded.{u1} α (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s)
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] (a : α), Iff (Set.Bounded.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a b)))) (Set.Bounded.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s)
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] (a : α), Iff (Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.3455 : α) (x._@.Mathlib.Order.Bounded._hyg.3457 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.Bounded._hyg.3455 x._@.Mathlib.Order.Bounded._hyg.3457) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (setOf.{u1} α (fun (b : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) a b)))) (Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.3488 : α) (x._@.Mathlib.Order.Bounded._hyg.3490 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.Bounded._hyg.3488 x._@.Mathlib.Order.Bounded._hyg.3490) s)
 Case conversion may be inaccurate. Consider using '#align set.bounded_le_inter_lt Set.bounded_le_inter_ltₓ'. -/
@@ -510,7 +662,7 @@ theorem bounded_le_inter_lt [LinearOrder α] (a : α) :
 
 /- warning: set.unbounded_le_inter_lt -> Set.unbounded_le_inter_lt is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] (a : α), Iff (Set.Unbounded.{u1} α (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a b)))) (Set.Unbounded.{u1} α (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s)
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] (a : α), Iff (Set.Unbounded.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a b)))) (Set.Unbounded.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s)
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] (a : α), Iff (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.3531 : α) (x._@.Mathlib.Order.Bounded._hyg.3533 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.Bounded._hyg.3531 x._@.Mathlib.Order.Bounded._hyg.3533) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (setOf.{u1} α (fun (b : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) a b)))) (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.3564 : α) (x._@.Mathlib.Order.Bounded._hyg.3566 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.Bounded._hyg.3564 x._@.Mathlib.Order.Bounded._hyg.3566) s)
 Case conversion may be inaccurate. Consider using '#align set.unbounded_le_inter_lt Set.unbounded_le_inter_ltₓ'. -/
@@ -524,7 +676,7 @@ theorem unbounded_le_inter_lt [LinearOrder α] (a : α) :
 
 /- warning: set.bounded_le_inter_le -> Set.bounded_le_inter_le is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] (a : α), Iff (Set.Bounded.{u1} α (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a b)))) (Set.Bounded.{u1} α (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s)
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] (a : α), Iff (Set.Bounded.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a b)))) (Set.Bounded.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s)
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] (a : α), Iff (Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.3674 : α) (x._@.Mathlib.Order.Bounded._hyg.3676 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.Bounded._hyg.3674 x._@.Mathlib.Order.Bounded._hyg.3676) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (setOf.{u1} α (fun (b : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) a b)))) (Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.3707 : α) (x._@.Mathlib.Order.Bounded._hyg.3709 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.Bounded._hyg.3707 x._@.Mathlib.Order.Bounded._hyg.3709) s)
 Case conversion may be inaccurate. Consider using '#align set.bounded_le_inter_le Set.bounded_le_inter_leₓ'. -/
@@ -538,7 +690,7 @@ theorem bounded_le_inter_le [LinearOrder α] (a : α) :
 
 /- warning: set.unbounded_le_inter_le -> Set.unbounded_le_inter_le is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] (a : α), Iff (Set.Unbounded.{u1} α (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a b)))) (Set.Unbounded.{u1} α (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s)
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] (a : α), Iff (Set.Unbounded.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a b)))) (Set.Unbounded.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s)
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] (a : α), Iff (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.3816 : α) (x._@.Mathlib.Order.Bounded._hyg.3818 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.Bounded._hyg.3816 x._@.Mathlib.Order.Bounded._hyg.3818) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (setOf.{u1} α (fun (b : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) a b)))) (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.3849 : α) (x._@.Mathlib.Order.Bounded._hyg.3851 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.Bounded._hyg.3849 x._@.Mathlib.Order.Bounded._hyg.3851) s)
 Case conversion may be inaccurate. Consider using '#align set.unbounded_le_inter_le Set.unbounded_le_inter_leₓ'. -/
@@ -554,7 +706,7 @@ theorem unbounded_le_inter_le [LinearOrder α] (a : α) :
 
 /- warning: set.bounded_lt_inter_not_lt -> Set.bounded_lt_inter_not_lt is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : SemilatticeSup.{u1} α] (a : α), Iff (Set.Bounded.{u1} α (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => Not (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) b a))))) (Set.Bounded.{u1} α (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))) s)
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : SemilatticeSup.{u1} α] (a : α), Iff (Set.Bounded.{u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => Not (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) b a))))) (Set.Bounded.{u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))) s)
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : SemilatticeSup.{u1} α] (a : α), Iff (Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.3923 : α) (x._@.Mathlib.Order.Bounded._hyg.3925 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) x._@.Mathlib.Order.Bounded._hyg.3923 x._@.Mathlib.Order.Bounded._hyg.3925) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (setOf.{u1} α (fun (b : α) => Not (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) b a))))) (Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.3959 : α) (x._@.Mathlib.Order.Bounded._hyg.3961 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) x._@.Mathlib.Order.Bounded._hyg.3959 x._@.Mathlib.Order.Bounded._hyg.3961) s)
 Case conversion may be inaccurate. Consider using '#align set.bounded_lt_inter_not_lt Set.bounded_lt_inter_not_ltₓ'. -/
@@ -565,7 +717,7 @@ theorem bounded_lt_inter_not_lt [SemilatticeSup α] (a : α) :
 
 /- warning: set.unbounded_lt_inter_not_lt -> Set.unbounded_lt_inter_not_lt is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : SemilatticeSup.{u1} α] (a : α), Iff (Set.Unbounded.{u1} α (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => Not (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) b a))))) (Set.Unbounded.{u1} α (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))) s)
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : SemilatticeSup.{u1} α] (a : α), Iff (Set.Unbounded.{u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => Not (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) b a))))) (Set.Unbounded.{u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))) s)
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : SemilatticeSup.{u1} α] (a : α), Iff (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.4020 : α) (x._@.Mathlib.Order.Bounded._hyg.4022 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) x._@.Mathlib.Order.Bounded._hyg.4020 x._@.Mathlib.Order.Bounded._hyg.4022) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (setOf.{u1} α (fun (b : α) => Not (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) b a))))) (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.4056 : α) (x._@.Mathlib.Order.Bounded._hyg.4058 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) x._@.Mathlib.Order.Bounded._hyg.4056 x._@.Mathlib.Order.Bounded._hyg.4058) s)
 Case conversion may be inaccurate. Consider using '#align set.unbounded_lt_inter_not_lt Set.unbounded_lt_inter_not_ltₓ'. -/
@@ -578,7 +730,7 @@ theorem unbounded_lt_inter_not_lt [SemilatticeSup α] (a : α) :
 
 /- warning: set.bounded_lt_inter_le -> Set.bounded_lt_inter_le is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] (a : α), Iff (Set.Bounded.{u1} α (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a b)))) (Set.Bounded.{u1} α (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s)
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] (a : α), Iff (Set.Bounded.{u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a b)))) (Set.Bounded.{u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s)
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] (a : α), Iff (Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.4129 : α) (x._@.Mathlib.Order.Bounded._hyg.4131 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.Bounded._hyg.4129 x._@.Mathlib.Order.Bounded._hyg.4131) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (setOf.{u1} α (fun (b : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) a b)))) (Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.4162 : α) (x._@.Mathlib.Order.Bounded._hyg.4164 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.Bounded._hyg.4162 x._@.Mathlib.Order.Bounded._hyg.4164) s)
 Case conversion may be inaccurate. Consider using '#align set.bounded_lt_inter_le Set.bounded_lt_inter_leₓ'. -/
@@ -592,7 +744,7 @@ theorem bounded_lt_inter_le [LinearOrder α] (a : α) :
 
 /- warning: set.unbounded_lt_inter_le -> Set.unbounded_lt_inter_le is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] (a : α), Iff (Set.Unbounded.{u1} α (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a b)))) (Set.Unbounded.{u1} α (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s)
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] (a : α), Iff (Set.Unbounded.{u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a b)))) (Set.Unbounded.{u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s)
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] (a : α), Iff (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.4272 : α) (x._@.Mathlib.Order.Bounded._hyg.4274 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.Bounded._hyg.4272 x._@.Mathlib.Order.Bounded._hyg.4274) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (setOf.{u1} α (fun (b : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) a b)))) (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.4305 : α) (x._@.Mathlib.Order.Bounded._hyg.4307 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.Bounded._hyg.4305 x._@.Mathlib.Order.Bounded._hyg.4307) s)
 Case conversion may be inaccurate. Consider using '#align set.unbounded_lt_inter_le Set.unbounded_lt_inter_leₓ'. -/
@@ -606,7 +758,7 @@ theorem unbounded_lt_inter_le [LinearOrder α] (a : α) :
 
 /- warning: set.bounded_lt_inter_lt -> Set.bounded_lt_inter_lt is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))] (a : α), Iff (Set.Bounded.{u1} α (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a b)))) (Set.Bounded.{u1} α (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s)
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : NoMaxOrder.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))] (a : α), Iff (Set.Bounded.{u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a b)))) (Set.Bounded.{u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s)
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))))] (a : α), Iff (Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.4418 : α) (x._@.Mathlib.Order.Bounded._hyg.4420 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.Bounded._hyg.4418 x._@.Mathlib.Order.Bounded._hyg.4420) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (setOf.{u1} α (fun (b : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) a b)))) (Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.4451 : α) (x._@.Mathlib.Order.Bounded._hyg.4453 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.Bounded._hyg.4451 x._@.Mathlib.Order.Bounded._hyg.4453) s)
 Case conversion may be inaccurate. Consider using '#align set.bounded_lt_inter_lt Set.bounded_lt_inter_ltₓ'. -/
@@ -619,7 +771,7 @@ theorem bounded_lt_inter_lt [LinearOrder α] [NoMaxOrder α] (a : α) :
 
 /- warning: set.unbounded_lt_inter_lt -> Set.unbounded_lt_inter_lt is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))] (a : α), Iff (Set.Unbounded.{u1} α (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a b)))) (Set.Unbounded.{u1} α (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s)
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : NoMaxOrder.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))] (a : α), Iff (Set.Unbounded.{u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a b)))) (Set.Unbounded.{u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s)
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))))] (a : α), Iff (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.4526 : α) (x._@.Mathlib.Order.Bounded._hyg.4528 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.Bounded._hyg.4526 x._@.Mathlib.Order.Bounded._hyg.4528) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (setOf.{u1} α (fun (b : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) a b)))) (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.4559 : α) (x._@.Mathlib.Order.Bounded._hyg.4561 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.Bounded._hyg.4559 x._@.Mathlib.Order.Bounded._hyg.4561) s)
 Case conversion may be inaccurate. Consider using '#align set.unbounded_lt_inter_lt Set.unbounded_lt_inter_ltₓ'. -/
@@ -635,7 +787,7 @@ theorem unbounded_lt_inter_lt [LinearOrder α] [NoMaxOrder α] (a : α) :
 
 /- warning: set.bounded_ge_inter_not_ge -> Set.bounded_ge_inter_not_ge is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : SemilatticeInf.{u1} α] (a : α), Iff (Set.Bounded.{u1} α (GE.ge.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => Not (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) a b))))) (Set.Bounded.{u1} α (GE.ge.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))) s)
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : SemilatticeInf.{u1} α] (a : α), Iff (Set.Bounded.{u1} α (GE.ge.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => Not (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) a b))))) (Set.Bounded.{u1} α (GE.ge.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))) s)
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : SemilatticeInf.{u1} α] (a : α), Iff (Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.4633 : α) (x._@.Mathlib.Order.Bounded._hyg.4635 : α) => GE.ge.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) x._@.Mathlib.Order.Bounded._hyg.4633 x._@.Mathlib.Order.Bounded._hyg.4635) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (setOf.{u1} α (fun (b : α) => Not (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) a b))))) (Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.4669 : α) (x._@.Mathlib.Order.Bounded._hyg.4671 : α) => GE.ge.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) x._@.Mathlib.Order.Bounded._hyg.4669 x._@.Mathlib.Order.Bounded._hyg.4671) s)
 Case conversion may be inaccurate. Consider using '#align set.bounded_ge_inter_not_ge Set.bounded_ge_inter_not_geₓ'. -/
@@ -646,7 +798,7 @@ theorem bounded_ge_inter_not_ge [SemilatticeInf α] (a : α) :
 
 /- warning: set.unbounded_ge_inter_not_ge -> Set.unbounded_ge_inter_not_ge is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : SemilatticeInf.{u1} α] (a : α), Iff (Set.Unbounded.{u1} α (GE.ge.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => Not (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) a b))))) (Set.Unbounded.{u1} α (GE.ge.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))) s)
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : SemilatticeInf.{u1} α] (a : α), Iff (Set.Unbounded.{u1} α (GE.ge.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => Not (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) a b))))) (Set.Unbounded.{u1} α (GE.ge.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))) s)
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : SemilatticeInf.{u1} α] (a : α), Iff (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.4712 : α) (x._@.Mathlib.Order.Bounded._hyg.4714 : α) => GE.ge.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) x._@.Mathlib.Order.Bounded._hyg.4712 x._@.Mathlib.Order.Bounded._hyg.4714) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (setOf.{u1} α (fun (b : α) => Not (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) a b))))) (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.4748 : α) (x._@.Mathlib.Order.Bounded._hyg.4750 : α) => GE.ge.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) x._@.Mathlib.Order.Bounded._hyg.4748 x._@.Mathlib.Order.Bounded._hyg.4750) s)
 Case conversion may be inaccurate. Consider using '#align set.unbounded_ge_inter_not_ge Set.unbounded_ge_inter_not_geₓ'. -/
@@ -657,7 +809,7 @@ theorem unbounded_ge_inter_not_ge [SemilatticeInf α] (a : α) :
 
 /- warning: set.bounded_ge_inter_gt -> Set.bounded_ge_inter_gt is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] (a : α), Iff (Set.Bounded.{u1} α (GE.ge.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) b a)))) (Set.Bounded.{u1} α (GE.ge.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s)
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] (a : α), Iff (Set.Bounded.{u1} α (GE.ge.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) b a)))) (Set.Bounded.{u1} α (GE.ge.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s)
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] (a : α), Iff (Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.4791 : α) (x._@.Mathlib.Order.Bounded._hyg.4793 : α) => GE.ge.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.Bounded._hyg.4791 x._@.Mathlib.Order.Bounded._hyg.4793) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (setOf.{u1} α (fun (b : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) b a)))) (Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.4824 : α) (x._@.Mathlib.Order.Bounded._hyg.4826 : α) => GE.ge.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.Bounded._hyg.4824 x._@.Mathlib.Order.Bounded._hyg.4826) s)
 Case conversion may be inaccurate. Consider using '#align set.bounded_ge_inter_gt Set.bounded_ge_inter_gtₓ'. -/
@@ -668,7 +820,7 @@ theorem bounded_ge_inter_gt [LinearOrder α] (a : α) :
 
 /- warning: set.unbounded_ge_inter_gt -> Set.unbounded_ge_inter_gt is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] (a : α), Iff (Set.Unbounded.{u1} α (GE.ge.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) b a)))) (Set.Unbounded.{u1} α (GE.ge.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s)
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] (a : α), Iff (Set.Unbounded.{u1} α (GE.ge.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) b a)))) (Set.Unbounded.{u1} α (GE.ge.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s)
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] (a : α), Iff (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.4867 : α) (x._@.Mathlib.Order.Bounded._hyg.4869 : α) => GE.ge.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.Bounded._hyg.4867 x._@.Mathlib.Order.Bounded._hyg.4869) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (setOf.{u1} α (fun (b : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) b a)))) (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.4900 : α) (x._@.Mathlib.Order.Bounded._hyg.4902 : α) => GE.ge.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.Bounded._hyg.4900 x._@.Mathlib.Order.Bounded._hyg.4902) s)
 Case conversion may be inaccurate. Consider using '#align set.unbounded_ge_inter_gt Set.unbounded_ge_inter_gtₓ'. -/
@@ -679,7 +831,7 @@ theorem unbounded_ge_inter_gt [LinearOrder α] (a : α) :
 
 /- warning: set.bounded_ge_inter_ge -> Set.bounded_ge_inter_ge is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] (a : α), Iff (Set.Bounded.{u1} α (GE.ge.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) b a)))) (Set.Bounded.{u1} α (GE.ge.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s)
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] (a : α), Iff (Set.Bounded.{u1} α (GE.ge.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) b a)))) (Set.Bounded.{u1} α (GE.ge.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s)
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] (a : α), Iff (Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.4943 : α) (x._@.Mathlib.Order.Bounded._hyg.4945 : α) => GE.ge.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.Bounded._hyg.4943 x._@.Mathlib.Order.Bounded._hyg.4945) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (setOf.{u1} α (fun (b : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) b a)))) (Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.4976 : α) (x._@.Mathlib.Order.Bounded._hyg.4978 : α) => GE.ge.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.Bounded._hyg.4976 x._@.Mathlib.Order.Bounded._hyg.4978) s)
 Case conversion may be inaccurate. Consider using '#align set.bounded_ge_inter_ge Set.bounded_ge_inter_geₓ'. -/
@@ -690,7 +842,7 @@ theorem bounded_ge_inter_ge [LinearOrder α] (a : α) :
 
 /- warning: set.unbounded_ge_iff_unbounded_inter_ge -> Set.unbounded_ge_iff_unbounded_inter_ge is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] (a : α), Iff (Set.Unbounded.{u1} α (GE.ge.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) b a)))) (Set.Unbounded.{u1} α (GE.ge.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s)
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] (a : α), Iff (Set.Unbounded.{u1} α (GE.ge.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) b a)))) (Set.Unbounded.{u1} α (GE.ge.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s)
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] (a : α), Iff (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.5019 : α) (x._@.Mathlib.Order.Bounded._hyg.5021 : α) => GE.ge.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.Bounded._hyg.5019 x._@.Mathlib.Order.Bounded._hyg.5021) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (setOf.{u1} α (fun (b : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) b a)))) (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.5052 : α) (x._@.Mathlib.Order.Bounded._hyg.5054 : α) => GE.ge.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.Bounded._hyg.5052 x._@.Mathlib.Order.Bounded._hyg.5054) s)
 Case conversion may be inaccurate. Consider using '#align set.unbounded_ge_iff_unbounded_inter_ge Set.unbounded_ge_iff_unbounded_inter_geₓ'. -/
@@ -704,7 +856,7 @@ theorem unbounded_ge_iff_unbounded_inter_ge [LinearOrder α] (a : α) :
 
 /- warning: set.bounded_gt_inter_not_gt -> Set.bounded_gt_inter_not_gt is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : SemilatticeInf.{u1} α] (a : α), Iff (Set.Bounded.{u1} α (GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => Not (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) a b))))) (Set.Bounded.{u1} α (GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))) s)
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : SemilatticeInf.{u1} α] (a : α), Iff (Set.Bounded.{u1} α (GT.gt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => Not (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) a b))))) (Set.Bounded.{u1} α (GT.gt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))) s)
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : SemilatticeInf.{u1} α] (a : α), Iff (Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.5096 : α) (x._@.Mathlib.Order.Bounded._hyg.5098 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) x._@.Mathlib.Order.Bounded._hyg.5096 x._@.Mathlib.Order.Bounded._hyg.5098) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (setOf.{u1} α (fun (b : α) => Not (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) a b))))) (Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.5132 : α) (x._@.Mathlib.Order.Bounded._hyg.5134 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) x._@.Mathlib.Order.Bounded._hyg.5132 x._@.Mathlib.Order.Bounded._hyg.5134) s)
 Case conversion may be inaccurate. Consider using '#align set.bounded_gt_inter_not_gt Set.bounded_gt_inter_not_gtₓ'. -/
@@ -715,7 +867,7 @@ theorem bounded_gt_inter_not_gt [SemilatticeInf α] (a : α) :
 
 /- warning: set.unbounded_gt_inter_not_gt -> Set.unbounded_gt_inter_not_gt is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : SemilatticeInf.{u1} α] (a : α), Iff (Set.Unbounded.{u1} α (GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => Not (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) a b))))) (Set.Unbounded.{u1} α (GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))) s)
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : SemilatticeInf.{u1} α] (a : α), Iff (Set.Unbounded.{u1} α (GT.gt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => Not (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) a b))))) (Set.Unbounded.{u1} α (GT.gt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))) s)
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : SemilatticeInf.{u1} α] (a : α), Iff (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.5175 : α) (x._@.Mathlib.Order.Bounded._hyg.5177 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) x._@.Mathlib.Order.Bounded._hyg.5175 x._@.Mathlib.Order.Bounded._hyg.5177) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (setOf.{u1} α (fun (b : α) => Not (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) a b))))) (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.5211 : α) (x._@.Mathlib.Order.Bounded._hyg.5213 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) x._@.Mathlib.Order.Bounded._hyg.5211 x._@.Mathlib.Order.Bounded._hyg.5213) s)
 Case conversion may be inaccurate. Consider using '#align set.unbounded_gt_inter_not_gt Set.unbounded_gt_inter_not_gtₓ'. -/
@@ -726,7 +878,7 @@ theorem unbounded_gt_inter_not_gt [SemilatticeInf α] (a : α) :
 
 /- warning: set.bounded_gt_inter_ge -> Set.bounded_gt_inter_ge is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] (a : α), Iff (Set.Bounded.{u1} α (GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) b a)))) (Set.Bounded.{u1} α (GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s)
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] (a : α), Iff (Set.Bounded.{u1} α (GT.gt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) b a)))) (Set.Bounded.{u1} α (GT.gt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s)
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] (a : α), Iff (Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.5254 : α) (x._@.Mathlib.Order.Bounded._hyg.5256 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.Bounded._hyg.5254 x._@.Mathlib.Order.Bounded._hyg.5256) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (setOf.{u1} α (fun (b : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) b a)))) (Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.5287 : α) (x._@.Mathlib.Order.Bounded._hyg.5289 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.Bounded._hyg.5287 x._@.Mathlib.Order.Bounded._hyg.5289) s)
 Case conversion may be inaccurate. Consider using '#align set.bounded_gt_inter_ge Set.bounded_gt_inter_geₓ'. -/
@@ -737,7 +889,7 @@ theorem bounded_gt_inter_ge [LinearOrder α] (a : α) :
 
 /- warning: set.unbounded_inter_ge -> Set.unbounded_inter_ge is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] (a : α), Iff (Set.Unbounded.{u1} α (GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) b a)))) (Set.Unbounded.{u1} α (GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s)
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] (a : α), Iff (Set.Unbounded.{u1} α (GT.gt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) b a)))) (Set.Unbounded.{u1} α (GT.gt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s)
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] (a : α), Iff (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.5330 : α) (x._@.Mathlib.Order.Bounded._hyg.5332 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.Bounded._hyg.5330 x._@.Mathlib.Order.Bounded._hyg.5332) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (setOf.{u1} α (fun (b : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) b a)))) (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.5363 : α) (x._@.Mathlib.Order.Bounded._hyg.5365 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.Bounded._hyg.5363 x._@.Mathlib.Order.Bounded._hyg.5365) s)
 Case conversion may be inaccurate. Consider using '#align set.unbounded_inter_ge Set.unbounded_inter_geₓ'. -/
@@ -748,7 +900,7 @@ theorem unbounded_inter_ge [LinearOrder α] (a : α) :
 
 /- warning: set.bounded_gt_inter_gt -> Set.bounded_gt_inter_gt is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))] (a : α), Iff (Set.Bounded.{u1} α (GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) b a)))) (Set.Bounded.{u1} α (GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s)
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : NoMinOrder.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))] (a : α), Iff (Set.Bounded.{u1} α (GT.gt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) b a)))) (Set.Bounded.{u1} α (GT.gt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s)
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))))] (a : α), Iff (Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.5409 : α) (x._@.Mathlib.Order.Bounded._hyg.5411 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.Bounded._hyg.5409 x._@.Mathlib.Order.Bounded._hyg.5411) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (setOf.{u1} α (fun (b : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) b a)))) (Set.Bounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.5442 : α) (x._@.Mathlib.Order.Bounded._hyg.5444 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.Bounded._hyg.5442 x._@.Mathlib.Order.Bounded._hyg.5444) s)
 Case conversion may be inaccurate. Consider using '#align set.bounded_gt_inter_gt Set.bounded_gt_inter_gtₓ'. -/
@@ -759,7 +911,7 @@ theorem bounded_gt_inter_gt [LinearOrder α] [NoMinOrder α] (a : α) :
 
 /- warning: set.unbounded_gt_inter_gt -> Set.unbounded_gt_inter_gt is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))] (a : α), Iff (Set.Unbounded.{u1} α (GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) b a)))) (Set.Unbounded.{u1} α (GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s)
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : NoMinOrder.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))] (a : α), Iff (Set.Unbounded.{u1} α (GT.gt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (setOf.{u1} α (fun (b : α) => LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) b a)))) (Set.Unbounded.{u1} α (GT.gt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) s)
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))))] (a : α), Iff (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.5488 : α) (x._@.Mathlib.Order.Bounded._hyg.5490 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.Bounded._hyg.5488 x._@.Mathlib.Order.Bounded._hyg.5490) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (setOf.{u1} α (fun (b : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) b a)))) (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.5521 : α) (x._@.Mathlib.Order.Bounded._hyg.5523 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.Bounded._hyg.5521 x._@.Mathlib.Order.Bounded._hyg.5523) s)
 Case conversion may be inaccurate. Consider using '#align set.unbounded_gt_inter_gt Set.unbounded_gt_inter_gtₓ'. -/

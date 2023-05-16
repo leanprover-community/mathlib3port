@@ -527,66 +527,110 @@ instance : LinearOrder Bool where
     revert x y
     exact by decide
 
-#print Bool.false_le /-
+/- warning: bool.ff_le -> Bool.false_le is a dubious translation:
+lean 3 declaration is
+  forall {x : Bool}, LE.le.{0} Bool (Preorder.toHasLe.{0} Bool (PartialOrder.toPreorder.{0} Bool (LinearOrder.toPartialOrder.{0} Bool Bool.linearOrder))) Bool.false x
+but is expected to have type
+  forall {x : Bool}, LE.le.{0} Bool (Preorder.toLE.{0} Bool (PartialOrder.toPreorder.{0} Bool (LinearOrder.toPartialOrder.{0} Bool Bool.linearOrder))) Bool.false x
+Case conversion may be inaccurate. Consider using '#align bool.ff_le Bool.false_leₓ'. -/
 @[simp]
 theorem false_le {x : Bool} : false ≤ x :=
   Or.intro_left _ rfl
 #align bool.ff_le Bool.false_le
--/
 
-#print Bool.le_true /-
+/- warning: bool.le_tt -> Bool.le_true is a dubious translation:
+lean 3 declaration is
+  forall {x : Bool}, LE.le.{0} Bool (Preorder.toHasLe.{0} Bool (PartialOrder.toPreorder.{0} Bool (LinearOrder.toPartialOrder.{0} Bool Bool.linearOrder))) x Bool.true
+but is expected to have type
+  forall {x : Bool}, LE.le.{0} Bool (Preorder.toLE.{0} Bool (PartialOrder.toPreorder.{0} Bool (LinearOrder.toPartialOrder.{0} Bool Bool.linearOrder))) x Bool.true
+Case conversion may be inaccurate. Consider using '#align bool.le_tt Bool.le_trueₓ'. -/
 @[simp]
 theorem le_true {x : Bool} : x ≤ true :=
   Or.intro_right _ rfl
 #align bool.le_tt Bool.le_true
--/
 
-#print Bool.lt_iff /-
+/- warning: bool.lt_iff -> Bool.lt_iff is a dubious translation:
+lean 3 declaration is
+  forall {x : Bool} {y : Bool}, Iff (LT.lt.{0} Bool (Preorder.toHasLt.{0} Bool (PartialOrder.toPreorder.{0} Bool (LinearOrder.toPartialOrder.{0} Bool Bool.linearOrder))) x y) (And (Eq.{1} Bool x Bool.false) (Eq.{1} Bool y Bool.true))
+but is expected to have type
+  forall {x : Bool} {y : Bool}, Iff (LT.lt.{0} Bool (Preorder.toLT.{0} Bool (PartialOrder.toPreorder.{0} Bool (LinearOrder.toPartialOrder.{0} Bool Bool.linearOrder))) x y) (And (Eq.{1} Bool x Bool.false) (Eq.{1} Bool y Bool.true))
+Case conversion may be inaccurate. Consider using '#align bool.lt_iff Bool.lt_iffₓ'. -/
 theorem lt_iff : ∀ {x y : Bool}, x < y ↔ x = false ∧ y = true := by decide
 #align bool.lt_iff Bool.lt_iff
--/
 
-#print Bool.false_lt_true /-
+/- warning: bool.ff_lt_tt -> Bool.false_lt_true is a dubious translation:
+lean 3 declaration is
+  LT.lt.{0} Bool (Preorder.toHasLt.{0} Bool (PartialOrder.toPreorder.{0} Bool (LinearOrder.toPartialOrder.{0} Bool Bool.linearOrder))) Bool.false Bool.true
+but is expected to have type
+  LT.lt.{0} Bool (Preorder.toLT.{0} Bool (PartialOrder.toPreorder.{0} Bool (LinearOrder.toPartialOrder.{0} Bool Bool.linearOrder))) Bool.false Bool.true
+Case conversion may be inaccurate. Consider using '#align bool.ff_lt_tt Bool.false_lt_trueₓ'. -/
 @[simp]
 theorem false_lt_true : false < true :=
   lt_iff.2 ⟨rfl, rfl⟩
 #align bool.ff_lt_tt Bool.false_lt_true
--/
 
-#print Bool.le_iff_imp /-
+/- warning: bool.le_iff_imp -> Bool.le_iff_imp is a dubious translation:
+lean 3 declaration is
+  forall {x : Bool} {y : Bool}, Iff (LE.le.{0} Bool (Preorder.toHasLe.{0} Bool (PartialOrder.toPreorder.{0} Bool (LinearOrder.toPartialOrder.{0} Bool Bool.linearOrder))) x y) ((coeSort.{1, 1} Bool Prop coeSortBool x) -> (coeSort.{1, 1} Bool Prop coeSortBool y))
+but is expected to have type
+  forall {x : Bool} {y : Bool}, Iff (LE.le.{0} Bool (Preorder.toLE.{0} Bool (PartialOrder.toPreorder.{0} Bool (LinearOrder.toPartialOrder.{0} Bool Bool.linearOrder))) x y) ((Eq.{1} Bool x Bool.true) -> (Eq.{1} Bool y Bool.true))
+Case conversion may be inaccurate. Consider using '#align bool.le_iff_imp Bool.le_iff_impₓ'. -/
 theorem le_iff_imp : ∀ {x y : Bool}, x ≤ y ↔ x → y := by decide
 #align bool.le_iff_imp Bool.le_iff_imp
--/
 
-#print Bool.and_le_left /-
+/- warning: bool.band_le_left -> Bool.and_le_left is a dubious translation:
+lean 3 declaration is
+  forall (x : Bool) (y : Bool), LE.le.{0} Bool (Preorder.toHasLe.{0} Bool (PartialOrder.toPreorder.{0} Bool (LinearOrder.toPartialOrder.{0} Bool Bool.linearOrder))) (and x y) x
+but is expected to have type
+  forall (x : Bool) (y : Bool), LE.le.{0} Bool (Preorder.toLE.{0} Bool (PartialOrder.toPreorder.{0} Bool (LinearOrder.toPartialOrder.{0} Bool Bool.linearOrder))) (and x y) x
+Case conversion may be inaccurate. Consider using '#align bool.band_le_left Bool.and_le_leftₓ'. -/
 theorem and_le_left : ∀ x y : Bool, (x && y) ≤ x := by decide
 #align bool.band_le_left Bool.and_le_left
--/
 
-#print Bool.and_le_right /-
+/- warning: bool.band_le_right -> Bool.and_le_right is a dubious translation:
+lean 3 declaration is
+  forall (x : Bool) (y : Bool), LE.le.{0} Bool (Preorder.toHasLe.{0} Bool (PartialOrder.toPreorder.{0} Bool (LinearOrder.toPartialOrder.{0} Bool Bool.linearOrder))) (and x y) y
+but is expected to have type
+  forall (x : Bool) (y : Bool), LE.le.{0} Bool (Preorder.toLE.{0} Bool (PartialOrder.toPreorder.{0} Bool (LinearOrder.toPartialOrder.{0} Bool Bool.linearOrder))) (and x y) y
+Case conversion may be inaccurate. Consider using '#align bool.band_le_right Bool.and_le_rightₓ'. -/
 theorem and_le_right : ∀ x y : Bool, (x && y) ≤ y := by decide
 #align bool.band_le_right Bool.and_le_right
--/
 
-#print Bool.le_and /-
+/- warning: bool.le_band -> Bool.le_and is a dubious translation:
+lean 3 declaration is
+  forall {x : Bool} {y : Bool} {z : Bool}, (LE.le.{0} Bool (Preorder.toHasLe.{0} Bool (PartialOrder.toPreorder.{0} Bool (LinearOrder.toPartialOrder.{0} Bool Bool.linearOrder))) x y) -> (LE.le.{0} Bool (Preorder.toHasLe.{0} Bool (PartialOrder.toPreorder.{0} Bool (LinearOrder.toPartialOrder.{0} Bool Bool.linearOrder))) x z) -> (LE.le.{0} Bool (Preorder.toHasLe.{0} Bool (PartialOrder.toPreorder.{0} Bool (LinearOrder.toPartialOrder.{0} Bool Bool.linearOrder))) x (and y z))
+but is expected to have type
+  forall {x : Bool} {y : Bool} {z : Bool}, (LE.le.{0} Bool (Preorder.toLE.{0} Bool (PartialOrder.toPreorder.{0} Bool (LinearOrder.toPartialOrder.{0} Bool Bool.linearOrder))) x y) -> (LE.le.{0} Bool (Preorder.toLE.{0} Bool (PartialOrder.toPreorder.{0} Bool (LinearOrder.toPartialOrder.{0} Bool Bool.linearOrder))) x z) -> (LE.le.{0} Bool (Preorder.toLE.{0} Bool (PartialOrder.toPreorder.{0} Bool (LinearOrder.toPartialOrder.{0} Bool Bool.linearOrder))) x (and y z))
+Case conversion may be inaccurate. Consider using '#align bool.le_band Bool.le_andₓ'. -/
 theorem le_and : ∀ {x y z : Bool}, x ≤ y → x ≤ z → x ≤ (y && z) := by decide
 #align bool.le_band Bool.le_and
--/
 
-#print Bool.left_le_or /-
+/- warning: bool.left_le_bor -> Bool.left_le_or is a dubious translation:
+lean 3 declaration is
+  forall (x : Bool) (y : Bool), LE.le.{0} Bool (Preorder.toHasLe.{0} Bool (PartialOrder.toPreorder.{0} Bool (LinearOrder.toPartialOrder.{0} Bool Bool.linearOrder))) x (or x y)
+but is expected to have type
+  forall (x : Bool) (y : Bool), LE.le.{0} Bool (Preorder.toLE.{0} Bool (PartialOrder.toPreorder.{0} Bool (LinearOrder.toPartialOrder.{0} Bool Bool.linearOrder))) x (or x y)
+Case conversion may be inaccurate. Consider using '#align bool.left_le_bor Bool.left_le_orₓ'. -/
 theorem left_le_or : ∀ x y : Bool, x ≤ (x || y) := by decide
 #align bool.left_le_bor Bool.left_le_or
--/
 
-#print Bool.right_le_or /-
+/- warning: bool.right_le_bor -> Bool.right_le_or is a dubious translation:
+lean 3 declaration is
+  forall (x : Bool) (y : Bool), LE.le.{0} Bool (Preorder.toHasLe.{0} Bool (PartialOrder.toPreorder.{0} Bool (LinearOrder.toPartialOrder.{0} Bool Bool.linearOrder))) y (or x y)
+but is expected to have type
+  forall (x : Bool) (y : Bool), LE.le.{0} Bool (Preorder.toLE.{0} Bool (PartialOrder.toPreorder.{0} Bool (LinearOrder.toPartialOrder.{0} Bool Bool.linearOrder))) y (or x y)
+Case conversion may be inaccurate. Consider using '#align bool.right_le_bor Bool.right_le_orₓ'. -/
 theorem right_le_or : ∀ x y : Bool, y ≤ (x || y) := by decide
 #align bool.right_le_bor Bool.right_le_or
--/
 
-#print Bool.or_le /-
+/- warning: bool.bor_le -> Bool.or_le is a dubious translation:
+lean 3 declaration is
+  forall {x : Bool} {y : Bool} {z : Bool}, (LE.le.{0} Bool (Preorder.toHasLe.{0} Bool (PartialOrder.toPreorder.{0} Bool (LinearOrder.toPartialOrder.{0} Bool Bool.linearOrder))) x z) -> (LE.le.{0} Bool (Preorder.toHasLe.{0} Bool (PartialOrder.toPreorder.{0} Bool (LinearOrder.toPartialOrder.{0} Bool Bool.linearOrder))) y z) -> (LE.le.{0} Bool (Preorder.toHasLe.{0} Bool (PartialOrder.toPreorder.{0} Bool (LinearOrder.toPartialOrder.{0} Bool Bool.linearOrder))) (or x y) z)
+but is expected to have type
+  forall {x : Bool} {y : Bool} {z : Bool}, (LE.le.{0} Bool (Preorder.toLE.{0} Bool (PartialOrder.toPreorder.{0} Bool (LinearOrder.toPartialOrder.{0} Bool Bool.linearOrder))) x z) -> (LE.le.{0} Bool (Preorder.toLE.{0} Bool (PartialOrder.toPreorder.{0} Bool (LinearOrder.toPartialOrder.{0} Bool Bool.linearOrder))) y z) -> (LE.le.{0} Bool (Preorder.toLE.{0} Bool (PartialOrder.toPreorder.{0} Bool (LinearOrder.toPartialOrder.{0} Bool Bool.linearOrder))) (or x y) z)
+Case conversion may be inaccurate. Consider using '#align bool.bor_le Bool.or_leₓ'. -/
 theorem or_le : ∀ {x y z}, x ≤ z → y ≤ z → (x || y) ≤ z := by decide
 #align bool.bor_le Bool.or_le
--/
 
 #print Bool.toNat /-
 /-- convert a `bool` to a `ℕ`, `false -> 0`, `true -> 1` -/
@@ -602,7 +646,12 @@ def ofNat (n : ℕ) : Bool :=
 #align bool.of_nat Bool.ofNat
 -/
 
-#print Bool.ofNat_le_ofNat /-
+/- warning: bool.of_nat_le_of_nat -> Bool.ofNat_le_ofNat is a dubious translation:
+lean 3 declaration is
+  forall {n : Nat} {m : Nat}, (LE.le.{0} Nat Nat.hasLe n m) -> (LE.le.{0} Bool (Preorder.toHasLe.{0} Bool (PartialOrder.toPreorder.{0} Bool (LinearOrder.toPartialOrder.{0} Bool Bool.linearOrder))) (Bool.ofNat n) (Bool.ofNat m))
+but is expected to have type
+  forall {n : Nat} {m : Nat}, (LE.le.{0} Nat instLENat n m) -> (LE.le.{0} Bool (Preorder.toLE.{0} Bool (PartialOrder.toPreorder.{0} Bool (LinearOrder.toPartialOrder.{0} Bool Bool.linearOrder))) (Bool.ofNat n) (Bool.ofNat m))
+Case conversion may be inaccurate. Consider using '#align bool.of_nat_le_of_nat Bool.ofNat_le_ofNatₓ'. -/
 theorem ofNat_le_ofNat {n m : ℕ} (h : n ≤ m) : ofNat n ≤ ofNat m :=
   by
   simp [of_nat] <;> cases Nat.decidableEq n 0 <;> cases Nat.decidableEq m 0 <;> simp only [to_bool]
@@ -612,13 +661,16 @@ theorem ofNat_le_ofNat {n m : ℕ} (h : n ≤ m) : ofNat n ≤ ofNat m :=
   · left
     rfl
 #align bool.of_nat_le_of_nat Bool.ofNat_le_ofNat
--/
 
-#print Bool.toNat_le_toNat /-
+/- warning: bool.to_nat_le_to_nat -> Bool.toNat_le_toNat is a dubious translation:
+lean 3 declaration is
+  forall {b₀ : Bool} {b₁ : Bool}, (LE.le.{0} Bool (Preorder.toHasLe.{0} Bool (PartialOrder.toPreorder.{0} Bool (LinearOrder.toPartialOrder.{0} Bool Bool.linearOrder))) b₀ b₁) -> (LE.le.{0} Nat Nat.hasLe (Bool.toNat b₀) (Bool.toNat b₁))
+but is expected to have type
+  forall {b₀ : Bool} {b₁ : Bool}, (LE.le.{0} Bool (Preorder.toLE.{0} Bool (PartialOrder.toPreorder.{0} Bool (LinearOrder.toPartialOrder.{0} Bool Bool.linearOrder))) b₀ b₁) -> (LE.le.{0} Nat instLENat (Bool.toNat b₀) (Bool.toNat b₁))
+Case conversion may be inaccurate. Consider using '#align bool.to_nat_le_to_nat Bool.toNat_le_toNatₓ'. -/
 theorem toNat_le_toNat {b₀ b₁ : Bool} (h : b₀ ≤ b₁) : toNat b₀ ≤ toNat b₁ := by
   cases h <;> subst h <;> [cases b₁, cases b₀] <;> simp [toNat, Nat.zero_le]
 #align bool.to_nat_le_to_nat Bool.toNat_le_toNat
--/
 
 #print Bool.ofNat_toNat /-
 theorem ofNat_toNat (b : Bool) : ofNat (toNat b) = b := by

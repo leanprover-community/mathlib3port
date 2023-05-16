@@ -198,13 +198,17 @@ theorem div_conj_eq_sub_one : p / q = p - 1 :=
   rw [h.sub_one_mul_conj]
 #align real.is_conjugate_exponent.div_conj_eq_sub_one Real.IsConjugateExponent.div_conj_eq_sub_one
 
-#print Real.IsConjugateExponent.one_lt_nnreal /-
+/- warning: real.is_conjugate_exponent.one_lt_nnreal -> Real.IsConjugateExponent.one_lt_nnreal is a dubious translation:
+lean 3 declaration is
+  forall {p : Real} {q : Real}, (Real.IsConjugateExponent p q) -> (LT.lt.{0} NNReal (Preorder.toHasLt.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (OrderedCancelAddCommMonoid.toPartialOrder.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring)))) (OfNat.ofNat.{0} NNReal 1 (OfNat.mk.{0} NNReal 1 (One.one.{0} NNReal (AddMonoidWithOne.toOne.{0} NNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} NNReal (NonAssocSemiring.toAddCommMonoidWithOne.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring))))))) (Real.toNNReal p))
+but is expected to have type
+  forall {p : Real} {q : Real}, (Real.IsConjugateExponent p q) -> (LT.lt.{0} NNReal (Preorder.toLT.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) (OfNat.ofNat.{0} NNReal 1 (One.toOfNat1.{0} NNReal instNNRealOne)) (Real.toNNReal p))
+Case conversion may be inaccurate. Consider using '#align real.is_conjugate_exponent.one_lt_nnreal Real.IsConjugateExponent.one_lt_nnrealₓ'. -/
 theorem one_lt_nnreal : 1 < Real.toNNReal p :=
   by
   rw [← Real.toNNReal_one, Real.toNNReal_lt_toNNReal_iff h.pos]
   exact h.one_lt
 #align real.is_conjugate_exponent.one_lt_nnreal Real.IsConjugateExponent.one_lt_nnreal
--/
 
 /- warning: real.is_conjugate_exponent.inv_add_inv_conj_nnreal -> Real.IsConjugateExponent.inv_add_inv_conj_nnreal is a dubious translation:
 lean 3 declaration is

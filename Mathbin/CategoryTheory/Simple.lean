@@ -279,7 +279,12 @@ instance {X : C} [Simple X] : IsSimpleOrder (Subobject X)
     · exact Or.inl (mk_eq_bot_iff_zero.mpr h)
     · refine' Or.inr ((is_iso_iff_mk_eq_top _).mp ((simple.mono_is_iso_iff_nonzero f).mpr h))
 
-#print CategoryTheory.simple_of_isSimpleOrder_subobject /-
+/- warning: category_theory.simple_of_is_simple_order_subobject -> CategoryTheory.simple_of_isSimpleOrder_subobject is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Limits.HasZeroMorphisms.{u1, u2} C _inst_1] [_inst_3 : CategoryTheory.Limits.HasZeroObject.{u1, u2} C _inst_1] (X : C) [_inst_4 : IsSimpleOrder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (Preorder.toHasLe.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (CategoryTheory.Subobject.partialOrder.{u2, u1} C _inst_1 X))) (CategoryTheory.Subobject.boundedOrder.{u1, u2} C _inst_1 (CategoryTheory.Limits.HasZeroObject.hasInitial.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Limits.HasZeroObject.initialMonoClass.{u1, u2} C _inst_1 _inst_3) X)], CategoryTheory.Simple.{u1, u2} C _inst_1 _inst_2 X
+but is expected to have type
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Limits.HasZeroMorphisms.{u1, u2} C _inst_1] [_inst_3 : CategoryTheory.Limits.HasZeroObject.{u1, u2} C _inst_1] (X : C) [_inst_4 : IsSimpleOrder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (Preorder.toLE.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (CategoryTheory.instPartialOrderSubobject.{u1, u2} C _inst_1 X))) (CategoryTheory.Subobject.boundedOrder.{u1, u2} C _inst_1 (CategoryTheory.Limits.HasZeroObject.hasInitial.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Limits.HasZeroObject.initialMonoClass.{u1, u2} C _inst_1 _inst_3) X)], CategoryTheory.Simple.{u1, u2} C _inst_1 _inst_2 X
+Case conversion may be inaccurate. Consider using '#align category_theory.simple_of_is_simple_order_subobject CategoryTheory.simple_of_isSimpleOrder_subobjectₓ'. -/
 /-- If `X` has subobject lattice `{⊥, ⊤}`, then `X` is simple. -/
 theorem simple_of_isSimpleOrder_subobject (X : C) [IsSimpleOrder (Subobject X)] : Simple X :=
   by
@@ -295,9 +300,13 @@ theorem simple_of_isSimpleOrder_subobject (X : C) [IsSimpleOrder (Subobject X)] 
       exact False.elim (i h)
     · exact (subobject.is_iso_iff_mk_eq_top _).mpr h
 #align category_theory.simple_of_is_simple_order_subobject CategoryTheory.simple_of_isSimpleOrder_subobject
--/
 
-#print CategoryTheory.simple_iff_subobject_isSimpleOrder /-
+/- warning: category_theory.simple_iff_subobject_is_simple_order -> CategoryTheory.simple_iff_subobject_isSimpleOrder is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Limits.HasZeroMorphisms.{u1, u2} C _inst_1] [_inst_3 : CategoryTheory.Limits.HasZeroObject.{u1, u2} C _inst_1] (X : C), Iff (CategoryTheory.Simple.{u1, u2} C _inst_1 _inst_2 X) (IsSimpleOrder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (Preorder.toHasLe.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (CategoryTheory.Subobject.partialOrder.{u2, u1} C _inst_1 X))) (CategoryTheory.Subobject.boundedOrder.{u1, u2} C _inst_1 (CategoryTheory.Limits.HasZeroObject.hasInitial.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Limits.HasZeroObject.initialMonoClass.{u1, u2} C _inst_1 _inst_3) X))
+but is expected to have type
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] [_inst_2 : CategoryTheory.Limits.HasZeroMorphisms.{u1, u2} C _inst_1] [_inst_3 : CategoryTheory.Limits.HasZeroObject.{u1, u2} C _inst_1] (X : C), Iff (CategoryTheory.Simple.{u1, u2} C _inst_1 _inst_2 X) (IsSimpleOrder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (Preorder.toLE.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (CategoryTheory.instPartialOrderSubobject.{u1, u2} C _inst_1 X))) (CategoryTheory.Subobject.boundedOrder.{u1, u2} C _inst_1 (CategoryTheory.Limits.HasZeroObject.hasInitial.{u1, u2} C _inst_1 _inst_3) (CategoryTheory.Limits.HasZeroObject.initialMonoClass.{u1, u2} C _inst_1 _inst_3) X))
+Case conversion may be inaccurate. Consider using '#align category_theory.simple_iff_subobject_is_simple_order CategoryTheory.simple_iff_subobject_isSimpleOrderₓ'. -/
 /-- `X` is simple iff it has subobject lattice `{⊥, ⊤}`. -/
 theorem simple_iff_subobject_isSimpleOrder (X : C) : Simple X ↔ IsSimpleOrder (Subobject X) :=
   ⟨by
@@ -306,7 +315,6 @@ theorem simple_iff_subobject_isSimpleOrder (X : C) : Simple X ↔ IsSimpleOrder 
     intro h
     exact simple_of_is_simple_order_subobject X⟩
 #align category_theory.simple_iff_subobject_is_simple_order CategoryTheory.simple_iff_subobject_isSimpleOrder
--/
 
 /- warning: category_theory.subobject_simple_iff_is_atom -> CategoryTheory.subobject_simple_iff_isAtom is a dubious translation:
 lean 3 declaration is

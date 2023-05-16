@@ -67,189 +67,297 @@ variable (a b c : ℕ)
 
 namespace Nat
 
-#print Nat.Icc_eq_range' /-
+/- warning: nat.Icc_eq_range' -> Nat.Icc_eq_range' is a dubious translation:
+lean 3 declaration is
+  forall (a : Nat) (b : Nat), Eq.{1} (Finset.{0} Nat) (Finset.Icc.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder a b) (Finset.mk.{0} Nat ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (List.{0} Nat) (Multiset.{0} Nat) (HasLiftT.mk.{1, 1} (List.{0} Nat) (Multiset.{0} Nat) (CoeTCₓ.coe.{1, 1} (List.{0} Nat) (Multiset.{0} Nat) (coeBase.{1, 1} (List.{0} Nat) (Multiset.{0} Nat) (Multiset.hasCoe.{0} Nat)))) (List.range' a (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) b (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) a))) (List.nodup_range' a (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) b (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) a)))
+but is expected to have type
+  forall (a : Nat) (b : Nat), Eq.{1} (Finset.{0} Nat) (Finset.Icc.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring a b) (Finset.mk.{0} Nat (Multiset.ofList.{0} Nat (List.range' a (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) b (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) a))) (List.nodup_range' a (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) b (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) a)))
+Case conversion may be inaccurate. Consider using '#align nat.Icc_eq_range' Nat.Icc_eq_range'ₓ'. -/
 theorem Icc_eq_range' : Icc a b = ⟨List.range' a (b + 1 - a), List.nodup_range' _ _⟩ :=
   rfl
 #align nat.Icc_eq_range' Nat.Icc_eq_range'
--/
 
-#print Nat.Ico_eq_range' /-
+/- warning: nat.Ico_eq_range' -> Nat.Ico_eq_range' is a dubious translation:
+lean 3 declaration is
+  forall (a : Nat) (b : Nat), Eq.{1} (Finset.{0} Nat) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder a b) (Finset.mk.{0} Nat ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (List.{0} Nat) (Multiset.{0} Nat) (HasLiftT.mk.{1, 1} (List.{0} Nat) (Multiset.{0} Nat) (CoeTCₓ.coe.{1, 1} (List.{0} Nat) (Multiset.{0} Nat) (coeBase.{1, 1} (List.{0} Nat) (Multiset.{0} Nat) (Multiset.hasCoe.{0} Nat)))) (List.range' a (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) b a))) (List.nodup_range' a (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) b a)))
+but is expected to have type
+  forall (a : Nat) (b : Nat), Eq.{1} (Finset.{0} Nat) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring a b) (Finset.mk.{0} Nat (Multiset.ofList.{0} Nat (List.range' a (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) b a))) (List.nodup_range' a (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) b a)))
+Case conversion may be inaccurate. Consider using '#align nat.Ico_eq_range' Nat.Ico_eq_range'ₓ'. -/
 theorem Ico_eq_range' : Ico a b = ⟨List.range' a (b - a), List.nodup_range' _ _⟩ :=
   rfl
 #align nat.Ico_eq_range' Nat.Ico_eq_range'
--/
 
-#print Nat.Ioc_eq_range' /-
+/- warning: nat.Ioc_eq_range' -> Nat.Ioc_eq_range' is a dubious translation:
+lean 3 declaration is
+  forall (a : Nat) (b : Nat), Eq.{1} (Finset.{0} Nat) (Finset.Ioc.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder a b) (Finset.mk.{0} Nat ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (List.{0} Nat) (Multiset.{0} Nat) (HasLiftT.mk.{1, 1} (List.{0} Nat) (Multiset.{0} Nat) (CoeTCₓ.coe.{1, 1} (List.{0} Nat) (Multiset.{0} Nat) (coeBase.{1, 1} (List.{0} Nat) (Multiset.{0} Nat) (Multiset.hasCoe.{0} Nat)))) (List.range' (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) a (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) b a))) (List.nodup_range' (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) a (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) b a)))
+but is expected to have type
+  forall (a : Nat) (b : Nat), Eq.{1} (Finset.{0} Nat) (Finset.Ioc.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring a b) (Finset.mk.{0} Nat (Multiset.ofList.{0} Nat (List.range' (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) a (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) b a))) (List.nodup_range' (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) a (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) b a)))
+Case conversion may be inaccurate. Consider using '#align nat.Ioc_eq_range' Nat.Ioc_eq_range'ₓ'. -/
 theorem Ioc_eq_range' : Ioc a b = ⟨List.range' (a + 1) (b - a), List.nodup_range' _ _⟩ :=
   rfl
 #align nat.Ioc_eq_range' Nat.Ioc_eq_range'
--/
 
-#print Nat.Ioo_eq_range' /-
+/- warning: nat.Ioo_eq_range' -> Nat.Ioo_eq_range' is a dubious translation:
+lean 3 declaration is
+  forall (a : Nat) (b : Nat), Eq.{1} (Finset.{0} Nat) (Finset.Ioo.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder a b) (Finset.mk.{0} Nat ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (List.{0} Nat) (Multiset.{0} Nat) (HasLiftT.mk.{1, 1} (List.{0} Nat) (Multiset.{0} Nat) (CoeTCₓ.coe.{1, 1} (List.{0} Nat) (Multiset.{0} Nat) (coeBase.{1, 1} (List.{0} Nat) (Multiset.{0} Nat) (Multiset.hasCoe.{0} Nat)))) (List.range' (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) a (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) b a) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) (List.nodup_range' (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) a (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) b a) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))
+but is expected to have type
+  forall (a : Nat) (b : Nat), Eq.{1} (Finset.{0} Nat) (Finset.Ioo.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring a b) (Finset.mk.{0} Nat (Multiset.ofList.{0} Nat (List.range' (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) a (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) b a) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (List.nodup_range' (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) a (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) b a) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))
+Case conversion may be inaccurate. Consider using '#align nat.Ioo_eq_range' Nat.Ioo_eq_range'ₓ'. -/
 theorem Ioo_eq_range' : Ioo a b = ⟨List.range' (a + 1) (b - a - 1), List.nodup_range' _ _⟩ :=
   rfl
 #align nat.Ioo_eq_range' Nat.Ioo_eq_range'
--/
 
-#print Nat.Iio_eq_range /-
+/- warning: nat.Iio_eq_range -> Nat.Iio_eq_range is a dubious translation:
+lean 3 declaration is
+  Eq.{1} (Nat -> (Finset.{0} Nat)) (Finset.Iio.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) (Finset.LocallyFiniteOrder.toLocallyFiniteOrderBot.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.orderBot Nat.locallyFiniteOrder)) Finset.range
+but is expected to have type
+  Eq.{1} (Nat -> (Finset.{0} Nat)) (Finset.Iio.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) (Finset.LocallyFiniteOrder.toLocallyFiniteOrderBot.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) Nat.orderBot instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring)) Finset.range
+Case conversion may be inaccurate. Consider using '#align nat.Iio_eq_range Nat.Iio_eq_rangeₓ'. -/
 theorem Iio_eq_range : Iio = range := by
   ext (b x)
   rw [mem_Iio, mem_range]
 #align nat.Iio_eq_range Nat.Iio_eq_range
--/
 
-#print Nat.Ico_zero_eq_range /-
+/- warning: nat.Ico_zero_eq_range -> Nat.Ico_zero_eq_range is a dubious translation:
+lean 3 declaration is
+  Eq.{1} (Nat -> (Finset.{0} Nat)) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) Finset.range
+but is expected to have type
+  Eq.{1} (Nat -> (Finset.{0} Nat)) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) Finset.range
+Case conversion may be inaccurate. Consider using '#align nat.Ico_zero_eq_range Nat.Ico_zero_eq_rangeₓ'. -/
 @[simp]
 theorem Ico_zero_eq_range : Ico 0 = range := by rw [← bot_eq_zero, ← Iio_eq_Ico, Iio_eq_range]
 #align nat.Ico_zero_eq_range Nat.Ico_zero_eq_range
--/
 
-#print Finset.range_eq_Ico /-
+/- warning: finset.range_eq_Ico -> Finset.range_eq_Ico is a dubious translation:
+lean 3 declaration is
+  Eq.{1} (Nat -> (Finset.{0} Nat)) Finset.range (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))))
+but is expected to have type
+  Eq.{1} (Nat -> (Finset.{0} Nat)) Finset.range (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))
+Case conversion may be inaccurate. Consider using '#align finset.range_eq_Ico Finset.range_eq_Icoₓ'. -/
 theorem Finset.range_eq_Ico : range = Ico 0 :=
   Ico_zero_eq_range.symm
 #align finset.range_eq_Ico Finset.range_eq_Ico
--/
 
-#print Nat.card_Icc /-
+/- warning: nat.card_Icc -> Nat.card_Icc is a dubious translation:
+lean 3 declaration is
+  forall (a : Nat) (b : Nat), Eq.{1} Nat (Finset.card.{0} Nat (Finset.Icc.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder a b)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) b (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) a)
+but is expected to have type
+  forall (a : Nat) (b : Nat), Eq.{1} Nat (Finset.card.{0} Nat (Finset.Icc.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring a b)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) b (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) a)
+Case conversion may be inaccurate. Consider using '#align nat.card_Icc Nat.card_Iccₓ'. -/
 @[simp]
 theorem card_Icc : (Icc a b).card = b + 1 - a :=
   List.length_range' _ _
 #align nat.card_Icc Nat.card_Icc
--/
 
-#print Nat.card_Ico /-
+/- warning: nat.card_Ico -> Nat.card_Ico is a dubious translation:
+lean 3 declaration is
+  forall (a : Nat) (b : Nat), Eq.{1} Nat (Finset.card.{0} Nat (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder a b)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) b a)
+but is expected to have type
+  forall (a : Nat) (b : Nat), Eq.{1} Nat (Finset.card.{0} Nat (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring a b)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) b a)
+Case conversion may be inaccurate. Consider using '#align nat.card_Ico Nat.card_Icoₓ'. -/
 @[simp]
 theorem card_Ico : (Ico a b).card = b - a :=
   List.length_range' _ _
 #align nat.card_Ico Nat.card_Ico
--/
 
-#print Nat.card_Ioc /-
+/- warning: nat.card_Ioc -> Nat.card_Ioc is a dubious translation:
+lean 3 declaration is
+  forall (a : Nat) (b : Nat), Eq.{1} Nat (Finset.card.{0} Nat (Finset.Ioc.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder a b)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) b a)
+but is expected to have type
+  forall (a : Nat) (b : Nat), Eq.{1} Nat (Finset.card.{0} Nat (Finset.Ioc.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring a b)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) b a)
+Case conversion may be inaccurate. Consider using '#align nat.card_Ioc Nat.card_Iocₓ'. -/
 @[simp]
 theorem card_Ioc : (Ioc a b).card = b - a :=
   List.length_range' _ _
 #align nat.card_Ioc Nat.card_Ioc
--/
 
-#print Nat.card_Ioo /-
+/- warning: nat.card_Ioo -> Nat.card_Ioo is a dubious translation:
+lean 3 declaration is
+  forall (a : Nat) (b : Nat), Eq.{1} Nat (Finset.card.{0} Nat (Finset.Ioo.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder a b)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) b a) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))
+but is expected to have type
+  forall (a : Nat) (b : Nat), Eq.{1} Nat (Finset.card.{0} Nat (Finset.Ioo.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring a b)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) b a) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))
+Case conversion may be inaccurate. Consider using '#align nat.card_Ioo Nat.card_Iooₓ'. -/
 @[simp]
 theorem card_Ioo : (Ioo a b).card = b - a - 1 :=
   List.length_range' _ _
 #align nat.card_Ioo Nat.card_Ioo
--/
 
-#print Nat.card_Iic /-
+/- warning: nat.card_Iic -> Nat.card_Iic is a dubious translation:
+lean 3 declaration is
+  forall (b : Nat), Eq.{1} Nat (Finset.card.{0} Nat (Finset.Iic.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) (Finset.LocallyFiniteOrder.toLocallyFiniteOrderBot.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.orderBot Nat.locallyFiniteOrder) b)) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) b (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))
+but is expected to have type
+  forall (b : Nat), Eq.{1} Nat (Finset.card.{0} Nat (Finset.Iic.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) (Finset.LocallyFiniteOrder.toLocallyFiniteOrderBot.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) Nat.orderBot instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring) b)) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) b (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))
+Case conversion may be inaccurate. Consider using '#align nat.card_Iic Nat.card_Iicₓ'. -/
 @[simp]
 theorem card_Iic : (Iic b).card = b + 1 := by rw [Iic_eq_Icc, card_Icc, bot_eq_zero, tsub_zero]
 #align nat.card_Iic Nat.card_Iic
--/
 
-#print Nat.card_Iio /-
+/- warning: nat.card_Iio -> Nat.card_Iio is a dubious translation:
+lean 3 declaration is
+  forall (b : Nat), Eq.{1} Nat (Finset.card.{0} Nat (Finset.Iio.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) (Finset.LocallyFiniteOrder.toLocallyFiniteOrderBot.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.orderBot Nat.locallyFiniteOrder) b)) b
+but is expected to have type
+  forall (b : Nat), Eq.{1} Nat (Finset.card.{0} Nat (Finset.Iio.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) (Finset.LocallyFiniteOrder.toLocallyFiniteOrderBot.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) Nat.orderBot instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring) b)) b
+Case conversion may be inaccurate. Consider using '#align nat.card_Iio Nat.card_Iioₓ'. -/
 @[simp]
 theorem card_Iio : (Iio b).card = b := by rw [Iio_eq_Ico, card_Ico, bot_eq_zero, tsub_zero]
 #align nat.card_Iio Nat.card_Iio
--/
 
-#print Nat.card_fintypeIcc /-
+/- warning: nat.card_fintype_Icc -> Nat.card_fintypeIcc is a dubious translation:
+lean 3 declaration is
+  forall (a : Nat) (b : Nat), Eq.{1} Nat (Fintype.card.{0} (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) (Set.Icc.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) a b)) (Set.fintypeIcc.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder a b)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) b (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) a)
+but is expected to have type
+  forall (a : Nat) (b : Nat), Eq.{1} Nat (Fintype.card.{0} (Set.Elem.{0} Nat (Set.Icc.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) a b)) (Set.fintypeIcc.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring a b)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) b (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) a)
+Case conversion may be inaccurate. Consider using '#align nat.card_fintype_Icc Nat.card_fintypeIccₓ'. -/
 @[simp]
 theorem card_fintypeIcc : Fintype.card (Set.Icc a b) = b + 1 - a := by
   rw [Fintype.card_ofFinset, card_Icc]
 #align nat.card_fintype_Icc Nat.card_fintypeIcc
--/
 
-#print Nat.card_fintypeIco /-
+/- warning: nat.card_fintype_Ico -> Nat.card_fintypeIco is a dubious translation:
+lean 3 declaration is
+  forall (a : Nat) (b : Nat), Eq.{1} Nat (Fintype.card.{0} (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) (Set.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) a b)) (Set.fintypeIco.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder a b)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) b a)
+but is expected to have type
+  forall (a : Nat) (b : Nat), Eq.{1} Nat (Fintype.card.{0} (Set.Elem.{0} Nat (Set.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) a b)) (Set.fintypeIco.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring a b)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) b a)
+Case conversion may be inaccurate. Consider using '#align nat.card_fintype_Ico Nat.card_fintypeIcoₓ'. -/
 @[simp]
 theorem card_fintypeIco : Fintype.card (Set.Ico a b) = b - a := by
   rw [Fintype.card_ofFinset, card_Ico]
 #align nat.card_fintype_Ico Nat.card_fintypeIco
--/
 
-#print Nat.card_fintypeIoc /-
+/- warning: nat.card_fintype_Ioc -> Nat.card_fintypeIoc is a dubious translation:
+lean 3 declaration is
+  forall (a : Nat) (b : Nat), Eq.{1} Nat (Fintype.card.{0} (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) (Set.Ioc.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) a b)) (Set.fintypeIoc.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder a b)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) b a)
+but is expected to have type
+  forall (a : Nat) (b : Nat), Eq.{1} Nat (Fintype.card.{0} (Set.Elem.{0} Nat (Set.Ioc.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) a b)) (Set.fintypeIoc.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring a b)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) b a)
+Case conversion may be inaccurate. Consider using '#align nat.card_fintype_Ioc Nat.card_fintypeIocₓ'. -/
 @[simp]
 theorem card_fintypeIoc : Fintype.card (Set.Ioc a b) = b - a := by
   rw [Fintype.card_ofFinset, card_Ioc]
 #align nat.card_fintype_Ioc Nat.card_fintypeIoc
--/
 
-#print Nat.card_fintypeIoo /-
+/- warning: nat.card_fintype_Ioo -> Nat.card_fintypeIoo is a dubious translation:
+lean 3 declaration is
+  forall (a : Nat) (b : Nat), Eq.{1} Nat (Fintype.card.{0} (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) (Set.Ioo.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) a b)) (Set.fintypeIoo.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder a b)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) b a) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))
+but is expected to have type
+  forall (a : Nat) (b : Nat), Eq.{1} Nat (Fintype.card.{0} (Set.Elem.{0} Nat (Set.Ioo.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) a b)) (Set.fintypeIoo.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring a b)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) b a) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))
+Case conversion may be inaccurate. Consider using '#align nat.card_fintype_Ioo Nat.card_fintypeIooₓ'. -/
 @[simp]
 theorem card_fintypeIoo : Fintype.card (Set.Ioo a b) = b - a - 1 := by
   rw [Fintype.card_ofFinset, card_Ioo]
 #align nat.card_fintype_Ioo Nat.card_fintypeIoo
--/
 
-#print Nat.card_fintypeIic /-
+/- warning: nat.card_fintype_Iic -> Nat.card_fintypeIic is a dubious translation:
+lean 3 declaration is
+  forall (b : Nat), Eq.{1} Nat (Fintype.card.{0} (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) (Set.Iic.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) b)) (Set.fintypeIic.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) (Finset.LocallyFiniteOrder.toLocallyFiniteOrderBot.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.orderBot Nat.locallyFiniteOrder) b)) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) b (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))
+but is expected to have type
+  forall (b : Nat), Eq.{1} Nat (Fintype.card.{0} (Set.Elem.{0} Nat (Set.Iic.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) b)) (Set.fintypeIic.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) (Finset.LocallyFiniteOrder.toLocallyFiniteOrderBot.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) Nat.orderBot instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring) b)) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) b (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))
+Case conversion may be inaccurate. Consider using '#align nat.card_fintype_Iic Nat.card_fintypeIicₓ'. -/
 @[simp]
 theorem card_fintypeIic : Fintype.card (Set.Iic b) = b + 1 := by
   rw [Fintype.card_ofFinset, card_Iic]
 #align nat.card_fintype_Iic Nat.card_fintypeIic
--/
 
-#print Nat.card_fintypeIio /-
+/- warning: nat.card_fintype_Iio -> Nat.card_fintypeIio is a dubious translation:
+lean 3 declaration is
+  forall (b : Nat), Eq.{1} Nat (Fintype.card.{0} (coeSort.{1, 2} (Set.{0} Nat) Type (Set.hasCoeToSort.{0} Nat) (Set.Iio.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) b)) (Set.fintypeIio.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) (Finset.LocallyFiniteOrder.toLocallyFiniteOrderBot.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.orderBot Nat.locallyFiniteOrder) b)) b
+but is expected to have type
+  forall (b : Nat), Eq.{1} Nat (Fintype.card.{0} (Set.Elem.{0} Nat (Set.Iio.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) b)) (Set.fintypeIio.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) (Finset.LocallyFiniteOrder.toLocallyFiniteOrderBot.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) Nat.orderBot instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring) b)) b
+Case conversion may be inaccurate. Consider using '#align nat.card_fintype_Iio Nat.card_fintypeIioₓ'. -/
 @[simp]
 theorem card_fintypeIio : Fintype.card (Set.Iio b) = b := by rw [Fintype.card_ofFinset, card_Iio]
 #align nat.card_fintype_Iio Nat.card_fintypeIio
--/
 
-#print Nat.Icc_succ_left /-
+/- warning: nat.Icc_succ_left -> Nat.Icc_succ_left is a dubious translation:
+lean 3 declaration is
+  forall (a : Nat) (b : Nat), Eq.{1} (Finset.{0} Nat) (Finset.Icc.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder (Nat.succ a) b) (Finset.Ioc.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder a b)
+but is expected to have type
+  forall (a : Nat) (b : Nat), Eq.{1} (Finset.{0} Nat) (Finset.Icc.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring (Nat.succ a) b) (Finset.Ioc.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring a b)
+Case conversion may be inaccurate. Consider using '#align nat.Icc_succ_left Nat.Icc_succ_leftₓ'. -/
 -- TODO@Yaël: Generalize all the following lemmas to `succ_order`
 theorem Icc_succ_left : Icc a.succ b = Ioc a b :=
   by
   ext x
   rw [mem_Icc, mem_Ioc, succ_le_iff]
 #align nat.Icc_succ_left Nat.Icc_succ_left
--/
 
-#print Nat.Ico_succ_right /-
+/- warning: nat.Ico_succ_right -> Nat.Ico_succ_right is a dubious translation:
+lean 3 declaration is
+  forall (a : Nat) (b : Nat), Eq.{1} (Finset.{0} Nat) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder a (Nat.succ b)) (Finset.Icc.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder a b)
+but is expected to have type
+  forall (a : Nat) (b : Nat), Eq.{1} (Finset.{0} Nat) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring a (Nat.succ b)) (Finset.Icc.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring a b)
+Case conversion may be inaccurate. Consider using '#align nat.Ico_succ_right Nat.Ico_succ_rightₓ'. -/
 theorem Ico_succ_right : Ico a b.succ = Icc a b :=
   by
   ext x
   rw [mem_Ico, mem_Icc, lt_succ_iff]
 #align nat.Ico_succ_right Nat.Ico_succ_right
--/
 
-#print Nat.Ico_succ_left /-
+/- warning: nat.Ico_succ_left -> Nat.Ico_succ_left is a dubious translation:
+lean 3 declaration is
+  forall (a : Nat) (b : Nat), Eq.{1} (Finset.{0} Nat) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder (Nat.succ a) b) (Finset.Ioo.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder a b)
+but is expected to have type
+  forall (a : Nat) (b : Nat), Eq.{1} (Finset.{0} Nat) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring (Nat.succ a) b) (Finset.Ioo.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring a b)
+Case conversion may be inaccurate. Consider using '#align nat.Ico_succ_left Nat.Ico_succ_leftₓ'. -/
 theorem Ico_succ_left : Ico a.succ b = Ioo a b :=
   by
   ext x
   rw [mem_Ico, mem_Ioo, succ_le_iff]
 #align nat.Ico_succ_left Nat.Ico_succ_left
--/
 
-#print Nat.Icc_pred_right /-
+/- warning: nat.Icc_pred_right -> Nat.Icc_pred_right is a dubious translation:
+lean 3 declaration is
+  forall (a : Nat) {b : Nat}, (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) b) -> (Eq.{1} (Finset.{0} Nat) (Finset.Icc.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder a (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) b (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder a b))
+but is expected to have type
+  forall (a : Nat) {b : Nat}, (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) b) -> (Eq.{1} (Finset.{0} Nat) (Finset.Icc.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring a (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) b (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring a b))
+Case conversion may be inaccurate. Consider using '#align nat.Icc_pred_right Nat.Icc_pred_rightₓ'. -/
 theorem Icc_pred_right {b : ℕ} (h : 0 < b) : Icc a (b - 1) = Ico a b :=
   by
   ext x
   rw [mem_Icc, mem_Ico, lt_iff_le_pred h]
 #align nat.Icc_pred_right Nat.Icc_pred_right
--/
 
-#print Nat.Ico_succ_succ /-
+/- warning: nat.Ico_succ_succ -> Nat.Ico_succ_succ is a dubious translation:
+lean 3 declaration is
+  forall (a : Nat) (b : Nat), Eq.{1} (Finset.{0} Nat) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder (Nat.succ a) (Nat.succ b)) (Finset.Ioc.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder a b)
+but is expected to have type
+  forall (a : Nat) (b : Nat), Eq.{1} (Finset.{0} Nat) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring (Nat.succ a) (Nat.succ b)) (Finset.Ioc.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring a b)
+Case conversion may be inaccurate. Consider using '#align nat.Ico_succ_succ Nat.Ico_succ_succₓ'. -/
 theorem Ico_succ_succ : Ico a.succ b.succ = Ioc a b :=
   by
   ext x
   rw [mem_Ico, mem_Ioc, succ_le_iff, lt_succ_iff]
 #align nat.Ico_succ_succ Nat.Ico_succ_succ
--/
 
-#print Nat.Ico_succ_singleton /-
+/- warning: nat.Ico_succ_singleton -> Nat.Ico_succ_singleton is a dubious translation:
+lean 3 declaration is
+  forall (a : Nat), Eq.{1} (Finset.{0} Nat) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder a (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) a (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Singleton.singleton.{0, 0} Nat (Finset.{0} Nat) (Finset.hasSingleton.{0} Nat) a)
+but is expected to have type
+  forall (a : Nat), Eq.{1} (Finset.{0} Nat) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring a (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) a (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Singleton.singleton.{0, 0} Nat (Finset.{0} Nat) (Finset.instSingletonFinset.{0} Nat) a)
+Case conversion may be inaccurate. Consider using '#align nat.Ico_succ_singleton Nat.Ico_succ_singletonₓ'. -/
 @[simp]
 theorem Ico_succ_singleton : Ico a (a + 1) = {a} := by rw [Ico_succ_right, Icc_self]
 #align nat.Ico_succ_singleton Nat.Ico_succ_singleton
--/
 
-#print Nat.Ico_pred_singleton /-
+/- warning: nat.Ico_pred_singleton -> Nat.Ico_pred_singleton is a dubious translation:
+lean 3 declaration is
+  forall {a : Nat}, (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) a) -> (Eq.{1} (Finset.{0} Nat) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) a (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) a) (Singleton.singleton.{0, 0} Nat (Finset.{0} Nat) (Finset.hasSingleton.{0} Nat) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) a (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))
+but is expected to have type
+  forall {a : Nat}, (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) a) -> (Eq.{1} (Finset.{0} Nat) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) a (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) a) (Singleton.singleton.{0, 0} Nat (Finset.{0} Nat) (Finset.instSingletonFinset.{0} Nat) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) a (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))
+Case conversion may be inaccurate. Consider using '#align nat.Ico_pred_singleton Nat.Ico_pred_singletonₓ'. -/
 @[simp]
 theorem Ico_pred_singleton {a : ℕ} (h : 0 < a) : Ico (a - 1) a = {a - 1} := by
   rw [← Icc_pred_right _ h, Icc_self]
 #align nat.Ico_pred_singleton Nat.Ico_pred_singleton
--/
 
-#print Nat.Ioc_succ_singleton /-
+/- warning: nat.Ioc_succ_singleton -> Nat.Ioc_succ_singleton is a dubious translation:
+lean 3 declaration is
+  forall (b : Nat), Eq.{1} (Finset.{0} Nat) (Finset.Ioc.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder b (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) b (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Singleton.singleton.{0, 0} Nat (Finset.{0} Nat) (Finset.hasSingleton.{0} Nat) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) b (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))
+but is expected to have type
+  forall (b : Nat), Eq.{1} (Finset.{0} Nat) (Finset.Ioc.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring b (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) b (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Singleton.singleton.{0, 0} Nat (Finset.{0} Nat) (Finset.instSingletonFinset.{0} Nat) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) b (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))
+Case conversion may be inaccurate. Consider using '#align nat.Ioc_succ_singleton Nat.Ioc_succ_singletonₓ'. -/
 @[simp]
 theorem Ioc_succ_singleton : Ioc b (b + 1) = {b + 1} := by rw [← Nat.Icc_succ_left, Icc_self]
 #align nat.Ioc_succ_singleton Nat.Ioc_succ_singleton
--/
 
 variable {a b c}
 
@@ -339,7 +447,12 @@ theorem Ico_succ_left_eq_erase_Ico : Ico a.succ b = erase (Ico a b) a :=
     lt_iff_le_and_ne]
 #align nat.Ico_succ_left_eq_erase_Ico Nat.Ico_succ_left_eq_erase_Ico
 
-#print Nat.mod_injOn_Ico /-
+/- warning: nat.mod_inj_on_Ico -> Nat.mod_injOn_Ico is a dubious translation:
+lean 3 declaration is
+  forall (n : Nat) (a : Nat), Set.InjOn.{0, 0} Nat Nat (fun (_x : Nat) => HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) _x a) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Finset.{0} Nat) (Set.{0} Nat) (HasLiftT.mk.{1, 1} (Finset.{0} Nat) (Set.{0} Nat) (CoeTCₓ.coe.{1, 1} (Finset.{0} Nat) (Set.{0} Nat) (Finset.Set.hasCoeT.{0} Nat))) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder n (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n a)))
+but is expected to have type
+  forall (n : Nat) (a : Nat), Set.InjOn.{0, 0} Nat Nat (fun (_x : Nat) => HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) _x a) (Finset.toSet.{0} Nat (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring n (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n a)))
+Case conversion may be inaccurate. Consider using '#align nat.mod_inj_on_Ico Nat.mod_injOn_Icoₓ'. -/
 theorem mod_injOn_Ico (n a : ℕ) : Set.InjOn (· % a) (Finset.Ico n (n + a)) :=
   by
   induction' n with n ih
@@ -365,7 +478,6 @@ theorem mod_injOn_Ico (n a : ℕ) : Set.InjOn (· % a) (Finset.Ico n (n + a)) :=
     simp only [lt_add_iff_pos_right, Set.left_mem_Ico, Finset.coe_Ico, ha]
   · refine' ih _ _ hkl <;> simp only [Finset.mem_coe, hk, hl]
 #align nat.mod_inj_on_Ico Nat.mod_injOn_Ico
--/
 
 /- warning: nat.image_Ico_mod -> Nat.image_Ico_mod is a dubious translation:
 lean 3 declaration is
@@ -406,14 +518,18 @@ section Multiset
 
 open Multiset
 
-#print Nat.multiset_Ico_map_mod /-
+/- warning: nat.multiset_Ico_map_mod -> Nat.multiset_Ico_map_mod is a dubious translation:
+lean 3 declaration is
+  forall (n : Nat) (a : Nat), Eq.{1} (Multiset.{0} Nat) (Multiset.map.{0, 0} Nat Nat (fun (_x : Nat) => HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) _x a) (Multiset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder n (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n a))) (Multiset.range a)
+but is expected to have type
+  forall (n : Nat) (a : Nat), Eq.{1} (Multiset.{0} Nat) (Multiset.map.{0, 0} Nat Nat (fun (_x : Nat) => HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) _x a) (Multiset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring n (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n a))) (Multiset.range a)
+Case conversion may be inaccurate. Consider using '#align nat.multiset_Ico_map_mod Nat.multiset_Ico_map_modₓ'. -/
 theorem multiset_Ico_map_mod (n a : ℕ) : (Multiset.Ico n (n + a)).map (· % a) = range a :=
   by
   convert congr_arg Finset.val (image_Ico_mod n a)
   refine' ((nodup_map_iff_inj_on (Finset.Ico _ _).Nodup).2 <| _).dedup.symm
   exact mod_inj_on_Ico _ _
 #align nat.multiset_Ico_map_mod Nat.multiset_Ico_map_mod
--/
 
 end Multiset
 

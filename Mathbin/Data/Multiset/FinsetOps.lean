@@ -76,7 +76,7 @@ theorem mem_ndinsert {a b : α} {s : Multiset α} : a ∈ ndinsert b s ↔ a = b
 
 /- warning: multiset.le_ndinsert_self -> Multiset.le_ndinsert_self is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (a : α) (s : Multiset.{u1} α), LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) s (Multiset.ndinsert.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a s)
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (a : α) (s : Multiset.{u1} α), LE.le.{u1} (Multiset.{u1} α) (Preorder.toHasLe.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) s (Multiset.ndinsert.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a s)
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (a : α) (s : Multiset.{u1} α), LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) s (Multiset.ndinsert.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a s)
 Case conversion may be inaccurate. Consider using '#align multiset.le_ndinsert_self Multiset.le_ndinsert_selfₓ'. -/
@@ -134,7 +134,7 @@ theorem Nodup.ndinsert (a : α) : Nodup s → Nodup (ndinsert a s) :=
 
 /- warning: multiset.ndinsert_le -> Multiset.ndinsert_le is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {a : α} {s : Multiset.{u1} α} {t : Multiset.{u1} α}, Iff (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) (Multiset.ndinsert.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a s) t) (And (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) s t) (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a t))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {a : α} {s : Multiset.{u1} α} {t : Multiset.{u1} α}, Iff (LE.le.{u1} (Multiset.{u1} α) (Preorder.toHasLe.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) (Multiset.ndinsert.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a s) t) (And (LE.le.{u1} (Multiset.{u1} α) (Preorder.toHasLe.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) s t) (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a t))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {a : α} {s : Multiset.{u1} α} {t : Multiset.{u1} α}, Iff (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) (Multiset.ndinsert.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a s) t) (And (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) s t) (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a t))
 Case conversion may be inaccurate. Consider using '#align multiset.ndinsert_le Multiset.ndinsert_leₓ'. -/
@@ -237,7 +237,7 @@ theorem mem_ndunion {s t : Multiset α} {a : α} : a ∈ ndunion s t ↔ a ∈ s
 
 /- warning: multiset.le_ndunion_right -> Multiset.le_ndunion_right is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Multiset.{u1} α) (t : Multiset.{u1} α), LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) t (Multiset.ndunion.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s t)
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Multiset.{u1} α) (t : Multiset.{u1} α), LE.le.{u1} (Multiset.{u1} α) (Preorder.toHasLe.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) t (Multiset.ndunion.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s t)
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Multiset.{u1} α) (t : Multiset.{u1} α), LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) t (Multiset.ndunion.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s t)
 Case conversion may be inaccurate. Consider using '#align multiset.le_ndunion_right Multiset.le_ndunion_rightₓ'. -/
@@ -253,7 +253,7 @@ theorem subset_ndunion_right (s t : Multiset α) : t ⊆ ndunion s t :=
 
 /- warning: multiset.ndunion_le_add -> Multiset.ndunion_le_add is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Multiset.{u1} α) (t : Multiset.{u1} α), LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) (Multiset.ndunion.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s t) (HAdd.hAdd.{u1, u1, u1} (Multiset.{u1} α) (Multiset.{u1} α) (Multiset.{u1} α) (instHAdd.{u1} (Multiset.{u1} α) (Multiset.hasAdd.{u1} α)) s t)
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Multiset.{u1} α) (t : Multiset.{u1} α), LE.le.{u1} (Multiset.{u1} α) (Preorder.toHasLe.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) (Multiset.ndunion.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s t) (HAdd.hAdd.{u1, u1, u1} (Multiset.{u1} α) (Multiset.{u1} α) (Multiset.{u1} α) (instHAdd.{u1} (Multiset.{u1} α) (Multiset.hasAdd.{u1} α)) s t)
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Multiset.{u1} α) (t : Multiset.{u1} α), LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) (Multiset.ndunion.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s t) (HAdd.hAdd.{u1, u1, u1} (Multiset.{u1} α) (Multiset.{u1} α) (Multiset.{u1} α) (instHAdd.{u1} (Multiset.{u1} α) (Multiset.instAddMultiset.{u1} α)) s t)
 Case conversion may be inaccurate. Consider using '#align multiset.ndunion_le_add Multiset.ndunion_le_addₓ'. -/
@@ -263,7 +263,7 @@ theorem ndunion_le_add (s t : Multiset α) : ndunion s t ≤ s + t :=
 
 /- warning: multiset.ndunion_le -> Multiset.ndunion_le is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Multiset.{u1} α} {t : Multiset.{u1} α} {u : Multiset.{u1} α}, Iff (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) (Multiset.ndunion.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s t) u) (And (HasSubset.Subset.{u1} (Multiset.{u1} α) (Multiset.hasSubset.{u1} α) s u) (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) t u))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Multiset.{u1} α} {t : Multiset.{u1} α} {u : Multiset.{u1} α}, Iff (LE.le.{u1} (Multiset.{u1} α) (Preorder.toHasLe.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) (Multiset.ndunion.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s t) u) (And (HasSubset.Subset.{u1} (Multiset.{u1} α) (Multiset.hasSubset.{u1} α) s u) (LE.le.{u1} (Multiset.{u1} α) (Preorder.toHasLe.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) t u))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Multiset.{u1} α} {t : Multiset.{u1} α} {u : Multiset.{u1} α}, Iff (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) (Multiset.ndunion.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s t) u) (And (HasSubset.Subset.{u1} (Multiset.{u1} α) (Multiset.instHasSubsetMultiset.{u1} α) s u) (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) t u))
 Case conversion may be inaccurate. Consider using '#align multiset.ndunion_le Multiset.ndunion_leₓ'. -/
@@ -280,7 +280,7 @@ theorem subset_ndunion_left (s t : Multiset α) : s ⊆ ndunion s t := fun a h =
 
 /- warning: multiset.le_ndunion_left -> Multiset.le_ndunion_left is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Multiset.{u1} α} (t : Multiset.{u1} α), (Multiset.Nodup.{u1} α s) -> (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) s (Multiset.ndunion.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s t))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Multiset.{u1} α} (t : Multiset.{u1} α), (Multiset.Nodup.{u1} α s) -> (LE.le.{u1} (Multiset.{u1} α) (Preorder.toHasLe.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) s (Multiset.ndunion.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s t))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Multiset.{u1} α} (t : Multiset.{u1} α), (Multiset.Nodup.{u1} α s) -> (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) s (Multiset.ndunion.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s t))
 Case conversion may be inaccurate. Consider using '#align multiset.le_ndunion_left Multiset.le_ndunion_leftₓ'. -/
@@ -290,7 +290,7 @@ theorem le_ndunion_left {s} (t : Multiset α) (d : Nodup s) : s ≤ ndunion s t 
 
 /- warning: multiset.ndunion_le_union -> Multiset.ndunion_le_union is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Multiset.{u1} α) (t : Multiset.{u1} α), LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) (Multiset.ndunion.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s t) (Union.union.{u1} (Multiset.{u1} α) (Multiset.hasUnion.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t)
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Multiset.{u1} α) (t : Multiset.{u1} α), LE.le.{u1} (Multiset.{u1} α) (Preorder.toHasLe.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) (Multiset.ndunion.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s t) (Union.union.{u1} (Multiset.{u1} α) (Multiset.hasUnion.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t)
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Multiset.{u1} α) (t : Multiset.{u1} α), LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) (Multiset.ndunion.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s t) (Union.union.{u1} (Multiset.{u1} α) (Multiset.instUnionMultiset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t)
 Case conversion may be inaccurate. Consider using '#align multiset.ndunion_le_union Multiset.ndunion_le_unionₓ'. -/
@@ -374,7 +374,7 @@ theorem Nodup.ndinter {s : Multiset α} (t : Multiset α) : Nodup s → Nodup (n
 
 /- warning: multiset.le_ndinter -> Multiset.le_ndinter is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Multiset.{u1} α} {t : Multiset.{u1} α} {u : Multiset.{u1} α}, Iff (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) s (Multiset.ndinter.{u1} α (fun (a : α) (b : α) => _inst_1 a b) t u)) (And (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) s t) (HasSubset.Subset.{u1} (Multiset.{u1} α) (Multiset.hasSubset.{u1} α) s u))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Multiset.{u1} α} {t : Multiset.{u1} α} {u : Multiset.{u1} α}, Iff (LE.le.{u1} (Multiset.{u1} α) (Preorder.toHasLe.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) s (Multiset.ndinter.{u1} α (fun (a : α) (b : α) => _inst_1 a b) t u)) (And (LE.le.{u1} (Multiset.{u1} α) (Preorder.toHasLe.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) s t) (HasSubset.Subset.{u1} (Multiset.{u1} α) (Multiset.hasSubset.{u1} α) s u))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Multiset.{u1} α} {t : Multiset.{u1} α} {u : Multiset.{u1} α}, Iff (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) s (Multiset.ndinter.{u1} α (fun (a : α) (b : α) => _inst_1 a b) t u)) (And (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) s t) (HasSubset.Subset.{u1} (Multiset.{u1} α) (Multiset.instHasSubsetMultiset.{u1} α) s u))
 Case conversion may be inaccurate. Consider using '#align multiset.le_ndinter Multiset.le_ndinterₓ'. -/
@@ -384,7 +384,7 @@ theorem le_ndinter {s t u : Multiset α} : s ≤ ndinter t u ↔ s ≤ t ∧ s �
 
 /- warning: multiset.ndinter_le_left -> Multiset.ndinter_le_left is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Multiset.{u1} α) (t : Multiset.{u1} α), LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) (Multiset.ndinter.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s t) s
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Multiset.{u1} α) (t : Multiset.{u1} α), LE.le.{u1} (Multiset.{u1} α) (Preorder.toHasLe.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) (Multiset.ndinter.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s t) s
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Multiset.{u1} α) (t : Multiset.{u1} α), LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) (Multiset.ndinter.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s t) s
 Case conversion may be inaccurate. Consider using '#align multiset.ndinter_le_left Multiset.ndinter_le_leftₓ'. -/
@@ -406,7 +406,7 @@ theorem ndinter_subset_right (s t : Multiset α) : ndinter s t ⊆ t :=
 
 /- warning: multiset.ndinter_le_right -> Multiset.ndinter_le_right is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Multiset.{u1} α} (t : Multiset.{u1} α), (Multiset.Nodup.{u1} α s) -> (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) (Multiset.ndinter.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s t) t)
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Multiset.{u1} α} (t : Multiset.{u1} α), (Multiset.Nodup.{u1} α s) -> (LE.le.{u1} (Multiset.{u1} α) (Preorder.toHasLe.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) (Multiset.ndinter.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s t) t)
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Multiset.{u1} α} (t : Multiset.{u1} α), (Multiset.Nodup.{u1} α s) -> (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) (Multiset.ndinter.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s t) t)
 Case conversion may be inaccurate. Consider using '#align multiset.ndinter_le_right Multiset.ndinter_le_rightₓ'. -/
@@ -416,7 +416,7 @@ theorem ndinter_le_right {s} (t : Multiset α) (d : Nodup s) : ndinter s t ≤ t
 
 /- warning: multiset.inter_le_ndinter -> Multiset.inter_le_ndinter is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Multiset.{u1} α) (t : Multiset.{u1} α), LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) (Inter.inter.{u1} (Multiset.{u1} α) (Multiset.hasInter.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t) (Multiset.ndinter.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s t)
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Multiset.{u1} α) (t : Multiset.{u1} α), LE.le.{u1} (Multiset.{u1} α) (Preorder.toHasLe.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) (Inter.inter.{u1} (Multiset.{u1} α) (Multiset.hasInter.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t) (Multiset.ndinter.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s t)
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Multiset.{u1} α) (t : Multiset.{u1} α), LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) (Inter.inter.{u1} (Multiset.{u1} α) (Multiset.instInterMultiset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t) (Multiset.ndinter.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s t)
 Case conversion may be inaccurate. Consider using '#align multiset.inter_le_ndinter Multiset.inter_le_ndinterₓ'. -/

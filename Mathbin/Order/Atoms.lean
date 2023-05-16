@@ -64,30 +64,42 @@ section Preorder
 
 variable [Preorder α] [OrderBot α] {a b x : α}
 
-#print IsAtom /-
+/- warning: is_atom -> IsAtom is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α _inst_1)], α -> Prop
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_1)], α -> Prop
+Case conversion may be inaccurate. Consider using '#align is_atom IsAtomₓ'. -/
 /-- An atom of an `order_bot` is an element with no other element between it and `⊥`,
   which is not `⊥`. -/
 def IsAtom (a : α) : Prop :=
   a ≠ ⊥ ∧ ∀ b, b < a → b = ⊥
 #align is_atom IsAtom
--/
 
-#print IsAtom.Iic /-
+/- warning: is_atom.Iic -> IsAtom.Iic is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α _inst_1)] {a : α} {x : α}, (IsAtom.{u1} α _inst_1 _inst_2 a) -> (forall (hax : LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a x), IsAtom.{u1} (Subtype.{succ u1} α (fun (x_1 : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x_1 (Set.Iic.{u1} α _inst_1 x))) (Subtype.preorder.{u1} α _inst_1 (fun (x_1 : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x_1 (Set.Iic.{u1} α _inst_1 x))) (Set.Iic.orderBot.{u1} α _inst_1 _inst_2 x) (Subtype.mk.{succ u1} α (fun (x_1 : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x_1 (Set.Iic.{u1} α _inst_1 x)) a hax))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_1)] {a : α} {x : α}, (IsAtom.{u1} α _inst_1 _inst_2 a) -> (forall (hax : LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a x), IsAtom.{u1} (Subtype.{succ u1} α (fun (x_1 : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x_1 (Set.Iic.{u1} α _inst_1 x))) (Subtype.preorder.{u1} α _inst_1 (fun (x_1 : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x_1 (Set.Iic.{u1} α _inst_1 x))) (Set.Iic.orderBot.{u1} α _inst_1 _inst_2 x) (Subtype.mk.{succ u1} α (fun (x_1 : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x_1 (Set.Iic.{u1} α _inst_1 x)) a hax))
+Case conversion may be inaccurate. Consider using '#align is_atom.Iic IsAtom.Iicₓ'. -/
 theorem IsAtom.Iic (ha : IsAtom a) (hax : a ≤ x) : IsAtom (⟨a, hax⟩ : Set.Iic x) :=
   ⟨fun con => ha.1 (Subtype.mk_eq_mk.1 Con), fun ⟨b, hb⟩ hba => Subtype.mk_eq_mk.2 (ha.2 b hba)⟩
 #align is_atom.Iic IsAtom.Iic
--/
 
-#print IsAtom.of_isAtom_coe_Iic /-
+/- warning: is_atom.of_is_atom_coe_Iic -> IsAtom.of_isAtom_coe_Iic is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α _inst_1)] {x : α} {a : coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Iic.{u1} α _inst_1 x)}, (IsAtom.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Iic.{u1} α _inst_1 x)) (Subtype.preorder.{u1} α _inst_1 (fun (x_1 : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x_1 (Set.Iic.{u1} α _inst_1 x))) (Set.Iic.orderBot.{u1} α _inst_1 _inst_2 x) a) -> (IsAtom.{u1} α _inst_1 _inst_2 ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Iic.{u1} α _inst_1 x)) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Iic.{u1} α _inst_1 x)) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Iic.{u1} α _inst_1 x)) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Iic.{u1} α _inst_1 x)) α (coeSubtype.{succ u1} α (fun (x_1 : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x_1 (Set.Iic.{u1} α _inst_1 x)))))) a))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_1)] {x : α} {a : Set.Elem.{u1} α (Set.Iic.{u1} α _inst_1 x)}, (IsAtom.{u1} (Set.Elem.{u1} α (Set.Iic.{u1} α _inst_1 x)) (Subtype.preorder.{u1} α _inst_1 (fun (x_1 : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x_1 (Set.Iic.{u1} α _inst_1 x))) (Set.Iic.orderBot.{u1} α _inst_1 _inst_2 x) a) -> (IsAtom.{u1} α _inst_1 _inst_2 (Subtype.val.{succ u1} α (fun (x_1 : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x_1 (Set.Iic.{u1} α _inst_1 x)) a))
+Case conversion may be inaccurate. Consider using '#align is_atom.of_is_atom_coe_Iic IsAtom.of_isAtom_coe_Iicₓ'. -/
 theorem IsAtom.of_isAtom_coe_Iic {a : Set.Iic x} (ha : IsAtom a) : IsAtom (a : α) :=
   ⟨fun con => ha.1 (Subtype.ext Con), fun b hba =>
     Subtype.mk_eq_mk.1 (ha.2 ⟨b, hba.le.trans a.Prop⟩ hba)⟩
 #align is_atom.of_is_atom_coe_Iic IsAtom.of_isAtom_coe_Iic
--/
 
 /- warning: is_atom_iff -> isAtom_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_1)] {a : α}, Iff (IsAtom.{u1} α _inst_1 _inst_2 a) (And (Ne.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2))) (forall (b : α), (Ne.{succ u1} α b (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2))) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) b a) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a b)))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α _inst_1)] {a : α}, Iff (IsAtom.{u1} α _inst_1 _inst_2 a) (And (Ne.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α _inst_1) _inst_2))) (forall (b : α), (Ne.{succ u1} α b (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α _inst_1) _inst_2))) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) b a) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a b)))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_1)] {a : α}, Iff (IsAtom.{u1} α _inst_1 _inst_2 a) (And (Ne.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2))) (forall (b : α), (Ne.{succ u1} α b (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2))) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) b a) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a b)))
 Case conversion may be inaccurate. Consider using '#align is_atom_iff isAtom_iffₓ'. -/
@@ -103,7 +115,7 @@ variable [PartialOrder α] [OrderBot α] {a b x : α}
 
 /- warning: is_atom.lt_iff -> IsAtom.lt_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α} {x : α}, (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) -> (Iff (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x a) (Eq.{succ u1} α x (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))))
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α} {x : α}, (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) -> (Iff (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x a) (Eq.{succ u1} α x (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α} {x : α}, (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) -> (Iff (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x a) (Eq.{succ u1} α x (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))))
 Case conversion may be inaccurate. Consider using '#align is_atom.lt_iff IsAtom.lt_iffₓ'. -/
@@ -113,7 +125,7 @@ theorem IsAtom.lt_iff (h : IsAtom a) : x < a ↔ x = ⊥ :=
 
 /- warning: is_atom.le_iff -> IsAtom.le_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α} {x : α}, (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) -> (Iff (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x a) (Or (Eq.{succ u1} α x (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))) (Eq.{succ u1} α x a)))
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α} {x : α}, (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) -> (Iff (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x a) (Or (Eq.{succ u1} α x (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))) (Eq.{succ u1} α x a)))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α} {x : α}, (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) -> (Iff (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x a) (Or (Eq.{succ u1} α x (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))) (Eq.{succ u1} α x a)))
 Case conversion may be inaccurate. Consider using '#align is_atom.le_iff IsAtom.le_iffₓ'. -/
@@ -122,7 +134,7 @@ theorem IsAtom.le_iff (h : IsAtom a) : x ≤ a ↔ x = ⊥ ∨ x = a := by rw [l
 
 /- warning: is_atom.Iic_eq -> IsAtom.Iic_eq is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) -> (Eq.{succ u1} (Set.{u1} α) (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a) (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.hasInsert.{u1} α) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a)))
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) -> (Eq.{succ u1} (Set.{u1} α) (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a) (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.hasInsert.{u1} α) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a)))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) -> (Eq.{succ u1} (Set.{u1} α) (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a) (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.instInsertSet.{u1} α) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) a)))
 Case conversion may be inaccurate. Consider using '#align is_atom.Iic_eq IsAtom.Iic_eqₓ'. -/
@@ -132,7 +144,7 @@ theorem IsAtom.Iic_eq (h : IsAtom a) : Set.Iic a = {⊥, a} :=
 
 /- warning: bot_covby_iff -> bot_covby_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, Iff (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)) a) (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a)
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, Iff (Covby.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)) a) (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a)
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, Iff (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)) a) (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a)
 Case conversion may be inaccurate. Consider using '#align bot_covby_iff bot_covby_iffₓ'. -/
@@ -143,13 +155,13 @@ theorem bot_covby_iff : ⊥ ⋖ a ↔ IsAtom a := by
 
 /- warning: covby.is_atom -> Covby.is_atom is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)) a) -> (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a)
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (Covby.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)) a) -> (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a)
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)) a) -> (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a)
 Case conversion may be inaccurate. Consider using '#align covby.is_atom Covby.is_atomₓ'. -/
 /- warning: is_atom.bot_covby -> IsAtom.bot_covby is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) -> (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)) a)
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) -> (Covby.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)) a)
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) -> (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)) a)
 Case conversion may be inaccurate. Consider using '#align is_atom.bot_covby IsAtom.bot_covbyₓ'. -/
@@ -165,51 +177,83 @@ section Preorder
 
 variable [Preorder α]
 
-#print IsCoatom /-
+/- warning: is_coatom -> IsCoatom is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toHasLe.{u1} α _inst_1)], α -> Prop
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α _inst_1)], α -> Prop
+Case conversion may be inaccurate. Consider using '#align is_coatom IsCoatomₓ'. -/
 /-- A coatom of an `order_top` is an element with no other element between it and `⊤`,
   which is not `⊤`. -/
 def IsCoatom [OrderTop α] (a : α) : Prop :=
   a ≠ ⊤ ∧ ∀ b, a < b → b = ⊤
 #align is_coatom IsCoatom
--/
 
-#print isCoatom_dual_iff_isAtom /-
+/- warning: is_coatom_dual_iff_is_atom -> isCoatom_dual_iff_isAtom is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α _inst_1)] {a : α}, Iff (IsCoatom.{u1} (OrderDual.{u1} α) (OrderDual.preorder.{u1} α _inst_1) (OrderDual.orderTop.{u1} α (Preorder.toHasLe.{u1} α _inst_1) _inst_2) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) => α -> (OrderDual.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} α (OrderDual.{u1} α)) (OrderDual.toDual.{u1} α) a)) (IsAtom.{u1} α _inst_1 _inst_2 a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_1)] {a : α}, Iff (IsCoatom.{u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => OrderDual.{u1} α) a) (OrderDual.preorder.{u1} α _inst_1) (OrderDual.orderTop.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => OrderDual.{u1} α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α (OrderDual.{u1} α)) (OrderDual.toDual.{u1} α) a)) (IsAtom.{u1} α _inst_1 _inst_2 a)
+Case conversion may be inaccurate. Consider using '#align is_coatom_dual_iff_is_atom isCoatom_dual_iff_isAtomₓ'. -/
 @[simp]
 theorem isCoatom_dual_iff_isAtom [OrderBot α] {a : α} : IsCoatom (OrderDual.toDual a) ↔ IsAtom a :=
   Iff.rfl
 #align is_coatom_dual_iff_is_atom isCoatom_dual_iff_isAtom
--/
 
-#print isAtom_dual_iff_isCoatom /-
+/- warning: is_atom_dual_iff_is_coatom -> isAtom_dual_iff_isCoatom is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toHasLe.{u1} α _inst_1)] {a : α}, Iff (IsAtom.{u1} (OrderDual.{u1} α) (OrderDual.preorder.{u1} α _inst_1) (OrderDual.orderBot.{u1} α (Preorder.toHasLe.{u1} α _inst_1) _inst_2) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) => α -> (OrderDual.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} α (OrderDual.{u1} α)) (OrderDual.toDual.{u1} α) a)) (IsCoatom.{u1} α _inst_1 _inst_2 a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α _inst_1)] {a : α}, Iff (IsAtom.{u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => OrderDual.{u1} α) a) (OrderDual.preorder.{u1} α _inst_1) (OrderDual.orderBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => OrderDual.{u1} α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α (OrderDual.{u1} α)) (OrderDual.toDual.{u1} α) a)) (IsCoatom.{u1} α _inst_1 _inst_2 a)
+Case conversion may be inaccurate. Consider using '#align is_atom_dual_iff_is_coatom isAtom_dual_iff_isCoatomₓ'. -/
 @[simp]
 theorem isAtom_dual_iff_isCoatom [OrderTop α] {a : α} : IsAtom (OrderDual.toDual a) ↔ IsCoatom a :=
   Iff.rfl
 #align is_atom_dual_iff_is_coatom isAtom_dual_iff_isCoatom
--/
 
+/- warning: is_atom.dual -> IsAtom.dual is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α _inst_1)] {a : α}, (IsAtom.{u1} α _inst_1 _inst_2 a) -> (IsCoatom.{u1} (OrderDual.{u1} α) (OrderDual.preorder.{u1} α _inst_1) (OrderDual.orderTop.{u1} α (Preorder.toHasLe.{u1} α _inst_1) _inst_2) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) => α -> (OrderDual.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} α (OrderDual.{u1} α)) (OrderDual.toDual.{u1} α) a))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_1)] {a : α}, (IsAtom.{u1} α _inst_1 _inst_2 a) -> (IsCoatom.{u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => OrderDual.{u1} α) a) (OrderDual.preorder.{u1} α _inst_1) (OrderDual.orderTop.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => OrderDual.{u1} α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α (OrderDual.{u1} α)) (OrderDual.toDual.{u1} α) a))
+Case conversion may be inaccurate. Consider using '#align is_atom.dual IsAtom.dualₓ'. -/
 alias isCoatom_dual_iff_isAtom ↔ _ IsAtom.dual
 #align is_atom.dual IsAtom.dual
 
+/- warning: is_coatom.dual -> IsCoatom.dual is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toHasLe.{u1} α _inst_1)] {a : α}, (IsCoatom.{u1} α _inst_1 _inst_2 a) -> (IsAtom.{u1} (OrderDual.{u1} α) (OrderDual.preorder.{u1} α _inst_1) (OrderDual.orderBot.{u1} α (Preorder.toHasLe.{u1} α _inst_1) _inst_2) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) => α -> (OrderDual.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} α (OrderDual.{u1} α)) (OrderDual.toDual.{u1} α) a))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α _inst_1)] {a : α}, (IsCoatom.{u1} α _inst_1 _inst_2 a) -> (IsAtom.{u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => OrderDual.{u1} α) a) (OrderDual.preorder.{u1} α _inst_1) (OrderDual.orderBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => OrderDual.{u1} α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α (OrderDual.{u1} α)) (OrderDual.toDual.{u1} α) a))
+Case conversion may be inaccurate. Consider using '#align is_coatom.dual IsCoatom.dualₓ'. -/
 alias isAtom_dual_iff_isCoatom ↔ _ IsCoatom.dual
 #align is_coatom.dual IsCoatom.dual
 
 variable [OrderTop α] {a x : α}
 
-#print IsCoatom.Ici /-
+/- warning: is_coatom.Ici -> IsCoatom.Ici is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toHasLe.{u1} α _inst_1)] {a : α} {x : α}, (IsCoatom.{u1} α _inst_1 _inst_2 a) -> (forall (hax : LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) x a), IsCoatom.{u1} (Subtype.{succ u1} α (fun (x_1 : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x_1 (Set.Ici.{u1} α _inst_1 x))) (Subtype.preorder.{u1} α _inst_1 (fun (x_1 : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x_1 (Set.Ici.{u1} α _inst_1 x))) (Set.Ici.orderTop.{u1} α _inst_1 _inst_2 x) (Subtype.mk.{succ u1} α (fun (x_1 : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x_1 (Set.Ici.{u1} α _inst_1 x)) a hax))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α _inst_1)] {a : α} {x : α}, (IsCoatom.{u1} α _inst_1 _inst_2 a) -> (forall (hax : LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x a), IsCoatom.{u1} (Subtype.{succ u1} α (fun (x_1 : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x_1 (Set.Ici.{u1} α _inst_1 x))) (Subtype.preorder.{u1} α _inst_1 (fun (x_1 : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x_1 (Set.Ici.{u1} α _inst_1 x))) (Set.Ici.orderTop.{u1} α _inst_1 _inst_2 x) (Subtype.mk.{succ u1} α (fun (x_1 : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x_1 (Set.Ici.{u1} α _inst_1 x)) a hax))
+Case conversion may be inaccurate. Consider using '#align is_coatom.Ici IsCoatom.Iciₓ'. -/
 theorem IsCoatom.Ici (ha : IsCoatom a) (hax : x ≤ a) : IsCoatom (⟨a, hax⟩ : Set.Ici x) :=
   ha.dual.Iic hax
 #align is_coatom.Ici IsCoatom.Ici
--/
 
-#print IsCoatom.of_isCoatom_coe_Ici /-
+/- warning: is_coatom.of_is_coatom_coe_Ici -> IsCoatom.of_isCoatom_coe_Ici is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toHasLe.{u1} α _inst_1)] {x : α} {a : coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ici.{u1} α _inst_1 x)}, (IsCoatom.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ici.{u1} α _inst_1 x)) (Subtype.preorder.{u1} α _inst_1 (fun (x_1 : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x_1 (Set.Ici.{u1} α _inst_1 x))) (Set.Ici.orderTop.{u1} α _inst_1 _inst_2 x) a) -> (IsCoatom.{u1} α _inst_1 _inst_2 ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ici.{u1} α _inst_1 x)) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ici.{u1} α _inst_1 x)) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ici.{u1} α _inst_1 x)) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ici.{u1} α _inst_1 x)) α (coeSubtype.{succ u1} α (fun (x_1 : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x_1 (Set.Ici.{u1} α _inst_1 x)))))) a))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α _inst_1)] {x : α} {a : Set.Elem.{u1} α (Set.Ici.{u1} α _inst_1 x)}, (IsCoatom.{u1} (Set.Elem.{u1} α (Set.Ici.{u1} α _inst_1 x)) (Subtype.preorder.{u1} α _inst_1 (fun (x_1 : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x_1 (Set.Ici.{u1} α _inst_1 x))) (Set.Ici.orderTop.{u1} α _inst_1 _inst_2 x) a) -> (IsCoatom.{u1} α _inst_1 _inst_2 (Subtype.val.{succ u1} α (fun (x_1 : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x_1 (Set.Ici.{u1} α _inst_1 x)) a))
+Case conversion may be inaccurate. Consider using '#align is_coatom.of_is_coatom_coe_Ici IsCoatom.of_isCoatom_coe_Iciₓ'. -/
 theorem IsCoatom.of_isCoatom_coe_Ici {a : Set.Ici x} (ha : IsCoatom a) : IsCoatom (a : α) :=
   @IsAtom.of_isAtom_coe_Iic αᵒᵈ _ _ x a ha
 #align is_coatom.of_is_coatom_coe_Ici IsCoatom.of_isCoatom_coe_Ici
--/
 
 /- warning: is_coatom_iff -> isCoatom_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α _inst_1)] {a : α}, Iff (IsCoatom.{u1} α _inst_1 _inst_2 a) (And (Ne.{succ u1} α a (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2))) (forall (b : α), (Ne.{succ u1} α b (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2))) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a b) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) b a)))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toHasLe.{u1} α _inst_1)] {a : α}, Iff (IsCoatom.{u1} α _inst_1 _inst_2 a) (And (Ne.{succ u1} α a (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toHasLe.{u1} α _inst_1) _inst_2))) (forall (b : α), (Ne.{succ u1} α b (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toHasLe.{u1} α _inst_1) _inst_2))) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a b) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) b a)))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α _inst_1)] {a : α}, Iff (IsCoatom.{u1} α _inst_1 _inst_2 a) (And (Ne.{succ u1} α a (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2))) (forall (b : α), (Ne.{succ u1} α b (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2))) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a b) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) b a)))
 Case conversion may be inaccurate. Consider using '#align is_coatom_iff isCoatom_iffₓ'. -/
@@ -224,7 +268,7 @@ variable [PartialOrder α] [OrderTop α] {a b x : α}
 
 /- warning: is_coatom.lt_iff -> IsCoatom.lt_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α} {x : α}, (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) -> (Iff (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a x) (Eq.{succ u1} α x (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))))
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α} {x : α}, (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) -> (Iff (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a x) (Eq.{succ u1} α x (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α} {x : α}, (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) -> (Iff (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a x) (Eq.{succ u1} α x (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))))
 Case conversion may be inaccurate. Consider using '#align is_coatom.lt_iff IsCoatom.lt_iffₓ'. -/
@@ -234,7 +278,7 @@ theorem IsCoatom.lt_iff (h : IsCoatom a) : a < x ↔ x = ⊤ :=
 
 /- warning: is_coatom.le_iff -> IsCoatom.le_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α} {x : α}, (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) -> (Iff (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a x) (Or (Eq.{succ u1} α x (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))) (Eq.{succ u1} α x a)))
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α} {x : α}, (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) -> (Iff (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a x) (Or (Eq.{succ u1} α x (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))) (Eq.{succ u1} α x a)))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α} {x : α}, (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) -> (Iff (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a x) (Or (Eq.{succ u1} α x (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))) (Eq.{succ u1} α x a)))
 Case conversion may be inaccurate. Consider using '#align is_coatom.le_iff IsCoatom.le_iffₓ'. -/
@@ -244,7 +288,7 @@ theorem IsCoatom.le_iff (h : IsCoatom a) : a ≤ x ↔ x = ⊤ ∨ x = a :=
 
 /- warning: is_coatom.Ici_eq -> IsCoatom.Ici_eq is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) -> (Eq.{succ u1} (Set.{u1} α) (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a) (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.hasInsert.{u1} α) (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a)))
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) -> (Eq.{succ u1} (Set.{u1} α) (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a) (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.hasInsert.{u1} α) (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a)))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) -> (Eq.{succ u1} (Set.{u1} α) (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a) (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.instInsertSet.{u1} α) (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) a)))
 Case conversion may be inaccurate. Consider using '#align is_coatom.Ici_eq IsCoatom.Ici_eqₓ'. -/
@@ -254,7 +298,7 @@ theorem IsCoatom.Ici_eq (h : IsCoatom a) : Set.Ici a = {⊤, a} :=
 
 /- warning: covby_top_iff -> covby_top_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, Iff (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))) (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a)
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, Iff (Covby.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))) (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a)
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, Iff (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))) (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a)
 Case conversion may be inaccurate. Consider using '#align covby_top_iff covby_top_iffₓ'. -/
@@ -265,13 +309,13 @@ theorem covby_top_iff : a ⋖ ⊤ ↔ IsCoatom a :=
 
 /- warning: covby.is_coatom -> Covby.is_coatom is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))) -> (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a)
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (Covby.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))) -> (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a)
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))) -> (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a)
 Case conversion may be inaccurate. Consider using '#align covby.is_coatom Covby.is_coatomₓ'. -/
 /- warning: is_coatom.covby_top -> IsCoatom.covby_top is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) -> (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) -> (Covby.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) -> (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))
 Case conversion may be inaccurate. Consider using '#align is_coatom.covby_top IsCoatom.covby_topₓ'. -/
@@ -285,7 +329,12 @@ section PartialOrder
 
 variable [PartialOrder α] {a b : α}
 
-#print Set.Ici.isAtom_iff /-
+/- warning: set.Ici.is_atom_iff -> Set.Ici.isAtom_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a)}, Iff (IsAtom.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a)) (Subtype.preorder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a))) (Set.Ici.orderBot.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a) b) (Covby.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a)) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a)) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a)) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a)) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a)))))) b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : Set.Elem.{u1} α (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a)}, Iff (IsAtom.{u1} (Set.Elem.{u1} α (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a)) (Subtype.preorder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a))) (Set.Ici.orderBot.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a) b) (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a (Subtype.val.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a)) b))
+Case conversion may be inaccurate. Consider using '#align set.Ici.is_atom_iff Set.Ici.isAtom_iffₓ'. -/
 @[simp]
 theorem Set.Ici.isAtom_iff {b : Set.Ici a} : IsAtom b ↔ a ⋖ b :=
   by
@@ -293,9 +342,13 @@ theorem Set.Ici.isAtom_iff {b : Set.Ici a} : IsAtom b ↔ a ⋖ b :=
   refine' (Set.OrdConnected.apply_covby_apply_iff (OrderEmbedding.subtype fun c => a ≤ c) _).symm
   simpa only [OrderEmbedding.subtype_apply, Subtype.range_coe_subtype] using Set.ordConnected_Ici
 #align set.Ici.is_atom_iff Set.Ici.isAtom_iff
--/
 
-#print Set.Iic.isCoatom_iff /-
+/- warning: set.Iic.is_coatom_iff -> Set.Iic.isCoatom_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {b : α} {a : coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) b)}, Iff (IsCoatom.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) b)) (Subtype.preorder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) b))) (Set.Iic.orderTop.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) b) a) (Covby.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) b)) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) b)) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) b)) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) b)) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) b)))))) a) b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {b : α} {a : Set.Elem.{u1} α (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) b)}, Iff (IsCoatom.{u1} (Set.Elem.{u1} α (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) b)) (Subtype.preorder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) b))) (Set.Iic.orderTop.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) b) a) (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Subtype.val.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) b)) a) b)
+Case conversion may be inaccurate. Consider using '#align set.Iic.is_coatom_iff Set.Iic.isCoatom_iffₓ'. -/
 @[simp]
 theorem Set.Iic.isCoatom_iff {a : Set.Iic b} : IsCoatom a ↔ ↑a ⋖ b :=
   by
@@ -303,17 +356,24 @@ theorem Set.Iic.isCoatom_iff {a : Set.Iic b} : IsCoatom a ↔ ↑a ⋖ b :=
   refine' (Set.OrdConnected.apply_covby_apply_iff (OrderEmbedding.subtype fun c => c ≤ b) _).symm
   simpa only [OrderEmbedding.subtype_apply, Subtype.range_coe_subtype] using Set.ordConnected_Iic
 #align set.Iic.is_coatom_iff Set.Iic.isCoatom_iff
--/
 
-#print covby_iff_atom_Ici /-
+/- warning: covby_iff_atom_Ici -> covby_iff_atom_Ici is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α} (h : LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b), Iff (Covby.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) (IsAtom.{u1} (Subtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a))) (Subtype.preorder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a))) (Set.Ici.orderBot.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a) (Subtype.mk.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a)) b h))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α} (h : LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b), Iff (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) (IsAtom.{u1} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a))) (Subtype.preorder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a))) (Set.Ici.orderBot.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a) (Subtype.mk.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a)) b h))
+Case conversion may be inaccurate. Consider using '#align covby_iff_atom_Ici covby_iff_atom_Iciₓ'. -/
 theorem covby_iff_atom_Ici (h : a ≤ b) : a ⋖ b ↔ IsAtom (⟨b, h⟩ : Set.Ici a) := by simp
 #align covby_iff_atom_Ici covby_iff_atom_Ici
--/
 
-#print covby_iff_coatom_Iic /-
+/- warning: covby_iff_coatom_Iic -> covby_iff_coatom_Iic is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α} (h : LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b), Iff (Covby.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) (IsCoatom.{u1} (Subtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) b))) (Subtype.preorder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) b))) (Set.Iic.orderTop.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) b) (Subtype.mk.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) b)) a h))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α} (h : LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b), Iff (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) (IsCoatom.{u1} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) b))) (Subtype.preorder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) b))) (Set.Iic.orderTop.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) b) (Subtype.mk.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) b)) a h))
+Case conversion may be inaccurate. Consider using '#align covby_iff_coatom_Iic covby_iff_coatom_Iicₓ'. -/
 theorem covby_iff_coatom_Iic (h : a ≤ b) : a ⋖ b ↔ IsCoatom (⟨a, h⟩ : Set.Iic b) := by simp
 #align covby_iff_coatom_Iic covby_iff_coatom_Iic
--/
 
 end PartialOrder
 
@@ -321,7 +381,7 @@ section Pairwise
 
 /- warning: is_atom.inf_eq_bot_of_ne -> IsAtom.inf_eq_bot_of_ne is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {a : α} {b : α}, (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)) _inst_2 a) -> (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)) _inst_2 b) -> (Ne.{succ u1} α a b) -> (Eq.{succ u1} α (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α _inst_1) a b) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) _inst_2)))
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {a : α} {b : α}, (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)) _inst_2 a) -> (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)) _inst_2 b) -> (Ne.{succ u1} α a b) -> (Eq.{succ u1} α (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α _inst_1) a b) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) _inst_2)))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {a : α} {b : α}, (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)) _inst_2 a) -> (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)) _inst_2 b) -> (Ne.{succ u1} α a b) -> (Eq.{succ u1} α (Inf.inf.{u1} α (SemilatticeInf.toInf.{u1} α _inst_1) a b) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) _inst_2)))
 Case conversion may be inaccurate. Consider using '#align is_atom.inf_eq_bot_of_ne IsAtom.inf_eq_bot_of_neₓ'. -/
@@ -330,16 +390,20 @@ theorem IsAtom.inf_eq_bot_of_ne [SemilatticeInf α] [OrderBot α] {a b : α} (ha
   hab.not_le_or_not_le.elim (ha.lt_iff.1 ∘ inf_lt_left.2) (hb.lt_iff.1 ∘ inf_lt_right.2)
 #align is_atom.inf_eq_bot_of_ne IsAtom.inf_eq_bot_of_ne
 
-#print IsAtom.disjoint_of_ne /-
+/- warning: is_atom.disjoint_of_ne -> IsAtom.disjoint_of_ne is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {a : α} {b : α}, (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)) _inst_2 a) -> (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)) _inst_2 b) -> (Ne.{succ u1} α a b) -> (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1) _inst_2 a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {a : α} {b : α}, (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)) _inst_2 a) -> (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)) _inst_2 b) -> (Ne.{succ u1} α a b) -> (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1) _inst_2 a b)
+Case conversion may be inaccurate. Consider using '#align is_atom.disjoint_of_ne IsAtom.disjoint_of_neₓ'. -/
 theorem IsAtom.disjoint_of_ne [SemilatticeInf α] [OrderBot α] {a b : α} (ha : IsAtom a)
     (hb : IsAtom b) (hab : a ≠ b) : Disjoint a b :=
   disjoint_iff.mpr (IsAtom.inf_eq_bot_of_ne ha hb hab)
 #align is_atom.disjoint_of_ne IsAtom.disjoint_of_ne
--/
 
 /- warning: is_coatom.sup_eq_top_of_ne -> IsCoatom.sup_eq_top_of_ne is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))] {a : α} {b : α}, (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) _inst_2 a) -> (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) _inst_2 b) -> (Ne.{succ u1} α a b) -> (Eq.{succ u1} α (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α _inst_1) a b) (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) _inst_2)))
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))] {a : α} {b : α}, (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) _inst_2 a) -> (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) _inst_2 b) -> (Ne.{succ u1} α a b) -> (Eq.{succ u1} α (Sup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α _inst_1) a b) (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) _inst_2)))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))] {a : α} {b : α}, (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) _inst_2 a) -> (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) _inst_2 b) -> (Ne.{succ u1} α a b) -> (Eq.{succ u1} α (Sup.sup.{u1} α (SemilatticeSup.toSup.{u1} α _inst_1) a b) (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) _inst_2)))
 Case conversion may be inaccurate. Consider using '#align is_coatom.sup_eq_top_of_ne IsCoatom.sup_eq_top_of_neₓ'. -/
@@ -356,21 +420,29 @@ section Atomic
 
 variable [PartialOrder α] (α)
 
-#print IsAtomic /-
+/- warning: is_atomic -> IsAtomic is a dubious translation:
+lean 3 declaration is
+  forall (α : Type.{u1}) [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))], Prop
+but is expected to have type
+  forall (α : Type.{u1}) [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))], Prop
+Case conversion may be inaccurate. Consider using '#align is_atomic IsAtomicₓ'. -/
 /-- A lattice is atomic iff every element other than `⊥` has an atom below it. -/
 @[mk_iff]
 class IsAtomic [OrderBot α] : Prop where
   eq_bot_or_exists_atom_le : ∀ b : α, b = ⊥ ∨ ∃ a : α, IsAtom a ∧ a ≤ b
 #align is_atomic IsAtomic
--/
 
-#print IsCoatomic /-
+/- warning: is_coatomic -> IsCoatomic is a dubious translation:
+lean 3 declaration is
+  forall (α : Type.{u1}) [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))], Prop
+but is expected to have type
+  forall (α : Type.{u1}) [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))], Prop
+Case conversion may be inaccurate. Consider using '#align is_coatomic IsCoatomicₓ'. -/
 /-- A lattice is coatomic iff every element other than `⊤` has a coatom above it. -/
 @[mk_iff]
 class IsCoatomic [OrderTop α] : Prop where
   eq_top_or_exists_le_coatom : ∀ b : α, b = ⊤ ∨ ∃ a : α, IsCoatom a ∧ b ≤ a
 #align is_coatomic IsCoatomic
--/
 
 export IsAtomic (eq_bot_or_exists_atom_le)
 
@@ -378,31 +450,43 @@ export IsCoatomic (eq_top_or_exists_le_coatom)
 
 variable {α}
 
-#print isCoatomic_dual_iff_isAtomic /-
+/- warning: is_coatomic_dual_iff_is_atomic -> isCoatomic_dual_iff_isAtomic is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))], Iff (IsCoatomic.{u1} (OrderDual.{u1} α) (OrderDual.partialOrder.{u1} α _inst_1) (OrderDual.orderTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)) (IsAtomic.{u1} α _inst_1 _inst_2)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))], Iff (IsCoatomic.{u1} (OrderDual.{u1} α) (OrderDual.partialOrder.{u1} α _inst_1) (OrderDual.orderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)) (IsAtomic.{u1} α _inst_1 _inst_2)
+Case conversion may be inaccurate. Consider using '#align is_coatomic_dual_iff_is_atomic isCoatomic_dual_iff_isAtomicₓ'. -/
 @[simp]
 theorem isCoatomic_dual_iff_isAtomic [OrderBot α] : IsCoatomic αᵒᵈ ↔ IsAtomic α :=
   ⟨fun h => ⟨fun b => by apply h.eq_top_or_exists_le_coatom⟩, fun h =>
     ⟨fun b => by apply h.eq_bot_or_exists_atom_le⟩⟩
 #align is_coatomic_dual_iff_is_atomic isCoatomic_dual_iff_isAtomic
--/
 
-#print isAtomic_dual_iff_isCoatomic /-
+/- warning: is_atomic_dual_iff_is_coatomic -> isAtomic_dual_iff_isCoatomic is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))], Iff (IsAtomic.{u1} (OrderDual.{u1} α) (OrderDual.partialOrder.{u1} α _inst_1) (OrderDual.orderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)) (IsCoatomic.{u1} α _inst_1 _inst_2)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))], Iff (IsAtomic.{u1} (OrderDual.{u1} α) (OrderDual.partialOrder.{u1} α _inst_1) (OrderDual.orderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)) (IsCoatomic.{u1} α _inst_1 _inst_2)
+Case conversion may be inaccurate. Consider using '#align is_atomic_dual_iff_is_coatomic isAtomic_dual_iff_isCoatomicₓ'. -/
 @[simp]
 theorem isAtomic_dual_iff_isCoatomic [OrderTop α] : IsAtomic αᵒᵈ ↔ IsCoatomic α :=
   ⟨fun h => ⟨fun b => by apply h.eq_bot_or_exists_atom_le⟩, fun h =>
     ⟨fun b => by apply h.eq_top_or_exists_le_coatom⟩⟩
 #align is_atomic_dual_iff_is_coatomic isAtomic_dual_iff_isCoatomic
--/
 
 namespace IsAtomic
 
 variable [OrderBot α] [IsAtomic α]
 
-#print IsAtomic.isCoatomic_dual /-
+/- warning: is_atomic.is_coatomic_dual -> IsAtomic.isCoatomic_dual is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_3 : IsAtomic.{u1} α _inst_1 _inst_2], IsCoatomic.{u1} (OrderDual.{u1} α) (OrderDual.partialOrder.{u1} α _inst_1) (OrderDual.orderTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_3 : IsAtomic.{u1} α _inst_1 _inst_2], IsCoatomic.{u1} (OrderDual.{u1} α) (OrderDual.partialOrder.{u1} α _inst_1) (OrderDual.orderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)
+Case conversion may be inaccurate. Consider using '#align is_atomic.is_coatomic_dual IsAtomic.isCoatomic_dualₓ'. -/
 instance isCoatomic_dual : IsCoatomic αᵒᵈ :=
   isCoatomic_dual_iff_isAtomic.2 ‹IsAtomic α›
 #align is_atomic.is_coatomic_dual IsAtomic.isCoatomic_dual
--/
 
 instance {x : α} : IsAtomic (Set.Iic x) :=
   ⟨fun ⟨y, hy⟩ =>
@@ -415,11 +499,15 @@ namespace IsCoatomic
 
 variable [OrderTop α] [IsCoatomic α]
 
-#print IsCoatomic.isCoatomic /-
+/- warning: is_coatomic.is_coatomic -> IsCoatomic.isCoatomic is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_3 : IsCoatomic.{u1} α _inst_1 _inst_2], IsAtomic.{u1} (OrderDual.{u1} α) (OrderDual.partialOrder.{u1} α _inst_1) (OrderDual.orderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_3 : IsCoatomic.{u1} α _inst_1 _inst_2], IsAtomic.{u1} (OrderDual.{u1} α) (OrderDual.partialOrder.{u1} α _inst_1) (OrderDual.orderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)
+Case conversion may be inaccurate. Consider using '#align is_coatomic.is_coatomic IsCoatomic.isCoatomicₓ'. -/
 instance isCoatomic : IsAtomic αᵒᵈ :=
   isAtomic_dual_iff_isCoatomic.2 ‹IsCoatomic α›
 #align is_coatomic.is_coatomic IsCoatomic.isCoatomic
--/
 
 instance {x : α} : IsCoatomic (Set.Ici x) :=
   ⟨fun ⟨y, hy⟩ =>
@@ -428,7 +516,12 @@ instance {x : α} : IsCoatomic (Set.Ici x) :=
 
 end IsCoatomic
 
-#print isAtomic_iff_forall_isAtomic_Iic /-
+/- warning: is_atomic_iff_forall_is_atomic_Iic -> isAtomic_iff_forall_isAtomic_Iic is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))], Iff (IsAtomic.{u1} α _inst_1 _inst_2) (forall (x : α), IsAtomic.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) x)) (Subtype.partialOrder.{u1} α _inst_1 (fun (x_1 : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x_1 (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) x))) (Set.Iic.orderBot.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 x))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))], Iff (IsAtomic.{u1} α _inst_1 _inst_2) (forall (x : α), IsAtomic.{u1} (Set.Elem.{u1} α (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) x)) (Subtype.partialOrder.{u1} α _inst_1 (fun (x_1 : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x_1 (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) x))) (Set.Iic.orderBot.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 x))
+Case conversion may be inaccurate. Consider using '#align is_atomic_iff_forall_is_atomic_Iic isAtomic_iff_forall_isAtomic_Iicₓ'. -/
 theorem isAtomic_iff_forall_isAtomic_Iic [OrderBot α] :
     IsAtomic α ↔ ∀ x : α, IsAtomic (Set.Iic x) :=
   ⟨@IsAtomic.Set.Iic.isAtomic _ _ _, fun h =>
@@ -436,20 +529,28 @@ theorem isAtomic_iff_forall_isAtomic_Iic [OrderBot α] :
       ((@eq_bot_or_exists_atom_le _ _ _ (h x)) (⊤ : Set.Iic x)).imp Subtype.mk_eq_mk.1
         (Exists.imp' coe fun ⟨a, ha⟩ => And.imp_left IsAtom.of_isAtom_coe_Iic)⟩⟩
 #align is_atomic_iff_forall_is_atomic_Iic isAtomic_iff_forall_isAtomic_Iic
--/
 
-#print isCoatomic_iff_forall_isCoatomic_Ici /-
+/- warning: is_coatomic_iff_forall_is_coatomic_Ici -> isCoatomic_iff_forall_isCoatomic_Ici is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))], Iff (IsCoatomic.{u1} α _inst_1 _inst_2) (forall (x : α), IsCoatomic.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) x)) (Subtype.partialOrder.{u1} α _inst_1 (fun (x_1 : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x_1 (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) x))) (Set.Ici.orderTop.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 x))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))], Iff (IsCoatomic.{u1} α _inst_1 _inst_2) (forall (x : α), IsCoatomic.{u1} (Set.Elem.{u1} α (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) x)) (Subtype.partialOrder.{u1} α _inst_1 (fun (x_1 : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x_1 (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) x))) (Set.Ici.orderTop.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 x))
+Case conversion may be inaccurate. Consider using '#align is_coatomic_iff_forall_is_coatomic_Ici isCoatomic_iff_forall_isCoatomic_Iciₓ'. -/
 theorem isCoatomic_iff_forall_isCoatomic_Ici [OrderTop α] :
     IsCoatomic α ↔ ∀ x : α, IsCoatomic (Set.Ici x) :=
   isAtomic_dual_iff_isCoatomic.symm.trans <|
     isAtomic_iff_forall_isAtomic_Iic.trans <|
       forall_congr' fun x => isCoatomic_dual_iff_isAtomic.symm.trans Iff.rfl
 #align is_coatomic_iff_forall_is_coatomic_Ici isCoatomic_iff_forall_isCoatomic_Ici
--/
 
 section WellFounded
 
-#print isAtomic_of_orderBot_wellFounded_lt /-
+/- warning: is_atomic_of_order_bot_well_founded_lt -> isAtomic_of_orderBot_wellFounded_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))], (WellFounded.{succ u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)))) -> (IsAtomic.{u1} α _inst_1 _inst_2)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))], (WellFounded.{succ u1} α (fun (x._@.Mathlib.Order.Atoms._hyg.1887 : α) (x._@.Mathlib.Order.Atoms._hyg.1889 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x._@.Mathlib.Order.Atoms._hyg.1887 x._@.Mathlib.Order.Atoms._hyg.1889)) -> (IsAtomic.{u1} α _inst_1 _inst_2)
+Case conversion may be inaccurate. Consider using '#align is_atomic_of_order_bot_well_founded_lt isAtomic_of_orderBot_wellFounded_ltₓ'. -/
 theorem isAtomic_of_orderBot_wellFounded_lt [OrderBot α]
     (h : WellFounded ((· < ·) : α → α → Prop)) : IsAtomic α :=
   ⟨fun a =>
@@ -457,14 +558,17 @@ theorem isAtomic_of_orderBot_wellFounded_lt [OrderBot α]
       let ⟨b, hb, hm⟩ := h.has_min { b | b ≠ ⊥ ∧ b ≤ a } ⟨a, ha, le_rfl⟩
       ⟨b, ⟨hb.1, fun c => not_imp_not.1 fun hc hl => hm c ⟨hc, hl.le.trans hb.2⟩ hl⟩, hb.2⟩⟩
 #align is_atomic_of_order_bot_well_founded_lt isAtomic_of_orderBot_wellFounded_lt
--/
 
-#print isCoatomic_of_orderTop_gt_wellFounded /-
+/- warning: is_coatomic_of_order_top_gt_well_founded -> isCoatomic_of_orderTop_gt_wellFounded is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))], (WellFounded.{succ u1} α (GT.gt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)))) -> (IsCoatomic.{u1} α _inst_1 _inst_2)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))], (WellFounded.{succ u1} α (fun (x._@.Mathlib.Order.Atoms._hyg.2010 : α) (x._@.Mathlib.Order.Atoms._hyg.2012 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x._@.Mathlib.Order.Atoms._hyg.2010 x._@.Mathlib.Order.Atoms._hyg.2012)) -> (IsCoatomic.{u1} α _inst_1 _inst_2)
+Case conversion may be inaccurate. Consider using '#align is_coatomic_of_order_top_gt_well_founded isCoatomic_of_orderTop_gt_wellFoundedₓ'. -/
 theorem isCoatomic_of_orderTop_gt_wellFounded [OrderTop α]
     (h : WellFounded ((· > ·) : α → α → Prop)) : IsCoatomic α :=
   isAtomic_dual_iff_isCoatomic.1 (@isAtomic_of_orderBot_wellFounded_lt αᵒᵈ _ _ h)
 #align is_coatomic_of_order_top_gt_well_founded isCoatomic_of_orderTop_gt_wellFounded
--/
 
 end WellFounded
 
@@ -533,7 +637,7 @@ variable [IsAtomistic α]
 
 /- warning: Sup_atoms_le_eq -> sSup_atoms_le_eq is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsAtomistic.{u1} α _inst_1] (b : α), Eq.{succ u1} α (SupSet.sSup.{u1} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) (setOf.{u1} α (fun (a : α) => And (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) a b)))) b
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsAtomistic.{u1} α _inst_1] (b : α), Eq.{succ u1} α (SupSet.sSup.{u1} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) (setOf.{u1} α (fun (a : α) => And (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a) (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) a b)))) b
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsAtomistic.{u1} α _inst_1] (b : α), Eq.{succ u1} α (SupSet.sSup.{u1} α (CompleteLattice.toSupSet.{u1} α _inst_1) (setOf.{u1} α (fun (a : α) => And (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) a b)))) b
 Case conversion may be inaccurate. Consider using '#align Sup_atoms_le_eq sSup_atoms_le_eqₓ'. -/
@@ -546,7 +650,7 @@ theorem sSup_atoms_le_eq (b : α) : sSup { a : α | IsAtom a ∧ a ≤ b } = b :
 
 /- warning: Sup_atoms_eq_top -> sSup_atoms_eq_top is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsAtomistic.{u1} α _inst_1], Eq.{succ u1} α (SupSet.sSup.{u1} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) (setOf.{u1} α (fun (a : α) => IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a))) (Top.top.{u1} α (CompleteLattice.toHasTop.{u1} α _inst_1))
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsAtomistic.{u1} α _inst_1], Eq.{succ u1} α (SupSet.sSup.{u1} α (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) (setOf.{u1} α (fun (a : α) => IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a))) (Top.top.{u1} α (CompleteLattice.toHasTop.{u1} α _inst_1))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsAtomistic.{u1} α _inst_1], Eq.{succ u1} α (SupSet.sSup.{u1} α (CompleteLattice.toSupSet.{u1} α _inst_1) (setOf.{u1} α (fun (a : α) => IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) a))) (Top.top.{u1} α (CompleteLattice.toTop.{u1} α _inst_1))
 Case conversion may be inaccurate. Consider using '#align Sup_atoms_eq_top sSup_atoms_eq_topₓ'. -/
@@ -557,14 +661,18 @@ theorem sSup_atoms_eq_top : sSup { a : α | IsAtom a } = ⊤ :=
   exact (and_iff_left le_top).symm
 #align Sup_atoms_eq_top sSup_atoms_eq_top
 
-#print le_iff_atom_le_imp /-
+/- warning: le_iff_atom_le_imp -> le_iff_atom_le_imp is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsAtomistic.{u1} α _inst_1] {a : α} {b : α}, Iff (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) a b) (forall (c : α), (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) c) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) c a) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) c b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : IsAtomistic.{u1} α _inst_1] {a : α} {b : α}, Iff (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) a b) (forall (c : α), (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) c) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) c a) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) c b))
+Case conversion may be inaccurate. Consider using '#align le_iff_atom_le_imp le_iff_atom_le_impₓ'. -/
 theorem le_iff_atom_le_imp {a b : α} : a ≤ b ↔ ∀ c : α, IsAtom c → c ≤ a → c ≤ b :=
   ⟨fun ab c hc ca => le_trans ca ab, fun h =>
     by
     rw [← sSup_atoms_le_eq a, ← sSup_atoms_le_eq b]
     exact sSup_le_sSup fun c hc => ⟨hc.1, h c hc.1 hc.2⟩⟩
 #align le_iff_atom_le_imp le_iff_atom_le_imp
--/
 
 end IsAtomistic
 
@@ -649,7 +757,12 @@ protected def IsSimpleOrder.preorder {α} [LE α] [BoundedOrder α] [IsSimpleOrd
 #align is_simple_order.preorder IsSimpleOrder.preorder
 -/
 
-#print IsSimpleOrder.linearOrder /-
+/- warning: is_simple_order.linear_order -> IsSimpleOrder.linearOrder is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_3 : IsSimpleOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2] [_inst_4 : DecidableEq.{succ u1} α], LinearOrder.{u1} α
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_3 : IsSimpleOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2] [_inst_4 : DecidableEq.{succ u1} α], LinearOrder.{u1} α
+Case conversion may be inaccurate. Consider using '#align is_simple_order.linear_order IsSimpleOrder.linearOrderₓ'. -/
 /-- A simple partial ordered `bounded_order` induces a linear order.
 This is not an instance to prevent loops. -/
 protected def IsSimpleOrder.linearOrder [DecidableEq α] : LinearOrder α :=
@@ -667,11 +780,10 @@ protected def IsSimpleOrder.linearOrder [DecidableEq α] : LinearOrder α :=
             hb (top_unique (le_trans (top_le_iff.mpr (Or.resolve_left (eq_bot_or_eq_top a) ha)) H))
     DecidableEq := by assumption }
 #align is_simple_order.linear_order IsSimpleOrder.linearOrder
--/
 
 /- warning: is_atom_top -> isAtom_top is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_3 : IsSimpleOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2], IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2) (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (BoundedOrder.toOrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_3 : IsSimpleOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2], IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) (BoundedOrder.toOrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2) (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (BoundedOrder.toOrderTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_3 : IsSimpleOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2], IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2) (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (BoundedOrder.toOrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))
 Case conversion may be inaccurate. Consider using '#align is_atom_top isAtom_topₓ'. -/
@@ -682,7 +794,7 @@ theorem isAtom_top : IsAtom (⊤ : α) :=
 
 /- warning: is_coatom_bot -> isCoatom_bot is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_3 : IsSimpleOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2], IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) (BoundedOrder.toOrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_3 : IsSimpleOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2], IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) (BoundedOrder.toOrderTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_3 : IsSimpleOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2], IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) (BoundedOrder.toOrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))
 Case conversion may be inaccurate. Consider using '#align is_coatom_bot isCoatom_botₓ'. -/
@@ -693,7 +805,7 @@ theorem isCoatom_bot : IsCoatom (⊥ : α) :=
 
 /- warning: bot_covby_top -> bot_covby_top is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_3 : IsSimpleOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2], Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))) (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (BoundedOrder.toOrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_3 : IsSimpleOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2], Covby.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))) (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (BoundedOrder.toOrderTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_3 : IsSimpleOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2], Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))) (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (BoundedOrder.toOrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))
 Case conversion may be inaccurate. Consider using '#align bot_covby_top bot_covby_topₓ'. -/
@@ -711,7 +823,7 @@ variable [Preorder α] [BoundedOrder α] [IsSimpleOrder α] {a b : α} (h : a < 
 
 /- warning: is_simple_order.eq_bot_of_lt -> IsSimpleOrder.eq_bot_of_lt is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α _inst_1)] [_inst_3 : IsSimpleOrder.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2] {a : α} {b : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) a b) -> (Eq.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α _inst_1) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2))))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toHasLe.{u1} α _inst_1)] [_inst_3 : IsSimpleOrder.{u1} α (Preorder.toHasLe.{u1} α _inst_1) _inst_2] {a : α} {b : α}, (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a b) -> (Eq.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α _inst_1) (BoundedOrder.toOrderBot.{u1} α (Preorder.toHasLe.{u1} α _inst_1) _inst_2))))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α _inst_1)] [_inst_3 : IsSimpleOrder.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2] {a : α} {b : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) a b) -> (Eq.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α _inst_1) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2))))
 Case conversion may be inaccurate. Consider using '#align is_simple_order.eq_bot_of_lt IsSimpleOrder.eq_bot_of_ltₓ'. -/
@@ -721,7 +833,7 @@ theorem eq_bot_of_lt : a = ⊥ :=
 
 /- warning: is_simple_order.eq_top_of_lt -> IsSimpleOrder.eq_top_of_lt is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α _inst_1)] [_inst_3 : IsSimpleOrder.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2] {a : α} {b : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) a b) -> (Eq.{succ u1} α b (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α _inst_1) (BoundedOrder.toOrderTop.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2))))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toHasLe.{u1} α _inst_1)] [_inst_3 : IsSimpleOrder.{u1} α (Preorder.toHasLe.{u1} α _inst_1) _inst_2] {a : α} {b : α}, (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a b) -> (Eq.{succ u1} α b (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toHasLe.{u1} α _inst_1) (BoundedOrder.toOrderTop.{u1} α (Preorder.toHasLe.{u1} α _inst_1) _inst_2))))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α _inst_1)] [_inst_3 : IsSimpleOrder.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2] {a : α} {b : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) a b) -> (Eq.{succ u1} α b (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α _inst_1) (BoundedOrder.toOrderTop.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2))))
 Case conversion may be inaccurate. Consider using '#align is_simple_order.eq_top_of_lt IsSimpleOrder.eq_top_of_ltₓ'. -/
@@ -741,23 +853,31 @@ section BoundedOrder
 
 variable [Lattice α] [BoundedOrder α] [IsSimpleOrder α]
 
-#print IsSimpleOrder.lattice /-
+/- warning: is_simple_order.lattice -> IsSimpleOrder.lattice is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_4 : DecidableEq.{succ u1} α] [_inst_5 : PartialOrder.{u1} α] [_inst_6 : BoundedOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_5))] [_inst_7 : IsSimpleOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_5)) _inst_6], Lattice.{u1} α
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_4 : DecidableEq.{succ u1} α] [_inst_5 : PartialOrder.{u1} α] [_inst_6 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_5))] [_inst_7 : IsSimpleOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_5)) _inst_6], Lattice.{u1} α
+Case conversion may be inaccurate. Consider using '#align is_simple_order.lattice IsSimpleOrder.latticeₓ'. -/
 /-- A simple partial ordered `bounded_order` induces a lattice.
 This is not an instance to prevent loops -/
 protected def lattice {α} [DecidableEq α] [PartialOrder α] [BoundedOrder α] [IsSimpleOrder α] :
     Lattice α :=
   @LinearOrder.toLattice α IsSimpleOrder.linearOrder
 #align is_simple_order.lattice IsSimpleOrder.lattice
--/
 
-#print IsSimpleOrder.distribLattice /-
+/- warning: is_simple_order.distrib_lattice -> IsSimpleOrder.distribLattice is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] [_inst_3 : IsSimpleOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2], DistribLattice.{u1} α
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] [_inst_3 : IsSimpleOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2], DistribLattice.{u1} α
+Case conversion may be inaccurate. Consider using '#align is_simple_order.distrib_lattice IsSimpleOrder.distribLatticeₓ'. -/
 /-- A lattice that is a `bounded_order` is a distributive lattice.
 This is not an instance to prevent loops -/
 protected def distribLattice : DistribLattice α :=
   { (inferInstance : Lattice α) with
     le_sup_inf := fun x y z => by rcases eq_bot_or_eq_top x with (rfl | rfl) <;> simp }
 #align is_simple_order.distrib_lattice IsSimpleOrder.distribLattice
--/
 
 -- see Note [lower instance priority]
 instance (priority := 100) : IsAtomic α :=
@@ -788,7 +908,7 @@ def equivBool {α} [DecidableEq α] [LE α] [BoundedOrder α] [IsSimpleOrder α]
 
 /- warning: is_simple_order.order_iso_bool -> IsSimpleOrder.orderIsoBool is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : PartialOrder.{u1} α] [_inst_3 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2))] [_inst_4 : IsSimpleOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) _inst_3], OrderIso.{u1, 0} α Bool (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) (Preorder.toLE.{0} Bool (PartialOrder.toPreorder.{0} Bool (SemilatticeInf.toPartialOrder.{0} Bool (Lattice.toSemilatticeInf.{0} Bool (GeneralizedCoheytingAlgebra.toLattice.{0} Bool (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{0} Bool (BooleanAlgebra.toGeneralizedBooleanAlgebra.{0} Bool Bool.booleanAlgebra)))))))
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : PartialOrder.{u1} α] [_inst_3 : BoundedOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2))] [_inst_4 : IsSimpleOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) _inst_3], OrderIso.{u1, 0} α Bool (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) (Preorder.toHasLe.{0} Bool (PartialOrder.toPreorder.{0} Bool (SemilatticeInf.toPartialOrder.{0} Bool (Lattice.toSemilatticeInf.{0} Bool (GeneralizedCoheytingAlgebra.toLattice.{0} Bool (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{0} Bool (BooleanAlgebra.toGeneralizedBooleanAlgebra.{0} Bool Bool.booleanAlgebra)))))))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : PartialOrder.{u1} α] [_inst_3 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2))] [_inst_4 : IsSimpleOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) _inst_3], OrderIso.{u1, 0} α Bool (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) (Preorder.toLE.{0} Bool (PartialOrder.toPreorder.{0} Bool (SemilatticeInf.toPartialOrder.{0} Bool (Lattice.toSemilatticeInf.{0} Bool (GeneralizedCoheytingAlgebra.toLattice.{0} Bool (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{0} Bool (BiheytingAlgebra.toCoheytingAlgebra.{0} Bool (BooleanAlgebra.toBiheytingAlgebra.{0} Bool instBooleanAlgebraBool))))))))
 Case conversion may be inaccurate. Consider using '#align is_simple_order.order_iso_bool IsSimpleOrder.orderIsoBoolₓ'. -/
@@ -804,7 +924,12 @@ def orderIsoBool : α ≃o Bool :=
         · simp [bot_ne_top] }
 #align is_simple_order.order_iso_bool IsSimpleOrder.orderIsoBool
 
-#print IsSimpleOrder.booleanAlgebra /-
+/- warning: is_simple_order.boolean_algebra -> IsSimpleOrder.booleanAlgebra is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_5 : DecidableEq.{succ u1} α] [_inst_6 : Lattice.{u1} α] [_inst_7 : BoundedOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_6))))] [_inst_8 : IsSimpleOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_6)))) _inst_7], BooleanAlgebra.{u1} α
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_5 : DecidableEq.{succ u1} α] [_inst_6 : Lattice.{u1} α] [_inst_7 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_6))))] [_inst_8 : IsSimpleOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_6)))) _inst_7], BooleanAlgebra.{u1} α
+Case conversion may be inaccurate. Consider using '#align is_simple_order.boolean_algebra IsSimpleOrder.booleanAlgebraₓ'. -/
 /-- A simple `bounded_order` is also a `boolean_algebra`. -/
 protected def booleanAlgebra {α} [DecidableEq α] [Lattice α] [BoundedOrder α] [IsSimpleOrder α] :
     BooleanAlgebra α :=
@@ -822,7 +947,6 @@ protected def booleanAlgebra {α} [DecidableEq α] [Lattice α] [BoundedOrder α
         split_ifs with h h <;> simp [h]
     top_le_sup_compl := fun x => by rcases eq_bot_or_eq_top x with (rfl | rfl) <;> simp }
 #align is_simple_order.boolean_algebra IsSimpleOrder.booleanAlgebra
--/
 
 end DecidableEq
 
@@ -830,7 +954,12 @@ variable [Lattice α] [BoundedOrder α] [IsSimpleOrder α]
 
 open Classical
 
-#print IsSimpleOrder.completeLattice /-
+/- warning: is_simple_order.complete_lattice -> IsSimpleOrder.completeLattice is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] [_inst_3 : IsSimpleOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2], CompleteLattice.{u1} α
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] [_inst_3 : IsSimpleOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2], CompleteLattice.{u1} α
+Case conversion may be inaccurate. Consider using '#align is_simple_order.complete_lattice IsSimpleOrder.completeLatticeₓ'. -/
 /-- A simple `bounded_order` is also complete. -/
 protected noncomputable def completeLattice : CompleteLattice α :=
   { (inferInstance : Lattice α),
@@ -859,9 +988,13 @@ protected noncomputable def completeLattice : CompleteLattice α :=
         intro con
         exact top_ne_bot (eq_bot_iff.2 (h ⊥ Con)) }
 #align is_simple_order.complete_lattice IsSimpleOrder.completeLattice
--/
 
-#print IsSimpleOrder.completeBooleanAlgebra /-
+/- warning: is_simple_order.complete_boolean_algebra -> IsSimpleOrder.completeBooleanAlgebra is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] [_inst_3 : IsSimpleOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2], CompleteBooleanAlgebra.{u1} α
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] [_inst_3 : IsSimpleOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2], CompleteBooleanAlgebra.{u1} α
+Case conversion may be inaccurate. Consider using '#align is_simple_order.complete_boolean_algebra IsSimpleOrder.completeBooleanAlgebraₓ'. -/
 /-- A simple `bounded_order` is also a `complete_boolean_algebra`. -/
 protected noncomputable def completeBooleanAlgebra : CompleteBooleanAlgebra α :=
   { IsSimpleOrder.completeLattice,
@@ -879,7 +1012,6 @@ protected noncomputable def completeBooleanAlgebra : CompleteBooleanAlgebra α :
       · simp only [top_inf_eq, ← sSup_eq_iSup]
         exact le_rfl }
 #align is_simple_order.complete_boolean_algebra IsSimpleOrder.completeBooleanAlgebra
--/
 
 end IsSimpleOrder
 
@@ -905,7 +1037,7 @@ end IsSimpleOrder
 
 /- warning: is_simple_order_iff_is_atom_top -> isSimpleOrder_iff_isAtom_top is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))], Iff (IsSimpleOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2) (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2) (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (BoundedOrder.toOrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))))
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))], Iff (IsSimpleOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2) (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) (BoundedOrder.toOrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2) (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (BoundedOrder.toOrderTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))], Iff (IsSimpleOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2) (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2) (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (BoundedOrder.toOrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))))
 Case conversion may be inaccurate. Consider using '#align is_simple_order_iff_is_atom_top isSimpleOrder_iff_isAtom_topₓ'. -/
@@ -918,7 +1050,7 @@ theorem isSimpleOrder_iff_isAtom_top [PartialOrder α] [BoundedOrder α] :
 
 /- warning: is_simple_order_iff_is_coatom_bot -> isSimpleOrder_iff_isCoatom_bot is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))], Iff (IsSimpleOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2) (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) (BoundedOrder.toOrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))))
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))], Iff (IsSimpleOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2) (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) (BoundedOrder.toOrderTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))], Iff (IsSimpleOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2) (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) (BoundedOrder.toOrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))))
 Case conversion may be inaccurate. Consider using '#align is_simple_order_iff_is_coatom_bot isSimpleOrder_iff_isCoatom_botₓ'. -/
@@ -931,7 +1063,7 @@ namespace Set
 
 /- warning: set.is_simple_order_Iic_iff_is_atom -> Set.isSimpleOrder_Iic_iff_isAtom is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, Iff (IsSimpleOrder.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a)) (Subtype.hasLe.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a))) (Set.Iic.boundedOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a)) (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a)
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, Iff (IsSimpleOrder.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a)) (Subtype.hasLe.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a))) (Set.Iic.boundedOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a)) (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a)
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, Iff (IsSimpleOrder.{u1} (Set.Elem.{u1} α (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a)) (Subtype.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a))) (Set.Iic.instBoundedOrderElemIicLeToLEMemSetInstMembershipSet.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a)) (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a)
 Case conversion may be inaccurate. Consider using '#align set.is_simple_order_Iic_iff_is_atom Set.isSimpleOrder_Iic_iff_isAtomₓ'. -/
@@ -943,7 +1075,12 @@ theorem isSimpleOrder_Iic_iff_isAtom [PartialOrder α] [OrderBot α] {a : α} :
         Subtype.mk_eq_mk.2 (h b (Subtype.mk_lt_mk.1 hbotb))⟩
 #align set.is_simple_order_Iic_iff_is_atom Set.isSimpleOrder_Iic_iff_isAtom
 
-#print Set.isSimpleOrder_Ici_iff_isCoatom /-
+/- warning: set.is_simple_order_Ici_iff_is_coatom -> Set.isSimpleOrder_Ici_iff_isCoatom is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, Iff (IsSimpleOrder.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a)) (Subtype.hasLe.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a))) (Set.Ici.boundedOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a)) (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, Iff (IsSimpleOrder.{u1} (Set.Elem.{u1} α (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a)) (Subtype.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a))) (Set.Ici.boundedOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a)) (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a)
+Case conversion may be inaccurate. Consider using '#align set.is_simple_order_Ici_iff_is_coatom Set.isSimpleOrder_Ici_iff_isCoatomₓ'. -/
 theorem isSimpleOrder_Ici_iff_isCoatom [PartialOrder α] [OrderTop α] {a : α} :
     IsSimpleOrder (Ici a) ↔ IsCoatom a :=
   isSimpleOrder_iff_isCoatom_bot.trans <|
@@ -951,7 +1088,6 @@ theorem isSimpleOrder_Ici_iff_isCoatom [PartialOrder α] [OrderTop α] {a : α} 
       ⟨fun h b ab => Subtype.mk_eq_mk.1 (h ⟨b, le_of_lt ab⟩ ab), fun h ⟨b, hab⟩ hbotb =>
         Subtype.mk_eq_mk.2 (h b (Subtype.mk_lt_mk.1 hbotb))⟩
 #align set.is_simple_order_Ici_iff_is_coatom Set.isSimpleOrder_Ici_iff_isCoatom
--/
 
 end Set
 
@@ -961,7 +1097,7 @@ variable [PartialOrder α] [PartialOrder β]
 
 /- warning: order_embedding.is_atom_of_map_bot_of_image -> OrderEmbedding.isAtom_of_map_bot_of_image is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : OrderBot.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))] (f : OrderEmbedding.{u2, u1} β α (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))), (Eq.{succ u1} α (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (OrderEmbedding.{u2, u1} β α (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) (fun (_x : RelEmbedding.{u2, u1} β α (LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)))) => β -> α) (RelEmbedding.hasCoeToFun.{u2, u1} β α (LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)))) f (Bot.bot.{u2} β (OrderBot.toHasBot.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) _inst_4))) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_3))) -> (forall {b : β}, (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (OrderEmbedding.{u2, u1} β α (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) (fun (_x : RelEmbedding.{u2, u1} β α (LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)))) => β -> α) (RelEmbedding.hasCoeToFun.{u2, u1} β α (LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)))) f b)) -> (IsAtom.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2) _inst_4 b))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : OrderBot.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))] (f : OrderEmbedding.{u2, u1} β α (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))), (Eq.{succ u1} α (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (OrderEmbedding.{u2, u1} β α (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) (fun (_x : RelEmbedding.{u2, u1} β α (LE.le.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))) (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)))) => β -> α) (RelEmbedding.hasCoeToFun.{u2, u1} β α (LE.le.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))) (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)))) f (Bot.bot.{u2} β (OrderBot.toHasBot.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) _inst_4))) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_3))) -> (forall {b : β}, (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (OrderEmbedding.{u2, u1} β α (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) (fun (_x : RelEmbedding.{u2, u1} β α (LE.le.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))) (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)))) => β -> α) (RelEmbedding.hasCoeToFun.{u2, u1} β α (LE.le.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))) (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)))) f b)) -> (IsAtom.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2) _inst_4 b))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : PartialOrder.{u1} β] [_inst_3 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))] [_inst_4 : OrderBot.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2))] (f : OrderEmbedding.{u1, u2} β α (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))), (Eq.{succ u2} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : β) => α) (Bot.bot.{u1} β (OrderBot.toBot.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) _inst_4))) (FunLike.coe.{max (succ u2) (succ u1), succ u1, succ u2} (OrderEmbedding.{u1, u2} β α (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))) β (fun (_x : β) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : β) => α) _x) (RelHomClass.toFunLike.{max u2 u1, u1, u2} (OrderEmbedding.{u1, u2} β α (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))) β α (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) (RelEmbedding.instRelHomClassRelEmbedding.{u1, u2} β α (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697))) f (Bot.bot.{u1} β (OrderBot.toBot.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) _inst_4))) (Bot.bot.{u2} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : β) => α) (Bot.bot.{u1} β (OrderBot.toBot.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) _inst_4))) (OrderBot.toBot.{u2} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : β) => α) (Bot.bot.{u1} β (OrderBot.toBot.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) _inst_4))) (Preorder.toLE.{u2} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : β) => α) (Bot.bot.{u1} β (OrderBot.toBot.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) _inst_4))) (PartialOrder.toPreorder.{u2} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : β) => α) (Bot.bot.{u1} β (OrderBot.toBot.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) _inst_4))) _inst_1)) _inst_3))) -> (forall {b : β}, (IsAtom.{u2} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : β) => α) b) (PartialOrder.toPreorder.{u2} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : β) => α) b) _inst_1) _inst_3 (FunLike.coe.{max (succ u2) (succ u1), succ u1, succ u2} (OrderEmbedding.{u1, u2} β α (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))) β (fun (_x : β) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : β) => α) _x) (RelHomClass.toFunLike.{max u2 u1, u1, u2} (OrderEmbedding.{u1, u2} β α (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))) β α (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) (RelEmbedding.instRelHomClassRelEmbedding.{u1, u2} β α (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697))) f b)) -> (IsAtom.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2) _inst_4 b))
 Case conversion may be inaccurate. Consider using '#align order_embedding.is_atom_of_map_bot_of_image OrderEmbedding.isAtom_of_map_bot_of_imageₓ'. -/
@@ -974,7 +1110,7 @@ theorem isAtom_of_map_bot_of_image [OrderBot α] [OrderBot β] (f : β ↪o α) 
 
 /- warning: order_embedding.is_coatom_of_map_top_of_image -> OrderEmbedding.isCoatom_of_map_top_of_image is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : OrderTop.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))] (f : OrderEmbedding.{u2, u1} β α (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))), (Eq.{succ u1} α (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (OrderEmbedding.{u2, u1} β α (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) (fun (_x : RelEmbedding.{u2, u1} β α (LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)))) => β -> α) (RelEmbedding.hasCoeToFun.{u2, u1} β α (LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)))) f (Top.top.{u2} β (OrderTop.toHasTop.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) _inst_4))) (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_3))) -> (forall {b : β}, (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (OrderEmbedding.{u2, u1} β α (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) (fun (_x : RelEmbedding.{u2, u1} β α (LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)))) => β -> α) (RelEmbedding.hasCoeToFun.{u2, u1} β α (LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)))) f b)) -> (IsCoatom.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2) _inst_4 b))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : OrderTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : OrderTop.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))] (f : OrderEmbedding.{u2, u1} β α (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))), (Eq.{succ u1} α (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (OrderEmbedding.{u2, u1} β α (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) (fun (_x : RelEmbedding.{u2, u1} β α (LE.le.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))) (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)))) => β -> α) (RelEmbedding.hasCoeToFun.{u2, u1} β α (LE.le.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))) (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)))) f (Top.top.{u2} β (OrderTop.toHasTop.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) _inst_4))) (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_3))) -> (forall {b : β}, (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (OrderEmbedding.{u2, u1} β α (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) (fun (_x : RelEmbedding.{u2, u1} β α (LE.le.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))) (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)))) => β -> α) (RelEmbedding.hasCoeToFun.{u2, u1} β α (LE.le.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))) (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)))) f b)) -> (IsCoatom.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2) _inst_4 b))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : PartialOrder.{u1} β] [_inst_3 : OrderTop.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))] [_inst_4 : OrderTop.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2))] (f : OrderEmbedding.{u1, u2} β α (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))), (Eq.{succ u2} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : β) => α) (Top.top.{u1} β (OrderTop.toTop.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) _inst_4))) (FunLike.coe.{max (succ u2) (succ u1), succ u1, succ u2} (OrderEmbedding.{u1, u2} β α (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))) β (fun (_x : β) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : β) => α) _x) (RelHomClass.toFunLike.{max u2 u1, u1, u2} (OrderEmbedding.{u1, u2} β α (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))) β α (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) (RelEmbedding.instRelHomClassRelEmbedding.{u1, u2} β α (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697))) f (Top.top.{u1} β (OrderTop.toTop.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) _inst_4))) (Top.top.{u2} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : β) => α) (Top.top.{u1} β (OrderTop.toTop.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) _inst_4))) (OrderTop.toTop.{u2} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : β) => α) (Top.top.{u1} β (OrderTop.toTop.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) _inst_4))) (Preorder.toLE.{u2} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : β) => α) (Top.top.{u1} β (OrderTop.toTop.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) _inst_4))) (PartialOrder.toPreorder.{u2} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : β) => α) (Top.top.{u1} β (OrderTop.toTop.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) _inst_4))) _inst_1)) _inst_3))) -> (forall {b : β}, (IsCoatom.{u2} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : β) => α) b) (PartialOrder.toPreorder.{u2} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : β) => α) b) _inst_1) _inst_3 (FunLike.coe.{max (succ u2) (succ u1), succ u1, succ u2} (OrderEmbedding.{u1, u2} β α (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))) β (fun (_x : β) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : β) => α) _x) (RelHomClass.toFunLike.{max u2 u1, u1, u2} (OrderEmbedding.{u1, u2} β α (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))) β α (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) (RelEmbedding.instRelHomClassRelEmbedding.{u1, u2} β α (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697))) f b)) -> (IsCoatom.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2) _inst_4 b))
 Case conversion may be inaccurate. Consider using '#align order_embedding.is_coatom_of_map_top_of_image OrderEmbedding.isCoatom_of_map_top_of_imageₓ'. -/
@@ -991,7 +1127,7 @@ variable [PartialOrder α] [PartialOrder β]
 
 /- warning: galois_insertion.is_atom_of_u_bot -> GaloisInsertion.isAtom_of_u_bot is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : OrderBot.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))] {l : α -> β} {u : β -> α}, (GaloisInsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2) l u) -> (Eq.{succ u1} α (u (Bot.bot.{u2} β (OrderBot.toHasBot.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) _inst_4))) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_3))) -> (forall {b : β}, (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 (u b)) -> (IsAtom.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2) _inst_4 b))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : OrderBot.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))] {l : α -> β} {u : β -> α}, (GaloisInsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2) l u) -> (Eq.{succ u1} α (u (Bot.bot.{u2} β (OrderBot.toHasBot.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) _inst_4))) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_3))) -> (forall {b : β}, (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 (u b)) -> (IsAtom.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2) _inst_4 b))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : PartialOrder.{u1} β] [_inst_3 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))] [_inst_4 : OrderBot.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2))] {l : α -> β} {u : β -> α}, (GaloisInsertion.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) (PartialOrder.toPreorder.{u1} β _inst_2) l u) -> (Eq.{succ u2} α (u (Bot.bot.{u1} β (OrderBot.toBot.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) _inst_4))) (Bot.bot.{u2} α (OrderBot.toBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) _inst_3))) -> (forall {b : β}, (IsAtom.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1) _inst_3 (u b)) -> (IsAtom.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2) _inst_4 b))
 Case conversion may be inaccurate. Consider using '#align galois_insertion.is_atom_of_u_bot GaloisInsertion.isAtom_of_u_botₓ'. -/
@@ -1003,7 +1139,7 @@ theorem isAtom_of_u_bot [OrderBot α] [OrderBot β] {l : α → β} {u : β → 
 
 /- warning: galois_insertion.is_atom_iff -> GaloisInsertion.isAtom_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : IsAtomic.{u1} α _inst_1 _inst_3] [_inst_5 : OrderBot.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))] {l : α -> β} {u : β -> α}, (GaloisInsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2) l u) -> (Eq.{succ u1} α (u (Bot.bot.{u2} β (OrderBot.toHasBot.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) _inst_5))) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_3))) -> (forall (a : α), (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 a) -> (Eq.{succ u1} α (u (l a)) a)) -> (forall (a : α), Iff (IsAtom.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2) _inst_5 (l a)) (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 a))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : IsAtomic.{u1} α _inst_1 _inst_3] [_inst_5 : OrderBot.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))] {l : α -> β} {u : β -> α}, (GaloisInsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2) l u) -> (Eq.{succ u1} α (u (Bot.bot.{u2} β (OrderBot.toHasBot.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) _inst_5))) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_3))) -> (forall (a : α), (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 a) -> (Eq.{succ u1} α (u (l a)) a)) -> (forall (a : α), Iff (IsAtom.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2) _inst_5 (l a)) (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 a))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : PartialOrder.{u1} β] [_inst_3 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))] [_inst_4 : IsAtomic.{u2} α _inst_1 _inst_3] [_inst_5 : OrderBot.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2))] {l : α -> β} {u : β -> α}, (GaloisInsertion.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) (PartialOrder.toPreorder.{u1} β _inst_2) l u) -> (Eq.{succ u2} α (u (Bot.bot.{u1} β (OrderBot.toBot.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) _inst_5))) (Bot.bot.{u2} α (OrderBot.toBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) _inst_3))) -> (forall (a : α), (IsAtom.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1) _inst_3 a) -> (Eq.{succ u2} α (u (l a)) a)) -> (forall (a : α), Iff (IsAtom.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2) _inst_5 (l a)) (IsAtom.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1) _inst_3 a))
 Case conversion may be inaccurate. Consider using '#align galois_insertion.is_atom_iff GaloisInsertion.isAtom_iffₓ'. -/
@@ -1026,7 +1162,7 @@ theorem isAtom_iff [OrderBot α] [IsAtomic α] [OrderBot β] {l : α → β} {u 
 
 /- warning: galois_insertion.is_atom_iff' -> GaloisInsertion.isAtom_iff' is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : IsAtomic.{u1} α _inst_1 _inst_3] [_inst_5 : OrderBot.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))] {l : α -> β} {u : β -> α}, (GaloisInsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2) l u) -> (Eq.{succ u1} α (u (Bot.bot.{u2} β (OrderBot.toHasBot.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) _inst_5))) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_3))) -> (forall (a : α), (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 a) -> (Eq.{succ u1} α (u (l a)) a)) -> (forall (b : β), Iff (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 (u b)) (IsAtom.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2) _inst_5 b))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : IsAtomic.{u1} α _inst_1 _inst_3] [_inst_5 : OrderBot.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))] {l : α -> β} {u : β -> α}, (GaloisInsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2) l u) -> (Eq.{succ u1} α (u (Bot.bot.{u2} β (OrderBot.toHasBot.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) _inst_5))) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_3))) -> (forall (a : α), (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 a) -> (Eq.{succ u1} α (u (l a)) a)) -> (forall (b : β), Iff (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 (u b)) (IsAtom.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2) _inst_5 b))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : PartialOrder.{u1} β] [_inst_3 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))] [_inst_4 : IsAtomic.{u2} α _inst_1 _inst_3] [_inst_5 : OrderBot.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2))] {l : α -> β} {u : β -> α}, (GaloisInsertion.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) (PartialOrder.toPreorder.{u1} β _inst_2) l u) -> (Eq.{succ u2} α (u (Bot.bot.{u1} β (OrderBot.toBot.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) _inst_5))) (Bot.bot.{u2} α (OrderBot.toBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) _inst_3))) -> (forall (a : α), (IsAtom.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1) _inst_3 a) -> (Eq.{succ u2} α (u (l a)) a)) -> (forall (b : β), Iff (IsAtom.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1) _inst_3 (u b)) (IsAtom.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2) _inst_5 b))
 Case conversion may be inaccurate. Consider using '#align galois_insertion.is_atom_iff' GaloisInsertion.isAtom_iff'ₓ'. -/
@@ -1037,7 +1173,7 @@ theorem isAtom_iff' [OrderBot α] [IsAtomic α] [OrderBot β] {l : α → β} {u
 
 /- warning: galois_insertion.is_coatom_of_image -> GaloisInsertion.isCoatom_of_image is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : OrderTop.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))] {l : α -> β} {u : β -> α}, (GaloisInsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2) l u) -> (forall {b : β}, (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 (u b)) -> (IsCoatom.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2) _inst_4 b))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : OrderTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : OrderTop.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))] {l : α -> β} {u : β -> α}, (GaloisInsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2) l u) -> (forall {b : β}, (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 (u b)) -> (IsCoatom.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2) _inst_4 b))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : PartialOrder.{u1} β] [_inst_3 : OrderTop.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))] [_inst_4 : OrderTop.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2))] {l : α -> β} {u : β -> α}, (GaloisInsertion.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) (PartialOrder.toPreorder.{u1} β _inst_2) l u) -> (forall {b : β}, (IsCoatom.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1) _inst_3 (u b)) -> (IsCoatom.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2) _inst_4 b))
 Case conversion may be inaccurate. Consider using '#align galois_insertion.is_coatom_of_image GaloisInsertion.isCoatom_of_imageₓ'. -/
@@ -1049,7 +1185,7 @@ theorem isCoatom_of_image [OrderTop α] [OrderTop β] {l : α → β} {u : β �
 
 /- warning: galois_insertion.is_coatom_iff -> GaloisInsertion.isCoatom_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : IsCoatomic.{u1} α _inst_1 _inst_3] [_inst_5 : OrderTop.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))] {l : α -> β} {u : β -> α}, (GaloisInsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2) l u) -> (forall (a : α), (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 a) -> (Eq.{succ u1} α (u (l a)) a)) -> (forall (b : β), Iff (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 (u b)) (IsCoatom.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2) _inst_5 b))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : OrderTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : IsCoatomic.{u1} α _inst_1 _inst_3] [_inst_5 : OrderTop.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))] {l : α -> β} {u : β -> α}, (GaloisInsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2) l u) -> (forall (a : α), (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 a) -> (Eq.{succ u1} α (u (l a)) a)) -> (forall (b : β), Iff (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 (u b)) (IsCoatom.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2) _inst_5 b))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : PartialOrder.{u1} β] [_inst_3 : OrderTop.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))] [_inst_4 : IsCoatomic.{u2} α _inst_1 _inst_3] [_inst_5 : OrderTop.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2))] {l : α -> β} {u : β -> α}, (GaloisInsertion.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) (PartialOrder.toPreorder.{u1} β _inst_2) l u) -> (forall (a : α), (IsCoatom.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1) _inst_3 a) -> (Eq.{succ u2} α (u (l a)) a)) -> (forall (b : β), Iff (IsCoatom.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1) _inst_3 (u b)) (IsCoatom.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2) _inst_5 b))
 Case conversion may be inaccurate. Consider using '#align galois_insertion.is_coatom_iff GaloisInsertion.isCoatom_iffₓ'. -/
@@ -1075,7 +1211,7 @@ variable [PartialOrder α] [PartialOrder β]
 
 /- warning: galois_coinsertion.is_coatom_of_l_top -> GaloisCoinsertion.isCoatom_of_l_top is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : OrderTop.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))] {l : α -> β} {u : β -> α}, (GaloisCoinsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2) l u) -> (Eq.{succ u2} β (l (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_3))) (Top.top.{u2} β (OrderTop.toHasTop.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) _inst_4))) -> (forall {a : α}, (IsCoatom.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2) _inst_4 (l a)) -> (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 a))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : OrderTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : OrderTop.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))] {l : α -> β} {u : β -> α}, (GaloisCoinsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2) l u) -> (Eq.{succ u2} β (l (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_3))) (Top.top.{u2} β (OrderTop.toHasTop.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) _inst_4))) -> (forall {a : α}, (IsCoatom.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2) _inst_4 (l a)) -> (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 a))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : PartialOrder.{u1} β] [_inst_3 : OrderTop.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))] [_inst_4 : OrderTop.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2))] {l : α -> β} {u : β -> α}, (GaloisCoinsertion.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) (PartialOrder.toPreorder.{u1} β _inst_2) l u) -> (Eq.{succ u1} β (l (Top.top.{u2} α (OrderTop.toTop.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) _inst_3))) (Top.top.{u1} β (OrderTop.toTop.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) _inst_4))) -> (forall {a : α}, (IsCoatom.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2) _inst_4 (l a)) -> (IsCoatom.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1) _inst_3 a))
 Case conversion may be inaccurate. Consider using '#align galois_coinsertion.is_coatom_of_l_top GaloisCoinsertion.isCoatom_of_l_topₓ'. -/
@@ -1086,7 +1222,7 @@ theorem isCoatom_of_l_top [OrderTop α] [OrderTop β] {l : α → β} {u : β �
 
 /- warning: galois_coinsertion.is_coatom_iff -> GaloisCoinsertion.isCoatom_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : OrderTop.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))] [_inst_5 : IsCoatomic.{u2} β _inst_2 _inst_4] {l : α -> β} {u : β -> α}, (GaloisCoinsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2) l u) -> (Eq.{succ u2} β (l (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_3))) (Top.top.{u2} β (OrderTop.toHasTop.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) _inst_4))) -> (forall (b : β), (IsCoatom.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2) _inst_4 b) -> (Eq.{succ u2} β (l (u b)) b)) -> (forall (b : β), Iff (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 (u b)) (IsCoatom.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2) _inst_4 b))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : OrderTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : OrderTop.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))] [_inst_5 : IsCoatomic.{u2} β _inst_2 _inst_4] {l : α -> β} {u : β -> α}, (GaloisCoinsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2) l u) -> (Eq.{succ u2} β (l (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_3))) (Top.top.{u2} β (OrderTop.toHasTop.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) _inst_4))) -> (forall (b : β), (IsCoatom.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2) _inst_4 b) -> (Eq.{succ u2} β (l (u b)) b)) -> (forall (b : β), Iff (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 (u b)) (IsCoatom.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2) _inst_4 b))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : PartialOrder.{u1} β] [_inst_3 : OrderTop.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))] [_inst_4 : OrderTop.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2))] [_inst_5 : IsCoatomic.{u1} β _inst_2 _inst_4] {l : α -> β} {u : β -> α}, (GaloisCoinsertion.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) (PartialOrder.toPreorder.{u1} β _inst_2) l u) -> (Eq.{succ u1} β (l (Top.top.{u2} α (OrderTop.toTop.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) _inst_3))) (Top.top.{u1} β (OrderTop.toTop.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) _inst_4))) -> (forall (b : β), (IsCoatom.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2) _inst_4 b) -> (Eq.{succ u1} β (l (u b)) b)) -> (forall (b : β), Iff (IsCoatom.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1) _inst_3 (u b)) (IsCoatom.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2) _inst_4 b))
 Case conversion may be inaccurate. Consider using '#align galois_coinsertion.is_coatom_iff GaloisCoinsertion.isCoatom_iffₓ'. -/
@@ -1098,7 +1234,7 @@ theorem isCoatom_iff [OrderTop α] [OrderTop β] [IsCoatomic β] {l : α → β}
 
 /- warning: galois_coinsertion.is_coatom_iff' -> GaloisCoinsertion.isCoatom_iff' is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : OrderTop.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))] [_inst_5 : IsCoatomic.{u2} β _inst_2 _inst_4] {l : α -> β} {u : β -> α}, (GaloisCoinsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2) l u) -> (Eq.{succ u2} β (l (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_3))) (Top.top.{u2} β (OrderTop.toHasTop.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) _inst_4))) -> (forall (b : β), (IsCoatom.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2) _inst_4 b) -> (Eq.{succ u2} β (l (u b)) b)) -> (forall (a : α), Iff (IsCoatom.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2) _inst_4 (l a)) (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 a))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : OrderTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : OrderTop.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))] [_inst_5 : IsCoatomic.{u2} β _inst_2 _inst_4] {l : α -> β} {u : β -> α}, (GaloisCoinsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2) l u) -> (Eq.{succ u2} β (l (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_3))) (Top.top.{u2} β (OrderTop.toHasTop.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) _inst_4))) -> (forall (b : β), (IsCoatom.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2) _inst_4 b) -> (Eq.{succ u2} β (l (u b)) b)) -> (forall (a : α), Iff (IsCoatom.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2) _inst_4 (l a)) (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 a))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : PartialOrder.{u1} β] [_inst_3 : OrderTop.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))] [_inst_4 : OrderTop.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2))] [_inst_5 : IsCoatomic.{u1} β _inst_2 _inst_4] {l : α -> β} {u : β -> α}, (GaloisCoinsertion.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) (PartialOrder.toPreorder.{u1} β _inst_2) l u) -> (Eq.{succ u1} β (l (Top.top.{u2} α (OrderTop.toTop.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) _inst_3))) (Top.top.{u1} β (OrderTop.toTop.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) _inst_4))) -> (forall (b : β), (IsCoatom.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2) _inst_4 b) -> (Eq.{succ u1} β (l (u b)) b)) -> (forall (a : α), Iff (IsCoatom.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2) _inst_4 (l a)) (IsCoatom.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1) _inst_3 a))
 Case conversion may be inaccurate. Consider using '#align galois_coinsertion.is_coatom_iff' GaloisCoinsertion.isCoatom_iff'ₓ'. -/
@@ -1110,7 +1246,7 @@ theorem isCoatom_iff' [OrderTop α] [OrderTop β] [IsCoatomic β] {l : α → β
 
 /- warning: galois_coinsertion.is_atom_of_image -> GaloisCoinsertion.isAtom_of_image is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : OrderBot.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))] {l : α -> β} {u : β -> α}, (GaloisCoinsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2) l u) -> (forall {a : α}, (IsAtom.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2) _inst_4 (l a)) -> (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 a))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : OrderBot.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))] {l : α -> β} {u : β -> α}, (GaloisCoinsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2) l u) -> (forall {a : α}, (IsAtom.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2) _inst_4 (l a)) -> (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 a))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : PartialOrder.{u1} β] [_inst_3 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))] [_inst_4 : OrderBot.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2))] {l : α -> β} {u : β -> α}, (GaloisCoinsertion.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) (PartialOrder.toPreorder.{u1} β _inst_2) l u) -> (forall {a : α}, (IsAtom.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2) _inst_4 (l a)) -> (IsAtom.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1) _inst_3 a))
 Case conversion may be inaccurate. Consider using '#align galois_coinsertion.is_atom_of_image GaloisCoinsertion.isAtom_of_imageₓ'. -/
@@ -1121,7 +1257,7 @@ theorem isAtom_of_image [OrderBot α] [OrderBot β] {l : α → β} {u : β → 
 
 /- warning: galois_coinsertion.is_atom_iff -> GaloisCoinsertion.isAtom_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : OrderBot.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))] [_inst_5 : IsAtomic.{u2} β _inst_2 _inst_4] {l : α -> β} {u : β -> α}, (GaloisCoinsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2) l u) -> (forall (b : β), (IsAtom.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2) _inst_4 b) -> (Eq.{succ u2} β (l (u b)) b)) -> (forall (a : α), Iff (IsAtom.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2) _inst_4 (l a)) (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 a))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : OrderBot.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))] [_inst_5 : IsAtomic.{u2} β _inst_2 _inst_4] {l : α -> β} {u : β -> α}, (GaloisCoinsertion.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2) l u) -> (forall (b : β), (IsAtom.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2) _inst_4 b) -> (Eq.{succ u2} β (l (u b)) b)) -> (forall (a : α), Iff (IsAtom.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2) _inst_4 (l a)) (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 a))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : PartialOrder.{u1} β] [_inst_3 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))] [_inst_4 : OrderBot.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2))] [_inst_5 : IsAtomic.{u1} β _inst_2 _inst_4] {l : α -> β} {u : β -> α}, (GaloisCoinsertion.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) (PartialOrder.toPreorder.{u1} β _inst_2) l u) -> (forall (b : β), (IsAtom.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2) _inst_4 b) -> (Eq.{succ u1} β (l (u b)) b)) -> (forall (a : α), Iff (IsAtom.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2) _inst_4 (l a)) (IsAtom.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1) _inst_3 a))
 Case conversion may be inaccurate. Consider using '#align galois_coinsertion.is_atom_iff GaloisCoinsertion.isAtom_iffₓ'. -/
@@ -1139,7 +1275,7 @@ variable [PartialOrder α] [PartialOrder β]
 
 /- warning: order_iso.is_atom_iff -> OrderIso.isAtom_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : OrderBot.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))] (f : OrderIso.{u1, u2} α β (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))) (a : α), Iff (IsAtom.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2) _inst_4 (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderIso.{u1, u2} α β (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))) (fun (_x : RelIso.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) (LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)))) => α -> β) (RelIso.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) (LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)))) f a)) (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 a)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : OrderBot.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))] (f : OrderIso.{u1, u2} α β (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))) (a : α), Iff (IsAtom.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2) _inst_4 (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderIso.{u1, u2} α β (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))) (fun (_x : RelIso.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) (LE.le.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)))) => α -> β) (RelIso.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) (LE.le.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)))) f a)) (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 a)
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : PartialOrder.{u1} β] [_inst_3 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))] [_inst_4 : OrderBot.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2))] (f : OrderIso.{u2, u1} α β (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2))) (a : α), Iff (IsAtom.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2) _inst_4 (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RelIso.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298)) α (fun (_x : α) => β) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (RelIso.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298)) α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) (RelIso.instRelHomClassRelIso.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298))) f a)) (IsAtom.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1) _inst_3 a)
 Case conversion may be inaccurate. Consider using '#align order_iso.is_atom_iff OrderIso.isAtom_iffₓ'. -/
@@ -1151,7 +1287,7 @@ theorem isAtom_iff [OrderBot α] [OrderBot β] (f : α ≃o β) (a : α) : IsAto
 
 /- warning: order_iso.is_coatom_iff -> OrderIso.isCoatom_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : OrderTop.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))] (f : OrderIso.{u1, u2} α β (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))) (a : α), Iff (IsCoatom.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2) _inst_4 (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderIso.{u1, u2} α β (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))) (fun (_x : RelIso.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) (LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)))) => α -> β) (RelIso.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) (LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)))) f a)) (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 a)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : OrderTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : OrderTop.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))] (f : OrderIso.{u1, u2} α β (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))) (a : α), Iff (IsCoatom.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2) _inst_4 (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderIso.{u1, u2} α β (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))) (fun (_x : RelIso.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) (LE.le.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)))) => α -> β) (RelIso.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) (LE.le.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)))) f a)) (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 a)
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : PartialOrder.{u1} β] [_inst_3 : OrderTop.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))] [_inst_4 : OrderTop.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2))] (f : OrderIso.{u2, u1} α β (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2))) (a : α), Iff (IsCoatom.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2) _inst_4 (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RelIso.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298)) α (fun (_x : α) => β) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (RelIso.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298)) α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) (RelIso.instRelHomClassRelIso.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298))) f a)) (IsCoatom.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1) _inst_3 a)
 Case conversion may be inaccurate. Consider using '#align order_iso.is_coatom_iff OrderIso.isCoatom_iffₓ'. -/
@@ -1162,7 +1298,7 @@ theorem isCoatom_iff [OrderTop α] [OrderTop β] (f : α ≃o β) (a : α) : IsC
 
 /- warning: order_iso.is_simple_order_iff -> OrderIso.isSimpleOrder_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : BoundedOrder.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))], (OrderIso.{u1, u2} α β (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))) -> (Iff (IsSimpleOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_3) (IsSimpleOrder.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) _inst_4))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : BoundedOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : BoundedOrder.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))], (OrderIso.{u1, u2} α β (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))) -> (Iff (IsSimpleOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_3) (IsSimpleOrder.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) _inst_4))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : PartialOrder.{u1} β] [_inst_3 : BoundedOrder.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))] [_inst_4 : BoundedOrder.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2))], (OrderIso.{u2, u1} α β (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2))) -> (Iff (IsSimpleOrder.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) _inst_3) (IsSimpleOrder.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) _inst_4))
 Case conversion may be inaccurate. Consider using '#align order_iso.is_simple_order_iff OrderIso.isSimpleOrder_iffₓ'. -/
@@ -1173,7 +1309,7 @@ theorem isSimpleOrder_iff [BoundedOrder α] [BoundedOrder β] (f : α ≃o β) :
 
 /- warning: order_iso.is_simple_order -> OrderIso.isSimpleOrder is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : BoundedOrder.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))] [h : IsSimpleOrder.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) _inst_4], (OrderIso.{u1, u2} α β (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))) -> (IsSimpleOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_3)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : BoundedOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : BoundedOrder.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))] [h : IsSimpleOrder.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) _inst_4], (OrderIso.{u1, u2} α β (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))) -> (IsSimpleOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_3)
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : PartialOrder.{u1} β] [_inst_3 : BoundedOrder.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))] [_inst_4 : BoundedOrder.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2))] [h : IsSimpleOrder.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) _inst_4], (OrderIso.{u2, u1} α β (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2))) -> (IsSimpleOrder.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) _inst_3)
 Case conversion may be inaccurate. Consider using '#align order_iso.is_simple_order OrderIso.isSimpleOrderₓ'. -/
@@ -1184,7 +1320,7 @@ theorem isSimpleOrder [BoundedOrder α] [BoundedOrder β] [h : IsSimpleOrder β]
 
 /- warning: order_iso.is_atomic_iff -> OrderIso.isAtomic_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : OrderBot.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))], (OrderIso.{u1, u2} α β (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))) -> (Iff (IsAtomic.{u1} α _inst_1 _inst_3) (IsAtomic.{u2} β _inst_2 _inst_4))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : OrderBot.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))], (OrderIso.{u1, u2} α β (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))) -> (Iff (IsAtomic.{u1} α _inst_1 _inst_3) (IsAtomic.{u2} β _inst_2 _inst_4))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : PartialOrder.{u1} β] [_inst_3 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))] [_inst_4 : OrderBot.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2))], (OrderIso.{u2, u1} α β (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2))) -> (Iff (IsAtomic.{u2} α _inst_1 _inst_3) (IsAtomic.{u1} β _inst_2 _inst_4))
 Case conversion may be inaccurate. Consider using '#align order_iso.is_atomic_iff OrderIso.isAtomic_iffₓ'. -/
@@ -1196,7 +1332,7 @@ protected theorem isAtomic_iff [OrderBot α] [OrderBot β] (f : α ≃o β) : Is
 
 /- warning: order_iso.is_coatomic_iff -> OrderIso.isCoatomic_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : OrderTop.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))], (OrderIso.{u1, u2} α β (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))) -> (Iff (IsCoatomic.{u1} α _inst_1 _inst_3) (IsCoatomic.{u2} β _inst_2 _inst_4))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] [_inst_3 : OrderTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_4 : OrderTop.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))], (OrderIso.{u1, u2} α β (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2))) -> (Iff (IsCoatomic.{u1} α _inst_1 _inst_3) (IsCoatomic.{u2} β _inst_2 _inst_4))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : PartialOrder.{u1} β] [_inst_3 : OrderTop.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))] [_inst_4 : OrderTop.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2))], (OrderIso.{u2, u1} α β (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2))) -> (Iff (IsCoatomic.{u2} α _inst_1 _inst_3) (IsCoatomic.{u1} β _inst_2 _inst_4))
 Case conversion may be inaccurate. Consider using '#align order_iso.is_coatomic_iff OrderIso.isCoatomic_iffₓ'. -/
@@ -1217,24 +1353,37 @@ variable {a b : α} (hc : IsCompl a b)
 
 include hc
 
-#print IsCompl.isAtom_iff_isCoatom /-
+/- warning: is_compl.is_atom_iff_is_coatom -> IsCompl.isAtom_iff_isCoatom is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] [_inst_3 : IsModularLattice.{u1} α _inst_1] {a : α} {b : α}, (IsCompl.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) _inst_2 a b) -> (Iff (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2) a) (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2) b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] [_inst_3 : IsModularLattice.{u1} α _inst_1] {a : α} {b : α}, (IsCompl.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) _inst_2 a b) -> (Iff (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2) a) (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2) b))
+Case conversion may be inaccurate. Consider using '#align is_compl.is_atom_iff_is_coatom IsCompl.isAtom_iff_isCoatomₓ'. -/
 theorem isAtom_iff_isCoatom : IsAtom a ↔ IsCoatom b :=
   Set.isSimpleOrder_Iic_iff_isAtom.symm.trans <|
     hc.IicOrderIsoIci.isSimpleOrder_iff.trans Set.isSimpleOrder_Ici_iff_isCoatom
 #align is_compl.is_atom_iff_is_coatom IsCompl.isAtom_iff_isCoatom
--/
 
-#print IsCompl.isCoatom_iff_isAtom /-
+/- warning: is_compl.is_coatom_iff_is_atom -> IsCompl.isCoatom_iff_isAtom is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] [_inst_3 : IsModularLattice.{u1} α _inst_1] {a : α} {b : α}, (IsCompl.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) _inst_2 a b) -> (Iff (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2) a) (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2) b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] [_inst_3 : IsModularLattice.{u1} α _inst_1] {a : α} {b : α}, (IsCompl.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) _inst_2 a b) -> (Iff (IsCoatom.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2) a) (IsAtom.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2) b))
+Case conversion may be inaccurate. Consider using '#align is_compl.is_coatom_iff_is_atom IsCompl.isCoatom_iff_isAtomₓ'. -/
 theorem isCoatom_iff_isAtom : IsCoatom a ↔ IsAtom b :=
   hc.symm.isAtom_iff_isCoatom.symm
 #align is_compl.is_coatom_iff_is_atom IsCompl.isCoatom_iff_isAtom
--/
 
 end IsCompl
 
 variable [ComplementedLattice α]
 
-#print isCoatomic_of_isAtomic_of_complementedLattice_of_isModular /-
+/- warning: is_coatomic_of_is_atomic_of_complemented_lattice_of_is_modular -> isCoatomic_of_isAtomic_of_complementedLattice_of_isModular is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] [_inst_3 : IsModularLattice.{u1} α _inst_1] [_inst_4 : ComplementedLattice.{u1} α _inst_1 _inst_2] [_inst_5 : IsAtomic.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2)], IsCoatomic.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] [_inst_3 : IsModularLattice.{u1} α _inst_1] [_inst_4 : ComplementedLattice.{u1} α _inst_1 _inst_2] [_inst_5 : IsAtomic.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2)], IsCoatomic.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2)
+Case conversion may be inaccurate. Consider using '#align is_coatomic_of_is_atomic_of_complemented_lattice_of_is_modular isCoatomic_of_isAtomic_of_complementedLattice_of_isModularₓ'. -/
 theorem isCoatomic_of_isAtomic_of_complementedLattice_of_isModular [IsAtomic α] : IsCoatomic α :=
   ⟨fun x => by
     rcases exists_is_compl x with ⟨y, xy⟩
@@ -1247,20 +1396,27 @@ theorem isCoatomic_of_isAtomic_of_complementedLattice_of_isModular [IsAtomic α]
       rw [← hb.is_atom_iff_is_coatom, OrderIso.isAtom_iff]
       apply ha.Iic⟩
 #align is_coatomic_of_is_atomic_of_complemented_lattice_of_is_modular isCoatomic_of_isAtomic_of_complementedLattice_of_isModular
--/
 
-#print isAtomic_of_isCoatomic_of_complementedLattice_of_isModular /-
+/- warning: is_atomic_of_is_coatomic_of_complemented_lattice_of_is_modular -> isAtomic_of_isCoatomic_of_complementedLattice_of_isModular is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] [_inst_3 : IsModularLattice.{u1} α _inst_1] [_inst_4 : ComplementedLattice.{u1} α _inst_1 _inst_2] [_inst_5 : IsCoatomic.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2)], IsAtomic.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] [_inst_3 : IsModularLattice.{u1} α _inst_1] [_inst_4 : ComplementedLattice.{u1} α _inst_1 _inst_2] [_inst_5 : IsCoatomic.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2)], IsAtomic.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2)
+Case conversion may be inaccurate. Consider using '#align is_atomic_of_is_coatomic_of_complemented_lattice_of_is_modular isAtomic_of_isCoatomic_of_complementedLattice_of_isModularₓ'. -/
 theorem isAtomic_of_isCoatomic_of_complementedLattice_of_isModular [IsCoatomic α] : IsAtomic α :=
   isCoatomic_dual_iff_isAtomic.1 isCoatomic_of_isAtomic_of_complementedLattice_of_isModular
 #align is_atomic_of_is_coatomic_of_complemented_lattice_of_is_modular isAtomic_of_isCoatomic_of_complementedLattice_of_isModular
--/
 
-#print isAtomic_iff_isCoatomic /-
+/- warning: is_atomic_iff_is_coatomic -> isAtomic_iff_isCoatomic is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] [_inst_3 : IsModularLattice.{u1} α _inst_1] [_inst_4 : ComplementedLattice.{u1} α _inst_1 _inst_2], Iff (IsAtomic.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2)) (IsCoatomic.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] [_inst_3 : IsModularLattice.{u1} α _inst_1] [_inst_4 : ComplementedLattice.{u1} α _inst_1 _inst_2], Iff (IsAtomic.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2)) (IsCoatomic.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2))
+Case conversion may be inaccurate. Consider using '#align is_atomic_iff_is_coatomic isAtomic_iff_isCoatomicₓ'. -/
 theorem isAtomic_iff_isCoatomic : IsAtomic α ↔ IsCoatomic α :=
   ⟨fun h => @isCoatomic_of_isAtomic_of_complementedLattice_of_isModular _ _ _ _ _ h, fun h =>
     @isAtomic_of_isCoatomic_of_complementedLattice_of_isModular _ _ _ _ _ h⟩
 #align is_atomic_iff_is_coatomic isAtomic_iff_isCoatomic
--/
 
 end IsModularLattice
 

@@ -82,25 +82,37 @@ theorem lift_le_continuum {c : Cardinal.{u}} : lift.{v} c ≤ 𝔠 ↔ c ≤ �
 #align cardinal.lift_le_continuum Cardinal.lift_le_continuum
 -/
 
-#print Cardinal.continuum_lt_lift /-
+/- warning: cardinal.continuum_lt_lift -> Cardinal.continuum_lt_lift is a dubious translation:
+lean 3 declaration is
+  forall {c : Cardinal.{u1}}, Iff (LT.lt.{succ (max u1 u2)} Cardinal.{max u1 u2} (Preorder.toHasLt.{succ (max u1 u2)} Cardinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Cardinal.{max u1 u2} Cardinal.partialOrder.{max u1 u2})) Cardinal.continuum.{max u1 u2} (Cardinal.lift.{u2, u1} c)) (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) Cardinal.continuum.{u1} c)
+but is expected to have type
+  forall {c : Cardinal.{u1}}, Iff (LT.lt.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} (Preorder.toLT.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} Cardinal.partialOrder.{max u1 u2})) Cardinal.continuum.{max u1 u2} (Cardinal.lift.{u2, u1} c)) (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) Cardinal.continuum.{u1} c)
+Case conversion may be inaccurate. Consider using '#align cardinal.continuum_lt_lift Cardinal.continuum_lt_liftₓ'. -/
 @[simp]
 theorem continuum_lt_lift {c : Cardinal.{u}} : 𝔠 < lift.{v} c ↔ 𝔠 < c := by
   rw [← lift_continuum, lift_lt]
 #align cardinal.continuum_lt_lift Cardinal.continuum_lt_lift
--/
 
-#print Cardinal.lift_lt_continuum /-
+/- warning: cardinal.lift_lt_continuum -> Cardinal.lift_lt_continuum is a dubious translation:
+lean 3 declaration is
+  forall {c : Cardinal.{u1}}, Iff (LT.lt.{succ (max u1 u2)} Cardinal.{max u1 u2} (Preorder.toHasLt.{succ (max u1 u2)} Cardinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Cardinal.{max u1 u2} Cardinal.partialOrder.{max u1 u2})) (Cardinal.lift.{u2, u1} c) Cardinal.continuum.{max u1 u2}) (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) c Cardinal.continuum.{u1})
+but is expected to have type
+  forall {c : Cardinal.{u1}}, Iff (LT.lt.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} (Preorder.toLT.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Cardinal.{max u1 u2} Cardinal.partialOrder.{max u1 u2})) (Cardinal.lift.{u2, u1} c) Cardinal.continuum.{max u1 u2}) (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) c Cardinal.continuum.{u1})
+Case conversion may be inaccurate. Consider using '#align cardinal.lift_lt_continuum Cardinal.lift_lt_continuumₓ'. -/
 @[simp]
 theorem lift_lt_continuum {c : Cardinal.{u}} : lift.{v} c < 𝔠 ↔ c < 𝔠 := by
   rw [← lift_continuum, lift_lt]
 #align cardinal.lift_lt_continuum Cardinal.lift_lt_continuum
--/
 
-#print Cardinal.aleph0_lt_continuum /-
+/- warning: cardinal.aleph_0_lt_continuum -> Cardinal.aleph0_lt_continuum is a dubious translation:
+lean 3 declaration is
+  LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) Cardinal.aleph0.{u1} Cardinal.continuum.{u1}
+but is expected to have type
+  LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) Cardinal.aleph0.{u1} Cardinal.continuum.{u1}
+Case conversion may be inaccurate. Consider using '#align cardinal.aleph_0_lt_continuum Cardinal.aleph0_lt_continuumₓ'. -/
 theorem aleph0_lt_continuum : ℵ₀ < 𝔠 :=
   cantor ℵ₀
 #align cardinal.aleph_0_lt_continuum Cardinal.aleph0_lt_continuum
--/
 
 #print Cardinal.aleph0_le_continuum /-
 theorem aleph0_le_continuum : ℵ₀ ≤ 𝔠 :=
@@ -120,7 +132,7 @@ theorem beth_one : beth 1 = 𝔠 := by simpa using beth_succ 0
 
 /- warning: cardinal.nat_lt_continuum -> Cardinal.nat_lt_continuum is a dubious translation:
 lean 3 declaration is
-  forall (n : Nat), LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) ((fun (a : Type) (b : Type.{succ u1}) [self : HasLiftT.{1, succ (succ u1)} a b] => self.0) Nat Cardinal.{u1} (HasLiftT.mk.{1, succ (succ u1)} Nat Cardinal.{u1} (CoeTCₓ.coe.{1, succ (succ u1)} Nat Cardinal.{u1} (Nat.castCoe.{succ u1} Cardinal.{u1} Cardinal.hasNatCast.{u1}))) n) Cardinal.continuum.{u1}
+  forall (n : Nat), LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) ((fun (a : Type) (b : Type.{succ u1}) [self : HasLiftT.{1, succ (succ u1)} a b] => self.0) Nat Cardinal.{u1} (HasLiftT.mk.{1, succ (succ u1)} Nat Cardinal.{u1} (CoeTCₓ.coe.{1, succ (succ u1)} Nat Cardinal.{u1} (Nat.castCoe.{succ u1} Cardinal.{u1} Cardinal.hasNatCast.{u1}))) n) Cardinal.continuum.{u1}
 but is expected to have type
   forall (n : Nat), LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Nat.cast.{succ u1} Cardinal.{u1} Cardinal.instNatCastCardinal.{u1} n) Cardinal.continuum.{u1}
 Case conversion may be inaccurate. Consider using '#align cardinal.nat_lt_continuum Cardinal.nat_lt_continuumₓ'. -/
@@ -133,11 +145,15 @@ theorem mk_set_nat : (#Set ℕ) = 𝔠 := by simp
 #align cardinal.mk_set_nat Cardinal.mk_set_nat
 -/
 
-#print Cardinal.continuum_pos /-
+/- warning: cardinal.continuum_pos -> Cardinal.continuum_pos is a dubious translation:
+lean 3 declaration is
+  LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Cardinal.{u1} 0 (OfNat.mk.{succ u1} Cardinal.{u1} 0 (Zero.zero.{succ u1} Cardinal.{u1} Cardinal.hasZero.{u1}))) Cardinal.continuum.{u1}
+but is expected to have type
+  LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Cardinal.{u1} 0 (Zero.toOfNat0.{succ u1} Cardinal.{u1} Cardinal.instZeroCardinal.{u1})) Cardinal.continuum.{u1}
+Case conversion may be inaccurate. Consider using '#align cardinal.continuum_pos Cardinal.continuum_posₓ'. -/
 theorem continuum_pos : 0 < 𝔠 :=
   nat_lt_continuum 0
 #align cardinal.continuum_pos Cardinal.continuum_pos
--/
 
 #print Cardinal.continuum_ne_zero /-
 theorem continuum_ne_zero : 𝔠 ≠ 0 :=

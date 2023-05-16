@@ -110,7 +110,12 @@ namespace Pi
 
 variable {ι : Type _} {α' : ι → Type _} [∀ i, PartialOrder (α' i)]
 
-#print Pi.disjoint_iff /-
+/- warning: pi.disjoint_iff -> Pi.disjoint_iff is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α' : ι -> Type.{u2}} [_inst_1 : forall (i : ι), PartialOrder.{u2} (α' i)] [_inst_2 : forall (i : ι), OrderBot.{u2} (α' i) (Preorder.toHasLe.{u2} (α' i) (PartialOrder.toPreorder.{u2} (α' i) (_inst_1 i)))] {f : forall (i : ι), α' i} {g : forall (i : ι), α' i}, Iff (Disjoint.{max u1 u2} (forall (i : ι), α' i) (Pi.partialOrder.{u1, u2} ι (fun (i : ι) => α' i) (fun (i : ι) => _inst_1 i)) (Pi.orderBot.{u1, u2} ι (fun (i : ι) => α' i) (fun (i : ι) => Preorder.toHasLe.{u2} ((fun (i : ι) => (fun (i : ι) => (fun (i : ι) => α' i) i) i) i) ((fun (i : ι) => PartialOrder.toPreorder.{u2} ((fun (i : ι) => α' i) i) ((fun (i : ι) => _inst_1 i) i)) i)) (fun (i : ι) => _inst_2 i)) f g) (forall (i : ι), Disjoint.{u2} (α' i) (_inst_1 i) (_inst_2 i) (f i) (g i))
+but is expected to have type
+  forall {ι : Type.{u1}} {α' : ι -> Type.{u2}} [_inst_1 : forall (i : ι), PartialOrder.{u2} (α' i)] [_inst_2 : forall (i : ι), OrderBot.{u2} (α' i) (Preorder.toLE.{u2} (α' i) (PartialOrder.toPreorder.{u2} (α' i) (_inst_1 i)))] {f : forall (i : ι), α' i} {g : forall (i : ι), α' i}, Iff (Disjoint.{max u1 u2} (forall (i : ι), α' i) (Pi.partialOrder.{u1, u2} ι (fun (i : ι) => α' i) (fun (i : ι) => _inst_1 i)) (Pi.orderBot.{u1, u2} ι (fun (i : ι) => α' i) (fun (i : ι) => Preorder.toLE.{u2} ((fun (i : ι) => (fun (i : ι) => α' i) i) i) ((fun (i : ι) => PartialOrder.toPreorder.{u2} ((fun (i : ι) => α' i) i) ((fun (i : ι) => _inst_1 i) i)) i)) (fun (i : ι) => _inst_2 i)) f g) (forall (i : ι), Disjoint.{u2} (α' i) (_inst_1 i) (_inst_2 i) (f i) (g i))
+Case conversion may be inaccurate. Consider using '#align pi.disjoint_iff Pi.disjoint_iffₓ'. -/
 theorem disjoint_iff [∀ i, OrderBot (α' i)] {f g : ∀ i, α' i} :
     Disjoint f g ↔ ∀ i, Disjoint (f i) (g i) :=
   by
@@ -127,21 +132,28 @@ theorem disjoint_iff [∀ i, OrderBot (α' i)] {f g : ∀ i, α' i} :
   · intro h x hf hg i
     apply h i (hf i) (hg i)
 #align pi.disjoint_iff Pi.disjoint_iff
--/
 
-#print Pi.codisjoint_iff /-
+/- warning: pi.codisjoint_iff -> Pi.codisjoint_iff is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α' : ι -> Type.{u2}} [_inst_1 : forall (i : ι), PartialOrder.{u2} (α' i)] [_inst_2 : forall (i : ι), OrderTop.{u2} (α' i) (Preorder.toHasLe.{u2} (α' i) (PartialOrder.toPreorder.{u2} (α' i) (_inst_1 i)))] {f : forall (i : ι), α' i} {g : forall (i : ι), α' i}, Iff (Codisjoint.{max u1 u2} (forall (i : ι), α' i) (Pi.partialOrder.{u1, u2} ι (fun (i : ι) => α' i) (fun (i : ι) => _inst_1 i)) (Pi.orderTop.{u1, u2} ι (fun (i : ι) => α' i) (fun (i : ι) => Preorder.toHasLe.{u2} ((fun (i : ι) => (fun (i : ι) => (fun (i : ι) => α' i) i) i) i) ((fun (i : ι) => PartialOrder.toPreorder.{u2} ((fun (i : ι) => α' i) i) ((fun (i : ι) => _inst_1 i) i)) i)) (fun (i : ι) => _inst_2 i)) f g) (forall (i : ι), Codisjoint.{u2} (α' i) (_inst_1 i) (_inst_2 i) (f i) (g i))
+but is expected to have type
+  forall {ι : Type.{u1}} {α' : ι -> Type.{u2}} [_inst_1 : forall (i : ι), PartialOrder.{u2} (α' i)] [_inst_2 : forall (i : ι), OrderTop.{u2} (α' i) (Preorder.toLE.{u2} (α' i) (PartialOrder.toPreorder.{u2} (α' i) (_inst_1 i)))] {f : forall (i : ι), α' i} {g : forall (i : ι), α' i}, Iff (Codisjoint.{max u1 u2} (forall (i : ι), α' i) (Pi.partialOrder.{u1, u2} ι (fun (i : ι) => α' i) (fun (i : ι) => _inst_1 i)) (Pi.orderTop.{u1, u2} ι (fun (i : ι) => α' i) (fun (i : ι) => Preorder.toLE.{u2} ((fun (i : ι) => (fun (i : ι) => α' i) i) i) ((fun (i : ι) => PartialOrder.toPreorder.{u2} ((fun (i : ι) => α' i) i) ((fun (i : ι) => _inst_1 i) i)) i)) (fun (i : ι) => _inst_2 i)) f g) (forall (i : ι), Codisjoint.{u2} (α' i) (_inst_1 i) (_inst_2 i) (f i) (g i))
+Case conversion may be inaccurate. Consider using '#align pi.codisjoint_iff Pi.codisjoint_iffₓ'. -/
 theorem codisjoint_iff [∀ i, OrderTop (α' i)] {f g : ∀ i, α' i} :
     Codisjoint f g ↔ ∀ i, Codisjoint (f i) (g i) :=
   @disjoint_iff _ (fun i => (α' i)ᵒᵈ) _ _ _ _
 #align pi.codisjoint_iff Pi.codisjoint_iff
--/
 
-#print Pi.isCompl_iff /-
+/- warning: pi.is_compl_iff -> Pi.isCompl_iff is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α' : ι -> Type.{u2}} [_inst_1 : forall (i : ι), PartialOrder.{u2} (α' i)] [_inst_2 : forall (i : ι), BoundedOrder.{u2} (α' i) (Preorder.toHasLe.{u2} (α' i) (PartialOrder.toPreorder.{u2} (α' i) (_inst_1 i)))] {f : forall (i : ι), α' i} {g : forall (i : ι), α' i}, Iff (IsCompl.{max u1 u2} (forall (i : ι), α' i) (Pi.partialOrder.{u1, u2} ι (fun (i : ι) => α' i) (fun (i : ι) => _inst_1 i)) (Pi.boundedOrder.{u1, u2} ι (fun (i : ι) => α' i) (fun (i : ι) => Preorder.toHasLe.{u2} ((fun (i : ι) => (fun (i : ι) => (fun (i : ι) => α' i) i) i) i) ((fun (i : ι) => PartialOrder.toPreorder.{u2} ((fun (i : ι) => α' i) i) ((fun (i : ι) => _inst_1 i) i)) i)) (fun (i : ι) => _inst_2 i)) f g) (forall (i : ι), IsCompl.{u2} (α' i) (_inst_1 i) (_inst_2 i) (f i) (g i))
+but is expected to have type
+  forall {ι : Type.{u1}} {α' : ι -> Type.{u2}} [_inst_1 : forall (i : ι), PartialOrder.{u2} (α' i)] [_inst_2 : forall (i : ι), BoundedOrder.{u2} (α' i) (Preorder.toLE.{u2} (α' i) (PartialOrder.toPreorder.{u2} (α' i) (_inst_1 i)))] {f : forall (i : ι), α' i} {g : forall (i : ι), α' i}, Iff (IsCompl.{max u1 u2} (forall (i : ι), α' i) (Pi.partialOrder.{u1, u2} ι (fun (i : ι) => α' i) (fun (i : ι) => _inst_1 i)) (Pi.boundedOrder.{u1, u2} ι (fun (i : ι) => α' i) (fun (i : ι) => Preorder.toLE.{u2} ((fun (i : ι) => (fun (i : ι) => α' i) i) i) ((fun (i : ι) => PartialOrder.toPreorder.{u2} ((fun (i : ι) => α' i) i) ((fun (i : ι) => _inst_1 i) i)) i)) (fun (i : ι) => _inst_2 i)) f g) (forall (i : ι), IsCompl.{u2} (α' i) (_inst_1 i) (_inst_2 i) (f i) (g i))
+Case conversion may be inaccurate. Consider using '#align pi.is_compl_iff Pi.isCompl_iffₓ'. -/
 theorem isCompl_iff [∀ i, BoundedOrder (α' i)] {f g : ∀ i, α' i} :
     IsCompl f g ↔ ∀ i, IsCompl (f i) (g i) := by
   simp_rw [isCompl_iff, disjoint_iff, codisjoint_iff, forall_and]
 #align pi.is_compl_iff Pi.isCompl_iff
--/
 
 end Pi
 

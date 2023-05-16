@@ -50,12 +50,16 @@ theorem succ_eq_succ : Order.succ = succ :=
   rfl
 #align int.succ_eq_succ Int.succ_eq_succ
 
-#print Int.pred_eq_pred /-
+/- warning: int.pred_eq_pred -> Int.pred_eq_pred is a dubious translation:
+lean 3 declaration is
+  Eq.{1} (Int -> Int) (Order.pred.{0} Int (PartialOrder.toPreorder.{0} Int (OrderedAddCommGroup.toPartialOrder.{0} Int (StrictOrderedRing.toOrderedAddCommGroup.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing))))) Int.predOrder) Int.pred
+but is expected to have type
+  Eq.{1} (Int -> Int) (Order.pred.{0} Int (PartialOrder.toPreorder.{0} Int (StrictOrderedRing.toPartialOrder.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) Int.instPredOrderIntToPreorderToPartialOrderToStrictOrderedRingToLinearOrderedRingLinearOrderedCommRing) Int.pred
+Case conversion may be inaccurate. Consider using '#align int.pred_eq_pred Int.pred_eq_predₓ'. -/
 @[simp]
 theorem pred_eq_pred : Order.pred = pred :=
   rfl
 #align int.pred_eq_pred Int.pred_eq_pred
--/
 
 #print Int.pos_iff_one_le /-
 theorem pos_iff_one_le {a : ℤ} : 0 < a ↔ 1 ≤ a :=

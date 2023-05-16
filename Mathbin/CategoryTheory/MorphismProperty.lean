@@ -810,13 +810,17 @@ theorem StableUnderComposition.universally [HasPullbacks C] {P : MorphismPropert
 #align category_theory.morphism_property.stable_under_composition.universally CategoryTheory.MorphismProperty.StableUnderComposition.universally
 -/
 
-#print CategoryTheory.MorphismProperty.universally_le /-
+/- warning: category_theory.morphism_property.universally_le -> CategoryTheory.MorphismProperty.universally_le is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] (P : CategoryTheory.MorphismProperty.{u1, u2} C _inst_1), LE.le.{max u2 u1} (CategoryTheory.MorphismProperty.{u1, u2} C _inst_1) (Preorder.toHasLe.{max u2 u1} (CategoryTheory.MorphismProperty.{u1, u2} C _inst_1) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.MorphismProperty.{u1, u2} C _inst_1) (CompleteSemilatticeInf.toPartialOrder.{max u2 u1} (CategoryTheory.MorphismProperty.{u1, u2} C _inst_1) (CompleteLattice.toCompleteSemilatticeInf.{max u2 u1} (CategoryTheory.MorphismProperty.{u1, u2} C _inst_1) (CategoryTheory.MorphismProperty.completeLattice.{u1, u2} C _inst_1))))) (CategoryTheory.MorphismProperty.universally.{u1, u2} C _inst_1 P) P
+but is expected to have type
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] (P : CategoryTheory.MorphismProperty.{u1, u2} C _inst_1), LE.le.{max u2 u1} (CategoryTheory.MorphismProperty.{u1, u2} C _inst_1) (Preorder.toLE.{max u2 u1} (CategoryTheory.MorphismProperty.{u1, u2} C _inst_1) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.MorphismProperty.{u1, u2} C _inst_1) (CompleteSemilatticeInf.toPartialOrder.{max u2 u1} (CategoryTheory.MorphismProperty.{u1, u2} C _inst_1) (CompleteLattice.toCompleteSemilatticeInf.{max u2 u1} (CategoryTheory.MorphismProperty.{u1, u2} C _inst_1) (CategoryTheory.instCompleteLatticeMorphismProperty.{u1, u2} C _inst_1))))) (CategoryTheory.MorphismProperty.universally.{u1, u2} C _inst_1 P) P
+Case conversion may be inaccurate. Consider using '#align category_theory.morphism_property.universally_le CategoryTheory.MorphismProperty.universally_leₓ'. -/
 theorem universally_le (P : MorphismProperty C) : P.universally ≤ P :=
   by
   intro X Y f hf
   exact hf (𝟙 _) (𝟙 _) _ (is_pullback.of_vert_is_iso ⟨by rw [category.comp_id, category.id_comp]⟩)
 #align category_theory.morphism_property.universally_le CategoryTheory.MorphismProperty.universally_le
--/
 
 #print CategoryTheory.MorphismProperty.StableUnderBaseChange.universally_eq /-
 theorem StableUnderBaseChange.universally_eq {P : MorphismProperty C}

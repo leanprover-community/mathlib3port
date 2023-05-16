@@ -103,7 +103,7 @@ theorem omegaLimit_subset_of_tendsto {m : τ → τ} {f₁ f₂ : Filter τ} (hf
 
 /- warning: omega_limit_mono_left -> omegaLimit_mono_left is a dubious translation:
 lean 3 declaration is
-  forall {τ : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : TopologicalSpace.{u3} β] (ϕ : τ -> α -> β) (s : Set.{u2} α) {f₁ : Filter.{u1} τ} {f₂ : Filter.{u1} τ}, (LE.le.{u1} (Filter.{u1} τ) (Preorder.toLE.{u1} (Filter.{u1} τ) (PartialOrder.toPreorder.{u1} (Filter.{u1} τ) (Filter.partialOrder.{u1} τ))) f₁ f₂) -> (HasSubset.Subset.{u3} (Set.{u3} β) (Set.hasSubset.{u3} β) (omegaLimit.{u1, u2, u3} τ α β _inst_1 f₁ ϕ s) (omegaLimit.{u1, u2, u3} τ α β _inst_1 f₂ ϕ s))
+  forall {τ : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : TopologicalSpace.{u3} β] (ϕ : τ -> α -> β) (s : Set.{u2} α) {f₁ : Filter.{u1} τ} {f₂ : Filter.{u1} τ}, (LE.le.{u1} (Filter.{u1} τ) (Preorder.toHasLe.{u1} (Filter.{u1} τ) (PartialOrder.toPreorder.{u1} (Filter.{u1} τ) (Filter.partialOrder.{u1} τ))) f₁ f₂) -> (HasSubset.Subset.{u3} (Set.{u3} β) (Set.hasSubset.{u3} β) (omegaLimit.{u1, u2, u3} τ α β _inst_1 f₁ ϕ s) (omegaLimit.{u1, u2, u3} τ α β _inst_1 f₂ ϕ s))
 but is expected to have type
   forall {τ : Type.{u3}} {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} β] (ϕ : τ -> α -> β) (s : Set.{u1} α) {f₁ : Filter.{u3} τ} {f₂ : Filter.{u3} τ}, (LE.le.{u3} (Filter.{u3} τ) (Preorder.toLE.{u3} (Filter.{u3} τ) (PartialOrder.toPreorder.{u3} (Filter.{u3} τ) (Filter.instPartialOrderFilter.{u3} τ))) f₁ f₂) -> (HasSubset.Subset.{u2} (Set.{u2} β) (Set.instHasSubsetSet.{u2} β) (omegaLimit.{u3, u1, u2} τ α β _inst_1 f₁ ϕ s) (omegaLimit.{u3, u1, u2} τ α β _inst_1 f₂ ϕ s))
 Case conversion may be inaccurate. Consider using '#align omega_limit_mono_left omegaLimit_mono_leftₓ'. -/

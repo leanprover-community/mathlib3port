@@ -213,7 +213,12 @@ theorem admissible_E8 : Admissible E8 :=
 #align ADE_inequality.admissible_E8 ADEInequality.admissible_E8
 -/
 
-#print ADEInequality.Admissible.one_lt_sumInv /-
+/- warning: ADE_inequality.admissible.one_lt_sum_inv -> ADEInequality.Admissible.one_lt_sumInv is a dubious translation:
+lean 3 declaration is
+  forall {pqr : Multiset.{0} PNat}, (ADEInequality.Admissible pqr) -> (LT.lt.{0} Rat Rat.hasLt (OfNat.ofNat.{0} Rat 1 (OfNat.mk.{0} Rat 1 (One.one.{0} Rat Rat.hasOne))) (ADEInequality.sumInv pqr))
+but is expected to have type
+  forall {pqr : Multiset.{0} PNat}, (ADEInequality.Admissible pqr) -> (LT.lt.{0} Rat Rat.instLTRat_1 (OfNat.ofNat.{0} Rat 1 (Rat.instOfNatRat 1)) (ADEInequality.sumInv pqr))
+Case conversion may be inaccurate. Consider using '#align ADE_inequality.admissible.one_lt_sum_inv ADEInequality.Admissible.one_lt_sumInvₓ'. -/
 theorem Admissible.one_lt_sumInv {pqr : Multiset ℕ+} : Admissible pqr → 1 < sumInv pqr :=
   by
   rw [admissible]
@@ -227,11 +232,10 @@ theorem Admissible.one_lt_sumInv {pqr : Multiset ℕ+} : Admissible pqr → 1 < 
     norm_num
   all_goals rw [← H, E', sum_inv_pqr]; norm_num
 #align ADE_inequality.admissible.one_lt_sum_inv ADEInequality.Admissible.one_lt_sumInv
--/
 
 /- warning: ADE_inequality.lt_three -> ADEInequality.lt_three is a dubious translation:
 lean 3 declaration is
-  forall {p : PNat} {q : PNat} {r : PNat}, (LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) p q) -> (LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) q r) -> (LT.lt.{0} Rat Rat.hasLt (OfNat.ofNat.{0} Rat 1 (OfNat.mk.{0} Rat 1 (One.one.{0} Rat Rat.hasOne))) (ADEInequality.sumInv (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.hasInsert.{0} PNat) p (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.hasInsert.{0} PNat) q (Singleton.singleton.{0, 0} PNat (Multiset.{0} PNat) (Multiset.hasSingleton.{0} PNat) r))))) -> (LT.lt.{0} PNat (Preorder.toLT.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) p (OfNat.ofNat.{0} PNat 3 (OfNat.mk.{0} PNat 3 (bit1.{0} PNat PNat.hasOne PNat.hasAdd (One.one.{0} PNat PNat.hasOne)))))
+  forall {p : PNat} {q : PNat} {r : PNat}, (LE.le.{0} PNat (Preorder.toHasLe.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) p q) -> (LE.le.{0} PNat (Preorder.toHasLe.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) q r) -> (LT.lt.{0} Rat Rat.hasLt (OfNat.ofNat.{0} Rat 1 (OfNat.mk.{0} Rat 1 (One.one.{0} Rat Rat.hasOne))) (ADEInequality.sumInv (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.hasInsert.{0} PNat) p (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.hasInsert.{0} PNat) q (Singleton.singleton.{0, 0} PNat (Multiset.{0} PNat) (Multiset.hasSingleton.{0} PNat) r))))) -> (LT.lt.{0} PNat (Preorder.toHasLt.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) p (OfNat.ofNat.{0} PNat 3 (OfNat.mk.{0} PNat 3 (bit1.{0} PNat PNat.hasOne PNat.hasAdd (One.one.{0} PNat PNat.hasOne)))))
 but is expected to have type
   forall {p : PNat} {q : PNat} {r : PNat}, (LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) p q) -> (LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) q r) -> (LT.lt.{0} Rat Rat.instLTRat_1 (OfNat.ofNat.{0} Rat 1 (Rat.instOfNatRat 1)) (ADEInequality.sumInv (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.instInsertMultiset.{0} PNat) p (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.instInsertMultiset.{0} PNat) q (Singleton.singleton.{0, 0} PNat (Multiset.{0} PNat) (Multiset.instSingletonMultiset.{0} PNat) r))))) -> (LT.lt.{0} PNat (Preorder.toLT.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) p (OfNat.ofNat.{0} PNat 3 (instOfNatPNatHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))))
 Case conversion may be inaccurate. Consider using '#align ADE_inequality.lt_three ADEInequality.lt_threeₓ'. -/
@@ -251,7 +255,7 @@ theorem lt_three {p q r : ℕ+} (hpq : p ≤ q) (hqr : q ≤ r) (H : 1 < sumInv 
 
 /- warning: ADE_inequality.lt_four -> ADEInequality.lt_four is a dubious translation:
 lean 3 declaration is
-  forall {q : PNat} {r : PNat}, (LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) q r) -> (LT.lt.{0} Rat Rat.hasLt (OfNat.ofNat.{0} Rat 1 (OfNat.mk.{0} Rat 1 (One.one.{0} Rat Rat.hasOne))) (ADEInequality.sumInv (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.hasInsert.{0} PNat) (OfNat.ofNat.{0} PNat 2 (OfNat.mk.{0} PNat 2 (bit0.{0} PNat PNat.hasAdd (One.one.{0} PNat PNat.hasOne)))) (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.hasInsert.{0} PNat) q (Singleton.singleton.{0, 0} PNat (Multiset.{0} PNat) (Multiset.hasSingleton.{0} PNat) r))))) -> (LT.lt.{0} PNat (Preorder.toLT.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) q (OfNat.ofNat.{0} PNat 4 (OfNat.mk.{0} PNat 4 (bit0.{0} PNat PNat.hasAdd (bit0.{0} PNat PNat.hasAdd (One.one.{0} PNat PNat.hasOne))))))
+  forall {q : PNat} {r : PNat}, (LE.le.{0} PNat (Preorder.toHasLe.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) q r) -> (LT.lt.{0} Rat Rat.hasLt (OfNat.ofNat.{0} Rat 1 (OfNat.mk.{0} Rat 1 (One.one.{0} Rat Rat.hasOne))) (ADEInequality.sumInv (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.hasInsert.{0} PNat) (OfNat.ofNat.{0} PNat 2 (OfNat.mk.{0} PNat 2 (bit0.{0} PNat PNat.hasAdd (One.one.{0} PNat PNat.hasOne)))) (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.hasInsert.{0} PNat) q (Singleton.singleton.{0, 0} PNat (Multiset.{0} PNat) (Multiset.hasSingleton.{0} PNat) r))))) -> (LT.lt.{0} PNat (Preorder.toHasLt.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) q (OfNat.ofNat.{0} PNat 4 (OfNat.mk.{0} PNat 4 (bit0.{0} PNat PNat.hasAdd (bit0.{0} PNat PNat.hasAdd (One.one.{0} PNat PNat.hasOne))))))
 but is expected to have type
   forall {q : PNat} {r : PNat}, (LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) q r) -> (LT.lt.{0} Rat Rat.instLTRat_1 (OfNat.ofNat.{0} Rat 1 (Rat.instOfNatRat 1)) (ADEInequality.sumInv (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.instInsertMultiset.{0} PNat) (OfNat.ofNat.{0} PNat 2 (instOfNatPNatHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.instInsertMultiset.{0} PNat) q (Singleton.singleton.{0, 0} PNat (Multiset.{0} PNat) (Multiset.instSingletonMultiset.{0} PNat) r))))) -> (LT.lt.{0} PNat (Preorder.toLT.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) q (OfNat.ofNat.{0} PNat 4 (instOfNatPNatHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3)))))
 Case conversion may be inaccurate. Consider using '#align ADE_inequality.lt_four ADEInequality.lt_fourₓ'. -/
@@ -271,7 +275,7 @@ theorem lt_four {q r : ℕ+} (hqr : q ≤ r) (H : 1 < sumInv {2, q, r}) : q < 4 
 
 /- warning: ADE_inequality.lt_six -> ADEInequality.lt_six is a dubious translation:
 lean 3 declaration is
-  forall {r : PNat}, (LT.lt.{0} Rat Rat.hasLt (OfNat.ofNat.{0} Rat 1 (OfNat.mk.{0} Rat 1 (One.one.{0} Rat Rat.hasOne))) (ADEInequality.sumInv (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.hasInsert.{0} PNat) (OfNat.ofNat.{0} PNat 2 (OfNat.mk.{0} PNat 2 (bit0.{0} PNat PNat.hasAdd (One.one.{0} PNat PNat.hasOne)))) (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.hasInsert.{0} PNat) (OfNat.ofNat.{0} PNat 3 (OfNat.mk.{0} PNat 3 (bit1.{0} PNat PNat.hasOne PNat.hasAdd (One.one.{0} PNat PNat.hasOne)))) (Singleton.singleton.{0, 0} PNat (Multiset.{0} PNat) (Multiset.hasSingleton.{0} PNat) r))))) -> (LT.lt.{0} PNat (Preorder.toLT.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) r (OfNat.ofNat.{0} PNat 6 (OfNat.mk.{0} PNat 6 (bit0.{0} PNat PNat.hasAdd (bit1.{0} PNat PNat.hasOne PNat.hasAdd (One.one.{0} PNat PNat.hasOne))))))
+  forall {r : PNat}, (LT.lt.{0} Rat Rat.hasLt (OfNat.ofNat.{0} Rat 1 (OfNat.mk.{0} Rat 1 (One.one.{0} Rat Rat.hasOne))) (ADEInequality.sumInv (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.hasInsert.{0} PNat) (OfNat.ofNat.{0} PNat 2 (OfNat.mk.{0} PNat 2 (bit0.{0} PNat PNat.hasAdd (One.one.{0} PNat PNat.hasOne)))) (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.hasInsert.{0} PNat) (OfNat.ofNat.{0} PNat 3 (OfNat.mk.{0} PNat 3 (bit1.{0} PNat PNat.hasOne PNat.hasAdd (One.one.{0} PNat PNat.hasOne)))) (Singleton.singleton.{0, 0} PNat (Multiset.{0} PNat) (Multiset.hasSingleton.{0} PNat) r))))) -> (LT.lt.{0} PNat (Preorder.toHasLt.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) r (OfNat.ofNat.{0} PNat 6 (OfNat.mk.{0} PNat 6 (bit0.{0} PNat PNat.hasAdd (bit1.{0} PNat PNat.hasOne PNat.hasAdd (One.one.{0} PNat PNat.hasOne))))))
 but is expected to have type
   forall {r : PNat}, (LT.lt.{0} Rat Rat.instLTRat_1 (OfNat.ofNat.{0} Rat 1 (Rat.instOfNatRat 1)) (ADEInequality.sumInv (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.instInsertMultiset.{0} PNat) (OfNat.ofNat.{0} PNat 2 (instOfNatPNatHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.instInsertMultiset.{0} PNat) (OfNat.ofNat.{0} PNat 3 (instOfNatPNatHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)))) (Singleton.singleton.{0, 0} PNat (Multiset.{0} PNat) (Multiset.instSingletonMultiset.{0} PNat) r))))) -> (LT.lt.{0} PNat (Preorder.toLT.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) r (OfNat.ofNat.{0} PNat 6 (instOfNatPNatHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 5 (instOfNatNat 5)))))
 Case conversion may be inaccurate. Consider using '#align ADE_inequality.lt_six ADEInequality.lt_sixₓ'. -/
@@ -289,7 +293,12 @@ theorem lt_six {r : ℕ+} (H : 1 < sumInv {2, 3, r}) : r < 6 :=
   rw [inv_le_inv _ h6] <;> [assumption_mod_cast, norm_num]
 #align ADE_inequality.lt_six ADEInequality.lt_six
 
-#print ADEInequality.admissible_of_one_lt_sumInv_aux' /-
+/- warning: ADE_inequality.admissible_of_one_lt_sum_inv_aux' -> ADEInequality.admissible_of_one_lt_sumInv_aux' is a dubious translation:
+lean 3 declaration is
+  forall {p : PNat} {q : PNat} {r : PNat}, (LE.le.{0} PNat (Preorder.toHasLe.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) p q) -> (LE.le.{0} PNat (Preorder.toHasLe.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) q r) -> (LT.lt.{0} Rat Rat.hasLt (OfNat.ofNat.{0} Rat 1 (OfNat.mk.{0} Rat 1 (One.one.{0} Rat Rat.hasOne))) (ADEInequality.sumInv (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.hasInsert.{0} PNat) p (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.hasInsert.{0} PNat) q (Singleton.singleton.{0, 0} PNat (Multiset.{0} PNat) (Multiset.hasSingleton.{0} PNat) r))))) -> (ADEInequality.Admissible (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.hasInsert.{0} PNat) p (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.hasInsert.{0} PNat) q (Singleton.singleton.{0, 0} PNat (Multiset.{0} PNat) (Multiset.hasSingleton.{0} PNat) r))))
+but is expected to have type
+  forall {p : PNat} {q : PNat} {r : PNat}, (LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) p q) -> (LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) q r) -> (LT.lt.{0} Rat Rat.instLTRat_1 (OfNat.ofNat.{0} Rat 1 (Rat.instOfNatRat 1)) (ADEInequality.sumInv (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.instInsertMultiset.{0} PNat) p (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.instInsertMultiset.{0} PNat) q (Singleton.singleton.{0, 0} PNat (Multiset.{0} PNat) (Multiset.instSingletonMultiset.{0} PNat) r))))) -> (ADEInequality.Admissible (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.instInsertMultiset.{0} PNat) p (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.instInsertMultiset.{0} PNat) q (Singleton.singleton.{0, 0} PNat (Multiset.{0} PNat) (Multiset.instSingletonMultiset.{0} PNat) r))))
+Case conversion may be inaccurate. Consider using '#align ADE_inequality.admissible_of_one_lt_sum_inv_aux' ADEInequality.admissible_of_one_lt_sumInv_aux'ₓ'. -/
 theorem admissible_of_one_lt_sumInv_aux' {p q r : ℕ+} (hpq : p ≤ q) (hqr : q ≤ r)
     (H : 1 < sumInv {p, q, r}) : Admissible {p, q, r} :=
   by
@@ -305,9 +314,13 @@ theorem admissible_of_one_lt_sumInv_aux' {p q r : ℕ+} (hpq : p ≤ q) (hqr : q
   · exact admissible_E7
   · exact admissible_E8
 #align ADE_inequality.admissible_of_one_lt_sum_inv_aux' ADEInequality.admissible_of_one_lt_sumInv_aux'
--/
 
-#print ADEInequality.admissible_of_one_lt_sumInv_aux /-
+/- warning: ADE_inequality.admissible_of_one_lt_sum_inv_aux -> ADEInequality.admissible_of_one_lt_sumInv_aux is a dubious translation:
+lean 3 declaration is
+  forall {pqr : List.{0} PNat}, (List.Sorted.{0} PNat (LE.le.{0} PNat (Preorder.toHasLe.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid))))) pqr) -> (Eq.{1} Nat (List.length.{0} PNat pqr) (OfNat.ofNat.{0} Nat 3 (OfNat.mk.{0} Nat 3 (bit1.{0} Nat Nat.hasOne Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))) -> (LT.lt.{0} Rat Rat.hasLt (OfNat.ofNat.{0} Rat 1 (OfNat.mk.{0} Rat 1 (One.one.{0} Rat Rat.hasOne))) (ADEInequality.sumInv ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (List.{0} PNat) (Multiset.{0} PNat) (HasLiftT.mk.{1, 1} (List.{0} PNat) (Multiset.{0} PNat) (CoeTCₓ.coe.{1, 1} (List.{0} PNat) (Multiset.{0} PNat) (coeBase.{1, 1} (List.{0} PNat) (Multiset.{0} PNat) (Multiset.hasCoe.{0} PNat)))) pqr))) -> (ADEInequality.Admissible ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (List.{0} PNat) (Multiset.{0} PNat) (HasLiftT.mk.{1, 1} (List.{0} PNat) (Multiset.{0} PNat) (CoeTCₓ.coe.{1, 1} (List.{0} PNat) (Multiset.{0} PNat) (coeBase.{1, 1} (List.{0} PNat) (Multiset.{0} PNat) (Multiset.hasCoe.{0} PNat)))) pqr))
+but is expected to have type
+  forall {pqr : List.{0} PNat}, (List.Sorted.{0} PNat (fun (x._@.Mathlib.NumberTheory.ADEInequality._hyg.2199 : PNat) (x._@.Mathlib.NumberTheory.ADEInequality._hyg.2201 : PNat) => LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) x._@.Mathlib.NumberTheory.ADEInequality._hyg.2199 x._@.Mathlib.NumberTheory.ADEInequality._hyg.2201) pqr) -> (Eq.{1} Nat (List.length.{0} PNat pqr) (OfNat.ofNat.{0} Nat 3 (instOfNatNat 3))) -> (LT.lt.{0} Rat Rat.instLTRat_1 (OfNat.ofNat.{0} Rat 1 (Rat.instOfNatRat 1)) (ADEInequality.sumInv (Multiset.ofList.{0} PNat pqr))) -> (ADEInequality.Admissible (Multiset.ofList.{0} PNat pqr))
+Case conversion may be inaccurate. Consider using '#align ADE_inequality.admissible_of_one_lt_sum_inv_aux ADEInequality.admissible_of_one_lt_sumInv_auxₓ'. -/
 theorem admissible_of_one_lt_sumInv_aux :
     ∀ {pqr : List ℕ+} (hs : pqr.Sorted (· ≤ ·)) (hl : pqr.length = 3) (H : 1 < sumInv pqr),
       Admissible pqr
@@ -317,9 +330,13 @@ theorem admissible_of_one_lt_sumInv_aux :
     simpa using hs
     exact admissible_of_one_lt_sum_inv_aux' hpq hqr H
 #align ADE_inequality.admissible_of_one_lt_sum_inv_aux ADEInequality.admissible_of_one_lt_sumInv_aux
--/
 
-#print ADEInequality.admissible_of_one_lt_sumInv /-
+/- warning: ADE_inequality.admissible_of_one_lt_sum_inv -> ADEInequality.admissible_of_one_lt_sumInv is a dubious translation:
+lean 3 declaration is
+  forall {p : PNat} {q : PNat} {r : PNat}, (LT.lt.{0} Rat Rat.hasLt (OfNat.ofNat.{0} Rat 1 (OfNat.mk.{0} Rat 1 (One.one.{0} Rat Rat.hasOne))) (ADEInequality.sumInv (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.hasInsert.{0} PNat) p (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.hasInsert.{0} PNat) q (Singleton.singleton.{0, 0} PNat (Multiset.{0} PNat) (Multiset.hasSingleton.{0} PNat) r))))) -> (ADEInequality.Admissible (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.hasInsert.{0} PNat) p (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.hasInsert.{0} PNat) q (Singleton.singleton.{0, 0} PNat (Multiset.{0} PNat) (Multiset.hasSingleton.{0} PNat) r))))
+but is expected to have type
+  forall {p : PNat} {q : PNat} {r : PNat}, (LT.lt.{0} Rat Rat.instLTRat_1 (OfNat.ofNat.{0} Rat 1 (Rat.instOfNatRat 1)) (ADEInequality.sumInv (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.instInsertMultiset.{0} PNat) p (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.instInsertMultiset.{0} PNat) q (Singleton.singleton.{0, 0} PNat (Multiset.{0} PNat) (Multiset.instSingletonMultiset.{0} PNat) r))))) -> (ADEInequality.Admissible (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.instInsertMultiset.{0} PNat) p (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.instInsertMultiset.{0} PNat) q (Singleton.singleton.{0, 0} PNat (Multiset.{0} PNat) (Multiset.instSingletonMultiset.{0} PNat) r))))
+Case conversion may be inaccurate. Consider using '#align ADE_inequality.admissible_of_one_lt_sum_inv ADEInequality.admissible_of_one_lt_sumInvₓ'. -/
 theorem admissible_of_one_lt_sumInv {p q r : ℕ+} (H : 1 < sumInv {p, q, r}) :
     Admissible {p, q, r} := by
   simp only [admissible]
@@ -331,9 +348,13 @@ theorem admissible_of_one_lt_sumInv {p q r : ℕ+} (H : 1 < sumInv {p, q, r}) :
   simp only [S, length_sort]
   decide
 #align ADE_inequality.admissible_of_one_lt_sum_inv ADEInequality.admissible_of_one_lt_sumInv
--/
 
-#print ADEInequality.classification /-
+/- warning: ADE_inequality.classification -> ADEInequality.classification is a dubious translation:
+lean 3 declaration is
+  forall (p : PNat) (q : PNat) (r : PNat), Iff (LT.lt.{0} Rat Rat.hasLt (OfNat.ofNat.{0} Rat 1 (OfNat.mk.{0} Rat 1 (One.one.{0} Rat Rat.hasOne))) (ADEInequality.sumInv (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.hasInsert.{0} PNat) p (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.hasInsert.{0} PNat) q (Singleton.singleton.{0, 0} PNat (Multiset.{0} PNat) (Multiset.hasSingleton.{0} PNat) r))))) (ADEInequality.Admissible (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.hasInsert.{0} PNat) p (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.hasInsert.{0} PNat) q (Singleton.singleton.{0, 0} PNat (Multiset.{0} PNat) (Multiset.hasSingleton.{0} PNat) r))))
+but is expected to have type
+  forall (p : PNat) (q : PNat) (r : PNat), Iff (LT.lt.{0} Rat Rat.instLTRat_1 (OfNat.ofNat.{0} Rat 1 (Rat.instOfNatRat 1)) (ADEInequality.sumInv (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.instInsertMultiset.{0} PNat) p (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.instInsertMultiset.{0} PNat) q (Singleton.singleton.{0, 0} PNat (Multiset.{0} PNat) (Multiset.instSingletonMultiset.{0} PNat) r))))) (ADEInequality.Admissible (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.instInsertMultiset.{0} PNat) p (Insert.insert.{0, 0} PNat (Multiset.{0} PNat) (Multiset.instInsertMultiset.{0} PNat) q (Singleton.singleton.{0, 0} PNat (Multiset.{0} PNat) (Multiset.instSingletonMultiset.{0} PNat) r))))
+Case conversion may be inaccurate. Consider using '#align ADE_inequality.classification ADEInequality.classificationₓ'. -/
 /-- A multiset `{p,q,r}` of positive natural numbers
 is a solution to `(p⁻¹ + q⁻¹ + r⁻¹ : ℚ) > 1` if and only if
 it is `admissible` which means it is one of:
@@ -345,7 +366,6 @@ it is `admissible` which means it is one of:
 theorem classification (p q r : ℕ+) : 1 < sumInv {p, q, r} ↔ Admissible {p, q, r} :=
   ⟨admissible_of_one_lt_sumInv, Admissible.one_lt_sumInv⟩
 #align ADE_inequality.classification ADEInequality.classification
--/
 
 end ADEInequality
 

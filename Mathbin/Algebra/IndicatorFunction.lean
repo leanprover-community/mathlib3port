@@ -1262,7 +1262,7 @@ variable [Preorder M]
 
 /- warning: set.one_le_mul_indicator_apply -> Set.one_le_mulIndicator_apply is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {M : Type.{u2}} [_inst_1 : One.{u2} M] {s : Set.{u1} α} {f : α -> M} {a : α} [_inst_2 : Preorder.{u2} M], ((Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) -> (LE.le.{u2} M (Preorder.toLE.{u2} M _inst_2) (OfNat.ofNat.{u2} M 1 (OfNat.mk.{u2} M 1 (One.one.{u2} M _inst_1))) (f a))) -> (LE.le.{u2} M (Preorder.toLE.{u2} M _inst_2) (OfNat.ofNat.{u2} M 1 (OfNat.mk.{u2} M 1 (One.one.{u2} M _inst_1))) (Set.mulIndicator.{u1, u2} α M _inst_1 s f a))
+  forall {α : Type.{u1}} {M : Type.{u2}} [_inst_1 : One.{u2} M] {s : Set.{u1} α} {f : α -> M} {a : α} [_inst_2 : Preorder.{u2} M], ((Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) -> (LE.le.{u2} M (Preorder.toHasLe.{u2} M _inst_2) (OfNat.ofNat.{u2} M 1 (OfNat.mk.{u2} M 1 (One.one.{u2} M _inst_1))) (f a))) -> (LE.le.{u2} M (Preorder.toHasLe.{u2} M _inst_2) (OfNat.ofNat.{u2} M 1 (OfNat.mk.{u2} M 1 (One.one.{u2} M _inst_1))) (Set.mulIndicator.{u1, u2} α M _inst_1 s f a))
 but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : One.{u1} M] {s : Set.{u2} α} {f : α -> M} {a : α} [_inst_2 : Preorder.{u1} M], ((Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s) -> (LE.le.{u1} M (Preorder.toLE.{u1} M _inst_2) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M _inst_1)) (f a))) -> (LE.le.{u1} M (Preorder.toLE.{u1} M _inst_2) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M _inst_1)) (Set.mulIndicator.{u2, u1} α M _inst_1 s f a))
 Case conversion may be inaccurate. Consider using '#align set.one_le_mul_indicator_apply Set.one_le_mulIndicator_applyₓ'. -/
@@ -1274,7 +1274,7 @@ theorem one_le_mulIndicator_apply (h : a ∈ s → 1 ≤ f a) : 1 ≤ mulIndicat
 
 /- warning: set.one_le_mul_indicator -> Set.one_le_mulIndicator is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {M : Type.{u2}} [_inst_1 : One.{u2} M] {s : Set.{u1} α} {f : α -> M} [_inst_2 : Preorder.{u2} M], (forall (a : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) -> (LE.le.{u2} M (Preorder.toLE.{u2} M _inst_2) (OfNat.ofNat.{u2} M 1 (OfNat.mk.{u2} M 1 (One.one.{u2} M _inst_1))) (f a))) -> (forall (a : α), LE.le.{u2} M (Preorder.toLE.{u2} M _inst_2) (OfNat.ofNat.{u2} M 1 (OfNat.mk.{u2} M 1 (One.one.{u2} M _inst_1))) (Set.mulIndicator.{u1, u2} α M _inst_1 s f a))
+  forall {α : Type.{u1}} {M : Type.{u2}} [_inst_1 : One.{u2} M] {s : Set.{u1} α} {f : α -> M} [_inst_2 : Preorder.{u2} M], (forall (a : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) -> (LE.le.{u2} M (Preorder.toHasLe.{u2} M _inst_2) (OfNat.ofNat.{u2} M 1 (OfNat.mk.{u2} M 1 (One.one.{u2} M _inst_1))) (f a))) -> (forall (a : α), LE.le.{u2} M (Preorder.toHasLe.{u2} M _inst_2) (OfNat.ofNat.{u2} M 1 (OfNat.mk.{u2} M 1 (One.one.{u2} M _inst_1))) (Set.mulIndicator.{u1, u2} α M _inst_1 s f a))
 but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : One.{u1} M] {s : Set.{u2} α} {f : α -> M} [_inst_2 : Preorder.{u1} M], (forall (a : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s) -> (LE.le.{u1} M (Preorder.toLE.{u1} M _inst_2) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M _inst_1)) (f a))) -> (forall (a : α), LE.le.{u1} M (Preorder.toLE.{u1} M _inst_2) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M _inst_1)) (Set.mulIndicator.{u2, u1} α M _inst_1 s f a))
 Case conversion may be inaccurate. Consider using '#align set.one_le_mul_indicator Set.one_le_mulIndicatorₓ'. -/
@@ -1286,7 +1286,7 @@ theorem one_le_mulIndicator (h : ∀ a ∈ s, 1 ≤ f a) (a : α) : 1 ≤ mulInd
 
 /- warning: set.mul_indicator_apply_le_one -> Set.mulIndicator_apply_le_one is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {M : Type.{u2}} [_inst_1 : One.{u2} M] {s : Set.{u1} α} {f : α -> M} {a : α} [_inst_2 : Preorder.{u2} M], ((Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) -> (LE.le.{u2} M (Preorder.toLE.{u2} M _inst_2) (f a) (OfNat.ofNat.{u2} M 1 (OfNat.mk.{u2} M 1 (One.one.{u2} M _inst_1))))) -> (LE.le.{u2} M (Preorder.toLE.{u2} M _inst_2) (Set.mulIndicator.{u1, u2} α M _inst_1 s f a) (OfNat.ofNat.{u2} M 1 (OfNat.mk.{u2} M 1 (One.one.{u2} M _inst_1))))
+  forall {α : Type.{u1}} {M : Type.{u2}} [_inst_1 : One.{u2} M] {s : Set.{u1} α} {f : α -> M} {a : α} [_inst_2 : Preorder.{u2} M], ((Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) -> (LE.le.{u2} M (Preorder.toHasLe.{u2} M _inst_2) (f a) (OfNat.ofNat.{u2} M 1 (OfNat.mk.{u2} M 1 (One.one.{u2} M _inst_1))))) -> (LE.le.{u2} M (Preorder.toHasLe.{u2} M _inst_2) (Set.mulIndicator.{u1, u2} α M _inst_1 s f a) (OfNat.ofNat.{u2} M 1 (OfNat.mk.{u2} M 1 (One.one.{u2} M _inst_1))))
 but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : One.{u1} M] {s : Set.{u2} α} {f : α -> M} {a : α} [_inst_2 : Preorder.{u1} M], ((Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s) -> (LE.le.{u1} M (Preorder.toLE.{u1} M _inst_2) (f a) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M _inst_1)))) -> (LE.le.{u1} M (Preorder.toLE.{u1} M _inst_2) (Set.mulIndicator.{u2, u1} α M _inst_1 s f a) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M _inst_1)))
 Case conversion may be inaccurate. Consider using '#align set.mul_indicator_apply_le_one Set.mulIndicator_apply_le_oneₓ'. -/
@@ -1298,7 +1298,7 @@ theorem mulIndicator_apply_le_one (h : a ∈ s → f a ≤ 1) : mulIndicator s f
 
 /- warning: set.mul_indicator_le_one -> Set.mulIndicator_le_one is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {M : Type.{u2}} [_inst_1 : One.{u2} M] {s : Set.{u1} α} {f : α -> M} [_inst_2 : Preorder.{u2} M], (forall (a : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) -> (LE.le.{u2} M (Preorder.toLE.{u2} M _inst_2) (f a) (OfNat.ofNat.{u2} M 1 (OfNat.mk.{u2} M 1 (One.one.{u2} M _inst_1))))) -> (forall (a : α), LE.le.{u2} M (Preorder.toLE.{u2} M _inst_2) (Set.mulIndicator.{u1, u2} α M _inst_1 s f a) (OfNat.ofNat.{u2} M 1 (OfNat.mk.{u2} M 1 (One.one.{u2} M _inst_1))))
+  forall {α : Type.{u1}} {M : Type.{u2}} [_inst_1 : One.{u2} M] {s : Set.{u1} α} {f : α -> M} [_inst_2 : Preorder.{u2} M], (forall (a : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) -> (LE.le.{u2} M (Preorder.toHasLe.{u2} M _inst_2) (f a) (OfNat.ofNat.{u2} M 1 (OfNat.mk.{u2} M 1 (One.one.{u2} M _inst_1))))) -> (forall (a : α), LE.le.{u2} M (Preorder.toHasLe.{u2} M _inst_2) (Set.mulIndicator.{u1, u2} α M _inst_1 s f a) (OfNat.ofNat.{u2} M 1 (OfNat.mk.{u2} M 1 (One.one.{u2} M _inst_1))))
 but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : One.{u1} M] {s : Set.{u2} α} {f : α -> M} [_inst_2 : Preorder.{u1} M], (forall (a : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s) -> (LE.le.{u1} M (Preorder.toLE.{u1} M _inst_2) (f a) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M _inst_1)))) -> (forall (a : α), LE.le.{u1} M (Preorder.toLE.{u1} M _inst_2) (Set.mulIndicator.{u2, u1} α M _inst_1 s f a) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M _inst_1)))
 Case conversion may be inaccurate. Consider using '#align set.mul_indicator_le_one Set.mulIndicator_le_oneₓ'. -/
@@ -1308,19 +1308,23 @@ theorem mulIndicator_le_one (h : ∀ a ∈ s, f a ≤ 1) (a : α) : mulIndicator
 #align set.mul_indicator_le_one Set.mulIndicator_le_one
 #align set.indicator_nonpos Set.indicator_nonpos
 
-#print Set.mulIndicator_le_mulIndicator /-
+/- warning: set.mul_indicator_le_mul_indicator -> Set.mulIndicator_le_mulIndicator is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {M : Type.{u2}} [_inst_1 : One.{u2} M] {s : Set.{u1} α} {f : α -> M} {g : α -> M} {a : α} [_inst_2 : Preorder.{u2} M], (LE.le.{u2} M (Preorder.toHasLe.{u2} M _inst_2) (f a) (g a)) -> (LE.le.{u2} M (Preorder.toHasLe.{u2} M _inst_2) (Set.mulIndicator.{u1, u2} α M _inst_1 s f a) (Set.mulIndicator.{u1, u2} α M _inst_1 s g a))
+but is expected to have type
+  forall {α : Type.{u1}} {M : Type.{u2}} [_inst_1 : One.{u2} M] {s : Set.{u1} α} {f : α -> M} {g : α -> M} {a : α} [_inst_2 : Preorder.{u2} M], (LE.le.{u2} M (Preorder.toLE.{u2} M _inst_2) (f a) (g a)) -> (LE.le.{u2} M (Preorder.toLE.{u2} M _inst_2) (Set.mulIndicator.{u1, u2} α M _inst_1 s f a) (Set.mulIndicator.{u1, u2} α M _inst_1 s g a))
+Case conversion may be inaccurate. Consider using '#align set.mul_indicator_le_mul_indicator Set.mulIndicator_le_mulIndicatorₓ'. -/
 @[to_additive]
 theorem mulIndicator_le_mulIndicator (h : f a ≤ g a) : mulIndicator s f a ≤ mulIndicator s g a :=
   mulIndicator_rel_mulIndicator le_rfl fun _ => h
 #align set.mul_indicator_le_mul_indicator Set.mulIndicator_le_mulIndicator
 #align set.indicator_le_indicator Set.indicator_le_indicator
--/
 
 attribute [mono] mul_indicator_le_mul_indicator indicator_le_indicator
 
 /- warning: set.mul_indicator_le_mul_indicator_of_subset -> Set.mulIndicator_le_mulIndicator_of_subset is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {M : Type.{u2}} [_inst_1 : One.{u2} M] {s : Set.{u1} α} {t : Set.{u1} α} {f : α -> M} [_inst_2 : Preorder.{u2} M], (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s t) -> (forall (a : α), LE.le.{u2} M (Preorder.toLE.{u2} M _inst_2) (OfNat.ofNat.{u2} M 1 (OfNat.mk.{u2} M 1 (One.one.{u2} M _inst_1))) (f a)) -> (forall (a : α), LE.le.{u2} M (Preorder.toLE.{u2} M _inst_2) (Set.mulIndicator.{u1, u2} α M _inst_1 s f a) (Set.mulIndicator.{u1, u2} α M _inst_1 t f a))
+  forall {α : Type.{u1}} {M : Type.{u2}} [_inst_1 : One.{u2} M] {s : Set.{u1} α} {t : Set.{u1} α} {f : α -> M} [_inst_2 : Preorder.{u2} M], (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s t) -> (forall (a : α), LE.le.{u2} M (Preorder.toHasLe.{u2} M _inst_2) (OfNat.ofNat.{u2} M 1 (OfNat.mk.{u2} M 1 (One.one.{u2} M _inst_1))) (f a)) -> (forall (a : α), LE.le.{u2} M (Preorder.toHasLe.{u2} M _inst_2) (Set.mulIndicator.{u1, u2} α M _inst_1 s f a) (Set.mulIndicator.{u1, u2} α M _inst_1 t f a))
 but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : One.{u1} M] {s : Set.{u2} α} {t : Set.{u2} α} {f : α -> M} [_inst_2 : Preorder.{u1} M], (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) s t) -> (forall (a : α), LE.le.{u1} M (Preorder.toLE.{u1} M _inst_2) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M _inst_1)) (f a)) -> (forall (a : α), LE.le.{u1} M (Preorder.toLE.{u1} M _inst_2) (Set.mulIndicator.{u2, u1} α M _inst_1 s f a) (Set.mulIndicator.{u2, u1} α M _inst_1 t f a))
 Case conversion may be inaccurate. Consider using '#align set.mul_indicator_le_mul_indicator_of_subset Set.mulIndicator_le_mulIndicator_of_subsetₓ'. -/
@@ -1335,7 +1339,7 @@ theorem mulIndicator_le_mulIndicator_of_subset (h : s ⊆ t) (hf : ∀ a, 1 ≤ 
 
 /- warning: set.mul_indicator_le_self' -> Set.mulIndicator_le_self' is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {M : Type.{u2}} [_inst_1 : One.{u2} M] {s : Set.{u1} α} {f : α -> M} [_inst_2 : Preorder.{u2} M], (forall (x : α), (Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s)) -> (LE.le.{u2} M (Preorder.toLE.{u2} M _inst_2) (OfNat.ofNat.{u2} M 1 (OfNat.mk.{u2} M 1 (One.one.{u2} M _inst_1))) (f x))) -> (LE.le.{max u1 u2} (α -> M) (Pi.hasLe.{u1, u2} α (fun (ᾰ : α) => M) (fun (i : α) => Preorder.toLE.{u2} M _inst_2)) (Set.mulIndicator.{u1, u2} α M _inst_1 s f) f)
+  forall {α : Type.{u1}} {M : Type.{u2}} [_inst_1 : One.{u2} M] {s : Set.{u1} α} {f : α -> M} [_inst_2 : Preorder.{u2} M], (forall (x : α), (Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s)) -> (LE.le.{u2} M (Preorder.toHasLe.{u2} M _inst_2) (OfNat.ofNat.{u2} M 1 (OfNat.mk.{u2} M 1 (One.one.{u2} M _inst_1))) (f x))) -> (LE.le.{max u1 u2} (α -> M) (Pi.hasLe.{u1, u2} α (fun (ᾰ : α) => M) (fun (i : α) => Preorder.toHasLe.{u2} M _inst_2)) (Set.mulIndicator.{u1, u2} α M _inst_1 s f) f)
 but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : One.{u1} M] {s : Set.{u2} α} {f : α -> M} [_inst_2 : Preorder.{u1} M], (forall (x : α), (Not (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s)) -> (LE.le.{u1} M (Preorder.toLE.{u1} M _inst_2) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M _inst_1)) (f x))) -> (LE.le.{max u2 u1} (α -> M) (Pi.hasLe.{u2, u1} α (fun (ᾰ : α) => M) (fun (i : α) => Preorder.toLE.{u1} M _inst_2)) (Set.mulIndicator.{u2, u1} α M _inst_1 s f) f)
 Case conversion may be inaccurate. Consider using '#align set.mul_indicator_le_self' Set.mulIndicator_le_self'ₓ'. -/
@@ -1377,7 +1381,7 @@ variable [CanonicallyOrderedMonoid M]
 
 /- warning: set.mul_indicator_le_self -> Set.mulIndicator_le_self is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {M : Type.{u2}} [_inst_1 : CanonicallyOrderedMonoid.{u2} M] (s : Set.{u1} α) (f : α -> M), LE.le.{max u1 u2} (α -> M) (Pi.hasLe.{u1, u2} α (fun (ᾰ : α) => M) (fun (i : α) => Preorder.toLE.{u2} M (PartialOrder.toPreorder.{u2} M (OrderedCommMonoid.toPartialOrder.{u2} M (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u2} M _inst_1))))) (Set.mulIndicator.{u1, u2} α M (MulOneClass.toHasOne.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M (OrderedCommMonoid.toCommMonoid.{u2} M (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u2} M _inst_1))))) s f) f
+  forall {α : Type.{u1}} {M : Type.{u2}} [_inst_1 : CanonicallyOrderedMonoid.{u2} M] (s : Set.{u1} α) (f : α -> M), LE.le.{max u1 u2} (α -> M) (Pi.hasLe.{u1, u2} α (fun (ᾰ : α) => M) (fun (i : α) => Preorder.toHasLe.{u2} M (PartialOrder.toPreorder.{u2} M (OrderedCommMonoid.toPartialOrder.{u2} M (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u2} M _inst_1))))) (Set.mulIndicator.{u1, u2} α M (MulOneClass.toHasOne.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M (OrderedCommMonoid.toCommMonoid.{u2} M (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u2} M _inst_1))))) s f) f
 but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : CanonicallyOrderedMonoid.{u1} M] (s : Set.{u2} α) (f : α -> M), LE.le.{max u2 u1} (α -> M) (Pi.hasLe.{u2, u1} α (fun (ᾰ : α) => M) (fun (i : α) => Preorder.toLE.{u1} M (PartialOrder.toPreorder.{u1} M (OrderedCommMonoid.toPartialOrder.{u1} M (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u1} M _inst_1))))) (Set.mulIndicator.{u2, u1} α M (Monoid.toOne.{u1} M (CommMonoid.toMonoid.{u1} M (OrderedCommMonoid.toCommMonoid.{u1} M (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u1} M _inst_1)))) s f) f
 Case conversion may be inaccurate. Consider using '#align set.mul_indicator_le_self Set.mulIndicator_le_selfₓ'. -/
@@ -1389,7 +1393,7 @@ theorem mulIndicator_le_self (s : Set α) (f : α → M) : mulIndicator s f ≤ 
 
 /- warning: set.mul_indicator_apply_le -> Set.mulIndicator_apply_le is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {M : Type.{u2}} [_inst_1 : CanonicallyOrderedMonoid.{u2} M] {a : α} {s : Set.{u1} α} {f : α -> M} {g : α -> M}, ((Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) -> (LE.le.{u2} M (Preorder.toLE.{u2} M (PartialOrder.toPreorder.{u2} M (OrderedCommMonoid.toPartialOrder.{u2} M (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u2} M _inst_1)))) (f a) (g a))) -> (LE.le.{u2} M (Preorder.toLE.{u2} M (PartialOrder.toPreorder.{u2} M (OrderedCommMonoid.toPartialOrder.{u2} M (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u2} M _inst_1)))) (Set.mulIndicator.{u1, u2} α M (MulOneClass.toHasOne.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M (OrderedCommMonoid.toCommMonoid.{u2} M (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u2} M _inst_1))))) s f a) (g a))
+  forall {α : Type.{u1}} {M : Type.{u2}} [_inst_1 : CanonicallyOrderedMonoid.{u2} M] {a : α} {s : Set.{u1} α} {f : α -> M} {g : α -> M}, ((Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) -> (LE.le.{u2} M (Preorder.toHasLe.{u2} M (PartialOrder.toPreorder.{u2} M (OrderedCommMonoid.toPartialOrder.{u2} M (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u2} M _inst_1)))) (f a) (g a))) -> (LE.le.{u2} M (Preorder.toHasLe.{u2} M (PartialOrder.toPreorder.{u2} M (OrderedCommMonoid.toPartialOrder.{u2} M (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u2} M _inst_1)))) (Set.mulIndicator.{u1, u2} α M (MulOneClass.toHasOne.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M (OrderedCommMonoid.toCommMonoid.{u2} M (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u2} M _inst_1))))) s f a) (g a))
 but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : CanonicallyOrderedMonoid.{u1} M] {a : α} {s : Set.{u2} α} {f : α -> M} {g : α -> M}, ((Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s) -> (LE.le.{u1} M (Preorder.toLE.{u1} M (PartialOrder.toPreorder.{u1} M (OrderedCommMonoid.toPartialOrder.{u1} M (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u1} M _inst_1)))) (f a) (g a))) -> (LE.le.{u1} M (Preorder.toLE.{u1} M (PartialOrder.toPreorder.{u1} M (OrderedCommMonoid.toPartialOrder.{u1} M (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u1} M _inst_1)))) (Set.mulIndicator.{u2, u1} α M (Monoid.toOne.{u1} M (CommMonoid.toMonoid.{u1} M (OrderedCommMonoid.toCommMonoid.{u1} M (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u1} M _inst_1)))) s f a) (g a))
 Case conversion may be inaccurate. Consider using '#align set.mul_indicator_apply_le Set.mulIndicator_apply_leₓ'. -/
@@ -1402,7 +1406,7 @@ theorem mulIndicator_apply_le {a : α} {s : Set α} {f g : α → M} (hfg : a �
 
 /- warning: set.mul_indicator_le -> Set.mulIndicator_le is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {M : Type.{u2}} [_inst_1 : CanonicallyOrderedMonoid.{u2} M] {s : Set.{u1} α} {f : α -> M} {g : α -> M}, (forall (a : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) -> (LE.le.{u2} M (Preorder.toLE.{u2} M (PartialOrder.toPreorder.{u2} M (OrderedCommMonoid.toPartialOrder.{u2} M (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u2} M _inst_1)))) (f a) (g a))) -> (LE.le.{max u1 u2} (α -> M) (Pi.hasLe.{u1, u2} α (fun (ᾰ : α) => M) (fun (i : α) => Preorder.toLE.{u2} M (PartialOrder.toPreorder.{u2} M (OrderedCommMonoid.toPartialOrder.{u2} M (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u2} M _inst_1))))) (Set.mulIndicator.{u1, u2} α M (MulOneClass.toHasOne.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M (OrderedCommMonoid.toCommMonoid.{u2} M (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u2} M _inst_1))))) s f) g)
+  forall {α : Type.{u1}} {M : Type.{u2}} [_inst_1 : CanonicallyOrderedMonoid.{u2} M] {s : Set.{u1} α} {f : α -> M} {g : α -> M}, (forall (a : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) -> (LE.le.{u2} M (Preorder.toHasLe.{u2} M (PartialOrder.toPreorder.{u2} M (OrderedCommMonoid.toPartialOrder.{u2} M (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u2} M _inst_1)))) (f a) (g a))) -> (LE.le.{max u1 u2} (α -> M) (Pi.hasLe.{u1, u2} α (fun (ᾰ : α) => M) (fun (i : α) => Preorder.toHasLe.{u2} M (PartialOrder.toPreorder.{u2} M (OrderedCommMonoid.toPartialOrder.{u2} M (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u2} M _inst_1))))) (Set.mulIndicator.{u1, u2} α M (MulOneClass.toHasOne.{u2} M (Monoid.toMulOneClass.{u2} M (CommMonoid.toMonoid.{u2} M (OrderedCommMonoid.toCommMonoid.{u2} M (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u2} M _inst_1))))) s f) g)
 but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : CanonicallyOrderedMonoid.{u1} M] {s : Set.{u2} α} {f : α -> M} {g : α -> M}, (forall (a : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s) -> (LE.le.{u1} M (Preorder.toLE.{u1} M (PartialOrder.toPreorder.{u1} M (OrderedCommMonoid.toPartialOrder.{u1} M (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u1} M _inst_1)))) (f a) (g a))) -> (LE.le.{max u2 u1} (α -> M) (Pi.hasLe.{u2, u1} α (fun (ᾰ : α) => M) (fun (i : α) => Preorder.toLE.{u1} M (PartialOrder.toPreorder.{u1} M (OrderedCommMonoid.toPartialOrder.{u1} M (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u1} M _inst_1))))) (Set.mulIndicator.{u2, u1} α M (Monoid.toOne.{u1} M (CommMonoid.toMonoid.{u1} M (OrderedCommMonoid.toCommMonoid.{u1} M (CanonicallyOrderedMonoid.toOrderedCommMonoid.{u1} M _inst_1)))) s f) g)
 Case conversion may be inaccurate. Consider using '#align set.mul_indicator_le Set.mulIndicator_leₓ'. -/
@@ -1415,7 +1419,12 @@ theorem mulIndicator_le {s : Set α} {f g : α → M} (hfg : ∀ a ∈ s, f a �
 
 end CanonicallyOrderedMonoid
 
-#print Set.indicator_le_indicator_nonneg /-
+/- warning: set.indicator_le_indicator_nonneg -> Set.indicator_le_indicator_nonneg is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LinearOrder.{u2} β] [_inst_2 : Zero.{u2} β] (s : Set.{u1} α) (f : α -> β), LE.le.{max u1 u2} (α -> β) (Pi.hasLe.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_1)))))) (Set.indicator.{u1, u2} α β _inst_2 s f) (Set.indicator.{u1, u2} α β _inst_2 (setOf.{u1} α (fun (x : α) => LE.le.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_1))))) (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_2))) (f x))) f)
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LinearOrder.{u2} β] [_inst_2 : Zero.{u2} β] (s : Set.{u1} α) (f : α -> β), LE.le.{max u1 u2} (α -> β) (Pi.hasLe.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_1))))))) (Set.indicator.{u1, u2} α β _inst_2 s f) (Set.indicator.{u1, u2} α β _inst_2 (setOf.{u1} α (fun (x : α) => LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_1)))))) (OfNat.ofNat.{u2} β 0 (Zero.toOfNat0.{u2} β _inst_2)) (f x))) f)
+Case conversion may be inaccurate. Consider using '#align set.indicator_le_indicator_nonneg Set.indicator_le_indicator_nonnegₓ'. -/
 theorem indicator_le_indicator_nonneg {β} [LinearOrder β] [Zero β] (s : Set α) (f : α → β) :
     s.indicator f ≤ { x | 0 ≤ f x }.indicator f :=
   by
@@ -1428,14 +1437,17 @@ theorem indicator_le_indicator_nonneg {β} [LinearOrder β] [Zero β] (s : Set �
     · exact h_1
     · exact le_rfl
 #align set.indicator_le_indicator_nonneg Set.indicator_le_indicator_nonneg
--/
 
-#print Set.indicator_nonpos_le_indicator /-
+/- warning: set.indicator_nonpos_le_indicator -> Set.indicator_nonpos_le_indicator is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LinearOrder.{u2} β] [_inst_2 : Zero.{u2} β] (s : Set.{u1} α) (f : α -> β), LE.le.{max u1 u2} (α -> β) (Pi.hasLe.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_1)))))) (Set.indicator.{u1, u2} α β _inst_2 (setOf.{u1} α (fun (x : α) => LE.le.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_1))))) (f x) (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_2))))) f) (Set.indicator.{u1, u2} α β _inst_2 s f)
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LinearOrder.{u2} β] [_inst_2 : Zero.{u2} β] (s : Set.{u1} α) (f : α -> β), LE.le.{max u1 u2} (α -> β) (Pi.hasLe.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_1))))))) (Set.indicator.{u1, u2} α β _inst_2 (setOf.{u1} α (fun (x : α) => LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_1)))))) (f x) (OfNat.ofNat.{u2} β 0 (Zero.toOfNat0.{u2} β _inst_2)))) f) (Set.indicator.{u1, u2} α β _inst_2 s f)
+Case conversion may be inaccurate. Consider using '#align set.indicator_nonpos_le_indicator Set.indicator_nonpos_le_indicatorₓ'. -/
 theorem indicator_nonpos_le_indicator {β} [LinearOrder β] [Zero β] (s : Set α) (f : α → β) :
     { x | f x ≤ 0 }.indicator f ≤ s.indicator f :=
   @indicator_le_indicator_nonneg α βᵒᵈ _ _ s f
 #align set.indicator_nonpos_le_indicator Set.indicator_nonpos_le_indicator
--/
 
 end Set
 

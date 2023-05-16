@@ -90,7 +90,12 @@ instance hasForgetToLat : HasForget₂ FrmCat LatCat
       map := fun X Y => FrameHom.toLatticeHom }
 #align Frm.has_forget_to_Lat FrmCat.hasForgetToLat
 
-#print FrmCat.Iso.mk /-
+/- warning: Frm.iso.mk -> FrmCat.Iso.mk is a dubious translation:
+lean 3 declaration is
+  forall {α : FrmCat.{u1}} {β : FrmCat.{u1}}, (OrderIso.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} FrmCat.{u1} Type.{u1} FrmCat.hasCoeToSort.{u1} α) (coeSort.{succ (succ u1), succ (succ u1)} FrmCat.{u1} Type.{u1} FrmCat.hasCoeToSort.{u1} β) (Preorder.toHasLe.{u1} (coeSort.{succ (succ u1), succ (succ u1)} FrmCat.{u1} Type.{u1} FrmCat.hasCoeToSort.{u1} α) (PartialOrder.toPreorder.{u1} (coeSort.{succ (succ u1), succ (succ u1)} FrmCat.{u1} Type.{u1} FrmCat.hasCoeToSort.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (coeSort.{succ (succ u1), succ (succ u1)} FrmCat.{u1} Type.{u1} FrmCat.hasCoeToSort.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (coeSort.{succ (succ u1), succ (succ u1)} FrmCat.{u1} Type.{u1} FrmCat.hasCoeToSort.{u1} α) (Order.Frame.toCompleteLattice.{u1} (coeSort.{succ (succ u1), succ (succ u1)} FrmCat.{u1} Type.{u1} FrmCat.hasCoeToSort.{u1} α) (FrmCat.Order.frame.{u1} α)))))) (Preorder.toHasLe.{u1} (coeSort.{succ (succ u1), succ (succ u1)} FrmCat.{u1} Type.{u1} FrmCat.hasCoeToSort.{u1} β) (PartialOrder.toPreorder.{u1} (coeSort.{succ (succ u1), succ (succ u1)} FrmCat.{u1} Type.{u1} FrmCat.hasCoeToSort.{u1} β) (CompleteSemilatticeInf.toPartialOrder.{u1} (coeSort.{succ (succ u1), succ (succ u1)} FrmCat.{u1} Type.{u1} FrmCat.hasCoeToSort.{u1} β) (CompleteLattice.toCompleteSemilatticeInf.{u1} (coeSort.{succ (succ u1), succ (succ u1)} FrmCat.{u1} Type.{u1} FrmCat.hasCoeToSort.{u1} β) (Order.Frame.toCompleteLattice.{u1} (coeSort.{succ (succ u1), succ (succ u1)} FrmCat.{u1} Type.{u1} FrmCat.hasCoeToSort.{u1} β) (FrmCat.Order.frame.{u1} β))))))) -> (CategoryTheory.Iso.{u1, succ u1} FrmCat.{u1} FrmCat.largeCategory.{u1} α β)
+but is expected to have type
+  forall {α : FrmCat.{u1}} {β : FrmCat.{u1}}, (OrderIso.{u1, u1} (CategoryTheory.Bundled.α.{u1, u1} Order.Frame.{u1} α) (CategoryTheory.Bundled.α.{u1, u1} Order.Frame.{u1} β) (Preorder.toLE.{u1} (CategoryTheory.Bundled.α.{u1, u1} Order.Frame.{u1} α) (PartialOrder.toPreorder.{u1} (CategoryTheory.Bundled.α.{u1, u1} Order.Frame.{u1} α) (OmegaCompletePartialOrder.toPartialOrder.{u1} (CategoryTheory.Bundled.α.{u1, u1} Order.Frame.{u1} α) (CompleteLattice.instOmegaCompletePartialOrder.{u1} (CategoryTheory.Bundled.α.{u1, u1} Order.Frame.{u1} α) (Order.Frame.toCompleteLattice.{u1} (CategoryTheory.Bundled.α.{u1, u1} Order.Frame.{u1} α) (FrmCat.instFrameα.{u1} α)))))) (Preorder.toLE.{u1} (CategoryTheory.Bundled.α.{u1, u1} Order.Frame.{u1} β) (PartialOrder.toPreorder.{u1} (CategoryTheory.Bundled.α.{u1, u1} Order.Frame.{u1} β) (OmegaCompletePartialOrder.toPartialOrder.{u1} (CategoryTheory.Bundled.α.{u1, u1} Order.Frame.{u1} β) (CompleteLattice.instOmegaCompletePartialOrder.{u1} (CategoryTheory.Bundled.α.{u1, u1} Order.Frame.{u1} β) (Order.Frame.toCompleteLattice.{u1} (CategoryTheory.Bundled.α.{u1, u1} Order.Frame.{u1} β) (FrmCat.instFrameα.{u1} β))))))) -> (CategoryTheory.Iso.{u1, succ u1} FrmCat.{u1} instFrmCatCategory.{u1} α β)
+Case conversion may be inaccurate. Consider using '#align Frm.iso.mk FrmCat.Iso.mkₓ'. -/
 /-- Constructs an isomorphism of frames from an order isomorphism between them. -/
 @[simps]
 def Iso.mk {α β : FrmCat.{u}} (e : α ≃o β) : α ≅ β
@@ -104,7 +109,6 @@ def Iso.mk {α β : FrmCat.{u}} (e : α ≃o β) : α ≅ β
     ext
     exact e.apply_symm_apply _
 #align Frm.iso.mk FrmCat.Iso.mk
--/
 
 end FrmCat
 

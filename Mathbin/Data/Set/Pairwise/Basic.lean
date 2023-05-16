@@ -50,23 +50,31 @@ theorem pairwise_on_bool (hr : Symmetric r) {a b : α} :
 #align pairwise_on_bool pairwise_on_bool
 -/
 
-#print pairwise_disjoint_on_bool /-
+/- warning: pairwise_disjoint_on_bool -> pairwise_disjoint_on_bool is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {a : α} {b : α}, Iff (Pairwise.{0} Bool (Function.onFun.{1, succ u1, 1} Bool α Prop (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1) _inst_2) (fun (c : Bool) => cond.{u1} α c a b))) (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1) _inst_2 a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {a : α} {b : α}, Iff (Pairwise.{0} Bool (Function.onFun.{1, succ u1, 1} Bool α Prop (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1) _inst_2) (fun (c : Bool) => cond.{u1} α c a b))) (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1) _inst_2 a b)
+Case conversion may be inaccurate. Consider using '#align pairwise_disjoint_on_bool pairwise_disjoint_on_boolₓ'. -/
 theorem pairwise_disjoint_on_bool [SemilatticeInf α] [OrderBot α] {a b : α} :
     Pairwise (Disjoint on fun c => cond c a b) ↔ Disjoint a b :=
   pairwise_on_bool Disjoint.symm
 #align pairwise_disjoint_on_bool pairwise_disjoint_on_bool
--/
 
-#print Symmetric.pairwise_on /-
+/- warning: symmetric.pairwise_on -> Symmetric.pairwise_on is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Type.{u2}} {r : α -> α -> Prop} [_inst_1 : LinearOrder.{u2} ι], (Symmetric.{succ u1} α r) -> (forall (f : ι -> α), Iff (Pairwise.{u2} ι (Function.onFun.{succ u2, succ u1, 1} ι α Prop r f)) (forall {{m : ι}} {{n : ι}}, (LT.lt.{u2} ι (Preorder.toHasLt.{u2} ι (PartialOrder.toPreorder.{u2} ι (SemilatticeInf.toPartialOrder.{u2} ι (Lattice.toSemilatticeInf.{u2} ι (LinearOrder.toLattice.{u2} ι _inst_1))))) m n) -> (r (f m) (f n))))
+but is expected to have type
+  forall {α : Type.{u1}} {ι : Type.{u2}} {r : α -> α -> Prop} [_inst_1 : LinearOrder.{u2} ι], (Symmetric.{succ u1} α r) -> (forall (f : ι -> α), Iff (Pairwise.{u2} ι (Function.onFun.{succ u2, succ u1, 1} ι α Prop r f)) (forall {{m : ι}} {{n : ι}}, (LT.lt.{u2} ι (Preorder.toLT.{u2} ι (PartialOrder.toPreorder.{u2} ι (SemilatticeInf.toPartialOrder.{u2} ι (Lattice.toSemilatticeInf.{u2} ι (DistribLattice.toLattice.{u2} ι (instDistribLattice.{u2} ι _inst_1)))))) m n) -> (r (f m) (f n))))
+Case conversion may be inaccurate. Consider using '#align symmetric.pairwise_on Symmetric.pairwise_onₓ'. -/
 theorem Symmetric.pairwise_on [LinearOrder ι] (hr : Symmetric r) (f : ι → α) :
     Pairwise (r on f) ↔ ∀ ⦃m n⦄, m < n → r (f m) (f n) :=
   ⟨fun h m n hmn => h hmn.Ne, fun h m n hmn => hmn.lt_or_lt.elim (@h _ _) fun h' => hr (h h')⟩
 #align symmetric.pairwise_on Symmetric.pairwise_on
--/
 
 /- warning: pairwise_disjoint_on -> pairwise_disjoint_on is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] [_inst_3 : LinearOrder.{u2} ι] (f : ι -> α), Iff (Pairwise.{u2} ι (Function.onFun.{succ u2, succ u1, 1} ι α Prop (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1) _inst_2) f)) (forall {{m : ι}} {{n : ι}}, (LT.lt.{u2} ι (Preorder.toLT.{u2} ι (PartialOrder.toPreorder.{u2} ι (SemilatticeInf.toPartialOrder.{u2} ι (Lattice.toSemilatticeInf.{u2} ι (LinearOrder.toLattice.{u2} ι _inst_3))))) m n) -> (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1) _inst_2 (f m) (f n)))
+  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] [_inst_3 : LinearOrder.{u2} ι] (f : ι -> α), Iff (Pairwise.{u2} ι (Function.onFun.{succ u2, succ u1, 1} ι α Prop (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1) _inst_2) f)) (forall {{m : ι}} {{n : ι}}, (LT.lt.{u2} ι (Preorder.toHasLt.{u2} ι (PartialOrder.toPreorder.{u2} ι (SemilatticeInf.toPartialOrder.{u2} ι (Lattice.toSemilatticeInf.{u2} ι (LinearOrder.toLattice.{u2} ι _inst_3))))) m n) -> (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1) _inst_2 (f m) (f n)))
 but is expected to have type
   forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : SemilatticeInf.{u2} α] [_inst_2 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α _inst_1)))] [_inst_3 : LinearOrder.{u1} ι] (f : ι -> α), Iff (Pairwise.{u1} ι (Function.onFun.{succ u1, succ u2, 1} ι α Prop (Disjoint.{u2} α (SemilatticeInf.toPartialOrder.{u2} α _inst_1) _inst_2) f)) (forall {{m : ι}} {{n : ι}}, (LT.lt.{u1} ι (Preorder.toLT.{u1} ι (PartialOrder.toPreorder.{u1} ι (SemilatticeInf.toPartialOrder.{u1} ι (Lattice.toSemilatticeInf.{u1} ι (DistribLattice.toLattice.{u1} ι (instDistribLattice.{u1} ι _inst_3)))))) m n) -> (Disjoint.{u2} α (SemilatticeInf.toPartialOrder.{u2} α _inst_1) _inst_2 (f m) (f n)))
 Case conversion may be inaccurate. Consider using '#align pairwise_disjoint_on pairwise_disjoint_onₓ'. -/
@@ -77,7 +85,7 @@ theorem pairwise_disjoint_on [SemilatticeInf α] [OrderBot α] [LinearOrder ι] 
 
 /- warning: pairwise_disjoint.mono -> pairwise_disjoint_mono is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} {f : ι -> α} {g : ι -> α} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))], (Pairwise.{u2} ι (Function.onFun.{succ u2, succ u1, 1} ι α Prop (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1) _inst_2) f)) -> (LE.le.{max u2 u1} (ι -> α) (Pi.hasLe.{u2, u1} ι (fun (ᾰ : ι) => α) (fun (i : ι) => Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))) g f) -> (Pairwise.{u2} ι (Function.onFun.{succ u2, succ u1, 1} ι α Prop (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1) _inst_2) g))
+  forall {α : Type.{u1}} {ι : Type.{u2}} {f : ι -> α} {g : ι -> α} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))], (Pairwise.{u2} ι (Function.onFun.{succ u2, succ u1, 1} ι α Prop (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1) _inst_2) f)) -> (LE.le.{max u2 u1} (ι -> α) (Pi.hasLe.{u2, u1} ι (fun (ᾰ : ι) => α) (fun (i : ι) => Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))) g f) -> (Pairwise.{u2} ι (Function.onFun.{succ u2, succ u1, 1} ι α Prop (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1) _inst_2) g))
 but is expected to have type
   forall {α : Type.{u2}} {ι : Type.{u1}} {f : ι -> α} {g : ι -> α} [_inst_1 : SemilatticeInf.{u2} α] [_inst_2 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α _inst_1)))], (Pairwise.{u1} ι (Function.onFun.{succ u1, succ u2, 1} ι α Prop (Disjoint.{u2} α (SemilatticeInf.toPartialOrder.{u2} α _inst_1) _inst_2) f)) -> (LE.le.{max u2 u1} (ι -> α) (Pi.hasLe.{u1, u2} ι (fun (ᾰ : ι) => α) (fun (i : ι) => Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α _inst_1)))) g f) -> (Pairwise.{u1} ι (Function.onFun.{succ u1, succ u2, 1} ι α Prop (Disjoint.{u2} α (SemilatticeInf.toPartialOrder.{u2} α _inst_1) _inst_2) g))
 Case conversion may be inaccurate. Consider using '#align pairwise_disjoint.mono pairwise_disjoint_monoₓ'. -/
@@ -343,7 +351,12 @@ section PartialOrderBot
 
 variable [PartialOrder α] [OrderBot α] {s t : Set ι} {f g : ι → α}
 
-#print Set.PairwiseDisjoint /-
+/- warning: set.pairwise_disjoint -> Set.PairwiseDisjoint is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))], (Set.{u2} ι) -> (ι -> α) -> Prop
+but is expected to have type
+  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))], (Set.{u2} ι) -> (ι -> α) -> Prop
+Case conversion may be inaccurate. Consider using '#align set.pairwise_disjoint Set.PairwiseDisjointₓ'. -/
 /-- A set is `pairwise_disjoint` under `f`, if the images of any distinct two elements under `f`
 are disjoint.
 
@@ -353,11 +366,10 @@ nicely. -/
 def PairwiseDisjoint (s : Set ι) (f : ι → α) : Prop :=
   s.Pairwise (Disjoint on f)
 #align set.pairwise_disjoint Set.PairwiseDisjoint
--/
 
 /- warning: set.pairwise_disjoint.subset -> Set.PairwiseDisjoint.subset is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {s : Set.{u2} ι} {t : Set.{u2} ι} {f : ι -> α}, (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 t f) -> (HasSubset.Subset.{u2} (Set.{u2} ι) (Set.hasSubset.{u2} ι) s t) -> (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 s f)
+  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {s : Set.{u2} ι} {t : Set.{u2} ι} {f : ι -> α}, (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 t f) -> (HasSubset.Subset.{u2} (Set.{u2} ι) (Set.hasSubset.{u2} ι) s t) -> (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 s f)
 but is expected to have type
   forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))] {s : Set.{u1} ι} {t : Set.{u1} ι} {f : ι -> α}, (Set.PairwiseDisjoint.{u2, u1} α ι _inst_1 _inst_2 t f) -> (HasSubset.Subset.{u1} (Set.{u1} ι) (Set.instHasSubsetSet.{u1} ι) s t) -> (Set.PairwiseDisjoint.{u2, u1} α ι _inst_1 _inst_2 s f)
 Case conversion may be inaccurate. Consider using '#align set.pairwise_disjoint.subset Set.PairwiseDisjoint.subsetₓ'. -/
@@ -367,7 +379,7 @@ theorem PairwiseDisjoint.subset (ht : t.PairwiseDisjoint f) (h : s ⊆ t) : s.Pa
 
 /- warning: set.pairwise_disjoint.mono_on -> Set.PairwiseDisjoint.mono_on is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {s : Set.{u2} ι} {f : ι -> α} {g : ι -> α}, (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 s f) -> (forall {{i : ι}}, (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (g i) (f i))) -> (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 s g)
+  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {s : Set.{u2} ι} {f : ι -> α} {g : ι -> α}, (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 s f) -> (forall {{i : ι}}, (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (g i) (f i))) -> (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 s g)
 but is expected to have type
   forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))] {s : Set.{u1} ι} {f : ι -> α} {g : ι -> α}, (Set.PairwiseDisjoint.{u2, u1} α ι _inst_1 _inst_2 s f) -> (forall {{i : ι}}, (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i s) -> (LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) (g i) (f i))) -> (Set.PairwiseDisjoint.{u2, u1} α ι _inst_1 _inst_2 s g)
 Case conversion may be inaccurate. Consider using '#align set.pairwise_disjoint.mono_on Set.PairwiseDisjoint.mono_onₓ'. -/
@@ -377,7 +389,7 @@ theorem PairwiseDisjoint.mono_on (hs : s.PairwiseDisjoint f) (h : ∀ ⦃i⦄, i
 
 /- warning: set.pairwise_disjoint.mono -> Set.PairwiseDisjoint.mono is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {s : Set.{u2} ι} {f : ι -> α} {g : ι -> α}, (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 s f) -> (LE.le.{max u2 u1} (ι -> α) (Pi.hasLe.{u2, u1} ι (fun (ᾰ : ι) => α) (fun (i : ι) => Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) g f) -> (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 s g)
+  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {s : Set.{u2} ι} {f : ι -> α} {g : ι -> α}, (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 s f) -> (LE.le.{max u2 u1} (ι -> α) (Pi.hasLe.{u2, u1} ι (fun (ᾰ : ι) => α) (fun (i : ι) => Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) g f) -> (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 s g)
 but is expected to have type
   forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))] {s : Set.{u1} ι} {f : ι -> α} {g : ι -> α}, (Set.PairwiseDisjoint.{u2, u1} α ι _inst_1 _inst_2 s f) -> (LE.le.{max u2 u1} (ι -> α) (Pi.hasLe.{u1, u2} ι (fun (ᾰ : ι) => α) (fun (i : ι) => Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))) g f) -> (Set.PairwiseDisjoint.{u2, u1} α ι _inst_1 _inst_2 s g)
 Case conversion may be inaccurate. Consider using '#align set.pairwise_disjoint.mono Set.PairwiseDisjoint.monoₓ'. -/
@@ -387,7 +399,7 @@ theorem PairwiseDisjoint.mono (hs : s.PairwiseDisjoint f) (h : g ≤ f) : s.Pair
 
 /- warning: set.pairwise_disjoint_empty -> Set.pairwiseDisjoint_empty is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {f : ι -> α}, Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 (EmptyCollection.emptyCollection.{u2} (Set.{u2} ι) (Set.hasEmptyc.{u2} ι)) f
+  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {f : ι -> α}, Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 (EmptyCollection.emptyCollection.{u2} (Set.{u2} ι) (Set.hasEmptyc.{u2} ι)) f
 but is expected to have type
   forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))] {f : ι -> α}, Set.PairwiseDisjoint.{u2, u1} α ι _inst_1 _inst_2 (EmptyCollection.emptyCollection.{u1} (Set.{u1} ι) (Set.instEmptyCollectionSet.{u1} ι)) f
 Case conversion may be inaccurate. Consider using '#align set.pairwise_disjoint_empty Set.pairwiseDisjoint_emptyₓ'. -/
@@ -398,7 +410,7 @@ theorem pairwiseDisjoint_empty : (∅ : Set ι).PairwiseDisjoint f :=
 
 /- warning: set.pairwise_disjoint_singleton -> Set.pairwiseDisjoint_singleton is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] (i : ι) (f : ι -> α), Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 (Singleton.singleton.{u2, u2} ι (Set.{u2} ι) (Set.hasSingleton.{u2} ι) i) f
+  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] (i : ι) (f : ι -> α), Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 (Singleton.singleton.{u2, u2} ι (Set.{u2} ι) (Set.hasSingleton.{u2} ι) i) f
 but is expected to have type
   forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))] (i : ι) (f : ι -> α), Set.PairwiseDisjoint.{u2, u1} α ι _inst_1 _inst_2 (Singleton.singleton.{u1, u1} ι (Set.{u1} ι) (Set.instSingletonSet.{u1} ι) i) f
 Case conversion may be inaccurate. Consider using '#align set.pairwise_disjoint_singleton Set.pairwiseDisjoint_singletonₓ'. -/
@@ -409,7 +421,7 @@ theorem pairwiseDisjoint_singleton (i : ι) (f : ι → α) : PairwiseDisjoint {
 
 /- warning: set.pairwise_disjoint_insert -> Set.pairwiseDisjoint_insert is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {s : Set.{u2} ι} {f : ι -> α} {i : ι}, Iff (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 (Insert.insert.{u2, u2} ι (Set.{u2} ι) (Set.hasInsert.{u2} ι) i s) f) (And (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 s f) (forall (j : ι), (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) j s) -> (Ne.{succ u2} ι i j) -> (Disjoint.{u1} α _inst_1 _inst_2 (f i) (f j))))
+  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {s : Set.{u2} ι} {f : ι -> α} {i : ι}, Iff (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 (Insert.insert.{u2, u2} ι (Set.{u2} ι) (Set.hasInsert.{u2} ι) i s) f) (And (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 s f) (forall (j : ι), (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) j s) -> (Ne.{succ u2} ι i j) -> (Disjoint.{u1} α _inst_1 _inst_2 (f i) (f j))))
 but is expected to have type
   forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))] {s : Set.{u1} ι} {f : ι -> α} {i : ι}, Iff (Set.PairwiseDisjoint.{u2, u1} α ι _inst_1 _inst_2 (Insert.insert.{u1, u1} ι (Set.{u1} ι) (Set.instInsertSet.{u1} ι) i s) f) (And (Set.PairwiseDisjoint.{u2, u1} α ι _inst_1 _inst_2 s f) (forall (j : ι), (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) j s) -> (Ne.{succ u1} ι i j) -> (Disjoint.{u2} α _inst_1 _inst_2 (f i) (f j))))
 Case conversion may be inaccurate. Consider using '#align set.pairwise_disjoint_insert Set.pairwiseDisjoint_insertₓ'. -/
@@ -419,16 +431,20 @@ theorem pairwiseDisjoint_insert {i : ι} :
   Set.pairwise_insert_of_symmetric <| symmetric_disjoint.comap f
 #align set.pairwise_disjoint_insert Set.pairwiseDisjoint_insert
 
-#print Set.pairwiseDisjoint_insert_of_not_mem /-
+/- warning: set.pairwise_disjoint_insert_of_not_mem -> Set.pairwiseDisjoint_insert_of_not_mem is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {s : Set.{u2} ι} {f : ι -> α} {i : ι}, (Not (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s)) -> (Iff (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 (Insert.insert.{u2, u2} ι (Set.{u2} ι) (Set.hasInsert.{u2} ι) i s) f) (And (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 s f) (forall (j : ι), (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) j s) -> (Disjoint.{u1} α _inst_1 _inst_2 (f i) (f j)))))
+but is expected to have type
+  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {s : Set.{u2} ι} {f : ι -> α} {i : ι}, (Not (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i s)) -> (Iff (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 (Insert.insert.{u2, u2} ι (Set.{u2} ι) (Set.instInsertSet.{u2} ι) i s) f) (And (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 s f) (forall (j : ι), (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) j s) -> (Disjoint.{u1} α _inst_1 _inst_2 (f i) (f j)))))
+Case conversion may be inaccurate. Consider using '#align set.pairwise_disjoint_insert_of_not_mem Set.pairwiseDisjoint_insert_of_not_memₓ'. -/
 theorem pairwiseDisjoint_insert_of_not_mem {i : ι} (hi : i ∉ s) :
     (insert i s).PairwiseDisjoint f ↔ s.PairwiseDisjoint f ∧ ∀ j ∈ s, Disjoint (f i) (f j) :=
   pairwise_insert_of_symmetric_of_not_mem (symmetric_disjoint.comap f) hi
 #align set.pairwise_disjoint_insert_of_not_mem Set.pairwiseDisjoint_insert_of_not_mem
--/
 
 /- warning: set.pairwise_disjoint.insert -> Set.PairwiseDisjoint.insert is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {s : Set.{u2} ι} {f : ι -> α}, (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 s f) -> (forall {i : ι}, (forall (j : ι), (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) j s) -> (Ne.{succ u2} ι i j) -> (Disjoint.{u1} α _inst_1 _inst_2 (f i) (f j))) -> (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 (Insert.insert.{u2, u2} ι (Set.{u2} ι) (Set.hasInsert.{u2} ι) i s) f))
+  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {s : Set.{u2} ι} {f : ι -> α}, (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 s f) -> (forall {i : ι}, (forall (j : ι), (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) j s) -> (Ne.{succ u2} ι i j) -> (Disjoint.{u1} α _inst_1 _inst_2 (f i) (f j))) -> (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 (Insert.insert.{u2, u2} ι (Set.{u2} ι) (Set.hasInsert.{u2} ι) i s) f))
 but is expected to have type
   forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))] {s : Set.{u1} ι} {f : ι -> α}, (Set.PairwiseDisjoint.{u2, u1} α ι _inst_1 _inst_2 s f) -> (forall {i : ι}, (forall (j : ι), (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) j s) -> (Ne.{succ u1} ι i j) -> (Disjoint.{u2} α _inst_1 _inst_2 (f i) (f j))) -> (Set.PairwiseDisjoint.{u2, u1} α ι _inst_1 _inst_2 (Insert.insert.{u1, u1} ι (Set.{u1} ι) (Set.instInsertSet.{u1} ι) i s) f))
 Case conversion may be inaccurate. Consider using '#align set.pairwise_disjoint.insert Set.PairwiseDisjoint.insertₓ'. -/
@@ -439,7 +455,7 @@ theorem PairwiseDisjoint.insert (hs : s.PairwiseDisjoint f) {i : ι}
 
 /- warning: set.pairwise_disjoint.insert_of_not_mem -> Set.PairwiseDisjoint.insert_of_not_mem is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {s : Set.{u2} ι} {f : ι -> α}, (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 s f) -> (forall {i : ι}, (Not (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s)) -> (forall (j : ι), (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) j s) -> (Disjoint.{u1} α _inst_1 _inst_2 (f i) (f j))) -> (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 (Insert.insert.{u2, u2} ι (Set.{u2} ι) (Set.hasInsert.{u2} ι) i s) f))
+  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {s : Set.{u2} ι} {f : ι -> α}, (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 s f) -> (forall {i : ι}, (Not (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s)) -> (forall (j : ι), (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) j s) -> (Disjoint.{u1} α _inst_1 _inst_2 (f i) (f j))) -> (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 (Insert.insert.{u2, u2} ι (Set.{u2} ι) (Set.hasInsert.{u2} ι) i s) f))
 but is expected to have type
   forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))] {s : Set.{u1} ι} {f : ι -> α}, (Set.PairwiseDisjoint.{u2, u1} α ι _inst_1 _inst_2 s f) -> (forall {i : ι}, (Not (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i s)) -> (forall (j : ι), (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) j s) -> (Disjoint.{u2} α _inst_1 _inst_2 (f i) (f j))) -> (Set.PairwiseDisjoint.{u2, u1} α ι _inst_1 _inst_2 (Insert.insert.{u1, u1} ι (Set.{u1} ι) (Set.instInsertSet.{u1} ι) i s) f))
 Case conversion may be inaccurate. Consider using '#align set.pairwise_disjoint.insert_of_not_mem Set.PairwiseDisjoint.insert_of_not_memₓ'. -/
@@ -450,7 +466,7 @@ theorem PairwiseDisjoint.insert_of_not_mem (hs : s.PairwiseDisjoint f) {i : ι} 
 
 /- warning: set.pairwise_disjoint.image_of_le -> Set.PairwiseDisjoint.image_of_le is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {s : Set.{u2} ι} {f : ι -> α}, (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 s f) -> (forall {g : ι -> ι}, (LE.le.{max u2 u1} (ι -> α) (Pi.hasLe.{u2, u1} ι (fun (ᾰ : ι) => α) (fun (i : ι) => Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) (Function.comp.{succ u2, succ u2, succ u1} ι ι α f g) f) -> (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 (Set.image.{u2, u2} ι ι g s) f))
+  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {s : Set.{u2} ι} {f : ι -> α}, (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 s f) -> (forall {g : ι -> ι}, (LE.le.{max u2 u1} (ι -> α) (Pi.hasLe.{u2, u1} ι (fun (ᾰ : ι) => α) (fun (i : ι) => Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) (Function.comp.{succ u2, succ u2, succ u1} ι ι α f g) f) -> (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 (Set.image.{u2, u2} ι ι g s) f))
 but is expected to have type
   forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))] {s : Set.{u1} ι} {f : ι -> α}, (Set.PairwiseDisjoint.{u2, u1} α ι _inst_1 _inst_2 s f) -> (forall {g : ι -> ι}, (LE.le.{max u2 u1} (ι -> α) (Pi.hasLe.{u1, u2} ι (fun (ᾰ : ι) => α) (fun (i : ι) => Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))) (Function.comp.{succ u1, succ u1, succ u2} ι ι α f g) f) -> (Set.PairwiseDisjoint.{u2, u1} α ι _inst_1 _inst_2 (Set.image.{u1, u1} ι ι g s) f))
 Case conversion may be inaccurate. Consider using '#align set.pairwise_disjoint.image_of_le Set.PairwiseDisjoint.image_of_leₓ'. -/
@@ -461,25 +477,33 @@ theorem PairwiseDisjoint.image_of_le (hs : s.PairwiseDisjoint f) {g : ι → ι}
   exact (hs ha hb <| ne_of_apply_ne _ h).mono (hg a) (hg b)
 #align set.pairwise_disjoint.image_of_le Set.PairwiseDisjoint.image_of_le
 
-#print Set.InjOn.pairwiseDisjoint_image /-
+/- warning: set.inj_on.pairwise_disjoint_image -> Set.InjOn.pairwiseDisjoint_image is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Type.{u2}} {ι' : Type.{u3}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {f : ι -> α} {g : ι' -> ι} {s : Set.{u3} ι'}, (Set.InjOn.{u3, u2} ι' ι g s) -> (Iff (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 (Set.image.{u3, u2} ι' ι g s) f) (Set.PairwiseDisjoint.{u1, u3} α ι' _inst_1 _inst_2 s (Function.comp.{succ u3, succ u2, succ u1} ι' ι α f g)))
+but is expected to have type
+  forall {α : Type.{u1}} {ι : Type.{u2}} {ι' : Type.{u3}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {f : ι -> α} {g : ι' -> ι} {s : Set.{u3} ι'}, (Set.InjOn.{u3, u2} ι' ι g s) -> (Iff (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 (Set.image.{u3, u2} ι' ι g s) f) (Set.PairwiseDisjoint.{u1, u3} α ι' _inst_1 _inst_2 s (Function.comp.{succ u3, succ u2, succ u1} ι' ι α f g)))
+Case conversion may be inaccurate. Consider using '#align set.inj_on.pairwise_disjoint_image Set.InjOn.pairwiseDisjoint_imageₓ'. -/
 theorem InjOn.pairwiseDisjoint_image {g : ι' → ι} {s : Set ι'} (h : s.InjOn g) :
     (g '' s).PairwiseDisjoint f ↔ s.PairwiseDisjoint (f ∘ g) :=
   h.pairwise_image
 #align set.inj_on.pairwise_disjoint_image Set.InjOn.pairwiseDisjoint_image
--/
 
-#print Set.PairwiseDisjoint.range /-
+/- warning: set.pairwise_disjoint.range -> Set.PairwiseDisjoint.range is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {s : Set.{u2} ι} {f : ι -> α} (g : (coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) s) -> ι), (forall (i : coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) s), LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (f (g i)) (f ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) s) ι (HasLiftT.mk.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) s) ι (CoeTCₓ.coe.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) s) ι (coeBase.{succ u2, succ u2} (coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) s) ι (coeSubtype.{succ u2} ι (fun (x : ι) => Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) x s))))) i))) -> (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 s f) -> (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 (Set.range.{u2, succ u2} ι (coeSort.{succ u2, succ (succ u2)} (Set.{u2} ι) Type.{u2} (Set.hasCoeToSort.{u2} ι) s) g) f)
+but is expected to have type
+  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {s : Set.{u2} ι} {f : ι -> α} (g : (Set.Elem.{u2} ι s) -> ι), (forall (i : Set.Elem.{u2} ι s), LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (f (g i)) (f (Subtype.val.{succ u2} ι (fun (x : ι) => Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) x s) i))) -> (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 s f) -> (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 (Set.range.{u2, succ u2} ι (Set.Elem.{u2} ι s) g) f)
+Case conversion may be inaccurate. Consider using '#align set.pairwise_disjoint.range Set.PairwiseDisjoint.rangeₓ'. -/
 theorem PairwiseDisjoint.range (g : s → ι) (hg : ∀ i : s, f (g i) ≤ f i)
     (ht : s.PairwiseDisjoint f) : (range g).PairwiseDisjoint f :=
   by
   rintro _ ⟨x, rfl⟩ _ ⟨y, rfl⟩ hxy
   exact (ht x.2 y.2 fun h => hxy <| congr_arg g <| Subtype.ext h).mono (hg x) (hg y)
 #align set.pairwise_disjoint.range Set.PairwiseDisjoint.range
--/
 
 /- warning: set.pairwise_disjoint_union -> Set.pairwiseDisjoint_union is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {s : Set.{u2} ι} {t : Set.{u2} ι} {f : ι -> α}, Iff (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 (Union.union.{u2} (Set.{u2} ι) (Set.hasUnion.{u2} ι) s t) f) (And (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 s f) (And (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 t f) (forall {{i : ι}}, (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s) -> (forall {{j : ι}}, (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) j t) -> (Ne.{succ u2} ι i j) -> (Disjoint.{u1} α _inst_1 _inst_2 (f i) (f j))))))
+  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {s : Set.{u2} ι} {t : Set.{u2} ι} {f : ι -> α}, Iff (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 (Union.union.{u2} (Set.{u2} ι) (Set.hasUnion.{u2} ι) s t) f) (And (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 s f) (And (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 t f) (forall {{i : ι}}, (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s) -> (forall {{j : ι}}, (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) j t) -> (Ne.{succ u2} ι i j) -> (Disjoint.{u1} α _inst_1 _inst_2 (f i) (f j))))))
 but is expected to have type
   forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))] {s : Set.{u1} ι} {t : Set.{u1} ι} {f : ι -> α}, Iff (Set.PairwiseDisjoint.{u2, u1} α ι _inst_1 _inst_2 (Union.union.{u1} (Set.{u1} ι) (Set.instUnionSet.{u1} ι) s t) f) (And (Set.PairwiseDisjoint.{u2, u1} α ι _inst_1 _inst_2 s f) (And (Set.PairwiseDisjoint.{u2, u1} α ι _inst_1 _inst_2 t f) (forall {{i : ι}}, (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i s) -> (forall {{j : ι}}, (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) j t) -> (Ne.{succ u1} ι i j) -> (Disjoint.{u2} α _inst_1 _inst_2 (f i) (f j))))))
 Case conversion may be inaccurate. Consider using '#align set.pairwise_disjoint_union Set.pairwiseDisjoint_unionₓ'. -/
@@ -492,7 +516,7 @@ theorem pairwiseDisjoint_union :
 
 /- warning: set.pairwise_disjoint.union -> Set.PairwiseDisjoint.union is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {s : Set.{u2} ι} {t : Set.{u2} ι} {f : ι -> α}, (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 s f) -> (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 t f) -> (forall {{i : ι}}, (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s) -> (forall {{j : ι}}, (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) j t) -> (Ne.{succ u2} ι i j) -> (Disjoint.{u1} α _inst_1 _inst_2 (f i) (f j)))) -> (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 (Union.union.{u2} (Set.{u2} ι) (Set.hasUnion.{u2} ι) s t) f)
+  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {s : Set.{u2} ι} {t : Set.{u2} ι} {f : ι -> α}, (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 s f) -> (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 t f) -> (forall {{i : ι}}, (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s) -> (forall {{j : ι}}, (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) j t) -> (Ne.{succ u2} ι i j) -> (Disjoint.{u1} α _inst_1 _inst_2 (f i) (f j)))) -> (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 (Union.union.{u2} (Set.{u2} ι) (Set.hasUnion.{u2} ι) s t) f)
 but is expected to have type
   forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))] {s : Set.{u1} ι} {t : Set.{u1} ι} {f : ι -> α}, (Set.PairwiseDisjoint.{u2, u1} α ι _inst_1 _inst_2 s f) -> (Set.PairwiseDisjoint.{u2, u1} α ι _inst_1 _inst_2 t f) -> (forall {{i : ι}}, (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i s) -> (forall {{j : ι}}, (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) j t) -> (Ne.{succ u1} ι i j) -> (Disjoint.{u2} α _inst_1 _inst_2 (f i) (f j)))) -> (Set.PairwiseDisjoint.{u2, u1} α ι _inst_1 _inst_2 (Union.union.{u1} (Set.{u1} ι) (Set.instUnionSet.{u1} ι) s t) f)
 Case conversion may be inaccurate. Consider using '#align set.pairwise_disjoint.union Set.PairwiseDisjoint.unionₓ'. -/
@@ -503,7 +527,7 @@ theorem PairwiseDisjoint.union (hs : s.PairwiseDisjoint f) (ht : t.PairwiseDisjo
 
 /- warning: set.pairwise_disjoint.elim -> Set.PairwiseDisjoint.elim is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {s : Set.{u2} ι} {f : ι -> α}, (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 s f) -> (forall {i : ι} {j : ι}, (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s) -> (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) j s) -> (Not (Disjoint.{u1} α _inst_1 _inst_2 (f i) (f j))) -> (Eq.{succ u2} ι i j))
+  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {s : Set.{u2} ι} {f : ι -> α}, (Set.PairwiseDisjoint.{u1, u2} α ι _inst_1 _inst_2 s f) -> (forall {i : ι} {j : ι}, (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s) -> (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) j s) -> (Not (Disjoint.{u1} α _inst_1 _inst_2 (f i) (f j))) -> (Eq.{succ u2} ι i j))
 but is expected to have type
   forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))] {s : Set.{u1} ι} {f : ι -> α}, (Set.PairwiseDisjoint.{u2, u1} α ι _inst_1 _inst_2 s f) -> (forall {i : ι} {j : ι}, (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i s) -> (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) j s) -> (Not (Disjoint.{u2} α _inst_1 _inst_2 (f i) (f j))) -> (Eq.{succ u1} ι i j))
 Case conversion may be inaccurate. Consider using '#align set.pairwise_disjoint.elim Set.PairwiseDisjoint.elimₓ'. -/
@@ -521,7 +545,7 @@ variable [SemilatticeInf α] [OrderBot α] {s t : Set ι} {f g : ι → α}
 
 /- warning: set.pairwise_disjoint.elim' -> Set.PairwiseDisjoint.elim' is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {s : Set.{u2} ι} {f : ι -> α}, (Set.PairwiseDisjoint.{u1, u2} α ι (SemilatticeInf.toPartialOrder.{u1} α _inst_1) _inst_2 s f) -> (forall {i : ι} {j : ι}, (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s) -> (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) j s) -> (Ne.{succ u1} α (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α _inst_1) (f i) (f j)) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) _inst_2))) -> (Eq.{succ u2} ι i j))
+  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {s : Set.{u2} ι} {f : ι -> α}, (Set.PairwiseDisjoint.{u1, u2} α ι (SemilatticeInf.toPartialOrder.{u1} α _inst_1) _inst_2 s f) -> (forall {i : ι} {j : ι}, (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s) -> (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) j s) -> (Ne.{succ u1} α (Inf.inf.{u1} α (SemilatticeInf.toHasInf.{u1} α _inst_1) (f i) (f j)) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) _inst_2))) -> (Eq.{succ u2} ι i j))
 but is expected to have type
   forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : SemilatticeInf.{u2} α] [_inst_2 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α _inst_1)))] {s : Set.{u1} ι} {f : ι -> α}, (Set.PairwiseDisjoint.{u2, u1} α ι (SemilatticeInf.toPartialOrder.{u2} α _inst_1) _inst_2 s f) -> (forall {i : ι} {j : ι}, (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i s) -> (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) j s) -> (Ne.{succ u2} α (Inf.inf.{u2} α (SemilatticeInf.toInf.{u2} α _inst_1) (f i) (f j)) (Bot.bot.{u2} α (OrderBot.toBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α _inst_1))) _inst_2))) -> (Eq.{succ u1} ι i j))
 Case conversion may be inaccurate. Consider using '#align set.pairwise_disjoint.elim' Set.PairwiseDisjoint.elim'ₓ'. -/
@@ -533,7 +557,7 @@ theorem PairwiseDisjoint.elim' (hs : s.PairwiseDisjoint f) {i j : ι} (hi : i �
 
 /- warning: set.pairwise_disjoint.eq_of_le -> Set.PairwiseDisjoint.eq_of_le is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {s : Set.{u2} ι} {f : ι -> α}, (Set.PairwiseDisjoint.{u1, u2} α ι (SemilatticeInf.toPartialOrder.{u1} α _inst_1) _inst_2 s f) -> (forall {i : ι} {j : ι}, (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s) -> (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) j s) -> (Ne.{succ u1} α (f i) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) _inst_2))) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) (f i) (f j)) -> (Eq.{succ u2} ι i j))
+  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {s : Set.{u2} ι} {f : ι -> α}, (Set.PairwiseDisjoint.{u1, u2} α ι (SemilatticeInf.toPartialOrder.{u1} α _inst_1) _inst_2 s f) -> (forall {i : ι} {j : ι}, (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i s) -> (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) j s) -> (Ne.{succ u1} α (f i) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) _inst_2))) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) (f i) (f j)) -> (Eq.{succ u2} ι i j))
 but is expected to have type
   forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : SemilatticeInf.{u2} α] [_inst_2 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α _inst_1)))] {s : Set.{u1} ι} {f : ι -> α}, (Set.PairwiseDisjoint.{u2, u1} α ι (SemilatticeInf.toPartialOrder.{u2} α _inst_1) _inst_2 s f) -> (forall {i : ι} {j : ι}, (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i s) -> (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) j s) -> (Ne.{succ u2} α (f i) (Bot.bot.{u2} α (OrderBot.toBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α _inst_1))) _inst_2))) -> (LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α _inst_1))) (f i) (f j)) -> (Eq.{succ u1} ι i j))
 Case conversion may be inaccurate. Consider using '#align set.pairwise_disjoint.eq_of_le Set.PairwiseDisjoint.eq_of_leₓ'. -/

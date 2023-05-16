@@ -107,7 +107,12 @@ instance (priority := 100) isFiltered_of_semilatticeSup_nonempty (α : Type u) [
 #align category_theory.is_filtered_of_semilattice_sup_nonempty CategoryTheory.isFiltered_of_semilatticeSup_nonempty
 -/
 
-#print CategoryTheory.isFilteredOrEmpty_of_directed_le /-
+/- warning: category_theory.is_filtered_or_empty_of_directed_le -> CategoryTheory.isFilteredOrEmpty_of_directed_le is a dubious translation:
+lean 3 declaration is
+  forall (α : Type.{u1}) [_inst_2 : Preorder.{u1} α] [_inst_3 : IsDirected.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_2))], CategoryTheory.IsFilteredOrEmpty.{u1, u1} α (Preorder.smallCategory.{u1} α _inst_2)
+but is expected to have type
+  forall (α : Type.{u1}) [_inst_2 : Preorder.{u1} α] [_inst_3 : IsDirected.{u1} α (fun (x._@.Mathlib.CategoryTheory.Filtered._hyg.210 : α) (x._@.Mathlib.CategoryTheory.Filtered._hyg.212 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_2) x._@.Mathlib.CategoryTheory.Filtered._hyg.210 x._@.Mathlib.CategoryTheory.Filtered._hyg.212)], CategoryTheory.IsFilteredOrEmpty.{u1, u1} α (Preorder.smallCategory.{u1} α _inst_2)
+Case conversion may be inaccurate. Consider using '#align category_theory.is_filtered_or_empty_of_directed_le CategoryTheory.isFilteredOrEmpty_of_directed_leₓ'. -/
 instance (priority := 100) isFilteredOrEmpty_of_directed_le (α : Type u) [Preorder α]
     [IsDirected α (· ≤ ·)] : IsFilteredOrEmpty α
     where
@@ -116,13 +121,16 @@ instance (priority := 100) isFilteredOrEmpty_of_directed_le (α : Type u) [Preor
     ⟨Z, homOfLE h1, homOfLE h2, trivial⟩
   cocone_maps X Y f g := ⟨Y, 𝟙 _, by simp⟩
 #align category_theory.is_filtered_or_empty_of_directed_le CategoryTheory.isFilteredOrEmpty_of_directed_le
--/
 
-#print CategoryTheory.isFiltered_of_directed_le_nonempty /-
+/- warning: category_theory.is_filtered_of_directed_le_nonempty -> CategoryTheory.isFiltered_of_directed_le_nonempty is a dubious translation:
+lean 3 declaration is
+  forall (α : Type.{u1}) [_inst_2 : Preorder.{u1} α] [_inst_3 : IsDirected.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_2))] [_inst_4 : Nonempty.{succ u1} α], CategoryTheory.IsFiltered.{u1, u1} α (Preorder.smallCategory.{u1} α _inst_2)
+but is expected to have type
+  forall (α : Type.{u1}) [_inst_2 : Preorder.{u1} α] [_inst_3 : IsDirected.{u1} α (fun (x._@.Mathlib.CategoryTheory.Filtered._hyg.309 : α) (x._@.Mathlib.CategoryTheory.Filtered._hyg.311 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_2) x._@.Mathlib.CategoryTheory.Filtered._hyg.309 x._@.Mathlib.CategoryTheory.Filtered._hyg.311)] [_inst_4 : Nonempty.{succ u1} α], CategoryTheory.IsFiltered.{u1, u1} α (Preorder.smallCategory.{u1} α _inst_2)
+Case conversion may be inaccurate. Consider using '#align category_theory.is_filtered_of_directed_le_nonempty CategoryTheory.isFiltered_of_directed_le_nonemptyₓ'. -/
 instance (priority := 100) isFiltered_of_directed_le_nonempty (α : Type u) [Preorder α]
     [IsDirected α (· ≤ ·)] [Nonempty α] : IsFiltered α where
 #align category_theory.is_filtered_of_directed_le_nonempty CategoryTheory.isFiltered_of_directed_le_nonempty
--/
 
 -- Sanity checks
 example (α : Type u) [SemilatticeSup α] [OrderBot α] : IsFiltered α := by infer_instance
@@ -563,7 +571,12 @@ instance (priority := 100) isCofiltered_of_semilatticeInf_nonempty (α : Type u)
 #align category_theory.is_cofiltered_of_semilattice_inf_nonempty CategoryTheory.isCofiltered_of_semilatticeInf_nonempty
 -/
 
-#print CategoryTheory.isCofilteredOrEmpty_of_directed_ge /-
+/- warning: category_theory.is_cofiltered_or_empty_of_directed_ge -> CategoryTheory.isCofilteredOrEmpty_of_directed_ge is a dubious translation:
+lean 3 declaration is
+  forall (α : Type.{u1}) [_inst_2 : Preorder.{u1} α] [_inst_3 : IsDirected.{u1} α (GE.ge.{u1} α (Preorder.toHasLe.{u1} α _inst_2))], CategoryTheory.IsCofilteredOrEmpty.{u1, u1} α (Preorder.smallCategory.{u1} α _inst_2)
+but is expected to have type
+  forall (α : Type.{u1}) [_inst_2 : Preorder.{u1} α] [_inst_3 : IsDirected.{u1} α (fun (x._@.Mathlib.CategoryTheory.Filtered._hyg.3767 : α) (x._@.Mathlib.CategoryTheory.Filtered._hyg.3769 : α) => GE.ge.{u1} α (Preorder.toLE.{u1} α _inst_2) x._@.Mathlib.CategoryTheory.Filtered._hyg.3767 x._@.Mathlib.CategoryTheory.Filtered._hyg.3769)], CategoryTheory.IsCofilteredOrEmpty.{u1, u1} α (Preorder.smallCategory.{u1} α _inst_2)
+Case conversion may be inaccurate. Consider using '#align category_theory.is_cofiltered_or_empty_of_directed_ge CategoryTheory.isCofilteredOrEmpty_of_directed_geₓ'. -/
 instance (priority := 100) isCofilteredOrEmpty_of_directed_ge (α : Type u) [Preorder α]
     [IsDirected α (· ≥ ·)] : IsCofilteredOrEmpty α
     where
@@ -572,13 +585,16 @@ instance (priority := 100) isCofilteredOrEmpty_of_directed_ge (α : Type u) [Pre
     ⟨Z, homOfLE hX, homOfLE hY, trivial⟩
   cone_maps X Y f g := ⟨X, 𝟙 _, by simp⟩
 #align category_theory.is_cofiltered_or_empty_of_directed_ge CategoryTheory.isCofilteredOrEmpty_of_directed_ge
--/
 
-#print CategoryTheory.isCofiltered_of_directed_ge_nonempty /-
+/- warning: category_theory.is_cofiltered_of_directed_ge_nonempty -> CategoryTheory.isCofiltered_of_directed_ge_nonempty is a dubious translation:
+lean 3 declaration is
+  forall (α : Type.{u1}) [_inst_2 : Preorder.{u1} α] [_inst_3 : IsDirected.{u1} α (GE.ge.{u1} α (Preorder.toHasLe.{u1} α _inst_2))] [_inst_4 : Nonempty.{succ u1} α], CategoryTheory.IsCofiltered.{u1, u1} α (Preorder.smallCategory.{u1} α _inst_2)
+but is expected to have type
+  forall (α : Type.{u1}) [_inst_2 : Preorder.{u1} α] [_inst_3 : IsDirected.{u1} α (fun (x._@.Mathlib.CategoryTheory.Filtered._hyg.3866 : α) (x._@.Mathlib.CategoryTheory.Filtered._hyg.3868 : α) => GE.ge.{u1} α (Preorder.toLE.{u1} α _inst_2) x._@.Mathlib.CategoryTheory.Filtered._hyg.3866 x._@.Mathlib.CategoryTheory.Filtered._hyg.3868)] [_inst_4 : Nonempty.{succ u1} α], CategoryTheory.IsCofiltered.{u1, u1} α (Preorder.smallCategory.{u1} α _inst_2)
+Case conversion may be inaccurate. Consider using '#align category_theory.is_cofiltered_of_directed_ge_nonempty CategoryTheory.isCofiltered_of_directed_ge_nonemptyₓ'. -/
 instance (priority := 100) isCofiltered_of_directed_ge_nonempty (α : Type u) [Preorder α]
     [IsDirected α (· ≥ ·)] [Nonempty α] : IsCofiltered α where
 #align category_theory.is_cofiltered_of_directed_ge_nonempty CategoryTheory.isCofiltered_of_directed_ge_nonempty
--/
 
 -- Sanity checks
 example (α : Type u) [SemilatticeInf α] [OrderBot α] : IsCofiltered α := by infer_instance

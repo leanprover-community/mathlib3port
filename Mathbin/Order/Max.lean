@@ -115,7 +115,7 @@ instance OrderDual.noMaxOrder (α : Type _) [LT α] [NoMinOrder α] : NoMaxOrder
 
 /- warning: no_max_order_of_left -> noMaxOrder_of_left is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)], NoMaxOrder.{max u1 u2} (Prod.{u1, u2} α β) (Preorder.toLT.{max u1 u2} (Prod.{u1, u2} α β) (Prod.preorder.{u1, u2} α β _inst_1 _inst_2))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMaxOrder.{u1} α (Preorder.toHasLt.{u1} α _inst_1)], NoMaxOrder.{max u1 u2} (Prod.{u1, u2} α β) (Preorder.toHasLt.{max u1 u2} (Prod.{u1, u2} α β) (Prod.preorder.{u1, u2} α β _inst_1 _inst_2))
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)], NoMaxOrder.{max u2 u1} (Prod.{u1, u2} α β) (Preorder.toLT.{max u1 u2} (Prod.{u1, u2} α β) (Prod.instPreorderProd.{u1, u2} α β _inst_1 _inst_2))
 Case conversion may be inaccurate. Consider using '#align no_max_order_of_left noMaxOrder_of_leftₓ'. -/
@@ -127,7 +127,7 @@ instance noMaxOrder_of_left [Preorder α] [Preorder β] [NoMaxOrder α] : NoMaxO
 
 /- warning: no_max_order_of_right -> noMaxOrder_of_right is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMaxOrder.{u2} β (Preorder.toLT.{u2} β _inst_2)], NoMaxOrder.{max u1 u2} (Prod.{u1, u2} α β) (Preorder.toLT.{max u1 u2} (Prod.{u1, u2} α β) (Prod.preorder.{u1, u2} α β _inst_1 _inst_2))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMaxOrder.{u2} β (Preorder.toHasLt.{u2} β _inst_2)], NoMaxOrder.{max u1 u2} (Prod.{u1, u2} α β) (Preorder.toHasLt.{max u1 u2} (Prod.{u1, u2} α β) (Prod.preorder.{u1, u2} α β _inst_1 _inst_2))
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMaxOrder.{u2} β (Preorder.toLT.{u2} β _inst_2)], NoMaxOrder.{max u2 u1} (Prod.{u1, u2} α β) (Preorder.toLT.{max u1 u2} (Prod.{u1, u2} α β) (Prod.instPreorderProd.{u1, u2} α β _inst_1 _inst_2))
 Case conversion may be inaccurate. Consider using '#align no_max_order_of_right noMaxOrder_of_rightₓ'. -/
@@ -139,7 +139,7 @@ instance noMaxOrder_of_right [Preorder α] [Preorder β] [NoMaxOrder β] : NoMax
 
 /- warning: no_min_order_of_left -> noMinOrder_of_left is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)], NoMinOrder.{max u1 u2} (Prod.{u1, u2} α β) (Preorder.toLT.{max u1 u2} (Prod.{u1, u2} α β) (Prod.preorder.{u1, u2} α β _inst_1 _inst_2))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMinOrder.{u1} α (Preorder.toHasLt.{u1} α _inst_1)], NoMinOrder.{max u1 u2} (Prod.{u1, u2} α β) (Preorder.toHasLt.{max u1 u2} (Prod.{u1, u2} α β) (Prod.preorder.{u1, u2} α β _inst_1 _inst_2))
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)], NoMinOrder.{max u2 u1} (Prod.{u1, u2} α β) (Preorder.toLT.{max u1 u2} (Prod.{u1, u2} α β) (Prod.instPreorderProd.{u1, u2} α β _inst_1 _inst_2))
 Case conversion may be inaccurate. Consider using '#align no_min_order_of_left noMinOrder_of_leftₓ'. -/
@@ -151,7 +151,7 @@ instance noMinOrder_of_left [Preorder α] [Preorder β] [NoMinOrder α] : NoMinO
 
 /- warning: no_min_order_of_right -> noMinOrder_of_right is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMinOrder.{u2} β (Preorder.toLT.{u2} β _inst_2)], NoMinOrder.{max u1 u2} (Prod.{u1, u2} α β) (Preorder.toLT.{max u1 u2} (Prod.{u1, u2} α β) (Prod.preorder.{u1, u2} α β _inst_1 _inst_2))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMinOrder.{u2} β (Preorder.toHasLt.{u2} β _inst_2)], NoMinOrder.{max u1 u2} (Prod.{u1, u2} α β) (Preorder.toHasLt.{max u1 u2} (Prod.{u1, u2} α β) (Prod.preorder.{u1, u2} α β _inst_1 _inst_2))
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : NoMinOrder.{u2} β (Preorder.toLT.{u2} β _inst_2)], NoMinOrder.{max u2 u1} (Prod.{u1, u2} α β) (Preorder.toLT.{max u1 u2} (Prod.{u1, u2} α β) (Prod.instPreorderProd.{u1, u2} α β _inst_1 _inst_2))
 Case conversion may be inaccurate. Consider using '#align no_min_order_of_right noMinOrder_of_rightₓ'. -/
@@ -185,25 +185,38 @@ instance (priority := 100) NoMaxOrder.to_noTopOrder (α : Type _) [Preorder α] 
   ⟨fun a => (exists_gt a).imp fun _ => not_le_of_lt⟩
 #align no_max_order.to_no_top_order NoMaxOrder.to_noTopOrder
 
-#print NoBotOrder.to_noMinOrder /-
+/- warning: no_bot_order.to_no_min_order -> NoBotOrder.to_noMinOrder is a dubious translation:
+lean 3 declaration is
+  forall (α : Type.{u1}) [_inst_1 : LinearOrder.{u1} α] [_inst_2 : NoBotOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)))], NoMinOrder.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)))
+but is expected to have type
+  forall (α : Type.{u1}) [_inst_1 : LinearOrder.{u1} α] [_inst_2 : NoBotOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)))], NoMinOrder.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)))
+Case conversion may be inaccurate. Consider using '#align no_bot_order.to_no_min_order NoBotOrder.to_noMinOrderₓ'. -/
 theorem NoBotOrder.to_noMinOrder (α : Type _) [LinearOrder α] [NoBotOrder α] : NoMinOrder α :=
   {
     exists_lt := by
       convert fun a : α => exists_not_ge a
       simp_rw [not_le] }
 #align no_bot_order.to_no_min_order NoBotOrder.to_noMinOrder
--/
 
-#print NoTopOrder.to_noMaxOrder /-
+/- warning: no_top_order.to_no_max_order -> NoTopOrder.to_noMaxOrder is a dubious translation:
+lean 3 declaration is
+  forall (α : Type.{u1}) [_inst_1 : LinearOrder.{u1} α] [_inst_2 : NoTopOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)))], NoMaxOrder.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)))
+but is expected to have type
+  forall (α : Type.{u1}) [_inst_1 : LinearOrder.{u1} α] [_inst_2 : NoTopOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)))], NoMaxOrder.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)))
+Case conversion may be inaccurate. Consider using '#align no_top_order.to_no_max_order NoTopOrder.to_noMaxOrderₓ'. -/
 theorem NoTopOrder.to_noMaxOrder (α : Type _) [LinearOrder α] [NoTopOrder α] : NoMaxOrder α :=
   {
     exists_gt := by
       convert fun a : α => exists_not_le a
       simp_rw [not_le] }
 #align no_top_order.to_no_max_order NoTopOrder.to_noMaxOrder
--/
 
-#print noBotOrder_iff_noMinOrder /-
+/- warning: no_bot_order_iff_no_min_order -> noBotOrder_iff_noMinOrder is a dubious translation:
+lean 3 declaration is
+  forall (α : Type.{u1}) [_inst_1 : LinearOrder.{u1} α], Iff (NoBotOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)))) (NoMinOrder.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))))
+but is expected to have type
+  forall (α : Type.{u1}) [_inst_1 : LinearOrder.{u1} α], Iff (NoBotOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)))) (NoMinOrder.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))))
+Case conversion may be inaccurate. Consider using '#align no_bot_order_iff_no_min_order noBotOrder_iff_noMinOrderₓ'. -/
 theorem noBotOrder_iff_noMinOrder (α : Type _) [LinearOrder α] : NoBotOrder α ↔ NoMinOrder α :=
   ⟨fun h =>
     haveI := h
@@ -212,9 +225,13 @@ theorem noBotOrder_iff_noMinOrder (α : Type _) [LinearOrder α] : NoBotOrder α
     haveI := h
     NoMinOrder.to_noBotOrder α⟩
 #align no_bot_order_iff_no_min_order noBotOrder_iff_noMinOrder
--/
 
-#print noTopOrder_iff_noMaxOrder /-
+/- warning: no_top_order_iff_no_max_order -> noTopOrder_iff_noMaxOrder is a dubious translation:
+lean 3 declaration is
+  forall (α : Type.{u1}) [_inst_1 : LinearOrder.{u1} α], Iff (NoTopOrder.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)))) (NoMaxOrder.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))))
+but is expected to have type
+  forall (α : Type.{u1}) [_inst_1 : LinearOrder.{u1} α], Iff (NoTopOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1)))) (NoMaxOrder.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))))
+Case conversion may be inaccurate. Consider using '#align no_top_order_iff_no_max_order noTopOrder_iff_noMaxOrderₓ'. -/
 theorem noTopOrder_iff_noMaxOrder (α : Type _) [LinearOrder α] : NoTopOrder α ↔ NoMaxOrder α :=
   ⟨fun h =>
     haveI := h
@@ -223,7 +240,6 @@ theorem noTopOrder_iff_noMaxOrder (α : Type _) [LinearOrder α] : NoTopOrder α
     haveI := h
     NoMaxOrder.to_noTopOrder α⟩
 #align no_top_order_iff_no_max_order noTopOrder_iff_noMaxOrder
--/
 
 #print NoMinOrder.not_acc /-
 theorem NoMinOrder.not_acc [LT α] [NoMinOrder α] (a : α) : ¬Acc (· < ·) a := fun h =>
@@ -391,119 +407,203 @@ section Preorder
 
 variable [Preorder α] {a b : α}
 
-#print IsBot.mono /-
+/- warning: is_bot.mono -> IsBot.mono is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (IsBot.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) b a) -> (IsBot.{u1} α (Preorder.toHasLe.{u1} α _inst_1) b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (IsBot.{u1} α (Preorder.toLE.{u1} α _inst_1) a) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) b a) -> (IsBot.{u1} α (Preorder.toLE.{u1} α _inst_1) b)
+Case conversion may be inaccurate. Consider using '#align is_bot.mono IsBot.monoₓ'. -/
 theorem IsBot.mono (ha : IsBot a) (h : b ≤ a) : IsBot b := fun c => h.trans <| ha _
 #align is_bot.mono IsBot.mono
--/
 
-#print IsTop.mono /-
+/- warning: is_top.mono -> IsTop.mono is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (IsTop.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a b) -> (IsTop.{u1} α (Preorder.toHasLe.{u1} α _inst_1) b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (IsTop.{u1} α (Preorder.toLE.{u1} α _inst_1) a) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a b) -> (IsTop.{u1} α (Preorder.toLE.{u1} α _inst_1) b)
+Case conversion may be inaccurate. Consider using '#align is_top.mono IsTop.monoₓ'. -/
 theorem IsTop.mono (ha : IsTop a) (h : a ≤ b) : IsTop b := fun c => (ha _).trans h
 #align is_top.mono IsTop.mono
--/
 
-#print IsMin.mono /-
+/- warning: is_min.mono -> IsMin.mono is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (IsMin.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) b a) -> (IsMin.{u1} α (Preorder.toHasLe.{u1} α _inst_1) b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (IsMin.{u1} α (Preorder.toLE.{u1} α _inst_1) a) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) b a) -> (IsMin.{u1} α (Preorder.toLE.{u1} α _inst_1) b)
+Case conversion may be inaccurate. Consider using '#align is_min.mono IsMin.monoₓ'. -/
 theorem IsMin.mono (ha : IsMin a) (h : b ≤ a) : IsMin b := fun c hc => h.trans <| ha <| hc.trans h
 #align is_min.mono IsMin.mono
--/
 
-#print IsMax.mono /-
+/- warning: is_max.mono -> IsMax.mono is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (IsMax.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a b) -> (IsMax.{u1} α (Preorder.toHasLe.{u1} α _inst_1) b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (IsMax.{u1} α (Preorder.toLE.{u1} α _inst_1) a) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a b) -> (IsMax.{u1} α (Preorder.toLE.{u1} α _inst_1) b)
+Case conversion may be inaccurate. Consider using '#align is_max.mono IsMax.monoₓ'. -/
 theorem IsMax.mono (ha : IsMax a) (h : a ≤ b) : IsMax b := fun c hc => (ha <| h.trans hc).trans h
 #align is_max.mono IsMax.mono
--/
 
-#print IsMin.not_lt /-
+/- warning: is_min.not_lt -> IsMin.not_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (IsMin.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a) -> (Not (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) b a))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (IsMin.{u1} α (Preorder.toLE.{u1} α _inst_1) a) -> (Not (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) b a))
+Case conversion may be inaccurate. Consider using '#align is_min.not_lt IsMin.not_ltₓ'. -/
 theorem IsMin.not_lt (h : IsMin a) : ¬b < a := fun hb => hb.not_le <| h hb.le
 #align is_min.not_lt IsMin.not_lt
--/
 
-#print IsMax.not_lt /-
+/- warning: is_max.not_lt -> IsMax.not_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (IsMax.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a) -> (Not (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (IsMax.{u1} α (Preorder.toLE.{u1} α _inst_1) a) -> (Not (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) a b))
+Case conversion may be inaccurate. Consider using '#align is_max.not_lt IsMax.not_ltₓ'. -/
 theorem IsMax.not_lt (h : IsMax a) : ¬a < b := fun hb => hb.not_le <| h hb.le
 #align is_max.not_lt IsMax.not_lt
--/
 
-#print not_isMin_of_lt /-
+/- warning: not_is_min_of_lt -> not_isMin_of_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) b a) -> (Not (IsMin.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) b a) -> (Not (IsMin.{u1} α (Preorder.toLE.{u1} α _inst_1) a))
+Case conversion may be inaccurate. Consider using '#align not_is_min_of_lt not_isMin_of_ltₓ'. -/
 @[simp]
 theorem not_isMin_of_lt (h : b < a) : ¬IsMin a := fun ha => ha.not_lt h
 #align not_is_min_of_lt not_isMin_of_lt
--/
 
-#print not_isMax_of_lt /-
+/- warning: not_is_max_of_lt -> not_isMax_of_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a b) -> (Not (IsMax.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) a b) -> (Not (IsMax.{u1} α (Preorder.toLE.{u1} α _inst_1) a))
+Case conversion may be inaccurate. Consider using '#align not_is_max_of_lt not_isMax_of_ltₓ'. -/
 @[simp]
 theorem not_isMax_of_lt (h : a < b) : ¬IsMax a := fun ha => ha.not_lt h
 #align not_is_max_of_lt not_isMax_of_lt
--/
 
+/- warning: has_lt.lt.not_is_min -> LT.lt.not_isMin is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) b a) -> (Not (IsMin.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) b a) -> (Not (IsMin.{u1} α (Preorder.toLE.{u1} α _inst_1) a))
+Case conversion may be inaccurate. Consider using '#align has_lt.lt.not_is_min LT.lt.not_isMinₓ'. -/
 alias not_isMin_of_lt ← LT.lt.not_isMin
 #align has_lt.lt.not_is_min LT.lt.not_isMin
 
+/- warning: has_lt.lt.not_is_max -> LT.lt.not_isMax is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a b) -> (Not (IsMax.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) a b) -> (Not (IsMax.{u1} α (Preorder.toLE.{u1} α _inst_1) a))
+Case conversion may be inaccurate. Consider using '#align has_lt.lt.not_is_max LT.lt.not_isMaxₓ'. -/
 alias not_isMax_of_lt ← LT.lt.not_isMax
 #align has_lt.lt.not_is_max LT.lt.not_isMax
 
-#print isMin_iff_forall_not_lt /-
+/- warning: is_min_iff_forall_not_lt -> isMin_iff_forall_not_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α}, Iff (IsMin.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a) (forall (b : α), Not (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) b a))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α}, Iff (IsMin.{u1} α (Preorder.toLE.{u1} α _inst_1) a) (forall (b : α), Not (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) b a))
+Case conversion may be inaccurate. Consider using '#align is_min_iff_forall_not_lt isMin_iff_forall_not_ltₓ'. -/
 theorem isMin_iff_forall_not_lt : IsMin a ↔ ∀ b, ¬b < a :=
   ⟨fun h _ => h.not_lt, fun h b hba => of_not_not fun hab => h _ <| hba.lt_of_not_le hab⟩
 #align is_min_iff_forall_not_lt isMin_iff_forall_not_lt
--/
 
-#print isMax_iff_forall_not_lt /-
+/- warning: is_max_iff_forall_not_lt -> isMax_iff_forall_not_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α}, Iff (IsMax.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a) (forall (b : α), Not (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α}, Iff (IsMax.{u1} α (Preorder.toLE.{u1} α _inst_1) a) (forall (b : α), Not (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) a b))
+Case conversion may be inaccurate. Consider using '#align is_max_iff_forall_not_lt isMax_iff_forall_not_ltₓ'. -/
 theorem isMax_iff_forall_not_lt : IsMax a ↔ ∀ b, ¬a < b :=
   ⟨fun h _ => h.not_lt, fun h b hba => of_not_not fun hab => h _ <| hba.lt_of_not_le hab⟩
 #align is_max_iff_forall_not_lt isMax_iff_forall_not_lt
--/
 
-#print not_isMin_iff /-
+/- warning: not_is_min_iff -> not_isMin_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α}, Iff (Not (IsMin.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a)) (Exists.{succ u1} α (fun (b : α) => LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) b a))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α}, Iff (Not (IsMin.{u1} α (Preorder.toLE.{u1} α _inst_1) a)) (Exists.{succ u1} α (fun (b : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) b a))
+Case conversion may be inaccurate. Consider using '#align not_is_min_iff not_isMin_iffₓ'. -/
 @[simp]
 theorem not_isMin_iff : ¬IsMin a ↔ ∃ b, b < a := by
   simp_rw [lt_iff_le_not_le, IsMin, not_forall, exists_prop]
 #align not_is_min_iff not_isMin_iff
--/
 
-#print not_isMax_iff /-
+/- warning: not_is_max_iff -> not_isMax_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α}, Iff (Not (IsMax.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a)) (Exists.{succ u1} α (fun (b : α) => LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α}, Iff (Not (IsMax.{u1} α (Preorder.toLE.{u1} α _inst_1) a)) (Exists.{succ u1} α (fun (b : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) a b))
+Case conversion may be inaccurate. Consider using '#align not_is_max_iff not_isMax_iffₓ'. -/
 @[simp]
 theorem not_isMax_iff : ¬IsMax a ↔ ∃ b, a < b := by
   simp_rw [lt_iff_le_not_le, IsMax, not_forall, exists_prop]
 #align not_is_max_iff not_isMax_iff
--/
 
-#print not_isMin /-
+/- warning: not_is_min -> not_isMin is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : NoMinOrder.{u1} α (Preorder.toHasLt.{u1} α _inst_1)] (a : α), Not (IsMin.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)] (a : α), Not (IsMin.{u1} α (Preorder.toLE.{u1} α _inst_1) a)
+Case conversion may be inaccurate. Consider using '#align not_is_min not_isMinₓ'. -/
 @[simp]
 theorem not_isMin [NoMinOrder α] (a : α) : ¬IsMin a :=
   not_isMin_iff.2 <| exists_lt a
 #align not_is_min not_isMin
--/
 
-#print not_isMax /-
+/- warning: not_is_max -> not_isMax is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : NoMaxOrder.{u1} α (Preorder.toHasLt.{u1} α _inst_1)] (a : α), Not (IsMax.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)] (a : α), Not (IsMax.{u1} α (Preorder.toLE.{u1} α _inst_1) a)
+Case conversion may be inaccurate. Consider using '#align not_is_max not_isMaxₓ'. -/
 @[simp]
 theorem not_isMax [NoMaxOrder α] (a : α) : ¬IsMax a :=
   not_isMax_iff.2 <| exists_gt a
 #align not_is_max not_isMax
--/
 
 namespace Subsingleton
 
 variable [Subsingleton α]
 
-#print Subsingleton.isBot /-
+/- warning: subsingleton.is_bot -> Subsingleton.isBot is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Subsingleton.{succ u1} α] (a : α), IsBot.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Subsingleton.{succ u1} α] (a : α), IsBot.{u1} α (Preorder.toLE.{u1} α _inst_1) a
+Case conversion may be inaccurate. Consider using '#align subsingleton.is_bot Subsingleton.isBotₓ'. -/
 protected theorem isBot (a : α) : IsBot a := fun _ => (Subsingleton.elim _ _).le
 #align subsingleton.is_bot Subsingleton.isBot
--/
 
-#print Subsingleton.isTop /-
+/- warning: subsingleton.is_top -> Subsingleton.isTop is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Subsingleton.{succ u1} α] (a : α), IsTop.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Subsingleton.{succ u1} α] (a : α), IsTop.{u1} α (Preorder.toLE.{u1} α _inst_1) a
+Case conversion may be inaccurate. Consider using '#align subsingleton.is_top Subsingleton.isTopₓ'. -/
 protected theorem isTop (a : α) : IsTop a := fun _ => (Subsingleton.elim _ _).le
 #align subsingleton.is_top Subsingleton.isTop
--/
 
-#print Subsingleton.isMin /-
+/- warning: subsingleton.is_min -> Subsingleton.isMin is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Subsingleton.{succ u1} α] (a : α), IsMin.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Subsingleton.{succ u1} α] (a : α), IsMin.{u1} α (Preorder.toLE.{u1} α _inst_1) a
+Case conversion may be inaccurate. Consider using '#align subsingleton.is_min Subsingleton.isMinₓ'. -/
 protected theorem isMin (a : α) : IsMin a :=
   (Subsingleton.isBot _).IsMin
 #align subsingleton.is_min Subsingleton.isMin
--/
 
-#print Subsingleton.isMax /-
+/- warning: subsingleton.is_max -> Subsingleton.isMax is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Subsingleton.{succ u1} α] (a : α), IsMax.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Subsingleton.{succ u1} α] (a : α), IsMax.{u1} α (Preorder.toLE.{u1} α _inst_1) a
+Case conversion may be inaccurate. Consider using '#align subsingleton.is_max Subsingleton.isMaxₓ'. -/
 protected theorem isMax (a : α) : IsMax a :=
   (Subsingleton.isTop _).IsMax
 #align subsingleton.is_max Subsingleton.isMax
--/
 
 end Subsingleton
 
@@ -513,29 +613,45 @@ section PartialOrder
 
 variable [PartialOrder α] {a b : α}
 
-#print IsMin.eq_of_le /-
+/- warning: is_min.eq_of_le -> IsMin.eq_of_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α}, (IsMin.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) b a) -> (Eq.{succ u1} α b a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α}, (IsMin.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) b a) -> (Eq.{succ u1} α b a)
+Case conversion may be inaccurate. Consider using '#align is_min.eq_of_le IsMin.eq_of_leₓ'. -/
 protected theorem IsMin.eq_of_le (ha : IsMin a) (h : b ≤ a) : b = a :=
   h.antisymm <| ha h
 #align is_min.eq_of_le IsMin.eq_of_le
--/
 
-#print IsMin.eq_of_ge /-
+/- warning: is_min.eq_of_ge -> IsMin.eq_of_ge is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α}, (IsMin.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) b a) -> (Eq.{succ u1} α a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α}, (IsMin.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) b a) -> (Eq.{succ u1} α a b)
+Case conversion may be inaccurate. Consider using '#align is_min.eq_of_ge IsMin.eq_of_geₓ'. -/
 protected theorem IsMin.eq_of_ge (ha : IsMin a) (h : b ≤ a) : a = b :=
   h.antisymm' <| ha h
 #align is_min.eq_of_ge IsMin.eq_of_ge
--/
 
-#print IsMax.eq_of_le /-
+/- warning: is_max.eq_of_le -> IsMax.eq_of_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α}, (IsMax.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) -> (Eq.{succ u1} α a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α}, (IsMax.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) -> (Eq.{succ u1} α a b)
+Case conversion may be inaccurate. Consider using '#align is_max.eq_of_le IsMax.eq_of_leₓ'. -/
 protected theorem IsMax.eq_of_le (ha : IsMax a) (h : a ≤ b) : a = b :=
   h.antisymm <| ha h
 #align is_max.eq_of_le IsMax.eq_of_le
--/
 
-#print IsMax.eq_of_ge /-
+/- warning: is_max.eq_of_ge -> IsMax.eq_of_ge is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α}, (IsMax.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) -> (Eq.{succ u1} α b a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α}, (IsMax.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) -> (Eq.{succ u1} α b a)
+Case conversion may be inaccurate. Consider using '#align is_max.eq_of_ge IsMax.eq_of_geₓ'. -/
 protected theorem IsMax.eq_of_ge (ha : IsMax a) (h : a ≤ b) : b = a :=
   h.antisymm' <| ha h
 #align is_max.eq_of_ge IsMax.eq_of_ge
--/
 
 end PartialOrder
 
@@ -545,7 +661,7 @@ variable [Preorder α] [Preorder β] {a a₁ a₂ : α} {b b₁ b₂ : β} {x y 
 
 /- warning: is_bot.prod_mk -> IsBot.prod_mk is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {a : α} {b : β}, (IsBot.{u1} α (Preorder.toLE.{u1} α _inst_1) a) -> (IsBot.{u2} β (Preorder.toLE.{u2} β _inst_2) b) -> (IsBot.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) (Prod.mk.{u1, u2} α β a b))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {a : α} {b : β}, (IsBot.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a) -> (IsBot.{u2} β (Preorder.toHasLe.{u2} β _inst_2) b) -> (IsBot.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) (Prod.mk.{u1, u2} α β a b))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {a : α} {b : β}, (IsBot.{u2} α (Preorder.toLE.{u2} α _inst_1) a) -> (IsBot.{u1} β (Preorder.toLE.{u1} β _inst_2) b) -> (IsBot.{max u1 u2} (Prod.{u2, u1} α β) (Prod.instLEProd.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) (Prod.mk.{u2, u1} α β a b))
 Case conversion may be inaccurate. Consider using '#align is_bot.prod_mk IsBot.prod_mkₓ'. -/
@@ -554,7 +670,7 @@ theorem IsBot.prod_mk (ha : IsBot a) (hb : IsBot b) : IsBot (a, b) := fun c => �
 
 /- warning: is_top.prod_mk -> IsTop.prod_mk is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {a : α} {b : β}, (IsTop.{u1} α (Preorder.toLE.{u1} α _inst_1) a) -> (IsTop.{u2} β (Preorder.toLE.{u2} β _inst_2) b) -> (IsTop.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) (Prod.mk.{u1, u2} α β a b))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {a : α} {b : β}, (IsTop.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a) -> (IsTop.{u2} β (Preorder.toHasLe.{u2} β _inst_2) b) -> (IsTop.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) (Prod.mk.{u1, u2} α β a b))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {a : α} {b : β}, (IsTop.{u2} α (Preorder.toLE.{u2} α _inst_1) a) -> (IsTop.{u1} β (Preorder.toLE.{u1} β _inst_2) b) -> (IsTop.{max u1 u2} (Prod.{u2, u1} α β) (Prod.instLEProd.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) (Prod.mk.{u2, u1} α β a b))
 Case conversion may be inaccurate. Consider using '#align is_top.prod_mk IsTop.prod_mkₓ'. -/
@@ -563,7 +679,7 @@ theorem IsTop.prod_mk (ha : IsTop a) (hb : IsTop b) : IsTop (a, b) := fun c => �
 
 /- warning: is_min.prod_mk -> IsMin.prod_mk is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {a : α} {b : β}, (IsMin.{u1} α (Preorder.toLE.{u1} α _inst_1) a) -> (IsMin.{u2} β (Preorder.toLE.{u2} β _inst_2) b) -> (IsMin.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) (Prod.mk.{u1, u2} α β a b))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {a : α} {b : β}, (IsMin.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a) -> (IsMin.{u2} β (Preorder.toHasLe.{u2} β _inst_2) b) -> (IsMin.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) (Prod.mk.{u1, u2} α β a b))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {a : α} {b : β}, (IsMin.{u2} α (Preorder.toLE.{u2} α _inst_1) a) -> (IsMin.{u1} β (Preorder.toLE.{u1} β _inst_2) b) -> (IsMin.{max u1 u2} (Prod.{u2, u1} α β) (Prod.instLEProd.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) (Prod.mk.{u2, u1} α β a b))
 Case conversion may be inaccurate. Consider using '#align is_min.prod_mk IsMin.prod_mkₓ'. -/
@@ -572,7 +688,7 @@ theorem IsMin.prod_mk (ha : IsMin a) (hb : IsMin b) : IsMin (a, b) := fun c hc =
 
 /- warning: is_max.prod_mk -> IsMax.prod_mk is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {a : α} {b : β}, (IsMax.{u1} α (Preorder.toLE.{u1} α _inst_1) a) -> (IsMax.{u2} β (Preorder.toLE.{u2} β _inst_2) b) -> (IsMax.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) (Prod.mk.{u1, u2} α β a b))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {a : α} {b : β}, (IsMax.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a) -> (IsMax.{u2} β (Preorder.toHasLe.{u2} β _inst_2) b) -> (IsMax.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) (Prod.mk.{u1, u2} α β a b))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {a : α} {b : β}, (IsMax.{u2} α (Preorder.toLE.{u2} α _inst_1) a) -> (IsMax.{u1} β (Preorder.toLE.{u1} β _inst_2) b) -> (IsMax.{max u1 u2} (Prod.{u2, u1} α β) (Prod.instLEProd.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) (Prod.mk.{u2, u1} α β a b))
 Case conversion may be inaccurate. Consider using '#align is_max.prod_mk IsMax.prod_mkₓ'. -/
@@ -581,7 +697,7 @@ theorem IsMax.prod_mk (ha : IsMax a) (hb : IsMax b) : IsMax (a, b) := fun c hc =
 
 /- warning: is_bot.fst -> IsBot.fst is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {x : Prod.{u1, u2} α β}, (IsBot.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) x) -> (IsBot.{u1} α (Preorder.toLE.{u1} α _inst_1) (Prod.fst.{u1, u2} α β x))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {x : Prod.{u1, u2} α β}, (IsBot.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) x) -> (IsBot.{u1} α (Preorder.toHasLe.{u1} α _inst_1) (Prod.fst.{u1, u2} α β x))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {x : Prod.{u2, u1} α β}, (IsBot.{max u2 u1} (Prod.{u2, u1} α β) (Prod.instLEProd.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) x) -> (IsBot.{u2} α (Preorder.toLE.{u2} α _inst_1) (Prod.fst.{u2, u1} α β x))
 Case conversion may be inaccurate. Consider using '#align is_bot.fst IsBot.fstₓ'. -/
@@ -590,7 +706,7 @@ theorem IsBot.fst (hx : IsBot x) : IsBot x.1 := fun c => (hx (c, x.2)).1
 
 /- warning: is_bot.snd -> IsBot.snd is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {x : Prod.{u1, u2} α β}, (IsBot.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) x) -> (IsBot.{u2} β (Preorder.toLE.{u2} β _inst_2) (Prod.snd.{u1, u2} α β x))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {x : Prod.{u1, u2} α β}, (IsBot.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) x) -> (IsBot.{u2} β (Preorder.toHasLe.{u2} β _inst_2) (Prod.snd.{u1, u2} α β x))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {x : Prod.{u2, u1} α β}, (IsBot.{max u2 u1} (Prod.{u2, u1} α β) (Prod.instLEProd.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) x) -> (IsBot.{u1} β (Preorder.toLE.{u1} β _inst_2) (Prod.snd.{u2, u1} α β x))
 Case conversion may be inaccurate. Consider using '#align is_bot.snd IsBot.sndₓ'. -/
@@ -599,7 +715,7 @@ theorem IsBot.snd (hx : IsBot x) : IsBot x.2 := fun c => (hx (x.1, c)).2
 
 /- warning: is_top.fst -> IsTop.fst is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {x : Prod.{u1, u2} α β}, (IsTop.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) x) -> (IsTop.{u1} α (Preorder.toLE.{u1} α _inst_1) (Prod.fst.{u1, u2} α β x))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {x : Prod.{u1, u2} α β}, (IsTop.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) x) -> (IsTop.{u1} α (Preorder.toHasLe.{u1} α _inst_1) (Prod.fst.{u1, u2} α β x))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {x : Prod.{u2, u1} α β}, (IsTop.{max u2 u1} (Prod.{u2, u1} α β) (Prod.instLEProd.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) x) -> (IsTop.{u2} α (Preorder.toLE.{u2} α _inst_1) (Prod.fst.{u2, u1} α β x))
 Case conversion may be inaccurate. Consider using '#align is_top.fst IsTop.fstₓ'. -/
@@ -608,7 +724,7 @@ theorem IsTop.fst (hx : IsTop x) : IsTop x.1 := fun c => (hx (c, x.2)).1
 
 /- warning: is_top.snd -> IsTop.snd is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {x : Prod.{u1, u2} α β}, (IsTop.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) x) -> (IsTop.{u2} β (Preorder.toLE.{u2} β _inst_2) (Prod.snd.{u1, u2} α β x))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {x : Prod.{u1, u2} α β}, (IsTop.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) x) -> (IsTop.{u2} β (Preorder.toHasLe.{u2} β _inst_2) (Prod.snd.{u1, u2} α β x))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {x : Prod.{u2, u1} α β}, (IsTop.{max u2 u1} (Prod.{u2, u1} α β) (Prod.instLEProd.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) x) -> (IsTop.{u1} β (Preorder.toLE.{u1} β _inst_2) (Prod.snd.{u2, u1} α β x))
 Case conversion may be inaccurate. Consider using '#align is_top.snd IsTop.sndₓ'. -/
@@ -617,7 +733,7 @@ theorem IsTop.snd (hx : IsTop x) : IsTop x.2 := fun c => (hx (x.1, c)).2
 
 /- warning: is_min.fst -> IsMin.fst is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {x : Prod.{u1, u2} α β}, (IsMin.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) x) -> (IsMin.{u1} α (Preorder.toLE.{u1} α _inst_1) (Prod.fst.{u1, u2} α β x))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {x : Prod.{u1, u2} α β}, (IsMin.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) x) -> (IsMin.{u1} α (Preorder.toHasLe.{u1} α _inst_1) (Prod.fst.{u1, u2} α β x))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {x : Prod.{u2, u1} α β}, (IsMin.{max u2 u1} (Prod.{u2, u1} α β) (Prod.instLEProd.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) x) -> (IsMin.{u2} α (Preorder.toLE.{u2} α _inst_1) (Prod.fst.{u2, u1} α β x))
 Case conversion may be inaccurate. Consider using '#align is_min.fst IsMin.fstₓ'. -/
@@ -627,7 +743,7 @@ theorem IsMin.fst (hx : IsMin x) : IsMin x.1 := fun c hc =>
 
 /- warning: is_min.snd -> IsMin.snd is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {x : Prod.{u1, u2} α β}, (IsMin.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) x) -> (IsMin.{u2} β (Preorder.toLE.{u2} β _inst_2) (Prod.snd.{u1, u2} α β x))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {x : Prod.{u1, u2} α β}, (IsMin.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) x) -> (IsMin.{u2} β (Preorder.toHasLe.{u2} β _inst_2) (Prod.snd.{u1, u2} α β x))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {x : Prod.{u2, u1} α β}, (IsMin.{max u2 u1} (Prod.{u2, u1} α β) (Prod.instLEProd.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) x) -> (IsMin.{u1} β (Preorder.toLE.{u1} β _inst_2) (Prod.snd.{u2, u1} α β x))
 Case conversion may be inaccurate. Consider using '#align is_min.snd IsMin.sndₓ'. -/
@@ -637,7 +753,7 @@ theorem IsMin.snd (hx : IsMin x) : IsMin x.2 := fun c hc =>
 
 /- warning: is_max.fst -> IsMax.fst is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {x : Prod.{u1, u2} α β}, (IsMax.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) x) -> (IsMax.{u1} α (Preorder.toLE.{u1} α _inst_1) (Prod.fst.{u1, u2} α β x))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {x : Prod.{u1, u2} α β}, (IsMax.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) x) -> (IsMax.{u1} α (Preorder.toHasLe.{u1} α _inst_1) (Prod.fst.{u1, u2} α β x))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {x : Prod.{u2, u1} α β}, (IsMax.{max u2 u1} (Prod.{u2, u1} α β) (Prod.instLEProd.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) x) -> (IsMax.{u2} α (Preorder.toLE.{u2} α _inst_1) (Prod.fst.{u2, u1} α β x))
 Case conversion may be inaccurate. Consider using '#align is_max.fst IsMax.fstₓ'. -/
@@ -647,7 +763,7 @@ theorem IsMax.fst (hx : IsMax x) : IsMax x.1 := fun c hc =>
 
 /- warning: is_max.snd -> IsMax.snd is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {x : Prod.{u1, u2} α β}, (IsMax.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) x) -> (IsMax.{u2} β (Preorder.toLE.{u2} β _inst_2) (Prod.snd.{u1, u2} α β x))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {x : Prod.{u1, u2} α β}, (IsMax.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) x) -> (IsMax.{u2} β (Preorder.toHasLe.{u2} β _inst_2) (Prod.snd.{u1, u2} α β x))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {x : Prod.{u2, u1} α β}, (IsMax.{max u2 u1} (Prod.{u2, u1} α β) (Prod.instLEProd.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) x) -> (IsMax.{u1} β (Preorder.toLE.{u1} β _inst_2) (Prod.snd.{u2, u1} α β x))
 Case conversion may be inaccurate. Consider using '#align is_max.snd IsMax.sndₓ'. -/
@@ -657,7 +773,7 @@ theorem IsMax.snd (hx : IsMax x) : IsMax x.2 := fun c hc =>
 
 /- warning: prod.is_bot_iff -> Prod.isBot_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {x : Prod.{u1, u2} α β}, Iff (IsBot.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) x) (And (IsBot.{u1} α (Preorder.toLE.{u1} α _inst_1) (Prod.fst.{u1, u2} α β x)) (IsBot.{u2} β (Preorder.toLE.{u2} β _inst_2) (Prod.snd.{u1, u2} α β x)))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {x : Prod.{u1, u2} α β}, Iff (IsBot.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) x) (And (IsBot.{u1} α (Preorder.toHasLe.{u1} α _inst_1) (Prod.fst.{u1, u2} α β x)) (IsBot.{u2} β (Preorder.toHasLe.{u2} β _inst_2) (Prod.snd.{u1, u2} α β x)))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {x : Prod.{u2, u1} α β}, Iff (IsBot.{max u2 u1} (Prod.{u2, u1} α β) (Prod.instLEProd.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) x) (And (IsBot.{u2} α (Preorder.toLE.{u2} α _inst_1) (Prod.fst.{u2, u1} α β x)) (IsBot.{u1} β (Preorder.toLE.{u1} β _inst_2) (Prod.snd.{u2, u1} α β x)))
 Case conversion may be inaccurate. Consider using '#align prod.is_bot_iff Prod.isBot_iffₓ'. -/
@@ -667,7 +783,7 @@ theorem Prod.isBot_iff : IsBot x ↔ IsBot x.1 ∧ IsBot x.2 :=
 
 /- warning: prod.is_top_iff -> Prod.isTop_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {x : Prod.{u1, u2} α β}, Iff (IsTop.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) x) (And (IsTop.{u1} α (Preorder.toLE.{u1} α _inst_1) (Prod.fst.{u1, u2} α β x)) (IsTop.{u2} β (Preorder.toLE.{u2} β _inst_2) (Prod.snd.{u1, u2} α β x)))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {x : Prod.{u1, u2} α β}, Iff (IsTop.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) x) (And (IsTop.{u1} α (Preorder.toHasLe.{u1} α _inst_1) (Prod.fst.{u1, u2} α β x)) (IsTop.{u2} β (Preorder.toHasLe.{u2} β _inst_2) (Prod.snd.{u1, u2} α β x)))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {x : Prod.{u2, u1} α β}, Iff (IsTop.{max u2 u1} (Prod.{u2, u1} α β) (Prod.instLEProd.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) x) (And (IsTop.{u2} α (Preorder.toLE.{u2} α _inst_1) (Prod.fst.{u2, u1} α β x)) (IsTop.{u1} β (Preorder.toLE.{u1} β _inst_2) (Prod.snd.{u2, u1} α β x)))
 Case conversion may be inaccurate. Consider using '#align prod.is_top_iff Prod.isTop_iffₓ'. -/
@@ -677,7 +793,7 @@ theorem Prod.isTop_iff : IsTop x ↔ IsTop x.1 ∧ IsTop x.2 :=
 
 /- warning: prod.is_min_iff -> Prod.isMin_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {x : Prod.{u1, u2} α β}, Iff (IsMin.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) x) (And (IsMin.{u1} α (Preorder.toLE.{u1} α _inst_1) (Prod.fst.{u1, u2} α β x)) (IsMin.{u2} β (Preorder.toLE.{u2} β _inst_2) (Prod.snd.{u1, u2} α β x)))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {x : Prod.{u1, u2} α β}, Iff (IsMin.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) x) (And (IsMin.{u1} α (Preorder.toHasLe.{u1} α _inst_1) (Prod.fst.{u1, u2} α β x)) (IsMin.{u2} β (Preorder.toHasLe.{u2} β _inst_2) (Prod.snd.{u1, u2} α β x)))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {x : Prod.{u2, u1} α β}, Iff (IsMin.{max u2 u1} (Prod.{u2, u1} α β) (Prod.instLEProd.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) x) (And (IsMin.{u2} α (Preorder.toLE.{u2} α _inst_1) (Prod.fst.{u2, u1} α β x)) (IsMin.{u1} β (Preorder.toLE.{u1} β _inst_2) (Prod.snd.{u2, u1} α β x)))
 Case conversion may be inaccurate. Consider using '#align prod.is_min_iff Prod.isMin_iffₓ'. -/
@@ -687,7 +803,7 @@ theorem Prod.isMin_iff : IsMin x ↔ IsMin x.1 ∧ IsMin x.2 :=
 
 /- warning: prod.is_max_iff -> Prod.isMax_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {x : Prod.{u1, u2} α β}, Iff (IsMax.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) x) (And (IsMax.{u1} α (Preorder.toLE.{u1} α _inst_1) (Prod.fst.{u1, u2} α β x)) (IsMax.{u2} β (Preorder.toLE.{u2} β _inst_2) (Prod.snd.{u1, u2} α β x)))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {x : Prod.{u1, u2} α β}, Iff (IsMax.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasLe.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) x) (And (IsMax.{u1} α (Preorder.toHasLe.{u1} α _inst_1) (Prod.fst.{u1, u2} α β x)) (IsMax.{u2} β (Preorder.toHasLe.{u2} β _inst_2) (Prod.snd.{u1, u2} α β x)))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {x : Prod.{u2, u1} α β}, Iff (IsMax.{max u2 u1} (Prod.{u2, u1} α β) (Prod.instLEProd.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) x) (And (IsMax.{u2} α (Preorder.toLE.{u2} α _inst_1) (Prod.fst.{u2, u1} α β x)) (IsMax.{u1} β (Preorder.toLE.{u1} β _inst_2) (Prod.snd.{u2, u1} α β x)))
 Case conversion may be inaccurate. Consider using '#align prod.is_max_iff Prod.isMax_iffₓ'. -/

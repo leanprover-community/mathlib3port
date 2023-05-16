@@ -49,12 +49,16 @@ def hasse : SimpleGraph α where
 
 variable {α β} {a b : α}
 
-#print SimpleGraph.hasse_adj /-
+/- warning: simple_graph.hasse_adj -> SimpleGraph.hasse_adj is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, Iff (SimpleGraph.Adj.{u1} α (SimpleGraph.hasse.{u1} α _inst_1) a b) (Or (Covby.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a b) (Covby.{u1} α (Preorder.toHasLt.{u1} α _inst_1) b a))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, Iff (SimpleGraph.Adj.{u1} α (SimpleGraph.hasse.{u1} α _inst_1) a b) (Or (Covby.{u1} α (Preorder.toLT.{u1} α _inst_1) a b) (Covby.{u1} α (Preorder.toLT.{u1} α _inst_1) b a))
+Case conversion may be inaccurate. Consider using '#align simple_graph.hasse_adj SimpleGraph.hasse_adjₓ'. -/
 @[simp]
 theorem hasse_adj : (hasse α).Adj a b ↔ a ⋖ b ∨ b ⋖ a :=
   Iff.rfl
 #align simple_graph.hasse_adj SimpleGraph.hasse_adj
--/
 
 #print SimpleGraph.hasseDualIso /-
 /-- `αᵒᵈ` and `α` have the same Hasse diagram. -/

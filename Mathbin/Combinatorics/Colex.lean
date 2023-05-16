@@ -127,7 +127,12 @@ theorem Nat.sum_two_pow_lt {k : ℕ} {A : Finset ℕ} (h₁ : ∀ {x}, x ∈ A �
 
 namespace Colex
 
-#print Colex.hom_lt_iff /-
+/- warning: colex.hom_lt_iff -> Colex.hom_lt_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : DecidableEq.{succ u2} β] [_inst_3 : Preorder.{u2} β] {f : α -> β}, (StrictMono.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) _inst_3 f) -> (forall (A : Finset.{u1} α) (B : Finset.{u1} α), Iff (LT.lt.{u2} (Finset.Colex.{u2} β) (Finset.Colex.hasLt.{u2} β (Preorder.toHasLt.{u2} β _inst_3)) (Finset.toColex.{u2} β (Finset.image.{u1, u2} α β (fun (a : β) (b : β) => _inst_2 a b) f A)) (Finset.toColex.{u2} β (Finset.image.{u1, u2} α β (fun (a : β) (b : β) => _inst_2 a b) f B))) (LT.lt.{u1} (Finset.Colex.{u1} α) (Finset.Colex.hasLt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Finset.toColex.{u1} α A) (Finset.toColex.{u1} α B)))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : DecidableEq.{succ u2} β] [_inst_3 : Preorder.{u2} β] {f : α -> β}, (StrictMono.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) _inst_3 f) -> (forall (A : Finset.{u1} α) (B : Finset.{u1} α), Iff (LT.lt.{u2} (Finset.Colex.{u2} β) (instLTColex.{u2} β (Preorder.toLT.{u2} β _inst_3)) (Finset.toColex.{u2} β (Finset.image.{u1, u2} α β (fun (a : β) (b : β) => _inst_2 a b) f A)) (Finset.toColex.{u2} β (Finset.image.{u1, u2} α β (fun (a : β) (b : β) => _inst_2 a b) f B))) (LT.lt.{u1} (Finset.Colex.{u1} α) (instLTColex.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))))) (Finset.toColex.{u1} α A) (Finset.toColex.{u1} α B)))
+Case conversion may be inaccurate. Consider using '#align colex.hom_lt_iff Colex.hom_lt_iffₓ'. -/
 /-- Strictly monotone functions preserve the colex ordering. -/
 theorem hom_lt_iff {β : Type _} [LinearOrder α] [DecidableEq β] [Preorder β] {f : α → β}
     (h₁ : StrictMono f) (A B : Finset α) :
@@ -149,7 +154,6 @@ theorem hom_lt_iff {β : Type _} [LinearOrder α] [DecidableEq β] [Preorder β]
   · simp only [h₁.injective, Function.Injective.eq_iff]
     exact fun x hx => ne_of_mem_of_not_mem hx ka
 #align colex.hom_lt_iff Colex.hom_lt_iff
--/
 
 /- warning: colex.hom_fin_lt_iff -> Colex.hom_fin_lt_iff is a dubious translation:
 lean 3 declaration is
@@ -168,7 +172,12 @@ theorem hom_fin_lt_iff {n : ℕ} (A B : Finset (Fin n)) :
 instance [LT α] : IsIrrefl (Finset.Colex α) (· < ·) :=
   ⟨fun A h => Exists.elim h fun _ ⟨_, a, b⟩ => a b⟩
 
-#print Colex.lt_trans /-
+/- warning: colex.lt_trans -> Colex.lt_trans is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : Finset.Colex.{u1} α} {b : Finset.Colex.{u1} α} {c : Finset.Colex.{u1} α}, (LT.lt.{u1} (Finset.Colex.{u1} α) (Finset.Colex.hasLt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) a b) -> (LT.lt.{u1} (Finset.Colex.{u1} α) (Finset.Colex.hasLt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) b c) -> (LT.lt.{u1} (Finset.Colex.{u1} α) (Finset.Colex.hasLt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) a c)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : Finset.Colex.{u1} α} {b : Finset.Colex.{u1} α} {c : Finset.Colex.{u1} α}, (LT.lt.{u1} (Finset.Colex.{u1} α) (instLTColex.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))))) a b) -> (LT.lt.{u1} (Finset.Colex.{u1} α) (instLTColex.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))))) b c) -> (LT.lt.{u1} (Finset.Colex.{u1} α) (instLTColex.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))))) a c)
+Case conversion may be inaccurate. Consider using '#align colex.lt_trans Colex.lt_transₓ'. -/
 @[trans]
 theorem lt_trans [LinearOrder α] {a b c : Finset.Colex α} : a < b → b < c → a < c :=
   by
@@ -181,19 +190,27 @@ theorem lt_trans [LinearOrder α] {a b c : Finset.Colex α} : a < b → b < c �
     rw [k₁z hx]
     apply k₂z (trans h hx)
 #align colex.lt_trans Colex.lt_trans
--/
 
-#print Colex.le_trans /-
+/- warning: colex.le_trans -> Colex.le_trans is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (a : Finset.Colex.{u1} α) (b : Finset.Colex.{u1} α) (c : Finset.Colex.{u1} α), (LE.le.{u1} (Finset.Colex.{u1} α) (Finset.Colex.hasLe.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) a b) -> (LE.le.{u1} (Finset.Colex.{u1} α) (Finset.Colex.hasLe.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) b c) -> (LE.le.{u1} (Finset.Colex.{u1} α) (Finset.Colex.hasLe.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) a c)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (a : Finset.Colex.{u1} α) (b : Finset.Colex.{u1} α) (c : Finset.Colex.{u1} α), (LE.le.{u1} (Finset.Colex.{u1} α) (instLEColex.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))))) a b) -> (LE.le.{u1} (Finset.Colex.{u1} α) (instLEColex.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))))) b c) -> (LE.le.{u1} (Finset.Colex.{u1} α) (instLEColex.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))))) a c)
+Case conversion may be inaccurate. Consider using '#align colex.le_trans Colex.le_transₓ'. -/
 @[trans]
 theorem le_trans [LinearOrder α] (a b c : Finset.Colex α) : a ≤ b → b ≤ c → a ≤ c := fun AB BC =>
   AB.elim (fun k => BC.elim (fun t => Or.inl (lt_trans k t)) fun t => t ▸ AB) fun k => k.symm ▸ BC
 #align colex.le_trans Colex.le_trans
--/
 
 instance [LinearOrder α] : IsTrans (Finset.Colex α) (· < ·) :=
   ⟨fun _ _ _ => Colex.lt_trans⟩
 
-#print Colex.lt_trichotomy /-
+/- warning: colex.lt_trichotomy -> Colex.lt_trichotomy is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (A : Finset.Colex.{u1} α) (B : Finset.Colex.{u1} α), Or (LT.lt.{u1} (Finset.Colex.{u1} α) (Finset.Colex.hasLt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) A B) (Or (Eq.{succ u1} (Finset.Colex.{u1} α) A B) (LT.lt.{u1} (Finset.Colex.{u1} α) (Finset.Colex.hasLt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) B A))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (A : Finset.Colex.{u1} α) (B : Finset.Colex.{u1} α), Or (LT.lt.{u1} (Finset.Colex.{u1} α) (instLTColex.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))))) A B) (Or (Eq.{succ u1} (Finset.Colex.{u1} α) A B) (LT.lt.{u1} (Finset.Colex.{u1} α) (instLTColex.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))))) B A))
+Case conversion may be inaccurate. Consider using '#align colex.lt_trichotomy Colex.lt_trichotomyₓ'. -/
 theorem lt_trichotomy [LinearOrder α] (A B : Finset.Colex α) : A < B ∨ A = B ∨ B < A :=
   by
   by_cases h₁ : A = B
@@ -221,12 +238,16 @@ theorem lt_trichotomy [LinearOrder α] (A B : Finset.Colex α) : A < B ∨ A = B
   simp only [union_eq_empty_iff, sdiff_eq_empty_iff_subset] at a
   apply h₁ (subset.antisymm a.1 a.2)
 #align colex.lt_trichotomy Colex.lt_trichotomy
--/
 
 instance [LinearOrder α] : IsTrichotomous (Finset.Colex α) (· < ·) :=
   ⟨lt_trichotomy⟩
 
-#print Colex.decidableLt /-
+/- warning: colex.decidable_lt -> Colex.decidableLt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {A : Finset.Colex.{u1} α} {B : Finset.Colex.{u1} α}, Decidable (LT.lt.{u1} (Finset.Colex.{u1} α) (Finset.Colex.hasLt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) A B)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {A : Finset.Colex.{u1} α} {B : Finset.Colex.{u1} α}, Decidable (LT.lt.{u1} (Finset.Colex.{u1} α) (instLTColex.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))))) A B)
+Case conversion may be inaccurate. Consider using '#align colex.decidable_lt Colex.decidableLtₓ'. -/
 instance decidableLt [LinearOrder α] : ∀ {A B : Finset.Colex α}, Decidable (A < B) :=
   show ∀ A B : Finset α, Decidable (A.toColex < B.toColex) from fun A B =>
     decidable_of_iff' (∃ k ∈ B, (∀ x ∈ A ∪ B, k < x → (x ∈ A ↔ x ∈ B)) ∧ k ∉ A)
@@ -238,7 +259,6 @@ instance decidableLt [LinearOrder α] : ∀ {A B : Finset.Colex α}, Decidable (
         refine' and_congr_left' (forall_congr' _)
         tauto)
 #align colex.decidable_lt Colex.decidableLt
--/
 
 instance [LinearOrder α] : LinearOrder (Finset.Colex α) :=
   { Finset.Colex.hasLt,
@@ -267,13 +287,17 @@ instance [LinearOrder α] : LinearOrder (Finset.Colex α) :=
 example [LinearOrder α] : IsStrictTotalOrder (Finset.Colex α) (· < ·) :=
   inferInstance
 
-#print Colex.hom_le_iff /-
+/- warning: colex.hom_le_iff -> Colex.hom_le_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : LinearOrder.{u2} β] {f : α -> β}, (StrictMono.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) f) -> (forall (A : Finset.{u1} α) (B : Finset.{u1} α), Iff (LE.le.{u2} (Finset.Colex.{u2} β) (Finset.Colex.hasLe.{u2} β (Preorder.toHasLt.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))))) (Finset.toColex.{u2} β (Finset.image.{u1, u2} α β (fun (a : β) (b : β) => Eq.decidable.{u2} β _inst_2 a b) f A)) (Finset.toColex.{u2} β (Finset.image.{u1, u2} α β (fun (a : β) (b : β) => Eq.decidable.{u2} β _inst_2 a b) f B))) (LE.le.{u1} (Finset.Colex.{u1} α) (Finset.Colex.hasLe.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Finset.toColex.{u1} α A) (Finset.toColex.{u1} α B)))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : LinearOrder.{u2} β] {f : α -> β}, (StrictMono.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) f) -> (forall (A : Finset.{u1} α) (B : Finset.{u1} α), Iff (LE.le.{u2} (Finset.Colex.{u2} β) (instLEColex.{u2} β (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))))) (Finset.toColex.{u2} β (Finset.image.{u1, u2} α β (fun (a : β) (b : β) => instDecidableEq.{u2} β _inst_2 a b) f A)) (Finset.toColex.{u2} β (Finset.image.{u1, u2} α β (fun (a : β) (b : β) => instDecidableEq.{u2} β _inst_2 a b) f B))) (LE.le.{u1} (Finset.Colex.{u1} α) (instLEColex.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))))) (Finset.toColex.{u1} α A) (Finset.toColex.{u1} α B)))
+Case conversion may be inaccurate. Consider using '#align colex.hom_le_iff Colex.hom_le_iffₓ'. -/
 /-- Strictly monotone functions preserve the colex ordering. -/
 theorem hom_le_iff {β : Type _} [LinearOrder α] [LinearOrder β] {f : α → β} (h₁ : StrictMono f)
     (A B : Finset α) : (A.image f).toColex ≤ (B.image f).toColex ↔ A.toColex ≤ B.toColex := by
   rw [le_iff_le_iff_lt_iff_lt, hom_lt_iff h₁]
 #align colex.hom_le_iff Colex.hom_le_iff
--/
 
 /- warning: colex.hom_fin_le_iff -> Colex.hom_fin_le_iff is a dubious translation:
 lean 3 declaration is
@@ -289,7 +313,12 @@ theorem hom_fin_le_iff {n : ℕ} (A B : Finset (Fin n)) :
   Colex.hom_le_iff (fun x y k => k) _ _
 #align colex.hom_fin_le_iff Colex.hom_fin_le_iff
 
-#print Colex.forall_lt_of_colex_lt_of_forall_lt /-
+/- warning: colex.forall_lt_of_colex_lt_of_forall_lt -> Colex.forall_lt_of_colex_lt_of_forall_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {A : Finset.{u1} α} {B : Finset.{u1} α} (t : α), (LT.lt.{u1} (Finset.Colex.{u1} α) (Finset.Colex.hasLt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Finset.toColex.{u1} α A) (Finset.toColex.{u1} α B)) -> (forall (x : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x B) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) x t)) -> (forall (x : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x A) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) x t))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {A : Finset.{u1} α} {B : Finset.{u1} α} (t : α), (LT.lt.{u1} (Finset.Colex.{u1} α) (instLTColex.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))))) (Finset.toColex.{u1} α A) (Finset.toColex.{u1} α B)) -> (forall (x : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x B) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x t)) -> (forall (x : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x A) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x t))
+Case conversion may be inaccurate. Consider using '#align colex.forall_lt_of_colex_lt_of_forall_lt Colex.forall_lt_of_colex_lt_of_forall_ltₓ'. -/
 /-- If `A` is before `B` in colex, and everything in `B` is small, then everything in `A` is small.
 -/
 theorem forall_lt_of_colex_lt_of_forall_lt [LinearOrder α] {A B : Finset α} (t : α)
@@ -304,9 +333,13 @@ theorem forall_lt_of_colex_lt_of_forall_lt [LinearOrder α] {A B : Finset α} (t
   rwa [← z]
   apply lt_of_lt_of_le (h₂ k ‹_›) a
 #align colex.forall_lt_of_colex_lt_of_forall_lt Colex.forall_lt_of_colex_lt_of_forall_lt
--/
 
-#print Colex.lt_singleton_iff_mem_lt /-
+/- warning: colex.lt_singleton_iff_mem_lt -> Colex.lt_singleton_iff_mem_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {r : α} {s : Finset.{u1} α}, Iff (LT.lt.{u1} (Finset.Colex.{u1} α) (Finset.Colex.hasLt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Finset.toColex.{u1} α s) (Finset.toColex.{u1} α (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.hasSingleton.{u1} α) r))) (forall (x : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x s) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) x r))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {r : α} {s : Finset.{u1} α}, Iff (LT.lt.{u1} (Finset.Colex.{u1} α) (instLTColex.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))))) (Finset.toColex.{u1} α s) (Finset.toColex.{u1} α (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.instSingletonFinset.{u1} α) r))) (forall (x : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x r))
+Case conversion may be inaccurate. Consider using '#align colex.lt_singleton_iff_mem_lt Colex.lt_singleton_iff_mem_ltₓ'. -/
 /-- `s.to_colex < {r}.to_colex` iff all elements of `s` are less than `r`. -/
 theorem lt_singleton_iff_mem_lt [LinearOrder α] {r : α} {s : Finset α} :
     s.toColex < ({r} : Finset α).toColex ↔ ∀ x ∈ s, x < r :=
@@ -323,11 +356,10 @@ theorem lt_singleton_iff_mem_lt [LinearOrder α] {r : α} {s : Finset α} :
     exact fun h =>
       ⟨fun z hz => ⟨fun i => (asymm hz (h _ i)).elim, fun i => (hz.ne' i).elim⟩, by simpa using h r⟩
 #align colex.lt_singleton_iff_mem_lt Colex.lt_singleton_iff_mem_lt
--/
 
 /- warning: colex.mem_le_of_singleton_le -> Colex.mem_le_of_singleton_le is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {r : α} {s : Finset.{u1} α}, Iff (LE.le.{u1} (Finset.Colex.{u1} α) (Finset.Colex.hasLe.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Finset.toColex.{u1} α (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.hasSingleton.{u1} α) r)) (Finset.toColex.{u1} α s)) (Exists.{succ u1} α (fun (x : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x s) (fun (H : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x s) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) r x)))
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {r : α} {s : Finset.{u1} α}, Iff (LE.le.{u1} (Finset.Colex.{u1} α) (Finset.Colex.hasLe.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Finset.toColex.{u1} α (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.hasSingleton.{u1} α) r)) (Finset.toColex.{u1} α s)) (Exists.{succ u1} α (fun (x : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x s) (fun (H : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x s) => LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) r x)))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {r : α} {s : Finset.{u1} α}, Iff (LE.le.{u1} (Finset.Colex.{u1} α) (instLEColex.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))))) (Finset.toColex.{u1} α (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.instSingletonFinset.{u1} α) r)) (Finset.toColex.{u1} α s)) (Exists.{succ u1} α (fun (x : α) => And (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) r x)))
 Case conversion may be inaccurate. Consider using '#align colex.mem_le_of_singleton_le Colex.mem_le_of_singleton_leₓ'. -/
@@ -340,20 +372,28 @@ theorem mem_le_of_singleton_le [LinearOrder α] {r : α} {s : Finset α} :
   simp [lt_singleton_iff_mem_lt]
 #align colex.mem_le_of_singleton_le Colex.mem_le_of_singleton_le
 
-#print Colex.singleton_lt_iff_lt /-
+/- warning: colex.singleton_lt_iff_lt -> Colex.singleton_lt_iff_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {r : α} {s : α}, Iff (LT.lt.{u1} (Finset.Colex.{u1} α) (Finset.Colex.hasLt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Finset.toColex.{u1} α (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.hasSingleton.{u1} α) r)) (Finset.toColex.{u1} α (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.hasSingleton.{u1} α) s))) (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) r s)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {r : α} {s : α}, Iff (LT.lt.{u1} (Finset.Colex.{u1} α) (instLTColex.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))))) (Finset.toColex.{u1} α (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.instSingletonFinset.{u1} α) r)) (Finset.toColex.{u1} α (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.instSingletonFinset.{u1} α) s))) (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) r s)
+Case conversion may be inaccurate. Consider using '#align colex.singleton_lt_iff_lt Colex.singleton_lt_iff_ltₓ'. -/
 /-- Colex is an extension of the base ordering on α. -/
 theorem singleton_lt_iff_lt [LinearOrder α] {r s : α} :
     ({r} : Finset α).toColex < ({s} : Finset α).toColex ↔ r < s := by simp [lt_singleton_iff_mem_lt]
 #align colex.singleton_lt_iff_lt Colex.singleton_lt_iff_lt
--/
 
-#print Colex.singleton_le_iff_le /-
+/- warning: colex.singleton_le_iff_le -> Colex.singleton_le_iff_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {r : α} {s : α}, Iff (LE.le.{u1} (Finset.Colex.{u1} α) (Finset.Colex.hasLe.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Finset.toColex.{u1} α (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.hasSingleton.{u1} α) r)) (Finset.toColex.{u1} α (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.hasSingleton.{u1} α) s))) (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) r s)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {r : α} {s : α}, Iff (LE.le.{u1} (Finset.Colex.{u1} α) (instLEColex.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))))) (Finset.toColex.{u1} α (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.instSingletonFinset.{u1} α) r)) (Finset.toColex.{u1} α (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.instSingletonFinset.{u1} α) s))) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) r s)
+Case conversion may be inaccurate. Consider using '#align colex.singleton_le_iff_le Colex.singleton_le_iff_leₓ'. -/
 /-- Colex is an extension of the base ordering on α. -/
 theorem singleton_le_iff_le [LinearOrder α] {r s : α} :
     ({r} : Finset α).toColex ≤ ({s} : Finset α).toColex ↔ r ≤ s := by
   rw [le_iff_le_iff_lt_iff_lt, singleton_lt_iff_lt]
 #align colex.singleton_le_iff_le Colex.singleton_le_iff_le
--/
 
 #print Colex.sdiff_lt_sdiff_iff_lt /-
 /-- Colex doesn't care if you remove the other set -/
@@ -378,16 +418,25 @@ theorem sdiff_lt_sdiff_iff_lt [LT α] [DecidableEq α] (A B : Finset α) :
 #align colex.sdiff_lt_sdiff_iff_lt Colex.sdiff_lt_sdiff_iff_lt
 -/
 
-#print Colex.sdiff_le_sdiff_iff_le /-
+/- warning: colex.sdiff_le_sdiff_iff_le -> Colex.sdiff_le_sdiff_iff_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (A : Finset.{u1} α) (B : Finset.{u1} α), Iff (LE.le.{u1} (Finset.Colex.{u1} α) (Finset.Colex.hasLe.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Finset.toColex.{u1} α (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.hasSdiff.{u1} α (fun (a : α) (b : α) => Eq.decidable.{u1} α _inst_1 a b)) A B)) (Finset.toColex.{u1} α (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.hasSdiff.{u1} α (fun (a : α) (b : α) => Eq.decidable.{u1} α _inst_1 a b)) B A))) (LE.le.{u1} (Finset.Colex.{u1} α) (Finset.Colex.hasLe.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Finset.toColex.{u1} α A) (Finset.toColex.{u1} α B))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (A : Finset.{u1} α) (B : Finset.{u1} α), Iff (LE.le.{u1} (Finset.Colex.{u1} α) (instLEColex.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))))) (Finset.toColex.{u1} α (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.instSDiffFinset.{u1} α (fun (a : α) (b : α) => instDecidableEq.{u1} α _inst_1 a b)) A B)) (Finset.toColex.{u1} α (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.instSDiffFinset.{u1} α (fun (a : α) (b : α) => instDecidableEq.{u1} α _inst_1 a b)) B A))) (LE.le.{u1} (Finset.Colex.{u1} α) (instLEColex.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))))) (Finset.toColex.{u1} α A) (Finset.toColex.{u1} α B))
+Case conversion may be inaccurate. Consider using '#align colex.sdiff_le_sdiff_iff_le Colex.sdiff_le_sdiff_iff_leₓ'. -/
 /-- Colex doesn't care if you remove the other set -/
 @[simp]
 theorem sdiff_le_sdiff_iff_le [LinearOrder α] (A B : Finset α) :
     (A \ B).toColex ≤ (B \ A).toColex ↔ A.toColex ≤ B.toColex := by
   rw [le_iff_le_iff_lt_iff_lt, sdiff_lt_sdiff_iff_lt]
 #align colex.sdiff_le_sdiff_iff_le Colex.sdiff_le_sdiff_iff_le
--/
 
-#print Colex.empty_toColex_lt /-
+/- warning: colex.empty_to_colex_lt -> Colex.empty_toColex_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {A : Finset.{u1} α}, (Finset.Nonempty.{u1} α A) -> (LT.lt.{u1} (Finset.Colex.{u1} α) (Finset.Colex.hasLt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Finset.toColex.{u1} α (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.hasEmptyc.{u1} α))) (Finset.toColex.{u1} α A))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {A : Finset.{u1} α}, (Finset.Nonempty.{u1} α A) -> (LT.lt.{u1} (Finset.Colex.{u1} α) (instLTColex.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))))) (Finset.toColex.{u1} α (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.instEmptyCollectionFinset.{u1} α))) (Finset.toColex.{u1} α A))
+Case conversion may be inaccurate. Consider using '#align colex.empty_to_colex_lt Colex.empty_toColex_ltₓ'. -/
 theorem empty_toColex_lt [LinearOrder α] {A : Finset α} (hA : A.Nonempty) :
     (∅ : Finset α).toColex < A.toColex :=
   by
@@ -397,9 +446,13 @@ theorem empty_toColex_lt [LinearOrder α] {A : Finset α} (hA : A.Nonempty) :
   intro x hx t
   apply not_le_of_lt hx (le_max' _ _ t)
 #align colex.empty_to_colex_lt Colex.empty_toColex_lt
--/
 
-#print Colex.colex_lt_of_ssubset /-
+/- warning: colex.colex_lt_of_ssubset -> Colex.colex_lt_of_ssubset is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {A : Finset.{u1} α} {B : Finset.{u1} α}, (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.hasSsubset.{u1} α) A B) -> (LT.lt.{u1} (Finset.Colex.{u1} α) (Finset.Colex.hasLt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Finset.toColex.{u1} α A) (Finset.toColex.{u1} α B))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {A : Finset.{u1} α} {B : Finset.{u1} α}, (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.instHasSSubsetFinset.{u1} α) A B) -> (LT.lt.{u1} (Finset.Colex.{u1} α) (instLTColex.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))))) (Finset.toColex.{u1} α A) (Finset.toColex.{u1} α B))
+Case conversion may be inaccurate. Consider using '#align colex.colex_lt_of_ssubset Colex.colex_lt_of_ssubsetₓ'. -/
 /-- If `A ⊂ B`, then `A` is less than `B` in the colex order. Note the converse does not hold, as
 `⊆` is not a linear order. -/
 theorem colex_lt_of_ssubset [LinearOrder α] {A B : Finset α} (h : A ⊂ B) : A.toColex < B.toColex :=
@@ -407,9 +460,13 @@ theorem colex_lt_of_ssubset [LinearOrder α] {A B : Finset α} (h : A ⊂ B) : A
   rw [← sdiff_lt_sdiff_iff_lt, sdiff_eq_empty_iff_subset.2 h.1]
   exact empty_to_colex_lt (by simpa [Finset.Nonempty] using exists_of_ssubset h)
 #align colex.colex_lt_of_ssubset Colex.colex_lt_of_ssubset
--/
 
-#print Colex.empty_toColex_le /-
+/- warning: colex.empty_to_colex_le -> Colex.empty_toColex_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {A : Finset.{u1} α}, LE.le.{u1} (Finset.Colex.{u1} α) (Finset.Colex.hasLe.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Finset.toColex.{u1} α (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.hasEmptyc.{u1} α))) (Finset.toColex.{u1} α A)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {A : Finset.{u1} α}, LE.le.{u1} (Finset.Colex.{u1} α) (instLEColex.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))))) (Finset.toColex.{u1} α (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.instEmptyCollectionFinset.{u1} α))) (Finset.toColex.{u1} α A)
+Case conversion may be inaccurate. Consider using '#align colex.empty_to_colex_le Colex.empty_toColex_leₓ'. -/
 @[simp]
 theorem empty_toColex_le [LinearOrder α] {A : Finset α} : (∅ : Finset α).toColex ≤ A.toColex :=
   by
@@ -417,9 +474,13 @@ theorem empty_toColex_le [LinearOrder α] {A : Finset α} : (∅ : Finset α).to
   · simp
   · apply (empty_to_colex_lt hA).le
 #align colex.empty_to_colex_le Colex.empty_toColex_le
--/
 
-#print Colex.colex_le_of_subset /-
+/- warning: colex.colex_le_of_subset -> Colex.colex_le_of_subset is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {A : Finset.{u1} α} {B : Finset.{u1} α}, (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) A B) -> (LE.le.{u1} (Finset.Colex.{u1} α) (Finset.Colex.hasLe.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Finset.toColex.{u1} α A) (Finset.toColex.{u1} α B))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {A : Finset.{u1} α} {B : Finset.{u1} α}, (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) A B) -> (LE.le.{u1} (Finset.Colex.{u1} α) (instLEColex.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))))) (Finset.toColex.{u1} α A) (Finset.toColex.{u1} α B))
+Case conversion may be inaccurate. Consider using '#align colex.colex_le_of_subset Colex.colex_le_of_subsetₓ'. -/
 /-- If `A ⊆ B`, then `A ≤ B` in the colex order. Note the converse does not hold, as `⊆` is not a
 linear order. -/
 theorem colex_le_of_subset [LinearOrder α] {A B : Finset α} (h : A ⊆ B) : A.toColex ≤ B.toColex :=
@@ -427,9 +488,13 @@ theorem colex_le_of_subset [LinearOrder α] {A B : Finset α} (h : A ⊆ B) : A.
   rw [← sdiff_le_sdiff_iff_le, sdiff_eq_empty_iff_subset.2 h]
   apply empty_to_colex_le
 #align colex.colex_le_of_subset Colex.colex_le_of_subset
--/
 
-#print Colex.toColexRelHom /-
+/- warning: colex.to_colex_rel_hom -> Colex.toColexRelHom is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α], RelHom.{u1, u1} (Finset.{u1} α) (Finset.Colex.{u1} α) (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α)) (LE.le.{u1} (Finset.Colex.{u1} α) (Finset.Colex.hasLe.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α], RelHom.{u1, u1} (Finset.{u1} α) (Finset.Colex.{u1} α) (fun (x._@.Mathlib.Combinatorics.Colex._hyg.3796 : Finset.{u1} α) (x._@.Mathlib.Combinatorics.Colex._hyg.3798 : Finset.{u1} α) => HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) x._@.Mathlib.Combinatorics.Colex._hyg.3796 x._@.Mathlib.Combinatorics.Colex._hyg.3798) (fun (x._@.Mathlib.Combinatorics.Colex._hyg.3820 : Finset.Colex.{u1} α) (x._@.Mathlib.Combinatorics.Colex._hyg.3822 : Finset.Colex.{u1} α) => LE.le.{u1} (Finset.Colex.{u1} α) (instLEColex.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))))) x._@.Mathlib.Combinatorics.Colex._hyg.3820 x._@.Mathlib.Combinatorics.Colex._hyg.3822)
+Case conversion may be inaccurate. Consider using '#align colex.to_colex_rel_hom Colex.toColexRelHomₓ'. -/
 /-- The function from finsets to finsets with the colex order is a relation homomorphism. -/
 @[simps]
 def toColexRelHom [LinearOrder α] :
@@ -438,7 +503,6 @@ def toColexRelHom [LinearOrder α] :
   toFun := Finset.toColex
   map_rel' A B := colex_le_of_subset
 #align colex.to_colex_rel_hom Colex.toColexRelHom
--/
 
 instance [LinearOrder α] : OrderBot (Finset.Colex α)
     where

@@ -208,7 +208,7 @@ theorem coeFn_mk (length : ℕ) (series step) :
 
 /- warning: composition_series.lt_succ -> CompositionSeries.lt_succ is a dubious translation:
 lean 3 declaration is
-  forall {X : Type.{u1}} [_inst_1 : Lattice.{u1} X] [_inst_2 : JordanHolderLattice.{u1} X _inst_1] (s : CompositionSeries.{u1} X _inst_1 _inst_2) (i : Fin (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)), LT.lt.{u1} X (Preorder.toLT.{u1} X (PartialOrder.toPreorder.{u1} X (SemilatticeInf.toPartialOrder.{u1} X (Lattice.toSemilatticeInf.{u1} X _inst_1)))) (coeFn.{succ u1, succ u1} (CompositionSeries.{u1} X _inst_1 _inst_2) (fun (x : CompositionSeries.{u1} X _inst_1 _inst_2) => (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (CompositionSeries.length.{u1} X _inst_1 _inst_2 x) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) -> X) (CompositionSeries.coeFun.{u1} X _inst_1 _inst_2) s (coeFn.{1, 1} (OrderEmbedding.{0, 0} (Fin (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Fin.hasLe (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)) (Fin.hasLe (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) (fun (_x : RelEmbedding.{0, 0} (Fin (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (LE.le.{0} (Fin (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)) (Fin.hasLe (CompositionSeries.length.{u1} X _inst_1 _inst_2 s))) (LE.le.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Fin.hasLe (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))) => (Fin (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)) -> (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) (RelEmbedding.hasCoeToFun.{0, 0} (Fin (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (LE.le.{0} (Fin (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)) (Fin.hasLe (CompositionSeries.length.{u1} X _inst_1 _inst_2 s))) (LE.le.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Fin.hasLe (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))) (Fin.castSucc (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)) i)) (coeFn.{succ u1, succ u1} (CompositionSeries.{u1} X _inst_1 _inst_2) (fun (x : CompositionSeries.{u1} X _inst_1 _inst_2) => (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (CompositionSeries.length.{u1} X _inst_1 _inst_2 x) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) -> X) (CompositionSeries.coeFun.{u1} X _inst_1 _inst_2) s (Fin.succ (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) i))
+  forall {X : Type.{u1}} [_inst_1 : Lattice.{u1} X] [_inst_2 : JordanHolderLattice.{u1} X _inst_1] (s : CompositionSeries.{u1} X _inst_1 _inst_2) (i : Fin (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)), LT.lt.{u1} X (Preorder.toHasLt.{u1} X (PartialOrder.toPreorder.{u1} X (SemilatticeInf.toPartialOrder.{u1} X (Lattice.toSemilatticeInf.{u1} X _inst_1)))) (coeFn.{succ u1, succ u1} (CompositionSeries.{u1} X _inst_1 _inst_2) (fun (x : CompositionSeries.{u1} X _inst_1 _inst_2) => (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (CompositionSeries.length.{u1} X _inst_1 _inst_2 x) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) -> X) (CompositionSeries.coeFun.{u1} X _inst_1 _inst_2) s (coeFn.{1, 1} (OrderEmbedding.{0, 0} (Fin (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Fin.hasLe (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)) (Fin.hasLe (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) (fun (_x : RelEmbedding.{0, 0} (Fin (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (LE.le.{0} (Fin (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)) (Fin.hasLe (CompositionSeries.length.{u1} X _inst_1 _inst_2 s))) (LE.le.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Fin.hasLe (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))) => (Fin (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)) -> (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) (RelEmbedding.hasCoeToFun.{0, 0} (Fin (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (LE.le.{0} (Fin (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)) (Fin.hasLe (CompositionSeries.length.{u1} X _inst_1 _inst_2 s))) (LE.le.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Fin.hasLe (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))) (Fin.castSucc (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)) i)) (coeFn.{succ u1, succ u1} (CompositionSeries.{u1} X _inst_1 _inst_2) (fun (x : CompositionSeries.{u1} X _inst_1 _inst_2) => (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (CompositionSeries.length.{u1} X _inst_1 _inst_2 x) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) -> X) (CompositionSeries.coeFun.{u1} X _inst_1 _inst_2) s (Fin.succ (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) i))
 but is expected to have type
   forall {X : Type.{u1}} [_inst_1 : Lattice.{u1} X] [_inst_2 : JordanHolderLattice.{u1} X _inst_1] (s : CompositionSeries.{u1} X _inst_1 _inst_2) (i : Fin (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)), LT.lt.{u1} X (Preorder.toLT.{u1} X (PartialOrder.toPreorder.{u1} X (SemilatticeInf.toPartialOrder.{u1} X (Lattice.toSemilatticeInf.{u1} X _inst_1)))) (CompositionSeries.series.{u1} X _inst_1 _inst_2 s (FunLike.coe.{1, 1, 1} (OrderEmbedding.{0, 0} (Fin (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (instLEFin (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)) (instLEFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (Fin (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)) (fun (_x : Fin (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : Fin (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)) => Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) _x) (RelHomClass.toFunLike.{0, 0, 0} (OrderEmbedding.{0, 0} (Fin (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (instLEFin (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)) (instLEFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (Fin (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : Fin (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : Fin (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)) => LE.le.{0} (Fin (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)) (instLEFin (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => LE.le.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (instLEFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) (RelEmbedding.instRelHomClassRelEmbedding.{0, 0} (Fin (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : Fin (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : Fin (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)) => LE.le.{0} (Fin (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)) (instLEFin (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => LE.le.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (instLEFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697))) (Fin.castSucc (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)) i)) (CompositionSeries.series.{u1} X _inst_1 _inst_2 s (Fin.succ (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) i))
 Case conversion may be inaccurate. Consider using '#align composition_series.lt_succ CompositionSeries.lt_succₓ'. -/
@@ -248,7 +248,12 @@ theorem mem_def {x : X} {s : CompositionSeries X} : x ∈ s ↔ x ∈ Set.range 
 #align composition_series.mem_def CompositionSeries.mem_def
 -/
 
-#print CompositionSeries.total /-
+/- warning: composition_series.total -> CompositionSeries.total is a dubious translation:
+lean 3 declaration is
+  forall {X : Type.{u1}} [_inst_1 : Lattice.{u1} X] [_inst_2 : JordanHolderLattice.{u1} X _inst_1] {s : CompositionSeries.{u1} X _inst_1 _inst_2} {x : X} {y : X}, (Membership.Mem.{u1, u1} X (CompositionSeries.{u1} X _inst_1 _inst_2) (CompositionSeries.membership.{u1} X _inst_1 _inst_2) x s) -> (Membership.Mem.{u1, u1} X (CompositionSeries.{u1} X _inst_1 _inst_2) (CompositionSeries.membership.{u1} X _inst_1 _inst_2) y s) -> (Or (LE.le.{u1} X (Preorder.toHasLe.{u1} X (PartialOrder.toPreorder.{u1} X (SemilatticeInf.toPartialOrder.{u1} X (Lattice.toSemilatticeInf.{u1} X _inst_1)))) x y) (LE.le.{u1} X (Preorder.toHasLe.{u1} X (PartialOrder.toPreorder.{u1} X (SemilatticeInf.toPartialOrder.{u1} X (Lattice.toSemilatticeInf.{u1} X _inst_1)))) y x))
+but is expected to have type
+  forall {X : Type.{u1}} [_inst_1 : Lattice.{u1} X] [_inst_2 : JordanHolderLattice.{u1} X _inst_1] {s : CompositionSeries.{u1} X _inst_1 _inst_2} {x : X} {y : X}, (Membership.mem.{u1, u1} X (CompositionSeries.{u1} X _inst_1 _inst_2) (CompositionSeries.membership.{u1} X _inst_1 _inst_2) x s) -> (Membership.mem.{u1, u1} X (CompositionSeries.{u1} X _inst_1 _inst_2) (CompositionSeries.membership.{u1} X _inst_1 _inst_2) y s) -> (Or (LE.le.{u1} X (Preorder.toLE.{u1} X (PartialOrder.toPreorder.{u1} X (SemilatticeInf.toPartialOrder.{u1} X (Lattice.toSemilatticeInf.{u1} X _inst_1)))) x y) (LE.le.{u1} X (Preorder.toLE.{u1} X (PartialOrder.toPreorder.{u1} X (SemilatticeInf.toPartialOrder.{u1} X (Lattice.toSemilatticeInf.{u1} X _inst_1)))) y x))
+Case conversion may be inaccurate. Consider using '#align composition_series.total CompositionSeries.totalₓ'. -/
 theorem total {s : CompositionSeries X} {x y : X} (hx : x ∈ s) (hy : y ∈ s) : x ≤ y ∨ y ≤ x :=
   by
   rcases Set.mem_range.1 hx with ⟨i, rfl⟩
@@ -256,7 +261,6 @@ theorem total {s : CompositionSeries X} {x y : X} (hx : x ∈ s) (hy : y ∈ s) 
   rw [s.strict_mono.le_iff_le, s.strict_mono.le_iff_le]
   exact le_total i j
 #align composition_series.total CompositionSeries.total
--/
 
 #print CompositionSeries.toList /-
 /-- The ordered `list X` of elements of a `composition_series X`. -/
@@ -328,7 +332,12 @@ theorem chain'_toList (s : CompositionSeries X) : List.Chain' IsMaximal s.toList
 #align composition_series.chain'_to_list CompositionSeries.chain'_toList
 -/
 
-#print CompositionSeries.toList_sorted /-
+/- warning: composition_series.to_list_sorted -> CompositionSeries.toList_sorted is a dubious translation:
+lean 3 declaration is
+  forall {X : Type.{u1}} [_inst_1 : Lattice.{u1} X] [_inst_2 : JordanHolderLattice.{u1} X _inst_1] (s : CompositionSeries.{u1} X _inst_1 _inst_2), List.Sorted.{u1} X (LT.lt.{u1} X (Preorder.toHasLt.{u1} X (PartialOrder.toPreorder.{u1} X (SemilatticeInf.toPartialOrder.{u1} X (Lattice.toSemilatticeInf.{u1} X _inst_1))))) (CompositionSeries.toList.{u1} X _inst_1 _inst_2 s)
+but is expected to have type
+  forall {X : Type.{u1}} [_inst_1 : Lattice.{u1} X] [_inst_2 : JordanHolderLattice.{u1} X _inst_1] (s : CompositionSeries.{u1} X _inst_1 _inst_2), List.Sorted.{u1} X (fun (x._@.Mathlib.Order.JordanHolder._hyg.1315 : X) (x._@.Mathlib.Order.JordanHolder._hyg.1317 : X) => LT.lt.{u1} X (Preorder.toLT.{u1} X (PartialOrder.toPreorder.{u1} X (SemilatticeInf.toPartialOrder.{u1} X (Lattice.toSemilatticeInf.{u1} X _inst_1)))) x._@.Mathlib.Order.JordanHolder._hyg.1315 x._@.Mathlib.Order.JordanHolder._hyg.1317) (CompositionSeries.toList.{u1} X _inst_1 _inst_2 s)
+Case conversion may be inaccurate. Consider using '#align composition_series.to_list_sorted CompositionSeries.toList_sortedₓ'. -/
 theorem toList_sorted (s : CompositionSeries X) : s.toList.Sorted (· < ·) :=
   List.pairwise_iff_nthLe.2 fun i j hi hij =>
     by
@@ -336,7 +345,6 @@ theorem toList_sorted (s : CompositionSeries X) : s.toList.Sorted (· < ·) :=
     rw [List.nthLe_ofFn', List.nthLe_ofFn']
     exact s.strict_mono hij
 #align composition_series.to_list_sorted CompositionSeries.toList_sorted
--/
 
 #print CompositionSeries.toList_nodup /-
 theorem toList_nodup (s : CompositionSeries X) : s.toList.Nodup :=
@@ -434,19 +442,27 @@ theorem top_mem (s : CompositionSeries X) : s.top ∈ s :=
 #align composition_series.top_mem CompositionSeries.top_mem
 -/
 
-#print CompositionSeries.le_top /-
+/- warning: composition_series.le_top -> CompositionSeries.le_top is a dubious translation:
+lean 3 declaration is
+  forall {X : Type.{u1}} [_inst_1 : Lattice.{u1} X] [_inst_2 : JordanHolderLattice.{u1} X _inst_1] {s : CompositionSeries.{u1} X _inst_1 _inst_2} (i : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))), LE.le.{u1} X (Preorder.toHasLe.{u1} X (PartialOrder.toPreorder.{u1} X (SemilatticeInf.toPartialOrder.{u1} X (Lattice.toSemilatticeInf.{u1} X _inst_1)))) (coeFn.{succ u1, succ u1} (CompositionSeries.{u1} X _inst_1 _inst_2) (fun (x : CompositionSeries.{u1} X _inst_1 _inst_2) => (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (CompositionSeries.length.{u1} X _inst_1 _inst_2 x) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) -> X) (CompositionSeries.coeFun.{u1} X _inst_1 _inst_2) s i) (CompositionSeries.top.{u1} X _inst_1 _inst_2 s)
+but is expected to have type
+  forall {X : Type.{u1}} [_inst_1 : Lattice.{u1} X] [_inst_2 : JordanHolderLattice.{u1} X _inst_1] {s : CompositionSeries.{u1} X _inst_1 _inst_2} (i : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))), LE.le.{u1} X (Preorder.toLE.{u1} X (PartialOrder.toPreorder.{u1} X (SemilatticeInf.toPartialOrder.{u1} X (Lattice.toSemilatticeInf.{u1} X _inst_1)))) (CompositionSeries.series.{u1} X _inst_1 _inst_2 s i) (CompositionSeries.top.{u1} X _inst_1 _inst_2 s)
+Case conversion may be inaccurate. Consider using '#align composition_series.le_top CompositionSeries.le_topₓ'. -/
 @[simp]
 theorem le_top {s : CompositionSeries X} (i : Fin (s.length + 1)) : s i ≤ s.top :=
   s.StrictMono.Monotone (Fin.le_last _)
 #align composition_series.le_top CompositionSeries.le_top
--/
 
-#print CompositionSeries.le_top_of_mem /-
+/- warning: composition_series.le_top_of_mem -> CompositionSeries.le_top_of_mem is a dubious translation:
+lean 3 declaration is
+  forall {X : Type.{u1}} [_inst_1 : Lattice.{u1} X] [_inst_2 : JordanHolderLattice.{u1} X _inst_1] {s : CompositionSeries.{u1} X _inst_1 _inst_2} {x : X}, (Membership.Mem.{u1, u1} X (CompositionSeries.{u1} X _inst_1 _inst_2) (CompositionSeries.membership.{u1} X _inst_1 _inst_2) x s) -> (LE.le.{u1} X (Preorder.toHasLe.{u1} X (PartialOrder.toPreorder.{u1} X (SemilatticeInf.toPartialOrder.{u1} X (Lattice.toSemilatticeInf.{u1} X _inst_1)))) x (CompositionSeries.top.{u1} X _inst_1 _inst_2 s))
+but is expected to have type
+  forall {X : Type.{u1}} [_inst_1 : Lattice.{u1} X] [_inst_2 : JordanHolderLattice.{u1} X _inst_1] {s : CompositionSeries.{u1} X _inst_1 _inst_2} {x : X}, (Membership.mem.{u1, u1} X (CompositionSeries.{u1} X _inst_1 _inst_2) (CompositionSeries.membership.{u1} X _inst_1 _inst_2) x s) -> (LE.le.{u1} X (Preorder.toLE.{u1} X (PartialOrder.toPreorder.{u1} X (SemilatticeInf.toPartialOrder.{u1} X (Lattice.toSemilatticeInf.{u1} X _inst_1)))) x (CompositionSeries.top.{u1} X _inst_1 _inst_2 s))
+Case conversion may be inaccurate. Consider using '#align composition_series.le_top_of_mem CompositionSeries.le_top_of_memₓ'. -/
 theorem le_top_of_mem {s : CompositionSeries X} {x : X} (hx : x ∈ s) : x ≤ s.top :=
   let ⟨i, hi⟩ := Set.mem_range.2 hx
   hi ▸ le_top _
 #align composition_series.le_top_of_mem CompositionSeries.le_top_of_mem
--/
 
 #print CompositionSeries.bot /-
 /-- The smallest element of a `composition_series` -/
@@ -461,19 +477,27 @@ theorem bot_mem (s : CompositionSeries X) : s.bot ∈ s :=
 #align composition_series.bot_mem CompositionSeries.bot_mem
 -/
 
-#print CompositionSeries.bot_le /-
+/- warning: composition_series.bot_le -> CompositionSeries.bot_le is a dubious translation:
+lean 3 declaration is
+  forall {X : Type.{u1}} [_inst_1 : Lattice.{u1} X] [_inst_2 : JordanHolderLattice.{u1} X _inst_1] {s : CompositionSeries.{u1} X _inst_1 _inst_2} (i : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))), LE.le.{u1} X (Preorder.toHasLe.{u1} X (PartialOrder.toPreorder.{u1} X (SemilatticeInf.toPartialOrder.{u1} X (Lattice.toSemilatticeInf.{u1} X _inst_1)))) (CompositionSeries.bot.{u1} X _inst_1 _inst_2 s) (coeFn.{succ u1, succ u1} (CompositionSeries.{u1} X _inst_1 _inst_2) (fun (x : CompositionSeries.{u1} X _inst_1 _inst_2) => (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (CompositionSeries.length.{u1} X _inst_1 _inst_2 x) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) -> X) (CompositionSeries.coeFun.{u1} X _inst_1 _inst_2) s i)
+but is expected to have type
+  forall {X : Type.{u1}} [_inst_1 : Lattice.{u1} X] [_inst_2 : JordanHolderLattice.{u1} X _inst_1] {s : CompositionSeries.{u1} X _inst_1 _inst_2} (i : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))), LE.le.{u1} X (Preorder.toLE.{u1} X (PartialOrder.toPreorder.{u1} X (SemilatticeInf.toPartialOrder.{u1} X (Lattice.toSemilatticeInf.{u1} X _inst_1)))) (CompositionSeries.bot.{u1} X _inst_1 _inst_2 s) (CompositionSeries.series.{u1} X _inst_1 _inst_2 s i)
+Case conversion may be inaccurate. Consider using '#align composition_series.bot_le CompositionSeries.bot_leₓ'. -/
 @[simp]
 theorem bot_le {s : CompositionSeries X} (i : Fin (s.length + 1)) : s.bot ≤ s i :=
   s.StrictMono.Monotone (Fin.zero_le _)
 #align composition_series.bot_le CompositionSeries.bot_le
--/
 
-#print CompositionSeries.bot_le_of_mem /-
+/- warning: composition_series.bot_le_of_mem -> CompositionSeries.bot_le_of_mem is a dubious translation:
+lean 3 declaration is
+  forall {X : Type.{u1}} [_inst_1 : Lattice.{u1} X] [_inst_2 : JordanHolderLattice.{u1} X _inst_1] {s : CompositionSeries.{u1} X _inst_1 _inst_2} {x : X}, (Membership.Mem.{u1, u1} X (CompositionSeries.{u1} X _inst_1 _inst_2) (CompositionSeries.membership.{u1} X _inst_1 _inst_2) x s) -> (LE.le.{u1} X (Preorder.toHasLe.{u1} X (PartialOrder.toPreorder.{u1} X (SemilatticeInf.toPartialOrder.{u1} X (Lattice.toSemilatticeInf.{u1} X _inst_1)))) (CompositionSeries.bot.{u1} X _inst_1 _inst_2 s) x)
+but is expected to have type
+  forall {X : Type.{u1}} [_inst_1 : Lattice.{u1} X] [_inst_2 : JordanHolderLattice.{u1} X _inst_1] {s : CompositionSeries.{u1} X _inst_1 _inst_2} {x : X}, (Membership.mem.{u1, u1} X (CompositionSeries.{u1} X _inst_1 _inst_2) (CompositionSeries.membership.{u1} X _inst_1 _inst_2) x s) -> (LE.le.{u1} X (Preorder.toLE.{u1} X (PartialOrder.toPreorder.{u1} X (SemilatticeInf.toPartialOrder.{u1} X (Lattice.toSemilatticeInf.{u1} X _inst_1)))) (CompositionSeries.bot.{u1} X _inst_1 _inst_2 s) x)
+Case conversion may be inaccurate. Consider using '#align composition_series.bot_le_of_mem CompositionSeries.bot_le_of_memₓ'. -/
 theorem bot_le_of_mem {s : CompositionSeries X} {x : X} (hx : x ∈ s) : s.bot ≤ x :=
   let ⟨i, hi⟩ := Set.mem_range.2 hx
   hi ▸ bot_le _
 #align composition_series.bot_le_of_mem CompositionSeries.bot_le_of_mem
--/
 
 #print CompositionSeries.length_pos_of_mem_ne /-
 theorem length_pos_of_mem_ne {s : CompositionSeries X} {x y : X} (hx : x ∈ s) (hy : y ∈ s)
@@ -521,11 +545,15 @@ theorem top_eraseTop (s : CompositionSeries X) :
 #align composition_series.top_erase_top CompositionSeries.top_eraseTop
 -/
 
-#print CompositionSeries.eraseTop_top_le /-
+/- warning: composition_series.erase_top_top_le -> CompositionSeries.eraseTop_top_le is a dubious translation:
+lean 3 declaration is
+  forall {X : Type.{u1}} [_inst_1 : Lattice.{u1} X] [_inst_2 : JordanHolderLattice.{u1} X _inst_1] (s : CompositionSeries.{u1} X _inst_1 _inst_2), LE.le.{u1} X (Preorder.toHasLe.{u1} X (PartialOrder.toPreorder.{u1} X (SemilatticeInf.toPartialOrder.{u1} X (Lattice.toSemilatticeInf.{u1} X _inst_1)))) (CompositionSeries.top.{u1} X _inst_1 _inst_2 (CompositionSeries.eraseTop.{u1} X _inst_1 _inst_2 s)) (CompositionSeries.top.{u1} X _inst_1 _inst_2 s)
+but is expected to have type
+  forall {X : Type.{u1}} [_inst_1 : Lattice.{u1} X] [_inst_2 : JordanHolderLattice.{u1} X _inst_1] (s : CompositionSeries.{u1} X _inst_1 _inst_2), LE.le.{u1} X (Preorder.toLE.{u1} X (PartialOrder.toPreorder.{u1} X (SemilatticeInf.toPartialOrder.{u1} X (Lattice.toSemilatticeInf.{u1} X _inst_1)))) (CompositionSeries.top.{u1} X _inst_1 _inst_2 (CompositionSeries.eraseTop.{u1} X _inst_1 _inst_2 s)) (CompositionSeries.top.{u1} X _inst_1 _inst_2 s)
+Case conversion may be inaccurate. Consider using '#align composition_series.erase_top_top_le CompositionSeries.eraseTop_top_leₓ'. -/
 theorem eraseTop_top_le (s : CompositionSeries X) : s.eraseTop.top ≤ s.top := by
   simp [erase_top, top, s.strict_mono.le_iff_le, Fin.le_iff_val_le_val, tsub_le_self]
 #align composition_series.erase_top_top_le CompositionSeries.eraseTop_top_le
--/
 
 #print CompositionSeries.bot_eraseTop /-
 @[simp]
@@ -565,12 +593,16 @@ theorem mem_eraseTop {s : CompositionSeries X} {x : X} (h : 0 < s.length) :
 #align composition_series.mem_erase_top CompositionSeries.mem_eraseTop
 -/
 
-#print CompositionSeries.lt_top_of_mem_eraseTop /-
+/- warning: composition_series.lt_top_of_mem_erase_top -> CompositionSeries.lt_top_of_mem_eraseTop is a dubious translation:
+lean 3 declaration is
+  forall {X : Type.{u1}} [_inst_1 : Lattice.{u1} X] [_inst_2 : JordanHolderLattice.{u1} X _inst_1] {s : CompositionSeries.{u1} X _inst_1 _inst_2} {x : X}, (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)) -> (Membership.Mem.{u1, u1} X (CompositionSeries.{u1} X _inst_1 _inst_2) (CompositionSeries.membership.{u1} X _inst_1 _inst_2) x (CompositionSeries.eraseTop.{u1} X _inst_1 _inst_2 s)) -> (LT.lt.{u1} X (Preorder.toHasLt.{u1} X (PartialOrder.toPreorder.{u1} X (SemilatticeInf.toPartialOrder.{u1} X (Lattice.toSemilatticeInf.{u1} X _inst_1)))) x (CompositionSeries.top.{u1} X _inst_1 _inst_2 s))
+but is expected to have type
+  forall {X : Type.{u1}} [_inst_1 : Lattice.{u1} X] [_inst_2 : JordanHolderLattice.{u1} X _inst_1] {s : CompositionSeries.{u1} X _inst_1 _inst_2} {x : X}, (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)) -> (Membership.mem.{u1, u1} X (CompositionSeries.{u1} X _inst_1 _inst_2) (CompositionSeries.membership.{u1} X _inst_1 _inst_2) x (CompositionSeries.eraseTop.{u1} X _inst_1 _inst_2 s)) -> (LT.lt.{u1} X (Preorder.toLT.{u1} X (PartialOrder.toPreorder.{u1} X (SemilatticeInf.toPartialOrder.{u1} X (Lattice.toSemilatticeInf.{u1} X _inst_1)))) x (CompositionSeries.top.{u1} X _inst_1 _inst_2 s))
+Case conversion may be inaccurate. Consider using '#align composition_series.lt_top_of_mem_erase_top CompositionSeries.lt_top_of_mem_eraseTopₓ'. -/
 theorem lt_top_of_mem_eraseTop {s : CompositionSeries X} {x : X} (h : 0 < s.length)
     (hx : x ∈ s.eraseTop) : x < s.top :=
   lt_of_le_of_ne (le_top_of_mem ((mem_eraseTop h).1 hx).2) ((mem_eraseTop h).1 hx).1
 #align composition_series.lt_top_of_mem_erase_top CompositionSeries.lt_top_of_mem_eraseTop
--/
 
 #print CompositionSeries.isMaximal_eraseTop_top /-
 theorem isMaximal_eraseTop_top {s : CompositionSeries X} (h : 0 < s.length) :
@@ -979,7 +1011,12 @@ theorem eq_of_bot_eq_bot_of_top_eq_top_of_length_eq_zero {s₁ s₂ : Compositio
 #align composition_series.eq_of_bot_eq_bot_of_top_eq_top_of_length_eq_zero CompositionSeries.eq_of_bot_eq_bot_of_top_eq_top_of_length_eq_zero
 -/
 
-#print CompositionSeries.exists_top_eq_snoc_equivalant /-
+/- warning: composition_series.exists_top_eq_snoc_equivalant -> CompositionSeries.exists_top_eq_snoc_equivalant is a dubious translation:
+lean 3 declaration is
+  forall {X : Type.{u1}} [_inst_1 : Lattice.{u1} X] [_inst_2 : JordanHolderLattice.{u1} X _inst_1] (s : CompositionSeries.{u1} X _inst_1 _inst_2) (x : X) (hm : JordanHolderLattice.IsMaximal.{u1} X _inst_1 _inst_2 x (CompositionSeries.top.{u1} X _inst_1 _inst_2 s)), (LE.le.{u1} X (Preorder.toHasLe.{u1} X (PartialOrder.toPreorder.{u1} X (SemilatticeInf.toPartialOrder.{u1} X (Lattice.toSemilatticeInf.{u1} X _inst_1)))) (CompositionSeries.bot.{u1} X _inst_1 _inst_2 s) x) -> (Exists.{succ u1} (CompositionSeries.{u1} X _inst_1 _inst_2) (fun (t : CompositionSeries.{u1} X _inst_1 _inst_2) => And (Eq.{succ u1} X (CompositionSeries.bot.{u1} X _inst_1 _inst_2 t) (CompositionSeries.bot.{u1} X _inst_1 _inst_2 s)) (And (Eq.{1} Nat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (CompositionSeries.length.{u1} X _inst_1 _inst_2 t) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)) (Exists.{0} (Eq.{succ u1} X (CompositionSeries.top.{u1} X _inst_1 _inst_2 t) x) (fun (htx : Eq.{succ u1} X (CompositionSeries.top.{u1} X _inst_1 _inst_2 t) x) => CompositionSeries.Equivalent.{u1} X _inst_1 _inst_2 s (CompositionSeries.snoc.{u1} X _inst_1 _inst_2 t (CompositionSeries.top.{u1} X _inst_1 _inst_2 s) (Eq.subst.{succ u1} X (fun (_x : X) => JordanHolderLattice.IsMaximal.{u1} X _inst_1 _inst_2 _x (CompositionSeries.top.{u1} X _inst_1 _inst_2 s)) x (CompositionSeries.top.{u1} X _inst_1 _inst_2 t) (Eq.symm.{succ u1} X (CompositionSeries.top.{u1} X _inst_1 _inst_2 t) x htx) hm)))))))
+but is expected to have type
+  forall {X : Type.{u1}} [_inst_1 : Lattice.{u1} X] [_inst_2 : JordanHolderLattice.{u1} X _inst_1] (s : CompositionSeries.{u1} X _inst_1 _inst_2) (x : X) (hm : JordanHolderLattice.IsMaximal.{u1} X _inst_1 _inst_2 x (CompositionSeries.top.{u1} X _inst_1 _inst_2 s)), (LE.le.{u1} X (Preorder.toLE.{u1} X (PartialOrder.toPreorder.{u1} X (SemilatticeInf.toPartialOrder.{u1} X (Lattice.toSemilatticeInf.{u1} X _inst_1)))) (CompositionSeries.bot.{u1} X _inst_1 _inst_2 s) x) -> (Exists.{succ u1} (CompositionSeries.{u1} X _inst_1 _inst_2) (fun (t : CompositionSeries.{u1} X _inst_1 _inst_2) => And (Eq.{succ u1} X (CompositionSeries.bot.{u1} X _inst_1 _inst_2 t) (CompositionSeries.bot.{u1} X _inst_1 _inst_2 s)) (And (Eq.{1} Nat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (CompositionSeries.length.{u1} X _inst_1 _inst_2 t) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (CompositionSeries.length.{u1} X _inst_1 _inst_2 s)) (Exists.{0} (Eq.{succ u1} X (CompositionSeries.top.{u1} X _inst_1 _inst_2 t) x) (fun (htx : Eq.{succ u1} X (CompositionSeries.top.{u1} X _inst_1 _inst_2 t) x) => CompositionSeries.Equivalent.{u1} X _inst_1 _inst_2 s (CompositionSeries.snoc.{u1} X _inst_1 _inst_2 t (CompositionSeries.top.{u1} X _inst_1 _inst_2 s) (Eq.rec.{0, succ u1} X x (fun (x._@.Mathlib.Order.JordanHolder._hyg.5781 : X) (h._@.Mathlib.Order.JordanHolder._hyg.5782 : Eq.{succ u1} X x x._@.Mathlib.Order.JordanHolder._hyg.5781) => JordanHolderLattice.IsMaximal.{u1} X _inst_1 _inst_2 x._@.Mathlib.Order.JordanHolder._hyg.5781 (CompositionSeries.top.{u1} X _inst_1 _inst_2 s)) hm (CompositionSeries.top.{u1} X _inst_1 _inst_2 t) (Eq.symm.{succ u1} X (CompositionSeries.top.{u1} X _inst_1 _inst_2 t) x htx))))))))
+Case conversion may be inaccurate. Consider using '#align composition_series.exists_top_eq_snoc_equivalant CompositionSeries.exists_top_eq_snoc_equivalantₓ'. -/
 /-- Given a `composition_series`, `s`, and an element `x`
 such that `x` is maximal inside `s.top` there is a series, `t`,
 such that `t.top = x`, `t.bot = s.bot`
@@ -1027,7 +1064,6 @@ theorem exists_top_eq_snoc_equivalant (s : CompositionSeries X) (x : X) (hm : Is
           second_iso_of_eq (is_maximal_erase_top_top h0s)
             (sup_eq_of_is_maximal (is_maximal_erase_top_top h0s) hm hetx) (by rw [inf_comm, htt])
 #align composition_series.exists_top_eq_snoc_equivalant CompositionSeries.exists_top_eq_snoc_equivalant
--/
 
 #print CompositionSeries.jordan_holder /-
 /-- The **Jordan-Hölder** theorem, stated for any `jordan_holder_lattice`.

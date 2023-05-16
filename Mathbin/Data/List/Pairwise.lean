@@ -431,7 +431,12 @@ theorem pairwise_of_reflexive_of_forall_ne {l : List α} {r : α → α → Prop
 #align list.pairwise_of_reflexive_of_forall_ne List.pairwise_of_reflexive_of_forall_ne
 -/
 
-#print List.pairwise_iff_nthLe /-
+/- warning: list.pairwise_iff_nth_le -> List.pairwise_iff_nthLe is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {R : α -> α -> Prop} {l : List.{u1} α}, Iff (List.Pairwise.{u1} α R l) (forall (i : Nat) (j : Nat) (h₁ : LT.lt.{0} Nat (Preorder.toHasLt.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring)))) j (List.length.{u1} α l)) (h₂ : LT.lt.{0} Nat (Preorder.toHasLt.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring)))) i j), R (List.nthLe.{u1} α l i (lt_trans.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) i j (List.length.{u1} α l) h₂ h₁)) (List.nthLe.{u1} α l j h₁))
+but is expected to have type
+  forall {α : Type.{u1}} {R : α -> α -> Prop} {l : List.{u1} α}, Iff (List.Pairwise.{u1} α R l) (forall (i : Nat) (j : Nat) (h₁ : LT.lt.{0} Nat instLTNat j (List.length.{u1} α l)) (h₂ : LT.lt.{0} Nat instLTNat i j), R (List.nthLe.{u1} α l i (lt_trans.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) i j (List.length.{u1} α l) h₂ h₁)) (List.nthLe.{u1} α l j h₁))
+Case conversion may be inaccurate. Consider using '#align list.pairwise_iff_nth_le List.pairwise_iff_nthLeₓ'. -/
 theorem pairwise_iff_nthLe {R} :
     ∀ {l : List α},
       Pairwise R l ↔
@@ -451,7 +456,6 @@ theorem pairwise_iff_nthLe {R} :
     · rcases nth_le_of_mem m with ⟨n, h, rfl⟩
       exact H _ _ (succ_lt_succ h) (succ_pos _)
 #align list.pairwise_iff_nth_le List.pairwise_iff_nthLe
--/
 
 #print List.pairwise_replicate /-
 theorem pairwise_replicate {α : Type _} {r : α → α → Prop} {x : α} (hx : r x x) :

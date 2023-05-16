@@ -243,7 +243,12 @@ theorem isClosed_upperClosure (h : s.Finite) : IsClosed (upperClosure s : Set α
 #align lower_topology.is_closed_upper_closure LowerTopology.isClosed_upperClosure
 -/
 
-#print LowerTopology.isLowerSet_of_isOpen /-
+/- warning: lower_topology.is_lower_set_of_is_open -> LowerTopology.isLowerSet_of_isOpen is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : TopologicalSpace.{u1} α] [_inst_3 : LowerTopology.{u1} α _inst_2 _inst_1] {s : Set.{u1} α}, (IsOpen.{u1} α _inst_2 s) -> (IsLowerSet.{u1} α (Preorder.toHasLe.{u1} α _inst_1) s)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : TopologicalSpace.{u1} α] [_inst_3 : LowerTopology.{u1} α _inst_2 _inst_1] {s : Set.{u1} α}, (IsOpen.{u1} α _inst_2 s) -> (IsLowerSet.{u1} α (Preorder.toLE.{u1} α _inst_1) s)
+Case conversion may be inaccurate. Consider using '#align lower_topology.is_lower_set_of_is_open LowerTopology.isLowerSet_of_isOpenₓ'. -/
 /-- Every set open in the lower topology is a lower set. -/
 theorem isLowerSet_of_isOpen (h : IsOpen s) : IsLowerSet s :=
   by
@@ -254,13 +259,16 @@ theorem isLowerSet_of_isOpen (h : IsOpen s) : IsLowerSet s :=
   case inter u v hu1 hv1 hu2 hv2 => exact hu2.inter hv2
   case sUnion _ _ ih => exact isLowerSet_sUnion ih
 #align lower_topology.is_lower_set_of_is_open LowerTopology.isLowerSet_of_isOpen
--/
 
-#print LowerTopology.isUpperSet_of_isClosed /-
+/- warning: lower_topology.is_upper_set_of_is_closed -> LowerTopology.isUpperSet_of_isClosed is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : TopologicalSpace.{u1} α] [_inst_3 : LowerTopology.{u1} α _inst_2 _inst_1] {s : Set.{u1} α}, (IsClosed.{u1} α _inst_2 s) -> (IsUpperSet.{u1} α (Preorder.toHasLe.{u1} α _inst_1) s)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : TopologicalSpace.{u1} α] [_inst_3 : LowerTopology.{u1} α _inst_2 _inst_1] {s : Set.{u1} α}, (IsClosed.{u1} α _inst_2 s) -> (IsUpperSet.{u1} α (Preorder.toLE.{u1} α _inst_1) s)
+Case conversion may be inaccurate. Consider using '#align lower_topology.is_upper_set_of_is_closed LowerTopology.isUpperSet_of_isClosedₓ'. -/
 theorem isUpperSet_of_isClosed (h : IsClosed s) : IsUpperSet s :=
   isLowerSet_compl.1 <| isLowerSet_of_isOpen h.isOpen_compl
 #align lower_topology.is_upper_set_of_is_closed LowerTopology.isUpperSet_of_isClosed
--/
 
 #print LowerTopology.closure_singleton /-
 /--

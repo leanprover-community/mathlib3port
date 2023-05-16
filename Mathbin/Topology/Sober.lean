@@ -238,7 +238,12 @@ theorem genericPoint_specializes [QuasiSober α] [IrreducibleSpace α] (x : α) 
 
 attribute [local instance 10] specializationOrder
 
-#print irreducibleSetEquivPoints /-
+/- warning: irreducible_set_equiv_points -> irreducibleSetEquivPoints is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_3 : QuasiSober.{u1} α _inst_1] [_inst_4 : T0Space.{u1} α _inst_1], OrderIso.{u1, u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} (Set.{u1} α)) Type.{u1} (Set.hasCoeToSort.{u1} (Set.{u1} α)) (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (IsIrreducible.{u1} α _inst_1 s) (IsClosed.{u1} α _inst_1 s)))) α (Subtype.hasLe.{u1} (Set.{u1} α) (Set.hasLe.{u1} α) (fun (x : Set.{u1} α) => Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) x (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (IsIrreducible.{u1} α _inst_1 s) (IsClosed.{u1} α _inst_1 s))))) (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (specializationOrder.{u1} α _inst_1 _inst_4)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_3 : QuasiSober.{u1} α _inst_1] [_inst_4 : T0Space.{u1} α _inst_1], OrderIso.{u1, u1} (Set.Elem.{u1} (Set.{u1} α) (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (IsIrreducible.{u1} α _inst_1 s) (IsClosed.{u1} α _inst_1 s)))) α (Subtype.le.{u1} (Set.{u1} α) (Set.instLESet.{u1} α) (fun (x : Set.{u1} α) => Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) x (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (IsIrreducible.{u1} α _inst_1 s) (IsClosed.{u1} α _inst_1 s))))) (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (specializationOrder.{u1} α _inst_1 _inst_4)))
+Case conversion may be inaccurate. Consider using '#align irreducible_set_equiv_points irreducibleSetEquivPointsₓ'. -/
 /-- The closed irreducible subsets of a sober space bijects with the points of the space. -/
 noncomputable def irreducibleSetEquivPoints [QuasiSober α] [T0Space α] :
     { s : Set α | IsIrreducible s ∧ IsClosed s } ≃o α
@@ -257,7 +262,6 @@ noncomputable def irreducibleSetEquivPoints [QuasiSober α] [T0Space α] :
     rw [specializes_iff_closure_subset]
     simp [s.prop.2.closure_eq, t.prop.2.closure_eq, ← Subtype.coe_le_coe]
 #align irreducible_set_equiv_points irreducibleSetEquivPoints
--/
 
 /- warning: closed_embedding.quasi_sober -> ClosedEmbedding.quasiSober is a dubious translation:
 lean 3 declaration is

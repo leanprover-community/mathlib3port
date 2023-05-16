@@ -227,14 +227,18 @@ theorem multiplicity_factorial_mul {n p : ℕ} (hp : p.Prime) :
     rw [add_comm, add_assoc]
 #align nat.prime.multiplicity_factorial_mul Nat.Prime.multiplicity_factorial_mul
 
-#print Nat.Prime.pow_dvd_factorial_iff /-
+/- warning: nat.prime.pow_dvd_factorial_iff -> Nat.Prime.pow_dvd_factorial_iff is a dubious translation:
+lean 3 declaration is
+  forall {p : Nat} {n : Nat} {r : Nat} {b : Nat}, (Nat.Prime p) -> (LT.lt.{0} Nat Nat.hasLt (Nat.log p n) b) -> (Iff (Dvd.Dvd.{0} Nat Nat.hasDvd (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) p r) (Nat.factorial n)) (LE.le.{0} Nat Nat.hasLe r (Finset.sum.{0, 0} Nat Nat Nat.addCommMonoid (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) b) (fun (i : Nat) => HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.hasDiv) n (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) p i)))))
+but is expected to have type
+  forall {p : Nat} {n : Nat} {r : Nat} {b : Nat}, (Nat.Prime p) -> (LT.lt.{0} Nat instLTNat (Nat.log p n) b) -> (Iff (Dvd.dvd.{0} Nat Nat.instDvdNat (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) p r) (Nat.factorial n)) (LE.le.{0} Nat instLENat r (Finset.sum.{0, 0} Nat Nat Nat.addCommMonoid (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) b) (fun (i : Nat) => HDiv.hDiv.{0, 0, 0} Nat Nat Nat (instHDiv.{0} Nat Nat.instDivNat) n (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) p i)))))
+Case conversion may be inaccurate. Consider using '#align nat.prime.pow_dvd_factorial_iff Nat.Prime.pow_dvd_factorial_iffₓ'. -/
 /-- A prime power divides `n!` iff it is at most the sum of the quotients `n / p ^ i`.
   This sum is expressed over the set `Ico 1 b` where `b` is any bound greater than `log p n` -/
 theorem pow_dvd_factorial_iff {p : ℕ} {n r b : ℕ} (hp : p.Prime) (hbn : log p n < b) :
     p ^ r ∣ n ! ↔ r ≤ ∑ i in Ico 1 b, n / p ^ i := by
   rw [← PartENat.coe_le_coe, ← hp.multiplicity_factorial hbn, ← pow_dvd_iff_le_multiplicity]
 #align nat.prime.pow_dvd_factorial_iff Nat.Prime.pow_dvd_factorial_iff
--/
 
 /- warning: nat.prime.multiplicity_factorial_le_div_pred -> Nat.Prime.multiplicity_factorial_le_div_pred is a dubious translation:
 lean 3 declaration is
@@ -382,7 +386,7 @@ end Prime
 
 /- warning: nat.multiplicity_two_factorial_lt -> Nat.multiplicity_two_factorial_lt is a dubious translation:
 lean 3 declaration is
-  forall {n : Nat}, (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (LT.lt.{0} PartENat (Preorder.toLT.{0} PartENat (PartialOrder.toPreorder.{0} PartENat PartENat.partialOrder)) (multiplicity.{0} Nat Nat.monoid (fun (a : Nat) (b : Nat) => Nat.decidableDvd a b) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))) (Nat.factorial n)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat PartENat (HasLiftT.mk.{1, 1} Nat PartENat (CoeTCₓ.coe.{1, 1} Nat PartENat (Nat.castCoe.{0} PartENat (AddMonoidWithOne.toNatCast.{0} PartENat (AddCommMonoidWithOne.toAddMonoidWithOne.{0} PartENat PartENat.addCommMonoidWithOne))))) n))
+  forall {n : Nat}, (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (LT.lt.{0} PartENat (Preorder.toHasLt.{0} PartENat (PartialOrder.toPreorder.{0} PartENat PartENat.partialOrder)) (multiplicity.{0} Nat Nat.monoid (fun (a : Nat) (b : Nat) => Nat.decidableDvd a b) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))) (Nat.factorial n)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat PartENat (HasLiftT.mk.{1, 1} Nat PartENat (CoeTCₓ.coe.{1, 1} Nat PartENat (Nat.castCoe.{0} PartENat (AddMonoidWithOne.toNatCast.{0} PartENat (AddCommMonoidWithOne.toAddMonoidWithOne.{0} PartENat PartENat.addCommMonoidWithOne))))) n))
 but is expected to have type
   forall {n : Nat}, (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (LT.lt.{0} PartENat (Preorder.toLT.{0} PartENat (PartialOrder.toPreorder.{0} PartENat PartENat.partialOrder)) (multiplicity.{0} Nat Nat.monoid (fun (a : Nat) (b : Nat) => Nat.decidable_dvd a b) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) (Nat.factorial n)) (Nat.cast.{0} PartENat (AddMonoidWithOne.toNatCast.{0} PartENat (AddCommMonoidWithOne.toAddMonoidWithOne.{0} PartENat PartENat.instAddCommMonoidWithOnePartENat)) n))
 Case conversion may be inaccurate. Consider using '#align nat.multiplicity_two_factorial_lt Nat.multiplicity_two_factorial_ltₓ'. -/

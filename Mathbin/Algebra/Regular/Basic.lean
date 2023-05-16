@@ -82,14 +82,18 @@ structure IsRegular (c : R) : Prop where
 
 attribute [to_additive] IsRegular
 
-#print MulLECancellable.isLeftRegular /-
+/- warning: mul_le_cancellable.is_left_regular -> MulLECancellable.isLeftRegular is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} [_inst_1 : Mul.{u1} R] [_inst_2 : PartialOrder.{u1} R] {a : R}, (MulLECancellable.{u1} R _inst_1 (Preorder.toHasLe.{u1} R (PartialOrder.toPreorder.{u1} R _inst_2)) a) -> (IsLeftRegular.{u1} R _inst_1 a)
+but is expected to have type
+  forall {R : Type.{u1}} [_inst_1 : Mul.{u1} R] [_inst_2 : PartialOrder.{u1} R] {a : R}, (MulLECancellable.{u1} R _inst_1 (Preorder.toLE.{u1} R (PartialOrder.toPreorder.{u1} R _inst_2)) a) -> (IsLeftRegular.{u1} R _inst_1 a)
+Case conversion may be inaccurate. Consider using '#align mul_le_cancellable.is_left_regular MulLECancellable.isLeftRegularₓ'. -/
 @[to_additive]
 protected theorem MulLECancellable.isLeftRegular [PartialOrder R] {a : R}
     (ha : MulLECancellable a) : IsLeftRegular a :=
   ha.Injective
 #align mul_le_cancellable.is_left_regular MulLECancellable.isLeftRegular
 #align add_le_cancellable.is_add_left_regular AddLECancellable.isAddLeftRegular
--/
 
 #print IsLeftRegular.right_of_commute /-
 theorem IsLeftRegular.right_of_commute {a : R} (ca : ∀ b, Commute a b) (h : IsLeftRegular a) :

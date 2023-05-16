@@ -2854,31 +2854,43 @@ theorem piecewise_eqOn_compl (f g : α → β) : EqOn (s.piecewise f g) g (sᶜ)
   piecewise_eq_of_not_mem _ _ _
 #align set.piecewise_eq_on_compl Set.piecewise_eqOn_compl
 
+/- warning: set.piecewise_le -> Set.piecewise_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {δ : α -> Type.{u2}} [_inst_2 : forall (i : α), Preorder.{u2} (δ i)] {s : Set.{u1} α} [_inst_3 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) j s)] {f₁ : forall (i : α), δ i} {f₂ : forall (i : α), δ i} {g : forall (i : α), δ i}, (forall (i : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) i s) -> (LE.le.{u2} (δ i) (Preorder.toHasLe.{u2} (δ i) (_inst_2 i)) (f₁ i) (g i))) -> (forall (i : α), (Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) i s)) -> (LE.le.{u2} (δ i) (Preorder.toHasLe.{u2} (δ i) (_inst_2 i)) (f₂ i) (g i))) -> (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toHasLe.{u2} (δ i) (_inst_2 i))) (Set.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s f₁ f₂ (fun (j : α) => _inst_3 j)) g)
+but is expected to have type
+  forall {α : Type.{u1}} {δ : α -> Type.{u2}} [_inst_2 : forall (i : α), Preorder.{u2} (δ i)] {s : Set.{u1} α} [_inst_3 : forall (j : α), Decidable (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) j s)] {f₁ : forall (i : α), δ i} {f₂ : forall (i : α), δ i} {g : forall (i : α), δ i}, (forall (i : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) i s) -> (LE.le.{u2} (δ i) (Preorder.toLE.{u2} (δ i) (_inst_2 i)) (f₁ i) (g i))) -> (forall (i : α), (Not (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) i s)) -> (LE.le.{u2} (δ i) (Preorder.toLE.{u2} (δ i) (_inst_2 i)) (f₂ i) (g i))) -> (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toLE.{u2} (δ i) (_inst_2 i))) (Set.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s f₁ f₂ (fun (j : α) => _inst_3 j)) g)
+Case conversion may be inaccurate. Consider using '#align set.piecewise_le Set.piecewise_leₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∉ » s) -/
-#print Set.piecewise_le /-
 theorem piecewise_le {δ : α → Type _} [∀ i, Preorder (δ i)] {s : Set α} [∀ j, Decidable (j ∈ s)]
     {f₁ f₂ g : ∀ i, δ i} (h₁ : ∀ i ∈ s, f₁ i ≤ g i) (h₂ : ∀ (i) (_ : i ∉ s), f₂ i ≤ g i) :
     s.piecewise f₁ f₂ ≤ g := fun i => if h : i ∈ s then by simp [*] else by simp [*]
 #align set.piecewise_le Set.piecewise_le
--/
 
+/- warning: set.le_piecewise -> Set.le_piecewise is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {δ : α -> Type.{u2}} [_inst_2 : forall (i : α), Preorder.{u2} (δ i)] {s : Set.{u1} α} [_inst_3 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) j s)] {f₁ : forall (i : α), δ i} {f₂ : forall (i : α), δ i} {g : forall (i : α), δ i}, (forall (i : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) i s) -> (LE.le.{u2} (δ i) (Preorder.toHasLe.{u2} (δ i) (_inst_2 i)) (g i) (f₁ i))) -> (forall (i : α), (Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) i s)) -> (LE.le.{u2} (δ i) (Preorder.toHasLe.{u2} (δ i) (_inst_2 i)) (g i) (f₂ i))) -> (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toHasLe.{u2} (δ i) (_inst_2 i))) g (Set.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s f₁ f₂ (fun (j : α) => _inst_3 j)))
+but is expected to have type
+  forall {α : Type.{u1}} {δ : α -> Type.{u2}} [_inst_2 : forall (i : α), Preorder.{u2} (δ i)] {s : Set.{u1} α} [_inst_3 : forall (j : α), Decidable (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) j s)] {f₁ : forall (i : α), δ i} {f₂ : forall (i : α), δ i} {g : forall (i : α), δ i}, (forall (i : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) i s) -> (LE.le.{u2} (δ i) (Preorder.toLE.{u2} (δ i) (_inst_2 i)) (g i) (f₁ i))) -> (forall (i : α), (Not (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) i s)) -> (LE.le.{u2} (δ i) (Preorder.toLE.{u2} (δ i) (_inst_2 i)) (g i) (f₂ i))) -> (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toLE.{u2} (δ i) (_inst_2 i))) g (Set.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s f₁ f₂ (fun (j : α) => _inst_3 j)))
+Case conversion may be inaccurate. Consider using '#align set.le_piecewise Set.le_piecewiseₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∉ » s) -/
-#print Set.le_piecewise /-
 theorem le_piecewise {δ : α → Type _} [∀ i, Preorder (δ i)] {s : Set α} [∀ j, Decidable (j ∈ s)]
     {f₁ f₂ g : ∀ i, δ i} (h₁ : ∀ i ∈ s, g i ≤ f₁ i) (h₂ : ∀ (i) (_ : i ∉ s), g i ≤ f₂ i) :
     g ≤ s.piecewise f₁ f₂ :=
   @piecewise_le α (fun i => (δ i)ᵒᵈ) _ s _ _ _ _ h₁ h₂
 #align set.le_piecewise Set.le_piecewise
--/
 
+/- warning: set.piecewise_le_piecewise -> Set.piecewise_le_piecewise is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {δ : α -> Type.{u2}} [_inst_2 : forall (i : α), Preorder.{u2} (δ i)] {s : Set.{u1} α} [_inst_3 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) j s)] {f₁ : forall (i : α), δ i} {f₂ : forall (i : α), δ i} {g₁ : forall (i : α), δ i} {g₂ : forall (i : α), δ i}, (forall (i : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) i s) -> (LE.le.{u2} (δ i) (Preorder.toHasLe.{u2} (δ i) (_inst_2 i)) (f₁ i) (g₁ i))) -> (forall (i : α), (Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) i s)) -> (LE.le.{u2} (δ i) (Preorder.toHasLe.{u2} (δ i) (_inst_2 i)) (f₂ i) (g₂ i))) -> (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toHasLe.{u2} (δ i) (_inst_2 i))) (Set.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s f₁ f₂ (fun (j : α) => _inst_3 j)) (Set.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s g₁ g₂ (fun (j : α) => _inst_3 j)))
+but is expected to have type
+  forall {α : Type.{u1}} {δ : α -> Type.{u2}} [_inst_2 : forall (i : α), Preorder.{u2} (δ i)] {s : Set.{u1} α} [_inst_3 : forall (j : α), Decidable (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) j s)] {f₁ : forall (i : α), δ i} {f₂ : forall (i : α), δ i} {g₁ : forall (i : α), δ i} {g₂ : forall (i : α), δ i}, (forall (i : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) i s) -> (LE.le.{u2} (δ i) (Preorder.toLE.{u2} (δ i) (_inst_2 i)) (f₁ i) (g₁ i))) -> (forall (i : α), (Not (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) i s)) -> (LE.le.{u2} (δ i) (Preorder.toLE.{u2} (δ i) (_inst_2 i)) (f₂ i) (g₂ i))) -> (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toLE.{u2} (δ i) (_inst_2 i))) (Set.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s f₁ f₂ (fun (j : α) => _inst_3 j)) (Set.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s g₁ g₂ (fun (j : α) => _inst_3 j)))
+Case conversion may be inaccurate. Consider using '#align set.piecewise_le_piecewise Set.piecewise_le_piecewiseₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∉ » s) -/
-#print Set.piecewise_le_piecewise /-
 theorem piecewise_le_piecewise {δ : α → Type _} [∀ i, Preorder (δ i)] {s : Set α}
     [∀ j, Decidable (j ∈ s)] {f₁ f₂ g₁ g₂ : ∀ i, δ i} (h₁ : ∀ i ∈ s, f₁ i ≤ g₁ i)
     (h₂ : ∀ (i) (_ : i ∉ s), f₂ i ≤ g₂ i) : s.piecewise f₁ f₂ ≤ s.piecewise g₁ g₂ := by
   apply piecewise_le <;> intros <;> simp [*]
 #align set.piecewise_le_piecewise Set.piecewise_le_piecewise
--/
 
 /- warning: set.piecewise_insert_of_ne -> Set.piecewise_insert_of_ne is a dubious translation:
 lean 3 declaration is

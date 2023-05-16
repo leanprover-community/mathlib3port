@@ -49,25 +49,39 @@ section
 
 variable [Zero α] [One α] [PartialOrder α] [ZeroLEOneClass α] [NeZero (1 : α)]
 
-#print zero_lt_one /-
+/- warning: zero_lt_one -> zero_lt_one is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Zero.{u1} α] [_inst_2 : One.{u1} α] [_inst_3 : PartialOrder.{u1} α] [_inst_4 : ZeroLEOneClass.{u1} α _inst_1 _inst_2 (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_3))] [_inst_5 : NeZero.{u1} α _inst_1 (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α _inst_2)))], LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_3)) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α _inst_1))) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α _inst_2)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Zero.{u1} α] [_inst_2 : One.{u1} α] [_inst_3 : PartialOrder.{u1} α] [_inst_4 : ZeroLEOneClass.{u1} α _inst_1 _inst_2 (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_3))] [_inst_5 : NeZero.{u1} α _inst_1 (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α _inst_2))], LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_3)) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_1)) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α _inst_2))
+Case conversion may be inaccurate. Consider using '#align zero_lt_one zero_lt_oneₓ'. -/
 /-- See `zero_lt_one'` for a version with the type explicit. -/
 @[simp]
 theorem zero_lt_one : (0 : α) < 1 :=
   zero_le_one.lt_of_ne (NeZero.ne' 1)
 #align zero_lt_one zero_lt_one
--/
 
 variable (α)
 
-#print zero_lt_one' /-
+/- warning: zero_lt_one' -> zero_lt_one' is a dubious translation:
+lean 3 declaration is
+  forall (α : Type.{u1}) [_inst_1 : Zero.{u1} α] [_inst_2 : One.{u1} α] [_inst_3 : PartialOrder.{u1} α] [_inst_4 : ZeroLEOneClass.{u1} α _inst_1 _inst_2 (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_3))] [_inst_5 : NeZero.{u1} α _inst_1 (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α _inst_2)))], LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_3)) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α _inst_1))) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α _inst_2)))
+but is expected to have type
+  forall (α : Type.{u1}) [_inst_1 : Zero.{u1} α] [_inst_2 : One.{u1} α] [_inst_3 : PartialOrder.{u1} α] [_inst_4 : ZeroLEOneClass.{u1} α _inst_1 _inst_2 (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_3))] [_inst_5 : NeZero.{u1} α _inst_1 (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α _inst_2))], LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_3)) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_1)) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α _inst_2))
+Case conversion may be inaccurate. Consider using '#align zero_lt_one' zero_lt_one'ₓ'. -/
 /-- See `zero_lt_one` for a version with the type implicit. -/
 theorem zero_lt_one' : (0 : α) < 1 :=
   zero_lt_one
 #align zero_lt_one' zero_lt_one'
--/
 
 end
 
+/- warning: one_pos -> one_pos is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Zero.{u1} α] [_inst_2 : One.{u1} α] [_inst_3 : PartialOrder.{u1} α] [_inst_4 : ZeroLEOneClass.{u1} α _inst_1 _inst_2 (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_3))] [_inst_5 : NeZero.{u1} α _inst_1 (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α _inst_2)))], LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_3)) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α _inst_1))) (OfNat.ofNat.{u1} α 1 (OfNat.mk.{u1} α 1 (One.one.{u1} α _inst_2)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Zero.{u1} α] [_inst_2 : One.{u1} α] [_inst_3 : PartialOrder.{u1} α] [_inst_4 : ZeroLEOneClass.{u1} α _inst_1 _inst_2 (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_3))] [_inst_5 : NeZero.{u1} α _inst_1 (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α _inst_2))], LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_3)) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α _inst_1)) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α _inst_2))
+Case conversion may be inaccurate. Consider using '#align one_pos one_posₓ'. -/
 alias zero_lt_one ← one_pos
 #align one_pos one_pos
 

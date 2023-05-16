@@ -98,11 +98,15 @@ theorem rangeIcc_support [DecidableEq ι] (f g : ι →₀ α) :
     (rangeIcc f g).support = f.support ∪ g.support := by convert rfl
 #align finsupp.range_Icc_support Finsupp.rangeIcc_support
 
-#print Finsupp.mem_rangeIcc_apply_iff /-
+/- warning: finsupp.mem_range_Icc_apply_iff -> Finsupp.mem_rangeIcc_apply_iff is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : Zero.{u2} α] [_inst_2 : PartialOrder.{u2} α] [_inst_3 : LocallyFiniteOrder.{u2} α (PartialOrder.toPreorder.{u2} α _inst_2)] {f : Finsupp.{u1, u2} ι α _inst_1} {g : Finsupp.{u1, u2} ι α _inst_1} {i : ι} {a : α}, Iff (Membership.Mem.{u2, u2} α (Finset.{u2} α) (Finset.hasMem.{u2} α) a (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (Finsupp.{u1, u2} ι (Finset.{u2} α) (Finset.zero.{u2} α _inst_1)) (fun (_x : Finsupp.{u1, u2} ι (Finset.{u2} α) (Finset.zero.{u2} α _inst_1)) => ι -> (Finset.{u2} α)) (Finsupp.coeFun.{u1, u2} ι (Finset.{u2} α) (Finset.zero.{u2} α _inst_1)) (Finsupp.rangeIcc.{u1, u2} ι α _inst_1 _inst_2 _inst_3 f g) i)) (And (LE.le.{u2} α (Preorder.toHasLe.{u2} α (PartialOrder.toPreorder.{u2} α _inst_2)) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (Finsupp.{u1, u2} ι α _inst_1) (fun (_x : Finsupp.{u1, u2} ι α _inst_1) => ι -> α) (Finsupp.coeFun.{u1, u2} ι α _inst_1) f i) a) (LE.le.{u2} α (Preorder.toHasLe.{u2} α (PartialOrder.toPreorder.{u2} α _inst_2)) a (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (Finsupp.{u1, u2} ι α _inst_1) (fun (_x : Finsupp.{u1, u2} ι α _inst_1) => ι -> α) (Finsupp.coeFun.{u1, u2} ι α _inst_1) g i)))
+but is expected to have type
+  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : Zero.{u2} α] [_inst_2 : PartialOrder.{u2} α] [_inst_3 : LocallyFiniteOrder.{u2} α (PartialOrder.toPreorder.{u2} α _inst_2)] {f : Finsupp.{u1, u2} ι α _inst_1} {g : Finsupp.{u1, u2} ι α _inst_1} {i : ι} {a : α}, Iff (Membership.mem.{u2, u2} α ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : ι) => Finset.{u2} α) i) (Finset.instMembershipFinset.{u2} α) a (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (Finsupp.{u1, u2} ι (Finset.{u2} α) (Finset.zero.{u2} α _inst_1)) ι (fun (_x : ι) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : ι) => Finset.{u2} α) _x) (Finsupp.funLike.{u1, u2} ι (Finset.{u2} α) (Finset.zero.{u2} α _inst_1)) (Finsupp.rangeIcc.{u1, u2} ι α _inst_1 _inst_2 _inst_3 f g) i)) (And (LE.le.{u2} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : ι) => α) i) (Preorder.toLE.{u2} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : ι) => α) i) (PartialOrder.toPreorder.{u2} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : ι) => α) i) _inst_2)) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (Finsupp.{u1, u2} ι α _inst_1) ι (fun (_x : ι) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : ι) => α) _x) (Finsupp.funLike.{u1, u2} ι α _inst_1) f i) a) (LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_2)) a (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (Finsupp.{u1, u2} ι α _inst_1) ι (fun (_x : ι) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : ι) => α) _x) (Finsupp.funLike.{u1, u2} ι α _inst_1) g i)))
+Case conversion may be inaccurate. Consider using '#align finsupp.mem_range_Icc_apply_iff Finsupp.mem_rangeIcc_apply_iffₓ'. -/
 theorem mem_rangeIcc_apply_iff : a ∈ f.rangeIcc g i ↔ f i ≤ a ∧ a ≤ g i :=
   mem_Icc
 #align finsupp.mem_range_Icc_apply_iff Finsupp.mem_rangeIcc_apply_iff
--/
 
 end RangeIcc
 

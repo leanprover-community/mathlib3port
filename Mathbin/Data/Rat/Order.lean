@@ -228,7 +228,12 @@ protected theorem le_def' {p q : ℚ} : p ≤ q ↔ p.num * q.den ≤ q.num * p.
   exact Rat.le_def (by exact_mod_cast p.pos) (by exact_mod_cast q.pos)
 #align rat.le_def' Rat.le_def'
 
-#print Rat.lt_def /-
+/- warning: rat.lt_def -> Rat.lt_def is a dubious translation:
+lean 3 declaration is
+  forall {p : Rat} {q : Rat}, Iff (LT.lt.{0} Rat Rat.hasLt p q) (LT.lt.{0} Int Int.hasLt (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) (Rat.num p) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Rat.den q))) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) (Rat.num q) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Rat.den p))))
+but is expected to have type
+  forall {p : Rat} {q : Rat}, Iff (LT.lt.{0} Rat Rat.instLTRat_1 p q) (LT.lt.{0} Int Int.instLTInt (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (Rat.num p) (Nat.cast.{0} Int instNatCastInt (Rat.den q))) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (Rat.num q) (Nat.cast.{0} Int instNatCastInt (Rat.den p))))
+Case conversion may be inaccurate. Consider using '#align rat.lt_def Rat.lt_defₓ'. -/
 protected theorem lt_def {p q : ℚ} : p < q ↔ p.num * q.den < q.num * p.den :=
   by
   rw [lt_iff_le_and_ne, Rat.le_def']
@@ -240,7 +245,6 @@ protected theorem lt_def {p q : ℚ} : p < q ↔ p.num * q.den < q.num * p.den :
       exact ⟨tmp.left, this.elim_right tmp.right⟩
   exact not_iff_not.elim_right eq_iff_mul_eq_mul
 #align rat.lt_def Rat.lt_def
--/
 
 /- warning: rat.nonneg_iff_zero_le -> Rat.nonneg_iff_zero_le is a dubious translation:
 lean 3 declaration is
@@ -310,14 +314,23 @@ instance : OrderedCancelAddCommMonoid ℚ := by infer_instance
 
 instance : OrderedAddCommMonoid ℚ := by infer_instance
 
-#print Rat.num_pos_iff_pos /-
+/- warning: rat.num_pos_iff_pos -> Rat.num_pos_iff_pos is a dubious translation:
+lean 3 declaration is
+  forall {a : Rat}, Iff (LT.lt.{0} Int Int.hasLt (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) (Rat.num a)) (LT.lt.{0} Rat Rat.hasLt (OfNat.ofNat.{0} Rat 0 (OfNat.mk.{0} Rat 0 (Zero.zero.{0} Rat Rat.hasZero))) a)
+but is expected to have type
+  forall {a : Rat}, Iff (LT.lt.{0} Int Int.instLTInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) (Rat.num a)) (LT.lt.{0} Rat Rat.instLTRat_1 (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)) a)
+Case conversion may be inaccurate. Consider using '#align rat.num_pos_iff_pos Rat.num_pos_iff_posₓ'. -/
 theorem num_pos_iff_pos {a : ℚ} : 0 < a.num ↔ 0 < a :=
   lt_iff_lt_of_le_iff_le <| by
     simpa [(by cases a <;> rfl : (-a).num = -a.num)] using @num_nonneg_iff_zero_le (-a)
 #align rat.num_pos_iff_pos Rat.num_pos_iff_pos
--/
 
-#print Rat.div_lt_div_iff_mul_lt_mul /-
+/- warning: rat.div_lt_div_iff_mul_lt_mul -> Rat.div_lt_div_iff_mul_lt_mul is a dubious translation:
+lean 3 declaration is
+  forall {a : Int} {b : Int} {c : Int} {d : Int}, (LT.lt.{0} Int Int.hasLt (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) b) -> (LT.lt.{0} Int Int.hasLt (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) d) -> (Iff (LT.lt.{0} Rat Rat.hasLt (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.hasDiv) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int Rat (HasLiftT.mk.{1, 1} Int Rat (CoeTCₓ.coe.{1, 1} Int Rat (Int.castCoe.{0} Rat Rat.hasIntCast))) a) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int Rat (HasLiftT.mk.{1, 1} Int Rat (CoeTCₓ.coe.{1, 1} Int Rat (Int.castCoe.{0} Rat Rat.hasIntCast))) b)) (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.hasDiv) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int Rat (HasLiftT.mk.{1, 1} Int Rat (CoeTCₓ.coe.{1, 1} Int Rat (Int.castCoe.{0} Rat Rat.hasIntCast))) c) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int Rat (HasLiftT.mk.{1, 1} Int Rat (CoeTCₓ.coe.{1, 1} Int Rat (Int.castCoe.{0} Rat Rat.hasIntCast))) d))) (LT.lt.{0} Int Int.hasLt (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) a d) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) c b)))
+but is expected to have type
+  forall {a : Int} {b : Int} {c : Int} {d : Int}, (LT.lt.{0} Int Int.instLTInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) b) -> (LT.lt.{0} Int Int.instLTInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) d) -> (Iff (LT.lt.{0} Rat Rat.instLTRat_1 (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.instDivRat) (Int.cast.{0} Rat Rat.instIntCastRat a) (Int.cast.{0} Rat Rat.instIntCastRat b)) (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.instDivRat) (Int.cast.{0} Rat Rat.instIntCastRat c) (Int.cast.{0} Rat Rat.instIntCastRat d))) (LT.lt.{0} Int Int.instLTInt (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a d) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) c b)))
+Case conversion may be inaccurate. Consider using '#align rat.div_lt_div_iff_mul_lt_mul Rat.div_lt_div_iff_mul_lt_mulₓ'. -/
 theorem div_lt_div_iff_mul_lt_mul {a b c d : ℤ} (b_pos : 0 < b) (d_pos : 0 < d) :
     (a : ℚ) / b < c / d ↔ a * d < c * b :=
   by
@@ -327,12 +340,15 @@ theorem div_lt_div_iff_mul_lt_mul {a b c d : ℤ} (b_pos : 0 < b) (d_pos : 0 < d
   · apply not_congr
     simp [div_num_denom, Rat.le_def d_pos b_pos]
 #align rat.div_lt_div_iff_mul_lt_mul Rat.div_lt_div_iff_mul_lt_mul
--/
 
-#print Rat.lt_one_iff_num_lt_denom /-
+/- warning: rat.lt_one_iff_num_lt_denom -> Rat.lt_one_iff_num_lt_denom is a dubious translation:
+lean 3 declaration is
+  forall {q : Rat}, Iff (LT.lt.{0} Rat Rat.hasLt q (OfNat.ofNat.{0} Rat 1 (OfNat.mk.{0} Rat 1 (One.one.{0} Rat Rat.hasOne)))) (LT.lt.{0} Int Int.hasLt (Rat.num q) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (coeBase.{1, 1} Nat Int Int.hasCoe))) (Rat.den q)))
+but is expected to have type
+  forall {q : Rat}, Iff (LT.lt.{0} Rat Rat.instLTRat_1 q (OfNat.ofNat.{0} Rat 1 (Rat.instOfNatRat 1))) (LT.lt.{0} Int Int.instLTInt (Rat.num q) (Nat.cast.{0} Int instNatCastInt (Rat.den q)))
+Case conversion may be inaccurate. Consider using '#align rat.lt_one_iff_num_lt_denom Rat.lt_one_iff_num_lt_denomₓ'. -/
 theorem lt_one_iff_num_lt_denom {q : ℚ} : q < 1 ↔ q.num < q.den := by simp [Rat.lt_def]
 #align rat.lt_one_iff_num_lt_denom Rat.lt_one_iff_num_lt_denom
--/
 
 /- warning: rat.abs_def -> Rat.abs_def is a dubious translation:
 lean 3 declaration is

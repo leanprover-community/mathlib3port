@@ -656,7 +656,7 @@ theorem image_interior_subset (hf : IsOpenMap f) (s : Set α) :
 
 /- warning: is_open_map.nhds_le -> IsOpenMap.nhds_le is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β}, (IsOpenMap.{u1, u2} α β _inst_1 _inst_2 f) -> (forall (a : α), LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (nhds.{u2} β _inst_2 (f a)) (Filter.map.{u1, u2} α β f (nhds.{u1} α _inst_1 a)))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β}, (IsOpenMap.{u1, u2} α β _inst_1 _inst_2 f) -> (forall (a : α), LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (nhds.{u2} β _inst_2 (f a)) (Filter.map.{u1, u2} α β f (nhds.{u1} α _inst_1 a)))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β}, (IsOpenMap.{u2, u1} α β _inst_1 _inst_2 f) -> (forall (a : α), LE.le.{u1} (Filter.{u1} β) (Preorder.toLE.{u1} (Filter.{u1} β) (PartialOrder.toPreorder.{u1} (Filter.{u1} β) (Filter.instPartialOrderFilter.{u1} β))) (nhds.{u1} β _inst_2 (f a)) (Filter.map.{u2, u1} α β f (nhds.{u2} α _inst_1 a)))
 Case conversion may be inaccurate. Consider using '#align is_open_map.nhds_le IsOpenMap.nhds_leₓ'. -/
@@ -666,7 +666,7 @@ theorem nhds_le (hf : IsOpenMap f) (a : α) : 𝓝 (f a) ≤ (𝓝 a).map f :=
 
 /- warning: is_open_map.of_nhds_le -> IsOpenMap.of_nhds_le is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β}, (forall (a : α), LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (nhds.{u2} β _inst_2 (f a)) (Filter.map.{u1, u2} α β f (nhds.{u1} α _inst_1 a))) -> (IsOpenMap.{u1, u2} α β _inst_1 _inst_2 f)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β}, (forall (a : α), LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (nhds.{u2} β _inst_2 (f a)) (Filter.map.{u1, u2} α β f (nhds.{u1} α _inst_1 a))) -> (IsOpenMap.{u1, u2} α β _inst_1 _inst_2 f)
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β}, (forall (a : α), LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) (nhds.{u2} β _inst_2 (f a)) (Filter.map.{u1, u2} α β f (nhds.{u1} α _inst_1 a))) -> (IsOpenMap.{u1, u2} α β _inst_1 _inst_2 f)
 Case conversion may be inaccurate. Consider using '#align is_open_map.of_nhds_le IsOpenMap.of_nhds_leₓ'. -/
@@ -787,7 +787,7 @@ end IsOpenMap
 
 /- warning: is_open_map_iff_nhds_le -> isOpenMap_iff_nhds_le is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β}, Iff (IsOpenMap.{u1, u2} α β _inst_1 _inst_2 f) (forall (a : α), LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (nhds.{u2} β _inst_2 (f a)) (Filter.map.{u1, u2} α β f (nhds.{u1} α _inst_1 a)))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β}, Iff (IsOpenMap.{u1, u2} α β _inst_1 _inst_2 f) (forall (a : α), LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (nhds.{u2} β _inst_2 (f a)) (Filter.map.{u1, u2} α β f (nhds.{u1} α _inst_1 a)))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β}, Iff (IsOpenMap.{u2, u1} α β _inst_1 _inst_2 f) (forall (a : α), LE.le.{u1} (Filter.{u1} β) (Preorder.toLE.{u1} (Filter.{u1} β) (PartialOrder.toPreorder.{u1} (Filter.{u1} β) (Filter.instPartialOrderFilter.{u1} β))) (nhds.{u1} β _inst_2 (f a)) (Filter.map.{u2, u1} α β f (nhds.{u2} α _inst_1 a)))
 Case conversion may be inaccurate. Consider using '#align is_open_map_iff_nhds_le isOpenMap_iff_nhds_leₓ'. -/

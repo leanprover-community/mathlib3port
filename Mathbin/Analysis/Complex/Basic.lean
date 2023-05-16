@@ -863,7 +863,7 @@ open ComplexOrder
 
 /- warning: complex.eq_coe_norm_of_nonneg -> Complex.eq_coe_norm_of_nonneg is a dubious translation:
 lean 3 declaration is
-  forall {z : Complex}, (LE.le.{0} Complex (Preorder.toLE.{0} Complex (PartialOrder.toPreorder.{0} Complex Complex.partialOrder)) (OfNat.ofNat.{0} Complex 0 (OfNat.mk.{0} Complex 0 (Zero.zero.{0} Complex Complex.hasZero))) z) -> (Eq.{1} Complex z ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real Complex (HasLiftT.mk.{1, 1} Real Complex (CoeTCₓ.coe.{1, 1} Real Complex (coeBase.{1, 1} Real Complex Complex.hasCoe))) (Norm.norm.{0} Complex Complex.hasNorm z)))
+  forall {z : Complex}, (LE.le.{0} Complex (Preorder.toHasLe.{0} Complex (PartialOrder.toPreorder.{0} Complex Complex.partialOrder)) (OfNat.ofNat.{0} Complex 0 (OfNat.mk.{0} Complex 0 (Zero.zero.{0} Complex Complex.hasZero))) z) -> (Eq.{1} Complex z ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real Complex (HasLiftT.mk.{1, 1} Real Complex (CoeTCₓ.coe.{1, 1} Real Complex (coeBase.{1, 1} Real Complex Complex.hasCoe))) (Norm.norm.{0} Complex Complex.hasNorm z)))
 but is expected to have type
   forall {z : Complex}, (LE.le.{0} Complex (Preorder.toLE.{0} Complex (PartialOrder.toPreorder.{0} Complex Complex.partialOrder)) (OfNat.ofNat.{0} Complex 0 (Zero.toOfNat0.{0} Complex Complex.instZeroComplex)) z) -> (Eq.{1} Complex z (Complex.ofReal' (Norm.norm.{0} Complex Complex.instNormComplex z)))
 Case conversion may be inaccurate. Consider using '#align complex.eq_coe_norm_of_nonneg Complex.eq_coe_norm_of_nonnegₓ'. -/

@@ -239,11 +239,15 @@ instance StructureGroupoid.partialOrder : PartialOrder (StructureGroupoid H) :=
 #align structure_groupoid.partial_order StructureGroupoid.partialOrder
 -/
 
-#print StructureGroupoid.le_iff /-
+/- warning: structure_groupoid.le_iff -> StructureGroupoid.le_iff is a dubious translation:
+lean 3 declaration is
+  forall {H : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} H] {G₁ : StructureGroupoid.{u1} H _inst_1} {G₂ : StructureGroupoid.{u1} H _inst_1}, Iff (LE.le.{u1} (StructureGroupoid.{u1} H _inst_1) (Preorder.toHasLe.{u1} (StructureGroupoid.{u1} H _inst_1) (PartialOrder.toPreorder.{u1} (StructureGroupoid.{u1} H _inst_1) (StructureGroupoid.partialOrder.{u1} H _inst_1))) G₁ G₂) (forall (e : LocalHomeomorph.{u1, u1} H H _inst_1 _inst_1), (Membership.Mem.{u1, u1} (LocalHomeomorph.{u1, u1} H H _inst_1 _inst_1) (StructureGroupoid.{u1} H _inst_1) (StructureGroupoid.hasMem.{u1} H _inst_1) e G₁) -> (Membership.Mem.{u1, u1} (LocalHomeomorph.{u1, u1} H H _inst_1 _inst_1) (StructureGroupoid.{u1} H _inst_1) (StructureGroupoid.hasMem.{u1} H _inst_1) e G₂))
+but is expected to have type
+  forall {H : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} H] {G₁ : StructureGroupoid.{u1} H _inst_1} {G₂ : StructureGroupoid.{u1} H _inst_1}, Iff (LE.le.{u1} (StructureGroupoid.{u1} H _inst_1) (Preorder.toLE.{u1} (StructureGroupoid.{u1} H _inst_1) (PartialOrder.toPreorder.{u1} (StructureGroupoid.{u1} H _inst_1) (StructureGroupoid.partialOrder.{u1} H _inst_1))) G₁ G₂) (forall (e : LocalHomeomorph.{u1, u1} H H _inst_1 _inst_1), (Membership.mem.{u1, u1} (LocalHomeomorph.{u1, u1} H H _inst_1 _inst_1) (StructureGroupoid.{u1} H _inst_1) (instMembershipLocalHomeomorphStructureGroupoid.{u1} H _inst_1) e G₁) -> (Membership.mem.{u1, u1} (LocalHomeomorph.{u1, u1} H H _inst_1 _inst_1) (StructureGroupoid.{u1} H _inst_1) (instMembershipLocalHomeomorphStructureGroupoid.{u1} H _inst_1) e G₂))
+Case conversion may be inaccurate. Consider using '#align structure_groupoid.le_iff StructureGroupoid.le_iffₓ'. -/
 theorem StructureGroupoid.le_iff {G₁ G₂ : StructureGroupoid H} : G₁ ≤ G₂ ↔ ∀ e, e ∈ G₁ → e ∈ G₂ :=
   Iff.rfl
 #align structure_groupoid.le_iff StructureGroupoid.le_iff
--/
 
 #print idGroupoid /-
 /-- The trivial groupoid, containing only the identity (and maps with empty source, as this is
@@ -390,7 +394,12 @@ theorem mem_groupoid_of_pregroupoid {PG : Pregroupoid H} {e : LocalHomeomorph H 
 #align mem_groupoid_of_pregroupoid mem_groupoid_of_pregroupoid
 -/
 
-#print groupoid_of_pregroupoid_le /-
+/- warning: groupoid_of_pregroupoid_le -> groupoid_of_pregroupoid_le is a dubious translation:
+lean 3 declaration is
+  forall {H : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} H] (PG₁ : Pregroupoid.{u1} H _inst_1) (PG₂ : Pregroupoid.{u1} H _inst_1), (forall (f : H -> H) (s : Set.{u1} H), (Pregroupoid.Property.{u1} H _inst_1 PG₁ f s) -> (Pregroupoid.Property.{u1} H _inst_1 PG₂ f s)) -> (LE.le.{u1} (StructureGroupoid.{u1} H _inst_1) (Preorder.toHasLe.{u1} (StructureGroupoid.{u1} H _inst_1) (PartialOrder.toPreorder.{u1} (StructureGroupoid.{u1} H _inst_1) (StructureGroupoid.partialOrder.{u1} H _inst_1))) (Pregroupoid.groupoid.{u1} H _inst_1 PG₁) (Pregroupoid.groupoid.{u1} H _inst_1 PG₂))
+but is expected to have type
+  forall {H : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} H] (PG₁ : Pregroupoid.{u1} H _inst_1) (PG₂ : Pregroupoid.{u1} H _inst_1), (forall (f : H -> H) (s : Set.{u1} H), (Pregroupoid.property.{u1} H _inst_1 PG₁ f s) -> (Pregroupoid.property.{u1} H _inst_1 PG₂ f s)) -> (LE.le.{u1} (StructureGroupoid.{u1} H _inst_1) (Preorder.toLE.{u1} (StructureGroupoid.{u1} H _inst_1) (PartialOrder.toPreorder.{u1} (StructureGroupoid.{u1} H _inst_1) (StructureGroupoid.partialOrder.{u1} H _inst_1))) (Pregroupoid.groupoid.{u1} H _inst_1 PG₁) (Pregroupoid.groupoid.{u1} H _inst_1 PG₂))
+Case conversion may be inaccurate. Consider using '#align groupoid_of_pregroupoid_le groupoid_of_pregroupoid_leₓ'. -/
 theorem groupoid_of_pregroupoid_le (PG₁ PG₂ : Pregroupoid H)
     (h : ∀ f s, PG₁.property f s → PG₂.property f s) : PG₁.groupoid ≤ PG₂.groupoid :=
   by
@@ -398,7 +407,6 @@ theorem groupoid_of_pregroupoid_le (PG₁ PG₂ : Pregroupoid H)
   rw [mem_groupoid_of_pregroupoid] at he⊢
   exact ⟨h _ _ he.1, h _ _ he.2⟩
 #align groupoid_of_pregroupoid_le groupoid_of_pregroupoid_le
--/
 
 /- warning: mem_pregroupoid_of_eq_on_source -> mem_pregroupoid_of_eq_on_source is a dubious translation:
 lean 3 declaration is
@@ -509,7 +517,12 @@ instance closedUnderRestriction_idRestrGroupoid : ClosedUnderRestriction (@idRes
 #align closed_under_restriction_id_restr_groupoid closedUnderRestriction_idRestrGroupoid
 -/
 
-#print closedUnderRestriction_iff_id_le /-
+/- warning: closed_under_restriction_iff_id_le -> closedUnderRestriction_iff_id_le is a dubious translation:
+lean 3 declaration is
+  forall {H : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} H] (G : StructureGroupoid.{u1} H _inst_1), Iff (ClosedUnderRestriction.{u1} H _inst_1 G) (LE.le.{u1} (StructureGroupoid.{u1} H _inst_1) (Preorder.toHasLe.{u1} (StructureGroupoid.{u1} H _inst_1) (PartialOrder.toPreorder.{u1} (StructureGroupoid.{u1} H _inst_1) (StructureGroupoid.partialOrder.{u1} H _inst_1))) (idRestrGroupoid.{u1} H _inst_1) G)
+but is expected to have type
+  forall {H : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} H] (G : StructureGroupoid.{u1} H _inst_1), Iff (ClosedUnderRestriction.{u1} H _inst_1 G) (LE.le.{u1} (StructureGroupoid.{u1} H _inst_1) (Preorder.toLE.{u1} (StructureGroupoid.{u1} H _inst_1) (PartialOrder.toPreorder.{u1} (StructureGroupoid.{u1} H _inst_1) (StructureGroupoid.partialOrder.{u1} H _inst_1))) (idRestrGroupoid.{u1} H _inst_1) G)
+Case conversion may be inaccurate. Consider using '#align closed_under_restriction_iff_id_le closedUnderRestriction_iff_id_leₓ'. -/
 /-- A groupoid is closed under restriction if and only if it contains the trivial restriction-closed
 groupoid. -/
 theorem closedUnderRestriction_iff_id_le (G : StructureGroupoid H) :
@@ -532,7 +545,6 @@ theorem closedUnderRestriction_iff_id_le (G : StructureGroupoid H) :
     apply structure_groupoid.le_iff.mp h
     exact idRestrGroupoid_mem hs
 #align closed_under_restriction_iff_id_le closedUnderRestriction_iff_id_le
--/
 
 /-- The groupoid of all local homeomorphisms on a topological space `H` is closed under restriction.
 -/
@@ -1093,7 +1105,7 @@ theorem StructureGroupoid.compatible {H : Type _} [TopologicalSpace H] (G : Stru
 
 /- warning: has_groupoid_of_le -> hasGroupoid_of_le is a dubious translation:
 lean 3 declaration is
-  forall {H : Type.{u1}} {M : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} H] [_inst_2 : TopologicalSpace.{u2} M] [_inst_3 : ChartedSpace.{u1, u2} H _inst_1 M _inst_2] {G₁ : StructureGroupoid.{u1} H _inst_1} {G₂ : StructureGroupoid.{u1} H _inst_1}, (HasGroupoid.{u1, u2} H _inst_1 M _inst_2 _inst_3 G₁) -> (LE.le.{u1} (StructureGroupoid.{u1} H _inst_1) (Preorder.toLE.{u1} (StructureGroupoid.{u1} H _inst_1) (PartialOrder.toPreorder.{u1} (StructureGroupoid.{u1} H _inst_1) (StructureGroupoid.partialOrder.{u1} H _inst_1))) G₁ G₂) -> (HasGroupoid.{u1, u2} H _inst_1 M _inst_2 _inst_3 G₂)
+  forall {H : Type.{u1}} {M : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} H] [_inst_2 : TopologicalSpace.{u2} M] [_inst_3 : ChartedSpace.{u1, u2} H _inst_1 M _inst_2] {G₁ : StructureGroupoid.{u1} H _inst_1} {G₂ : StructureGroupoid.{u1} H _inst_1}, (HasGroupoid.{u1, u2} H _inst_1 M _inst_2 _inst_3 G₁) -> (LE.le.{u1} (StructureGroupoid.{u1} H _inst_1) (Preorder.toHasLe.{u1} (StructureGroupoid.{u1} H _inst_1) (PartialOrder.toPreorder.{u1} (StructureGroupoid.{u1} H _inst_1) (StructureGroupoid.partialOrder.{u1} H _inst_1))) G₁ G₂) -> (HasGroupoid.{u1, u2} H _inst_1 M _inst_2 _inst_3 G₂)
 but is expected to have type
   forall {H : Type.{u2}} {M : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} H] [_inst_2 : TopologicalSpace.{u1} M] [_inst_3 : ChartedSpace.{u2, u1} H _inst_1 M _inst_2] {G₁ : StructureGroupoid.{u2} H _inst_1} {G₂ : StructureGroupoid.{u2} H _inst_1}, (HasGroupoid.{u2, u1} H _inst_1 M _inst_2 _inst_3 G₁) -> (LE.le.{u2} (StructureGroupoid.{u2} H _inst_1) (Preorder.toLE.{u2} (StructureGroupoid.{u2} H _inst_1) (PartialOrder.toPreorder.{u2} (StructureGroupoid.{u2} H _inst_1) (StructureGroupoid.partialOrder.{u2} H _inst_1))) G₁ G₂) -> (HasGroupoid.{u2, u1} H _inst_1 M _inst_2 _inst_3 G₂)
 Case conversion may be inaccurate. Consider using '#align has_groupoid_of_le hasGroupoid_of_leₓ'. -/

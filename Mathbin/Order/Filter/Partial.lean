@@ -156,7 +156,7 @@ theorem rcomap_compose (r : Rel α β) (s : Rel β γ) : rcomap r ∘ rcomap s =
 
 /- warning: filter.rtendsto_iff_le_rcomap -> Filter.rtendsto_iff_le_rcomap is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} (r : Rel.{u1, u2} α β) (l₁ : Filter.{u1} α) (l₂ : Filter.{u2} β), Iff (Filter.Rtendsto.{u1, u2} α β r l₁ l₂) (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) l₁ (Filter.rcomap.{u1, u2} α β r l₂))
+  forall {α : Type.{u1}} {β : Type.{u2}} (r : Rel.{u1, u2} α β) (l₁ : Filter.{u1} α) (l₂ : Filter.{u2} β), Iff (Filter.Rtendsto.{u1, u2} α β r l₁ l₂) (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) l₁ (Filter.rcomap.{u1, u2} α β r l₂))
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} (r : Rel.{u1, u2} α β) (l₁ : Filter.{u1} α) (l₂ : Filter.{u2} β), Iff (Filter.Rtendsto.{u1, u2} α β r l₁ l₂) (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) l₁ (Filter.rcomap.{u1, u2} α β r l₂))
 Case conversion may be inaccurate. Consider using '#align filter.rtendsto_iff_le_rcomap Filter.rtendsto_iff_le_rcomapₓ'. -/

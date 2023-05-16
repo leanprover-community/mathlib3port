@@ -68,15 +68,19 @@ theorem nfpFamily_eq_sup (f : ι → Ordinal → Ordinal) (a) : nfpFamily f a = 
 #align ordinal.nfp_family_eq_sup Ordinal.nfpFamily_eq_sup
 -/
 
-#print Ordinal.foldr_le_nfpFamily /-
+/- warning: ordinal.foldr_le_nfp_family -> Ordinal.foldr_le_nfpFamily is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} (f : ι -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}) (a : Ordinal.{max u1 u2}) (l : List.{u1} ι), LE.le.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLe.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (List.foldr.{u1, succ (max u1 u2)} ι Ordinal.{max u1 u2} f a l) (Ordinal.nfpFamily.{u1, u2} ι f a)
+but is expected to have type
+  forall {ι : Type.{u1}} (f : ι -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}) (a : Ordinal.{max u1 u2}) (l : List.{u1} ι), LE.le.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (Preorder.toLE.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (List.foldr.{u1, succ (max u1 u2)} ι Ordinal.{max u1 u2} f a l) (Ordinal.nfpFamily.{u1, u2} ι f a)
+Case conversion may be inaccurate. Consider using '#align ordinal.foldr_le_nfp_family Ordinal.foldr_le_nfpFamilyₓ'. -/
 theorem foldr_le_nfpFamily (f : ι → Ordinal → Ordinal) (a l) : List.foldr f a l ≤ nfpFamily f a :=
   le_sup _ _
 #align ordinal.foldr_le_nfp_family Ordinal.foldr_le_nfpFamily
--/
 
 /- warning: ordinal.le_nfp_family -> Ordinal.le_nfpFamily is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} (f : ι -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}) (a : Ordinal.{max u1 u2}), LE.le.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toLE.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) a (Ordinal.nfpFamily.{u1, u2} ι f a)
+  forall {ι : Type.{u1}} (f : ι -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}) (a : Ordinal.{max u1 u2}), LE.le.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLe.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) a (Ordinal.nfpFamily.{u1, u2} ι f a)
 but is expected to have type
   forall {ι : Type.{u2}} (f : ι -> Ordinal.{max u2 u1} -> Ordinal.{max u2 u1}) (a : Ordinal.{max u2 u1}), LE.le.{max (succ u2) (succ u1)} Ordinal.{max u2 u1} (Preorder.toLE.{max (succ u2) (succ u1)} Ordinal.{max u2 u1} (PartialOrder.toPreorder.{max (succ u2) (succ u1)} Ordinal.{max u2 u1} Ordinal.partialOrder.{max u2 u1})) a (Ordinal.nfpFamily.{u2, u1} ι f a)
 Case conversion may be inaccurate. Consider using '#align ordinal.le_nfp_family Ordinal.le_nfpFamilyₓ'. -/
@@ -84,23 +88,35 @@ theorem le_nfpFamily (f : ι → Ordinal → Ordinal) (a) : a ≤ nfpFamily f a 
   le_sup _ []
 #align ordinal.le_nfp_family Ordinal.le_nfpFamily
 
-#print Ordinal.lt_nfpFamily /-
+/- warning: ordinal.lt_nfp_family -> Ordinal.lt_nfpFamily is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {f : ι -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}} {a : Ordinal.{max u1 u2}} {b : Ordinal.{max u1 u2}}, Iff (LT.lt.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLt.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) a (Ordinal.nfpFamily.{u1, u2} ι f b)) (Exists.{succ u1} (List.{u1} ι) (fun (l : List.{u1} ι) => LT.lt.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLt.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) a (List.foldr.{u1, succ (max u1 u2)} ι Ordinal.{max u1 u2} f b l)))
+but is expected to have type
+  forall {ι : Type.{u1}} {f : ι -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}} {a : Ordinal.{max u2 u1}} {b : Ordinal.{max u1 u2}}, Iff (LT.lt.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (Preorder.toLT.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} Ordinal.partialOrder.{max u1 u2})) a (Ordinal.nfpFamily.{u1, u2} ι f b)) (Exists.{succ u1} (List.{u1} ι) (fun (l : List.{u1} ι) => LT.lt.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (Preorder.toLT.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} Ordinal.partialOrder.{max u1 u2})) a (List.foldr.{u1, max (succ u1) (succ u2)} ι Ordinal.{max u1 u2} f b l)))
+Case conversion may be inaccurate. Consider using '#align ordinal.lt_nfp_family Ordinal.lt_nfpFamilyₓ'. -/
 theorem lt_nfpFamily {a b} : a < nfpFamily f b ↔ ∃ l, a < List.foldr f b l :=
   lt_sup
 #align ordinal.lt_nfp_family Ordinal.lt_nfpFamily
--/
 
-#print Ordinal.nfpFamily_le_iff /-
+/- warning: ordinal.nfp_family_le_iff -> Ordinal.nfpFamily_le_iff is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {f : ι -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}} {a : Ordinal.{max u1 u2}} {b : Ordinal.{max u1 u2}}, Iff (LE.le.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLe.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (Ordinal.nfpFamily.{u1, u2} ι f a) b) (forall (l : List.{u1} ι), LE.le.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLe.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (List.foldr.{u1, succ (max u1 u2)} ι Ordinal.{max u1 u2} f a l) b)
+but is expected to have type
+  forall {ι : Type.{u1}} {f : ι -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}} {a : Ordinal.{max u1 u2}} {b : Ordinal.{max u2 u1}}, Iff (LE.le.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (Preorder.toLE.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} Ordinal.partialOrder.{max u1 u2})) (Ordinal.nfpFamily.{u1, u2} ι f a) b) (forall (l : List.{u1} ι), LE.le.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (Preorder.toLE.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (List.foldr.{u1, max (succ u1) (succ u2)} ι Ordinal.{max u1 u2} f a l) b)
+Case conversion may be inaccurate. Consider using '#align ordinal.nfp_family_le_iff Ordinal.nfpFamily_le_iffₓ'. -/
 theorem nfpFamily_le_iff {a b} : nfpFamily f a ≤ b ↔ ∀ l, List.foldr f a l ≤ b :=
   sup_le_iff
 #align ordinal.nfp_family_le_iff Ordinal.nfpFamily_le_iff
--/
 
-#print Ordinal.nfpFamily_le /-
+/- warning: ordinal.nfp_family_le -> Ordinal.nfpFamily_le is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {f : ι -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}} {a : Ordinal.{max u1 u2}} {b : Ordinal.{max u1 u2}}, (forall (l : List.{u1} ι), LE.le.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLe.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (List.foldr.{u1, succ (max u1 u2)} ι Ordinal.{max u1 u2} f a l) b) -> (LE.le.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLe.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (Ordinal.nfpFamily.{u1, u2} ι f a) b)
+but is expected to have type
+  forall {ι : Type.{u1}} {f : ι -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}} {a : Ordinal.{max u1 u2}} {b : Ordinal.{max u1 u2}}, (forall (l : List.{u1} ι), LE.le.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (Preorder.toLE.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (List.foldr.{u1, max (succ u1) (succ u2)} ι Ordinal.{max u1 u2} f a l) b) -> (LE.le.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (Preorder.toLE.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} Ordinal.partialOrder.{max u1 u2})) (Ordinal.nfpFamily.{u1, u2} ι f a) b)
+Case conversion may be inaccurate. Consider using '#align ordinal.nfp_family_le Ordinal.nfpFamily_leₓ'. -/
 theorem nfpFamily_le {a b} : (∀ l, List.foldr f a l ≤ b) → nfpFamily f a ≤ b :=
   sup_le
 #align ordinal.nfp_family_le Ordinal.nfpFamily_le
--/
 
 #print Ordinal.nfpFamily_monotone /-
 theorem nfpFamily_monotone (hf : ∀ i, Monotone (f i)) : Monotone (nfpFamily f) := fun a b h =>
@@ -108,16 +124,25 @@ theorem nfpFamily_monotone (hf : ∀ i, Monotone (f i)) : Monotone (nfpFamily f)
 #align ordinal.nfp_family_monotone Ordinal.nfpFamily_monotone
 -/
 
+/- warning: ordinal.apply_lt_nfp_family -> Ordinal.apply_lt_nfpFamily is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {f : ι -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}}, (forall (i : ι), Ordinal.IsNormal.{max u1 u2, max u1 u2} (f i)) -> (forall {a : Ordinal.{max u1 u2}} {b : Ordinal.{max u1 u2}}, (LT.lt.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLt.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) b (Ordinal.nfpFamily.{u1, u2} ι f a)) -> (forall (i : ι), LT.lt.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLt.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (f i b) (Ordinal.nfpFamily.{u1, u2} ι f a)))
+but is expected to have type
+  forall {ι : Type.{u1}} {f : ι -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}}, (forall (i : ι), Ordinal.IsNormal.{max u1 u2, max u1 u2} (f i)) -> (forall {a : Ordinal.{max u1 u2}} {b : Ordinal.{max u2 u1}}, (LT.lt.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (Preorder.toLT.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} Ordinal.partialOrder.{max u1 u2})) b (Ordinal.nfpFamily.{u1, u2} ι f a)) -> (forall (i : ι), LT.lt.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (Preorder.toLT.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (f i b) (Ordinal.nfpFamily.{u1, u2} ι f a)))
+Case conversion may be inaccurate. Consider using '#align ordinal.apply_lt_nfp_family Ordinal.apply_lt_nfpFamilyₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Ordinal.apply_lt_nfpFamily /-
 theorem apply_lt_nfpFamily (H : ∀ i, IsNormal (f i)) {a b} (hb : b < nfpFamily f a) (i) :
     f i b < nfpFamily f a :=
   let ⟨l, hl⟩ := lt_nfpFamily.1 hb
   lt_sup.2 ⟨i::l, (H i).StrictMono hl⟩
 #align ordinal.apply_lt_nfp_family Ordinal.apply_lt_nfpFamily
--/
 
-#print Ordinal.apply_lt_nfpFamily_iff /-
+/- warning: ordinal.apply_lt_nfp_family_iff -> Ordinal.apply_lt_nfpFamily_iff is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {f : ι -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}} [_inst_1 : Nonempty.{succ u1} ι], (forall (i : ι), Ordinal.IsNormal.{max u1 u2, max u1 u2} (f i)) -> (forall {a : Ordinal.{max u1 u2}} {b : Ordinal.{max u1 u2}}, Iff (forall (i : ι), LT.lt.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLt.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (f i b) (Ordinal.nfpFamily.{u1, u2} ι f a)) (LT.lt.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLt.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) b (Ordinal.nfpFamily.{u1, u2} ι f a)))
+but is expected to have type
+  forall {ι : Type.{u1}} {f : ι -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}} [_inst_1 : Nonempty.{succ u1} ι], (forall (i : ι), Ordinal.IsNormal.{max u1 u2, max u1 u2} (f i)) -> (forall {a : Ordinal.{max u1 u2}} {b : Ordinal.{max u1 u2}}, Iff (forall (i : ι), LT.lt.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (Preorder.toLT.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (f i b) (Ordinal.nfpFamily.{u1, u2} ι f a)) (LT.lt.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (Preorder.toLT.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) b (Ordinal.nfpFamily.{u1, u2} ι f a)))
+Case conversion may be inaccurate. Consider using '#align ordinal.apply_lt_nfp_family_iff Ordinal.apply_lt_nfpFamily_iffₓ'. -/
 theorem apply_lt_nfpFamily_iff [Nonempty ι] (H : ∀ i, IsNormal (f i)) {a b} :
     (∀ i, f i b < nfpFamily f a) ↔ b < nfpFamily f a :=
   ⟨fun h =>
@@ -126,9 +151,13 @@ theorem apply_lt_nfpFamily_iff [Nonempty ι] (H : ∀ i, IsNormal (f i)) {a b} :
       ⟨l, ((H _).self_le b).trans_lt hl⟩,
     apply_lt_nfpFamily H⟩
 #align ordinal.apply_lt_nfp_family_iff Ordinal.apply_lt_nfpFamily_iff
--/
 
-#print Ordinal.nfpFamily_le_apply /-
+/- warning: ordinal.nfp_family_le_apply -> Ordinal.nfpFamily_le_apply is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {f : ι -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}} [_inst_1 : Nonempty.{succ u1} ι], (forall (i : ι), Ordinal.IsNormal.{max u1 u2, max u1 u2} (f i)) -> (forall {a : Ordinal.{max u1 u2}} {b : Ordinal.{max u1 u2}}, Iff (Exists.{succ u1} ι (fun (i : ι) => LE.le.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLe.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (Ordinal.nfpFamily.{u1, u2} ι f a) (f i b))) (LE.le.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLe.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (Ordinal.nfpFamily.{u1, u2} ι f a) b))
+but is expected to have type
+  forall {ι : Type.{u1}} {f : ι -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}} [_inst_1 : Nonempty.{succ u1} ι], (forall (i : ι), Ordinal.IsNormal.{max u1 u2, max u1 u2} (f i)) -> (forall {a : Ordinal.{max u1 u2}} {b : Ordinal.{max u1 u2}}, Iff (Exists.{succ u1} ι (fun (i : ι) => LE.le.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (Preorder.toLE.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} Ordinal.partialOrder.{max u1 u2})) (Ordinal.nfpFamily.{u1, u2} ι f a) (f i b))) (LE.le.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (Preorder.toLE.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} Ordinal.partialOrder.{max u1 u2})) (Ordinal.nfpFamily.{u1, u2} ι f a) b))
+Case conversion may be inaccurate. Consider using '#align ordinal.nfp_family_le_apply Ordinal.nfpFamily_le_applyₓ'. -/
 theorem nfpFamily_le_apply [Nonempty ι] (H : ∀ i, IsNormal (f i)) {a b} :
     (∃ i, nfpFamily f a ≤ f i b) ↔ nfpFamily f a ≤ b :=
   by
@@ -136,9 +165,13 @@ theorem nfpFamily_le_apply [Nonempty ι] (H : ∀ i, IsNormal (f i)) {a b} :
   push_neg
   exact apply_lt_nfp_family_iff H
 #align ordinal.nfp_family_le_apply Ordinal.nfpFamily_le_apply
--/
 
-#print Ordinal.nfpFamily_le_fp /-
+/- warning: ordinal.nfp_family_le_fp -> Ordinal.nfpFamily_le_fp is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {f : ι -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}}, (forall (i : ι), Monotone.{succ (max u1 u2), succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2}) (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2}) (f i)) -> (forall {a : Ordinal.{max u1 u2}} {b : Ordinal.{max u1 u2}}, (LE.le.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLe.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) a b) -> (forall (i : ι), LE.le.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLe.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (f i b) b) -> (LE.le.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLe.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (Ordinal.nfpFamily.{u1, u2} ι f a) b))
+but is expected to have type
+  forall {ι : Type.{u1}} {f : ι -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}}, (forall (i : ι), Monotone.{max (succ u1) (succ u2), max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2}) (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2}) (f i)) -> (forall {a : Ordinal.{max u1 u2}} {b : Ordinal.{max u1 u2}}, (LE.le.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (Preorder.toLE.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) a b) -> (forall (i : ι), LE.le.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (Preorder.toLE.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (f i b) b) -> (LE.le.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (Preorder.toLE.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} Ordinal.partialOrder.{max u1 u2})) (Ordinal.nfpFamily.{u1, u2} ι f a) b))
+Case conversion may be inaccurate. Consider using '#align ordinal.nfp_family_le_fp Ordinal.nfpFamily_le_fpₓ'. -/
 theorem nfpFamily_le_fp (H : ∀ i, Monotone (f i)) {a b} (ab : a ≤ b) (h : ∀ i, f i b ≤ b) :
     nfpFamily f a ≤ b :=
   sup_le fun l => by
@@ -150,7 +183,6 @@ theorem nfpFamily_le_fp (H : ∀ i, Monotone (f i)) {a b} (ab : a ≤ b) (h : �
       · exact ab
       exact (H i (IH ab)).trans (h i)
 #align ordinal.nfp_family_le_fp Ordinal.nfpFamily_le_fp
--/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Ordinal.nfpFamily_fp /-
@@ -164,7 +196,12 @@ theorem nfpFamily_fp {i} (H : IsNormal (f i)) (a) : f i (nfpFamily f a) = nfpFam
 #align ordinal.nfp_family_fp Ordinal.nfpFamily_fp
 -/
 
-#print Ordinal.apply_le_nfpFamily /-
+/- warning: ordinal.apply_le_nfp_family -> Ordinal.apply_le_nfpFamily is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} [hι : Nonempty.{succ u1} ι] {f : ι -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}}, (forall (i : ι), Ordinal.IsNormal.{max u1 u2, max u1 u2} (f i)) -> (forall {a : Ordinal.{max u1 u2}} {b : Ordinal.{max u1 u2}}, Iff (forall (i : ι), LE.le.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLe.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (f i b) (Ordinal.nfpFamily.{u1, u2} ι f a)) (LE.le.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLe.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) b (Ordinal.nfpFamily.{u1, u2} ι f a)))
+but is expected to have type
+  forall {ι : Type.{u1}} [hι : Nonempty.{succ u1} ι] {f : ι -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}}, (forall (i : ι), Ordinal.IsNormal.{max u1 u2, max u1 u2} (f i)) -> (forall {a : Ordinal.{max u1 u2}} {b : Ordinal.{max u1 u2}}, Iff (forall (i : ι), LE.le.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (Preorder.toLE.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (f i b) (Ordinal.nfpFamily.{u1, u2} ι f a)) (LE.le.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (Preorder.toLE.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) b (Ordinal.nfpFamily.{u1, u2} ι f a)))
+Case conversion may be inaccurate. Consider using '#align ordinal.apply_le_nfp_family Ordinal.apply_le_nfpFamilyₓ'. -/
 theorem apply_le_nfpFamily [hι : Nonempty ι] {f : ι → Ordinal → Ordinal} (H : ∀ i, IsNormal (f i))
     {a b} : (∀ i, f i b ≤ nfpFamily f a) ↔ b ≤ nfpFamily f a :=
   by
@@ -174,7 +211,6 @@ theorem apply_le_nfpFamily [hι : Nonempty ι] {f : ι → Ordinal → Ordinal} 
   rw [← nfp_family_fp (H i)]
   exact (H i).Monotone h
 #align ordinal.apply_le_nfp_family Ordinal.apply_le_nfpFamily
--/
 
 /- warning: ordinal.nfp_family_eq_self -> Ordinal.nfpFamily_eq_self is a dubious translation:
 lean 3 declaration is
@@ -187,7 +223,12 @@ theorem nfpFamily_eq_self {f : ι → Ordinal → Ordinal} {a} (h : ∀ i, f i a
   le_antisymm (sup_le fun l => by rw [List.foldr_fixed' h l]) <| le_nfpFamily f a
 #align ordinal.nfp_family_eq_self Ordinal.nfpFamily_eq_self
 
-#print Ordinal.fp_family_unbounded /-
+/- warning: ordinal.fp_family_unbounded -> Ordinal.fp_family_unbounded is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {f : ι -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}}, (forall (i : ι), Ordinal.IsNormal.{max u1 u2, max u1 u2} (f i)) -> (Set.Unbounded.{succ (max u1 u2)} Ordinal.{max u1 u2} (LT.lt.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLt.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2}))) (Set.iInter.{succ (max u1 u2), succ u1} Ordinal.{max u1 u2} ι (fun (i : ι) => Function.fixedPoints.{succ (max u1 u2)} Ordinal.{max u1 u2} (f i))))
+but is expected to have type
+  forall {ι : Type.{u1}} {f : ι -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}}, (forall (i : ι), Ordinal.IsNormal.{max u1 u2, max u1 u2} (f i)) -> (Set.Unbounded.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (fun (x._@.Mathlib.SetTheory.Ordinal.FixedPoint._hyg.1018 : Ordinal.{max u1 u2}) (x._@.Mathlib.SetTheory.Ordinal.FixedPoint._hyg.1020 : Ordinal.{max u1 u2}) => LT.lt.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (Preorder.toLT.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) x._@.Mathlib.SetTheory.Ordinal.FixedPoint._hyg.1018 x._@.Mathlib.SetTheory.Ordinal.FixedPoint._hyg.1020) (Set.iInter.{max (succ u1) (succ u2), succ u1} Ordinal.{max u1 u2} ι (fun (i : ι) => Function.fixedPoints.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (f i))))
+Case conversion may be inaccurate. Consider using '#align ordinal.fp_family_unbounded Ordinal.fp_family_unboundedₓ'. -/
 -- Todo: This is actually a special case of the fact the intersection of club sets is a club set.
 /-- A generalization of the fixed point lemma for normal functions: any family of normal functions
     has an unbounded set of common fixed points. -/
@@ -197,7 +238,6 @@ theorem fp_family_unbounded (H : ∀ i, IsNormal (f i)) :
     rw [← hi]
     exact nfp_family_fp (H i) a, (le_nfpFamily f a).not_lt⟩
 #align ordinal.fp_family_unbounded Ordinal.fp_family_unbounded
--/
 
 #print Ordinal.derivFamily /-
 /-- The derivative of a family of normal functions is the sequence of their common fixed points.
@@ -259,7 +299,12 @@ theorem derivFamily_fp {i} (H : IsNormal (f i)) (o : Ordinal.{max u v}) :
 #align ordinal.deriv_family_fp Ordinal.derivFamily_fp
 -/
 
-#print Ordinal.le_iff_derivFamily /-
+/- warning: ordinal.le_iff_deriv_family -> Ordinal.le_iff_derivFamily is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {f : ι -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}}, (forall (i : ι), Ordinal.IsNormal.{max u1 u2, max u1 u2} (f i)) -> (forall {a : Ordinal.{max u1 u2}}, Iff (forall (i : ι), LE.le.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLe.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (f i a) a) (Exists.{succ (succ (max u1 u2))} Ordinal.{max u1 u2} (fun (o : Ordinal.{max u1 u2}) => Eq.{succ (succ (max u1 u2))} Ordinal.{max u1 u2} (Ordinal.derivFamily.{u1, u2} ι f o) a)))
+but is expected to have type
+  forall {ι : Type.{u1}} {f : ι -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}}, (forall (i : ι), Ordinal.IsNormal.{max u1 u2, max u1 u2} (f i)) -> (forall {a : Ordinal.{max u1 u2}}, Iff (forall (i : ι), LE.le.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (Preorder.toLE.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (f i a) a) (Exists.{max (succ (succ u1)) (succ (succ u2))} Ordinal.{max u1 u2} (fun (o : Ordinal.{max u1 u2}) => Eq.{max (succ (succ u1)) (succ (succ u2))} Ordinal.{max u1 u2} (Ordinal.derivFamily.{u1, u2} ι f o) a)))
+Case conversion may be inaccurate. Consider using '#align ordinal.le_iff_deriv_family Ordinal.le_iff_derivFamilyₓ'. -/
 theorem le_iff_derivFamily (H : ∀ i, IsNormal (f i)) {a} :
     (∀ i, f i a ≤ a) ↔ ∃ o, derivFamily f o = a :=
   ⟨fun ha => by
@@ -282,7 +327,6 @@ theorem le_iff_derivFamily (H : ∀ i, IsNormal (f i)) {a} :
         IH o' h (le_of_not_le hl),
     fun ⟨o, e⟩ i => e ▸ (derivFamily_fp (H i) _).le⟩
 #align ordinal.le_iff_deriv_family Ordinal.le_iff_derivFamily
--/
 
 #print Ordinal.fp_iff_derivFamily /-
 theorem fp_iff_derivFamily (H : ∀ i, IsNormal (f i)) {a} :
@@ -317,7 +361,12 @@ section
 
 variable {o : Ordinal.{u}} {f : ∀ b < o, Ordinal.{max u v} → Ordinal.{max u v}}
 
-#print Ordinal.nfpBFamily /-
+/- warning: ordinal.nfp_bfamily -> Ordinal.nfpBFamily is a dubious translation:
+lean 3 declaration is
+  forall (o : Ordinal.{u1}), (forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}
+but is expected to have type
+  forall (o : Ordinal.{u1}), (forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}) -> Ordinal.{max u2 u1} -> Ordinal.{max u2 u1}
+Case conversion may be inaccurate. Consider using '#align ordinal.nfp_bfamily Ordinal.nfpBFamilyₓ'. -/
 /-- The next common fixed point, at least `a`, for a family of normal functions indexed by ordinals.
 
 This is defined as `ordinal.nfp_family` of the type-indexed family associated to `f`.
@@ -325,56 +374,88 @@ This is defined as `ordinal.nfp_family` of the type-indexed family associated to
 def nfpBFamily (o : Ordinal) (f : ∀ b < o, Ordinal → Ordinal) : Ordinal → Ordinal :=
   nfpFamily (familyOfBFamily o f)
 #align ordinal.nfp_bfamily Ordinal.nfpBFamily
--/
 
-#print Ordinal.nfpBFamily_eq_nfpFamily /-
+/- warning: ordinal.nfp_bfamily_eq_nfp_family -> Ordinal.nfpBFamily_eq_nfpFamily is a dubious translation:
+lean 3 declaration is
+  forall {o : Ordinal.{u1}} (f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}), Eq.{succ (succ (max u1 u2))} (Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}) (Ordinal.nfpBFamily.{u1, u2} o f) (Ordinal.nfpFamily.{u1, u2} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} o)) (Ordinal.familyOfBFamily.{succ (max u1 u2), u1} (Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}) o f))
+but is expected to have type
+  forall {o : Ordinal.{u1}} (f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}), Eq.{max (succ (succ u1)) (succ (succ u2))} (Ordinal.{max u2 u1} -> Ordinal.{max u2 u1}) (Ordinal.nfpBFamily.{u1, u2} o f) (Ordinal.nfpFamily.{u1, u2} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} o)) (Ordinal.familyOfBFamily.{max (succ u1) (succ u2), u1} (Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}) o f))
+Case conversion may be inaccurate. Consider using '#align ordinal.nfp_bfamily_eq_nfp_family Ordinal.nfpBFamily_eq_nfpFamilyₓ'. -/
 theorem nfpBFamily_eq_nfpFamily {o : Ordinal} (f : ∀ b < o, Ordinal → Ordinal) :
     nfpBFamily o f = nfpFamily (familyOfBFamily o f) :=
   rfl
 #align ordinal.nfp_bfamily_eq_nfp_family Ordinal.nfpBFamily_eq_nfpFamily
--/
 
-#print Ordinal.foldr_le_nfpBFamily /-
+/- warning: ordinal.foldr_le_nfp_bfamily -> Ordinal.foldr_le_nfpBFamily is a dubious translation:
+lean 3 declaration is
+  forall {o : Ordinal.{u1}} (f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}) (a : Ordinal.{max u1 u2}) (l : List.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} o))), LE.le.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLe.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (List.foldr.{u1, succ (max u1 u2)} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} o)) Ordinal.{max u1 u2} (Ordinal.familyOfBFamily.{succ (max u1 u2), u1} (Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}) o f) a l) (Ordinal.nfpBFamily.{u1, u2} o f a)
+but is expected to have type
+  forall {o : Ordinal.{u1}} (f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}) (a : Ordinal.{max u1 u2}) (l : List.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} o))), LE.le.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (Preorder.toLE.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (List.foldr.{u1, succ (max u1 u2)} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} o)) Ordinal.{max u1 u2} (Ordinal.familyOfBFamily.{succ (max u1 u2), u1} (Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}) o f) a l) (Ordinal.nfpBFamily.{u1, u2} o f a)
+Case conversion may be inaccurate. Consider using '#align ordinal.foldr_le_nfp_bfamily Ordinal.foldr_le_nfpBFamilyₓ'. -/
 theorem foldr_le_nfpBFamily {o : Ordinal} (f : ∀ b < o, Ordinal → Ordinal) (a l) :
     List.foldr (familyOfBFamily o f) a l ≤ nfpBFamily o f a :=
   le_sup _ _
 #align ordinal.foldr_le_nfp_bfamily Ordinal.foldr_le_nfpBFamily
--/
 
-#print Ordinal.le_nfpBFamily /-
+/- warning: ordinal.le_nfp_bfamily -> Ordinal.le_nfpBFamily is a dubious translation:
+lean 3 declaration is
+  forall {o : Ordinal.{u1}} (f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}) (a : Ordinal.{max u1 u2}), LE.le.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLe.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) a (Ordinal.nfpBFamily.{u1, u2} o f a)
+but is expected to have type
+  forall {o : Ordinal.{u1}} (f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}) (a : Ordinal.{max u2 u1}), LE.le.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (Preorder.toLE.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} Ordinal.partialOrder.{max u1 u2})) a (Ordinal.nfpBFamily.{u1, u2} o f a)
+Case conversion may be inaccurate. Consider using '#align ordinal.le_nfp_bfamily Ordinal.le_nfpBFamilyₓ'. -/
 theorem le_nfpBFamily {o : Ordinal} (f : ∀ b < o, Ordinal → Ordinal) (a) : a ≤ nfpBFamily o f a :=
   le_sup _ []
 #align ordinal.le_nfp_bfamily Ordinal.le_nfpBFamily
--/
 
-#print Ordinal.lt_nfpBFamily /-
+/- warning: ordinal.lt_nfp_bfamily -> Ordinal.lt_nfpBFamily is a dubious translation:
+lean 3 declaration is
+  forall {o : Ordinal.{u1}} {f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}} {a : Ordinal.{max u1 u2}} {b : Ordinal.{max u1 u2}}, Iff (LT.lt.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLt.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) a (Ordinal.nfpBFamily.{u1, u2} o f b)) (Exists.{succ u1} (List.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} o))) (fun (l : List.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} o))) => LT.lt.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLt.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) a (List.foldr.{u1, succ (max u1 u2)} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} o)) Ordinal.{max u1 u2} (Ordinal.familyOfBFamily.{succ (max u1 u2), u1} (Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}) o f) b l)))
+but is expected to have type
+  forall {o : Ordinal.{u1}} {f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}} {a : Ordinal.{max u2 u1}} {b : Ordinal.{max u2 u1}}, Iff (LT.lt.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (Preorder.toLT.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} Ordinal.partialOrder.{max u1 u2})) a (Ordinal.nfpBFamily.{u1, u2} o f b)) (Exists.{succ u1} (List.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} o))) (fun (l : List.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} o))) => LT.lt.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (Preorder.toLT.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} Ordinal.partialOrder.{max u1 u2})) a (List.foldr.{u1, max (succ u1) (succ u2)} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} o)) Ordinal.{max u1 u2} (Ordinal.familyOfBFamily.{max (succ u1) (succ u2), u1} (Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}) o f) b l)))
+Case conversion may be inaccurate. Consider using '#align ordinal.lt_nfp_bfamily Ordinal.lt_nfpBFamilyₓ'. -/
 theorem lt_nfpBFamily {a b} :
     a < nfpBFamily o f b ↔ ∃ l, a < List.foldr (familyOfBFamily o f) b l :=
   lt_sup
 #align ordinal.lt_nfp_bfamily Ordinal.lt_nfpBFamily
--/
 
-#print Ordinal.nfpBFamily_le_iff /-
+/- warning: ordinal.nfp_bfamily_le_iff -> Ordinal.nfpBFamily_le_iff is a dubious translation:
+lean 3 declaration is
+  forall {o : Ordinal.{u1}} {f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}} {a : Ordinal.{max u1 u2}} {b : Ordinal.{max u1 u2}}, Iff (LE.le.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLe.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (Ordinal.nfpBFamily.{u1, u2} o f a) b) (forall (l : List.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} o))), LE.le.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLe.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (List.foldr.{u1, succ (max u1 u2)} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} o)) Ordinal.{max u1 u2} (Ordinal.familyOfBFamily.{succ (max u1 u2), u1} (Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}) o f) a l) b)
+but is expected to have type
+  forall {o : Ordinal.{u1}} {f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}} {a : Ordinal.{max u2 u1}} {b : Ordinal.{max u2 u1}}, Iff (LE.le.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (Preorder.toLE.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} Ordinal.partialOrder.{max u1 u2})) (Ordinal.nfpBFamily.{u1, u2} o f a) b) (forall (l : List.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} o))), LE.le.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (Preorder.toLE.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (List.foldr.{u1, max (succ u1) (succ u2)} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} o)) Ordinal.{max u1 u2} (Ordinal.familyOfBFamily.{max (succ u1) (succ u2), u1} (Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}) o f) a l) b)
+Case conversion may be inaccurate. Consider using '#align ordinal.nfp_bfamily_le_iff Ordinal.nfpBFamily_le_iffₓ'. -/
 theorem nfpBFamily_le_iff {o : Ordinal} {f : ∀ b < o, Ordinal → Ordinal} {a b} :
     nfpBFamily o f a ≤ b ↔ ∀ l, List.foldr (familyOfBFamily o f) a l ≤ b :=
   sup_le_iff
 #align ordinal.nfp_bfamily_le_iff Ordinal.nfpBFamily_le_iff
--/
 
-#print Ordinal.nfpBFamily_le /-
+/- warning: ordinal.nfp_bfamily_le -> Ordinal.nfpBFamily_le is a dubious translation:
+lean 3 declaration is
+  forall {o : Ordinal.{u1}} {f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}} {a : Ordinal.{max u1 u2}} {b : Ordinal.{max u1 u2}}, (forall (l : List.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} o))), LE.le.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLe.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (List.foldr.{u1, succ (max u1 u2)} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} o)) Ordinal.{max u1 u2} (Ordinal.familyOfBFamily.{succ (max u1 u2), u1} (Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}) o f) a l) b) -> (LE.le.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLe.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (Ordinal.nfpBFamily.{u1, u2} o f a) b)
+but is expected to have type
+  forall {o : Ordinal.{u1}} {f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}} {a : Ordinal.{max u1 u2}} {b : Ordinal.{max u1 u2}}, (forall (l : List.{u1} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} o))), LE.le.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toLE.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (List.foldr.{u1, succ (max u1 u2)} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} o)) Ordinal.{max u1 u2} (Ordinal.familyOfBFamily.{succ (max u1 u2), u1} (Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}) o f) a l) b) -> (LE.le.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (Preorder.toLE.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} Ordinal.partialOrder.{max u1 u2})) (Ordinal.nfpBFamily.{u1, u2} o f a) b)
+Case conversion may be inaccurate. Consider using '#align ordinal.nfp_bfamily_le Ordinal.nfpBFamily_leₓ'. -/
 theorem nfpBFamily_le {o : Ordinal} {f : ∀ b < o, Ordinal → Ordinal} {a b} :
     (∀ l, List.foldr (familyOfBFamily o f) a l ≤ b) → nfpBFamily o f a ≤ b :=
   sup_le
 #align ordinal.nfp_bfamily_le Ordinal.nfpBFamily_le
--/
 
-#print Ordinal.nfpBFamily_monotone /-
+/- warning: ordinal.nfp_bfamily_monotone -> Ordinal.nfpBFamily_monotone is a dubious translation:
+lean 3 declaration is
+  forall {o : Ordinal.{u1}} {f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}}, (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), Monotone.{succ (max u1 u2), succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2}) (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2}) (f i hi)) -> (Monotone.{succ (max u1 u2), succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2}) (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2}) (Ordinal.nfpBFamily.{u1, u2} o f))
+but is expected to have type
+  forall {o : Ordinal.{u1}} {f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}}, (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), Monotone.{max (succ u1) (succ u2), max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2}) (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2}) (f i hi)) -> (Monotone.{max (succ u1) (succ u2), max (succ u1) (succ u2)} Ordinal.{max u2 u1} Ordinal.{max u2 u1} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} Ordinal.partialOrder.{max u1 u2}) (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} Ordinal.partialOrder.{max u1 u2}) (Ordinal.nfpBFamily.{u1, u2} o f))
+Case conversion may be inaccurate. Consider using '#align ordinal.nfp_bfamily_monotone Ordinal.nfpBFamily_monotoneₓ'. -/
 theorem nfpBFamily_monotone (hf : ∀ i hi, Monotone (f i hi)) : Monotone (nfpBFamily o f) :=
   nfpFamily_monotone fun i => hf _ _
 #align ordinal.nfp_bfamily_monotone Ordinal.nfpBFamily_monotone
--/
 
-#print Ordinal.apply_lt_nfpBFamily /-
+/- warning: ordinal.apply_lt_nfp_bfamily -> Ordinal.apply_lt_nfpBFamily is a dubious translation:
+lean 3 declaration is
+  forall {o : Ordinal.{u1}} {f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}}, (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), Ordinal.IsNormal.{max u1 u2, max u1 u2} (f i hi)) -> (forall {a : Ordinal.{max u1 u2}} {b : Ordinal.{max u1 u2}}, (LT.lt.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLt.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) b (Ordinal.nfpBFamily.{u1, u2} o f a)) -> (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), LT.lt.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLt.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (f i hi b) (Ordinal.nfpBFamily.{u1, u2} o f a)))
+but is expected to have type
+  forall {o : Ordinal.{u1}} {f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}}, (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), Ordinal.IsNormal.{max u1 u2, max u1 u2} (f i hi)) -> (forall {a : Ordinal.{max u2 u1}} {b : Ordinal.{max u2 u1}}, (LT.lt.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (Preorder.toLT.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} Ordinal.partialOrder.{max u1 u2})) b (Ordinal.nfpBFamily.{u1, u2} o f a)) -> (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), LT.lt.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (Preorder.toLT.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (f i hi b) (Ordinal.nfpBFamily.{u1, u2} o f a)))
+Case conversion may be inaccurate. Consider using '#align ordinal.apply_lt_nfp_bfamily Ordinal.apply_lt_nfpBFamilyₓ'. -/
 theorem apply_lt_nfpBFamily (H : ∀ i hi, IsNormal (f i hi)) {a b} (hb : b < nfpBFamily o f a)
     (i hi) : f i hi b < nfpBFamily o f a :=
   by
@@ -382,9 +463,13 @@ theorem apply_lt_nfpBFamily (H : ∀ i hi, IsNormal (f i hi)) {a b} (hb : b < nf
   apply apply_lt_nfp_family _ hb
   exact fun _ => H _ _
 #align ordinal.apply_lt_nfp_bfamily Ordinal.apply_lt_nfpBFamily
--/
 
-#print Ordinal.apply_lt_nfpBFamily_iff /-
+/- warning: ordinal.apply_lt_nfp_bfamily_iff -> Ordinal.apply_lt_nfpBFamily_iff is a dubious translation:
+lean 3 declaration is
+  forall {o : Ordinal.{u1}} {f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}}, (Ne.{succ (succ u1)} Ordinal.{u1} o (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1})))) -> (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), Ordinal.IsNormal.{max u1 u2, max u1 u2} (f i hi)) -> (forall {a : Ordinal.{max u1 u2}} {b : Ordinal.{max u1 u2}}, Iff (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), LT.lt.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLt.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (f i hi b) (Ordinal.nfpBFamily.{u1, u2} o f a)) (LT.lt.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLt.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) b (Ordinal.nfpBFamily.{u1, u2} o f a)))
+but is expected to have type
+  forall {o : Ordinal.{u1}} {f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}}, (Ne.{succ (succ u1)} Ordinal.{u1} o (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1}))) -> (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), Ordinal.IsNormal.{max u1 u2, max u1 u2} (f i hi)) -> (forall {a : Ordinal.{max u2 u1}} {b : Ordinal.{max u1 u2}}, Iff (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), LT.lt.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (Preorder.toLT.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (f i hi b) (Ordinal.nfpBFamily.{u1, u2} o f a)) (LT.lt.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (Preorder.toLT.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) b (Ordinal.nfpBFamily.{u1, u2} o f a)))
+Case conversion may be inaccurate. Consider using '#align ordinal.apply_lt_nfp_bfamily_iff Ordinal.apply_lt_nfpBFamily_iffₓ'. -/
 theorem apply_lt_nfpBFamily_iff (ho : o ≠ 0) (H : ∀ i hi, IsNormal (f i hi)) {a b} :
     (∀ i hi, f i hi b < nfpBFamily o f a) ↔ b < nfpBFamily o f a :=
   ⟨fun h => by
@@ -392,9 +477,13 @@ theorem apply_lt_nfpBFamily_iff (ho : o ≠ 0) (H : ∀ i hi, IsNormal (f i hi))
     refine' (apply_lt_nfp_family_iff _).1 fun _ => h _ _
     exact fun _ => H _ _, apply_lt_nfpBFamily H⟩
 #align ordinal.apply_lt_nfp_bfamily_iff Ordinal.apply_lt_nfpBFamily_iff
--/
 
-#print Ordinal.nfpBFamily_le_apply /-
+/- warning: ordinal.nfp_bfamily_le_apply -> Ordinal.nfpBFamily_le_apply is a dubious translation:
+lean 3 declaration is
+  forall {o : Ordinal.{u1}} {f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}}, (Ne.{succ (succ u1)} Ordinal.{u1} o (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1})))) -> (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), Ordinal.IsNormal.{max u1 u2, max u1 u2} (f i hi)) -> (forall {a : Ordinal.{max u1 u2}} {b : Ordinal.{max u1 u2}}, Iff (Exists.{succ (succ u1)} Ordinal.{u1} (fun (i : Ordinal.{u1}) => Exists.{0} (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o) (fun (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o) => LE.le.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLe.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (Ordinal.nfpBFamily.{u1, u2} o f a) (f i hi b)))) (LE.le.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLe.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (Ordinal.nfpBFamily.{u1, u2} o f a) b))
+but is expected to have type
+  forall {o : Ordinal.{u1}} {f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}}, (Ne.{succ (succ u1)} Ordinal.{u1} o (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1}))) -> (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), Ordinal.IsNormal.{max u1 u2, max u1 u2} (f i hi)) -> (forall {a : Ordinal.{max u2 u1}} {b : Ordinal.{max u1 u2}}, Iff (Exists.{succ (succ u1)} Ordinal.{u1} (fun (i : Ordinal.{u1}) => Exists.{0} (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o) (fun (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o) => LE.le.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (Preorder.toLE.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} Ordinal.partialOrder.{max u1 u2})) (Ordinal.nfpBFamily.{u1, u2} o f a) (f i hi b)))) (LE.le.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (Preorder.toLE.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} Ordinal.partialOrder.{max u1 u2})) (Ordinal.nfpBFamily.{u1, u2} o f a) b))
+Case conversion may be inaccurate. Consider using '#align ordinal.nfp_bfamily_le_apply Ordinal.nfpBFamily_le_applyₓ'. -/
 theorem nfpBFamily_le_apply (ho : o ≠ 0) (H : ∀ i hi, IsNormal (f i hi)) {a b} :
     (∃ i hi, nfpBFamily o f a ≤ f i hi b) ↔ nfpBFamily o f a ≤ b :=
   by
@@ -403,16 +492,24 @@ theorem nfpBFamily_le_apply (ho : o ≠ 0) (H : ∀ i hi, IsNormal (f i hi)) {a 
   convert apply_lt_nfp_bfamily_iff ho H
   simp only [not_le]
 #align ordinal.nfp_bfamily_le_apply Ordinal.nfpBFamily_le_apply
--/
 
-#print Ordinal.nfpBFamily_le_fp /-
+/- warning: ordinal.nfp_bfamily_le_fp -> Ordinal.nfpBFamily_le_fp is a dubious translation:
+lean 3 declaration is
+  forall {o : Ordinal.{u1}} {f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}}, (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), Monotone.{succ (max u1 u2), succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2}) (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2}) (f i hi)) -> (forall {a : Ordinal.{max u1 u2}} {b : Ordinal.{max u1 u2}}, (LE.le.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLe.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) a b) -> (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), LE.le.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLe.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (f i hi b) b) -> (LE.le.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLe.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (Ordinal.nfpBFamily.{u1, u2} o f a) b))
+but is expected to have type
+  forall {o : Ordinal.{u1}} {f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}}, (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), Monotone.{max (succ u1) (succ u2), max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2}) (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2}) (f i hi)) -> (forall {a : Ordinal.{max u1 u2}} {b : Ordinal.{max u1 u2}}, (LE.le.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (Preorder.toLE.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) a b) -> (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), LE.le.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (Preorder.toLE.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (f i hi b) b) -> (LE.le.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (Preorder.toLE.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u2 u1} Ordinal.partialOrder.{max u1 u2})) (Ordinal.nfpBFamily.{u1, u2} o f a) b))
+Case conversion may be inaccurate. Consider using '#align ordinal.nfp_bfamily_le_fp Ordinal.nfpBFamily_le_fpₓ'. -/
 theorem nfpBFamily_le_fp (H : ∀ i hi, Monotone (f i hi)) {a b} (ab : a ≤ b)
     (h : ∀ i hi, f i hi b ≤ b) : nfpBFamily o f a ≤ b :=
   nfpFamily_le_fp (fun _ => H _ _) ab fun i => h _ _
 #align ordinal.nfp_bfamily_le_fp Ordinal.nfpBFamily_le_fp
--/
 
-#print Ordinal.nfpBFamily_fp /-
+/- warning: ordinal.nfp_bfamily_fp -> Ordinal.nfpBFamily_fp is a dubious translation:
+lean 3 declaration is
+  forall {o : Ordinal.{u1}} {f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}} {i : Ordinal.{u1}} {hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o}, (Ordinal.IsNormal.{max u1 u2, max u1 u2} (f i hi)) -> (forall (a : Ordinal.{max u1 u2}), Eq.{succ (succ (max u1 u2))} Ordinal.{max u1 u2} (f i hi (Ordinal.nfpBFamily.{u1, u2} o f a)) (Ordinal.nfpBFamily.{u1, u2} o f a))
+but is expected to have type
+  forall {o : Ordinal.{u1}} {f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}} {i : Ordinal.{u1}} {hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o}, (Ordinal.IsNormal.{max u1 u2, max u1 u2} (f i hi)) -> (forall (a : Ordinal.{max u2 u1}), Eq.{max (succ (succ u1)) (succ (succ u2))} Ordinal.{max u1 u2} (f i hi (Ordinal.nfpBFamily.{u1, u2} o f a)) (Ordinal.nfpBFamily.{u1, u2} o f a))
+Case conversion may be inaccurate. Consider using '#align ordinal.nfp_bfamily_fp Ordinal.nfpBFamily_fpₓ'. -/
 theorem nfpBFamily_fp {i hi} (H : IsNormal (f i hi)) (a) :
     f i hi (nfpBFamily o f a) = nfpBFamily o f a :=
   by
@@ -421,9 +518,13 @@ theorem nfpBFamily_fp {i hi} (H : IsNormal (f i hi)) (a) :
   rw [family_of_bfamily_enum]
   exact H
 #align ordinal.nfp_bfamily_fp Ordinal.nfpBFamily_fp
--/
 
-#print Ordinal.apply_le_nfpBFamily /-
+/- warning: ordinal.apply_le_nfp_bfamily -> Ordinal.apply_le_nfpBFamily is a dubious translation:
+lean 3 declaration is
+  forall {o : Ordinal.{u1}} {f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}}, (Ne.{succ (succ u1)} Ordinal.{u1} o (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1})))) -> (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), Ordinal.IsNormal.{max u1 u2, max u1 u2} (f i hi)) -> (forall {a : Ordinal.{max u1 u2}} {b : Ordinal.{max u1 u2}}, Iff (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), LE.le.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLe.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (f i hi b) (Ordinal.nfpBFamily.{u1, u2} o f a)) (LE.le.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLe.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) b (Ordinal.nfpBFamily.{u1, u2} o f a)))
+but is expected to have type
+  forall {o : Ordinal.{u1}} {f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}}, (Ne.{succ (succ u1)} Ordinal.{u1} o (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1}))) -> (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), Ordinal.IsNormal.{max u1 u2, max u1 u2} (f i hi)) -> (forall {a : Ordinal.{max u2 u1}} {b : Ordinal.{max u1 u2}}, Iff (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), LE.le.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (Preorder.toLE.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (f i hi b) (Ordinal.nfpBFamily.{u1, u2} o f a)) (LE.le.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (Preorder.toLE.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) b (Ordinal.nfpBFamily.{u1, u2} o f a)))
+Case conversion may be inaccurate. Consider using '#align ordinal.apply_le_nfp_bfamily Ordinal.apply_le_nfpBFamilyₓ'. -/
 theorem apply_le_nfpBFamily (ho : o ≠ 0) (H : ∀ i hi, IsNormal (f i hi)) {a b} :
     (∀ i hi, f i hi b ≤ nfpBFamily o f a) ↔ b ≤ nfpBFamily o f a :=
   by
@@ -433,16 +534,24 @@ theorem apply_le_nfpBFamily (ho : o ≠ 0) (H : ∀ i hi, IsNormal (f i hi)) {a 
   · rw [← nfp_bfamily_fp (H i hi)]
     exact (H i hi).Monotone h
 #align ordinal.apply_le_nfp_bfamily Ordinal.apply_le_nfpBFamily
--/
 
-#print Ordinal.nfpBFamily_eq_self /-
+/- warning: ordinal.nfp_bfamily_eq_self -> Ordinal.nfpBFamily_eq_self is a dubious translation:
+lean 3 declaration is
+  forall {o : Ordinal.{u1}} {f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}} {a : Ordinal.{max u1 u2}}, (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), Eq.{succ (succ (max u1 u2))} Ordinal.{max u1 u2} (f i hi a) a) -> (Eq.{succ (succ (max u1 u2))} Ordinal.{max u1 u2} (Ordinal.nfpBFamily.{u1, u2} o f a) a)
+but is expected to have type
+  forall {o : Ordinal.{u1}} {f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}} {a : Ordinal.{max u1 u2}}, (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), Eq.{max (succ (succ u1)) (succ (succ u2))} Ordinal.{max u1 u2} (f i hi a) a) -> (Eq.{max (succ (succ u1)) (succ (succ u2))} Ordinal.{max u2 u1} (Ordinal.nfpBFamily.{u1, u2} o f a) a)
+Case conversion may be inaccurate. Consider using '#align ordinal.nfp_bfamily_eq_self Ordinal.nfpBFamily_eq_selfₓ'. -/
 theorem nfpBFamily_eq_self {a} (h : ∀ i hi, f i hi a = a) : nfpBFamily o f a = a :=
   nfpFamily_eq_self fun _ => h _ _
 #align ordinal.nfp_bfamily_eq_self Ordinal.nfpBFamily_eq_self
--/
 
+/- warning: ordinal.fp_bfamily_unbounded -> Ordinal.fp_bfamily_unbounded is a dubious translation:
+lean 3 declaration is
+  forall {o : Ordinal.{u1}} {f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}}, (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), Ordinal.IsNormal.{max u1 u2, max u1 u2} (f i hi)) -> (Set.Unbounded.{succ (max u1 u2)} Ordinal.{max u1 u2} (LT.lt.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLt.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2}))) (Set.iInter.{succ (max u1 u2), succ (succ u1)} Ordinal.{max u1 u2} Ordinal.{u1} (fun (i : Ordinal.{u1}) => Set.iInter.{succ (max u1 u2), 0} Ordinal.{max u1 u2} (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o) (fun (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o) => Function.fixedPoints.{succ (max u1 u2)} Ordinal.{max u1 u2} (f i hi)))))
+but is expected to have type
+  forall {o : Ordinal.{u1}} {f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}}, (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), Ordinal.IsNormal.{max u1 u2, max u1 u2} (f i hi)) -> (Set.Unbounded.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (fun (x._@.Mathlib.SetTheory.Ordinal.FixedPoint._hyg.3500 : Ordinal.{max u1 u2}) (x._@.Mathlib.SetTheory.Ordinal.FixedPoint._hyg.3502 : Ordinal.{max u1 u2}) => LT.lt.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (Preorder.toLT.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) x._@.Mathlib.SetTheory.Ordinal.FixedPoint._hyg.3500 x._@.Mathlib.SetTheory.Ordinal.FixedPoint._hyg.3502) (Set.iInter.{max (succ u1) (succ u2), succ (succ u1)} Ordinal.{max u1 u2} Ordinal.{u1} (fun (i : Ordinal.{u1}) => Set.iInter.{max (succ u1) (succ u2), 0} Ordinal.{max u1 u2} (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o) (fun (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o) => Function.fixedPoints.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (f i hi)))))
+Case conversion may be inaccurate. Consider using '#align ordinal.fp_bfamily_unbounded Ordinal.fp_bfamily_unboundedₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i hi) -/
-#print Ordinal.fp_bfamily_unbounded /-
 /-- A generalization of the fixed point lemma for normal functions: any family of normal functions
     has an unbounded set of common fixed points. -/
 theorem fp_bfamily_unbounded (H : ∀ i hi, IsNormal (f i hi)) :
@@ -451,27 +560,34 @@ theorem fp_bfamily_unbounded (H : ∀ i hi, IsNormal (f i hi)) :
     rw [Set.mem_iInter₂]
     exact fun i hi => nfp_bfamily_fp (H i hi) _, (le_nfpBFamily f a).not_lt⟩
 #align ordinal.fp_bfamily_unbounded Ordinal.fp_bfamily_unbounded
--/
 
-#print Ordinal.derivBFamily /-
+/- warning: ordinal.deriv_bfamily -> Ordinal.derivBFamily is a dubious translation:
+lean 3 declaration is
+  forall (o : Ordinal.{u1}), (forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}
+but is expected to have type
+  forall (o : Ordinal.{u1}), (forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}) -> Ordinal.{max u2 u1} -> Ordinal.{max u2 u1}
+Case conversion may be inaccurate. Consider using '#align ordinal.deriv_bfamily Ordinal.derivBFamilyₓ'. -/
 /-- The derivative of a family of normal functions is the sequence of their common fixed points.
 
 This is defined as `ordinal.deriv_family` of the type-indexed family associated to `f`. -/
 def derivBFamily (o : Ordinal) (f : ∀ b < o, Ordinal → Ordinal) : Ordinal → Ordinal :=
   derivFamily (familyOfBFamily o f)
 #align ordinal.deriv_bfamily Ordinal.derivBFamily
--/
 
-#print Ordinal.derivBFamily_eq_derivFamily /-
+/- warning: ordinal.deriv_bfamily_eq_deriv_family -> Ordinal.derivBFamily_eq_derivFamily is a dubious translation:
+lean 3 declaration is
+  forall {o : Ordinal.{u1}} (f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}), Eq.{succ (succ (max u1 u2))} (Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}) (Ordinal.derivBFamily.{u1, u2} o f) (Ordinal.derivFamily.{u1, u2} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} o)) (Ordinal.familyOfBFamily.{succ (max u1 u2), u1} (Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}) o f))
+but is expected to have type
+  forall {o : Ordinal.{u1}} (f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}), Eq.{max (succ (succ u1)) (succ (succ u2))} (Ordinal.{max u2 u1} -> Ordinal.{max u2 u1}) (Ordinal.derivBFamily.{u1, u2} o f) (Ordinal.derivFamily.{u1, u2} (WellOrder.α.{u1} (Quotient.out.{succ (succ u1)} WellOrder.{u1} Ordinal.isEquivalent.{u1} o)) (Ordinal.familyOfBFamily.{max (succ u1) (succ u2), u1} (Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}) o f))
+Case conversion may be inaccurate. Consider using '#align ordinal.deriv_bfamily_eq_deriv_family Ordinal.derivBFamily_eq_derivFamilyₓ'. -/
 theorem derivBFamily_eq_derivFamily {o : Ordinal} (f : ∀ b < o, Ordinal → Ordinal) :
     derivBFamily o f = derivFamily (familyOfBFamily o f) :=
   rfl
 #align ordinal.deriv_bfamily_eq_deriv_family Ordinal.derivBFamily_eq_derivFamily
--/
 
 /- warning: ordinal.deriv_bfamily_is_normal -> Ordinal.derivBFamily_isNormal is a dubious translation:
 lean 3 declaration is
-  forall {o : Ordinal.{u1}} (f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}), Ordinal.IsNormal.{max u1 u2, max u1 u2} (Ordinal.derivBFamily.{u1, u2} o f)
+  forall {o : Ordinal.{u1}} (f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}), Ordinal.IsNormal.{max u1 u2, max u1 u2} (Ordinal.derivBFamily.{u1, u2} o f)
 but is expected to have type
   forall {o : Ordinal.{u2}} (f : forall (b : Ordinal.{u2}), (LT.lt.{succ u2} Ordinal.{u2} (Preorder.toLT.{succ u2} Ordinal.{u2} (PartialOrder.toPreorder.{succ u2} Ordinal.{u2} Ordinal.partialOrder.{u2})) b o) -> Ordinal.{max u2 u1} -> Ordinal.{max u2 u1}), Ordinal.IsNormal.{max u1 u2, max u1 u2} (Ordinal.derivBFamily.{u2, u1} o f)
 Case conversion may be inaccurate. Consider using '#align ordinal.deriv_bfamily_is_normal Ordinal.derivBFamily_isNormalₓ'. -/
@@ -480,7 +596,12 @@ theorem derivBFamily_isNormal {o : Ordinal} (f : ∀ b < o, Ordinal → Ordinal)
   derivFamily_isNormal _
 #align ordinal.deriv_bfamily_is_normal Ordinal.derivBFamily_isNormal
 
-#print Ordinal.derivBFamily_fp /-
+/- warning: ordinal.deriv_bfamily_fp -> Ordinal.derivBFamily_fp is a dubious translation:
+lean 3 declaration is
+  forall {o : Ordinal.{u1}} {f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}} {i : Ordinal.{u1}} {hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o}, (Ordinal.IsNormal.{max u1 u2, max u1 u2} (f i hi)) -> (forall (a : Ordinal.{max u1 u2}), Eq.{succ (succ (max u1 u2))} Ordinal.{max u1 u2} (f i hi (Ordinal.derivBFamily.{u1, u2} o f a)) (Ordinal.derivBFamily.{u1, u2} o f a))
+but is expected to have type
+  forall {o : Ordinal.{u1}} {f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}} {i : Ordinal.{u1}} {hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o}, (Ordinal.IsNormal.{max u1 u2, max u1 u2} (f i hi)) -> (forall (a : Ordinal.{max u1 u2}), Eq.{max (succ (succ u1)) (succ (succ u2))} Ordinal.{max u1 u2} (f i hi (Ordinal.derivBFamily.{u1, u2} o f a)) (Ordinal.derivBFamily.{u1, u2} o f a))
+Case conversion may be inaccurate. Consider using '#align ordinal.deriv_bfamily_fp Ordinal.derivBFamily_fpₓ'. -/
 theorem derivBFamily_fp {i hi} (H : IsNormal (f i hi)) (a : Ordinal) :
     f i hi (derivBFamily o f a) = derivBFamily o f a :=
   by
@@ -489,9 +610,13 @@ theorem derivBFamily_fp {i hi} (H : IsNormal (f i hi)) (a : Ordinal) :
   rw [family_of_bfamily_enum]
   exact H
 #align ordinal.deriv_bfamily_fp Ordinal.derivBFamily_fp
--/
 
-#print Ordinal.le_iff_derivBFamily /-
+/- warning: ordinal.le_iff_deriv_bfamily -> Ordinal.le_iff_derivBFamily is a dubious translation:
+lean 3 declaration is
+  forall {o : Ordinal.{u1}} {f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}}, (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), Ordinal.IsNormal.{max u1 u2, max u1 u2} (f i hi)) -> (forall {a : Ordinal.{max u1 u2}}, Iff (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), LE.le.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toHasLe.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (f i hi a) a) (Exists.{succ (succ (max u1 u2))} Ordinal.{max u1 u2} (fun (b : Ordinal.{max u1 u2}) => Eq.{succ (succ (max u1 u2))} Ordinal.{max u1 u2} (Ordinal.derivBFamily.{u1, u2} o f b) a)))
+but is expected to have type
+  forall {o : Ordinal.{u1}} {f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}}, (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), Ordinal.IsNormal.{max u1 u2, max u1 u2} (f i hi)) -> (forall {a : Ordinal.{max u1 u2}}, Iff (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), LE.le.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (Preorder.toLE.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (f i hi a) a) (Exists.{max (succ (succ u1)) (succ (succ u2))} Ordinal.{max u2 u1} (fun (b : Ordinal.{max u2 u1}) => Eq.{max (succ (succ u1)) (succ (succ u2))} Ordinal.{max u2 u1} (Ordinal.derivBFamily.{u1, u2} o f b) a)))
+Case conversion may be inaccurate. Consider using '#align ordinal.le_iff_deriv_bfamily Ordinal.le_iff_derivBFamilyₓ'. -/
 theorem le_iff_derivBFamily (H : ∀ i hi, IsNormal (f i hi)) {a} :
     (∀ i hi, f i hi a ≤ a) ↔ ∃ b, derivBFamily o f b = a :=
   by
@@ -502,9 +627,13 @@ theorem le_iff_derivBFamily (H : ∀ i hi, IsNormal (f i hi)) {a} :
     apply h
   · exact fun _ => H _ _
 #align ordinal.le_iff_deriv_bfamily Ordinal.le_iff_derivBFamily
--/
 
-#print Ordinal.fp_iff_derivBFamily /-
+/- warning: ordinal.fp_iff_deriv_bfamily -> Ordinal.fp_iff_derivBFamily is a dubious translation:
+lean 3 declaration is
+  forall {o : Ordinal.{u1}} {f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}}, (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), Ordinal.IsNormal.{max u1 u2, max u1 u2} (f i hi)) -> (forall {a : Ordinal.{max u1 u2}}, Iff (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), Eq.{succ (succ (max u1 u2))} Ordinal.{max u1 u2} (f i hi a) a) (Exists.{succ (succ (max u1 u2))} Ordinal.{max u1 u2} (fun (b : Ordinal.{max u1 u2}) => Eq.{succ (succ (max u1 u2))} Ordinal.{max u1 u2} (Ordinal.derivBFamily.{u1, u2} o f b) a)))
+but is expected to have type
+  forall {o : Ordinal.{u1}} {f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}}, (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), Ordinal.IsNormal.{max u1 u2, max u1 u2} (f i hi)) -> (forall {a : Ordinal.{max u1 u2}}, Iff (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), Eq.{max (succ (succ u1)) (succ (succ u2))} Ordinal.{max u1 u2} (f i hi a) a) (Exists.{max (succ (succ u1)) (succ (succ u2))} Ordinal.{max u2 u1} (fun (b : Ordinal.{max u2 u1}) => Eq.{max (succ (succ u1)) (succ (succ u2))} Ordinal.{max u2 u1} (Ordinal.derivBFamily.{u1, u2} o f b) a)))
+Case conversion may be inaccurate. Consider using '#align ordinal.fp_iff_deriv_bfamily Ordinal.fp_iff_derivBFamilyₓ'. -/
 theorem fp_iff_derivBFamily (H : ∀ i hi, IsNormal (f i hi)) {a} :
     (∀ i hi, f i hi a = a) ↔ ∃ b, derivBFamily o f b = a :=
   by
@@ -513,10 +642,14 @@ theorem fp_iff_derivBFamily (H : ∀ i hi, IsNormal (f i hi)) {a} :
   rw [← (H i hi).le_iff_eq]
   exact h i hi
 #align ordinal.fp_iff_deriv_bfamily Ordinal.fp_iff_derivBFamily
--/
 
+/- warning: ordinal.deriv_bfamily_eq_enum_ord -> Ordinal.derivBFamily_eq_enumOrd is a dubious translation:
+lean 3 declaration is
+  forall {o : Ordinal.{u1}} {f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}}, (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), Ordinal.IsNormal.{max u1 u2, max u1 u2} (f i hi)) -> (Eq.{succ (succ (max u1 u2))} (Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}) (Ordinal.derivBFamily.{u1, u2} o f) (Ordinal.enumOrd.{max u1 u2} (Set.iInter.{succ (max u1 u2), succ (succ u1)} Ordinal.{max u1 u2} Ordinal.{u1} (fun (i : Ordinal.{u1}) => Set.iInter.{succ (max u1 u2), 0} Ordinal.{max u1 u2} (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o) (fun (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o) => Function.fixedPoints.{succ (max u1 u2)} Ordinal.{max u1 u2} (f i hi))))))
+but is expected to have type
+  forall {o : Ordinal.{u1}} {f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}}, (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), Ordinal.IsNormal.{max u1 u2, max u1 u2} (f i hi)) -> (Eq.{max (succ (succ u1)) (succ (succ u2))} (Ordinal.{max u2 u1} -> Ordinal.{max u2 u1}) (Ordinal.derivBFamily.{u1, u2} o f) (Ordinal.enumOrd.{max u1 u2} (Set.iInter.{succ (max u1 u2), succ (succ u1)} Ordinal.{max u1 u2} Ordinal.{u1} (fun (i : Ordinal.{u1}) => Set.iInter.{succ (max u1 u2), 0} Ordinal.{max u1 u2} (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o) (fun (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o) => Function.fixedPoints.{succ (max u1 u2)} Ordinal.{max u1 u2} (f i hi))))))
+Case conversion may be inaccurate. Consider using '#align ordinal.deriv_bfamily_eq_enum_ord Ordinal.derivBFamily_eq_enumOrdₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i hi) -/
-#print Ordinal.derivBFamily_eq_enumOrd /-
 /-- For a family of normal functions, `ordinal.deriv_bfamily` enumerates the common fixed points. -/
 theorem derivBFamily_eq_enumOrd (H : ∀ i hi, IsNormal (f i hi)) :
     derivBFamily o f = enumOrd (⋂ (i) (hi), Function.fixedPoints (f i hi)) :=
@@ -528,7 +661,6 @@ theorem derivBFamily_eq_enumOrd (H : ∀ i hi, IsNormal (f i hi)) :
   rw [Set.mem_iInter₂] at ha
   rwa [← fp_iff_deriv_bfamily H]
 #align ordinal.deriv_bfamily_eq_enum_ord Ordinal.derivBFamily_eq_enumOrd
--/
 
 end
 
@@ -569,41 +701,61 @@ theorem sup_iterate_eq_nfp (f : Ordinal.{u} → Ordinal.{u}) :
 #align ordinal.sup_iterate_eq_nfp Ordinal.sup_iterate_eq_nfp
 -/
 
-#print Ordinal.iterate_le_nfp /-
+/- warning: ordinal.iterate_le_nfp -> Ordinal.iterate_le_nfp is a dubious translation:
+lean 3 declaration is
+  forall (f : Ordinal.{u1} -> Ordinal.{u1}) (a : Ordinal.{u1}) (n : Nat), LE.le.{succ u1} Ordinal.{u1} (Preorder.toHasLe.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Nat.iterate.{succ (succ u1)} Ordinal.{u1} f n a) (Ordinal.nfp.{u1} f a)
+but is expected to have type
+  forall (f : Ordinal.{u1} -> Ordinal.{u1}) (a : Ordinal.{u1}) (n : Nat), LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Nat.iterate.{succ (succ u1)} Ordinal.{u1} f n a) (Ordinal.nfp.{u1} f a)
+Case conversion may be inaccurate. Consider using '#align ordinal.iterate_le_nfp Ordinal.iterate_le_nfpₓ'. -/
 theorem iterate_le_nfp (f a n) : (f^[n]) a ≤ nfp f a :=
   by
   rw [← sup_iterate_eq_nfp]
   exact le_sup _ n
 #align ordinal.iterate_le_nfp Ordinal.iterate_le_nfp
--/
 
-#print Ordinal.le_nfp /-
+/- warning: ordinal.le_nfp -> Ordinal.le_nfp is a dubious translation:
+lean 3 declaration is
+  forall (f : Ordinal.{u1} -> Ordinal.{u1}) (a : Ordinal.{u1}), LE.le.{succ u1} Ordinal.{u1} (Preorder.toHasLe.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a (Ordinal.nfp.{u1} f a)
+but is expected to have type
+  forall (f : Ordinal.{u1} -> Ordinal.{u1}) (a : Ordinal.{u1}), LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a (Ordinal.nfp.{u1} f a)
+Case conversion may be inaccurate. Consider using '#align ordinal.le_nfp Ordinal.le_nfpₓ'. -/
 theorem le_nfp (f a) : a ≤ nfp f a :=
   iterate_le_nfp f a 0
 #align ordinal.le_nfp Ordinal.le_nfp
--/
 
-#print Ordinal.lt_nfp /-
+/- warning: ordinal.lt_nfp -> Ordinal.lt_nfp is a dubious translation:
+lean 3 declaration is
+  forall {f : Ordinal.{u1} -> Ordinal.{u1}} {a : Ordinal.{u1}} {b : Ordinal.{u1}}, Iff (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a (Ordinal.nfp.{u1} f b)) (Exists.{1} Nat (fun (n : Nat) => LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a (Nat.iterate.{succ (succ u1)} Ordinal.{u1} f n b)))
+but is expected to have type
+  forall {f : Ordinal.{u1} -> Ordinal.{u1}} {a : Ordinal.{u1}} {b : Ordinal.{u1}}, Iff (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a (Ordinal.nfp.{u1} f b)) (Exists.{1} Nat (fun (n : Nat) => LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a (Nat.iterate.{succ (succ u1)} Ordinal.{u1} f n b)))
+Case conversion may be inaccurate. Consider using '#align ordinal.lt_nfp Ordinal.lt_nfpₓ'. -/
 theorem lt_nfp {a b} : a < nfp f b ↔ ∃ n, a < (f^[n]) b :=
   by
   rw [← sup_iterate_eq_nfp]
   exact lt_sup
 #align ordinal.lt_nfp Ordinal.lt_nfp
--/
 
-#print Ordinal.nfp_le_iff /-
+/- warning: ordinal.nfp_le_iff -> Ordinal.nfp_le_iff is a dubious translation:
+lean 3 declaration is
+  forall {f : Ordinal.{u1} -> Ordinal.{u1}} {a : Ordinal.{u1}} {b : Ordinal.{u1}}, Iff (LE.le.{succ u1} Ordinal.{u1} (Preorder.toHasLe.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Ordinal.nfp.{u1} f a) b) (forall (n : Nat), LE.le.{succ u1} Ordinal.{u1} (Preorder.toHasLe.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Nat.iterate.{succ (succ u1)} Ordinal.{u1} f n a) b)
+but is expected to have type
+  forall {f : Ordinal.{u1} -> Ordinal.{u1}} {a : Ordinal.{u1}} {b : Ordinal.{u1}}, Iff (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Ordinal.nfp.{u1} f a) b) (forall (n : Nat), LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Nat.iterate.{succ (succ u1)} Ordinal.{u1} f n a) b)
+Case conversion may be inaccurate. Consider using '#align ordinal.nfp_le_iff Ordinal.nfp_le_iffₓ'. -/
 theorem nfp_le_iff {a b} : nfp f a ≤ b ↔ ∀ n, (f^[n]) a ≤ b :=
   by
   rw [← sup_iterate_eq_nfp]
   exact sup_le_iff
 #align ordinal.nfp_le_iff Ordinal.nfp_le_iff
--/
 
-#print Ordinal.nfp_le /-
+/- warning: ordinal.nfp_le -> Ordinal.nfp_le is a dubious translation:
+lean 3 declaration is
+  forall {f : Ordinal.{u1} -> Ordinal.{u1}} {a : Ordinal.{u1}} {b : Ordinal.{u1}}, (forall (n : Nat), LE.le.{succ u1} Ordinal.{u1} (Preorder.toHasLe.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Nat.iterate.{succ (succ u1)} Ordinal.{u1} f n a) b) -> (LE.le.{succ u1} Ordinal.{u1} (Preorder.toHasLe.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Ordinal.nfp.{u1} f a) b)
+but is expected to have type
+  forall {f : Ordinal.{u1} -> Ordinal.{u1}} {a : Ordinal.{u1}} {b : Ordinal.{u1}}, (forall (n : Nat), LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Nat.iterate.{succ (succ u1)} Ordinal.{u1} f n a) b) -> (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Ordinal.nfp.{u1} f a) b)
+Case conversion may be inaccurate. Consider using '#align ordinal.nfp_le Ordinal.nfp_leₓ'. -/
 theorem nfp_le {a b} : (∀ n, (f^[n]) a ≤ b) → nfp f a ≤ b :=
   nfp_le_iff.2
 #align ordinal.nfp_le Ordinal.nfp_le
--/
 
 #print Ordinal.nfp_id /-
 @[simp]
@@ -620,26 +772,38 @@ theorem nfp_monotone (hf : Monotone f) : Monotone (nfp f) :=
 #align ordinal.nfp_monotone Ordinal.nfp_monotone
 -/
 
-#print Ordinal.IsNormal.apply_lt_nfp /-
+/- warning: ordinal.is_normal.apply_lt_nfp -> Ordinal.IsNormal.apply_lt_nfp is a dubious translation:
+lean 3 declaration is
+  forall {f : Ordinal.{u1} -> Ordinal.{u1}}, (Ordinal.IsNormal.{u1, u1} f) -> (forall {a : Ordinal.{u1}} {b : Ordinal.{u1}}, Iff (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (f b) (Ordinal.nfp.{u1} f a)) (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b (Ordinal.nfp.{u1} f a)))
+but is expected to have type
+  forall {f : Ordinal.{u1} -> Ordinal.{u1}}, (Ordinal.IsNormal.{u1, u1} f) -> (forall {a : Ordinal.{u1}} {b : Ordinal.{u1}}, Iff (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (f b) (Ordinal.nfp.{u1} f a)) (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b (Ordinal.nfp.{u1} f a)))
+Case conversion may be inaccurate. Consider using '#align ordinal.is_normal.apply_lt_nfp Ordinal.IsNormal.apply_lt_nfpₓ'. -/
 theorem IsNormal.apply_lt_nfp {f} (H : IsNormal f) {a b} : f b < nfp f a ↔ b < nfp f a :=
   by
   unfold nfp
   rw [← @apply_lt_nfp_family_iff Unit (fun _ => f) _ (fun _ => H) a b]
   exact ⟨fun h _ => h, fun h => h Unit.unit⟩
 #align ordinal.is_normal.apply_lt_nfp Ordinal.IsNormal.apply_lt_nfp
--/
 
-#print Ordinal.IsNormal.nfp_le_apply /-
+/- warning: ordinal.is_normal.nfp_le_apply -> Ordinal.IsNormal.nfp_le_apply is a dubious translation:
+lean 3 declaration is
+  forall {f : Ordinal.{u1} -> Ordinal.{u1}}, (Ordinal.IsNormal.{u1, u1} f) -> (forall {a : Ordinal.{u1}} {b : Ordinal.{u1}}, Iff (LE.le.{succ u1} Ordinal.{u1} (Preorder.toHasLe.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Ordinal.nfp.{u1} f a) (f b)) (LE.le.{succ u1} Ordinal.{u1} (Preorder.toHasLe.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Ordinal.nfp.{u1} f a) b))
+but is expected to have type
+  forall {f : Ordinal.{u1} -> Ordinal.{u1}}, (Ordinal.IsNormal.{u1, u1} f) -> (forall {a : Ordinal.{u1}} {b : Ordinal.{u1}}, Iff (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Ordinal.nfp.{u1} f a) (f b)) (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Ordinal.nfp.{u1} f a) b))
+Case conversion may be inaccurate. Consider using '#align ordinal.is_normal.nfp_le_apply Ordinal.IsNormal.nfp_le_applyₓ'. -/
 theorem IsNormal.nfp_le_apply {f} (H : IsNormal f) {a b} : nfp f a ≤ f b ↔ nfp f a ≤ b :=
   le_iff_le_iff_lt_iff_lt.2 H.apply_lt_nfp
 #align ordinal.is_normal.nfp_le_apply Ordinal.IsNormal.nfp_le_apply
--/
 
-#print Ordinal.nfp_le_fp /-
+/- warning: ordinal.nfp_le_fp -> Ordinal.nfp_le_fp is a dubious translation:
+lean 3 declaration is
+  forall {f : Ordinal.{u1} -> Ordinal.{u1}}, (Monotone.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) f) -> (forall {a : Ordinal.{u1}} {b : Ordinal.{u1}}, (LE.le.{succ u1} Ordinal.{u1} (Preorder.toHasLe.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a b) -> (LE.le.{succ u1} Ordinal.{u1} (Preorder.toHasLe.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (f b) b) -> (LE.le.{succ u1} Ordinal.{u1} (Preorder.toHasLe.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Ordinal.nfp.{u1} f a) b))
+but is expected to have type
+  forall {f : Ordinal.{u1} -> Ordinal.{u1}}, (Monotone.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) f) -> (forall {a : Ordinal.{u1}} {b : Ordinal.{u1}}, (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a b) -> (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (f b) b) -> (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Ordinal.nfp.{u1} f a) b))
+Case conversion may be inaccurate. Consider using '#align ordinal.nfp_le_fp Ordinal.nfp_le_fpₓ'. -/
 theorem nfp_le_fp {f} (H : Monotone f) {a b} (ab : a ≤ b) (h : f b ≤ b) : nfp f a ≤ b :=
   nfpFamily_le_fp (fun _ => H) ab fun _ => h
 #align ordinal.nfp_le_fp Ordinal.nfp_le_fp
--/
 
 #print Ordinal.IsNormal.nfp_fp /-
 theorem IsNormal.nfp_fp {f} (H : IsNormal f) : ∀ a, f (nfp f a) = nfp f a :=
@@ -647,11 +811,15 @@ theorem IsNormal.nfp_fp {f} (H : IsNormal f) : ∀ a, f (nfp f a) = nfp f a :=
 #align ordinal.is_normal.nfp_fp Ordinal.IsNormal.nfp_fp
 -/
 
-#print Ordinal.IsNormal.apply_le_nfp /-
+/- warning: ordinal.is_normal.apply_le_nfp -> Ordinal.IsNormal.apply_le_nfp is a dubious translation:
+lean 3 declaration is
+  forall {f : Ordinal.{u1} -> Ordinal.{u1}}, (Ordinal.IsNormal.{u1, u1} f) -> (forall {a : Ordinal.{u1}} {b : Ordinal.{u1}}, Iff (LE.le.{succ u1} Ordinal.{u1} (Preorder.toHasLe.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (f b) (Ordinal.nfp.{u1} f a)) (LE.le.{succ u1} Ordinal.{u1} (Preorder.toHasLe.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b (Ordinal.nfp.{u1} f a)))
+but is expected to have type
+  forall {f : Ordinal.{u1} -> Ordinal.{u1}}, (Ordinal.IsNormal.{u1, u1} f) -> (forall {a : Ordinal.{u1}} {b : Ordinal.{u1}}, Iff (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (f b) (Ordinal.nfp.{u1} f a)) (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b (Ordinal.nfp.{u1} f a)))
+Case conversion may be inaccurate. Consider using '#align ordinal.is_normal.apply_le_nfp Ordinal.IsNormal.apply_le_nfpₓ'. -/
 theorem IsNormal.apply_le_nfp {f} (H : IsNormal f) {a b} : f b ≤ nfp f a ↔ b ≤ nfp f a :=
   ⟨le_trans (H.self_le _), fun h => by simpa only [H.nfp_fp] using H.le_iff.2 h⟩
 #align ordinal.is_normal.apply_le_nfp Ordinal.IsNormal.apply_le_nfp
--/
 
 #print Ordinal.nfp_eq_self /-
 theorem nfp_eq_self {f : Ordinal → Ordinal} {a} (h : f a = a) : nfp f a = a :=
@@ -659,7 +827,12 @@ theorem nfp_eq_self {f : Ordinal → Ordinal} {a} (h : f a = a) : nfp f a = a :=
 #align ordinal.nfp_eq_self Ordinal.nfp_eq_self
 -/
 
-#print Ordinal.fp_unbounded /-
+/- warning: ordinal.fp_unbounded -> Ordinal.fp_unbounded is a dubious translation:
+lean 3 declaration is
+  forall {f : Ordinal.{u1} -> Ordinal.{u1}}, (Ordinal.IsNormal.{u1, u1} f) -> (Set.Unbounded.{succ u1} Ordinal.{u1} (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}))) (Function.fixedPoints.{succ u1} Ordinal.{u1} f))
+but is expected to have type
+  forall {f : Ordinal.{u1} -> Ordinal.{u1}}, (Ordinal.IsNormal.{u1, u1} f) -> (Set.Unbounded.{succ u1} Ordinal.{u1} (fun (x._@.Mathlib.SetTheory.Ordinal.FixedPoint._hyg.5212 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Ordinal.FixedPoint._hyg.5214 : Ordinal.{u1}) => LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) x._@.Mathlib.SetTheory.Ordinal.FixedPoint._hyg.5212 x._@.Mathlib.SetTheory.Ordinal.FixedPoint._hyg.5214) (Function.fixedPoints.{succ u1} Ordinal.{u1} f))
+Case conversion may be inaccurate. Consider using '#align ordinal.fp_unbounded Ordinal.fp_unboundedₓ'. -/
 /-- The fixed point lemma for normal functions: any normal function has an unbounded set of
 fixed points. -/
 theorem fp_unbounded (H : IsNormal f) : (Function.fixedPoints f).Unbounded (· < ·) :=
@@ -667,7 +840,6 @@ theorem fp_unbounded (H : IsNormal f) : (Function.fixedPoints f).Unbounded (· <
   convert fp_family_unbounded fun _ : Unit => H
   exact (Set.iInter_const _).symm
 #align ordinal.fp_unbounded Ordinal.fp_unbounded
--/
 
 #print Ordinal.deriv /-
 /-- The derivative of a normal function `f` is the sequence of fixed points of `f`.
@@ -722,14 +894,18 @@ theorem IsNormal.deriv_fp {f} (H : IsNormal f) : ∀ o, f (deriv f o) = deriv f 
 #align ordinal.is_normal.deriv_fp Ordinal.IsNormal.deriv_fp
 -/
 
-#print Ordinal.IsNormal.le_iff_deriv /-
+/- warning: ordinal.is_normal.le_iff_deriv -> Ordinal.IsNormal.le_iff_deriv is a dubious translation:
+lean 3 declaration is
+  forall {f : Ordinal.{u1} -> Ordinal.{u1}}, (Ordinal.IsNormal.{u1, u1} f) -> (forall {a : Ordinal.{u1}}, Iff (LE.le.{succ u1} Ordinal.{u1} (Preorder.toHasLe.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (f a) a) (Exists.{succ (succ u1)} Ordinal.{u1} (fun (o : Ordinal.{u1}) => Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.deriv.{u1} f o) a)))
+but is expected to have type
+  forall {f : Ordinal.{u1} -> Ordinal.{u1}}, (Ordinal.IsNormal.{u1, u1} f) -> (forall {a : Ordinal.{u1}}, Iff (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (f a) a) (Exists.{succ (succ u1)} Ordinal.{u1} (fun (o : Ordinal.{u1}) => Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.deriv.{u1} f o) a)))
+Case conversion may be inaccurate. Consider using '#align ordinal.is_normal.le_iff_deriv Ordinal.IsNormal.le_iff_derivₓ'. -/
 theorem IsNormal.le_iff_deriv {f} (H : IsNormal f) {a} : f a ≤ a ↔ ∃ o, deriv f o = a :=
   by
   unfold deriv
   rw [← le_iff_deriv_family fun _ : Unit => H]
   exact ⟨fun h _ => h, fun h => h Unit.unit⟩
 #align ordinal.is_normal.le_iff_deriv Ordinal.IsNormal.le_iff_deriv
--/
 
 #print Ordinal.IsNormal.fp_iff_deriv /-
 theorem IsNormal.fp_iff_deriv {f} (H : IsNormal f) {a} : f a = a ↔ ∃ o, deriv f o = a := by
@@ -776,7 +952,7 @@ theorem nfp_add_zero (a) : nfp ((· + ·) a) 0 = a * omega :=
 
 /- warning: ordinal.nfp_add_eq_mul_omega -> Ordinal.nfp_add_eq_mul_omega is a dubious translation:
 lean 3 declaration is
-  forall {a : Ordinal.{u1}} {b : Ordinal.{u1}}, (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a Ordinal.omega.{u1})) -> (Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.nfp.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.hasAdd.{u1}) a) b) (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a Ordinal.omega.{u1}))
+  forall {a : Ordinal.{u1}} {b : Ordinal.{u1}}, (LE.le.{succ u1} Ordinal.{u1} (Preorder.toHasLe.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a Ordinal.omega.{u1})) -> (Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.nfp.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.hasAdd.{u1}) a) b) (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a Ordinal.omega.{u1}))
 but is expected to have type
   forall {a : Ordinal.{u1}} {b : Ordinal.{u1}}, (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a Ordinal.omega.{u1})) -> (Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.nfp.{u1} (fun (x._@.Mathlib.SetTheory.Ordinal.FixedPoint._hyg.5911 : Ordinal.{u1}) => HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.add.{u1}) a x._@.Mathlib.SetTheory.Ordinal.FixedPoint._hyg.5911) b) (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a Ordinal.omega.{u1}))
 Case conversion may be inaccurate. Consider using '#align ordinal.nfp_add_eq_mul_omega Ordinal.nfp_add_eq_mul_omegaₓ'. -/
@@ -790,7 +966,7 @@ theorem nfp_add_eq_mul_omega {a b} (hba : b ≤ a * omega) : nfp ((· + ·) a) b
 
 /- warning: ordinal.add_eq_right_iff_mul_omega_le -> Ordinal.add_eq_right_iff_mul_omega_le is a dubious translation:
 lean 3 declaration is
-  forall {a : Ordinal.{u1}} {b : Ordinal.{u1}}, Iff (Eq.{succ (succ u1)} Ordinal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.hasAdd.{u1}) a b) b) (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a Ordinal.omega.{u1}) b)
+  forall {a : Ordinal.{u1}} {b : Ordinal.{u1}}, Iff (Eq.{succ (succ u1)} Ordinal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.hasAdd.{u1}) a b) b) (LE.le.{succ u1} Ordinal.{u1} (Preorder.toHasLe.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a Ordinal.omega.{u1}) b)
 but is expected to have type
   forall {a : Ordinal.{u1}} {b : Ordinal.{u1}}, Iff (Eq.{succ (succ u1)} Ordinal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.add.{u1}) a b) b) (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a Ordinal.omega.{u1}) b)
 Case conversion may be inaccurate. Consider using '#align ordinal.add_eq_right_iff_mul_omega_le Ordinal.add_eq_right_iff_mul_omega_leₓ'. -/
@@ -808,7 +984,7 @@ theorem add_eq_right_iff_mul_omega_le {a b : Ordinal} : a + b = b ↔ a * omega 
 
 /- warning: ordinal.add_le_right_iff_mul_omega_le -> Ordinal.add_le_right_iff_mul_omega_le is a dubious translation:
 lean 3 declaration is
-  forall {a : Ordinal.{u1}} {b : Ordinal.{u1}}, Iff (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.hasAdd.{u1}) a b) b) (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a Ordinal.omega.{u1}) b)
+  forall {a : Ordinal.{u1}} {b : Ordinal.{u1}}, Iff (LE.le.{succ u1} Ordinal.{u1} (Preorder.toHasLe.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.hasAdd.{u1}) a b) b) (LE.le.{succ u1} Ordinal.{u1} (Preorder.toHasLe.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a Ordinal.omega.{u1}) b)
 but is expected to have type
   forall {a : Ordinal.{u1}} {b : Ordinal.{u1}}, Iff (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.add.{u1}) a b) b) (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a Ordinal.omega.{u1}) b)
 Case conversion may be inaccurate. Consider using '#align ordinal.add_le_right_iff_mul_omega_le Ordinal.add_le_right_iff_mul_omega_leₓ'. -/
@@ -843,7 +1019,7 @@ local infixr:0 "^" => @pow Ordinal Ordinal Ordinal.hasPow
 
 /- warning: ordinal.nfp_mul_one -> Ordinal.nfp_mul_one is a dubious translation:
 lean 3 declaration is
-  forall {a : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1}))) a) -> (Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.nfp.{u1} (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a) (OfNat.ofNat.{succ u1} Ordinal.{u1} 1 (OfNat.mk.{succ u1} Ordinal.{u1} 1 (One.one.{succ u1} Ordinal.{u1} Ordinal.hasOne.{u1})))) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) a Ordinal.omega.{u1}))
+  forall {a : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1}))) a) -> (Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.nfp.{u1} (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a) (OfNat.ofNat.{succ u1} Ordinal.{u1} 1 (OfNat.mk.{succ u1} Ordinal.{u1} 1 (One.one.{succ u1} Ordinal.{u1} Ordinal.hasOne.{u1})))) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) a Ordinal.omega.{u1}))
 but is expected to have type
   forall {a : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1})) a) -> (Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.nfp.{u1} (fun (x._@.Mathlib.SetTheory.Ordinal.FixedPoint._hyg.6456 : Ordinal.{u1}) => HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a x._@.Mathlib.SetTheory.Ordinal.FixedPoint._hyg.6456) (OfNat.ofNat.{succ u1} Ordinal.{u1} 1 (One.toOfNat1.{succ u1} Ordinal.{u1} Ordinal.one.{u1}))) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.pow.{u1}) a Ordinal.omega.{u1}))
 Case conversion may be inaccurate. Consider using '#align ordinal.nfp_mul_one Ordinal.nfp_mul_oneₓ'. -/
@@ -907,7 +1083,7 @@ theorem deriv_mul_zero : deriv ((· * ·) 0) = id :=
 
 /- warning: ordinal.nfp_mul_eq_opow_omega -> Ordinal.nfp_mul_eq_opow_omega is a dubious translation:
 lean 3 declaration is
-  forall {a : Ordinal.{u1}} {b : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1}))) b) -> (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) a Ordinal.omega.{u1})) -> (Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.nfp.{u1} (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a) b) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) a Ordinal.omega.{u1}))
+  forall {a : Ordinal.{u1}} {b : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1}))) b) -> (LE.le.{succ u1} Ordinal.{u1} (Preorder.toHasLe.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) a Ordinal.omega.{u1})) -> (Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.nfp.{u1} (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a) b) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) a Ordinal.omega.{u1}))
 but is expected to have type
   forall {a : Ordinal.{u1}} {b : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1})) b) -> (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.pow.{u1}) a Ordinal.omega.{u1})) -> (Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.nfp.{u1} (fun (x._@.Mathlib.SetTheory.Ordinal.FixedPoint._hyg.6933 : Ordinal.{u1}) => HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a x._@.Mathlib.SetTheory.Ordinal.FixedPoint._hyg.6933) b) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.pow.{u1}) a Ordinal.omega.{u1}))
 Case conversion may be inaccurate. Consider using '#align ordinal.nfp_mul_eq_opow_omega Ordinal.nfp_mul_eq_opow_omegaₓ'. -/
@@ -927,7 +1103,7 @@ theorem nfp_mul_eq_opow_omega {a b : Ordinal} (hb : 0 < b) (hba : b ≤ (a^omega
 
 /- warning: ordinal.eq_zero_or_opow_omega_le_of_mul_eq_right -> Ordinal.eq_zero_or_opow_omega_le_of_mul_eq_right is a dubious translation:
 lean 3 declaration is
-  forall {a : Ordinal.{u1}} {b : Ordinal.{u1}}, (Eq.{succ (succ u1)} Ordinal.{u1} (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a b) b) -> (Or (Eq.{succ (succ u1)} Ordinal.{u1} b (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1})))) (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) a Ordinal.omega.{u1}) b))
+  forall {a : Ordinal.{u1}} {b : Ordinal.{u1}}, (Eq.{succ (succ u1)} Ordinal.{u1} (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a b) b) -> (Or (Eq.{succ (succ u1)} Ordinal.{u1} b (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1})))) (LE.le.{succ u1} Ordinal.{u1} (Preorder.toHasLe.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) a Ordinal.omega.{u1}) b))
 but is expected to have type
   forall {a : Ordinal.{u1}} {b : Ordinal.{u1}}, (Eq.{succ (succ u1)} Ordinal.{u1} (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a b) b) -> (Or (Eq.{succ (succ u1)} Ordinal.{u1} b (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1}))) (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.pow.{u1}) a Ordinal.omega.{u1}) b))
 Case conversion may be inaccurate. Consider using '#align ordinal.eq_zero_or_opow_omega_le_of_mul_eq_right Ordinal.eq_zero_or_opow_omega_le_of_mul_eq_rightₓ'. -/
@@ -970,7 +1146,7 @@ theorem mul_eq_right_iff_opow_omega_dvd {a b : Ordinal} : a * b = b ↔ (a^omega
 
 /- warning: ordinal.mul_le_right_iff_opow_omega_dvd -> Ordinal.mul_le_right_iff_opow_omega_dvd is a dubious translation:
 lean 3 declaration is
-  forall {a : Ordinal.{u1}} {b : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1}))) a) -> (Iff (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a b) b) (Dvd.Dvd.{succ u1} Ordinal.{u1} (semigroupDvd.{succ u1} Ordinal.{u1} (SemigroupWithZero.toSemigroup.{succ u1} Ordinal.{u1} (MonoidWithZero.toSemigroupWithZero.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1}))) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) a Ordinal.omega.{u1}) b))
+  forall {a : Ordinal.{u1}} {b : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1}))) a) -> (Iff (LE.le.{succ u1} Ordinal.{u1} (Preorder.toHasLe.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a b) b) (Dvd.Dvd.{succ u1} Ordinal.{u1} (semigroupDvd.{succ u1} Ordinal.{u1} (SemigroupWithZero.toSemigroup.{succ u1} Ordinal.{u1} (MonoidWithZero.toSemigroupWithZero.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1}))) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) a Ordinal.omega.{u1}) b))
 but is expected to have type
   forall {a : Ordinal.{u1}} {b : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1})) a) -> (Iff (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a b) b) (Dvd.dvd.{succ u1} Ordinal.{u1} (semigroupDvd.{succ u1} Ordinal.{u1} (SemigroupWithZero.toSemigroup.{succ u1} Ordinal.{u1} (MonoidWithZero.toSemigroupWithZero.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1}))) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.pow.{u1}) a Ordinal.omega.{u1}) b))
 Case conversion may be inaccurate. Consider using '#align ordinal.mul_le_right_iff_opow_omega_dvd Ordinal.mul_le_right_iff_opow_omega_dvdₓ'. -/
@@ -982,7 +1158,7 @@ theorem mul_le_right_iff_opow_omega_dvd {a b : Ordinal} (ha : 0 < a) : a * b ≤
 
 /- warning: ordinal.nfp_mul_opow_omega_add -> Ordinal.nfp_mul_opow_omega_add is a dubious translation:
 lean 3 declaration is
-  forall {a : Ordinal.{u1}} {c : Ordinal.{u1}} (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1}))) a) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1}))) c) -> (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) c (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) a Ordinal.omega.{u1})) -> (Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.nfp.{u1} (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a) (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.hasAdd.{u1}) (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) a Ordinal.omega.{u1}) b) c)) (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) a Ordinal.omega.{u1}) (Order.succ.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) Ordinal.succOrder.{u1} b)))
+  forall {a : Ordinal.{u1}} {c : Ordinal.{u1}} (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1}))) a) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1}))) c) -> (LE.le.{succ u1} Ordinal.{u1} (Preorder.toHasLe.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) c (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) a Ordinal.omega.{u1})) -> (Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.nfp.{u1} (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a) (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.hasAdd.{u1}) (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) a Ordinal.omega.{u1}) b) c)) (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) a Ordinal.omega.{u1}) (Order.succ.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) Ordinal.succOrder.{u1} b)))
 but is expected to have type
   forall {a : Ordinal.{u1}} {c : Ordinal.{u1}} (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1})) a) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1})) c) -> (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) c (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.pow.{u1}) a Ordinal.omega.{u1})) -> (Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.nfp.{u1} (fun (x._@.Mathlib.SetTheory.Ordinal.FixedPoint._hyg.7632 : Ordinal.{u1}) => HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a x._@.Mathlib.SetTheory.Ordinal.FixedPoint._hyg.7632) (HAdd.hAdd.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHAdd.{succ u1} Ordinal.{u1} Ordinal.add.{u1}) (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.pow.{u1}) a Ordinal.omega.{u1}) b) c)) (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.pow.{u1}) a Ordinal.omega.{u1}) (Order.succ.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) Ordinal.succOrder.{u1} b)))
 Case conversion may be inaccurate. Consider using '#align ordinal.nfp_mul_opow_omega_add Ordinal.nfp_mul_opow_omega_addₓ'. -/
@@ -1007,7 +1183,7 @@ theorem nfp_mul_opow_omega_add {a c : Ordinal} (b) (ha : 0 < a) (hc : 0 < c) (hc
 
 /- warning: ordinal.deriv_mul_eq_opow_omega_mul -> Ordinal.deriv_mul_eq_opow_omega_mul is a dubious translation:
 lean 3 declaration is
-  forall {a : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1}))) a) -> (forall (b : Ordinal.{u1}), Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.deriv.{u1} (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a) b) (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) a Ordinal.omega.{u1}) b))
+  forall {a : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1}))) a) -> (forall (b : Ordinal.{u1}), Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.deriv.{u1} (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a) b) (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toHasMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.hasPow.{u1}) a Ordinal.omega.{u1}) b))
 but is expected to have type
   forall {a : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1})) a) -> (forall (b : Ordinal.{u1}), Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.deriv.{u1} (fun (x._@.Mathlib.SetTheory.Ordinal.FixedPoint._hyg.7992 : Ordinal.{u1}) => HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) a x._@.Mathlib.SetTheory.Ordinal.FixedPoint._hyg.7992) b) (HMul.hMul.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHMul.{succ u1} Ordinal.{u1} (MulZeroClass.toMul.{succ u1} Ordinal.{u1} (MulZeroOneClass.toMulZeroClass.{succ u1} Ordinal.{u1} (MonoidWithZero.toMulZeroOneClass.{succ u1} Ordinal.{u1} Ordinal.monoidWithZero.{u1})))) (HPow.hPow.{succ u1, succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.{u1} (instHPow.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.pow.{u1}) a Ordinal.omega.{u1}) b))
 Case conversion may be inaccurate. Consider using '#align ordinal.deriv_mul_eq_opow_omega_mul Ordinal.deriv_mul_eq_opow_omega_mulₓ'. -/

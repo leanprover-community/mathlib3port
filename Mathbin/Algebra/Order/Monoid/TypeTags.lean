@@ -117,33 +117,49 @@ namespace Additive
 
 variable [Preorder α]
 
-#print Additive.ofMul_le /-
+/- warning: additive.of_mul_le -> Additive.ofMul_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, Iff (LE.le.{u1} (Additive.{u1} α) (Additive.hasLe.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} α (Additive.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} α (Additive.{u1} α)) => α -> (Additive.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} α (Additive.{u1} α)) (Additive.ofMul.{u1} α) a) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} α (Additive.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} α (Additive.{u1} α)) => α -> (Additive.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} α (Additive.{u1} α)) (Additive.ofMul.{u1} α) b)) (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, Iff (LE.le.{u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => Additive.{u1} α) a) (instForAllLEAdditive.{u1} α (Preorder.toLE.{u1} α _inst_1)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} α (Additive.{u1} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => Additive.{u1} α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α (Additive.{u1} α)) (Additive.ofMul.{u1} α) a) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} α (Additive.{u1} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => Additive.{u1} α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α (Additive.{u1} α)) (Additive.ofMul.{u1} α) b)) (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a b)
+Case conversion may be inaccurate. Consider using '#align additive.of_mul_le Additive.ofMul_leₓ'. -/
 @[simp]
 theorem ofMul_le {a b : α} : ofMul a ≤ ofMul b ↔ a ≤ b :=
   Iff.rfl
 #align additive.of_mul_le Additive.ofMul_le
--/
 
-#print Additive.ofMul_lt /-
+/- warning: additive.of_mul_lt -> Additive.ofMul_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, Iff (LT.lt.{u1} (Additive.{u1} α) (Additive.hasLt.{u1} α (Preorder.toHasLt.{u1} α _inst_1)) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} α (Additive.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} α (Additive.{u1} α)) => α -> (Additive.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} α (Additive.{u1} α)) (Additive.ofMul.{u1} α) a) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} α (Additive.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} α (Additive.{u1} α)) => α -> (Additive.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} α (Additive.{u1} α)) (Additive.ofMul.{u1} α) b)) (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, Iff (LT.lt.{u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => Additive.{u1} α) a) (instForAllLTAdditive.{u1} α (Preorder.toLT.{u1} α _inst_1)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} α (Additive.{u1} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => Additive.{u1} α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α (Additive.{u1} α)) (Additive.ofMul.{u1} α) a) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} α (Additive.{u1} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => Additive.{u1} α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α (Additive.{u1} α)) (Additive.ofMul.{u1} α) b)) (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) a b)
+Case conversion may be inaccurate. Consider using '#align additive.of_mul_lt Additive.ofMul_ltₓ'. -/
 @[simp]
 theorem ofMul_lt {a b : α} : ofMul a < ofMul b ↔ a < b :=
   Iff.rfl
 #align additive.of_mul_lt Additive.ofMul_lt
--/
 
-#print Additive.toMul_le /-
+/- warning: additive.to_mul_le -> Additive.toMul_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : Additive.{u1} α} {b : Additive.{u1} α}, Iff (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (Additive.{u1} α) α) (fun (_x : Equiv.{succ u1, succ u1} (Additive.{u1} α) α) => (Additive.{u1} α) -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} (Additive.{u1} α) α) (Additive.toMul.{u1} α) a) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (Additive.{u1} α) α) (fun (_x : Equiv.{succ u1, succ u1} (Additive.{u1} α) α) => (Additive.{u1} α) -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} (Additive.{u1} α) α) (Additive.toMul.{u1} α) b)) (LE.le.{u1} (Additive.{u1} α) (Additive.hasLe.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : Additive.{u1} α} {b : Additive.{u1} α}, Iff (LE.le.{u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : Additive.{u1} α) => α) a) (Preorder.toLE.{u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : Additive.{u1} α) => α) a) _inst_1) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (Additive.{u1} α) α) (Additive.{u1} α) (fun (_x : Additive.{u1} α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : Additive.{u1} α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} (Additive.{u1} α) α) (Additive.toMul.{u1} α) a) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (Additive.{u1} α) α) (Additive.{u1} α) (fun (_x : Additive.{u1} α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : Additive.{u1} α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} (Additive.{u1} α) α) (Additive.toMul.{u1} α) b)) (LE.le.{u1} (Additive.{u1} α) (instForAllLEAdditive.{u1} α (Preorder.toLE.{u1} α _inst_1)) a b)
+Case conversion may be inaccurate. Consider using '#align additive.to_mul_le Additive.toMul_leₓ'. -/
 @[simp]
 theorem toMul_le {a b : Additive α} : toMul a ≤ toMul b ↔ a ≤ b :=
   Iff.rfl
 #align additive.to_mul_le Additive.toMul_le
--/
 
-#print Additive.toMul_lt /-
+/- warning: additive.to_mul_lt -> Additive.toMul_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : Additive.{u1} α} {b : Additive.{u1} α}, Iff (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (Additive.{u1} α) α) (fun (_x : Equiv.{succ u1, succ u1} (Additive.{u1} α) α) => (Additive.{u1} α) -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} (Additive.{u1} α) α) (Additive.toMul.{u1} α) a) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (Additive.{u1} α) α) (fun (_x : Equiv.{succ u1, succ u1} (Additive.{u1} α) α) => (Additive.{u1} α) -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} (Additive.{u1} α) α) (Additive.toMul.{u1} α) b)) (LT.lt.{u1} (Additive.{u1} α) (Additive.hasLt.{u1} α (Preorder.toHasLt.{u1} α _inst_1)) a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : Additive.{u1} α} {b : Additive.{u1} α}, Iff (LT.lt.{u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : Additive.{u1} α) => α) a) (Preorder.toLT.{u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : Additive.{u1} α) => α) a) _inst_1) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (Additive.{u1} α) α) (Additive.{u1} α) (fun (_x : Additive.{u1} α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : Additive.{u1} α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} (Additive.{u1} α) α) (Additive.toMul.{u1} α) a) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (Additive.{u1} α) α) (Additive.{u1} α) (fun (_x : Additive.{u1} α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : Additive.{u1} α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} (Additive.{u1} α) α) (Additive.toMul.{u1} α) b)) (LT.lt.{u1} (Additive.{u1} α) (instForAllLTAdditive.{u1} α (Preorder.toLT.{u1} α _inst_1)) a b)
+Case conversion may be inaccurate. Consider using '#align additive.to_mul_lt Additive.toMul_ltₓ'. -/
 @[simp]
 theorem toMul_lt {a b : Additive α} : toMul a < toMul b ↔ a < b :=
   Iff.rfl
 #align additive.to_mul_lt Additive.toMul_lt
--/
 
 end Additive
 
@@ -151,33 +167,49 @@ namespace Multiplicative
 
 variable [Preorder α]
 
-#print Multiplicative.ofAdd_le /-
+/- warning: multiplicative.of_add_le -> Multiplicative.ofAdd_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, Iff (LE.le.{u1} (Multiplicative.{u1} α) (Multiplicative.hasLe.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} α (Multiplicative.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} α (Multiplicative.{u1} α)) => α -> (Multiplicative.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} α (Multiplicative.{u1} α)) (Multiplicative.ofAdd.{u1} α) a) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} α (Multiplicative.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} α (Multiplicative.{u1} α)) => α -> (Multiplicative.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} α (Multiplicative.{u1} α)) (Multiplicative.ofAdd.{u1} α) b)) (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, Iff (LE.le.{u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => Multiplicative.{u1} α) a) (instForAllLEMultiplicative.{u1} α (Preorder.toLE.{u1} α _inst_1)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} α (Multiplicative.{u1} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => Multiplicative.{u1} α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α (Multiplicative.{u1} α)) (Multiplicative.ofAdd.{u1} α) a) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} α (Multiplicative.{u1} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => Multiplicative.{u1} α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α (Multiplicative.{u1} α)) (Multiplicative.ofAdd.{u1} α) b)) (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a b)
+Case conversion may be inaccurate. Consider using '#align multiplicative.of_add_le Multiplicative.ofAdd_leₓ'. -/
 @[simp]
 theorem ofAdd_le {a b : α} : ofAdd a ≤ ofAdd b ↔ a ≤ b :=
   Iff.rfl
 #align multiplicative.of_add_le Multiplicative.ofAdd_le
--/
 
-#print Multiplicative.ofAdd_lt /-
+/- warning: multiplicative.of_add_lt -> Multiplicative.ofAdd_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, Iff (LT.lt.{u1} (Multiplicative.{u1} α) (Multiplicative.hasLt.{u1} α (Preorder.toHasLt.{u1} α _inst_1)) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} α (Multiplicative.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} α (Multiplicative.{u1} α)) => α -> (Multiplicative.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} α (Multiplicative.{u1} α)) (Multiplicative.ofAdd.{u1} α) a) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} α (Multiplicative.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} α (Multiplicative.{u1} α)) => α -> (Multiplicative.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} α (Multiplicative.{u1} α)) (Multiplicative.ofAdd.{u1} α) b)) (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, Iff (LT.lt.{u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => Multiplicative.{u1} α) a) (instForAllLTMultiplicative.{u1} α (Preorder.toLT.{u1} α _inst_1)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} α (Multiplicative.{u1} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => Multiplicative.{u1} α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α (Multiplicative.{u1} α)) (Multiplicative.ofAdd.{u1} α) a) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} α (Multiplicative.{u1} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => Multiplicative.{u1} α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α (Multiplicative.{u1} α)) (Multiplicative.ofAdd.{u1} α) b)) (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) a b)
+Case conversion may be inaccurate. Consider using '#align multiplicative.of_add_lt Multiplicative.ofAdd_ltₓ'. -/
 @[simp]
 theorem ofAdd_lt {a b : α} : ofAdd a < ofAdd b ↔ a < b :=
   Iff.rfl
 #align multiplicative.of_add_lt Multiplicative.ofAdd_lt
--/
 
-#print Multiplicative.toAdd_le /-
+/- warning: multiplicative.to_add_le -> Multiplicative.toAdd_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : Multiplicative.{u1} α} {b : Multiplicative.{u1} α}, Iff (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (Multiplicative.{u1} α) α) (fun (_x : Equiv.{succ u1, succ u1} (Multiplicative.{u1} α) α) => (Multiplicative.{u1} α) -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} (Multiplicative.{u1} α) α) (Multiplicative.toAdd.{u1} α) a) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (Multiplicative.{u1} α) α) (fun (_x : Equiv.{succ u1, succ u1} (Multiplicative.{u1} α) α) => (Multiplicative.{u1} α) -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} (Multiplicative.{u1} α) α) (Multiplicative.toAdd.{u1} α) b)) (LE.le.{u1} (Multiplicative.{u1} α) (Multiplicative.hasLe.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : Multiplicative.{u1} α} {b : Multiplicative.{u1} α}, Iff (LE.le.{u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : Multiplicative.{u1} α) => α) a) (Preorder.toLE.{u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : Multiplicative.{u1} α) => α) a) _inst_1) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (Multiplicative.{u1} α) α) (Multiplicative.{u1} α) (fun (_x : Multiplicative.{u1} α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : Multiplicative.{u1} α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} (Multiplicative.{u1} α) α) (Multiplicative.toAdd.{u1} α) a) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (Multiplicative.{u1} α) α) (Multiplicative.{u1} α) (fun (_x : Multiplicative.{u1} α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : Multiplicative.{u1} α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} (Multiplicative.{u1} α) α) (Multiplicative.toAdd.{u1} α) b)) (LE.le.{u1} (Multiplicative.{u1} α) (instForAllLEMultiplicative.{u1} α (Preorder.toLE.{u1} α _inst_1)) a b)
+Case conversion may be inaccurate. Consider using '#align multiplicative.to_add_le Multiplicative.toAdd_leₓ'. -/
 @[simp]
 theorem toAdd_le {a b : Multiplicative α} : toAdd a ≤ toAdd b ↔ a ≤ b :=
   Iff.rfl
 #align multiplicative.to_add_le Multiplicative.toAdd_le
--/
 
-#print Multiplicative.toAdd_lt /-
+/- warning: multiplicative.to_add_lt -> Multiplicative.toAdd_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : Multiplicative.{u1} α} {b : Multiplicative.{u1} α}, Iff (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (Multiplicative.{u1} α) α) (fun (_x : Equiv.{succ u1, succ u1} (Multiplicative.{u1} α) α) => (Multiplicative.{u1} α) -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} (Multiplicative.{u1} α) α) (Multiplicative.toAdd.{u1} α) a) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (Multiplicative.{u1} α) α) (fun (_x : Equiv.{succ u1, succ u1} (Multiplicative.{u1} α) α) => (Multiplicative.{u1} α) -> α) (Equiv.hasCoeToFun.{succ u1, succ u1} (Multiplicative.{u1} α) α) (Multiplicative.toAdd.{u1} α) b)) (LT.lt.{u1} (Multiplicative.{u1} α) (Multiplicative.hasLt.{u1} α (Preorder.toHasLt.{u1} α _inst_1)) a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : Multiplicative.{u1} α} {b : Multiplicative.{u1} α}, Iff (LT.lt.{u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : Multiplicative.{u1} α) => α) a) (Preorder.toLT.{u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : Multiplicative.{u1} α) => α) a) _inst_1) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (Multiplicative.{u1} α) α) (Multiplicative.{u1} α) (fun (_x : Multiplicative.{u1} α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : Multiplicative.{u1} α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} (Multiplicative.{u1} α) α) (Multiplicative.toAdd.{u1} α) a) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (Multiplicative.{u1} α) α) (Multiplicative.{u1} α) (fun (_x : Multiplicative.{u1} α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : Multiplicative.{u1} α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} (Multiplicative.{u1} α) α) (Multiplicative.toAdd.{u1} α) b)) (LT.lt.{u1} (Multiplicative.{u1} α) (instForAllLTMultiplicative.{u1} α (Preorder.toLT.{u1} α _inst_1)) a b)
+Case conversion may be inaccurate. Consider using '#align multiplicative.to_add_lt Multiplicative.toAdd_ltₓ'. -/
 @[simp]
 theorem toAdd_lt {a b : Multiplicative α} : toAdd a < toAdd b ↔ a < b :=
   Iff.rfl
 #align multiplicative.to_add_lt Multiplicative.toAdd_lt
--/
 
 end Multiplicative
 

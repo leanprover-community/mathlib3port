@@ -47,14 +47,18 @@ theorem cmpLE_swap {α} [LE α] [IsTotal α (· ≤ ·)] [@DecidableRel α (· �
 #align cmp_le_swap cmpLE_swap
 -/
 
-#print cmpLE_eq_cmp /-
+/- warning: cmp_le_eq_cmp -> cmpLE_eq_cmp is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : IsTotal.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1))] [_inst_3 : DecidableRel.{succ u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1))] [_inst_4 : DecidableRel.{succ u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1))] (x : α) (y : α), Eq.{1} Ordering (cmpLE.{u1} α (Preorder.toHasLe.{u1} α _inst_1) (fun (a : α) (b : α) => _inst_3 a b) x y) (cmp.{u1} α (Preorder.toHasLt.{u1} α _inst_1) (fun (a : α) (b : α) => _inst_4 a b) x y)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : IsTotal.{u1} α (fun (x._@.Mathlib.Order.Compare._hyg.273 : α) (x._@.Mathlib.Order.Compare._hyg.275 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Compare._hyg.273 x._@.Mathlib.Order.Compare._hyg.275)] [_inst_3 : DecidableRel.{succ u1} α (fun (x._@.Mathlib.Order.Compare._hyg.291 : α) (x._@.Mathlib.Order.Compare._hyg.293 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Compare._hyg.291 x._@.Mathlib.Order.Compare._hyg.293)] [_inst_4 : DecidableRel.{succ u1} α (fun (x._@.Mathlib.Order.Compare._hyg.309 : α) (x._@.Mathlib.Order.Compare._hyg.311 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.Compare._hyg.309 x._@.Mathlib.Order.Compare._hyg.311)] (x : α) (y : α), Eq.{1} Ordering (cmpLE.{u1} α (Preorder.toLE.{u1} α _inst_1) (fun (a : α) (b : α) => _inst_3 a b) x y) (cmp.{u1} α (Preorder.toLT.{u1} α _inst_1) (fun (a : α) (b : α) => _inst_4 a b) x y)
+Case conversion may be inaccurate. Consider using '#align cmp_le_eq_cmp cmpLE_eq_cmpₓ'. -/
 theorem cmpLE_eq_cmp {α} [Preorder α] [IsTotal α (· ≤ ·)] [@DecidableRel α (· ≤ ·)]
     [@DecidableRel α (· < ·)] (x y : α) : cmpLE x y = cmp x y :=
   by
   by_cases xy : x ≤ y <;> by_cases yx : y ≤ x <;> simp [cmpLE, lt_iff_le_not_le, *, cmp, cmpUsing]
   cases not_or_of_not xy yx (total_of _ _ _)
 #align cmp_le_eq_cmp cmpLE_eq_cmp
--/
 
 namespace Ordering
 
@@ -94,70 +98,102 @@ theorem swap_eq_iff_eq_swap {o o' : Ordering} : o.symm = o' ↔ o = o'.symm := b
 #align ordering.swap_eq_iff_eq_swap Ordering.swap_eq_iff_eq_swap
 -/
 
-#print Ordering.Compares.eq_lt /-
+/- warning: ordering.compares.eq_lt -> Ordering.Compares.eq_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {o : Ordering} {a : α} {b : α}, (Ordering.Compares.{u1} α (Preorder.toHasLt.{u1} α _inst_1) o a b) -> (Iff (Eq.{1} Ordering o Ordering.lt) (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {o : Ordering} {a : α} {b : α}, (Ordering.Compares.{u1} α (Preorder.toLT.{u1} α _inst_1) o a b) -> (Iff (Eq.{1} Ordering o Ordering.lt) (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) a b))
+Case conversion may be inaccurate. Consider using '#align ordering.compares.eq_lt Ordering.Compares.eq_ltₓ'. -/
 theorem Compares.eq_lt [Preorder α] : ∀ {o} {a b : α}, Compares o a b → (o = lt ↔ a < b)
   | lt, a, b, h => ⟨fun _ => h, fun _ => rfl⟩
   | Eq, a, b, h => ⟨fun h => by injection h, fun h' => (ne_of_lt h' h).elim⟩
   | GT.gt, a, b, h => ⟨fun h => by injection h, fun h' => (lt_asymm h h').elim⟩
 #align ordering.compares.eq_lt Ordering.Compares.eq_lt
--/
 
-#print Ordering.Compares.ne_lt /-
+/- warning: ordering.compares.ne_lt -> Ordering.Compares.ne_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {o : Ordering} {a : α} {b : α}, (Ordering.Compares.{u1} α (Preorder.toHasLt.{u1} α _inst_1) o a b) -> (Iff (Ne.{1} Ordering o Ordering.lt) (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) b a))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {o : Ordering} {a : α} {b : α}, (Ordering.Compares.{u1} α (Preorder.toLT.{u1} α _inst_1) o a b) -> (Iff (Ne.{1} Ordering o Ordering.lt) (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) b a))
+Case conversion may be inaccurate. Consider using '#align ordering.compares.ne_lt Ordering.Compares.ne_ltₓ'. -/
 theorem Compares.ne_lt [Preorder α] : ∀ {o} {a b : α}, Compares o a b → (o ≠ lt ↔ b ≤ a)
   | lt, a, b, h => ⟨absurd rfl, fun h' => (not_le_of_lt h h').elim⟩
   | Eq, a, b, h => ⟨fun _ => ge_of_eq h, fun _ h => by injection h⟩
   | GT.gt, a, b, h => ⟨fun _ => le_of_lt h, fun _ h => by injection h⟩
 #align ordering.compares.ne_lt Ordering.Compares.ne_lt
--/
 
-#print Ordering.Compares.eq_eq /-
+/- warning: ordering.compares.eq_eq -> Ordering.Compares.eq_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {o : Ordering} {a : α} {b : α}, (Ordering.Compares.{u1} α (Preorder.toHasLt.{u1} α _inst_1) o a b) -> (Iff (Eq.{1} Ordering o Ordering.eq) (Eq.{succ u1} α a b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {o : Ordering} {a : α} {b : α}, (Ordering.Compares.{u1} α (Preorder.toLT.{u1} α _inst_1) o a b) -> (Iff (Eq.{1} Ordering o Ordering.eq) (Eq.{succ u1} α a b))
+Case conversion may be inaccurate. Consider using '#align ordering.compares.eq_eq Ordering.Compares.eq_eqₓ'. -/
 theorem Compares.eq_eq [Preorder α] : ∀ {o} {a b : α}, Compares o a b → (o = eq ↔ a = b)
   | lt, a, b, h => ⟨fun h => by injection h, fun h' => (ne_of_lt h h').elim⟩
   | Eq, a, b, h => ⟨fun _ => h, fun _ => rfl⟩
   | GT.gt, a, b, h => ⟨fun h => by injection h, fun h' => (ne_of_gt h h').elim⟩
 #align ordering.compares.eq_eq Ordering.Compares.eq_eq
--/
 
-#print Ordering.Compares.eq_gt /-
+/- warning: ordering.compares.eq_gt -> Ordering.Compares.eq_gt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {o : Ordering} {a : α} {b : α}, (Ordering.Compares.{u1} α (Preorder.toHasLt.{u1} α _inst_1) o a b) -> (Iff (Eq.{1} Ordering o Ordering.gt) (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) b a))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {o : Ordering} {a : α} {b : α}, (Ordering.Compares.{u1} α (Preorder.toLT.{u1} α _inst_1) o a b) -> (Iff (Eq.{1} Ordering o Ordering.gt) (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) b a))
+Case conversion may be inaccurate. Consider using '#align ordering.compares.eq_gt Ordering.Compares.eq_gtₓ'. -/
 theorem Compares.eq_gt [Preorder α] {o} {a b : α} (h : Compares o a b) : o = gt ↔ b < a :=
   swap_eq_iff_eq_swap.symm.trans h.symm.eq_lt
 #align ordering.compares.eq_gt Ordering.Compares.eq_gt
--/
 
-#print Ordering.Compares.ne_gt /-
+/- warning: ordering.compares.ne_gt -> Ordering.Compares.ne_gt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {o : Ordering} {a : α} {b : α}, (Ordering.Compares.{u1} α (Preorder.toHasLt.{u1} α _inst_1) o a b) -> (Iff (Ne.{1} Ordering o Ordering.gt) (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {o : Ordering} {a : α} {b : α}, (Ordering.Compares.{u1} α (Preorder.toLT.{u1} α _inst_1) o a b) -> (Iff (Ne.{1} Ordering o Ordering.gt) (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a b))
+Case conversion may be inaccurate. Consider using '#align ordering.compares.ne_gt Ordering.Compares.ne_gtₓ'. -/
 theorem Compares.ne_gt [Preorder α] {o} {a b : α} (h : Compares o a b) : o ≠ gt ↔ a ≤ b :=
   (not_congr swap_eq_iff_eq_swap.symm).trans h.symm.ne_lt
 #align ordering.compares.ne_gt Ordering.Compares.ne_gt
--/
 
-#print Ordering.Compares.le_total /-
+/- warning: ordering.compares.le_total -> Ordering.Compares.le_total is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α} {o : Ordering}, (Ordering.Compares.{u1} α (Preorder.toHasLt.{u1} α _inst_1) o a b) -> (Or (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a b) (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) b a))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α} {o : Ordering}, (Ordering.Compares.{u1} α (Preorder.toLT.{u1} α _inst_1) o a b) -> (Or (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a b) (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) b a))
+Case conversion may be inaccurate. Consider using '#align ordering.compares.le_total Ordering.Compares.le_totalₓ'. -/
 theorem Compares.le_total [Preorder α] {a b : α} : ∀ {o}, Compares o a b → a ≤ b ∨ b ≤ a
   | lt, h => Or.inl (le_of_lt h)
   | Eq, h => Or.inl (le_of_eq h)
   | GT.gt, h => Or.inr (le_of_lt h)
 #align ordering.compares.le_total Ordering.Compares.le_total
--/
 
-#print Ordering.Compares.le_antisymm /-
+/- warning: ordering.compares.le_antisymm -> Ordering.Compares.le_antisymm is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α} {o : Ordering}, (Ordering.Compares.{u1} α (Preorder.toHasLt.{u1} α _inst_1) o a b) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a b) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) b a) -> (Eq.{succ u1} α a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α} {o : Ordering}, (Ordering.Compares.{u1} α (Preorder.toLT.{u1} α _inst_1) o a b) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a b) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) b a) -> (Eq.{succ u1} α a b)
+Case conversion may be inaccurate. Consider using '#align ordering.compares.le_antisymm Ordering.Compares.le_antisymmₓ'. -/
 theorem Compares.le_antisymm [Preorder α] {a b : α} : ∀ {o}, Compares o a b → a ≤ b → b ≤ a → a = b
   | lt, h, _, hba => (not_le_of_lt h hba).elim
   | Eq, h, _, _ => h
   | GT.gt, h, hab, _ => (not_le_of_lt h hab).elim
 #align ordering.compares.le_antisymm Ordering.Compares.le_antisymm
--/
 
-#print Ordering.Compares.inj /-
+/- warning: ordering.compares.inj -> Ordering.Compares.inj is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {o₁ : Ordering} {o₂ : Ordering} {a : α} {b : α}, (Ordering.Compares.{u1} α (Preorder.toHasLt.{u1} α _inst_1) o₁ a b) -> (Ordering.Compares.{u1} α (Preorder.toHasLt.{u1} α _inst_1) o₂ a b) -> (Eq.{1} Ordering o₁ o₂)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {o₁ : Ordering} {o₂ : Ordering} {a : α} {b : α}, (Ordering.Compares.{u1} α (Preorder.toLT.{u1} α _inst_1) o₁ a b) -> (Ordering.Compares.{u1} α (Preorder.toLT.{u1} α _inst_1) o₂ a b) -> (Eq.{1} Ordering o₁ o₂)
+Case conversion may be inaccurate. Consider using '#align ordering.compares.inj Ordering.Compares.injₓ'. -/
 theorem Compares.inj [Preorder α] {o₁} :
     ∀ {o₂} {a b : α}, Compares o₁ a b → Compares o₂ a b → o₁ = o₂
   | lt, a, b, h₁, h₂ => h₁.eq_lt.2 h₂
   | Eq, a, b, h₁, h₂ => h₁.eq_eq.2 h₂
   | GT.gt, a, b, h₁, h₂ => h₁.eq_gt.2 h₂
 #align ordering.compares.inj Ordering.Compares.inj
--/
 
 /- warning: ordering.compares_iff_of_compares_impl -> Ordering.compares_iff_of_compares_impl is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : Preorder.{u2} β] {a : α} {b : α} {a' : β} {b' : β}, (forall {o : Ordering}, (Ordering.Compares.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) o a b) -> (Ordering.Compares.{u2} β (Preorder.toLT.{u2} β _inst_2) o a' b')) -> (forall (o : Ordering), Iff (Ordering.Compares.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) o a b) (Ordering.Compares.{u2} β (Preorder.toLT.{u2} β _inst_2) o a' b'))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : Preorder.{u2} β] {a : α} {b : α} {a' : β} {b' : β}, (forall {o : Ordering}, (Ordering.Compares.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) o a b) -> (Ordering.Compares.{u2} β (Preorder.toHasLt.{u2} β _inst_2) o a' b')) -> (forall (o : Ordering), Iff (Ordering.Compares.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) o a b) (Ordering.Compares.{u2} β (Preorder.toHasLt.{u2} β _inst_2) o a' b'))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : LinearOrder.{u2} α] [_inst_2 : Preorder.{u1} β] {a : α} {b : α} {a' : β} {b' : β}, (forall {o : Ordering}, (Ordering.Compares.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α (LinearOrder.toPartialOrder.{u2} α _inst_1))) o a b) -> (Ordering.Compares.{u1} β (Preorder.toLT.{u1} β _inst_2) o a' b')) -> (forall (o : Ordering), Iff (Ordering.Compares.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α (LinearOrder.toPartialOrder.{u2} α _inst_1))) o a b) (Ordering.Compares.{u1} β (Preorder.toLT.{u1} β _inst_2) o a' b'))
 Case conversion may be inaccurate. Consider using '#align ordering.compares_iff_of_compares_impl Ordering.compares_iff_of_compares_implₓ'. -/
@@ -218,14 +254,23 @@ theorem cmp_compares [LinearOrder α] (a b : α) : (cmp a b).Compares a b := by
 #align cmp_compares cmp_compares
 -/
 
-#print Ordering.Compares.cmp_eq /-
+/- warning: ordering.compares.cmp_eq -> Ordering.Compares.cmp_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α} {o : Ordering}, (Ordering.Compares.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) o a b) -> (Eq.{1} Ordering (cmp.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) (fun (a : α) (b : α) => LT.lt.decidable.{u1} α _inst_1 a b) a b) o)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α} {o : Ordering}, (Ordering.Compares.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) o a b) -> (Eq.{1} Ordering (cmp.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) (fun (a : α) (b : α) => instDecidableLtToLTToPreorderToPartialOrder.{u1} α _inst_1 a b) a b) o)
+Case conversion may be inaccurate. Consider using '#align ordering.compares.cmp_eq Ordering.Compares.cmp_eqₓ'. -/
 theorem Ordering.Compares.cmp_eq [LinearOrder α] {a b : α} {o : Ordering} (h : o.Compares a b) :
     cmp a b = o :=
   (cmp_compares a b).inj h
 #align ordering.compares.cmp_eq Ordering.Compares.cmp_eq
--/
 
-#print cmp_swap /-
+/- warning: cmp_swap -> cmp_swap is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1))] (a : α) (b : α), Eq.{1} Ordering (Ordering.swap (cmp.{u1} α (Preorder.toHasLt.{u1} α _inst_1) (fun (a : α) (b : α) => _inst_2 a b) a b)) (cmp.{u1} α (Preorder.toHasLt.{u1} α _inst_1) (fun (a : α) (b : α) => _inst_2 a b) b a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (fun (x._@.Mathlib.Order.Compare._hyg.2319 : α) (x._@.Mathlib.Order.Compare._hyg.2321 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.Compare._hyg.2319 x._@.Mathlib.Order.Compare._hyg.2321)] (a : α) (b : α), Eq.{1} Ordering (Ordering.swap (cmp.{u1} α (Preorder.toLT.{u1} α _inst_1) (fun (a : α) (b : α) => _inst_2 a b) a b)) (cmp.{u1} α (Preorder.toLT.{u1} α _inst_1) (fun (a : α) (b : α) => _inst_2 a b) b a)
+Case conversion may be inaccurate. Consider using '#align cmp_swap cmp_swapₓ'. -/
 @[simp]
 theorem cmp_swap [Preorder α] [@DecidableRel α (· < ·)] (a b : α) : (cmp a b).symm = cmp b a :=
   by
@@ -233,7 +278,6 @@ theorem cmp_swap [Preorder α] [@DecidableRel α (· < ·)] (a b : α) : (cmp a 
   by_cases a < b <;> by_cases h₂ : b < a <;> simp [h, h₂, Ordering.swap]
   exact lt_asymm h h₂
 #align cmp_swap cmp_swap
--/
 
 #print cmpLE_toDual /-
 @[simp]
@@ -277,7 +321,12 @@ theorem cmpLE_ofDual [LT α] [@DecidableRel α (· < ·)] (x y : αᵒᵈ) :
   rfl
 #align cmp_of_dual cmpLE_ofDual
 
-#print linearOrderOfCompares /-
+/- warning: linear_order_of_compares -> linearOrderOfCompares is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (cmp : α -> α -> Ordering), (forall (a : α) (b : α), Ordering.Compares.{u1} α (Preorder.toHasLt.{u1} α _inst_1) (cmp a b) a b) -> (LinearOrder.{u1} α)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (cmp : α -> α -> Ordering), (forall (a : α) (b : α), Ordering.Compares.{u1} α (Preorder.toLT.{u1} α _inst_1) (cmp a b) a b) -> (LinearOrder.{u1} α)
+Case conversion may be inaccurate. Consider using '#align linear_order_of_compares linearOrderOfComparesₓ'. -/
 /-- Generate a linear order structure from a preorder and `cmp` function. -/
 def linearOrderOfCompares [Preorder α] (cmp : α → α → Ordering)
     (h : ∀ a b, (cmp a b).Compares a b) : LinearOrder α :=
@@ -288,7 +337,6 @@ def linearOrderOfCompares [Preorder α] (cmp : α → α → Ordering)
     decidableLt := fun a b => decidable_of_iff _ (h a b).eq_lt
     DecidableEq := fun a b => decidable_of_iff _ (h a b).eq_eq }
 #align linear_order_of_compares linearOrderOfCompares
--/
 
 variable [LinearOrder α] (x y : α)
 
@@ -323,7 +371,7 @@ variable {x y} {β : Type _} [LinearOrder β] {x' y' : β}
 
 /- warning: cmp_eq_cmp_symm -> cmp_eq_cmp_symm is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {x : α} {y : α} {β : Type.{u2}} [_inst_2 : LinearOrder.{u2} β] {x' : β} {y' : β}, Iff (Eq.{1} Ordering (cmp.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) (fun (a : α) (b : α) => LT.lt.decidable.{u1} α _inst_1 a b) x y) (cmp.{u2} β (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β (LinearOrder.toPartialOrder.{u2} β _inst_2))) (fun (a : β) (b : β) => LT.lt.decidable.{u2} β _inst_2 a b) x' y')) (Eq.{1} Ordering (cmp.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) (fun (a : α) (b : α) => LT.lt.decidable.{u1} α _inst_1 a b) y x) (cmp.{u2} β (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β (LinearOrder.toPartialOrder.{u2} β _inst_2))) (fun (a : β) (b : β) => LT.lt.decidable.{u2} β _inst_2 a b) y' x'))
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {x : α} {y : α} {β : Type.{u2}} [_inst_2 : LinearOrder.{u2} β] {x' : β} {y' : β}, Iff (Eq.{1} Ordering (cmp.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) (fun (a : α) (b : α) => LT.lt.decidable.{u1} α _inst_1 a b) x y) (cmp.{u2} β (Preorder.toHasLt.{u2} β (PartialOrder.toPreorder.{u2} β (LinearOrder.toPartialOrder.{u2} β _inst_2))) (fun (a : β) (b : β) => LT.lt.decidable.{u2} β _inst_2 a b) x' y')) (Eq.{1} Ordering (cmp.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) (fun (a : α) (b : α) => LT.lt.decidable.{u1} α _inst_1 a b) y x) (cmp.{u2} β (Preorder.toHasLt.{u2} β (PartialOrder.toPreorder.{u2} β (LinearOrder.toPartialOrder.{u2} β _inst_2))) (fun (a : β) (b : β) => LT.lt.decidable.{u2} β _inst_2 a b) y' x'))
 but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : LinearOrder.{u2} α] {x : α} {y : α} {β : Type.{u1}} [_inst_2 : LinearOrder.{u1} β] {x' : β} {y' : β}, Iff (Eq.{1} Ordering (cmp.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α (LinearOrder.toPartialOrder.{u2} α _inst_1))) (fun (a : α) (b : α) => instDecidableLtToLTToPreorderToPartialOrder.{u2} α _inst_1 a b) x y) (cmp.{u1} β (Preorder.toLT.{u1} β (PartialOrder.toPreorder.{u1} β (LinearOrder.toPartialOrder.{u1} β _inst_2))) (fun (a : β) (b : β) => instDecidableLtToLTToPreorderToPartialOrder.{u1} β _inst_2 a b) x' y')) (Eq.{1} Ordering (cmp.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α (LinearOrder.toPartialOrder.{u2} α _inst_1))) (fun (a : α) (b : α) => instDecidableLtToLTToPreorderToPartialOrder.{u2} α _inst_1 a b) y x) (cmp.{u1} β (Preorder.toLT.{u1} β (PartialOrder.toPreorder.{u1} β (LinearOrder.toPartialOrder.{u1} β _inst_2))) (fun (a : β) (b : β) => instDecidableLtToLTToPreorderToPartialOrder.{u1} β _inst_2 a b) y' x'))
 Case conversion may be inaccurate. Consider using '#align cmp_eq_cmp_symm cmp_eq_cmp_symmₓ'. -/
@@ -333,7 +381,7 @@ theorem cmp_eq_cmp_symm : cmp x y = cmp x' y' ↔ cmp y x = cmp y' x' := by
 
 /- warning: lt_iff_lt_of_cmp_eq_cmp -> lt_iff_lt_of_cmp_eq_cmp is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {x : α} {y : α} {β : Type.{u2}} [_inst_2 : LinearOrder.{u2} β] {x' : β} {y' : β}, (Eq.{1} Ordering (cmp.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) (fun (a : α) (b : α) => LT.lt.decidable.{u1} α _inst_1 a b) x y) (cmp.{u2} β (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β (LinearOrder.toPartialOrder.{u2} β _inst_2))) (fun (a : β) (b : β) => LT.lt.decidable.{u2} β _inst_2 a b) x' y')) -> (Iff (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) x y) (LT.lt.{u2} β (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β (LinearOrder.toPartialOrder.{u2} β _inst_2))) x' y'))
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {x : α} {y : α} {β : Type.{u2}} [_inst_2 : LinearOrder.{u2} β] {x' : β} {y' : β}, (Eq.{1} Ordering (cmp.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) (fun (a : α) (b : α) => LT.lt.decidable.{u1} α _inst_1 a b) x y) (cmp.{u2} β (Preorder.toHasLt.{u2} β (PartialOrder.toPreorder.{u2} β (LinearOrder.toPartialOrder.{u2} β _inst_2))) (fun (a : β) (b : β) => LT.lt.decidable.{u2} β _inst_2 a b) x' y')) -> (Iff (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) x y) (LT.lt.{u2} β (Preorder.toHasLt.{u2} β (PartialOrder.toPreorder.{u2} β (LinearOrder.toPartialOrder.{u2} β _inst_2))) x' y'))
 but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : LinearOrder.{u2} α] {x : α} {y : α} {β : Type.{u1}} [_inst_2 : LinearOrder.{u1} β] {x' : β} {y' : β}, (Eq.{1} Ordering (cmp.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α (LinearOrder.toPartialOrder.{u2} α _inst_1))) (fun (a : α) (b : α) => instDecidableLtToLTToPreorderToPartialOrder.{u2} α _inst_1 a b) x y) (cmp.{u1} β (Preorder.toLT.{u1} β (PartialOrder.toPreorder.{u1} β (LinearOrder.toPartialOrder.{u1} β _inst_2))) (fun (a : β) (b : β) => instDecidableLtToLTToPreorderToPartialOrder.{u1} β _inst_2 a b) x' y')) -> (Iff (LT.lt.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α (LinearOrder.toPartialOrder.{u2} α _inst_1))) x y) (LT.lt.{u1} β (Preorder.toLT.{u1} β (PartialOrder.toPreorder.{u1} β (LinearOrder.toPartialOrder.{u1} β _inst_2))) x' y'))
 Case conversion may be inaccurate. Consider using '#align lt_iff_lt_of_cmp_eq_cmp lt_iff_lt_of_cmp_eq_cmpₓ'. -/
@@ -343,7 +391,7 @@ theorem lt_iff_lt_of_cmp_eq_cmp (h : cmp x y = cmp x' y') : x < y ↔ x' < y' :=
 
 /- warning: le_iff_le_of_cmp_eq_cmp -> le_iff_le_of_cmp_eq_cmp is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {x : α} {y : α} {β : Type.{u2}} [_inst_2 : LinearOrder.{u2} β] {x' : β} {y' : β}, (Eq.{1} Ordering (cmp.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) (fun (a : α) (b : α) => LT.lt.decidable.{u1} α _inst_1 a b) x y) (cmp.{u2} β (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β (LinearOrder.toPartialOrder.{u2} β _inst_2))) (fun (a : β) (b : β) => LT.lt.decidable.{u2} β _inst_2 a b) x' y')) -> (Iff (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) x y) (LE.le.{u2} β (Preorder.toLE.{u2} β (PartialOrder.toPreorder.{u2} β (LinearOrder.toPartialOrder.{u2} β _inst_2))) x' y'))
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {x : α} {y : α} {β : Type.{u2}} [_inst_2 : LinearOrder.{u2} β] {x' : β} {y' : β}, (Eq.{1} Ordering (cmp.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) (fun (a : α) (b : α) => LT.lt.decidable.{u1} α _inst_1 a b) x y) (cmp.{u2} β (Preorder.toHasLt.{u2} β (PartialOrder.toPreorder.{u2} β (LinearOrder.toPartialOrder.{u2} β _inst_2))) (fun (a : β) (b : β) => LT.lt.decidable.{u2} β _inst_2 a b) x' y')) -> (Iff (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) x y) (LE.le.{u2} β (Preorder.toHasLe.{u2} β (PartialOrder.toPreorder.{u2} β (LinearOrder.toPartialOrder.{u2} β _inst_2))) x' y'))
 but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : LinearOrder.{u2} α] {x : α} {y : α} {β : Type.{u1}} [_inst_2 : LinearOrder.{u1} β] {x' : β} {y' : β}, (Eq.{1} Ordering (cmp.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α (LinearOrder.toPartialOrder.{u2} α _inst_1))) (fun (a : α) (b : α) => instDecidableLtToLTToPreorderToPartialOrder.{u2} α _inst_1 a b) x y) (cmp.{u1} β (Preorder.toLT.{u1} β (PartialOrder.toPreorder.{u1} β (LinearOrder.toPartialOrder.{u1} β _inst_2))) (fun (a : β) (b : β) => instDecidableLtToLTToPreorderToPartialOrder.{u1} β _inst_2 a b) x' y')) -> (Iff (LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (LinearOrder.toPartialOrder.{u2} α _inst_1))) x y) (LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (LinearOrder.toPartialOrder.{u1} β _inst_2))) x' y'))
 Case conversion may be inaccurate. Consider using '#align le_iff_le_of_cmp_eq_cmp le_iff_le_of_cmp_eq_cmpₓ'. -/
@@ -357,7 +405,7 @@ theorem le_iff_le_of_cmp_eq_cmp (h : cmp x y = cmp x' y') : x ≤ y ↔ x' ≤ y
 
 /- warning: eq_iff_eq_of_cmp_eq_cmp -> eq_iff_eq_of_cmp_eq_cmp is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {x : α} {y : α} {β : Type.{u2}} [_inst_2 : LinearOrder.{u2} β] {x' : β} {y' : β}, (Eq.{1} Ordering (cmp.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) (fun (a : α) (b : α) => LT.lt.decidable.{u1} α _inst_1 a b) x y) (cmp.{u2} β (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β (LinearOrder.toPartialOrder.{u2} β _inst_2))) (fun (a : β) (b : β) => LT.lt.decidable.{u2} β _inst_2 a b) x' y')) -> (Iff (Eq.{succ u1} α x y) (Eq.{succ u2} β x' y'))
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {x : α} {y : α} {β : Type.{u2}} [_inst_2 : LinearOrder.{u2} β] {x' : β} {y' : β}, (Eq.{1} Ordering (cmp.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) (fun (a : α) (b : α) => LT.lt.decidable.{u1} α _inst_1 a b) x y) (cmp.{u2} β (Preorder.toHasLt.{u2} β (PartialOrder.toPreorder.{u2} β (LinearOrder.toPartialOrder.{u2} β _inst_2))) (fun (a : β) (b : β) => LT.lt.decidable.{u2} β _inst_2 a b) x' y')) -> (Iff (Eq.{succ u1} α x y) (Eq.{succ u2} β x' y'))
 but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : LinearOrder.{u2} α] {x : α} {y : α} {β : Type.{u1}} [_inst_2 : LinearOrder.{u1} β] {x' : β} {y' : β}, (Eq.{1} Ordering (cmp.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α (LinearOrder.toPartialOrder.{u2} α _inst_1))) (fun (a : α) (b : α) => instDecidableLtToLTToPreorderToPartialOrder.{u2} α _inst_1 a b) x y) (cmp.{u1} β (Preorder.toLT.{u1} β (PartialOrder.toPreorder.{u1} β (LinearOrder.toPartialOrder.{u1} β _inst_2))) (fun (a : β) (b : β) => instDecidableLtToLTToPreorderToPartialOrder.{u1} β _inst_2 a b) x' y')) -> (Iff (Eq.{succ u2} α x y) (Eq.{succ u1} β x' y'))
 Case conversion may be inaccurate. Consider using '#align eq_iff_eq_of_cmp_eq_cmp eq_iff_eq_of_cmp_eq_cmpₓ'. -/
@@ -366,17 +414,25 @@ theorem eq_iff_eq_of_cmp_eq_cmp (h : cmp x y = cmp x' y') : x = y ↔ x' = y' :=
     le_iff_le_of_cmp_eq_cmp (cmp_eq_cmp_symm.1 h)]
 #align eq_iff_eq_of_cmp_eq_cmp eq_iff_eq_of_cmp_eq_cmp
 
-#print LT.lt.cmp_eq_lt /-
+/- warning: has_lt.lt.cmp_eq_lt -> LT.lt.cmp_eq_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {x : α} {y : α}, (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) x y) -> (Eq.{1} Ordering (cmp.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) (fun (a : α) (b : α) => LT.lt.decidable.{u1} α _inst_1 a b) x y) Ordering.lt)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {x : α} {y : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) x y) -> (Eq.{1} Ordering (cmp.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) (fun (a : α) (b : α) => instDecidableLtToLTToPreorderToPartialOrder.{u1} α _inst_1 a b) x y) Ordering.lt)
+Case conversion may be inaccurate. Consider using '#align has_lt.lt.cmp_eq_lt LT.lt.cmp_eq_ltₓ'. -/
 theorem LT.lt.cmp_eq_lt (h : x < y) : cmp x y = Ordering.lt :=
   (cmp_eq_lt_iff _ _).2 h
 #align has_lt.lt.cmp_eq_lt LT.lt.cmp_eq_lt
--/
 
-#print LT.lt.cmp_eq_gt /-
+/- warning: has_lt.lt.cmp_eq_gt -> LT.lt.cmp_eq_gt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {x : α} {y : α}, (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) x y) -> (Eq.{1} Ordering (cmp.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) (fun (a : α) (b : α) => LT.lt.decidable.{u1} α _inst_1 a b) y x) Ordering.gt)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {x : α} {y : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) x y) -> (Eq.{1} Ordering (cmp.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) (fun (a : α) (b : α) => instDecidableLtToLTToPreorderToPartialOrder.{u1} α _inst_1 a b) y x) Ordering.gt)
+Case conversion may be inaccurate. Consider using '#align has_lt.lt.cmp_eq_gt LT.lt.cmp_eq_gtₓ'. -/
 theorem LT.lt.cmp_eq_gt (h : x < y) : cmp y x = Ordering.gt :=
   (cmp_eq_gt_iff _ _).2 h
 #align has_lt.lt.cmp_eq_gt LT.lt.cmp_eq_gt
--/
 
 #print Eq.cmp_eq_eq /-
 theorem Eq.cmp_eq_eq (h : x = y) : cmp x y = Ordering.eq :=

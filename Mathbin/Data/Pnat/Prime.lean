@@ -137,7 +137,7 @@ theorem gcd_mul_lcm (n m : ℕ+) : gcd n m * lcm n m = n * m :=
 
 /- warning: pnat.eq_one_of_lt_two -> PNat.eq_one_of_lt_two is a dubious translation:
 lean 3 declaration is
-  forall {n : PNat}, (LT.lt.{0} PNat (Preorder.toLT.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) n (OfNat.ofNat.{0} PNat 2 (OfNat.mk.{0} PNat 2 (bit0.{0} PNat PNat.hasAdd (One.one.{0} PNat PNat.hasOne))))) -> (Eq.{1} PNat n (OfNat.ofNat.{0} PNat 1 (OfNat.mk.{0} PNat 1 (One.one.{0} PNat PNat.hasOne))))
+  forall {n : PNat}, (LT.lt.{0} PNat (Preorder.toHasLt.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) n (OfNat.ofNat.{0} PNat 2 (OfNat.mk.{0} PNat 2 (bit0.{0} PNat PNat.hasAdd (One.one.{0} PNat PNat.hasOne))))) -> (Eq.{1} PNat n (OfNat.ofNat.{0} PNat 1 (OfNat.mk.{0} PNat 1 (One.one.{0} PNat PNat.hasOne))))
 but is expected to have type
   forall {n : PNat}, (LT.lt.{0} PNat (Preorder.toLT.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) n (OfNat.ofNat.{0} PNat 2 (instOfNatPNatHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) -> (Eq.{1} PNat n (OfNat.ofNat.{0} PNat 1 (instOfNatPNatHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))
 Case conversion may be inaccurate. Consider using '#align pnat.eq_one_of_lt_two PNat.eq_one_of_lt_twoₓ'. -/
@@ -159,11 +159,15 @@ def Prime (p : ℕ+) : Prop :=
 #align pnat.prime PNat.Prime
 -/
 
-#print PNat.Prime.one_lt /-
+/- warning: pnat.prime.one_lt -> PNat.Prime.one_lt is a dubious translation:
+lean 3 declaration is
+  forall {p : PNat}, (PNat.Prime p) -> (LT.lt.{0} PNat (Preorder.toHasLt.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) (OfNat.ofNat.{0} PNat 1 (OfNat.mk.{0} PNat 1 (One.one.{0} PNat PNat.hasOne))) p)
+but is expected to have type
+  forall {p : PNat}, (PNat.Prime p) -> (LT.lt.{0} PNat (Preorder.toLT.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) (OfNat.ofNat.{0} PNat 1 (instOfNatPNatHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))) p)
+Case conversion may be inaccurate. Consider using '#align pnat.prime.one_lt PNat.Prime.one_ltₓ'. -/
 theorem Prime.one_lt {p : ℕ+} : p.Prime → 1 < p :=
   Nat.Prime.one_lt
 #align pnat.prime.one_lt PNat.Prime.one_lt
--/
 
 /- warning: pnat.prime_two -> PNat.prime_two is a dubious translation:
 lean 3 declaration is

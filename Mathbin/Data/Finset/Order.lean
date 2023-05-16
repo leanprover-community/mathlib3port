@@ -40,10 +40,14 @@ theorem Directed.finset_le {r : α → α → Prop} [IsTrans α r] {ι} [hι : N
         Or.cases_on (Multiset.mem_cons.1 h) (fun h => h.symm ▸ h₁) fun h => trans (H _ h) h₂⟩
 #align directed.finset_le Directed.finset_le
 
-#print Finset.exists_le /-
+/- warning: finset.exists_le -> Finset.exists_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Nonempty.{succ u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : IsDirected.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_2))] (s : Finset.{u1} α), Exists.{succ u1} α (fun (M : α) => forall (i : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) i s) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_2) i M))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Nonempty.{succ u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : IsDirected.{u1} α (fun (x._@.Mathlib.Data.Finset.Order._hyg.225 : α) (x._@.Mathlib.Data.Finset.Order._hyg.227 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_2) x._@.Mathlib.Data.Finset.Order._hyg.225 x._@.Mathlib.Data.Finset.Order._hyg.227)] (s : Finset.{u1} α), Exists.{succ u1} α (fun (M : α) => forall (i : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) i s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_2) i M))
+Case conversion may be inaccurate. Consider using '#align finset.exists_le Finset.exists_leₓ'. -/
 theorem Finset.exists_le [Nonempty α] [Preorder α] [IsDirected α (· ≤ ·)] (s : Finset α) :
     ∃ M, ∀ i ∈ s, i ≤ M :=
   directed_id.finset_le _
 #align finset.exists_le Finset.exists_le
--/
 

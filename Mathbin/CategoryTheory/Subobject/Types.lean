@@ -82,11 +82,15 @@ instance : WellPowered (Type u) :=
   wellPowered_of_essentiallySmall_monoOver fun α =>
     EssentiallySmall.mk' (Types.monoOverEquivalenceSet α)
 
-#print Types.subobjectEquivSet /-
+/- warning: types.subobject_equiv_set -> Types.subobjectEquivSet is a dubious translation:
+lean 3 declaration is
+  forall (α : Type.{u1}), OrderIso.{succ u1, u1} (CategoryTheory.Subobject.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} α) (Set.{u1} α) (Preorder.toHasLe.{succ u1} (CategoryTheory.ThinSkeleton.{u1, succ u1} (CategoryTheory.MonoOver.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} α) (CategoryTheory.MonoOver.category.{succ u1, u1} Type.{u1} CategoryTheory.types.{u1} α)) (CategoryTheory.ThinSkeleton.preorder.{u1, succ u1} (CategoryTheory.MonoOver.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} α) (CategoryTheory.MonoOver.category.{succ u1, u1} Type.{u1} CategoryTheory.types.{u1} α))) (Set.hasLe.{u1} α)
+but is expected to have type
+  forall (α : Type.{u1}), OrderIso.{succ u1, u1} (CategoryTheory.Subobject.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} α) (Set.{u1} α) (Preorder.toLE.{succ u1} (CategoryTheory.Subobject.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} α) (PartialOrder.toPreorder.{succ u1} (CategoryTheory.Subobject.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} α) (CategoryTheory.instPartialOrderSubobject.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1} α))) (Set.instLESet.{u1} α)
+Case conversion may be inaccurate. Consider using '#align types.subobject_equiv_set Types.subobjectEquivSetₓ'. -/
 /-- For `α : Type u`, `subobject α` is order isomorphic to `set α`.
 -/
 noncomputable def Types.subobjectEquivSet (α : Type u) : Subobject α ≃o Set α :=
   (Types.monoOverEquivalenceSet α).thinSkeletonOrderIso
 #align types.subobject_equiv_set Types.subobjectEquivSet
--/
 

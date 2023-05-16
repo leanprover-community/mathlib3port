@@ -27,7 +27,12 @@ section PartialSucc
 
 variable {α : Type _} [PartialOrder α] [SuccOrder α] [IsSuccArchimedean α]
 
-#print reflTransGen_of_succ_of_le /-
+/- warning: refl_trans_gen_of_succ_of_le -> reflTransGen_of_succ_of_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] [_inst_3 : IsSuccArchimedean.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2] (r : α -> α -> Prop) {n : α} {m : α}, (forall (i : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) i (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) n m)) -> (r i (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 i))) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) n m) -> (Relation.ReflTransGen.{u1} α r n m)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] [_inst_3 : IsSuccArchimedean.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2] (r : α -> α -> Prop) {n : α} {m : α}, (forall (i : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) i (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) n m)) -> (r i (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 i))) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) n m) -> (Relation.ReflTransGen.{u1} α r n m)
+Case conversion may be inaccurate. Consider using '#align refl_trans_gen_of_succ_of_le reflTransGen_of_succ_of_leₓ'. -/
 /-- For `n ≤ m`, `(n, m)` is in the reflexive-transitive closure of `~` if `i ~ succ i`
   for all `i` between `n` and `m`. -/
 theorem reflTransGen_of_succ_of_le (r : α → α → Prop) {n m : α} (h : ∀ i ∈ Ico n m, r i (succ i))
@@ -41,9 +46,13 @@ theorem reflTransGen_of_succ_of_le (r : α → α → Prop) {n m : α} (h : ∀ 
     · rwa [← hm]
     exact this.tail (h m ⟨hnm, hm⟩)
 #align refl_trans_gen_of_succ_of_le reflTransGen_of_succ_of_le
--/
 
-#print reflTransGen_of_succ_of_ge /-
+/- warning: refl_trans_gen_of_succ_of_ge -> reflTransGen_of_succ_of_ge is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] [_inst_3 : IsSuccArchimedean.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2] (r : α -> α -> Prop) {n : α} {m : α}, (forall (i : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) i (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) m n)) -> (r (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 i) i)) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) m n) -> (Relation.ReflTransGen.{u1} α r n m)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] [_inst_3 : IsSuccArchimedean.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2] (r : α -> α -> Prop) {n : α} {m : α}, (forall (i : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) i (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) m n)) -> (r (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 i) i)) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) m n) -> (Relation.ReflTransGen.{u1} α r n m)
+Case conversion may be inaccurate. Consider using '#align refl_trans_gen_of_succ_of_ge reflTransGen_of_succ_of_geₓ'. -/
 /-- For `m ≤ n`, `(n, m)` is in the reflexive-transitive closure of `~` if `succ i ~ i`
   for all `i` between `n` and `m`. -/
 theorem reflTransGen_of_succ_of_ge (r : α → α → Prop) {n m : α} (h : ∀ i ∈ Ico m n, r (succ i) i)
@@ -52,25 +61,32 @@ theorem reflTransGen_of_succ_of_ge (r : α → α → Prop) {n m : α} (h : ∀ 
   rw [← refl_trans_gen_swap]
   exact reflTransGen_of_succ_of_le (swap r) h hmn
 #align refl_trans_gen_of_succ_of_ge reflTransGen_of_succ_of_ge
--/
 
-#print transGen_of_succ_of_lt /-
+/- warning: trans_gen_of_succ_of_lt -> transGen_of_succ_of_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] [_inst_3 : IsSuccArchimedean.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2] (r : α -> α -> Prop) {n : α} {m : α}, (forall (i : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) i (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) n m)) -> (r i (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 i))) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) n m) -> (Relation.TransGen.{u1} α r n m)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] [_inst_3 : IsSuccArchimedean.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2] (r : α -> α -> Prop) {n : α} {m : α}, (forall (i : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) i (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) n m)) -> (r i (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 i))) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) n m) -> (Relation.TransGen.{u1} α r n m)
+Case conversion may be inaccurate. Consider using '#align trans_gen_of_succ_of_lt transGen_of_succ_of_ltₓ'. -/
 /-- For `n < m`, `(n, m)` is in the transitive closure of a relation `~` if `i ~ succ i`
   for all `i` between `n` and `m`. -/
 theorem transGen_of_succ_of_lt (r : α → α → Prop) {n m : α} (h : ∀ i ∈ Ico n m, r i (succ i))
     (hnm : n < m) : TransGen r n m :=
   (reflTransGen_iff_eq_or_transGen.mp <| reflTransGen_of_succ_of_le r h hnm.le).resolve_left hnm.ne'
 #align trans_gen_of_succ_of_lt transGen_of_succ_of_lt
--/
 
-#print transGen_of_succ_of_gt /-
+/- warning: trans_gen_of_succ_of_gt -> transGen_of_succ_of_gt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] [_inst_3 : IsSuccArchimedean.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2] (r : α -> α -> Prop) {n : α} {m : α}, (forall (i : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) i (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) m n)) -> (r (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 i) i)) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) m n) -> (Relation.TransGen.{u1} α r n m)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] [_inst_3 : IsSuccArchimedean.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2] (r : α -> α -> Prop) {n : α} {m : α}, (forall (i : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) i (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) m n)) -> (r (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 i) i)) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) m n) -> (Relation.TransGen.{u1} α r n m)
+Case conversion may be inaccurate. Consider using '#align trans_gen_of_succ_of_gt transGen_of_succ_of_gtₓ'. -/
 /-- For `m < n`, `(n, m)` is in the transitive closure of a relation `~` if `succ i ~ i`
   for all `i` between `n` and `m`. -/
 theorem transGen_of_succ_of_gt (r : α → α → Prop) {n m : α} (h : ∀ i ∈ Ico m n, r (succ i) i)
     (hmn : m < n) : TransGen r n m :=
   (reflTransGen_iff_eq_or_transGen.mp <| reflTransGen_of_succ_of_ge r h hmn.le).resolve_left hmn.Ne
 #align trans_gen_of_succ_of_gt transGen_of_succ_of_gt
--/
 
 end PartialSucc
 
@@ -113,41 +129,57 @@ section PartialPred
 
 variable {α : Type _} [PartialOrder α] [PredOrder α] [IsPredArchimedean α]
 
-#print reflTransGen_of_pred_of_ge /-
+/- warning: refl_trans_gen_of_pred_of_ge -> reflTransGen_of_pred_of_ge is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] [_inst_3 : IsPredArchimedean.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2] (r : α -> α -> Prop) {n : α} {m : α}, (forall (i : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) i (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) m n)) -> (r i (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 i))) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) m n) -> (Relation.ReflTransGen.{u1} α r n m)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] [_inst_3 : IsPredArchimedean.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2] (r : α -> α -> Prop) {n : α} {m : α}, (forall (i : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) i (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) m n)) -> (r i (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 i))) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) m n) -> (Relation.ReflTransGen.{u1} α r n m)
+Case conversion may be inaccurate. Consider using '#align refl_trans_gen_of_pred_of_ge reflTransGen_of_pred_of_geₓ'. -/
 /-- For `m ≤ n`, `(n, m)` is in the reflexive-transitive closure of `~` if `i ~ pred i`
   for all `i` between `n` and `m`. -/
 theorem reflTransGen_of_pred_of_ge (r : α → α → Prop) {n m : α} (h : ∀ i ∈ Ioc m n, r i (pred i))
     (hnm : m ≤ n) : ReflTransGen r n m :=
   @reflTransGen_of_succ_of_le αᵒᵈ _ _ _ r n m (fun x hx => h x ⟨hx.2, hx.1⟩) hnm
 #align refl_trans_gen_of_pred_of_ge reflTransGen_of_pred_of_ge
--/
 
-#print reflTransGen_of_pred_of_le /-
+/- warning: refl_trans_gen_of_pred_of_le -> reflTransGen_of_pred_of_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] [_inst_3 : IsPredArchimedean.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2] (r : α -> α -> Prop) {n : α} {m : α}, (forall (i : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) i (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) n m)) -> (r (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 i) i)) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) n m) -> (Relation.ReflTransGen.{u1} α r n m)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] [_inst_3 : IsPredArchimedean.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2] (r : α -> α -> Prop) {n : α} {m : α}, (forall (i : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) i (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) n m)) -> (r (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 i) i)) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) n m) -> (Relation.ReflTransGen.{u1} α r n m)
+Case conversion may be inaccurate. Consider using '#align refl_trans_gen_of_pred_of_le reflTransGen_of_pred_of_leₓ'. -/
 /-- For `n ≤ m`, `(n, m)` is in the reflexive-transitive closure of `~` if `pred i ~ i`
   for all `i` between `n` and `m`. -/
 theorem reflTransGen_of_pred_of_le (r : α → α → Prop) {n m : α} (h : ∀ i ∈ Ioc n m, r (pred i) i)
     (hmn : n ≤ m) : ReflTransGen r n m :=
   @reflTransGen_of_succ_of_ge αᵒᵈ _ _ _ r n m (fun x hx => h x ⟨hx.2, hx.1⟩) hmn
 #align refl_trans_gen_of_pred_of_le reflTransGen_of_pred_of_le
--/
 
-#print transGen_of_pred_of_gt /-
+/- warning: trans_gen_of_pred_of_gt -> transGen_of_pred_of_gt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] [_inst_3 : IsPredArchimedean.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2] (r : α -> α -> Prop) {n : α} {m : α}, (forall (i : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) i (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) m n)) -> (r i (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 i))) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) m n) -> (Relation.TransGen.{u1} α r n m)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] [_inst_3 : IsPredArchimedean.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2] (r : α -> α -> Prop) {n : α} {m : α}, (forall (i : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) i (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) m n)) -> (r i (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 i))) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) m n) -> (Relation.TransGen.{u1} α r n m)
+Case conversion may be inaccurate. Consider using '#align trans_gen_of_pred_of_gt transGen_of_pred_of_gtₓ'. -/
 /-- For `m < n`, `(n, m)` is in the transitive closure of a relation `~` for `n ≠ m` if `i ~ pred i`
   for all `i` between `n` and `m`. -/
 theorem transGen_of_pred_of_gt (r : α → α → Prop) {n m : α} (h : ∀ i ∈ Ioc m n, r i (pred i))
     (hnm : m < n) : TransGen r n m :=
   @transGen_of_succ_of_lt αᵒᵈ _ _ _ r _ _ (fun x hx => h x ⟨hx.2, hx.1⟩) hnm
 #align trans_gen_of_pred_of_gt transGen_of_pred_of_gt
--/
 
-#print transGen_of_pred_of_lt /-
+/- warning: trans_gen_of_pred_of_lt -> transGen_of_pred_of_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] [_inst_3 : IsPredArchimedean.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2] (r : α -> α -> Prop) {n : α} {m : α}, (forall (i : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) i (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) n m)) -> (r (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 i) i)) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) n m) -> (Relation.TransGen.{u1} α r n m)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] [_inst_3 : IsPredArchimedean.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2] (r : α -> α -> Prop) {n : α} {m : α}, (forall (i : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) i (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) n m)) -> (r (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 i) i)) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) n m) -> (Relation.TransGen.{u1} α r n m)
+Case conversion may be inaccurate. Consider using '#align trans_gen_of_pred_of_lt transGen_of_pred_of_ltₓ'. -/
 /-- For `n < m`, `(n, m)` is in the transitive closure of a relation `~` for `n ≠ m` if `pred i ~ i`
   for all `i` between `n` and `m`. -/
 theorem transGen_of_pred_of_lt (r : α → α → Prop) {n m : α} (h : ∀ i ∈ Ioc n m, r (pred i) i)
     (hmn : n < m) : TransGen r n m :=
   @transGen_of_succ_of_gt αᵒᵈ _ _ _ r _ _ (fun x hx => h x ⟨hx.2, hx.1⟩) hmn
 #align trans_gen_of_pred_of_lt transGen_of_pred_of_lt
--/
 
 end PartialPred
 

@@ -331,7 +331,7 @@ theorem count_bind [DecidableEq α] {m : Multiset β} {f : β → Multiset α} {
 
 /- warning: multiset.le_bind -> Multiset.le_bind is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> (Multiset.{u2} β)} (S : Multiset.{u1} α) {x : α}, (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) x S) -> (LE.le.{u2} (Multiset.{u2} β) (Preorder.toLE.{u2} (Multiset.{u2} β) (PartialOrder.toPreorder.{u2} (Multiset.{u2} β) (Multiset.partialOrder.{u2} β))) (f x) (Multiset.bind.{u1, u2} α β S f))
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> (Multiset.{u2} β)} (S : Multiset.{u1} α) {x : α}, (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) x S) -> (LE.le.{u2} (Multiset.{u2} β) (Preorder.toHasLe.{u2} (Multiset.{u2} β) (PartialOrder.toPreorder.{u2} (Multiset.{u2} β) (Multiset.partialOrder.{u2} β))) (f x) (Multiset.bind.{u1, u2} α β S f))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> (Multiset.{u1} β)} (S : Multiset.{u2} α) {x : α}, (Membership.mem.{u2, u2} α (Multiset.{u2} α) (Multiset.instMembershipMultiset.{u2} α) x S) -> (LE.le.{u1} (Multiset.{u1} β) (Preorder.toLE.{u1} (Multiset.{u1} β) (PartialOrder.toPreorder.{u1} (Multiset.{u1} β) (Multiset.instPartialOrderMultiset.{u1} β))) (f x) (Multiset.bind.{u2, u1} α β S f))
 Case conversion may be inaccurate. Consider using '#align multiset.le_bind Multiset.le_bindₓ'. -/

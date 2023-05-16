@@ -508,7 +508,7 @@ theorem coe_mono [Preorder α] : Monotone (coe : α → WithBot α) := fun a b =
 
 /- warning: with_bot.monotone_iff -> WithBot.monotone_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : (WithBot.{u1} α) -> β}, Iff (Monotone.{u1, u2} (WithBot.{u1} α) β (WithBot.preorder.{u1} α _inst_1) _inst_2 f) (And (Monotone.{u1, u2} α β _inst_1 _inst_2 (Function.comp.{succ u1, succ u1, succ u2} α (WithBot.{u1} α) β f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α)))))) (forall (x : α), LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) (f (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.hasBot.{u1} α))) (f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) x))))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : (WithBot.{u1} α) -> β}, Iff (Monotone.{u1, u2} (WithBot.{u1} α) β (WithBot.preorder.{u1} α _inst_1) _inst_2 f) (And (Monotone.{u1, u2} α β _inst_1 _inst_2 (Function.comp.{succ u1, succ u1, succ u2} α (WithBot.{u1} α) β f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α)))))) (forall (x : α), LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) (f (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.hasBot.{u1} α))) (f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) x))))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : (WithBot.{u2} α) -> β}, Iff (Monotone.{u2, u1} (WithBot.{u2} α) β (WithBot.preorder.{u2} α _inst_1) _inst_2 f) (And (Monotone.{u2, u1} α β _inst_1 _inst_2 (fun (a : α) => f (WithBot.some.{u2} α a))) (forall (x : α), LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) (f (Bot.bot.{u2} (WithBot.{u2} α) (WithBot.bot.{u2} α))) (f (WithBot.some.{u2} α x))))
 Case conversion may be inaccurate. Consider using '#align with_bot.monotone_iff WithBot.monotone_iffₓ'. -/
@@ -543,7 +543,7 @@ alias monotone_map_iff ↔ _ _root_.monotone.with_bot_map
 
 /- warning: with_bot.strict_mono_iff -> WithBot.strictMono_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : (WithBot.{u1} α) -> β}, Iff (StrictMono.{u1, u2} (WithBot.{u1} α) β (WithBot.preorder.{u1} α _inst_1) _inst_2 f) (And (StrictMono.{u1, u2} α β _inst_1 _inst_2 (Function.comp.{succ u1, succ u1, succ u2} α (WithBot.{u1} α) β f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α)))))) (forall (x : α), LT.lt.{u2} β (Preorder.toLT.{u2} β _inst_2) (f (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.hasBot.{u1} α))) (f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) x))))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : (WithBot.{u1} α) -> β}, Iff (StrictMono.{u1, u2} (WithBot.{u1} α) β (WithBot.preorder.{u1} α _inst_1) _inst_2 f) (And (StrictMono.{u1, u2} α β _inst_1 _inst_2 (Function.comp.{succ u1, succ u1, succ u2} α (WithBot.{u1} α) β f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α)))))) (forall (x : α), LT.lt.{u2} β (Preorder.toHasLt.{u2} β _inst_2) (f (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.hasBot.{u1} α))) (f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) x))))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : (WithBot.{u2} α) -> β}, Iff (StrictMono.{u2, u1} (WithBot.{u2} α) β (WithBot.preorder.{u2} α _inst_1) _inst_2 f) (And (StrictMono.{u2, u1} α β _inst_1 _inst_2 (fun (a : α) => f (WithBot.some.{u2} α a))) (forall (x : α), LT.lt.{u1} β (Preorder.toLT.{u1} β _inst_2) (f (Bot.bot.{u2} (WithBot.{u2} α) (WithBot.bot.{u2} α))) (f (WithBot.some.{u2} α x))))
 Case conversion may be inaccurate. Consider using '#align with_bot.strict_mono_iff WithBot.strictMono_iffₓ'. -/
@@ -578,7 +578,7 @@ alias strict_mono_map_iff ↔ _ _root_.strict_mono.with_bot_map
 
 /- warning: with_bot.map_le_iff -> WithBot.map_le_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] (f : α -> β), (forall {a : α} {b : α}, Iff (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) (f a) (f b)) (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a b)) -> (forall (a : WithBot.{u1} α) (b : WithBot.{u1} α), Iff (LE.le.{u2} (WithBot.{u2} β) (Preorder.toLE.{u2} (WithBot.{u2} β) (WithBot.preorder.{u2} β _inst_2)) (WithBot.map.{u1, u2} α β f a) (WithBot.map.{u1, u2} α β f b)) (LE.le.{u1} (WithBot.{u1} α) (Preorder.toLE.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_1)) a b))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] (f : α -> β), (forall {a : α} {b : α}, Iff (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) (f a) (f b)) (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a b)) -> (forall (a : WithBot.{u1} α) (b : WithBot.{u1} α), Iff (LE.le.{u2} (WithBot.{u2} β) (Preorder.toHasLe.{u2} (WithBot.{u2} β) (WithBot.preorder.{u2} β _inst_2)) (WithBot.map.{u1, u2} α β f a) (WithBot.map.{u1, u2} α β f b)) (LE.le.{u1} (WithBot.{u1} α) (Preorder.toHasLe.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_1)) a b))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] (f : α -> β), (forall {a : α} {b : α}, Iff (LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) (f a) (f b)) (LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) a b)) -> (forall (a : WithBot.{u2} α) (b : WithBot.{u2} α), Iff (LE.le.{u1} (WithBot.{u1} β) (Preorder.toLE.{u1} (WithBot.{u1} β) (WithBot.preorder.{u1} β _inst_2)) (WithBot.map.{u2, u1} α β f a) (WithBot.map.{u2, u1} α β f b)) (LE.le.{u2} (WithBot.{u2} α) (Preorder.toLE.{u2} (WithBot.{u2} α) (WithBot.preorder.{u2} α _inst_1)) a b))
 Case conversion may be inaccurate. Consider using '#align with_bot.map_le_iff WithBot.map_le_iffₓ'. -/
@@ -589,12 +589,16 @@ theorem map_le_iff [Preorder α] [Preorder β] (f : α → β) (mono_iff : ∀ {
   | (a : α), (b : α) => by simpa only [map_coe, coe_le_coe] using mono_iff
 #align with_bot.map_le_iff WithBot.map_le_iff
 
-#print WithBot.le_coe_unbot' /-
+/- warning: with_bot.le_coe_unbot' -> WithBot.le_coe_unbot' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : WithBot.{u1} α) (b : α), LE.le.{u1} (WithBot.{u1} α) (Preorder.toHasLe.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_1)) a ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) (WithBot.unbot'.{u1} α b a))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : WithBot.{u1} α) (b : α), LE.le.{u1} (WithBot.{u1} α) (Preorder.toLE.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_1)) a (WithBot.some.{u1} α (WithBot.unbot'.{u1} α b a))
+Case conversion may be inaccurate. Consider using '#align with_bot.le_coe_unbot' WithBot.le_coe_unbot'ₓ'. -/
 theorem le_coe_unbot' [Preorder α] : ∀ (a : WithBot α) (b : α), a ≤ a.unbot' b
   | (a : α), b => le_rfl
   | ⊥, b => bot_le
 #align with_bot.le_coe_unbot' WithBot.le_coe_unbot'
--/
 
 /- warning: with_bot.unbot'_bot_le_iff -> WithBot.unbot'_bot_le_iff is a dubious translation:
 lean 3 declaration is
@@ -691,7 +695,7 @@ instance [DistribLattice α] : DistribLattice (WithBot α) :=
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (LE.le.{u1} α _inst_1)], DecidableRel.{succ u1} (WithBot.{u1} α) (LE.le.{u1} (WithBot.{u1} α) (WithBot.hasLe.{u1} α _inst_1))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.4186 : α) (x._@.Mathlib.Order.WithBot._hyg.4188 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.4186 x._@.Mathlib.Order.WithBot._hyg.4188)], DecidableRel.{succ u1} (WithBot.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.4206 : WithBot.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.4208 : WithBot.{u1} α) => LE.le.{u1} (WithBot.{u1} α) (WithBot.le.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.4206 x._@.Mathlib.Order.WithBot._hyg.4208)
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.4202 : α) (x._@.Mathlib.Order.WithBot._hyg.4204 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.4202 x._@.Mathlib.Order.WithBot._hyg.4204)], DecidableRel.{succ u1} (WithBot.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.4222 : WithBot.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.4224 : WithBot.{u1} α) => LE.le.{u1} (WithBot.{u1} α) (WithBot.le.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.4222 x._@.Mathlib.Order.WithBot._hyg.4224)
 Case conversion may be inaccurate. Consider using '#align with_bot.decidable_le WithBot.decidableLEₓ'. -/
 instance decidableLE [LE α] [@DecidableRel α (· ≤ ·)] : @DecidableRel (WithBot α) (· ≤ ·)
   | none, x => isTrue fun a h => Option.noConfusion h
@@ -703,7 +707,7 @@ instance decidableLE [LE α] [@DecidableRel α (· ≤ ·)] : @DecidableRel (Wit
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (LT.lt.{u1} α _inst_1)], DecidableRel.{succ u1} (WithBot.{u1} α) (LT.lt.{u1} (WithBot.{u1} α) (WithBot.hasLt.{u1} α _inst_1))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.4348 : α) (x._@.Mathlib.Order.WithBot._hyg.4350 : α) => LT.lt.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.4348 x._@.Mathlib.Order.WithBot._hyg.4350)], DecidableRel.{succ u1} (WithBot.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.4368 : WithBot.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.4370 : WithBot.{u1} α) => LT.lt.{u1} (WithBot.{u1} α) (WithBot.lt.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.4368 x._@.Mathlib.Order.WithBot._hyg.4370)
+  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.4364 : α) (x._@.Mathlib.Order.WithBot._hyg.4366 : α) => LT.lt.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.4364 x._@.Mathlib.Order.WithBot._hyg.4366)], DecidableRel.{succ u1} (WithBot.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.4384 : WithBot.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.4386 : WithBot.{u1} α) => LT.lt.{u1} (WithBot.{u1} α) (WithBot.lt.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.4384 x._@.Mathlib.Order.WithBot._hyg.4386)
 Case conversion may be inaccurate. Consider using '#align with_bot.decidable_lt WithBot.decidableLTₓ'. -/
 instance decidableLT [LT α] [@DecidableRel α (· < ·)] : @DecidableRel (WithBot α) (· < ·)
   | none, some x => isTrue <| by exists x, rfl <;> rintro _ ⟨⟩
@@ -715,7 +719,7 @@ instance decidableLT [LT α] [@DecidableRel α (· < ·)] : @DecidableRel (WithB
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : IsTotal.{u1} α (LE.le.{u1} α _inst_1)], IsTotal.{u1} (WithBot.{u1} α) (LE.le.{u1} (WithBot.{u1} α) (WithBot.hasLe.{u1} α _inst_1))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : IsTotal.{u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.4547 : α) (x._@.Mathlib.Order.WithBot._hyg.4549 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.4547 x._@.Mathlib.Order.WithBot._hyg.4549)], IsTotal.{u1} (WithBot.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.4567 : WithBot.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.4569 : WithBot.{u1} α) => LE.le.{u1} (WithBot.{u1} α) (WithBot.le.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.4567 x._@.Mathlib.Order.WithBot._hyg.4569)
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : IsTotal.{u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.4563 : α) (x._@.Mathlib.Order.WithBot._hyg.4565 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.4563 x._@.Mathlib.Order.WithBot._hyg.4565)], IsTotal.{u1} (WithBot.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.4583 : WithBot.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.4585 : WithBot.{u1} α) => LE.le.{u1} (WithBot.{u1} α) (WithBot.le.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.4583 x._@.Mathlib.Order.WithBot._hyg.4585)
 Case conversion may be inaccurate. Consider using '#align with_bot.is_total_le WithBot.isTotal_leₓ'. -/
 instance isTotal_le [LE α] [IsTotal α (· ≤ ·)] : IsTotal (WithBot α) (· ≤ ·) :=
   ⟨fun a b =>
@@ -752,7 +756,12 @@ theorem coe_max [LinearOrder α] (x y : α) : ((max x y : α) : WithBot α) = ma
   rfl
 #align with_bot.coe_max WithBot.coe_max
 
-#print WithBot.wellFounded_lt /-
+/- warning: with_bot.well_founded_lt -> WithBot.wellFounded_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], (WellFounded.{succ u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1))) -> (WellFounded.{succ u1} (WithBot.{u1} α) (LT.lt.{u1} (WithBot.{u1} α) (Preorder.toHasLt.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_1))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], (WellFounded.{succ u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.4766 : α) (x._@.Mathlib.Order.WithBot._hyg.4768 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.4766 x._@.Mathlib.Order.WithBot._hyg.4768)) -> (WellFounded.{succ u1} (WithBot.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.4786 : WithBot.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.4788 : WithBot.{u1} α) => LT.lt.{u1} (WithBot.{u1} α) (Preorder.toLT.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_1)) x._@.Mathlib.Order.WithBot._hyg.4786 x._@.Mathlib.Order.WithBot._hyg.4788))
+Case conversion may be inaccurate. Consider using '#align with_bot.well_founded_lt WithBot.wellFounded_ltₓ'. -/
 theorem wellFounded_lt [Preorder α] (h : @WellFounded α (· < ·)) :
     @WellFounded (WithBot α) (· < ·) :=
   have acc_bot : Acc ((· < ·) : WithBot α → WithBot α → Prop) ⊥ :=
@@ -772,7 +781,6 @@ theorem wellFounded_lt [Preorder α] (h : @WellFounded α (· < ·)) :
                 Option.recOn c (fun _ => acc_bot) fun c hc =>
                   ih _ (some_lt_some.1 hc) (lt_trans hc hba))⟩
 #align with_bot.well_founded_lt WithBot.wellFounded_lt
--/
 
 instance [LT α] [DenselyOrdered α] [NoMinOrder α] : DenselyOrdered (WithBot α) :=
   ⟨fun a b =>
@@ -785,7 +793,12 @@ instance [LT α] [DenselyOrdered α] [NoMinOrder α] : DenselyOrdered (WithBot �
       let ⟨a, ha₁, ha₂⟩ := exists_between (coe_lt_coe.1 h)
       ⟨a, coe_lt_coe.2 ha₁, coe_lt_coe.2 ha₂⟩⟩
 
-#print WithBot.lt_iff_exists_coe_btwn /-
+/- warning: with_bot.lt_iff_exists_coe_btwn -> WithBot.lt_iff_exists_coe_btwn is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : DenselyOrdered.{u1} α (Preorder.toHasLt.{u1} α _inst_1)] [_inst_3 : NoMinOrder.{u1} α (Preorder.toHasLt.{u1} α _inst_1)] {a : WithBot.{u1} α} {b : WithBot.{u1} α}, Iff (LT.lt.{u1} (WithBot.{u1} α) (Preorder.toHasLt.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_1)) a b) (Exists.{succ u1} α (fun (x : α) => And (LT.lt.{u1} (WithBot.{u1} α) (Preorder.toHasLt.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_1)) a ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) x)) (LT.lt.{u1} (WithBot.{u1} α) (Preorder.toHasLt.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_1)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) x) b)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : DenselyOrdered.{u1} α (Preorder.toLT.{u1} α _inst_1)] [_inst_3 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)] {a : WithBot.{u1} α} {b : WithBot.{u1} α}, Iff (LT.lt.{u1} (WithBot.{u1} α) (Preorder.toLT.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_1)) a b) (Exists.{succ u1} α (fun (x : α) => And (LT.lt.{u1} (WithBot.{u1} α) (Preorder.toLT.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_1)) a (WithBot.some.{u1} α x)) (LT.lt.{u1} (WithBot.{u1} α) (Preorder.toLT.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_1)) (WithBot.some.{u1} α x) b)))
+Case conversion may be inaccurate. Consider using '#align with_bot.lt_iff_exists_coe_btwn WithBot.lt_iff_exists_coe_btwnₓ'. -/
 theorem lt_iff_exists_coe_btwn [Preorder α] [DenselyOrdered α] [NoMinOrder α] {a b : WithBot α} :
     a < b ↔ ∃ x : α, a < ↑x ∧ ↑x < b :=
   ⟨fun h =>
@@ -794,7 +807,6 @@ theorem lt_iff_exists_coe_btwn [Preorder α] [DenselyOrdered α] [NoMinOrder α]
     ⟨x, hx.1 ▸ hy⟩,
     fun ⟨x, hx⟩ => lt_trans hx.1 hx.2⟩
 #align with_bot.lt_iff_exists_coe_btwn WithBot.lt_iff_exists_coe_btwn
--/
 
 instance [LE α] [NoTopOrder α] [Nonempty α] : NoTopOrder (WithBot α) :=
   ⟨by
@@ -1750,7 +1762,7 @@ theorem coe_mono [Preorder α] : Monotone (coe : α → WithTop α) := fun a b =
 
 /- warning: with_top.monotone_iff -> WithTop.monotone_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : (WithTop.{u1} α) -> β}, Iff (Monotone.{u1, u2} (WithTop.{u1} α) β (WithTop.preorder.{u1} α _inst_1) _inst_2 f) (And (Monotone.{u1, u2} α β _inst_1 _inst_2 (Function.comp.{succ u1, succ u1, succ u2} α (WithTop.{u1} α) β f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α)))))) (forall (x : α), LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) (f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) x)) (f (Top.top.{u1} (WithTop.{u1} α) (WithTop.hasTop.{u1} α)))))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : (WithTop.{u1} α) -> β}, Iff (Monotone.{u1, u2} (WithTop.{u1} α) β (WithTop.preorder.{u1} α _inst_1) _inst_2 f) (And (Monotone.{u1, u2} α β _inst_1 _inst_2 (Function.comp.{succ u1, succ u1, succ u2} α (WithTop.{u1} α) β f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α)))))) (forall (x : α), LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) (f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) x)) (f (Top.top.{u1} (WithTop.{u1} α) (WithTop.hasTop.{u1} α)))))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : (WithTop.{u2} α) -> β}, Iff (Monotone.{u2, u1} (WithTop.{u2} α) β (WithTop.preorder.{u2} α _inst_1) _inst_2 f) (And (Monotone.{u2, u1} α β _inst_1 _inst_2 (fun (a : α) => f (WithTop.some.{u2} α a))) (forall (x : α), LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) (f (WithTop.some.{u2} α x)) (f (Top.top.{u2} (WithTop.{u2} α) (WithTop.top.{u2} α)))))
 Case conversion may be inaccurate. Consider using '#align with_top.monotone_iff WithTop.monotone_iffₓ'. -/
@@ -1785,7 +1797,7 @@ alias monotone_map_iff ↔ _ _root_.monotone.with_top_map
 
 /- warning: with_top.strict_mono_iff -> WithTop.strictMono_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : (WithTop.{u1} α) -> β}, Iff (StrictMono.{u1, u2} (WithTop.{u1} α) β (WithTop.preorder.{u1} α _inst_1) _inst_2 f) (And (StrictMono.{u1, u2} α β _inst_1 _inst_2 (Function.comp.{succ u1, succ u1, succ u2} α (WithTop.{u1} α) β f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α)))))) (forall (x : α), LT.lt.{u2} β (Preorder.toLT.{u2} β _inst_2) (f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) x)) (f (Top.top.{u1} (WithTop.{u1} α) (WithTop.hasTop.{u1} α)))))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {f : (WithTop.{u1} α) -> β}, Iff (StrictMono.{u1, u2} (WithTop.{u1} α) β (WithTop.preorder.{u1} α _inst_1) _inst_2 f) (And (StrictMono.{u1, u2} α β _inst_1 _inst_2 (Function.comp.{succ u1, succ u1, succ u2} α (WithTop.{u1} α) β f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α)))))) (forall (x : α), LT.lt.{u2} β (Preorder.toHasLt.{u2} β _inst_2) (f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) x)) (f (Top.top.{u1} (WithTop.{u1} α) (WithTop.hasTop.{u1} α)))))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : (WithTop.{u2} α) -> β}, Iff (StrictMono.{u2, u1} (WithTop.{u2} α) β (WithTop.preorder.{u2} α _inst_1) _inst_2 f) (And (StrictMono.{u2, u1} α β _inst_1 _inst_2 (fun (a : α) => f (WithTop.some.{u2} α a))) (forall (x : α), LT.lt.{u1} β (Preorder.toLT.{u1} β _inst_2) (f (WithTop.some.{u2} α x)) (f (Top.top.{u2} (WithTop.{u2} α) (WithTop.top.{u2} α)))))
 Case conversion may be inaccurate. Consider using '#align with_top.strict_mono_iff WithTop.strictMono_iffₓ'. -/
@@ -1820,7 +1832,7 @@ alias strict_mono_map_iff ↔ _ _root_.strict_mono.with_top_map
 
 /- warning: with_top.map_le_iff -> WithTop.map_le_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] (f : α -> β) (a : WithTop.{u1} α) (b : WithTop.{u1} α), (forall {a : α} {b : α}, Iff (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) (f a) (f b)) (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a b)) -> (Iff (LE.le.{u2} (WithTop.{u2} β) (Preorder.toLE.{u2} (WithTop.{u2} β) (WithTop.preorder.{u2} β _inst_2)) (WithTop.map.{u1, u2} α β f a) (WithTop.map.{u1, u2} α β f b)) (LE.le.{u1} (WithTop.{u1} α) (Preorder.toLE.{u1} (WithTop.{u1} α) (WithTop.preorder.{u1} α _inst_1)) a b))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] (f : α -> β) (a : WithTop.{u1} α) (b : WithTop.{u1} α), (forall {a : α} {b : α}, Iff (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) (f a) (f b)) (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a b)) -> (Iff (LE.le.{u2} (WithTop.{u2} β) (Preorder.toHasLe.{u2} (WithTop.{u2} β) (WithTop.preorder.{u2} β _inst_2)) (WithTop.map.{u1, u2} α β f a) (WithTop.map.{u1, u2} α β f b)) (LE.le.{u1} (WithTop.{u1} α) (Preorder.toHasLe.{u1} (WithTop.{u1} α) (WithTop.preorder.{u1} α _inst_1)) a b))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] (f : α -> β) (a : WithTop.{u2} α) (b : WithTop.{u2} α), (forall {a : α} {b : α}, Iff (LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) (f a) (f b)) (LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) a b)) -> (Iff (LE.le.{u1} (WithTop.{u1} β) (Preorder.toLE.{u1} (WithTop.{u1} β) (WithTop.preorder.{u1} β _inst_2)) (WithTop.map.{u2, u1} α β f a) (WithTop.map.{u2, u1} α β f b)) (LE.le.{u2} (WithTop.{u2} α) (Preorder.toLE.{u2} (WithTop.{u2} α) (WithTop.preorder.{u2} α _inst_1)) a b))
 Case conversion may be inaccurate. Consider using '#align with_top.map_le_iff WithTop.map_le_iffₓ'. -/
@@ -1900,7 +1912,7 @@ instance [DistribLattice α] : DistribLattice (WithTop α) :=
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (LE.le.{u1} α _inst_1)], DecidableRel.{succ u1} (WithTop.{u1} α) (LE.le.{u1} (WithTop.{u1} α) (WithTop.hasLe.{u1} α _inst_1))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.10356 : α) (x._@.Mathlib.Order.WithBot._hyg.10358 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.10356 x._@.Mathlib.Order.WithBot._hyg.10358)], DecidableRel.{succ u1} (WithTop.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.10376 : WithTop.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.10378 : WithTop.{u1} α) => LE.le.{u1} (WithTop.{u1} α) (WithTop.le.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.10376 x._@.Mathlib.Order.WithBot._hyg.10378)
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.10386 : α) (x._@.Mathlib.Order.WithBot._hyg.10388 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.10386 x._@.Mathlib.Order.WithBot._hyg.10388)], DecidableRel.{succ u1} (WithTop.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.10406 : WithTop.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.10408 : WithTop.{u1} α) => LE.le.{u1} (WithTop.{u1} α) (WithTop.le.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.10406 x._@.Mathlib.Order.WithBot._hyg.10408)
 Case conversion may be inaccurate. Consider using '#align with_top.decidable_le WithTop.decidableLEₓ'. -/
 instance decidableLE [LE α] [@DecidableRel α (· ≤ ·)] : @DecidableRel (WithTop α) (· ≤ ·) :=
   fun _ _ => decidable_of_decidable_of_iff (WithBot.decidableLE _ _) toDual_le_toDual_iff
@@ -1910,7 +1922,7 @@ instance decidableLE [LE α] [@DecidableRel α (· ≤ ·)] : @DecidableRel (Wit
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (LT.lt.{u1} α _inst_1)], DecidableRel.{succ u1} (WithTop.{u1} α) (LT.lt.{u1} (WithTop.{u1} α) (WithTop.hasLt.{u1} α _inst_1))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.10411 : α) (x._@.Mathlib.Order.WithBot._hyg.10413 : α) => LT.lt.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.10411 x._@.Mathlib.Order.WithBot._hyg.10413)], DecidableRel.{succ u1} (WithTop.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.10431 : WithTop.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.10433 : WithTop.{u1} α) => LT.lt.{u1} (WithTop.{u1} α) (WithTop.lt.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.10431 x._@.Mathlib.Order.WithBot._hyg.10433)
+  forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.10441 : α) (x._@.Mathlib.Order.WithBot._hyg.10443 : α) => LT.lt.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.10441 x._@.Mathlib.Order.WithBot._hyg.10443)], DecidableRel.{succ u1} (WithTop.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.10461 : WithTop.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.10463 : WithTop.{u1} α) => LT.lt.{u1} (WithTop.{u1} α) (WithTop.lt.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.10461 x._@.Mathlib.Order.WithBot._hyg.10463)
 Case conversion may be inaccurate. Consider using '#align with_top.decidable_lt WithTop.decidableLTₓ'. -/
 instance decidableLT [LT α] [@DecidableRel α (· < ·)] : @DecidableRel (WithTop α) (· < ·) :=
   fun _ _ => decidable_of_decidable_of_iff (WithBot.decidableLT _ _) toDual_lt_toDual_iff
@@ -1920,7 +1932,7 @@ instance decidableLT [LT α] [@DecidableRel α (· < ·)] : @DecidableRel (WithT
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : IsTotal.{u1} α (LE.le.{u1} α _inst_1)], IsTotal.{u1} (WithTop.{u1} α) (LE.le.{u1} (WithTop.{u1} α) (WithTop.hasLe.{u1} α _inst_1))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : IsTotal.{u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.10466 : α) (x._@.Mathlib.Order.WithBot._hyg.10468 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.10466 x._@.Mathlib.Order.WithBot._hyg.10468)], IsTotal.{u1} (WithTop.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.10486 : WithTop.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.10488 : WithTop.{u1} α) => LE.le.{u1} (WithTop.{u1} α) (WithTop.le.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.10486 x._@.Mathlib.Order.WithBot._hyg.10488)
+  forall {α : Type.{u1}} [_inst_1 : LE.{u1} α] [_inst_2 : IsTotal.{u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.10496 : α) (x._@.Mathlib.Order.WithBot._hyg.10498 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.WithBot._hyg.10496 x._@.Mathlib.Order.WithBot._hyg.10498)], IsTotal.{u1} (WithTop.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.10516 : WithTop.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.10518 : WithTop.{u1} α) => LE.le.{u1} (WithTop.{u1} α) (WithTop.le.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.10516 x._@.Mathlib.Order.WithBot._hyg.10518)
 Case conversion may be inaccurate. Consider using '#align with_top.is_total_le WithTop.isTotal_leₓ'. -/
 instance isTotal_le [LE α] [IsTotal α (· ≤ ·)] : IsTotal (WithTop α) (· ≤ ·) :=
   ⟨fun _ _ => by
@@ -1953,7 +1965,12 @@ theorem coe_max [LinearOrder α] (x y : α) : (↑(max x y) : WithTop α) = max 
   rfl
 #align with_top.coe_max WithTop.coe_max
 
-#print WithTop.wellFounded_lt /-
+/- warning: with_top.well_founded_lt -> WithTop.wellFounded_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], (WellFounded.{succ u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1))) -> (WellFounded.{succ u1} (WithTop.{u1} α) (LT.lt.{u1} (WithTop.{u1} α) (Preorder.toHasLt.{u1} (WithTop.{u1} α) (WithTop.preorder.{u1} α _inst_1))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], (WellFounded.{succ u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.10643 : α) (x._@.Mathlib.Order.WithBot._hyg.10645 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.10643 x._@.Mathlib.Order.WithBot._hyg.10645)) -> (WellFounded.{succ u1} (WithTop.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.10663 : WithTop.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.10665 : WithTop.{u1} α) => LT.lt.{u1} (WithTop.{u1} α) (Preorder.toLT.{u1} (WithTop.{u1} α) (WithTop.preorder.{u1} α _inst_1)) x._@.Mathlib.Order.WithBot._hyg.10663 x._@.Mathlib.Order.WithBot._hyg.10665))
+Case conversion may be inaccurate. Consider using '#align with_top.well_founded_lt WithTop.wellFounded_ltₓ'. -/
 theorem wellFounded_lt [Preorder α] (h : @WellFounded α (· < ·)) :
     @WellFounded (WithTop α) (· < ·) :=
   have acc_some : ∀ a : α, Acc ((· < ·) : WithTop α → WithTop α → Prop) (some a) := fun a =>
@@ -1971,11 +1988,15 @@ theorem wellFounded_lt [Preorder α] (h : @WellFounded α (· < ·)) :
       (Acc.intro _ fun y => Option.recOn y (fun h => (lt_irrefl _ h).elim) fun _ _ => acc_some _)
       acc_some⟩
 #align with_top.well_founded_lt WithTop.wellFounded_lt
--/
 
 open OrderDual
 
-#print WithTop.wellFounded_gt /-
+/- warning: with_top.well_founded_gt -> WithTop.wellFounded_gt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], (WellFounded.{succ u1} α (GT.gt.{u1} α (Preorder.toHasLt.{u1} α _inst_1))) -> (WellFounded.{succ u1} (WithTop.{u1} α) (GT.gt.{u1} (WithTop.{u1} α) (Preorder.toHasLt.{u1} (WithTop.{u1} α) (WithTop.preorder.{u1} α _inst_1))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], (WellFounded.{succ u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.10894 : α) (x._@.Mathlib.Order.WithBot._hyg.10896 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.10894 x._@.Mathlib.Order.WithBot._hyg.10896)) -> (WellFounded.{succ u1} (WithTop.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.10914 : WithTop.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.10916 : WithTop.{u1} α) => GT.gt.{u1} (WithTop.{u1} α) (Preorder.toLT.{u1} (WithTop.{u1} α) (WithTop.preorder.{u1} α _inst_1)) x._@.Mathlib.Order.WithBot._hyg.10914 x._@.Mathlib.Order.WithBot._hyg.10916))
+Case conversion may be inaccurate. Consider using '#align with_top.well_founded_gt WithTop.wellFounded_gtₓ'. -/
 theorem wellFounded_gt [Preorder α] (h : @WellFounded α (· > ·)) :
     @WellFounded (WithTop α) (· > ·) :=
   ⟨fun a =>
@@ -1987,9 +2008,13 @@ theorem wellFounded_gt [Preorder α] (h : @WellFounded α (· > ·)) :
     induction' ac with _ H IH generalizing a; subst ha
     exact ⟨_, fun a' h => IH a'.toDual (to_dual_lt_to_dual.mpr h) _ rfl⟩⟩
 #align with_top.well_founded_gt WithTop.wellFounded_gt
--/
 
-#print WithBot.wellFounded_gt /-
+/- warning: with_bot.well_founded_gt -> WithBot.wellFounded_gt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], (WellFounded.{succ u1} α (GT.gt.{u1} α (Preorder.toHasLt.{u1} α _inst_1))) -> (WellFounded.{succ u1} (WithBot.{u1} α) (GT.gt.{u1} (WithBot.{u1} α) (Preorder.toHasLt.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_1))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], (WellFounded.{succ u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.11053 : α) (x._@.Mathlib.Order.WithBot._hyg.11055 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.11053 x._@.Mathlib.Order.WithBot._hyg.11055)) -> (WellFounded.{succ u1} (WithBot.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.11073 : WithBot.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.11075 : WithBot.{u1} α) => GT.gt.{u1} (WithBot.{u1} α) (Preorder.toLT.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_1)) x._@.Mathlib.Order.WithBot._hyg.11073 x._@.Mathlib.Order.WithBot._hyg.11075))
+Case conversion may be inaccurate. Consider using '#align with_bot.well_founded_gt WithBot.wellFounded_gtₓ'. -/
 theorem WithBot.wellFounded_gt [Preorder α] (h : @WellFounded α (· > ·)) :
     @WellFounded (WithBot α) (· > ·) :=
   ⟨fun a =>
@@ -2001,9 +2026,13 @@ theorem WithBot.wellFounded_gt [Preorder α] (h : @WellFounded α (· > ·)) :
     induction' ac with _ H IH generalizing a; subst ha
     exact ⟨_, fun a' h => IH a'.toDual (to_dual_lt_to_dual.mpr h) _ rfl⟩⟩
 #align with_bot.well_founded_gt WithBot.wellFounded_gt
--/
 
-#print WithTop.trichotomous.lt /-
+/- warning: with_top.trichotomous.lt -> WithTop.trichotomous.lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : IsTrichotomous.{u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1))], IsTrichotomous.{u1} (WithTop.{u1} α) (LT.lt.{u1} (WithTop.{u1} α) (Preorder.toHasLt.{u1} (WithTop.{u1} α) (WithTop.preorder.{u1} α _inst_1)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : IsTrichotomous.{u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.11216 : α) (x._@.Mathlib.Order.WithBot._hyg.11218 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.11216 x._@.Mathlib.Order.WithBot._hyg.11218)], IsTrichotomous.{u1} (WithTop.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.11236 : WithTop.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.11238 : WithTop.{u1} α) => LT.lt.{u1} (WithTop.{u1} α) (Preorder.toLT.{u1} (WithTop.{u1} α) (WithTop.preorder.{u1} α _inst_1)) x._@.Mathlib.Order.WithBot._hyg.11236 x._@.Mathlib.Order.WithBot._hyg.11238)
+Case conversion may be inaccurate. Consider using '#align with_top.trichotomous.lt WithTop.trichotomous.ltₓ'. -/
 instance trichotomous.lt [Preorder α] [IsTrichotomous α (· < ·)] :
     IsTrichotomous (WithTop α) (· < ·) :=
   ⟨by
@@ -2011,15 +2040,23 @@ instance trichotomous.lt [Preorder α] [IsTrichotomous α (· < ·)] :
     iterate 3 simp
     simpa [Option.some_inj] using @trichotomous _ (· < ·) _ a b⟩
 #align with_top.trichotomous.lt WithTop.trichotomous.lt
--/
 
-#print WithTop.IsWellOrder.lt /-
+/- warning: with_top.is_well_order.lt -> WithTop.IsWellOrder.lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [h : IsWellOrder.{u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1))], IsWellOrder.{u1} (WithTop.{u1} α) (LT.lt.{u1} (WithTop.{u1} α) (Preorder.toHasLt.{u1} (WithTop.{u1} α) (WithTop.preorder.{u1} α _inst_1)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [h : IsWellOrder.{u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.11309 : α) (x._@.Mathlib.Order.WithBot._hyg.11311 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.11309 x._@.Mathlib.Order.WithBot._hyg.11311)], IsWellOrder.{u1} (WithTop.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.11329 : WithTop.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.11331 : WithTop.{u1} α) => LT.lt.{u1} (WithTop.{u1} α) (Preorder.toLT.{u1} (WithTop.{u1} α) (WithTop.preorder.{u1} α _inst_1)) x._@.Mathlib.Order.WithBot._hyg.11329 x._@.Mathlib.Order.WithBot._hyg.11331)
+Case conversion may be inaccurate. Consider using '#align with_top.is_well_order.lt WithTop.IsWellOrder.ltₓ'. -/
 instance IsWellOrder.lt [Preorder α] [h : IsWellOrder α (· < ·)] : IsWellOrder (WithTop α) (· < ·)
     where wf := wellFounded_lt h.wf
 #align with_top.is_well_order.lt WithTop.IsWellOrder.lt
--/
 
-#print WithTop.trichotomous.gt /-
+/- warning: with_top.trichotomous.gt -> WithTop.trichotomous.gt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : IsTrichotomous.{u1} α (GT.gt.{u1} α (Preorder.toHasLt.{u1} α _inst_1))], IsTrichotomous.{u1} (WithTop.{u1} α) (GT.gt.{u1} (WithTop.{u1} α) (Preorder.toHasLt.{u1} (WithTop.{u1} α) (WithTop.preorder.{u1} α _inst_1)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : IsTrichotomous.{u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.11366 : α) (x._@.Mathlib.Order.WithBot._hyg.11368 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.11366 x._@.Mathlib.Order.WithBot._hyg.11368)], IsTrichotomous.{u1} (WithTop.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.11386 : WithTop.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.11388 : WithTop.{u1} α) => GT.gt.{u1} (WithTop.{u1} α) (Preorder.toLT.{u1} (WithTop.{u1} α) (WithTop.preorder.{u1} α _inst_1)) x._@.Mathlib.Order.WithBot._hyg.11386 x._@.Mathlib.Order.WithBot._hyg.11388)
+Case conversion may be inaccurate. Consider using '#align with_top.trichotomous.gt WithTop.trichotomous.gtₓ'. -/
 instance trichotomous.gt [Preorder α] [IsTrichotomous α (· > ·)] :
     IsTrichotomous (WithTop α) (· > ·) :=
   ⟨by
@@ -2027,46 +2064,70 @@ instance trichotomous.gt [Preorder α] [IsTrichotomous α (· > ·)] :
     iterate 3 simp
     simpa [Option.some_inj] using @trichotomous _ (· > ·) _ a b⟩
 #align with_top.trichotomous.gt WithTop.trichotomous.gt
--/
 
-#print WithTop.IsWellOrder.gt /-
+/- warning: with_top.is_well_order.gt -> WithTop.IsWellOrder.gt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [h : IsWellOrder.{u1} α (GT.gt.{u1} α (Preorder.toHasLt.{u1} α _inst_1))], IsWellOrder.{u1} (WithTop.{u1} α) (GT.gt.{u1} (WithTop.{u1} α) (Preorder.toHasLt.{u1} (WithTop.{u1} α) (WithTop.preorder.{u1} α _inst_1)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [h : IsWellOrder.{u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.11459 : α) (x._@.Mathlib.Order.WithBot._hyg.11461 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.11459 x._@.Mathlib.Order.WithBot._hyg.11461)], IsWellOrder.{u1} (WithTop.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.11479 : WithTop.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.11481 : WithTop.{u1} α) => GT.gt.{u1} (WithTop.{u1} α) (Preorder.toLT.{u1} (WithTop.{u1} α) (WithTop.preorder.{u1} α _inst_1)) x._@.Mathlib.Order.WithBot._hyg.11479 x._@.Mathlib.Order.WithBot._hyg.11481)
+Case conversion may be inaccurate. Consider using '#align with_top.is_well_order.gt WithTop.IsWellOrder.gtₓ'. -/
 instance IsWellOrder.gt [Preorder α] [h : IsWellOrder α (· > ·)] : IsWellOrder (WithTop α) (· > ·)
     where wf := wellFounded_gt h.wf
 #align with_top.is_well_order.gt WithTop.IsWellOrder.gt
--/
 
-#print WithBot.trichotomous.lt /-
+/- warning: with_bot.trichotomous.lt -> WithBot.trichotomous.lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [h : IsTrichotomous.{u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1))], IsTrichotomous.{u1} (WithBot.{u1} α) (LT.lt.{u1} (WithBot.{u1} α) (Preorder.toHasLt.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_1)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [h : IsTrichotomous.{u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.11512 : α) (x._@.Mathlib.Order.WithBot._hyg.11514 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.11512 x._@.Mathlib.Order.WithBot._hyg.11514)], IsTrichotomous.{u1} (WithBot.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.11532 : WithBot.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.11534 : WithBot.{u1} α) => LT.lt.{u1} (WithBot.{u1} α) (Preorder.toLT.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_1)) x._@.Mathlib.Order.WithBot._hyg.11532 x._@.Mathlib.Order.WithBot._hyg.11534)
+Case conversion may be inaccurate. Consider using '#align with_bot.trichotomous.lt WithBot.trichotomous.ltₓ'. -/
 instance WithBot.trichotomous.lt [Preorder α] [h : IsTrichotomous α (· < ·)] :
     IsTrichotomous (WithBot α) (· < ·) :=
   @WithTop.trichotomous.gt αᵒᵈ _ h
 #align with_bot.trichotomous.lt WithBot.trichotomous.lt
--/
 
-#print WithBot.isWellOrder.lt /-
+/- warning: with_bot.is_well_order.lt -> WithBot.isWellOrder.lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [h : IsWellOrder.{u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1))], IsWellOrder.{u1} (WithBot.{u1} α) (LT.lt.{u1} (WithBot.{u1} α) (Preorder.toHasLt.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_1)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [h : IsWellOrder.{u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.11564 : α) (x._@.Mathlib.Order.WithBot._hyg.11566 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.11564 x._@.Mathlib.Order.WithBot._hyg.11566)], IsWellOrder.{u1} (WithBot.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.11584 : WithBot.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.11586 : WithBot.{u1} α) => LT.lt.{u1} (WithBot.{u1} α) (Preorder.toLT.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_1)) x._@.Mathlib.Order.WithBot._hyg.11584 x._@.Mathlib.Order.WithBot._hyg.11586)
+Case conversion may be inaccurate. Consider using '#align with_bot.is_well_order.lt WithBot.isWellOrder.ltₓ'. -/
 instance WithBot.isWellOrder.lt [Preorder α] [h : IsWellOrder α (· < ·)] :
     IsWellOrder (WithBot α) (· < ·) :=
   @WithTop.IsWellOrder.gt αᵒᵈ _ h
 #align with_bot.is_well_order.lt WithBot.isWellOrder.lt
--/
 
-#print WithBot.trichotomous.gt /-
+/- warning: with_bot.trichotomous.gt -> WithBot.trichotomous.gt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [h : IsTrichotomous.{u1} α (GT.gt.{u1} α (Preorder.toHasLt.{u1} α _inst_1))], IsTrichotomous.{u1} (WithBot.{u1} α) (GT.gt.{u1} (WithBot.{u1} α) (Preorder.toHasLt.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_1)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [h : IsTrichotomous.{u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.11616 : α) (x._@.Mathlib.Order.WithBot._hyg.11618 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.11616 x._@.Mathlib.Order.WithBot._hyg.11618)], IsTrichotomous.{u1} (WithBot.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.11636 : WithBot.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.11638 : WithBot.{u1} α) => GT.gt.{u1} (WithBot.{u1} α) (Preorder.toLT.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_1)) x._@.Mathlib.Order.WithBot._hyg.11636 x._@.Mathlib.Order.WithBot._hyg.11638)
+Case conversion may be inaccurate. Consider using '#align with_bot.trichotomous.gt WithBot.trichotomous.gtₓ'. -/
 instance WithBot.trichotomous.gt [Preorder α] [h : IsTrichotomous α (· > ·)] :
     IsTrichotomous (WithBot α) (· > ·) :=
   @WithTop.trichotomous.lt αᵒᵈ _ h
 #align with_bot.trichotomous.gt WithBot.trichotomous.gt
--/
 
-#print WithBot.isWellOrder.gt /-
+/- warning: with_bot.is_well_order.gt -> WithBot.isWellOrder.gt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [h : IsWellOrder.{u1} α (GT.gt.{u1} α (Preorder.toHasLt.{u1} α _inst_1))], IsWellOrder.{u1} (WithBot.{u1} α) (GT.gt.{u1} (WithBot.{u1} α) (Preorder.toHasLt.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_1)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [h : IsWellOrder.{u1} α (fun (x._@.Mathlib.Order.WithBot._hyg.11668 : α) (x._@.Mathlib.Order.WithBot._hyg.11670 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.WithBot._hyg.11668 x._@.Mathlib.Order.WithBot._hyg.11670)], IsWellOrder.{u1} (WithBot.{u1} α) (fun (x._@.Mathlib.Order.WithBot._hyg.11688 : WithBot.{u1} α) (x._@.Mathlib.Order.WithBot._hyg.11690 : WithBot.{u1} α) => GT.gt.{u1} (WithBot.{u1} α) (Preorder.toLT.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_1)) x._@.Mathlib.Order.WithBot._hyg.11688 x._@.Mathlib.Order.WithBot._hyg.11690)
+Case conversion may be inaccurate. Consider using '#align with_bot.is_well_order.gt WithBot.isWellOrder.gtₓ'. -/
 instance WithBot.isWellOrder.gt [Preorder α] [h : IsWellOrder α (· > ·)] :
     IsWellOrder (WithBot α) (· > ·) :=
   @WithTop.IsWellOrder.lt αᵒᵈ _ h
 #align with_bot.is_well_order.gt WithBot.isWellOrder.gt
--/
 
 instance [LT α] [DenselyOrdered α] [NoMaxOrder α] : DenselyOrdered (WithTop α) :=
   OrderDual.denselyOrdered (WithBot αᵒᵈ)
 
-#print WithTop.lt_iff_exists_coe_btwn /-
+/- warning: with_top.lt_iff_exists_coe_btwn -> WithTop.lt_iff_exists_coe_btwn is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : DenselyOrdered.{u1} α (Preorder.toHasLt.{u1} α _inst_1)] [_inst_3 : NoMaxOrder.{u1} α (Preorder.toHasLt.{u1} α _inst_1)] {a : WithTop.{u1} α} {b : WithTop.{u1} α}, Iff (LT.lt.{u1} (WithTop.{u1} α) (Preorder.toHasLt.{u1} (WithTop.{u1} α) (WithTop.preorder.{u1} α _inst_1)) a b) (Exists.{succ u1} α (fun (x : α) => And (LT.lt.{u1} (WithTop.{u1} α) (Preorder.toHasLt.{u1} (WithTop.{u1} α) (WithTop.preorder.{u1} α _inst_1)) a ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) x)) (LT.lt.{u1} (WithTop.{u1} α) (Preorder.toHasLt.{u1} (WithTop.{u1} α) (WithTop.preorder.{u1} α _inst_1)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) x) b)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : DenselyOrdered.{u1} α (Preorder.toLT.{u1} α _inst_1)] [_inst_3 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)] {a : WithTop.{u1} α} {b : WithTop.{u1} α}, Iff (LT.lt.{u1} (WithTop.{u1} α) (Preorder.toLT.{u1} (WithTop.{u1} α) (WithTop.preorder.{u1} α _inst_1)) a b) (Exists.{succ u1} α (fun (x : α) => And (LT.lt.{u1} (WithTop.{u1} α) (Preorder.toLT.{u1} (WithTop.{u1} α) (WithTop.preorder.{u1} α _inst_1)) a (WithTop.some.{u1} α x)) (LT.lt.{u1} (WithTop.{u1} α) (Preorder.toLT.{u1} (WithTop.{u1} α) (WithTop.preorder.{u1} α _inst_1)) (WithTop.some.{u1} α x) b)))
+Case conversion may be inaccurate. Consider using '#align with_top.lt_iff_exists_coe_btwn WithTop.lt_iff_exists_coe_btwnₓ'. -/
 theorem lt_iff_exists_coe_btwn [Preorder α] [DenselyOrdered α] [NoMaxOrder α] {a b : WithTop α} :
     a < b ↔ ∃ x : α, a < ↑x ∧ ↑x < b :=
   ⟨fun h =>
@@ -2075,7 +2136,6 @@ theorem lt_iff_exists_coe_btwn [Preorder α] [DenselyOrdered α] [NoMaxOrder α]
     ⟨x, hx.1 ▸ hy⟩,
     fun ⟨x, hx⟩ => lt_trans hx.1 hx.2⟩
 #align with_top.lt_iff_exists_coe_btwn WithTop.lt_iff_exists_coe_btwn
--/
 
 instance [LE α] [NoBotOrder α] [Nonempty α] : NoBotOrder (WithTop α) :=
   OrderDual.noBotOrder (WithBot αᵒᵈ)

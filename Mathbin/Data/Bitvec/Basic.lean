@@ -128,20 +128,28 @@ theorem toFin_val {n : ℕ} (v : Bitvec n) : (toFin v : ℕ) = v.toNat := by
 #align bitvec.to_fin_val Bitvec.toFin_val
 -/
 
-#print Bitvec.toFin_le_toFin_of_le /-
+/- warning: bitvec.to_fin_le_to_fin_of_le -> Bitvec.toFin_le_toFin_of_le is a dubious translation:
+lean 3 declaration is
+  forall {n : Nat} {v₀ : Bitvec n} {v₁ : Bitvec n}, (LE.le.{0} (Bitvec n) (Preorder.toHasLe.{0} (Bitvec n) (Bitvec.preorder n)) v₀ v₁) -> (LE.le.{0} (Fin (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))) n)) (Fin.hasLe (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))) n)) (Bitvec.toFin n v₀) (Bitvec.toFin n v₁))
+but is expected to have type
+  forall {n : Nat} {v₀ : Bitvec n} {v₁ : Bitvec n}, (LE.le.{0} (Bitvec n) (Preorder.toLE.{0} (Bitvec n) (Bitvec.instPreorderBitvec n)) v₀ v₁) -> (LE.le.{0} (Fin (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) n)) (instLEFin (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) n)) (Bitvec.toFin n v₀) (Bitvec.toFin n v₁))
+Case conversion may be inaccurate. Consider using '#align bitvec.to_fin_le_to_fin_of_le Bitvec.toFin_le_toFin_of_leₓ'. -/
 theorem toFin_le_toFin_of_le {n} {v₀ v₁ : Bitvec n} (h : v₀ ≤ v₁) : v₀.toFin ≤ v₁.toFin :=
   show (v₀.toFin : ℕ) ≤ v₁.toFin by rw [to_fin_val, to_fin_val] <;> exact h
 #align bitvec.to_fin_le_to_fin_of_le Bitvec.toFin_le_toFin_of_le
--/
 
-#print Bitvec.ofFin_le_ofFin_of_le /-
+/- warning: bitvec.of_fin_le_of_fin_of_le -> Bitvec.ofFin_le_ofFin_of_le is a dubious translation:
+lean 3 declaration is
+  forall {n : Nat} {i : Fin (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))) n)} {j : Fin (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))) n)}, (LE.le.{0} (Fin (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))) n)) (Fin.hasLe (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))) n)) i j) -> (LE.le.{0} (Bitvec n) (Preorder.toHasLe.{0} (Bitvec n) (Bitvec.preorder n)) (Bitvec.ofFin n i) (Bitvec.ofFin n j))
+but is expected to have type
+  forall {n : Nat} {i : Fin (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) n)} {j : Fin (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) n)}, (LE.le.{0} (Fin (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) n)) (instLEFin (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) n)) i j) -> (LE.le.{0} (Bitvec n) (Preorder.toLE.{0} (Bitvec n) (Bitvec.instPreorderBitvec n)) (Bitvec.ofFin n i) (Bitvec.ofFin n j))
+Case conversion may be inaccurate. Consider using '#align bitvec.of_fin_le_of_fin_of_le Bitvec.ofFin_le_ofFin_of_leₓ'. -/
 theorem ofFin_le_ofFin_of_le {n : ℕ} {i j : Fin (2 ^ n)} (h : i ≤ j) : ofFin i ≤ ofFin j :=
   show (Bitvec.ofNat n i).toNat ≤ (Bitvec.ofNat n j).toNat
     by
     simp only [to_nat_of_nat, Nat.mod_eq_of_lt, Fin.is_lt]
     exact h
 #align bitvec.of_fin_le_of_fin_of_le Bitvec.ofFin_le_ofFin_of_le
--/
 
 #print Bitvec.toFin_ofFin /-
 theorem toFin_ofFin {n} (i : Fin <| 2 ^ n) : (ofFin i).toFin = i :=

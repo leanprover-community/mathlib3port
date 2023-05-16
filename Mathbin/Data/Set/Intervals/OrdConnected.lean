@@ -61,15 +61,24 @@ theorem ordConnected_def : OrdConnected s ↔ ∀ ⦃x⦄ (hx : x ∈ s) ⦃y⦄
 #align set.ord_connected_def Set.ordConnected_def
 -/
 
-#print Set.ordConnected_iff /-
+/- warning: set.ord_connected_iff -> Set.ordConnected_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α}, Iff (Set.OrdConnected.{u1} α _inst_1 s) (forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (forall (y : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y s) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) x y) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Set.Icc.{u1} α _inst_1 x y) s)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α}, Iff (Set.OrdConnected.{u1} α _inst_1 s) (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (forall (y : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x y) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Set.Icc.{u1} α _inst_1 x y) s)))
+Case conversion may be inaccurate. Consider using '#align set.ord_connected_iff Set.ordConnected_iffₓ'. -/
 /-- It suffices to prove `[x, y] ⊆ s` for `x y ∈ s`, `x ≤ y`. -/
 theorem ordConnected_iff : OrdConnected s ↔ ∀ x ∈ s, ∀ y ∈ s, x ≤ y → Icc x y ⊆ s :=
   ordConnected_def.trans
     ⟨fun hs x hx y hy hxy => hs hx hy, fun H x hx y hy z hz => H x hx y hy (le_trans hz.1 hz.2) hz⟩
 #align set.ord_connected_iff Set.ordConnected_iff
--/
 
-#print Set.ordConnected_of_Ioo /-
+/- warning: set.ord_connected_of_Ioo -> Set.ordConnected_of_Ioo is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_3 : PartialOrder.{u1} α] {s : Set.{u1} α}, (forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (forall (y : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y s) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_3)) x y) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Set.Ioo.{u1} α (PartialOrder.toPreorder.{u1} α _inst_3) x y) s))) -> (Set.OrdConnected.{u1} α (PartialOrder.toPreorder.{u1} α _inst_3) s)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_3 : PartialOrder.{u1} α] {s : Set.{u1} α}, (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (forall (y : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y s) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_3)) x y) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Set.Ioo.{u1} α (PartialOrder.toPreorder.{u1} α _inst_3) x y) s))) -> (Set.OrdConnected.{u1} α (PartialOrder.toPreorder.{u1} α _inst_3) s)
+Case conversion may be inaccurate. Consider using '#align set.ord_connected_of_Ioo Set.ordConnected_of_Iooₓ'. -/
 theorem ordConnected_of_Ioo {α : Type _} [PartialOrder α] {s : Set α}
     (hs : ∀ x ∈ s, ∀ y ∈ s, x < y → Ioo x y ⊆ s) : OrdConnected s :=
   by
@@ -79,7 +88,6 @@ theorem ordConnected_of_Ioo {α : Type _} [PartialOrder α] {s : Set α}
   rw [← Ioc_insert_left hxy, ← Ioo_insert_right hxy']
   exact insert_subset.2 ⟨hx, insert_subset.2 ⟨hy, hs x hx y hy hxy'⟩⟩
 #align set.ord_connected_of_Ioo Set.ordConnected_of_Ioo
--/
 
 /- warning: set.ord_connected.preimage_mono -> Set.OrdConnected.preimage_mono is a dubious translation:
 lean 3 declaration is
@@ -279,7 +287,7 @@ instance [DenselyOrdered α] {s : Set α} [hs : OrdConnected s] : DenselyOrdered
 
 /- warning: set.ord_connected_preimage -> Set.ordConnected_preimage is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {F : Type.{u3}} [_inst_3 : OrderHomClass.{u3, u1, u2} F α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)] (f : F) {s : Set.{u2} β} [hs : Set.OrdConnected.{u2} β _inst_2 s], Set.OrdConnected.{u1} α _inst_1 (Set.preimage.{u1, u2} α β (coeFn.{succ u3, max (succ u1) (succ u2)} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{succ u3, succ u1, succ u2} F α (fun (_x : α) => β) (RelHomClass.toFunLike.{u3, u1, u2} F α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2)) _inst_3)) f) s)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {F : Type.{u3}} [_inst_3 : OrderHomClass.{u3, u1, u2} F α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)] (f : F) {s : Set.{u2} β} [hs : Set.OrdConnected.{u2} β _inst_2 s], Set.OrdConnected.{u1} α _inst_1 (Set.preimage.{u1, u2} α β (coeFn.{succ u3, max (succ u1) (succ u2)} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{succ u3, succ u1, succ u2} F α (fun (_x : α) => β) (RelHomClass.toFunLike.{u3, u1, u2} F α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2)) _inst_3)) f) s)
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {F : Type.{u3}} [_inst_3 : OrderHomClass.{u3, u2, u1} F α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)] (f : F) {s : Set.{u1} β} [hs : Set.OrdConnected.{u1} β _inst_2 s], Set.OrdConnected.{u2} α _inst_1 (Set.preimage.{u2, u1} α β (FunLike.coe.{succ u3, succ u2, succ u1} F α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) _x) (RelHomClass.toFunLike.{u3, u2, u1} F α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1896 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1898 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1896 x._@.Mathlib.Order.Hom.Basic._hyg.1898) (fun (_x : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1920 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) _x x._@.Mathlib.Order.Hom.Basic._hyg.1920) _inst_3) f) s)
 Case conversion may be inaccurate. Consider using '#align set.ord_connected_preimage Set.ordConnected_preimageₓ'. -/
@@ -291,7 +299,7 @@ theorem ordConnected_preimage {F : Type _} [OrderHomClass F α β] (f : F) {s : 
 
 /- warning: set.ord_connected_image -> Set.ordConnected_image is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {E : Type.{u3}} [_inst_3 : OrderIsoClass.{u3, u1, u2} E α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)] (e : E) {s : Set.{u1} α} [hs : Set.OrdConnected.{u1} α _inst_1 s], Set.OrdConnected.{u2} β _inst_2 (Set.image.{u1, u2} α β (coeFn.{succ u3, max (succ u1) (succ u2)} E (fun (_x : E) => α -> β) (FunLike.hasCoeToFun.{succ u3, succ u1, succ u2} E α (fun (_x : α) => β) (RelHomClass.toFunLike.{u3, u1, u2} E α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2)) (OrderIsoClass.toOrderHomClass.{u3, u1, u2} E α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2) _inst_3))) e) s)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {E : Type.{u3}} [_inst_3 : OrderIsoClass.{u3, u1, u2} E α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)] (e : E) {s : Set.{u1} α} [hs : Set.OrdConnected.{u1} α _inst_1 s], Set.OrdConnected.{u2} β _inst_2 (Set.image.{u1, u2} α β (coeFn.{succ u3, max (succ u1) (succ u2)} E (fun (_x : E) => α -> β) (FunLike.hasCoeToFun.{succ u3, succ u1, succ u2} E α (fun (_x : α) => β) (RelHomClass.toFunLike.{u3, u1, u2} E α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2)) (OrderIsoClass.toOrderHomClass.{u3, u1, u2} E α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2) _inst_3))) e) s)
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {E : Type.{u3}} [_inst_3 : OrderIsoClass.{u3, u2, u1} E α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)] (e : E) {s : Set.{u2} α} [hs : Set.OrdConnected.{u2} α _inst_1 s], Set.OrdConnected.{u1} β _inst_2 (Set.image.{u2, u1} α β (FunLike.coe.{succ u3, succ u2, succ u1} E α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) _x) (RelHomClass.toFunLike.{u3, u2, u1} E α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1896 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1898 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1896 x._@.Mathlib.Order.Hom.Basic._hyg.1898) (fun (_x : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1920 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) _x x._@.Mathlib.Order.Hom.Basic._hyg.1920) (OrderIsoClass.toOrderHomClass.{u3, u2, u1} E α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2) _inst_3)) e) s)
 Case conversion may be inaccurate. Consider using '#align set.ord_connected_image Set.ordConnected_imageₓ'. -/
@@ -305,7 +313,7 @@ theorem ordConnected_image {E : Type _} [OrderIsoClass E α β] (e : E) {s : Set
 
 /- warning: set.ord_connected_range -> Set.ordConnected_range is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {E : Type.{u3}} [_inst_3 : OrderIsoClass.{u3, u1, u2} E α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)] (e : E), Set.OrdConnected.{u2} β _inst_2 (Set.range.{u2, succ u1} β α (coeFn.{succ u3, max (succ u1) (succ u2)} E (fun (_x : E) => α -> β) (FunLike.hasCoeToFun.{succ u3, succ u1, succ u2} E α (fun (_x : α) => β) (RelHomClass.toFunLike.{u3, u1, u2} E α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2)) (OrderIsoClass.toOrderHomClass.{u3, u1, u2} E α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2) _inst_3))) e))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {E : Type.{u3}} [_inst_3 : OrderIsoClass.{u3, u1, u2} E α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)] (e : E), Set.OrdConnected.{u2} β _inst_2 (Set.range.{u2, succ u1} β α (coeFn.{succ u3, max (succ u1) (succ u2)} E (fun (_x : E) => α -> β) (FunLike.hasCoeToFun.{succ u3, succ u1, succ u2} E α (fun (_x : α) => β) (RelHomClass.toFunLike.{u3, u1, u2} E α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2)) (OrderIsoClass.toOrderHomClass.{u3, u1, u2} E α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2) _inst_3))) e))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {E : Type.{u3}} [_inst_3 : OrderIsoClass.{u3, u2, u1} E α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)] (e : E), Set.OrdConnected.{u1} β _inst_2 (Set.range.{u1, succ u2} β α (FunLike.coe.{succ u3, succ u2, succ u1} E α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) _x) (RelHomClass.toFunLike.{u3, u2, u1} E α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1896 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1898 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1896 x._@.Mathlib.Order.Hom.Basic._hyg.1898) (fun (_x : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1920 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) _x x._@.Mathlib.Order.Hom.Basic._hyg.1920) (OrderIsoClass.toOrderHomClass.{u3, u2, u1} E α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2) _inst_3)) e))
 Case conversion may be inaccurate. Consider using '#align set.ord_connected_range Set.ordConnected_rangeₓ'. -/
@@ -336,14 +344,18 @@ section PartialOrder
 
 variable {α : Type _} [PartialOrder α] {s : Set α}
 
-#print IsAntichain.ordConnected /-
+/- warning: is_antichain.ord_connected -> IsAntichain.ordConnected is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {s : Set.{u1} α}, (IsAntichain.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) s) -> (Set.OrdConnected.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) s)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {s : Set.{u1} α}, (IsAntichain.{u1} α (fun (x._@.Mathlib.Data.Set.Intervals.OrdConnected._hyg.1947 : α) (x._@.Mathlib.Data.Set.Intervals.OrdConnected._hyg.1949 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x._@.Mathlib.Data.Set.Intervals.OrdConnected._hyg.1947 x._@.Mathlib.Data.Set.Intervals.OrdConnected._hyg.1949) s) -> (Set.OrdConnected.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) s)
+Case conversion may be inaccurate. Consider using '#align is_antichain.ord_connected IsAntichain.ordConnectedₓ'. -/
 protected theorem IsAntichain.ordConnected (hs : IsAntichain (· ≤ ·) s) : s.OrdConnected :=
   ⟨fun x hx y hy z hz => by
     obtain rfl := hs.eq hx hy (hz.1.trans hz.2)
     rw [Icc_self, mem_singleton_iff] at hz
     rwa [hz]⟩
 #align is_antichain.ord_connected IsAntichain.ordConnected
--/
 
 end PartialOrder
 

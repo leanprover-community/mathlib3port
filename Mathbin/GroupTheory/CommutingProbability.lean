@@ -59,13 +59,17 @@ theorem commProb_def :
 
 variable [Finite M]
 
-#print commProb_pos /-
+/- warning: comm_prob_pos -> commProb_pos is a dubious translation:
+lean 3 declaration is
+  forall (M : Type.{u1}) [_inst_1 : Mul.{u1} M] [_inst_2 : Finite.{succ u1} M] [h : Nonempty.{succ u1} M], LT.lt.{0} Rat Rat.hasLt (OfNat.ofNat.{0} Rat 0 (OfNat.mk.{0} Rat 0 (Zero.zero.{0} Rat Rat.hasZero))) (commProb.{u1} M _inst_1)
+but is expected to have type
+  forall (M : Type.{u1}) [_inst_1 : Mul.{u1} M] [_inst_2 : Finite.{succ u1} M] [h : Nonempty.{succ u1} M], LT.lt.{0} Rat Rat.instLTRat_1 (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)) (commProb.{u1} M _inst_1)
+Case conversion may be inaccurate. Consider using '#align comm_prob_pos commProb_posₓ'. -/
 theorem commProb_pos [h : Nonempty M] : 0 < commProb M :=
   h.elim fun x =>
     div_pos (Nat.cast_pos.mpr (Finite.card_pos_iff.mpr ⟨⟨(x, x), rfl⟩⟩))
       (pow_pos (Nat.cast_pos.mpr Finite.card_pos) 2)
 #align comm_prob_pos commProb_pos
--/
 
 /- warning: comm_prob_le_one -> commProb_le_one is a dubious translation:
 lean 3 declaration is

@@ -271,7 +271,7 @@ theorem sInter_nhds (l : Filter α) : ⋂₀ { s | s ∈ 𝓝 l } = Iic l := by
 
 /- warning: filter.nhds_mono -> Filter.nhds_mono is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {l₁ : Filter.{u1} α} {l₂ : Filter.{u1} α}, Iff (LE.le.{u1} (Filter.{u1} (Filter.{u1} α)) (Preorder.toLE.{u1} (Filter.{u1} (Filter.{u1} α)) (PartialOrder.toPreorder.{u1} (Filter.{u1} (Filter.{u1} α)) (Filter.partialOrder.{u1} (Filter.{u1} α)))) (nhds.{u1} (Filter.{u1} α) (Filter.topologicalSpace.{u1} α) l₁) (nhds.{u1} (Filter.{u1} α) (Filter.topologicalSpace.{u1} α) l₂)) (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) l₁ l₂)
+  forall {α : Type.{u1}} {l₁ : Filter.{u1} α} {l₂ : Filter.{u1} α}, Iff (LE.le.{u1} (Filter.{u1} (Filter.{u1} α)) (Preorder.toHasLe.{u1} (Filter.{u1} (Filter.{u1} α)) (PartialOrder.toPreorder.{u1} (Filter.{u1} (Filter.{u1} α)) (Filter.partialOrder.{u1} (Filter.{u1} α)))) (nhds.{u1} (Filter.{u1} α) (Filter.topologicalSpace.{u1} α) l₁) (nhds.{u1} (Filter.{u1} α) (Filter.topologicalSpace.{u1} α) l₂)) (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) l₁ l₂)
 but is expected to have type
   forall {α : Type.{u1}} {l₁ : Filter.{u1} α} {l₂ : Filter.{u1} α}, Iff (LE.le.{u1} (Filter.{u1} (Filter.{u1} α)) (Preorder.toLE.{u1} (Filter.{u1} (Filter.{u1} α)) (PartialOrder.toPreorder.{u1} (Filter.{u1} (Filter.{u1} α)) (Filter.instPartialOrderFilter.{u1} (Filter.{u1} α)))) (nhds.{u1} (Filter.{u1} α) (Filter.instTopologicalSpaceFilter.{u1} α) l₁) (nhds.{u1} (Filter.{u1} α) (Filter.instTopologicalSpaceFilter.{u1} α) l₂)) (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) l₁ l₂)
 Case conversion may be inaccurate. Consider using '#align filter.nhds_mono Filter.nhds_monoₓ'. -/
@@ -321,7 +321,7 @@ protected theorem closure_singleton (l : Filter α) : closure {l} = Ici l :=
 
 /- warning: filter.specializes_iff_le -> Filter.specializes_iff_le is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {l₁ : Filter.{u1} α} {l₂ : Filter.{u1} α}, Iff (Specializes.{u1} (Filter.{u1} α) (Filter.topologicalSpace.{u1} α) l₁ l₂) (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) l₁ l₂)
+  forall {α : Type.{u1}} {l₁ : Filter.{u1} α} {l₂ : Filter.{u1} α}, Iff (Specializes.{u1} (Filter.{u1} α) (Filter.topologicalSpace.{u1} α) l₁ l₂) (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) l₁ l₂)
 but is expected to have type
   forall {α : Type.{u1}} {l₁ : Filter.{u1} α} {l₂ : Filter.{u1} α}, Iff (Specializes.{u1} (Filter.{u1} α) (Filter.instTopologicalSpaceFilter.{u1} α) l₁ l₂) (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) l₁ l₂)
 Case conversion may be inaccurate. Consider using '#align filter.specializes_iff_le Filter.specializes_iff_leₓ'. -/

@@ -52,17 +52,25 @@ instance : LocallyFiniteOrder (Finset α)
     rw [mem_filter, mem_ssubsets]
     exact and_comm' _ _
 
-#print Finset.Icc_eq_filter_powerset /-
+/- warning: finset.Icc_eq_filter_powerset -> Finset.Icc_eq_filter_powerset is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Finset.{u1} α) (t : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} (Finset.{u1} α)) (Finset.Icc.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Finset.locallyFiniteOrder.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t) (Finset.filter.{u1} (Finset.{u1} α) (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) s) (fun (a : Finset.{u1} α) => Finset.decidableDforallFinset.{u1} α s (fun (a_1 : α) (ᾰ : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a_1 s) => Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a_1 a) (fun (a_1 : α) (h : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a_1 s) => Finset.decidableMem.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a_1 a)) (Finset.powerset.{u1} α t))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Finset.{u1} α) (t : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} (Finset.{u1} α)) (Finset.Icc.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Finset.instLocallyFiniteOrderFinsetToPreorderPartialOrder.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t) (Finset.filter.{u1} (Finset.{u1} α) ((fun (x._@.Mathlib.Data.Finset.Interval._hyg.383 : Finset.{u1} α) (x._@.Mathlib.Data.Finset.Interval._hyg.385 : Finset.{u1} α) => HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) x._@.Mathlib.Data.Finset.Interval._hyg.383 x._@.Mathlib.Data.Finset.Interval._hyg.385) s) (fun (a : Finset.{u1} α) => Finset.decidableSubsetFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s a) (Finset.powerset.{u1} α t))
+Case conversion may be inaccurate. Consider using '#align finset.Icc_eq_filter_powerset Finset.Icc_eq_filter_powersetₓ'. -/
 theorem Icc_eq_filter_powerset : Icc s t = t.powerset.filterₓ ((· ⊆ ·) s) :=
   rfl
 #align finset.Icc_eq_filter_powerset Finset.Icc_eq_filter_powerset
--/
 
-#print Finset.Ico_eq_filter_ssubsets /-
+/- warning: finset.Ico_eq_filter_ssubsets -> Finset.Ico_eq_filter_ssubsets is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Finset.{u1} α) (t : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} (Finset.{u1} α)) (Finset.Ico.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Finset.locallyFiniteOrder.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t) (Finset.filter.{u1} (Finset.{u1} α) (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) s) (fun (a : Finset.{u1} α) => Finset.decidableDforallFinset.{u1} α s (fun (a_1 : α) (ᾰ : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a_1 s) => Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a_1 a) (fun (a_1 : α) (h : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a_1 s) => Finset.decidableMem.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a_1 a)) (Finset.ssubsets.{u1} α (fun (a : α) (b : α) => _inst_1 a b) t))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Finset.{u1} α) (t : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} (Finset.{u1} α)) (Finset.Ico.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Finset.instLocallyFiniteOrderFinsetToPreorderPartialOrder.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t) (Finset.filter.{u1} (Finset.{u1} α) ((fun (x._@.Mathlib.Data.Finset.Interval._hyg.420 : Finset.{u1} α) (x._@.Mathlib.Data.Finset.Interval._hyg.422 : Finset.{u1} α) => HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) x._@.Mathlib.Data.Finset.Interval._hyg.420 x._@.Mathlib.Data.Finset.Interval._hyg.422) s) (fun (a : Finset.{u1} α) => Finset.decidableSubsetFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s a) (Finset.ssubsets.{u1} α (fun (a : α) (b : α) => _inst_1 a b) t))
+Case conversion may be inaccurate. Consider using '#align finset.Ico_eq_filter_ssubsets Finset.Ico_eq_filter_ssubsetsₓ'. -/
 theorem Ico_eq_filter_ssubsets : Ico s t = t.ssubsets.filterₓ ((· ⊆ ·) s) :=
   rfl
 #align finset.Ico_eq_filter_ssubsets Finset.Ico_eq_filter_ssubsets
--/
 
 /- warning: finset.Ioc_eq_filter_powerset -> Finset.Ioc_eq_filter_powerset is a dubious translation:
 lean 3 declaration is
@@ -106,7 +114,12 @@ theorem Iio_eq_ssubsets : Iio s = s.ssubsets :=
 
 variable {s t}
 
-#print Finset.Icc_eq_image_powerset /-
+/- warning: finset.Icc_eq_image_powerset -> Finset.Icc_eq_image_powerset is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α}, (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) s t) -> (Eq.{succ u1} (Finset.{u1} (Finset.{u1} α)) (Finset.Icc.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Finset.locallyFiniteOrder.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t) (Finset.image.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (fun (a : Finset.{u1} α) (b : Finset.{u1} α) => Finset.decidableEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a b) (Union.union.{u1} (Finset.{u1} α) (Finset.hasUnion.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s) (Finset.powerset.{u1} α (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.hasSdiff.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) t s))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α}, (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) s t) -> (Eq.{succ u1} (Finset.{u1} (Finset.{u1} α)) (Finset.Icc.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Finset.instLocallyFiniteOrderFinsetToPreorderPartialOrder.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t) (Finset.image.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (fun (a : Finset.{u1} α) (b : Finset.{u1} α) => Finset.decidableEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a b) ((fun (x._@.Mathlib.Data.Finset.Interval._hyg.602 : Finset.{u1} α) (x._@.Mathlib.Data.Finset.Interval._hyg.604 : Finset.{u1} α) => Union.union.{u1} (Finset.{u1} α) (Finset.instUnionFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) x._@.Mathlib.Data.Finset.Interval._hyg.602 x._@.Mathlib.Data.Finset.Interval._hyg.604) s) (Finset.powerset.{u1} α (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.instSDiffFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) t s))))
+Case conversion may be inaccurate. Consider using '#align finset.Icc_eq_image_powerset Finset.Icc_eq_image_powersetₓ'. -/
 theorem Icc_eq_image_powerset (h : s ⊆ t) : Icc s t = (t \ s).powerset.image ((· ∪ ·) s) :=
   by
   ext u
@@ -117,9 +130,13 @@ theorem Icc_eq_image_powerset (h : s ⊆ t) : Icc s t = (t \ s).powerset.image (
   · rintro ⟨v, hv, rfl⟩
     exact ⟨le_sup_left, union_subset h <| hv.trans <| sdiff_subset _ _⟩
 #align finset.Icc_eq_image_powerset Finset.Icc_eq_image_powerset
--/
 
-#print Finset.Ico_eq_image_ssubsets /-
+/- warning: finset.Ico_eq_image_ssubsets -> Finset.Ico_eq_image_ssubsets is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α}, (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) s t) -> (Eq.{succ u1} (Finset.{u1} (Finset.{u1} α)) (Finset.Ico.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Finset.locallyFiniteOrder.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t) (Finset.image.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (fun (a : Finset.{u1} α) (b : Finset.{u1} α) => Finset.decidableEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a b) (Union.union.{u1} (Finset.{u1} α) (Finset.hasUnion.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s) (Finset.ssubsets.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.hasSdiff.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) t s))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α}, (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) s t) -> (Eq.{succ u1} (Finset.{u1} (Finset.{u1} α)) (Finset.Ico.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Finset.instLocallyFiniteOrderFinsetToPreorderPartialOrder.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t) (Finset.image.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (fun (a : Finset.{u1} α) (b : Finset.{u1} α) => Finset.decidableEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a b) ((fun (x._@.Mathlib.Data.Finset.Interval._hyg.698 : Finset.{u1} α) (x._@.Mathlib.Data.Finset.Interval._hyg.700 : Finset.{u1} α) => Union.union.{u1} (Finset.{u1} α) (Finset.instUnionFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) x._@.Mathlib.Data.Finset.Interval._hyg.698 x._@.Mathlib.Data.Finset.Interval._hyg.700) s) (Finset.ssubsets.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.instSDiffFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) t s))))
+Case conversion may be inaccurate. Consider using '#align finset.Ico_eq_image_ssubsets Finset.Ico_eq_image_ssubsetsₓ'. -/
 theorem Ico_eq_image_ssubsets (h : s ⊆ t) : Ico s t = (t \ s).ssubsets.image ((· ∪ ·) s) :=
   by
   ext u
@@ -130,9 +147,13 @@ theorem Ico_eq_image_ssubsets (h : s ⊆ t) : Ico s t = (t \ s).ssubsets.image (
   · rintro ⟨v, hv, rfl⟩
     exact ⟨le_sup_left, sup_lt_of_lt_sdiff_left hv h⟩
 #align finset.Ico_eq_image_ssubsets Finset.Ico_eq_image_ssubsets
--/
 
-#print Finset.card_Icc_finset /-
+/- warning: finset.card_Icc_finset -> Finset.card_Icc_finset is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α}, (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) s t) -> (Eq.{1} Nat (Finset.card.{u1} (Finset.{u1} α) (Finset.Icc.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Finset.locallyFiniteOrder.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t)) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (Finset.card.{u1} α t) (Finset.card.{u1} α s))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α}, (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) s t) -> (Eq.{1} Nat (Finset.card.{u1} (Finset.{u1} α) (Finset.Icc.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Finset.instLocallyFiniteOrderFinsetToPreorderPartialOrder.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t)) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (Finset.card.{u1} α t) (Finset.card.{u1} α s))))
+Case conversion may be inaccurate. Consider using '#align finset.card_Icc_finset Finset.card_Icc_finsetₓ'. -/
 /-- Cardinality of a non-empty `Icc` of finsets. -/
 theorem card_Icc_finset (h : s ⊆ t) : (Icc s t).card = 2 ^ (t.card - s.card) :=
   by
@@ -142,14 +163,17 @@ theorem card_Icc_finset (h : s ⊆ t) : (Icc s t).card = 2 ^ (t.card - s.card) :
   rw [← (disjoint_sdiff.mono_right hu : Disjoint s u).sup_sdiff_cancel_left, ←
     (disjoint_sdiff.mono_right hv : Disjoint s v).sup_sdiff_cancel_left, huv]
 #align finset.card_Icc_finset Finset.card_Icc_finset
--/
 
-#print Finset.card_Ico_finset /-
+/- warning: finset.card_Ico_finset -> Finset.card_Ico_finset is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α}, (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) s t) -> (Eq.{1} Nat (Finset.card.{u1} (Finset.{u1} α) (Finset.Ico.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Finset.locallyFiniteOrder.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) (OfNat.ofNat.{0} Nat 2 (OfNat.mk.{0} Nat 2 (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne)))) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (Finset.card.{u1} α t) (Finset.card.{u1} α s))) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α}, (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) s t) -> (Eq.{1} Nat (Finset.card.{u1} (Finset.{u1} α) (Finset.Ico.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)) (Finset.instLocallyFiniteOrderFinsetToPreorderPartialOrder.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (Finset.card.{u1} α t) (Finset.card.{u1} α s))) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))
+Case conversion may be inaccurate. Consider using '#align finset.card_Ico_finset Finset.card_Ico_finsetₓ'. -/
 /-- Cardinality of an `Ico` of finsets. -/
 theorem card_Ico_finset (h : s ⊆ t) : (Ico s t).card = 2 ^ (t.card - s.card) - 1 := by
   rw [card_Ico_eq_card_Icc_sub_one, card_Icc_finset h]
 #align finset.card_Ico_finset Finset.card_Ico_finset
--/
 
 /- warning: finset.card_Ioc_finset -> Finset.card_Ioc_finset is a dubious translation:
 lean 3 declaration is

@@ -457,7 +457,7 @@ theorem coe_subset {s₁ s₂ : Finset α} : (s₁ : Set α) ⊆ s₂ ↔ s₁ �
 
 /- warning: finset.val_le_iff -> Finset.val_le_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s₁ : Finset.{u1} α} {s₂ : Finset.{u1} α}, Iff (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) (Finset.val.{u1} α s₁) (Finset.val.{u1} α s₂)) (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) s₁ s₂)
+  forall {α : Type.{u1}} {s₁ : Finset.{u1} α} {s₂ : Finset.{u1} α}, Iff (LE.le.{u1} (Multiset.{u1} α) (Preorder.toHasLe.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) (Finset.val.{u1} α s₁) (Finset.val.{u1} α s₂)) (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) s₁ s₂)
 but is expected to have type
   forall {α : Type.{u1}} {s₁ : Finset.{u1} α} {s₂ : Finset.{u1} α}, Iff (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) (Finset.val.{u1} α s₁) (Finset.val.{u1} α s₂)) (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) s₁ s₂)
 Case conversion may be inaccurate. Consider using '#align finset.val_le_iff Finset.val_le_iffₓ'. -/
@@ -481,31 +481,47 @@ Case conversion may be inaccurate. Consider using '#align finset.not_subset Fins
 theorem not_subset : ¬s ⊆ t ↔ ∃ x ∈ s, x ∉ t := by simp only [← coe_subset, Set.not_subset, mem_coe]
 #align finset.not_subset Finset.not_subset
 
-#print Finset.le_eq_subset /-
+/- warning: finset.le_eq_subset -> Finset.le_eq_subset is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}}, Eq.{succ u1} ((Finset.{u1} α) -> (Finset.{u1} α) -> Prop) (LE.le.{u1} (Finset.{u1} α) (Preorder.toHasLe.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)))) (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α))
+but is expected to have type
+  forall {α : Type.{u1}}, Eq.{succ u1} ((Finset.{u1} α) -> (Finset.{u1} α) -> Prop) (fun (x._@.Mathlib.Data.Finset.Basic._hyg.2180 : Finset.{u1} α) (x._@.Mathlib.Data.Finset.Basic._hyg.2182 : Finset.{u1} α) => LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) x._@.Mathlib.Data.Finset.Basic._hyg.2180 x._@.Mathlib.Data.Finset.Basic._hyg.2182) (fun (x._@.Mathlib.Data.Finset.Basic._hyg.2195 : Finset.{u1} α) (x._@.Mathlib.Data.Finset.Basic._hyg.2197 : Finset.{u1} α) => HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) x._@.Mathlib.Data.Finset.Basic._hyg.2195 x._@.Mathlib.Data.Finset.Basic._hyg.2197)
+Case conversion may be inaccurate. Consider using '#align finset.le_eq_subset Finset.le_eq_subsetₓ'. -/
 @[simp]
 theorem le_eq_subset : ((· ≤ ·) : Finset α → Finset α → Prop) = (· ⊆ ·) :=
   rfl
 #align finset.le_eq_subset Finset.le_eq_subset
--/
 
-#print Finset.lt_eq_subset /-
+/- warning: finset.lt_eq_subset -> Finset.lt_eq_subset is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}}, Eq.{succ u1} ((Finset.{u1} α) -> (Finset.{u1} α) -> Prop) (LT.lt.{u1} (Finset.{u1} α) (Preorder.toHasLt.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)))) (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.hasSsubset.{u1} α))
+but is expected to have type
+  forall {α : Type.{u1}}, Eq.{succ u1} ((Finset.{u1} α) -> (Finset.{u1} α) -> Prop) (fun (x._@.Mathlib.Data.Finset.Basic._hyg.2233 : Finset.{u1} α) (x._@.Mathlib.Data.Finset.Basic._hyg.2235 : Finset.{u1} α) => LT.lt.{u1} (Finset.{u1} α) (Preorder.toLT.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) x._@.Mathlib.Data.Finset.Basic._hyg.2233 x._@.Mathlib.Data.Finset.Basic._hyg.2235) (fun (x._@.Mathlib.Data.Finset.Basic._hyg.2248 : Finset.{u1} α) (x._@.Mathlib.Data.Finset.Basic._hyg.2250 : Finset.{u1} α) => HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.instHasSSubsetFinset.{u1} α) x._@.Mathlib.Data.Finset.Basic._hyg.2248 x._@.Mathlib.Data.Finset.Basic._hyg.2250)
+Case conversion may be inaccurate. Consider using '#align finset.lt_eq_subset Finset.lt_eq_subsetₓ'. -/
 @[simp]
 theorem lt_eq_subset : ((· < ·) : Finset α → Finset α → Prop) = (· ⊂ ·) :=
   rfl
 #align finset.lt_eq_subset Finset.lt_eq_subset
--/
 
-#print Finset.le_iff_subset /-
+/- warning: finset.le_iff_subset -> Finset.le_iff_subset is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {s₁ : Finset.{u1} α} {s₂ : Finset.{u1} α}, Iff (LE.le.{u1} (Finset.{u1} α) (Preorder.toHasLe.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) s₁ s₂) (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.hasSubset.{u1} α) s₁ s₂)
+but is expected to have type
+  forall {α : Type.{u1}} {s₁ : Finset.{u1} α} {s₂ : Finset.{u1} α}, Iff (LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) s₁ s₂) (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) s₁ s₂)
+Case conversion may be inaccurate. Consider using '#align finset.le_iff_subset Finset.le_iff_subsetₓ'. -/
 theorem le_iff_subset {s₁ s₂ : Finset α} : s₁ ≤ s₂ ↔ s₁ ⊆ s₂ :=
   Iff.rfl
 #align finset.le_iff_subset Finset.le_iff_subset
--/
 
-#print Finset.lt_iff_ssubset /-
+/- warning: finset.lt_iff_ssubset -> Finset.lt_iff_ssubset is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {s₁ : Finset.{u1} α} {s₂ : Finset.{u1} α}, Iff (LT.lt.{u1} (Finset.{u1} α) (Preorder.toHasLt.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) s₁ s₂) (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.hasSsubset.{u1} α) s₁ s₂)
+but is expected to have type
+  forall {α : Type.{u1}} {s₁ : Finset.{u1} α} {s₂ : Finset.{u1} α}, Iff (LT.lt.{u1} (Finset.{u1} α) (Preorder.toLT.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) s₁ s₂) (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.instHasSSubsetFinset.{u1} α) s₁ s₂)
+Case conversion may be inaccurate. Consider using '#align finset.lt_iff_ssubset Finset.lt_iff_ssubsetₓ'. -/
 theorem lt_iff_ssubset {s₁ s₂ : Finset α} : s₁ < s₂ ↔ s₁ ⊂ s₂ :=
   Iff.rfl
 #align finset.lt_iff_ssubset Finset.lt_iff_ssubset
--/
 
 /- warning: finset.coe_ssubset -> Finset.coe_ssubset is a dubious translation:
 lean 3 declaration is
@@ -520,7 +536,7 @@ theorem coe_ssubset {s₁ s₂ : Finset α} : (s₁ : Set α) ⊂ s₂ ↔ s₁ 
 
 /- warning: finset.val_lt_iff -> Finset.val_lt_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s₁ : Finset.{u1} α} {s₂ : Finset.{u1} α}, Iff (LT.lt.{u1} (Multiset.{u1} α) (Preorder.toLT.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) (Finset.val.{u1} α s₁) (Finset.val.{u1} α s₂)) (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.hasSsubset.{u1} α) s₁ s₂)
+  forall {α : Type.{u1}} {s₁ : Finset.{u1} α} {s₂ : Finset.{u1} α}, Iff (LT.lt.{u1} (Multiset.{u1} α) (Preorder.toHasLt.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) (Finset.val.{u1} α s₁) (Finset.val.{u1} α s₂)) (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.hasSsubset.{u1} α) s₁ s₂)
 but is expected to have type
   forall {α : Type.{u1}} {s₁ : Finset.{u1} α} {s₂ : Finset.{u1} α}, Iff (LT.lt.{u1} (Multiset.{u1} α) (Preorder.toLT.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) (Finset.val.{u1} α s₁) (Finset.val.{u1} α s₂)) (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.instHasSSubsetFinset.{u1} α) s₁ s₂)
 Case conversion may be inaccurate. Consider using '#align finset.val_lt_iff Finset.val_lt_iffₓ'. -/
@@ -575,11 +591,15 @@ instance isWellFounded_ssubset : IsWellFounded (Finset α) (· ⊂ ·) :=
 #align finset.is_well_founded_ssubset Finset.isWellFounded_ssubset
 -/
 
-#print Finset.wellFoundedLT /-
+/- warning: finset.is_well_founded_lt -> Finset.wellFoundedLT is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}}, WellFoundedLT.{u1} (Finset.{u1} α) (Preorder.toHasLt.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)))
+but is expected to have type
+  forall {α : Type.{u1}}, WellFoundedLT.{u1} (Finset.{u1} α) (Preorder.toLT.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)))
+Case conversion may be inaccurate. Consider using '#align finset.is_well_founded_lt Finset.wellFoundedLTₓ'. -/
 instance wellFoundedLT : WellFoundedLT (Finset α) :=
   Finset.isWellFounded_ssubset
 #align finset.is_well_founded_lt Finset.wellFoundedLT
--/
 
 end Subset
 
@@ -589,16 +609,20 @@ attribute [local trans] subset.trans superset.trans
 /-! ### Order embedding from `finset α` to `set α` -/
 
 
-#print Finset.coeEmb /-
+/- warning: finset.coe_emb -> Finset.coeEmb is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}}, OrderEmbedding.{u1, u1} (Finset.{u1} α) (Set.{u1} α) (Preorder.toHasLe.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Set.hasLe.{u1} α)
+but is expected to have type
+  forall {α : Type.{u1}}, OrderEmbedding.{u1, u1} (Finset.{u1} α) (Set.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Set.instLESet.{u1} α)
+Case conversion may be inaccurate. Consider using '#align finset.coe_emb Finset.coeEmbₓ'. -/
 /-- Coercion to `set α` as an `order_embedding`. -/
 def coeEmb : Finset α ↪o Set α :=
   ⟨⟨coe, coe_injective⟩, fun s t => coe_subset⟩
 #align finset.coe_emb Finset.coeEmb
--/
 
 /- warning: finset.coe_coe_emb -> Finset.coe_coeEmb is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}}, Eq.{succ u1} ((Finset.{u1} α) -> (Set.{u1} α)) (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (Finset.{u1} α) (Set.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Set.hasLe.{u1} α)) (fun (_x : RelEmbedding.{u1, u1} (Finset.{u1} α) (Set.{u1} α) (LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)))) (LE.le.{u1} (Set.{u1} α) (Set.hasLe.{u1} α))) => (Finset.{u1} α) -> (Set.{u1} α)) (RelEmbedding.hasCoeToFun.{u1, u1} (Finset.{u1} α) (Set.{u1} α) (LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)))) (LE.le.{u1} (Set.{u1} α) (Set.hasLe.{u1} α))) (Finset.coeEmb.{u1} α)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))))
+  forall {α : Type.{u1}}, Eq.{succ u1} ((Finset.{u1} α) -> (Set.{u1} α)) (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (Finset.{u1} α) (Set.{u1} α) (Preorder.toHasLe.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Set.hasLe.{u1} α)) (fun (_x : RelEmbedding.{u1, u1} (Finset.{u1} α) (Set.{u1} α) (LE.le.{u1} (Finset.{u1} α) (Preorder.toHasLe.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)))) (LE.le.{u1} (Set.{u1} α) (Set.hasLe.{u1} α))) => (Finset.{u1} α) -> (Set.{u1} α)) (RelEmbedding.hasCoeToFun.{u1, u1} (Finset.{u1} α) (Set.{u1} α) (LE.le.{u1} (Finset.{u1} α) (Preorder.toHasLe.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α)))) (LE.le.{u1} (Set.{u1} α) (Set.hasLe.{u1} α))) (Finset.coeEmb.{u1} α)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))))
 but is expected to have type
   forall {α : Type.{u1}}, Eq.{succ u1} (forall (ᾰ : Finset.{u1} α), (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : Finset.{u1} α) => Set.{u1} α) ᾰ) (FunLike.coe.{succ u1, succ u1, succ u1} (OrderEmbedding.{u1, u1} (Finset.{u1} α) (Set.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Set.instLESet.{u1} α)) (Finset.{u1} α) (fun (_x : Finset.{u1} α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : Finset.{u1} α) => Set.{u1} α) _x) (RelHomClass.toFunLike.{u1, u1, u1} (OrderEmbedding.{u1, u1} (Finset.{u1} α) (Set.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Set.instLESet.{u1} α)) (Finset.{u1} α) (Set.{u1} α) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : Finset.{u1} α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : Finset.{u1} α) => LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : Set.{u1} α) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Set.{u1} α) => LE.le.{u1} (Set.{u1} α) (Set.instLESet.{u1} α) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) (RelEmbedding.instRelHomClassRelEmbedding.{u1, u1} (Finset.{u1} α) (Set.{u1} α) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : Finset.{u1} α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : Finset.{u1} α) => LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : Set.{u1} α) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Set.{u1} α) => LE.le.{u1} (Set.{u1} α) (Set.instLESet.{u1} α) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697))) (Finset.coeEmb.{u1} α)) (Finset.toSet.{u1} α)
 Case conversion may be inaccurate. Consider using '#align finset.coe_coe_emb Finset.coe_coeEmbₓ'. -/
@@ -838,7 +862,7 @@ instance : OrderBot (Finset α) where
 
 /- warning: finset.bot_eq_empty -> Finset.bot_eq_empty is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}}, Eq.{succ u1} (Finset.{u1} α) (Bot.bot.{u1} (Finset.{u1} α) (OrderBot.toHasBot.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Finset.orderBot.{u1} α))) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.hasEmptyc.{u1} α))
+  forall {α : Type.{u1}}, Eq.{succ u1} (Finset.{u1} α) (Bot.bot.{u1} (Finset.{u1} α) (OrderBot.toHasBot.{u1} (Finset.{u1} α) (Preorder.toHasLe.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Finset.orderBot.{u1} α))) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.hasEmptyc.{u1} α))
 but is expected to have type
   forall {α : Type.{u1}}, Eq.{succ u1} (Finset.{u1} α) (Bot.bot.{u1} (Finset.{u1} α) (OrderBot.toBot.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α))) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.instEmptyCollectionFinset.{u1} α))
 Case conversion may be inaccurate. Consider using '#align finset.bot_eq_empty Finset.bot_eq_emptyₓ'. -/
@@ -3798,34 +3822,50 @@ theorem update_piecewise_of_not_mem [DecidableEq α] {i : α} (hi : i ∉ s) (v 
   exact fun h => hi (h ▸ hj)
 #align finset.update_piecewise_of_not_mem Finset.update_piecewise_of_not_mem
 
-#print Finset.piecewise_le_of_le_of_le /-
+/- warning: finset.piecewise_le_of_le_of_le -> Finset.piecewise_le_of_le_of_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (s : Finset.{u1} α) [_inst_1 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) j s)] {δ : α -> Type.{u2}} [_inst_2 : forall (i : α), Preorder.{u2} (δ i)] {f : forall (i : α), δ i} {g : forall (i : α), δ i} {h : forall (i : α), δ i}, (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toHasLe.{u2} (δ i) (_inst_2 i))) f h) -> (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toHasLe.{u2} (δ i) (_inst_2 i))) g h) -> (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toHasLe.{u2} (δ i) (_inst_2 i))) (Finset.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j)) h)
+but is expected to have type
+  forall {α : Type.{u1}} (s : Finset.{u1} α) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) j s)] {δ : α -> Type.{u2}} [_inst_2 : forall (i : α), Preorder.{u2} (δ i)] {f : forall (i : α), δ i} {g : forall (i : α), δ i} {h : forall (i : α), δ i}, (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toLE.{u2} (δ i) (_inst_2 i))) f h) -> (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toLE.{u2} (δ i) (_inst_2 i))) g h) -> (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toLE.{u2} (δ i) (_inst_2 i))) (Finset.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j)) h)
+Case conversion may be inaccurate. Consider using '#align finset.piecewise_le_of_le_of_le Finset.piecewise_le_of_le_of_leₓ'. -/
 theorem piecewise_le_of_le_of_le {δ : α → Type _} [∀ i, Preorder (δ i)] {f g h : ∀ i, δ i}
     (Hf : f ≤ h) (Hg : g ≤ h) : s.piecewise f g ≤ h := fun x =>
   piecewise_cases s f g (· ≤ h x) (Hf x) (Hg x)
 #align finset.piecewise_le_of_le_of_le Finset.piecewise_le_of_le_of_le
--/
 
-#print Finset.le_piecewise_of_le_of_le /-
+/- warning: finset.le_piecewise_of_le_of_le -> Finset.le_piecewise_of_le_of_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (s : Finset.{u1} α) [_inst_1 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) j s)] {δ : α -> Type.{u2}} [_inst_2 : forall (i : α), Preorder.{u2} (δ i)] {f : forall (i : α), δ i} {g : forall (i : α), δ i} {h : forall (i : α), δ i}, (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toHasLe.{u2} (δ i) (_inst_2 i))) h f) -> (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toHasLe.{u2} (δ i) (_inst_2 i))) h g) -> (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toHasLe.{u2} (δ i) (_inst_2 i))) h (Finset.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j)))
+but is expected to have type
+  forall {α : Type.{u1}} (s : Finset.{u1} α) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) j s)] {δ : α -> Type.{u2}} [_inst_2 : forall (i : α), Preorder.{u2} (δ i)] {f : forall (i : α), δ i} {g : forall (i : α), δ i} {h : forall (i : α), δ i}, (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toLE.{u2} (δ i) (_inst_2 i))) h f) -> (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toLE.{u2} (δ i) (_inst_2 i))) h g) -> (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toLE.{u2} (δ i) (_inst_2 i))) h (Finset.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j)))
+Case conversion may be inaccurate. Consider using '#align finset.le_piecewise_of_le_of_le Finset.le_piecewise_of_le_of_leₓ'. -/
 theorem le_piecewise_of_le_of_le {δ : α → Type _} [∀ i, Preorder (δ i)] {f g h : ∀ i, δ i}
     (Hf : h ≤ f) (Hg : h ≤ g) : h ≤ s.piecewise f g := fun x =>
   piecewise_cases s f g (fun y => h x ≤ y) (Hf x) (Hg x)
 #align finset.le_piecewise_of_le_of_le Finset.le_piecewise_of_le_of_le
--/
 
+/- warning: finset.piecewise_le_piecewise' -> Finset.piecewise_le_piecewise' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (s : Finset.{u1} α) [_inst_1 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) j s)] {δ : α -> Type.{u2}} [_inst_2 : forall (i : α), Preorder.{u2} (δ i)] {f : forall (i : α), δ i} {g : forall (i : α), δ i} {f' : forall (i : α), δ i} {g' : forall (i : α), δ i}, (forall (x : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x s) -> (LE.le.{u2} (δ x) (Preorder.toHasLe.{u2} (δ x) (_inst_2 x)) (f x) (f' x))) -> (forall (x : α), (Not (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x s)) -> (LE.le.{u2} (δ x) (Preorder.toHasLe.{u2} (δ x) (_inst_2 x)) (g x) (g' x))) -> (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toHasLe.{u2} (δ i) (_inst_2 i))) (Finset.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j)) (Finset.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s f' g' (fun (j : α) => _inst_1 j)))
+but is expected to have type
+  forall {α : Type.{u1}} (s : Finset.{u1} α) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) j s)] {δ : α -> Type.{u2}} [_inst_2 : forall (i : α), Preorder.{u2} (δ i)] {f : forall (i : α), δ i} {g : forall (i : α), δ i} {f' : forall (i : α), δ i} {g' : forall (i : α), δ i}, (forall (x : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s) -> (LE.le.{u2} (δ x) (Preorder.toLE.{u2} (δ x) (_inst_2 x)) (f x) (f' x))) -> (forall (x : α), (Not (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s)) -> (LE.le.{u2} (δ x) (Preorder.toLE.{u2} (δ x) (_inst_2 x)) (g x) (g' x))) -> (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toLE.{u2} (δ i) (_inst_2 i))) (Finset.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j)) (Finset.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s f' g' (fun (j : α) => _inst_1 j)))
+Case conversion may be inaccurate. Consider using '#align finset.piecewise_le_piecewise' Finset.piecewise_le_piecewise'ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ∉ » s) -/
-#print Finset.piecewise_le_piecewise' /-
 theorem piecewise_le_piecewise' {δ : α → Type _} [∀ i, Preorder (δ i)] {f g f' g' : ∀ i, δ i}
     (Hf : ∀ x ∈ s, f x ≤ f' x) (Hg : ∀ (x) (_ : x ∉ s), g x ≤ g' x) :
     s.piecewise f g ≤ s.piecewise f' g' := fun x => by by_cases hx : x ∈ s <;> simp [hx, *]
 #align finset.piecewise_le_piecewise' Finset.piecewise_le_piecewise'
--/
 
-#print Finset.piecewise_le_piecewise /-
+/- warning: finset.piecewise_le_piecewise -> Finset.piecewise_le_piecewise is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (s : Finset.{u1} α) [_inst_1 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) j s)] {δ : α -> Type.{u2}} [_inst_2 : forall (i : α), Preorder.{u2} (δ i)] {f : forall (i : α), δ i} {g : forall (i : α), δ i} {f' : forall (i : α), δ i} {g' : forall (i : α), δ i}, (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toHasLe.{u2} (δ i) (_inst_2 i))) f f') -> (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toHasLe.{u2} (δ i) (_inst_2 i))) g g') -> (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toHasLe.{u2} (δ i) (_inst_2 i))) (Finset.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j)) (Finset.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s f' g' (fun (j : α) => _inst_1 j)))
+but is expected to have type
+  forall {α : Type.{u1}} (s : Finset.{u1} α) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) j s)] {δ : α -> Type.{u2}} [_inst_2 : forall (i : α), Preorder.{u2} (δ i)] {f : forall (i : α), δ i} {g : forall (i : α), δ i} {f' : forall (i : α), δ i} {g' : forall (i : α), δ i}, (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toLE.{u2} (δ i) (_inst_2 i))) f f') -> (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toLE.{u2} (δ i) (_inst_2 i))) g g') -> (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toLE.{u2} (δ i) (_inst_2 i))) (Finset.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j)) (Finset.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s f' g' (fun (j : α) => _inst_1 j)))
+Case conversion may be inaccurate. Consider using '#align finset.piecewise_le_piecewise Finset.piecewise_le_piecewiseₓ'. -/
 theorem piecewise_le_piecewise {δ : α → Type _} [∀ i, Preorder (δ i)] {f g f' g' : ∀ i, δ i}
     (Hf : f ≤ f') (Hg : g ≤ g') : s.piecewise f g ≤ s.piecewise f' g' :=
   s.piecewise_le_piecewise' (fun x _ => Hf x) fun x _ => Hg x
 #align finset.piecewise_le_piecewise Finset.piecewise_le_piecewise
--/
 
 #print Finset.piecewise_mem_Icc_of_mem_of_mem /-
 theorem piecewise_mem_Icc_of_mem_of_mem {δ : α → Type _} [∀ i, Preorder (δ i)]
@@ -3835,19 +3875,27 @@ theorem piecewise_mem_Icc_of_mem_of_mem {δ : α → Type _} [∀ i, Preorder (�
 #align finset.piecewise_mem_Icc_of_mem_of_mem Finset.piecewise_mem_Icc_of_mem_of_mem
 -/
 
-#print Finset.piecewise_mem_Icc /-
+/- warning: finset.piecewise_mem_Icc -> Finset.piecewise_mem_Icc is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (s : Finset.{u1} α) [_inst_1 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) j s)] {δ : α -> Type.{u2}} [_inst_2 : forall (i : α), Preorder.{u2} (δ i)] {f : forall (i : α), δ i} {g : forall (i : α), δ i}, (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toHasLe.{u2} (δ i) (_inst_2 i))) f g) -> (Membership.Mem.{max u1 u2, max u1 u2} (forall (i : α), δ i) (Set.{max u1 u2} (forall (i : α), δ i)) (Set.hasMem.{max u1 u2} (forall (i : α), δ i)) (Finset.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j)) (Set.Icc.{max u1 u2} (forall (i : α), δ i) (Pi.preorder.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => _inst_2 i)) f g))
+but is expected to have type
+  forall {α : Type.{u1}} (s : Finset.{u1} α) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) j s)] {δ : α -> Type.{u2}} [_inst_2 : forall (i : α), Preorder.{u2} (δ i)] {f : forall (i : α), δ i} {g : forall (i : α), δ i}, (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toLE.{u2} (δ i) (_inst_2 i))) f g) -> (Membership.mem.{max u1 u2, max u1 u2} (forall (i : α), δ i) (Set.{max u1 u2} (forall (i : α), δ i)) (Set.instMembershipSet.{max u1 u2} (forall (i : α), δ i)) (Finset.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j)) (Set.Icc.{max u1 u2} (forall (i : α), δ i) (Pi.preorder.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => _inst_2 i)) f g))
+Case conversion may be inaccurate. Consider using '#align finset.piecewise_mem_Icc Finset.piecewise_mem_Iccₓ'. -/
 theorem piecewise_mem_Icc {δ : α → Type _} [∀ i, Preorder (δ i)] {f g : ∀ i, δ i} (h : f ≤ g) :
     s.piecewise f g ∈ Set.Icc f g :=
   piecewise_mem_Icc_of_mem_of_mem _ (Set.left_mem_Icc.2 h) (Set.right_mem_Icc.2 h)
 #align finset.piecewise_mem_Icc Finset.piecewise_mem_Icc
--/
 
-#print Finset.piecewise_mem_Icc' /-
+/- warning: finset.piecewise_mem_Icc' -> Finset.piecewise_mem_Icc' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (s : Finset.{u1} α) [_inst_1 : forall (j : α), Decidable (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) j s)] {δ : α -> Type.{u2}} [_inst_2 : forall (i : α), Preorder.{u2} (δ i)] {f : forall (i : α), δ i} {g : forall (i : α), δ i}, (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toHasLe.{u2} (δ i) (_inst_2 i))) g f) -> (Membership.Mem.{max u1 u2, max u1 u2} (forall (i : α), δ i) (Set.{max u1 u2} (forall (i : α), δ i)) (Set.hasMem.{max u1 u2} (forall (i : α), δ i)) (Finset.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j)) (Set.Icc.{max u1 u2} (forall (i : α), δ i) (Pi.preorder.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => _inst_2 i)) g f))
+but is expected to have type
+  forall {α : Type.{u1}} (s : Finset.{u1} α) [_inst_1 : forall (j : α), Decidable (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) j s)] {δ : α -> Type.{u2}} [_inst_2 : forall (i : α), Preorder.{u2} (δ i)] {f : forall (i : α), δ i} {g : forall (i : α), δ i}, (LE.le.{max u1 u2} (forall (i : α), δ i) (Pi.hasLe.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => Preorder.toLE.{u2} (δ i) (_inst_2 i))) g f) -> (Membership.mem.{max u1 u2, max u1 u2} (forall (i : α), δ i) (Set.{max u1 u2} (forall (i : α), δ i)) (Set.instMembershipSet.{max u1 u2} (forall (i : α), δ i)) (Finset.piecewise.{u1, succ u2} α (fun (i : α) => δ i) s f g (fun (j : α) => _inst_1 j)) (Set.Icc.{max u1 u2} (forall (i : α), δ i) (Pi.preorder.{u1, u2} α (fun (i : α) => δ i) (fun (i : α) => _inst_2 i)) g f))
+Case conversion may be inaccurate. Consider using '#align finset.piecewise_mem_Icc' Finset.piecewise_mem_Icc'ₓ'. -/
 theorem piecewise_mem_Icc' {δ : α → Type _} [∀ i, Preorder (δ i)] {f g : ∀ i, δ i} (h : g ≤ f) :
     s.piecewise f g ∈ Set.Icc g f :=
   piecewise_mem_Icc_of_mem_of_mem _ (Set.right_mem_Icc.2 h) (Set.left_mem_Icc.2 h)
 #align finset.piecewise_mem_Icc' Finset.piecewise_mem_Icc'
--/
 
 end Piecewise
 
@@ -4031,12 +4079,16 @@ theorem monotone_filter_left : Monotone (filter p) := fun _ _ => filter_subset_f
 #align finset.monotone_filter_left Finset.monotone_filter_left
 -/
 
-#print Finset.monotone_filter_right /-
+/- warning: finset.monotone_filter_right -> Finset.monotone_filter_right is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (s : Finset.{u1} α) {{p : α -> Prop}} {{q : α -> Prop}} [_inst_3 : DecidablePred.{succ u1} α p] [_inst_4 : DecidablePred.{succ u1} α q], (LE.le.{u1} (α -> Prop) (Pi.hasLe.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => Prop.le)) p q) -> (LE.le.{u1} (Finset.{u1} α) (Preorder.toHasLe.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Finset.filter.{u1} α p (fun (a : α) => _inst_3 a) s) (Finset.filter.{u1} α q (fun (a : α) => _inst_4 a) s))
+but is expected to have type
+  forall {α : Type.{u1}} (s : Finset.{u1} α) {{p : α -> Prop}} {{q : α -> Prop}} [_inst_3 : DecidablePred.{succ u1} α p] [_inst_4 : DecidablePred.{succ u1} α q], (LE.le.{u1} (α -> Prop) (Pi.hasLe.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => Prop.le)) p q) -> (LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Finset.filter.{u1} α p (fun (a : α) => _inst_3 a) s) (Finset.filter.{u1} α q (fun (a : α) => _inst_4 a) s))
+Case conversion may be inaccurate. Consider using '#align finset.monotone_filter_right Finset.monotone_filter_rightₓ'. -/
 theorem monotone_filter_right (s : Finset α) ⦃p q : α → Prop⦄ [DecidablePred p] [DecidablePred q]
     (h : p ≤ q) : s.filterₓ p ≤ s.filterₓ q :=
   Multiset.subset_of_le (Multiset.monotone_filter_right s.val h)
 #align finset.monotone_filter_right Finset.monotone_filter_right
--/
 
 #print Finset.coe_filter /-
 @[simp, norm_cast]
@@ -4098,7 +4150,7 @@ theorem disjoint_filter_filter {s t : Finset α} {p q : α → Prop} [DecidableP
 
 /- warning: finset.disjoint_filter_filter' -> Finset.disjoint_filter_filter' is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} (s : Finset.{u1} α) (t : Finset.{u1} α) {p : α -> Prop} {q : α -> Prop} [_inst_3 : DecidablePred.{succ u1} α p] [_inst_4 : DecidablePred.{succ u1} α q], (Disjoint.{u1} (α -> Prop) (Pi.partialOrder.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => Prop.partialOrder)) (Pi.orderBot.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => Preorder.toLE.{0} ((fun (i : α) => (fun (i : α) => (fun (ᾰ : α) => Prop) i) i) i) ((fun (i : α) => PartialOrder.toPreorder.{0} ((fun (ᾰ : α) => Prop) i) ((fun (i : α) => Prop.partialOrder) i)) i)) (fun (i : α) => BoundedOrder.toOrderBot.{0} Prop (Preorder.toLE.{0} ((fun (i : α) => (fun (i : α) => (fun (ᾰ : α) => Prop) i) i) i) ((fun (i : α) => PartialOrder.toPreorder.{0} ((fun (ᾰ : α) => Prop) i) ((fun (i : α) => Prop.partialOrder) i)) i)) Prop.boundedOrder)) p q) -> (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) (Finset.filter.{u1} α p (fun (a : α) => _inst_3 a) s) (Finset.filter.{u1} α q (fun (a : α) => _inst_4 a) t))
+  forall {α : Type.{u1}} (s : Finset.{u1} α) (t : Finset.{u1} α) {p : α -> Prop} {q : α -> Prop} [_inst_3 : DecidablePred.{succ u1} α p] [_inst_4 : DecidablePred.{succ u1} α q], (Disjoint.{u1} (α -> Prop) (Pi.partialOrder.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => Prop.partialOrder)) (Pi.orderBot.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => Preorder.toHasLe.{0} ((fun (i : α) => (fun (i : α) => (fun (ᾰ : α) => Prop) i) i) i) ((fun (i : α) => PartialOrder.toPreorder.{0} ((fun (ᾰ : α) => Prop) i) ((fun (i : α) => Prop.partialOrder) i)) i)) (fun (i : α) => BoundedOrder.toOrderBot.{0} Prop (Preorder.toHasLe.{0} ((fun (i : α) => (fun (i : α) => (fun (ᾰ : α) => Prop) i) i) i) ((fun (i : α) => PartialOrder.toPreorder.{0} ((fun (ᾰ : α) => Prop) i) ((fun (i : α) => Prop.partialOrder) i)) i)) Prop.boundedOrder)) p q) -> (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.orderBot.{u1} α) (Finset.filter.{u1} α p (fun (a : α) => _inst_3 a) s) (Finset.filter.{u1} α q (fun (a : α) => _inst_4 a) t))
 but is expected to have type
   forall {α : Type.{u1}} (s : Finset.{u1} α) (t : Finset.{u1} α) {p : α -> Prop} {q : α -> Prop} [_inst_3 : DecidablePred.{succ u1} α p] [_inst_4 : DecidablePred.{succ u1} α q], (Disjoint.{u1} (α -> Prop) (Pi.partialOrder.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => Prop.partialOrder)) (Pi.orderBot.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => Preorder.toLE.{0} ((fun (i : α) => (fun (i : α) => Prop) i) i) ((fun (i : α) => PartialOrder.toPreorder.{0} ((fun (ᾰ : α) => Prop) i) ((fun (i : α) => Prop.partialOrder) i)) i)) (fun (i : α) => BoundedOrder.toOrderBot.{0} Prop Prop.le Prop.boundedOrder)) p q) -> (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (Finset.filter.{u1} α p (fun (a : α) => _inst_3 a) s) (Finset.filter.{u1} α q (fun (a : α) => _inst_4 a) t))
 Case conversion may be inaccurate. Consider using '#align finset.disjoint_filter_filter' Finset.disjoint_filter_filter'ₓ'. -/
@@ -4767,7 +4819,7 @@ theorem val_toFinset [DecidableEq α] (s : Finset α) : s.val.toFinset = s :=
 
 /- warning: finset.val_le_iff_val_subset -> Finset.val_le_iff_val_subset is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {a : Finset.{u1} α} {b : Multiset.{u1} α}, Iff (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) (Finset.val.{u1} α a) b) (HasSubset.Subset.{u1} (Multiset.{u1} α) (Multiset.hasSubset.{u1} α) (Finset.val.{u1} α a) b)
+  forall {α : Type.{u1}} {a : Finset.{u1} α} {b : Multiset.{u1} α}, Iff (LE.le.{u1} (Multiset.{u1} α) (Preorder.toHasLe.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) (Finset.val.{u1} α a) b) (HasSubset.Subset.{u1} (Multiset.{u1} α) (Multiset.hasSubset.{u1} α) (Finset.val.{u1} α a) b)
 but is expected to have type
   forall {α : Type.{u1}} {a : Finset.{u1} α} {b : Multiset.{u1} α}, Iff (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) (Finset.val.{u1} α a) b) (HasSubset.Subset.{u1} (Multiset.{u1} α) (Multiset.instHasSubsetMultiset.{u1} α) (Finset.val.{u1} α a) b)
 Case conversion may be inaccurate. Consider using '#align finset.val_le_iff_val_subset Finset.val_le_iff_val_subsetₓ'. -/

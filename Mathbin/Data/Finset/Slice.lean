@@ -232,15 +232,24 @@ theorem pairwiseDisjoint_slice : (Set.univ : Set ℕ).PairwiseDisjoint (slice �
 
 variable [Fintype α] (𝒜)
 
-#print Finset.biUnion_slice /-
+/- warning: finset.bUnion_slice -> Finset.biUnion_slice is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (𝒜 : Finset.{u1} (Finset.{u1} α)) [_inst_1 : Fintype.{u1} α] [_inst_2 : DecidableEq.{succ u1} α], Eq.{succ u1} (Finset.{u1} (Finset.{u1} α)) (Finset.biUnion.{0, u1} Nat (Finset.{u1} α) (fun (a : Finset.{u1} α) (b : Finset.{u1} α) => Finset.decidableEq.{u1} α (fun (a : α) (b : α) => _inst_2 a b) a b) (Finset.Iic.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) (Finset.LocallyFiniteOrder.toLocallyFiniteOrderBot.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.orderBot Nat.locallyFiniteOrder) (Fintype.card.{u1} α _inst_1)) (Finset.slice.{u1} α 𝒜)) 𝒜
+but is expected to have type
+  forall {α : Type.{u1}} (𝒜 : Finset.{u1} (Finset.{u1} α)) [_inst_1 : Fintype.{u1} α] [_inst_2 : DecidableEq.{succ u1} α], Eq.{succ u1} (Finset.{u1} (Finset.{u1} α)) (Finset.biUnion.{0, u1} Nat (Finset.{u1} α) (fun (a : Finset.{u1} α) (b : Finset.{u1} α) => Finset.decidableEq.{u1} α (fun (a : α) (b : α) => _inst_2 a b) a b) (Finset.Iic.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) (Finset.LocallyFiniteOrder.toLocallyFiniteOrderBot.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) Nat.orderBot instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring) (Fintype.card.{u1} α _inst_1)) (Finset.slice.{u1} α 𝒜)) 𝒜
+Case conversion may be inaccurate. Consider using '#align finset.bUnion_slice Finset.biUnion_sliceₓ'. -/
 @[simp]
 theorem biUnion_slice [DecidableEq α] : (Iic <| Fintype.card α).biUnion 𝒜.slice = 𝒜 :=
   Subset.antisymm (biUnion_subset.2 fun r _ => slice_subset) fun s hs =>
     mem_biUnion.2 ⟨s.card, mem_Iic.2 <| s.card_le_univ, mem_slice.2 <| ⟨hs, rfl⟩⟩
 #align finset.bUnion_slice Finset.biUnion_slice
--/
 
-#print Finset.sum_card_slice /-
+/- warning: finset.sum_card_slice -> Finset.sum_card_slice is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (𝒜 : Finset.{u1} (Finset.{u1} α)) [_inst_1 : Fintype.{u1} α], Eq.{1} Nat (Finset.sum.{0, 0} Nat Nat Nat.addCommMonoid (Finset.Iic.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) (Finset.LocallyFiniteOrder.toLocallyFiniteOrderBot.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.orderBot Nat.locallyFiniteOrder) (Fintype.card.{u1} α _inst_1)) (fun (r : Nat) => Finset.card.{u1} (Finset.{u1} α) (Finset.slice.{u1} α 𝒜 r))) (Finset.card.{u1} (Finset.{u1} α) 𝒜)
+but is expected to have type
+  forall {α : Type.{u1}} (𝒜 : Finset.{u1} (Finset.{u1} α)) [_inst_1 : Fintype.{u1} α], Eq.{1} Nat (Finset.sum.{0, 0} Nat Nat Nat.addCommMonoid (Finset.Iic.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) (Finset.LocallyFiniteOrder.toLocallyFiniteOrderBot.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) Nat.orderBot instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring) (Fintype.card.{u1} α _inst_1)) (fun (r : Nat) => Finset.card.{u1} (Finset.{u1} α) (Finset.slice.{u1} α 𝒜 r))) (Finset.card.{u1} (Finset.{u1} α) 𝒜)
+Case conversion may be inaccurate. Consider using '#align finset.sum_card_slice Finset.sum_card_sliceₓ'. -/
 @[simp]
 theorem sum_card_slice : (∑ r in Iic (Fintype.card α), (𝒜 # r).card) = 𝒜.card :=
   by
@@ -248,7 +257,6 @@ theorem sum_card_slice : (∑ r in Iic (Fintype.card α), (𝒜 # r).card) = �
   rw [← card_bUnion, bUnion_slice]
   exact finset.pairwise_disjoint_slice.subset (Set.subset_univ _)
 #align finset.sum_card_slice Finset.sum_card_slice
--/
 
 end Slice
 

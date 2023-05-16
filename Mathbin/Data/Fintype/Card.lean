@@ -1253,29 +1253,45 @@ theorem wellFounded_of_trans_of_irrefl (r : α → α → Prop) [IsTrans α r] [
 #align finite.well_founded_of_trans_of_irrefl Finite.wellFounded_of_trans_of_irrefl
 -/
 
-#print Finite.Preorder.wellFounded_lt /-
+/- warning: finite.preorder.well_founded_lt -> Finite.Preorder.wellFounded_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Finite.{succ u1} α] [_inst_2 : Preorder.{u1} α], WellFounded.{succ u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_2))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Finite.{succ u1} α] [_inst_2 : Preorder.{u1} α], WellFounded.{succ u1} α (fun (x._@.Mathlib.Data.Fintype.Card._hyg.6398 : α) (x._@.Mathlib.Data.Fintype.Card._hyg.6400 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_2) x._@.Mathlib.Data.Fintype.Card._hyg.6398 x._@.Mathlib.Data.Fintype.Card._hyg.6400)
+Case conversion may be inaccurate. Consider using '#align finite.preorder.well_founded_lt Finite.Preorder.wellFounded_ltₓ'. -/
 theorem Preorder.wellFounded_lt [Preorder α] : WellFounded ((· < ·) : α → α → Prop) :=
   wellFounded_of_trans_of_irrefl _
 #align finite.preorder.well_founded_lt Finite.Preorder.wellFounded_lt
--/
 
-#print Finite.Preorder.wellFounded_gt /-
+/- warning: finite.preorder.well_founded_gt -> Finite.Preorder.wellFounded_gt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Finite.{succ u1} α] [_inst_2 : Preorder.{u1} α], WellFounded.{succ u1} α (GT.gt.{u1} α (Preorder.toHasLt.{u1} α _inst_2))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Finite.{succ u1} α] [_inst_2 : Preorder.{u1} α], WellFounded.{succ u1} α (fun (x._@.Mathlib.Data.Fintype.Card._hyg.6438 : α) (x._@.Mathlib.Data.Fintype.Card._hyg.6440 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α _inst_2) x._@.Mathlib.Data.Fintype.Card._hyg.6438 x._@.Mathlib.Data.Fintype.Card._hyg.6440)
+Case conversion may be inaccurate. Consider using '#align finite.preorder.well_founded_gt Finite.Preorder.wellFounded_gtₓ'. -/
 theorem Preorder.wellFounded_gt [Preorder α] : WellFounded ((· > ·) : α → α → Prop) :=
   wellFounded_of_trans_of_irrefl _
 #align finite.preorder.well_founded_gt Finite.Preorder.wellFounded_gt
--/
 
-#print Finite.LinearOrder.isWellOrder_lt /-
+/- warning: finite.linear_order.is_well_order_lt -> Finite.LinearOrder.isWellOrder_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Finite.{succ u1} α] [_inst_2 : LinearOrder.{u1} α], IsWellOrder.{u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_2))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Finite.{succ u1} α] [_inst_2 : LinearOrder.{u1} α], IsWellOrder.{u1} α (fun (x._@.Mathlib.Data.Fintype.Card._hyg.6472 : α) (x._@.Mathlib.Data.Fintype.Card._hyg.6474 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))) x._@.Mathlib.Data.Fintype.Card._hyg.6472 x._@.Mathlib.Data.Fintype.Card._hyg.6474)
+Case conversion may be inaccurate. Consider using '#align finite.linear_order.is_well_order_lt Finite.LinearOrder.isWellOrder_ltₓ'. -/
 instance (priority := 10) LinearOrder.isWellOrder_lt [LinearOrder α] : IsWellOrder α (· < ·)
     where wf := Preorder.wellFounded_lt
 #align finite.linear_order.is_well_order_lt Finite.LinearOrder.isWellOrder_lt
--/
 
-#print Finite.LinearOrder.isWellOrder_gt /-
+/- warning: finite.linear_order.is_well_order_gt -> Finite.LinearOrder.isWellOrder_gt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Finite.{succ u1} α] [_inst_2 : LinearOrder.{u1} α], IsWellOrder.{u1} α (GT.gt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_2))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Finite.{succ u1} α] [_inst_2 : LinearOrder.{u1} α], IsWellOrder.{u1} α (fun (x._@.Mathlib.Data.Fintype.Card._hyg.6509 : α) (x._@.Mathlib.Data.Fintype.Card._hyg.6511 : α) => GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))) x._@.Mathlib.Data.Fintype.Card._hyg.6509 x._@.Mathlib.Data.Fintype.Card._hyg.6511)
+Case conversion may be inaccurate. Consider using '#align finite.linear_order.is_well_order_gt Finite.LinearOrder.isWellOrder_gtₓ'. -/
 instance (priority := 10) LinearOrder.isWellOrder_gt [LinearOrder α] : IsWellOrder α (· > ·)
     where wf := Preorder.wellFounded_gt
 #align finite.linear_order.is_well_order_gt Finite.LinearOrder.isWellOrder_gt
--/
 
 end Finite
 
@@ -1318,7 +1334,7 @@ end
 
 /- warning: finset.exists_minimal -> Finset.exists_minimal is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (s : Finset.{u1} α), (Finset.Nonempty.{u1} α s) -> (Exists.{succ u1} α (fun (m : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) m s) (fun (H : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) m s) => forall (x : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x s) -> (Not (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x m)))))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (s : Finset.{u1} α), (Finset.Nonempty.{u1} α s) -> (Exists.{succ u1} α (fun (m : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) m s) (fun (H : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) m s) => forall (x : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x s) -> (Not (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) x m)))))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (s : Finset.{u1} α), (Finset.Nonempty.{u1} α s) -> (Exists.{succ u1} α (fun (m : α) => And (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) m s) (forall (x : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s) -> (Not (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x m)))))
 Case conversion may be inaccurate. Consider using '#align finset.exists_minimal Finset.exists_minimalₓ'. -/
@@ -1332,7 +1348,7 @@ theorem Finset.exists_minimal {α : Type _} [Preorder α] (s : Finset α) (h : s
 
 /- warning: finset.exists_maximal -> Finset.exists_maximal is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (s : Finset.{u1} α), (Finset.Nonempty.{u1} α s) -> (Exists.{succ u1} α (fun (m : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) m s) (fun (H : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) m s) => forall (x : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x s) -> (Not (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) m x)))))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (s : Finset.{u1} α), (Finset.Nonempty.{u1} α s) -> (Exists.{succ u1} α (fun (m : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) m s) (fun (H : Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) m s) => forall (x : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x s) -> (Not (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) m x)))))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (s : Finset.{u1} α), (Finset.Nonempty.{u1} α s) -> (Exists.{succ u1} α (fun (m : α) => And (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) m s) (forall (x : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s) -> (Not (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) m x)))))
 Case conversion may be inaccurate. Consider using '#align finset.exists_maximal Finset.exists_maximalₓ'. -/

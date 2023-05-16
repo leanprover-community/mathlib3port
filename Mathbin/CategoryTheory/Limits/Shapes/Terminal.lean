@@ -98,7 +98,7 @@ def IsTerminal.ofUnique (Y : C) [h : ∀ X : C, Unique (X ⟶ Y)] : IsTerminal Y
 
 /- warning: category_theory.limits.is_terminal_top -> CategoryTheory.Limits.isTerminalTop is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_2 : Preorder.{u1} α] [_inst_3 : OrderTop.{u1} α (Preorder.toLE.{u1} α _inst_2)], CategoryTheory.Limits.IsTerminal.{u1, u1} α (Preorder.smallCategory.{u1} α _inst_2) (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α _inst_2) _inst_3))
+  forall {α : Type.{u1}} [_inst_2 : Preorder.{u1} α] [_inst_3 : OrderTop.{u1} α (Preorder.toHasLe.{u1} α _inst_2)], CategoryTheory.Limits.IsTerminal.{u1, u1} α (Preorder.smallCategory.{u1} α _inst_2) (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toHasLe.{u1} α _inst_2) _inst_3))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_2 : Preorder.{u1} α] [_inst_3 : OrderTop.{u1} α (Preorder.toLE.{u1} α _inst_2)], CategoryTheory.Limits.IsTerminal.{u1, u1} α (Preorder.smallCategory.{u1} α _inst_2) (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α _inst_2) _inst_3))
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.is_terminal_top CategoryTheory.Limits.isTerminalTopₓ'. -/
@@ -146,7 +146,7 @@ def IsInitial.ofUnique (X : C) [h : ∀ Y : C, Unique (X ⟶ Y)] : IsInitial X
 
 /- warning: category_theory.limits.is_initial_bot -> CategoryTheory.Limits.isInitialBot is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_2 : Preorder.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_2)], CategoryTheory.Limits.IsInitial.{u1, u1} α (Preorder.smallCategory.{u1} α _inst_2) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α _inst_2) _inst_3))
+  forall {α : Type.{u1}} [_inst_2 : Preorder.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α _inst_2)], CategoryTheory.Limits.IsInitial.{u1, u1} α (Preorder.smallCategory.{u1} α _inst_2) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α _inst_2) _inst_3))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_2 : Preorder.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_2)], CategoryTheory.Limits.IsInitial.{u1, u1} α (Preorder.smallCategory.{u1} α _inst_2) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α _inst_2) _inst_3))
 Case conversion may be inaccurate. Consider using '#align category_theory.limits.is_initial_bot CategoryTheory.Limits.isInitialBotₓ'. -/

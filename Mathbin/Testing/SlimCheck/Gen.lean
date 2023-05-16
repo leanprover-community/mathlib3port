@@ -77,12 +77,16 @@ def chooseAny [Random α] : Gen α :=
 
 variable {α} [Preorder α]
 
-#print SlimCheck.Gen.choose /-
+/- warning: slim_check.gen.choose -> SlimCheck.Gen.choose is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : BoundedRandom.{u1} α _inst_1] (x : α) (y : α), (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) x y) -> (SlimCheck.Gen.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Icc.{u1} α _inst_1 x y)))
+but is expected to have type
+  forall (α : Type.{u1}) [_inst_1 : Preorder.{u1} α] [_inst_2 : BoundedRandom.{u1} α _inst_1] (x : α) (y : α), (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x y) -> (SlimCheck.Gen.{u1} (Subtype.{succ u1} α (fun (a : α) => And (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x a) (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a y))))
+Case conversion may be inaccurate. Consider using '#align slim_check.gen.choose SlimCheck.Gen.chooseₓ'. -/
 /-- Lift `random.random_r` to the `gen` monad. -/
 def choose [BoundedRandom α] (x y : α) (p : x ≤ y) : Gen (x .. y) :=
   ⟨fun _ => Rand.randomR x y p⟩
 #align slim_check.gen.choose SlimCheck.Gen.choose
--/
 
 end Rand
 

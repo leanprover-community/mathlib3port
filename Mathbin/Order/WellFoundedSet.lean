@@ -260,7 +260,7 @@ variable [Preorder α] {s t : Set α} {a : α}
 
 /- warning: set.is_wf.union -> Set.IsWf.union is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (Set.IsWf.{u1} α (Preorder.toLT.{u1} α _inst_1) s) -> (Set.IsWf.{u1} α (Preorder.toLT.{u1} α _inst_1) t) -> (Set.IsWf.{u1} α (Preorder.toLT.{u1} α _inst_1) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (Set.IsWf.{u1} α (Preorder.toHasLt.{u1} α _inst_1) s) -> (Set.IsWf.{u1} α (Preorder.toHasLt.{u1} α _inst_1) t) -> (Set.IsWf.{u1} α (Preorder.toHasLt.{u1} α _inst_1) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (Set.IsWf.{u1} α (Preorder.toLT.{u1} α _inst_1) s) -> (Set.IsWf.{u1} α (Preorder.toLT.{u1} α _inst_1) t) -> (Set.IsWf.{u1} α (Preorder.toLT.{u1} α _inst_1) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t))
 Case conversion may be inaccurate. Consider using '#align set.is_wf.union Set.IsWf.unionₓ'. -/
@@ -270,7 +270,7 @@ protected theorem IsWf.union (hs : IsWf s) (ht : IsWf t) : IsWf (s ∪ t) :=
 
 /- warning: set.is_wf_union -> Set.isWf_union is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, Iff (Set.IsWf.{u1} α (Preorder.toLT.{u1} α _inst_1) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t)) (And (Set.IsWf.{u1} α (Preorder.toLT.{u1} α _inst_1) s) (Set.IsWf.{u1} α (Preorder.toLT.{u1} α _inst_1) t))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, Iff (Set.IsWf.{u1} α (Preorder.toHasLt.{u1} α _inst_1) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t)) (And (Set.IsWf.{u1} α (Preorder.toHasLt.{u1} α _inst_1) s) (Set.IsWf.{u1} α (Preorder.toHasLt.{u1} α _inst_1) t))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, Iff (Set.IsWf.{u1} α (Preorder.toLT.{u1} α _inst_1) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t)) (And (Set.IsWf.{u1} α (Preorder.toLT.{u1} α _inst_1) s) (Set.IsWf.{u1} α (Preorder.toLT.{u1} α _inst_1) t))
 Case conversion may be inaccurate. Consider using '#align set.is_wf_union Set.isWf_unionₓ'. -/
@@ -285,14 +285,18 @@ section Preorder
 
 variable [Preorder α] {s t : Set α} {a : α}
 
-#print Set.isWf_iff_no_descending_seq /-
+/- warning: set.is_wf_iff_no_descending_seq -> Set.isWf_iff_no_descending_seq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α}, Iff (Set.IsWf.{u1} α (Preorder.toHasLt.{u1} α _inst_1) s) (forall (f : Nat -> α), (StrictAnti.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) _inst_1 f) -> (Not (forall (n : Nat), Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) (f (coeFn.{1, 1} (Equiv.{1, 1} Nat (OrderDual.{0} Nat)) (fun (_x : Equiv.{1, 1} Nat (OrderDual.{0} Nat)) => Nat -> (OrderDual.{0} Nat)) (Equiv.hasCoeToFun.{1, 1} Nat (OrderDual.{0} Nat)) (OrderDual.toDual.{0} Nat) n)) s)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α}, Iff (Set.IsWf.{u1} α (Preorder.toLT.{u1} α _inst_1) s) (forall (f : Nat -> α), (StrictAnti.{0, u1} Nat α (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) _inst_1 f) -> (Not (forall (n : Nat), Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) (f (FunLike.coe.{1, 1, 1} (Equiv.{1, 1} Nat (OrderDual.{0} Nat)) Nat (fun (_x : Nat) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : Nat) => OrderDual.{0} Nat) _x) (Equiv.instFunLikeEquiv.{1, 1} Nat (OrderDual.{0} Nat)) (OrderDual.toDual.{0} Nat) n)) s)))
+Case conversion may be inaccurate. Consider using '#align set.is_wf_iff_no_descending_seq Set.isWf_iff_no_descending_seqₓ'. -/
 theorem isWf_iff_no_descending_seq :
     IsWf s ↔ ∀ f : ℕ → α, StrictAnti f → ¬∀ n, f (OrderDual.toDual n) ∈ s :=
   wellFoundedOn_iff_no_descending_seq.trans
     ⟨fun H f hf => H ⟨⟨f, hf.Injective⟩, fun a b => hf.lt_iff_lt⟩, fun H f =>
       H f fun _ _ => f.map_rel_iff.2⟩
 #align set.is_wf_iff_no_descending_seq Set.isWf_iff_no_descending_seq
--/
 
 end Preorder
 
@@ -566,11 +570,15 @@ theorem isPwo_iff_exists_monotone_subseq :
   partiallyWellOrderedOn_iff_exists_monotone_subseq
 #align set.is_pwo_iff_exists_monotone_subseq Set.isPwo_iff_exists_monotone_subseq
 
-#print Set.IsPwo.isWf /-
+/- warning: set.is_pwo.is_wf -> Set.IsPwo.isWf is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α}, (Set.IsPwo.{u1} α _inst_1 s) -> (Set.IsWf.{u1} α (Preorder.toHasLt.{u1} α _inst_1) s)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α}, (Set.IsPwo.{u1} α _inst_1 s) -> (Set.IsWf.{u1} α (Preorder.toLT.{u1} α _inst_1) s)
+Case conversion may be inaccurate. Consider using '#align set.is_pwo.is_wf Set.IsPwo.isWfₓ'. -/
 protected theorem IsPwo.isWf (h : s.IsPwo) : s.IsWf := by
   simpa only [← lt_iff_le_not_le] using h.well_founded_on
 #align set.is_pwo.is_wf Set.IsPwo.isWf
--/
 
 /- warning: set.is_pwo.prod -> Set.IsPwo.prod is a dubious translation:
 lean 3 declaration is
@@ -671,37 +679,57 @@ protected theorem IsPwo.insert (h : IsPwo s) (a : α) : IsPwo (insert a s) :=
 #align set.is_pwo.insert Set.IsPwo.insert
 -/
 
-#print Set.Finite.isWf /-
+/- warning: set.finite.is_wf -> Set.Finite.isWf is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α}, (Set.Finite.{u1} α s) -> (Set.IsWf.{u1} α (Preorder.toHasLt.{u1} α _inst_1) s)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α}, (Set.Finite.{u1} α s) -> (Set.IsWf.{u1} α (Preorder.toLT.{u1} α _inst_1) s)
+Case conversion may be inaccurate. Consider using '#align set.finite.is_wf Set.Finite.isWfₓ'. -/
 protected theorem Finite.isWf (hs : s.Finite) : IsWf s :=
   hs.IsPwo.IsWf
 #align set.finite.is_wf Set.Finite.isWf
--/
 
-#print Set.isWf_singleton /-
+/- warning: set.is_wf_singleton -> Set.isWf_singleton is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α}, Set.IsWf.{u1} α (Preorder.toHasLt.{u1} α _inst_1) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α}, Set.IsWf.{u1} α (Preorder.toLT.{u1} α _inst_1) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) a)
+Case conversion may be inaccurate. Consider using '#align set.is_wf_singleton Set.isWf_singletonₓ'. -/
 @[simp]
 theorem isWf_singleton {a : α} : IsWf ({a} : Set α) :=
   (finite_singleton a).IsWf
 #align set.is_wf_singleton Set.isWf_singleton
--/
 
-#print Set.Subsingleton.isWf /-
+/- warning: set.subsingleton.is_wf -> Set.Subsingleton.isWf is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α}, (Set.Subsingleton.{u1} α s) -> (Set.IsWf.{u1} α (Preorder.toHasLt.{u1} α _inst_1) s)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α}, (Set.Subsingleton.{u1} α s) -> (Set.IsWf.{u1} α (Preorder.toLT.{u1} α _inst_1) s)
+Case conversion may be inaccurate. Consider using '#align set.subsingleton.is_wf Set.Subsingleton.isWfₓ'. -/
 protected theorem Subsingleton.isWf (hs : s.Subsingleton) : IsWf s :=
   hs.IsPwo.IsWf
 #align set.subsingleton.is_wf Set.Subsingleton.isWf
--/
 
-#print Set.isWf_insert /-
+/- warning: set.is_wf_insert -> Set.isWf_insert is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {a : α}, Iff (Set.IsWf.{u1} α (Preorder.toHasLt.{u1} α _inst_1) (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.hasInsert.{u1} α) a s)) (Set.IsWf.{u1} α (Preorder.toHasLt.{u1} α _inst_1) s)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {a : α}, Iff (Set.IsWf.{u1} α (Preorder.toLT.{u1} α _inst_1) (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.instInsertSet.{u1} α) a s)) (Set.IsWf.{u1} α (Preorder.toLT.{u1} α _inst_1) s)
+Case conversion may be inaccurate. Consider using '#align set.is_wf_insert Set.isWf_insertₓ'. -/
 @[simp]
 theorem isWf_insert {a} : IsWf (insert a s) ↔ IsWf s := by
   simp only [← singleton_union, is_wf_union, is_wf_singleton, true_and_iff]
 #align set.is_wf_insert Set.isWf_insert
--/
 
-#print Set.IsWf.insert /-
+/- warning: set.is_wf.insert -> Set.IsWf.insert is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α}, (Set.IsWf.{u1} α (Preorder.toHasLt.{u1} α _inst_1) s) -> (forall (a : α), Set.IsWf.{u1} α (Preorder.toHasLt.{u1} α _inst_1) (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.hasInsert.{u1} α) a s))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α}, (Set.IsWf.{u1} α (Preorder.toLT.{u1} α _inst_1) s) -> (forall (a : α), Set.IsWf.{u1} α (Preorder.toLT.{u1} α _inst_1) (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.instInsertSet.{u1} α) a s))
+Case conversion may be inaccurate. Consider using '#align set.is_wf.insert Set.IsWf.insertₓ'. -/
 theorem IsWf.insert (h : IsWf s) (a : α) : IsWf (insert a s) :=
   isWf_insert.2 h
 #align set.is_wf.insert Set.IsWf.insert
--/
 
 end IsPwo
 
@@ -748,7 +776,12 @@ section LinearOrder
 
 variable [LinearOrder α] {s : Set α}
 
-#print Set.IsWf.isPwo /-
+/- warning: set.is_wf.is_pwo -> Set.IsWf.isPwo is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {s : Set.{u1} α}, (Set.IsWf.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) s) -> (Set.IsPwo.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) s)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {s : Set.{u1} α}, (Set.IsWf.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) s) -> (Set.IsPwo.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) s)
+Case conversion may be inaccurate. Consider using '#align set.is_wf.is_pwo Set.IsWf.isPwoₓ'. -/
 protected theorem IsWf.isPwo (hs : s.IsWf) : s.IsPwo :=
   by
   intro f hf
@@ -758,14 +791,17 @@ protected theorem IsWf.isPwo (hs : s.IsWf) : s.IsPwo :=
   simp only [forall_range_iff, not_lt] at hm
   exact ⟨m, m + 1, lt_add_one m, hm _⟩
 #align set.is_wf.is_pwo Set.IsWf.isPwo
--/
 
-#print Set.isWf_iff_isPwo /-
+/- warning: set.is_wf_iff_is_pwo -> Set.isWf_iff_isPwo is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {s : Set.{u1} α}, Iff (Set.IsWf.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) s) (Set.IsPwo.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) s)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {s : Set.{u1} α}, Iff (Set.IsWf.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) s) (Set.IsPwo.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) s)
+Case conversion may be inaccurate. Consider using '#align set.is_wf_iff_is_pwo Set.isWf_iff_isPwoₓ'. -/
 /-- In a linear order, the predicates `set.is_wf` and `set.is_pwo` are equivalent. -/
 theorem isWf_iff_isPwo : s.IsWf ↔ s.IsPwo :=
   ⟨IsWf.isPwo, IsPwo.isWf⟩
 #align set.is_wf_iff_is_pwo Set.isWf_iff_isPwo
--/
 
 end LinearOrder
 
@@ -790,12 +826,16 @@ protected theorem isPwo [Preorder α] (s : Finset α) : Set.IsPwo (↑s : Set α
 #align finset.is_pwo Finset.isPwo
 -/
 
-#print Finset.isWf /-
+/- warning: finset.is_wf -> Finset.isWf is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (s : Finset.{u1} α), Set.IsWf.{u1} α (Preorder.toHasLt.{u1} α _inst_1) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (s : Finset.{u1} α), Set.IsWf.{u1} α (Preorder.toLT.{u1} α _inst_1) (Finset.toSet.{u1} α s)
+Case conversion may be inaccurate. Consider using '#align finset.is_wf Finset.isWfₓ'. -/
 @[simp]
 protected theorem isWf [Preorder α] (s : Finset α) : Set.IsWf (↑s : Set α) :=
   s.finite_toSet.IsWf
 #align finset.is_wf Finset.isWf
--/
 
 #print Finset.wellFoundedOn /-
 @[simp]
@@ -830,7 +870,7 @@ theorem partiallyWellOrderedOn_sup (s : Finset ι) {f : ι → Set α} :
 
 /- warning: finset.is_wf_sup -> Finset.isWf_sup is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : Preorder.{u2} α] (s : Finset.{u1} ι) {f : ι -> (Set.{u2} α)}, Iff (Set.IsWf.{u2} α (Preorder.toLT.{u2} α _inst_1) (Finset.sup.{u2, u1} (Set.{u2} α) ι (Lattice.toSemilatticeSup.{u2} (Set.{u2} α) (ConditionallyCompleteLattice.toLattice.{u2} (Set.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.completeBooleanAlgebra.{u2} α))))))) (GeneralizedBooleanAlgebra.toOrderBot.{u2} (Set.{u2} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u2} (Set.{u2} α) (Set.booleanAlgebra.{u2} α))) s f)) (forall (i : ι), (Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i s) -> (Set.IsWf.{u2} α (Preorder.toLT.{u2} α _inst_1) (f i)))
+  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : Preorder.{u2} α] (s : Finset.{u1} ι) {f : ι -> (Set.{u2} α)}, Iff (Set.IsWf.{u2} α (Preorder.toHasLt.{u2} α _inst_1) (Finset.sup.{u2, u1} (Set.{u2} α) ι (Lattice.toSemilatticeSup.{u2} (Set.{u2} α) (ConditionallyCompleteLattice.toLattice.{u2} (Set.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.completeBooleanAlgebra.{u2} α))))))) (GeneralizedBooleanAlgebra.toOrderBot.{u2} (Set.{u2} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u2} (Set.{u2} α) (Set.booleanAlgebra.{u2} α))) s f)) (forall (i : ι), (Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i s) -> (Set.IsWf.{u2} α (Preorder.toHasLt.{u2} α _inst_1) (f i)))
 but is expected to have type
   forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : Preorder.{u2} α] (s : Finset.{u1} ι) {f : ι -> (Set.{u2} α)}, Iff (Set.IsWf.{u2} α (Preorder.toLT.{u2} α _inst_1) (Finset.sup.{u2, u1} (Set.{u2} α) ι (Lattice.toSemilatticeSup.{u2} (Set.{u2} α) (ConditionallyCompleteLattice.toLattice.{u2} (Set.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α))))))) (BoundedOrder.toOrderBot.{u2} (Set.{u2} α) (Preorder.toLE.{u2} (Set.{u2} α) (PartialOrder.toPreorder.{u2} (Set.{u2} α) (SemilatticeSup.toPartialOrder.{u2} (Set.{u2} α) (Lattice.toSemilatticeSup.{u2} (Set.{u2} α) (ConditionallyCompleteLattice.toLattice.{u2} (Set.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α)))))))))) (CompleteLattice.toBoundedOrder.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α)))))) s f)) (forall (i : ι), (Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i s) -> (Set.IsWf.{u2} α (Preorder.toLT.{u2} α _inst_1) (f i)))
 Case conversion may be inaccurate. Consider using '#align finset.is_wf_sup Finset.isWf_supₓ'. -/
@@ -870,13 +910,17 @@ theorem partiallyWellOrderedOn_bUnion (s : Finset ι) {f : ι → Set α} :
   simpa only [Finset.sup_eq_iSup] using s.partially_well_ordered_on_sup
 #align finset.partially_well_ordered_on_bUnion Finset.partiallyWellOrderedOn_bUnion
 
-#print Finset.isWf_bUnion /-
+/- warning: finset.is_wf_bUnion -> Finset.isWf_bUnion is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : Preorder.{u2} α] (s : Finset.{u1} ι) {f : ι -> (Set.{u2} α)}, Iff (Set.IsWf.{u2} α (Preorder.toHasLt.{u2} α _inst_1) (Set.iUnion.{u2, succ u1} α ι (fun (i : ι) => Set.iUnion.{u2, 0} α (Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i s) (fun (H : Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i s) => f i)))) (forall (i : ι), (Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i s) -> (Set.IsWf.{u2} α (Preorder.toHasLt.{u2} α _inst_1) (f i)))
+but is expected to have type
+  forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : Preorder.{u2} α] (s : Finset.{u1} ι) {f : ι -> (Set.{u2} α)}, Iff (Set.IsWf.{u2} α (Preorder.toLT.{u2} α _inst_1) (Set.iUnion.{u2, succ u1} α ι (fun (i : ι) => Set.iUnion.{u2, 0} α (Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i s) (fun (H : Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i s) => f i)))) (forall (i : ι), (Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i s) -> (Set.IsWf.{u2} α (Preorder.toLT.{u2} α _inst_1) (f i)))
+Case conversion may be inaccurate. Consider using '#align finset.is_wf_bUnion Finset.isWf_bUnionₓ'. -/
 @[simp]
 theorem isWf_bUnion [Preorder α] (s : Finset ι) {f : ι → Set α} :
     (⋃ i ∈ s, f i).IsWf ↔ ∀ i ∈ s, (f i).IsWf :=
   s.wellFoundedOn_bUnion
 #align finset.is_wf_bUnion Finset.isWf_bUnion
--/
 
 #print Finset.isPwo_bUnion /-
 @[simp]
@@ -894,32 +938,48 @@ section Preorder
 
 variable [Preorder α] {s : Set α} {a : α}
 
-#print Set.IsWf.min /-
+/- warning: set.is_wf.min -> Set.IsWf.min is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α}, (Set.IsWf.{u1} α (Preorder.toHasLt.{u1} α _inst_1) s) -> (Set.Nonempty.{u1} α s) -> α
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α}, (Set.IsWf.{u1} α (Preorder.toLT.{u1} α _inst_1) s) -> (Set.Nonempty.{u1} α s) -> α
+Case conversion may be inaccurate. Consider using '#align set.is_wf.min Set.IsWf.minₓ'. -/
 /-- `is_wf.min` returns a minimal element of a nonempty well-founded set. -/
 noncomputable def IsWf.min (hs : IsWf s) (hn : s.Nonempty) : α :=
   hs.min univ (nonempty_iff_univ_nonempty.1 hn.to_subtype)
 #align set.is_wf.min Set.IsWf.min
--/
 
-#print Set.IsWf.min_mem /-
+/- warning: set.is_wf.min_mem -> Set.IsWf.min_mem is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} (hs : Set.IsWf.{u1} α (Preorder.toHasLt.{u1} α _inst_1) s) (hn : Set.Nonempty.{u1} α s), Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) (Set.IsWf.min.{u1} α _inst_1 s hs hn) s
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} (hs : Set.IsWf.{u1} α (Preorder.toLT.{u1} α _inst_1) s) (hn : Set.Nonempty.{u1} α s), Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) (Set.IsWf.min.{u1} α _inst_1 s hs hn) s
+Case conversion may be inaccurate. Consider using '#align set.is_wf.min_mem Set.IsWf.min_memₓ'. -/
 theorem IsWf.min_mem (hs : IsWf s) (hn : s.Nonempty) : hs.min hn ∈ s :=
   (WellFounded.min hs univ (nonempty_iff_univ_nonempty.1 hn.to_subtype)).2
 #align set.is_wf.min_mem Set.IsWf.min_mem
--/
 
-#print Set.IsWf.not_lt_min /-
+/- warning: set.is_wf.not_lt_min -> Set.IsWf.not_lt_min is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {a : α} (hs : Set.IsWf.{u1} α (Preorder.toHasLt.{u1} α _inst_1) s) (hn : Set.Nonempty.{u1} α s), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) -> (Not (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a (Set.IsWf.min.{u1} α _inst_1 s hs hn)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} {a : α} (hs : Set.IsWf.{u1} α (Preorder.toLT.{u1} α _inst_1) s) (hn : Set.Nonempty.{u1} α s), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) -> (Not (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) a (Set.IsWf.min.{u1} α _inst_1 s hs hn)))
+Case conversion may be inaccurate. Consider using '#align set.is_wf.not_lt_min Set.IsWf.not_lt_minₓ'. -/
 theorem IsWf.not_lt_min (hs : IsWf s) (hn : s.Nonempty) (ha : a ∈ s) : ¬a < hs.min hn :=
   hs.not_lt_min univ (nonempty_iff_univ_nonempty.1 hn.to_subtype) (mem_univ (⟨a, ha⟩ : s))
 #align set.is_wf.not_lt_min Set.IsWf.not_lt_min
--/
 
-#print Set.isWf_min_singleton /-
+/- warning: set.is_wf_min_singleton -> Set.isWf_min_singleton is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α) {hs : Set.IsWf.{u1} α (Preorder.toHasLt.{u1} α _inst_1) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a)} {hn : Set.Nonempty.{u1} α (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a)}, Eq.{succ u1} α (Set.IsWf.min.{u1} α _inst_1 (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a) hs hn) a
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α) {hs : Set.IsWf.{u1} α (Preorder.toLT.{u1} α _inst_1) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) a)} {hn : Set.Nonempty.{u1} α (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) a)}, Eq.{succ u1} α (Set.IsWf.min.{u1} α _inst_1 (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) a) hs hn) a
+Case conversion may be inaccurate. Consider using '#align set.is_wf_min_singleton Set.isWf_min_singletonₓ'. -/
 @[simp]
 theorem isWf_min_singleton (a) {hs : IsWf ({a} : Set α)} {hn : ({a} : Set α).Nonempty} :
     hs.min hn = a :=
   eq_of_mem_singleton (IsWf.min_mem hs hn)
 #align set.is_wf_min_singleton Set.isWf_min_singleton
--/
 
 end Preorder
 
@@ -927,28 +987,40 @@ section LinearOrder
 
 variable [LinearOrder α] {s t : Set α} {a : α}
 
-#print Set.IsWf.min_le /-
+/- warning: set.is_wf.min_le -> Set.IsWf.min_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {s : Set.{u1} α} {a : α} (hs : Set.IsWf.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) s) (hn : Set.Nonempty.{u1} α s), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) (Set.IsWf.min.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) s hs hn) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {s : Set.{u1} α} {a : α} (hs : Set.IsWf.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) s) (hn : Set.Nonempty.{u1} α s), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) (Set.IsWf.min.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) s hs hn) a)
+Case conversion may be inaccurate. Consider using '#align set.is_wf.min_le Set.IsWf.min_leₓ'. -/
 theorem IsWf.min_le (hs : s.IsWf) (hn : s.Nonempty) (ha : a ∈ s) : hs.min hn ≤ a :=
   le_of_not_lt (hs.not_lt_min hn ha)
 #align set.is_wf.min_le Set.IsWf.min_le
--/
 
-#print Set.IsWf.le_min_iff /-
+/- warning: set.is_wf.le_min_iff -> Set.IsWf.le_min_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {s : Set.{u1} α} {a : α} (hs : Set.IsWf.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) s) (hn : Set.Nonempty.{u1} α s), Iff (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a (Set.IsWf.min.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) s hs hn)) (forall (b : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {s : Set.{u1} α} {a : α} (hs : Set.IsWf.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) s) (hn : Set.Nonempty.{u1} α s), Iff (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) a (Set.IsWf.min.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) s hs hn)) (forall (b : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) a b))
+Case conversion may be inaccurate. Consider using '#align set.is_wf.le_min_iff Set.IsWf.le_min_iffₓ'. -/
 theorem IsWf.le_min_iff (hs : s.IsWf) (hn : s.Nonempty) : a ≤ hs.min hn ↔ ∀ b, b ∈ s → a ≤ b :=
   ⟨fun ha b hb => le_trans ha (hs.min_le hn hb), fun h => h _ (hs.min_mem _)⟩
 #align set.is_wf.le_min_iff Set.IsWf.le_min_iff
--/
 
-#print Set.IsWf.min_le_min_of_subset /-
+/- warning: set.is_wf.min_le_min_of_subset -> Set.IsWf.min_le_min_of_subset is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α} {hs : Set.IsWf.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) s} {hsn : Set.Nonempty.{u1} α s} {ht : Set.IsWf.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) t} {htn : Set.Nonempty.{u1} α t}, (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s t) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) (Set.IsWf.min.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) t ht htn) (Set.IsWf.min.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) s hs hsn))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α} {hs : Set.IsWf.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) s} {hsn : Set.Nonempty.{u1} α s} {ht : Set.IsWf.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) t} {htn : Set.Nonempty.{u1} α t}, (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s t) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) (Set.IsWf.min.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) t ht htn) (Set.IsWf.min.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) s hs hsn))
+Case conversion may be inaccurate. Consider using '#align set.is_wf.min_le_min_of_subset Set.IsWf.min_le_min_of_subsetₓ'. -/
 theorem IsWf.min_le_min_of_subset {hs : s.IsWf} {hsn : s.Nonempty} {ht : t.IsWf} {htn : t.Nonempty}
     (hst : s ⊆ t) : ht.min htn ≤ hs.min hsn :=
   (IsWf.le_min_iff _ _).2 fun b hb => ht.min_le htn (hst hb)
 #align set.is_wf.min_le_min_of_subset Set.IsWf.min_le_min_of_subset
--/
 
 /- warning: set.is_wf.min_union -> Set.IsWf.min_union is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α} (hs : Set.IsWf.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) s) (hsn : Set.Nonempty.{u1} α s) (ht : Set.IsWf.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) t) (htn : Set.Nonempty.{u1} α t), Eq.{succ u1} α (Set.IsWf.min.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t) (Set.IsWf.union.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) s t hs ht) (Iff.mpr (Set.Nonempty.{u1} α (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t)) (Or (Set.Nonempty.{u1} α s) (Set.Nonempty.{u1} α t)) (Set.union_nonempty.{u1} α s t) (Or.intro_left (Set.Nonempty.{u1} α s) (Set.Nonempty.{u1} α t) hsn))) (LinearOrder.min.{u1} α _inst_1 (Set.IsWf.min.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) s hs hsn) (Set.IsWf.min.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) t ht htn))
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α} (hs : Set.IsWf.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) s) (hsn : Set.Nonempty.{u1} α s) (ht : Set.IsWf.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) t) (htn : Set.Nonempty.{u1} α t), Eq.{succ u1} α (Set.IsWf.min.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t) (Set.IsWf.union.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) s t hs ht) (Iff.mpr (Set.Nonempty.{u1} α (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t)) (Or (Set.Nonempty.{u1} α s) (Set.Nonempty.{u1} α t)) (Set.union_nonempty.{u1} α s t) (Or.intro_left (Set.Nonempty.{u1} α s) (Set.Nonempty.{u1} α t) hsn))) (LinearOrder.min.{u1} α _inst_1 (Set.IsWf.min.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) s hs hsn) (Set.IsWf.min.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) t ht htn))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α} (hs : Set.IsWf.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) s) (hsn : Set.Nonempty.{u1} α s) (ht : Set.IsWf.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) t) (htn : Set.Nonempty.{u1} α t), Eq.{succ u1} α (Set.IsWf.min.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t) (Set.IsWf.union.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) s t hs ht) (Iff.mpr (Set.Nonempty.{u1} α (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t)) (Or (Set.Nonempty.{u1} α s) (Set.Nonempty.{u1} α t)) (Set.union_nonempty.{u1} α s t) (Or.intro_left (Set.Nonempty.{u1} α s) (Set.Nonempty.{u1} α t) hsn))) (Min.min.{u1} α (LinearOrder.toMin.{u1} α _inst_1) (Set.IsWf.min.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) s hs hsn) (Set.IsWf.min.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) t ht htn))
 Case conversion may be inaccurate. Consider using '#align set.is_wf.min_union Set.IsWf.min_unionₓ'. -/
@@ -1126,7 +1198,12 @@ theorem WellFounded.isWf [LT α] (h : WellFounded ((· < ·) : α → α → Pro
 #align well_founded.is_wf WellFounded.isWf
 -/
 
-#print Pi.isPwo /-
+/- warning: pi.is_pwo -> Pi.isPwo is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : forall (i : ι), LinearOrder.{u2} (α i)] [_inst_2 : forall (i : ι), IsWellOrder.{u2} (α i) (LT.lt.{u2} (α i) (Preorder.toHasLt.{u2} (α i) (PartialOrder.toPreorder.{u2} (α i) (SemilatticeInf.toPartialOrder.{u2} (α i) (Lattice.toSemilatticeInf.{u2} (α i) (LinearOrder.toLattice.{u2} (α i) (_inst_1 i)))))))] [_inst_3 : Finite.{succ u1} ι] (s : Set.{max u1 u2} (forall (i : ι), α i)), Set.IsPwo.{max u1 u2} (forall (i : ι), α i) (Pi.preorder.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => PartialOrder.toPreorder.{u2} (α i) (SemilatticeInf.toPartialOrder.{u2} (α i) (Lattice.toSemilatticeInf.{u2} (α i) (LinearOrder.toLattice.{u2} (α i) (_inst_1 i)))))) s
+but is expected to have type
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : forall (i : ι), LinearOrder.{u2} (α i)] [_inst_2 : forall (i : ι), IsWellOrder.{u2} (α i) (fun (x._@.Mathlib.Order.WellFoundedSet._hyg.9686 : α i) (x._@.Mathlib.Order.WellFoundedSet._hyg.9688 : α i) => LT.lt.{u2} (α i) (Preorder.toLT.{u2} (α i) (PartialOrder.toPreorder.{u2} (α i) (SemilatticeInf.toPartialOrder.{u2} (α i) (Lattice.toSemilatticeInf.{u2} (α i) (DistribLattice.toLattice.{u2} (α i) (instDistribLattice.{u2} (α i) (_inst_1 i))))))) x._@.Mathlib.Order.WellFoundedSet._hyg.9686 x._@.Mathlib.Order.WellFoundedSet._hyg.9688)] [_inst_3 : Finite.{succ u1} ι] (s : Set.{max u1 u2} (forall (i : ι), α i)), Set.IsPwo.{max u1 u2} (forall (i : ι), α i) (Pi.preorder.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => PartialOrder.toPreorder.{u2} (α i) (SemilatticeInf.toPartialOrder.{u2} (α i) (Lattice.toSemilatticeInf.{u2} (α i) (DistribLattice.toLattice.{u2} (α i) (instDistribLattice.{u2} (α i) (_inst_1 i))))))) s
+Case conversion may be inaccurate. Consider using '#align pi.is_pwo Pi.isPwoₓ'. -/
 /-- A version of **Dickson's lemma** any subset of functions `Π s : σ, α s` is partially well
 ordered, when `σ` is a `fintype` and each `α s` is a linear well order.
 This includes the classical case of Dickson's lemma that `ℕ ^ n` is a well partial order.
@@ -1155,5 +1232,4 @@ theorem Pi.isPwo {α : ι → Type _} [∀ i, LinearOrder (α i)] [∀ i, IsWell
     refine' ⟨g'.trans g, fun a b hab => (Finset.forall_mem_cons _ _).2 _⟩
     exact ⟨hg (OrderHomClass.mono g' hab), hg' hab⟩
 #align pi.is_pwo Pi.isPwo
--/
 

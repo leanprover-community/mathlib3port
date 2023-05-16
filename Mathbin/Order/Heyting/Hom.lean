@@ -148,7 +148,12 @@ instance (priority := 100) BiheytingHomClass.toCoheytingHomClass [BiheytingAlgeb
 #align biheyting_hom_class.to_coheyting_hom_class BiheytingHomClass.toCoheytingHomClass
 -/
 
-#print OrderIsoClass.toHeytingHomClass /-
+/- warning: order_iso_class.to_heyting_hom_class -> OrderIsoClass.toHeytingHomClass is a dubious translation:
+lean 3 declaration is
+  forall {F : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : HeytingAlgebra.{u2} α] [_inst_2 : HeytingAlgebra.{u3} β] [_inst_3 : OrderIsoClass.{u1, u2, u3} F α β (Preorder.toHasLe.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (GeneralizedHeytingAlgebra.toLattice.{u2} α (HeytingAlgebra.toGeneralizedHeytingAlgebra.{u2} α _inst_1)))))) (Preorder.toHasLe.{u3} β (PartialOrder.toPreorder.{u3} β (SemilatticeInf.toPartialOrder.{u3} β (Lattice.toSemilatticeInf.{u3} β (GeneralizedHeytingAlgebra.toLattice.{u3} β (HeytingAlgebra.toGeneralizedHeytingAlgebra.{u3} β _inst_2))))))], HeytingHomClass.{u1, u2, u3} F α β _inst_1 _inst_2
+but is expected to have type
+  forall {F : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : HeytingAlgebra.{u2} α] {_inst_2 : HeytingAlgebra.{u3} β} [_inst_3 : OrderIsoClass.{u1, u2, u3} F α β (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (GeneralizedHeytingAlgebra.toLattice.{u2} α (HeytingAlgebra.toGeneralizedHeytingAlgebra.{u2} α _inst_1)))))) (Preorder.toLE.{u3} β (PartialOrder.toPreorder.{u3} β (SemilatticeInf.toPartialOrder.{u3} β (Lattice.toSemilatticeInf.{u3} β (GeneralizedHeytingAlgebra.toLattice.{u3} β (HeytingAlgebra.toGeneralizedHeytingAlgebra.{u3} β _inst_2))))))], HeytingHomClass.{u1, u2, u3} F α β _inst_1 _inst_2
+Case conversion may be inaccurate. Consider using '#align order_iso_class.to_heyting_hom_class OrderIsoClass.toHeytingHomClassₓ'. -/
 -- See note [lower instance priority]
 instance (priority := 100) OrderIsoClass.toHeytingHomClass [HeytingAlgebra α] [HeytingAlgebra β]
     [OrderIsoClass F α β] : HeytingHomClass F α β :=
@@ -160,9 +165,13 @@ instance (priority := 100) OrderIsoClass.toHeytingHomClass [HeytingAlgebra α] [
         rw [← OrderIsoClass.map_le_map_iff f]
         simp }
 #align order_iso_class.to_heyting_hom_class OrderIsoClass.toHeytingHomClass
--/
 
-#print OrderIsoClass.toCoheytingHomClass /-
+/- warning: order_iso_class.to_coheyting_hom_class -> OrderIsoClass.toCoheytingHomClass is a dubious translation:
+lean 3 declaration is
+  forall {F : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : CoheytingAlgebra.{u2} α] [_inst_2 : CoheytingAlgebra.{u3} β] [_inst_3 : OrderIsoClass.{u1, u2, u3} F α β (Preorder.toHasLe.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (GeneralizedCoheytingAlgebra.toLattice.{u2} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} α _inst_1)))))) (Preorder.toHasLe.{u3} β (PartialOrder.toPreorder.{u3} β (SemilatticeInf.toPartialOrder.{u3} β (Lattice.toSemilatticeInf.{u3} β (GeneralizedCoheytingAlgebra.toLattice.{u3} β (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u3} β _inst_2))))))], CoheytingHomClass.{u1, u2, u3} F α β _inst_1 _inst_2
+but is expected to have type
+  forall {F : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : CoheytingAlgebra.{u2} α] {_inst_2 : CoheytingAlgebra.{u3} β} [_inst_3 : OrderIsoClass.{u1, u2, u3} F α β (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (GeneralizedCoheytingAlgebra.toLattice.{u2} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} α _inst_1)))))) (Preorder.toLE.{u3} β (PartialOrder.toPreorder.{u3} β (SemilatticeInf.toPartialOrder.{u3} β (Lattice.toSemilatticeInf.{u3} β (GeneralizedCoheytingAlgebra.toLattice.{u3} β (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u3} β _inst_2))))))], CoheytingHomClass.{u1, u2, u3} F α β _inst_1 _inst_2
+Case conversion may be inaccurate. Consider using '#align order_iso_class.to_coheyting_hom_class OrderIsoClass.toCoheytingHomClassₓ'. -/
 -- See note [lower instance priority]
 instance (priority := 100) OrderIsoClass.toCoheytingHomClass [CoheytingAlgebra α]
     [CoheytingAlgebra β] [OrderIsoClass F α β] : CoheytingHomClass F α β :=
@@ -174,9 +183,13 @@ instance (priority := 100) OrderIsoClass.toCoheytingHomClass [CoheytingAlgebra �
         rw [← OrderIsoClass.map_le_map_iff f]
         simp }
 #align order_iso_class.to_coheyting_hom_class OrderIsoClass.toCoheytingHomClass
--/
 
-#print OrderIsoClass.toBiheytingHomClass /-
+/- warning: order_iso_class.to_biheyting_hom_class -> OrderIsoClass.toBiheytingHomClass is a dubious translation:
+lean 3 declaration is
+  forall {F : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : BiheytingAlgebra.{u2} α] [_inst_2 : BiheytingAlgebra.{u3} β] [_inst_3 : OrderIsoClass.{u1, u2, u3} F α β (Preorder.toHasLe.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (GeneralizedCoheytingAlgebra.toLattice.{u2} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} α (BiheytingAlgebra.toCoheytingAlgebra.{u2} α _inst_1))))))) (Preorder.toHasLe.{u3} β (PartialOrder.toPreorder.{u3} β (SemilatticeInf.toPartialOrder.{u3} β (Lattice.toSemilatticeInf.{u3} β (GeneralizedCoheytingAlgebra.toLattice.{u3} β (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u3} β (BiheytingAlgebra.toCoheytingAlgebra.{u3} β _inst_2)))))))], BiheytingHomClass.{u1, u2, u3} F α β _inst_1 _inst_2
+but is expected to have type
+  forall {F : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : BiheytingAlgebra.{u2} α] {_inst_2 : BiheytingAlgebra.{u3} β} [_inst_3 : OrderIsoClass.{u1, u2, u3} F α β (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (GeneralizedCoheytingAlgebra.toLattice.{u2} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u2} α (BiheytingAlgebra.toCoheytingAlgebra.{u2} α _inst_1))))))) (Preorder.toLE.{u3} β (PartialOrder.toPreorder.{u3} β (SemilatticeInf.toPartialOrder.{u3} β (Lattice.toSemilatticeInf.{u3} β (GeneralizedCoheytingAlgebra.toLattice.{u3} β (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u3} β (BiheytingAlgebra.toCoheytingAlgebra.{u3} β _inst_2)))))))], BiheytingHomClass.{u1, u2, u3} F α β _inst_1 _inst_2
+Case conversion may be inaccurate. Consider using '#align order_iso_class.to_biheyting_hom_class OrderIsoClass.toBiheytingHomClassₓ'. -/
 -- See note [lower instance priority]
 instance (priority := 100) OrderIsoClass.toBiheytingHomClass [BiheytingAlgebra α]
     [BiheytingAlgebra β] [OrderIsoClass F α β] : BiheytingHomClass F α β :=
@@ -195,7 +208,6 @@ instance (priority := 100) OrderIsoClass.toBiheytingHomClass [BiheytingAlgebra �
         rw [← OrderIsoClass.map_le_map_iff f]
         simp }
 #align order_iso_class.to_biheyting_hom_class OrderIsoClass.toBiheytingHomClass
--/
 
 #print BoundedLatticeHomClass.toBiheytingHomClass /-
 -- See note [reducible non instances]

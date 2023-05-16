@@ -72,7 +72,12 @@ def Function.Injective.linearOrderedCommMonoid [LinearOrderedCommMonoid α] {β 
 #align function.injective.linear_ordered_comm_monoid Function.Injective.linearOrderedCommMonoid
 #align function.injective.linear_ordered_add_comm_monoid Function.Injective.linearOrderedAddCommMonoid
 
-#print OrderEmbedding.mulLeft /-
+/- warning: order_embedding.mul_left -> OrderEmbedding.mulLeft is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] [_inst_2 : LinearOrder.{u1} α] [_inst_3 : CovariantClass.{u1, u1} α α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1)) (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_2))))))], α -> (OrderEmbedding.{u1, u1} α α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_2))))) (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_2))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] [_inst_2 : LinearOrder.{u1} α] [_inst_3 : CovariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Order.Monoid.Basic._hyg.376 : α) (x._@.Mathlib.Algebra.Order.Monoid.Basic._hyg.378 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) x._@.Mathlib.Algebra.Order.Monoid.Basic._hyg.376 x._@.Mathlib.Algebra.Order.Monoid.Basic._hyg.378) (fun (x._@.Mathlib.Algebra.Order.Monoid.Basic._hyg.391 : α) (x._@.Mathlib.Algebra.Order.Monoid.Basic._hyg.393 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))) x._@.Mathlib.Algebra.Order.Monoid.Basic._hyg.391 x._@.Mathlib.Algebra.Order.Monoid.Basic._hyg.393)], α -> (OrderEmbedding.{u1, u1} α α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))) (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))))
+Case conversion may be inaccurate. Consider using '#align order_embedding.mul_left OrderEmbedding.mulLeftₓ'. -/
 -- TODO find a better home for the next two constructions.
 /-- The order embedding sending `b` to `a * b`, for some fixed `a`.
 See also `order_iso.mul_left` when working in an ordered group. -/
@@ -84,9 +89,13 @@ def OrderEmbedding.mulLeft {α : Type _} [Mul α] [LinearOrder α] [CovariantCla
   OrderEmbedding.ofStrictMono (fun n => m * n) fun a b w => mul_lt_mul_left' w m
 #align order_embedding.mul_left OrderEmbedding.mulLeft
 #align order_embedding.add_left OrderEmbedding.addLeft
--/
 
-#print OrderEmbedding.mulRight /-
+/- warning: order_embedding.mul_right -> OrderEmbedding.mulRight is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] [_inst_2 : LinearOrder.{u1} α] [_inst_3 : CovariantClass.{u1, u1} α α (Function.swap.{succ u1, succ u1, succ u1} α α (fun (ᾰ : α) (ᾰ : α) => α) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1))) (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_2))))))], α -> (OrderEmbedding.{u1, u1} α α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_2))))) (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_2))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] [_inst_2 : LinearOrder.{u1} α] [_inst_3 : CovariantClass.{u1, u1} α α (Function.swap.{succ u1, succ u1, succ u1} α α (fun (ᾰ : α) (ᾰ : α) => α) (fun (x._@.Mathlib.Algebra.Order.Monoid.Basic._hyg.459 : α) (x._@.Mathlib.Algebra.Order.Monoid.Basic._hyg.461 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) x._@.Mathlib.Algebra.Order.Monoid.Basic._hyg.459 x._@.Mathlib.Algebra.Order.Monoid.Basic._hyg.461)) (fun (x._@.Mathlib.Algebra.Order.Monoid.Basic._hyg.474 : α) (x._@.Mathlib.Algebra.Order.Monoid.Basic._hyg.476 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))) x._@.Mathlib.Algebra.Order.Monoid.Basic._hyg.474 x._@.Mathlib.Algebra.Order.Monoid.Basic._hyg.476)], α -> (OrderEmbedding.{u1, u1} α α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))) (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))))
+Case conversion may be inaccurate. Consider using '#align order_embedding.mul_right OrderEmbedding.mulRightₓ'. -/
 /-- The order embedding sending `b` to `b * a`, for some fixed `a`.
 See also `order_iso.mul_right` when working in an ordered group. -/
 @[to_additive
@@ -97,5 +106,4 @@ def OrderEmbedding.mulRight {α : Type _} [Mul α] [LinearOrder α]
   OrderEmbedding.ofStrictMono (fun n => n * m) fun a b w => mul_lt_mul_right' w m
 #align order_embedding.mul_right OrderEmbedding.mulRight
 #align order_embedding.add_right OrderEmbedding.addRight
--/
 

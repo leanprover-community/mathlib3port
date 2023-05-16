@@ -1534,7 +1534,12 @@ theorem support_cycleOf_eq_nil_iff : (f.cycleOf x).support = ∅ ↔ x ∉ f.sup
 #align equiv.perm.support_cycle_of_eq_nil_iff Equiv.Perm.support_cycleOf_eq_nil_iff
 -/
 
-#print Equiv.Perm.support_cycleOf_le /-
+/- warning: equiv.perm.support_cycle_of_le -> Equiv.Perm.support_cycleOf_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (f : Equiv.Perm.{succ u1} α) (x : α), LE.le.{u1} (Finset.{u1} α) (Preorder.toHasLe.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (Equiv.Perm.cycleOf.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f x)) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (f : Equiv.Perm.{succ u1} α) (x : α), LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (Equiv.Perm.cycleOf.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f x)) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f)
+Case conversion may be inaccurate. Consider using '#align equiv.perm.support_cycle_of_le Equiv.Perm.support_cycleOf_leₓ'. -/
 theorem support_cycleOf_le (f : Perm α) (x : α) : support (f.cycleOf x) ≤ support f :=
   by
   intro y hy
@@ -1543,7 +1548,6 @@ theorem support_cycleOf_le (f : Perm α) (x : α) : support (f.cycleOf x) ≤ su
   · exact mem_support.mpr hy
   · exact absurd rfl hy
 #align equiv.perm.support_cycle_of_le Equiv.Perm.support_cycleOf_le
--/
 
 #print Equiv.Perm.mem_support_cycleOf_iff /-
 theorem mem_support_cycleOf_iff : y ∈ support (f.cycleOf x) ↔ SameCycle f x y ∧ x ∈ support f :=
@@ -1909,14 +1913,18 @@ theorem cycleOf_mem_cycleFactorsFinset_iff {f : Perm α} {x : α} :
 #align equiv.perm.cycle_of_mem_cycle_factors_finset_iff Equiv.Perm.cycleOf_mem_cycleFactorsFinset_iff
 -/
 
-#print Equiv.Perm.mem_cycleFactorsFinset_support_le /-
+/- warning: equiv.perm.mem_cycle_factors_finset_support_le -> Equiv.Perm.mem_cycleFactorsFinset_support_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {p : Equiv.Perm.{succ u1} α} {f : Equiv.Perm.{succ u1} α}, (Membership.Mem.{u1, u1} (Equiv.Perm.{succ u1} α) (Finset.{u1} (Equiv.Perm.{succ u1} α)) (Finset.hasMem.{u1} (Equiv.Perm.{succ u1} α)) p (Equiv.Perm.cycleFactorsFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f)) -> (LE.le.{u1} (Finset.{u1} α) (Preorder.toHasLe.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 p) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {p : Equiv.Perm.{succ u1} α} {f : Equiv.Perm.{succ u1} α}, (Membership.mem.{u1, u1} (Equiv.Perm.{succ u1} α) (Finset.{u1} (Equiv.Perm.{succ u1} α)) (Finset.instMembershipFinset.{u1} (Equiv.Perm.{succ u1} α)) p (Equiv.Perm.cycleFactorsFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f)) -> (LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 p) (Equiv.Perm.support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f))
+Case conversion may be inaccurate. Consider using '#align equiv.perm.mem_cycle_factors_finset_support_le Equiv.Perm.mem_cycleFactorsFinset_support_leₓ'. -/
 theorem mem_cycleFactorsFinset_support_le {p f : Perm α} (h : p ∈ cycleFactorsFinset f) :
     p.support ≤ f.support := by
   rw [mem_cycle_factors_finset_iff] at h
   intro x hx
   rwa [mem_support, ← h.right x hx, ← mem_support]
 #align equiv.perm.mem_cycle_factors_finset_support_le Equiv.Perm.mem_cycleFactorsFinset_support_le
--/
 
 /- warning: equiv.perm.cycle_factors_finset_eq_empty_iff -> Equiv.Perm.cycleFactorsFinset_eq_empty_iff is a dubious translation:
 lean 3 declaration is

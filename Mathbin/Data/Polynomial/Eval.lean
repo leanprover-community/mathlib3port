@@ -1331,14 +1331,18 @@ theorem map_surjective (hf : Function.Surjective f) : Function.Surjective (map f
     ⟨monomial n r, by rw [map_monomial f, hr]⟩
 #align polynomial.map_surjective Polynomial.map_surjective
 
-#print Polynomial.degree_map_le /-
+/- warning: polynomial.degree_map_le -> Polynomial.degree_map_le is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} {S : Type.{u2}} [_inst_1 : Semiring.{u1} R] [_inst_2 : Semiring.{u2} S] (f : RingHom.{u1, u2} R S (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u2} S _inst_2)) (p : Polynomial.{u1} R _inst_1), LE.le.{0} (WithBot.{0} Nat) (Preorder.toHasLe.{0} (WithBot.{0} Nat) (WithBot.preorder.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (Polynomial.degree.{u2} S _inst_2 (Polynomial.map.{u1, u2} R S _inst_1 _inst_2 f p)) (Polynomial.degree.{u1} R _inst_1 p)
+but is expected to have type
+  forall {R : Type.{u1}} {S : Type.{u2}} [_inst_1 : Semiring.{u1} R] [_inst_2 : Semiring.{u2} S] (f : RingHom.{u1, u2} R S (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u2} S _inst_2)) (p : Polynomial.{u1} R _inst_1), LE.le.{0} (WithBot.{0} Nat) (Preorder.toLE.{0} (WithBot.{0} Nat) (WithBot.preorder.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)))) (Polynomial.degree.{u2} S _inst_2 (Polynomial.map.{u1, u2} R S _inst_1 _inst_2 f p)) (Polynomial.degree.{u1} R _inst_1 p)
+Case conversion may be inaccurate. Consider using '#align polynomial.degree_map_le Polynomial.degree_map_leₓ'. -/
 theorem degree_map_le (p : R[X]) : degree (p.map f) ≤ degree p :=
   by
   apply (degree_le_iff_coeff_zero _ _).2 fun m hm => _
   rw [degree_lt_iff_coeff_zero] at hm
   simp [hm m le_rfl]
 #align polynomial.degree_map_le Polynomial.degree_map_le
--/
 
 #print Polynomial.natDegree_map_le /-
 theorem natDegree_map_le (p : R[X]) : natDegree (p.map f) ≤ natDegree p :=

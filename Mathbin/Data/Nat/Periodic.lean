@@ -79,14 +79,18 @@ section Finset
 
 open Finset
 
-#print Nat.filter_Ico_card_eq_of_periodic /-
+/- warning: nat.filter_Ico_card_eq_of_periodic -> Nat.filter_Ico_card_eq_of_periodic is a dubious translation:
+lean 3 declaration is
+  forall (n : Nat) (a : Nat) (p : Nat -> Prop) [_inst_1 : DecidablePred.{1} Nat p], (Function.Periodic.{0, 0} Nat Prop Nat.hasAdd p a) -> (Eq.{1} Nat (Finset.card.{0} Nat (Finset.filter.{0} Nat p (fun (a : Nat) => _inst_1 a) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder n (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n a)))) (Nat.count p (fun (a : Nat) => _inst_1 a) a))
+but is expected to have type
+  forall (n : Nat) (a : Nat) (p : Nat -> Prop) [_inst_1 : DecidablePred.{1} Nat p], (Function.Periodic.{0, 0} Nat Prop instAddNat p a) -> (Eq.{1} Nat (Finset.card.{0} Nat (Finset.filter.{0} Nat p (fun (a : Nat) => _inst_1 a) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring n (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n a)))) (Nat.count p (fun (a : Nat) => _inst_1 a) a))
+Case conversion may be inaccurate. Consider using '#align nat.filter_Ico_card_eq_of_periodic Nat.filter_Ico_card_eq_of_periodicₓ'. -/
 /-- An interval of length `a` filtered over a periodic predicate of period `a` has cardinality
 equal to the number naturals below `a` for which `p a` is true. -/
 theorem filter_Ico_card_eq_of_periodic (n a : ℕ) (p : ℕ → Prop) [DecidablePred p]
     (pp : Periodic p a) : ((Ico n (n + a)).filterₓ p).card = a.count p :=
   filter_multiset_Ico_card_eq_of_periodic n a p pp
 #align nat.filter_Ico_card_eq_of_periodic Nat.filter_Ico_card_eq_of_periodic
--/
 
 end Finset
 

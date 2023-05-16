@@ -248,7 +248,7 @@ instance (priority := 100) CompleteLatticeHomClass.toBoundedLatticeHomClass [Com
 
 /- warning: order_iso_class.to_Sup_hom_class -> OrderIsoClass.tosSupHomClass is a dubious translation:
 lean 3 declaration is
-  forall {F : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : CompleteLattice.{u2} α] [_inst_2 : CompleteLattice.{u3} β] [_inst_3 : OrderIsoClass.{u1, u2, u3} F α β (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1)))) (Preorder.toLE.{u3} β (PartialOrder.toPreorder.{u3} β (CompleteSemilatticeInf.toPartialOrder.{u3} β (CompleteLattice.toCompleteSemilatticeInf.{u3} β _inst_2))))], sSupHomClass.{u1, u2, u3} F α β (CompleteSemilatticeSup.toHasSup.{u2} α (CompleteLattice.toCompleteSemilatticeSup.{u2} α _inst_1)) (CompleteSemilatticeSup.toHasSup.{u3} β (CompleteLattice.toCompleteSemilatticeSup.{u3} β _inst_2))
+  forall {F : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : CompleteLattice.{u2} α] [_inst_2 : CompleteLattice.{u3} β] [_inst_3 : OrderIsoClass.{u1, u2, u3} F α β (Preorder.toHasLe.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1)))) (Preorder.toHasLe.{u3} β (PartialOrder.toPreorder.{u3} β (CompleteSemilatticeInf.toPartialOrder.{u3} β (CompleteLattice.toCompleteSemilatticeInf.{u3} β _inst_2))))], sSupHomClass.{u1, u2, u3} F α β (CompleteSemilatticeSup.toHasSup.{u2} α (CompleteLattice.toCompleteSemilatticeSup.{u2} α _inst_1)) (CompleteSemilatticeSup.toHasSup.{u3} β (CompleteLattice.toCompleteSemilatticeSup.{u3} β _inst_2))
 but is expected to have type
   forall {F : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : CompleteLattice.{u2} α] [_inst_2 : CompleteLattice.{u3} β] [_inst_3 : OrderIsoClass.{u1, u2, u3} F α β (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1)))) (Preorder.toLE.{u3} β (PartialOrder.toPreorder.{u3} β (CompleteSemilatticeInf.toPartialOrder.{u3} β (CompleteLattice.toCompleteSemilatticeInf.{u3} β _inst_2))))], sSupHomClass.{u1, u2, u3} F α β (CompleteLattice.toSupSet.{u2} α _inst_1) (CompleteLattice.toSupSet.{u3} β _inst_2)
 Case conversion may be inaccurate. Consider using '#align order_iso_class.to_Sup_hom_class OrderIsoClass.tosSupHomClassₓ'. -/
@@ -263,7 +263,7 @@ instance (priority := 100) OrderIsoClass.tosSupHomClass [CompleteLattice α] [Co
 
 /- warning: order_iso_class.to_Inf_hom_class -> OrderIsoClass.tosInfHomClass is a dubious translation:
 lean 3 declaration is
-  forall {F : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : CompleteLattice.{u2} α] [_inst_2 : CompleteLattice.{u3} β] [_inst_3 : OrderIsoClass.{u1, u2, u3} F α β (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1)))) (Preorder.toLE.{u3} β (PartialOrder.toPreorder.{u3} β (CompleteSemilatticeInf.toPartialOrder.{u3} β (CompleteLattice.toCompleteSemilatticeInf.{u3} β _inst_2))))], sInfHomClass.{u1, u2, u3} F α β (CompleteSemilatticeInf.toHasInf.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1)) (CompleteSemilatticeInf.toHasInf.{u3} β (CompleteLattice.toCompleteSemilatticeInf.{u3} β _inst_2))
+  forall {F : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : CompleteLattice.{u2} α] [_inst_2 : CompleteLattice.{u3} β] [_inst_3 : OrderIsoClass.{u1, u2, u3} F α β (Preorder.toHasLe.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1)))) (Preorder.toHasLe.{u3} β (PartialOrder.toPreorder.{u3} β (CompleteSemilatticeInf.toPartialOrder.{u3} β (CompleteLattice.toCompleteSemilatticeInf.{u3} β _inst_2))))], sInfHomClass.{u1, u2, u3} F α β (CompleteSemilatticeInf.toHasInf.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1)) (CompleteSemilatticeInf.toHasInf.{u3} β (CompleteLattice.toCompleteSemilatticeInf.{u3} β _inst_2))
 but is expected to have type
   forall {F : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : CompleteLattice.{u2} α] [_inst_2 : CompleteLattice.{u3} β] [_inst_3 : OrderIsoClass.{u1, u2, u3} F α β (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1)))) (Preorder.toLE.{u3} β (PartialOrder.toPreorder.{u3} β (CompleteSemilatticeInf.toPartialOrder.{u3} β (CompleteLattice.toCompleteSemilatticeInf.{u3} β _inst_2))))], sInfHomClass.{u1, u2, u3} F α β (CompleteLattice.toInfSet.{u2} α _inst_1) (CompleteLattice.toInfSet.{u3} β _inst_2)
 Case conversion may be inaccurate. Consider using '#align order_iso_class.to_Inf_hom_class OrderIsoClass.tosInfHomClassₓ'. -/
@@ -276,14 +276,18 @@ instance (priority := 100) OrderIsoClass.tosInfHomClass [CompleteLattice α] [Co
         simp only [← map_inv_le_iff, le_sInf_iff, Set.ball_image_iff] }
 #align order_iso_class.to_Inf_hom_class OrderIsoClass.tosInfHomClass
 
-#print OrderIsoClass.toCompleteLatticeHomClass /-
+/- warning: order_iso_class.to_complete_lattice_hom_class -> OrderIsoClass.toCompleteLatticeHomClass is a dubious translation:
+lean 3 declaration is
+  forall {F : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : CompleteLattice.{u2} α] [_inst_2 : CompleteLattice.{u3} β] [_inst_3 : OrderIsoClass.{u1, u2, u3} F α β (Preorder.toHasLe.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1)))) (Preorder.toHasLe.{u3} β (PartialOrder.toPreorder.{u3} β (CompleteSemilatticeInf.toPartialOrder.{u3} β (CompleteLattice.toCompleteSemilatticeInf.{u3} β _inst_2))))], CompleteLatticeHomClass.{u1, u2, u3} F α β _inst_1 _inst_2
+but is expected to have type
+  forall {F : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : CompleteLattice.{u2} α] [_inst_2 : CompleteLattice.{u3} β] [_inst_3 : OrderIsoClass.{u1, u2, u3} F α β (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1)))) (Preorder.toLE.{u3} β (PartialOrder.toPreorder.{u3} β (CompleteSemilatticeInf.toPartialOrder.{u3} β (CompleteLattice.toCompleteSemilatticeInf.{u3} β _inst_2))))], CompleteLatticeHomClass.{u1, u2, u3} F α β _inst_1 _inst_2
+Case conversion may be inaccurate. Consider using '#align order_iso_class.to_complete_lattice_hom_class OrderIsoClass.toCompleteLatticeHomClassₓ'. -/
 -- See note [lower instance priority]
 instance (priority := 100) OrderIsoClass.toCompleteLatticeHomClass [CompleteLattice α]
     [CompleteLattice β] [OrderIsoClass F α β] : CompleteLatticeHomClass F α β :=
   { OrderIsoClass.tosSupHomClass, OrderIsoClass.toLatticeHomClass,
     show sInfHomClass F α β from inferInstance with }
 #align order_iso_class.to_complete_lattice_hom_class OrderIsoClass.toCompleteLatticeHomClass
--/
 
 instance [SupSet α] [SupSet β] [sSupHomClass F α β] : CoeTC F (sSupHom α β) :=
   ⟨fun f => ⟨f, map_sSup f⟩⟩

@@ -102,11 +102,15 @@ theorem mono_ac (h : μ₁ ⟂ₘ ν₁) (hμ : μ₂ ≪ μ₁) (hν : ν₂ �
 #align measure_theory.measure.mutually_singular.mono_ac MeasureTheory.Measure.MutuallySingular.mono_ac
 -/
 
-#print MeasureTheory.Measure.MutuallySingular.mono /-
+/- warning: measure_theory.measure.mutually_singular.mono -> MeasureTheory.Measure.MutuallySingular.mono is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ₁ : MeasureTheory.Measure.{u1} α m0} {μ₂ : MeasureTheory.Measure.{u1} α m0} {ν₁ : MeasureTheory.Measure.{u1} α m0} {ν₂ : MeasureTheory.Measure.{u1} α m0}, (MeasureTheory.Measure.MutuallySingular.{u1} α m0 μ₁ ν₁) -> (LE.le.{u1} (MeasureTheory.Measure.{u1} α m0) (Preorder.toHasLe.{u1} (MeasureTheory.Measure.{u1} α m0) (PartialOrder.toPreorder.{u1} (MeasureTheory.Measure.{u1} α m0) (MeasureTheory.Measure.instPartialOrder.{u1} α m0))) μ₂ μ₁) -> (LE.le.{u1} (MeasureTheory.Measure.{u1} α m0) (Preorder.toHasLe.{u1} (MeasureTheory.Measure.{u1} α m0) (PartialOrder.toPreorder.{u1} (MeasureTheory.Measure.{u1} α m0) (MeasureTheory.Measure.instPartialOrder.{u1} α m0))) ν₂ ν₁) -> (MeasureTheory.Measure.MutuallySingular.{u1} α m0 μ₂ ν₂)
+but is expected to have type
+  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ₁ : MeasureTheory.Measure.{u1} α m0} {μ₂ : MeasureTheory.Measure.{u1} α m0} {ν₁ : MeasureTheory.Measure.{u1} α m0} {ν₂ : MeasureTheory.Measure.{u1} α m0}, (MeasureTheory.Measure.MutuallySingular.{u1} α m0 μ₁ ν₁) -> (LE.le.{u1} (MeasureTheory.Measure.{u1} α m0) (Preorder.toLE.{u1} (MeasureTheory.Measure.{u1} α m0) (PartialOrder.toPreorder.{u1} (MeasureTheory.Measure.{u1} α m0) (MeasureTheory.Measure.instPartialOrder.{u1} α m0))) μ₂ μ₁) -> (LE.le.{u1} (MeasureTheory.Measure.{u1} α m0) (Preorder.toLE.{u1} (MeasureTheory.Measure.{u1} α m0) (PartialOrder.toPreorder.{u1} (MeasureTheory.Measure.{u1} α m0) (MeasureTheory.Measure.instPartialOrder.{u1} α m0))) ν₂ ν₁) -> (MeasureTheory.Measure.MutuallySingular.{u1} α m0 μ₂ ν₂)
+Case conversion may be inaccurate. Consider using '#align measure_theory.measure.mutually_singular.mono MeasureTheory.Measure.MutuallySingular.monoₓ'. -/
 theorem mono (h : μ₁ ⟂ₘ ν₁) (hμ : μ₂ ≤ μ₁) (hν : ν₂ ≤ ν₁) : μ₂ ⟂ₘ ν₂ :=
   h.mono_ac hμ.AbsolutelyContinuous hν.AbsolutelyContinuous
 #align measure_theory.measure.mutually_singular.mono MeasureTheory.Measure.MutuallySingular.mono
--/
 
 #print MeasureTheory.Measure.MutuallySingular.sum_left /-
 @[simp]

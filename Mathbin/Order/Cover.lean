@@ -51,11 +51,15 @@ def Wcovby (a b : α) : Prop :=
 -- mathport name: «expr ⩿ »
 infixl:50 " ⩿ " => Wcovby
 
-#print Wcovby.le /-
+/- warning: wcovby.le -> Wcovby.le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (Wcovby.{u1} α _inst_1 a b) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (Wcovby.{u1} α _inst_1 a b) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a b)
+Case conversion may be inaccurate. Consider using '#align wcovby.le Wcovby.leₓ'. -/
 theorem Wcovby.le (h : a ⩿ b) : a ≤ b :=
   h.1
 #align wcovby.le Wcovby.le
--/
 
 #print Wcovby.refl /-
 theorem Wcovby.refl (a : α) : a ⩿ a :=
@@ -75,63 +79,105 @@ protected theorem Eq.wcovby (h : a = b) : a ⩿ b :=
 #align eq.wcovby Eq.wcovby
 -/
 
-#print wcovby_of_le_of_le /-
+/- warning: wcovby_of_le_of_le -> wcovby_of_le_of_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a b) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) b a) -> (Wcovby.{u1} α _inst_1 a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a b) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) b a) -> (Wcovby.{u1} α _inst_1 a b)
+Case conversion may be inaccurate. Consider using '#align wcovby_of_le_of_le wcovby_of_le_of_leₓ'. -/
 theorem wcovby_of_le_of_le (h1 : a ≤ b) (h2 : b ≤ a) : a ⩿ b :=
   ⟨h1, fun c hac hcb => (hac.trans hcb).not_le h2⟩
 #align wcovby_of_le_of_le wcovby_of_le_of_le
--/
 
+/- warning: has_le.le.wcovby_of_le -> LE.le.wcovby_of_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a b) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) b a) -> (Wcovby.{u1} α _inst_1 a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a b) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) b a) -> (Wcovby.{u1} α _inst_1 a b)
+Case conversion may be inaccurate. Consider using '#align has_le.le.wcovby_of_le LE.le.wcovby_of_leₓ'. -/
 alias wcovby_of_le_of_le ← LE.le.wcovby_of_le
 #align has_le.le.wcovby_of_le LE.le.wcovby_of_le
 
-#print AntisymmRel.wcovby /-
+/- warning: antisymm_rel.wcovby -> AntisymmRel.wcovby is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (AntisymmRel.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) a b) -> (Wcovby.{u1} α _inst_1 a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (AntisymmRel.{u1} α (fun (x._@.Mathlib.Order.Cover._hyg.863 : α) (x._@.Mathlib.Order.Cover._hyg.865 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Cover._hyg.863 x._@.Mathlib.Order.Cover._hyg.865) a b) -> (Wcovby.{u1} α _inst_1 a b)
+Case conversion may be inaccurate. Consider using '#align antisymm_rel.wcovby AntisymmRel.wcovbyₓ'. -/
 theorem AntisymmRel.wcovby (h : AntisymmRel (· ≤ ·) a b) : a ⩿ b :=
   wcovby_of_le_of_le h.1 h.2
 #align antisymm_rel.wcovby AntisymmRel.wcovby
--/
 
-#print Wcovby.wcovby_iff_le /-
+/- warning: wcovby.wcovby_iff_le -> Wcovby.wcovby_iff_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (Wcovby.{u1} α _inst_1 a b) -> (Iff (Wcovby.{u1} α _inst_1 b a) (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) b a))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (Wcovby.{u1} α _inst_1 a b) -> (Iff (Wcovby.{u1} α _inst_1 b a) (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) b a))
+Case conversion may be inaccurate. Consider using '#align wcovby.wcovby_iff_le Wcovby.wcovby_iff_leₓ'. -/
 theorem Wcovby.wcovby_iff_le (hab : a ⩿ b) : b ⩿ a ↔ b ≤ a :=
   ⟨fun h => h.le, fun h => h.wcovby_of_le hab.le⟩
 #align wcovby.wcovby_iff_le Wcovby.wcovby_iff_le
--/
 
-#print wcovby_of_eq_or_eq /-
+/- warning: wcovby_of_eq_or_eq -> wcovby_of_eq_or_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a b) -> (forall (c : α), (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a c) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) c b) -> (Or (Eq.{succ u1} α c a) (Eq.{succ u1} α c b))) -> (Wcovby.{u1} α _inst_1 a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a b) -> (forall (c : α), (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a c) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) c b) -> (Or (Eq.{succ u1} α c a) (Eq.{succ u1} α c b))) -> (Wcovby.{u1} α _inst_1 a b)
+Case conversion may be inaccurate. Consider using '#align wcovby_of_eq_or_eq wcovby_of_eq_or_eqₓ'. -/
 theorem wcovby_of_eq_or_eq (hab : a ≤ b) (h : ∀ c, a ≤ c → c ≤ b → c = a ∨ c = b) : a ⩿ b :=
   ⟨hab, fun c ha hb => (h c ha.le hb.le).elim ha.ne' hb.Ne⟩
 #align wcovby_of_eq_or_eq wcovby_of_eq_or_eq
--/
 
-#print AntisymmRel.trans_wcovby /-
+/- warning: antisymm_rel.trans_wcovby -> AntisymmRel.trans_wcovby is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α} {c : α}, (AntisymmRel.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) a b) -> (Wcovby.{u1} α _inst_1 b c) -> (Wcovby.{u1} α _inst_1 a c)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α} {c : α}, (AntisymmRel.{u1} α (fun (x._@.Mathlib.Order.Cover._hyg.1020 : α) (x._@.Mathlib.Order.Cover._hyg.1022 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Cover._hyg.1020 x._@.Mathlib.Order.Cover._hyg.1022) a b) -> (Wcovby.{u1} α _inst_1 b c) -> (Wcovby.{u1} α _inst_1 a c)
+Case conversion may be inaccurate. Consider using '#align antisymm_rel.trans_wcovby AntisymmRel.trans_wcovbyₓ'. -/
 theorem AntisymmRel.trans_wcovby (hab : AntisymmRel (· ≤ ·) a b) (hbc : b ⩿ c) : a ⩿ c :=
   ⟨hab.1.trans hbc.le, fun d had hdc => hbc.2 (hab.2.trans_lt had) hdc⟩
 #align antisymm_rel.trans_wcovby AntisymmRel.trans_wcovby
--/
 
-#print wcovby_congr_left /-
+/- warning: wcovby_congr_left -> wcovby_congr_left is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α} {c : α}, (AntisymmRel.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) a b) -> (Iff (Wcovby.{u1} α _inst_1 a c) (Wcovby.{u1} α _inst_1 b c))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α} {c : α}, (AntisymmRel.{u1} α (fun (x._@.Mathlib.Order.Cover._hyg.1078 : α) (x._@.Mathlib.Order.Cover._hyg.1080 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Cover._hyg.1078 x._@.Mathlib.Order.Cover._hyg.1080) a b) -> (Iff (Wcovby.{u1} α _inst_1 a c) (Wcovby.{u1} α _inst_1 b c))
+Case conversion may be inaccurate. Consider using '#align wcovby_congr_left wcovby_congr_leftₓ'. -/
 theorem wcovby_congr_left (hab : AntisymmRel (· ≤ ·) a b) : a ⩿ c ↔ b ⩿ c :=
   ⟨hab.symm.trans_wcovby, hab.trans_wcovby⟩
 #align wcovby_congr_left wcovby_congr_left
--/
 
-#print Wcovby.trans_antisymm_rel /-
+/- warning: wcovby.trans_antisymm_rel -> Wcovby.trans_antisymm_rel is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α} {c : α}, (Wcovby.{u1} α _inst_1 a b) -> (AntisymmRel.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) b c) -> (Wcovby.{u1} α _inst_1 a c)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α} {c : α}, (Wcovby.{u1} α _inst_1 a b) -> (AntisymmRel.{u1} α (fun (x._@.Mathlib.Order.Cover._hyg.1134 : α) (x._@.Mathlib.Order.Cover._hyg.1136 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Cover._hyg.1134 x._@.Mathlib.Order.Cover._hyg.1136) b c) -> (Wcovby.{u1} α _inst_1 a c)
+Case conversion may be inaccurate. Consider using '#align wcovby.trans_antisymm_rel Wcovby.trans_antisymm_relₓ'. -/
 theorem Wcovby.trans_antisymm_rel (hab : a ⩿ b) (hbc : AntisymmRel (· ≤ ·) b c) : a ⩿ c :=
   ⟨hab.le.trans hbc.1, fun d had hdc => hab.2 had <| hdc.trans_le hbc.2⟩
 #align wcovby.trans_antisymm_rel Wcovby.trans_antisymm_rel
--/
 
-#print wcovby_congr_right /-
+/- warning: wcovby_congr_right -> wcovby_congr_right is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α} {c : α}, (AntisymmRel.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) a b) -> (Iff (Wcovby.{u1} α _inst_1 c a) (Wcovby.{u1} α _inst_1 c b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α} {c : α}, (AntisymmRel.{u1} α (fun (x._@.Mathlib.Order.Cover._hyg.1187 : α) (x._@.Mathlib.Order.Cover._hyg.1189 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Cover._hyg.1187 x._@.Mathlib.Order.Cover._hyg.1189) a b) -> (Iff (Wcovby.{u1} α _inst_1 c a) (Wcovby.{u1} α _inst_1 c b))
+Case conversion may be inaccurate. Consider using '#align wcovby_congr_right wcovby_congr_rightₓ'. -/
 theorem wcovby_congr_right (hab : AntisymmRel (· ≤ ·) a b) : c ⩿ a ↔ c ⩿ b :=
   ⟨fun h => h.trans_antisymm_rel hab, fun h => h.trans_antisymm_rel hab.symm⟩
 #align wcovby_congr_right wcovby_congr_right
--/
 
-#print not_wcovby_iff /-
+/- warning: not_wcovby_iff -> not_wcovby_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a b) -> (Iff (Not (Wcovby.{u1} α _inst_1 a b)) (Exists.{succ u1} α (fun (c : α) => And (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a c) (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) c b))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a b) -> (Iff (Not (Wcovby.{u1} α _inst_1 a b)) (Exists.{succ u1} α (fun (c : α) => And (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) a c) (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) c b))))
+Case conversion may be inaccurate. Consider using '#align not_wcovby_iff not_wcovby_iffₓ'. -/
 /-- If `a ≤ b`, then `b` does not cover `a` iff there's an element in between. -/
 theorem not_wcovby_iff (h : a ≤ b) : ¬a ⩿ b ↔ ∃ c, a < c ∧ c < b := by
   simp_rw [Wcovby, h, true_and_iff, not_forall, exists_prop, Classical.not_not]
 #align not_wcovby_iff not_wcovby_iff
--/
 
 #print Wcovby.isRefl /-
 instance Wcovby.isRefl : IsRefl α (· ⩿ ·) :=
@@ -145,15 +191,19 @@ theorem Wcovby.Ioo_eq (h : a ⩿ b) : Ioo a b = ∅ :=
 #align wcovby.Ioo_eq Wcovby.Ioo_eq
 -/
 
-#print wcovby_iff_Ioo_eq /-
+/- warning: wcovby_iff_Ioo_eq -> wcovby_iff_Ioo_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, Iff (Wcovby.{u1} α _inst_1 a b) (And (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a b) (Eq.{succ u1} (Set.{u1} α) (Set.Ioo.{u1} α _inst_1 a b) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, Iff (Wcovby.{u1} α _inst_1 a b) (And (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a b) (Eq.{succ u1} (Set.{u1} α) (Set.Ioo.{u1} α _inst_1 a b) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α))))
+Case conversion may be inaccurate. Consider using '#align wcovby_iff_Ioo_eq wcovby_iff_Ioo_eqₓ'. -/
 theorem wcovby_iff_Ioo_eq : a ⩿ b ↔ a ≤ b ∧ Ioo a b = ∅ :=
   and_congr_right' <| by simp [eq_empty_iff_forall_not_mem]
 #align wcovby_iff_Ioo_eq wcovby_iff_Ioo_eq
--/
 
 /- warning: wcovby.of_image -> Wcovby.of_image is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {a : α} {b : α} (f : OrderEmbedding.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)), (Wcovby.{u2} β _inst_2 (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2))) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2))) f a) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2))) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2))) f b)) -> (Wcovby.{u1} α _inst_1 a b)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {a : α} {b : α} (f : OrderEmbedding.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)), (Wcovby.{u2} β _inst_2 (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) f a) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) f b)) -> (Wcovby.{u1} α _inst_1 a b)
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {a : α} {b : α} (f : OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)), (Wcovby.{u1} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) a) _inst_2 (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) (RelEmbedding.instRelHomClassRelEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697))) f a) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) (RelEmbedding.instRelHomClassRelEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697))) f b)) -> (Wcovby.{u2} α _inst_1 a b)
 Case conversion may be inaccurate. Consider using '#align wcovby.of_image Wcovby.of_imageₓ'. -/
@@ -163,7 +213,7 @@ theorem Wcovby.of_image (f : α ↪o β) (h : f a ⩿ f b) : a ⩿ b :=
 
 /- warning: wcovby.image -> Wcovby.image is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {a : α} {b : α} (f : OrderEmbedding.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)), (Wcovby.{u1} α _inst_1 a b) -> (Set.OrdConnected.{u2} β _inst_2 (Set.range.{u2, succ u1} β α (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2))) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2))) f))) -> (Wcovby.{u2} β _inst_2 (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2))) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2))) f a) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2))) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2))) f b))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {a : α} {b : α} (f : OrderEmbedding.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)), (Wcovby.{u1} α _inst_1 a b) -> (Set.OrdConnected.{u2} β _inst_2 (Set.range.{u2, succ u1} β α (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) f))) -> (Wcovby.{u2} β _inst_2 (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) f a) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) f b))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {a : α} {b : α} (f : OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)), (Wcovby.{u2} α _inst_1 a b) -> (Set.OrdConnected.{u1} β _inst_2 (Set.range.{u1, succ u2} β α (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) (RelEmbedding.instRelHomClassRelEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697))) f))) -> (Wcovby.{u1} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) a) _inst_2 (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) (RelEmbedding.instRelHomClassRelEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697))) f a) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) (RelEmbedding.instRelHomClassRelEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697))) f b))
 Case conversion may be inaccurate. Consider using '#align wcovby.image Wcovby.imageₓ'. -/
@@ -177,7 +227,7 @@ theorem Wcovby.image (f : α ↪o β) (hab : a ⩿ b) (h : (range f).OrdConnecte
 
 /- warning: set.ord_connected.apply_wcovby_apply_iff -> Set.OrdConnected.apply_wcovby_apply_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {a : α} {b : α} (f : OrderEmbedding.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)), (Set.OrdConnected.{u2} β _inst_2 (Set.range.{u2, succ u1} β α (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2))) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2))) f))) -> (Iff (Wcovby.{u2} β _inst_2 (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2))) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2))) f a) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2))) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2))) f b)) (Wcovby.{u1} α _inst_1 a b))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {a : α} {b : α} (f : OrderEmbedding.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)), (Set.OrdConnected.{u2} β _inst_2 (Set.range.{u2, succ u1} β α (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) f))) -> (Iff (Wcovby.{u2} β _inst_2 (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) f a) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) f b)) (Wcovby.{u1} α _inst_1 a b))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {a : α} {b : α} (f : OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)), (Set.OrdConnected.{u1} β _inst_2 (Set.range.{u1, succ u2} β α (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) (RelEmbedding.instRelHomClassRelEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697))) f))) -> (Iff (Wcovby.{u1} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) a) _inst_2 (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) (RelEmbedding.instRelHomClassRelEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697))) f a) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) (RelEmbedding.instRelHomClassRelEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697))) f b)) (Wcovby.{u2} α _inst_1 a b))
 Case conversion may be inaccurate. Consider using '#align set.ord_connected.apply_wcovby_apply_iff Set.OrdConnected.apply_wcovby_apply_iffₓ'. -/
@@ -188,7 +238,7 @@ theorem Set.OrdConnected.apply_wcovby_apply_iff (f : α ↪o β) (h : (range f).
 
 /- warning: apply_wcovby_apply_iff -> apply_wcovby_apply_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {a : α} {b : α} {E : Type.{u3}} [_inst_3 : OrderIsoClass.{u3, u1, u2} E α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)] (e : E), Iff (Wcovby.{u2} β _inst_2 (coeFn.{succ u3, max (succ u1) (succ u2)} E (fun (_x : E) => α -> β) (FunLike.hasCoeToFun.{succ u3, succ u1, succ u2} E α (fun (_x : α) => β) (RelHomClass.toFunLike.{u3, u1, u2} E α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2)) (OrderIsoClass.toOrderHomClass.{u3, u1, u2} E α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2) _inst_3))) e a) (coeFn.{succ u3, max (succ u1) (succ u2)} E (fun (_x : E) => α -> β) (FunLike.hasCoeToFun.{succ u3, succ u1, succ u2} E α (fun (_x : α) => β) (RelHomClass.toFunLike.{u3, u1, u2} E α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2)) (OrderIsoClass.toOrderHomClass.{u3, u1, u2} E α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2) _inst_3))) e b)) (Wcovby.{u1} α _inst_1 a b)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {a : α} {b : α} {E : Type.{u3}} [_inst_3 : OrderIsoClass.{u3, u1, u2} E α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)] (e : E), Iff (Wcovby.{u2} β _inst_2 (coeFn.{succ u3, max (succ u1) (succ u2)} E (fun (_x : E) => α -> β) (FunLike.hasCoeToFun.{succ u3, succ u1, succ u2} E α (fun (_x : α) => β) (RelHomClass.toFunLike.{u3, u1, u2} E α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2)) (OrderIsoClass.toOrderHomClass.{u3, u1, u2} E α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2) _inst_3))) e a) (coeFn.{succ u3, max (succ u1) (succ u2)} E (fun (_x : E) => α -> β) (FunLike.hasCoeToFun.{succ u3, succ u1, succ u2} E α (fun (_x : α) => β) (RelHomClass.toFunLike.{u3, u1, u2} E α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2)) (OrderIsoClass.toOrderHomClass.{u3, u1, u2} E α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2) _inst_3))) e b)) (Wcovby.{u1} α _inst_1 a b)
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {a : α} {b : α} {E : Type.{u3}} [_inst_3 : OrderIsoClass.{u3, u2, u1} E α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)] (e : E), Iff (Wcovby.{u1} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) a) _inst_2 (FunLike.coe.{succ u3, succ u2, succ u1} E α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) _x) (RelHomClass.toFunLike.{u3, u2, u1} E α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1896 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1898 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1896 x._@.Mathlib.Order.Hom.Basic._hyg.1898) (fun (_x : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1920 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) _x x._@.Mathlib.Order.Hom.Basic._hyg.1920) (OrderIsoClass.toOrderHomClass.{u3, u2, u1} E α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2) _inst_3)) e a) (FunLike.coe.{succ u3, succ u2, succ u1} E α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) _x) (RelHomClass.toFunLike.{u3, u2, u1} E α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1896 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1898 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1896 x._@.Mathlib.Order.Hom.Basic._hyg.1898) (fun (_x : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1920 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) _x x._@.Mathlib.Order.Hom.Basic._hyg.1920) (OrderIsoClass.toOrderHomClass.{u3, u2, u1} E α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2) _inst_3)) e b)) (Wcovby.{u2} α _inst_1 a b)
 Case conversion may be inaccurate. Consider using '#align apply_wcovby_apply_iff apply_wcovby_apply_iffₓ'. -/
@@ -223,28 +273,40 @@ section PartialOrder
 
 variable [PartialOrder α] {a b c : α}
 
-#print Wcovby.eq_or_eq /-
+/- warning: wcovby.eq_or_eq -> Wcovby.eq_or_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α} {c : α}, (Wcovby.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a b) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a c) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) c b) -> (Or (Eq.{succ u1} α c a) (Eq.{succ u1} α c b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α} {c : α}, (Wcovby.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a b) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a c) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) c b) -> (Or (Eq.{succ u1} α c a) (Eq.{succ u1} α c b))
+Case conversion may be inaccurate. Consider using '#align wcovby.eq_or_eq Wcovby.eq_or_eqₓ'. -/
 theorem Wcovby.eq_or_eq (h : a ⩿ b) (h2 : a ≤ c) (h3 : c ≤ b) : c = a ∨ c = b :=
   by
   rcases h2.eq_or_lt with (h2 | h2); · exact Or.inl h2.symm
   rcases h3.eq_or_lt with (h3 | h3); · exact Or.inr h3
   exact (h.2 h2 h3).elim
 #align wcovby.eq_or_eq Wcovby.eq_or_eq
--/
 
-#print wcovby_iff_le_and_eq_or_eq /-
+/- warning: wcovby_iff_le_and_eq_or_eq -> wcovby_iff_le_and_eq_or_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α}, Iff (Wcovby.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a b) (And (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) (forall (c : α), (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a c) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) c b) -> (Or (Eq.{succ u1} α c a) (Eq.{succ u1} α c b))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α}, Iff (Wcovby.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a b) (And (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) (forall (c : α), (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a c) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) c b) -> (Or (Eq.{succ u1} α c a) (Eq.{succ u1} α c b))))
+Case conversion may be inaccurate. Consider using '#align wcovby_iff_le_and_eq_or_eq wcovby_iff_le_and_eq_or_eqₓ'. -/
 /-- An `iff` version of `wcovby.eq_or_eq` and `wcovby_of_eq_or_eq`. -/
 theorem wcovby_iff_le_and_eq_or_eq : a ⩿ b ↔ a ≤ b ∧ ∀ c, a ≤ c → c ≤ b → c = a ∨ c = b :=
   ⟨fun h => ⟨h.le, fun c => h.eq_or_eq⟩, And.ndrec wcovby_of_eq_or_eq⟩
 #align wcovby_iff_le_and_eq_or_eq wcovby_iff_le_and_eq_or_eq
--/
 
-#print Wcovby.le_and_le_iff /-
+/- warning: wcovby.le_and_le_iff -> Wcovby.le_and_le_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α} {c : α}, (Wcovby.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a b) -> (Iff (And (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a c) (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) c b)) (Or (Eq.{succ u1} α c a) (Eq.{succ u1} α c b)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α} {c : α}, (Wcovby.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a b) -> (Iff (And (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a c) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) c b)) (Or (Eq.{succ u1} α c a) (Eq.{succ u1} α c b)))
+Case conversion may be inaccurate. Consider using '#align wcovby.le_and_le_iff Wcovby.le_and_le_iffₓ'. -/
 theorem Wcovby.le_and_le_iff (h : a ⩿ b) : a ≤ c ∧ c ≤ b ↔ c = a ∨ c = b := by
   refine' ⟨fun h2 => h.eq_or_eq h2.1 h2.2, _⟩; rintro (rfl | rfl);
   exacts[⟨le_rfl, h.le⟩, ⟨h.le, le_rfl⟩]
 #align wcovby.le_and_le_iff Wcovby.le_and_le_iff
--/
 
 #print Wcovby.Icc_eq /-
 theorem Wcovby.Icc_eq (h : a ⩿ b) : Icc a b = {a, b} :=
@@ -377,116 +439,184 @@ section Preorder
 
 variable [Preorder α] [Preorder β] {a b c : α}
 
-#print Covby.le /-
+/- warning: covby.le -> Covby.le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (Covby.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a b) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (Covby.{u1} α (Preorder.toLT.{u1} α _inst_1) a b) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a b)
+Case conversion may be inaccurate. Consider using '#align covby.le Covby.leₓ'. -/
 theorem Covby.le (h : a ⋖ b) : a ≤ b :=
   h.1.le
 #align covby.le Covby.le
--/
 
-#print Covby.ne /-
+/- warning: covby.ne -> Covby.ne is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (Covby.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a b) -> (Ne.{succ u1} α a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (Covby.{u1} α (Preorder.toLT.{u1} α _inst_1) a b) -> (Ne.{succ u1} α a b)
+Case conversion may be inaccurate. Consider using '#align covby.ne Covby.neₓ'. -/
 protected theorem Covby.ne (h : a ⋖ b) : a ≠ b :=
   h.lt.Ne
 #align covby.ne Covby.ne
--/
 
-#print Covby.ne' /-
+/- warning: covby.ne' -> Covby.ne' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (Covby.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a b) -> (Ne.{succ u1} α b a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (Covby.{u1} α (Preorder.toLT.{u1} α _inst_1) a b) -> (Ne.{succ u1} α b a)
+Case conversion may be inaccurate. Consider using '#align covby.ne' Covby.ne'ₓ'. -/
 theorem Covby.ne' (h : a ⋖ b) : b ≠ a :=
   h.lt.ne'
 #align covby.ne' Covby.ne'
--/
 
-#print Covby.wcovby /-
+/- warning: covby.wcovby -> Covby.wcovby is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (Covby.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a b) -> (Wcovby.{u1} α _inst_1 a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (Covby.{u1} α (Preorder.toLT.{u1} α _inst_1) a b) -> (Wcovby.{u1} α _inst_1 a b)
+Case conversion may be inaccurate. Consider using '#align covby.wcovby Covby.wcovbyₓ'. -/
 protected theorem Covby.wcovby (h : a ⋖ b) : a ⩿ b :=
   ⟨h.le, h.2⟩
 #align covby.wcovby Covby.wcovby
--/
 
-#print Wcovby.covby_of_not_le /-
+/- warning: wcovby.covby_of_not_le -> Wcovby.covby_of_not_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (Wcovby.{u1} α _inst_1 a b) -> (Not (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) b a)) -> (Covby.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (Wcovby.{u1} α _inst_1 a b) -> (Not (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) b a)) -> (Covby.{u1} α (Preorder.toLT.{u1} α _inst_1) a b)
+Case conversion may be inaccurate. Consider using '#align wcovby.covby_of_not_le Wcovby.covby_of_not_leₓ'. -/
 theorem Wcovby.covby_of_not_le (h : a ⩿ b) (h2 : ¬b ≤ a) : a ⋖ b :=
   ⟨h.le.lt_of_not_le h2, h.2⟩
 #align wcovby.covby_of_not_le Wcovby.covby_of_not_le
--/
 
-#print Wcovby.covby_of_lt /-
+/- warning: wcovby.covby_of_lt -> Wcovby.covby_of_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (Wcovby.{u1} α _inst_1 a b) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a b) -> (Covby.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (Wcovby.{u1} α _inst_1 a b) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) a b) -> (Covby.{u1} α (Preorder.toLT.{u1} α _inst_1) a b)
+Case conversion may be inaccurate. Consider using '#align wcovby.covby_of_lt Wcovby.covby_of_ltₓ'. -/
 theorem Wcovby.covby_of_lt (h : a ⩿ b) (h2 : a < b) : a ⋖ b :=
   ⟨h2, h.2⟩
 #align wcovby.covby_of_lt Wcovby.covby_of_lt
--/
 
-#print not_covby_of_lt_of_lt /-
+/- warning: not_covby_of_lt_of_lt -> not_covby_of_lt_of_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α} {c : α}, (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a b) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) b c) -> (Not (Covby.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a c))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α} {c : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) a b) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) b c) -> (Not (Covby.{u1} α (Preorder.toLT.{u1} α _inst_1) a c))
+Case conversion may be inaccurate. Consider using '#align not_covby_of_lt_of_lt not_covby_of_lt_of_ltₓ'. -/
 theorem not_covby_of_lt_of_lt (h₁ : a < b) (h₂ : b < c) : ¬a ⋖ c :=
   (not_covby_iff (h₁.trans h₂)).2 ⟨b, h₁, h₂⟩
 #align not_covby_of_lt_of_lt not_covby_of_lt_of_lt
--/
 
-#print covby_iff_wcovby_and_lt /-
+/- warning: covby_iff_wcovby_and_lt -> covby_iff_wcovby_and_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, Iff (Covby.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a b) (And (Wcovby.{u1} α _inst_1 a b) (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, Iff (Covby.{u1} α (Preorder.toLT.{u1} α _inst_1) a b) (And (Wcovby.{u1} α _inst_1 a b) (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) a b))
+Case conversion may be inaccurate. Consider using '#align covby_iff_wcovby_and_lt covby_iff_wcovby_and_ltₓ'. -/
 theorem covby_iff_wcovby_and_lt : a ⋖ b ↔ a ⩿ b ∧ a < b :=
   ⟨fun h => ⟨h.Wcovby, h.lt⟩, fun h => h.1.covby_of_lt h.2⟩
 #align covby_iff_wcovby_and_lt covby_iff_wcovby_and_lt
--/
 
-#print covby_iff_wcovby_and_not_le /-
+/- warning: covby_iff_wcovby_and_not_le -> covby_iff_wcovby_and_not_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, Iff (Covby.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a b) (And (Wcovby.{u1} α _inst_1 a b) (Not (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) b a)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, Iff (Covby.{u1} α (Preorder.toLT.{u1} α _inst_1) a b) (And (Wcovby.{u1} α _inst_1 a b) (Not (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) b a)))
+Case conversion may be inaccurate. Consider using '#align covby_iff_wcovby_and_not_le covby_iff_wcovby_and_not_leₓ'. -/
 theorem covby_iff_wcovby_and_not_le : a ⋖ b ↔ a ⩿ b ∧ ¬b ≤ a :=
   ⟨fun h => ⟨h.Wcovby, h.lt.not_le⟩, fun h => h.1.covby_of_not_le h.2⟩
 #align covby_iff_wcovby_and_not_le covby_iff_wcovby_and_not_le
--/
 
-#print wcovby_iff_covby_or_le_and_le /-
+/- warning: wcovby_iff_covby_or_le_and_le -> wcovby_iff_covby_or_le_and_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, Iff (Wcovby.{u1} α _inst_1 a b) (Or (Covby.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a b) (And (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a b) (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) b a)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, Iff (Wcovby.{u1} α _inst_1 a b) (Or (Covby.{u1} α (Preorder.toLT.{u1} α _inst_1) a b) (And (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a b) (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) b a)))
+Case conversion may be inaccurate. Consider using '#align wcovby_iff_covby_or_le_and_le wcovby_iff_covby_or_le_and_leₓ'. -/
 theorem wcovby_iff_covby_or_le_and_le : a ⩿ b ↔ a ⋖ b ∨ a ≤ b ∧ b ≤ a :=
   ⟨fun h => or_iff_not_imp_right.mpr fun h' => h.covby_of_not_le fun hba => h' ⟨h.le, hba⟩,
     fun h' => h'.elim (fun h => h.Wcovby) fun h => h.1.wcovby_of_le h.2⟩
 #align wcovby_iff_covby_or_le_and_le wcovby_iff_covby_or_le_and_le
--/
 
-#print AntisymmRel.trans_covby /-
+/- warning: antisymm_rel.trans_covby -> AntisymmRel.trans_covby is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α} {c : α}, (AntisymmRel.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) a b) -> (Covby.{u1} α (Preorder.toHasLt.{u1} α _inst_1) b c) -> (Covby.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a c)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α} {c : α}, (AntisymmRel.{u1} α (fun (x._@.Mathlib.Order.Cover._hyg.3707 : α) (x._@.Mathlib.Order.Cover._hyg.3709 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Cover._hyg.3707 x._@.Mathlib.Order.Cover._hyg.3709) a b) -> (Covby.{u1} α (Preorder.toLT.{u1} α _inst_1) b c) -> (Covby.{u1} α (Preorder.toLT.{u1} α _inst_1) a c)
+Case conversion may be inaccurate. Consider using '#align antisymm_rel.trans_covby AntisymmRel.trans_covbyₓ'. -/
 theorem AntisymmRel.trans_covby (hab : AntisymmRel (· ≤ ·) a b) (hbc : b ⋖ c) : a ⋖ c :=
   ⟨hab.1.trans_lt hbc.lt, fun d had hdc => hbc.2 (hab.2.trans_lt had) hdc⟩
 #align antisymm_rel.trans_covby AntisymmRel.trans_covby
--/
 
-#print covby_congr_left /-
+/- warning: covby_congr_left -> covby_congr_left is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α} {c : α}, (AntisymmRel.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) a b) -> (Iff (Covby.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a c) (Covby.{u1} α (Preorder.toHasLt.{u1} α _inst_1) b c))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α} {c : α}, (AntisymmRel.{u1} α (fun (x._@.Mathlib.Order.Cover._hyg.3765 : α) (x._@.Mathlib.Order.Cover._hyg.3767 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Cover._hyg.3765 x._@.Mathlib.Order.Cover._hyg.3767) a b) -> (Iff (Covby.{u1} α (Preorder.toLT.{u1} α _inst_1) a c) (Covby.{u1} α (Preorder.toLT.{u1} α _inst_1) b c))
+Case conversion may be inaccurate. Consider using '#align covby_congr_left covby_congr_leftₓ'. -/
 theorem covby_congr_left (hab : AntisymmRel (· ≤ ·) a b) : a ⋖ c ↔ b ⋖ c :=
   ⟨hab.symm.trans_covby, hab.trans_covby⟩
 #align covby_congr_left covby_congr_left
--/
 
-#print Covby.trans_antisymmRel /-
+/- warning: covby.trans_antisymm_rel -> Covby.trans_antisymmRel is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α} {c : α}, (Covby.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a b) -> (AntisymmRel.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) b c) -> (Covby.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a c)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α} {c : α}, (Covby.{u1} α (Preorder.toLT.{u1} α _inst_1) a b) -> (AntisymmRel.{u1} α (fun (x._@.Mathlib.Order.Cover._hyg.3821 : α) (x._@.Mathlib.Order.Cover._hyg.3823 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Cover._hyg.3821 x._@.Mathlib.Order.Cover._hyg.3823) b c) -> (Covby.{u1} α (Preorder.toLT.{u1} α _inst_1) a c)
+Case conversion may be inaccurate. Consider using '#align covby.trans_antisymm_rel Covby.trans_antisymmRelₓ'. -/
 theorem Covby.trans_antisymmRel (hab : a ⋖ b) (hbc : AntisymmRel (· ≤ ·) b c) : a ⋖ c :=
   ⟨hab.lt.trans_le hbc.1, fun d had hdb => hab.2 had <| hdb.trans_le hbc.2⟩
 #align covby.trans_antisymm_rel Covby.trans_antisymmRel
--/
 
-#print covby_congr_right /-
+/- warning: covby_congr_right -> covby_congr_right is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α} {c : α}, (AntisymmRel.{u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) a b) -> (Iff (Covby.{u1} α (Preorder.toHasLt.{u1} α _inst_1) c a) (Covby.{u1} α (Preorder.toHasLt.{u1} α _inst_1) c b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α} {c : α}, (AntisymmRel.{u1} α (fun (x._@.Mathlib.Order.Cover._hyg.3874 : α) (x._@.Mathlib.Order.Cover._hyg.3876 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.Cover._hyg.3874 x._@.Mathlib.Order.Cover._hyg.3876) a b) -> (Iff (Covby.{u1} α (Preorder.toLT.{u1} α _inst_1) c a) (Covby.{u1} α (Preorder.toLT.{u1} α _inst_1) c b))
+Case conversion may be inaccurate. Consider using '#align covby_congr_right covby_congr_rightₓ'. -/
 theorem covby_congr_right (hab : AntisymmRel (· ≤ ·) a b) : c ⋖ a ↔ c ⋖ b :=
   ⟨fun h => h.trans_antisymm_rel hab, fun h => h.trans_antisymm_rel hab.symm⟩
 #align covby_congr_right covby_congr_right
--/
 
 instance : IsNonstrictStrictOrder α (· ⩿ ·) (· ⋖ ·) :=
   ⟨fun a b =>
     covby_iff_wcovby_and_not_le.trans <| and_congr_right fun h => h.wcovby_iff_le.Not.symm⟩
 
-#print Covby.isIrrefl /-
+/- warning: covby.is_irrefl -> Covby.isIrrefl is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], IsIrrefl.{u1} α (Covby.{u1} α (Preorder.toHasLt.{u1} α _inst_1))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], IsIrrefl.{u1} α (fun (x._@.Mathlib.Order.Cover._hyg.3994 : α) (x._@.Mathlib.Order.Cover._hyg.3996 : α) => Covby.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.Cover._hyg.3994 x._@.Mathlib.Order.Cover._hyg.3996)
+Case conversion may be inaccurate. Consider using '#align covby.is_irrefl Covby.isIrreflₓ'. -/
 instance Covby.isIrrefl : IsIrrefl α (· ⋖ ·) :=
   ⟨fun a ha => ha.Ne rfl⟩
 #align covby.is_irrefl Covby.isIrrefl
--/
 
-#print Covby.Ioo_eq /-
+/- warning: covby.Ioo_eq -> Covby.Ioo_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (Covby.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a b) -> (Eq.{succ u1} (Set.{u1} α) (Set.Ioo.{u1} α _inst_1 a b) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (Covby.{u1} α (Preorder.toLT.{u1} α _inst_1) a b) -> (Eq.{succ u1} (Set.{u1} α) (Set.Ioo.{u1} α _inst_1 a b) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α)))
+Case conversion may be inaccurate. Consider using '#align covby.Ioo_eq Covby.Ioo_eqₓ'. -/
 theorem Covby.Ioo_eq (h : a ⋖ b) : Ioo a b = ∅ :=
   h.Wcovby.Ioo_eq
 #align covby.Ioo_eq Covby.Ioo_eq
--/
 
-#print covby_iff_Ioo_eq /-
+/- warning: covby_iff_Ioo_eq -> covby_iff_Ioo_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, Iff (Covby.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a b) (And (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a b) (Eq.{succ u1} (Set.{u1} α) (Set.Ioo.{u1} α _inst_1 a b) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, Iff (Covby.{u1} α (Preorder.toLT.{u1} α _inst_1) a b) (And (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) a b) (Eq.{succ u1} (Set.{u1} α) (Set.Ioo.{u1} α _inst_1 a b) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α))))
+Case conversion may be inaccurate. Consider using '#align covby_iff_Ioo_eq covby_iff_Ioo_eqₓ'. -/
 theorem covby_iff_Ioo_eq : a ⋖ b ↔ a < b ∧ Ioo a b = ∅ :=
   and_congr_right' <| by simp [eq_empty_iff_forall_not_mem]
 #align covby_iff_Ioo_eq covby_iff_Ioo_eq
--/
 
 /- warning: covby.of_image -> Covby.of_image is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {a : α} {b : α} (f : OrderEmbedding.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)), (Covby.{u2} β (Preorder.toLT.{u2} β _inst_2) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2))) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2))) f a) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2))) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2))) f b)) -> (Covby.{u1} α (Preorder.toLT.{u1} α _inst_1) a b)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {a : α} {b : α} (f : OrderEmbedding.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)), (Covby.{u2} β (Preorder.toHasLt.{u2} β _inst_2) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) f a) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) f b)) -> (Covby.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a b)
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {a : α} {b : α} (f : OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)), (Covby.{u1} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) a) (Preorder.toLT.{u1} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) a) _inst_2) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) (RelEmbedding.instRelHomClassRelEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697))) f a) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) (RelEmbedding.instRelHomClassRelEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697))) f b)) -> (Covby.{u2} α (Preorder.toLT.{u2} α _inst_1) a b)
 Case conversion may be inaccurate. Consider using '#align covby.of_image Covby.of_imageₓ'. -/
@@ -496,7 +626,7 @@ theorem Covby.of_image (f : α ↪o β) (h : f a ⋖ f b) : a ⋖ b :=
 
 /- warning: covby.image -> Covby.image is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {a : α} {b : α} (f : OrderEmbedding.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)), (Covby.{u1} α (Preorder.toLT.{u1} α _inst_1) a b) -> (Set.OrdConnected.{u2} β _inst_2 (Set.range.{u2, succ u1} β α (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2))) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2))) f))) -> (Covby.{u2} β (Preorder.toLT.{u2} β _inst_2) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2))) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2))) f a) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2))) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2))) f b))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {a : α} {b : α} (f : OrderEmbedding.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)), (Covby.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a b) -> (Set.OrdConnected.{u2} β _inst_2 (Set.range.{u2, succ u1} β α (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) f))) -> (Covby.{u2} β (Preorder.toHasLt.{u2} β _inst_2) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) f a) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) f b))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {a : α} {b : α} (f : OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)), (Covby.{u2} α (Preorder.toLT.{u2} α _inst_1) a b) -> (Set.OrdConnected.{u1} β _inst_2 (Set.range.{u1, succ u2} β α (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) (RelEmbedding.instRelHomClassRelEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697))) f))) -> (Covby.{u1} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) a) (Preorder.toLT.{u1} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) a) _inst_2) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) (RelEmbedding.instRelHomClassRelEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697))) f a) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) (RelEmbedding.instRelHomClassRelEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697))) f b))
 Case conversion may be inaccurate. Consider using '#align covby.image Covby.imageₓ'. -/
@@ -506,7 +636,7 @@ theorem Covby.image (f : α ↪o β) (hab : a ⋖ b) (h : (range f).OrdConnected
 
 /- warning: set.ord_connected.apply_covby_apply_iff -> Set.OrdConnected.apply_covby_apply_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {a : α} {b : α} (f : OrderEmbedding.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)), (Set.OrdConnected.{u2} β _inst_2 (Set.range.{u2, succ u1} β α (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2))) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2))) f))) -> (Iff (Covby.{u2} β (Preorder.toLT.{u2} β _inst_2) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2))) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2))) f a) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2))) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2))) f b)) (Covby.{u1} α (Preorder.toLT.{u1} α _inst_1) a b))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {a : α} {b : α} (f : OrderEmbedding.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)), (Set.OrdConnected.{u2} β _inst_2 (Set.range.{u2, succ u1} β α (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) f))) -> (Iff (Covby.{u2} β (Preorder.toHasLt.{u2} β _inst_2) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) f a) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (OrderEmbedding.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)) (fun (_x : RelEmbedding.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) => α -> β) (RelEmbedding.hasCoeToFun.{u1, u2} α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2))) f b)) (Covby.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a b))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {a : α} {b : α} (f : OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)), (Set.OrdConnected.{u1} β _inst_2 (Set.range.{u1, succ u2} β α (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) (RelEmbedding.instRelHomClassRelEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697))) f))) -> (Iff (Covby.{u1} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) a) (Preorder.toLT.{u1} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) a) _inst_2) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) (RelEmbedding.instRelHomClassRelEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697))) f a) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) _x) (RelHomClass.toFunLike.{max u2 u1, u2, u1} (OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) (RelEmbedding.instRelHomClassRelEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697))) f b)) (Covby.{u2} α (Preorder.toLT.{u2} α _inst_1) a b))
 Case conversion may be inaccurate. Consider using '#align set.ord_connected.apply_covby_apply_iff Set.OrdConnected.apply_covby_apply_iffₓ'. -/
@@ -517,7 +647,7 @@ theorem Set.OrdConnected.apply_covby_apply_iff (f : α ↪o β) (h : (range f).O
 
 /- warning: apply_covby_apply_iff -> apply_covby_apply_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {a : α} {b : α} {E : Type.{u3}} [_inst_3 : OrderIsoClass.{u3, u1, u2} E α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2)] (e : E), Iff (Covby.{u2} β (Preorder.toLT.{u2} β _inst_2) (coeFn.{succ u3, max (succ u1) (succ u2)} E (fun (_x : E) => α -> β) (FunLike.hasCoeToFun.{succ u3, succ u1, succ u2} E α (fun (_x : α) => β) (RelHomClass.toFunLike.{u3, u1, u2} E α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2)) (OrderIsoClass.toOrderHomClass.{u3, u1, u2} E α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2) _inst_3))) e a) (coeFn.{succ u3, max (succ u1) (succ u2)} E (fun (_x : E) => α -> β) (FunLike.hasCoeToFun.{succ u3, succ u1, succ u2} E α (fun (_x : α) => β) (RelHomClass.toFunLike.{u3, u1, u2} E α β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2)) (OrderIsoClass.toOrderHomClass.{u3, u1, u2} E α β (Preorder.toLE.{u1} α _inst_1) (Preorder.toLE.{u2} β _inst_2) _inst_3))) e b)) (Covby.{u1} α (Preorder.toLT.{u1} α _inst_1) a b)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {a : α} {b : α} {E : Type.{u3}} [_inst_3 : OrderIsoClass.{u3, u1, u2} E α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2)] (e : E), Iff (Covby.{u2} β (Preorder.toHasLt.{u2} β _inst_2) (coeFn.{succ u3, max (succ u1) (succ u2)} E (fun (_x : E) => α -> β) (FunLike.hasCoeToFun.{succ u3, succ u1, succ u2} E α (fun (_x : α) => β) (RelHomClass.toFunLike.{u3, u1, u2} E α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2)) (OrderIsoClass.toOrderHomClass.{u3, u1, u2} E α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2) _inst_3))) e a) (coeFn.{succ u3, max (succ u1) (succ u2)} E (fun (_x : E) => α -> β) (FunLike.hasCoeToFun.{succ u3, succ u1, succ u2} E α (fun (_x : α) => β) (RelHomClass.toFunLike.{u3, u1, u2} E α β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2)) (OrderIsoClass.toOrderHomClass.{u3, u1, u2} E α β (Preorder.toHasLe.{u1} α _inst_1) (Preorder.toHasLe.{u2} β _inst_2) _inst_3))) e b)) (Covby.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a b)
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {a : α} {b : α} {E : Type.{u3}} [_inst_3 : OrderIsoClass.{u3, u2, u1} E α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)] (e : E), Iff (Covby.{u1} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) a) (Preorder.toLT.{u1} ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) a) _inst_2) (FunLike.coe.{succ u3, succ u2, succ u1} E α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) _x) (RelHomClass.toFunLike.{u3, u2, u1} E α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1896 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1898 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1896 x._@.Mathlib.Order.Hom.Basic._hyg.1898) (fun (_x : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1920 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) _x x._@.Mathlib.Order.Hom.Basic._hyg.1920) (OrderIsoClass.toOrderHomClass.{u3, u2, u1} E α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2) _inst_3)) e a) (FunLike.coe.{succ u3, succ u2, succ u1} E α (fun (_x : α) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.867 : α) => β) _x) (RelHomClass.toFunLike.{u3, u2, u1} E α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1896 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1898 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1896 x._@.Mathlib.Order.Hom.Basic._hyg.1898) (fun (_x : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1920 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) _x x._@.Mathlib.Order.Hom.Basic._hyg.1920) (OrderIsoClass.toOrderHomClass.{u3, u2, u1} E α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2) _inst_3)) e b)) (Covby.{u2} α (Preorder.toLT.{u2} α _inst_1) a b)
 Case conversion may be inaccurate. Consider using '#align apply_covby_apply_iff apply_covby_apply_iffₓ'. -/
@@ -526,11 +656,15 @@ theorem apply_covby_apply_iff {E : Type _} [OrderIsoClass E α β] (e : E) : e a
   (ordConnected_range (e : α ≃o β)).apply_covby_apply_iff ((e : α ≃o β) : α ↪o β)
 #align apply_covby_apply_iff apply_covby_apply_iff
 
-#print covby_of_eq_or_eq /-
+/- warning: covby_of_eq_or_eq -> covby_of_eq_or_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a b) -> (forall (c : α), (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a c) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) c b) -> (Or (Eq.{succ u1} α c a) (Eq.{succ u1} α c b))) -> (Covby.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) a b) -> (forall (c : α), (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a c) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) c b) -> (Or (Eq.{succ u1} α c a) (Eq.{succ u1} α c b))) -> (Covby.{u1} α (Preorder.toLT.{u1} α _inst_1) a b)
+Case conversion may be inaccurate. Consider using '#align covby_of_eq_or_eq covby_of_eq_or_eqₓ'. -/
 theorem covby_of_eq_or_eq (hab : a < b) (h : ∀ c, a ≤ c → c ≤ b → c = a ∨ c = b) : a ⋖ b :=
   ⟨hab, fun c ha hb => (h c ha.le hb.le).elim ha.ne' hb.Ne⟩
 #align covby_of_eq_or_eq covby_of_eq_or_eq
--/
 
 end Preorder
 
@@ -538,66 +672,114 @@ section PartialOrder
 
 variable [PartialOrder α] {a b c : α}
 
-#print Wcovby.covby_of_ne /-
+/- warning: wcovby.covby_of_ne -> Wcovby.covby_of_ne is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α}, (Wcovby.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a b) -> (Ne.{succ u1} α a b) -> (Covby.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α}, (Wcovby.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a b) -> (Ne.{succ u1} α a b) -> (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b)
+Case conversion may be inaccurate. Consider using '#align wcovby.covby_of_ne Wcovby.covby_of_neₓ'. -/
 theorem Wcovby.covby_of_ne (h : a ⩿ b) (h2 : a ≠ b) : a ⋖ b :=
   ⟨h.le.lt_of_ne h2, h.2⟩
 #align wcovby.covby_of_ne Wcovby.covby_of_ne
--/
 
-#print covby_iff_wcovby_and_ne /-
+/- warning: covby_iff_wcovby_and_ne -> covby_iff_wcovby_and_ne is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α}, Iff (Covby.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) (And (Wcovby.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a b) (Ne.{succ u1} α a b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α}, Iff (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) (And (Wcovby.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a b) (Ne.{succ u1} α a b))
+Case conversion may be inaccurate. Consider using '#align covby_iff_wcovby_and_ne covby_iff_wcovby_and_neₓ'. -/
 theorem covby_iff_wcovby_and_ne : a ⋖ b ↔ a ⩿ b ∧ a ≠ b :=
   ⟨fun h => ⟨h.Wcovby, h.Ne⟩, fun h => h.1.covby_of_ne h.2⟩
 #align covby_iff_wcovby_and_ne covby_iff_wcovby_and_ne
--/
 
-#print wcovby_iff_covby_or_eq /-
+/- warning: wcovby_iff_covby_or_eq -> wcovby_iff_covby_or_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α}, Iff (Wcovby.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a b) (Or (Covby.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) (Eq.{succ u1} α a b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α}, Iff (Wcovby.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a b) (Or (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) (Eq.{succ u1} α a b))
+Case conversion may be inaccurate. Consider using '#align wcovby_iff_covby_or_eq wcovby_iff_covby_or_eqₓ'. -/
 theorem wcovby_iff_covby_or_eq : a ⩿ b ↔ a ⋖ b ∨ a = b := by
   rw [le_antisymm_iff, wcovby_iff_covby_or_le_and_le]
 #align wcovby_iff_covby_or_eq wcovby_iff_covby_or_eq
--/
 
-#print wcovby_iff_eq_or_covby /-
+/- warning: wcovby_iff_eq_or_covby -> wcovby_iff_eq_or_covby is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α}, Iff (Wcovby.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a b) (Or (Eq.{succ u1} α a b) (Covby.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α}, Iff (Wcovby.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a b) (Or (Eq.{succ u1} α a b) (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b))
+Case conversion may be inaccurate. Consider using '#align wcovby_iff_eq_or_covby wcovby_iff_eq_or_covbyₓ'. -/
 theorem wcovby_iff_eq_or_covby : a ⩿ b ↔ a = b ∨ a ⋖ b :=
   wcovby_iff_covby_or_eq.trans or_comm
 #align wcovby_iff_eq_or_covby wcovby_iff_eq_or_covby
--/
 
+/- warning: wcovby.covby_or_eq -> Wcovby.covby_or_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α}, (Wcovby.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a b) -> (Or (Covby.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) (Eq.{succ u1} α a b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α}, (Wcovby.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a b) -> (Or (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) (Eq.{succ u1} α a b))
+Case conversion may be inaccurate. Consider using '#align wcovby.covby_or_eq Wcovby.covby_or_eqₓ'. -/
 alias wcovby_iff_covby_or_eq ↔ Wcovby.covby_or_eq _
 #align wcovby.covby_or_eq Wcovby.covby_or_eq
 
+/- warning: wcovby.eq_or_covby -> Wcovby.eq_or_covby is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α}, (Wcovby.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a b) -> (Or (Eq.{succ u1} α a b) (Covby.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α}, (Wcovby.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a b) -> (Or (Eq.{succ u1} α a b) (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b))
+Case conversion may be inaccurate. Consider using '#align wcovby.eq_or_covby Wcovby.eq_or_covbyₓ'. -/
 alias wcovby_iff_eq_or_covby ↔ Wcovby.eq_or_covby _
 #align wcovby.eq_or_covby Wcovby.eq_or_covby
 
-#print Covby.eq_or_eq /-
+/- warning: covby.eq_or_eq -> Covby.eq_or_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α} {c : α}, (Covby.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a c) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) c b) -> (Or (Eq.{succ u1} α c a) (Eq.{succ u1} α c b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α} {c : α}, (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a c) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) c b) -> (Or (Eq.{succ u1} α c a) (Eq.{succ u1} α c b))
+Case conversion may be inaccurate. Consider using '#align covby.eq_or_eq Covby.eq_or_eqₓ'. -/
 theorem Covby.eq_or_eq (h : a ⋖ b) (h2 : a ≤ c) (h3 : c ≤ b) : c = a ∨ c = b :=
   h.Wcovby.eq_or_eq h2 h3
 #align covby.eq_or_eq Covby.eq_or_eq
--/
 
-#print covby_iff_lt_and_eq_or_eq /-
+/- warning: covby_iff_lt_and_eq_or_eq -> covby_iff_lt_and_eq_or_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α}, Iff (Covby.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) (And (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) (forall (c : α), (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a c) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) c b) -> (Or (Eq.{succ u1} α c a) (Eq.{succ u1} α c b))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α}, Iff (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) (And (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) (forall (c : α), (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a c) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) c b) -> (Or (Eq.{succ u1} α c a) (Eq.{succ u1} α c b))))
+Case conversion may be inaccurate. Consider using '#align covby_iff_lt_and_eq_or_eq covby_iff_lt_and_eq_or_eqₓ'. -/
 /-- An `iff` version of `covby.eq_or_eq` and `covby_of_eq_or_eq`. -/
 theorem covby_iff_lt_and_eq_or_eq : a ⋖ b ↔ a < b ∧ ∀ c, a ≤ c → c ≤ b → c = a ∨ c = b :=
   ⟨fun h => ⟨h.lt, fun c => h.eq_or_eq⟩, And.ndrec covby_of_eq_or_eq⟩
 #align covby_iff_lt_and_eq_or_eq covby_iff_lt_and_eq_or_eq
--/
 
-#print Covby.Ico_eq /-
+/- warning: covby.Ico_eq -> Covby.Ico_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α}, (Covby.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) -> (Eq.{succ u1} (Set.{u1} α) (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a b) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) a))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α}, (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) -> (Eq.{succ u1} (Set.{u1} α) (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a b) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) a))
+Case conversion may be inaccurate. Consider using '#align covby.Ico_eq Covby.Ico_eqₓ'. -/
 theorem Covby.Ico_eq (h : a ⋖ b) : Ico a b = {a} := by
   rw [← Ioo_union_left h.lt, h.Ioo_eq, empty_union]
 #align covby.Ico_eq Covby.Ico_eq
--/
 
-#print Covby.Ioc_eq /-
+/- warning: covby.Ioc_eq -> Covby.Ioc_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α}, (Covby.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) -> (Eq.{succ u1} (Set.{u1} α) (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a b) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α}, (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) -> (Eq.{succ u1} (Set.{u1} α) (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a b) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) b))
+Case conversion may be inaccurate. Consider using '#align covby.Ioc_eq Covby.Ioc_eqₓ'. -/
 theorem Covby.Ioc_eq (h : a ⋖ b) : Ioc a b = {b} := by
   rw [← Ioo_union_right h.lt, h.Ioo_eq, empty_union]
 #align covby.Ioc_eq Covby.Ioc_eq
--/
 
-#print Covby.Icc_eq /-
+/- warning: covby.Icc_eq -> Covby.Icc_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α}, (Covby.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) -> (Eq.{succ u1} (Set.{u1} α) (Set.Icc.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a b) (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.hasInsert.{u1} α) a (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.hasSingleton.{u1} α) b)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α}, (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) -> (Eq.{succ u1} (Set.{u1} α) (Set.Icc.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a b) (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.instInsertSet.{u1} α) a (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) b)))
+Case conversion may be inaccurate. Consider using '#align covby.Icc_eq Covby.Icc_eqₓ'. -/
 theorem Covby.Icc_eq (h : a ⋖ b) : Icc a b = {a, b} :=
   h.Wcovby.Icc_eq
 #align covby.Icc_eq Covby.Icc_eq
--/
 
 end PartialOrder
 
@@ -605,61 +787,97 @@ section LinearOrder
 
 variable [LinearOrder α] {a b c : α}
 
-#print Covby.Ioi_eq /-
+/- warning: covby.Ioi_eq -> Covby.Ioi_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α}, (Covby.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a b) -> (Eq.{succ u1} (Set.{u1} α) (Set.Ioi.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) a) (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α}, (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) a b) -> (Eq.{succ u1} (Set.{u1} α) (Set.Ioi.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) a) (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) b))
+Case conversion may be inaccurate. Consider using '#align covby.Ioi_eq Covby.Ioi_eqₓ'. -/
 theorem Covby.Ioi_eq (h : a ⋖ b) : Ioi a = Ici b := by
   rw [← Ioo_union_Ici_eq_Ioi h.lt, h.Ioo_eq, empty_union]
 #align covby.Ioi_eq Covby.Ioi_eq
--/
 
-#print Covby.Iio_eq /-
+/- warning: covby.Iio_eq -> Covby.Iio_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α}, (Covby.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a b) -> (Eq.{succ u1} (Set.{u1} α) (Set.Iio.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) b) (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) a))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α}, (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) a b) -> (Eq.{succ u1} (Set.{u1} α) (Set.Iio.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) b) (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) a))
+Case conversion may be inaccurate. Consider using '#align covby.Iio_eq Covby.Iio_eqₓ'. -/
 theorem Covby.Iio_eq (h : a ⋖ b) : Iio b = Iic a := by
   rw [← Iic_union_Ioo_eq_Iio h.lt, h.Ioo_eq, union_empty]
 #align covby.Iio_eq Covby.Iio_eq
--/
 
-#print Wcovby.le_of_lt /-
+/- warning: wcovby.le_of_lt -> Wcovby.le_of_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α} {c : α}, (Wcovby.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) a b) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) c b) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) c a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α} {c : α}, (Wcovby.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) a b) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) c b) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) c a)
+Case conversion may be inaccurate. Consider using '#align wcovby.le_of_lt Wcovby.le_of_ltₓ'. -/
 theorem Wcovby.le_of_lt (hab : a ⩿ b) (hcb : c < b) : c ≤ a :=
   not_lt.1 fun hac => hab.2 hac hcb
 #align wcovby.le_of_lt Wcovby.le_of_lt
--/
 
-#print Wcovby.ge_of_gt /-
+/- warning: wcovby.ge_of_gt -> Wcovby.ge_of_gt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α} {c : α}, (Wcovby.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) a b) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a c) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) b c)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α} {c : α}, (Wcovby.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) a b) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) a c) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) b c)
+Case conversion may be inaccurate. Consider using '#align wcovby.ge_of_gt Wcovby.ge_of_gtₓ'. -/
 theorem Wcovby.ge_of_gt (hab : a ⩿ b) (hac : a < c) : b ≤ c :=
   not_lt.1 <| hab.2 hac
 #align wcovby.ge_of_gt Wcovby.ge_of_gt
--/
 
-#print Covby.le_of_lt /-
+/- warning: covby.le_of_lt -> Covby.le_of_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α} {c : α}, (Covby.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a b) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) c b) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) c a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α} {c : α}, (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) a b) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) c b) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) c a)
+Case conversion may be inaccurate. Consider using '#align covby.le_of_lt Covby.le_of_ltₓ'. -/
 theorem Covby.le_of_lt (hab : a ⋖ b) : c < b → c ≤ a :=
   hab.Wcovby.le_of_lt
 #align covby.le_of_lt Covby.le_of_lt
--/
 
-#print Covby.ge_of_gt /-
+/- warning: covby.ge_of_gt -> Covby.ge_of_gt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α} {c : α}, (Covby.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a b) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a c) -> (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) b c)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α} {c : α}, (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) a b) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) a c) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) b c)
+Case conversion may be inaccurate. Consider using '#align covby.ge_of_gt Covby.ge_of_gtₓ'. -/
 theorem Covby.ge_of_gt (hab : a ⋖ b) : a < c → b ≤ c :=
   hab.Wcovby.ge_of_gt
 #align covby.ge_of_gt Covby.ge_of_gt
--/
 
-#print Covby.unique_left /-
+/- warning: covby.unique_left -> Covby.unique_left is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α} {c : α}, (Covby.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a c) -> (Covby.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) b c) -> (Eq.{succ u1} α a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α} {c : α}, (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) a c) -> (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) b c) -> (Eq.{succ u1} α a b)
+Case conversion may be inaccurate. Consider using '#align covby.unique_left Covby.unique_leftₓ'. -/
 theorem Covby.unique_left (ha : a ⋖ c) (hb : b ⋖ c) : a = b :=
   (hb.le_of_lt ha.lt).antisymm <| ha.le_of_lt hb.lt
 #align covby.unique_left Covby.unique_left
--/
 
-#print Covby.unique_right /-
+/- warning: covby.unique_right -> Covby.unique_right is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α} {c : α}, (Covby.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a b) -> (Covby.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a c) -> (Eq.{succ u1} α b c)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α} {c : α}, (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) a b) -> (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) a c) -> (Eq.{succ u1} α b c)
+Case conversion may be inaccurate. Consider using '#align covby.unique_right Covby.unique_rightₓ'. -/
 theorem Covby.unique_right (hb : a ⋖ b) (hc : a ⋖ c) : b = c :=
   (hb.ge_of_gt hc.lt).antisymm <| hc.ge_of_gt hb.lt
 #align covby.unique_right Covby.unique_right
--/
 
-#print Covby.eq_of_between /-
+/- warning: covby.eq_of_between -> Covby.eq_of_between is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α} {c : α} {x : α}, (Covby.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a b) -> (Covby.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) b c) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a x) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) x c) -> (Eq.{succ u1} α x b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {a : α} {b : α} {c : α} {x : α}, (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) a b) -> (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) b c) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) a x) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x c) -> (Eq.{succ u1} α x b)
+Case conversion may be inaccurate. Consider using '#align covby.eq_of_between Covby.eq_of_betweenₓ'. -/
 /-- If `a`, `b`, `c` are consecutive and `a < x < c` then `x = b`. -/
 theorem Covby.eq_of_between {x : α} (hab : a ⋖ b) (hbc : b ⋖ c) (hax : a < x) (hxc : x < c) :
     x = b :=
   le_antisymm (le_of_not_lt fun h => hbc.2 h hxc) (le_of_not_lt <| hab.2 hax)
 #align covby.eq_of_between Covby.eq_of_between
--/
 
 end LinearOrder
 
@@ -682,7 +900,7 @@ theorem wcovby_insert (x : α) (s : Set α) : s ⩿ insert x s :=
 
 /- warning: set.covby_insert -> Set.covby_insert is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {x : α} {s : Set.{u1} α}, (Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s)) -> (Covby.{u1} (Set.{u1} α) (Preorder.toLT.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))))) s (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.hasInsert.{u1} α) x s))
+  forall {α : Type.{u1}} {x : α} {s : Set.{u1} α}, (Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s)) -> (Covby.{u1} (Set.{u1} α) (Preorder.toHasLt.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))))) s (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.hasInsert.{u1} α) x s))
 but is expected to have type
   forall {α : Type.{u1}} {x : α} {s : Set.{u1} α}, (Not (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s)) -> (Covby.{u1} (Set.{u1} α) (Preorder.toLT.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) s (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.instInsertSet.{u1} α) x s))
 Case conversion may be inaccurate. Consider using '#align set.covby_insert Set.covby_insertₓ'. -/
@@ -709,7 +927,7 @@ theorem swap_wcovby_swap : x.symm ⩿ y.symm ↔ x ⩿ y :=
 
 /- warning: prod.swap_covby_swap -> Prod.swap_covby_swap is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] {x : Prod.{u1, u2} α β} {y : Prod.{u1, u2} α β}, Iff (Covby.{max u2 u1} (Prod.{u2, u1} β α) (Preorder.toLT.{max u2 u1} (Prod.{u2, u1} β α) (Prod.preorder.{u2, u1} β α (PartialOrder.toPreorder.{u2} β _inst_2) (PartialOrder.toPreorder.{u1} α _inst_1))) (Prod.swap.{u1, u2} α β x) (Prod.swap.{u1, u2} α β y)) (Covby.{max u1 u2} (Prod.{u1, u2} α β) (Preorder.toLT.{max u1 u2} (Prod.{u1, u2} α β) (Prod.preorder.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2))) x y)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] {x : Prod.{u1, u2} α β} {y : Prod.{u1, u2} α β}, Iff (Covby.{max u2 u1} (Prod.{u2, u1} β α) (Preorder.toHasLt.{max u2 u1} (Prod.{u2, u1} β α) (Prod.preorder.{u2, u1} β α (PartialOrder.toPreorder.{u2} β _inst_2) (PartialOrder.toPreorder.{u1} α _inst_1))) (Prod.swap.{u1, u2} α β x) (Prod.swap.{u1, u2} α β y)) (Covby.{max u1 u2} (Prod.{u1, u2} α β) (Preorder.toHasLt.{max u1 u2} (Prod.{u1, u2} α β) (Prod.preorder.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2))) x y)
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : PartialOrder.{u1} β] {x : Prod.{u2, u1} α β} {y : Prod.{u2, u1} α β}, Iff (Covby.{max u2 u1} (Prod.{u1, u2} β α) (Preorder.toLT.{max u2 u1} (Prod.{u1, u2} β α) (Prod.instPreorderProd.{u1, u2} β α (PartialOrder.toPreorder.{u1} β _inst_2) (PartialOrder.toPreorder.{u2} α _inst_1))) (Prod.swap.{u2, u1} α β x) (Prod.swap.{u2, u1} α β y)) (Covby.{max u2 u1} (Prod.{u2, u1} α β) (Preorder.toLT.{max u2 u1} (Prod.{u2, u1} α β) (Prod.instPreorderProd.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) (PartialOrder.toPreorder.{u1} β _inst_2))) x y)
 Case conversion may be inaccurate. Consider using '#align prod.swap_covby_swap Prod.swap_covby_swapₓ'. -/
@@ -779,7 +997,7 @@ theorem mk_wcovby_mk_iff_right : (a, b₁) ⩿ (a, b₂) ↔ b₁ ⩿ b₂ :=
 
 /- warning: prod.mk_covby_mk_iff_left -> Prod.mk_covby_mk_iff_left is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] {a₁ : α} {a₂ : α} {b : β}, Iff (Covby.{max u1 u2} (Prod.{u1, u2} α β) (Preorder.toLT.{max u1 u2} (Prod.{u1, u2} α β) (Prod.preorder.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2))) (Prod.mk.{u1, u2} α β a₁ b) (Prod.mk.{u1, u2} α β a₂ b)) (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a₁ a₂)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] {a₁ : α} {a₂ : α} {b : β}, Iff (Covby.{max u1 u2} (Prod.{u1, u2} α β) (Preorder.toHasLt.{max u1 u2} (Prod.{u1, u2} α β) (Prod.preorder.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2))) (Prod.mk.{u1, u2} α β a₁ b) (Prod.mk.{u1, u2} α β a₂ b)) (Covby.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a₁ a₂)
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] {a₁ : α} {a₂ : α} {b : β}, Iff (Covby.{max u2 u1} (Prod.{u1, u2} α β) (Preorder.toLT.{max u1 u2} (Prod.{u1, u2} α β) (Prod.instPreorderProd.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2))) (Prod.mk.{u1, u2} α β a₁ b) (Prod.mk.{u1, u2} α β a₂ b)) (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a₁ a₂)
 Case conversion may be inaccurate. Consider using '#align prod.mk_covby_mk_iff_left Prod.mk_covby_mk_iff_leftₓ'. -/
@@ -789,7 +1007,7 @@ theorem mk_covby_mk_iff_left : (a₁, b) ⋖ (a₂, b) ↔ a₁ ⋖ a₂ := by
 
 /- warning: prod.mk_covby_mk_iff_right -> Prod.mk_covby_mk_iff_right is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] {a : α} {b₁ : β} {b₂ : β}, Iff (Covby.{max u1 u2} (Prod.{u1, u2} α β) (Preorder.toLT.{max u1 u2} (Prod.{u1, u2} α β) (Prod.preorder.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2))) (Prod.mk.{u1, u2} α β a b₁) (Prod.mk.{u1, u2} α β a b₂)) (Covby.{u2} β (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) b₁ b₂)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] {a : α} {b₁ : β} {b₂ : β}, Iff (Covby.{max u1 u2} (Prod.{u1, u2} α β) (Preorder.toHasLt.{max u1 u2} (Prod.{u1, u2} α β) (Prod.preorder.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2))) (Prod.mk.{u1, u2} α β a b₁) (Prod.mk.{u1, u2} α β a b₂)) (Covby.{u2} β (Preorder.toHasLt.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) b₁ b₂)
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] {a : α} {b₁ : β} {b₂ : β}, Iff (Covby.{max u2 u1} (Prod.{u1, u2} α β) (Preorder.toLT.{max u1 u2} (Prod.{u1, u2} α β) (Prod.instPreorderProd.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2))) (Prod.mk.{u1, u2} α β a b₁) (Prod.mk.{u1, u2} α β a b₂)) (Covby.{u2} β (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) b₁ b₂)
 Case conversion may be inaccurate. Consider using '#align prod.mk_covby_mk_iff_right Prod.mk_covby_mk_iff_rightₓ'. -/
@@ -816,7 +1034,7 @@ theorem mk_wcovby_mk_iff : (a₁, b₁) ⩿ (a₂, b₂) ↔ a₁ ⩿ a₂ ∧ b
 
 /- warning: prod.mk_covby_mk_iff -> Prod.mk_covby_mk_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] {a₁ : α} {a₂ : α} {b₁ : β} {b₂ : β}, Iff (Covby.{max u1 u2} (Prod.{u1, u2} α β) (Preorder.toLT.{max u1 u2} (Prod.{u1, u2} α β) (Prod.preorder.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2))) (Prod.mk.{u1, u2} α β a₁ b₁) (Prod.mk.{u1, u2} α β a₂ b₂)) (Or (And (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a₁ a₂) (Eq.{succ u2} β b₁ b₂)) (And (Covby.{u2} β (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) b₁ b₂) (Eq.{succ u1} α a₁ a₂)))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] {a₁ : α} {a₂ : α} {b₁ : β} {b₂ : β}, Iff (Covby.{max u1 u2} (Prod.{u1, u2} α β) (Preorder.toHasLt.{max u1 u2} (Prod.{u1, u2} α β) (Prod.preorder.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2))) (Prod.mk.{u1, u2} α β a₁ b₁) (Prod.mk.{u1, u2} α β a₂ b₂)) (Or (And (Covby.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a₁ a₂) (Eq.{succ u2} β b₁ b₂)) (And (Covby.{u2} β (Preorder.toHasLt.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) b₁ b₂) (Eq.{succ u1} α a₁ a₂)))
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] {a₁ : α} {a₂ : α} {b₁ : β} {b₂ : β}, Iff (Covby.{max u2 u1} (Prod.{u1, u2} α β) (Preorder.toLT.{max u1 u2} (Prod.{u1, u2} α β) (Prod.instPreorderProd.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2))) (Prod.mk.{u1, u2} α β a₁ b₁) (Prod.mk.{u1, u2} α β a₂ b₂)) (Or (And (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a₁ a₂) (Eq.{succ u2} β b₁ b₂)) (And (Covby.{u2} β (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) b₁ b₂) (Eq.{succ u1} α a₁ a₂)))
 Case conversion may be inaccurate. Consider using '#align prod.mk_covby_mk_iff Prod.mk_covby_mk_iffₓ'. -/
@@ -846,7 +1064,7 @@ theorem wcovby_iff : x ⩿ y ↔ x.1 ⩿ y.1 ∧ x.2 = y.2 ∨ x.2 ⩿ y.2 ∧ x
 
 /- warning: prod.covby_iff -> Prod.covby_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] {x : Prod.{u1, u2} α β} {y : Prod.{u1, u2} α β}, Iff (Covby.{max u1 u2} (Prod.{u1, u2} α β) (Preorder.toLT.{max u1 u2} (Prod.{u1, u2} α β) (Prod.preorder.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2))) x y) (Or (And (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Prod.fst.{u1, u2} α β x) (Prod.fst.{u1, u2} α β y)) (Eq.{succ u2} β (Prod.snd.{u1, u2} α β x) (Prod.snd.{u1, u2} α β y))) (And (Covby.{u2} β (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) (Prod.snd.{u1, u2} α β x) (Prod.snd.{u1, u2} α β y)) (Eq.{succ u1} α (Prod.fst.{u1, u2} α β x) (Prod.fst.{u1, u2} α β y))))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PartialOrder.{u2} β] {x : Prod.{u1, u2} α β} {y : Prod.{u1, u2} α β}, Iff (Covby.{max u1 u2} (Prod.{u1, u2} α β) (Preorder.toHasLt.{max u1 u2} (Prod.{u1, u2} α β) (Prod.preorder.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) (PartialOrder.toPreorder.{u2} β _inst_2))) x y) (Or (And (Covby.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Prod.fst.{u1, u2} α β x) (Prod.fst.{u1, u2} α β y)) (Eq.{succ u2} β (Prod.snd.{u1, u2} α β x) (Prod.snd.{u1, u2} α β y))) (And (Covby.{u2} β (Preorder.toHasLt.{u2} β (PartialOrder.toPreorder.{u2} β _inst_2)) (Prod.snd.{u1, u2} α β x) (Prod.snd.{u1, u2} α β y)) (Eq.{succ u1} α (Prod.fst.{u1, u2} α β x) (Prod.fst.{u1, u2} α β y))))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : PartialOrder.{u1} β] {x : Prod.{u2, u1} α β} {y : Prod.{u2, u1} α β}, Iff (Covby.{max u2 u1} (Prod.{u2, u1} α β) (Preorder.toLT.{max u2 u1} (Prod.{u2, u1} α β) (Prod.instPreorderProd.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) (PartialOrder.toPreorder.{u1} β _inst_2))) x y) (Or (And (Covby.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) (Prod.fst.{u2, u1} α β x) (Prod.fst.{u2, u1} α β y)) (Eq.{succ u1} β (Prod.snd.{u2, u1} α β x) (Prod.snd.{u2, u1} α β y))) (And (Covby.{u1} β (Preorder.toLT.{u1} β (PartialOrder.toPreorder.{u1} β _inst_2)) (Prod.snd.{u2, u1} α β x) (Prod.snd.{u2, u1} α β y)) (Eq.{succ u2} α (Prod.fst.{u2, u1} α β x) (Prod.fst.{u2, u1} α β y))))
 Case conversion may be inaccurate. Consider using '#align prod.covby_iff Prod.covby_iffₓ'. -/

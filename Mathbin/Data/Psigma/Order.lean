@@ -131,7 +131,7 @@ instance linearOrder [LinearOrder ι] [∀ i, LinearOrder (α i)] : LinearOrder 
 
 /- warning: psigma.lex.order_bot -> PSigma.Lex.orderBot is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : PartialOrder.{u1} ι] [_inst_2 : OrderBot.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1))] [_inst_3 : forall (i : ι), Preorder.{u2} (α i)] [_inst_4 : OrderBot.{u2} (α (Bot.bot.{u1} ι (OrderBot.toHasBot.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2))) (Preorder.toLE.{u2} (α (Bot.bot.{u1} ι (OrderBot.toHasBot.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2))) (_inst_3 (Bot.bot.{u1} ι (OrderBot.toHasBot.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2))))], OrderBot.{max u1 u2} (Lex.{max u1 u2} (PSigma.{succ u1, succ u2} ι (fun (i : ι) => α i))) (PSigma.Lex.le.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toLT.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (fun (i : ι) => Preorder.toLE.{u2} (α i) (_inst_3 i)))
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : PartialOrder.{u1} ι] [_inst_2 : OrderBot.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1))] [_inst_3 : forall (i : ι), Preorder.{u2} (α i)] [_inst_4 : OrderBot.{u2} (α (Bot.bot.{u1} ι (OrderBot.toHasBot.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2))) (Preorder.toHasLe.{u2} (α (Bot.bot.{u1} ι (OrderBot.toHasBot.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2))) (_inst_3 (Bot.bot.{u1} ι (OrderBot.toHasBot.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2))))], OrderBot.{max u1 u2} (Lex.{max u1 u2} (PSigma.{succ u1, succ u2} ι (fun (i : ι) => α i))) (PSigma.Lex.le.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toHasLt.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (fun (i : ι) => Preorder.toHasLe.{u2} (α i) (_inst_3 i)))
 but is expected to have type
   forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : PartialOrder.{u1} ι] [_inst_2 : OrderBot.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1))] [_inst_3 : forall (i : ι), Preorder.{u2} (α i)] [_inst_4 : OrderBot.{u2} (α (Bot.bot.{u1} ι (OrderBot.toBot.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2))) (Preorder.toLE.{u2} (α (Bot.bot.{u1} ι (OrderBot.toBot.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2))) (_inst_3 (Bot.bot.{u1} ι (OrderBot.toBot.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2))))], OrderBot.{max u1 u2} (Lex.{max u1 u2} (PSigma.{succ u1, succ u2} ι (fun (i : ι) => α i))) (PSigma.Lex.le.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toLT.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (fun (i : ι) => Preorder.toLE.{u2} (α i) (_inst_3 i)))
 Case conversion may be inaccurate. Consider using '#align psigma.lex.order_bot PSigma.Lex.orderBotₓ'. -/
@@ -147,7 +147,7 @@ instance orderBot [PartialOrder ι] [OrderBot ι] [∀ i, Preorder (α i)] [Orde
 
 /- warning: psigma.lex.order_top -> PSigma.Lex.orderTop is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : PartialOrder.{u1} ι] [_inst_2 : OrderTop.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1))] [_inst_3 : forall (i : ι), Preorder.{u2} (α i)] [_inst_4 : OrderTop.{u2} (α (Top.top.{u1} ι (OrderTop.toHasTop.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2))) (Preorder.toLE.{u2} (α (Top.top.{u1} ι (OrderTop.toHasTop.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2))) (_inst_3 (Top.top.{u1} ι (OrderTop.toHasTop.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2))))], OrderTop.{max u1 u2} (Lex.{max u1 u2} (PSigma.{succ u1, succ u2} ι (fun (i : ι) => α i))) (PSigma.Lex.le.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toLT.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (fun (i : ι) => Preorder.toLE.{u2} (α i) (_inst_3 i)))
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : PartialOrder.{u1} ι] [_inst_2 : OrderTop.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1))] [_inst_3 : forall (i : ι), Preorder.{u2} (α i)] [_inst_4 : OrderTop.{u2} (α (Top.top.{u1} ι (OrderTop.toHasTop.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2))) (Preorder.toHasLe.{u2} (α (Top.top.{u1} ι (OrderTop.toHasTop.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2))) (_inst_3 (Top.top.{u1} ι (OrderTop.toHasTop.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2))))], OrderTop.{max u1 u2} (Lex.{max u1 u2} (PSigma.{succ u1, succ u2} ι (fun (i : ι) => α i))) (PSigma.Lex.le.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toHasLt.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (fun (i : ι) => Preorder.toHasLe.{u2} (α i) (_inst_3 i)))
 but is expected to have type
   forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : PartialOrder.{u1} ι] [_inst_2 : OrderTop.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1))] [_inst_3 : forall (i : ι), Preorder.{u2} (α i)] [_inst_4 : OrderTop.{u2} (α (Top.top.{u1} ι (OrderTop.toTop.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2))) (Preorder.toLE.{u2} (α (Top.top.{u1} ι (OrderTop.toTop.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2))) (_inst_3 (Top.top.{u1} ι (OrderTop.toTop.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2))))], OrderTop.{max u1 u2} (Lex.{max u1 u2} (PSigma.{succ u1, succ u2} ι (fun (i : ι) => α i))) (PSigma.Lex.le.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toLT.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (fun (i : ι) => Preorder.toLE.{u2} (α i) (_inst_3 i)))
 Case conversion may be inaccurate. Consider using '#align psigma.lex.order_top PSigma.Lex.orderTopₓ'. -/
@@ -163,7 +163,7 @@ instance orderTop [PartialOrder ι] [OrderTop ι] [∀ i, Preorder (α i)] [Orde
 
 /- warning: psigma.lex.bounded_order -> PSigma.Lex.boundedOrder is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : PartialOrder.{u1} ι] [_inst_2 : BoundedOrder.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1))] [_inst_3 : forall (i : ι), Preorder.{u2} (α i)] [_inst_4 : OrderBot.{u2} (α (Bot.bot.{u1} ι (OrderBot.toHasBot.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (BoundedOrder.toOrderBot.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2)))) (Preorder.toLE.{u2} (α (Bot.bot.{u1} ι (OrderBot.toHasBot.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (BoundedOrder.toOrderBot.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2)))) (_inst_3 (Bot.bot.{u1} ι (OrderBot.toHasBot.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (BoundedOrder.toOrderBot.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2)))))] [_inst_5 : OrderTop.{u2} (α (Top.top.{u1} ι (OrderTop.toHasTop.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (BoundedOrder.toOrderTop.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2)))) (Preorder.toLE.{u2} (α (Top.top.{u1} ι (OrderTop.toHasTop.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (BoundedOrder.toOrderTop.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2)))) (_inst_3 (Top.top.{u1} ι (OrderTop.toHasTop.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (BoundedOrder.toOrderTop.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2)))))], BoundedOrder.{max u1 u2} (Lex.{max u1 u2} (PSigma.{succ u1, succ u2} ι (fun (i : ι) => α i))) (PSigma.Lex.le.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toLT.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (fun (i : ι) => Preorder.toLE.{u2} (α i) (_inst_3 i)))
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : PartialOrder.{u1} ι] [_inst_2 : BoundedOrder.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1))] [_inst_3 : forall (i : ι), Preorder.{u2} (α i)] [_inst_4 : OrderBot.{u2} (α (Bot.bot.{u1} ι (OrderBot.toHasBot.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (BoundedOrder.toOrderBot.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2)))) (Preorder.toHasLe.{u2} (α (Bot.bot.{u1} ι (OrderBot.toHasBot.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (BoundedOrder.toOrderBot.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2)))) (_inst_3 (Bot.bot.{u1} ι (OrderBot.toHasBot.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (BoundedOrder.toOrderBot.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2)))))] [_inst_5 : OrderTop.{u2} (α (Top.top.{u1} ι (OrderTop.toHasTop.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (BoundedOrder.toOrderTop.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2)))) (Preorder.toHasLe.{u2} (α (Top.top.{u1} ι (OrderTop.toHasTop.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (BoundedOrder.toOrderTop.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2)))) (_inst_3 (Top.top.{u1} ι (OrderTop.toHasTop.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (BoundedOrder.toOrderTop.{u1} ι (Preorder.toHasLe.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2)))))], BoundedOrder.{max u1 u2} (Lex.{max u1 u2} (PSigma.{succ u1, succ u2} ι (fun (i : ι) => α i))) (PSigma.Lex.le.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toHasLt.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (fun (i : ι) => Preorder.toHasLe.{u2} (α i) (_inst_3 i)))
 but is expected to have type
   forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : PartialOrder.{u1} ι] [_inst_2 : BoundedOrder.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1))] [_inst_3 : forall (i : ι), Preorder.{u2} (α i)] [_inst_4 : OrderBot.{u2} (α (Bot.bot.{u1} ι (OrderBot.toBot.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (BoundedOrder.toOrderBot.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2)))) (Preorder.toLE.{u2} (α (Bot.bot.{u1} ι (OrderBot.toBot.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (BoundedOrder.toOrderBot.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2)))) (_inst_3 (Bot.bot.{u1} ι (OrderBot.toBot.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (BoundedOrder.toOrderBot.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2)))))] [_inst_5 : OrderTop.{u2} (α (Top.top.{u1} ι (OrderTop.toTop.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (BoundedOrder.toOrderTop.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2)))) (Preorder.toLE.{u2} (α (Top.top.{u1} ι (OrderTop.toTop.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (BoundedOrder.toOrderTop.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2)))) (_inst_3 (Top.top.{u1} ι (OrderTop.toTop.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (BoundedOrder.toOrderTop.{u1} ι (Preorder.toLE.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) _inst_2)))))], BoundedOrder.{max u1 u2} (Lex.{max u1 u2} (PSigma.{succ u1, succ u2} ι (fun (i : ι) => α i))) (PSigma.Lex.le.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toLT.{u1} ι (PartialOrder.toPreorder.{u1} ι _inst_1)) (fun (i : ι) => Preorder.toLE.{u2} (α i) (_inst_3 i)))
 Case conversion may be inaccurate. Consider using '#align psigma.lex.bounded_order PSigma.Lex.boundedOrderₓ'. -/
@@ -173,7 +173,12 @@ instance boundedOrder [PartialOrder ι] [BoundedOrder ι] [∀ i, Preorder (α i
   { Lex.orderBot, Lex.orderTop with }
 #align psigma.lex.bounded_order PSigma.Lex.boundedOrder
 
-#print PSigma.Lex.denselyOrdered /-
+/- warning: psigma.lex.densely_ordered -> PSigma.Lex.denselyOrdered is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : Preorder.{u1} ι] [_inst_2 : DenselyOrdered.{u1} ι (Preorder.toHasLt.{u1} ι _inst_1)] [_inst_3 : forall (i : ι), Nonempty.{succ u2} (α i)] [_inst_4 : forall (i : ι), Preorder.{u2} (α i)] [_inst_5 : forall (i : ι), DenselyOrdered.{u2} (α i) (Preorder.toHasLt.{u2} (α i) (_inst_4 i))], DenselyOrdered.{max u1 u2} (Lex.{max u1 u2} (PSigma.{succ u1, succ u2} ι (fun (i : ι) => α i))) (PSigma.Lex.lt.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toHasLt.{u1} ι _inst_1) (fun (i : ι) => Preorder.toHasLt.{u2} (α i) (_inst_4 i)))
+but is expected to have type
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : Preorder.{u1} ι] [_inst_2 : DenselyOrdered.{u1} ι (Preorder.toLT.{u1} ι _inst_1)] [_inst_3 : forall (i : ι), Nonempty.{succ u2} (α i)] [_inst_4 : forall (i : ι), Preorder.{u2} (α i)] [_inst_5 : forall (i : ι), DenselyOrdered.{u2} (α i) (Preorder.toLT.{u2} (α i) (_inst_4 i))], DenselyOrdered.{max u1 u2} (Lex.{max u1 u2} (PSigma.{succ u1, succ u2} ι (fun (i : ι) => α i))) (PSigma.Lex.lt.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toLT.{u1} ι _inst_1) (fun (i : ι) => Preorder.toLT.{u2} (α i) (_inst_4 i)))
+Case conversion may be inaccurate. Consider using '#align psigma.lex.densely_ordered PSigma.Lex.denselyOrderedₓ'. -/
 instance denselyOrdered [Preorder ι] [DenselyOrdered ι] [∀ i, Nonempty (α i)] [∀ i, Preorder (α i)]
     [∀ i, DenselyOrdered (α i)] : DenselyOrdered (Σₗ' i, α i) :=
   ⟨by
@@ -184,9 +189,13 @@ instance denselyOrdered [Preorder ι] [DenselyOrdered ι] [∀ i, Nonempty (α i
     · obtain ⟨c, ha, hb⟩ := exists_between h
       exact ⟨⟨i, c⟩, right _ ha, right _ hb⟩⟩
 #align psigma.lex.densely_ordered PSigma.Lex.denselyOrdered
--/
 
-#print PSigma.Lex.denselyOrdered_of_noMaxOrder /-
+/- warning: psigma.lex.densely_ordered_of_no_max_order -> PSigma.Lex.denselyOrdered_of_noMaxOrder is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : Preorder.{u1} ι] [_inst_2 : forall (i : ι), Preorder.{u2} (α i)] [_inst_3 : forall (i : ι), DenselyOrdered.{u2} (α i) (Preorder.toHasLt.{u2} (α i) (_inst_2 i))] [_inst_4 : forall (i : ι), NoMaxOrder.{u2} (α i) (Preorder.toHasLt.{u2} (α i) (_inst_2 i))], DenselyOrdered.{max u1 u2} (Lex.{max u1 u2} (PSigma.{succ u1, succ u2} ι (fun (i : ι) => α i))) (PSigma.Lex.lt.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toHasLt.{u1} ι _inst_1) (fun (i : ι) => Preorder.toHasLt.{u2} (α i) (_inst_2 i)))
+but is expected to have type
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : Preorder.{u1} ι] [_inst_2 : forall (i : ι), Preorder.{u2} (α i)] [_inst_3 : forall (i : ι), DenselyOrdered.{u2} (α i) (Preorder.toLT.{u2} (α i) (_inst_2 i))] [_inst_4 : forall (i : ι), NoMaxOrder.{u2} (α i) (Preorder.toLT.{u2} (α i) (_inst_2 i))], DenselyOrdered.{max u1 u2} (Lex.{max u1 u2} (PSigma.{succ u1, succ u2} ι (fun (i : ι) => α i))) (PSigma.Lex.lt.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toLT.{u1} ι _inst_1) (fun (i : ι) => Preorder.toLT.{u2} (α i) (_inst_2 i)))
+Case conversion may be inaccurate. Consider using '#align psigma.lex.densely_ordered_of_no_max_order PSigma.Lex.denselyOrdered_of_noMaxOrderₓ'. -/
 instance denselyOrdered_of_noMaxOrder [Preorder ι] [∀ i, Preorder (α i)] [∀ i, DenselyOrdered (α i)]
     [∀ i, NoMaxOrder (α i)] : DenselyOrdered (Σₗ' i, α i) :=
   ⟨by
@@ -196,9 +205,13 @@ instance denselyOrdered_of_noMaxOrder [Preorder ι] [∀ i, Preorder (α i)] [�
     · obtain ⟨c, ha, hb⟩ := exists_between h
       exact ⟨⟨i, c⟩, right _ ha, right _ hb⟩⟩
 #align psigma.lex.densely_ordered_of_no_max_order PSigma.Lex.denselyOrdered_of_noMaxOrder
--/
 
-#print PSigma.Lex.densely_ordered_of_noMinOrder /-
+/- warning: psigma.lex.densely_ordered_of_no_min_order -> PSigma.Lex.densely_ordered_of_noMinOrder is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : Preorder.{u1} ι] [_inst_2 : forall (i : ι), Preorder.{u2} (α i)] [_inst_3 : forall (i : ι), DenselyOrdered.{u2} (α i) (Preorder.toHasLt.{u2} (α i) (_inst_2 i))] [_inst_4 : forall (i : ι), NoMinOrder.{u2} (α i) (Preorder.toHasLt.{u2} (α i) (_inst_2 i))], DenselyOrdered.{max u1 u2} (Lex.{max u1 u2} (PSigma.{succ u1, succ u2} ι (fun (i : ι) => α i))) (PSigma.Lex.lt.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toHasLt.{u1} ι _inst_1) (fun (i : ι) => Preorder.toHasLt.{u2} (α i) (_inst_2 i)))
+but is expected to have type
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : Preorder.{u1} ι] [_inst_2 : forall (i : ι), Preorder.{u2} (α i)] [_inst_3 : forall (i : ι), DenselyOrdered.{u2} (α i) (Preorder.toLT.{u2} (α i) (_inst_2 i))] [_inst_4 : forall (i : ι), NoMinOrder.{u2} (α i) (Preorder.toLT.{u2} (α i) (_inst_2 i))], DenselyOrdered.{max u1 u2} (Lex.{max u1 u2} (PSigma.{succ u1, succ u2} ι (fun (i : ι) => α i))) (PSigma.Lex.lt.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toLT.{u1} ι _inst_1) (fun (i : ι) => Preorder.toLT.{u2} (α i) (_inst_2 i)))
+Case conversion may be inaccurate. Consider using '#align psigma.lex.densely_ordered_of_no_min_order PSigma.Lex.densely_ordered_of_noMinOrderₓ'. -/
 instance densely_ordered_of_noMinOrder [Preorder ι] [∀ i, Preorder (α i)]
     [∀ i, DenselyOrdered (α i)] [∀ i, NoMinOrder (α i)] : DenselyOrdered (Σₗ' i, α i) :=
   ⟨by
@@ -208,9 +221,13 @@ instance densely_ordered_of_noMinOrder [Preorder ι] [∀ i, Preorder (α i)]
     · obtain ⟨c, ha, hb⟩ := exists_between h
       exact ⟨⟨i, c⟩, right _ ha, right _ hb⟩⟩
 #align psigma.lex.densely_ordered_of_no_min_order PSigma.Lex.densely_ordered_of_noMinOrder
--/
 
-#print PSigma.Lex.noMaxOrder_of_nonempty /-
+/- warning: psigma.lex.no_max_order_of_nonempty -> PSigma.Lex.noMaxOrder_of_nonempty is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : Preorder.{u1} ι] [_inst_2 : forall (i : ι), Preorder.{u2} (α i)] [_inst_3 : NoMaxOrder.{u1} ι (Preorder.toHasLt.{u1} ι _inst_1)] [_inst_4 : forall (i : ι), Nonempty.{succ u2} (α i)], NoMaxOrder.{max u1 u2} (Lex.{max u1 u2} (PSigma.{succ u1, succ u2} ι (fun (i : ι) => α i))) (PSigma.Lex.lt.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toHasLt.{u1} ι _inst_1) (fun (i : ι) => Preorder.toHasLt.{u2} (α i) (_inst_2 i)))
+but is expected to have type
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : Preorder.{u1} ι] [_inst_2 : forall (i : ι), Preorder.{u2} (α i)] [_inst_3 : NoMaxOrder.{u1} ι (Preorder.toLT.{u1} ι _inst_1)] [_inst_4 : forall (i : ι), Nonempty.{succ u2} (α i)], NoMaxOrder.{max u1 u2} (Lex.{max u1 u2} (PSigma.{succ u1, succ u2} ι (fun (i : ι) => α i))) (PSigma.Lex.lt.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toLT.{u1} ι _inst_1) (fun (i : ι) => Preorder.toLT.{u2} (α i) (_inst_2 i)))
+Case conversion may be inaccurate. Consider using '#align psigma.lex.no_max_order_of_nonempty PSigma.Lex.noMaxOrder_of_nonemptyₓ'. -/
 instance noMaxOrder_of_nonempty [Preorder ι] [∀ i, Preorder (α i)] [NoMaxOrder ι]
     [∀ i, Nonempty (α i)] : NoMaxOrder (Σₗ' i, α i) :=
   ⟨by
@@ -219,12 +236,11 @@ instance noMaxOrder_of_nonempty [Preorder ι] [∀ i, Preorder (α i)] [NoMaxOrd
     obtain ⟨b⟩ : Nonempty (α j) := inferInstance
     exact ⟨⟨j, b⟩, left _ _ h⟩⟩
 #align psigma.lex.no_max_order_of_nonempty PSigma.Lex.noMaxOrder_of_nonempty
--/
 
 /- warning: psigma.lex.no_min_order_of_nonempty clashes with [anonymous] -> [anonymous]
 warning: psigma.lex.no_min_order_of_nonempty -> [anonymous] is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : Preorder.{u1} ι] [_inst_2 : forall (i : ι), Preorder.{u2} (α i)] [_inst_3 : NoMaxOrder.{u1} ι (Preorder.toLT.{u1} ι _inst_1)] [_inst_4 : forall (i : ι), Nonempty.{succ u2} (α i)], NoMaxOrder.{max u1 u2} (Lex.{max u1 u2} (PSigma.{succ u1, succ u2} ι (fun (i : ι) => α i))) (PSigma.Lex.lt.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toLT.{u1} ι _inst_1) (fun (i : ι) => Preorder.toLT.{u2} (α i) (_inst_2 i)))
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : Preorder.{u1} ι] [_inst_2 : forall (i : ι), Preorder.{u2} (α i)] [_inst_3 : NoMaxOrder.{u1} ι (Preorder.toHasLt.{u1} ι _inst_1)] [_inst_4 : forall (i : ι), Nonempty.{succ u2} (α i)], NoMaxOrder.{max u1 u2} (Lex.{max u1 u2} (PSigma.{succ u1, succ u2} ι (fun (i : ι) => α i))) (PSigma.Lex.lt.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toHasLt.{u1} ι _inst_1) (fun (i : ι) => Preorder.toHasLt.{u2} (α i) (_inst_2 i)))
 but is expected to have type
   forall {ι : Type.{u1}} {α : Type.{u2}}, (Nat -> ι -> α) -> Nat -> (List.{u1} ι) -> (List.{u2} α)
 Case conversion may be inaccurate. Consider using '#align psigma.lex.no_min_order_of_nonempty [anonymous]ₓ'. -/
@@ -237,7 +253,12 @@ instance [anonymous] [Preorder ι] [∀ i, Preorder (α i)] [NoMaxOrder ι] [∀
     exact ⟨⟨j, b⟩, left _ _ h⟩⟩
 #align psigma.lex.no_min_order_of_nonempty [anonymous]
 
-#print PSigma.Lex.noMaxOrder /-
+/- warning: psigma.lex.no_max_order -> PSigma.Lex.noMaxOrder is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : Preorder.{u1} ι] [_inst_2 : forall (i : ι), Preorder.{u2} (α i)] [_inst_3 : forall (i : ι), NoMaxOrder.{u2} (α i) (Preorder.toHasLt.{u2} (α i) (_inst_2 i))], NoMaxOrder.{max u1 u2} (Lex.{max u1 u2} (PSigma.{succ u1, succ u2} ι (fun (i : ι) => α i))) (PSigma.Lex.lt.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toHasLt.{u1} ι _inst_1) (fun (i : ι) => Preorder.toHasLt.{u2} (α i) (_inst_2 i)))
+but is expected to have type
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : Preorder.{u1} ι] [_inst_2 : forall (i : ι), Preorder.{u2} (α i)] [_inst_3 : forall (i : ι), NoMaxOrder.{u2} (α i) (Preorder.toLT.{u2} (α i) (_inst_2 i))], NoMaxOrder.{max u1 u2} (Lex.{max u1 u2} (PSigma.{succ u1, succ u2} ι (fun (i : ι) => α i))) (PSigma.Lex.lt.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toLT.{u1} ι _inst_1) (fun (i : ι) => Preorder.toLT.{u2} (α i) (_inst_2 i)))
+Case conversion may be inaccurate. Consider using '#align psigma.lex.no_max_order PSigma.Lex.noMaxOrderₓ'. -/
 instance noMaxOrder [Preorder ι] [∀ i, Preorder (α i)] [∀ i, NoMaxOrder (α i)] :
     NoMaxOrder (Σₗ' i, α i) :=
   ⟨by
@@ -245,9 +266,13 @@ instance noMaxOrder [Preorder ι] [∀ i, Preorder (α i)] [∀ i, NoMaxOrder (�
     obtain ⟨b, h⟩ := exists_gt a
     exact ⟨⟨i, b⟩, right _ h⟩⟩
 #align psigma.lex.no_max_order PSigma.Lex.noMaxOrder
--/
 
-#print PSigma.Lex.noMinOrder /-
+/- warning: psigma.lex.no_min_order -> PSigma.Lex.noMinOrder is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : Preorder.{u1} ι] [_inst_2 : forall (i : ι), Preorder.{u2} (α i)] [_inst_3 : forall (i : ι), NoMinOrder.{u2} (α i) (Preorder.toHasLt.{u2} (α i) (_inst_2 i))], NoMinOrder.{max u1 u2} (Lex.{max u1 u2} (PSigma.{succ u1, succ u2} ι (fun (i : ι) => α i))) (PSigma.Lex.lt.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toHasLt.{u1} ι _inst_1) (fun (i : ι) => Preorder.toHasLt.{u2} (α i) (_inst_2 i)))
+but is expected to have type
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : Preorder.{u1} ι] [_inst_2 : forall (i : ι), Preorder.{u2} (α i)] [_inst_3 : forall (i : ι), NoMinOrder.{u2} (α i) (Preorder.toLT.{u2} (α i) (_inst_2 i))], NoMinOrder.{max u1 u2} (Lex.{max u1 u2} (PSigma.{succ u1, succ u2} ι (fun (i : ι) => α i))) (PSigma.Lex.lt.{u1, u2} ι (fun (i : ι) => α i) (Preorder.toLT.{u1} ι _inst_1) (fun (i : ι) => Preorder.toLT.{u2} (α i) (_inst_2 i)))
+Case conversion may be inaccurate. Consider using '#align psigma.lex.no_min_order PSigma.Lex.noMinOrderₓ'. -/
 instance noMinOrder [Preorder ι] [∀ i, Preorder (α i)] [∀ i, NoMinOrder (α i)] :
     NoMinOrder (Σₗ' i, α i) :=
   ⟨by
@@ -255,7 +280,6 @@ instance noMinOrder [Preorder ι] [∀ i, Preorder (α i)] [∀ i, NoMinOrder (�
     obtain ⟨b, h⟩ := exists_lt a
     exact ⟨⟨i, b⟩, right _ h⟩⟩
 #align psigma.lex.no_min_order PSigma.Lex.noMinOrder
--/
 
 end Lex
 

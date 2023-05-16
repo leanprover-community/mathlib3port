@@ -337,17 +337,25 @@ theorem Subsingleton.countable {s : Set α} (hs : s.Subsingleton) : s.Countable 
 #align set.subsingleton.countable Set.Subsingleton.countable
 -/
 
-#print Set.countable_isTop /-
+/- warning: set.countable_is_top -> Set.countable_isTop is a dubious translation:
+lean 3 declaration is
+  forall (α : Type.{u1}) [_inst_1 : PartialOrder.{u1} α], Set.Countable.{u1} α (setOf.{u1} α (fun (x : α) => IsTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x))
+but is expected to have type
+  forall (α : Type.{u1}) [_inst_1 : PartialOrder.{u1} α], Set.Countable.{u1} α (setOf.{u1} α (fun (x : α) => IsTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x))
+Case conversion may be inaccurate. Consider using '#align set.countable_is_top Set.countable_isTopₓ'. -/
 theorem countable_isTop (α : Type _) [PartialOrder α] : { x : α | IsTop x }.Countable :=
   (finite_isTop α).Countable
 #align set.countable_is_top Set.countable_isTop
--/
 
-#print Set.countable_isBot /-
+/- warning: set.countable_is_bot -> Set.countable_isBot is a dubious translation:
+lean 3 declaration is
+  forall (α : Type.{u1}) [_inst_1 : PartialOrder.{u1} α], Set.Countable.{u1} α (setOf.{u1} α (fun (x : α) => IsBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x))
+but is expected to have type
+  forall (α : Type.{u1}) [_inst_1 : PartialOrder.{u1} α], Set.Countable.{u1} α (setOf.{u1} α (fun (x : α) => IsBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x))
+Case conversion may be inaccurate. Consider using '#align set.countable_is_bot Set.countable_isBotₓ'. -/
 theorem countable_isBot (α : Type _) [PartialOrder α] : { x : α | IsBot x }.Countable :=
   (finite_isBot α).Countable
 #align set.countable_is_bot Set.countable_isBot
--/
 
 #print Set.countable_setOf_finite_subset /-
 /-- The set of finite subsets of a countable set is countable. -/

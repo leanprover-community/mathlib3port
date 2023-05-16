@@ -99,7 +99,7 @@ theorem IsOpen.mem_nhdsSet (hU : IsOpen s) : s ∈ 𝓝ˢ t ↔ t ⊆ s := by
 
 /- warning: principal_le_nhds_set -> principal_le_nhdsSet is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (Filter.principal.{u1} α s) (nhdsSet.{u1} α _inst_1 s)
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (Filter.principal.{u1} α s) (nhdsSet.{u1} α _inst_1 s)
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Filter.principal.{u1} α s) (nhdsSet.{u1} α _inst_1 s)
 Case conversion may be inaccurate. Consider using '#align principal_le_nhds_set principal_le_nhdsSetₓ'. -/
@@ -166,7 +166,7 @@ theorem nhdsSet_univ : 𝓝ˢ (univ : Set α) = ⊤ := by rw [is_open_univ.nhds_
 
 /- warning: nhds_set_mono -> nhdsSet_mono is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s t) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (nhdsSet.{u1} α _inst_1 s) (nhdsSet.{u1} α _inst_1 t))
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s t) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (nhdsSet.{u1} α _inst_1 s) (nhdsSet.{u1} α _inst_1 t))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s t) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (nhdsSet.{u1} α _inst_1 s) (nhdsSet.{u1} α _inst_1 t))
 Case conversion may be inaccurate. Consider using '#align nhds_set_mono nhdsSet_monoₓ'. -/
@@ -186,7 +186,7 @@ theorem monotone_nhdsSet : Monotone (𝓝ˢ : Set α → Filter α) := fun s t =
 
 /- warning: nhds_le_nhds_set -> nhds_le_nhdsSet is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {x : α}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (nhds.{u1} α _inst_1 x) (nhdsSet.{u1} α _inst_1 s))
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {x : α}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (nhds.{u1} α _inst_1 x) (nhdsSet.{u1} α _inst_1 s))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {x : α}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (nhds.{u1} α _inst_1 x) (nhdsSet.{u1} α _inst_1 s))
 Case conversion may be inaccurate. Consider using '#align nhds_le_nhds_set nhds_le_nhdsSetₓ'. -/

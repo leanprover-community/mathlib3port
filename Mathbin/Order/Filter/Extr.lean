@@ -147,29 +147,45 @@ theorem IsExtrOn.elim {p : Prop} : IsExtrOn f s a → (IsMinOn f s a → p) → 
 #align is_extr_on.elim IsExtrOn.elim
 -/
 
-#print isMinOn_iff /-
+/- warning: is_min_on_iff -> isMinOn_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {a : α}, Iff (IsMinOn.{u1, u2} α β _inst_1 f s a) (forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_1) (f a) (f x)))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {a : α}, Iff (IsMinOn.{u1, u2} α β _inst_1 f s a) (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_1) (f a) (f x)))
+Case conversion may be inaccurate. Consider using '#align is_min_on_iff isMinOn_iffₓ'. -/
 theorem isMinOn_iff : IsMinOn f s a ↔ ∀ x ∈ s, f a ≤ f x :=
   Iff.rfl
 #align is_min_on_iff isMinOn_iff
--/
 
-#print isMaxOn_iff /-
+/- warning: is_max_on_iff -> isMaxOn_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {a : α}, Iff (IsMaxOn.{u1, u2} α β _inst_1 f s a) (forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_1) (f x) (f a)))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {a : α}, Iff (IsMaxOn.{u1, u2} α β _inst_1 f s a) (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_1) (f x) (f a)))
+Case conversion may be inaccurate. Consider using '#align is_max_on_iff isMaxOn_iffₓ'. -/
 theorem isMaxOn_iff : IsMaxOn f s a ↔ ∀ x ∈ s, f x ≤ f a :=
   Iff.rfl
 #align is_max_on_iff isMaxOn_iff
--/
 
-#print isMinOn_univ_iff /-
+/- warning: is_min_on_univ_iff -> isMinOn_univ_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {f : α -> β} {a : α}, Iff (IsMinOn.{u1, u2} α β _inst_1 f (Set.univ.{u1} α) a) (forall (x : α), LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_1) (f a) (f x))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {f : α -> β} {a : α}, Iff (IsMinOn.{u1, u2} α β _inst_1 f (Set.univ.{u1} α) a) (forall (x : α), LE.le.{u2} β (Preorder.toLE.{u2} β _inst_1) (f a) (f x))
+Case conversion may be inaccurate. Consider using '#align is_min_on_univ_iff isMinOn_univ_iffₓ'. -/
 theorem isMinOn_univ_iff : IsMinOn f univ a ↔ ∀ x, f a ≤ f x :=
   univ_subset_iff.trans eq_univ_iff_forall
 #align is_min_on_univ_iff isMinOn_univ_iff
--/
 
-#print isMaxOn_univ_iff /-
+/- warning: is_max_on_univ_iff -> isMaxOn_univ_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {f : α -> β} {a : α}, Iff (IsMaxOn.{u1, u2} α β _inst_1 f (Set.univ.{u1} α) a) (forall (x : α), LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_1) (f x) (f a))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {f : α -> β} {a : α}, Iff (IsMaxOn.{u1, u2} α β _inst_1 f (Set.univ.{u1} α) a) (forall (x : α), LE.le.{u2} β (Preorder.toLE.{u2} β _inst_1) (f x) (f a))
+Case conversion may be inaccurate. Consider using '#align is_max_on_univ_iff isMaxOn_univ_iffₓ'. -/
 theorem isMaxOn_univ_iff : IsMaxOn f univ a ↔ ∀ x, f x ≤ f a :=
   univ_subset_iff.trans eq_univ_iff_forall
 #align is_max_on_univ_iff isMaxOn_univ_iff
--/
 
 #print IsMinFilter.tendsto_principal_Ici /-
 theorem IsMinFilter.tendsto_principal_Ici (h : IsMinFilter f l a) : Tendsto f l (𝓟 <| Ici (f a)) :=
@@ -319,7 +335,7 @@ alias isExtrOn_dual_iff ↔ IsExtrOn.undual IsExtrOn.dual
 
 /- warning: is_min_filter.filter_mono -> IsMinFilter.filter_mono is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {f : α -> β} {l : Filter.{u1} α} {a : α} {l' : Filter.{u1} α}, (IsMinFilter.{u1, u2} α β _inst_1 f l a) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) l' l) -> (IsMinFilter.{u1, u2} α β _inst_1 f l' a)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {f : α -> β} {l : Filter.{u1} α} {a : α} {l' : Filter.{u1} α}, (IsMinFilter.{u1, u2} α β _inst_1 f l a) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) l' l) -> (IsMinFilter.{u1, u2} α β _inst_1 f l' a)
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {f : α -> β} {l : Filter.{u1} α} {a : α} {l' : Filter.{u1} α}, (IsMinFilter.{u1, u2} α β _inst_1 f l a) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) l' l) -> (IsMinFilter.{u1, u2} α β _inst_1 f l' a)
 Case conversion may be inaccurate. Consider using '#align is_min_filter.filter_mono IsMinFilter.filter_monoₓ'. -/
@@ -329,7 +345,7 @@ theorem IsMinFilter.filter_mono (h : IsMinFilter f l a) (hl : l' ≤ l) : IsMinF
 
 /- warning: is_max_filter.filter_mono -> IsMaxFilter.filter_mono is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {f : α -> β} {l : Filter.{u1} α} {a : α} {l' : Filter.{u1} α}, (IsMaxFilter.{u1, u2} α β _inst_1 f l a) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) l' l) -> (IsMaxFilter.{u1, u2} α β _inst_1 f l' a)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {f : α -> β} {l : Filter.{u1} α} {a : α} {l' : Filter.{u1} α}, (IsMaxFilter.{u1, u2} α β _inst_1 f l a) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) l' l) -> (IsMaxFilter.{u1, u2} α β _inst_1 f l' a)
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {f : α -> β} {l : Filter.{u1} α} {a : α} {l' : Filter.{u1} α}, (IsMaxFilter.{u1, u2} α β _inst_1 f l a) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) l' l) -> (IsMaxFilter.{u1, u2} α β _inst_1 f l' a)
 Case conversion may be inaccurate. Consider using '#align is_max_filter.filter_mono IsMaxFilter.filter_monoₓ'. -/
@@ -339,7 +355,7 @@ theorem IsMaxFilter.filter_mono (h : IsMaxFilter f l a) (hl : l' ≤ l) : IsMaxF
 
 /- warning: is_extr_filter.filter_mono -> IsExtrFilter.filter_mono is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {f : α -> β} {l : Filter.{u1} α} {a : α} {l' : Filter.{u1} α}, (IsExtrFilter.{u1, u2} α β _inst_1 f l a) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) l' l) -> (IsExtrFilter.{u1, u2} α β _inst_1 f l' a)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {f : α -> β} {l : Filter.{u1} α} {a : α} {l' : Filter.{u1} α}, (IsExtrFilter.{u1, u2} α β _inst_1 f l a) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) l' l) -> (IsExtrFilter.{u1, u2} α β _inst_1 f l' a)
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {f : α -> β} {l : Filter.{u1} α} {a : α} {l' : Filter.{u1} α}, (IsExtrFilter.{u1, u2} α β _inst_1 f l a) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) l' l) -> (IsExtrFilter.{u1, u2} α β _inst_1 f l' a)
 Case conversion may be inaccurate. Consider using '#align is_extr_filter.filter_mono IsExtrFilter.filter_monoₓ'. -/
@@ -512,38 +528,54 @@ theorem IsExtrOn.comp_antitone (hf : IsExtrOn f s a) {g : β → γ} (hg : Antit
 #align is_extr_on.comp_antitone IsExtrOn.comp_antitone
 -/
 
-#print IsMinFilter.bicomp_mono /-
+/- warning: is_min_filter.bicomp_mono -> IsMinFilter.bicomp_mono is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} [_inst_1 : Preorder.{u2} β] [_inst_2 : Preorder.{u3} γ] {f : α -> β} {l : Filter.{u1} α} {a : α} [_inst_3 : Preorder.{u4} δ] {op : β -> γ -> δ}, (Relator.LiftFun.{succ u2, succ u2, max (succ u3) (succ u4), max (succ u3) (succ u4)} β β (γ -> δ) (γ -> δ) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_1)) (Relator.LiftFun.{succ u3, succ u3, succ u4, succ u4} γ γ δ δ (LE.le.{u3} γ (Preorder.toHasLe.{u3} γ _inst_2)) (LE.le.{u4} δ (Preorder.toHasLe.{u4} δ _inst_3))) op op) -> (IsMinFilter.{u1, u2} α β _inst_1 f l a) -> (forall {g : α -> γ}, (IsMinFilter.{u1, u3} α γ _inst_2 g l a) -> (IsMinFilter.{u1, u4} α δ _inst_3 (fun (x : α) => op (f x) (g x)) l a))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} [_inst_1 : Preorder.{u2} β] [_inst_2 : Preorder.{u3} γ] {f : α -> β} {l : Filter.{u1} α} {a : α} [_inst_3 : Preorder.{u4} δ] {op : β -> γ -> δ}, (Relator.LiftFun.{succ u2, succ u2, max (succ u3) (succ u4), max (succ u3) (succ u4)} β β (γ -> δ) (γ -> δ) (fun (x._@.Mathlib.Order.Filter.Extr._hyg.2557 : β) (x._@.Mathlib.Order.Filter.Extr._hyg.2559 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_1) x._@.Mathlib.Order.Filter.Extr._hyg.2557 x._@.Mathlib.Order.Filter.Extr._hyg.2559) (Relator.LiftFun.{succ u3, succ u3, succ u4, succ u4} γ γ δ δ (fun (x._@.Mathlib.Order.Filter.Extr._hyg.2575 : γ) (x._@.Mathlib.Order.Filter.Extr._hyg.2577 : γ) => LE.le.{u3} γ (Preorder.toLE.{u3} γ _inst_2) x._@.Mathlib.Order.Filter.Extr._hyg.2575 x._@.Mathlib.Order.Filter.Extr._hyg.2577) (fun (x._@.Mathlib.Order.Filter.Extr._hyg.2590 : δ) (x._@.Mathlib.Order.Filter.Extr._hyg.2592 : δ) => LE.le.{u4} δ (Preorder.toLE.{u4} δ _inst_3) x._@.Mathlib.Order.Filter.Extr._hyg.2590 x._@.Mathlib.Order.Filter.Extr._hyg.2592)) op op) -> (IsMinFilter.{u1, u2} α β _inst_1 f l a) -> (forall {g : α -> γ}, (IsMinFilter.{u1, u3} α γ _inst_2 g l a) -> (IsMinFilter.{u1, u4} α δ _inst_3 (fun (x : α) => op (f x) (g x)) l a))
+Case conversion may be inaccurate. Consider using '#align is_min_filter.bicomp_mono IsMinFilter.bicomp_monoₓ'. -/
 theorem IsMinFilter.bicomp_mono [Preorder δ] {op : β → γ → δ}
     (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op) (hf : IsMinFilter f l a) {g : α → γ}
     (hg : IsMinFilter g l a) : IsMinFilter (fun x => op (f x) (g x)) l a :=
   mem_of_superset (inter_mem hf hg) fun x ⟨hfx, hgx⟩ => hop hfx hgx
 #align is_min_filter.bicomp_mono IsMinFilter.bicomp_mono
--/
 
-#print IsMaxFilter.bicomp_mono /-
+/- warning: is_max_filter.bicomp_mono -> IsMaxFilter.bicomp_mono is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} [_inst_1 : Preorder.{u2} β] [_inst_2 : Preorder.{u3} γ] {f : α -> β} {l : Filter.{u1} α} {a : α} [_inst_3 : Preorder.{u4} δ] {op : β -> γ -> δ}, (Relator.LiftFun.{succ u2, succ u2, max (succ u3) (succ u4), max (succ u3) (succ u4)} β β (γ -> δ) (γ -> δ) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_1)) (Relator.LiftFun.{succ u3, succ u3, succ u4, succ u4} γ γ δ δ (LE.le.{u3} γ (Preorder.toHasLe.{u3} γ _inst_2)) (LE.le.{u4} δ (Preorder.toHasLe.{u4} δ _inst_3))) op op) -> (IsMaxFilter.{u1, u2} α β _inst_1 f l a) -> (forall {g : α -> γ}, (IsMaxFilter.{u1, u3} α γ _inst_2 g l a) -> (IsMaxFilter.{u1, u4} α δ _inst_3 (fun (x : α) => op (f x) (g x)) l a))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} [_inst_1 : Preorder.{u2} β] [_inst_2 : Preorder.{u3} γ] {f : α -> β} {l : Filter.{u1} α} {a : α} [_inst_3 : Preorder.{u4} δ] {op : β -> γ -> δ}, (Relator.LiftFun.{succ u2, succ u2, max (succ u3) (succ u4), max (succ u3) (succ u4)} β β (γ -> δ) (γ -> δ) (fun (x._@.Mathlib.Order.Filter.Extr._hyg.2707 : β) (x._@.Mathlib.Order.Filter.Extr._hyg.2709 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_1) x._@.Mathlib.Order.Filter.Extr._hyg.2707 x._@.Mathlib.Order.Filter.Extr._hyg.2709) (Relator.LiftFun.{succ u3, succ u3, succ u4, succ u4} γ γ δ δ (fun (x._@.Mathlib.Order.Filter.Extr._hyg.2725 : γ) (x._@.Mathlib.Order.Filter.Extr._hyg.2727 : γ) => LE.le.{u3} γ (Preorder.toLE.{u3} γ _inst_2) x._@.Mathlib.Order.Filter.Extr._hyg.2725 x._@.Mathlib.Order.Filter.Extr._hyg.2727) (fun (x._@.Mathlib.Order.Filter.Extr._hyg.2740 : δ) (x._@.Mathlib.Order.Filter.Extr._hyg.2742 : δ) => LE.le.{u4} δ (Preorder.toLE.{u4} δ _inst_3) x._@.Mathlib.Order.Filter.Extr._hyg.2740 x._@.Mathlib.Order.Filter.Extr._hyg.2742)) op op) -> (IsMaxFilter.{u1, u2} α β _inst_1 f l a) -> (forall {g : α -> γ}, (IsMaxFilter.{u1, u3} α γ _inst_2 g l a) -> (IsMaxFilter.{u1, u4} α δ _inst_3 (fun (x : α) => op (f x) (g x)) l a))
+Case conversion may be inaccurate. Consider using '#align is_max_filter.bicomp_mono IsMaxFilter.bicomp_monoₓ'. -/
 theorem IsMaxFilter.bicomp_mono [Preorder δ] {op : β → γ → δ}
     (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op) (hf : IsMaxFilter f l a) {g : α → γ}
     (hg : IsMaxFilter g l a) : IsMaxFilter (fun x => op (f x) (g x)) l a :=
   mem_of_superset (inter_mem hf hg) fun x ⟨hfx, hgx⟩ => hop hfx hgx
 #align is_max_filter.bicomp_mono IsMaxFilter.bicomp_mono
--/
 
-#print IsMinOn.bicomp_mono /-
+/- warning: is_min_on.bicomp_mono -> IsMinOn.bicomp_mono is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} [_inst_1 : Preorder.{u2} β] [_inst_2 : Preorder.{u3} γ] {f : α -> β} {s : Set.{u1} α} {a : α} [_inst_3 : Preorder.{u4} δ] {op : β -> γ -> δ}, (Relator.LiftFun.{succ u2, succ u2, max (succ u3) (succ u4), max (succ u3) (succ u4)} β β (γ -> δ) (γ -> δ) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_1)) (Relator.LiftFun.{succ u3, succ u3, succ u4, succ u4} γ γ δ δ (LE.le.{u3} γ (Preorder.toHasLe.{u3} γ _inst_2)) (LE.le.{u4} δ (Preorder.toHasLe.{u4} δ _inst_3))) op op) -> (IsMinOn.{u1, u2} α β _inst_1 f s a) -> (forall {g : α -> γ}, (IsMinOn.{u1, u3} α γ _inst_2 g s a) -> (IsMinOn.{u1, u4} α δ _inst_3 (fun (x : α) => op (f x) (g x)) s a))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} [_inst_1 : Preorder.{u2} β] [_inst_2 : Preorder.{u3} γ] {f : α -> β} {s : Set.{u1} α} {a : α} [_inst_3 : Preorder.{u4} δ] {op : β -> γ -> δ}, (Relator.LiftFun.{succ u2, succ u2, max (succ u3) (succ u4), max (succ u3) (succ u4)} β β (γ -> δ) (γ -> δ) (fun (x._@.Mathlib.Order.Filter.Extr._hyg.2857 : β) (x._@.Mathlib.Order.Filter.Extr._hyg.2859 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_1) x._@.Mathlib.Order.Filter.Extr._hyg.2857 x._@.Mathlib.Order.Filter.Extr._hyg.2859) (Relator.LiftFun.{succ u3, succ u3, succ u4, succ u4} γ γ δ δ (fun (x._@.Mathlib.Order.Filter.Extr._hyg.2875 : γ) (x._@.Mathlib.Order.Filter.Extr._hyg.2877 : γ) => LE.le.{u3} γ (Preorder.toLE.{u3} γ _inst_2) x._@.Mathlib.Order.Filter.Extr._hyg.2875 x._@.Mathlib.Order.Filter.Extr._hyg.2877) (fun (x._@.Mathlib.Order.Filter.Extr._hyg.2890 : δ) (x._@.Mathlib.Order.Filter.Extr._hyg.2892 : δ) => LE.le.{u4} δ (Preorder.toLE.{u4} δ _inst_3) x._@.Mathlib.Order.Filter.Extr._hyg.2890 x._@.Mathlib.Order.Filter.Extr._hyg.2892)) op op) -> (IsMinOn.{u1, u2} α β _inst_1 f s a) -> (forall {g : α -> γ}, (IsMinOn.{u1, u3} α γ _inst_2 g s a) -> (IsMinOn.{u1, u4} α δ _inst_3 (fun (x : α) => op (f x) (g x)) s a))
+Case conversion may be inaccurate. Consider using '#align is_min_on.bicomp_mono IsMinOn.bicomp_monoₓ'. -/
 -- No `extr` version because we need `hf` and `hg` to be of the same kind
 theorem IsMinOn.bicomp_mono [Preorder δ] {op : β → γ → δ}
     (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op) (hf : IsMinOn f s a) {g : α → γ}
     (hg : IsMinOn g s a) : IsMinOn (fun x => op (f x) (g x)) s a :=
   hf.bicomp_mono hop hg
 #align is_min_on.bicomp_mono IsMinOn.bicomp_mono
--/
 
-#print IsMaxOn.bicomp_mono /-
+/- warning: is_max_on.bicomp_mono -> IsMaxOn.bicomp_mono is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} [_inst_1 : Preorder.{u2} β] [_inst_2 : Preorder.{u3} γ] {f : α -> β} {s : Set.{u1} α} {a : α} [_inst_3 : Preorder.{u4} δ] {op : β -> γ -> δ}, (Relator.LiftFun.{succ u2, succ u2, max (succ u3) (succ u4), max (succ u3) (succ u4)} β β (γ -> δ) (γ -> δ) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_1)) (Relator.LiftFun.{succ u3, succ u3, succ u4, succ u4} γ γ δ δ (LE.le.{u3} γ (Preorder.toHasLe.{u3} γ _inst_2)) (LE.le.{u4} δ (Preorder.toHasLe.{u4} δ _inst_3))) op op) -> (IsMaxOn.{u1, u2} α β _inst_1 f s a) -> (forall {g : α -> γ}, (IsMaxOn.{u1, u3} α γ _inst_2 g s a) -> (IsMaxOn.{u1, u4} α δ _inst_3 (fun (x : α) => op (f x) (g x)) s a))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} [_inst_1 : Preorder.{u2} β] [_inst_2 : Preorder.{u3} γ] {f : α -> β} {s : Set.{u1} α} {a : α} [_inst_3 : Preorder.{u4} δ] {op : β -> γ -> δ}, (Relator.LiftFun.{succ u2, succ u2, max (succ u3) (succ u4), max (succ u3) (succ u4)} β β (γ -> δ) (γ -> δ) (fun (x._@.Mathlib.Order.Filter.Extr._hyg.2981 : β) (x._@.Mathlib.Order.Filter.Extr._hyg.2983 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_1) x._@.Mathlib.Order.Filter.Extr._hyg.2981 x._@.Mathlib.Order.Filter.Extr._hyg.2983) (Relator.LiftFun.{succ u3, succ u3, succ u4, succ u4} γ γ δ δ (fun (x._@.Mathlib.Order.Filter.Extr._hyg.2999 : γ) (x._@.Mathlib.Order.Filter.Extr._hyg.3001 : γ) => LE.le.{u3} γ (Preorder.toLE.{u3} γ _inst_2) x._@.Mathlib.Order.Filter.Extr._hyg.2999 x._@.Mathlib.Order.Filter.Extr._hyg.3001) (fun (x._@.Mathlib.Order.Filter.Extr._hyg.3014 : δ) (x._@.Mathlib.Order.Filter.Extr._hyg.3016 : δ) => LE.le.{u4} δ (Preorder.toLE.{u4} δ _inst_3) x._@.Mathlib.Order.Filter.Extr._hyg.3014 x._@.Mathlib.Order.Filter.Extr._hyg.3016)) op op) -> (IsMaxOn.{u1, u2} α β _inst_1 f s a) -> (forall {g : α -> γ}, (IsMaxOn.{u1, u3} α γ _inst_2 g s a) -> (IsMaxOn.{u1, u4} α δ _inst_3 (fun (x : α) => op (f x) (g x)) s a))
+Case conversion may be inaccurate. Consider using '#align is_max_on.bicomp_mono IsMaxOn.bicomp_monoₓ'. -/
 theorem IsMaxOn.bicomp_mono [Preorder δ] {op : β → γ → δ}
     (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op) (hf : IsMaxOn f s a) {g : α → γ}
     (hg : IsMaxOn g s a) : IsMaxOn (fun x => op (f x) (g x)) s a :=
   hf.bicomp_mono hop hg
 #align is_max_on.bicomp_mono IsMaxOn.bicomp_mono
--/
 
 /-! ### Composition with `tendsto` -/
 
@@ -986,7 +1018,7 @@ section Eventually
 
 /- warning: filter.eventually_le.is_max_filter -> Filter.EventuallyLE.isMaxFilter is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {f : α -> β} {g : α -> β} {a : α} {l : Filter.{u1} α}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β _inst_1) l g f) -> (Eq.{succ u2} β (f a) (g a)) -> (IsMaxFilter.{u1, u2} α β _inst_1 f l a) -> (IsMaxFilter.{u1, u2} α β _inst_1 g l a)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {f : α -> β} {g : α -> β} {a : α} {l : Filter.{u1} α}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β _inst_1) l g f) -> (Eq.{succ u2} β (f a) (g a)) -> (IsMaxFilter.{u1, u2} α β _inst_1 f l a) -> (IsMaxFilter.{u1, u2} α β _inst_1 g l a)
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u1} β] {f : α -> β} {g : α -> β} {a : α} {l : Filter.{u2} α}, (Filter.EventuallyLE.{u2, u1} α β (Preorder.toLE.{u1} β _inst_1) l g f) -> (Eq.{succ u1} β (f a) (g a)) -> (IsMaxFilter.{u2, u1} α β _inst_1 f l a) -> (IsMaxFilter.{u2, u1} α β _inst_1 g l a)
 Case conversion may be inaccurate. Consider using '#align filter.eventually_le.is_max_filter Filter.EventuallyLE.isMaxFilterₓ'. -/
@@ -1022,7 +1054,7 @@ theorem Filter.EventuallyEq.isMaxFilter_iff {α β : Type _} [Preorder β] {f g 
 
 /- warning: filter.eventually_le.is_min_filter -> Filter.EventuallyLE.isMinFilter is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {f : α -> β} {g : α -> β} {a : α} {l : Filter.{u1} α}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β _inst_1) l f g) -> (Eq.{succ u2} β (f a) (g a)) -> (IsMinFilter.{u1, u2} α β _inst_1 f l a) -> (IsMinFilter.{u1, u2} α β _inst_1 g l a)
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {f : α -> β} {g : α -> β} {a : α} {l : Filter.{u1} α}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β _inst_1) l f g) -> (Eq.{succ u2} β (f a) (g a)) -> (IsMinFilter.{u1, u2} α β _inst_1 f l a) -> (IsMinFilter.{u1, u2} α β _inst_1 g l a)
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u1} β] {f : α -> β} {g : α -> β} {a : α} {l : Filter.{u2} α}, (Filter.EventuallyLE.{u2, u1} α β (Preorder.toLE.{u1} β _inst_1) l f g) -> (Eq.{succ u1} β (f a) (g a)) -> (IsMinFilter.{u2, u1} α β _inst_1 f l a) -> (IsMinFilter.{u2, u1} α β _inst_1 g l a)
 Case conversion may be inaccurate. Consider using '#align filter.eventually_le.is_min_filter Filter.EventuallyLE.isMinFilterₓ'. -/

@@ -850,17 +850,25 @@ theorem rel_sequence {r : β → β → Prop} {f : α → β} (hf : Directed r f
 
 variable [Preorder β] {f : α → β} (hf : Directed (· ≤ ·) f)
 
-#print Directed.sequence_mono /-
+/- warning: directed.sequence_mono -> Directed.sequence_mono is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Encodable.{u1} α] [_inst_2 : Inhabited.{succ u1} α] [_inst_3 : Preorder.{u2} β] {f : α -> β} (hf : Directed.{u2, succ u1} β α (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_3)) f), Monotone.{0, u2} Nat β (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) _inst_3 (Function.comp.{1, succ u1, succ u2} Nat α β f (Directed.sequence.{u1, u2} α β _inst_1 _inst_2 (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_3)) f hf))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Encodable.{u1} α] [_inst_2 : Inhabited.{succ u1} α] [_inst_3 : Preorder.{u2} β] {f : α -> β} (hf : Directed.{u2, succ u1} β α (fun (x._@.Mathlib.Logic.Encodable.Basic._hyg.4335 : β) (x._@.Mathlib.Logic.Encodable.Basic._hyg.4337 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_3) x._@.Mathlib.Logic.Encodable.Basic._hyg.4335 x._@.Mathlib.Logic.Encodable.Basic._hyg.4337) f), Monotone.{0, u2} Nat β (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) _inst_3 (Function.comp.{1, succ u1, succ u2} Nat α β f (Directed.sequence.{u1, u2} α β _inst_1 _inst_2 (fun (x._@.Mathlib.Logic.Encodable.Basic._hyg.4335 : β) (x._@.Mathlib.Logic.Encodable.Basic._hyg.4337 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_3) x._@.Mathlib.Logic.Encodable.Basic._hyg.4335 x._@.Mathlib.Logic.Encodable.Basic._hyg.4337) f hf))
+Case conversion may be inaccurate. Consider using '#align directed.sequence_mono Directed.sequence_monoₓ'. -/
 theorem sequence_mono : Monotone (f ∘ hf.sequence f) :=
   monotone_nat_of_le_succ <| hf.sequence_mono_nat
 #align directed.sequence_mono Directed.sequence_mono
--/
 
-#print Directed.le_sequence /-
+/- warning: directed.le_sequence -> Directed.le_sequence is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Encodable.{u1} α] [_inst_2 : Inhabited.{succ u1} α] [_inst_3 : Preorder.{u2} β] {f : α -> β} (hf : Directed.{u2, succ u1} β α (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_3)) f) (a : α), LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_3) (f a) (f (Directed.sequence.{u1, u2} α β _inst_1 _inst_2 (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_3)) f hf (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (Encodable.encode.{u1} α _inst_1 a) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Encodable.{u1} α] [_inst_2 : Inhabited.{succ u1} α] [_inst_3 : Preorder.{u2} β] {f : α -> β} (hf : Directed.{u2, succ u1} β α (fun (x._@.Mathlib.Logic.Encodable.Basic._hyg.4381 : β) (x._@.Mathlib.Logic.Encodable.Basic._hyg.4383 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_3) x._@.Mathlib.Logic.Encodable.Basic._hyg.4381 x._@.Mathlib.Logic.Encodable.Basic._hyg.4383) f) (a : α), LE.le.{u2} β (Preorder.toLE.{u2} β _inst_3) (f a) (f (Directed.sequence.{u1, u2} α β _inst_1 _inst_2 (fun (x._@.Mathlib.Logic.Encodable.Basic._hyg.4381 : β) (x._@.Mathlib.Logic.Encodable.Basic._hyg.4383 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_3) x._@.Mathlib.Logic.Encodable.Basic._hyg.4381 x._@.Mathlib.Logic.Encodable.Basic._hyg.4383) f hf (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (Encodable.encode.{u1} α _inst_1 a) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))
+Case conversion may be inaccurate. Consider using '#align directed.le_sequence Directed.le_sequenceₓ'. -/
 theorem le_sequence (a : α) : f a ≤ f (hf.sequence f (encode a + 1)) :=
   hf.rel_sequence a
 #align directed.le_sequence Directed.le_sequence
--/
 
 end Directed
 

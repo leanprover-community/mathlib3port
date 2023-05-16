@@ -739,7 +739,7 @@ theorem Dense.exists_countable_dense_subset {α : Type _} [TopologicalSpace α] 
 
 /- warning: dense.exists_countable_dense_subset_bot_top -> Dense.exists_countable_dense_subset_bot_top is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : PartialOrder.{u1} α] {s : Set.{u1} α} [_inst_3 : TopologicalSpace.SeparableSpace.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) (Subtype.topologicalSpace.{u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) _inst_1)], (Dense.{u1} α _inst_1 s) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t s) (fun (H : HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t s) => And (Set.Countable.{u1} α t) (And (Dense.{u1} α _inst_1 t) (And (forall (x : α), (IsBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) x) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x t)) (forall (x : α), (IsTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) x) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x t)))))))
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : PartialOrder.{u1} α] {s : Set.{u1} α} [_inst_3 : TopologicalSpace.SeparableSpace.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) (Subtype.topologicalSpace.{u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) _inst_1)], (Dense.{u1} α _inst_1 s) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t s) (fun (H : HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t s) => And (Set.Countable.{u1} α t) (And (Dense.{u1} α _inst_1 t) (And (forall (x : α), (IsBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) x) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x t)) (forall (x : α), (IsTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) x) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x t)))))))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : PartialOrder.{u1} α] {s : Set.{u1} α} [_inst_3 : TopologicalSpace.SeparableSpace.{u1} (Set.Elem.{u1} α s) (instTopologicalSpaceSubtype.{u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) _inst_1)], (Dense.{u1} α _inst_1 s) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) t s) (And (Set.Countable.{u1} α t) (And (Dense.{u1} α _inst_1 t) (And (forall (x : α), (IsBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) x) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x t)) (forall (x : α), (IsTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) x) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x t)))))))
 Case conversion may be inaccurate. Consider using '#align dense.exists_countable_dense_subset_bot_top Dense.exists_countable_dense_subset_bot_topₓ'. -/
@@ -769,7 +769,12 @@ instance separableSpace_univ {α : Type _} [TopologicalSpace α] [SeparableSpace
 #align separable_space_univ separableSpace_univ
 -/
 
-#print exists_countable_dense_bot_top /-
+/- warning: exists_countable_dense_bot_top -> exists_countable_dense_bot_top is a dubious translation:
+lean 3 declaration is
+  forall (α : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.SeparableSpace.{u1} α _inst_1] [_inst_3 : PartialOrder.{u1} α], Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (Set.Countable.{u1} α s) (And (Dense.{u1} α _inst_1 s) (And (forall (x : α), (IsBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_3)) x) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s)) (forall (x : α), (IsTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_3)) x) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s)))))
+but is expected to have type
+  forall (α : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.SeparableSpace.{u1} α _inst_1] [_inst_3 : PartialOrder.{u1} α], Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (Set.Countable.{u1} α s) (And (Dense.{u1} α _inst_1 s) (And (forall (x : α), (IsBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_3)) x) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s)) (forall (x : α), (IsTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_3)) x) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s)))))
+Case conversion may be inaccurate. Consider using '#align exists_countable_dense_bot_top exists_countable_dense_bot_topₓ'. -/
 /-- If `α` is a separable topological space with a partial order, then there exists a countable
 dense set `s : set α` that contains those of both bottom and top elements of `α` that actually
 exist. For a dense set containing neither bot nor top elements, see
@@ -779,7 +784,6 @@ theorem exists_countable_dense_bot_top (α : Type _) [TopologicalSpace α] [Sepa
     ∃ s : Set α, s.Countable ∧ Dense s ∧ (∀ x, IsBot x → x ∈ s) ∧ ∀ x, IsTop x → x ∈ s := by
   simpa using dense_univ.exists_countable_dense_subset_bot_top
 #align exists_countable_dense_bot_top exists_countable_dense_bot_top
--/
 
 namespace TopologicalSpace
 

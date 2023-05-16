@@ -78,17 +78,25 @@ instance (priority := 100) OrderedCommGroup.to_hasUpperLowerClosure [OrderedComm
 
 variable [Preorder α] [HasUpperLowerClosure α] {s : Set α}
 
-#print IsUpperSet.closure /-
+/- warning: is_upper_set.closure -> IsUpperSet.closure is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : HasUpperLowerClosure.{u1} α _inst_1 _inst_2] {s : Set.{u1} α}, (IsUpperSet.{u1} α (Preorder.toHasLe.{u1} α _inst_2) s) -> (IsUpperSet.{u1} α (Preorder.toHasLe.{u1} α _inst_2) (closure.{u1} α _inst_1 s))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : HasUpperLowerClosure.{u1} α _inst_1 _inst_2] {s : Set.{u1} α}, (IsUpperSet.{u1} α (Preorder.toLE.{u1} α _inst_2) s) -> (IsUpperSet.{u1} α (Preorder.toLE.{u1} α _inst_2) (closure.{u1} α _inst_1 s))
+Case conversion may be inaccurate. Consider using '#align is_upper_set.closure IsUpperSet.closureₓ'. -/
 protected theorem IsUpperSet.closure : IsUpperSet s → IsUpperSet (closure s) :=
   HasUpperLowerClosure.isUpperSet_closure _
 #align is_upper_set.closure IsUpperSet.closure
--/
 
-#print IsLowerSet.closure /-
+/- warning: is_lower_set.closure -> IsLowerSet.closure is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : HasUpperLowerClosure.{u1} α _inst_1 _inst_2] {s : Set.{u1} α}, (IsLowerSet.{u1} α (Preorder.toHasLe.{u1} α _inst_2) s) -> (IsLowerSet.{u1} α (Preorder.toHasLe.{u1} α _inst_2) (closure.{u1} α _inst_1 s))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : HasUpperLowerClosure.{u1} α _inst_1 _inst_2] {s : Set.{u1} α}, (IsLowerSet.{u1} α (Preorder.toLE.{u1} α _inst_2) s) -> (IsLowerSet.{u1} α (Preorder.toLE.{u1} α _inst_2) (closure.{u1} α _inst_1 s))
+Case conversion may be inaccurate. Consider using '#align is_lower_set.closure IsLowerSet.closureₓ'. -/
 protected theorem IsLowerSet.closure : IsLowerSet s → IsLowerSet (closure s) :=
   HasUpperLowerClosure.isLowerSet_closure _
 #align is_lower_set.closure IsLowerSet.closure
--/
 
 #print IsOpen.upperClosure /-
 protected theorem IsOpen.upperClosure : IsOpen s → IsOpen (upperClosure s : Set α) :=
@@ -109,7 +117,12 @@ instance : HasUpperLowerClosure αᵒᵈ
   isOpen_upperClosure := @IsOpen.lowerClosure α _ _ _
   isOpen_lowerClosure := @IsOpen.upperClosure α _ _ _
 
-#print IsUpperSet.interior /-
+/- warning: is_upper_set.interior -> IsUpperSet.interior is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : HasUpperLowerClosure.{u1} α _inst_1 _inst_2] {s : Set.{u1} α}, (IsUpperSet.{u1} α (Preorder.toHasLe.{u1} α _inst_2) s) -> (IsUpperSet.{u1} α (Preorder.toHasLe.{u1} α _inst_2) (interior.{u1} α _inst_1 s))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : HasUpperLowerClosure.{u1} α _inst_1 _inst_2] {s : Set.{u1} α}, (IsUpperSet.{u1} α (Preorder.toLE.{u1} α _inst_2) s) -> (IsUpperSet.{u1} α (Preorder.toLE.{u1} α _inst_2) (interior.{u1} α _inst_1 s))
+Case conversion may be inaccurate. Consider using '#align is_upper_set.interior IsUpperSet.interiorₓ'. -/
 /-
 Note: `s.ord_connected` does not imply `(closure s).ord_connected`, as we can see by taking
 `s := Ioo 0 1 × Ioo 1 2 ∪ Ioo 2 3 × Ioo 0 1` because then
@@ -129,13 +142,16 @@ protected theorem IsUpperSet.interior (h : IsUpperSet s) : IsUpperSet (interior 
   rw [← isLowerSet_compl, ← closure_compl]
   exact h.compl.closure
 #align is_upper_set.interior IsUpperSet.interior
--/
 
-#print IsLowerSet.interior /-
+/- warning: is_lower_set.interior -> IsLowerSet.interior is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : HasUpperLowerClosure.{u1} α _inst_1 _inst_2] {s : Set.{u1} α}, (IsLowerSet.{u1} α (Preorder.toHasLe.{u1} α _inst_2) s) -> (IsLowerSet.{u1} α (Preorder.toHasLe.{u1} α _inst_2) (interior.{u1} α _inst_1 s))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : HasUpperLowerClosure.{u1} α _inst_1 _inst_2] {s : Set.{u1} α}, (IsLowerSet.{u1} α (Preorder.toLE.{u1} α _inst_2) s) -> (IsLowerSet.{u1} α (Preorder.toLE.{u1} α _inst_2) (interior.{u1} α _inst_1 s))
+Case conversion may be inaccurate. Consider using '#align is_lower_set.interior IsLowerSet.interiorₓ'. -/
 protected theorem IsLowerSet.interior (h : IsLowerSet s) : IsLowerSet (interior s) :=
   h.ofDual.interior
 #align is_lower_set.interior IsLowerSet.interior
--/
 
 #print Set.OrdConnected.interior /-
 protected theorem Set.OrdConnected.interior (h : s.OrdConnected) : (interior s).OrdConnected :=

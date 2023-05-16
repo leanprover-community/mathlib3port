@@ -67,19 +67,27 @@ theorem natPred_injective : Function.Injective natPred :=
 #align pnat.nat_pred_injective PNat.natPred_injective
 -/
 
-#print PNat.natPred_lt_natPred /-
+/- warning: pnat.nat_pred_lt_nat_pred -> PNat.natPred_lt_natPred is a dubious translation:
+lean 3 declaration is
+  forall {m : PNat} {n : PNat}, Iff (LT.lt.{0} Nat Nat.hasLt (PNat.natPred m) (PNat.natPred n)) (LT.lt.{0} PNat (Preorder.toHasLt.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) m n)
+but is expected to have type
+  forall {m : PNat} {n : PNat}, Iff (LT.lt.{0} Nat instLTNat (PNat.natPred m) (PNat.natPred n)) (LT.lt.{0} PNat (Preorder.toLT.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) m n)
+Case conversion may be inaccurate. Consider using '#align pnat.nat_pred_lt_nat_pred PNat.natPred_lt_natPredₓ'. -/
 @[simp]
 theorem natPred_lt_natPred {m n : ℕ+} : m.natPred < n.natPred ↔ m < n :=
   natPred_strictMono.lt_iff_lt
 #align pnat.nat_pred_lt_nat_pred PNat.natPred_lt_natPred
--/
 
-#print PNat.natPred_le_natPred /-
+/- warning: pnat.nat_pred_le_nat_pred -> PNat.natPred_le_natPred is a dubious translation:
+lean 3 declaration is
+  forall {m : PNat} {n : PNat}, Iff (LE.le.{0} Nat Nat.hasLe (PNat.natPred m) (PNat.natPred n)) (LE.le.{0} PNat (Preorder.toHasLe.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) m n)
+but is expected to have type
+  forall {m : PNat} {n : PNat}, Iff (LE.le.{0} Nat instLENat (PNat.natPred m) (PNat.natPred n)) (LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) m n)
+Case conversion may be inaccurate. Consider using '#align pnat.nat_pred_le_nat_pred PNat.natPred_le_natPredₓ'. -/
 @[simp]
 theorem natPred_le_natPred {m n : ℕ+} : m.natPred ≤ n.natPred ↔ m ≤ n :=
   natPred_strictMono.le_iff_le
 #align pnat.nat_pred_le_nat_pred PNat.natPred_le_natPred
--/
 
 #print PNat.natPred_inj /-
 @[simp]
@@ -105,19 +113,27 @@ theorem succPNat_mono : Monotone succPNat :=
 #align nat.succ_pnat_mono Nat.succPNat_mono
 -/
 
-#print Nat.succPNat_lt_succPNat /-
+/- warning: nat.succ_pnat_lt_succ_pnat -> Nat.succPNat_lt_succPNat is a dubious translation:
+lean 3 declaration is
+  forall {m : Nat} {n : Nat}, Iff (LT.lt.{0} PNat (Preorder.toHasLt.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) (Nat.succPNat m) (Nat.succPNat n)) (LT.lt.{0} Nat Nat.hasLt m n)
+but is expected to have type
+  forall {m : Nat} {n : Nat}, Iff (LT.lt.{0} PNat (Preorder.toLT.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) (Nat.succPNat m) (Nat.succPNat n)) (LT.lt.{0} Nat instLTNat m n)
+Case conversion may be inaccurate. Consider using '#align nat.succ_pnat_lt_succ_pnat Nat.succPNat_lt_succPNatₓ'. -/
 @[simp]
 theorem succPNat_lt_succPNat {m n : ℕ} : m.succPNat < n.succPNat ↔ m < n :=
   succPNat_strictMono.lt_iff_lt
 #align nat.succ_pnat_lt_succ_pnat Nat.succPNat_lt_succPNat
--/
 
-#print Nat.succPNat_le_succPNat /-
+/- warning: nat.succ_pnat_le_succ_pnat -> Nat.succPNat_le_succPNat is a dubious translation:
+lean 3 declaration is
+  forall {m : Nat} {n : Nat}, Iff (LE.le.{0} PNat (Preorder.toHasLe.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) (Nat.succPNat m) (Nat.succPNat n)) (LE.le.{0} Nat Nat.hasLe m n)
+but is expected to have type
+  forall {m : Nat} {n : Nat}, Iff (LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) (Nat.succPNat m) (Nat.succPNat n)) (LE.le.{0} Nat instLENat m n)
+Case conversion may be inaccurate. Consider using '#align nat.succ_pnat_le_succ_pnat Nat.succPNat_le_succPNatₓ'. -/
 @[simp]
 theorem succPNat_le_succPNat {m n : ℕ} : m.succPNat ≤ n.succPNat ↔ m ≤ n :=
   succPNat_strictMono.le_iff_le
 #align nat.succ_pnat_le_succ_pnat Nat.succPNat_le_succPNat
--/
 
 #print Nat.succPNat_injective /-
 theorem succPNat_injective : Function.Injective succPNat :=
@@ -196,7 +212,12 @@ def Equiv.pnatEquivNat : ℕ+ ≃ ℕ where
 #align equiv.pnat_equiv_nat Equiv.pnatEquivNat
 -/
 
-#print OrderIso.pnatIsoNat /-
+/- warning: order_iso.pnat_iso_nat -> OrderIso.pnatIsoNat is a dubious translation:
+lean 3 declaration is
+  OrderIso.{0, 0} PNat Nat (Preorder.toHasLe.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) Nat.hasLe
+but is expected to have type
+  OrderIso.{0, 0} PNat Nat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) instLENat
+Case conversion may be inaccurate. Consider using '#align order_iso.pnat_iso_nat OrderIso.pnatIsoNatₓ'. -/
 /-- The order isomorphism between ℕ and ℕ+ given by `succ`. -/
 @[simps (config := { fullyApplied := false }) apply]
 def OrderIso.pnatIsoNat : ℕ+ ≃o ℕ
@@ -204,11 +225,10 @@ def OrderIso.pnatIsoNat : ℕ+ ≃o ℕ
   toEquiv := Equiv.pnatEquivNat
   map_rel_iff' _ _ := natPred_le_natPred
 #align order_iso.pnat_iso_nat OrderIso.pnatIsoNat
--/
 
 /- warning: order_iso.pnat_iso_nat_symm_apply -> OrderIso.pnatIsoNat_symm_apply is a dubious translation:
 lean 3 declaration is
-  Eq.{1} (Nat -> PNat) (coeFn.{1, 1} (OrderIso.{0, 0} Nat PNat Nat.hasLe (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid))))) (fun (_x : RelIso.{0, 0} Nat PNat (LE.le.{0} Nat Nat.hasLe) (LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))))) => Nat -> PNat) (RelIso.hasCoeToFun.{0, 0} Nat PNat (LE.le.{0} Nat Nat.hasLe) (LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))))) (OrderIso.symm.{0, 0} PNat Nat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) Nat.hasLe OrderIso.pnatIsoNat)) Nat.succPNat
+  Eq.{1} (Nat -> PNat) (coeFn.{1, 1} (OrderIso.{0, 0} Nat PNat Nat.hasLe (Preorder.toHasLe.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid))))) (fun (_x : RelIso.{0, 0} Nat PNat (LE.le.{0} Nat Nat.hasLe) (LE.le.{0} PNat (Preorder.toHasLe.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))))) => Nat -> PNat) (RelIso.hasCoeToFun.{0, 0} Nat PNat (LE.le.{0} Nat Nat.hasLe) (LE.le.{0} PNat (Preorder.toHasLe.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))))) (OrderIso.symm.{0, 0} PNat Nat (Preorder.toHasLe.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) Nat.hasLe OrderIso.pnatIsoNat)) Nat.succPNat
 but is expected to have type
   Eq.{1} (Nat -> PNat) (FunLike.coe.{1, 1, 1} (RelIso.{0, 0} Nat PNat (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : PNat) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : PNat) => LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298)) Nat (fun (_x : Nat) => PNat) (RelHomClass.toFunLike.{0, 0, 0} (RelIso.{0, 0} Nat PNat (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : PNat) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : PNat) => LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298)) Nat PNat (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : PNat) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : PNat) => LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) (RelIso.instRelHomClassRelIso.{0, 0} Nat PNat (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : Nat) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : Nat) => LE.le.{0} Nat instLENat x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : PNat) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : PNat) => LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298))) (OrderIso.symm.{0, 0} PNat Nat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) instLENat OrderIso.pnatIsoNat)) Nat.succPNat
 Case conversion may be inaccurate. Consider using '#align order_iso.pnat_iso_nat_symm_apply OrderIso.pnatIsoNat_symm_applyₓ'. -/
@@ -219,7 +239,7 @@ theorem OrderIso.pnatIsoNat_symm_apply : ⇑OrderIso.pnatIsoNat.symm = Nat.succP
 
 /- warning: pnat.lt_add_one_iff -> PNat.lt_add_one_iff is a dubious translation:
 lean 3 declaration is
-  forall {a : PNat} {b : PNat}, Iff (LT.lt.{0} PNat (Preorder.toLT.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) a (HAdd.hAdd.{0, 0, 0} PNat PNat PNat (instHAdd.{0} PNat PNat.hasAdd) b (OfNat.ofNat.{0} PNat 1 (OfNat.mk.{0} PNat 1 (One.one.{0} PNat PNat.hasOne))))) (LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) a b)
+  forall {a : PNat} {b : PNat}, Iff (LT.lt.{0} PNat (Preorder.toHasLt.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) a (HAdd.hAdd.{0, 0, 0} PNat PNat PNat (instHAdd.{0} PNat PNat.hasAdd) b (OfNat.ofNat.{0} PNat 1 (OfNat.mk.{0} PNat 1 (One.one.{0} PNat PNat.hasOne))))) (LE.le.{0} PNat (Preorder.toHasLe.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) a b)
 but is expected to have type
   forall {a : PNat} {b : PNat}, Iff (LT.lt.{0} PNat (Preorder.toLT.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) a (HAdd.hAdd.{0, 0, 0} PNat PNat PNat (instHAdd.{0} PNat instPNatAdd) b (OfNat.ofNat.{0} PNat 1 (instOfNatPNatHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))) (LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) a b)
 Case conversion may be inaccurate. Consider using '#align pnat.lt_add_one_iff PNat.lt_add_one_iffₓ'. -/
@@ -228,7 +248,7 @@ theorem lt_add_one_iff : ∀ {a b : ℕ+}, a < b + 1 ↔ a ≤ b := fun a b => N
 
 /- warning: pnat.add_one_le_iff -> PNat.add_one_le_iff is a dubious translation:
 lean 3 declaration is
-  forall {a : PNat} {b : PNat}, Iff (LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) (HAdd.hAdd.{0, 0, 0} PNat PNat PNat (instHAdd.{0} PNat PNat.hasAdd) a (OfNat.ofNat.{0} PNat 1 (OfNat.mk.{0} PNat 1 (One.one.{0} PNat PNat.hasOne)))) b) (LT.lt.{0} PNat (Preorder.toLT.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) a b)
+  forall {a : PNat} {b : PNat}, Iff (LE.le.{0} PNat (Preorder.toHasLe.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) (HAdd.hAdd.{0, 0, 0} PNat PNat PNat (instHAdd.{0} PNat PNat.hasAdd) a (OfNat.ofNat.{0} PNat 1 (OfNat.mk.{0} PNat 1 (One.one.{0} PNat PNat.hasOne)))) b) (LT.lt.{0} PNat (Preorder.toHasLt.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) a b)
 but is expected to have type
   forall {a : PNat} {b : PNat}, Iff (LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) (HAdd.hAdd.{0, 0, 0} PNat PNat PNat (instHAdd.{0} PNat instPNatAdd) a (OfNat.ofNat.{0} PNat 1 (instOfNatPNatHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))) b) (LT.lt.{0} PNat (Preorder.toLT.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) a b)
 Case conversion may be inaccurate. Consider using '#align pnat.add_one_le_iff PNat.add_one_le_iffₓ'. -/
@@ -241,7 +261,7 @@ instance : OrderBot ℕ+ where
 
 /- warning: pnat.bot_eq_one -> PNat.bot_eq_one is a dubious translation:
 lean 3 declaration is
-  Eq.{1} PNat (Bot.bot.{0} PNat (OrderBot.toHasBot.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) PNat.orderBot)) (OfNat.ofNat.{0} PNat 1 (OfNat.mk.{0} PNat 1 (One.one.{0} PNat PNat.hasOne)))
+  Eq.{1} PNat (Bot.bot.{0} PNat (OrderBot.toHasBot.{0} PNat (Preorder.toHasLe.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) PNat.orderBot)) (OfNat.ofNat.{0} PNat 1 (OfNat.mk.{0} PNat 1 (One.one.{0} PNat PNat.hasOne)))
 but is expected to have type
   Eq.{1} PNat (Bot.bot.{0} PNat (OrderBot.toBot.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) PNat.instOrderBotPNatToLEToPreorderToPartialOrderToOrderedCancelCommMonoidInstPNatLinearOrderedCancelCommMonoid)) (OfNat.ofNat.{0} PNat 1 (instOfNatPNatHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))
 Case conversion may be inaccurate. Consider using '#align pnat.bot_eq_one PNat.bot_eq_oneₓ'. -/
@@ -275,7 +295,7 @@ theorem mk_bit1 (n) {h} {k} : (⟨bit1 n, h⟩ : ℕ+) = (bit1 ⟨n, k⟩ : ℕ+
 
 /- warning: pnat.bit0_le_bit0 -> PNat.bit0_le_bit0 is a dubious translation:
 lean 3 declaration is
-  forall (n : PNat) (m : PNat), Iff (LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) (bit0.{0} PNat PNat.hasAdd n) (bit0.{0} PNat PNat.hasAdd m)) (LE.le.{0} Nat Nat.hasLe (bit0.{0} Nat Nat.hasAdd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) n)) (bit0.{0} Nat Nat.hasAdd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) m)))
+  forall (n : PNat) (m : PNat), Iff (LE.le.{0} PNat (Preorder.toHasLe.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) (bit0.{0} PNat PNat.hasAdd n) (bit0.{0} PNat PNat.hasAdd m)) (LE.le.{0} Nat Nat.hasLe (bit0.{0} Nat Nat.hasAdd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) n)) (bit0.{0} Nat Nat.hasAdd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) m)))
 but is expected to have type
   forall (n : PNat) (m : PNat), Iff (LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) (bit0.{0} PNat instPNatAdd n) (bit0.{0} PNat instPNatAdd m)) (LE.le.{0} Nat instLENat (bit0.{0} Nat instAddNat (PNat.val n)) (bit0.{0} Nat instAddNat (PNat.val m)))
 Case conversion may be inaccurate. Consider using '#align pnat.bit0_le_bit0 PNat.bit0_le_bit0ₓ'. -/
@@ -293,7 +313,7 @@ theorem bit0_le_bit0 (n m : ℕ+) : bit0 n ≤ bit0 m ↔ bit0 (n : ℕ) ≤ bit
 
 /- warning: pnat.bit0_le_bit1 -> PNat.bit0_le_bit1 is a dubious translation:
 lean 3 declaration is
-  forall (n : PNat) (m : PNat), Iff (LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) (bit0.{0} PNat PNat.hasAdd n) (bit1.{0} PNat PNat.hasOne PNat.hasAdd m)) (LE.le.{0} Nat Nat.hasLe (bit0.{0} Nat Nat.hasAdd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) n)) (bit1.{0} Nat Nat.hasOne Nat.hasAdd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) m)))
+  forall (n : PNat) (m : PNat), Iff (LE.le.{0} PNat (Preorder.toHasLe.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) (bit0.{0} PNat PNat.hasAdd n) (bit1.{0} PNat PNat.hasOne PNat.hasAdd m)) (LE.le.{0} Nat Nat.hasLe (bit0.{0} Nat Nat.hasAdd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) n)) (bit1.{0} Nat Nat.hasOne Nat.hasAdd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) m)))
 but is expected to have type
   forall (n : PNat) (m : PNat), Iff (LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) (bit0.{0} PNat instPNatAdd n) (bit1.{0} PNat instOnePNat instPNatAdd m)) (LE.le.{0} Nat instLENat (bit0.{0} Nat instAddNat (PNat.val n)) (bit1.{0} Nat (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring) instAddNat (PNat.val m)))
 Case conversion may be inaccurate. Consider using '#align pnat.bit0_le_bit1 PNat.bit0_le_bit1ₓ'. -/
@@ -304,7 +324,7 @@ theorem bit0_le_bit1 (n m : ℕ+) : bit0 n ≤ bit1 m ↔ bit0 (n : ℕ) ≤ bit
 
 /- warning: pnat.bit1_le_bit0 -> PNat.bit1_le_bit0 is a dubious translation:
 lean 3 declaration is
-  forall (n : PNat) (m : PNat), Iff (LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) (bit1.{0} PNat PNat.hasOne PNat.hasAdd n) (bit0.{0} PNat PNat.hasAdd m)) (LE.le.{0} Nat Nat.hasLe (bit1.{0} Nat Nat.hasOne Nat.hasAdd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) n)) (bit0.{0} Nat Nat.hasAdd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) m)))
+  forall (n : PNat) (m : PNat), Iff (LE.le.{0} PNat (Preorder.toHasLe.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) (bit1.{0} PNat PNat.hasOne PNat.hasAdd n) (bit0.{0} PNat PNat.hasAdd m)) (LE.le.{0} Nat Nat.hasLe (bit1.{0} Nat Nat.hasOne Nat.hasAdd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) n)) (bit0.{0} Nat Nat.hasAdd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) m)))
 but is expected to have type
   forall (n : PNat) (m : PNat), Iff (LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) (bit1.{0} PNat instOnePNat instPNatAdd n) (bit0.{0} PNat instPNatAdd m)) (LE.le.{0} Nat instLENat (bit1.{0} Nat (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring) instAddNat (PNat.val n)) (bit0.{0} Nat instAddNat (PNat.val m)))
 Case conversion may be inaccurate. Consider using '#align pnat.bit1_le_bit0 PNat.bit1_le_bit0ₓ'. -/
@@ -315,7 +335,7 @@ theorem bit1_le_bit0 (n m : ℕ+) : bit1 n ≤ bit0 m ↔ bit1 (n : ℕ) ≤ bit
 
 /- warning: pnat.bit1_le_bit1 -> PNat.bit1_le_bit1 is a dubious translation:
 lean 3 declaration is
-  forall (n : PNat) (m : PNat), Iff (LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) (bit1.{0} PNat PNat.hasOne PNat.hasAdd n) (bit1.{0} PNat PNat.hasOne PNat.hasAdd m)) (LE.le.{0} Nat Nat.hasLe (bit1.{0} Nat Nat.hasOne Nat.hasAdd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) n)) (bit1.{0} Nat Nat.hasOne Nat.hasAdd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) m)))
+  forall (n : PNat) (m : PNat), Iff (LE.le.{0} PNat (Preorder.toHasLe.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) (bit1.{0} PNat PNat.hasOne PNat.hasAdd n) (bit1.{0} PNat PNat.hasOne PNat.hasAdd m)) (LE.le.{0} Nat Nat.hasLe (bit1.{0} Nat Nat.hasOne Nat.hasAdd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) n)) (bit1.{0} Nat Nat.hasOne Nat.hasAdd ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) m)))
 but is expected to have type
   forall (n : PNat) (m : PNat), Iff (LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) (bit1.{0} PNat instOnePNat instPNatAdd n) (bit1.{0} PNat instOnePNat instPNatAdd m)) (LE.le.{0} Nat instLENat (bit1.{0} Nat (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring) instAddNat (PNat.val n)) (bit1.{0} Nat (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring) instAddNat (PNat.val m)))
 Case conversion may be inaccurate. Consider using '#align pnat.bit1_le_bit1 PNat.bit1_le_bit1ₓ'. -/
@@ -355,16 +375,20 @@ theorem coe_coeMonoidHom : (coeMonoidHom : ℕ+ → ℕ) = coe :=
   rfl
 #align pnat.coe_coe_monoid_hom PNat.coe_coeMonoidHom
 
-#print PNat.le_one_iff /-
+/- warning: pnat.le_one_iff -> PNat.le_one_iff is a dubious translation:
+lean 3 declaration is
+  forall {n : PNat}, Iff (LE.le.{0} PNat (Preorder.toHasLe.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) n (OfNat.ofNat.{0} PNat 1 (OfNat.mk.{0} PNat 1 (One.one.{0} PNat PNat.hasOne)))) (Eq.{1} PNat n (OfNat.ofNat.{0} PNat 1 (OfNat.mk.{0} PNat 1 (One.one.{0} PNat PNat.hasOne))))
+but is expected to have type
+  forall {n : PNat}, Iff (LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) n (OfNat.ofNat.{0} PNat 1 (instOfNatPNatHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))) (Eq.{1} PNat n (OfNat.ofNat.{0} PNat 1 (instOfNatPNatHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))
+Case conversion may be inaccurate. Consider using '#align pnat.le_one_iff PNat.le_one_iffₓ'. -/
 @[simp]
 theorem le_one_iff {n : ℕ+} : n ≤ 1 ↔ n = 1 :=
   le_bot_iff
 #align pnat.le_one_iff PNat.le_one_iff
--/
 
 /- warning: pnat.lt_add_left -> PNat.lt_add_left is a dubious translation:
 lean 3 declaration is
-  forall (n : PNat) (m : PNat), LT.lt.{0} PNat (Preorder.toLT.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) n (HAdd.hAdd.{0, 0, 0} PNat PNat PNat (instHAdd.{0} PNat PNat.hasAdd) m n)
+  forall (n : PNat) (m : PNat), LT.lt.{0} PNat (Preorder.toHasLt.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) n (HAdd.hAdd.{0, 0, 0} PNat PNat PNat (instHAdd.{0} PNat PNat.hasAdd) m n)
 but is expected to have type
   forall (n : PNat) (m : PNat), LT.lt.{0} PNat (Preorder.toLT.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) n (HAdd.hAdd.{0, 0, 0} PNat PNat PNat (instHAdd.{0} PNat instPNatAdd) m n)
 Case conversion may be inaccurate. Consider using '#align pnat.lt_add_left PNat.lt_add_leftₓ'. -/
@@ -374,7 +398,7 @@ theorem lt_add_left (n m : ℕ+) : n < m + n :=
 
 /- warning: pnat.lt_add_right -> PNat.lt_add_right is a dubious translation:
 lean 3 declaration is
-  forall (n : PNat) (m : PNat), LT.lt.{0} PNat (Preorder.toLT.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) n (HAdd.hAdd.{0, 0, 0} PNat PNat PNat (instHAdd.{0} PNat PNat.hasAdd) n m)
+  forall (n : PNat) (m : PNat), LT.lt.{0} PNat (Preorder.toHasLt.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) n (HAdd.hAdd.{0, 0, 0} PNat PNat PNat (instHAdd.{0} PNat PNat.hasAdd) n m)
 but is expected to have type
   forall (n : PNat) (m : PNat), LT.lt.{0} PNat (Preorder.toLT.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) n (HAdd.hAdd.{0, 0, 0} PNat PNat PNat (instHAdd.{0} PNat instPNatAdd) n m)
 Case conversion may be inaccurate. Consider using '#align pnat.lt_add_right PNat.lt_add_rightₓ'. -/
@@ -419,7 +443,7 @@ instance : Sub ℕ+ :=
 
 /- warning: pnat.sub_coe -> PNat.sub_coe is a dubious translation:
 lean 3 declaration is
-  forall (a : PNat) (b : PNat), Eq.{1} Nat ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) (HSub.hSub.{0, 0, 0} PNat PNat PNat (instHSub.{0} PNat PNat.hasSub) a b)) (ite.{1} Nat (LT.lt.{0} PNat (Preorder.toLT.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) b a) (Subtype.decidableLT.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) (fun (a : Nat) (b : Nat) => Nat.decidableLt a b) (fun (n : Nat) => LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) b a) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) a) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) b)) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))
+  forall (a : PNat) (b : PNat), Eq.{1} Nat ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) (HSub.hSub.{0, 0, 0} PNat PNat PNat (instHSub.{0} PNat PNat.hasSub) a b)) (ite.{1} Nat (LT.lt.{0} PNat (Preorder.toHasLt.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) b a) (Subtype.decidableLT.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) (fun (a : Nat) (b : Nat) => Nat.decidableLt a b) (fun (n : Nat) => LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) b a) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) a) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) b)) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))
 but is expected to have type
   forall (a : PNat) (b : PNat), Eq.{1} Nat (PNat.val (HSub.hSub.{0, 0, 0} PNat PNat PNat (instHSub.{0} PNat PNat.instSubPNat) a b)) (ite.{1} Nat (LT.lt.{0} PNat (Preorder.toLT.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) b a) (instDecidableLtToLTToPreorderToPartialOrder.{0} PNat instPNatLinearOrder b a) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (PNat.val a) (PNat.val b)) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))
 Case conversion may be inaccurate. Consider using '#align pnat.sub_coe PNat.sub_coeₓ'. -/
@@ -434,7 +458,7 @@ theorem sub_coe (a b : ℕ+) : ((a - b : ℕ+) : ℕ) = ite (b < a) (a - b : ℕ
 
 /- warning: pnat.add_sub_of_lt -> PNat.add_sub_of_lt is a dubious translation:
 lean 3 declaration is
-  forall {a : PNat} {b : PNat}, (LT.lt.{0} PNat (Preorder.toLT.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) a b) -> (Eq.{1} PNat (HAdd.hAdd.{0, 0, 0} PNat PNat PNat (instHAdd.{0} PNat PNat.hasAdd) a (HSub.hSub.{0, 0, 0} PNat PNat PNat (instHSub.{0} PNat PNat.hasSub) b a)) b)
+  forall {a : PNat} {b : PNat}, (LT.lt.{0} PNat (Preorder.toHasLt.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) a b) -> (Eq.{1} PNat (HAdd.hAdd.{0, 0, 0} PNat PNat PNat (instHAdd.{0} PNat PNat.hasAdd) a (HSub.hSub.{0, 0, 0} PNat PNat PNat (instHSub.{0} PNat PNat.hasSub) b a)) b)
 but is expected to have type
   forall {a : PNat} {b : PNat}, (LT.lt.{0} PNat (Preorder.toLT.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) a b) -> (Eq.{1} PNat (HAdd.hAdd.{0, 0, 0} PNat PNat PNat (instHAdd.{0} PNat instPNatAdd) a (HSub.hSub.{0, 0, 0} PNat PNat PNat (instHSub.{0} PNat PNat.instSubPNat) b a)) b)
 Case conversion may be inaccurate. Consider using '#align pnat.add_sub_of_lt PNat.add_sub_of_ltₓ'. -/
@@ -458,7 +482,7 @@ theorem exists_eq_succ_of_ne_one : ∀ {n : ℕ+} (h1 : n ≠ 1), ∃ k : ℕ+, 
 
 /- warning: pnat.case_strong_induction_on -> PNat.caseStrongInductionOn is a dubious translation:
 lean 3 declaration is
-  forall {p : PNat -> Sort.{u1}} (a : PNat), (p (OfNat.ofNat.{0} PNat 1 (OfNat.mk.{0} PNat 1 (One.one.{0} PNat PNat.hasOne)))) -> (forall (n : PNat), (forall (m : PNat), (LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) m n) -> (p m)) -> (p (HAdd.hAdd.{0, 0, 0} PNat PNat PNat (instHAdd.{0} PNat PNat.hasAdd) n (OfNat.ofNat.{0} PNat 1 (OfNat.mk.{0} PNat 1 (One.one.{0} PNat PNat.hasOne)))))) -> (p a)
+  forall {p : PNat -> Sort.{u1}} (a : PNat), (p (OfNat.ofNat.{0} PNat 1 (OfNat.mk.{0} PNat 1 (One.one.{0} PNat PNat.hasOne)))) -> (forall (n : PNat), (forall (m : PNat), (LE.le.{0} PNat (Preorder.toHasLe.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) m n) -> (p m)) -> (p (HAdd.hAdd.{0, 0, 0} PNat PNat PNat (instHAdd.{0} PNat PNat.hasAdd) n (OfNat.ofNat.{0} PNat 1 (OfNat.mk.{0} PNat 1 (One.one.{0} PNat PNat.hasOne)))))) -> (p a)
 but is expected to have type
   forall {p : PNat -> Sort.{u1}} (a : PNat), (p (OfNat.ofNat.{0} PNat 1 (instOfNatPNatHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))) -> (forall (n : PNat), (forall (m : PNat), (LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) m n) -> (p m)) -> (p (HAdd.hAdd.{0, 0, 0} PNat PNat PNat (instHAdd.{0} PNat instPNatAdd) n (OfNat.ofNat.{0} PNat 1 (instOfNatPNatHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))))) -> (p a)
 Case conversion may be inaccurate. Consider using '#align pnat.case_strong_induction_on PNat.caseStrongInductionOnₓ'. -/
@@ -568,7 +592,12 @@ theorem div_add_mod' (m k : ℕ+) : (div m k * k + mod m k : ℕ) = m :=
 #align pnat.div_add_mod' PNat.div_add_mod'
 -/
 
-#print PNat.mod_le /-
+/- warning: pnat.mod_le -> PNat.mod_le is a dubious translation:
+lean 3 declaration is
+  forall (m : PNat) (k : PNat), And (LE.le.{0} PNat (Preorder.toHasLe.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) (PNat.mod m k) m) (LE.le.{0} PNat (Preorder.toHasLe.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) (PNat.mod m k) k)
+but is expected to have type
+  forall (m : PNat) (k : PNat), And (LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) (PNat.mod m k) m) (LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) (PNat.mod m k) k)
+Case conversion may be inaccurate. Consider using '#align pnat.mod_le PNat.mod_leₓ'. -/
 theorem mod_le (m k : ℕ+) : mod m k ≤ m ∧ mod m k ≤ k :=
   by
   change (mod m k : ℕ) ≤ (m : ℕ) ∧ (mod m k : ℕ) ≤ (k : ℕ)
@@ -583,7 +612,6 @@ theorem mod_le (m k : ℕ+) : mod m k ≤ m ∧ mod m k ≤ k :=
       exact ⟨h', le_refl (k : ℕ)⟩
   · exact ⟨Nat.mod_le (m : ℕ) (k : ℕ), (Nat.mod_lt (m : ℕ) k.pos).le⟩
 #align pnat.mod_le PNat.mod_le
--/
 
 #print PNat.dvd_iff /-
 theorem dvd_iff {k m : ℕ+} : k ∣ m ↔ (k : ℕ) ∣ (m : ℕ) :=
@@ -613,7 +641,12 @@ theorem dvd_iff' {k m : ℕ+} : k ∣ m ↔ mod m k = k :=
 #align pnat.dvd_iff' PNat.dvd_iff'
 -/
 
-#print PNat.le_of_dvd /-
+/- warning: pnat.le_of_dvd -> PNat.le_of_dvd is a dubious translation:
+lean 3 declaration is
+  forall {m : PNat} {n : PNat}, (Dvd.Dvd.{0} PNat (semigroupDvd.{0} PNat (Monoid.toSemigroup.{0} PNat (RightCancelMonoid.toMonoid.{0} PNat (CancelMonoid.toRightCancelMonoid.{0} PNat (CancelCommMonoid.toCancelMonoid.{0} PNat (OrderedCancelCommMonoid.toCancelCommMonoid.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid))))))) m n) -> (LE.le.{0} PNat (Preorder.toHasLe.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat PNat.linearOrderedCancelCommMonoid)))) m n)
+but is expected to have type
+  forall {m : PNat} {n : PNat}, (Dvd.dvd.{0} PNat (semigroupDvd.{0} PNat (Monoid.toSemigroup.{0} PNat (RightCancelMonoid.toMonoid.{0} PNat (CancelMonoid.toRightCancelMonoid.{0} PNat (CancelCommMonoid.toCancelMonoid.{0} PNat (OrderedCancelCommMonoid.toCancelCommMonoid.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid))))))) m n) -> (LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) m n)
+Case conversion may be inaccurate. Consider using '#align pnat.le_of_dvd PNat.le_of_dvdₓ'. -/
 theorem le_of_dvd {m n : ℕ+} : m ∣ n → m ≤ n :=
   by
   rw [dvd_iff']
@@ -621,7 +654,6 @@ theorem le_of_dvd {m n : ℕ+} : m ∣ n → m ≤ n :=
   rw [← h]
   apply (mod_le n m).left
 #align pnat.le_of_dvd PNat.le_of_dvd
--/
 
 /- warning: pnat.mul_div_exact -> PNat.mul_div_exact is a dubious translation:
 lean 3 declaration is

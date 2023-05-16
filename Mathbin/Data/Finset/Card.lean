@@ -991,13 +991,17 @@ theorem strongDownwardInductionOn_eq {p : Finset α → Sort _} (s : Finset α)
   rw [strong_downward_induction]
 #align finset.strong_downward_induction_on_eq Finset.strongDownwardInductionOn_eq
 
-#print Finset.lt_wf /-
+/- warning: finset.lt_wf -> Finset.lt_wf is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}}, WellFounded.{succ u1} (Finset.{u1} α) (LT.lt.{u1} (Finset.{u1} α) (Preorder.toHasLt.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))))
+but is expected to have type
+  forall {α : Type.{u1}}, WellFounded.{succ u1} (Finset.{u1} α) (LT.lt.{u1} (Finset.{u1} α) (Preorder.toLT.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))))
+Case conversion may be inaccurate. Consider using '#align finset.lt_wf Finset.lt_wfₓ'. -/
 theorem lt_wf {α} : WellFounded (@LT.lt (Finset α) _) :=
   have H : Subrelation (@LT.lt (Finset α) _) (InvImage (· < ·) card) := fun x y hxy =>
     card_lt_card hxy
   Subrelation.wf H <| InvImage.wf _ <| Nat.lt_wfRel
 #align finset.lt_wf Finset.lt_wf
--/
 
 end Finset
 

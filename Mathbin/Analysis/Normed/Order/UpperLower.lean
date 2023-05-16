@@ -36,7 +36,12 @@ section MetricSpace
 
 variable [NormedOrderedGroup α] {s : Set α}
 
-#print IsUpperSet.thickening' /-
+/- warning: is_upper_set.thickening' -> IsUpperSet.thickening' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : NormedOrderedGroup.{u1} α] {s : Set.{u1} α}, (IsUpperSet.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α (NormedOrderedGroup.toOrderedCommGroup.{u1} α _inst_1)))) s) -> (forall (ε : Real), IsUpperSet.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α (NormedOrderedGroup.toOrderedCommGroup.{u1} α _inst_1)))) (Metric.thickening.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α (SeminormedCommGroup.toPseudoMetricSpace.{u1} α (NormedCommGroup.toSeminormedCommGroup.{u1} α (NormedOrderedGroup.toNormedCommGroup.{u1} α _inst_1)))) ε s))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : NormedOrderedGroup.{u1} α] {s : Set.{u1} α}, (IsUpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α (NormedOrderedGroup.toOrderedCommGroup.{u1} α _inst_1)))) s) -> (forall (ε : Real), IsUpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α (NormedOrderedGroup.toOrderedCommGroup.{u1} α _inst_1)))) (Metric.thickening.{u1} α (EMetricSpace.toPseudoEMetricSpace.{u1} α (MetricSpace.toEMetricSpace.{u1} α (NormedOrderedGroup.toMetricSpace.{u1} α _inst_1))) ε s))
+Case conversion may be inaccurate. Consider using '#align is_upper_set.thickening' IsUpperSet.thickening'ₓ'. -/
 @[to_additive IsUpperSet.thickening]
 protected theorem IsUpperSet.thickening' (hs : IsUpperSet s) (ε : ℝ) :
     IsUpperSet (thickening ε s) := by
@@ -44,9 +49,13 @@ protected theorem IsUpperSet.thickening' (hs : IsUpperSet s) (ε : ℝ) :
   exact hs.mul_left
 #align is_upper_set.thickening' IsUpperSet.thickening'
 #align is_upper_set.thickening IsUpperSet.thickening
--/
 
-#print IsLowerSet.thickening' /-
+/- warning: is_lower_set.thickening' -> IsLowerSet.thickening' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : NormedOrderedGroup.{u1} α] {s : Set.{u1} α}, (IsLowerSet.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α (NormedOrderedGroup.toOrderedCommGroup.{u1} α _inst_1)))) s) -> (forall (ε : Real), IsLowerSet.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α (NormedOrderedGroup.toOrderedCommGroup.{u1} α _inst_1)))) (Metric.thickening.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α (SeminormedCommGroup.toPseudoMetricSpace.{u1} α (NormedCommGroup.toSeminormedCommGroup.{u1} α (NormedOrderedGroup.toNormedCommGroup.{u1} α _inst_1)))) ε s))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : NormedOrderedGroup.{u1} α] {s : Set.{u1} α}, (IsLowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α (NormedOrderedGroup.toOrderedCommGroup.{u1} α _inst_1)))) s) -> (forall (ε : Real), IsLowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α (NormedOrderedGroup.toOrderedCommGroup.{u1} α _inst_1)))) (Metric.thickening.{u1} α (EMetricSpace.toPseudoEMetricSpace.{u1} α (MetricSpace.toEMetricSpace.{u1} α (NormedOrderedGroup.toMetricSpace.{u1} α _inst_1))) ε s))
+Case conversion may be inaccurate. Consider using '#align is_lower_set.thickening' IsLowerSet.thickening'ₓ'. -/
 @[to_additive IsLowerSet.thickening]
 protected theorem IsLowerSet.thickening' (hs : IsLowerSet s) (ε : ℝ) :
     IsLowerSet (thickening ε s) := by
@@ -54,9 +63,13 @@ protected theorem IsLowerSet.thickening' (hs : IsLowerSet s) (ε : ℝ) :
   exact hs.mul_left
 #align is_lower_set.thickening' IsLowerSet.thickening'
 #align is_lower_set.thickening IsLowerSet.thickening
--/
 
-#print IsUpperSet.cthickening' /-
+/- warning: is_upper_set.cthickening' -> IsUpperSet.cthickening' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : NormedOrderedGroup.{u1} α] {s : Set.{u1} α}, (IsUpperSet.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α (NormedOrderedGroup.toOrderedCommGroup.{u1} α _inst_1)))) s) -> (forall (ε : Real), IsUpperSet.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α (NormedOrderedGroup.toOrderedCommGroup.{u1} α _inst_1)))) (Metric.cthickening.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α (SeminormedCommGroup.toPseudoMetricSpace.{u1} α (NormedCommGroup.toSeminormedCommGroup.{u1} α (NormedOrderedGroup.toNormedCommGroup.{u1} α _inst_1)))) ε s))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : NormedOrderedGroup.{u1} α] {s : Set.{u1} α}, (IsUpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α (NormedOrderedGroup.toOrderedCommGroup.{u1} α _inst_1)))) s) -> (forall (ε : Real), IsUpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α (NormedOrderedGroup.toOrderedCommGroup.{u1} α _inst_1)))) (Metric.cthickening.{u1} α (EMetricSpace.toPseudoEMetricSpace.{u1} α (MetricSpace.toEMetricSpace.{u1} α (NormedOrderedGroup.toMetricSpace.{u1} α _inst_1))) ε s))
+Case conversion may be inaccurate. Consider using '#align is_upper_set.cthickening' IsUpperSet.cthickening'ₓ'. -/
 @[to_additive IsUpperSet.cthickening]
 protected theorem IsUpperSet.cthickening' (hs : IsUpperSet s) (ε : ℝ) :
     IsUpperSet (cthickening ε s) :=
@@ -65,9 +78,13 @@ protected theorem IsUpperSet.cthickening' (hs : IsUpperSet s) (ε : ℝ) :
   exact isUpperSet_iInter₂ fun δ hδ => hs.thickening' _
 #align is_upper_set.cthickening' IsUpperSet.cthickening'
 #align is_upper_set.cthickening IsUpperSet.cthickening
--/
 
-#print IsLowerSet.cthickening' /-
+/- warning: is_lower_set.cthickening' -> IsLowerSet.cthickening' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : NormedOrderedGroup.{u1} α] {s : Set.{u1} α}, (IsLowerSet.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α (NormedOrderedGroup.toOrderedCommGroup.{u1} α _inst_1)))) s) -> (forall (ε : Real), IsLowerSet.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α (NormedOrderedGroup.toOrderedCommGroup.{u1} α _inst_1)))) (Metric.cthickening.{u1} α (PseudoMetricSpace.toPseudoEMetricSpace.{u1} α (SeminormedCommGroup.toPseudoMetricSpace.{u1} α (NormedCommGroup.toSeminormedCommGroup.{u1} α (NormedOrderedGroup.toNormedCommGroup.{u1} α _inst_1)))) ε s))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : NormedOrderedGroup.{u1} α] {s : Set.{u1} α}, (IsLowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α (NormedOrderedGroup.toOrderedCommGroup.{u1} α _inst_1)))) s) -> (forall (ε : Real), IsLowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommGroup.toPartialOrder.{u1} α (NormedOrderedGroup.toOrderedCommGroup.{u1} α _inst_1)))) (Metric.cthickening.{u1} α (EMetricSpace.toPseudoEMetricSpace.{u1} α (MetricSpace.toEMetricSpace.{u1} α (NormedOrderedGroup.toMetricSpace.{u1} α _inst_1))) ε s))
+Case conversion may be inaccurate. Consider using '#align is_lower_set.cthickening' IsLowerSet.cthickening'ₓ'. -/
 @[to_additive IsLowerSet.cthickening]
 protected theorem IsLowerSet.cthickening' (hs : IsLowerSet s) (ε : ℝ) :
     IsLowerSet (cthickening ε s) :=
@@ -76,7 +93,6 @@ protected theorem IsLowerSet.cthickening' (hs : IsLowerSet s) (ε : ℝ) :
   exact isLowerSet_iInter₂ fun δ hδ => hs.thickening' _
 #align is_lower_set.cthickening' IsLowerSet.cthickening'
 #align is_lower_set.cthickening IsLowerSet.cthickening
--/
 
 end MetricSpace
 

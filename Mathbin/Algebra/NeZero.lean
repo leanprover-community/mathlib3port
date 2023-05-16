@@ -175,11 +175,15 @@ instance succ : NeZero (n + 1) :=
 #align ne_zero.succ NeZero.succ
 -/
 
-#print NeZero.of_pos /-
+/- warning: ne_zero.of_pos -> NeZero.of_pos is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u1}} {x : M} [_inst_1 : Preorder.{u1} M] [_inst_2 : Zero.{u1} M], (LT.lt.{u1} M (Preorder.toHasLt.{u1} M _inst_1) (OfNat.ofNat.{u1} M 0 (OfNat.mk.{u1} M 0 (Zero.zero.{u1} M _inst_2))) x) -> (NeZero.{u1} M _inst_2 x)
+but is expected to have type
+  forall {M : Type.{u1}} {x : M} [_inst_1 : Preorder.{u1} M] [_inst_2 : Zero.{u1} M], (LT.lt.{u1} M (Preorder.toLT.{u1} M _inst_1) (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M _inst_2)) x) -> (NeZero.{u1} M _inst_2 x)
+Case conversion may be inaccurate. Consider using '#align ne_zero.of_pos NeZero.of_posₓ'. -/
 theorem of_pos [Preorder M] [Zero M] (h : 0 < x) : NeZero x :=
   ⟨ne_of_gt h⟩
 #align ne_zero.of_pos NeZero.of_pos
--/
 
 instance coeTrans [Zero M] [Coe R S] [CoeTC S M] [h : NeZero (r : M)] : NeZero ((r : S) : M) :=
   ⟨h.out⟩

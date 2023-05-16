@@ -64,13 +64,17 @@ def IsPFilter [Preorder P] (F : Set P) : Prop :=
 #align order.is_pfilter Order.IsPFilter
 -/
 
-#print Order.IsPFilter.of_def /-
+/- warning: order.is_pfilter.of_def -> Order.IsPFilter.of_def is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : Preorder.{u1} P] {F : Set.{u1} P}, (Set.Nonempty.{u1} P F) -> (DirectedOn.{u1} P (GE.ge.{u1} P (Preorder.toHasLe.{u1} P _inst_1)) F) -> (forall {x : P} {y : P}, (LE.le.{u1} P (Preorder.toHasLe.{u1} P _inst_1) x y) -> (Membership.Mem.{u1, u1} P (Set.{u1} P) (Set.hasMem.{u1} P) x F) -> (Membership.Mem.{u1, u1} P (Set.{u1} P) (Set.hasMem.{u1} P) y F)) -> (Order.IsPFilter.{u1} P _inst_1 F)
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : Preorder.{u1} P] {F : Set.{u1} P}, (Set.Nonempty.{u1} P F) -> (DirectedOn.{u1} P (fun (x._@.Mathlib.Order.PFilter._hyg.66 : P) (x._@.Mathlib.Order.PFilter._hyg.68 : P) => GE.ge.{u1} P (Preorder.toLE.{u1} P _inst_1) x._@.Mathlib.Order.PFilter._hyg.66 x._@.Mathlib.Order.PFilter._hyg.68) F) -> (forall {x : P} {y : P}, (LE.le.{u1} P (Preorder.toLE.{u1} P _inst_1) x y) -> (Membership.mem.{u1, u1} P (Set.{u1} P) (Set.instMembershipSet.{u1} P) x F) -> (Membership.mem.{u1, u1} P (Set.{u1} P) (Set.instMembershipSet.{u1} P) y F)) -> (Order.IsPFilter.{u1} P _inst_1 F)
+Case conversion may be inaccurate. Consider using '#align order.is_pfilter.of_def Order.IsPFilter.of_defₓ'. -/
 theorem IsPFilter.of_def [Preorder P] {F : Set P} (nonempty : F.Nonempty)
     (directed : DirectedOn (· ≥ ·) F) (mem_of_le : ∀ {x y : P}, x ≤ y → x ∈ F → y ∈ F) :
     IsPFilter F :=
   ⟨fun _ _ _ _ => mem_of_le ‹_› ‹_›, Nonempty, Directed⟩
 #align order.is_pfilter.of_def Order.IsPFilter.of_def
--/
 
 #print Order.IsPFilter.toPFilter /-
 /-- Create an element of type `order.pfilter` from a set satisfying the predicate
@@ -102,30 +106,51 @@ theorem SetLike.mem_coe : x ∈ (F : Set P) ↔ x ∈ F :=
   iff_of_eq rfl
 #align order.pfilter.mem_coe SetLike.mem_coeₓ
 
-#print Order.PFilter.isPFilter /-
+/- warning: order.pfilter.is_pfilter -> Order.PFilter.isPFilter is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : Preorder.{u1} P] (F : Order.PFilter.{u1} P _inst_1), Order.IsPFilter.{u1} P _inst_1 ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Order.PFilter.{u1} P _inst_1) (Set.{u1} P) (HasLiftT.mk.{succ u1, succ u1} (Order.PFilter.{u1} P _inst_1) (Set.{u1} P) (CoeTCₓ.coe.{succ u1, succ u1} (Order.PFilter.{u1} P _inst_1) (Set.{u1} P) (coeBase.{succ u1, succ u1} (Order.PFilter.{u1} P _inst_1) (Set.{u1} P) (Order.PFilter.Set.hasCoe.{u1} P _inst_1)))) F)
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : Preorder.{u1} P] (F : Order.PFilter.{u1} P _inst_1), Order.IsPFilter.{u1} P _inst_1 (SetLike.coe.{u1, u1} (Order.PFilter.{u1} P _inst_1) P (Order.PFilter.instSetLikePFilter.{u1} P _inst_1) F)
+Case conversion may be inaccurate. Consider using '#align order.pfilter.is_pfilter Order.PFilter.isPFilterₓ'. -/
 theorem isPFilter : IsPFilter (F : Set P) :=
   F.dual.IsIdeal
 #align order.pfilter.is_pfilter Order.PFilter.isPFilter
--/
 
-#print Order.PFilter.nonempty /-
+/- warning: order.pfilter.nonempty -> Order.PFilter.nonempty is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : Preorder.{u1} P] (F : Order.PFilter.{u1} P _inst_1), Set.Nonempty.{u1} P ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Order.PFilter.{u1} P _inst_1) (Set.{u1} P) (HasLiftT.mk.{succ u1, succ u1} (Order.PFilter.{u1} P _inst_1) (Set.{u1} P) (CoeTCₓ.coe.{succ u1, succ u1} (Order.PFilter.{u1} P _inst_1) (Set.{u1} P) (coeBase.{succ u1, succ u1} (Order.PFilter.{u1} P _inst_1) (Set.{u1} P) (Order.PFilter.Set.hasCoe.{u1} P _inst_1)))) F)
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : Preorder.{u1} P] (F : Order.PFilter.{u1} P _inst_1), Set.Nonempty.{u1} P (SetLike.coe.{u1, u1} (Order.PFilter.{u1} P _inst_1) P (Order.PFilter.instSetLikePFilter.{u1} P _inst_1) F)
+Case conversion may be inaccurate. Consider using '#align order.pfilter.nonempty Order.PFilter.nonemptyₓ'. -/
 theorem nonempty : (F : Set P).Nonempty :=
   F.dual.Nonempty
 #align order.pfilter.nonempty Order.PFilter.nonempty
--/
 
-#print Order.PFilter.directed /-
+/- warning: order.pfilter.directed -> Order.PFilter.directed is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : Preorder.{u1} P] (F : Order.PFilter.{u1} P _inst_1), DirectedOn.{u1} P (GE.ge.{u1} P (Preorder.toHasLe.{u1} P _inst_1)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Order.PFilter.{u1} P _inst_1) (Set.{u1} P) (HasLiftT.mk.{succ u1, succ u1} (Order.PFilter.{u1} P _inst_1) (Set.{u1} P) (CoeTCₓ.coe.{succ u1, succ u1} (Order.PFilter.{u1} P _inst_1) (Set.{u1} P) (coeBase.{succ u1, succ u1} (Order.PFilter.{u1} P _inst_1) (Set.{u1} P) (Order.PFilter.Set.hasCoe.{u1} P _inst_1)))) F)
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : Preorder.{u1} P] (F : Order.PFilter.{u1} P _inst_1), DirectedOn.{u1} P (fun (x._@.Mathlib.Order.PFilter._hyg.344 : P) (x._@.Mathlib.Order.PFilter._hyg.346 : P) => GE.ge.{u1} P (Preorder.toLE.{u1} P _inst_1) x._@.Mathlib.Order.PFilter._hyg.344 x._@.Mathlib.Order.PFilter._hyg.346) (SetLike.coe.{u1, u1} (Order.PFilter.{u1} P _inst_1) P (Order.PFilter.instSetLikePFilter.{u1} P _inst_1) F)
+Case conversion may be inaccurate. Consider using '#align order.pfilter.directed Order.PFilter.directedₓ'. -/
 theorem directed : DirectedOn (· ≥ ·) (F : Set P) :=
   F.dual.Directed
 #align order.pfilter.directed Order.PFilter.directed
--/
 
-#print Order.PFilter.mem_of_le /-
+/- warning: order.pfilter.mem_of_le -> Order.PFilter.mem_of_le is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : Preorder.{u1} P] {x : P} {y : P} {F : Order.PFilter.{u1} P _inst_1}, (LE.le.{u1} P (Preorder.toHasLe.{u1} P _inst_1) x y) -> (Membership.Mem.{u1, u1} P (Order.PFilter.{u1} P _inst_1) (Order.PFilter.hasMem.{u1} P _inst_1) x F) -> (Membership.Mem.{u1, u1} P (Order.PFilter.{u1} P _inst_1) (Order.PFilter.hasMem.{u1} P _inst_1) y F)
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : Preorder.{u1} P] {x : P} {y : P} {F : Order.PFilter.{u1} P _inst_1}, (LE.le.{u1} P (Preorder.toLE.{u1} P _inst_1) x y) -> (Membership.mem.{u1, u1} P (Order.PFilter.{u1} P _inst_1) (SetLike.instMembership.{u1, u1} (Order.PFilter.{u1} P _inst_1) P (Order.PFilter.instSetLikePFilter.{u1} P _inst_1)) x F) -> (Membership.mem.{u1, u1} P (Order.PFilter.{u1} P _inst_1) (SetLike.instMembership.{u1, u1} (Order.PFilter.{u1} P _inst_1) P (Order.PFilter.instSetLikePFilter.{u1} P _inst_1)) y F)
+Case conversion may be inaccurate. Consider using '#align order.pfilter.mem_of_le Order.PFilter.mem_of_leₓ'. -/
 theorem mem_of_le {F : PFilter P} : x ≤ y → x ∈ F → y ∈ F := fun h => F.dual.lower h
 #align order.pfilter.mem_of_le Order.PFilter.mem_of_le
--/
 
-#print Order.PFilter.ext /-
+/- warning: order.pfilter.ext -> Order.PFilter.ext is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : Preorder.{u1} P] (s : Order.PFilter.{u1} P _inst_1) (t : Order.PFilter.{u1} P _inst_1), (Eq.{succ u1} (Set.{u1} P) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Order.PFilter.{u1} P _inst_1) (Set.{u1} P) (HasLiftT.mk.{succ u1, succ u1} (Order.PFilter.{u1} P _inst_1) (Set.{u1} P) (CoeTCₓ.coe.{succ u1, succ u1} (Order.PFilter.{u1} P _inst_1) (Set.{u1} P) (coeBase.{succ u1, succ u1} (Order.PFilter.{u1} P _inst_1) (Set.{u1} P) (Order.PFilter.Set.hasCoe.{u1} P _inst_1)))) s) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Order.PFilter.{u1} P _inst_1) (Set.{u1} P) (HasLiftT.mk.{succ u1, succ u1} (Order.PFilter.{u1} P _inst_1) (Set.{u1} P) (CoeTCₓ.coe.{succ u1, succ u1} (Order.PFilter.{u1} P _inst_1) (Set.{u1} P) (coeBase.{succ u1, succ u1} (Order.PFilter.{u1} P _inst_1) (Set.{u1} P) (Order.PFilter.Set.hasCoe.{u1} P _inst_1)))) t)) -> (Eq.{succ u1} (Order.PFilter.{u1} P _inst_1) s t)
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : Preorder.{u1} P] (s : Order.PFilter.{u1} P _inst_1) (t : Order.PFilter.{u1} P _inst_1), (Eq.{succ u1} (Set.{u1} P) (SetLike.coe.{u1, u1} (Order.PFilter.{u1} P _inst_1) P (Order.PFilter.instSetLikePFilter.{u1} P _inst_1) s) (SetLike.coe.{u1, u1} (Order.PFilter.{u1} P _inst_1) P (Order.PFilter.instSetLikePFilter.{u1} P _inst_1) t)) -> (Eq.{succ u1} (Order.PFilter.{u1} P _inst_1) s t)
+Case conversion may be inaccurate. Consider using '#align order.pfilter.ext Order.PFilter.extₓ'. -/
 /-- Two filters are equal when their underlying sets are equal. -/
 @[ext]
 theorem ext (h : (s : Set P) = t) : s = t := by
@@ -133,7 +158,6 @@ theorem ext (h : (s : Set P) = t) : s = t := by
   cases t
   exact congr_arg _ (Ideal.ext h)
 #align order.pfilter.ext Order.PFilter.ext
--/
 
 /-- The partial ordering by subset inclusion, inherited from `set P`. -/
 instance : PartialOrder (PFilter P) :=
@@ -141,7 +165,7 @@ instance : PartialOrder (PFilter P) :=
 
 /- warning: order.pfilter.mem_of_mem_of_le -> Order.PFilter.mem_of_mem_of_le is a dubious translation:
 lean 3 declaration is
-  forall {P : Type.{u1}} [_inst_1 : Preorder.{u1} P] {x : P} {F : Order.PFilter.{u1} P _inst_1} {G : Order.PFilter.{u1} P _inst_1}, (Membership.Mem.{u1, u1} P (Order.PFilter.{u1} P _inst_1) (Order.PFilter.hasMem.{u1} P _inst_1) x F) -> (LE.le.{u1} (Order.PFilter.{u1} P _inst_1) (Preorder.toLE.{u1} (Order.PFilter.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.PFilter.{u1} P _inst_1) (Order.PFilter.partialOrder.{u1} P _inst_1))) F G) -> (Membership.Mem.{u1, u1} P (Order.PFilter.{u1} P _inst_1) (Order.PFilter.hasMem.{u1} P _inst_1) x G)
+  forall {P : Type.{u1}} [_inst_1 : Preorder.{u1} P] {x : P} {F : Order.PFilter.{u1} P _inst_1} {G : Order.PFilter.{u1} P _inst_1}, (Membership.Mem.{u1, u1} P (Order.PFilter.{u1} P _inst_1) (Order.PFilter.hasMem.{u1} P _inst_1) x F) -> (LE.le.{u1} (Order.PFilter.{u1} P _inst_1) (Preorder.toHasLe.{u1} (Order.PFilter.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.PFilter.{u1} P _inst_1) (Order.PFilter.partialOrder.{u1} P _inst_1))) F G) -> (Membership.Mem.{u1, u1} P (Order.PFilter.{u1} P _inst_1) (Order.PFilter.hasMem.{u1} P _inst_1) x G)
 but is expected to have type
   forall {P : Type.{u1}} [_inst_1 : Preorder.{u1} P] {x : P} {F : Order.PFilter.{u1} P _inst_1} {G : Order.PFilter.{u1} P _inst_1}, (Membership.mem.{u1, u1} P (Order.PFilter.{u1} P _inst_1) (SetLike.instMembership.{u1, u1} (Order.PFilter.{u1} P _inst_1) P (Order.PFilter.instSetLikePFilter.{u1} P _inst_1)) x F) -> (LE.le.{u1} (Order.PFilter.{u1} P _inst_1) (Preorder.toLE.{u1} (Order.PFilter.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.PFilter.{u1} P _inst_1) (SetLike.instPartialOrder.{u1, u1} (Order.PFilter.{u1} P _inst_1) P (Order.PFilter.instSetLikePFilter.{u1} P _inst_1)))) F G) -> (Membership.mem.{u1, u1} P (Order.PFilter.{u1} P _inst_1) (SetLike.instMembership.{u1, u1} (Order.PFilter.{u1} P _inst_1) P (Order.PFilter.instSetLikePFilter.{u1} P _inst_1)) x G)
 Case conversion may be inaccurate. Consider using '#align order.pfilter.mem_of_mem_of_le Order.PFilter.mem_of_mem_of_leₓ'. -/
@@ -157,16 +181,20 @@ def principal (p : P) : PFilter P :=
 #align order.pfilter.principal Order.PFilter.principal
 -/
 
-#print Order.PFilter.mem_mk /-
+/- warning: order.pfilter.mem_def -> Order.PFilter.mem_mk is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : Preorder.{u1} P] (x : P) (I : Order.Ideal.{u1} (OrderDual.{u1} P) (OrderDual.hasLe.{u1} P (Preorder.toHasLe.{u1} P _inst_1))), Iff (Membership.Mem.{u1, u1} P (Order.PFilter.{u1} P _inst_1) (Order.PFilter.hasMem.{u1} P _inst_1) x (Order.PFilter.mk.{u1} P _inst_1 I)) (Membership.Mem.{u1, u1} (OrderDual.{u1} P) (Order.Ideal.{u1} (OrderDual.{u1} P) (OrderDual.hasLe.{u1} P (Preorder.toHasLe.{u1} P _inst_1))) (SetLike.hasMem.{u1, u1} (Order.Ideal.{u1} (OrderDual.{u1} P) (OrderDual.hasLe.{u1} P (Preorder.toHasLe.{u1} P _inst_1))) (OrderDual.{u1} P) (Order.Ideal.setLike.{u1} (OrderDual.{u1} P) (OrderDual.hasLe.{u1} P (Preorder.toHasLe.{u1} P _inst_1)))) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} P (OrderDual.{u1} P)) (fun (_x : Equiv.{succ u1, succ u1} P (OrderDual.{u1} P)) => P -> (OrderDual.{u1} P)) (Equiv.hasCoeToFun.{succ u1, succ u1} P (OrderDual.{u1} P)) (OrderDual.toDual.{u1} P) x) I)
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : Preorder.{u1} P] (x : P) (I : Order.Ideal.{u1} (OrderDual.{u1} P) (OrderDual.instLEOrderDual.{u1} P (Preorder.toLE.{u1} P _inst_1))), Iff (Membership.mem.{u1, u1} P (Order.PFilter.{u1} P _inst_1) (SetLike.instMembership.{u1, u1} (Order.PFilter.{u1} P _inst_1) P (Order.PFilter.instSetLikePFilter.{u1} P _inst_1)) x (Order.PFilter.mk.{u1} P _inst_1 I)) (Membership.mem.{u1, u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : P) => OrderDual.{u1} P) x) (Order.Ideal.{u1} (OrderDual.{u1} P) (OrderDual.instLEOrderDual.{u1} P (Preorder.toLE.{u1} P _inst_1))) (SetLike.instMembership.{u1, u1} (Order.Ideal.{u1} (OrderDual.{u1} P) (OrderDual.instLEOrderDual.{u1} P (Preorder.toLE.{u1} P _inst_1))) (OrderDual.{u1} P) (Order.Ideal.instSetLikeIdeal.{u1} (OrderDual.{u1} P) (OrderDual.instLEOrderDual.{u1} P (Preorder.toLE.{u1} P _inst_1)))) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} P (OrderDual.{u1} P)) P (fun (_x : P) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : P) => OrderDual.{u1} P) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} P (OrderDual.{u1} P)) (OrderDual.toDual.{u1} P) x) I)
+Case conversion may be inaccurate. Consider using '#align order.pfilter.mem_def Order.PFilter.mem_mkₓ'. -/
 @[simp]
 theorem mem_mk (x : P) (I : Ideal Pᵒᵈ) : x ∈ (⟨I⟩ : PFilter P) ↔ OrderDual.toDual x ∈ I :=
   Iff.rfl
 #align order.pfilter.mem_def Order.PFilter.mem_mk
--/
 
 /- warning: order.pfilter.principal_le_iff -> Order.PFilter.principal_le_iff is a dubious translation:
 lean 3 declaration is
-  forall {P : Type.{u1}} [_inst_1 : Preorder.{u1} P] {x : P} {F : Order.PFilter.{u1} P _inst_1}, Iff (LE.le.{u1} (Order.PFilter.{u1} P _inst_1) (Preorder.toLE.{u1} (Order.PFilter.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.PFilter.{u1} P _inst_1) (Order.PFilter.partialOrder.{u1} P _inst_1))) (Order.PFilter.principal.{u1} P _inst_1 x) F) (Membership.Mem.{u1, u1} P (Order.PFilter.{u1} P _inst_1) (Order.PFilter.hasMem.{u1} P _inst_1) x F)
+  forall {P : Type.{u1}} [_inst_1 : Preorder.{u1} P] {x : P} {F : Order.PFilter.{u1} P _inst_1}, Iff (LE.le.{u1} (Order.PFilter.{u1} P _inst_1) (Preorder.toHasLe.{u1} (Order.PFilter.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.PFilter.{u1} P _inst_1) (Order.PFilter.partialOrder.{u1} P _inst_1))) (Order.PFilter.principal.{u1} P _inst_1 x) F) (Membership.Mem.{u1, u1} P (Order.PFilter.{u1} P _inst_1) (Order.PFilter.hasMem.{u1} P _inst_1) x F)
 but is expected to have type
   forall {P : Type.{u1}} [_inst_1 : Preorder.{u1} P] {x : P} {F : Order.PFilter.{u1} P _inst_1}, Iff (LE.le.{u1} (Order.PFilter.{u1} P _inst_1) (Preorder.toLE.{u1} (Order.PFilter.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.PFilter.{u1} P _inst_1) (SetLike.instPartialOrder.{u1, u1} (Order.PFilter.{u1} P _inst_1) P (Order.PFilter.instSetLikePFilter.{u1} P _inst_1)))) (Order.PFilter.principal.{u1} P _inst_1 x) F) (Membership.mem.{u1, u1} P (Order.PFilter.{u1} P _inst_1) (SetLike.instMembership.{u1, u1} (Order.PFilter.{u1} P _inst_1) P (Order.PFilter.instSetLikePFilter.{u1} P _inst_1)) x F)
 Case conversion may be inaccurate. Consider using '#align order.pfilter.principal_le_iff Order.PFilter.principal_le_iffₓ'. -/
@@ -175,12 +203,16 @@ theorem principal_le_iff {F : PFilter P} : principal x ≤ F ↔ x ∈ F :=
   Ideal.principal_le_iff
 #align order.pfilter.principal_le_iff Order.PFilter.principal_le_iff
 
-#print Order.PFilter.mem_principal /-
+/- warning: order.pfilter.mem_principal -> Order.PFilter.mem_principal is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : Preorder.{u1} P] {x : P} {y : P}, Iff (Membership.Mem.{u1, u1} P (Order.PFilter.{u1} P _inst_1) (Order.PFilter.hasMem.{u1} P _inst_1) x (Order.PFilter.principal.{u1} P _inst_1 y)) (LE.le.{u1} P (Preorder.toHasLe.{u1} P _inst_1) y x)
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : Preorder.{u1} P] {x : P} {y : P}, Iff (Membership.mem.{u1, u1} P (Order.PFilter.{u1} P _inst_1) (SetLike.instMembership.{u1, u1} (Order.PFilter.{u1} P _inst_1) P (Order.PFilter.instSetLikePFilter.{u1} P _inst_1)) x (Order.PFilter.principal.{u1} P _inst_1 y)) (LE.le.{u1} P (Preorder.toLE.{u1} P _inst_1) y x)
+Case conversion may be inaccurate. Consider using '#align order.pfilter.mem_principal Order.PFilter.mem_principalₓ'. -/
 @[simp]
 theorem mem_principal : x ∈ principal y ↔ y ≤ x :=
   Ideal.mem_principal
 #align order.pfilter.mem_principal Order.PFilter.mem_principal
--/
 
 /- warning: order.pfilter.antitone_principal -> Order.PFilter.antitone_principal is a dubious translation:
 lean 3 declaration is
@@ -194,7 +226,7 @@ theorem antitone_principal : Antitone (principal : P → PFilter P) := by delta 
 
 /- warning: order.pfilter.principal_le_principal_iff -> Order.PFilter.principal_le_principal_iff is a dubious translation:
 lean 3 declaration is
-  forall {P : Type.{u1}} [_inst_1 : Preorder.{u1} P] {p : P} {q : P}, Iff (LE.le.{u1} (Order.PFilter.{u1} P _inst_1) (Preorder.toLE.{u1} (Order.PFilter.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.PFilter.{u1} P _inst_1) (Order.PFilter.partialOrder.{u1} P _inst_1))) (Order.PFilter.principal.{u1} P _inst_1 q) (Order.PFilter.principal.{u1} P _inst_1 p)) (LE.le.{u1} P (Preorder.toLE.{u1} P _inst_1) p q)
+  forall {P : Type.{u1}} [_inst_1 : Preorder.{u1} P] {p : P} {q : P}, Iff (LE.le.{u1} (Order.PFilter.{u1} P _inst_1) (Preorder.toHasLe.{u1} (Order.PFilter.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.PFilter.{u1} P _inst_1) (Order.PFilter.partialOrder.{u1} P _inst_1))) (Order.PFilter.principal.{u1} P _inst_1 q) (Order.PFilter.principal.{u1} P _inst_1 p)) (LE.le.{u1} P (Preorder.toHasLe.{u1} P _inst_1) p q)
 but is expected to have type
   forall {P : Type.{u1}} [_inst_1 : Preorder.{u1} P] {p : P} {q : P}, Iff (LE.le.{u1} (Order.PFilter.{u1} P _inst_1) (Preorder.toLE.{u1} (Order.PFilter.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.PFilter.{u1} P _inst_1) (SetLike.instPartialOrder.{u1, u1} (Order.PFilter.{u1} P _inst_1) P (Order.PFilter.instSetLikePFilter.{u1} P _inst_1)))) (Order.PFilter.principal.{u1} P _inst_1 q) (Order.PFilter.principal.{u1} P _inst_1 p)) (LE.le.{u1} P (Preorder.toLE.{u1} P _inst_1) p q)
 Case conversion may be inaccurate. Consider using '#align order.pfilter.principal_le_principal_iff Order.PFilter.principal_le_principal_iffₓ'. -/
@@ -209,7 +241,7 @@ variable [Preorder P] [OrderTop P] {F : PFilter P}
 
 /- warning: order.pfilter.top_mem -> Order.PFilter.top_mem is a dubious translation:
 lean 3 declaration is
-  forall {P : Type.{u1}} [_inst_1 : Preorder.{u1} P] [_inst_2 : OrderTop.{u1} P (Preorder.toLE.{u1} P _inst_1)] {F : Order.PFilter.{u1} P _inst_1}, Membership.Mem.{u1, u1} P (Order.PFilter.{u1} P _inst_1) (Order.PFilter.hasMem.{u1} P _inst_1) (Top.top.{u1} P (OrderTop.toHasTop.{u1} P (Preorder.toLE.{u1} P _inst_1) _inst_2)) F
+  forall {P : Type.{u1}} [_inst_1 : Preorder.{u1} P] [_inst_2 : OrderTop.{u1} P (Preorder.toHasLe.{u1} P _inst_1)] {F : Order.PFilter.{u1} P _inst_1}, Membership.Mem.{u1, u1} P (Order.PFilter.{u1} P _inst_1) (Order.PFilter.hasMem.{u1} P _inst_1) (Top.top.{u1} P (OrderTop.toHasTop.{u1} P (Preorder.toHasLe.{u1} P _inst_1) _inst_2)) F
 but is expected to have type
   forall {P : Type.{u1}} [_inst_1 : Preorder.{u1} P] [_inst_2 : OrderTop.{u1} P (Preorder.toLE.{u1} P _inst_1)] {F : Order.PFilter.{u1} P _inst_1}, Membership.mem.{u1, u1} P (Order.PFilter.{u1} P _inst_1) (SetLike.instMembership.{u1, u1} (Order.PFilter.{u1} P _inst_1) P (Order.PFilter.instSetLikePFilter.{u1} P _inst_1)) (Top.top.{u1} P (OrderTop.toTop.{u1} P (Preorder.toLE.{u1} P _inst_1) _inst_2)) F
 Case conversion may be inaccurate. Consider using '#align order.pfilter.top_mem Order.PFilter.top_memₓ'. -/

@@ -83,7 +83,7 @@ theorem Nodup.not_mem (h : Nodup (a ::ₘ s)) : a ∉ s :=
 
 /- warning: multiset.nodup_of_le -> Multiset.nodup_of_le is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Multiset.{u1} α} {t : Multiset.{u1} α}, (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) s t) -> (Multiset.Nodup.{u1} α t) -> (Multiset.Nodup.{u1} α s)
+  forall {α : Type.{u1}} {s : Multiset.{u1} α} {t : Multiset.{u1} α}, (LE.le.{u1} (Multiset.{u1} α) (Preorder.toHasLe.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) s t) -> (Multiset.Nodup.{u1} α t) -> (Multiset.Nodup.{u1} α s)
 but is expected to have type
   forall {α : Type.{u1}} {s : Multiset.{u1} α} {t : Multiset.{u1} α}, (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) s t) -> (Multiset.Nodup.{u1} α t) -> (Multiset.Nodup.{u1} α s)
 Case conversion may be inaccurate. Consider using '#align multiset.nodup_of_le Multiset.nodup_of_leₓ'. -/
@@ -99,7 +99,7 @@ theorem not_nodup_pair : ∀ a : α, ¬Nodup (a ::ₘ a ::ₘ 0) :=
 
 /- warning: multiset.nodup_iff_le -> Multiset.nodup_iff_le is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Multiset.{u1} α}, Iff (Multiset.Nodup.{u1} α s) (forall (a : α), Not (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) (Multiset.cons.{u1} α a (Multiset.cons.{u1} α a (OfNat.ofNat.{u1} (Multiset.{u1} α) 0 (OfNat.mk.{u1} (Multiset.{u1} α) 0 (Zero.zero.{u1} (Multiset.{u1} α) (Multiset.hasZero.{u1} α)))))) s))
+  forall {α : Type.{u1}} {s : Multiset.{u1} α}, Iff (Multiset.Nodup.{u1} α s) (forall (a : α), Not (LE.le.{u1} (Multiset.{u1} α) (Preorder.toHasLe.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) (Multiset.cons.{u1} α a (Multiset.cons.{u1} α a (OfNat.ofNat.{u1} (Multiset.{u1} α) 0 (OfNat.mk.{u1} (Multiset.{u1} α) 0 (Zero.zero.{u1} (Multiset.{u1} α) (Multiset.hasZero.{u1} α)))))) s))
 but is expected to have type
   forall {α : Type.{u1}} {s : Multiset.{u1} α}, Iff (Multiset.Nodup.{u1} α s) (forall (a : α), Not (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) (Multiset.cons.{u1} α a (Multiset.cons.{u1} α a (OfNat.ofNat.{u1} (Multiset.{u1} α) 0 (Zero.toOfNat0.{u1} (Multiset.{u1} α) (Multiset.instZeroMultiset.{u1} α))))) s))
 Case conversion may be inaccurate. Consider using '#align multiset.nodup_iff_le Multiset.nodup_iff_leₓ'. -/
@@ -359,7 +359,7 @@ theorem Nodup.ext {s t : Multiset α} : Nodup s → Nodup t → (s = t ↔ ∀ a
 
 /- warning: multiset.le_iff_subset -> Multiset.le_iff_subset is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Multiset.{u1} α} {t : Multiset.{u1} α}, (Multiset.Nodup.{u1} α s) -> (Iff (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) s t) (HasSubset.Subset.{u1} (Multiset.{u1} α) (Multiset.hasSubset.{u1} α) s t))
+  forall {α : Type.{u1}} {s : Multiset.{u1} α} {t : Multiset.{u1} α}, (Multiset.Nodup.{u1} α s) -> (Iff (LE.le.{u1} (Multiset.{u1} α) (Preorder.toHasLe.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.partialOrder.{u1} α))) s t) (HasSubset.Subset.{u1} (Multiset.{u1} α) (Multiset.hasSubset.{u1} α) s t))
 but is expected to have type
   forall {α : Type.{u1}} {s : Multiset.{u1} α} {t : Multiset.{u1} α}, (Multiset.Nodup.{u1} α s) -> (Iff (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) s t) (HasSubset.Subset.{u1} (Multiset.{u1} α) (Multiset.instHasSubsetMultiset.{u1} α) s t))
 Case conversion may be inaccurate. Consider using '#align multiset.le_iff_subset Multiset.le_iff_subsetₓ'. -/
@@ -369,7 +369,7 @@ theorem le_iff_subset {s t : Multiset α} : Nodup s → (s ≤ t ↔ s ⊆ t) :=
 
 /- warning: multiset.range_le -> Multiset.range_le is a dubious translation:
 lean 3 declaration is
-  forall {m : Nat} {n : Nat}, Iff (LE.le.{0} (Multiset.{0} Nat) (Preorder.toLE.{0} (Multiset.{0} Nat) (PartialOrder.toPreorder.{0} (Multiset.{0} Nat) (Multiset.partialOrder.{0} Nat))) (Multiset.range m) (Multiset.range n)) (LE.le.{0} Nat Nat.hasLe m n)
+  forall {m : Nat} {n : Nat}, Iff (LE.le.{0} (Multiset.{0} Nat) (Preorder.toHasLe.{0} (Multiset.{0} Nat) (PartialOrder.toPreorder.{0} (Multiset.{0} Nat) (Multiset.partialOrder.{0} Nat))) (Multiset.range m) (Multiset.range n)) (LE.le.{0} Nat Nat.hasLe m n)
 but is expected to have type
   forall {m : Nat} {n : Nat}, Iff (LE.le.{0} (Multiset.{0} Nat) (Preorder.toLE.{0} (Multiset.{0} Nat) (PartialOrder.toPreorder.{0} (Multiset.{0} Nat) (Multiset.instPartialOrderMultiset.{0} Nat))) (Multiset.range m) (Multiset.range n)) (LE.le.{0} Nat instLENat m n)
 Case conversion may be inaccurate. Consider using '#align multiset.range_le Multiset.range_leₓ'. -/

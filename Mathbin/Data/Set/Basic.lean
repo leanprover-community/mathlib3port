@@ -162,7 +162,7 @@ theorem le_eq_subset : ((· ≤ ·) : Set α → Set α → Prop) = (· ⊆ ·) 
 
 /- warning: set.lt_eq_ssubset -> Set.lt_eq_ssubset is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}}, Eq.{succ u1} ((Set.{u1} α) -> (Set.{u1} α) -> Prop) (LT.lt.{u1} (Set.{u1} α) (Preorder.toLT.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))))))))) (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.hasSsubset.{u1} α))
+  forall {α : Type.{u1}}, Eq.{succ u1} ((Set.{u1} α) -> (Set.{u1} α) -> Prop) (LT.lt.{u1} (Set.{u1} α) (Preorder.toHasLt.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))))))))) (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.hasSsubset.{u1} α))
 but is expected to have type
   forall {α : Type.{u1}}, Eq.{succ u1} ((Set.{u1} α) -> (Set.{u1} α) -> Prop) (fun (x._@.Mathlib.Data.Set.Basic._hyg.488 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.490 : Set.{u1} α) => LT.lt.{u1} (Set.{u1} α) (Preorder.toLT.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))))))))) x._@.Mathlib.Data.Set.Basic._hyg.488 x._@.Mathlib.Data.Set.Basic._hyg.490) (fun (x._@.Mathlib.Data.Set.Basic._hyg.503 : Set.{u1} α) (x._@.Mathlib.Data.Set.Basic._hyg.505 : Set.{u1} α) => HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.instHasSSubsetSet.{u1} α) x._@.Mathlib.Data.Set.Basic._hyg.503 x._@.Mathlib.Data.Set.Basic._hyg.505)
 Case conversion may be inaccurate. Consider using '#align set.lt_eq_ssubset Set.lt_eq_ssubsetₓ'. -/
@@ -179,7 +179,7 @@ theorem le_iff_subset : s ≤ t ↔ s ⊆ t :=
 
 /- warning: set.lt_iff_ssubset -> Set.lt_iff_ssubset is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, Iff (LT.lt.{u1} (Set.{u1} α) (Preorder.toLT.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)))))))) s t) (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.hasSsubset.{u1} α) s t)
+  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, Iff (LT.lt.{u1} (Set.{u1} α) (Preorder.toHasLt.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)))))))) s t) (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.hasSsubset.{u1} α) s t)
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, Iff (LT.lt.{u1} (Set.{u1} α) (Preorder.toLT.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))))))))) s t) (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.instHasSSubsetSet.{u1} α) s t)
 Case conversion may be inaccurate. Consider using '#align set.lt_iff_ssubset Set.lt_iff_ssubsetₓ'. -/
@@ -193,7 +193,7 @@ alias le_iff_subset ↔ _root_.has_le.le.subset _root_.has_subset.subset.le
 
 /- warning: has_ssubset.ssubset.lt -> HasSSubset.SSubset.lt is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.hasSsubset.{u1} α) s t) -> (LT.lt.{u1} (Set.{u1} α) (Preorder.toLT.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)))))))) s t)
+  forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.hasSsubset.{u1} α) s t) -> (LT.lt.{u1} (Set.{u1} α) (Preorder.toHasLt.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)))))))) s t)
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.instHasSSubsetSet.{u1} α) s t) -> (LT.lt.{u1} (Set.{u1} α) (Preorder.toLT.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))))))))) s t)
 Case conversion may be inaccurate. Consider using '#align has_ssubset.ssubset.lt HasSSubset.SSubset.ltₓ'. -/
@@ -4541,17 +4541,25 @@ theorem subsingleton_of_subsingleton [Subsingleton α] {s : Set α} : Set.Subsin
 #align set.subsingleton_of_subsingleton Set.subsingleton_of_subsingleton
 -/
 
-#print Set.subsingleton_isTop /-
+/- warning: set.subsingleton_is_top -> Set.subsingleton_isTop is a dubious translation:
+lean 3 declaration is
+  forall (α : Type.{u1}) [_inst_1 : PartialOrder.{u1} α], Set.Subsingleton.{u1} α (setOf.{u1} α (fun (x : α) => IsTop.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x))
+but is expected to have type
+  forall (α : Type.{u1}) [_inst_1 : PartialOrder.{u1} α], Set.Subsingleton.{u1} α (setOf.{u1} α (fun (x : α) => IsTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x))
+Case conversion may be inaccurate. Consider using '#align set.subsingleton_is_top Set.subsingleton_isTopₓ'. -/
 theorem subsingleton_isTop (α : Type _) [PartialOrder α] : Set.Subsingleton { x : α | IsTop x } :=
   fun x hx y hy => hx.IsMax.eq_of_le (hy x)
 #align set.subsingleton_is_top Set.subsingleton_isTop
--/
 
-#print Set.subsingleton_isBot /-
+/- warning: set.subsingleton_is_bot -> Set.subsingleton_isBot is a dubious translation:
+lean 3 declaration is
+  forall (α : Type.{u1}) [_inst_1 : PartialOrder.{u1} α], Set.Subsingleton.{u1} α (setOf.{u1} α (fun (x : α) => IsBot.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x))
+but is expected to have type
+  forall (α : Type.{u1}) [_inst_1 : PartialOrder.{u1} α], Set.Subsingleton.{u1} α (setOf.{u1} α (fun (x : α) => IsBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x))
+Case conversion may be inaccurate. Consider using '#align set.subsingleton_is_bot Set.subsingleton_isBotₓ'. -/
 theorem subsingleton_isBot (α : Type _) [PartialOrder α] : Set.Subsingleton { x : α | IsBot x } :=
   fun x hx y hy => hx.IsMin.eq_of_ge (hy x)
 #align set.subsingleton_is_bot Set.subsingleton_isBot
--/
 
 #print Set.exists_eq_singleton_iff_nonempty_subsingleton /-
 theorem exists_eq_singleton_iff_nonempty_subsingleton :
@@ -4705,38 +4713,54 @@ theorem nontrivial_iff_exists_ne {x} (hx : x ∈ s) : s.Nontrivial ↔ ∃ y ∈
   ⟨fun H => H.exists_ne _, nontrivial_of_exists_ne hx⟩
 #align set.nontrivial_iff_exists_ne Set.nontrivial_iff_exists_ne
 
-#print Set.nontrivial_of_lt /-
+/- warning: set.nontrivial_of_lt -> Set.nontrivial_of_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : Preorder.{u1} α] {x : α} {y : α}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y s) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) x y) -> (Set.Nontrivial.{u1} α s)
+but is expected to have type
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : Preorder.{u1} α] {x : α} {y : α}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y s) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x y) -> (Set.Nontrivial.{u1} α s)
+Case conversion may be inaccurate. Consider using '#align set.nontrivial_of_lt Set.nontrivial_of_ltₓ'. -/
 theorem nontrivial_of_lt [Preorder α] {x y} (hx : x ∈ s) (hy : y ∈ s) (hxy : x < y) :
     s.Nontrivial :=
   ⟨x, hx, y, hy, ne_of_lt hxy⟩
 #align set.nontrivial_of_lt Set.nontrivial_of_lt
--/
 
+/- warning: set.nontrivial_of_exists_lt -> Set.nontrivial_of_exists_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : Preorder.{u1} α], (Exists.{succ u1} α (fun (x : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) => Exists.{succ u1} α (fun (y : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y s) => LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) x y))))) -> (Set.Nontrivial.{u1} α s)
+but is expected to have type
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : Preorder.{u1} α], (Exists.{succ u1} α (fun (x : α) => Exists.{0} (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) => Exists.{succ u1} α (fun (y : α) => Exists.{0} (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y s) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y s) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x y))))) -> (Set.Nontrivial.{u1} α s)
+Case conversion may be inaccurate. Consider using '#align set.nontrivial_of_exists_lt Set.nontrivial_of_exists_ltₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
-#print Set.nontrivial_of_exists_lt /-
 theorem nontrivial_of_exists_lt [Preorder α] (H : ∃ (x : _)(_ : x ∈ s)(y : _)(_ : y ∈ s), x < y) :
     s.Nontrivial :=
   let ⟨x, hx, y, hy, hxy⟩ := H
   nontrivial_of_lt hx hy hxy
 #align set.nontrivial_of_exists_lt Set.nontrivial_of_exists_lt
--/
 
+/- warning: set.nontrivial.exists_lt -> Set.Nontrivial.exists_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α], (Set.Nontrivial.{u1} α s) -> (Exists.{succ u1} α (fun (x : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) => Exists.{succ u1} α (fun (y : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y s) => LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) x y)))))
+but is expected to have type
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α], (Set.Nontrivial.{u1} α s) -> (Exists.{succ u1} α (fun (x : α) => Exists.{0} (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) => Exists.{succ u1} α (fun (y : α) => Exists.{0} (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y s) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y s) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x y)))))
+Case conversion may be inaccurate. Consider using '#align set.nontrivial.exists_lt Set.Nontrivial.exists_ltₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
-#print Set.Nontrivial.exists_lt /-
 theorem Nontrivial.exists_lt [LinearOrder α] (hs : s.Nontrivial) :
     ∃ (x : _)(_ : x ∈ s)(y : _)(_ : y ∈ s), x < y :=
   let ⟨x, hx, y, hy, hxy⟩ := hs
   Or.elim (lt_or_gt_of_ne hxy) (fun H => ⟨x, hx, y, hy, H⟩) fun H => ⟨y, hy, x, hx, H⟩
 #align set.nontrivial.exists_lt Set.Nontrivial.exists_lt
--/
 
+/- warning: set.nontrivial_iff_exists_lt -> Set.nontrivial_iff_exists_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α], Iff (Set.Nontrivial.{u1} α s) (Exists.{succ u1} α (fun (x : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) => Exists.{succ u1} α (fun (y : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y s) => LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) x y)))))
+but is expected to have type
+  forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α], Iff (Set.Nontrivial.{u1} α s) (Exists.{succ u1} α (fun (x : α) => Exists.{0} (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) => Exists.{succ u1} α (fun (y : α) => Exists.{0} (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y s) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y s) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x y)))))
+Case conversion may be inaccurate. Consider using '#align set.nontrivial_iff_exists_lt Set.nontrivial_iff_exists_ltₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
-#print Set.nontrivial_iff_exists_lt /-
 theorem nontrivial_iff_exists_lt [LinearOrder α] :
     s.Nontrivial ↔ ∃ (x : _)(_ : x ∈ s)(y : _)(_ : y ∈ s), x < y :=
   ⟨Nontrivial.exists_lt, nontrivial_of_exists_lt⟩
 #align set.nontrivial_iff_exists_lt Set.nontrivial_iff_exists_lt
--/
 
 #print Set.Nontrivial.nonempty /-
 protected theorem Nontrivial.nonempty (hs : s.Nontrivial) : s.Nonempty :=
@@ -4986,8 +5010,13 @@ section LinearOrder
 
 variable [LinearOrder α] [LinearOrder β] {f : α → β}
 
+/- warning: set.not_monotone_on_not_antitone_on_iff_exists_le_le -> Set.not_monotoneOn_not_antitoneOn_iff_exists_le_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : LinearOrder.{u2} β] {f : α -> β}, Iff (And (Not (MonotoneOn.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) f s)) (Not (AntitoneOn.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) f s))) (Exists.{succ u1} α (fun (a : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) => Exists.{succ u1} α (fun (b : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) => Exists.{succ u1} α (fun (c : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) c s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) c s) => And (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a b) (And (LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) b c) (Or (And (LT.lt.{u2} β (Preorder.toHasLt.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2))))) (f a) (f b)) (LT.lt.{u2} β (Preorder.toHasLt.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2))))) (f c) (f b))) (And (LT.lt.{u2} β (Preorder.toHasLt.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2))))) (f b) (f a)) (LT.lt.{u2} β (Preorder.toHasLt.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2))))) (f b) (f c))))))))))))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : LinearOrder.{u2} β] {f : α -> β}, Iff (And (Not (MonotoneOn.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) f s)) (Not (AntitoneOn.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) f s))) (Exists.{succ u1} α (fun (a : α) => Exists.{0} (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) => Exists.{succ u1} α (fun (b : α) => Exists.{0} (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) => Exists.{succ u1} α (fun (c : α) => Exists.{0} (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) c s) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) c s) => And (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) a b) (And (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) b c) (Or (And (LT.lt.{u2} β (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2)))))) (f a) (f b)) (LT.lt.{u2} β (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2)))))) (f c) (f b))) (And (LT.lt.{u2} β (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2)))))) (f b) (f a)) (LT.lt.{u2} β (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2)))))) (f b) (f c))))))))))))
+Case conversion may be inaccurate. Consider using '#align set.not_monotone_on_not_antitone_on_iff_exists_le_le Set.not_monotoneOn_not_antitoneOn_iff_exists_le_leₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a b c «expr ∈ » s) -/
-#print Set.not_monotoneOn_not_antitoneOn_iff_exists_le_le /-
 /-- A function between linear orders which is neither monotone nor antitone makes a dent upright or
 downright. -/
 theorem not_monotoneOn_not_antitoneOn_iff_exists_le_le :
@@ -4998,10 +5027,14 @@ theorem not_monotoneOn_not_antitoneOn_iff_exists_le_le :
   simp [monotone_on_iff_monotone, antitone_on_iff_antitone, and_assoc', exists_and_left,
     not_monotone_not_antitone_iff_exists_le_le, @and_left_comm (_ ∈ s)]
 #align set.not_monotone_on_not_antitone_on_iff_exists_le_le Set.not_monotoneOn_not_antitoneOn_iff_exists_le_le
--/
 
+/- warning: set.not_monotone_on_not_antitone_on_iff_exists_lt_lt -> Set.not_monotoneOn_not_antitoneOn_iff_exists_lt_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : LinearOrder.{u2} β] {f : α -> β}, Iff (And (Not (MonotoneOn.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) f s)) (Not (AntitoneOn.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) f s))) (Exists.{succ u1} α (fun (a : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a s) => Exists.{succ u1} α (fun (b : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) b s) => Exists.{succ u1} α (fun (c : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) c s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) c s) => And (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) a b) (And (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) b c) (Or (And (LT.lt.{u2} β (Preorder.toHasLt.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2))))) (f a) (f b)) (LT.lt.{u2} β (Preorder.toHasLt.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2))))) (f c) (f b))) (And (LT.lt.{u2} β (Preorder.toHasLt.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2))))) (f b) (f a)) (LT.lt.{u2} β (Preorder.toHasLt.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2))))) (f b) (f c))))))))))))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : LinearOrder.{u2} β] {f : α -> β}, Iff (And (Not (MonotoneOn.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) f s)) (Not (AntitoneOn.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) f s))) (Exists.{succ u1} α (fun (a : α) => Exists.{0} (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) => Exists.{succ u1} α (fun (b : α) => Exists.{0} (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) => Exists.{succ u1} α (fun (c : α) => Exists.{0} (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) c s) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) c s) => And (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) a b) (And (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) b c) (Or (And (LT.lt.{u2} β (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2)))))) (f a) (f b)) (LT.lt.{u2} β (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2)))))) (f c) (f b))) (And (LT.lt.{u2} β (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2)))))) (f b) (f a)) (LT.lt.{u2} β (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2)))))) (f b) (f c))))))))))))
+Case conversion may be inaccurate. Consider using '#align set.not_monotone_on_not_antitone_on_iff_exists_lt_lt Set.not_monotoneOn_not_antitoneOn_iff_exists_lt_ltₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a b c «expr ∈ » s) -/
-#print Set.not_monotoneOn_not_antitoneOn_iff_exists_lt_lt /-
 /-- A function between linear orders which is neither monotone nor antitone makes a dent upright or
 downright. -/
 theorem not_monotoneOn_not_antitoneOn_iff_exists_lt_lt :
@@ -5012,7 +5045,6 @@ theorem not_monotoneOn_not_antitoneOn_iff_exists_lt_lt :
   simp [monotone_on_iff_monotone, antitone_on_iff_antitone, and_assoc', exists_and_left,
     not_monotone_not_antitone_iff_exists_lt_lt, @and_left_comm (_ ∈ s)]
 #align set.not_monotone_on_not_antitone_on_iff_exists_lt_lt Set.not_monotoneOn_not_antitoneOn_iff_exists_lt_lt
--/
 
 end LinearOrder
 

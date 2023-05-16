@@ -1949,7 +1949,7 @@ scoped[ComplexOrder] attribute [instance] Complex.partialOrder
 
 /- warning: complex.le_def -> Complex.le_def is a dubious translation:
 lean 3 declaration is
-  forall {z : Complex} {w : Complex}, Iff (LE.le.{0} Complex (Preorder.toLE.{0} Complex (PartialOrder.toPreorder.{0} Complex Complex.partialOrder)) z w) (And (LE.le.{0} Real Real.hasLe (Complex.re z) (Complex.re w)) (Eq.{1} Real (Complex.im z) (Complex.im w)))
+  forall {z : Complex} {w : Complex}, Iff (LE.le.{0} Complex (Preorder.toHasLe.{0} Complex (PartialOrder.toPreorder.{0} Complex Complex.partialOrder)) z w) (And (LE.le.{0} Real Real.hasLe (Complex.re z) (Complex.re w)) (Eq.{1} Real (Complex.im z) (Complex.im w)))
 but is expected to have type
   forall {z : Complex} {w : Complex}, Iff (LE.le.{0} Complex (Preorder.toLE.{0} Complex (PartialOrder.toPreorder.{0} Complex Complex.partialOrder)) z w) (And (LE.le.{0} Real Real.instLEReal (Complex.re z) (Complex.re w)) (Eq.{1} Real (Complex.im z) (Complex.im w)))
 Case conversion may be inaccurate. Consider using '#align complex.le_def Complex.le_defₓ'. -/
@@ -1959,7 +1959,7 @@ theorem le_def {z w : ℂ} : z ≤ w ↔ z.re ≤ w.re ∧ z.im = w.im :=
 
 /- warning: complex.lt_def -> Complex.lt_def is a dubious translation:
 lean 3 declaration is
-  forall {z : Complex} {w : Complex}, Iff (LT.lt.{0} Complex (Preorder.toLT.{0} Complex (PartialOrder.toPreorder.{0} Complex Complex.partialOrder)) z w) (And (LT.lt.{0} Real Real.hasLt (Complex.re z) (Complex.re w)) (Eq.{1} Real (Complex.im z) (Complex.im w)))
+  forall {z : Complex} {w : Complex}, Iff (LT.lt.{0} Complex (Preorder.toHasLt.{0} Complex (PartialOrder.toPreorder.{0} Complex Complex.partialOrder)) z w) (And (LT.lt.{0} Real Real.hasLt (Complex.re z) (Complex.re w)) (Eq.{1} Real (Complex.im z) (Complex.im w)))
 but is expected to have type
   forall {z : Complex} {w : Complex}, Iff (LT.lt.{0} Complex (Preorder.toLT.{0} Complex (PartialOrder.toPreorder.{0} Complex Complex.partialOrder)) z w) (And (LT.lt.{0} Real Real.instLTReal (Complex.re z) (Complex.re w)) (Eq.{1} Real (Complex.im z) (Complex.im w)))
 Case conversion may be inaccurate. Consider using '#align complex.lt_def Complex.lt_defₓ'. -/
@@ -1969,7 +1969,7 @@ theorem lt_def {z w : ℂ} : z < w ↔ z.re < w.re ∧ z.im = w.im :=
 
 /- warning: complex.real_le_real -> Complex.real_le_real is a dubious translation:
 lean 3 declaration is
-  forall {x : Real} {y : Real}, Iff (LE.le.{0} Complex (Preorder.toLE.{0} Complex (PartialOrder.toPreorder.{0} Complex Complex.partialOrder)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real Complex (HasLiftT.mk.{1, 1} Real Complex (CoeTCₓ.coe.{1, 1} Real Complex (coeBase.{1, 1} Real Complex Complex.hasCoe))) x) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real Complex (HasLiftT.mk.{1, 1} Real Complex (CoeTCₓ.coe.{1, 1} Real Complex (coeBase.{1, 1} Real Complex Complex.hasCoe))) y)) (LE.le.{0} Real Real.hasLe x y)
+  forall {x : Real} {y : Real}, Iff (LE.le.{0} Complex (Preorder.toHasLe.{0} Complex (PartialOrder.toPreorder.{0} Complex Complex.partialOrder)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real Complex (HasLiftT.mk.{1, 1} Real Complex (CoeTCₓ.coe.{1, 1} Real Complex (coeBase.{1, 1} Real Complex Complex.hasCoe))) x) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real Complex (HasLiftT.mk.{1, 1} Real Complex (CoeTCₓ.coe.{1, 1} Real Complex (coeBase.{1, 1} Real Complex Complex.hasCoe))) y)) (LE.le.{0} Real Real.hasLe x y)
 but is expected to have type
   forall {x : Real} {y : Real}, Iff (LE.le.{0} Complex (Preorder.toLE.{0} Complex (PartialOrder.toPreorder.{0} Complex Complex.partialOrder)) (Complex.ofReal' x) (Complex.ofReal' y)) (LE.le.{0} Real Real.instLEReal x y)
 Case conversion may be inaccurate. Consider using '#align complex.real_le_real Complex.real_le_realₓ'. -/
@@ -1979,7 +1979,7 @@ theorem real_le_real {x y : ℝ} : (x : ℂ) ≤ (y : ℂ) ↔ x ≤ y := by sim
 
 /- warning: complex.real_lt_real -> Complex.real_lt_real is a dubious translation:
 lean 3 declaration is
-  forall {x : Real} {y : Real}, Iff (LT.lt.{0} Complex (Preorder.toLT.{0} Complex (PartialOrder.toPreorder.{0} Complex Complex.partialOrder)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real Complex (HasLiftT.mk.{1, 1} Real Complex (CoeTCₓ.coe.{1, 1} Real Complex (coeBase.{1, 1} Real Complex Complex.hasCoe))) x) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real Complex (HasLiftT.mk.{1, 1} Real Complex (CoeTCₓ.coe.{1, 1} Real Complex (coeBase.{1, 1} Real Complex Complex.hasCoe))) y)) (LT.lt.{0} Real Real.hasLt x y)
+  forall {x : Real} {y : Real}, Iff (LT.lt.{0} Complex (Preorder.toHasLt.{0} Complex (PartialOrder.toPreorder.{0} Complex Complex.partialOrder)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real Complex (HasLiftT.mk.{1, 1} Real Complex (CoeTCₓ.coe.{1, 1} Real Complex (coeBase.{1, 1} Real Complex Complex.hasCoe))) x) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real Complex (HasLiftT.mk.{1, 1} Real Complex (CoeTCₓ.coe.{1, 1} Real Complex (coeBase.{1, 1} Real Complex Complex.hasCoe))) y)) (LT.lt.{0} Real Real.hasLt x y)
 but is expected to have type
   forall {x : Real} {y : Real}, Iff (LT.lt.{0} Complex (Preorder.toLT.{0} Complex (PartialOrder.toPreorder.{0} Complex Complex.partialOrder)) (Complex.ofReal' x) (Complex.ofReal' y)) (LT.lt.{0} Real Real.instLTReal x y)
 Case conversion may be inaccurate. Consider using '#align complex.real_lt_real Complex.real_lt_realₓ'. -/
@@ -1989,7 +1989,7 @@ theorem real_lt_real {x y : ℝ} : (x : ℂ) < (y : ℂ) ↔ x < y := by simp [l
 
 /- warning: complex.zero_le_real -> Complex.zero_le_real is a dubious translation:
 lean 3 declaration is
-  forall {x : Real}, Iff (LE.le.{0} Complex (Preorder.toLE.{0} Complex (PartialOrder.toPreorder.{0} Complex Complex.partialOrder)) (OfNat.ofNat.{0} Complex 0 (OfNat.mk.{0} Complex 0 (Zero.zero.{0} Complex Complex.hasZero))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real Complex (HasLiftT.mk.{1, 1} Real Complex (CoeTCₓ.coe.{1, 1} Real Complex (coeBase.{1, 1} Real Complex Complex.hasCoe))) x)) (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) x)
+  forall {x : Real}, Iff (LE.le.{0} Complex (Preorder.toHasLe.{0} Complex (PartialOrder.toPreorder.{0} Complex Complex.partialOrder)) (OfNat.ofNat.{0} Complex 0 (OfNat.mk.{0} Complex 0 (Zero.zero.{0} Complex Complex.hasZero))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real Complex (HasLiftT.mk.{1, 1} Real Complex (CoeTCₓ.coe.{1, 1} Real Complex (coeBase.{1, 1} Real Complex Complex.hasCoe))) x)) (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) x)
 but is expected to have type
   forall {x : Real}, Iff (LE.le.{0} Complex (Preorder.toLE.{0} Complex (PartialOrder.toPreorder.{0} Complex Complex.partialOrder)) (OfNat.ofNat.{0} Complex 0 (Zero.toOfNat0.{0} Complex Complex.instZeroComplex)) (Complex.ofReal' x)) (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) x)
 Case conversion may be inaccurate. Consider using '#align complex.zero_le_real Complex.zero_le_realₓ'. -/
@@ -2000,7 +2000,7 @@ theorem zero_le_real {x : ℝ} : (0 : ℂ) ≤ (x : ℂ) ↔ 0 ≤ x :=
 
 /- warning: complex.zero_lt_real -> Complex.zero_lt_real is a dubious translation:
 lean 3 declaration is
-  forall {x : Real}, Iff (LT.lt.{0} Complex (Preorder.toLT.{0} Complex (PartialOrder.toPreorder.{0} Complex Complex.partialOrder)) (OfNat.ofNat.{0} Complex 0 (OfNat.mk.{0} Complex 0 (Zero.zero.{0} Complex Complex.hasZero))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real Complex (HasLiftT.mk.{1, 1} Real Complex (CoeTCₓ.coe.{1, 1} Real Complex (coeBase.{1, 1} Real Complex Complex.hasCoe))) x)) (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) x)
+  forall {x : Real}, Iff (LT.lt.{0} Complex (Preorder.toHasLt.{0} Complex (PartialOrder.toPreorder.{0} Complex Complex.partialOrder)) (OfNat.ofNat.{0} Complex 0 (OfNat.mk.{0} Complex 0 (Zero.zero.{0} Complex Complex.hasZero))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real Complex (HasLiftT.mk.{1, 1} Real Complex (CoeTCₓ.coe.{1, 1} Real Complex (coeBase.{1, 1} Real Complex Complex.hasCoe))) x)) (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) x)
 but is expected to have type
   forall {x : Real}, Iff (LT.lt.{0} Complex (Preorder.toLT.{0} Complex (PartialOrder.toPreorder.{0} Complex Complex.partialOrder)) (OfNat.ofNat.{0} Complex 0 (Zero.toOfNat0.{0} Complex Complex.instZeroComplex)) (Complex.ofReal' x)) (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) x)
 Case conversion may be inaccurate. Consider using '#align complex.zero_lt_real Complex.zero_lt_realₓ'. -/
@@ -2011,7 +2011,7 @@ theorem zero_lt_real {x : ℝ} : (0 : ℂ) < (x : ℂ) ↔ 0 < x :=
 
 /- warning: complex.not_le_iff -> Complex.not_le_iff is a dubious translation:
 lean 3 declaration is
-  forall {z : Complex} {w : Complex}, Iff (Not (LE.le.{0} Complex (Preorder.toLE.{0} Complex (PartialOrder.toPreorder.{0} Complex Complex.partialOrder)) z w)) (Or (LT.lt.{0} Real Real.hasLt (Complex.re w) (Complex.re z)) (Ne.{1} Real (Complex.im z) (Complex.im w)))
+  forall {z : Complex} {w : Complex}, Iff (Not (LE.le.{0} Complex (Preorder.toHasLe.{0} Complex (PartialOrder.toPreorder.{0} Complex Complex.partialOrder)) z w)) (Or (LT.lt.{0} Real Real.hasLt (Complex.re w) (Complex.re z)) (Ne.{1} Real (Complex.im z) (Complex.im w)))
 but is expected to have type
   forall {z : Complex} {w : Complex}, Iff (Not (LE.le.{0} Complex (Preorder.toLE.{0} Complex (PartialOrder.toPreorder.{0} Complex Complex.partialOrder)) z w)) (Or (LT.lt.{0} Real Real.instLTReal (Complex.re w) (Complex.re z)) (Ne.{1} Real (Complex.im z) (Complex.im w)))
 Case conversion may be inaccurate. Consider using '#align complex.not_le_iff Complex.not_le_iffₓ'. -/
@@ -2021,7 +2021,7 @@ theorem not_le_iff {z w : ℂ} : ¬z ≤ w ↔ w.re < z.re ∨ z.im ≠ w.im := 
 
 /- warning: complex.not_lt_iff -> Complex.not_lt_iff is a dubious translation:
 lean 3 declaration is
-  forall {z : Complex} {w : Complex}, Iff (Not (LT.lt.{0} Complex (Preorder.toLT.{0} Complex (PartialOrder.toPreorder.{0} Complex Complex.partialOrder)) z w)) (Or (LE.le.{0} Real Real.hasLe (Complex.re w) (Complex.re z)) (Ne.{1} Real (Complex.im z) (Complex.im w)))
+  forall {z : Complex} {w : Complex}, Iff (Not (LT.lt.{0} Complex (Preorder.toHasLt.{0} Complex (PartialOrder.toPreorder.{0} Complex Complex.partialOrder)) z w)) (Or (LE.le.{0} Real Real.hasLe (Complex.re w) (Complex.re z)) (Ne.{1} Real (Complex.im z) (Complex.im w)))
 but is expected to have type
   forall {z : Complex} {w : Complex}, Iff (Not (LT.lt.{0} Complex (Preorder.toLT.{0} Complex (PartialOrder.toPreorder.{0} Complex Complex.partialOrder)) z w)) (Or (LE.le.{0} Real Real.instLEReal (Complex.re w) (Complex.re z)) (Ne.{1} Real (Complex.im z) (Complex.im w)))
 Case conversion may be inaccurate. Consider using '#align complex.not_lt_iff Complex.not_lt_iffₓ'. -/
@@ -2031,7 +2031,7 @@ theorem not_lt_iff {z w : ℂ} : ¬z < w ↔ w.re ≤ z.re ∨ z.im ≠ w.im := 
 
 /- warning: complex.not_le_zero_iff -> Complex.not_le_zero_iff is a dubious translation:
 lean 3 declaration is
-  forall {z : Complex}, Iff (Not (LE.le.{0} Complex (Preorder.toLE.{0} Complex (PartialOrder.toPreorder.{0} Complex Complex.partialOrder)) z (OfNat.ofNat.{0} Complex 0 (OfNat.mk.{0} Complex 0 (Zero.zero.{0} Complex Complex.hasZero))))) (Or (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) (Complex.re z)) (Ne.{1} Real (Complex.im z) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))
+  forall {z : Complex}, Iff (Not (LE.le.{0} Complex (Preorder.toHasLe.{0} Complex (PartialOrder.toPreorder.{0} Complex Complex.partialOrder)) z (OfNat.ofNat.{0} Complex 0 (OfNat.mk.{0} Complex 0 (Zero.zero.{0} Complex Complex.hasZero))))) (Or (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) (Complex.re z)) (Ne.{1} Real (Complex.im z) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))
 but is expected to have type
   forall {z : Complex}, Iff (Not (LE.le.{0} Complex (Preorder.toLE.{0} Complex (PartialOrder.toPreorder.{0} Complex Complex.partialOrder)) z (OfNat.ofNat.{0} Complex 0 (Zero.toOfNat0.{0} Complex Complex.instZeroComplex)))) (Or (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) (Complex.re z)) (Ne.{1} Real (Complex.im z) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))
 Case conversion may be inaccurate. Consider using '#align complex.not_le_zero_iff Complex.not_le_zero_iffₓ'. -/
@@ -2041,7 +2041,7 @@ theorem not_le_zero_iff {z : ℂ} : ¬z ≤ 0 ↔ 0 < z.re ∨ z.im ≠ 0 :=
 
 /- warning: complex.not_lt_zero_iff -> Complex.not_lt_zero_iff is a dubious translation:
 lean 3 declaration is
-  forall {z : Complex}, Iff (Not (LT.lt.{0} Complex (Preorder.toLT.{0} Complex (PartialOrder.toPreorder.{0} Complex Complex.partialOrder)) z (OfNat.ofNat.{0} Complex 0 (OfNat.mk.{0} Complex 0 (Zero.zero.{0} Complex Complex.hasZero))))) (Or (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) (Complex.re z)) (Ne.{1} Real (Complex.im z) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))
+  forall {z : Complex}, Iff (Not (LT.lt.{0} Complex (Preorder.toHasLt.{0} Complex (PartialOrder.toPreorder.{0} Complex Complex.partialOrder)) z (OfNat.ofNat.{0} Complex 0 (OfNat.mk.{0} Complex 0 (Zero.zero.{0} Complex Complex.hasZero))))) (Or (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) (Complex.re z)) (Ne.{1} Real (Complex.im z) (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))
 but is expected to have type
   forall {z : Complex}, Iff (Not (LT.lt.{0} Complex (Preorder.toLT.{0} Complex (PartialOrder.toPreorder.{0} Complex Complex.partialOrder)) z (OfNat.ofNat.{0} Complex 0 (Zero.toOfNat0.{0} Complex Complex.instZeroComplex)))) (Or (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) (Complex.re z)) (Ne.{1} Real (Complex.im z) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))
 Case conversion may be inaccurate. Consider using '#align complex.not_lt_zero_iff Complex.not_lt_zero_iffₓ'. -/
@@ -2051,7 +2051,7 @@ theorem not_lt_zero_iff {z : ℂ} : ¬z < 0 ↔ 0 ≤ z.re ∨ z.im ≠ 0 :=
 
 /- warning: complex.eq_re_of_real_le -> Complex.eq_re_ofReal_le is a dubious translation:
 lean 3 declaration is
-  forall {r : Real} {z : Complex}, (LE.le.{0} Complex (Preorder.toLE.{0} Complex (PartialOrder.toPreorder.{0} Complex Complex.partialOrder)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real Complex (HasLiftT.mk.{1, 1} Real Complex (CoeTCₓ.coe.{1, 1} Real Complex (coeBase.{1, 1} Real Complex Complex.hasCoe))) r) z) -> (Eq.{1} Complex z ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real Complex (HasLiftT.mk.{1, 1} Real Complex (CoeTCₓ.coe.{1, 1} Real Complex (coeBase.{1, 1} Real Complex Complex.hasCoe))) (Complex.re z)))
+  forall {r : Real} {z : Complex}, (LE.le.{0} Complex (Preorder.toHasLe.{0} Complex (PartialOrder.toPreorder.{0} Complex Complex.partialOrder)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real Complex (HasLiftT.mk.{1, 1} Real Complex (CoeTCₓ.coe.{1, 1} Real Complex (coeBase.{1, 1} Real Complex Complex.hasCoe))) r) z) -> (Eq.{1} Complex z ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Real Complex (HasLiftT.mk.{1, 1} Real Complex (CoeTCₓ.coe.{1, 1} Real Complex (coeBase.{1, 1} Real Complex Complex.hasCoe))) (Complex.re z)))
 but is expected to have type
   forall {r : Real} {z : Complex}, (LE.le.{0} Complex (Preorder.toLE.{0} Complex (PartialOrder.toPreorder.{0} Complex Complex.partialOrder)) (Complex.ofReal' r) z) -> (Eq.{1} Complex z (Complex.ofReal' (Complex.re z)))
 Case conversion may be inaccurate. Consider using '#align complex.eq_re_of_real_le Complex.eq_re_ofReal_leₓ'. -/

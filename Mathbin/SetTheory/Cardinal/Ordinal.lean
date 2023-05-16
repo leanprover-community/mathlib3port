@@ -81,7 +81,12 @@ theorem ord_isLimit {c} (co : ℵ₀ ≤ c) : (ord c).IsLimit :=
 /-! ### Aleph cardinals -/
 
 
-#print Cardinal.alephIdx.initialSeg /-
+/- warning: cardinal.aleph_idx.initial_seg -> Cardinal.alephIdx.initialSeg is a dubious translation:
+lean 3 declaration is
+  InitialSeg.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}))) (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})))
+but is expected to have type
+  InitialSeg.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} (fun (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.232 : Cardinal.{u1}) (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.234 : Cardinal.{u1}) => LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.232 x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.234) (fun (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.247 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.249 : Ordinal.{u1}) => LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.247 x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.249)
+Case conversion may be inaccurate. Consider using '#align cardinal.aleph_idx.initial_seg Cardinal.alephIdx.initialSegₓ'. -/
 /-- The `aleph'` index function, which gives the ordinal index of a cardinal.
   (The `aleph'` part is because unlike `aleph` this counts also the
   finite stages. So `aleph_idx n = n`, `aleph_idx ω = ω`,
@@ -93,7 +98,6 @@ theorem ord_isLimit {c} (co : ℵ₀ ≤ c) : (ord c).IsLimit :=
 def alephIdx.initialSeg : @InitialSeg Cardinal Ordinal (· < ·) (· < ·) :=
   @RelEmbedding.collapse Cardinal Ordinal (· < ·) (· < ·) _ Cardinal.ord.orderEmbedding.ltEmbedding
 #align cardinal.aleph_idx.initial_seg Cardinal.alephIdx.initialSeg
--/
 
 #print Cardinal.alephIdx /-
 /-- The `aleph'` index function, which gives the ordinal index of a cardinal.
@@ -108,7 +112,7 @@ def alephIdx : Cardinal → Ordinal :=
 
 /- warning: cardinal.aleph_idx.initial_seg_coe -> Cardinal.alephIdx.initialSeg_coe is a dubious translation:
 lean 3 declaration is
-  Eq.{succ (succ u1)} ((fun (_x : InitialSeg.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}))) (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})))) => Cardinal.{u1} -> Ordinal.{u1}) Cardinal.alephIdx.initialSeg.{u1}) (coeFn.{succ (succ u1), succ (succ u1)} (InitialSeg.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}))) (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})))) (fun (_x : InitialSeg.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}))) (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})))) => Cardinal.{u1} -> Ordinal.{u1}) (FunLike.hasCoeToFun.{succ (succ u1), succ (succ u1), succ (succ u1)} (InitialSeg.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}))) (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})))) Cardinal.{u1} (fun (_x : Cardinal.{u1}) => Ordinal.{u1}) (EmbeddingLike.toFunLike.{succ (succ u1), succ (succ u1), succ (succ u1)} (InitialSeg.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}))) (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})))) Cardinal.{u1} Ordinal.{u1} (InitialSeg.embeddingLike.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}))) (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})))))) Cardinal.alephIdx.initialSeg.{u1}) Cardinal.alephIdx.{u1}
+  Eq.{succ (succ u1)} ((fun (_x : InitialSeg.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}))) (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})))) => Cardinal.{u1} -> Ordinal.{u1}) Cardinal.alephIdx.initialSeg.{u1}) (coeFn.{succ (succ u1), succ (succ u1)} (InitialSeg.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}))) (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})))) (fun (_x : InitialSeg.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}))) (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})))) => Cardinal.{u1} -> Ordinal.{u1}) (FunLike.hasCoeToFun.{succ (succ u1), succ (succ u1), succ (succ u1)} (InitialSeg.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}))) (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})))) Cardinal.{u1} (fun (_x : Cardinal.{u1}) => Ordinal.{u1}) (EmbeddingLike.toFunLike.{succ (succ u1), succ (succ u1), succ (succ u1)} (InitialSeg.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}))) (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})))) Cardinal.{u1} Ordinal.{u1} (InitialSeg.embeddingLike.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}))) (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})))))) Cardinal.alephIdx.initialSeg.{u1}) Cardinal.alephIdx.{u1}
 but is expected to have type
   Eq.{succ (succ u1)} (forall (a : Cardinal.{u1}), (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Cardinal.{u1}) => Ordinal.{u1}) a) (FunLike.coe.{succ (succ u1), succ (succ u1), succ (succ u1)} (InitialSeg.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} (fun (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.232 : Cardinal.{u1}) (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.234 : Cardinal.{u1}) => LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.232 x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.234) (fun (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.247 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.249 : Ordinal.{u1}) => LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.247 x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.249)) Cardinal.{u1} (fun (_x : Cardinal.{u1}) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Cardinal.{u1}) => Ordinal.{u1}) _x) (EmbeddingLike.toFunLike.{succ (succ u1), succ (succ u1), succ (succ u1)} (InitialSeg.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} (fun (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.232 : Cardinal.{u1}) (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.234 : Cardinal.{u1}) => LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.232 x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.234) (fun (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.247 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.249 : Ordinal.{u1}) => LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.247 x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.249)) Cardinal.{u1} Ordinal.{u1} (InitialSeg.instEmbeddingLikeInitialSeg.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} (fun (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.232 : Cardinal.{u1}) (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.234 : Cardinal.{u1}) => LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.232 x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.234) (fun (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.247 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.249 : Ordinal.{u1}) => LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.247 x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.249))) Cardinal.alephIdx.initialSeg.{u1}) Cardinal.alephIdx.{u1}
 Case conversion may be inaccurate. Consider using '#align cardinal.aleph_idx.initial_seg_coe Cardinal.alephIdx.initialSeg_coeₓ'. -/
@@ -117,27 +121,44 @@ theorem alephIdx.initialSeg_coe : (alephIdx.initialSeg : Cardinal → Ordinal) =
   rfl
 #align cardinal.aleph_idx.initial_seg_coe Cardinal.alephIdx.initialSeg_coe
 
-#print Cardinal.alephIdx_lt /-
+/- warning: cardinal.aleph_idx_lt -> Cardinal.alephIdx_lt is a dubious translation:
+lean 3 declaration is
+  forall {a : Cardinal.{u1}} {b : Cardinal.{u1}}, Iff (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Cardinal.alephIdx.{u1} a) (Cardinal.alephIdx.{u1} b)) (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) a b)
+but is expected to have type
+  forall {a : Cardinal.{u1}} {b : Cardinal.{u1}}, Iff (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Cardinal.alephIdx.{u1} a) (Cardinal.alephIdx.{u1} b)) (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) a b)
+Case conversion may be inaccurate. Consider using '#align cardinal.aleph_idx_lt Cardinal.alephIdx_ltₓ'. -/
 @[simp]
 theorem alephIdx_lt {a b} : alephIdx a < alephIdx b ↔ a < b :=
   alephIdx.initialSeg.toRelEmbedding.map_rel_iff
 #align cardinal.aleph_idx_lt Cardinal.alephIdx_lt
--/
 
-#print Cardinal.alephIdx_le /-
+/- warning: cardinal.aleph_idx_le -> Cardinal.alephIdx_le is a dubious translation:
+lean 3 declaration is
+  forall {a : Cardinal.{u1}} {b : Cardinal.{u1}}, Iff (LE.le.{succ u1} Ordinal.{u1} (Preorder.toHasLe.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Cardinal.alephIdx.{u1} a) (Cardinal.alephIdx.{u1} b)) (LE.le.{succ u1} Cardinal.{u1} Cardinal.hasLe.{u1} a b)
+but is expected to have type
+  forall {a : Cardinal.{u1}} {b : Cardinal.{u1}}, Iff (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Cardinal.alephIdx.{u1} a) (Cardinal.alephIdx.{u1} b)) (LE.le.{succ u1} Cardinal.{u1} Cardinal.instLECardinal.{u1} a b)
+Case conversion may be inaccurate. Consider using '#align cardinal.aleph_idx_le Cardinal.alephIdx_leₓ'. -/
 @[simp]
 theorem alephIdx_le {a b} : alephIdx a ≤ alephIdx b ↔ a ≤ b := by
   rw [← not_lt, ← not_lt, aleph_idx_lt]
 #align cardinal.aleph_idx_le Cardinal.alephIdx_le
--/
 
-#print Cardinal.alephIdx.init /-
+/- warning: cardinal.aleph_idx.init -> Cardinal.alephIdx.init is a dubious translation:
+lean 3 declaration is
+  forall {a : Cardinal.{u1}} {b : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b (Cardinal.alephIdx.{u1} a)) -> (Exists.{succ (succ u1)} Cardinal.{u1} (fun (c : Cardinal.{u1}) => Eq.{succ (succ u1)} Ordinal.{u1} (Cardinal.alephIdx.{u1} c) b))
+but is expected to have type
+  forall {a : Cardinal.{u1}} {b : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b (Cardinal.alephIdx.{u1} a)) -> (Exists.{succ (succ u1)} Cardinal.{u1} (fun (c : Cardinal.{u1}) => Eq.{succ (succ u1)} Ordinal.{u1} (Cardinal.alephIdx.{u1} c) b))
+Case conversion may be inaccurate. Consider using '#align cardinal.aleph_idx.init Cardinal.alephIdx.initₓ'. -/
 theorem alephIdx.init {a b} : b < alephIdx a → ∃ c, alephIdx c = b :=
   alephIdx.initialSeg.dropLast
 #align cardinal.aleph_idx.init Cardinal.alephIdx.init
--/
 
-#print Cardinal.alephIdx.relIso /-
+/- warning: cardinal.aleph_idx.rel_iso -> Cardinal.alephIdx.relIso is a dubious translation:
+lean 3 declaration is
+  RelIso.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}))) (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})))
+but is expected to have type
+  RelIso.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} (fun (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.448 : Cardinal.{u1}) (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.450 : Cardinal.{u1}) => LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.448 x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.450) (fun (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.463 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.465 : Ordinal.{u1}) => LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.463 x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.465)
+Case conversion may be inaccurate. Consider using '#align cardinal.aleph_idx.rel_iso Cardinal.alephIdx.relIsoₓ'. -/
 /-- The `aleph'` index function, which gives the ordinal index of a cardinal.
   (The `aleph'` part is because unlike `aleph` this counts also the
   finite stages. So `aleph_idx n = n`, `aleph_idx ℵ₀ = ω`,
@@ -159,11 +180,10 @@ def alephIdx.relIso : @RelIso Cardinal.{u} Ordinal.{u} (· < ·) (· < ·) :=
           (Cardinal.bddAbove_range.{u, u} fun a : α => inv_fun aleph_idx (Ordinal.typein r a))
           (Ordinal.enum r _ (h (succ s)))
 #align cardinal.aleph_idx.rel_iso Cardinal.alephIdx.relIso
--/
 
 /- warning: cardinal.aleph_idx.rel_iso_coe -> Cardinal.alephIdx.relIso_coe is a dubious translation:
 lean 3 declaration is
-  Eq.{succ (succ u1)} ((fun (_x : RelIso.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}))) (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})))) => Cardinal.{u1} -> Ordinal.{u1}) Cardinal.alephIdx.relIso.{u1}) (coeFn.{succ (succ u1), succ (succ u1)} (RelIso.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}))) (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})))) (fun (_x : RelIso.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}))) (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})))) => Cardinal.{u1} -> Ordinal.{u1}) (RelIso.hasCoeToFun.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}))) (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})))) Cardinal.alephIdx.relIso.{u1}) Cardinal.alephIdx.{u1}
+  Eq.{succ (succ u1)} ((fun (_x : RelIso.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}))) (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})))) => Cardinal.{u1} -> Ordinal.{u1}) Cardinal.alephIdx.relIso.{u1}) (coeFn.{succ (succ u1), succ (succ u1)} (RelIso.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}))) (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})))) (fun (_x : RelIso.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}))) (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})))) => Cardinal.{u1} -> Ordinal.{u1}) (RelIso.hasCoeToFun.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}))) (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})))) Cardinal.alephIdx.relIso.{u1}) Cardinal.alephIdx.{u1}
 but is expected to have type
   Eq.{succ (succ u1)} (Cardinal.{u1} -> Ordinal.{u1}) (FunLike.coe.{succ (succ u1), succ (succ u1), succ (succ u1)} (RelIso.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} (fun (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.448 : Cardinal.{u1}) (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.450 : Cardinal.{u1}) => LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.448 x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.450) (fun (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.463 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.465 : Ordinal.{u1}) => LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.463 x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.465)) Cardinal.{u1} (fun (_x : Cardinal.{u1}) => Ordinal.{u1}) (RelHomClass.toFunLike.{succ u1, succ u1, succ u1} (RelIso.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} (fun (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.448 : Cardinal.{u1}) (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.450 : Cardinal.{u1}) => LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.448 x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.450) (fun (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.463 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.465 : Ordinal.{u1}) => LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.463 x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.465)) Cardinal.{u1} Ordinal.{u1} (fun (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.448 : Cardinal.{u1}) (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.450 : Cardinal.{u1}) => LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.448 x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.450) (fun (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.463 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.465 : Ordinal.{u1}) => LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.463 x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.465) (RelIso.instRelHomClassRelIso.{succ u1, succ u1} Cardinal.{u1} Ordinal.{u1} (fun (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.448 : Cardinal.{u1}) (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.450 : Cardinal.{u1}) => LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.448 x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.450) (fun (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.463 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.465 : Ordinal.{u1}) => LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.463 x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.465))) Cardinal.alephIdx.relIso.{u1}) Cardinal.alephIdx.{u1}
 Case conversion may be inaccurate. Consider using '#align cardinal.aleph_idx.rel_iso_coe Cardinal.alephIdx.relIso_coeₓ'. -/
@@ -172,12 +192,16 @@ theorem alephIdx.relIso_coe : (alephIdx.relIso : Cardinal → Ordinal) = alephId
   rfl
 #align cardinal.aleph_idx.rel_iso_coe Cardinal.alephIdx.relIso_coe
 
-#print Cardinal.type_cardinal /-
+/- warning: cardinal.type_cardinal -> Cardinal.type_cardinal is a dubious translation:
+lean 3 declaration is
+  Eq.{succ (succ (succ u1))} Ordinal.{succ u1} (Ordinal.type.{succ u1} Cardinal.{u1} (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1}))) Cardinal.wo.{u1}) Ordinal.univ.{u1, succ u1}
+but is expected to have type
+  Eq.{succ (succ (succ u1))} Ordinal.{succ u1} (Ordinal.type.{succ u1} Cardinal.{u1} (fun (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.737 : Cardinal.{u1}) (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.739 : Cardinal.{u1}) => LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.737 x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.739) Cardinal.wo.{u1}) Ordinal.univ.{u1, succ u1}
+Case conversion may be inaccurate. Consider using '#align cardinal.type_cardinal Cardinal.type_cardinalₓ'. -/
 @[simp]
 theorem type_cardinal : @type Cardinal (· < ·) _ = Ordinal.univ.{u, u + 1} := by
   rw [Ordinal.univ_id] <;> exact Quotient.sound ⟨aleph_idx.rel_iso⟩
 #align cardinal.type_cardinal Cardinal.type_cardinal
--/
 
 #print Cardinal.mk_cardinal /-
 @[simp]
@@ -186,7 +210,12 @@ theorem mk_cardinal : (#Cardinal) = univ.{u, u + 1} := by
 #align cardinal.mk_cardinal Cardinal.mk_cardinal
 -/
 
-#print Cardinal.Aleph'.relIso /-
+/- warning: cardinal.aleph'.rel_iso -> Cardinal.Aleph'.relIso is a dubious translation:
+lean 3 declaration is
+  RelIso.{succ u1, succ u1} Ordinal.{u1} Cardinal.{u1} (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}))) (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})))
+but is expected to have type
+  RelIso.{succ u1, succ u1} Ordinal.{u1} Cardinal.{u1} (fun (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.463 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.465 : Ordinal.{u1}) => LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.463 x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.465) (fun (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.448 : Cardinal.{u1}) (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.450 : Cardinal.{u1}) => LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.448 x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.450)
+Case conversion may be inaccurate. Consider using '#align cardinal.aleph'.rel_iso Cardinal.Aleph'.relIsoₓ'. -/
 /-- The `aleph'` function gives the cardinals listed by their ordinal
   index, and is the inverse of `aleph_idx`.
   `aleph' n = n`, `aleph' ω = ω`, `aleph' (ω + 1) = succ ℵ₀`, etc.
@@ -196,7 +225,6 @@ theorem mk_cardinal : (#Cardinal) = univ.{u, u + 1} := by
 def Aleph'.relIso :=
   Cardinal.alephIdx.relIso.symm
 #align cardinal.aleph'.rel_iso Cardinal.Aleph'.relIso
--/
 
 #print Cardinal.aleph' /-
 /-- The `aleph'` function gives the cardinals listed by their ordinal
@@ -209,7 +237,7 @@ def aleph' : Ordinal → Cardinal :=
 
 /- warning: cardinal.aleph'.rel_iso_coe -> Cardinal.aleph'.relIso_coe is a dubious translation:
 lean 3 declaration is
-  Eq.{succ (succ u1)} ((fun (_x : RelIso.{succ u1, succ u1} Ordinal.{u1} Cardinal.{u1} (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}))) (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})))) => Ordinal.{u1} -> Cardinal.{u1}) Cardinal.Aleph'.relIso.{u1}) (coeFn.{succ (succ u1), succ (succ u1)} (RelIso.{succ u1, succ u1} Ordinal.{u1} Cardinal.{u1} (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}))) (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})))) (fun (_x : RelIso.{succ u1, succ u1} Ordinal.{u1} Cardinal.{u1} (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}))) (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})))) => Ordinal.{u1} -> Cardinal.{u1}) (RelIso.hasCoeToFun.{succ u1, succ u1} Ordinal.{u1} Cardinal.{u1} (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}))) (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})))) Cardinal.Aleph'.relIso.{u1}) Cardinal.aleph'.{u1}
+  Eq.{succ (succ u1)} ((fun (_x : RelIso.{succ u1, succ u1} Ordinal.{u1} Cardinal.{u1} (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}))) (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})))) => Ordinal.{u1} -> Cardinal.{u1}) Cardinal.Aleph'.relIso.{u1}) (coeFn.{succ (succ u1), succ (succ u1)} (RelIso.{succ u1, succ u1} Ordinal.{u1} Cardinal.{u1} (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}))) (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})))) (fun (_x : RelIso.{succ u1, succ u1} Ordinal.{u1} Cardinal.{u1} (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}))) (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})))) => Ordinal.{u1} -> Cardinal.{u1}) (RelIso.hasCoeToFun.{succ u1, succ u1} Ordinal.{u1} Cardinal.{u1} (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}))) (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})))) Cardinal.Aleph'.relIso.{u1}) Cardinal.aleph'.{u1}
 but is expected to have type
   Eq.{succ (succ u1)} (Ordinal.{u1} -> Cardinal.{u1}) (FunLike.coe.{succ (succ u1), succ (succ u1), succ (succ u1)} (RelIso.{succ u1, succ u1} Ordinal.{u1} Cardinal.{u1} (fun (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.463 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.465 : Ordinal.{u1}) => LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.463 x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.465) (fun (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.448 : Cardinal.{u1}) (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.450 : Cardinal.{u1}) => LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.448 x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.450)) Ordinal.{u1} (fun (_x : Ordinal.{u1}) => Cardinal.{u1}) (RelHomClass.toFunLike.{succ u1, succ u1, succ u1} (RelIso.{succ u1, succ u1} Ordinal.{u1} Cardinal.{u1} (fun (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.463 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.465 : Ordinal.{u1}) => LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.463 x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.465) (fun (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.448 : Cardinal.{u1}) (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.450 : Cardinal.{u1}) => LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.448 x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.450)) Ordinal.{u1} Cardinal.{u1} (fun (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.463 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.465 : Ordinal.{u1}) => LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.463 x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.465) (fun (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.448 : Cardinal.{u1}) (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.450 : Cardinal.{u1}) => LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.448 x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.450) (RelIso.instRelHomClassRelIso.{succ u1, succ u1} Ordinal.{u1} Cardinal.{u1} (fun (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.463 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.465 : Ordinal.{u1}) => LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.463 x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.465) (fun (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.448 : Cardinal.{u1}) (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.450 : Cardinal.{u1}) => LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.448 x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.450))) Cardinal.Aleph'.relIso.{u1}) Cardinal.aleph'.{u1}
 Case conversion may be inaccurate. Consider using '#align cardinal.aleph'.rel_iso_coe Cardinal.aleph'.relIso_coeₓ'. -/
@@ -218,19 +246,27 @@ theorem aleph'.relIso_coe : (Aleph'.relIso : Ordinal → Cardinal) = aleph' :=
   rfl
 #align cardinal.aleph'.rel_iso_coe Cardinal.aleph'.relIso_coe
 
-#print Cardinal.aleph'_lt /-
+/- warning: cardinal.aleph'_lt -> Cardinal.aleph'_lt is a dubious translation:
+lean 3 declaration is
+  forall {o₁ : Ordinal.{u1}} {o₂ : Ordinal.{u1}}, Iff (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Cardinal.aleph'.{u1} o₁) (Cardinal.aleph'.{u1} o₂)) (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) o₁ o₂)
+but is expected to have type
+  forall {o₁ : Ordinal.{u1}} {o₂ : Ordinal.{u1}}, Iff (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Cardinal.aleph'.{u1} o₁) (Cardinal.aleph'.{u1} o₂)) (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) o₁ o₂)
+Case conversion may be inaccurate. Consider using '#align cardinal.aleph'_lt Cardinal.aleph'_ltₓ'. -/
 @[simp]
 theorem aleph'_lt {o₁ o₂ : Ordinal} : aleph' o₁ < aleph' o₂ ↔ o₁ < o₂ :=
   Aleph'.relIso.map_rel_iff
 #align cardinal.aleph'_lt Cardinal.aleph'_lt
--/
 
-#print Cardinal.aleph'_le /-
+/- warning: cardinal.aleph'_le -> Cardinal.aleph'_le is a dubious translation:
+lean 3 declaration is
+  forall {o₁ : Ordinal.{u1}} {o₂ : Ordinal.{u1}}, Iff (LE.le.{succ u1} Cardinal.{u1} Cardinal.hasLe.{u1} (Cardinal.aleph'.{u1} o₁) (Cardinal.aleph'.{u1} o₂)) (LE.le.{succ u1} Ordinal.{u1} (Preorder.toHasLe.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) o₁ o₂)
+but is expected to have type
+  forall {o₁ : Ordinal.{u1}} {o₂ : Ordinal.{u1}}, Iff (LE.le.{succ u1} Cardinal.{u1} Cardinal.instLECardinal.{u1} (Cardinal.aleph'.{u1} o₁) (Cardinal.aleph'.{u1} o₂)) (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) o₁ o₂)
+Case conversion may be inaccurate. Consider using '#align cardinal.aleph'_le Cardinal.aleph'_leₓ'. -/
 @[simp]
 theorem aleph'_le {o₁ o₂ : Ordinal} : aleph' o₁ ≤ aleph' o₂ ↔ o₁ ≤ o₂ :=
   le_iff_le_iff_lt_iff_lt.2 aleph'_lt
 #align cardinal.aleph'_le Cardinal.aleph'_le
--/
 
 #print Cardinal.aleph'_alephIdx /-
 @[simp]
@@ -281,7 +317,12 @@ theorem aleph'_nat : ∀ n : ℕ, aleph' n = n
   | n + 1 => show aleph' (succ n) = n.succ by rw [aleph'_succ, aleph'_nat, nat_succ]
 #align cardinal.aleph'_nat Cardinal.aleph'_nat
 
-#print Cardinal.aleph'_le_of_limit /-
+/- warning: cardinal.aleph'_le_of_limit -> Cardinal.aleph'_le_of_limit is a dubious translation:
+lean 3 declaration is
+  forall {o : Ordinal.{u1}}, (Ordinal.IsLimit.{u1} o) -> (forall {c : Cardinal.{u1}}, Iff (LE.le.{succ u1} Cardinal.{u1} Cardinal.hasLe.{u1} (Cardinal.aleph'.{u1} o) c) (forall (o' : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) o' o) -> (LE.le.{succ u1} Cardinal.{u1} Cardinal.hasLe.{u1} (Cardinal.aleph'.{u1} o') c)))
+but is expected to have type
+  forall {o : Ordinal.{u1}}, (Ordinal.IsLimit.{u1} o) -> (forall {c : Cardinal.{u1}}, Iff (LE.le.{succ u1} Cardinal.{u1} Cardinal.instLECardinal.{u1} (Cardinal.aleph'.{u1} o) c) (forall (o' : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) o' o) -> (LE.le.{succ u1} Cardinal.{u1} Cardinal.instLECardinal.{u1} (Cardinal.aleph'.{u1} o') c)))
+Case conversion may be inaccurate. Consider using '#align cardinal.aleph'_le_of_limit Cardinal.aleph'_le_of_limitₓ'. -/
 theorem aleph'_le_of_limit {o : Ordinal} (l : o.IsLimit) {c} :
     aleph' o ≤ c ↔ ∀ o' < o, aleph' o' ≤ c :=
   ⟨fun h o' h' => (aleph'_le.2 <| h'.le).trans h, fun h =>
@@ -291,7 +332,6 @@ theorem aleph'_le_of_limit {o : Ordinal} (l : o.IsLimit) {c} :
     rw [← aleph'_le, aleph'_aleph_idx]
     exact h _ h'⟩
 #align cardinal.aleph'_le_of_limit Cardinal.aleph'_le_of_limit
--/
 
 /- warning: cardinal.aleph'_limit -> Cardinal.aleph'_limit is a dubious translation:
 lean 3 declaration is
@@ -333,19 +373,27 @@ def aleph (o : Ordinal) : Cardinal :=
 #align cardinal.aleph Cardinal.aleph
 -/
 
-#print Cardinal.aleph_lt /-
+/- warning: cardinal.aleph_lt -> Cardinal.aleph_lt is a dubious translation:
+lean 3 declaration is
+  forall {o₁ : Ordinal.{u1}} {o₂ : Ordinal.{u1}}, Iff (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Cardinal.aleph.{u1} o₁) (Cardinal.aleph.{u1} o₂)) (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) o₁ o₂)
+but is expected to have type
+  forall {o₁ : Ordinal.{u1}} {o₂ : Ordinal.{u1}}, Iff (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Cardinal.aleph.{u1} o₁) (Cardinal.aleph.{u1} o₂)) (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) o₁ o₂)
+Case conversion may be inaccurate. Consider using '#align cardinal.aleph_lt Cardinal.aleph_ltₓ'. -/
 @[simp]
 theorem aleph_lt {o₁ o₂ : Ordinal} : aleph o₁ < aleph o₂ ↔ o₁ < o₂ :=
   aleph'_lt.trans (add_lt_add_iff_left _)
 #align cardinal.aleph_lt Cardinal.aleph_lt
--/
 
-#print Cardinal.aleph_le /-
+/- warning: cardinal.aleph_le -> Cardinal.aleph_le is a dubious translation:
+lean 3 declaration is
+  forall {o₁ : Ordinal.{u1}} {o₂ : Ordinal.{u1}}, Iff (LE.le.{succ u1} Cardinal.{u1} Cardinal.hasLe.{u1} (Cardinal.aleph.{u1} o₁) (Cardinal.aleph.{u1} o₂)) (LE.le.{succ u1} Ordinal.{u1} (Preorder.toHasLe.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) o₁ o₂)
+but is expected to have type
+  forall {o₁ : Ordinal.{u1}} {o₂ : Ordinal.{u1}}, Iff (LE.le.{succ u1} Cardinal.{u1} Cardinal.instLECardinal.{u1} (Cardinal.aleph.{u1} o₁) (Cardinal.aleph.{u1} o₂)) (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) o₁ o₂)
+Case conversion may be inaccurate. Consider using '#align cardinal.aleph_le Cardinal.aleph_leₓ'. -/
 @[simp]
 theorem aleph_le {o₁ o₂ : Ordinal} : aleph o₁ ≤ aleph o₂ ↔ o₁ ≤ o₂ :=
   le_iff_le_iff_lt_iff_lt.2 aleph_lt
 #align cardinal.aleph_le Cardinal.aleph_le
--/
 
 /- warning: cardinal.max_aleph_eq -> Cardinal.max_aleph_eq is a dubious translation:
 lean 3 declaration is
@@ -398,10 +446,14 @@ theorem aleph_limit {o : Ordinal} (ho : o.IsLimit) : aleph o = ⨆ a : Iio o, al
   · exact fun i => aleph_le.2 (le_of_lt i.2)
 #align cardinal.aleph_limit Cardinal.aleph_limit
 
-#print Cardinal.aleph0_le_aleph' /-
+/- warning: cardinal.aleph_0_le_aleph' -> Cardinal.aleph0_le_aleph' is a dubious translation:
+lean 3 declaration is
+  forall {o : Ordinal.{u1}}, Iff (LE.le.{succ u1} Cardinal.{u1} Cardinal.hasLe.{u1} Cardinal.aleph0.{u1} (Cardinal.aleph'.{u1} o)) (LE.le.{succ u1} Ordinal.{u1} (Preorder.toHasLe.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) Ordinal.omega.{u1} o)
+but is expected to have type
+  forall {o : Ordinal.{u1}}, Iff (LE.le.{succ u1} Cardinal.{u1} Cardinal.instLECardinal.{u1} Cardinal.aleph0.{u1} (Cardinal.aleph'.{u1} o)) (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) Ordinal.omega.{u1} o)
+Case conversion may be inaccurate. Consider using '#align cardinal.aleph_0_le_aleph' Cardinal.aleph0_le_aleph'ₓ'. -/
 theorem aleph0_le_aleph' {o : Ordinal} : ℵ₀ ≤ aleph' o ↔ ω ≤ o := by rw [← aleph'_omega, aleph'_le]
 #align cardinal.aleph_0_le_aleph' Cardinal.aleph0_le_aleph'
--/
 
 #print Cardinal.aleph0_le_aleph /-
 theorem aleph0_le_aleph (o : Ordinal) : ℵ₀ ≤ aleph o :=
@@ -411,16 +463,24 @@ theorem aleph0_le_aleph (o : Ordinal) : ℵ₀ ≤ aleph o :=
 #align cardinal.aleph_0_le_aleph Cardinal.aleph0_le_aleph
 -/
 
-#print Cardinal.aleph'_pos /-
+/- warning: cardinal.aleph'_pos -> Cardinal.aleph'_pos is a dubious translation:
+lean 3 declaration is
+  forall {o : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1}))) o) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Cardinal.{u1} 0 (OfNat.mk.{succ u1} Cardinal.{u1} 0 (Zero.zero.{succ u1} Cardinal.{u1} Cardinal.hasZero.{u1}))) (Cardinal.aleph'.{u1} o))
+but is expected to have type
+  forall {o : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1})) o) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Cardinal.{u1} 0 (Zero.toOfNat0.{succ u1} Cardinal.{u1} Cardinal.instZeroCardinal.{u1})) (Cardinal.aleph'.{u1} o))
+Case conversion may be inaccurate. Consider using '#align cardinal.aleph'_pos Cardinal.aleph'_posₓ'. -/
 theorem aleph'_pos {o : Ordinal} (ho : 0 < o) : 0 < aleph' o := by rwa [← aleph'_zero, aleph'_lt]
 #align cardinal.aleph'_pos Cardinal.aleph'_pos
--/
 
-#print Cardinal.aleph_pos /-
+/- warning: cardinal.aleph_pos -> Cardinal.aleph_pos is a dubious translation:
+lean 3 declaration is
+  forall (o : Ordinal.{u1}), LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Cardinal.{u1} 0 (OfNat.mk.{succ u1} Cardinal.{u1} 0 (Zero.zero.{succ u1} Cardinal.{u1} Cardinal.hasZero.{u1}))) (Cardinal.aleph.{u1} o)
+but is expected to have type
+  forall (o : Ordinal.{u1}), LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Cardinal.{u1} 0 (Zero.toOfNat0.{succ u1} Cardinal.{u1} Cardinal.instZeroCardinal.{u1})) (Cardinal.aleph.{u1} o)
+Case conversion may be inaccurate. Consider using '#align cardinal.aleph_pos Cardinal.aleph_posₓ'. -/
 theorem aleph_pos (o : Ordinal) : 0 < aleph o :=
   aleph0_pos.trans_le (aleph0_le_aleph o)
 #align cardinal.aleph_pos Cardinal.aleph_pos
--/
 
 #print Cardinal.aleph_toNat /-
 @[simp]
@@ -491,7 +551,7 @@ theorem succ_aleph0 : succ ℵ₀ = aleph 1 := by rw [← aleph_zero, ← aleph_
 
 /- warning: cardinal.aleph_0_lt_aleph_one -> Cardinal.aleph0_lt_aleph_one is a dubious translation:
 lean 3 declaration is
-  LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) Cardinal.aleph0.{u1} (Cardinal.aleph.{u1} (OfNat.ofNat.{succ u1} Ordinal.{u1} 1 (OfNat.mk.{succ u1} Ordinal.{u1} 1 (One.one.{succ u1} Ordinal.{u1} Ordinal.hasOne.{u1}))))
+  LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) Cardinal.aleph0.{u1} (Cardinal.aleph.{u1} (OfNat.ofNat.{succ u1} Ordinal.{u1} 1 (OfNat.mk.{succ u1} Ordinal.{u1} 1 (One.one.{succ u1} Ordinal.{u1} Ordinal.hasOne.{u1}))))
 but is expected to have type
   LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) Cardinal.aleph0.{u1} (Cardinal.aleph.{u1} (OfNat.ofNat.{succ u1} Ordinal.{u1} 1 (One.toOfNat1.{succ u1} Ordinal.{u1} Ordinal.one.{u1})))
 Case conversion may be inaccurate. Consider using '#align cardinal.aleph_0_lt_aleph_one Cardinal.aleph0_lt_aleph_oneₓ'. -/
@@ -503,7 +563,7 @@ theorem aleph0_lt_aleph_one : ℵ₀ < aleph 1 :=
 
 /- warning: cardinal.countable_iff_lt_aleph_one -> Cardinal.countable_iff_lt_aleph_one is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} (s : Set.{u1} α), Iff (Set.Countable.{u1} α s) (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Cardinal.mk.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s)) (Cardinal.aleph.{u1} (OfNat.ofNat.{succ u1} Ordinal.{u1} 1 (OfNat.mk.{succ u1} Ordinal.{u1} 1 (One.one.{succ u1} Ordinal.{u1} Ordinal.hasOne.{u1})))))
+  forall {α : Type.{u1}} (s : Set.{u1} α), Iff (Set.Countable.{u1} α s) (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Cardinal.mk.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s)) (Cardinal.aleph.{u1} (OfNat.ofNat.{succ u1} Ordinal.{u1} 1 (OfNat.mk.{succ u1} Ordinal.{u1} 1 (One.one.{succ u1} Ordinal.{u1} Ordinal.hasOne.{u1})))))
 but is expected to have type
   forall {α : Type.{u1}} (s : Set.{u1} α), Iff (Set.Countable.{u1} α s) (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Cardinal.mk.{u1} (Set.Elem.{u1} α s)) (Cardinal.aleph.{u1} (OfNat.ofNat.{succ u1} Ordinal.{u1} 1 (One.toOfNat1.{succ u1} Ordinal.{u1} Ordinal.one.{u1}))))
 Case conversion may be inaccurate. Consider using '#align cardinal.countable_iff_lt_aleph_one Cardinal.countable_iff_lt_aleph_oneₓ'. -/
@@ -511,7 +571,12 @@ theorem countable_iff_lt_aleph_one {α : Type _} (s : Set α) : s.Countable ↔ 
   rw [← succ_aleph_0, lt_succ_iff, le_aleph_0_iff_set_countable]
 #align cardinal.countable_iff_lt_aleph_one Cardinal.countable_iff_lt_aleph_one
 
-#print Cardinal.ord_card_unbounded /-
+/- warning: cardinal.ord_card_unbounded -> Cardinal.ord_card_unbounded is a dubious translation:
+lean 3 declaration is
+  Set.Unbounded.{succ u1} Ordinal.{u1} (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}))) (setOf.{succ u1} Ordinal.{u1} (fun (b : Ordinal.{u1}) => Eq.{succ (succ u1)} Ordinal.{u1} (Cardinal.ord.{u1} (Ordinal.card.{u1} b)) b))
+but is expected to have type
+  Set.Unbounded.{succ u1} Ordinal.{u1} (fun (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.2408 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.2410 : Ordinal.{u1}) => LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.2408 x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.2410) (setOf.{succ u1} Ordinal.{u1} (fun (b : Ordinal.{u1}) => Eq.{succ (succ u1)} Ordinal.{u1} (Cardinal.ord.{u1} (Ordinal.card.{u1} b)) b))
+Case conversion may be inaccurate. Consider using '#align cardinal.ord_card_unbounded Cardinal.ord_card_unboundedₓ'. -/
 /-- Ordinals that are cardinals are unbounded. -/
 theorem ord_card_unbounded : Unbounded (· < ·) { b : Ordinal | b.card.ord = b } :=
   unbounded_lt_iff.2 fun a =>
@@ -520,7 +585,6 @@ theorem ord_card_unbounded : Unbounded (· < ·) { b : Ordinal | b.card.ord = b 
         dsimp
         rw [card_ord], (lt_ord_succ_card a).le⟩⟩
 #align cardinal.ord_card_unbounded Cardinal.ord_card_unbounded
--/
 
 #print Cardinal.eq_aleph'_of_eq_card_ord /-
 theorem eq_aleph'_of_eq_card_ord {o : Ordinal} (ho : o.card.ord = o) : ∃ a, (aleph' a).ord = o :=
@@ -541,14 +605,23 @@ theorem ord_aleph'_eq_enum_card : ord ∘ aleph' = enumOrd { b : Ordinal | b.car
 #align cardinal.ord_aleph'_eq_enum_card Cardinal.ord_aleph'_eq_enum_card
 -/
 
-#print Cardinal.ord_card_unbounded' /-
+/- warning: cardinal.ord_card_unbounded' -> Cardinal.ord_card_unbounded' is a dubious translation:
+lean 3 declaration is
+  Set.Unbounded.{succ u1} Ordinal.{u1} (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}))) (setOf.{succ u1} Ordinal.{u1} (fun (b : Ordinal.{u1}) => And (Eq.{succ (succ u1)} Ordinal.{u1} (Cardinal.ord.{u1} (Ordinal.card.{u1} b)) b) (LE.le.{succ u1} Ordinal.{u1} (Preorder.toHasLe.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) Ordinal.omega.{u1} b)))
+but is expected to have type
+  Set.Unbounded.{succ u1} Ordinal.{u1} (fun (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.2621 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.2623 : Ordinal.{u1}) => LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.2621 x._@.Mathlib.SetTheory.Cardinal.Ordinal._hyg.2623) (setOf.{succ u1} Ordinal.{u1} (fun (b : Ordinal.{u1}) => And (Eq.{succ (succ u1)} Ordinal.{u1} (Cardinal.ord.{u1} (Ordinal.card.{u1} b)) b) (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) Ordinal.omega.{u1} b)))
+Case conversion may be inaccurate. Consider using '#align cardinal.ord_card_unbounded' Cardinal.ord_card_unbounded'ₓ'. -/
 /-- Infinite ordinals that are cardinals are unbounded. -/
 theorem ord_card_unbounded' : Unbounded (· < ·) { b : Ordinal | b.card.ord = b ∧ ω ≤ b } :=
   (unbounded_lt_inter_le ω).2 ord_card_unbounded
 #align cardinal.ord_card_unbounded' Cardinal.ord_card_unbounded'
--/
 
-#print Cardinal.eq_aleph_of_eq_card_ord /-
+/- warning: cardinal.eq_aleph_of_eq_card_ord -> Cardinal.eq_aleph_of_eq_card_ord is a dubious translation:
+lean 3 declaration is
+  forall {o : Ordinal.{u1}}, (Eq.{succ (succ u1)} Ordinal.{u1} (Cardinal.ord.{u1} (Ordinal.card.{u1} o)) o) -> (LE.le.{succ u1} Ordinal.{u1} (Preorder.toHasLe.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) Ordinal.omega.{u1} o) -> (Exists.{succ (succ u1)} Ordinal.{u1} (fun (a : Ordinal.{u1}) => Eq.{succ (succ u1)} Ordinal.{u1} (Cardinal.ord.{u1} (Cardinal.aleph.{u1} a)) o))
+but is expected to have type
+  forall {o : Ordinal.{u1}}, (Eq.{succ (succ u1)} Ordinal.{u1} (Cardinal.ord.{u1} (Ordinal.card.{u1} o)) o) -> (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) Ordinal.omega.{u1} o) -> (Exists.{succ (succ u1)} Ordinal.{u1} (fun (a : Ordinal.{u1}) => Eq.{succ (succ u1)} Ordinal.{u1} (Cardinal.ord.{u1} (Cardinal.aleph.{u1} a)) o))
+Case conversion may be inaccurate. Consider using '#align cardinal.eq_aleph_of_eq_card_ord Cardinal.eq_aleph_of_eq_card_ordₓ'. -/
 theorem eq_aleph_of_eq_card_ord {o : Ordinal} (ho : o.card.ord = o) (ho' : ω ≤ o) :
     ∃ a, (aleph a).ord = o :=
   by
@@ -558,9 +631,13 @@ theorem eq_aleph_of_eq_card_ord {o : Ordinal} (ho : o.card.ord = o) (ho' : ω �
   rwa [Ordinal.add_sub_cancel_of_le]
   rwa [← aleph_0_le_aleph', ← ord_le_ord, ha, ord_aleph_0]
 #align cardinal.eq_aleph_of_eq_card_ord Cardinal.eq_aleph_of_eq_card_ord
--/
 
-#print Cardinal.ord_aleph_eq_enum_card /-
+/- warning: cardinal.ord_aleph_eq_enum_card -> Cardinal.ord_aleph_eq_enum_card is a dubious translation:
+lean 3 declaration is
+  Eq.{succ (succ u1)} (Ordinal.{u1} -> Ordinal.{u1}) (Function.comp.{succ (succ u1), succ (succ u1), succ (succ u1)} Ordinal.{u1} Cardinal.{u1} Ordinal.{u1} Cardinal.ord.{u1} Cardinal.aleph.{u1}) (Ordinal.enumOrd.{u1} (setOf.{succ u1} Ordinal.{u1} (fun (b : Ordinal.{u1}) => And (Eq.{succ (succ u1)} Ordinal.{u1} (Cardinal.ord.{u1} (Ordinal.card.{u1} b)) b) (LE.le.{succ u1} Ordinal.{u1} (Preorder.toHasLe.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) Ordinal.omega.{u1} b))))
+but is expected to have type
+  Eq.{succ (succ u1)} (Ordinal.{u1} -> Ordinal.{u1}) (Function.comp.{succ (succ u1), succ (succ u1), succ (succ u1)} Ordinal.{u1} Cardinal.{u1} Ordinal.{u1} Cardinal.ord.{u1} Cardinal.aleph.{u1}) (Ordinal.enumOrd.{u1} (setOf.{succ u1} Ordinal.{u1} (fun (b : Ordinal.{u1}) => And (Eq.{succ (succ u1)} Ordinal.{u1} (Cardinal.ord.{u1} (Ordinal.card.{u1} b)) b) (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) Ordinal.omega.{u1} b))))
+Case conversion may be inaccurate. Consider using '#align cardinal.ord_aleph_eq_enum_card Cardinal.ord_aleph_eq_enum_cardₓ'. -/
 /-- `ord ∘ aleph` enumerates the infinite ordinals that are cardinals. -/
 theorem ord_aleph_eq_enum_card : ord ∘ aleph = enumOrd { b : Ordinal | b.card.ord = b ∧ ω ≤ b } :=
   by
@@ -572,7 +649,6 @@ theorem ord_aleph_eq_enum_card : ord ∘ aleph = enumOrd { b : Ordinal | b.card.
   · rw [← ord_aleph_0, ord_le_ord]
     exact aleph_0_le_aleph _
 #align cardinal.ord_aleph_eq_enum_card Cardinal.ord_aleph_eq_enum_card
--/
 
 /-! ### Beth cardinals -/
 
@@ -641,19 +717,27 @@ theorem beth_mono : Monotone beth :=
 #align cardinal.beth_mono Cardinal.beth_mono
 -/
 
-#print Cardinal.beth_lt /-
+/- warning: cardinal.beth_lt -> Cardinal.beth_lt is a dubious translation:
+lean 3 declaration is
+  forall {o₁ : Ordinal.{u1}} {o₂ : Ordinal.{u1}}, Iff (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Cardinal.beth.{u1} o₁) (Cardinal.beth.{u1} o₂)) (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) o₁ o₂)
+but is expected to have type
+  forall {o₁ : Ordinal.{u1}} {o₂ : Ordinal.{u1}}, Iff (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Cardinal.beth.{u1} o₁) (Cardinal.beth.{u1} o₂)) (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) o₁ o₂)
+Case conversion may be inaccurate. Consider using '#align cardinal.beth_lt Cardinal.beth_ltₓ'. -/
 @[simp]
 theorem beth_lt {o₁ o₂ : Ordinal} : beth o₁ < beth o₂ ↔ o₁ < o₂ :=
   beth_strictMono.lt_iff_lt
 #align cardinal.beth_lt Cardinal.beth_lt
--/
 
-#print Cardinal.beth_le /-
+/- warning: cardinal.beth_le -> Cardinal.beth_le is a dubious translation:
+lean 3 declaration is
+  forall {o₁ : Ordinal.{u1}} {o₂ : Ordinal.{u1}}, Iff (LE.le.{succ u1} Cardinal.{u1} Cardinal.hasLe.{u1} (Cardinal.beth.{u1} o₁) (Cardinal.beth.{u1} o₂)) (LE.le.{succ u1} Ordinal.{u1} (Preorder.toHasLe.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) o₁ o₂)
+but is expected to have type
+  forall {o₁ : Ordinal.{u1}} {o₂ : Ordinal.{u1}}, Iff (LE.le.{succ u1} Cardinal.{u1} Cardinal.instLECardinal.{u1} (Cardinal.beth.{u1} o₁) (Cardinal.beth.{u1} o₂)) (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) o₁ o₂)
+Case conversion may be inaccurate. Consider using '#align cardinal.beth_le Cardinal.beth_leₓ'. -/
 @[simp]
 theorem beth_le {o₁ o₂ : Ordinal} : beth o₁ ≤ beth o₂ ↔ o₁ ≤ o₂ :=
   beth_strictMono.le_iff_le
 #align cardinal.beth_le Cardinal.beth_le
--/
 
 #print Cardinal.aleph_le_beth /-
 theorem aleph_le_beth (o : Ordinal) : aleph o ≤ beth o :=
@@ -675,11 +759,15 @@ theorem aleph0_le_beth (o : Ordinal) : ℵ₀ ≤ beth o :=
 #align cardinal.aleph_0_le_beth Cardinal.aleph0_le_beth
 -/
 
-#print Cardinal.beth_pos /-
+/- warning: cardinal.beth_pos -> Cardinal.beth_pos is a dubious translation:
+lean 3 declaration is
+  forall (o : Ordinal.{u1}), LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Cardinal.{u1} 0 (OfNat.mk.{succ u1} Cardinal.{u1} 0 (Zero.zero.{succ u1} Cardinal.{u1} Cardinal.hasZero.{u1}))) (Cardinal.beth.{u1} o)
+but is expected to have type
+  forall (o : Ordinal.{u1}), LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Cardinal.{u1} 0 (Zero.toOfNat0.{succ u1} Cardinal.{u1} Cardinal.instZeroCardinal.{u1})) (Cardinal.beth.{u1} o)
+Case conversion may be inaccurate. Consider using '#align cardinal.beth_pos Cardinal.beth_posₓ'. -/
 theorem beth_pos (o : Ordinal) : 0 < beth o :=
   aleph0_pos.trans_le <| aleph0_le_beth o
 #align cardinal.beth_pos Cardinal.beth_pos
--/
 
 #print Cardinal.beth_ne_zero /-
 theorem beth_ne_zero (o : Ordinal) : beth o ≠ 0 :=
@@ -869,7 +957,7 @@ theorem aleph_mul_aleph0 (o : Ordinal) : aleph o * ℵ₀ = aleph o :=
 
 /- warning: cardinal.mul_lt_of_lt -> Cardinal.mul_lt_of_lt is a dubious translation:
 lean 3 declaration is
-  forall {a : Cardinal.{u1}} {b : Cardinal.{u1}} {c : Cardinal.{u1}}, (LE.le.{succ u1} Cardinal.{u1} Cardinal.hasLe.{u1} Cardinal.aleph0.{u1} c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) a c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) b c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (HMul.hMul.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHMul.{succ u1} Cardinal.{u1} Cardinal.hasMul.{u1}) a b) c)
+  forall {a : Cardinal.{u1}} {b : Cardinal.{u1}} {c : Cardinal.{u1}}, (LE.le.{succ u1} Cardinal.{u1} Cardinal.hasLe.{u1} Cardinal.aleph0.{u1} c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) a c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) b c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (HMul.hMul.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHMul.{succ u1} Cardinal.{u1} Cardinal.hasMul.{u1}) a b) c)
 but is expected to have type
   forall {a : Cardinal.{u1}} {b : Cardinal.{u1}} {c : Cardinal.{u1}}, (LE.le.{succ u1} Cardinal.{u1} Cardinal.instLECardinal.{u1} Cardinal.aleph0.{u1} c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) a c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) b c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (HMul.hMul.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHMul.{succ u1} Cardinal.{u1} Cardinal.instMulCardinal.{u1}) a b) c)
 Case conversion may be inaccurate. Consider using '#align cardinal.mul_lt_of_lt Cardinal.mul_lt_of_ltₓ'. -/
@@ -1152,7 +1240,7 @@ theorem add_le_of_le {a b c : Cardinal} (hc : ℵ₀ ≤ c) (h1 : a ≤ c) (h2 :
 
 /- warning: cardinal.add_lt_of_lt -> Cardinal.add_lt_of_lt is a dubious translation:
 lean 3 declaration is
-  forall {a : Cardinal.{u1}} {b : Cardinal.{u1}} {c : Cardinal.{u1}}, (LE.le.{succ u1} Cardinal.{u1} Cardinal.hasLe.{u1} Cardinal.aleph0.{u1} c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) a c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) b c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.hasAdd.{u1}) a b) c)
+  forall {a : Cardinal.{u1}} {b : Cardinal.{u1}} {c : Cardinal.{u1}}, (LE.le.{succ u1} Cardinal.{u1} Cardinal.hasLe.{u1} Cardinal.aleph0.{u1} c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) a c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) b c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.hasAdd.{u1}) a b) c)
 but is expected to have type
   forall {a : Cardinal.{u1}} {b : Cardinal.{u1}} {c : Cardinal.{u1}}, (LE.le.{succ u1} Cardinal.{u1} Cardinal.instLECardinal.{u1} Cardinal.aleph0.{u1} c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) a c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) b c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.instAddCardinal.{u1}) a b) c)
 Case conversion may be inaccurate. Consider using '#align cardinal.add_lt_of_lt Cardinal.add_lt_of_ltₓ'. -/
@@ -1164,7 +1252,7 @@ theorem add_lt_of_lt {a b c : Cardinal} (hc : ℵ₀ ≤ c) (h1 : a < c) (h2 : b
 
 /- warning: cardinal.eq_of_add_eq_of_aleph_0_le -> Cardinal.eq_of_add_eq_of_aleph0_le is a dubious translation:
 lean 3 declaration is
-  forall {a : Cardinal.{u1}} {b : Cardinal.{u1}} {c : Cardinal.{u1}}, (Eq.{succ (succ u1)} Cardinal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.hasAdd.{u1}) a b) c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) a c) -> (LE.le.{succ u1} Cardinal.{u1} Cardinal.hasLe.{u1} Cardinal.aleph0.{u1} c) -> (Eq.{succ (succ u1)} Cardinal.{u1} b c)
+  forall {a : Cardinal.{u1}} {b : Cardinal.{u1}} {c : Cardinal.{u1}}, (Eq.{succ (succ u1)} Cardinal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.hasAdd.{u1}) a b) c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) a c) -> (LE.le.{succ u1} Cardinal.{u1} Cardinal.hasLe.{u1} Cardinal.aleph0.{u1} c) -> (Eq.{succ (succ u1)} Cardinal.{u1} b c)
 but is expected to have type
   forall {a : Cardinal.{u1}} {b : Cardinal.{u1}} {c : Cardinal.{u1}}, (Eq.{succ (succ u1)} Cardinal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.instAddCardinal.{u1}) a b) c) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) a c) -> (LE.le.{succ u1} Cardinal.{u1} Cardinal.instLECardinal.{u1} Cardinal.aleph0.{u1} c) -> (Eq.{succ (succ u1)} Cardinal.{u1} b c)
 Case conversion may be inaccurate. Consider using '#align cardinal.eq_of_add_eq_of_aleph_0_le Cardinal.eq_of_add_eq_of_aleph0_leₓ'. -/
@@ -1267,7 +1355,7 @@ theorem mk_add_one_eq {α : Type _} [Infinite α] : (#α) + 1 = (#α) :=
 
 /- warning: cardinal.eq_of_add_eq_add_left -> Cardinal.eq_of_add_eq_add_left is a dubious translation:
 lean 3 declaration is
-  forall {a : Cardinal.{u1}} {b : Cardinal.{u1}} {c : Cardinal.{u1}}, (Eq.{succ (succ u1)} Cardinal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.hasAdd.{u1}) a b) (HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.hasAdd.{u1}) a c)) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) a Cardinal.aleph0.{u1}) -> (Eq.{succ (succ u1)} Cardinal.{u1} b c)
+  forall {a : Cardinal.{u1}} {b : Cardinal.{u1}} {c : Cardinal.{u1}}, (Eq.{succ (succ u1)} Cardinal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.hasAdd.{u1}) a b) (HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.hasAdd.{u1}) a c)) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) a Cardinal.aleph0.{u1}) -> (Eq.{succ (succ u1)} Cardinal.{u1} b c)
 but is expected to have type
   forall {a : Cardinal.{u1}} {b : Cardinal.{u1}} {c : Cardinal.{u1}}, (Eq.{succ (succ u1)} Cardinal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.instAddCardinal.{u1}) a b) (HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.instAddCardinal.{u1}) a c)) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) a Cardinal.aleph0.{u1}) -> (Eq.{succ (succ u1)} Cardinal.{u1} b c)
 Case conversion may be inaccurate. Consider using '#align cardinal.eq_of_add_eq_add_left Cardinal.eq_of_add_eq_add_leftₓ'. -/
@@ -1294,7 +1382,7 @@ protected theorem eq_of_add_eq_add_left {a b c : Cardinal} (h : a + b = a + c) (
 
 /- warning: cardinal.eq_of_add_eq_add_right -> Cardinal.eq_of_add_eq_add_right is a dubious translation:
 lean 3 declaration is
-  forall {a : Cardinal.{u1}} {b : Cardinal.{u1}} {c : Cardinal.{u1}}, (Eq.{succ (succ u1)} Cardinal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.hasAdd.{u1}) a b) (HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.hasAdd.{u1}) c b)) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) b Cardinal.aleph0.{u1}) -> (Eq.{succ (succ u1)} Cardinal.{u1} a c)
+  forall {a : Cardinal.{u1}} {b : Cardinal.{u1}} {c : Cardinal.{u1}}, (Eq.{succ (succ u1)} Cardinal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.hasAdd.{u1}) a b) (HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.hasAdd.{u1}) c b)) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) b Cardinal.aleph0.{u1}) -> (Eq.{succ (succ u1)} Cardinal.{u1} a c)
 but is expected to have type
   forall {a : Cardinal.{u1}} {b : Cardinal.{u1}} {c : Cardinal.{u1}}, (Eq.{succ (succ u1)} Cardinal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.instAddCardinal.{u1}) a b) (HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.instAddCardinal.{u1}) c b)) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) b Cardinal.aleph0.{u1}) -> (Eq.{succ (succ u1)} Cardinal.{u1} a c)
 Case conversion may be inaccurate. Consider using '#align cardinal.eq_of_add_eq_add_right Cardinal.eq_of_add_eq_add_rightₓ'. -/
@@ -1331,7 +1419,7 @@ theorem principal_add_aleph (o : Ordinal) : Ordinal.Principal (· + ·) (aleph o
 
 /- warning: cardinal.add_right_inj_of_lt_aleph_0 -> Cardinal.add_right_inj_of_lt_aleph0 is a dubious translation:
 lean 3 declaration is
-  forall {α : Cardinal.{u1}} {β : Cardinal.{u1}} {γ : Cardinal.{u1}}, (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) γ Cardinal.aleph0.{u1}) -> (Iff (Eq.{succ (succ u1)} Cardinal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.hasAdd.{u1}) α γ) (HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.hasAdd.{u1}) β γ)) (Eq.{succ (succ u1)} Cardinal.{u1} α β))
+  forall {α : Cardinal.{u1}} {β : Cardinal.{u1}} {γ : Cardinal.{u1}}, (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) γ Cardinal.aleph0.{u1}) -> (Iff (Eq.{succ (succ u1)} Cardinal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.hasAdd.{u1}) α γ) (HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.hasAdd.{u1}) β γ)) (Eq.{succ (succ u1)} Cardinal.{u1} α β))
 but is expected to have type
   forall {α : Cardinal.{u1}} {β : Cardinal.{u1}} {γ : Cardinal.{u1}}, (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) γ Cardinal.aleph0.{u1}) -> (Iff (Eq.{succ (succ u1)} Cardinal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.instAddCardinal.{u1}) α γ) (HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.instAddCardinal.{u1}) β γ)) (Eq.{succ (succ u1)} Cardinal.{u1} α β))
 Case conversion may be inaccurate. Consider using '#align cardinal.add_right_inj_of_lt_aleph_0 Cardinal.add_right_inj_of_lt_aleph0ₓ'. -/
@@ -1363,7 +1451,7 @@ theorem add_one_inj {α β : Cardinal} : α + 1 = β + 1 ↔ α = β :=
 
 /- warning: cardinal.add_le_add_iff_of_lt_aleph_0 -> Cardinal.add_le_add_iff_of_lt_aleph0 is a dubious translation:
 lean 3 declaration is
-  forall {α : Cardinal.{u1}} {β : Cardinal.{u1}} {γ : Cardinal.{u1}}, (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) γ Cardinal.aleph0.{u1}) -> (Iff (LE.le.{succ u1} Cardinal.{u1} Cardinal.hasLe.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.hasAdd.{u1}) α γ) (HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.hasAdd.{u1}) β γ)) (LE.le.{succ u1} Cardinal.{u1} Cardinal.hasLe.{u1} α β))
+  forall {α : Cardinal.{u1}} {β : Cardinal.{u1}} {γ : Cardinal.{u1}}, (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) γ Cardinal.aleph0.{u1}) -> (Iff (LE.le.{succ u1} Cardinal.{u1} Cardinal.hasLe.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.hasAdd.{u1}) α γ) (HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.hasAdd.{u1}) β γ)) (LE.le.{succ u1} Cardinal.{u1} Cardinal.hasLe.{u1} α β))
 but is expected to have type
   forall {α : Cardinal.{u1}} {β : Cardinal.{u1}} {γ : Cardinal.{u1}}, (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) γ Cardinal.aleph0.{u1}) -> (Iff (LE.le.{succ u1} Cardinal.{u1} Cardinal.instLECardinal.{u1} (HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.instAddCardinal.{u1}) α γ) (HAdd.hAdd.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHAdd.{succ u1} Cardinal.{u1} Cardinal.instAddCardinal.{u1}) β γ)) (LE.le.{succ u1} Cardinal.{u1} Cardinal.instLECardinal.{u1} α β))
 Case conversion may be inaccurate. Consider using '#align cardinal.add_le_add_iff_of_lt_aleph_0 Cardinal.add_le_add_iff_of_lt_aleph0ₓ'. -/
@@ -1401,7 +1489,12 @@ theorem add_one_le_add_one_iff_of_lt_aleph_0 {α β : Cardinal} : α + 1 ≤ β 
 /-! ### Properties about power -/
 
 
-#print Cardinal.pow_le /-
+/- warning: cardinal.pow_le -> Cardinal.pow_le is a dubious translation:
+lean 3 declaration is
+  forall {κ : Cardinal.{u1}} {μ : Cardinal.{u1}}, (LE.le.{succ u1} Cardinal.{u1} Cardinal.hasLe.{u1} Cardinal.aleph0.{u1} κ) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) μ Cardinal.aleph0.{u1}) -> (LE.le.{succ u1} Cardinal.{u1} Cardinal.hasLe.{u1} (HPow.hPow.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHPow.{succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.hasPow.{u1}) κ μ) κ)
+but is expected to have type
+  forall {κ : Cardinal.{u1}} {μ : Cardinal.{u1}}, (LE.le.{succ u1} Cardinal.{u1} Cardinal.instLECardinal.{u1} Cardinal.aleph0.{u1} κ) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) μ Cardinal.aleph0.{u1}) -> (LE.le.{succ u1} Cardinal.{u1} Cardinal.instLECardinal.{u1} (HPow.hPow.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHPow.{succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.instPowCardinal.{u1}) κ μ) κ)
+Case conversion may be inaccurate. Consider using '#align cardinal.pow_le Cardinal.pow_leₓ'. -/
 theorem pow_le {κ μ : Cardinal.{u}} (H1 : ℵ₀ ≤ κ) (H2 : μ < ℵ₀) : κ ^ μ ≤ κ :=
   let ⟨n, H3⟩ := lt_aleph0.1 H2
   H3.symm ▸
@@ -1421,13 +1514,16 @@ theorem pow_le {κ μ : Cardinal.{u}} (H1 : ℵ₀ ≤ κ) (H2 : μ < ℵ₀) : 
             (mul_eq_self H1))
       H1
 #align cardinal.pow_le Cardinal.pow_le
--/
 
-#print Cardinal.pow_eq /-
+/- warning: cardinal.pow_eq -> Cardinal.pow_eq is a dubious translation:
+lean 3 declaration is
+  forall {κ : Cardinal.{u1}} {μ : Cardinal.{u1}}, (LE.le.{succ u1} Cardinal.{u1} Cardinal.hasLe.{u1} Cardinal.aleph0.{u1} κ) -> (LE.le.{succ u1} Cardinal.{u1} Cardinal.hasLe.{u1} (OfNat.ofNat.{succ u1} Cardinal.{u1} 1 (OfNat.mk.{succ u1} Cardinal.{u1} 1 (One.one.{succ u1} Cardinal.{u1} Cardinal.hasOne.{u1}))) μ) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) μ Cardinal.aleph0.{u1}) -> (Eq.{succ (succ u1)} Cardinal.{u1} (HPow.hPow.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHPow.{succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.hasPow.{u1}) κ μ) κ)
+but is expected to have type
+  forall {κ : Cardinal.{u1}} {μ : Cardinal.{u1}}, (LE.le.{succ u1} Cardinal.{u1} Cardinal.instLECardinal.{u1} Cardinal.aleph0.{u1} κ) -> (LE.le.{succ u1} Cardinal.{u1} Cardinal.instLECardinal.{u1} (OfNat.ofNat.{succ u1} Cardinal.{u1} 1 (One.toOfNat1.{succ u1} Cardinal.{u1} Cardinal.instOneCardinal.{u1})) μ) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) μ Cardinal.aleph0.{u1}) -> (Eq.{succ (succ u1)} Cardinal.{u1} (HPow.hPow.{succ u1, succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.{u1} (instHPow.{succ u1, succ u1} Cardinal.{u1} Cardinal.{u1} Cardinal.instPowCardinal.{u1}) κ μ) κ)
+Case conversion may be inaccurate. Consider using '#align cardinal.pow_eq Cardinal.pow_eqₓ'. -/
 theorem pow_eq {κ μ : Cardinal.{u}} (H1 : ℵ₀ ≤ κ) (H2 : 1 ≤ μ) (H3 : μ < ℵ₀) : κ ^ μ = κ :=
   (pow_le H1 H3).antisymm <| self_le_power κ H2
 #align cardinal.pow_eq Cardinal.pow_eq
--/
 
 /- warning: cardinal.power_self_eq -> Cardinal.power_self_eq is a dubious translation:
 lean 3 declaration is
@@ -1782,7 +1878,7 @@ theorem mk_bounded_subset_le {α : Type u} (s : Set α) (c : Cardinal.{u}) :
 
 /- warning: cardinal.mk_compl_of_infinite -> Cardinal.mk_compl_of_infinite is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Infinite.{succ u1} α] (s : Set.{u1} α), (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Cardinal.mk.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s)) (Cardinal.mk.{u1} α)) -> (Eq.{succ (succ u1)} Cardinal.{u1} (Cardinal.mk.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s))) (Cardinal.mk.{u1} α))
+  forall {α : Type.{u1}} [_inst_1 : Infinite.{succ u1} α] (s : Set.{u1} α), (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Cardinal.mk.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s)) (Cardinal.mk.{u1} α)) -> (Eq.{succ (succ u1)} Cardinal.{u1} (Cardinal.mk.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s))) (Cardinal.mk.{u1} α))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Infinite.{succ u1} α] (s : Set.{u1} α), (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Cardinal.mk.{u1} (Set.Elem.{u1} α s)) (Cardinal.mk.{u1} α)) -> (Eq.{succ (succ u1)} Cardinal.{u1} (Cardinal.mk.{u1} (Set.Elem.{u1} α (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s))) (Cardinal.mk.{u1} α))
 Case conversion may be inaccurate. Consider using '#align cardinal.mk_compl_of_infinite Cardinal.mk_compl_of_infiniteₓ'. -/
@@ -1807,7 +1903,7 @@ theorem mk_compl_finset_of_infinite {α : Type _} [Infinite α] (s : Finset α) 
 
 /- warning: cardinal.mk_compl_eq_mk_compl_infinite -> Cardinal.mk_compl_eq_mk_compl_infinite is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Infinite.{succ u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Cardinal.mk.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s)) (Cardinal.mk.{u1} α)) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Cardinal.mk.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) t)) (Cardinal.mk.{u1} α)) -> (Eq.{succ (succ u1)} Cardinal.{u1} (Cardinal.mk.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s))) (Cardinal.mk.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) t))))
+  forall {α : Type.{u1}} [_inst_1 : Infinite.{succ u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Cardinal.mk.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s)) (Cardinal.mk.{u1} α)) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Cardinal.mk.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) t)) (Cardinal.mk.{u1} α)) -> (Eq.{succ (succ u1)} Cardinal.{u1} (Cardinal.mk.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s))) (Cardinal.mk.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) t))))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Infinite.{succ u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Cardinal.mk.{u1} (Set.Elem.{u1} α s)) (Cardinal.mk.{u1} α)) -> (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Cardinal.mk.{u1} (Set.Elem.{u1} α t)) (Cardinal.mk.{u1} α)) -> (Eq.{succ (succ u1)} Cardinal.{u1} (Cardinal.mk.{u1} (Set.Elem.{u1} α (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s))) (Cardinal.mk.{u1} (Set.Elem.{u1} α (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) t))))
 Case conversion may be inaccurate. Consider using '#align cardinal.mk_compl_eq_mk_compl_infinite Cardinal.mk_compl_eq_mk_compl_infiniteₓ'. -/
@@ -1895,7 +1991,7 @@ theorem extend_function_finite {α β : Type _} [Finite α] {s : Set α} (f : s 
 
 /- warning: cardinal.extend_function_of_lt -> Cardinal.extend_function_of_lt is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} (f : Function.Embedding.{succ u1, succ u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) β), (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toLT.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Cardinal.mk.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s)) (Cardinal.mk.{u1} α)) -> (Nonempty.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1)} (Equiv.{succ u1, succ u2} α β)) -> (Exists.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1)} (Equiv.{succ u1, succ u2} α β) (fun (g : Equiv.{succ u1, succ u2} α β) => forall (x : coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s), Eq.{succ u2} β (coeFn.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1), max (succ u1) (succ u2)} (Equiv.{succ u1, succ u2} α β) (fun (_x : Equiv.{succ u1, succ u2} α β) => α -> β) (Equiv.hasCoeToFun.{succ u1, succ u2} α β) g ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s))))) x)) (coeFn.{max 1 (succ u1) (succ u2), max (succ u1) (succ u2)} (Function.Embedding.{succ u1, succ u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) β) (fun (_x : Function.Embedding.{succ u1, succ u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) β) => (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) -> β) (Function.Embedding.hasCoeToFun.{succ u1, succ u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) β) f x)))
+  forall {α : Type.{u1}} {β : Type.{u2}} {s : Set.{u1} α} (f : Function.Embedding.{succ u1, succ u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) β), (LT.lt.{succ u1} Cardinal.{u1} (Preorder.toHasLt.{succ u1} Cardinal.{u1} (PartialOrder.toPreorder.{succ u1} Cardinal.{u1} Cardinal.partialOrder.{u1})) (Cardinal.mk.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s)) (Cardinal.mk.{u1} α)) -> (Nonempty.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1)} (Equiv.{succ u1, succ u2} α β)) -> (Exists.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1)} (Equiv.{succ u1, succ u2} α β) (fun (g : Equiv.{succ u1, succ u2} α β) => forall (x : coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s), Eq.{succ u2} β (coeFn.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1), max (succ u1) (succ u2)} (Equiv.{succ u1, succ u2} α β) (fun (_x : Equiv.{succ u1, succ u2} α β) => α -> β) (Equiv.hasCoeToFun.{succ u1, succ u2} α β) g ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s))))) x)) (coeFn.{max 1 (succ u1) (succ u2), max (succ u1) (succ u2)} (Function.Embedding.{succ u1, succ u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) β) (fun (_x : Function.Embedding.{succ u1, succ u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) β) => (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) -> β) (Function.Embedding.hasCoeToFun.{succ u1, succ u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) s) β) f x)))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} (f : Function.Embedding.{succ u2, succ u1} (Set.Elem.{u2} α s) β), (LT.lt.{succ u2} Cardinal.{u2} (Preorder.toLT.{succ u2} Cardinal.{u2} (PartialOrder.toPreorder.{succ u2} Cardinal.{u2} Cardinal.partialOrder.{u2})) (Cardinal.mk.{u2} (Set.Elem.{u2} α s)) (Cardinal.mk.{u2} α)) -> (Nonempty.{max (succ u1) (succ u2)} (Equiv.{succ u2, succ u1} α β)) -> (Exists.{max (succ u2) (succ u1)} (Equiv.{succ u2, succ u1} α β) (fun (g : Equiv.{succ u2, succ u1} α β) => forall (x : Set.Elem.{u2} α s), Eq.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => β) (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) x)) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => β) _x) (Equiv.instFunLikeEquiv.{succ u2, succ u1} α β) g (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) x)) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} (Set.Elem.{u2} α s) β) (Set.Elem.{u2} α s) (fun (_x : Set.Elem.{u2} α s) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Set.Elem.{u2} α s) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} (Set.Elem.{u2} α s) β) (Set.Elem.{u2} α s) β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} (Set.Elem.{u2} α s) β)) f x)))
 Case conversion may be inaccurate. Consider using '#align cardinal.extend_function_of_lt Cardinal.extend_function_of_ltₓ'. -/

@@ -240,7 +240,7 @@ theorem IsExtrOn.isLocalExtr (hf : IsExtrOn f s a) (hs : s ∈ 𝓝 a) : IsLocal
 
 /- warning: is_local_min_on.not_nhds_le_map -> IsLocalMinOn.not_nhds_le_map is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {a : α} [_inst_4 : TopologicalSpace.{u2} β], (IsLocalMinOn.{u1, u2} α β _inst_1 _inst_2 f s a) -> (forall [_inst_5 : Filter.NeBot.{u2} β (nhdsWithin.{u2} β _inst_4 (f a) (Set.Iio.{u2} β _inst_2 (f a)))], Not (LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (nhds.{u2} β _inst_4 (f a)) (Filter.map.{u1, u2} α β f (nhdsWithin.{u1} α _inst_1 a s))))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {a : α} [_inst_4 : TopologicalSpace.{u2} β], (IsLocalMinOn.{u1, u2} α β _inst_1 _inst_2 f s a) -> (forall [_inst_5 : Filter.NeBot.{u2} β (nhdsWithin.{u2} β _inst_4 (f a) (Set.Iio.{u2} β _inst_2 (f a)))], Not (LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (nhds.{u2} β _inst_4 (f a)) (Filter.map.{u1, u2} α β f (nhdsWithin.{u1} α _inst_1 a s))))
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {a : α} [_inst_4 : TopologicalSpace.{u2} β], (IsLocalMinOn.{u1, u2} α β _inst_1 _inst_2 f s a) -> (forall [_inst_5 : Filter.NeBot.{u2} β (nhdsWithin.{u2} β _inst_4 (f a) (Set.Iio.{u2} β _inst_2 (f a)))], Not (LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) (nhds.{u2} β _inst_4 (f a)) (Filter.map.{u1, u2} α β f (nhdsWithin.{u1} α _inst_1 a s))))
 Case conversion may be inaccurate. Consider using '#align is_local_min_on.not_nhds_le_map IsLocalMinOn.not_nhds_le_mapₓ'. -/
@@ -253,7 +253,7 @@ theorem IsLocalMinOn.not_nhds_le_map [TopologicalSpace β] (hf : IsLocalMinOn f 
 
 /- warning: is_local_max_on.not_nhds_le_map -> IsLocalMaxOn.not_nhds_le_map is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {a : α} [_inst_4 : TopologicalSpace.{u2} β], (IsLocalMaxOn.{u1, u2} α β _inst_1 _inst_2 f s a) -> (forall [_inst_5 : Filter.NeBot.{u2} β (nhdsWithin.{u2} β _inst_4 (f a) (Set.Ioi.{u2} β _inst_2 (f a)))], Not (LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (nhds.{u2} β _inst_4 (f a)) (Filter.map.{u1, u2} α β f (nhdsWithin.{u1} α _inst_1 a s))))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {a : α} [_inst_4 : TopologicalSpace.{u2} β], (IsLocalMaxOn.{u1, u2} α β _inst_1 _inst_2 f s a) -> (forall [_inst_5 : Filter.NeBot.{u2} β (nhdsWithin.{u2} β _inst_4 (f a) (Set.Ioi.{u2} β _inst_2 (f a)))], Not (LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (nhds.{u2} β _inst_4 (f a)) (Filter.map.{u1, u2} α β f (nhdsWithin.{u1} α _inst_1 a s))))
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {a : α} [_inst_4 : TopologicalSpace.{u2} β], (IsLocalMaxOn.{u1, u2} α β _inst_1 _inst_2 f s a) -> (forall [_inst_5 : Filter.NeBot.{u2} β (nhdsWithin.{u2} β _inst_4 (f a) (Set.Ioi.{u2} β _inst_2 (f a)))], Not (LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) (nhds.{u2} β _inst_4 (f a)) (Filter.map.{u1, u2} α β f (nhdsWithin.{u1} α _inst_1 a s))))
 Case conversion may be inaccurate. Consider using '#align is_local_max_on.not_nhds_le_map IsLocalMaxOn.not_nhds_le_mapₓ'. -/
@@ -264,7 +264,7 @@ theorem IsLocalMaxOn.not_nhds_le_map [TopologicalSpace β] (hf : IsLocalMaxOn f 
 
 /- warning: is_local_extr_on.not_nhds_le_map -> IsLocalExtrOn.not_nhds_le_map is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {a : α} [_inst_4 : TopologicalSpace.{u2} β], (IsLocalExtrOn.{u1, u2} α β _inst_1 _inst_2 f s a) -> (forall [_inst_5 : Filter.NeBot.{u2} β (nhdsWithin.{u2} β _inst_4 (f a) (Set.Iio.{u2} β _inst_2 (f a)))] [_inst_6 : Filter.NeBot.{u2} β (nhdsWithin.{u2} β _inst_4 (f a) (Set.Ioi.{u2} β _inst_2 (f a)))], Not (LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (nhds.{u2} β _inst_4 (f a)) (Filter.map.{u1, u2} α β f (nhdsWithin.{u1} α _inst_1 a s))))
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {a : α} [_inst_4 : TopologicalSpace.{u2} β], (IsLocalExtrOn.{u1, u2} α β _inst_1 _inst_2 f s a) -> (forall [_inst_5 : Filter.NeBot.{u2} β (nhdsWithin.{u2} β _inst_4 (f a) (Set.Iio.{u2} β _inst_2 (f a)))] [_inst_6 : Filter.NeBot.{u2} β (nhdsWithin.{u2} β _inst_4 (f a) (Set.Ioi.{u2} β _inst_2 (f a)))], Not (LE.le.{u2} (Filter.{u2} β) (Preorder.toHasLe.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.partialOrder.{u2} β))) (nhds.{u2} β _inst_4 (f a)) (Filter.map.{u1, u2} α β f (nhdsWithin.{u1} α _inst_1 a s))))
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {s : Set.{u1} α} {a : α} [_inst_4 : TopologicalSpace.{u2} β], (IsLocalExtrOn.{u1, u2} α β _inst_1 _inst_2 f s a) -> (forall [_inst_5 : Filter.NeBot.{u2} β (nhdsWithin.{u2} β _inst_4 (f a) (Set.Iio.{u2} β _inst_2 (f a)))] [_inst_6 : Filter.NeBot.{u2} β (nhdsWithin.{u2} β _inst_4 (f a) (Set.Ioi.{u2} β _inst_2 (f a)))], Not (LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) (nhds.{u2} β _inst_4 (f a)) (Filter.map.{u1, u2} α β f (nhdsWithin.{u1} α _inst_1 a s))))
 Case conversion may be inaccurate. Consider using '#align is_local_extr_on.not_nhds_le_map IsLocalExtrOn.not_nhds_le_mapₓ'. -/
@@ -399,38 +399,54 @@ theorem IsLocalExtrOn.comp_antitone (hf : IsLocalExtrOn f s a) {g : β → γ} (
 #align is_local_extr_on.comp_antitone IsLocalExtrOn.comp_antitone
 -/
 
-#print IsLocalMin.bicomp_mono /-
+/- warning: is_local_min.bicomp_mono -> IsLocalMin.bicomp_mono is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : Preorder.{u3} γ] {f : α -> β} {a : α} [_inst_4 : Preorder.{u4} δ] {op : β -> γ -> δ}, (Relator.LiftFun.{succ u2, succ u2, max (succ u3) (succ u4), max (succ u3) (succ u4)} β β (γ -> δ) (γ -> δ) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2)) (Relator.LiftFun.{succ u3, succ u3, succ u4, succ u4} γ γ δ δ (LE.le.{u3} γ (Preorder.toHasLe.{u3} γ _inst_3)) (LE.le.{u4} δ (Preorder.toHasLe.{u4} δ _inst_4))) op op) -> (IsLocalMin.{u1, u2} α β _inst_1 _inst_2 f a) -> (forall {g : α -> γ}, (IsLocalMin.{u1, u3} α γ _inst_1 _inst_3 g a) -> (IsLocalMin.{u1, u4} α δ _inst_1 _inst_4 (fun (x : α) => op (f x) (g x)) a))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : Preorder.{u3} γ] {f : α -> β} {a : α} [_inst_4 : Preorder.{u4} δ] {op : β -> γ -> δ}, (Relator.LiftFun.{succ u2, succ u2, max (succ u3) (succ u4), max (succ u3) (succ u4)} β β (γ -> δ) (γ -> δ) (fun (x._@.Mathlib.Topology.LocalExtr._hyg.2290 : β) (x._@.Mathlib.Topology.LocalExtr._hyg.2292 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Topology.LocalExtr._hyg.2290 x._@.Mathlib.Topology.LocalExtr._hyg.2292) (Relator.LiftFun.{succ u3, succ u3, succ u4, succ u4} γ γ δ δ (fun (x._@.Mathlib.Topology.LocalExtr._hyg.2308 : γ) (x._@.Mathlib.Topology.LocalExtr._hyg.2310 : γ) => LE.le.{u3} γ (Preorder.toLE.{u3} γ _inst_3) x._@.Mathlib.Topology.LocalExtr._hyg.2308 x._@.Mathlib.Topology.LocalExtr._hyg.2310) (fun (x._@.Mathlib.Topology.LocalExtr._hyg.2323 : δ) (x._@.Mathlib.Topology.LocalExtr._hyg.2325 : δ) => LE.le.{u4} δ (Preorder.toLE.{u4} δ _inst_4) x._@.Mathlib.Topology.LocalExtr._hyg.2323 x._@.Mathlib.Topology.LocalExtr._hyg.2325)) op op) -> (IsLocalMin.{u1, u2} α β _inst_1 _inst_2 f a) -> (forall {g : α -> γ}, (IsLocalMin.{u1, u3} α γ _inst_1 _inst_3 g a) -> (IsLocalMin.{u1, u4} α δ _inst_1 _inst_4 (fun (x : α) => op (f x) (g x)) a))
+Case conversion may be inaccurate. Consider using '#align is_local_min.bicomp_mono IsLocalMin.bicomp_monoₓ'. -/
 theorem IsLocalMin.bicomp_mono [Preorder δ] {op : β → γ → δ}
     (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op) (hf : IsLocalMin f a) {g : α → γ}
     (hg : IsLocalMin g a) : IsLocalMin (fun x => op (f x) (g x)) a :=
   hf.bicomp_mono hop hg
 #align is_local_min.bicomp_mono IsLocalMin.bicomp_mono
--/
 
-#print IsLocalMax.bicomp_mono /-
+/- warning: is_local_max.bicomp_mono -> IsLocalMax.bicomp_mono is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : Preorder.{u3} γ] {f : α -> β} {a : α} [_inst_4 : Preorder.{u4} δ] {op : β -> γ -> δ}, (Relator.LiftFun.{succ u2, succ u2, max (succ u3) (succ u4), max (succ u3) (succ u4)} β β (γ -> δ) (γ -> δ) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2)) (Relator.LiftFun.{succ u3, succ u3, succ u4, succ u4} γ γ δ δ (LE.le.{u3} γ (Preorder.toHasLe.{u3} γ _inst_3)) (LE.le.{u4} δ (Preorder.toHasLe.{u4} δ _inst_4))) op op) -> (IsLocalMax.{u1, u2} α β _inst_1 _inst_2 f a) -> (forall {g : α -> γ}, (IsLocalMax.{u1, u3} α γ _inst_1 _inst_3 g a) -> (IsLocalMax.{u1, u4} α δ _inst_1 _inst_4 (fun (x : α) => op (f x) (g x)) a))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : Preorder.{u3} γ] {f : α -> β} {a : α} [_inst_4 : Preorder.{u4} δ] {op : β -> γ -> δ}, (Relator.LiftFun.{succ u2, succ u2, max (succ u3) (succ u4), max (succ u3) (succ u4)} β β (γ -> δ) (γ -> δ) (fun (x._@.Mathlib.Topology.LocalExtr._hyg.2407 : β) (x._@.Mathlib.Topology.LocalExtr._hyg.2409 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Topology.LocalExtr._hyg.2407 x._@.Mathlib.Topology.LocalExtr._hyg.2409) (Relator.LiftFun.{succ u3, succ u3, succ u4, succ u4} γ γ δ δ (fun (x._@.Mathlib.Topology.LocalExtr._hyg.2425 : γ) (x._@.Mathlib.Topology.LocalExtr._hyg.2427 : γ) => LE.le.{u3} γ (Preorder.toLE.{u3} γ _inst_3) x._@.Mathlib.Topology.LocalExtr._hyg.2425 x._@.Mathlib.Topology.LocalExtr._hyg.2427) (fun (x._@.Mathlib.Topology.LocalExtr._hyg.2440 : δ) (x._@.Mathlib.Topology.LocalExtr._hyg.2442 : δ) => LE.le.{u4} δ (Preorder.toLE.{u4} δ _inst_4) x._@.Mathlib.Topology.LocalExtr._hyg.2440 x._@.Mathlib.Topology.LocalExtr._hyg.2442)) op op) -> (IsLocalMax.{u1, u2} α β _inst_1 _inst_2 f a) -> (forall {g : α -> γ}, (IsLocalMax.{u1, u3} α γ _inst_1 _inst_3 g a) -> (IsLocalMax.{u1, u4} α δ _inst_1 _inst_4 (fun (x : α) => op (f x) (g x)) a))
+Case conversion may be inaccurate. Consider using '#align is_local_max.bicomp_mono IsLocalMax.bicomp_monoₓ'. -/
 theorem IsLocalMax.bicomp_mono [Preorder δ] {op : β → γ → δ}
     (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op) (hf : IsLocalMax f a) {g : α → γ}
     (hg : IsLocalMax g a) : IsLocalMax (fun x => op (f x) (g x)) a :=
   hf.bicomp_mono hop hg
 #align is_local_max.bicomp_mono IsLocalMax.bicomp_mono
--/
 
-#print IsLocalMinOn.bicomp_mono /-
+/- warning: is_local_min_on.bicomp_mono -> IsLocalMinOn.bicomp_mono is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : Preorder.{u3} γ] {f : α -> β} {s : Set.{u1} α} {a : α} [_inst_4 : Preorder.{u4} δ] {op : β -> γ -> δ}, (Relator.LiftFun.{succ u2, succ u2, max (succ u3) (succ u4), max (succ u3) (succ u4)} β β (γ -> δ) (γ -> δ) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2)) (Relator.LiftFun.{succ u3, succ u3, succ u4, succ u4} γ γ δ δ (LE.le.{u3} γ (Preorder.toHasLe.{u3} γ _inst_3)) (LE.le.{u4} δ (Preorder.toHasLe.{u4} δ _inst_4))) op op) -> (IsLocalMinOn.{u1, u2} α β _inst_1 _inst_2 f s a) -> (forall {g : α -> γ}, (IsLocalMinOn.{u1, u3} α γ _inst_1 _inst_3 g s a) -> (IsLocalMinOn.{u1, u4} α δ _inst_1 _inst_4 (fun (x : α) => op (f x) (g x)) s a))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : Preorder.{u3} γ] {f : α -> β} {s : Set.{u1} α} {a : α} [_inst_4 : Preorder.{u4} δ] {op : β -> γ -> δ}, (Relator.LiftFun.{succ u2, succ u2, max (succ u3) (succ u4), max (succ u3) (succ u4)} β β (γ -> δ) (γ -> δ) (fun (x._@.Mathlib.Topology.LocalExtr._hyg.2524 : β) (x._@.Mathlib.Topology.LocalExtr._hyg.2526 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Topology.LocalExtr._hyg.2524 x._@.Mathlib.Topology.LocalExtr._hyg.2526) (Relator.LiftFun.{succ u3, succ u3, succ u4, succ u4} γ γ δ δ (fun (x._@.Mathlib.Topology.LocalExtr._hyg.2542 : γ) (x._@.Mathlib.Topology.LocalExtr._hyg.2544 : γ) => LE.le.{u3} γ (Preorder.toLE.{u3} γ _inst_3) x._@.Mathlib.Topology.LocalExtr._hyg.2542 x._@.Mathlib.Topology.LocalExtr._hyg.2544) (fun (x._@.Mathlib.Topology.LocalExtr._hyg.2557 : δ) (x._@.Mathlib.Topology.LocalExtr._hyg.2559 : δ) => LE.le.{u4} δ (Preorder.toLE.{u4} δ _inst_4) x._@.Mathlib.Topology.LocalExtr._hyg.2557 x._@.Mathlib.Topology.LocalExtr._hyg.2559)) op op) -> (IsLocalMinOn.{u1, u2} α β _inst_1 _inst_2 f s a) -> (forall {g : α -> γ}, (IsLocalMinOn.{u1, u3} α γ _inst_1 _inst_3 g s a) -> (IsLocalMinOn.{u1, u4} α δ _inst_1 _inst_4 (fun (x : α) => op (f x) (g x)) s a))
+Case conversion may be inaccurate. Consider using '#align is_local_min_on.bicomp_mono IsLocalMinOn.bicomp_monoₓ'. -/
 -- No `extr` version because we need `hf` and `hg` to be of the same kind
 theorem IsLocalMinOn.bicomp_mono [Preorder δ] {op : β → γ → δ}
     (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op) (hf : IsLocalMinOn f s a) {g : α → γ}
     (hg : IsLocalMinOn g s a) : IsLocalMinOn (fun x => op (f x) (g x)) s a :=
   hf.bicomp_mono hop hg
 #align is_local_min_on.bicomp_mono IsLocalMinOn.bicomp_mono
--/
 
-#print IsLocalMaxOn.bicomp_mono /-
+/- warning: is_local_max_on.bicomp_mono -> IsLocalMaxOn.bicomp_mono is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : Preorder.{u3} γ] {f : α -> β} {s : Set.{u1} α} {a : α} [_inst_4 : Preorder.{u4} δ] {op : β -> γ -> δ}, (Relator.LiftFun.{succ u2, succ u2, max (succ u3) (succ u4), max (succ u3) (succ u4)} β β (γ -> δ) (γ -> δ) (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2)) (Relator.LiftFun.{succ u3, succ u3, succ u4, succ u4} γ γ δ δ (LE.le.{u3} γ (Preorder.toHasLe.{u3} γ _inst_3)) (LE.le.{u4} δ (Preorder.toHasLe.{u4} δ _inst_4))) op op) -> (IsLocalMaxOn.{u1, u2} α β _inst_1 _inst_2 f s a) -> (forall {g : α -> γ}, (IsLocalMaxOn.{u1, u3} α γ _inst_1 _inst_3 g s a) -> (IsLocalMaxOn.{u1, u4} α δ _inst_1 _inst_4 (fun (x : α) => op (f x) (g x)) s a))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] [_inst_3 : Preorder.{u3} γ] {f : α -> β} {s : Set.{u1} α} {a : α} [_inst_4 : Preorder.{u4} δ] {op : β -> γ -> δ}, (Relator.LiftFun.{succ u2, succ u2, max (succ u3) (succ u4), max (succ u3) (succ u4)} β β (γ -> δ) (γ -> δ) (fun (x._@.Mathlib.Topology.LocalExtr._hyg.2644 : β) (x._@.Mathlib.Topology.LocalExtr._hyg.2646 : β) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) x._@.Mathlib.Topology.LocalExtr._hyg.2644 x._@.Mathlib.Topology.LocalExtr._hyg.2646) (Relator.LiftFun.{succ u3, succ u3, succ u4, succ u4} γ γ δ δ (fun (x._@.Mathlib.Topology.LocalExtr._hyg.2662 : γ) (x._@.Mathlib.Topology.LocalExtr._hyg.2664 : γ) => LE.le.{u3} γ (Preorder.toLE.{u3} γ _inst_3) x._@.Mathlib.Topology.LocalExtr._hyg.2662 x._@.Mathlib.Topology.LocalExtr._hyg.2664) (fun (x._@.Mathlib.Topology.LocalExtr._hyg.2677 : δ) (x._@.Mathlib.Topology.LocalExtr._hyg.2679 : δ) => LE.le.{u4} δ (Preorder.toLE.{u4} δ _inst_4) x._@.Mathlib.Topology.LocalExtr._hyg.2677 x._@.Mathlib.Topology.LocalExtr._hyg.2679)) op op) -> (IsLocalMaxOn.{u1, u2} α β _inst_1 _inst_2 f s a) -> (forall {g : α -> γ}, (IsLocalMaxOn.{u1, u3} α γ _inst_1 _inst_3 g s a) -> (IsLocalMaxOn.{u1, u4} α δ _inst_1 _inst_4 (fun (x : α) => op (f x) (g x)) s a))
+Case conversion may be inaccurate. Consider using '#align is_local_max_on.bicomp_mono IsLocalMaxOn.bicomp_monoₓ'. -/
 theorem IsLocalMaxOn.bicomp_mono [Preorder δ] {op : β → γ → δ}
     (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op) (hf : IsLocalMaxOn f s a) {g : α → γ}
     (hg : IsLocalMaxOn g s a) : IsLocalMaxOn (fun x => op (f x) (g x)) s a :=
   hf.bicomp_mono hop hg
 #align is_local_max_on.bicomp_mono IsLocalMaxOn.bicomp_mono
--/
 
 /-! ### Composition with `continuous_at` -/
 
@@ -882,12 +898,16 @@ section Eventually
 
 variable [Preorder β] {s : Set α}
 
-#print Filter.EventuallyLE.isLocalMaxOn /-
+/- warning: filter.eventually_le.is_local_max_on -> Filter.EventuallyLE.isLocalMaxOn is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] {s : Set.{u1} α} {f : α -> β} {g : α -> β} {a : α}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β _inst_2) (nhdsWithin.{u1} α _inst_1 a s) g f) -> (Eq.{succ u2} β (f a) (g a)) -> (IsLocalMaxOn.{u1, u2} α β _inst_1 _inst_2 f s a) -> (IsLocalMaxOn.{u1, u2} α β _inst_1 _inst_2 g s a)
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] {s : Set.{u1} α} {f : α -> β} {g : α -> β} {a : α}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β _inst_2) (nhdsWithin.{u1} α _inst_1 a s) g f) -> (Eq.{succ u2} β (f a) (g a)) -> (IsLocalMaxOn.{u1, u2} α β _inst_1 _inst_2 f s a) -> (IsLocalMaxOn.{u1, u2} α β _inst_1 _inst_2 g s a)
+Case conversion may be inaccurate. Consider using '#align filter.eventually_le.is_local_max_on Filter.EventuallyLE.isLocalMaxOnₓ'. -/
 theorem Filter.EventuallyLE.isLocalMaxOn {f g : α → β} {a : α} (hle : g ≤ᶠ[𝓝[s] a] f)
     (hfga : f a = g a) (h : IsLocalMaxOn f s a) : IsLocalMaxOn g s a :=
   hle.IsMaxFilter hfga h
 #align filter.eventually_le.is_local_max_on Filter.EventuallyLE.isLocalMaxOn
--/
 
 #print IsLocalMaxOn.congr /-
 theorem IsLocalMaxOn.congr {f g : α → β} {a : α} (h : IsLocalMaxOn f s a) (heq : f =ᶠ[𝓝[s] a] g)
@@ -903,12 +923,16 @@ theorem Filter.EventuallyEq.isLocalMaxOn_iff {f g : α → β} {a : α} (heq : f
 #align filter.eventually_eq.is_local_max_on_iff Filter.EventuallyEq.isLocalMaxOn_iff
 -/
 
-#print Filter.EventuallyLE.isLocalMinOn /-
+/- warning: filter.eventually_le.is_local_min_on -> Filter.EventuallyLE.isLocalMinOn is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] {s : Set.{u1} α} {f : α -> β} {g : α -> β} {a : α}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β _inst_2) (nhdsWithin.{u1} α _inst_1 a s) f g) -> (Eq.{succ u2} β (f a) (g a)) -> (IsLocalMinOn.{u1, u2} α β _inst_1 _inst_2 f s a) -> (IsLocalMinOn.{u1, u2} α β _inst_1 _inst_2 g s a)
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] {s : Set.{u1} α} {f : α -> β} {g : α -> β} {a : α}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β _inst_2) (nhdsWithin.{u1} α _inst_1 a s) f g) -> (Eq.{succ u2} β (f a) (g a)) -> (IsLocalMinOn.{u1, u2} α β _inst_1 _inst_2 f s a) -> (IsLocalMinOn.{u1, u2} α β _inst_1 _inst_2 g s a)
+Case conversion may be inaccurate. Consider using '#align filter.eventually_le.is_local_min_on Filter.EventuallyLE.isLocalMinOnₓ'. -/
 theorem Filter.EventuallyLE.isLocalMinOn {f g : α → β} {a : α} (hle : f ≤ᶠ[𝓝[s] a] g)
     (hfga : f a = g a) (h : IsLocalMinOn f s a) : IsLocalMinOn g s a :=
   hle.IsMinFilter hfga h
 #align filter.eventually_le.is_local_min_on Filter.EventuallyLE.isLocalMinOn
--/
 
 #print IsLocalMinOn.congr /-
 theorem IsLocalMinOn.congr {f g : α → β} {a : α} (h : IsLocalMinOn f s a) (heq : f =ᶠ[𝓝[s] a] g)
@@ -938,12 +962,16 @@ theorem Filter.EventuallyEq.isLocalExtrOn_iff {f g : α → β} {a : α} (heq : 
 #align filter.eventually_eq.is_local_extr_on_iff Filter.EventuallyEq.isLocalExtrOn_iff
 -/
 
-#print Filter.EventuallyLE.isLocalMax /-
+/- warning: filter.eventually_le.is_local_max -> Filter.EventuallyLE.isLocalMax is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {g : α -> β} {a : α}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β _inst_2) (nhds.{u1} α _inst_1 a) g f) -> (Eq.{succ u2} β (f a) (g a)) -> (IsLocalMax.{u1, u2} α β _inst_1 _inst_2 f a) -> (IsLocalMax.{u1, u2} α β _inst_1 _inst_2 g a)
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {g : α -> β} {a : α}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β _inst_2) (nhds.{u1} α _inst_1 a) g f) -> (Eq.{succ u2} β (f a) (g a)) -> (IsLocalMax.{u1, u2} α β _inst_1 _inst_2 f a) -> (IsLocalMax.{u1, u2} α β _inst_1 _inst_2 g a)
+Case conversion may be inaccurate. Consider using '#align filter.eventually_le.is_local_max Filter.EventuallyLE.isLocalMaxₓ'. -/
 theorem Filter.EventuallyLE.isLocalMax {f g : α → β} {a : α} (hle : g ≤ᶠ[𝓝 a] f) (hfga : f a = g a)
     (h : IsLocalMax f a) : IsLocalMax g a :=
   hle.IsMaxFilter hfga h
 #align filter.eventually_le.is_local_max Filter.EventuallyLE.isLocalMax
--/
 
 #print IsLocalMax.congr /-
 theorem IsLocalMax.congr {f g : α → β} {a : α} (h : IsLocalMax f a) (heq : f =ᶠ[𝓝 a] g) :
@@ -959,12 +987,16 @@ theorem Filter.EventuallyEq.isLocalMax_iff {f g : α → β} {a : α} (heq : f =
 #align filter.eventually_eq.is_local_max_iff Filter.EventuallyEq.isLocalMax_iff
 -/
 
-#print Filter.EventuallyLE.isLocalMin /-
+/- warning: filter.eventually_le.is_local_min -> Filter.EventuallyLE.isLocalMin is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {g : α -> β} {a : α}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toHasLe.{u2} β _inst_2) (nhds.{u1} α _inst_1 a) f g) -> (Eq.{succ u2} β (f a) (g a)) -> (IsLocalMin.{u1, u2} α β _inst_1 _inst_2 f a) -> (IsLocalMin.{u1, u2} α β _inst_1 _inst_2 g a)
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u2} β] {f : α -> β} {g : α -> β} {a : α}, (Filter.EventuallyLE.{u1, u2} α β (Preorder.toLE.{u2} β _inst_2) (nhds.{u1} α _inst_1 a) f g) -> (Eq.{succ u2} β (f a) (g a)) -> (IsLocalMin.{u1, u2} α β _inst_1 _inst_2 f a) -> (IsLocalMin.{u1, u2} α β _inst_1 _inst_2 g a)
+Case conversion may be inaccurate. Consider using '#align filter.eventually_le.is_local_min Filter.EventuallyLE.isLocalMinₓ'. -/
 theorem Filter.EventuallyLE.isLocalMin {f g : α → β} {a : α} (hle : f ≤ᶠ[𝓝 a] g) (hfga : f a = g a)
     (h : IsLocalMin f a) : IsLocalMin g a :=
   hle.IsMinFilter hfga h
 #align filter.eventually_le.is_local_min Filter.EventuallyLE.isLocalMin
--/
 
 #print IsLocalMin.congr /-
 theorem IsLocalMin.congr {f g : α → β} {a : α} (h : IsLocalMin f a) (heq : f =ᶠ[𝓝 a] g) :

@@ -85,7 +85,7 @@ theorem natDegree_sum_le (f : ι → S[X]) :
 
 /- warning: polynomial.degree_list_sum_le -> Polynomial.degree_list_sum_le is a dubious translation:
 lean 3 declaration is
-  forall {S : Type.{u1}} [_inst_1 : Semiring.{u1} S] (l : List.{u1} (Polynomial.{u1} S _inst_1)), LE.le.{0} (WithBot.{0} Nat) (Preorder.toLE.{0} (WithBot.{0} Nat) (WithBot.preorder.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (Polynomial.degree.{u1} S _inst_1 (List.sum.{u1} (Polynomial.{u1} S _inst_1) (Polynomial.add'.{u1} S _inst_1) (Polynomial.zero.{u1} S _inst_1) l)) (List.maximum.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) (fun (a : Nat) (b : Nat) => Nat.decidableLt a b) (List.map.{u1, 0} (Polynomial.{u1} S _inst_1) Nat (Polynomial.natDegree.{u1} S _inst_1) l))
+  forall {S : Type.{u1}} [_inst_1 : Semiring.{u1} S] (l : List.{u1} (Polynomial.{u1} S _inst_1)), LE.le.{0} (WithBot.{0} Nat) (Preorder.toHasLe.{0} (WithBot.{0} Nat) (WithBot.preorder.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (Polynomial.degree.{u1} S _inst_1 (List.sum.{u1} (Polynomial.{u1} S _inst_1) (Polynomial.add'.{u1} S _inst_1) (Polynomial.zero.{u1} S _inst_1) l)) (List.maximum.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) (fun (a : Nat) (b : Nat) => Nat.decidableLt a b) (List.map.{u1, 0} (Polynomial.{u1} S _inst_1) Nat (Polynomial.natDegree.{u1} S _inst_1) l))
 but is expected to have type
   forall {S : Type.{u1}} [_inst_1 : Semiring.{u1} S] (l : List.{u1} (Polynomial.{u1} S _inst_1)), LE.le.{0} (WithBot.{0} Nat) (Preorder.toLE.{0} (WithBot.{0} Nat) (WithBot.preorder.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)))) (Polynomial.degree.{u1} S _inst_1 (List.sum.{u1} (Polynomial.{u1} S _inst_1) (Polynomial.add'.{u1} S _inst_1) (Polynomial.zero.{u1} S _inst_1) l)) (List.maximum.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) (fun (a : Nat) (b : Nat) => Nat.decLt a b) (List.map.{u1, 0} (Polynomial.{u1} S _inst_1) Nat (Polynomial.natDegree.{u1} S _inst_1) l))
 Case conversion may be inaccurate. Consider using '#align polynomial.degree_list_sum_le Polynomial.degree_list_sum_leₓ'. -/
@@ -114,14 +114,18 @@ theorem natDegree_list_prod_le (l : List S[X]) : natDegree l.Prod ≤ (l.map nat
 #align polynomial.nat_degree_list_prod_le Polynomial.natDegree_list_prod_le
 -/
 
-#print Polynomial.degree_list_prod_le /-
+/- warning: polynomial.degree_list_prod_le -> Polynomial.degree_list_prod_le is a dubious translation:
+lean 3 declaration is
+  forall {S : Type.{u1}} [_inst_1 : Semiring.{u1} S] (l : List.{u1} (Polynomial.{u1} S _inst_1)), LE.le.{0} (WithBot.{0} Nat) (Preorder.toHasLe.{0} (WithBot.{0} Nat) (WithBot.preorder.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (Polynomial.degree.{u1} S _inst_1 (List.prod.{u1} (Polynomial.{u1} S _inst_1) (Polynomial.mul'.{u1} S _inst_1) (Polynomial.hasOne.{u1} S _inst_1) l)) (List.sum.{0} (WithBot.{0} Nat) (WithBot.hasAdd.{0} Nat Nat.hasAdd) (WithBot.hasZero.{0} Nat Nat.hasZero) (List.map.{u1, 0} (Polynomial.{u1} S _inst_1) (WithBot.{0} Nat) (Polynomial.degree.{u1} S _inst_1) l))
+but is expected to have type
+  forall {S : Type.{u1}} [_inst_1 : Semiring.{u1} S] (l : List.{u1} (Polynomial.{u1} S _inst_1)), LE.le.{0} (WithBot.{0} Nat) (Preorder.toLE.{0} (WithBot.{0} Nat) (WithBot.preorder.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)))) (Polynomial.degree.{u1} S _inst_1 (List.prod.{u1} (Polynomial.{u1} S _inst_1) (Polynomial.mul'.{u1} S _inst_1) (Polynomial.one.{u1} S _inst_1) l)) (List.sum.{0} (WithBot.{0} Nat) (WithBot.add.{0} Nat instAddNat) (WithBot.zero.{0} Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (List.map.{u1, 0} (Polynomial.{u1} S _inst_1) (WithBot.{0} Nat) (Polynomial.degree.{u1} S _inst_1) l))
+Case conversion may be inaccurate. Consider using '#align polynomial.degree_list_prod_le Polynomial.degree_list_prod_leₓ'. -/
 theorem degree_list_prod_le (l : List S[X]) : degree l.Prod ≤ (l.map degree).Sum :=
   by
   induction' l with hd tl IH
   · simp
   · simpa using (degree_mul_le _ _).trans (add_le_add_left IH _)
 #align polynomial.degree_list_prod_le Polynomial.degree_list_prod_le
--/
 
 /- warning: polynomial.coeff_list_prod_of_nat_degree_le -> Polynomial.coeff_list_prod_of_natDegree_le is a dubious translation:
 lean 3 declaration is
@@ -173,20 +177,28 @@ theorem natDegree_prod_le : (∏ i in s, f i).natDegree ≤ ∑ i in s, (f i).na
 #align polynomial.nat_degree_prod_le Polynomial.natDegree_prod_le
 -/
 
-#print Polynomial.degree_multiset_prod_le /-
+/- warning: polynomial.degree_multiset_prod_le -> Polynomial.degree_multiset_prod_le is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] (t : Multiset.{u1} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))), LE.le.{0} (WithBot.{0} Nat) (Preorder.toHasLe.{0} (WithBot.{0} Nat) (WithBot.preorder.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (Polynomial.degree.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1) (Multiset.prod.{u1} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (CommSemiring.toCommMonoid.{u1} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Polynomial.commSemiring.{u1} R _inst_1)) t)) (Multiset.sum.{0} (WithBot.{0} Nat) (WithBot.addCommMonoid.{0} Nat Nat.addCommMonoid) (Multiset.map.{u1, 0} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (WithBot.{0} Nat) (Polynomial.degree.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) t))
+but is expected to have type
+  forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] (t : Multiset.{u1} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))), LE.le.{0} (WithBot.{0} Nat) (Preorder.toLE.{0} (WithBot.{0} Nat) (WithBot.preorder.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)))) (Polynomial.degree.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1) (Multiset.prod.{u1} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (CommSemiring.toCommMonoid.{u1} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Polynomial.commSemiring.{u1} R _inst_1)) t)) (Multiset.sum.{0} (WithBot.{0} Nat) (WithBot.addCommMonoid.{0} Nat Nat.addCommMonoid) (Multiset.map.{u1, 0} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (WithBot.{0} Nat) (Polynomial.degree.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) t))
+Case conversion may be inaccurate. Consider using '#align polynomial.degree_multiset_prod_le Polynomial.degree_multiset_prod_leₓ'. -/
 /-- The degree of a product of polynomials is at most the sum of the degrees,
 where the degree of the zero polynomial is ⊥.
 -/
 theorem degree_multiset_prod_le : t.Prod.degree ≤ (t.map Polynomial.degree).Sum :=
   Quotient.inductionOn t (by simpa using degree_list_prod_le)
 #align polynomial.degree_multiset_prod_le Polynomial.degree_multiset_prod_le
--/
 
-#print Polynomial.degree_prod_le /-
+/- warning: polynomial.degree_prod_le -> Polynomial.degree_prod_le is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} {ι : Type.{u2}} (s : Finset.{u2} ι) [_inst_1 : CommSemiring.{u1} R] (f : ι -> (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))), LE.le.{0} (WithBot.{0} Nat) (Preorder.toHasLe.{0} (WithBot.{0} Nat) (WithBot.preorder.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (Polynomial.degree.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1) (Finset.prod.{u1, u2} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) ι (CommSemiring.toCommMonoid.{u1} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Polynomial.commSemiring.{u1} R _inst_1)) s (fun (i : ι) => f i))) (Finset.sum.{0, u2} (WithBot.{0} Nat) ι (WithBot.addCommMonoid.{0} Nat Nat.addCommMonoid) s (fun (i : ι) => Polynomial.degree.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1) (f i)))
+but is expected to have type
+  forall {R : Type.{u1}} {ι : Type.{u2}} (s : Finset.{u2} ι) [_inst_1 : CommSemiring.{u1} R] (f : ι -> (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))), LE.le.{0} (WithBot.{0} Nat) (Preorder.toLE.{0} (WithBot.{0} Nat) (WithBot.preorder.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)))) (Polynomial.degree.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1) (Finset.prod.{u1, u2} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) ι (CommSemiring.toCommMonoid.{u1} (Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1)) (Polynomial.commSemiring.{u1} R _inst_1)) s (fun (i : ι) => f i))) (Finset.sum.{0, u2} (WithBot.{0} Nat) ι (WithBot.addCommMonoid.{0} Nat Nat.addCommMonoid) s (fun (i : ι) => Polynomial.degree.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1) (f i)))
+Case conversion may be inaccurate. Consider using '#align polynomial.degree_prod_le Polynomial.degree_prod_leₓ'. -/
 theorem degree_prod_le : (∏ i in s, f i).degree ≤ ∑ i in s, (f i).degree := by
   simpa only [Multiset.map_map] using degree_multiset_prod_le (s.1.map f)
 #align polynomial.degree_prod_le Polynomial.degree_prod_le
--/
 
 /- warning: polynomial.leading_coeff_multiset_prod' -> Polynomial.leadingCoeff_multiset_prod' is a dubious translation:
 lean 3 declaration is

@@ -137,7 +137,7 @@ theorem one_CNF {o : Ordinal} (ho : o ≠ 0) : CNF 1 o = [⟨0, o⟩] := by simp
 
 /- warning: ordinal.CNF_of_le_one -> Ordinal.CNF_of_le_one is a dubious translation:
 lean 3 declaration is
-  forall {b : Ordinal.{u1}} {o : Ordinal.{u1}}, (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b (OfNat.ofNat.{succ u1} Ordinal.{u1} 1 (OfNat.mk.{succ u1} Ordinal.{u1} 1 (One.one.{succ u1} Ordinal.{u1} Ordinal.hasOne.{u1})))) -> (Ne.{succ (succ u1)} Ordinal.{u1} o (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1})))) -> (Eq.{succ (succ u1)} (List.{succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1})) (Ordinal.CNF.{u1} b o) (List.cons.{succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1}) (Prod.mk.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1}))) o) (List.nil.{succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1}))))
+  forall {b : Ordinal.{u1}} {o : Ordinal.{u1}}, (LE.le.{succ u1} Ordinal.{u1} (Preorder.toHasLe.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b (OfNat.ofNat.{succ u1} Ordinal.{u1} 1 (OfNat.mk.{succ u1} Ordinal.{u1} 1 (One.one.{succ u1} Ordinal.{u1} Ordinal.hasOne.{u1})))) -> (Ne.{succ (succ u1)} Ordinal.{u1} o (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1})))) -> (Eq.{succ (succ u1)} (List.{succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1})) (Ordinal.CNF.{u1} b o) (List.cons.{succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1}) (Prod.mk.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1}))) o) (List.nil.{succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1}))))
 but is expected to have type
   forall {b : Ordinal.{u1}} {o : Ordinal.{u1}}, (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b (OfNat.ofNat.{succ u1} Ordinal.{u1} 1 (One.toOfNat1.{succ u1} Ordinal.{u1} Ordinal.one.{u1}))) -> (Ne.{succ (succ u1)} Ordinal.{u1} o (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1}))) -> (Eq.{succ (succ u1)} (List.{succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1})) (Ordinal.CNF.{u1} b o) (List.cons.{succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1}) (Prod.mk.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1})) o) (List.nil.{succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1}))))
 Case conversion may be inaccurate. Consider using '#align ordinal.CNF_of_le_one Ordinal.CNF_of_le_oneₓ'. -/
@@ -148,11 +148,15 @@ theorem CNF_of_le_one {b o : Ordinal} (hb : b ≤ 1) (ho : o ≠ 0) : CNF b o = 
   · exact one_CNF ho
 #align ordinal.CNF_of_le_one Ordinal.CNF_of_le_one
 
-#print Ordinal.CNF_of_lt /-
+/- warning: ordinal.CNF_of_lt -> Ordinal.CNF_of_lt is a dubious translation:
+lean 3 declaration is
+  forall {b : Ordinal.{u1}} {o : Ordinal.{u1}}, (Ne.{succ (succ u1)} Ordinal.{u1} o (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1})))) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) o b) -> (Eq.{succ (succ u1)} (List.{succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1})) (Ordinal.CNF.{u1} b o) (List.cons.{succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1}) (Prod.mk.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1}))) o) (List.nil.{succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1}))))
+but is expected to have type
+  forall {b : Ordinal.{u1}} {o : Ordinal.{u1}}, (Ne.{succ (succ u1)} Ordinal.{u1} o (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1}))) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) o b) -> (Eq.{succ (succ u1)} (List.{succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1})) (Ordinal.CNF.{u1} b o) (List.cons.{succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1}) (Prod.mk.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1})) o) (List.nil.{succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1}))))
+Case conversion may be inaccurate. Consider using '#align ordinal.CNF_of_lt Ordinal.CNF_of_ltₓ'. -/
 theorem CNF_of_lt {b o : Ordinal} (ho : o ≠ 0) (hb : o < b) : CNF b o = [⟨0, o⟩] := by
   simp [CNF_ne_zero ho, log_eq_zero hb]
 #align ordinal.CNF_of_lt Ordinal.CNF_of_lt
--/
 
 /- warning: ordinal.CNF_foldr -> Ordinal.CNF_foldr is a dubious translation:
 lean 3 declaration is
@@ -169,7 +173,12 @@ theorem CNF_foldr (b o : Ordinal) : (CNF b o).foldr (fun p r => b ^ p.1 * p.2 + 
     (fun o ho IH => by rw [CNF_ne_zero ho, foldr_cons, IH, div_add_mod]) o
 #align ordinal.CNF_foldr Ordinal.CNF_foldr
 
-#print Ordinal.CNF_fst_le_log /-
+/- warning: ordinal.CNF_fst_le_log -> Ordinal.CNF_fst_le_log is a dubious translation:
+lean 3 declaration is
+  forall {b : Ordinal.{u1}} {o : Ordinal.{u1}} {x : Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1}}, (Membership.Mem.{succ u1, succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1}) (List.{succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1})) (List.hasMem.{succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1})) x (Ordinal.CNF.{u1} b o)) -> (LE.le.{succ u1} Ordinal.{u1} (Preorder.toHasLe.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Prod.fst.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} x) (Ordinal.log.{u1} b o))
+but is expected to have type
+  forall {b : Ordinal.{u1}} {o : Ordinal.{u1}} {x : Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1}}, (Membership.mem.{succ u1, succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1}) (List.{succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1})) (List.instMembershipList.{succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1})) x (Ordinal.CNF.{u1} b o)) -> (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Prod.fst.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} x) (Ordinal.log.{u1} b o))
+Case conversion may be inaccurate. Consider using '#align ordinal.CNF_fst_le_log Ordinal.CNF_fst_le_logₓ'. -/
 /-- Every exponent in the Cantor normal form `CNF b o` is less or equal to `log b o`. -/
 theorem CNF_fst_le_log {b o : Ordinal.{u}} {x : Ordinal × Ordinal} : x ∈ CNF b o → x.1 ≤ log b o :=
   by
@@ -180,16 +189,24 @@ theorem CNF_fst_le_log {b o : Ordinal.{u}} {x : Ordinal × Ordinal} : x ∈ CNF 
     · exact le_rfl
     · exact (H h).trans (log_mono_right _ (mod_opow_log_lt_self b ho).le)
 #align ordinal.CNF_fst_le_log Ordinal.CNF_fst_le_log
--/
 
-#print Ordinal.CNF_fst_le /-
+/- warning: ordinal.CNF_fst_le -> Ordinal.CNF_fst_le is a dubious translation:
+lean 3 declaration is
+  forall {b : Ordinal.{u1}} {o : Ordinal.{u1}} {x : Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1}}, (Membership.Mem.{succ u1, succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1}) (List.{succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1})) (List.hasMem.{succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1})) x (Ordinal.CNF.{u1} b o)) -> (LE.le.{succ u1} Ordinal.{u1} (Preorder.toHasLe.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Prod.fst.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} x) o)
+but is expected to have type
+  forall {b : Ordinal.{u1}} {o : Ordinal.{u1}} {x : Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1}}, (Membership.mem.{succ u1, succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1}) (List.{succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1})) (List.instMembershipList.{succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1})) x (Ordinal.CNF.{u1} b o)) -> (LE.le.{succ u1} Ordinal.{u1} (Preorder.toLE.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Prod.fst.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} x) o)
+Case conversion may be inaccurate. Consider using '#align ordinal.CNF_fst_le Ordinal.CNF_fst_leₓ'. -/
 /-- Every exponent in the Cantor normal form `CNF b o` is less or equal to `o`. -/
 theorem CNF_fst_le {b o : Ordinal.{u}} {x : Ordinal × Ordinal} (h : x ∈ CNF b o) : x.1 ≤ o :=
   (CNF_fst_le_log h).trans <| log_le_self _ _
 #align ordinal.CNF_fst_le Ordinal.CNF_fst_le
--/
 
-#print Ordinal.CNF_lt_snd /-
+/- warning: ordinal.CNF_lt_snd -> Ordinal.CNF_lt_snd is a dubious translation:
+lean 3 declaration is
+  forall {b : Ordinal.{u1}} {o : Ordinal.{u1}} {x : Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1}}, (Membership.Mem.{succ u1, succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1}) (List.{succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1})) (List.hasMem.{succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1})) x (Ordinal.CNF.{u1} b o)) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1}))) (Prod.snd.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} x))
+but is expected to have type
+  forall {b : Ordinal.{u1}} {o : Ordinal.{u1}} {x : Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1}}, (Membership.mem.{succ u1, succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1}) (List.{succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1})) (List.instMembershipList.{succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1})) x (Ordinal.CNF.{u1} b o)) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1})) (Prod.snd.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} x))
+Case conversion may be inaccurate. Consider using '#align ordinal.CNF_lt_snd Ordinal.CNF_lt_sndₓ'. -/
 /-- Every coefficient in a Cantor normal form is positive. -/
 theorem CNF_lt_snd {b o : Ordinal.{u}} {x : Ordinal × Ordinal} : x ∈ CNF b o → 0 < x.2 :=
   by
@@ -200,11 +217,10 @@ theorem CNF_lt_snd {b o : Ordinal.{u}} {x : Ordinal × Ordinal} : x ∈ CNF b o 
     · exact div_opow_log_pos b ho
     · exact IH h
 #align ordinal.CNF_lt_snd Ordinal.CNF_lt_snd
--/
 
 /- warning: ordinal.CNF_snd_lt -> Ordinal.CNF_snd_lt is a dubious translation:
 lean 3 declaration is
-  forall {b : Ordinal.{u1}} {o : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 1 (OfNat.mk.{succ u1} Ordinal.{u1} 1 (One.one.{succ u1} Ordinal.{u1} Ordinal.hasOne.{u1}))) b) -> (forall {x : Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1}}, (Membership.Mem.{succ u1, succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1}) (List.{succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1})) (List.hasMem.{succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1})) x (Ordinal.CNF.{u1} b o)) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Prod.snd.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} x) b))
+  forall {b : Ordinal.{u1}} {o : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 1 (OfNat.mk.{succ u1} Ordinal.{u1} 1 (One.one.{succ u1} Ordinal.{u1} Ordinal.hasOne.{u1}))) b) -> (forall {x : Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1}}, (Membership.Mem.{succ u1, succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1}) (List.{succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1})) (List.hasMem.{succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1})) x (Ordinal.CNF.{u1} b o)) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Prod.snd.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} x) b))
 but is expected to have type
   forall {b : Ordinal.{u1}} {o : Ordinal.{u1}}, (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (OfNat.ofNat.{succ u1} Ordinal.{u1} 1 (One.toOfNat1.{succ u1} Ordinal.{u1} Ordinal.one.{u1})) b) -> (forall {x : Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1}}, (Membership.mem.{succ u1, succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1}) (List.{succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1})) (List.instMembershipList.{succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1})) x (Ordinal.CNF.{u1} b o)) -> (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) (Prod.snd.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} x) b))
 Case conversion may be inaccurate. Consider using '#align ordinal.CNF_snd_lt Ordinal.CNF_snd_ltₓ'. -/
@@ -219,7 +235,12 @@ theorem CNF_snd_lt {b o : Ordinal.{u}} (hb : 1 < b) {x : Ordinal × Ordinal} :
     · exact IH h
 #align ordinal.CNF_snd_lt Ordinal.CNF_snd_lt
 
-#print Ordinal.CNF_sorted /-
+/- warning: ordinal.CNF_sorted -> Ordinal.CNF_sorted is a dubious translation:
+lean 3 declaration is
+  forall (b : Ordinal.{u1}) (o : Ordinal.{u1}), List.Sorted.{succ u1} Ordinal.{u1} (GT.gt.{succ u1} Ordinal.{u1} (Preorder.toHasLt.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}))) (List.map.{succ u1, succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1}) Ordinal.{u1} (Prod.fst.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1}) (Ordinal.CNF.{u1} b o))
+but is expected to have type
+  forall (b : Ordinal.{u1}) (o : Ordinal.{u1}), List.Sorted.{succ u1} Ordinal.{u1} (fun (x._@.Mathlib.SetTheory.Ordinal.CantorNormalForm._hyg.1273 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Ordinal.CantorNormalForm._hyg.1275 : Ordinal.{u1}) => GT.gt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) x._@.Mathlib.SetTheory.Ordinal.CantorNormalForm._hyg.1273 x._@.Mathlib.SetTheory.Ordinal.CantorNormalForm._hyg.1275) (List.map.{succ u1, succ u1} (Prod.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1}) Ordinal.{u1} (Prod.fst.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1}) (Ordinal.CNF.{u1} b o))
+Case conversion may be inaccurate. Consider using '#align ordinal.CNF_sorted Ordinal.CNF_sortedₓ'. -/
 /-- The exponents of the Cantor normal form are decreasing. -/
 theorem CNF_sorted (b o : Ordinal) : ((CNF b o).map Prod.fst).Sorted (· > ·) :=
   by
@@ -235,7 +256,6 @@ theorem CNF_sorted (b o : Ordinal) : ((CNF b o).map Prod.fst).Sorted (· > ·) :
         rcases H with ⟨⟨a, a'⟩, H, rfl⟩
         exact (CNF_fst_le_log H).trans_lt (log_mod_opow_log_lt_log_self hb ho hbo)
 #align ordinal.CNF_sorted Ordinal.CNF_sorted
--/
 
 end Ordinal
 

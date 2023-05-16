@@ -55,20 +55,28 @@ section Preorder
 
 variable [Preorder α] [PriestleySpace α] {x y : α}
 
-#print exists_clopen_upper_of_not_le /-
+/- warning: exists_clopen_upper_of_not_le -> exists_clopen_upper_of_not_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : PriestleySpace.{u1} α _inst_2 _inst_1] {x : α} {y : α}, (Not (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_2) x y)) -> (Exists.{succ u1} (Set.{u1} α) (fun (U : Set.{u1} α) => And (IsClopen.{u1} α _inst_1 U) (And (IsUpperSet.{u1} α (Preorder.toHasLe.{u1} α _inst_2) U) (And (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x U) (Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y U))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : PriestleySpace.{u1} α _inst_2 _inst_1] {x : α} {y : α}, (Not (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_2) x y)) -> (Exists.{succ u1} (Set.{u1} α) (fun (U : Set.{u1} α) => And (IsClopen.{u1} α _inst_1 U) (And (IsUpperSet.{u1} α (Preorder.toLE.{u1} α _inst_2) U) (And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x U) (Not (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y U))))))
+Case conversion may be inaccurate. Consider using '#align exists_clopen_upper_of_not_le exists_clopen_upper_of_not_leₓ'. -/
 theorem exists_clopen_upper_of_not_le :
     ¬x ≤ y → ∃ U : Set α, IsClopen U ∧ IsUpperSet U ∧ x ∈ U ∧ y ∉ U :=
   PriestleySpace.priestley
 #align exists_clopen_upper_of_not_le exists_clopen_upper_of_not_le
--/
 
-#print exists_clopen_lower_of_not_le /-
+/- warning: exists_clopen_lower_of_not_le -> exists_clopen_lower_of_not_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : PriestleySpace.{u1} α _inst_2 _inst_1] {x : α} {y : α}, (Not (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_2) x y)) -> (Exists.{succ u1} (Set.{u1} α) (fun (U : Set.{u1} α) => And (IsClopen.{u1} α _inst_1 U) (And (IsLowerSet.{u1} α (Preorder.toHasLe.{u1} α _inst_2) U) (And (Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x U)) (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y U)))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : PriestleySpace.{u1} α _inst_2 _inst_1] {x : α} {y : α}, (Not (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_2) x y)) -> (Exists.{succ u1} (Set.{u1} α) (fun (U : Set.{u1} α) => And (IsClopen.{u1} α _inst_1 U) (And (IsLowerSet.{u1} α (Preorder.toLE.{u1} α _inst_2) U) (And (Not (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x U)) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y U)))))
+Case conversion may be inaccurate. Consider using '#align exists_clopen_lower_of_not_le exists_clopen_lower_of_not_leₓ'. -/
 theorem exists_clopen_lower_of_not_le (h : ¬x ≤ y) :
     ∃ U : Set α, IsClopen U ∧ IsLowerSet U ∧ x ∉ U ∧ y ∈ U :=
   let ⟨U, hU, hU', hx, hy⟩ := exists_clopen_upper_of_not_le h
   ⟨Uᶜ, hU.compl, hU'.compl, Classical.not_not.2 hx, hy⟩
 #align exists_clopen_lower_of_not_le exists_clopen_lower_of_not_le
--/
 
 end Preorder
 
@@ -76,7 +84,12 @@ section PartialOrder
 
 variable [PartialOrder α] [PriestleySpace α] {x y : α}
 
-#print exists_clopen_upper_or_lower_of_ne /-
+/- warning: exists_clopen_upper_or_lower_of_ne -> exists_clopen_upper_or_lower_of_ne is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : PartialOrder.{u1} α] [_inst_3 : PriestleySpace.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2) _inst_1] {x : α} {y : α}, (Ne.{succ u1} α x y) -> (Exists.{succ u1} (Set.{u1} α) (fun (U : Set.{u1} α) => And (IsClopen.{u1} α _inst_1 U) (And (Or (IsUpperSet.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) U) (IsLowerSet.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) U)) (And (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x U) (Not (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y U))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : PartialOrder.{u1} α] [_inst_3 : PriestleySpace.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2) _inst_1] {x : α} {y : α}, (Ne.{succ u1} α x y) -> (Exists.{succ u1} (Set.{u1} α) (fun (U : Set.{u1} α) => And (IsClopen.{u1} α _inst_1 U) (And (Or (IsUpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) U) (IsLowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2)) U)) (And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x U) (Not (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y U))))))
+Case conversion may be inaccurate. Consider using '#align exists_clopen_upper_or_lower_of_ne exists_clopen_upper_or_lower_of_neₓ'. -/
 theorem exists_clopen_upper_or_lower_of_ne (h : x ≠ y) :
     ∃ U : Set α, IsClopen U ∧ (IsUpperSet U ∨ IsLowerSet U) ∧ x ∈ U ∧ y ∉ U :=
   by
@@ -85,7 +98,6 @@ theorem exists_clopen_upper_or_lower_of_ne (h : x ≠ y) :
   · obtain ⟨U, hU, hU', hy, hx⟩ := exists_clopen_lower_of_not_le h
     exact ⟨U, hU, Or.inr hU', hx, hy⟩
 #align exists_clopen_upper_or_lower_of_ne exists_clopen_upper_or_lower_of_ne
--/
 
 #print PriestleySpace.toT2Space /-
 -- See note [lower instance priority]

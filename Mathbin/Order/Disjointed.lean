@@ -76,7 +76,12 @@ theorem disjointed_succ (f : ℕ → α) (n : ℕ) : disjointed f (n + 1) = f (n
   rfl
 #align disjointed_succ disjointed_succ
 
-#print disjointed_le_id /-
+/- warning: disjointed_le_id -> disjointed_le_id is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], LE.le.{u1} ((Nat -> α) -> Nat -> α) (Pi.hasLe.{u1, u1} (Nat -> α) (fun (f : Nat -> α) => Nat -> α) (fun (i : Nat -> α) => Pi.hasLe.{0, u1} Nat (fun (ᾰ : Nat) => α) (fun (i : Nat) => Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))))) (disjointed.{u1} α _inst_1) (id.{succ u1} (Nat -> α))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], LE.le.{u1} ((Nat -> α) -> Nat -> α) (Pi.hasLe.{u1, u1} (Nat -> α) (fun (f : Nat -> α) => Nat -> α) (fun (i : Nat -> α) => Pi.hasLe.{0, u1} Nat (fun (ᾰ : Nat) => α) (fun (i : Nat) => Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))))) (disjointed.{u1} α _inst_1) (id.{succ u1} (Nat -> α))
+Case conversion may be inaccurate. Consider using '#align disjointed_le_id disjointed_le_idₓ'. -/
 theorem disjointed_le_id : disjointed ≤ (id : (ℕ → α) → ℕ → α) :=
   by
   rintro f n
@@ -84,13 +89,16 @@ theorem disjointed_le_id : disjointed ≤ (id : (ℕ → α) → ℕ → α) :=
   · rfl
   · exact sdiff_le
 #align disjointed_le_id disjointed_le_id
--/
 
-#print disjointed_le /-
+/- warning: disjointed_le -> disjointed_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] (f : Nat -> α), LE.le.{u1} (Nat -> α) (Pi.hasLe.{0, u1} Nat (fun (ᾰ : Nat) => α) (fun (i : Nat) => Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))))))) (disjointed.{u1} α _inst_1 f) f
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] (f : Nat -> α), LE.le.{u1} (Nat -> α) (Pi.hasLe.{0, u1} Nat (fun (ᾰ : Nat) => α) (fun (i : Nat) => Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1))))))) (disjointed.{u1} α _inst_1 f) f
+Case conversion may be inaccurate. Consider using '#align disjointed_le disjointed_leₓ'. -/
 theorem disjointed_le (f : ℕ → α) : disjointed f ≤ f :=
   disjointed_le_id f
 #align disjointed_le disjointed_le
--/
 
 #print disjoint_disjointed /-
 theorem disjoint_disjointed (f : ℕ → α) : Pairwise (Disjoint on disjointed f) :=

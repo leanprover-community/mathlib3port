@@ -77,13 +77,17 @@ theorem scaleRoots_ne_zero {p : R[X]} (hp : p ≠ 0) (s : R) : scaleRoots p s �
 #align polynomial.scale_roots_ne_zero Polynomial.scaleRoots_ne_zero
 -/
 
-#print Polynomial.support_scaleRoots_le /-
+/- warning: polynomial.support_scale_roots_le -> Polynomial.support_scaleRoots_le is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} [_inst_4 : CommRing.{u1} R] (p : Polynomial.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_4))) (s : R), LE.le.{0} (Finset.{0} Nat) (Preorder.toHasLe.{0} (Finset.{0} Nat) (PartialOrder.toPreorder.{0} (Finset.{0} Nat) (Finset.partialOrder.{0} Nat))) (Polynomial.support.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_4)) (Polynomial.scaleRoots.{u1} R _inst_4 p s)) (Polynomial.support.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_4)) p)
+but is expected to have type
+  forall {R : Type.{u1}} [_inst_4 : CommRing.{u1} R] (p : Polynomial.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_4))) (s : R), LE.le.{0} (Finset.{0} Nat) (Preorder.toLE.{0} (Finset.{0} Nat) (PartialOrder.toPreorder.{0} (Finset.{0} Nat) (Finset.partialOrder.{0} Nat))) (Polynomial.support.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_4)) (Polynomial.scaleRoots.{u1} R _inst_4 p s)) (Polynomial.support.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_4)) p)
+Case conversion may be inaccurate. Consider using '#align polynomial.support_scale_roots_le Polynomial.support_scaleRoots_leₓ'. -/
 theorem support_scaleRoots_le (p : R[X]) (s : R) : (scaleRoots p s).support ≤ p.support :=
   by
   intro
   simpa using left_ne_zero_of_mul
 #align polynomial.support_scale_roots_le Polynomial.support_scaleRoots_le
--/
 
 /- warning: polynomial.support_scale_roots_eq -> Polynomial.support_scaleRoots_eq is a dubious translation:
 lean 3 declaration is

@@ -1177,29 +1177,45 @@ instance [LinearOrder α] : IsIncompTrans α (· < ·) := by infer_instance
 
 instance [LinearOrder α] : IsStrictWeakOrder α (· < ·) := by infer_instance
 
-#print transitive_le /-
+/- warning: transitive_le -> transitive_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], Transitive.{succ u1} α (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], Transitive.{succ u1} α (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1))
+Case conversion may be inaccurate. Consider using '#align transitive_le transitive_leₓ'. -/
 theorem transitive_le [Preorder α] : Transitive (@LE.le α _) :=
   transitive_of_trans _
 #align transitive_le transitive_le
--/
 
-#print transitive_lt /-
+/- warning: transitive_lt -> transitive_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], Transitive.{succ u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], Transitive.{succ u1} α (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1))
+Case conversion may be inaccurate. Consider using '#align transitive_lt transitive_ltₓ'. -/
 theorem transitive_lt [Preorder α] : Transitive (@LT.lt α _) :=
   transitive_of_trans _
 #align transitive_lt transitive_lt
--/
 
-#print transitive_ge /-
+/- warning: transitive_ge -> transitive_ge is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], Transitive.{succ u1} α (GE.ge.{u1} α (Preorder.toHasLe.{u1} α _inst_1))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], Transitive.{succ u1} α (GE.ge.{u1} α (Preorder.toLE.{u1} α _inst_1))
+Case conversion may be inaccurate. Consider using '#align transitive_ge transitive_geₓ'. -/
 theorem transitive_ge [Preorder α] : Transitive (@GE.ge α _) :=
   transitive_of_trans _
 #align transitive_ge transitive_ge
--/
 
-#print transitive_gt /-
+/- warning: transitive_gt -> transitive_gt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], Transitive.{succ u1} α (GT.gt.{u1} α (Preorder.toHasLt.{u1} α _inst_1))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], Transitive.{succ u1} α (GT.gt.{u1} α (Preorder.toLT.{u1} α _inst_1))
+Case conversion may be inaccurate. Consider using '#align transitive_gt transitive_gtₓ'. -/
 theorem transitive_gt [Preorder α] : Transitive (@GT.gt α _) :=
   transitive_of_trans _
 #align transitive_gt transitive_gt
--/
 
 #print OrderDual.isTotal_le /-
 instance OrderDual.isTotal_le [LE α] [IsTotal α (· ≤ ·)] : IsTotal αᵒᵈ (· ≤ ·) :=

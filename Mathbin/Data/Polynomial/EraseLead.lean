@@ -268,11 +268,15 @@ theorem eraseLead_add_of_natDegree_lt_right {p q : R[X]} (pq : p.natDegree < q.n
 #align polynomial.erase_lead_add_of_nat_degree_lt_right Polynomial.eraseLead_add_of_natDegree_lt_right
 -/
 
-#print Polynomial.eraseLead_degree_le /-
+/- warning: polynomial.erase_lead_degree_le -> Polynomial.eraseLead_degree_le is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {f : Polynomial.{u1} R _inst_1}, LE.le.{0} (WithBot.{0} Nat) (Preorder.toHasLe.{0} (WithBot.{0} Nat) (WithBot.preorder.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (Polynomial.degree.{u1} R _inst_1 (Polynomial.eraseLead.{u1} R _inst_1 f)) (Polynomial.degree.{u1} R _inst_1 f)
+but is expected to have type
+  forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {f : Polynomial.{u1} R _inst_1}, LE.le.{0} (WithBot.{0} Nat) (Preorder.toLE.{0} (WithBot.{0} Nat) (WithBot.preorder.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)))) (Polynomial.degree.{u1} R _inst_1 (Polynomial.eraseLead.{u1} R _inst_1 f)) (Polynomial.degree.{u1} R _inst_1 f)
+Case conversion may be inaccurate. Consider using '#align polynomial.erase_lead_degree_le Polynomial.eraseLead_degree_leₓ'. -/
 theorem eraseLead_degree_le : (eraseLead f).degree ≤ f.degree :=
   f.degree_erase_le _
 #align polynomial.erase_lead_degree_le Polynomial.eraseLead_degree_le
--/
 
 #print Polynomial.eraseLead_natDegree_le_aux /-
 theorem eraseLead_natDegree_le_aux : (eraseLead f).natDegree ≤ f.natDegree :=

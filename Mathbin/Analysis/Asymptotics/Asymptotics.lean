@@ -805,7 +805,7 @@ theorem isLittleO_map {k : β → α} {l : Filter β} : f =o[map k l] g ↔ (f �
 
 /- warning: asymptotics.is_O_with.mono -> Asymptotics.IsBigOWith.mono is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {E : Type.{u2}} {F : Type.{u3}} [_inst_1 : Norm.{u2} E] [_inst_2 : Norm.{u3} F] {c : Real} {f : α -> E} {g : α -> F} {l : Filter.{u1} α} {l' : Filter.{u1} α}, (Asymptotics.IsBigOWith.{u1, u2, u3} α E F _inst_1 _inst_2 c l' f g) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) l l') -> (Asymptotics.IsBigOWith.{u1, u2, u3} α E F _inst_1 _inst_2 c l f g)
+  forall {α : Type.{u1}} {E : Type.{u2}} {F : Type.{u3}} [_inst_1 : Norm.{u2} E] [_inst_2 : Norm.{u3} F] {c : Real} {f : α -> E} {g : α -> F} {l : Filter.{u1} α} {l' : Filter.{u1} α}, (Asymptotics.IsBigOWith.{u1, u2, u3} α E F _inst_1 _inst_2 c l' f g) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) l l') -> (Asymptotics.IsBigOWith.{u1, u2, u3} α E F _inst_1 _inst_2 c l f g)
 but is expected to have type
   forall {α : Type.{u3}} {E : Type.{u2}} {F : Type.{u1}} [_inst_1 : Norm.{u2} E] [_inst_2 : Norm.{u1} F] {c : Real} {f : α -> E} {g : α -> F} {l : Filter.{u3} α} {l' : Filter.{u3} α}, (Asymptotics.IsBigOWith.{u3, u2, u1} α E F _inst_1 _inst_2 c l' f g) -> (LE.le.{u3} (Filter.{u3} α) (Preorder.toLE.{u3} (Filter.{u3} α) (PartialOrder.toPreorder.{u3} (Filter.{u3} α) (Filter.instPartialOrderFilter.{u3} α))) l l') -> (Asymptotics.IsBigOWith.{u3, u2, u1} α E F _inst_1 _inst_2 c l f g)
 Case conversion may be inaccurate. Consider using '#align asymptotics.is_O_with.mono Asymptotics.IsBigOWith.monoₓ'. -/
@@ -815,7 +815,7 @@ theorem IsBigOWith.mono (h : IsBigOWith c l' f g) (hl : l ≤ l') : IsBigOWith c
 
 /- warning: asymptotics.is_O.mono -> Asymptotics.IsBigO.mono is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {E : Type.{u2}} {F : Type.{u3}} [_inst_1 : Norm.{u2} E] [_inst_2 : Norm.{u3} F] {f : α -> E} {g : α -> F} {l : Filter.{u1} α} {l' : Filter.{u1} α}, (Asymptotics.IsBigO.{u1, u2, u3} α E F _inst_1 _inst_2 l' f g) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) l l') -> (Asymptotics.IsBigO.{u1, u2, u3} α E F _inst_1 _inst_2 l f g)
+  forall {α : Type.{u1}} {E : Type.{u2}} {F : Type.{u3}} [_inst_1 : Norm.{u2} E] [_inst_2 : Norm.{u3} F] {f : α -> E} {g : α -> F} {l : Filter.{u1} α} {l' : Filter.{u1} α}, (Asymptotics.IsBigO.{u1, u2, u3} α E F _inst_1 _inst_2 l' f g) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) l l') -> (Asymptotics.IsBigO.{u1, u2, u3} α E F _inst_1 _inst_2 l f g)
 but is expected to have type
   forall {α : Type.{u3}} {E : Type.{u2}} {F : Type.{u1}} [_inst_1 : Norm.{u2} E] [_inst_2 : Norm.{u1} F] {f : α -> E} {g : α -> F} {l : Filter.{u3} α} {l' : Filter.{u3} α}, (Asymptotics.IsBigO.{u3, u2, u1} α E F _inst_1 _inst_2 l' f g) -> (LE.le.{u3} (Filter.{u3} α) (Preorder.toLE.{u3} (Filter.{u3} α) (PartialOrder.toPreorder.{u3} (Filter.{u3} α) (Filter.instPartialOrderFilter.{u3} α))) l l') -> (Asymptotics.IsBigO.{u3, u2, u1} α E F _inst_1 _inst_2 l f g)
 Case conversion may be inaccurate. Consider using '#align asymptotics.is_O.mono Asymptotics.IsBigO.monoₓ'. -/
@@ -825,7 +825,7 @@ theorem IsBigO.mono (h : f =O[l'] g) (hl : l ≤ l') : f =O[l] g :=
 
 /- warning: asymptotics.is_o.mono -> Asymptotics.IsLittleO.mono is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {E : Type.{u2}} {F : Type.{u3}} [_inst_1 : Norm.{u2} E] [_inst_2 : Norm.{u3} F] {f : α -> E} {g : α -> F} {l : Filter.{u1} α} {l' : Filter.{u1} α}, (Asymptotics.IsLittleO.{u1, u2, u3} α E F _inst_1 _inst_2 l' f g) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) l l') -> (Asymptotics.IsLittleO.{u1, u2, u3} α E F _inst_1 _inst_2 l f g)
+  forall {α : Type.{u1}} {E : Type.{u2}} {F : Type.{u3}} [_inst_1 : Norm.{u2} E] [_inst_2 : Norm.{u3} F] {f : α -> E} {g : α -> F} {l : Filter.{u1} α} {l' : Filter.{u1} α}, (Asymptotics.IsLittleO.{u1, u2, u3} α E F _inst_1 _inst_2 l' f g) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toHasLe.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) l l') -> (Asymptotics.IsLittleO.{u1, u2, u3} α E F _inst_1 _inst_2 l f g)
 but is expected to have type
   forall {α : Type.{u3}} {E : Type.{u2}} {F : Type.{u1}} [_inst_1 : Norm.{u2} E] [_inst_2 : Norm.{u1} F] {f : α -> E} {g : α -> F} {l : Filter.{u3} α} {l' : Filter.{u3} α}, (Asymptotics.IsLittleO.{u3, u2, u1} α E F _inst_1 _inst_2 l' f g) -> (LE.le.{u3} (Filter.{u3} α) (Preorder.toLE.{u3} (Filter.{u3} α) (PartialOrder.toPreorder.{u3} (Filter.{u3} α) (Filter.instPartialOrderFilter.{u3} α))) l l') -> (Asymptotics.IsLittleO.{u3, u2, u1} α E F _inst_1 _inst_2 l f g)
 Case conversion may be inaccurate. Consider using '#align asymptotics.is_o.mono Asymptotics.IsLittleO.monoₓ'. -/

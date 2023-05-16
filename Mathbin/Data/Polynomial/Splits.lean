@@ -111,7 +111,12 @@ theorem splits_of_map_degree_eq_one {f : K[X]} (hf : degree (f.map i) = 1) : Spl
 #align polynomial.splits_of_map_degree_eq_one Polynomial.splits_of_map_degree_eq_one
 -/
 
-#print Polynomial.splits_of_degree_le_one /-
+/- warning: polynomial.splits_of_degree_le_one -> Polynomial.splits_of_degree_le_one is a dubious translation:
+lean 3 declaration is
+  forall {K : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} K] [_inst_2 : Field.{u2} L] (i : RingHom.{u1, u2} K L (NonAssocRing.toNonAssocSemiring.{u1} K (Ring.toNonAssocRing.{u1} K (CommRing.toRing.{u1} K _inst_1))) (NonAssocRing.toNonAssocSemiring.{u2} L (Ring.toNonAssocRing.{u2} L (DivisionRing.toRing.{u2} L (Field.toDivisionRing.{u2} L _inst_2))))) {f : Polynomial.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K _inst_1))}, (LE.le.{0} (WithBot.{0} Nat) (Preorder.toHasLe.{0} (WithBot.{0} Nat) (WithBot.preorder.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) (Polynomial.degree.{u1} K (Ring.toSemiring.{u1} K (CommRing.toRing.{u1} K _inst_1)) f) (OfNat.ofNat.{0} (WithBot.{0} Nat) 1 (OfNat.mk.{0} (WithBot.{0} Nat) 1 (One.one.{0} (WithBot.{0} Nat) (WithBot.hasOne.{0} Nat Nat.hasOne))))) -> (Polynomial.Splits.{u1, u2} K L _inst_1 _inst_2 i f)
+but is expected to have type
+  forall {K : Type.{u1}} {L : Type.{u2}} [_inst_1 : CommRing.{u1} K] [_inst_2 : Field.{u2} L] (i : RingHom.{u1, u2} K L (Semiring.toNonAssocSemiring.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K _inst_1))) (Semiring.toNonAssocSemiring.{u2} L (DivisionSemiring.toSemiring.{u2} L (Semifield.toDivisionSemiring.{u2} L (Field.toSemifield.{u2} L _inst_2))))) {f : Polynomial.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K _inst_1))}, (LE.le.{0} (WithBot.{0} Nat) (Preorder.toLE.{0} (WithBot.{0} Nat) (WithBot.preorder.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)))) (Polynomial.degree.{u1} K (CommSemiring.toSemiring.{u1} K (CommRing.toCommSemiring.{u1} K _inst_1)) f) (OfNat.ofNat.{0} (WithBot.{0} Nat) 1 (One.toOfNat1.{0} (WithBot.{0} Nat) (WithBot.one.{0} Nat (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring))))) -> (Polynomial.Splits.{u1, u2} K L _inst_1 _inst_2 i f)
+Case conversion may be inaccurate. Consider using '#align polynomial.splits_of_degree_le_one Polynomial.splits_of_degree_le_oneₓ'. -/
 theorem splits_of_degree_le_one {f : K[X]} (hf : degree f ≤ 1) : Splits i f :=
   if hif : degree (f.map i) ≤ 0 then splits_of_map_eq_C i (degree_le_zero_iff.mp hif)
   else by
@@ -119,7 +124,6 @@ theorem splits_of_degree_le_one {f : K[X]} (hf : degree f ≤ 1) : Splits i f :=
     rw [← Order.succ_le_iff, ← WithBot.coe_zero, WithBot.succ_coe, Nat.succ_eq_succ] at hif
     exact splits_of_map_degree_eq_one i (le_antisymm ((degree_map_le i _).trans hf) hif)
 #align polynomial.splits_of_degree_le_one Polynomial.splits_of_degree_le_one
--/
 
 #print Polynomial.splits_of_degree_eq_one /-
 theorem splits_of_degree_eq_one {f : K[X]} (hf : degree f = 1) : Splits i f :=

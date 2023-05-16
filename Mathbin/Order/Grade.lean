@@ -130,7 +130,7 @@ def grade : α → 𝕆 :=
 
 /- warning: covby.grade -> Covby.grade is a dubious translation:
 lean 3 declaration is
-  forall (𝕆 : Type.{u1}) {α : Type.{u2}} [_inst_1 : Preorder.{u1} 𝕆] [_inst_2 : Preorder.{u2} α] [_inst_3 : GradeOrder.{u1, u2} 𝕆 α _inst_1 _inst_2] {a : α} {b : α}, (Covby.{u2} α (Preorder.toLT.{u2} α _inst_2) a b) -> (Covby.{u1} 𝕆 (Preorder.toLT.{u1} 𝕆 _inst_1) (grade.{u1, u2} 𝕆 α _inst_1 _inst_2 _inst_3 a) (grade.{u1, u2} 𝕆 α _inst_1 _inst_2 _inst_3 b))
+  forall (𝕆 : Type.{u1}) {α : Type.{u2}} [_inst_1 : Preorder.{u1} 𝕆] [_inst_2 : Preorder.{u2} α] [_inst_3 : GradeOrder.{u1, u2} 𝕆 α _inst_1 _inst_2] {a : α} {b : α}, (Covby.{u2} α (Preorder.toHasLt.{u2} α _inst_2) a b) -> (Covby.{u1} 𝕆 (Preorder.toHasLt.{u1} 𝕆 _inst_1) (grade.{u1, u2} 𝕆 α _inst_1 _inst_2 _inst_3 a) (grade.{u1, u2} 𝕆 α _inst_1 _inst_2 _inst_3 b))
 but is expected to have type
   forall (𝕆 : Type.{u1}) {α : Type.{u2}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} 𝕆] [_inst_3 : GradeOrder.{u1, u2} 𝕆 α _inst_2 _inst_1] {a : α} {b : α}, (Covby.{u2} α (Preorder.toLT.{u2} α _inst_1) a b) -> (Covby.{u1} 𝕆 (Preorder.toLT.{u1} 𝕆 _inst_2) (grade.{u1, u2} 𝕆 α _inst_1 _inst_2 _inst_3 a) (grade.{u1, u2} 𝕆 α _inst_1 _inst_2 _inst_3 b))
 Case conversion may be inaccurate. Consider using '#align covby.grade Covby.gradeₓ'. -/
@@ -152,7 +152,7 @@ theorem grade_strictMono : StrictMono (grade 𝕆 : α → 𝕆) :=
 
 /- warning: covby_iff_lt_covby_grade -> covby_iff_lt_covby_grade is a dubious translation:
 lean 3 declaration is
-  forall {𝕆 : Type.{u1}} {α : Type.{u2}} [_inst_1 : Preorder.{u1} 𝕆] [_inst_2 : Preorder.{u2} α] [_inst_3 : GradeOrder.{u1, u2} 𝕆 α _inst_1 _inst_2] {a : α} {b : α}, Iff (Covby.{u2} α (Preorder.toLT.{u2} α _inst_2) a b) (And (LT.lt.{u2} α (Preorder.toLT.{u2} α _inst_2) a b) (Covby.{u1} 𝕆 (Preorder.toLT.{u1} 𝕆 _inst_1) (grade.{u1, u2} 𝕆 α _inst_1 _inst_2 _inst_3 a) (grade.{u1, u2} 𝕆 α _inst_1 _inst_2 _inst_3 b)))
+  forall {𝕆 : Type.{u1}} {α : Type.{u2}} [_inst_1 : Preorder.{u1} 𝕆] [_inst_2 : Preorder.{u2} α] [_inst_3 : GradeOrder.{u1, u2} 𝕆 α _inst_1 _inst_2] {a : α} {b : α}, Iff (Covby.{u2} α (Preorder.toHasLt.{u2} α _inst_2) a b) (And (LT.lt.{u2} α (Preorder.toHasLt.{u2} α _inst_2) a b) (Covby.{u1} 𝕆 (Preorder.toHasLt.{u1} 𝕆 _inst_1) (grade.{u1, u2} 𝕆 α _inst_1 _inst_2 _inst_3 a) (grade.{u1, u2} 𝕆 α _inst_1 _inst_2 _inst_3 b)))
 but is expected to have type
   forall {𝕆 : Type.{u1}} {α : Type.{u2}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} 𝕆] [_inst_3 : GradeOrder.{u1, u2} 𝕆 α _inst_2 _inst_1] {a : α} {b : α}, Iff (Covby.{u2} α (Preorder.toLT.{u2} α _inst_1) a b) (And (LT.lt.{u2} α (Preorder.toLT.{u2} α _inst_1) a b) (Covby.{u1} 𝕆 (Preorder.toLT.{u1} 𝕆 _inst_2) (grade.{u1, u2} 𝕆 α _inst_1 _inst_2 _inst_3 a) (grade.{u1, u2} 𝕆 α _inst_1 _inst_2 _inst_3 b)))
 Case conversion may be inaccurate. Consider using '#align covby_iff_lt_covby_grade covby_iff_lt_covby_gradeₓ'. -/
@@ -169,7 +169,7 @@ variable (𝕆) [GradeMinOrder 𝕆 α] {a : α}
 
 /- warning: is_min.grade -> IsMin.grade is a dubious translation:
 lean 3 declaration is
-  forall (𝕆 : Type.{u1}) {α : Type.{u2}} [_inst_1 : Preorder.{u1} 𝕆] [_inst_2 : Preorder.{u2} α] [_inst_3 : GradeMinOrder.{u1, u2} 𝕆 α _inst_1 _inst_2] {a : α}, (IsMin.{u2} α (Preorder.toLE.{u2} α _inst_2) a) -> (IsMin.{u1} 𝕆 (Preorder.toLE.{u1} 𝕆 _inst_1) (grade.{u1, u2} 𝕆 α _inst_1 _inst_2 (GradeMinOrder.toGradeOrder.{u1, u2} 𝕆 α _inst_1 _inst_2 _inst_3) a))
+  forall (𝕆 : Type.{u1}) {α : Type.{u2}} [_inst_1 : Preorder.{u1} 𝕆] [_inst_2 : Preorder.{u2} α] [_inst_3 : GradeMinOrder.{u1, u2} 𝕆 α _inst_1 _inst_2] {a : α}, (IsMin.{u2} α (Preorder.toHasLe.{u2} α _inst_2) a) -> (IsMin.{u1} 𝕆 (Preorder.toHasLe.{u1} 𝕆 _inst_1) (grade.{u1, u2} 𝕆 α _inst_1 _inst_2 (GradeMinOrder.toGradeOrder.{u1, u2} 𝕆 α _inst_1 _inst_2 _inst_3) a))
 but is expected to have type
   forall (𝕆 : Type.{u1}) {α : Type.{u2}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} 𝕆] [_inst_3 : GradeMinOrder.{u1, u2} 𝕆 α _inst_2 _inst_1] {a : α}, (IsMin.{u2} α (Preorder.toLE.{u2} α _inst_1) a) -> (IsMin.{u1} 𝕆 (Preorder.toLE.{u1} 𝕆 _inst_2) (grade.{u1, u2} 𝕆 α _inst_1 _inst_2 (GradeMinOrder.toGradeOrder.{u1, u2} 𝕆 α _inst_2 _inst_1 _inst_3) a))
 Case conversion may be inaccurate. Consider using '#align is_min.grade IsMin.gradeₓ'. -/
@@ -181,7 +181,7 @@ variable {𝕆}
 
 /- warning: is_min_grade_iff -> isMin_grade_iff is a dubious translation:
 lean 3 declaration is
-  forall {𝕆 : Type.{u1}} {α : Type.{u2}} [_inst_1 : Preorder.{u1} 𝕆] [_inst_2 : Preorder.{u2} α] [_inst_3 : GradeMinOrder.{u1, u2} 𝕆 α _inst_1 _inst_2] {a : α}, Iff (IsMin.{u1} 𝕆 (Preorder.toLE.{u1} 𝕆 _inst_1) (grade.{u1, u2} 𝕆 α _inst_1 _inst_2 (GradeMinOrder.toGradeOrder.{u1, u2} 𝕆 α _inst_1 _inst_2 _inst_3) a)) (IsMin.{u2} α (Preorder.toLE.{u2} α _inst_2) a)
+  forall {𝕆 : Type.{u1}} {α : Type.{u2}} [_inst_1 : Preorder.{u1} 𝕆] [_inst_2 : Preorder.{u2} α] [_inst_3 : GradeMinOrder.{u1, u2} 𝕆 α _inst_1 _inst_2] {a : α}, Iff (IsMin.{u1} 𝕆 (Preorder.toHasLe.{u1} 𝕆 _inst_1) (grade.{u1, u2} 𝕆 α _inst_1 _inst_2 (GradeMinOrder.toGradeOrder.{u1, u2} 𝕆 α _inst_1 _inst_2 _inst_3) a)) (IsMin.{u2} α (Preorder.toHasLe.{u2} α _inst_2) a)
 but is expected to have type
   forall {𝕆 : Type.{u2}} {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} 𝕆] [_inst_3 : GradeMinOrder.{u2, u1} 𝕆 α _inst_2 _inst_1] {a : α}, Iff (IsMin.{u2} 𝕆 (Preorder.toLE.{u2} 𝕆 _inst_2) (grade.{u2, u1} 𝕆 α _inst_1 _inst_2 (GradeMinOrder.toGradeOrder.{u2, u1} 𝕆 α _inst_2 _inst_1 _inst_3) a)) (IsMin.{u1} α (Preorder.toLE.{u1} α _inst_1) a)
 Case conversion may be inaccurate. Consider using '#align is_min_grade_iff isMin_grade_iffₓ'. -/
@@ -198,7 +198,7 @@ variable (𝕆) [GradeMaxOrder 𝕆 α] {a : α}
 
 /- warning: is_max.grade -> IsMax.grade is a dubious translation:
 lean 3 declaration is
-  forall (𝕆 : Type.{u1}) {α : Type.{u2}} [_inst_1 : Preorder.{u1} 𝕆] [_inst_2 : Preorder.{u2} α] [_inst_3 : GradeMaxOrder.{u1, u2} 𝕆 α _inst_1 _inst_2] {a : α}, (IsMax.{u2} α (Preorder.toLE.{u2} α _inst_2) a) -> (IsMax.{u1} 𝕆 (Preorder.toLE.{u1} 𝕆 _inst_1) (grade.{u1, u2} 𝕆 α _inst_1 _inst_2 (GradeMaxOrder.toGradeOrder.{u1, u2} 𝕆 α _inst_1 _inst_2 _inst_3) a))
+  forall (𝕆 : Type.{u1}) {α : Type.{u2}} [_inst_1 : Preorder.{u1} 𝕆] [_inst_2 : Preorder.{u2} α] [_inst_3 : GradeMaxOrder.{u1, u2} 𝕆 α _inst_1 _inst_2] {a : α}, (IsMax.{u2} α (Preorder.toHasLe.{u2} α _inst_2) a) -> (IsMax.{u1} 𝕆 (Preorder.toHasLe.{u1} 𝕆 _inst_1) (grade.{u1, u2} 𝕆 α _inst_1 _inst_2 (GradeMaxOrder.toGradeOrder.{u1, u2} 𝕆 α _inst_1 _inst_2 _inst_3) a))
 but is expected to have type
   forall (𝕆 : Type.{u1}) {α : Type.{u2}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} 𝕆] [_inst_3 : GradeMaxOrder.{u1, u2} 𝕆 α _inst_2 _inst_1] {a : α}, (IsMax.{u2} α (Preorder.toLE.{u2} α _inst_1) a) -> (IsMax.{u1} 𝕆 (Preorder.toLE.{u1} 𝕆 _inst_2) (grade.{u1, u2} 𝕆 α _inst_1 _inst_2 (GradeMaxOrder.toGradeOrder.{u1, u2} 𝕆 α _inst_2 _inst_1 _inst_3) a))
 Case conversion may be inaccurate. Consider using '#align is_max.grade IsMax.gradeₓ'. -/
@@ -210,7 +210,7 @@ variable {𝕆}
 
 /- warning: is_max_grade_iff -> isMax_grade_iff is a dubious translation:
 lean 3 declaration is
-  forall {𝕆 : Type.{u1}} {α : Type.{u2}} [_inst_1 : Preorder.{u1} 𝕆] [_inst_2 : Preorder.{u2} α] [_inst_3 : GradeMaxOrder.{u1, u2} 𝕆 α _inst_1 _inst_2] {a : α}, Iff (IsMax.{u1} 𝕆 (Preorder.toLE.{u1} 𝕆 _inst_1) (grade.{u1, u2} 𝕆 α _inst_1 _inst_2 (GradeMaxOrder.toGradeOrder.{u1, u2} 𝕆 α _inst_1 _inst_2 _inst_3) a)) (IsMax.{u2} α (Preorder.toLE.{u2} α _inst_2) a)
+  forall {𝕆 : Type.{u1}} {α : Type.{u2}} [_inst_1 : Preorder.{u1} 𝕆] [_inst_2 : Preorder.{u2} α] [_inst_3 : GradeMaxOrder.{u1, u2} 𝕆 α _inst_1 _inst_2] {a : α}, Iff (IsMax.{u1} 𝕆 (Preorder.toHasLe.{u1} 𝕆 _inst_1) (grade.{u1, u2} 𝕆 α _inst_1 _inst_2 (GradeMaxOrder.toGradeOrder.{u1, u2} 𝕆 α _inst_1 _inst_2 _inst_3) a)) (IsMax.{u2} α (Preorder.toHasLe.{u2} α _inst_2) a)
 but is expected to have type
   forall {𝕆 : Type.{u2}} {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} 𝕆] [_inst_3 : GradeMaxOrder.{u2, u1} 𝕆 α _inst_2 _inst_1] {a : α}, Iff (IsMax.{u2} 𝕆 (Preorder.toLE.{u2} 𝕆 _inst_2) (grade.{u2, u1} 𝕆 α _inst_1 _inst_2 (GradeMaxOrder.toGradeOrder.{u2, u1} 𝕆 α _inst_2 _inst_1 _inst_3) a)) (IsMax.{u1} α (Preorder.toLE.{u1} α _inst_1) a)
 Case conversion may be inaccurate. Consider using '#align is_max_grade_iff isMax_grade_iffₓ'. -/
@@ -251,7 +251,7 @@ theorem grade_injective : Function.Injective (grade 𝕆 : α → 𝕆) :=
 
 /- warning: grade_le_grade_iff -> grade_le_grade_iff is a dubious translation:
 lean 3 declaration is
-  forall {𝕆 : Type.{u1}} {α : Type.{u2}} [_inst_1 : Preorder.{u1} 𝕆] [_inst_2 : LinearOrder.{u2} α] [_inst_3 : GradeOrder.{u1, u2} 𝕆 α _inst_1 (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (LinearOrder.toLattice.{u2} α _inst_2))))] {a : α} {b : α}, Iff (LE.le.{u1} 𝕆 (Preorder.toLE.{u1} 𝕆 _inst_1) (grade.{u1, u2} 𝕆 α _inst_1 (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (LinearOrder.toLattice.{u2} α _inst_2)))) _inst_3 a) (grade.{u1, u2} 𝕆 α _inst_1 (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (LinearOrder.toLattice.{u2} α _inst_2)))) _inst_3 b)) (LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (LinearOrder.toLattice.{u2} α _inst_2))))) a b)
+  forall {𝕆 : Type.{u1}} {α : Type.{u2}} [_inst_1 : Preorder.{u1} 𝕆] [_inst_2 : LinearOrder.{u2} α] [_inst_3 : GradeOrder.{u1, u2} 𝕆 α _inst_1 (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (LinearOrder.toLattice.{u2} α _inst_2))))] {a : α} {b : α}, Iff (LE.le.{u1} 𝕆 (Preorder.toHasLe.{u1} 𝕆 _inst_1) (grade.{u1, u2} 𝕆 α _inst_1 (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (LinearOrder.toLattice.{u2} α _inst_2)))) _inst_3 a) (grade.{u1, u2} 𝕆 α _inst_1 (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (LinearOrder.toLattice.{u2} α _inst_2)))) _inst_3 b)) (LE.le.{u2} α (Preorder.toHasLe.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (LinearOrder.toLattice.{u2} α _inst_2))))) a b)
 but is expected to have type
   forall {𝕆 : Type.{u2}} {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : Preorder.{u2} 𝕆] [_inst_3 : GradeOrder.{u2, u1} 𝕆 α _inst_2 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))] {a : α} {b : α}, Iff (LE.le.{u2} 𝕆 (Preorder.toLE.{u2} 𝕆 _inst_2) (grade.{u2, u1} 𝕆 α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) _inst_2 _inst_3 a) (grade.{u2, u1} 𝕆 α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) _inst_2 _inst_3 b)) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) a b)
 Case conversion may be inaccurate. Consider using '#align grade_le_grade_iff grade_le_grade_iffₓ'. -/
@@ -262,7 +262,7 @@ theorem grade_le_grade_iff : grade 𝕆 a ≤ grade 𝕆 b ↔ a ≤ b :=
 
 /- warning: grade_lt_grade_iff -> grade_lt_grade_iff is a dubious translation:
 lean 3 declaration is
-  forall {𝕆 : Type.{u1}} {α : Type.{u2}} [_inst_1 : Preorder.{u1} 𝕆] [_inst_2 : LinearOrder.{u2} α] [_inst_3 : GradeOrder.{u1, u2} 𝕆 α _inst_1 (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (LinearOrder.toLattice.{u2} α _inst_2))))] {a : α} {b : α}, Iff (LT.lt.{u1} 𝕆 (Preorder.toLT.{u1} 𝕆 _inst_1) (grade.{u1, u2} 𝕆 α _inst_1 (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (LinearOrder.toLattice.{u2} α _inst_2)))) _inst_3 a) (grade.{u1, u2} 𝕆 α _inst_1 (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (LinearOrder.toLattice.{u2} α _inst_2)))) _inst_3 b)) (LT.lt.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (LinearOrder.toLattice.{u2} α _inst_2))))) a b)
+  forall {𝕆 : Type.{u1}} {α : Type.{u2}} [_inst_1 : Preorder.{u1} 𝕆] [_inst_2 : LinearOrder.{u2} α] [_inst_3 : GradeOrder.{u1, u2} 𝕆 α _inst_1 (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (LinearOrder.toLattice.{u2} α _inst_2))))] {a : α} {b : α}, Iff (LT.lt.{u1} 𝕆 (Preorder.toHasLt.{u1} 𝕆 _inst_1) (grade.{u1, u2} 𝕆 α _inst_1 (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (LinearOrder.toLattice.{u2} α _inst_2)))) _inst_3 a) (grade.{u1, u2} 𝕆 α _inst_1 (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (LinearOrder.toLattice.{u2} α _inst_2)))) _inst_3 b)) (LT.lt.{u2} α (Preorder.toHasLt.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (LinearOrder.toLattice.{u2} α _inst_2))))) a b)
 but is expected to have type
   forall {𝕆 : Type.{u2}} {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : Preorder.{u2} 𝕆] [_inst_3 : GradeOrder.{u2, u1} 𝕆 α _inst_2 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))] {a : α} {b : α}, Iff (LT.lt.{u2} 𝕆 (Preorder.toLT.{u2} 𝕆 _inst_2) (grade.{u2, u1} 𝕆 α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) _inst_2 _inst_3 a) (grade.{u2, u1} 𝕆 α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) _inst_2 _inst_3 b)) (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) a b)
 Case conversion may be inaccurate. Consider using '#align grade_lt_grade_iff grade_lt_grade_iffₓ'. -/
@@ -294,7 +294,7 @@ theorem grade_ne_grade_iff : grade 𝕆 a ≠ grade 𝕆 b ↔ a ≠ b :=
 
 /- warning: grade_covby_grade_iff -> grade_covby_grade_iff is a dubious translation:
 lean 3 declaration is
-  forall {𝕆 : Type.{u1}} {α : Type.{u2}} [_inst_1 : Preorder.{u1} 𝕆] [_inst_2 : LinearOrder.{u2} α] [_inst_3 : GradeOrder.{u1, u2} 𝕆 α _inst_1 (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (LinearOrder.toLattice.{u2} α _inst_2))))] {a : α} {b : α}, Iff (Covby.{u1} 𝕆 (Preorder.toLT.{u1} 𝕆 _inst_1) (grade.{u1, u2} 𝕆 α _inst_1 (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (LinearOrder.toLattice.{u2} α _inst_2)))) _inst_3 a) (grade.{u1, u2} 𝕆 α _inst_1 (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (LinearOrder.toLattice.{u2} α _inst_2)))) _inst_3 b)) (Covby.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (LinearOrder.toLattice.{u2} α _inst_2))))) a b)
+  forall {𝕆 : Type.{u1}} {α : Type.{u2}} [_inst_1 : Preorder.{u1} 𝕆] [_inst_2 : LinearOrder.{u2} α] [_inst_3 : GradeOrder.{u1, u2} 𝕆 α _inst_1 (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (LinearOrder.toLattice.{u2} α _inst_2))))] {a : α} {b : α}, Iff (Covby.{u1} 𝕆 (Preorder.toHasLt.{u1} 𝕆 _inst_1) (grade.{u1, u2} 𝕆 α _inst_1 (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (LinearOrder.toLattice.{u2} α _inst_2)))) _inst_3 a) (grade.{u1, u2} 𝕆 α _inst_1 (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (LinearOrder.toLattice.{u2} α _inst_2)))) _inst_3 b)) (Covby.{u2} α (Preorder.toHasLt.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (LinearOrder.toLattice.{u2} α _inst_2))))) a b)
 but is expected to have type
   forall {𝕆 : Type.{u2}} {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : Preorder.{u2} 𝕆] [_inst_3 : GradeOrder.{u2, u1} 𝕆 α _inst_2 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))] {a : α} {b : α}, Iff (Covby.{u2} 𝕆 (Preorder.toLT.{u2} 𝕆 _inst_2) (grade.{u2, u1} 𝕆 α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) _inst_2 _inst_3 a) (grade.{u2, u1} 𝕆 α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) _inst_2 _inst_3 b)) (Covby.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) a b)
 Case conversion may be inaccurate. Consider using '#align grade_covby_grade_iff grade_covby_grade_iffₓ'. -/
@@ -314,7 +314,7 @@ variable [PartialOrder 𝕆] [Preorder α]
 
 /- warning: grade_bot -> grade_bot is a dubious translation:
 lean 3 declaration is
-  forall {𝕆 : Type.{u1}} {α : Type.{u2}} [_inst_1 : PartialOrder.{u1} 𝕆] [_inst_2 : Preorder.{u2} α] [_inst_3 : OrderBot.{u1} 𝕆 (Preorder.toLE.{u1} 𝕆 (PartialOrder.toPreorder.{u1} 𝕆 _inst_1))] [_inst_4 : OrderBot.{u2} α (Preorder.toLE.{u2} α _inst_2)] [_inst_5 : GradeMinOrder.{u1, u2} 𝕆 α (PartialOrder.toPreorder.{u1} 𝕆 _inst_1) _inst_2], Eq.{succ u1} 𝕆 (grade.{u1, u2} 𝕆 α (PartialOrder.toPreorder.{u1} 𝕆 _inst_1) _inst_2 (GradeMinOrder.toGradeOrder.{u1, u2} 𝕆 α (PartialOrder.toPreorder.{u1} 𝕆 _inst_1) _inst_2 _inst_5) (Bot.bot.{u2} α (OrderBot.toHasBot.{u2} α (Preorder.toLE.{u2} α _inst_2) _inst_4))) (Bot.bot.{u1} 𝕆 (OrderBot.toHasBot.{u1} 𝕆 (Preorder.toLE.{u1} 𝕆 (PartialOrder.toPreorder.{u1} 𝕆 _inst_1)) _inst_3))
+  forall {𝕆 : Type.{u1}} {α : Type.{u2}} [_inst_1 : PartialOrder.{u1} 𝕆] [_inst_2 : Preorder.{u2} α] [_inst_3 : OrderBot.{u1} 𝕆 (Preorder.toHasLe.{u1} 𝕆 (PartialOrder.toPreorder.{u1} 𝕆 _inst_1))] [_inst_4 : OrderBot.{u2} α (Preorder.toHasLe.{u2} α _inst_2)] [_inst_5 : GradeMinOrder.{u1, u2} 𝕆 α (PartialOrder.toPreorder.{u1} 𝕆 _inst_1) _inst_2], Eq.{succ u1} 𝕆 (grade.{u1, u2} 𝕆 α (PartialOrder.toPreorder.{u1} 𝕆 _inst_1) _inst_2 (GradeMinOrder.toGradeOrder.{u1, u2} 𝕆 α (PartialOrder.toPreorder.{u1} 𝕆 _inst_1) _inst_2 _inst_5) (Bot.bot.{u2} α (OrderBot.toHasBot.{u2} α (Preorder.toHasLe.{u2} α _inst_2) _inst_4))) (Bot.bot.{u1} 𝕆 (OrderBot.toHasBot.{u1} 𝕆 (Preorder.toHasLe.{u1} 𝕆 (PartialOrder.toPreorder.{u1} 𝕆 _inst_1)) _inst_3))
 but is expected to have type
   forall {𝕆 : Type.{u2}} {α : Type.{u1}} [_inst_1 : PartialOrder.{u2} 𝕆] [_inst_2 : Preorder.{u1} α] [_inst_3 : OrderBot.{u2} 𝕆 (Preorder.toLE.{u2} 𝕆 (PartialOrder.toPreorder.{u2} 𝕆 _inst_1))] [_inst_4 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_2)] [_inst_5 : GradeMinOrder.{u2, u1} 𝕆 α (PartialOrder.toPreorder.{u2} 𝕆 _inst_1) _inst_2], Eq.{succ u2} 𝕆 (grade.{u2, u1} 𝕆 α _inst_2 (PartialOrder.toPreorder.{u2} 𝕆 _inst_1) (GradeMinOrder.toGradeOrder.{u2, u1} 𝕆 α (PartialOrder.toPreorder.{u2} 𝕆 _inst_1) _inst_2 _inst_5) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α _inst_2) _inst_4))) (Bot.bot.{u2} 𝕆 (OrderBot.toBot.{u2} 𝕆 (Preorder.toLE.{u2} 𝕆 (PartialOrder.toPreorder.{u2} 𝕆 _inst_1)) _inst_3))
 Case conversion may be inaccurate. Consider using '#align grade_bot grade_botₓ'. -/
@@ -325,7 +325,7 @@ theorem grade_bot [OrderBot 𝕆] [OrderBot α] [GradeMinOrder 𝕆 α] : grade 
 
 /- warning: grade_top -> grade_top is a dubious translation:
 lean 3 declaration is
-  forall {𝕆 : Type.{u1}} {α : Type.{u2}} [_inst_1 : PartialOrder.{u1} 𝕆] [_inst_2 : Preorder.{u2} α] [_inst_3 : OrderTop.{u1} 𝕆 (Preorder.toLE.{u1} 𝕆 (PartialOrder.toPreorder.{u1} 𝕆 _inst_1))] [_inst_4 : OrderTop.{u2} α (Preorder.toLE.{u2} α _inst_2)] [_inst_5 : GradeMaxOrder.{u1, u2} 𝕆 α (PartialOrder.toPreorder.{u1} 𝕆 _inst_1) _inst_2], Eq.{succ u1} 𝕆 (grade.{u1, u2} 𝕆 α (PartialOrder.toPreorder.{u1} 𝕆 _inst_1) _inst_2 (GradeMaxOrder.toGradeOrder.{u1, u2} 𝕆 α (PartialOrder.toPreorder.{u1} 𝕆 _inst_1) _inst_2 _inst_5) (Top.top.{u2} α (OrderTop.toHasTop.{u2} α (Preorder.toLE.{u2} α _inst_2) _inst_4))) (Top.top.{u1} 𝕆 (OrderTop.toHasTop.{u1} 𝕆 (Preorder.toLE.{u1} 𝕆 (PartialOrder.toPreorder.{u1} 𝕆 _inst_1)) _inst_3))
+  forall {𝕆 : Type.{u1}} {α : Type.{u2}} [_inst_1 : PartialOrder.{u1} 𝕆] [_inst_2 : Preorder.{u2} α] [_inst_3 : OrderTop.{u1} 𝕆 (Preorder.toHasLe.{u1} 𝕆 (PartialOrder.toPreorder.{u1} 𝕆 _inst_1))] [_inst_4 : OrderTop.{u2} α (Preorder.toHasLe.{u2} α _inst_2)] [_inst_5 : GradeMaxOrder.{u1, u2} 𝕆 α (PartialOrder.toPreorder.{u1} 𝕆 _inst_1) _inst_2], Eq.{succ u1} 𝕆 (grade.{u1, u2} 𝕆 α (PartialOrder.toPreorder.{u1} 𝕆 _inst_1) _inst_2 (GradeMaxOrder.toGradeOrder.{u1, u2} 𝕆 α (PartialOrder.toPreorder.{u1} 𝕆 _inst_1) _inst_2 _inst_5) (Top.top.{u2} α (OrderTop.toHasTop.{u2} α (Preorder.toHasLe.{u2} α _inst_2) _inst_4))) (Top.top.{u1} 𝕆 (OrderTop.toHasTop.{u1} 𝕆 (Preorder.toHasLe.{u1} 𝕆 (PartialOrder.toPreorder.{u1} 𝕆 _inst_1)) _inst_3))
 but is expected to have type
   forall {𝕆 : Type.{u2}} {α : Type.{u1}} [_inst_1 : PartialOrder.{u2} 𝕆] [_inst_2 : Preorder.{u1} α] [_inst_3 : OrderTop.{u2} 𝕆 (Preorder.toLE.{u2} 𝕆 (PartialOrder.toPreorder.{u2} 𝕆 _inst_1))] [_inst_4 : OrderTop.{u1} α (Preorder.toLE.{u1} α _inst_2)] [_inst_5 : GradeMaxOrder.{u2, u1} 𝕆 α (PartialOrder.toPreorder.{u2} 𝕆 _inst_1) _inst_2], Eq.{succ u2} 𝕆 (grade.{u2, u1} 𝕆 α _inst_2 (PartialOrder.toPreorder.{u2} 𝕆 _inst_1) (GradeMaxOrder.toGradeOrder.{u2, u1} 𝕆 α (PartialOrder.toPreorder.{u2} 𝕆 _inst_1) _inst_2 _inst_5) (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α _inst_2) _inst_4))) (Top.top.{u2} 𝕆 (OrderTop.toTop.{u2} 𝕆 (Preorder.toLE.{u2} 𝕆 (PartialOrder.toPreorder.{u2} 𝕆 _inst_1)) _inst_3))
 Case conversion may be inaccurate. Consider using '#align grade_top grade_topₓ'. -/
@@ -402,7 +402,12 @@ theorem grade_ofDual [GradeOrder 𝕆 α] (a : αᵒᵈ) : grade 𝕆 (ofDual a)
 /-! #### Lifting a graded order -/
 
 
-#print GradeOrder.liftLeft /-
+/- warning: grade_order.lift_left -> GradeOrder.liftLeft is a dubious translation:
+lean 3 declaration is
+  forall {𝕆 : Type.{u1}} {ℙ : Type.{u2}} {α : Type.{u3}} [_inst_1 : Preorder.{u1} 𝕆] [_inst_2 : Preorder.{u2} ℙ] [_inst_3 : Preorder.{u3} α] [_inst_5 : GradeOrder.{u1, u3} 𝕆 α _inst_1 _inst_3] (f : 𝕆 -> ℙ), (StrictMono.{u1, u2} 𝕆 ℙ _inst_1 _inst_2 f) -> (forall (a : 𝕆) (b : 𝕆), (Covby.{u1} 𝕆 (Preorder.toHasLt.{u1} 𝕆 _inst_1) a b) -> (Covby.{u2} ℙ (Preorder.toHasLt.{u2} ℙ _inst_2) (f a) (f b))) -> (GradeOrder.{u2, u3} ℙ α _inst_2 _inst_3)
+but is expected to have type
+  forall {𝕆 : Type.{u1}} {ℙ : Type.{u2}} {α : Type.{u3}} [_inst_1 : Preorder.{u1} 𝕆] [_inst_2 : Preorder.{u2} ℙ] [_inst_3 : Preorder.{u3} α] [_inst_5 : GradeOrder.{u1, u3} 𝕆 α _inst_1 _inst_3] (f : 𝕆 -> ℙ), (StrictMono.{u1, u2} 𝕆 ℙ _inst_1 _inst_2 f) -> (forall (a : 𝕆) (b : 𝕆), (Covby.{u1} 𝕆 (Preorder.toLT.{u1} 𝕆 _inst_1) a b) -> (Covby.{u2} ℙ (Preorder.toLT.{u2} ℙ _inst_2) (f a) (f b))) -> (GradeOrder.{u2, u3} ℙ α _inst_2 _inst_3)
+Case conversion may be inaccurate. Consider using '#align grade_order.lift_left GradeOrder.liftLeftₓ'. -/
 -- See note [reducible non-instances]
 /-- Lifts a graded order along a strictly monotone function. -/
 @[reducible]
@@ -413,9 +418,13 @@ def GradeOrder.liftLeft [GradeOrder 𝕆 α] (f : 𝕆 → ℙ) (hf : StrictMono
   grade_strictMono := hf.comp grade_strictMono
   covby_grade a b h := hcovby _ _ <| h.grade _
 #align grade_order.lift_left GradeOrder.liftLeft
--/
 
-#print GradeMinOrder.liftLeft /-
+/- warning: grade_min_order.lift_left -> GradeMinOrder.liftLeft is a dubious translation:
+lean 3 declaration is
+  forall {𝕆 : Type.{u1}} {ℙ : Type.{u2}} {α : Type.{u3}} [_inst_1 : Preorder.{u1} 𝕆] [_inst_2 : Preorder.{u2} ℙ] [_inst_3 : Preorder.{u3} α] [_inst_5 : GradeMinOrder.{u1, u3} 𝕆 α _inst_1 _inst_3] (f : 𝕆 -> ℙ), (StrictMono.{u1, u2} 𝕆 ℙ _inst_1 _inst_2 f) -> (forall (a : 𝕆) (b : 𝕆), (Covby.{u1} 𝕆 (Preorder.toHasLt.{u1} 𝕆 _inst_1) a b) -> (Covby.{u2} ℙ (Preorder.toHasLt.{u2} ℙ _inst_2) (f a) (f b))) -> (forall (a : 𝕆), (IsMin.{u1} 𝕆 (Preorder.toHasLe.{u1} 𝕆 _inst_1) a) -> (IsMin.{u2} ℙ (Preorder.toHasLe.{u2} ℙ _inst_2) (f a))) -> (GradeMinOrder.{u2, u3} ℙ α _inst_2 _inst_3)
+but is expected to have type
+  forall {𝕆 : Type.{u1}} {ℙ : Type.{u2}} {α : Type.{u3}} [_inst_1 : Preorder.{u1} 𝕆] [_inst_2 : Preorder.{u2} ℙ] [_inst_3 : Preorder.{u3} α] [_inst_5 : GradeMinOrder.{u1, u3} 𝕆 α _inst_1 _inst_3] (f : 𝕆 -> ℙ), (StrictMono.{u1, u2} 𝕆 ℙ _inst_1 _inst_2 f) -> (forall (a : 𝕆) (b : 𝕆), (Covby.{u1} 𝕆 (Preorder.toLT.{u1} 𝕆 _inst_1) a b) -> (Covby.{u2} ℙ (Preorder.toLT.{u2} ℙ _inst_2) (f a) (f b))) -> (forall (a : 𝕆), (IsMin.{u1} 𝕆 (Preorder.toLE.{u1} 𝕆 _inst_1) a) -> (IsMin.{u2} ℙ (Preorder.toLE.{u2} ℙ _inst_2) (f a))) -> (GradeMinOrder.{u2, u3} ℙ α _inst_2 _inst_3)
+Case conversion may be inaccurate. Consider using '#align grade_min_order.lift_left GradeMinOrder.liftLeftₓ'. -/
 -- See note [reducible non-instances]
 /-- Lifts a graded order along a strictly monotone function. -/
 @[reducible]
@@ -423,9 +432,13 @@ def GradeMinOrder.liftLeft [GradeMinOrder 𝕆 α] (f : 𝕆 → ℙ) (hf : Stri
     (hcovby : ∀ a b, a ⋖ b → f a ⋖ f b) (hmin : ∀ a, IsMin a → IsMin (f a)) : GradeMinOrder ℙ α :=
   { GradeOrder.liftLeft f hf hcovby with isMin_grade := fun a ha => hmin _ <| ha.grade _ }
 #align grade_min_order.lift_left GradeMinOrder.liftLeft
--/
 
-#print GradeMaxOrder.liftLeft /-
+/- warning: grade_max_order.lift_left -> GradeMaxOrder.liftLeft is a dubious translation:
+lean 3 declaration is
+  forall {𝕆 : Type.{u1}} {ℙ : Type.{u2}} {α : Type.{u3}} [_inst_1 : Preorder.{u1} 𝕆] [_inst_2 : Preorder.{u2} ℙ] [_inst_3 : Preorder.{u3} α] [_inst_5 : GradeMaxOrder.{u1, u3} 𝕆 α _inst_1 _inst_3] (f : 𝕆 -> ℙ), (StrictMono.{u1, u2} 𝕆 ℙ _inst_1 _inst_2 f) -> (forall (a : 𝕆) (b : 𝕆), (Covby.{u1} 𝕆 (Preorder.toHasLt.{u1} 𝕆 _inst_1) a b) -> (Covby.{u2} ℙ (Preorder.toHasLt.{u2} ℙ _inst_2) (f a) (f b))) -> (forall (a : 𝕆), (IsMax.{u1} 𝕆 (Preorder.toHasLe.{u1} 𝕆 _inst_1) a) -> (IsMax.{u2} ℙ (Preorder.toHasLe.{u2} ℙ _inst_2) (f a))) -> (GradeMaxOrder.{u2, u3} ℙ α _inst_2 _inst_3)
+but is expected to have type
+  forall {𝕆 : Type.{u1}} {ℙ : Type.{u2}} {α : Type.{u3}} [_inst_1 : Preorder.{u1} 𝕆] [_inst_2 : Preorder.{u2} ℙ] [_inst_3 : Preorder.{u3} α] [_inst_5 : GradeMaxOrder.{u1, u3} 𝕆 α _inst_1 _inst_3] (f : 𝕆 -> ℙ), (StrictMono.{u1, u2} 𝕆 ℙ _inst_1 _inst_2 f) -> (forall (a : 𝕆) (b : 𝕆), (Covby.{u1} 𝕆 (Preorder.toLT.{u1} 𝕆 _inst_1) a b) -> (Covby.{u2} ℙ (Preorder.toLT.{u2} ℙ _inst_2) (f a) (f b))) -> (forall (a : 𝕆), (IsMax.{u1} 𝕆 (Preorder.toLE.{u1} 𝕆 _inst_1) a) -> (IsMax.{u2} ℙ (Preorder.toLE.{u2} ℙ _inst_2) (f a))) -> (GradeMaxOrder.{u2, u3} ℙ α _inst_2 _inst_3)
+Case conversion may be inaccurate. Consider using '#align grade_max_order.lift_left GradeMaxOrder.liftLeftₓ'. -/
 -- See note [reducible non-instances]
 /-- Lifts a graded order along a strictly monotone function. -/
 @[reducible]
@@ -433,9 +446,13 @@ def GradeMaxOrder.liftLeft [GradeMaxOrder 𝕆 α] (f : 𝕆 → ℙ) (hf : Stri
     (hcovby : ∀ a b, a ⋖ b → f a ⋖ f b) (hmax : ∀ a, IsMax a → IsMax (f a)) : GradeMaxOrder ℙ α :=
   { GradeOrder.liftLeft f hf hcovby with isMax_grade := fun a ha => hmax _ <| ha.grade _ }
 #align grade_max_order.lift_left GradeMaxOrder.liftLeft
--/
 
-#print GradeBoundedOrder.liftLeft /-
+/- warning: grade_bounded_order.lift_left -> GradeBoundedOrder.liftLeft is a dubious translation:
+lean 3 declaration is
+  forall {𝕆 : Type.{u1}} {ℙ : Type.{u2}} {α : Type.{u3}} [_inst_1 : Preorder.{u1} 𝕆] [_inst_2 : Preorder.{u2} ℙ] [_inst_3 : Preorder.{u3} α] [_inst_5 : GradeBoundedOrder.{u1, u3} 𝕆 α _inst_1 _inst_3] (f : 𝕆 -> ℙ), (StrictMono.{u1, u2} 𝕆 ℙ _inst_1 _inst_2 f) -> (forall (a : 𝕆) (b : 𝕆), (Covby.{u1} 𝕆 (Preorder.toHasLt.{u1} 𝕆 _inst_1) a b) -> (Covby.{u2} ℙ (Preorder.toHasLt.{u2} ℙ _inst_2) (f a) (f b))) -> (forall (a : 𝕆), (IsMin.{u1} 𝕆 (Preorder.toHasLe.{u1} 𝕆 _inst_1) a) -> (IsMin.{u2} ℙ (Preorder.toHasLe.{u2} ℙ _inst_2) (f a))) -> (forall (a : 𝕆), (IsMax.{u1} 𝕆 (Preorder.toHasLe.{u1} 𝕆 _inst_1) a) -> (IsMax.{u2} ℙ (Preorder.toHasLe.{u2} ℙ _inst_2) (f a))) -> (GradeBoundedOrder.{u2, u3} ℙ α _inst_2 _inst_3)
+but is expected to have type
+  forall {𝕆 : Type.{u1}} {ℙ : Type.{u2}} {α : Type.{u3}} [_inst_1 : Preorder.{u1} 𝕆] [_inst_2 : Preorder.{u2} ℙ] [_inst_3 : Preorder.{u3} α] [_inst_5 : GradeBoundedOrder.{u1, u3} 𝕆 α _inst_1 _inst_3] (f : 𝕆 -> ℙ), (StrictMono.{u1, u2} 𝕆 ℙ _inst_1 _inst_2 f) -> (forall (a : 𝕆) (b : 𝕆), (Covby.{u1} 𝕆 (Preorder.toLT.{u1} 𝕆 _inst_1) a b) -> (Covby.{u2} ℙ (Preorder.toLT.{u2} ℙ _inst_2) (f a) (f b))) -> (forall (a : 𝕆), (IsMin.{u1} 𝕆 (Preorder.toLE.{u1} 𝕆 _inst_1) a) -> (IsMin.{u2} ℙ (Preorder.toLE.{u2} ℙ _inst_2) (f a))) -> (forall (a : 𝕆), (IsMax.{u1} 𝕆 (Preorder.toLE.{u1} 𝕆 _inst_1) a) -> (IsMax.{u2} ℙ (Preorder.toLE.{u2} ℙ _inst_2) (f a))) -> (GradeBoundedOrder.{u2, u3} ℙ α _inst_2 _inst_3)
+Case conversion may be inaccurate. Consider using '#align grade_bounded_order.lift_left GradeBoundedOrder.liftLeftₓ'. -/
 -- See note [reducible non-instances]
 /-- Lifts a graded order along a strictly monotone function. -/
 @[reducible]
@@ -444,9 +461,13 @@ def GradeBoundedOrder.liftLeft [GradeBoundedOrder 𝕆 α] (f : 𝕆 → ℙ) (h
     (hmax : ∀ a, IsMax a → IsMax (f a)) : GradeBoundedOrder ℙ α :=
   { GradeMinOrder.liftLeft f hf hcovby hmin, GradeMaxOrder.liftLeft f hf hcovby hmax with }
 #align grade_bounded_order.lift_left GradeBoundedOrder.liftLeft
--/
 
-#print GradeOrder.liftRight /-
+/- warning: grade_order.lift_right -> GradeOrder.liftRight is a dubious translation:
+lean 3 declaration is
+  forall {𝕆 : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : Preorder.{u1} 𝕆] [_inst_3 : Preorder.{u2} α] [_inst_4 : Preorder.{u3} β] [_inst_5 : GradeOrder.{u1, u3} 𝕆 β _inst_1 _inst_4] (f : α -> β), (StrictMono.{u2, u3} α β _inst_3 _inst_4 f) -> (forall (a : α) (b : α), (Covby.{u2} α (Preorder.toHasLt.{u2} α _inst_3) a b) -> (Covby.{u3} β (Preorder.toHasLt.{u3} β _inst_4) (f a) (f b))) -> (GradeOrder.{u1, u2} 𝕆 α _inst_1 _inst_3)
+but is expected to have type
+  forall {𝕆 : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : Preorder.{u1} 𝕆] [_inst_3 : Preorder.{u2} α] [_inst_4 : Preorder.{u3} β] [_inst_5 : GradeOrder.{u1, u3} 𝕆 β _inst_1 _inst_4] (f : α -> β), (StrictMono.{u2, u3} α β _inst_3 _inst_4 f) -> (forall (a : α) (b : α), (Covby.{u2} α (Preorder.toLT.{u2} α _inst_3) a b) -> (Covby.{u3} β (Preorder.toLT.{u3} β _inst_4) (f a) (f b))) -> (GradeOrder.{u1, u2} 𝕆 α _inst_1 _inst_3)
+Case conversion may be inaccurate. Consider using '#align grade_order.lift_right GradeOrder.liftRightₓ'. -/
 -- See note [reducible non-instances]
 /-- Lifts a graded order along a strictly monotone function. -/
 @[reducible]
@@ -457,9 +478,13 @@ def GradeOrder.liftRight [GradeOrder 𝕆 β] (f : α → β) (hf : StrictMono f
   grade_strictMono := grade_strictMono.comp hf
   covby_grade a b h := (hcovby _ _ h).grade _
 #align grade_order.lift_right GradeOrder.liftRight
--/
 
-#print GradeMinOrder.liftRight /-
+/- warning: grade_min_order.lift_right -> GradeMinOrder.liftRight is a dubious translation:
+lean 3 declaration is
+  forall {𝕆 : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : Preorder.{u1} 𝕆] [_inst_3 : Preorder.{u2} α] [_inst_4 : Preorder.{u3} β] [_inst_5 : GradeMinOrder.{u1, u3} 𝕆 β _inst_1 _inst_4] (f : α -> β), (StrictMono.{u2, u3} α β _inst_3 _inst_4 f) -> (forall (a : α) (b : α), (Covby.{u2} α (Preorder.toHasLt.{u2} α _inst_3) a b) -> (Covby.{u3} β (Preorder.toHasLt.{u3} β _inst_4) (f a) (f b))) -> (forall (a : α), (IsMin.{u2} α (Preorder.toHasLe.{u2} α _inst_3) a) -> (IsMin.{u3} β (Preorder.toHasLe.{u3} β _inst_4) (f a))) -> (GradeMinOrder.{u1, u2} 𝕆 α _inst_1 _inst_3)
+but is expected to have type
+  forall {𝕆 : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : Preorder.{u1} 𝕆] [_inst_3 : Preorder.{u2} α] [_inst_4 : Preorder.{u3} β] [_inst_5 : GradeMinOrder.{u1, u3} 𝕆 β _inst_1 _inst_4] (f : α -> β), (StrictMono.{u2, u3} α β _inst_3 _inst_4 f) -> (forall (a : α) (b : α), (Covby.{u2} α (Preorder.toLT.{u2} α _inst_3) a b) -> (Covby.{u3} β (Preorder.toLT.{u3} β _inst_4) (f a) (f b))) -> (forall (a : α), (IsMin.{u2} α (Preorder.toLE.{u2} α _inst_3) a) -> (IsMin.{u3} β (Preorder.toLE.{u3} β _inst_4) (f a))) -> (GradeMinOrder.{u1, u2} 𝕆 α _inst_1 _inst_3)
+Case conversion may be inaccurate. Consider using '#align grade_min_order.lift_right GradeMinOrder.liftRightₓ'. -/
 -- See note [reducible non-instances]
 /-- Lifts a graded order along a strictly monotone function. -/
 @[reducible]
@@ -467,9 +492,13 @@ def GradeMinOrder.liftRight [GradeMinOrder 𝕆 β] (f : α → β) (hf : Strict
     (hcovby : ∀ a b, a ⋖ b → f a ⋖ f b) (hmin : ∀ a, IsMin a → IsMin (f a)) : GradeMinOrder 𝕆 α :=
   { GradeOrder.liftRight f hf hcovby with isMin_grade := fun a ha => (hmin _ ha).grade _ }
 #align grade_min_order.lift_right GradeMinOrder.liftRight
--/
 
-#print GradeMaxOrder.liftRight /-
+/- warning: grade_max_order.lift_right -> GradeMaxOrder.liftRight is a dubious translation:
+lean 3 declaration is
+  forall {𝕆 : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : Preorder.{u1} 𝕆] [_inst_3 : Preorder.{u2} α] [_inst_4 : Preorder.{u3} β] [_inst_5 : GradeMaxOrder.{u1, u3} 𝕆 β _inst_1 _inst_4] (f : α -> β), (StrictMono.{u2, u3} α β _inst_3 _inst_4 f) -> (forall (a : α) (b : α), (Covby.{u2} α (Preorder.toHasLt.{u2} α _inst_3) a b) -> (Covby.{u3} β (Preorder.toHasLt.{u3} β _inst_4) (f a) (f b))) -> (forall (a : α), (IsMax.{u2} α (Preorder.toHasLe.{u2} α _inst_3) a) -> (IsMax.{u3} β (Preorder.toHasLe.{u3} β _inst_4) (f a))) -> (GradeMaxOrder.{u1, u2} 𝕆 α _inst_1 _inst_3)
+but is expected to have type
+  forall {𝕆 : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : Preorder.{u1} 𝕆] [_inst_3 : Preorder.{u2} α] [_inst_4 : Preorder.{u3} β] [_inst_5 : GradeMaxOrder.{u1, u3} 𝕆 β _inst_1 _inst_4] (f : α -> β), (StrictMono.{u2, u3} α β _inst_3 _inst_4 f) -> (forall (a : α) (b : α), (Covby.{u2} α (Preorder.toLT.{u2} α _inst_3) a b) -> (Covby.{u3} β (Preorder.toLT.{u3} β _inst_4) (f a) (f b))) -> (forall (a : α), (IsMax.{u2} α (Preorder.toLE.{u2} α _inst_3) a) -> (IsMax.{u3} β (Preorder.toLE.{u3} β _inst_4) (f a))) -> (GradeMaxOrder.{u1, u2} 𝕆 α _inst_1 _inst_3)
+Case conversion may be inaccurate. Consider using '#align grade_max_order.lift_right GradeMaxOrder.liftRightₓ'. -/
 -- See note [reducible non-instances]
 /-- Lifts a graded order along a strictly monotone function. -/
 @[reducible]
@@ -477,9 +506,13 @@ def GradeMaxOrder.liftRight [GradeMaxOrder 𝕆 β] (f : α → β) (hf : Strict
     (hcovby : ∀ a b, a ⋖ b → f a ⋖ f b) (hmax : ∀ a, IsMax a → IsMax (f a)) : GradeMaxOrder 𝕆 α :=
   { GradeOrder.liftRight f hf hcovby with isMax_grade := fun a ha => (hmax _ ha).grade _ }
 #align grade_max_order.lift_right GradeMaxOrder.liftRight
--/
 
-#print GradeBoundedOrder.liftRight /-
+/- warning: grade_bounded_order.lift_right -> GradeBoundedOrder.liftRight is a dubious translation:
+lean 3 declaration is
+  forall {𝕆 : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : Preorder.{u1} 𝕆] [_inst_3 : Preorder.{u2} α] [_inst_4 : Preorder.{u3} β] [_inst_5 : GradeBoundedOrder.{u1, u3} 𝕆 β _inst_1 _inst_4] (f : α -> β), (StrictMono.{u2, u3} α β _inst_3 _inst_4 f) -> (forall (a : α) (b : α), (Covby.{u2} α (Preorder.toHasLt.{u2} α _inst_3) a b) -> (Covby.{u3} β (Preorder.toHasLt.{u3} β _inst_4) (f a) (f b))) -> (forall (a : α), (IsMin.{u2} α (Preorder.toHasLe.{u2} α _inst_3) a) -> (IsMin.{u3} β (Preorder.toHasLe.{u3} β _inst_4) (f a))) -> (forall (a : α), (IsMax.{u2} α (Preorder.toHasLe.{u2} α _inst_3) a) -> (IsMax.{u3} β (Preorder.toHasLe.{u3} β _inst_4) (f a))) -> (GradeBoundedOrder.{u1, u2} 𝕆 α _inst_1 _inst_3)
+but is expected to have type
+  forall {𝕆 : Type.{u1}} {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : Preorder.{u1} 𝕆] [_inst_3 : Preorder.{u2} α] [_inst_4 : Preorder.{u3} β] [_inst_5 : GradeBoundedOrder.{u1, u3} 𝕆 β _inst_1 _inst_4] (f : α -> β), (StrictMono.{u2, u3} α β _inst_3 _inst_4 f) -> (forall (a : α) (b : α), (Covby.{u2} α (Preorder.toLT.{u2} α _inst_3) a b) -> (Covby.{u3} β (Preorder.toLT.{u3} β _inst_4) (f a) (f b))) -> (forall (a : α), (IsMin.{u2} α (Preorder.toLE.{u2} α _inst_3) a) -> (IsMin.{u3} β (Preorder.toLE.{u3} β _inst_4) (f a))) -> (forall (a : α), (IsMax.{u2} α (Preorder.toLE.{u2} α _inst_3) a) -> (IsMax.{u3} β (Preorder.toLE.{u3} β _inst_4) (f a))) -> (GradeBoundedOrder.{u1, u2} 𝕆 α _inst_1 _inst_3)
+Case conversion may be inaccurate. Consider using '#align grade_bounded_order.lift_right GradeBoundedOrder.liftRightₓ'. -/
 -- See note [reducible non-instances]
 /-- Lifts a graded order along a strictly monotone function. -/
 @[reducible]
@@ -488,7 +521,6 @@ def GradeBoundedOrder.liftRight [GradeBoundedOrder 𝕆 β] (f : α → β) (hf 
     (hmax : ∀ a, IsMax a → IsMax (f a)) : GradeBoundedOrder 𝕆 α :=
   { GradeMinOrder.liftRight f hf hcovby hmin, GradeMaxOrder.liftRight f hf hcovby hmax with }
 #align grade_bounded_order.lift_right GradeBoundedOrder.liftRight
--/
 
 /-! #### `fin n`-graded to `ℕ`-graded to `ℤ`-graded -/
 

@@ -94,29 +94,29 @@ instance opensNhdsHomHasCoeToFun {x : X} {U V : OpenNhds x} : CoeFun (U ⟶ V) f
 #align topological_space.open_nhds.opens_nhds_hom_has_coe_to_fun TopologicalSpace.OpenNhds.opensNhdsHomHasCoeToFun
 -/
 
-/- warning: topological_space.open_nhds.inf_le_left -> TopologicalSpace.OpenNhds.infLeLeft is a dubious translation:
+/- warning: topological_space.open_nhds.inf_le_left -> TopologicalSpace.OpenNhds.infLELeft is a dubious translation:
 lean 3 declaration is
   forall {X : TopCat.{u1}} {x : coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X} (U : TopologicalSpace.OpenNhds.{u1} X x) (V : TopologicalSpace.OpenNhds.{u1} X x), Quiver.Hom.{succ u1, u1} (TopologicalSpace.OpenNhds.{u1} X x) (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} (TopologicalSpace.OpenNhds.{u1} X x) (CategoryTheory.Category.toCategoryStruct.{u1, u1} (TopologicalSpace.OpenNhds.{u1} X x) (Preorder.smallCategory.{u1} (TopologicalSpace.OpenNhds.{u1} X x) (PartialOrder.toPreorder.{u1} (TopologicalSpace.OpenNhds.{u1} X x) (TopologicalSpace.OpenNhds.partialOrder.{u1} X x))))) (Inf.inf.{u1} (TopologicalSpace.OpenNhds.{u1} X x) (SemilatticeInf.toHasInf.{u1} (TopologicalSpace.OpenNhds.{u1} X x) (Lattice.toSemilatticeInf.{u1} (TopologicalSpace.OpenNhds.{u1} X x) (TopologicalSpace.OpenNhds.lattice.{u1} X x))) U V) U
 but is expected to have type
   forall {X : TopCat.{u1}} {x : CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X} (U : TopologicalSpace.OpenNhds.{u1} X x) (V : TopologicalSpace.OpenNhds.{u1} X x), Quiver.Hom.{succ u1, u1} (TopologicalSpace.OpenNhds.{u1} X x) (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} (TopologicalSpace.OpenNhds.{u1} X x) (CategoryTheory.Category.toCategoryStruct.{u1, u1} (TopologicalSpace.OpenNhds.{u1} X x) (TopologicalSpace.OpenNhds.openNhdsCategory.{u1} X x))) (Inf.inf.{u1} (TopologicalSpace.OpenNhds.{u1} X x) (Lattice.toInf.{u1} (TopologicalSpace.OpenNhds.{u1} X x) (TopologicalSpace.OpenNhds.instLatticeOpenNhds.{u1} X x)) U V) U
-Case conversion may be inaccurate. Consider using '#align topological_space.open_nhds.inf_le_left TopologicalSpace.OpenNhds.infLeLeftₓ'. -/
+Case conversion may be inaccurate. Consider using '#align topological_space.open_nhds.inf_le_left TopologicalSpace.OpenNhds.infLELeftₓ'. -/
 /-- The inclusion `U ⊓ V ⟶ U` as a morphism in the category of open sets.
 -/
-def infLeLeft {x : X} (U V : OpenNhds x) : U ⊓ V ⟶ U :=
+def infLELeft {x : X} (U V : OpenNhds x) : U ⊓ V ⟶ U :=
   homOfLE inf_le_left
-#align topological_space.open_nhds.inf_le_left TopologicalSpace.OpenNhds.infLeLeft
+#align topological_space.open_nhds.inf_le_left TopologicalSpace.OpenNhds.infLELeft
 
-/- warning: topological_space.open_nhds.inf_le_right -> TopologicalSpace.OpenNhds.infLeRight is a dubious translation:
+/- warning: topological_space.open_nhds.inf_le_right -> TopologicalSpace.OpenNhds.infLERight is a dubious translation:
 lean 3 declaration is
   forall {X : TopCat.{u1}} {x : coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} X} (U : TopologicalSpace.OpenNhds.{u1} X x) (V : TopologicalSpace.OpenNhds.{u1} X x), Quiver.Hom.{succ u1, u1} (TopologicalSpace.OpenNhds.{u1} X x) (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} (TopologicalSpace.OpenNhds.{u1} X x) (CategoryTheory.Category.toCategoryStruct.{u1, u1} (TopologicalSpace.OpenNhds.{u1} X x) (Preorder.smallCategory.{u1} (TopologicalSpace.OpenNhds.{u1} X x) (PartialOrder.toPreorder.{u1} (TopologicalSpace.OpenNhds.{u1} X x) (TopologicalSpace.OpenNhds.partialOrder.{u1} X x))))) (Inf.inf.{u1} (TopologicalSpace.OpenNhds.{u1} X x) (SemilatticeInf.toHasInf.{u1} (TopologicalSpace.OpenNhds.{u1} X x) (Lattice.toSemilatticeInf.{u1} (TopologicalSpace.OpenNhds.{u1} X x) (TopologicalSpace.OpenNhds.lattice.{u1} X x))) U V) V
 but is expected to have type
   forall {X : TopCat.{u1}} {x : CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} X} (U : TopologicalSpace.OpenNhds.{u1} X x) (V : TopologicalSpace.OpenNhds.{u1} X x), Quiver.Hom.{succ u1, u1} (TopologicalSpace.OpenNhds.{u1} X x) (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} (TopologicalSpace.OpenNhds.{u1} X x) (CategoryTheory.Category.toCategoryStruct.{u1, u1} (TopologicalSpace.OpenNhds.{u1} X x) (TopologicalSpace.OpenNhds.openNhdsCategory.{u1} X x))) (Inf.inf.{u1} (TopologicalSpace.OpenNhds.{u1} X x) (Lattice.toInf.{u1} (TopologicalSpace.OpenNhds.{u1} X x) (TopologicalSpace.OpenNhds.instLatticeOpenNhds.{u1} X x)) U V) V
-Case conversion may be inaccurate. Consider using '#align topological_space.open_nhds.inf_le_right TopologicalSpace.OpenNhds.infLeRightₓ'. -/
+Case conversion may be inaccurate. Consider using '#align topological_space.open_nhds.inf_le_right TopologicalSpace.OpenNhds.infLERightₓ'. -/
 /-- The inclusion `U ⊓ V ⟶ V` as a morphism in the category of open sets.
 -/
-def infLeRight {x : X} (U V : OpenNhds x) : U ⊓ V ⟶ V :=
+def infLERight {x : X} (U V : OpenNhds x) : U ⊓ V ⟶ V :=
   homOfLE inf_le_right
-#align topological_space.open_nhds.inf_le_right TopologicalSpace.OpenNhds.infLeRight
+#align topological_space.open_nhds.inf_le_right TopologicalSpace.OpenNhds.infLERight
 
 /- warning: topological_space.open_nhds.inclusion -> TopologicalSpace.OpenNhds.inclusion is a dubious translation:
 lean 3 declaration is

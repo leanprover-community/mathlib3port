@@ -56,7 +56,7 @@ theorem mem_accumulate [LE α] {x : α} {z : β} : z ∈ Accumulate s x ↔ ∃ 
 
 /- warning: set.subset_accumulate -> Set.subset_accumulate is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : α -> (Set.{u2} β)} [_inst_1 : Preorder.{u1} α] {x : α}, HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) (s x) (Set.Accumulate.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) s x)
+  forall {α : Type.{u1}} {β : Type.{u2}} {s : α -> (Set.{u2} β)} [_inst_1 : Preorder.{u1} α] {x : α}, HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) (s x) (Set.Accumulate.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) s x)
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : α -> (Set.{u1} β)} [_inst_1 : Preorder.{u2} α] {x : α}, HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet.{u1} β) (s x) (Set.Accumulate.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) s x)
 Case conversion may be inaccurate. Consider using '#align set.subset_accumulate Set.subset_accumulateₓ'. -/
@@ -65,7 +65,7 @@ theorem subset_accumulate [Preorder α] {x : α} : s x ⊆ Accumulate s x := fun
 
 /- warning: set.monotone_accumulate -> Set.monotone_accumulate is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : α -> (Set.{u2} β)} [_inst_1 : Preorder.{u1} α], Monotone.{u1, u2} α (Set.{u2} β) _inst_1 (PartialOrder.toPreorder.{u2} (Set.{u2} β) (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} β) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} β) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} β) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} β) (Set.completeBooleanAlgebra.{u2} β))))))) (Set.Accumulate.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) s)
+  forall {α : Type.{u1}} {β : Type.{u2}} {s : α -> (Set.{u2} β)} [_inst_1 : Preorder.{u1} α], Monotone.{u1, u2} α (Set.{u2} β) _inst_1 (PartialOrder.toPreorder.{u2} (Set.{u2} β) (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} β) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} β) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} β) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} β) (Set.completeBooleanAlgebra.{u2} β))))))) (Set.Accumulate.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) s)
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : α -> (Set.{u1} β)} [_inst_1 : Preorder.{u2} α], Monotone.{u2, u1} α (Set.{u1} β) _inst_1 (PartialOrder.toPreorder.{u1} (Set.{u1} β) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} β) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} β) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} β) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} β) (Set.instCompleteBooleanAlgebraSet.{u1} β))))))) (Set.Accumulate.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) s)
 Case conversion may be inaccurate. Consider using '#align set.monotone_accumulate Set.monotone_accumulateₓ'. -/
@@ -75,7 +75,7 @@ theorem monotone_accumulate [Preorder α] : Monotone (Accumulate s) := fun x y h
 
 /- warning: set.bUnion_accumulate -> Set.biUnion_accumulate is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : α -> (Set.{u2} β)} [_inst_1 : Preorder.{u1} α] (x : α), Eq.{succ u2} (Set.{u2} β) (Set.iUnion.{u2, succ u1} β α (fun (y : α) => Set.iUnion.{u2, 0} β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) y x) (fun (H : LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) y x) => Set.Accumulate.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) s y))) (Set.iUnion.{u2, succ u1} β α (fun (y : α) => Set.iUnion.{u2, 0} β (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) y x) (fun (H : LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) y x) => s y)))
+  forall {α : Type.{u1}} {β : Type.{u2}} {s : α -> (Set.{u2} β)} [_inst_1 : Preorder.{u1} α] (x : α), Eq.{succ u2} (Set.{u2} β) (Set.iUnion.{u2, succ u1} β α (fun (y : α) => Set.iUnion.{u2, 0} β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) y x) (fun (H : LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) y x) => Set.Accumulate.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) s y))) (Set.iUnion.{u2, succ u1} β α (fun (y : α) => Set.iUnion.{u2, 0} β (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) y x) (fun (H : LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) y x) => s y)))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : α -> (Set.{u1} β)} [_inst_1 : Preorder.{u2} α] (x : α), Eq.{succ u1} (Set.{u1} β) (Set.iUnion.{u1, succ u2} β α (fun (y : α) => Set.iUnion.{u1, 0} β (LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) y x) (fun (H : LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) y x) => Set.Accumulate.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) s y))) (Set.iUnion.{u1, succ u2} β α (fun (y : α) => Set.iUnion.{u1, 0} β (LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) y x) (fun (H : LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) y x) => s y)))
 Case conversion may be inaccurate. Consider using '#align set.bUnion_accumulate Set.biUnion_accumulateₓ'. -/
@@ -88,7 +88,7 @@ theorem biUnion_accumulate [Preorder α] (x : α) : (⋃ y ≤ x, Accumulate s y
 
 /- warning: set.Union_accumulate -> Set.iUnion_accumulate is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {s : α -> (Set.{u2} β)} [_inst_1 : Preorder.{u1} α], Eq.{succ u2} (Set.{u2} β) (Set.iUnion.{u2, succ u1} β α (fun (x : α) => Set.Accumulate.{u1, u2} α β (Preorder.toLE.{u1} α _inst_1) s x)) (Set.iUnion.{u2, succ u1} β α (fun (x : α) => s x))
+  forall {α : Type.{u1}} {β : Type.{u2}} {s : α -> (Set.{u2} β)} [_inst_1 : Preorder.{u1} α], Eq.{succ u2} (Set.{u2} β) (Set.iUnion.{u2, succ u1} β α (fun (x : α) => Set.Accumulate.{u1, u2} α β (Preorder.toHasLe.{u1} α _inst_1) s x)) (Set.iUnion.{u2, succ u1} β α (fun (x : α) => s x))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : α -> (Set.{u1} β)} [_inst_1 : Preorder.{u2} α], Eq.{succ u1} (Set.{u1} β) (Set.iUnion.{u1, succ u2} β α (fun (x : α) => Set.Accumulate.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) s x)) (Set.iUnion.{u1, succ u2} β α (fun (x : α) => s x))
 Case conversion may be inaccurate. Consider using '#align set.Union_accumulate Set.iUnion_accumulateₓ'. -/

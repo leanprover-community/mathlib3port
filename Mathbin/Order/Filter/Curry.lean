@@ -86,7 +86,7 @@ theorem eventually_curry_iff {f : Filter α} {g : Filter β} {p : α × β → P
 
 /- warning: filter.curry_le_prod -> Filter.curry_le_prod is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{u1} α} {g : Filter.{u2} β}, LE.le.{max u1 u2} (Filter.{max u1 u2} (Prod.{u1, u2} α β)) (Preorder.toLE.{max u1 u2} (Filter.{max u1 u2} (Prod.{u1, u2} α β)) (PartialOrder.toPreorder.{max u1 u2} (Filter.{max u1 u2} (Prod.{u1, u2} α β)) (Filter.partialOrder.{max u1 u2} (Prod.{u1, u2} α β)))) (Filter.curry.{u1, u2} α β f g) (Filter.prod.{u1, u2} α β f g)
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : Filter.{u1} α} {g : Filter.{u2} β}, LE.le.{max u1 u2} (Filter.{max u1 u2} (Prod.{u1, u2} α β)) (Preorder.toHasLe.{max u1 u2} (Filter.{max u1 u2} (Prod.{u1, u2} α β)) (PartialOrder.toPreorder.{max u1 u2} (Filter.{max u1 u2} (Prod.{u1, u2} α β)) (Filter.partialOrder.{max u1 u2} (Prod.{u1, u2} α β)))) (Filter.curry.{u1, u2} α β f g) (Filter.prod.{u1, u2} α β f g)
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {f : Filter.{u2} α} {g : Filter.{u1} β}, LE.le.{max u2 u1} (Filter.{max u1 u2} (Prod.{u2, u1} α β)) (Preorder.toLE.{max u2 u1} (Filter.{max u1 u2} (Prod.{u2, u1} α β)) (PartialOrder.toPreorder.{max u2 u1} (Filter.{max u1 u2} (Prod.{u2, u1} α β)) (Filter.instPartialOrderFilter.{max u2 u1} (Prod.{u2, u1} α β)))) (Filter.curry.{u2, u1} α β f g) (Filter.prod.{u2, u1} α β f g)
 Case conversion may be inaccurate. Consider using '#align filter.curry_le_prod Filter.curry_le_prodₓ'. -/

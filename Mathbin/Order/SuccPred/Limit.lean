@@ -68,15 +68,19 @@ section Preorder
 
 variable [Preorder α] {a : α}
 
-#print IsMin.isSuccLimit /-
+/- warning: is_min.is_succ_limit -> IsMin.isSuccLimit is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α}, (IsMin.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a) -> (Order.IsSuccLimit.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α}, (IsMin.{u1} α (Preorder.toLE.{u1} α _inst_1) a) -> (Order.IsSuccLimit.{u1} α (Preorder.toLT.{u1} α _inst_1) a)
+Case conversion may be inaccurate. Consider using '#align is_min.is_succ_limit IsMin.isSuccLimitₓ'. -/
 protected theorem IsMin.isSuccLimit : IsMin a → IsSuccLimit a := fun h b hab =>
   not_isMin_of_lt hab.lt h
 #align is_min.is_succ_limit IsMin.isSuccLimit
--/
 
 /- warning: order.is_succ_limit_bot -> Order.isSuccLimit_bot is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_1)], Order.IsSuccLimit.{u1} α (Preorder.toLT.{u1} α _inst_1) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α _inst_1)], Order.IsSuccLimit.{u1} α (Preorder.toHasLt.{u1} α _inst_1) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α _inst_1) _inst_2))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_1)], Order.IsSuccLimit.{u1} α (Preorder.toLT.{u1} α _inst_1) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2))
 Case conversion may be inaccurate. Consider using '#align order.is_succ_limit_bot Order.isSuccLimit_botₓ'. -/
@@ -86,39 +90,55 @@ theorem isSuccLimit_bot [OrderBot α] : IsSuccLimit (⊥ : α) :=
 
 variable [SuccOrder α]
 
-#print Order.IsSuccLimit.isMax /-
+/- warning: order.is_succ_limit.is_max -> Order.IsSuccLimit.isMax is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} [_inst_2 : SuccOrder.{u1} α _inst_1], (Order.IsSuccLimit.{u1} α (Preorder.toHasLt.{u1} α _inst_1) (Order.succ.{u1} α _inst_1 _inst_2 a)) -> (IsMax.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} [_inst_2 : SuccOrder.{u1} α _inst_1], (Order.IsSuccLimit.{u1} α (Preorder.toLT.{u1} α _inst_1) (Order.succ.{u1} α _inst_1 _inst_2 a)) -> (IsMax.{u1} α (Preorder.toLE.{u1} α _inst_1) a)
+Case conversion may be inaccurate. Consider using '#align order.is_succ_limit.is_max Order.IsSuccLimit.isMaxₓ'. -/
 protected theorem IsSuccLimit.isMax (h : IsSuccLimit (succ a)) : IsMax a :=
   by
   by_contra H
   exact h a (covby_succ_of_not_is_max H)
 #align order.is_succ_limit.is_max Order.IsSuccLimit.isMax
--/
 
-#print Order.not_isSuccLimit_succ_of_not_isMax /-
+/- warning: order.not_is_succ_limit_succ_of_not_is_max -> Order.not_isSuccLimit_succ_of_not_isMax is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} [_inst_2 : SuccOrder.{u1} α _inst_1], (Not (IsMax.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a)) -> (Not (Order.IsSuccLimit.{u1} α (Preorder.toHasLt.{u1} α _inst_1) (Order.succ.{u1} α _inst_1 _inst_2 a)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} [_inst_2 : SuccOrder.{u1} α _inst_1], (Not (IsMax.{u1} α (Preorder.toLE.{u1} α _inst_1) a)) -> (Not (Order.IsSuccLimit.{u1} α (Preorder.toLT.{u1} α _inst_1) (Order.succ.{u1} α _inst_1 _inst_2 a)))
+Case conversion may be inaccurate. Consider using '#align order.not_is_succ_limit_succ_of_not_is_max Order.not_isSuccLimit_succ_of_not_isMaxₓ'. -/
 theorem not_isSuccLimit_succ_of_not_isMax (ha : ¬IsMax a) : ¬IsSuccLimit (succ a) :=
   by
   contrapose! ha
   exact ha.is_max
 #align order.not_is_succ_limit_succ_of_not_is_max Order.not_isSuccLimit_succ_of_not_isMax
--/
 
 section NoMaxOrder
 
 variable [NoMaxOrder α]
 
-#print Order.IsSuccLimit.succ_ne /-
+/- warning: order.is_succ_limit.succ_ne -> Order.IsSuccLimit.succ_ne is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} [_inst_2 : SuccOrder.{u1} α _inst_1] [_inst_3 : NoMaxOrder.{u1} α (Preorder.toHasLt.{u1} α _inst_1)], (Order.IsSuccLimit.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a) -> (forall (b : α), Ne.{succ u1} α (Order.succ.{u1} α _inst_1 _inst_2 b) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} [_inst_2 : SuccOrder.{u1} α _inst_1] [_inst_3 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)], (Order.IsSuccLimit.{u1} α (Preorder.toLT.{u1} α _inst_1) a) -> (forall (b : α), Ne.{succ u1} α (Order.succ.{u1} α _inst_1 _inst_2 b) a)
+Case conversion may be inaccurate. Consider using '#align order.is_succ_limit.succ_ne Order.IsSuccLimit.succ_neₓ'. -/
 theorem IsSuccLimit.succ_ne (h : IsSuccLimit a) (b : α) : succ b ≠ a :=
   by
   rintro rfl
   exact not_isMax _ h.is_max
 #align order.is_succ_limit.succ_ne Order.IsSuccLimit.succ_ne
--/
 
-#print Order.not_isSuccLimit_succ /-
+/- warning: order.not_is_succ_limit_succ -> Order.not_isSuccLimit_succ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : SuccOrder.{u1} α _inst_1] [_inst_3 : NoMaxOrder.{u1} α (Preorder.toHasLt.{u1} α _inst_1)] (a : α), Not (Order.IsSuccLimit.{u1} α (Preorder.toHasLt.{u1} α _inst_1) (Order.succ.{u1} α _inst_1 _inst_2 a))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : SuccOrder.{u1} α _inst_1] [_inst_3 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)] (a : α), Not (Order.IsSuccLimit.{u1} α (Preorder.toLT.{u1} α _inst_1) (Order.succ.{u1} α _inst_1 _inst_2 a))
+Case conversion may be inaccurate. Consider using '#align order.not_is_succ_limit_succ Order.not_isSuccLimit_succₓ'. -/
 @[simp]
 theorem not_isSuccLimit_succ (a : α) : ¬IsSuccLimit (succ a) := fun h => h.succ_ne _ rfl
 #align order.not_is_succ_limit_succ Order.not_isSuccLimit_succ
--/
 
 end NoMaxOrder
 
@@ -126,7 +146,12 @@ section IsSuccArchimedean
 
 variable [IsSuccArchimedean α]
 
-#print Order.IsSuccLimit.isMin_of_noMax /-
+/- warning: order.is_succ_limit.is_min_of_no_max -> Order.IsSuccLimit.isMin_of_noMax is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} [_inst_2 : SuccOrder.{u1} α _inst_1] [_inst_3 : IsSuccArchimedean.{u1} α _inst_1 _inst_2] [_inst_4 : NoMaxOrder.{u1} α (Preorder.toHasLt.{u1} α _inst_1)], (Order.IsSuccLimit.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a) -> (IsMin.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} [_inst_2 : SuccOrder.{u1} α _inst_1] [_inst_3 : IsSuccArchimedean.{u1} α _inst_1 _inst_2] [_inst_4 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)], (Order.IsSuccLimit.{u1} α (Preorder.toLT.{u1} α _inst_1) a) -> (IsMin.{u1} α (Preorder.toLE.{u1} α _inst_1) a)
+Case conversion may be inaccurate. Consider using '#align order.is_succ_limit.is_min_of_no_max Order.IsSuccLimit.isMin_of_noMaxₓ'. -/
 theorem IsSuccLimit.isMin_of_noMax [NoMaxOrder α] (h : IsSuccLimit a) : IsMin a := fun b hb =>
   by
   rcases hb.exists_succ_iterate with ⟨_ | n, rfl⟩
@@ -134,19 +159,26 @@ theorem IsSuccLimit.isMin_of_noMax [NoMaxOrder α] (h : IsSuccLimit a) : IsMin a
   · rw [iterate_succ_apply'] at h
     exact (not_is_succ_limit_succ _ h).elim
 #align order.is_succ_limit.is_min_of_no_max Order.IsSuccLimit.isMin_of_noMax
--/
 
-#print Order.isSuccLimit_iff_of_noMax /-
+/- warning: order.is_succ_limit_iff_of_no_max -> Order.isSuccLimit_iff_of_noMax is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} [_inst_2 : SuccOrder.{u1} α _inst_1] [_inst_3 : IsSuccArchimedean.{u1} α _inst_1 _inst_2] [_inst_4 : NoMaxOrder.{u1} α (Preorder.toHasLt.{u1} α _inst_1)], Iff (Order.IsSuccLimit.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a) (IsMin.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} [_inst_2 : SuccOrder.{u1} α _inst_1] [_inst_3 : IsSuccArchimedean.{u1} α _inst_1 _inst_2] [_inst_4 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)], Iff (Order.IsSuccLimit.{u1} α (Preorder.toLT.{u1} α _inst_1) a) (IsMin.{u1} α (Preorder.toLE.{u1} α _inst_1) a)
+Case conversion may be inaccurate. Consider using '#align order.is_succ_limit_iff_of_no_max Order.isSuccLimit_iff_of_noMaxₓ'. -/
 @[simp]
 theorem isSuccLimit_iff_of_noMax [NoMaxOrder α] : IsSuccLimit a ↔ IsMin a :=
   ⟨IsSuccLimit.isMin_of_noMax, IsMin.isSuccLimit⟩
 #align order.is_succ_limit_iff_of_no_max Order.isSuccLimit_iff_of_noMax
--/
 
-#print Order.not_isSuccLimit_of_noMax /-
+/- warning: order.not_is_succ_limit_of_no_max -> Order.not_isSuccLimit_of_noMax is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} [_inst_2 : SuccOrder.{u1} α _inst_1] [_inst_3 : IsSuccArchimedean.{u1} α _inst_1 _inst_2] [_inst_4 : NoMinOrder.{u1} α (Preorder.toHasLt.{u1} α _inst_1)] [_inst_5 : NoMaxOrder.{u1} α (Preorder.toHasLt.{u1} α _inst_1)], Not (Order.IsSuccLimit.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} [_inst_2 : SuccOrder.{u1} α _inst_1] [_inst_3 : IsSuccArchimedean.{u1} α _inst_1 _inst_2] [_inst_4 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)] [_inst_5 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)], Not (Order.IsSuccLimit.{u1} α (Preorder.toLT.{u1} α _inst_1) a)
+Case conversion may be inaccurate. Consider using '#align order.not_is_succ_limit_of_no_max Order.not_isSuccLimit_of_noMaxₓ'. -/
 theorem not_isSuccLimit_of_noMax [NoMinOrder α] [NoMaxOrder α] : ¬IsSuccLimit a := by simp
 #align order.not_is_succ_limit_of_no_max Order.not_isSuccLimit_of_noMax
--/
 
 end IsSuccArchimedean
 
@@ -156,12 +188,21 @@ section PartialOrder
 
 variable [PartialOrder α] [SuccOrder α] {a b : α} {C : α → Sort _}
 
-#print Order.isSuccLimit_of_succ_ne /-
+/- warning: order.is_succ_limit_of_succ_ne -> Order.isSuccLimit_of_succ_ne is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α}, (forall (b : α), Ne.{succ u1} α (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 b) a) -> (Order.IsSuccLimit.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α}, (forall (b : α), Ne.{succ u1} α (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 b) a) -> (Order.IsSuccLimit.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)
+Case conversion may be inaccurate. Consider using '#align order.is_succ_limit_of_succ_ne Order.isSuccLimit_of_succ_neₓ'. -/
 theorem isSuccLimit_of_succ_ne (h : ∀ b, succ b ≠ a) : IsSuccLimit a := fun b hba => h b hba.succ_eq
 #align order.is_succ_limit_of_succ_ne Order.isSuccLimit_of_succ_ne
--/
 
-#print Order.not_isSuccLimit_iff /-
+/- warning: order.not_is_succ_limit_iff -> Order.not_isSuccLimit_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α}, Iff (Not (Order.IsSuccLimit.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)) (Exists.{succ u1} α (fun (b : α) => And (Not (IsMax.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) b)) (Eq.{succ u1} α (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 b) a)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α}, Iff (Not (Order.IsSuccLimit.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)) (Exists.{succ u1} α (fun (b : α) => And (Not (IsMax.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) b)) (Eq.{succ u1} α (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 b) a)))
+Case conversion may be inaccurate. Consider using '#align order.not_is_succ_limit_iff Order.not_isSuccLimit_iffₓ'. -/
 theorem not_isSuccLimit_iff : ¬IsSuccLimit a ↔ ∃ b, ¬IsMax b ∧ succ b = a :=
   by
   rw [not_is_succ_limit_iff_exists_covby]
@@ -169,9 +210,13 @@ theorem not_isSuccLimit_iff : ¬IsSuccLimit a ↔ ∃ b, ¬IsMax b ∧ succ b = 
   rintro ⟨h, rfl⟩
   exact covby_succ_of_not_is_max h
 #align order.not_is_succ_limit_iff Order.not_isSuccLimit_iff
--/
 
-#print Order.mem_range_succ_of_not_isSuccLimit /-
+/- warning: order.mem_range_succ_of_not_is_succ_limit -> Order.mem_range_succ_of_not_isSuccLimit is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α}, (Not (Order.IsSuccLimit.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a (Set.range.{u1, succ u1} α α (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α}, (Not (Order.IsSuccLimit.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a (Set.range.{u1, succ u1} α α (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2)))
+Case conversion may be inaccurate. Consider using '#align order.mem_range_succ_of_not_is_succ_limit Order.mem_range_succ_of_not_isSuccLimitₓ'. -/
 /-- See `not_is_succ_limit_iff` for a version that states that `a` is a successor of a value other
 than itself. -/
 theorem mem_range_succ_of_not_isSuccLimit (h : ¬IsSuccLimit a) : a ∈ range (@succ α _ _) :=
@@ -179,15 +224,23 @@ theorem mem_range_succ_of_not_isSuccLimit (h : ¬IsSuccLimit a) : a ∈ range (@
   cases' not_is_succ_limit_iff.1 h with b hb
   exact ⟨b, hb.2⟩
 #align order.mem_range_succ_of_not_is_succ_limit Order.mem_range_succ_of_not_isSuccLimit
--/
 
-#print Order.isSuccLimit_of_succ_lt /-
+/- warning: order.is_succ_limit_of_succ_lt -> Order.isSuccLimit_of_succ_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {b : α}, (forall (a : α), (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) b)) -> (Order.IsSuccLimit.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {b : α}, (forall (a : α), (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) b)) -> (Order.IsSuccLimit.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) b)
+Case conversion may be inaccurate. Consider using '#align order.is_succ_limit_of_succ_lt Order.isSuccLimit_of_succ_ltₓ'. -/
 theorem isSuccLimit_of_succ_lt (H : ∀ a < b, succ a < b) : IsSuccLimit b := fun a hab =>
   (H a hab.lt).Ne hab.succ_eq
 #align order.is_succ_limit_of_succ_lt Order.isSuccLimit_of_succ_lt
--/
 
-#print Order.IsSuccLimit.succ_lt /-
+/- warning: order.is_succ_limit.succ_lt -> Order.IsSuccLimit.succ_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α} {b : α}, (Order.IsSuccLimit.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) b) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α} {b : α}, (Order.IsSuccLimit.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) b) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) b)
+Case conversion may be inaccurate. Consider using '#align order.is_succ_limit.succ_lt Order.IsSuccLimit.succ_ltₓ'. -/
 theorem IsSuccLimit.succ_lt (hb : IsSuccLimit b) (ha : a < b) : succ a < b :=
   by
   by_cases h : IsMax a
@@ -197,21 +250,33 @@ theorem IsSuccLimit.succ_lt (hb : IsSuccLimit b) (ha : a < b) : succ a < b :=
     subst hab
     exact (h hb.is_max).elim
 #align order.is_succ_limit.succ_lt Order.IsSuccLimit.succ_lt
--/
 
-#print Order.IsSuccLimit.succ_lt_iff /-
+/- warning: order.is_succ_limit.succ_lt_iff -> Order.IsSuccLimit.succ_lt_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α} {b : α}, (Order.IsSuccLimit.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) b) -> (Iff (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) b) (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α} {b : α}, (Order.IsSuccLimit.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) b) -> (Iff (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) b) (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b))
+Case conversion may be inaccurate. Consider using '#align order.is_succ_limit.succ_lt_iff Order.IsSuccLimit.succ_lt_iffₓ'. -/
 theorem IsSuccLimit.succ_lt_iff (hb : IsSuccLimit b) : succ a < b ↔ a < b :=
   ⟨fun h => (le_succ a).trans_lt h, hb.succ_lt⟩
 #align order.is_succ_limit.succ_lt_iff Order.IsSuccLimit.succ_lt_iff
--/
 
-#print Order.isSuccLimit_iff_succ_lt /-
+/- warning: order.is_succ_limit_iff_succ_lt -> Order.isSuccLimit_iff_succ_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {b : α}, Iff (Order.IsSuccLimit.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) b) (forall (a : α), (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {b : α}, Iff (Order.IsSuccLimit.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) b) (forall (a : α), (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) b))
+Case conversion may be inaccurate. Consider using '#align order.is_succ_limit_iff_succ_lt Order.isSuccLimit_iff_succ_ltₓ'. -/
 theorem isSuccLimit_iff_succ_lt : IsSuccLimit b ↔ ∀ a < b, succ a < b :=
   ⟨fun hb a => hb.succ_lt, isSuccLimit_of_succ_lt⟩
 #align order.is_succ_limit_iff_succ_lt Order.isSuccLimit_iff_succ_lt
--/
 
-#print Order.isSuccLimitRecOn /-
+/- warning: order.is_succ_limit_rec_on -> Order.isSuccLimitRecOn is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {C : α -> Sort.{u2}} (b : α), (forall (a : α), (Not (IsMax.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)) -> (C (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a))) -> (forall (a : α), (Order.IsSuccLimit.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (C a)) -> (C b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {C : α -> Sort.{u2}} (b : α), (forall (a : α), (Not (IsMax.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)) -> (C (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a))) -> (forall (a : α), (Order.IsSuccLimit.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (C a)) -> (C b)
+Case conversion may be inaccurate. Consider using '#align order.is_succ_limit_rec_on Order.isSuccLimitRecOnₓ'. -/
 /-- A value can be built by building it on successors and successor limits. -/
 @[elab_as_elim]
 noncomputable def isSuccLimitRecOn (b : α) (hs : ∀ a, ¬IsMax a → C (succ a))
@@ -223,11 +288,10 @@ noncomputable def isSuccLimitRecOn (b : α) (hs : ∀ a, ¬IsMax a → C (succ a
     rw [← H.2]
     exact hs _ H.1
 #align order.is_succ_limit_rec_on Order.isSuccLimitRecOn
--/
 
 /- warning: order.is_succ_limit_rec_on_limit -> Order.isSuccLimitRecOn_limit is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {b : α} {C : α -> Sort.{u2}} (hs : forall (a : α), (Not (IsMax.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)) -> (C (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a))) (hl : forall (a : α), (Order.IsSuccLimit.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (C a)) (hb : Order.IsSuccLimit.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) b), Eq.{u2} (C b) (Order.isSuccLimitRecOn.{u1, u2} α _inst_1 _inst_2 C b hs hl) (hl b hb)
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {b : α} {C : α -> Sort.{u2}} (hs : forall (a : α), (Not (IsMax.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)) -> (C (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a))) (hl : forall (a : α), (Order.IsSuccLimit.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (C a)) (hb : Order.IsSuccLimit.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) b), Eq.{u2} (C b) (Order.isSuccLimitRecOn.{u1, u2} α _inst_1 _inst_2 C b hs hl) (hl b hb)
 but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : SuccOrder.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)] {b : α} {C : α -> Sort.{u1}} (hs : forall (a : α), (Not (IsMax.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) a)) -> (C (Order.succ.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1) _inst_2 a))) (hl : forall (a : α), (Order.IsSuccLimit.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) a) -> (C a)) (hb : Order.IsSuccLimit.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) b), Eq.{u1} (C b) (Order.isSuccLimitRecOn.{u2, u1} α _inst_1 _inst_2 C b hs hl) (hl b hb)
 Case conversion may be inaccurate. Consider using '#align order.is_succ_limit_rec_on_limit Order.isSuccLimitRecOn_limitₓ'. -/
@@ -238,7 +302,7 @@ theorem isSuccLimitRecOn_limit (hs : ∀ a, ¬IsMax a → C (succ a)) (hl : ∀ 
 
 /- warning: order.is_succ_limit_rec_on_succ' -> Order.isSuccLimitRecOn_succ' is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {C : α -> Sort.{u2}} (hs : forall (a : α), (Not (IsMax.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)) -> (C (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a))) (hl : forall (a : α), (Order.IsSuccLimit.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (C a)) {b : α} (hb : Not (IsMax.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) b)), Eq.{u2} (C (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 b)) (Order.isSuccLimitRecOn.{u1, u2} α _inst_1 _inst_2 C (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 b) hs hl) (hs b hb)
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {C : α -> Sort.{u2}} (hs : forall (a : α), (Not (IsMax.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)) -> (C (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a))) (hl : forall (a : α), (Order.IsSuccLimit.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (C a)) {b : α} (hb : Not (IsMax.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) b)), Eq.{u2} (C (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 b)) (Order.isSuccLimitRecOn.{u1, u2} α _inst_1 _inst_2 C (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 b) hs hl) (hs b hb)
 but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : SuccOrder.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)] {C : α -> Sort.{u1}} (hs : forall (a : α), (Not (IsMax.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) a)) -> (C (Order.succ.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1) _inst_2 a))) (hl : forall (a : α), (Order.IsSuccLimit.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) a) -> (C a)) {b : α} (hb : Not (IsMax.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) b)), Eq.{u1} (C (Order.succ.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1) _inst_2 b)) (Order.isSuccLimitRecOn.{u2, u1} α _inst_1 _inst_2 C (Order.succ.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1) _inst_2 b) hs hl) (hs b hb)
 Case conversion may be inaccurate. Consider using '#align order.is_succ_limit_rec_on_succ' Order.isSuccLimitRecOn_succ'ₓ'. -/
@@ -260,7 +324,7 @@ variable [NoMaxOrder α]
 
 /- warning: order.is_succ_limit_rec_on_succ -> Order.isSuccLimitRecOn_succ is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {C : α -> Sort.{u2}} [_inst_3 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] (hs : forall (a : α), (Not (IsMax.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)) -> (C (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a))) (hl : forall (a : α), (Order.IsSuccLimit.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (C a)) (b : α), Eq.{u2} (C (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 b)) (Order.isSuccLimitRecOn.{u1, u2} α _inst_1 _inst_2 C (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 b) hs hl) (hs b (not_isMax.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 b))
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {C : α -> Sort.{u2}} [_inst_3 : NoMaxOrder.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] (hs : forall (a : α), (Not (IsMax.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)) -> (C (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a))) (hl : forall (a : α), (Order.IsSuccLimit.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (C a)) (b : α), Eq.{u2} (C (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 b)) (Order.isSuccLimitRecOn.{u1, u2} α _inst_1 _inst_2 C (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 b) hs hl) (hs b (not_isMax.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 b))
 but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : SuccOrder.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)] {C : α -> Sort.{u1}} [_inst_3 : NoMaxOrder.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))] (hs : forall (a : α), (Not (IsMax.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) a)) -> (C (Order.succ.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1) _inst_2 a))) (hl : forall (a : α), (Order.IsSuccLimit.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) a) -> (C a)) (b : α), Eq.{u1} (C (Order.succ.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1) _inst_2 b)) (Order.isSuccLimitRecOn.{u2, u1} α _inst_1 _inst_2 C (Order.succ.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1) _inst_2 b) hs hl) (hs b (not_isMax.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1) _inst_3 b))
 Case conversion may be inaccurate. Consider using '#align order.is_succ_limit_rec_on_succ Order.isSuccLimitRecOn_succₓ'. -/
@@ -270,19 +334,27 @@ theorem isSuccLimitRecOn_succ (hs : ∀ a, ¬IsMax a → C (succ a)) (hl : ∀ a
   isSuccLimitRecOn_succ' _ _ _
 #align order.is_succ_limit_rec_on_succ Order.isSuccLimitRecOn_succ
 
-#print Order.isSuccLimit_iff_succ_ne /-
+/- warning: order.is_succ_limit_iff_succ_ne -> Order.isSuccLimit_iff_succ_ne is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α} [_inst_3 : NoMaxOrder.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))], Iff (Order.IsSuccLimit.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) (forall (b : α), Ne.{succ u1} α (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 b) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α} [_inst_3 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))], Iff (Order.IsSuccLimit.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) (forall (b : α), Ne.{succ u1} α (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 b) a)
+Case conversion may be inaccurate. Consider using '#align order.is_succ_limit_iff_succ_ne Order.isSuccLimit_iff_succ_neₓ'. -/
 theorem isSuccLimit_iff_succ_ne : IsSuccLimit a ↔ ∀ b, succ b ≠ a :=
   ⟨IsSuccLimit.succ_ne, isSuccLimit_of_succ_ne⟩
 #align order.is_succ_limit_iff_succ_ne Order.isSuccLimit_iff_succ_ne
--/
 
-#print Order.not_isSuccLimit_iff' /-
+/- warning: order.not_is_succ_limit_iff' -> Order.not_isSuccLimit_iff' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α} [_inst_3 : NoMaxOrder.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))], Iff (Not (Order.IsSuccLimit.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)) (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a (Set.range.{u1, succ u1} α α (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α} [_inst_3 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))], Iff (Not (Order.IsSuccLimit.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a (Set.range.{u1, succ u1} α α (Order.succ.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2)))
+Case conversion may be inaccurate. Consider using '#align order.not_is_succ_limit_iff' Order.not_isSuccLimit_iff'ₓ'. -/
 theorem not_isSuccLimit_iff' : ¬IsSuccLimit a ↔ a ∈ range (@succ α _ _) :=
   by
   simp_rw [is_succ_limit_iff_succ_ne, not_forall, not_ne_iff]
   rfl
 #align order.not_is_succ_limit_iff' Order.not_isSuccLimit_iff'
--/
 
 end NoMaxOrder
 
@@ -290,7 +362,12 @@ section IsSuccArchimedean
 
 variable [IsSuccArchimedean α]
 
-#print Order.IsSuccLimit.isMin /-
+/- warning: order.is_succ_limit.is_min -> Order.IsSuccLimit.isMin is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α} [_inst_3 : IsSuccArchimedean.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2], (Order.IsSuccLimit.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (IsMin.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α} [_inst_3 : IsSuccArchimedean.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2], (Order.IsSuccLimit.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (IsMin.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)
+Case conversion may be inaccurate. Consider using '#align order.is_succ_limit.is_min Order.IsSuccLimit.isMinₓ'. -/
 protected theorem IsSuccLimit.isMin (h : IsSuccLimit a) : IsMin a := fun b hb =>
   by
   revert h
@@ -299,19 +376,26 @@ protected theorem IsSuccLimit.isMin (h : IsSuccLimit a) : IsMin a := fun b hb =>
   rw [this] at hc⊢
   exact H hc
 #align order.is_succ_limit.is_min Order.IsSuccLimit.isMin
--/
 
-#print Order.isSuccLimit_iff /-
+/- warning: order.is_succ_limit_iff -> Order.isSuccLimit_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α} [_inst_3 : IsSuccArchimedean.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2], Iff (Order.IsSuccLimit.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) (IsMin.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α} [_inst_3 : IsSuccArchimedean.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2], Iff (Order.IsSuccLimit.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) (IsMin.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)
+Case conversion may be inaccurate. Consider using '#align order.is_succ_limit_iff Order.isSuccLimit_iffₓ'. -/
 @[simp]
 theorem isSuccLimit_iff : IsSuccLimit a ↔ IsMin a :=
   ⟨IsSuccLimit.isMin, IsMin.isSuccLimit⟩
 #align order.is_succ_limit_iff Order.isSuccLimit_iff
--/
 
-#print Order.not_isSuccLimit /-
+/- warning: order.not_is_succ_limit -> Order.not_isSuccLimit is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α} [_inst_3 : IsSuccArchimedean.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2] [_inst_4 : NoMinOrder.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))], Not (Order.IsSuccLimit.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : SuccOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α} [_inst_3 : IsSuccArchimedean.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2] [_inst_4 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))], Not (Order.IsSuccLimit.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)
+Case conversion may be inaccurate. Consider using '#align order.not_is_succ_limit Order.not_isSuccLimitₓ'. -/
 theorem not_isSuccLimit [NoMinOrder α] : ¬IsSuccLimit a := by simp
 #align order.not_is_succ_limit Order.not_isSuccLimit
--/
 
 end IsSuccArchimedean
 
@@ -371,15 +455,19 @@ section Preorder
 
 variable [Preorder α] {a : α}
 
-#print IsMax.isPredLimit /-
+/- warning: is_max.is_pred_limit -> IsMax.isPredLimit is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α}, (IsMax.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a) -> (Order.IsPredLimit.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α}, (IsMax.{u1} α (Preorder.toLE.{u1} α _inst_1) a) -> (Order.IsPredLimit.{u1} α (Preorder.toLT.{u1} α _inst_1) a)
+Case conversion may be inaccurate. Consider using '#align is_max.is_pred_limit IsMax.isPredLimitₓ'. -/
 protected theorem IsMax.isPredLimit : IsMax a → IsPredLimit a := fun h b hab =>
   not_isMax_of_lt hab.lt h
 #align is_max.is_pred_limit IsMax.isPredLimit
--/
 
 /- warning: order.is_pred_limit_top -> Order.isPredLimit_top is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α _inst_1)], Order.IsPredLimit.{u1} α (Preorder.toLT.{u1} α _inst_1) (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toHasLe.{u1} α _inst_1)], Order.IsPredLimit.{u1} α (Preorder.toHasLt.{u1} α _inst_1) (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toHasLe.{u1} α _inst_1) _inst_2))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α _inst_1)], Order.IsPredLimit.{u1} α (Preorder.toLT.{u1} α _inst_1) (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2))
 Case conversion may be inaccurate. Consider using '#align order.is_pred_limit_top Order.isPredLimit_topₓ'. -/
@@ -389,39 +477,55 @@ theorem isPredLimit_top [OrderTop α] : IsPredLimit (⊤ : α) :=
 
 variable [PredOrder α]
 
-#print Order.IsPredLimit.isMin /-
+/- warning: order.is_pred_limit.is_min -> Order.IsPredLimit.isMin is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} [_inst_2 : PredOrder.{u1} α _inst_1], (Order.IsPredLimit.{u1} α (Preorder.toHasLt.{u1} α _inst_1) (Order.pred.{u1} α _inst_1 _inst_2 a)) -> (IsMin.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} [_inst_2 : PredOrder.{u1} α _inst_1], (Order.IsPredLimit.{u1} α (Preorder.toLT.{u1} α _inst_1) (Order.pred.{u1} α _inst_1 _inst_2 a)) -> (IsMin.{u1} α (Preorder.toLE.{u1} α _inst_1) a)
+Case conversion may be inaccurate. Consider using '#align order.is_pred_limit.is_min Order.IsPredLimit.isMinₓ'. -/
 protected theorem IsPredLimit.isMin (h : IsPredLimit (pred a)) : IsMin a :=
   by
   by_contra H
   exact h a (pred_covby_of_not_is_min H)
 #align order.is_pred_limit.is_min Order.IsPredLimit.isMin
--/
 
-#print Order.not_isPredLimit_pred_of_not_isMin /-
+/- warning: order.not_is_pred_limit_pred_of_not_is_min -> Order.not_isPredLimit_pred_of_not_isMin is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} [_inst_2 : PredOrder.{u1} α _inst_1], (Not (IsMin.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a)) -> (Not (Order.IsPredLimit.{u1} α (Preorder.toHasLt.{u1} α _inst_1) (Order.pred.{u1} α _inst_1 _inst_2 a)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} [_inst_2 : PredOrder.{u1} α _inst_1], (Not (IsMin.{u1} α (Preorder.toLE.{u1} α _inst_1) a)) -> (Not (Order.IsPredLimit.{u1} α (Preorder.toLT.{u1} α _inst_1) (Order.pred.{u1} α _inst_1 _inst_2 a)))
+Case conversion may be inaccurate. Consider using '#align order.not_is_pred_limit_pred_of_not_is_min Order.not_isPredLimit_pred_of_not_isMinₓ'. -/
 theorem not_isPredLimit_pred_of_not_isMin (ha : ¬IsMin a) : ¬IsPredLimit (pred a) :=
   by
   contrapose! ha
   exact ha.is_min
 #align order.not_is_pred_limit_pred_of_not_is_min Order.not_isPredLimit_pred_of_not_isMin
--/
 
 section NoMinOrder
 
 variable [NoMinOrder α]
 
-#print Order.IsPredLimit.pred_ne /-
+/- warning: order.is_pred_limit.pred_ne -> Order.IsPredLimit.pred_ne is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} [_inst_2 : PredOrder.{u1} α _inst_1] [_inst_3 : NoMinOrder.{u1} α (Preorder.toHasLt.{u1} α _inst_1)], (Order.IsPredLimit.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a) -> (forall (b : α), Ne.{succ u1} α (Order.pred.{u1} α _inst_1 _inst_2 b) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} [_inst_2 : PredOrder.{u1} α _inst_1] [_inst_3 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)], (Order.IsPredLimit.{u1} α (Preorder.toLT.{u1} α _inst_1) a) -> (forall (b : α), Ne.{succ u1} α (Order.pred.{u1} α _inst_1 _inst_2 b) a)
+Case conversion may be inaccurate. Consider using '#align order.is_pred_limit.pred_ne Order.IsPredLimit.pred_neₓ'. -/
 theorem IsPredLimit.pred_ne (h : IsPredLimit a) (b : α) : pred b ≠ a :=
   by
   rintro rfl
   exact not_isMin _ h.is_min
 #align order.is_pred_limit.pred_ne Order.IsPredLimit.pred_ne
--/
 
-#print Order.not_isPredLimit_pred /-
+/- warning: order.not_is_pred_limit_pred -> Order.not_isPredLimit_pred is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : PredOrder.{u1} α _inst_1] [_inst_3 : NoMinOrder.{u1} α (Preorder.toHasLt.{u1} α _inst_1)] (a : α), Not (Order.IsPredLimit.{u1} α (Preorder.toHasLt.{u1} α _inst_1) (Order.pred.{u1} α _inst_1 _inst_2 a))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : PredOrder.{u1} α _inst_1] [_inst_3 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)] (a : α), Not (Order.IsPredLimit.{u1} α (Preorder.toLT.{u1} α _inst_1) (Order.pred.{u1} α _inst_1 _inst_2 a))
+Case conversion may be inaccurate. Consider using '#align order.not_is_pred_limit_pred Order.not_isPredLimit_predₓ'. -/
 @[simp]
 theorem not_isPredLimit_pred (a : α) : ¬IsPredLimit (pred a) := fun h => h.pred_ne _ rfl
 #align order.not_is_pred_limit_pred Order.not_isPredLimit_pred
--/
 
 end NoMinOrder
 
@@ -429,23 +533,35 @@ section IsPredArchimedean
 
 variable [IsPredArchimedean α]
 
-#print Order.IsPredLimit.isMax_of_noMin /-
+/- warning: order.is_pred_limit.is_max_of_no_min -> Order.IsPredLimit.isMax_of_noMin is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} [_inst_2 : PredOrder.{u1} α _inst_1] [_inst_3 : IsPredArchimedean.{u1} α _inst_1 _inst_2] [_inst_4 : NoMinOrder.{u1} α (Preorder.toHasLt.{u1} α _inst_1)], (Order.IsPredLimit.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a) -> (IsMax.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} [_inst_2 : PredOrder.{u1} α _inst_1] [_inst_3 : IsPredArchimedean.{u1} α _inst_1 _inst_2] [_inst_4 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)], (Order.IsPredLimit.{u1} α (Preorder.toLT.{u1} α _inst_1) a) -> (IsMax.{u1} α (Preorder.toLE.{u1} α _inst_1) a)
+Case conversion may be inaccurate. Consider using '#align order.is_pred_limit.is_max_of_no_min Order.IsPredLimit.isMax_of_noMinₓ'. -/
 protected theorem IsPredLimit.isMax_of_noMin [NoMinOrder α] (h : IsPredLimit a) : IsMax a :=
   h.dual.isMin_of_noMax
 #align order.is_pred_limit.is_max_of_no_min Order.IsPredLimit.isMax_of_noMin
--/
 
-#print Order.isPredLimit_iff_of_noMin /-
+/- warning: order.is_pred_limit_iff_of_no_min -> Order.isPredLimit_iff_of_noMin is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} [_inst_2 : PredOrder.{u1} α _inst_1] [_inst_3 : IsPredArchimedean.{u1} α _inst_1 _inst_2] [_inst_4 : NoMinOrder.{u1} α (Preorder.toHasLt.{u1} α _inst_1)], Iff (Order.IsPredLimit.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a) (IsMax.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} [_inst_2 : PredOrder.{u1} α _inst_1] [_inst_3 : IsPredArchimedean.{u1} α _inst_1 _inst_2] [_inst_4 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)], Iff (Order.IsPredLimit.{u1} α (Preorder.toLT.{u1} α _inst_1) a) (IsMax.{u1} α (Preorder.toLE.{u1} α _inst_1) a)
+Case conversion may be inaccurate. Consider using '#align order.is_pred_limit_iff_of_no_min Order.isPredLimit_iff_of_noMinₓ'. -/
 @[simp]
 theorem isPredLimit_iff_of_noMin [NoMinOrder α] : IsPredLimit a ↔ IsMax a :=
   isSuccLimit_toDual_iff.symm.trans isSuccLimit_iff_of_noMax
 #align order.is_pred_limit_iff_of_no_min Order.isPredLimit_iff_of_noMin
--/
 
-#print Order.not_isPredLimit_of_noMin /-
+/- warning: order.not_is_pred_limit_of_no_min -> Order.not_isPredLimit_of_noMin is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} [_inst_2 : PredOrder.{u1} α _inst_1] [_inst_3 : IsPredArchimedean.{u1} α _inst_1 _inst_2] [_inst_4 : NoMinOrder.{u1} α (Preorder.toHasLt.{u1} α _inst_1)] [_inst_5 : NoMaxOrder.{u1} α (Preorder.toHasLt.{u1} α _inst_1)], Not (Order.IsPredLimit.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} [_inst_2 : PredOrder.{u1} α _inst_1] [_inst_3 : IsPredArchimedean.{u1} α _inst_1 _inst_2] [_inst_4 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)] [_inst_5 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α _inst_1)], Not (Order.IsPredLimit.{u1} α (Preorder.toLT.{u1} α _inst_1) a)
+Case conversion may be inaccurate. Consider using '#align order.not_is_pred_limit_of_no_min Order.not_isPredLimit_of_noMinₓ'. -/
 theorem not_isPredLimit_of_noMin [NoMinOrder α] [NoMaxOrder α] : ¬IsPredLimit a := by simp
 #align order.not_is_pred_limit_of_no_min Order.not_isPredLimit_of_noMin
--/
 
 end IsPredArchimedean
 
@@ -455,20 +571,33 @@ section PartialOrder
 
 variable [PartialOrder α] [PredOrder α] {a b : α} {C : α → Sort _}
 
-#print Order.isPredLimit_of_pred_ne /-
+/- warning: order.is_pred_limit_of_pred_ne -> Order.isPredLimit_of_pred_ne is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α}, (forall (b : α), Ne.{succ u1} α (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 b) a) -> (Order.IsPredLimit.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α}, (forall (b : α), Ne.{succ u1} α (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 b) a) -> (Order.IsPredLimit.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)
+Case conversion may be inaccurate. Consider using '#align order.is_pred_limit_of_pred_ne Order.isPredLimit_of_pred_neₓ'. -/
 theorem isPredLimit_of_pred_ne (h : ∀ b, pred b ≠ a) : IsPredLimit a := fun b hba => h b hba.pred_eq
 #align order.is_pred_limit_of_pred_ne Order.isPredLimit_of_pred_ne
--/
 
-#print Order.not_isPredLimit_iff /-
+/- warning: order.not_is_pred_limit_iff -> Order.not_isPredLimit_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α}, Iff (Not (Order.IsPredLimit.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)) (Exists.{succ u1} α (fun (b : α) => And (Not (IsMin.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) b)) (Eq.{succ u1} α (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 b) a)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α}, Iff (Not (Order.IsPredLimit.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)) (Exists.{succ u1} α (fun (b : α) => And (Not (IsMin.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) b)) (Eq.{succ u1} α (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 b) a)))
+Case conversion may be inaccurate. Consider using '#align order.not_is_pred_limit_iff Order.not_isPredLimit_iffₓ'. -/
 theorem not_isPredLimit_iff : ¬IsPredLimit a ↔ ∃ b, ¬IsMin b ∧ pred b = a :=
   by
   rw [← is_succ_limit_to_dual_iff]
   exact not_is_succ_limit_iff
 #align order.not_is_pred_limit_iff Order.not_isPredLimit_iff
--/
 
-#print Order.mem_range_pred_of_not_isPredLimit /-
+/- warning: order.mem_range_pred_of_not_is_pred_limit -> Order.mem_range_pred_of_not_isPredLimit is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α}, (Not (Order.IsPredLimit.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) a (Set.range.{u1, succ u1} α α (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α}, (Not (Order.IsPredLimit.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a (Set.range.{u1, succ u1} α α (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2)))
+Case conversion may be inaccurate. Consider using '#align order.mem_range_pred_of_not_is_pred_limit Order.mem_range_pred_of_not_isPredLimitₓ'. -/
 /-- See `not_is_pred_limit_iff` for a version that states that `a` is a successor of a value other
 than itself. -/
 theorem mem_range_pred_of_not_isPredLimit (h : ¬IsPredLimit a) : a ∈ range (@pred α _ _) :=
@@ -476,44 +605,63 @@ theorem mem_range_pred_of_not_isPredLimit (h : ¬IsPredLimit a) : a ∈ range (@
   cases' not_is_pred_limit_iff.1 h with b hb
   exact ⟨b, hb.2⟩
 #align order.mem_range_pred_of_not_is_pred_limit Order.mem_range_pred_of_not_isPredLimit
--/
 
-#print Order.isPredLimit_of_pred_lt /-
+/- warning: order.is_pred_limit_of_pred_lt -> Order.isPredLimit_of_pred_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {b : α}, (forall (a : α), (GT.gt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) b)) -> (Order.IsPredLimit.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {b : α}, (forall (a : α), (GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a) b)) -> (Order.IsPredLimit.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) b)
+Case conversion may be inaccurate. Consider using '#align order.is_pred_limit_of_pred_lt Order.isPredLimit_of_pred_ltₓ'. -/
 theorem isPredLimit_of_pred_lt (H : ∀ a > b, pred a < b) : IsPredLimit b := fun a hab =>
   (H a hab.lt).Ne hab.pred_eq
 #align order.is_pred_limit_of_pred_lt Order.isPredLimit_of_pred_lt
--/
 
-#print Order.IsPredLimit.lt_pred /-
+/- warning: order.is_pred_limit.lt_pred -> Order.IsPredLimit.lt_pred is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α} {b : α}, (Order.IsPredLimit.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α} {b : α}, (Order.IsPredLimit.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 b))
+Case conversion may be inaccurate. Consider using '#align order.is_pred_limit.lt_pred Order.IsPredLimit.lt_predₓ'. -/
 theorem IsPredLimit.lt_pred (h : IsPredLimit a) : a < b → a < pred b :=
   h.dual.succ_lt
 #align order.is_pred_limit.lt_pred Order.IsPredLimit.lt_pred
--/
 
-#print Order.IsPredLimit.lt_pred_iff /-
+/- warning: order.is_pred_limit.lt_pred_iff -> Order.IsPredLimit.lt_pred_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α} {b : α}, (Order.IsPredLimit.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (Iff (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 b)) (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α} {b : α}, (Order.IsPredLimit.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (Iff (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 b)) (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b))
+Case conversion may be inaccurate. Consider using '#align order.is_pred_limit.lt_pred_iff Order.IsPredLimit.lt_pred_iffₓ'. -/
 theorem IsPredLimit.lt_pred_iff (h : IsPredLimit a) : a < pred b ↔ a < b :=
   h.dual.succ_lt_iff
 #align order.is_pred_limit.lt_pred_iff Order.IsPredLimit.lt_pred_iff
--/
 
-#print Order.isPredLimit_iff_lt_pred /-
+/- warning: order.is_pred_limit_iff_lt_pred -> Order.isPredLimit_iff_lt_pred is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α}, Iff (Order.IsPredLimit.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) (forall {{b : α}}, (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) -> (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 b)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α}, Iff (Order.IsPredLimit.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) (forall {{b : α}}, (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 b)))
+Case conversion may be inaccurate. Consider using '#align order.is_pred_limit_iff_lt_pred Order.isPredLimit_iff_lt_predₓ'. -/
 theorem isPredLimit_iff_lt_pred : IsPredLimit a ↔ ∀ ⦃b⦄, a < b → a < pred b :=
   isSuccLimit_toDual_iff.symm.trans isSuccLimit_iff_succ_lt
 #align order.is_pred_limit_iff_lt_pred Order.isPredLimit_iff_lt_pred
--/
 
-#print Order.isPredLimitRecOn /-
+/- warning: order.is_pred_limit_rec_on -> Order.isPredLimitRecOn is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {C : α -> Sort.{u2}} (b : α), (forall (a : α), (Not (IsMin.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)) -> (C (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a))) -> (forall (a : α), (Order.IsPredLimit.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (C a)) -> (C b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {C : α -> Sort.{u2}} (b : α), (forall (a : α), (Not (IsMin.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)) -> (C (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a))) -> (forall (a : α), (Order.IsPredLimit.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (C a)) -> (C b)
+Case conversion may be inaccurate. Consider using '#align order.is_pred_limit_rec_on Order.isPredLimitRecOnₓ'. -/
 /-- A value can be built by building it on predecessors and predecessor limits. -/
 @[elab_as_elim]
 noncomputable def isPredLimitRecOn (b : α) (hs : ∀ a, ¬IsMin a → C (pred a))
     (hl : ∀ a, IsPredLimit a → C a) : C b :=
   @isSuccLimitRecOn αᵒᵈ _ _ _ _ hs fun a ha => hl _ ha.dual
 #align order.is_pred_limit_rec_on Order.isPredLimitRecOn
--/
 
 /- warning: order.is_pred_limit_rec_on_limit -> Order.isPredLimitRecOn_limit is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {b : α} {C : α -> Sort.{u2}} (hs : forall (a : α), (Not (IsMin.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)) -> (C (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a))) (hl : forall (a : α), (Order.IsPredLimit.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (C a)) (hb : Order.IsPredLimit.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) b), Eq.{u2} (C b) (Order.isPredLimitRecOn.{u1, u2} α _inst_1 _inst_2 C b hs hl) (hl b hb)
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {b : α} {C : α -> Sort.{u2}} (hs : forall (a : α), (Not (IsMin.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)) -> (C (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a))) (hl : forall (a : α), (Order.IsPredLimit.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (C a)) (hb : Order.IsPredLimit.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) b), Eq.{u2} (C b) (Order.isPredLimitRecOn.{u1, u2} α _inst_1 _inst_2 C b hs hl) (hl b hb)
 but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : PredOrder.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)] {b : α} {C : α -> Sort.{u1}} (hs : forall (a : α), (Not (IsMin.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) a)) -> (C (Order.pred.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1) _inst_2 a))) (hl : forall (a : α), (Order.IsPredLimit.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) a) -> (C a)) (hb : Order.IsPredLimit.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) b), Eq.{u1} (C b) (Order.isPredLimitRecOn.{u2, u1} α _inst_1 _inst_2 C b hs hl) (hl b hb)
 Case conversion may be inaccurate. Consider using '#align order.is_pred_limit_rec_on_limit Order.isPredLimitRecOn_limitₓ'. -/
@@ -524,7 +672,7 @@ theorem isPredLimitRecOn_limit (hs : ∀ a, ¬IsMin a → C (pred a)) (hl : ∀ 
 
 /- warning: order.is_pred_limit_rec_on_pred' -> Order.isPredLimitRecOn_pred' is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {C : α -> Sort.{u2}} (hs : forall (a : α), (Not (IsMin.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)) -> (C (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a))) (hl : forall (a : α), (Order.IsPredLimit.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (C a)) {b : α} (hb : Not (IsMin.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) b)), Eq.{u2} (C (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 b)) (Order.isPredLimitRecOn.{u1, u2} α _inst_1 _inst_2 C (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 b) hs hl) (hs b hb)
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {C : α -> Sort.{u2}} (hs : forall (a : α), (Not (IsMin.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)) -> (C (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a))) (hl : forall (a : α), (Order.IsPredLimit.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (C a)) {b : α} (hb : Not (IsMin.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) b)), Eq.{u2} (C (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 b)) (Order.isPredLimitRecOn.{u1, u2} α _inst_1 _inst_2 C (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 b) hs hl) (hs b hb)
 but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : PredOrder.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)] {C : α -> Sort.{u1}} (hs : forall (a : α), (Not (IsMin.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) a)) -> (C (Order.pred.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1) _inst_2 a))) (hl : forall (a : α), (Order.IsPredLimit.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) a) -> (C a)) {b : α} (hb : Not (IsMin.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) b)), Eq.{u1} (C (Order.pred.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1) _inst_2 b)) (Order.isPredLimitRecOn.{u2, u1} α _inst_1 _inst_2 C (Order.pred.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1) _inst_2 b) hs hl) (hs b hb)
 Case conversion may be inaccurate. Consider using '#align order.is_pred_limit_rec_on_pred' Order.isPredLimitRecOn_pred'ₓ'. -/
@@ -539,7 +687,7 @@ variable [NoMinOrder α]
 
 /- warning: order.is_pred_limit_rec_on_pred -> Order.isPredLimitRecOn_pred is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {C : α -> Sort.{u2}} [_inst_3 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] (hs : forall (a : α), (Not (IsMin.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)) -> (C (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a))) (hl : forall (a : α), (Order.IsPredLimit.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (C a)) (b : α), Eq.{u2} (C (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 b)) (Order.isPredLimitRecOn.{u1, u2} α _inst_1 _inst_2 C (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 b) hs hl) (hs b (not_isMin.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 b))
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {C : α -> Sort.{u2}} [_inst_3 : NoMinOrder.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] (hs : forall (a : α), (Not (IsMin.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)) -> (C (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 a))) (hl : forall (a : α), (Order.IsPredLimit.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (C a)) (b : α), Eq.{u2} (C (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 b)) (Order.isPredLimitRecOn.{u1, u2} α _inst_1 _inst_2 C (Order.pred.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2 b) hs hl) (hs b (not_isMin.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 b))
 but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : PredOrder.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)] {C : α -> Sort.{u1}} [_inst_3 : NoMinOrder.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1))] (hs : forall (a : α), (Not (IsMin.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) a)) -> (C (Order.pred.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1) _inst_2 a))) (hl : forall (a : α), (Order.IsPredLimit.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) a) -> (C a)) (b : α), Eq.{u1} (C (Order.pred.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1) _inst_2 b)) (Order.isPredLimitRecOn.{u2, u1} α _inst_1 _inst_2 C (Order.pred.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1) _inst_2 b) hs hl) (hs b (not_isMin.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1) _inst_3 b))
 Case conversion may be inaccurate. Consider using '#align order.is_pred_limit_rec_on_pred Order.isPredLimitRecOn_predₓ'. -/
@@ -555,23 +703,35 @@ section IsPredArchimedean
 
 variable [IsPredArchimedean α]
 
-#print Order.IsPredLimit.isMax /-
+/- warning: order.is_pred_limit.is_max -> Order.IsPredLimit.isMax is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α} [_inst_3 : IsPredArchimedean.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2], (Order.IsPredLimit.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (IsMax.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α} [_inst_3 : IsPredArchimedean.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2], (Order.IsPredLimit.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) -> (IsMax.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)
+Case conversion may be inaccurate. Consider using '#align order.is_pred_limit.is_max Order.IsPredLimit.isMaxₓ'. -/
 protected theorem IsPredLimit.isMax (h : IsPredLimit a) : IsMax a :=
   h.dual.IsMin
 #align order.is_pred_limit.is_max Order.IsPredLimit.isMax
--/
 
-#print Order.isPredLimit_iff /-
+/- warning: order.is_pred_limit_iff -> Order.isPredLimit_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α} [_inst_3 : IsPredArchimedean.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2], Iff (Order.IsPredLimit.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) (IsMax.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α} [_inst_3 : IsPredArchimedean.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2], Iff (Order.IsPredLimit.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a) (IsMax.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)
+Case conversion may be inaccurate. Consider using '#align order.is_pred_limit_iff Order.isPredLimit_iffₓ'. -/
 @[simp]
 theorem isPredLimit_iff : IsPredLimit a ↔ IsMax a :=
   isSuccLimit_toDual_iff.symm.trans isSuccLimit_iff
 #align order.is_pred_limit_iff Order.isPredLimit_iff
--/
 
-#print Order.not_isPredLimit /-
+/- warning: order.not_is_pred_limit -> Order.not_isPredLimit is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α} [_inst_3 : IsPredArchimedean.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2] [_inst_4 : NoMaxOrder.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))], Not (Order.IsPredLimit.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : PredOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] {a : α} [_inst_3 : IsPredArchimedean.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) _inst_2] [_inst_4 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))], Not (Order.IsPredLimit.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)
+Case conversion may be inaccurate. Consider using '#align order.not_is_pred_limit Order.not_isPredLimitₓ'. -/
 theorem not_isPredLimit [NoMaxOrder α] : ¬IsPredLimit a := by simp
 #align order.not_is_pred_limit Order.not_isPredLimit
--/
 
 end IsPredArchimedean
 

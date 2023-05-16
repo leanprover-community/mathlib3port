@@ -30,7 +30,12 @@ namespace IsNoetherian
 
 variable {K : Type u} {V : Type v} [DivisionRing K] [AddCommGroup V] [Module K V]
 
-#print IsNoetherian.iff_rank_lt_aleph0 /-
+/- warning: is_noetherian.iff_rank_lt_aleph_0 -> IsNoetherian.iff_rank_lt_aleph0 is a dubious translation:
+lean 3 declaration is
+  forall {K : Type.{u1}} {V : Type.{u2}} [_inst_1 : DivisionRing.{u1} K] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} K V (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)], Iff (IsNoetherian.{u1, u2} K V (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3) (LT.lt.{succ u2} Cardinal.{u2} (Preorder.toHasLt.{succ u2} Cardinal.{u2} (PartialOrder.toPreorder.{succ u2} Cardinal.{u2} Cardinal.partialOrder.{u2})) (Module.rank.{u1, u2} K V (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3) Cardinal.aleph0.{u2})
+but is expected to have type
+  forall {K : Type.{u1}} {V : Type.{u2}} [_inst_1 : DivisionRing.{u1} K] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} K V (DivisionSemiring.toSemiring.{u1} K (DivisionRing.toDivisionSemiring.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)], Iff (IsNoetherian.{u1, u2} K V (DivisionSemiring.toSemiring.{u1} K (DivisionRing.toDivisionSemiring.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3) (LT.lt.{succ u2} Cardinal.{u2} (Preorder.toLT.{succ u2} Cardinal.{u2} (PartialOrder.toPreorder.{succ u2} Cardinal.{u2} Cardinal.partialOrder.{u2})) (Module.rank.{u1, u2} K V (DivisionSemiring.toSemiring.{u1} K (DivisionRing.toDivisionSemiring.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3) Cardinal.aleph0.{u2})
+Case conversion may be inaccurate. Consider using '#align is_noetherian.iff_rank_lt_aleph_0 IsNoetherian.iff_rank_lt_aleph0ₓ'. -/
 /-- A module over a division ring is noetherian if and only if
 its dimension (as a cardinal) is strictly less than the first infinite cardinal `ℵ₀`.
 -/
@@ -48,17 +53,20 @@ theorem iff_rank_lt_aleph0 : IsNoetherian K V ↔ Module.rank K V < ℵ₀ :=
     refine' isNoetherian_of_fg_of_noetherian _ ⟨Set.Finite.toFinset hbfinite, _⟩
     rw [Set.Finite.coe_toFinset, ← b.span_eq, Basis.coe_ofVectorSpace, Subtype.range_coe]
 #align is_noetherian.iff_rank_lt_aleph_0 IsNoetherian.iff_rank_lt_aleph0
--/
 
 variable (K V)
 
-#print IsNoetherian.rank_lt_aleph0 /-
+/- warning: is_noetherian.rank_lt_aleph_0 -> IsNoetherian.rank_lt_aleph0 is a dubious translation:
+lean 3 declaration is
+  forall (K : Type.{u1}) (V : Type.{u2}) [_inst_1 : DivisionRing.{u1} K] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} K V (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)] [_inst_4 : IsNoetherian.{u1, u2} K V (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3], LT.lt.{succ u2} Cardinal.{u2} (Preorder.toHasLt.{succ u2} Cardinal.{u2} (PartialOrder.toPreorder.{succ u2} Cardinal.{u2} Cardinal.partialOrder.{u2})) (Module.rank.{u1, u2} K V (Ring.toSemiring.{u1} K (DivisionRing.toRing.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3) Cardinal.aleph0.{u2}
+but is expected to have type
+  forall (K : Type.{u1}) (V : Type.{u2}) [_inst_1 : DivisionRing.{u1} K] [_inst_2 : AddCommGroup.{u2} V] [_inst_3 : Module.{u1, u2} K V (DivisionSemiring.toSemiring.{u1} K (DivisionRing.toDivisionSemiring.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2)] [_inst_4 : IsNoetherian.{u1, u2} K V (DivisionSemiring.toSemiring.{u1} K (DivisionRing.toDivisionSemiring.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3], LT.lt.{succ u2} Cardinal.{u2} (Preorder.toLT.{succ u2} Cardinal.{u2} (PartialOrder.toPreorder.{succ u2} Cardinal.{u2} Cardinal.partialOrder.{u2})) (Module.rank.{u1, u2} K V (DivisionSemiring.toSemiring.{u1} K (DivisionRing.toDivisionSemiring.{u1} K _inst_1)) (AddCommGroup.toAddCommMonoid.{u2} V _inst_2) _inst_3) Cardinal.aleph0.{u2}
+Case conversion may be inaccurate. Consider using '#align is_noetherian.rank_lt_aleph_0 IsNoetherian.rank_lt_aleph0ₓ'. -/
 /-- The dimension of a noetherian module over a division ring, as a cardinal,
 is strictly less than the first infinite cardinal `ℵ₀`. -/
 theorem rank_lt_aleph0 : ∀ [IsNoetherian K V], Module.rank K V < ℵ₀ :=
   IsNoetherian.iff_rank_lt_aleph0.1
 #align is_noetherian.rank_lt_aleph_0 IsNoetherian.rank_lt_aleph0
--/
 
 variable {K V}
 

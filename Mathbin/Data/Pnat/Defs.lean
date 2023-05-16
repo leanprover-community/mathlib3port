@@ -156,19 +156,27 @@ theorem mk_lt_mk (n k : ℕ) (hn : 0 < n) (hk : 0 < k) : (⟨n, hn⟩ : ℕ+) < 
 #align pnat.mk_lt_mk PNat.mk_lt_mk
 -/
 
-#print PNat.coe_le_coe /-
+/- warning: pnat.coe_le_coe -> PNat.coe_le_coe is a dubious translation:
+lean 3 declaration is
+  forall (n : PNat) (k : PNat), Iff (LE.le.{0} Nat Nat.hasLe ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) n) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) k)) (LE.le.{0} PNat (Preorder.toHasLe.{0} PNat (PartialOrder.toPreorder.{0} PNat (LinearOrder.toPartialOrder.{0} PNat PNat.linearOrder))) n k)
+but is expected to have type
+  forall (n : PNat) (k : PNat), Iff (LE.le.{0} Nat instLENat (PNat.val n) (PNat.val k)) (LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (LinearOrder.toPartialOrder.{0} PNat instPNatLinearOrder))) n k)
+Case conversion may be inaccurate. Consider using '#align pnat.coe_le_coe PNat.coe_le_coeₓ'. -/
 @[simp, norm_cast]
 theorem coe_le_coe (n k : ℕ+) : (n : ℕ) ≤ k ↔ n ≤ k :=
   Iff.rfl
 #align pnat.coe_le_coe PNat.coe_le_coe
--/
 
-#print PNat.coe_lt_coe /-
+/- warning: pnat.coe_lt_coe -> PNat.coe_lt_coe is a dubious translation:
+lean 3 declaration is
+  forall (n : PNat) (k : PNat), Iff (LT.lt.{0} Nat Nat.hasLt ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) n) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) k)) (LT.lt.{0} PNat (Preorder.toHasLt.{0} PNat (PartialOrder.toPreorder.{0} PNat (LinearOrder.toPartialOrder.{0} PNat PNat.linearOrder))) n k)
+but is expected to have type
+  forall (n : PNat) (k : PNat), Iff (LT.lt.{0} Nat instLTNat (PNat.val n) (PNat.val k)) (LT.lt.{0} PNat (Preorder.toLT.{0} PNat (PartialOrder.toPreorder.{0} PNat (LinearOrder.toPartialOrder.{0} PNat instPNatLinearOrder))) n k)
+Case conversion may be inaccurate. Consider using '#align pnat.coe_lt_coe PNat.coe_lt_coeₓ'. -/
 @[simp, norm_cast]
 theorem coe_lt_coe (n k : ℕ+) : (n : ℕ) < k ↔ n < k :=
   Iff.rfl
 #align pnat.coe_lt_coe PNat.coe_lt_coe
--/
 
 #print PNat.pos /-
 @[simp]
@@ -215,19 +223,27 @@ theorem coe_toPNat' (n : ℕ+) : (n : ℕ).toPNat' = n :=
 #align pnat.coe_to_pnat' PNat.coe_toPNat'
 -/
 
-#print PNat.one_le /-
+/- warning: pnat.one_le -> PNat.one_le is a dubious translation:
+lean 3 declaration is
+  forall (n : PNat), LE.le.{0} PNat (Preorder.toHasLe.{0} PNat (PartialOrder.toPreorder.{0} PNat (LinearOrder.toPartialOrder.{0} PNat PNat.linearOrder))) (OfNat.ofNat.{0} PNat 1 (OfNat.mk.{0} PNat 1 (One.one.{0} PNat PNat.hasOne))) n
+but is expected to have type
+  forall (n : PNat), LE.le.{0} PNat (Preorder.toLE.{0} PNat (PartialOrder.toPreorder.{0} PNat (LinearOrder.toPartialOrder.{0} PNat instPNatLinearOrder))) (OfNat.ofNat.{0} PNat 1 (instOfNatPNatHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))) n
+Case conversion may be inaccurate. Consider using '#align pnat.one_le PNat.one_leₓ'. -/
 @[simp]
 theorem one_le (n : ℕ+) : (1 : ℕ+) ≤ n :=
   n.2
 #align pnat.one_le PNat.one_le
--/
 
-#print PNat.not_lt_one /-
+/- warning: pnat.not_lt_one -> PNat.not_lt_one is a dubious translation:
+lean 3 declaration is
+  forall (n : PNat), Not (LT.lt.{0} PNat (Preorder.toHasLt.{0} PNat (PartialOrder.toPreorder.{0} PNat (LinearOrder.toPartialOrder.{0} PNat PNat.linearOrder))) n (OfNat.ofNat.{0} PNat 1 (OfNat.mk.{0} PNat 1 (One.one.{0} PNat PNat.hasOne))))
+but is expected to have type
+  forall (n : PNat), Not (LT.lt.{0} PNat (Preorder.toLT.{0} PNat (PartialOrder.toPreorder.{0} PNat (LinearOrder.toPartialOrder.{0} PNat instPNatLinearOrder))) n (OfNat.ofNat.{0} PNat 1 (instOfNatPNatHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))
+Case conversion may be inaccurate. Consider using '#align pnat.not_lt_one PNat.not_lt_oneₓ'. -/
 @[simp]
 theorem not_lt_one (n : ℕ+) : ¬n < 1 :=
   not_lt_of_le n.one_le
 #align pnat.not_lt_one PNat.not_lt_one
--/
 
 instance : Inhabited ℕ+ :=
   ⟨1⟩
@@ -257,12 +273,16 @@ theorem coe_eq_one_iff {m : ℕ+} : (m : ℕ) = 1 ↔ m = 1 :=
 instance : WellFoundedRelation ℕ+ :=
   ⟨(· < ·), measure_wf coe⟩
 
-#print PNat.strongInductionOn /-
+/- warning: pnat.strong_induction_on -> PNat.strongInductionOn is a dubious translation:
+lean 3 declaration is
+  forall {p : PNat -> Sort.{u1}} (n : PNat), (forall (k : PNat), (forall (m : PNat), (LT.lt.{0} PNat (Preorder.toHasLt.{0} PNat (PartialOrder.toPreorder.{0} PNat (LinearOrder.toPartialOrder.{0} PNat PNat.linearOrder))) m k) -> (p m)) -> (p k)) -> (p n)
+but is expected to have type
+  forall {p : PNat -> Sort.{u1}} (n : PNat), (forall (k : PNat), (forall (m : PNat), (LT.lt.{0} PNat (Preorder.toLT.{0} PNat (PartialOrder.toPreorder.{0} PNat (LinearOrder.toPartialOrder.{0} PNat instPNatLinearOrder))) m k) -> (p m)) -> (p k)) -> (p n)
+Case conversion may be inaccurate. Consider using '#align pnat.strong_induction_on PNat.strongInductionOnₓ'. -/
 /-- Strong induction on `ℕ+`. -/
 def strongInductionOn {p : ℕ+ → Sort _} : ∀ (n : ℕ+) (h : ∀ k, (∀ m, m < k → p m) → p k), p n
   | n => fun IH => IH _ fun a h => strong_induction_on a IH
 #align pnat.strong_induction_on PNat.strongInductionOn
--/
 
 #print PNat.modDivAux /-
 /-- We define `m % k` and `m / k` in the same way as for `ℕ`

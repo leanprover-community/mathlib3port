@@ -92,7 +92,12 @@ theorem induction_on_pi {p : (∀ i, Finset (α i)) → Prop} (f : ∀ i, Finset
 #align finset.induction_on_pi Finset.induction_on_pi
 -/
 
-#print Finset.induction_on_pi_max /-
+/- warning: finset.induction_on_pi_max -> Finset.induction_on_pi_max is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : Finite.{succ u1} ι] [_inst_2 : DecidableEq.{succ u1} ι] [_inst_3 : forall (i : ι), DecidableEq.{succ u2} (α i)] [_inst_4 : forall (i : ι), LinearOrder.{u2} (α i)] {p : (forall (i : ι), Finset.{u2} (α i)) -> Prop} (f : forall (i : ι), Finset.{u2} (α i)), (p (fun (_x : ι) => EmptyCollection.emptyCollection.{u2} (Finset.{u2} (α _x)) (Finset.hasEmptyc.{u2} (α _x)))) -> (forall (g : forall (i : ι), Finset.{u2} (α i)) (i : ι) (x : α i), (forall (y : α i), (Membership.Mem.{u2, u2} (α i) (Finset.{u2} (α i)) (Finset.hasMem.{u2} (α i)) y (g i)) -> (LT.lt.{u2} (α i) (Preorder.toHasLt.{u2} (α i) (PartialOrder.toPreorder.{u2} (α i) (SemilatticeInf.toPartialOrder.{u2} (α i) (Lattice.toSemilatticeInf.{u2} (α i) (LinearOrder.toLattice.{u2} (α i) (_inst_4 i)))))) y x)) -> (p g) -> (p (Function.update.{succ u1, succ u2} ι (fun (i : ι) => Finset.{u2} (α i)) (fun (a : ι) (b : ι) => _inst_2 a b) g i (Insert.insert.{u2, u2} (α i) (Finset.{u2} (α i)) (Finset.hasInsert.{u2} (α i) (fun (a : α i) (b : α i) => _inst_3 i a b)) x (g i))))) -> (p f)
+but is expected to have type
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : Finite.{succ u1} ι] [_inst_2 : DecidableEq.{succ u1} ι] [_inst_3 : forall (i : ι), DecidableEq.{succ u2} (α i)] [_inst_4 : forall (i : ι), LinearOrder.{u2} (α i)] {p : (forall (i : ι), Finset.{u2} (α i)) -> Prop} (f : forall (i : ι), Finset.{u2} (α i)), (p (fun (_x : ι) => EmptyCollection.emptyCollection.{u2} (Finset.{u2} (α _x)) (Finset.instEmptyCollectionFinset.{u2} (α _x)))) -> (forall (g : forall (i : ι), Finset.{u2} (α i)) (i : ι) (x : α i), (forall (y : α i), (Membership.mem.{u2, u2} (α i) (Finset.{u2} (α i)) (Finset.instMembershipFinset.{u2} (α i)) y (g i)) -> (LT.lt.{u2} (α i) (Preorder.toLT.{u2} (α i) (PartialOrder.toPreorder.{u2} (α i) (SemilatticeInf.toPartialOrder.{u2} (α i) (Lattice.toSemilatticeInf.{u2} (α i) (DistribLattice.toLattice.{u2} (α i) (instDistribLattice.{u2} (α i) (_inst_4 i))))))) y x)) -> (p g) -> (p (Function.update.{succ u1, succ u2} ι (fun (i : ι) => Finset.{u2} (α i)) (fun (a : ι) (b : ι) => _inst_2 a b) g i (Insert.insert.{u2, u2} (α i) (Finset.{u2} (α i)) (Finset.instInsertFinset.{u2} (α i) (fun (a : α i) (b : α i) => _inst_3 i a b)) x (g i))))) -> (p f)
+Case conversion may be inaccurate. Consider using '#align finset.induction_on_pi_max Finset.induction_on_pi_maxₓ'. -/
 /-- Given a predicate on functions `Π i, finset (α i)` defined on a finite type, it is true on all
 maps provided that it is true on `λ _, ∅` and for any function `g : Π i, finset (α i)`, an index
 `i : ι`, and an element`x : α i` that is strictly greater than all elements of `g i`, `p g` implies
@@ -109,9 +114,13 @@ theorem induction_on_pi_max [∀ i, LinearOrder (α i)] {p : (∀ i, Finset (α 
   induction_on_pi_of_choice (fun i x s => ∀ y ∈ s, y < x)
     (fun i s hs => ⟨s.max' hs, s.max'_mem hs, fun y => s.lt_max'_of_mem_erase_max' _⟩) f h0 step
 #align finset.induction_on_pi_max Finset.induction_on_pi_max
--/
 
-#print Finset.induction_on_pi_min /-
+/- warning: finset.induction_on_pi_min -> Finset.induction_on_pi_min is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : Finite.{succ u1} ι] [_inst_2 : DecidableEq.{succ u1} ι] [_inst_3 : forall (i : ι), DecidableEq.{succ u2} (α i)] [_inst_4 : forall (i : ι), LinearOrder.{u2} (α i)] {p : (forall (i : ι), Finset.{u2} (α i)) -> Prop} (f : forall (i : ι), Finset.{u2} (α i)), (p (fun (_x : ι) => EmptyCollection.emptyCollection.{u2} (Finset.{u2} (α _x)) (Finset.hasEmptyc.{u2} (α _x)))) -> (forall (g : forall (i : ι), Finset.{u2} (α i)) (i : ι) (x : α i), (forall (y : α i), (Membership.Mem.{u2, u2} (α i) (Finset.{u2} (α i)) (Finset.hasMem.{u2} (α i)) y (g i)) -> (LT.lt.{u2} (α i) (Preorder.toHasLt.{u2} (α i) (PartialOrder.toPreorder.{u2} (α i) (SemilatticeInf.toPartialOrder.{u2} (α i) (Lattice.toSemilatticeInf.{u2} (α i) (LinearOrder.toLattice.{u2} (α i) (_inst_4 i)))))) x y)) -> (p g) -> (p (Function.update.{succ u1, succ u2} ι (fun (i : ι) => Finset.{u2} (α i)) (fun (a : ι) (b : ι) => _inst_2 a b) g i (Insert.insert.{u2, u2} (α i) (Finset.{u2} (α i)) (Finset.hasInsert.{u2} (α i) (fun (a : α i) (b : α i) => _inst_3 i a b)) x (g i))))) -> (p f)
+but is expected to have type
+  forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : Finite.{succ u1} ι] [_inst_2 : DecidableEq.{succ u1} ι] [_inst_3 : forall (i : ι), DecidableEq.{succ u2} (α i)] [_inst_4 : forall (i : ι), LinearOrder.{u2} (α i)] {p : (forall (i : ι), Finset.{u2} (α i)) -> Prop} (f : forall (i : ι), Finset.{u2} (α i)), (p (fun (_x : ι) => EmptyCollection.emptyCollection.{u2} (Finset.{u2} (α _x)) (Finset.instEmptyCollectionFinset.{u2} (α _x)))) -> (forall (g : forall (i : ι), Finset.{u2} (α i)) (i : ι) (x : α i), (forall (y : α i), (Membership.mem.{u2, u2} (α i) (Finset.{u2} (α i)) (Finset.instMembershipFinset.{u2} (α i)) y (g i)) -> (LT.lt.{u2} (α i) (Preorder.toLT.{u2} (α i) (PartialOrder.toPreorder.{u2} (α i) (SemilatticeInf.toPartialOrder.{u2} (α i) (Lattice.toSemilatticeInf.{u2} (α i) (DistribLattice.toLattice.{u2} (α i) (instDistribLattice.{u2} (α i) (_inst_4 i))))))) x y)) -> (p g) -> (p (Function.update.{succ u1, succ u2} ι (fun (i : ι) => Finset.{u2} (α i)) (fun (a : ι) (b : ι) => _inst_2 a b) g i (Insert.insert.{u2, u2} (α i) (Finset.{u2} (α i)) (Finset.instInsertFinset.{u2} (α i) (fun (a : α i) (b : α i) => _inst_3 i a b)) x (g i))))) -> (p f)
+Case conversion may be inaccurate. Consider using '#align finset.induction_on_pi_min Finset.induction_on_pi_minₓ'. -/
 /-- Given a predicate on functions `Π i, finset (α i)` defined on a finite type, it is true on all
 maps provided that it is true on `λ _, ∅` and for any function `g : Π i, finset (α i)`, an index
 `i : ι`, and an element`x : α i` that is strictly less than all elements of `g i`, `p g` implies
@@ -127,7 +136,6 @@ theorem induction_on_pi_min [∀ i, LinearOrder (α i)] {p : (∀ i, Finset (α 
     p f :=
   @induction_on_pi_max ι (fun i => (α i)ᵒᵈ) _ _ _ _ _ _ h0 step
 #align finset.induction_on_pi_min Finset.induction_on_pi_min
--/
 
 end Finset
 

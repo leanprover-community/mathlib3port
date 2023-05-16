@@ -298,7 +298,7 @@ variable [Zero β]
 
 /- warning: is_open.lower_semicontinuous_indicator -> IsOpen.lowerSemicontinuous_indicator is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_2 : Preorder.{u2} β] {s : Set.{u1} α} {y : β} [_inst_3 : Zero.{u2} β], (IsOpen.{u1} α _inst_1 s) -> (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_3))) y) -> (LowerSemicontinuous.{u1, u2} α _inst_1 β _inst_2 (Set.indicator.{u1, u2} α β _inst_3 s (fun (x : α) => y)))
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_2 : Preorder.{u2} β] {s : Set.{u1} α} {y : β} [_inst_3 : Zero.{u2} β], (IsOpen.{u1} α _inst_1 s) -> (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_3))) y) -> (LowerSemicontinuous.{u1, u2} α _inst_1 β _inst_2 (Set.indicator.{u1, u2} α β _inst_3 s (fun (x : α) => y)))
 but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {β : Type.{u1}} [_inst_2 : Preorder.{u1} β] {s : Set.{u2} α} {y : β} [_inst_3 : Zero.{u1} β], (IsOpen.{u2} α _inst_1 s) -> (LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) (OfNat.ofNat.{u1} β 0 (Zero.toOfNat0.{u1} β _inst_3)) y) -> (LowerSemicontinuous.{u2, u1} α _inst_1 β _inst_2 (Set.indicator.{u2, u1} α β _inst_3 s (fun (x : α) => y)))
 Case conversion may be inaccurate. Consider using '#align is_open.lower_semicontinuous_indicator IsOpen.lowerSemicontinuous_indicatorₓ'. -/
@@ -315,7 +315,7 @@ theorem IsOpen.lowerSemicontinuous_indicator (hs : IsOpen s) (hy : 0 ≤ y) :
 
 /- warning: is_open.lower_semicontinuous_on_indicator -> IsOpen.lowerSemicontinuousOn_indicator is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_2 : Preorder.{u2} β] {s : Set.{u1} α} {t : Set.{u1} α} {y : β} [_inst_3 : Zero.{u2} β], (IsOpen.{u1} α _inst_1 s) -> (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_3))) y) -> (LowerSemicontinuousOn.{u1, u2} α _inst_1 β _inst_2 (Set.indicator.{u1, u2} α β _inst_3 s (fun (x : α) => y)) t)
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_2 : Preorder.{u2} β] {s : Set.{u1} α} {t : Set.{u1} α} {y : β} [_inst_3 : Zero.{u2} β], (IsOpen.{u1} α _inst_1 s) -> (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_3))) y) -> (LowerSemicontinuousOn.{u1, u2} α _inst_1 β _inst_2 (Set.indicator.{u1, u2} α β _inst_3 s (fun (x : α) => y)) t)
 but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {β : Type.{u1}} [_inst_2 : Preorder.{u1} β] {s : Set.{u2} α} {t : Set.{u2} α} {y : β} [_inst_3 : Zero.{u1} β], (IsOpen.{u2} α _inst_1 s) -> (LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) (OfNat.ofNat.{u1} β 0 (Zero.toOfNat0.{u1} β _inst_3)) y) -> (LowerSemicontinuousOn.{u2, u1} α _inst_1 β _inst_2 (Set.indicator.{u2, u1} α β _inst_3 s (fun (x : α) => y)) t)
 Case conversion may be inaccurate. Consider using '#align is_open.lower_semicontinuous_on_indicator IsOpen.lowerSemicontinuousOn_indicatorₓ'. -/
@@ -326,7 +326,7 @@ theorem IsOpen.lowerSemicontinuousOn_indicator (hs : IsOpen s) (hy : 0 ≤ y) :
 
 /- warning: is_open.lower_semicontinuous_at_indicator -> IsOpen.lowerSemicontinuousAt_indicator is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_2 : Preorder.{u2} β] {x : α} {s : Set.{u1} α} {y : β} [_inst_3 : Zero.{u2} β], (IsOpen.{u1} α _inst_1 s) -> (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_3))) y) -> (LowerSemicontinuousAt.{u1, u2} α _inst_1 β _inst_2 (Set.indicator.{u1, u2} α β _inst_3 s (fun (x : α) => y)) x)
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_2 : Preorder.{u2} β] {x : α} {s : Set.{u1} α} {y : β} [_inst_3 : Zero.{u2} β], (IsOpen.{u1} α _inst_1 s) -> (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_3))) y) -> (LowerSemicontinuousAt.{u1, u2} α _inst_1 β _inst_2 (Set.indicator.{u1, u2} α β _inst_3 s (fun (x : α) => y)) x)
 but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {β : Type.{u1}} [_inst_2 : Preorder.{u1} β] {x : α} {s : Set.{u2} α} {y : β} [_inst_3 : Zero.{u1} β], (IsOpen.{u2} α _inst_1 s) -> (LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) (OfNat.ofNat.{u1} β 0 (Zero.toOfNat0.{u1} β _inst_3)) y) -> (LowerSemicontinuousAt.{u2, u1} α _inst_1 β _inst_2 (Set.indicator.{u2, u1} α β _inst_3 s (fun (x : α) => y)) x)
 Case conversion may be inaccurate. Consider using '#align is_open.lower_semicontinuous_at_indicator IsOpen.lowerSemicontinuousAt_indicatorₓ'. -/
@@ -337,7 +337,7 @@ theorem IsOpen.lowerSemicontinuousAt_indicator (hs : IsOpen s) (hy : 0 ≤ y) :
 
 /- warning: is_open.lower_semicontinuous_within_at_indicator -> IsOpen.lowerSemicontinuousWithinAt_indicator is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_2 : Preorder.{u2} β] {x : α} {s : Set.{u1} α} {t : Set.{u1} α} {y : β} [_inst_3 : Zero.{u2} β], (IsOpen.{u1} α _inst_1 s) -> (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_3))) y) -> (LowerSemicontinuousWithinAt.{u1, u2} α _inst_1 β _inst_2 (Set.indicator.{u1, u2} α β _inst_3 s (fun (x : α) => y)) t x)
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_2 : Preorder.{u2} β] {x : α} {s : Set.{u1} α} {t : Set.{u1} α} {y : β} [_inst_3 : Zero.{u2} β], (IsOpen.{u1} α _inst_1 s) -> (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_3))) y) -> (LowerSemicontinuousWithinAt.{u1, u2} α _inst_1 β _inst_2 (Set.indicator.{u1, u2} α β _inst_3 s (fun (x : α) => y)) t x)
 but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {β : Type.{u1}} [_inst_2 : Preorder.{u1} β] {x : α} {s : Set.{u2} α} {t : Set.{u2} α} {y : β} [_inst_3 : Zero.{u1} β], (IsOpen.{u2} α _inst_1 s) -> (LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) (OfNat.ofNat.{u1} β 0 (Zero.toOfNat0.{u1} β _inst_3)) y) -> (LowerSemicontinuousWithinAt.{u2, u1} α _inst_1 β _inst_2 (Set.indicator.{u2, u1} α β _inst_3 s (fun (x : α) => y)) t x)
 Case conversion may be inaccurate. Consider using '#align is_open.lower_semicontinuous_within_at_indicator IsOpen.lowerSemicontinuousWithinAt_indicatorₓ'. -/
@@ -348,7 +348,7 @@ theorem IsOpen.lowerSemicontinuousWithinAt_indicator (hs : IsOpen s) (hy : 0 ≤
 
 /- warning: is_closed.lower_semicontinuous_indicator -> IsClosed.lowerSemicontinuous_indicator is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_2 : Preorder.{u2} β] {s : Set.{u1} α} {y : β} [_inst_3 : Zero.{u2} β], (IsClosed.{u1} α _inst_1 s) -> (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) y (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_3)))) -> (LowerSemicontinuous.{u1, u2} α _inst_1 β _inst_2 (Set.indicator.{u1, u2} α β _inst_3 s (fun (x : α) => y)))
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_2 : Preorder.{u2} β] {s : Set.{u1} α} {y : β} [_inst_3 : Zero.{u2} β], (IsClosed.{u1} α _inst_1 s) -> (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) y (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_3)))) -> (LowerSemicontinuous.{u1, u2} α _inst_1 β _inst_2 (Set.indicator.{u1, u2} α β _inst_3 s (fun (x : α) => y)))
 but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {β : Type.{u1}} [_inst_2 : Preorder.{u1} β] {s : Set.{u2} α} {y : β} [_inst_3 : Zero.{u1} β], (IsClosed.{u2} α _inst_1 s) -> (LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) y (OfNat.ofNat.{u1} β 0 (Zero.toOfNat0.{u1} β _inst_3))) -> (LowerSemicontinuous.{u2, u1} α _inst_1 β _inst_2 (Set.indicator.{u2, u1} α β _inst_3 s (fun (x : α) => y)))
 Case conversion may be inaccurate. Consider using '#align is_closed.lower_semicontinuous_indicator IsClosed.lowerSemicontinuous_indicatorₓ'. -/
@@ -365,7 +365,7 @@ theorem IsClosed.lowerSemicontinuous_indicator (hs : IsClosed s) (hy : y ≤ 0) 
 
 /- warning: is_closed.lower_semicontinuous_on_indicator -> IsClosed.lowerSemicontinuousOn_indicator is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_2 : Preorder.{u2} β] {s : Set.{u1} α} {t : Set.{u1} α} {y : β} [_inst_3 : Zero.{u2} β], (IsClosed.{u1} α _inst_1 s) -> (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) y (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_3)))) -> (LowerSemicontinuousOn.{u1, u2} α _inst_1 β _inst_2 (Set.indicator.{u1, u2} α β _inst_3 s (fun (x : α) => y)) t)
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_2 : Preorder.{u2} β] {s : Set.{u1} α} {t : Set.{u1} α} {y : β} [_inst_3 : Zero.{u2} β], (IsClosed.{u1} α _inst_1 s) -> (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) y (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_3)))) -> (LowerSemicontinuousOn.{u1, u2} α _inst_1 β _inst_2 (Set.indicator.{u1, u2} α β _inst_3 s (fun (x : α) => y)) t)
 but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {β : Type.{u1}} [_inst_2 : Preorder.{u1} β] {s : Set.{u2} α} {t : Set.{u2} α} {y : β} [_inst_3 : Zero.{u1} β], (IsClosed.{u2} α _inst_1 s) -> (LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) y (OfNat.ofNat.{u1} β 0 (Zero.toOfNat0.{u1} β _inst_3))) -> (LowerSemicontinuousOn.{u2, u1} α _inst_1 β _inst_2 (Set.indicator.{u2, u1} α β _inst_3 s (fun (x : α) => y)) t)
 Case conversion may be inaccurate. Consider using '#align is_closed.lower_semicontinuous_on_indicator IsClosed.lowerSemicontinuousOn_indicatorₓ'. -/
@@ -376,7 +376,7 @@ theorem IsClosed.lowerSemicontinuousOn_indicator (hs : IsClosed s) (hy : y ≤ 0
 
 /- warning: is_closed.lower_semicontinuous_at_indicator -> IsClosed.lowerSemicontinuousAt_indicator is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_2 : Preorder.{u2} β] {x : α} {s : Set.{u1} α} {y : β} [_inst_3 : Zero.{u2} β], (IsClosed.{u1} α _inst_1 s) -> (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) y (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_3)))) -> (LowerSemicontinuousAt.{u1, u2} α _inst_1 β _inst_2 (Set.indicator.{u1, u2} α β _inst_3 s (fun (x : α) => y)) x)
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_2 : Preorder.{u2} β] {x : α} {s : Set.{u1} α} {y : β} [_inst_3 : Zero.{u2} β], (IsClosed.{u1} α _inst_1 s) -> (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) y (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_3)))) -> (LowerSemicontinuousAt.{u1, u2} α _inst_1 β _inst_2 (Set.indicator.{u1, u2} α β _inst_3 s (fun (x : α) => y)) x)
 but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {β : Type.{u1}} [_inst_2 : Preorder.{u1} β] {x : α} {s : Set.{u2} α} {y : β} [_inst_3 : Zero.{u1} β], (IsClosed.{u2} α _inst_1 s) -> (LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) y (OfNat.ofNat.{u1} β 0 (Zero.toOfNat0.{u1} β _inst_3))) -> (LowerSemicontinuousAt.{u2, u1} α _inst_1 β _inst_2 (Set.indicator.{u2, u1} α β _inst_3 s (fun (x : α) => y)) x)
 Case conversion may be inaccurate. Consider using '#align is_closed.lower_semicontinuous_at_indicator IsClosed.lowerSemicontinuousAt_indicatorₓ'. -/
@@ -387,7 +387,7 @@ theorem IsClosed.lowerSemicontinuousAt_indicator (hs : IsClosed s) (hy : y ≤ 0
 
 /- warning: is_closed.lower_semicontinuous_within_at_indicator -> IsClosed.lowerSemicontinuousWithinAt_indicator is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_2 : Preorder.{u2} β] {x : α} {s : Set.{u1} α} {t : Set.{u1} α} {y : β} [_inst_3 : Zero.{u2} β], (IsClosed.{u1} α _inst_1 s) -> (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) y (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_3)))) -> (LowerSemicontinuousWithinAt.{u1, u2} α _inst_1 β _inst_2 (Set.indicator.{u1, u2} α β _inst_3 s (fun (x : α) => y)) t x)
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_2 : Preorder.{u2} β] {x : α} {s : Set.{u1} α} {t : Set.{u1} α} {y : β} [_inst_3 : Zero.{u2} β], (IsClosed.{u1} α _inst_1 s) -> (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) y (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_3)))) -> (LowerSemicontinuousWithinAt.{u1, u2} α _inst_1 β _inst_2 (Set.indicator.{u1, u2} α β _inst_3 s (fun (x : α) => y)) t x)
 but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {β : Type.{u1}} [_inst_2 : Preorder.{u1} β] {x : α} {s : Set.{u2} α} {t : Set.{u2} α} {y : β} [_inst_3 : Zero.{u1} β], (IsClosed.{u2} α _inst_1 s) -> (LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) y (OfNat.ofNat.{u1} β 0 (Zero.toOfNat0.{u1} β _inst_3))) -> (LowerSemicontinuousWithinAt.{u2, u1} α _inst_1 β _inst_2 (Set.indicator.{u2, u1} α β _inst_3 s (fun (x : α) => y)) t x)
 Case conversion may be inaccurate. Consider using '#align is_closed.lower_semicontinuous_within_at_indicator IsClosed.lowerSemicontinuousWithinAt_indicatorₓ'. -/
@@ -1250,7 +1250,7 @@ variable [Zero β]
 
 /- warning: is_open.upper_semicontinuous_indicator -> IsOpen.upperSemicontinuous_indicator is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_2 : Preorder.{u2} β] {s : Set.{u1} α} {y : β} [_inst_3 : Zero.{u2} β], (IsOpen.{u1} α _inst_1 s) -> (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) y (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_3)))) -> (UpperSemicontinuous.{u1, u2} α _inst_1 β _inst_2 (Set.indicator.{u1, u2} α β _inst_3 s (fun (x : α) => y)))
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_2 : Preorder.{u2} β] {s : Set.{u1} α} {y : β} [_inst_3 : Zero.{u2} β], (IsOpen.{u1} α _inst_1 s) -> (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) y (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_3)))) -> (UpperSemicontinuous.{u1, u2} α _inst_1 β _inst_2 (Set.indicator.{u1, u2} α β _inst_3 s (fun (x : α) => y)))
 but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {β : Type.{u1}} [_inst_2 : Preorder.{u1} β] {s : Set.{u2} α} {y : β} [_inst_3 : Zero.{u1} β], (IsOpen.{u2} α _inst_1 s) -> (LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) y (OfNat.ofNat.{u1} β 0 (Zero.toOfNat0.{u1} β _inst_3))) -> (UpperSemicontinuous.{u2, u1} α _inst_1 β _inst_2 (Set.indicator.{u2, u1} α β _inst_3 s (fun (x : α) => y)))
 Case conversion may be inaccurate. Consider using '#align is_open.upper_semicontinuous_indicator IsOpen.upperSemicontinuous_indicatorₓ'. -/
@@ -1261,7 +1261,7 @@ theorem IsOpen.upperSemicontinuous_indicator (hs : IsOpen s) (hy : y ≤ 0) :
 
 /- warning: is_open.upper_semicontinuous_on_indicator -> IsOpen.upperSemicontinuousOn_indicator is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_2 : Preorder.{u2} β] {s : Set.{u1} α} {t : Set.{u1} α} {y : β} [_inst_3 : Zero.{u2} β], (IsOpen.{u1} α _inst_1 s) -> (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) y (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_3)))) -> (UpperSemicontinuousOn.{u1, u2} α _inst_1 β _inst_2 (Set.indicator.{u1, u2} α β _inst_3 s (fun (x : α) => y)) t)
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_2 : Preorder.{u2} β] {s : Set.{u1} α} {t : Set.{u1} α} {y : β} [_inst_3 : Zero.{u2} β], (IsOpen.{u1} α _inst_1 s) -> (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) y (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_3)))) -> (UpperSemicontinuousOn.{u1, u2} α _inst_1 β _inst_2 (Set.indicator.{u1, u2} α β _inst_3 s (fun (x : α) => y)) t)
 but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {β : Type.{u1}} [_inst_2 : Preorder.{u1} β] {s : Set.{u2} α} {t : Set.{u2} α} {y : β} [_inst_3 : Zero.{u1} β], (IsOpen.{u2} α _inst_1 s) -> (LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) y (OfNat.ofNat.{u1} β 0 (Zero.toOfNat0.{u1} β _inst_3))) -> (UpperSemicontinuousOn.{u2, u1} α _inst_1 β _inst_2 (Set.indicator.{u2, u1} α β _inst_3 s (fun (x : α) => y)) t)
 Case conversion may be inaccurate. Consider using '#align is_open.upper_semicontinuous_on_indicator IsOpen.upperSemicontinuousOn_indicatorₓ'. -/
@@ -1272,7 +1272,7 @@ theorem IsOpen.upperSemicontinuousOn_indicator (hs : IsOpen s) (hy : y ≤ 0) :
 
 /- warning: is_open.upper_semicontinuous_at_indicator -> IsOpen.upperSemicontinuousAt_indicator is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_2 : Preorder.{u2} β] {x : α} {s : Set.{u1} α} {y : β} [_inst_3 : Zero.{u2} β], (IsOpen.{u1} α _inst_1 s) -> (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) y (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_3)))) -> (UpperSemicontinuousAt.{u1, u2} α _inst_1 β _inst_2 (Set.indicator.{u1, u2} α β _inst_3 s (fun (x : α) => y)) x)
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_2 : Preorder.{u2} β] {x : α} {s : Set.{u1} α} {y : β} [_inst_3 : Zero.{u2} β], (IsOpen.{u1} α _inst_1 s) -> (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) y (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_3)))) -> (UpperSemicontinuousAt.{u1, u2} α _inst_1 β _inst_2 (Set.indicator.{u1, u2} α β _inst_3 s (fun (x : α) => y)) x)
 but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {β : Type.{u1}} [_inst_2 : Preorder.{u1} β] {x : α} {s : Set.{u2} α} {y : β} [_inst_3 : Zero.{u1} β], (IsOpen.{u2} α _inst_1 s) -> (LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) y (OfNat.ofNat.{u1} β 0 (Zero.toOfNat0.{u1} β _inst_3))) -> (UpperSemicontinuousAt.{u2, u1} α _inst_1 β _inst_2 (Set.indicator.{u2, u1} α β _inst_3 s (fun (x : α) => y)) x)
 Case conversion may be inaccurate. Consider using '#align is_open.upper_semicontinuous_at_indicator IsOpen.upperSemicontinuousAt_indicatorₓ'. -/
@@ -1283,7 +1283,7 @@ theorem IsOpen.upperSemicontinuousAt_indicator (hs : IsOpen s) (hy : y ≤ 0) :
 
 /- warning: is_open.upper_semicontinuous_within_at_indicator -> IsOpen.upperSemicontinuousWithinAt_indicator is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_2 : Preorder.{u2} β] {x : α} {s : Set.{u1} α} {t : Set.{u1} α} {y : β} [_inst_3 : Zero.{u2} β], (IsOpen.{u1} α _inst_1 s) -> (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) y (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_3)))) -> (UpperSemicontinuousWithinAt.{u1, u2} α _inst_1 β _inst_2 (Set.indicator.{u1, u2} α β _inst_3 s (fun (x : α) => y)) t x)
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_2 : Preorder.{u2} β] {x : α} {s : Set.{u1} α} {t : Set.{u1} α} {y : β} [_inst_3 : Zero.{u2} β], (IsOpen.{u1} α _inst_1 s) -> (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) y (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_3)))) -> (UpperSemicontinuousWithinAt.{u1, u2} α _inst_1 β _inst_2 (Set.indicator.{u1, u2} α β _inst_3 s (fun (x : α) => y)) t x)
 but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {β : Type.{u1}} [_inst_2 : Preorder.{u1} β] {x : α} {s : Set.{u2} α} {t : Set.{u2} α} {y : β} [_inst_3 : Zero.{u1} β], (IsOpen.{u2} α _inst_1 s) -> (LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) y (OfNat.ofNat.{u1} β 0 (Zero.toOfNat0.{u1} β _inst_3))) -> (UpperSemicontinuousWithinAt.{u2, u1} α _inst_1 β _inst_2 (Set.indicator.{u2, u1} α β _inst_3 s (fun (x : α) => y)) t x)
 Case conversion may be inaccurate. Consider using '#align is_open.upper_semicontinuous_within_at_indicator IsOpen.upperSemicontinuousWithinAt_indicatorₓ'. -/
@@ -1294,7 +1294,7 @@ theorem IsOpen.upperSemicontinuousWithinAt_indicator (hs : IsOpen s) (hy : y ≤
 
 /- warning: is_closed.upper_semicontinuous_indicator -> IsClosed.upperSemicontinuous_indicator is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_2 : Preorder.{u2} β] {s : Set.{u1} α} {y : β} [_inst_3 : Zero.{u2} β], (IsClosed.{u1} α _inst_1 s) -> (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_3))) y) -> (UpperSemicontinuous.{u1, u2} α _inst_1 β _inst_2 (Set.indicator.{u1, u2} α β _inst_3 s (fun (x : α) => y)))
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_2 : Preorder.{u2} β] {s : Set.{u1} α} {y : β} [_inst_3 : Zero.{u2} β], (IsClosed.{u1} α _inst_1 s) -> (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_3))) y) -> (UpperSemicontinuous.{u1, u2} α _inst_1 β _inst_2 (Set.indicator.{u1, u2} α β _inst_3 s (fun (x : α) => y)))
 but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {β : Type.{u1}} [_inst_2 : Preorder.{u1} β] {s : Set.{u2} α} {y : β} [_inst_3 : Zero.{u1} β], (IsClosed.{u2} α _inst_1 s) -> (LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) (OfNat.ofNat.{u1} β 0 (Zero.toOfNat0.{u1} β _inst_3)) y) -> (UpperSemicontinuous.{u2, u1} α _inst_1 β _inst_2 (Set.indicator.{u2, u1} α β _inst_3 s (fun (x : α) => y)))
 Case conversion may be inaccurate. Consider using '#align is_closed.upper_semicontinuous_indicator IsClosed.upperSemicontinuous_indicatorₓ'. -/
@@ -1305,7 +1305,7 @@ theorem IsClosed.upperSemicontinuous_indicator (hs : IsClosed s) (hy : 0 ≤ y) 
 
 /- warning: is_closed.upper_semicontinuous_on_indicator -> IsClosed.upperSemicontinuousOn_indicator is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_2 : Preorder.{u2} β] {s : Set.{u1} α} {t : Set.{u1} α} {y : β} [_inst_3 : Zero.{u2} β], (IsClosed.{u1} α _inst_1 s) -> (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_3))) y) -> (UpperSemicontinuousOn.{u1, u2} α _inst_1 β _inst_2 (Set.indicator.{u1, u2} α β _inst_3 s (fun (x : α) => y)) t)
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_2 : Preorder.{u2} β] {s : Set.{u1} α} {t : Set.{u1} α} {y : β} [_inst_3 : Zero.{u2} β], (IsClosed.{u1} α _inst_1 s) -> (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_3))) y) -> (UpperSemicontinuousOn.{u1, u2} α _inst_1 β _inst_2 (Set.indicator.{u1, u2} α β _inst_3 s (fun (x : α) => y)) t)
 but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {β : Type.{u1}} [_inst_2 : Preorder.{u1} β] {s : Set.{u2} α} {t : Set.{u2} α} {y : β} [_inst_3 : Zero.{u1} β], (IsClosed.{u2} α _inst_1 s) -> (LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) (OfNat.ofNat.{u1} β 0 (Zero.toOfNat0.{u1} β _inst_3)) y) -> (UpperSemicontinuousOn.{u2, u1} α _inst_1 β _inst_2 (Set.indicator.{u2, u1} α β _inst_3 s (fun (x : α) => y)) t)
 Case conversion may be inaccurate. Consider using '#align is_closed.upper_semicontinuous_on_indicator IsClosed.upperSemicontinuousOn_indicatorₓ'. -/
@@ -1316,7 +1316,7 @@ theorem IsClosed.upperSemicontinuousOn_indicator (hs : IsClosed s) (hy : 0 ≤ y
 
 /- warning: is_closed.upper_semicontinuous_at_indicator -> IsClosed.upperSemicontinuousAt_indicator is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_2 : Preorder.{u2} β] {x : α} {s : Set.{u1} α} {y : β} [_inst_3 : Zero.{u2} β], (IsClosed.{u1} α _inst_1 s) -> (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_3))) y) -> (UpperSemicontinuousAt.{u1, u2} α _inst_1 β _inst_2 (Set.indicator.{u1, u2} α β _inst_3 s (fun (x : α) => y)) x)
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_2 : Preorder.{u2} β] {x : α} {s : Set.{u1} α} {y : β} [_inst_3 : Zero.{u2} β], (IsClosed.{u1} α _inst_1 s) -> (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_3))) y) -> (UpperSemicontinuousAt.{u1, u2} α _inst_1 β _inst_2 (Set.indicator.{u1, u2} α β _inst_3 s (fun (x : α) => y)) x)
 but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {β : Type.{u1}} [_inst_2 : Preorder.{u1} β] {x : α} {s : Set.{u2} α} {y : β} [_inst_3 : Zero.{u1} β], (IsClosed.{u2} α _inst_1 s) -> (LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) (OfNat.ofNat.{u1} β 0 (Zero.toOfNat0.{u1} β _inst_3)) y) -> (UpperSemicontinuousAt.{u2, u1} α _inst_1 β _inst_2 (Set.indicator.{u2, u1} α β _inst_3 s (fun (x : α) => y)) x)
 Case conversion may be inaccurate. Consider using '#align is_closed.upper_semicontinuous_at_indicator IsClosed.upperSemicontinuousAt_indicatorₓ'. -/
@@ -1327,7 +1327,7 @@ theorem IsClosed.upperSemicontinuousAt_indicator (hs : IsClosed s) (hy : 0 ≤ y
 
 /- warning: is_closed.upper_semicontinuous_within_at_indicator -> IsClosed.upperSemicontinuousWithinAt_indicator is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_2 : Preorder.{u2} β] {x : α} {s : Set.{u1} α} {t : Set.{u1} α} {y : β} [_inst_3 : Zero.{u2} β], (IsClosed.{u1} α _inst_1 s) -> (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_2) (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_3))) y) -> (UpperSemicontinuousWithinAt.{u1, u2} α _inst_1 β _inst_2 (Set.indicator.{u1, u2} α β _inst_3 s (fun (x : α) => y)) t x)
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_2 : Preorder.{u2} β] {x : α} {s : Set.{u1} α} {t : Set.{u1} α} {y : β} [_inst_3 : Zero.{u2} β], (IsClosed.{u1} α _inst_1 s) -> (LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_2) (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_3))) y) -> (UpperSemicontinuousWithinAt.{u1, u2} α _inst_1 β _inst_2 (Set.indicator.{u1, u2} α β _inst_3 s (fun (x : α) => y)) t x)
 but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {β : Type.{u1}} [_inst_2 : Preorder.{u1} β] {x : α} {s : Set.{u2} α} {t : Set.{u2} α} {y : β} [_inst_3 : Zero.{u1} β], (IsClosed.{u2} α _inst_1 s) -> (LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) (OfNat.ofNat.{u1} β 0 (Zero.toOfNat0.{u1} β _inst_3)) y) -> (UpperSemicontinuousWithinAt.{u2, u1} α _inst_1 β _inst_2 (Set.indicator.{u2, u1} α β _inst_3 s (fun (x : α) => y)) t x)
 Case conversion may be inaccurate. Consider using '#align is_closed.upper_semicontinuous_within_at_indicator IsClosed.upperSemicontinuousWithinAt_indicatorₓ'. -/

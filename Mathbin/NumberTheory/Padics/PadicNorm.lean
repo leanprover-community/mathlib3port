@@ -463,7 +463,12 @@ theorem nat_lt_one_iff (m : ℕ) : padicNorm p m < 1 ↔ p ∣ m := by
 
 open BigOperators
 
-#print padicNorm.sum_lt /-
+/- warning: padic_norm.sum_lt -> padicNorm.sum_lt is a dubious translation:
+lean 3 declaration is
+  forall {p : Nat} [hp : Fact (Nat.Prime p)] {α : Type.{u1}} {F : α -> Rat} {t : Rat} {s : Finset.{u1} α}, (Finset.Nonempty.{u1} α s) -> (forall (i : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) i s) -> (LT.lt.{0} Rat Rat.hasLt (padicNorm p (F i)) t)) -> (LT.lt.{0} Rat Rat.hasLt (padicNorm p (Finset.sum.{0, u1} Rat α Rat.addCommMonoid s (fun (i : α) => F i))) t)
+but is expected to have type
+  forall {p : Nat} [hp : Fact (Nat.Prime p)] {α : Type.{u1}} {F : α -> Rat} {t : Rat} {s : Finset.{u1} α}, (Finset.Nonempty.{u1} α s) -> (forall (i : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) i s) -> (LT.lt.{0} Rat Rat.instLTRat_1 (padicNorm p (F i)) t)) -> (LT.lt.{0} Rat Rat.instLTRat_1 (padicNorm p (Finset.sum.{0, u1} Rat α Rat.addCommMonoid s (fun (i : α) => F i))) t)
+Case conversion may be inaccurate. Consider using '#align padic_norm.sum_lt padicNorm.sum_ltₓ'. -/
 theorem sum_lt {α : Type _} {F : α → ℚ} {t : ℚ} {s : Finset α} :
     s.Nonempty → (∀ i ∈ s, padicNorm p (F i) < t) → padicNorm p (∑ i in s, F i) < t := by
   classical
@@ -477,7 +482,6 @@ theorem sum_lt {α : Type _} {F : α → ℚ} {t : ℚ} {s : Finset α} :
             (IH hs fun b hb => ht b (Finset.mem_insert_of_mem hb)))
     · simp_all
 #align padic_norm.sum_lt padicNorm.sum_lt
--/
 
 /- warning: padic_norm.sum_le -> padicNorm.sum_le is a dubious translation:
 lean 3 declaration is
@@ -499,7 +503,12 @@ theorem sum_le {α : Type _} {F : α → ℚ} {t : ℚ} {s : Finset α} :
     · simp_all
 #align padic_norm.sum_le padicNorm.sum_le
 
-#print padicNorm.sum_lt' /-
+/- warning: padic_norm.sum_lt' -> padicNorm.sum_lt' is a dubious translation:
+lean 3 declaration is
+  forall {p : Nat} [hp : Fact (Nat.Prime p)] {α : Type.{u1}} {F : α -> Rat} {t : Rat} {s : Finset.{u1} α}, (forall (i : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) i s) -> (LT.lt.{0} Rat Rat.hasLt (padicNorm p (F i)) t)) -> (LT.lt.{0} Rat Rat.hasLt (OfNat.ofNat.{0} Rat 0 (OfNat.mk.{0} Rat 0 (Zero.zero.{0} Rat Rat.hasZero))) t) -> (LT.lt.{0} Rat Rat.hasLt (padicNorm p (Finset.sum.{0, u1} Rat α Rat.addCommMonoid s (fun (i : α) => F i))) t)
+but is expected to have type
+  forall {p : Nat} [hp : Fact (Nat.Prime p)] {α : Type.{u1}} {F : α -> Rat} {t : Rat} {s : Finset.{u1} α}, (forall (i : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) i s) -> (LT.lt.{0} Rat Rat.instLTRat_1 (padicNorm p (F i)) t)) -> (LT.lt.{0} Rat Rat.instLTRat_1 (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)) t) -> (LT.lt.{0} Rat Rat.instLTRat_1 (padicNorm p (Finset.sum.{0, u1} Rat α Rat.addCommMonoid s (fun (i : α) => F i))) t)
+Case conversion may be inaccurate. Consider using '#align padic_norm.sum_lt' padicNorm.sum_lt'ₓ'. -/
 theorem sum_lt' {α : Type _} {F : α → ℚ} {t : ℚ} {s : Finset α}
     (hF : ∀ i ∈ s, padicNorm p (F i) < t) (ht : 0 < t) : padicNorm p (∑ i in s, F i) < t :=
   by
@@ -507,7 +516,6 @@ theorem sum_lt' {α : Type _} {F : α → ℚ} {t : ℚ} {s : Finset α}
   · simp [ht]
   · exact sum_lt hs hF
 #align padic_norm.sum_lt' padicNorm.sum_lt'
--/
 
 /- warning: padic_norm.sum_le' -> padicNorm.sum_le' is a dubious translation:
 lean 3 declaration is

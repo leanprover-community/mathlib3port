@@ -399,7 +399,12 @@ section WellPowered
 
 namespace Subobject
 
-#print CategoryTheory.Subobject.eq_of_le_of_isDetecting /-
+/- warning: category_theory.subobject.eq_of_le_of_is_detecting -> CategoryTheory.Subobject.eq_of_le_of_isDetecting is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {𝒢 : Set.{u2} C}, (CategoryTheory.IsDetecting.{u1, u2} C _inst_1 𝒢) -> (forall {X : C} (P : CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (Q : CategoryTheory.Subobject.{u1, u2} C _inst_1 X), (LE.le.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (Preorder.toHasLe.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (CategoryTheory.Subobject.partialOrder.{u2, u1} C _inst_1 X))) P Q) -> (forall (G : C), (Membership.Mem.{u2, u2} C (Set.{u2} C) (Set.hasMem.{u2} C) G 𝒢) -> (forall {f : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) G X}, (CategoryTheory.Subobject.Factors.{u1, u2} C _inst_1 G X Q f) -> (CategoryTheory.Subobject.Factors.{u1, u2} C _inst_1 G X P f))) -> (Eq.{succ (max u2 u1)} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) P Q))
+but is expected to have type
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {𝒢 : Set.{u2} C}, (CategoryTheory.IsDetecting.{u1, u2} C _inst_1 𝒢) -> (forall {X : C} (P : CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (Q : CategoryTheory.Subobject.{u1, u2} C _inst_1 X), (LE.le.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (Preorder.toLE.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (PartialOrder.toPreorder.{max u2 u1} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) (CategoryTheory.instPartialOrderSubobject.{u1, u2} C _inst_1 X))) P Q) -> (forall (G : C), (Membership.mem.{u2, u2} C (Set.{u2} C) (Set.instMembershipSet.{u2} C) G 𝒢) -> (forall {f : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) G X}, (CategoryTheory.Subobject.Factors.{u1, u2} C _inst_1 G X Q f) -> (CategoryTheory.Subobject.Factors.{u1, u2} C _inst_1 G X P f))) -> (Eq.{max (succ u2) (succ u1)} (CategoryTheory.Subobject.{u1, u2} C _inst_1 X) P Q))
+Case conversion may be inaccurate. Consider using '#align category_theory.subobject.eq_of_le_of_is_detecting CategoryTheory.Subobject.eq_of_le_of_isDetectingₓ'. -/
 theorem eq_of_le_of_isDetecting {𝒢 : Set C} (h𝒢 : IsDetecting 𝒢) {X : C} (P Q : Subobject X)
     (h₁ : P ≤ Q) (h₂ : ∀ G ∈ 𝒢, ∀ {f : G ⟶ X}, Q.Factors f → P.Factors f) : P = Q :=
   by
@@ -412,7 +417,6 @@ theorem eq_of_le_of_isDetecting {𝒢 : Set C} (h𝒢 : IsDetecting 𝒢) {X : C
     simp only [← cancel_mono (subobject.of_le _ _ h₁), ← cancel_mono Q.arrow, hg, category.assoc,
       of_le_arrow, factor_thru_arrow]
 #align category_theory.subobject.eq_of_le_of_is_detecting CategoryTheory.Subobject.eq_of_le_of_isDetecting
--/
 
 /- warning: category_theory.subobject.inf_eq_of_is_detecting -> CategoryTheory.Subobject.inf_eq_of_isDetecting is a dubious translation:
 lean 3 declaration is

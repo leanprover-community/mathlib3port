@@ -73,7 +73,12 @@ instance hasForgetToLatCat : HasForget₂ LinOrdCat LatCat
       map := fun X Y f => (OrderHomClass.toLatticeHom X Y f : LatticeHom X Y) }
 #align LinOrd.has_forget_to_Lat LinOrdCat.hasForgetToLatCat
 
-#print LinOrdCat.Iso.mk /-
+/- warning: LinOrd.iso.mk -> LinOrdCat.Iso.mk is a dubious translation:
+lean 3 declaration is
+  forall {α : LinOrdCat.{u1}} {β : LinOrdCat.{u1}}, (OrderIso.{u1, u1} (coeSort.{succ (succ u1), succ (succ u1)} LinOrdCat.{u1} Type.{u1} LinOrdCat.hasCoeToSort.{u1} α) (coeSort.{succ (succ u1), succ (succ u1)} LinOrdCat.{u1} Type.{u1} LinOrdCat.hasCoeToSort.{u1} β) (Preorder.toHasLe.{u1} (coeSort.{succ (succ u1), succ (succ u1)} LinOrdCat.{u1} Type.{u1} LinOrdCat.hasCoeToSort.{u1} α) (PartialOrder.toPreorder.{u1} (coeSort.{succ (succ u1), succ (succ u1)} LinOrdCat.{u1} Type.{u1} LinOrdCat.hasCoeToSort.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (coeSort.{succ (succ u1), succ (succ u1)} LinOrdCat.{u1} Type.{u1} LinOrdCat.hasCoeToSort.{u1} α) (Lattice.toSemilatticeInf.{u1} (coeSort.{succ (succ u1), succ (succ u1)} LinOrdCat.{u1} Type.{u1} LinOrdCat.hasCoeToSort.{u1} α) (LinearOrder.toLattice.{u1} (coeSort.{succ (succ u1), succ (succ u1)} LinOrdCat.{u1} Type.{u1} LinOrdCat.hasCoeToSort.{u1} α) (LinOrdCat.linearOrder.{u1} α)))))) (Preorder.toHasLe.{u1} (coeSort.{succ (succ u1), succ (succ u1)} LinOrdCat.{u1} Type.{u1} LinOrdCat.hasCoeToSort.{u1} β) (PartialOrder.toPreorder.{u1} (coeSort.{succ (succ u1), succ (succ u1)} LinOrdCat.{u1} Type.{u1} LinOrdCat.hasCoeToSort.{u1} β) (SemilatticeInf.toPartialOrder.{u1} (coeSort.{succ (succ u1), succ (succ u1)} LinOrdCat.{u1} Type.{u1} LinOrdCat.hasCoeToSort.{u1} β) (Lattice.toSemilatticeInf.{u1} (coeSort.{succ (succ u1), succ (succ u1)} LinOrdCat.{u1} Type.{u1} LinOrdCat.hasCoeToSort.{u1} β) (LinearOrder.toLattice.{u1} (coeSort.{succ (succ u1), succ (succ u1)} LinOrdCat.{u1} Type.{u1} LinOrdCat.hasCoeToSort.{u1} β) (LinOrdCat.linearOrder.{u1} β))))))) -> (CategoryTheory.Iso.{u1, succ u1} LinOrdCat.{u1} LinOrdCat.largeCategory.{u1} α β)
+but is expected to have type
+  forall {α : LinOrdCat.{u1}} {β : LinOrdCat.{u1}}, (OrderIso.{u1, u1} (CategoryTheory.Bundled.α.{u1, u1} LinearOrder.{u1} α) (CategoryTheory.Bundled.α.{u1, u1} LinearOrder.{u1} β) (Preorder.toLE.{u1} (CategoryTheory.Bundled.α.{u1, u1} LinearOrder.{u1} α) (PartialOrder.toPreorder.{u1} (CategoryTheory.Bundled.α.{u1, u1} LinearOrder.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (CategoryTheory.Bundled.α.{u1, u1} LinearOrder.{u1} α) (Lattice.toSemilatticeInf.{u1} (CategoryTheory.Bundled.α.{u1, u1} LinearOrder.{u1} α) (DistribLattice.toLattice.{u1} (CategoryTheory.Bundled.α.{u1, u1} LinearOrder.{u1} α) (instDistribLattice.{u1} (CategoryTheory.Bundled.α.{u1, u1} LinearOrder.{u1} α) (LinOrdCat.instLinearOrderα.{u1} α))))))) (Preorder.toLE.{u1} (CategoryTheory.Bundled.α.{u1, u1} LinearOrder.{u1} β) (PartialOrder.toPreorder.{u1} (CategoryTheory.Bundled.α.{u1, u1} LinearOrder.{u1} β) (SemilatticeInf.toPartialOrder.{u1} (CategoryTheory.Bundled.α.{u1, u1} LinearOrder.{u1} β) (Lattice.toSemilatticeInf.{u1} (CategoryTheory.Bundled.α.{u1, u1} LinearOrder.{u1} β) (DistribLattice.toLattice.{u1} (CategoryTheory.Bundled.α.{u1, u1} LinearOrder.{u1} β) (instDistribLattice.{u1} (CategoryTheory.Bundled.α.{u1, u1} LinearOrder.{u1} β) (LinOrdCat.instLinearOrderα.{u1} β)))))))) -> (CategoryTheory.Iso.{u1, succ u1} LinOrdCat.{u1} instLinOrdCatLargeCategory.{u1} α β)
+Case conversion may be inaccurate. Consider using '#align LinOrd.iso.mk LinOrdCat.Iso.mkₓ'. -/
 /-- Constructs an equivalence between linear orders from an order isomorphism between them. -/
 @[simps]
 def Iso.mk {α β : LinOrdCat.{u}} (e : α ≃o β) : α ≅ β
@@ -87,7 +92,6 @@ def Iso.mk {α β : LinOrdCat.{u}} (e : α ≃o β) : α ≅ β
     ext
     exact e.apply_symm_apply x
 #align LinOrd.iso.mk LinOrdCat.Iso.mk
--/
 
 #print LinOrdCat.dual /-
 /-- `order_dual` as a functor. -/

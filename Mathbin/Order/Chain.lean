@@ -465,11 +465,15 @@ section Preorder
 
 variable [Preorder α] {a b : α}
 
-#print Flag.le_or_le /-
+/- warning: flag.le_or_le -> Flag.le_or_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α} (s : Flag.{u1} α (Preorder.toHasLe.{u1} α _inst_1)), (Membership.Mem.{u1, u1} α (Flag.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (SetLike.hasMem.{u1, u1} (Flag.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) α (Flag.setLike.{u1} α (Preorder.toHasLe.{u1} α _inst_1))) a s) -> (Membership.Mem.{u1, u1} α (Flag.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) (SetLike.hasMem.{u1, u1} (Flag.{u1} α (Preorder.toHasLe.{u1} α _inst_1)) α (Flag.setLike.{u1} α (Preorder.toHasLe.{u1} α _inst_1))) b s) -> (Or (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a b) (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) b a))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α} (s : Flag.{u1} α (Preorder.toLE.{u1} α _inst_1)), (Membership.mem.{u1, u1} α (Flag.{u1} α (Preorder.toLE.{u1} α _inst_1)) (SetLike.instMembership.{u1, u1} (Flag.{u1} α (Preorder.toLE.{u1} α _inst_1)) α (Flag.instSetLikeFlag.{u1} α (Preorder.toLE.{u1} α _inst_1))) a s) -> (Membership.mem.{u1, u1} α (Flag.{u1} α (Preorder.toLE.{u1} α _inst_1)) (SetLike.instMembership.{u1, u1} (Flag.{u1} α (Preorder.toLE.{u1} α _inst_1)) α (Flag.instSetLikeFlag.{u1} α (Preorder.toLE.{u1} α _inst_1))) b s) -> (Or (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a b) (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) b a))
+Case conversion may be inaccurate. Consider using '#align flag.le_or_le Flag.le_or_leₓ'. -/
 protected theorem le_or_le (s : Flag α) (ha : a ∈ s) (hb : b ∈ s) : a ≤ b ∨ b ≤ a :=
   s.chain_le.Total ha hb
 #align flag.le_or_le Flag.le_or_le
--/
 
 instance [OrderTop α] (s : Flag α) : OrderTop s :=
   Subtype.orderTop s.top_mem
@@ -486,11 +490,15 @@ section PartialOrder
 
 variable [PartialOrder α]
 
-#print Flag.chain_lt /-
+/- warning: flag.chain_lt -> Flag.chain_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] (s : Flag.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))), IsChain.{u1} α (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Flag.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Flag.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Flag.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (Flag.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) α (Flag.setLike.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)))))) s)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] (s : Flag.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))), IsChain.{u1} α (fun (x._@.Mathlib.Order.Chain._hyg.3784 : α) (x._@.Mathlib.Order.Chain._hyg.3786 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) x._@.Mathlib.Order.Chain._hyg.3784 x._@.Mathlib.Order.Chain._hyg.3786) (SetLike.coe.{u1, u1} (Flag.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) α (Flag.instSetLikeFlag.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))) s)
+Case conversion may be inaccurate. Consider using '#align flag.chain_lt Flag.chain_ltₓ'. -/
 theorem chain_lt (s : Flag α) : IsChain (· < ·) (s : Set α) := fun a ha b hb h =>
   (s.le_or_le ha hb).imp h.lt_of_le h.lt_of_le'
 #align flag.chain_lt Flag.chain_lt
--/
 
 instance [DecidableEq α] [@DecidableRel α (· ≤ ·)] [@DecidableRel α (· < ·)] (s : Flag α) :
     LinearOrder s :=

@@ -43,13 +43,17 @@ namespace Ico
 instance [SemilatticeInf α] {a b : α} : SemilatticeInf (Ico a b) :=
   Subtype.semilatticeInf fun x y hx hy => ⟨le_inf hx.1 hy.1, lt_of_le_of_lt inf_le_left hx.2⟩
 
-#print Set.Ico.orderBot /-
+/- warning: set.Ico.order_bot -> Set.Ico.orderBot is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α}, (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) -> (OrderBot.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a b)) (Subtype.hasLe.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a b))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) -> (OrderBot.{u1} (Set.Elem.{u1} α (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a b)) (Subtype.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a b))))
+Case conversion may be inaccurate. Consider using '#align set.Ico.order_bot Set.Ico.orderBotₓ'. -/
 /-- `Ico a b` has a bottom element whenever `a < b`. -/
 @[reducible]
 protected def orderBot [PartialOrder α] {a b : α} (h : a < b) : OrderBot (Ico a b) :=
   (isLeast_Ico h).OrderBot
 #align set.Ico.order_bot Set.Ico.orderBot
--/
 
 end Ico
 
@@ -65,13 +69,17 @@ namespace Ioc
 instance [SemilatticeSup α] {a b : α} : SemilatticeSup (Ioc a b) :=
   Subtype.semilatticeSup fun x y hx hy => ⟨lt_of_lt_of_le hx.1 le_sup_left, sup_le hx.2 hy.2⟩
 
-#print Set.Ioc.orderTop /-
+/- warning: set.Ioc.order_top -> Set.Ioc.orderTop is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α}, (LT.lt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) -> (OrderTop.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a b)) (Subtype.hasLe.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a b))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] {a : α} {b : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) -> (OrderTop.{u1} (Set.Elem.{u1} α (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a b)) (Subtype.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1) a b))))
+Case conversion may be inaccurate. Consider using '#align set.Ioc.order_top Set.Ioc.orderTopₓ'. -/
 /-- `Ioc a b` has a top element whenever `a < b`. -/
 @[reducible]
 protected def orderTop [PartialOrder α] {a b : α} (h : a < b) : OrderTop (Ioc a b) :=
   (isGreatest_Ioc h).OrderTop
 #align set.Ioc.order_top Set.Ioc.orderTop
--/
 
 end Ioc
 
@@ -100,7 +108,7 @@ instance [Preorder α] {a : α} : OrderTop (Iic a)
 
 /- warning: set.Iic.coe_top -> Set.Iic.coe_top is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α}, Eq.{succ u1} α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Iic.{u1} α _inst_1 a)) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Iic.{u1} α _inst_1 a)) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Iic.{u1} α _inst_1 a)) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Iic.{u1} α _inst_1 a)) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.Iic.{u1} α _inst_1 a)))))) (Top.top.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Iic.{u1} α _inst_1 a)) (OrderTop.toHasTop.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Iic.{u1} α _inst_1 a)) (Subtype.hasLe.{u1} α (Preorder.toLE.{u1} α _inst_1) (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.Iic.{u1} α _inst_1 a))) (Set.Iic.orderTop.{u1} α _inst_1 a)))) a
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α}, Eq.{succ u1} α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Iic.{u1} α _inst_1 a)) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Iic.{u1} α _inst_1 a)) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Iic.{u1} α _inst_1 a)) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Iic.{u1} α _inst_1 a)) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.Iic.{u1} α _inst_1 a)))))) (Top.top.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Iic.{u1} α _inst_1 a)) (OrderTop.toHasTop.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Iic.{u1} α _inst_1 a)) (Subtype.hasLe.{u1} α (Preorder.toHasLe.{u1} α _inst_1) (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.Iic.{u1} α _inst_1 a))) (Set.Iic.orderTop.{u1} α _inst_1 a)))) a
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α}, Eq.{succ u1} α (Subtype.val.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Set.Iic.{u1} α _inst_1 a)) (Top.top.{u1} (Set.Elem.{u1} α (Set.Iic.{u1} α _inst_1 a)) (OrderTop.toTop.{u1} (Set.Elem.{u1} α (Set.Iic.{u1} α _inst_1 a)) (Subtype.le.{u1} α (Preorder.toLE.{u1} α _inst_1) (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Set.Iic.{u1} α _inst_1 a))) (Set.Iic.orderTop.{u1} α _inst_1 a)))) a
 Case conversion may be inaccurate. Consider using '#align set.Iic.coe_top Set.Iic.coe_topₓ'. -/
@@ -116,7 +124,7 @@ instance [Preorder α] [OrderBot α] {a : α} : OrderBot (Iic a)
 
 /- warning: set.Iic.coe_bot -> Set.Iic.coe_bot is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_1)] {a : α}, Eq.{succ u1} α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Iic.{u1} α _inst_1 a)) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Iic.{u1} α _inst_1 a)) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Iic.{u1} α _inst_1 a)) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Iic.{u1} α _inst_1 a)) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.Iic.{u1} α _inst_1 a)))))) (Bot.bot.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Iic.{u1} α _inst_1 a)) (OrderBot.toHasBot.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Iic.{u1} α _inst_1 a)) (Subtype.hasLe.{u1} α (Preorder.toLE.{u1} α _inst_1) (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.Iic.{u1} α _inst_1 a))) (Set.Iic.orderBot.{u1} α _inst_1 _inst_2 a)))) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toHasLe.{u1} α _inst_1)] {a : α}, Eq.{succ u1} α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Iic.{u1} α _inst_1 a)) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Iic.{u1} α _inst_1 a)) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Iic.{u1} α _inst_1 a)) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Iic.{u1} α _inst_1 a)) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.Iic.{u1} α _inst_1 a)))))) (Bot.bot.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Iic.{u1} α _inst_1 a)) (OrderBot.toHasBot.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Iic.{u1} α _inst_1 a)) (Subtype.hasLe.{u1} α (Preorder.toHasLe.{u1} α _inst_1) (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.Iic.{u1} α _inst_1 a))) (Set.Iic.orderBot.{u1} α _inst_1 _inst_2 a)))) (Bot.bot.{u1} α (OrderBot.toHasBot.{u1} α (Preorder.toHasLe.{u1} α _inst_1) _inst_2))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_1)] {a : α}, Eq.{succ u1} α (Subtype.val.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Set.Iic.{u1} α _inst_1 a)) (Bot.bot.{u1} (Set.Elem.{u1} α (Set.Iic.{u1} α _inst_1 a)) (OrderBot.toBot.{u1} (Set.Elem.{u1} α (Set.Iic.{u1} α _inst_1 a)) (Subtype.le.{u1} α (Preorder.toLE.{u1} α _inst_1) (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Set.Iic.{u1} α _inst_1 a))) (Set.Iic.orderBot.{u1} α _inst_1 _inst_2 a)))) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2))
 Case conversion may be inaccurate. Consider using '#align set.Iic.coe_bot Set.Iic.coe_botₓ'. -/
@@ -151,7 +159,7 @@ instance [Preorder α] {a : α} : OrderBot (Ici a)
 
 /- warning: set.Ici.coe_bot -> Set.Ici.coe_bot is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α}, Eq.{succ u1} α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ici.{u1} α _inst_1 a)) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ici.{u1} α _inst_1 a)) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ici.{u1} α _inst_1 a)) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ici.{u1} α _inst_1 a)) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.Ici.{u1} α _inst_1 a)))))) (Bot.bot.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ici.{u1} α _inst_1 a)) (OrderBot.toHasBot.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ici.{u1} α _inst_1 a)) (Subtype.hasLe.{u1} α (Preorder.toLE.{u1} α _inst_1) (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.Ici.{u1} α _inst_1 a))) (Set.Ici.orderBot.{u1} α _inst_1 a)))) a
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α}, Eq.{succ u1} α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ici.{u1} α _inst_1 a)) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ici.{u1} α _inst_1 a)) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ici.{u1} α _inst_1 a)) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ici.{u1} α _inst_1 a)) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.Ici.{u1} α _inst_1 a)))))) (Bot.bot.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ici.{u1} α _inst_1 a)) (OrderBot.toHasBot.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ici.{u1} α _inst_1 a)) (Subtype.hasLe.{u1} α (Preorder.toHasLe.{u1} α _inst_1) (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.Ici.{u1} α _inst_1 a))) (Set.Ici.orderBot.{u1} α _inst_1 a)))) a
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α}, Eq.{succ u1} α (Subtype.val.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Set.Ici.{u1} α _inst_1 a)) (Bot.bot.{u1} (Set.Elem.{u1} α (Set.Ici.{u1} α _inst_1 a)) (OrderBot.toBot.{u1} (Set.Elem.{u1} α (Set.Ici.{u1} α _inst_1 a)) (Subtype.le.{u1} α (Preorder.toLE.{u1} α _inst_1) (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Set.Ici.{u1} α _inst_1 a))) (Set.Ici.orderBot.{u1} α _inst_1 a)))) a
 Case conversion may be inaccurate. Consider using '#align set.Ici.coe_bot Set.Ici.coe_botₓ'. -/
@@ -167,7 +175,7 @@ instance [Preorder α] [OrderTop α] {a : α} : OrderTop (Ici a)
 
 /- warning: set.Ici.coe_top -> Set.Ici.coe_top is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α _inst_1)] {a : α}, Eq.{succ u1} α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ici.{u1} α _inst_1 a)) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ici.{u1} α _inst_1 a)) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ici.{u1} α _inst_1 a)) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ici.{u1} α _inst_1 a)) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.Ici.{u1} α _inst_1 a)))))) (Top.top.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ici.{u1} α _inst_1 a)) (OrderTop.toHasTop.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ici.{u1} α _inst_1 a)) (Subtype.hasLe.{u1} α (Preorder.toLE.{u1} α _inst_1) (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.Ici.{u1} α _inst_1 a))) (Set.Ici.orderTop.{u1} α _inst_1 _inst_2 a)))) (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toHasLe.{u1} α _inst_1)] {a : α}, Eq.{succ u1} α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ici.{u1} α _inst_1 a)) α (HasLiftT.mk.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ici.{u1} α _inst_1 a)) α (CoeTCₓ.coe.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ici.{u1} α _inst_1 a)) α (coeBase.{succ u1, succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ici.{u1} α _inst_1 a)) α (coeSubtype.{succ u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.Ici.{u1} α _inst_1 a)))))) (Top.top.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ici.{u1} α _inst_1 a)) (OrderTop.toHasTop.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Ici.{u1} α _inst_1 a)) (Subtype.hasLe.{u1} α (Preorder.toHasLe.{u1} α _inst_1) (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.Ici.{u1} α _inst_1 a))) (Set.Ici.orderTop.{u1} α _inst_1 _inst_2 a)))) (Top.top.{u1} α (OrderTop.toHasTop.{u1} α (Preorder.toHasLe.{u1} α _inst_1) _inst_2))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α _inst_1)] {a : α}, Eq.{succ u1} α (Subtype.val.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Set.Ici.{u1} α _inst_1 a)) (Top.top.{u1} (Set.Elem.{u1} α (Set.Ici.{u1} α _inst_1 a)) (OrderTop.toTop.{u1} (Set.Elem.{u1} α (Set.Ici.{u1} α _inst_1 a)) (Subtype.le.{u1} α (Preorder.toLE.{u1} α _inst_1) (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Set.Ici.{u1} α _inst_1 a))) (Set.Ici.orderTop.{u1} α _inst_1 _inst_2 a)))) (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2))
 Case conversion may be inaccurate. Consider using '#align set.Ici.coe_top Set.Ici.coe_topₓ'. -/
@@ -192,29 +200,41 @@ instance [SemilatticeSup α] {a b : α} : SemilatticeSup (Icc a b) :=
 instance [Lattice α] {a b : α} : Lattice (Icc a b) :=
   { Icc.semilatticeInf, Icc.semilatticeSup with }
 
-#print Set.Icc.orderBot /-
+/- warning: set.Icc.order_bot -> Set.Icc.orderBot is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a b) -> (OrderBot.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Icc.{u1} α _inst_1 a b)) (Subtype.hasLe.{u1} α (Preorder.toHasLe.{u1} α _inst_1) (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.Icc.{u1} α _inst_1 a b))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a b) -> (OrderBot.{u1} (Set.Elem.{u1} α (Set.Icc.{u1} α _inst_1 a b)) (Subtype.le.{u1} α (Preorder.toLE.{u1} α _inst_1) (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Set.Icc.{u1} α _inst_1 a b))))
+Case conversion may be inaccurate. Consider using '#align set.Icc.order_bot Set.Icc.orderBotₓ'. -/
 /-- `Icc a b` has a bottom element whenever `a ≤ b`. -/
 @[reducible]
 protected def orderBot [Preorder α] {a b : α} (h : a ≤ b) : OrderBot (Icc a b) :=
   (isLeast_Icc h).OrderBot
 #align set.Icc.order_bot Set.Icc.orderBot
--/
 
-#print Set.Icc.orderTop /-
+/- warning: set.Icc.order_top -> Set.Icc.orderTop is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a b) -> (OrderTop.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Icc.{u1} α _inst_1 a b)) (Subtype.hasLe.{u1} α (Preorder.toHasLe.{u1} α _inst_1) (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.Icc.{u1} α _inst_1 a b))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a b) -> (OrderTop.{u1} (Set.Elem.{u1} α (Set.Icc.{u1} α _inst_1 a b)) (Subtype.le.{u1} α (Preorder.toLE.{u1} α _inst_1) (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Set.Icc.{u1} α _inst_1 a b))))
+Case conversion may be inaccurate. Consider using '#align set.Icc.order_top Set.Icc.orderTopₓ'. -/
 /-- `Icc a b` has a top element whenever `a ≤ b`. -/
 @[reducible]
 protected def orderTop [Preorder α] {a b : α} (h : a ≤ b) : OrderTop (Icc a b) :=
   (isGreatest_Icc h).OrderTop
 #align set.Icc.order_top Set.Icc.orderTop
--/
 
-#print Set.Icc.boundedOrder /-
+/- warning: set.Icc.bounded_order -> Set.Icc.boundedOrder is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a b) -> (BoundedOrder.{u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.Icc.{u1} α _inst_1 a b)) (Subtype.hasLe.{u1} α (Preorder.toHasLe.{u1} α _inst_1) (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.Icc.{u1} α _inst_1 a b))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a b) -> (BoundedOrder.{u1} (Set.Elem.{u1} α (Set.Icc.{u1} α _inst_1 a b)) (Subtype.le.{u1} α (Preorder.toLE.{u1} α _inst_1) (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Set.Icc.{u1} α _inst_1 a b))))
+Case conversion may be inaccurate. Consider using '#align set.Icc.bounded_order Set.Icc.boundedOrderₓ'. -/
 /-- `Icc a b` is a `bounded_order` whenever `a ≤ b`. -/
 @[reducible]
 protected def boundedOrder [Preorder α] {a b : α} (h : a ≤ b) : BoundedOrder (Icc a b) :=
   { Icc.orderTop h, Icc.orderBot h with }
 #align set.Icc.bounded_order Set.Icc.boundedOrder
--/
 
 end Icc
 

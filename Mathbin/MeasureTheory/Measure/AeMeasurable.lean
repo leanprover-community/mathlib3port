@@ -68,7 +68,7 @@ namespace AEMeasurable
 
 /- warning: ae_measurable.mono_measure -> AEMeasurable.mono_measure is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m0 : MeasurableSpace.{u1} α} [_inst_1 : MeasurableSpace.{u2} β] {f : α -> β} {μ : MeasureTheory.Measure.{u1} α m0} {ν : MeasureTheory.Measure.{u1} α m0}, (AEMeasurable.{u1, u2} α β _inst_1 m0 f μ) -> (LE.le.{u1} (MeasureTheory.Measure.{u1} α m0) (Preorder.toLE.{u1} (MeasureTheory.Measure.{u1} α m0) (PartialOrder.toPreorder.{u1} (MeasureTheory.Measure.{u1} α m0) (MeasureTheory.Measure.instPartialOrder.{u1} α m0))) ν μ) -> (AEMeasurable.{u1, u2} α β _inst_1 m0 f ν)
+  forall {α : Type.{u1}} {β : Type.{u2}} {m0 : MeasurableSpace.{u1} α} [_inst_1 : MeasurableSpace.{u2} β] {f : α -> β} {μ : MeasureTheory.Measure.{u1} α m0} {ν : MeasureTheory.Measure.{u1} α m0}, (AEMeasurable.{u1, u2} α β _inst_1 m0 f μ) -> (LE.le.{u1} (MeasureTheory.Measure.{u1} α m0) (Preorder.toHasLe.{u1} (MeasureTheory.Measure.{u1} α m0) (PartialOrder.toPreorder.{u1} (MeasureTheory.Measure.{u1} α m0) (MeasureTheory.Measure.instPartialOrder.{u1} α m0))) ν μ) -> (AEMeasurable.{u1, u2} α β _inst_1 m0 f ν)
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {m0 : MeasurableSpace.{u2} α} [_inst_1 : MeasurableSpace.{u1} β] {f : α -> β} {μ : MeasureTheory.Measure.{u2} α m0} {ν : MeasureTheory.Measure.{u2} α m0}, (AEMeasurable.{u2, u1} α β _inst_1 m0 f μ) -> (LE.le.{u2} (MeasureTheory.Measure.{u2} α m0) (Preorder.toLE.{u2} (MeasureTheory.Measure.{u2} α m0) (PartialOrder.toPreorder.{u2} (MeasureTheory.Measure.{u2} α m0) (MeasureTheory.Measure.instPartialOrder.{u2} α m0))) ν μ) -> (AEMeasurable.{u2, u1} α β _inst_1 m0 f ν)
 Case conversion may be inaccurate. Consider using '#align ae_measurable.mono_measure AEMeasurable.mono_measureₓ'. -/
@@ -347,14 +347,18 @@ theorem exists_ae_eq_range_subset (H : AEMeasurable f μ) {t : Set β} (ht : ∀
     simp only [hx, mem_compl_iff, mem_set_of_eq, false_and_iff, not_false_iff]
 #align ae_measurable.exists_ae_eq_range_subset AEMeasurable.exists_ae_eq_range_subset
 
-#print AEMeasurable.exists_measurable_nonneg /-
+/- warning: ae_measurable.exists_measurable_nonneg -> AEMeasurable.exists_measurable_nonneg is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {β : Type.{u2}} [_inst_4 : Preorder.{u2} β] [_inst_5 : Zero.{u2} β] {mβ : MeasurableSpace.{u2} β} {f : α -> β}, (AEMeasurable.{u1, u2} α β mβ m0 f μ) -> (Filter.Eventually.{u1} α (fun (t : α) => LE.le.{u2} β (Preorder.toHasLe.{u2} β _inst_4) (OfNat.ofNat.{u2} β 0 (OfNat.mk.{u2} β 0 (Zero.zero.{u2} β _inst_5))) (f t)) (MeasureTheory.Measure.ae.{u1} α m0 μ)) -> (Exists.{max (succ u1) (succ u2)} (α -> β) (fun (g : α -> β) => And (Measurable.{u1, u2} α β m0 mβ g) (And (LE.le.{max u1 u2} (α -> β) (Pi.hasLe.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => Preorder.toHasLe.{u2} β _inst_4)) (OfNat.ofNat.{max u1 u2} (α -> β) 0 (OfNat.mk.{max u1 u2} (α -> β) 0 (Zero.zero.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => _inst_5))))) g) (Filter.EventuallyEq.{u1, u2} α β (MeasureTheory.Measure.ae.{u1} α m0 μ) f g))))
+but is expected to have type
+  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {β : Type.{u2}} [_inst_4 : Preorder.{u2} β] [_inst_5 : Zero.{u2} β] {mβ : MeasurableSpace.{u2} β} {f : α -> β}, (AEMeasurable.{u1, u2} α β mβ m0 f μ) -> (Filter.Eventually.{u1} α (fun (t : α) => LE.le.{u2} β (Preorder.toLE.{u2} β _inst_4) (OfNat.ofNat.{u2} β 0 (Zero.toOfNat0.{u2} β _inst_5)) (f t)) (MeasureTheory.Measure.ae.{u1} α m0 μ)) -> (Exists.{max (succ u2) (succ u1)} (α -> β) (fun (g : α -> β) => And (Measurable.{u1, u2} α β m0 mβ g) (And (LE.le.{max u2 u1} (α -> β) (Pi.hasLe.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => Preorder.toLE.{u2} β _inst_4)) (OfNat.ofNat.{max u2 u1} (α -> β) 0 (Zero.toOfNat0.{max u1 u2} (α -> β) (Pi.instZero.{u1, u2} α (fun (a._@.Mathlib.MeasureTheory.MeasurableSpaceDef._hyg.5446 : α) => β) (fun (i : α) => _inst_5)))) g) (Filter.EventuallyEq.{u1, u2} α β (MeasureTheory.Measure.ae.{u1} α m0 μ) f g))))
+Case conversion may be inaccurate. Consider using '#align ae_measurable.exists_measurable_nonneg AEMeasurable.exists_measurable_nonnegₓ'. -/
 theorem exists_measurable_nonneg {β} [Preorder β] [Zero β] {mβ : MeasurableSpace β} {f : α → β}
     (hf : AEMeasurable f μ) (f_nn : ∀ᵐ t ∂μ, 0 ≤ f t) : ∃ g, Measurable g ∧ 0 ≤ g ∧ f =ᵐ[μ] g :=
   by
   obtain ⟨G, hG_meas, hG_mem, hG_ae_eq⟩ := hf.exists_ae_eq_range_subset f_nn ⟨0, le_rfl⟩
   exact ⟨G, hG_meas, fun x => hG_mem (mem_range_self x), hG_ae_eq⟩
 #align ae_measurable.exists_measurable_nonneg AEMeasurable.exists_measurable_nonneg
--/
 
 /- warning: ae_measurable.subtype_mk -> AEMeasurable.subtype_mk is a dubious translation:
 lean 3 declaration is
@@ -527,7 +531,12 @@ theorem AEMeasurable.restrict (hfm : AEMeasurable f μ) {s} : AEMeasurable f (μ
   ⟨AEMeasurable.mk f hfm, hfm.measurable_mk, ae_restrict_of_ae hfm.ae_eq_mk⟩
 #align ae_measurable.restrict AEMeasurable.restrict
 
-#print aemeasurable_Ioi_of_forall_Ioc /-
+/- warning: ae_measurable_Ioi_of_forall_Ioc -> aemeasurable_Ioi_of_forall_Ioc is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {β : Type.{u2}} {mβ : MeasurableSpace.{u2} β} [_inst_4 : LinearOrder.{u1} α] [_inst_5 : Filter.IsCountablyGenerated.{u1} α (Filter.atTop.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_4)))))] {x : α} {g : α -> β}, (forall (t : α), (GT.gt.{u1} α (Preorder.toHasLt.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_4))))) t x) -> (AEMeasurable.{u1, u2} α β mβ m0 g (MeasureTheory.Measure.restrict.{u1} α m0 μ (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_4)))) x t)))) -> (AEMeasurable.{u1, u2} α β mβ m0 g (MeasureTheory.Measure.restrict.{u1} α m0 μ (Set.Ioi.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_4)))) x)))
+but is expected to have type
+  forall {α : Type.{u1}} {m0 : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m0} {β : Type.{u2}} {mβ : MeasurableSpace.{u2} β} [_inst_4 : LinearOrder.{u1} α] [_inst_5 : Filter.IsCountablyGenerated.{u1} α (Filter.atTop.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_4))))))] {x : α} {g : α -> β}, (forall (t : α), (GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_4)))))) t x) -> (AEMeasurable.{u1, u2} α β mβ m0 g (MeasureTheory.Measure.restrict.{u1} α m0 μ (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_4))))) x t)))) -> (AEMeasurable.{u1, u2} α β mβ m0 g (MeasureTheory.Measure.restrict.{u1} α m0 μ (Set.Ioi.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_4))))) x)))
+Case conversion may be inaccurate. Consider using '#align ae_measurable_Ioi_of_forall_Ioc aemeasurable_Ioi_of_forall_Iocₓ'. -/
 theorem aemeasurable_Ioi_of_forall_Ioc {β} {mβ : MeasurableSpace β} [LinearOrder α]
     [(atTop : Filter α).IsCountablyGenerated] {x : α} {g : α → β}
     (g_meas : ∀ t > x, AEMeasurable g (μ.restrict (Ioc x t))) :
@@ -546,7 +555,6 @@ theorem aemeasurable_Ioi_of_forall_Ioc {β} {mβ : MeasurableSpace β} [LinearOr
   · rw [Ioc_eq_empty (not_lt.mpr h), measure.restrict_empty]
     exact aemeasurable_zero_measure
 #align ae_measurable_Ioi_of_forall_Ioc aemeasurable_Ioi_of_forall_Ioc
--/
 
 variable [Zero β]
 
@@ -610,7 +618,7 @@ theorem MeasureTheory.Measure.restrict_map_of_aemeasurable {f : α → δ} (hf :
 
 /- warning: measure_theory.measure.map_mono_of_ae_measurable -> MeasureTheory.Measure.map_mono_of_aemeasurable is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {δ : Type.{u2}} {m0 : MeasurableSpace.{u1} α} [_inst_3 : MeasurableSpace.{u2} δ] {μ : MeasureTheory.Measure.{u1} α m0} {ν : MeasureTheory.Measure.{u1} α m0} {f : α -> δ}, (LE.le.{u1} (MeasureTheory.Measure.{u1} α m0) (Preorder.toLE.{u1} (MeasureTheory.Measure.{u1} α m0) (PartialOrder.toPreorder.{u1} (MeasureTheory.Measure.{u1} α m0) (MeasureTheory.Measure.instPartialOrder.{u1} α m0))) μ ν) -> (AEMeasurable.{u1, u2} α δ _inst_3 m0 f ν) -> (LE.le.{u2} (MeasureTheory.Measure.{u2} δ _inst_3) (Preorder.toLE.{u2} (MeasureTheory.Measure.{u2} δ _inst_3) (PartialOrder.toPreorder.{u2} (MeasureTheory.Measure.{u2} δ _inst_3) (MeasureTheory.Measure.instPartialOrder.{u2} δ _inst_3))) (MeasureTheory.Measure.map.{u1, u2} α δ _inst_3 m0 f μ) (MeasureTheory.Measure.map.{u1, u2} α δ _inst_3 m0 f ν))
+  forall {α : Type.{u1}} {δ : Type.{u2}} {m0 : MeasurableSpace.{u1} α} [_inst_3 : MeasurableSpace.{u2} δ] {μ : MeasureTheory.Measure.{u1} α m0} {ν : MeasureTheory.Measure.{u1} α m0} {f : α -> δ}, (LE.le.{u1} (MeasureTheory.Measure.{u1} α m0) (Preorder.toHasLe.{u1} (MeasureTheory.Measure.{u1} α m0) (PartialOrder.toPreorder.{u1} (MeasureTheory.Measure.{u1} α m0) (MeasureTheory.Measure.instPartialOrder.{u1} α m0))) μ ν) -> (AEMeasurable.{u1, u2} α δ _inst_3 m0 f ν) -> (LE.le.{u2} (MeasureTheory.Measure.{u2} δ _inst_3) (Preorder.toHasLe.{u2} (MeasureTheory.Measure.{u2} δ _inst_3) (PartialOrder.toPreorder.{u2} (MeasureTheory.Measure.{u2} δ _inst_3) (MeasureTheory.Measure.instPartialOrder.{u2} δ _inst_3))) (MeasureTheory.Measure.map.{u1, u2} α δ _inst_3 m0 f μ) (MeasureTheory.Measure.map.{u1, u2} α δ _inst_3 m0 f ν))
 but is expected to have type
   forall {α : Type.{u2}} {δ : Type.{u1}} {m0 : MeasurableSpace.{u2} α} [_inst_3 : MeasurableSpace.{u1} δ] {μ : MeasureTheory.Measure.{u2} α m0} {ν : MeasureTheory.Measure.{u2} α m0} {f : α -> δ}, (LE.le.{u2} (MeasureTheory.Measure.{u2} α m0) (Preorder.toLE.{u2} (MeasureTheory.Measure.{u2} α m0) (PartialOrder.toPreorder.{u2} (MeasureTheory.Measure.{u2} α m0) (MeasureTheory.Measure.instPartialOrder.{u2} α m0))) μ ν) -> (AEMeasurable.{u2, u1} α δ _inst_3 m0 f ν) -> (LE.le.{u1} (MeasureTheory.Measure.{u1} δ _inst_3) (Preorder.toLE.{u1} (MeasureTheory.Measure.{u1} δ _inst_3) (PartialOrder.toPreorder.{u1} (MeasureTheory.Measure.{u1} δ _inst_3) (MeasureTheory.Measure.instPartialOrder.{u1} δ _inst_3))) (MeasureTheory.Measure.map.{u2, u1} α δ _inst_3 m0 f μ) (MeasureTheory.Measure.map.{u2, u1} α δ _inst_3 m0 f ν))
 Case conversion may be inaccurate. Consider using '#align measure_theory.measure.map_mono_of_ae_measurable MeasureTheory.Measure.map_mono_of_aemeasurableₓ'. -/

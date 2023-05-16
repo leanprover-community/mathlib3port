@@ -34,7 +34,7 @@ class LinearOrderedCommMonoidWithZero (α : Type _) extends LinearOrderedCommMon
 
 /- warning: linear_ordered_comm_monoid_with_zero.to_zero_le_one_class -> LinearOrderedCommMonoidWithZero.toZeroLeOneClass is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LinearOrderedCommMonoidWithZero.{u1} α], ZeroLEOneClass.{u1} α (MulZeroClass.toHasZero.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (LinearOrderedCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) (MulOneClass.toHasOne.{u1} α (MulZeroOneClass.toMulOneClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (LinearOrderedCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommMonoid.toPartialOrder.{u1} α (LinearOrderedCommMonoid.toOrderedCommMonoid.{u1} α (LinearOrderedCommMonoidWithZero.toLinearOrderedCommMonoid.{u1} α _inst_1)))))
+  forall {α : Type.{u1}} [_inst_1 : LinearOrderedCommMonoidWithZero.{u1} α], ZeroLEOneClass.{u1} α (MulZeroClass.toHasZero.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (LinearOrderedCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) (MulOneClass.toHasOne.{u1} α (MulZeroOneClass.toMulOneClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (LinearOrderedCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommMonoid.toPartialOrder.{u1} α (LinearOrderedCommMonoid.toOrderedCommMonoid.{u1} α (LinearOrderedCommMonoidWithZero.toLinearOrderedCommMonoid.{u1} α _inst_1)))))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedCommMonoidWithZero.{u1} α], ZeroLEOneClass.{u1} α (LinearOrderedCommMonoidWithZero.toZero.{u1} α _inst_1) (Monoid.toOne.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (LinearOrderedCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))) (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedCommMonoid.toPartialOrder.{u1} α (LinearOrderedCommMonoid.toOrderedCommMonoid.{u1} α (LinearOrderedCommMonoidWithZero.toLinearOrderedCommMonoid.{u1} α _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align linear_ordered_comm_monoid_with_zero.to_zero_le_one_class LinearOrderedCommMonoidWithZero.toZeroLeOneClassₓ'. -/
@@ -45,7 +45,7 @@ instance (priority := 100) LinearOrderedCommMonoidWithZero.toZeroLeOneClass
 
 /- warning: canonically_ordered_add_monoid.to_zero_le_one_class -> CanonicallyOrderedAddMonoid.toZeroLeOneClass is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CanonicallyOrderedAddMonoid.{u1} α] [_inst_2 : One.{u1} α], ZeroLEOneClass.{u1} α (AddZeroClass.toHasZero.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (OrderedAddCommMonoid.toAddCommMonoid.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α _inst_1))))) _inst_2 (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommMonoid.toPartialOrder.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α _inst_1))))
+  forall {α : Type.{u1}} [_inst_1 : CanonicallyOrderedAddMonoid.{u1} α] [_inst_2 : One.{u1} α], ZeroLEOneClass.{u1} α (AddZeroClass.toHasZero.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (OrderedAddCommMonoid.toAddCommMonoid.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α _inst_1))))) _inst_2 (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommMonoid.toPartialOrder.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α _inst_1))))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CanonicallyOrderedAddMonoid.{u1} α] [_inst_2 : One.{u1} α], ZeroLEOneClass.{u1} α (AddMonoid.toZero.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (OrderedAddCommMonoid.toAddCommMonoid.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α _inst_1)))) _inst_2 (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommMonoid.toPartialOrder.{u1} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u1} α _inst_1))))
 Case conversion may be inaccurate. Consider using '#align canonically_ordered_add_monoid.to_zero_le_one_class CanonicallyOrderedAddMonoid.toZeroLeOneClassₓ'. -/
@@ -67,21 +67,29 @@ instance [PartialOrder α] : PartialOrder (WithZero α) :=
 instance [Preorder α] : OrderBot (WithZero α) :=
   WithBot.orderBot
 
-#print WithZero.zero_le /-
+/- warning: with_zero.zero_le -> WithZero.zero_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : WithZero.{u1} α), LE.le.{u1} (WithZero.{u1} α) (Preorder.toHasLe.{u1} (WithZero.{u1} α) (WithZero.preorder.{u1} α _inst_1)) (OfNat.ofNat.{u1} (WithZero.{u1} α) 0 (OfNat.mk.{u1} (WithZero.{u1} α) 0 (Zero.zero.{u1} (WithZero.{u1} α) (WithZero.zero.{u1} α)))) a
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : WithZero.{u1} α), LE.le.{u1} (WithZero.{u1} α) (Preorder.toLE.{u1} (WithZero.{u1} α) (WithZero.preorder.{u1} α _inst_1)) (OfNat.ofNat.{u1} (WithZero.{u1} α) 0 (Zero.toOfNat0.{u1} (WithZero.{u1} α) (WithZero.zero.{u1} α))) a
+Case conversion may be inaccurate. Consider using '#align with_zero.zero_le WithZero.zero_leₓ'. -/
 theorem zero_le [Preorder α] (a : WithZero α) : 0 ≤ a :=
   bot_le
 #align with_zero.zero_le WithZero.zero_le
--/
 
-#print WithZero.zero_lt_coe /-
+/- warning: with_zero.zero_lt_coe -> WithZero.zero_lt_coe is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α), LT.lt.{u1} (WithZero.{u1} α) (Preorder.toHasLt.{u1} (WithZero.{u1} α) (WithZero.preorder.{u1} α _inst_1)) (OfNat.ofNat.{u1} (WithZero.{u1} α) 0 (OfNat.mk.{u1} (WithZero.{u1} α) 0 (Zero.zero.{u1} (WithZero.{u1} α) (WithZero.zero.{u1} α)))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithZero.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithZero.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithZero.{u1} α) (WithZero.hasCoeT.{u1} α))) a)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (a : α), LT.lt.{u1} (WithZero.{u1} α) (Preorder.toLT.{u1} (WithZero.{u1} α) (WithZero.preorder.{u1} α _inst_1)) (OfNat.ofNat.{u1} (WithZero.{u1} α) 0 (Zero.toOfNat0.{u1} (WithZero.{u1} α) (WithZero.zero.{u1} α))) (WithZero.coe.{u1} α a)
+Case conversion may be inaccurate. Consider using '#align with_zero.zero_lt_coe WithZero.zero_lt_coeₓ'. -/
 theorem zero_lt_coe [Preorder α] (a : α) : (0 : WithZero α) < a :=
   WithBot.bot_lt_coe a
 #align with_zero.zero_lt_coe WithZero.zero_lt_coe
--/
 
 /- warning: with_zero.zero_eq_bot -> WithZero.zero_eq_bot is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], Eq.{succ u1} (WithZero.{u1} α) (OfNat.ofNat.{u1} (WithZero.{u1} α) 0 (OfNat.mk.{u1} (WithZero.{u1} α) 0 (Zero.zero.{u1} (WithZero.{u1} α) (WithZero.zero.{u1} α)))) (Bot.bot.{u1} (WithZero.{u1} α) (OrderBot.toHasBot.{u1} (WithZero.{u1} α) (Preorder.toLE.{u1} (WithZero.{u1} α) (WithZero.preorder.{u1} α _inst_1)) (WithZero.orderBot.{u1} α _inst_1)))
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], Eq.{succ u1} (WithZero.{u1} α) (OfNat.ofNat.{u1} (WithZero.{u1} α) 0 (OfNat.mk.{u1} (WithZero.{u1} α) 0 (Zero.zero.{u1} (WithZero.{u1} α) (WithZero.zero.{u1} α)))) (Bot.bot.{u1} (WithZero.{u1} α) (OrderBot.toHasBot.{u1} (WithZero.{u1} α) (Preorder.toHasLe.{u1} (WithZero.{u1} α) (WithZero.preorder.{u1} α _inst_1)) (WithZero.orderBot.{u1} α _inst_1)))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], Eq.{succ u1} (WithZero.{u1} α) (OfNat.ofNat.{u1} (WithZero.{u1} α) 0 (Zero.toOfNat0.{u1} (WithZero.{u1} α) (WithZero.zero.{u1} α))) (Bot.bot.{u1} (WithZero.{u1} α) (OrderBot.toBot.{u1} (WithZero.{u1} α) (Preorder.toLE.{u1} (WithZero.{u1} α) (WithZero.preorder.{u1} α _inst_1)) (WithZero.orderBot.{u1} α _inst_1)))
 Case conversion may be inaccurate. Consider using '#align with_zero.zero_eq_bot WithZero.zero_eq_botₓ'. -/
@@ -89,19 +97,27 @@ theorem zero_eq_bot [Preorder α] : (0 : WithZero α) = ⊥ :=
   rfl
 #align with_zero.zero_eq_bot WithZero.zero_eq_bot
 
-#print WithZero.coe_lt_coe /-
+/- warning: with_zero.coe_lt_coe -> WithZero.coe_lt_coe is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, Iff (LT.lt.{u1} (WithZero.{u1} α) (Preorder.toHasLt.{u1} (WithZero.{u1} α) (WithZero.preorder.{u1} α _inst_1)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithZero.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithZero.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithZero.{u1} α) (WithZero.hasCoeT.{u1} α))) a) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithZero.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithZero.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithZero.{u1} α) (WithZero.hasCoeT.{u1} α))) b)) (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, Iff (LT.lt.{u1} (WithZero.{u1} α) (Preorder.toLT.{u1} (WithZero.{u1} α) (WithZero.preorder.{u1} α _inst_1)) (WithZero.coe.{u1} α a) (WithZero.coe.{u1} α b)) (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) a b)
+Case conversion may be inaccurate. Consider using '#align with_zero.coe_lt_coe WithZero.coe_lt_coeₓ'. -/
 @[simp, norm_cast]
 theorem coe_lt_coe [Preorder α] {a b : α} : (a : WithZero α) < b ↔ a < b :=
   WithBot.coe_lt_coe
 #align with_zero.coe_lt_coe WithZero.coe_lt_coe
--/
 
-#print WithZero.coe_le_coe /-
+/- warning: with_zero.coe_le_coe -> WithZero.coe_le_coe is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, Iff (LE.le.{u1} (WithZero.{u1} α) (Preorder.toHasLe.{u1} (WithZero.{u1} α) (WithZero.preorder.{u1} α _inst_1)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithZero.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithZero.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithZero.{u1} α) (WithZero.hasCoeT.{u1} α))) a) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithZero.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithZero.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithZero.{u1} α) (WithZero.hasCoeT.{u1} α))) b)) (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) a b)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {a : α} {b : α}, Iff (LE.le.{u1} (WithZero.{u1} α) (Preorder.toLE.{u1} (WithZero.{u1} α) (WithZero.preorder.{u1} α _inst_1)) (WithZero.coe.{u1} α a) (WithZero.coe.{u1} α b)) (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a b)
+Case conversion may be inaccurate. Consider using '#align with_zero.coe_le_coe WithZero.coe_le_coeₓ'. -/
 @[simp, norm_cast]
 theorem coe_le_coe [Preorder α] {a b : α} : (a : WithZero α) ≤ b ↔ a ≤ b :=
   WithBot.coe_le_coe
 #align with_zero.coe_le_coe WithZero.coe_le_coe
--/
 
 instance [Lattice α] : Lattice (WithZero α) :=
   WithBot.lattice
@@ -111,7 +127,7 @@ instance [LinearOrder α] : LinearOrder (WithZero α) :=
 
 /- warning: with_zero.covariant_class_mul_le -> WithZero.covariantClass_mul_le is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : CovariantClass.{u1, u1} α α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1)) (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_2))], CovariantClass.{u1, u1} (WithZero.{u1} α) (WithZero.{u1} α) (HMul.hMul.{u1, u1, u1} (WithZero.{u1} α) (WithZero.{u1} α) (WithZero.{u1} α) (instHMul.{u1} (WithZero.{u1} α) (MulZeroClass.toHasMul.{u1} (WithZero.{u1} α) (WithZero.mulZeroClass.{u1} α _inst_1)))) (LE.le.{u1} (WithZero.{u1} α) (Preorder.toLE.{u1} (WithZero.{u1} α) (WithZero.preorder.{u1} α _inst_2)))
+  forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : CovariantClass.{u1, u1} α α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1)) (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_2))], CovariantClass.{u1, u1} (WithZero.{u1} α) (WithZero.{u1} α) (HMul.hMul.{u1, u1, u1} (WithZero.{u1} α) (WithZero.{u1} α) (WithZero.{u1} α) (instHMul.{u1} (WithZero.{u1} α) (MulZeroClass.toHasMul.{u1} (WithZero.{u1} α) (WithZero.mulZeroClass.{u1} α _inst_1)))) (LE.le.{u1} (WithZero.{u1} α) (Preorder.toHasLe.{u1} (WithZero.{u1} α) (WithZero.preorder.{u1} α _inst_2)))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Mul.{u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : CovariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Order.Monoid.WithZero.Defs._hyg.255 : α) (x._@.Mathlib.Algebra.Order.Monoid.WithZero.Defs._hyg.257 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_1) x._@.Mathlib.Algebra.Order.Monoid.WithZero.Defs._hyg.255 x._@.Mathlib.Algebra.Order.Monoid.WithZero.Defs._hyg.257) (fun (x._@.Mathlib.Algebra.Order.Monoid.WithZero.Defs._hyg.270 : α) (x._@.Mathlib.Algebra.Order.Monoid.WithZero.Defs._hyg.272 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_2) x._@.Mathlib.Algebra.Order.Monoid.WithZero.Defs._hyg.270 x._@.Mathlib.Algebra.Order.Monoid.WithZero.Defs._hyg.272)], CovariantClass.{u1, u1} (WithZero.{u1} α) (WithZero.{u1} α) (fun (x._@.Mathlib.Algebra.Order.Monoid.WithZero.Defs._hyg.294 : WithZero.{u1} α) (x._@.Mathlib.Algebra.Order.Monoid.WithZero.Defs._hyg.296 : WithZero.{u1} α) => HMul.hMul.{u1, u1, u1} (WithZero.{u1} α) (WithZero.{u1} α) (WithZero.{u1} α) (instHMul.{u1} (WithZero.{u1} α) (MulZeroClass.toMul.{u1} (WithZero.{u1} α) (WithZero.mulZeroClass.{u1} α _inst_1))) x._@.Mathlib.Algebra.Order.Monoid.WithZero.Defs._hyg.294 x._@.Mathlib.Algebra.Order.Monoid.WithZero.Defs._hyg.296) (fun (x._@.Mathlib.Algebra.Order.Monoid.WithZero.Defs._hyg.309 : WithZero.{u1} α) (x._@.Mathlib.Algebra.Order.Monoid.WithZero.Defs._hyg.311 : WithZero.{u1} α) => LE.le.{u1} (WithZero.{u1} α) (Preorder.toLE.{u1} (WithZero.{u1} α) (WithZero.preorder.{u1} α _inst_2)) x._@.Mathlib.Algebra.Order.Monoid.WithZero.Defs._hyg.309 x._@.Mathlib.Algebra.Order.Monoid.WithZero.Defs._hyg.311)
 Case conversion may be inaccurate. Consider using '#align with_zero.covariant_class_mul_le WithZero.covariantClass_mul_leₓ'. -/
@@ -130,7 +146,7 @@ instance covariantClass_mul_le {α : Type u} [Mul α] [Preorder α]
 /- warning: with_zero.le_max_iff clashes with [anonymous] -> [anonymous]
 warning: with_zero.le_max_iff -> [anonymous] is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : LinearOrder.{u} α] {a : α} {b : α} {c : α}, Iff (LE.le.{u} (WithZero.{u} α) (Preorder.toLE.{u} (WithZero.{u} α) (WithZero.preorder.{u} α (PartialOrder.toPreorder.{u} α (SemilatticeInf.toPartialOrder.{u} α (Lattice.toSemilatticeInf.{u} α (LinearOrder.toLattice.{u} α _inst_1)))))) ((fun (a : Type.{u}) (b : Type.{u}) [self : HasLiftT.{succ u, succ u} a b] => self.0) α (WithZero.{u} α) (HasLiftT.mk.{succ u, succ u} α (WithZero.{u} α) (CoeTCₓ.coe.{succ u, succ u} α (WithZero.{u} α) (WithZero.hasCoeT.{u} α))) a) (LinearOrder.max.{u} (WithZero.{u} α) (WithZero.linearOrder.{u} α _inst_1) ((fun (a : Type.{u}) (b : Type.{u}) [self : HasLiftT.{succ u, succ u} a b] => self.0) α (WithZero.{u} α) (HasLiftT.mk.{succ u, succ u} α (WithZero.{u} α) (CoeTCₓ.coe.{succ u, succ u} α (WithZero.{u} α) (WithZero.hasCoeT.{u} α))) b) ((fun (a : Type.{u}) (b : Type.{u}) [self : HasLiftT.{succ u, succ u} a b] => self.0) α (WithZero.{u} α) (HasLiftT.mk.{succ u, succ u} α (WithZero.{u} α) (CoeTCₓ.coe.{succ u, succ u} α (WithZero.{u} α) (WithZero.hasCoeT.{u} α))) c))) (LE.le.{u} α (Preorder.toLE.{u} α (PartialOrder.toPreorder.{u} α (SemilatticeInf.toPartialOrder.{u} α (Lattice.toSemilatticeInf.{u} α (LinearOrder.toLattice.{u} α _inst_1))))) a (LinearOrder.max.{u} α _inst_1 b c))
+  forall {α : Type.{u}} [_inst_1 : LinearOrder.{u} α] {a : α} {b : α} {c : α}, Iff (LE.le.{u} (WithZero.{u} α) (Preorder.toHasLe.{u} (WithZero.{u} α) (WithZero.preorder.{u} α (PartialOrder.toPreorder.{u} α (SemilatticeInf.toPartialOrder.{u} α (Lattice.toSemilatticeInf.{u} α (LinearOrder.toLattice.{u} α _inst_1)))))) ((fun (a : Type.{u}) (b : Type.{u}) [self : HasLiftT.{succ u, succ u} a b] => self.0) α (WithZero.{u} α) (HasLiftT.mk.{succ u, succ u} α (WithZero.{u} α) (CoeTCₓ.coe.{succ u, succ u} α (WithZero.{u} α) (WithZero.hasCoeT.{u} α))) a) (LinearOrder.max.{u} (WithZero.{u} α) (WithZero.linearOrder.{u} α _inst_1) ((fun (a : Type.{u}) (b : Type.{u}) [self : HasLiftT.{succ u, succ u} a b] => self.0) α (WithZero.{u} α) (HasLiftT.mk.{succ u, succ u} α (WithZero.{u} α) (CoeTCₓ.coe.{succ u, succ u} α (WithZero.{u} α) (WithZero.hasCoeT.{u} α))) b) ((fun (a : Type.{u}) (b : Type.{u}) [self : HasLiftT.{succ u, succ u} a b] => self.0) α (WithZero.{u} α) (HasLiftT.mk.{succ u, succ u} α (WithZero.{u} α) (CoeTCₓ.coe.{succ u, succ u} α (WithZero.{u} α) (WithZero.hasCoeT.{u} α))) c))) (LE.le.{u} α (Preorder.toHasLe.{u} α (PartialOrder.toPreorder.{u} α (SemilatticeInf.toPartialOrder.{u} α (Lattice.toSemilatticeInf.{u} α (LinearOrder.toLattice.{u} α _inst_1))))) a (LinearOrder.max.{u} α _inst_1 b c))
 but is expected to have type
   forall {α : Type.{u}} {_inst_1 : Type.{v}}, (Nat -> α -> _inst_1) -> Nat -> (List.{u} α) -> (List.{v} _inst_1)
 Case conversion may be inaccurate. Consider using '#align with_zero.le_max_iff [anonymous]ₓ'. -/
@@ -142,7 +158,7 @@ theorem [anonymous] [LinearOrder α] {a b c : α} : (a : WithZero α) ≤ max b 
 /- warning: with_zero.min_le_iff clashes with [anonymous] -> [anonymous]
 warning: with_zero.min_le_iff -> [anonymous] is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : LinearOrder.{u} α] {a : α} {b : α} {c : α}, Iff (LE.le.{u} (WithZero.{u} α) (Preorder.toLE.{u} (WithZero.{u} α) (WithZero.preorder.{u} α (PartialOrder.toPreorder.{u} α (SemilatticeInf.toPartialOrder.{u} α (Lattice.toSemilatticeInf.{u} α (LinearOrder.toLattice.{u} α _inst_1)))))) (LinearOrder.min.{u} (WithZero.{u} α) (WithZero.linearOrder.{u} α _inst_1) ((fun (a : Type.{u}) (b : Type.{u}) [self : HasLiftT.{succ u, succ u} a b] => self.0) α (WithZero.{u} α) (HasLiftT.mk.{succ u, succ u} α (WithZero.{u} α) (CoeTCₓ.coe.{succ u, succ u} α (WithZero.{u} α) (WithZero.hasCoeT.{u} α))) a) ((fun (a : Type.{u}) (b : Type.{u}) [self : HasLiftT.{succ u, succ u} a b] => self.0) α (WithZero.{u} α) (HasLiftT.mk.{succ u, succ u} α (WithZero.{u} α) (CoeTCₓ.coe.{succ u, succ u} α (WithZero.{u} α) (WithZero.hasCoeT.{u} α))) b)) ((fun (a : Type.{u}) (b : Type.{u}) [self : HasLiftT.{succ u, succ u} a b] => self.0) α (WithZero.{u} α) (HasLiftT.mk.{succ u, succ u} α (WithZero.{u} α) (CoeTCₓ.coe.{succ u, succ u} α (WithZero.{u} α) (WithZero.hasCoeT.{u} α))) c)) (LE.le.{u} α (Preorder.toLE.{u} α (PartialOrder.toPreorder.{u} α (SemilatticeInf.toPartialOrder.{u} α (Lattice.toSemilatticeInf.{u} α (LinearOrder.toLattice.{u} α _inst_1))))) (LinearOrder.min.{u} α _inst_1 a b) c)
+  forall {α : Type.{u}} [_inst_1 : LinearOrder.{u} α] {a : α} {b : α} {c : α}, Iff (LE.le.{u} (WithZero.{u} α) (Preorder.toHasLe.{u} (WithZero.{u} α) (WithZero.preorder.{u} α (PartialOrder.toPreorder.{u} α (SemilatticeInf.toPartialOrder.{u} α (Lattice.toSemilatticeInf.{u} α (LinearOrder.toLattice.{u} α _inst_1)))))) (LinearOrder.min.{u} (WithZero.{u} α) (WithZero.linearOrder.{u} α _inst_1) ((fun (a : Type.{u}) (b : Type.{u}) [self : HasLiftT.{succ u, succ u} a b] => self.0) α (WithZero.{u} α) (HasLiftT.mk.{succ u, succ u} α (WithZero.{u} α) (CoeTCₓ.coe.{succ u, succ u} α (WithZero.{u} α) (WithZero.hasCoeT.{u} α))) a) ((fun (a : Type.{u}) (b : Type.{u}) [self : HasLiftT.{succ u, succ u} a b] => self.0) α (WithZero.{u} α) (HasLiftT.mk.{succ u, succ u} α (WithZero.{u} α) (CoeTCₓ.coe.{succ u, succ u} α (WithZero.{u} α) (WithZero.hasCoeT.{u} α))) b)) ((fun (a : Type.{u}) (b : Type.{u}) [self : HasLiftT.{succ u, succ u} a b] => self.0) α (WithZero.{u} α) (HasLiftT.mk.{succ u, succ u} α (WithZero.{u} α) (CoeTCₓ.coe.{succ u, succ u} α (WithZero.{u} α) (WithZero.hasCoeT.{u} α))) c)) (LE.le.{u} α (Preorder.toHasLe.{u} α (PartialOrder.toPreorder.{u} α (SemilatticeInf.toPartialOrder.{u} α (Lattice.toSemilatticeInf.{u} α (LinearOrder.toLattice.{u} α _inst_1))))) (LinearOrder.min.{u} α _inst_1 a b) c)
 but is expected to have type
   forall {α : Type.{u}} {_inst_1 : Type.{v}}, (Nat -> α -> _inst_1) -> Nat -> (List.{u} α) -> (List.{v} _inst_1)
 Case conversion may be inaccurate. Consider using '#align with_zero.min_le_iff [anonymous]ₓ'. -/
@@ -157,7 +173,7 @@ instance [OrderedCommMonoid α] : OrderedCommMonoid (WithZero α) :=
 
 /- warning: with_zero.covariant_class_add_le -> WithZero.covariantClass_add_le is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : AddZeroClass.{u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : CovariantClass.{u1, u1} α α (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toHasAdd.{u1} α _inst_1))) (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_2))], (forall (a : α), LE.le.{u1} α (Preorder.toLE.{u1} α _inst_2) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (AddZeroClass.toHasZero.{u1} α _inst_1)))) a) -> (CovariantClass.{u1, u1} (WithZero.{u1} α) (WithZero.{u1} α) (HAdd.hAdd.{u1, u1, u1} (WithZero.{u1} α) (WithZero.{u1} α) (WithZero.{u1} α) (instHAdd.{u1} (WithZero.{u1} α) (WithZero.add.{u1} α (AddZeroClass.toHasAdd.{u1} α _inst_1)))) (LE.le.{u1} (WithZero.{u1} α) (Preorder.toLE.{u1} (WithZero.{u1} α) (WithZero.preorder.{u1} α _inst_2))))
+  forall {α : Type.{u1}} [_inst_1 : AddZeroClass.{u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : CovariantClass.{u1, u1} α α (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toHasAdd.{u1} α _inst_1))) (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_2))], (forall (a : α), LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_2) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (AddZeroClass.toHasZero.{u1} α _inst_1)))) a) -> (CovariantClass.{u1, u1} (WithZero.{u1} α) (WithZero.{u1} α) (HAdd.hAdd.{u1, u1, u1} (WithZero.{u1} α) (WithZero.{u1} α) (WithZero.{u1} α) (instHAdd.{u1} (WithZero.{u1} α) (WithZero.add.{u1} α (AddZeroClass.toHasAdd.{u1} α _inst_1)))) (LE.le.{u1} (WithZero.{u1} α) (Preorder.toHasLe.{u1} (WithZero.{u1} α) (WithZero.preorder.{u1} α _inst_2))))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : AddZeroClass.{u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : CovariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Order.Monoid.WithZero.Defs._hyg.454 : α) (x._@.Mathlib.Algebra.Order.Monoid.WithZero.Defs._hyg.456 : α) => HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α _inst_1)) x._@.Mathlib.Algebra.Order.Monoid.WithZero.Defs._hyg.454 x._@.Mathlib.Algebra.Order.Monoid.WithZero.Defs._hyg.456) (fun (x._@.Mathlib.Algebra.Order.Monoid.WithZero.Defs._hyg.469 : α) (x._@.Mathlib.Algebra.Order.Monoid.WithZero.Defs._hyg.471 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_2) x._@.Mathlib.Algebra.Order.Monoid.WithZero.Defs._hyg.469 x._@.Mathlib.Algebra.Order.Monoid.WithZero.Defs._hyg.471)], (forall (a : α), LE.le.{u1} α (Preorder.toLE.{u1} α _inst_2) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (AddZeroClass.toZero.{u1} α _inst_1))) a) -> (CovariantClass.{u1, u1} (WithZero.{u1} α) (WithZero.{u1} α) (fun (x._@.Mathlib.Algebra.Order.Monoid.WithZero.Defs._hyg.503 : WithZero.{u1} α) (x._@.Mathlib.Algebra.Order.Monoid.WithZero.Defs._hyg.505 : WithZero.{u1} α) => HAdd.hAdd.{u1, u1, u1} (WithZero.{u1} α) (WithZero.{u1} α) (WithZero.{u1} α) (instHAdd.{u1} (WithZero.{u1} α) (WithZero.add.{u1} α (AddZeroClass.toAdd.{u1} α _inst_1))) x._@.Mathlib.Algebra.Order.Monoid.WithZero.Defs._hyg.503 x._@.Mathlib.Algebra.Order.Monoid.WithZero.Defs._hyg.505) (fun (x._@.Mathlib.Algebra.Order.Monoid.WithZero.Defs._hyg.518 : WithZero.{u1} α) (x._@.Mathlib.Algebra.Order.Monoid.WithZero.Defs._hyg.520 : WithZero.{u1} α) => LE.le.{u1} (WithZero.{u1} α) (Preorder.toLE.{u1} (WithZero.{u1} α) (WithZero.preorder.{u1} α _inst_2)) x._@.Mathlib.Algebra.Order.Monoid.WithZero.Defs._hyg.518 x._@.Mathlib.Algebra.Order.Monoid.WithZero.Defs._hyg.520))
 Case conversion may be inaccurate. Consider using '#align with_zero.covariant_class_add_le WithZero.covariantClass_add_leₓ'. -/
@@ -182,7 +198,7 @@ protected theorem covariantClass_add_le [AddZeroClass α] [Preorder α]
 
 /- warning: with_zero.ordered_add_comm_monoid -> WithZero.orderedAddCommMonoid is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : OrderedAddCommMonoid.{u1} α], (forall (a : α), LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommMonoid.toPartialOrder.{u1} α _inst_1))) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (AddZeroClass.toHasZero.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (OrderedAddCommMonoid.toAddCommMonoid.{u1} α _inst_1))))))) a) -> (OrderedAddCommMonoid.{u1} (WithZero.{u1} α))
+  forall {α : Type.{u1}} [_inst_1 : OrderedAddCommMonoid.{u1} α], (forall (a : α), LE.le.{u1} α (Preorder.toHasLe.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommMonoid.toPartialOrder.{u1} α _inst_1))) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (AddZeroClass.toHasZero.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (OrderedAddCommMonoid.toAddCommMonoid.{u1} α _inst_1))))))) a) -> (OrderedAddCommMonoid.{u1} (WithZero.{u1} α))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : OrderedAddCommMonoid.{u1} α], (forall (a : α), LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommMonoid.toPartialOrder.{u1} α _inst_1))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (AddMonoid.toZero.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (OrderedAddCommMonoid.toAddCommMonoid.{u1} α _inst_1))))) a) -> (OrderedAddCommMonoid.{u1} (WithZero.{u1} α))
 Case conversion may be inaccurate. Consider using '#align with_zero.ordered_add_comm_monoid WithZero.orderedAddCommMonoidₓ'. -/
@@ -207,7 +223,12 @@ end WithZero
 
 section CanonicallyOrderedMonoid
 
-#print WithZero.existsAddOfLE /-
+/- warning: with_zero.has_exists_add_of_le -> WithZero.existsAddOfLE is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Add.{u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : ExistsAddOfLE.{u1} α _inst_1 (Preorder.toHasLe.{u1} α _inst_2)], ExistsAddOfLE.{u1} (WithZero.{u1} α) (WithZero.add.{u1} α _inst_1) (Preorder.toHasLe.{u1} (WithZero.{u1} α) (WithZero.preorder.{u1} α _inst_2))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Add.{u1} α] [_inst_2 : Preorder.{u1} α] [_inst_3 : ExistsAddOfLE.{u1} α _inst_1 (Preorder.toLE.{u1} α _inst_2)], ExistsAddOfLE.{u1} (WithZero.{u1} α) (WithZero.add.{u1} α _inst_1) (Preorder.toLE.{u1} (WithZero.{u1} α) (WithZero.preorder.{u1} α _inst_2))
+Case conversion may be inaccurate. Consider using '#align with_zero.has_exists_add_of_le WithZero.existsAddOfLEₓ'. -/
 instance WithZero.existsAddOfLE {α} [Add α] [Preorder α] [ExistsAddOfLE α] :
     ExistsAddOfLE (WithZero α) :=
   ⟨fun a b => by
@@ -219,7 +240,6 @@ instance WithZero.existsAddOfLE {α} [Add α] [Preorder α] [ExistsAddOfLE α] :
     obtain ⟨c, rfl⟩ := exists_add_of_le (WithZero.coe_le_coe.1 h)
     exact ⟨c, rfl⟩⟩
 #align with_zero.has_exists_add_of_le WithZero.existsAddOfLE
--/
 
 #print WithZero.canonicallyOrderedAddMonoid /-
 -- This instance looks absurd: a monoid already has a zero

@@ -557,7 +557,7 @@ variable (L M)
   agrees with its value in the overall structure. -/
 structure ElementarySubstructure where
   toSubstructure : L.Substructure M
-  is_elementary' : to_substructure.IsElementary
+  isElementary' : to_substructure.IsElementary
 #align first_order.language.elementary_substructure FirstOrder.Language.ElementarySubstructure
 -/
 
@@ -588,7 +588,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align first_order.language.elementary_substructure.is_elementary FirstOrder.Language.ElementarySubstructure.isElementaryₓ'. -/
 @[simp]
 theorem isElementary (S : L.ElementarySubstructure M) : (S : L.Substructure M).IsElementary :=
-  S.is_elementary'
+  S.isElementary'
 #align first_order.language.elementary_substructure.is_elementary FirstOrder.Language.ElementarySubstructure.isElementary
 
 #print FirstOrder.Language.ElementarySubstructure.subtype /-
