@@ -120,7 +120,7 @@ namespace Real
 
 @[continuity]
 theorem continuous_exp : Continuous exp :=
-  Complex.continuous_re.comp Complex.continuous_of_real.cexp
+  Complex.continuous_re.comp Complex.continuous_ofReal.cexp
 #align real.continuous_exp Real.continuous_exp
 
 theorem continuousOn_exp {s : Set ℝ} : ContinuousOn exp s :=

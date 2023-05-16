@@ -96,7 +96,7 @@ variable {x y z : ℝ}
 
 @[continuity]
 theorem continuous_sin : Continuous sin :=
-  Complex.continuous_re.comp (Complex.continuous_sin.comp Complex.continuous_of_real)
+  Complex.continuous_re.comp (Complex.continuous_sin.comp Complex.continuous_ofReal)
 #align real.continuous_sin Real.continuous_sin
 
 theorem continuousOn_sin {s} : ContinuousOn sin s :=
@@ -105,7 +105,7 @@ theorem continuousOn_sin {s} : ContinuousOn sin s :=
 
 @[continuity]
 theorem continuous_cos : Continuous cos :=
-  Complex.continuous_re.comp (Complex.continuous_cos.comp Complex.continuous_of_real)
+  Complex.continuous_re.comp (Complex.continuous_cos.comp Complex.continuous_ofReal)
 #align real.continuous_cos Real.continuous_cos
 
 theorem continuousOn_cos {s} : ContinuousOn cos s :=
@@ -114,12 +114,12 @@ theorem continuousOn_cos {s} : ContinuousOn cos s :=
 
 @[continuity]
 theorem continuous_sinh : Continuous sinh :=
-  Complex.continuous_re.comp (Complex.continuous_sinh.comp Complex.continuous_of_real)
+  Complex.continuous_re.comp (Complex.continuous_sinh.comp Complex.continuous_ofReal)
 #align real.continuous_sinh Real.continuous_sinh
 
 @[continuity]
 theorem continuous_cosh : Continuous cosh :=
-  Complex.continuous_re.comp (Complex.continuous_cosh.comp Complex.continuous_of_real)
+  Complex.continuous_re.comp (Complex.continuous_cosh.comp Complex.continuous_ofReal)
 #align real.continuous_cosh Real.continuous_cosh
 
 end Real

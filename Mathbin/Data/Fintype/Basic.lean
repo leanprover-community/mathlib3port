@@ -1417,16 +1417,12 @@ instance Prop.fintype : Fintype Prop :=
 #align Prop.fintype Prop.fintype
 -/
 
-/- warning: fintype.univ_Prop -> Fintype.univ_Prop is a dubious translation:
-lean 3 declaration is
-  Eq.{1} (Finset.{0} Prop) (Finset.univ.{0} Prop Prop.fintype) (Insert.insert.{0, 0} Prop (Finset.{0} Prop) (Finset.hasInsert.{0} Prop (fun (a : Prop) (b : Prop) => Eq.decidable.{0} Prop Prop.linearOrder a b)) True (Singleton.singleton.{0, 0} Prop (Finset.{0} Prop) (Finset.hasSingleton.{0} Prop) False))
-but is expected to have type
-  Eq.{1} (Finset.{0} Prop) (Finset.univ.{0} Prop Prop.fintype) (Insert.insert.{0, 0} Prop (Finset.{0} Prop) (Finset.instInsertFinset.{0} Prop (fun (a : Prop) (b : Prop) => instDecidableEq.{0} Prop Prop.linearOrder a b)) True (Singleton.singleton.{0, 0} Prop (Finset.{0} Prop) (Finset.instSingletonFinset.{0} Prop) False))
-Case conversion may be inaccurate. Consider using '#align fintype.univ_Prop Fintype.univ_Propₓ'. -/
+#print Fintype.univ_Prop /-
 @[simp]
 theorem Fintype.univ_Prop : (Finset.univ : Finset Prop) = {True, False} :=
   Finset.eq_of_veq <| by simp <;> rfl
 #align fintype.univ_Prop Fintype.univ_Prop
+-/
 
 #print Subtype.fintype /-
 instance Subtype.fintype (p : α → Prop) [DecidablePred p] [Fintype α] : Fintype { x // p x } :=

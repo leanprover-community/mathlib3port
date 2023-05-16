@@ -554,7 +554,7 @@ theorem integral_cos_mul_complex {z : ℂ} (hz : z ≠ 0) (a b : ℝ) :
   apply integral_eq_sub_of_has_deriv_at
   swap
   · apply Continuous.intervalIntegrable
-    exact complex.continuous_cos.comp (continuous_const.mul Complex.continuous_of_real)
+    exact complex.continuous_cos.comp (continuous_const.mul Complex.continuous_ofReal)
   intro x hx
   have a := Complex.hasDerivAt_sin (↑x * z)
   have b : HasDerivAt (fun y => y * z : ℂ → ℂ) z ↑x := hasDerivAt_mul_const _

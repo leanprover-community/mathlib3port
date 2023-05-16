@@ -96,7 +96,7 @@ theorem integral_cos_mul_cos_pow_aux (hn : 2 ≤ n) (hz : z ≠ 0) :
       (continuous_const.mul (complex.continuous_of_real.comp continuous_sin)).mul
         ((complex.continuous_of_real.comp continuous_cos).pow (n - 1))
   · apply Continuous.intervalIntegrable
-    exact complex.continuous_cos.comp (continuous_const.mul Complex.continuous_of_real)
+    exact complex.continuous_cos.comp (continuous_const.mul Complex.continuous_ofReal)
 #align euler_sine.integral_cos_mul_cos_pow_aux EulerSine.integral_cos_mul_cos_pow_aux
 
 theorem integral_sin_mul_sin_mul_cos_pow_eq (hn : 2 ≤ n) (hz : z ≠ 0) :
@@ -137,12 +137,12 @@ theorem integral_sin_mul_sin_mul_cos_pow_eq (hn : 2 ≤ n) (hz : z ≠ 0) :
     · apply Continuous.intervalIntegrable
       exact
         continuous_const.mul
-          ((complex.continuous_cos.comp (continuous_const.mul Complex.continuous_of_real)).mul
+          ((complex.continuous_cos.comp (continuous_const.mul Complex.continuous_ofReal)).mul
             ((complex.continuous_of_real.comp continuous_cos).pow n))
     · apply Continuous.intervalIntegrable
       exact
         continuous_const.mul
-          ((complex.continuous_cos.comp (continuous_const.mul Complex.continuous_of_real)).mul
+          ((complex.continuous_cos.comp (continuous_const.mul Complex.continuous_ofReal)).mul
             ((complex.continuous_of_real.comp continuous_cos).pow (n - 2)))
     · apply Nat.sub_pos_of_lt
       exact one_lt_two.trans_le hn
@@ -162,7 +162,7 @@ theorem integral_sin_mul_sin_mul_cos_pow_eq (hn : 2 ≤ n) (hz : z ≠ 0) :
         ((continuous_const.mul ((complex.continuous_of_real.comp continuous_sin).pow 2)).mul
           ((complex.continuous_of_real.comp continuous_cos).pow (n - 2)))
   · apply Continuous.intervalIntegrable
-    exact complex.continuous_sin.comp (continuous_const.mul Complex.continuous_of_real)
+    exact complex.continuous_sin.comp (continuous_const.mul Complex.continuous_ofReal)
 #align euler_sine.integral_sin_mul_sin_mul_cos_pow_eq EulerSine.integral_sin_mul_sin_mul_cos_pow_eq
 
 /-- Note this also holds for `z = 0`, but we do not need this case for `sin_pi_mul_eq`.  -/
@@ -361,7 +361,7 @@ theorem Complex.tendsto_euler_sin_prod (z : ℂ) :
       at_top (𝓝 1)
   exact this.comp (tendsto_id.const_mul_at_top' zero_lt_two)
   have : ContinuousOn (fun x : ℝ => Complex.cos (2 * z * x)) (Icc 0 (π / 2)) :=
-    (complex.continuous_cos.comp (continuous_const.mul Complex.continuous_of_real)).ContinuousOn
+    (complex.continuous_cos.comp (continuous_const.mul Complex.continuous_ofReal)).ContinuousOn
   convert tendsto_integral_cos_pow_mul_div this
   · ext1 n
     congr 2 with x : 1

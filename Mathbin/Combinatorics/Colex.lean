@@ -267,17 +267,13 @@ instance [LinearOrder α] : LinearOrder (Finset.Colex α) :=
 example [LinearOrder α] : IsStrictTotalOrder (Finset.Colex α) (· < ·) :=
   inferInstance
 
-/- warning: colex.hom_le_iff -> Colex.hom_le_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : LinearOrder.{u2} β] {f : α -> β}, (StrictMono.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) f) -> (forall (A : Finset.{u1} α) (B : Finset.{u1} α), Iff (LE.le.{u2} (Finset.Colex.{u2} β) (Finset.Colex.hasLe.{u2} β (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))))) (Finset.toColex.{u2} β (Finset.image.{u1, u2} α β (fun (a : β) (b : β) => Eq.decidable.{u2} β _inst_2 a b) f A)) (Finset.toColex.{u2} β (Finset.image.{u1, u2} α β (fun (a : β) (b : β) => Eq.decidable.{u2} β _inst_2 a b) f B))) (LE.le.{u1} (Finset.Colex.{u1} α) (Finset.Colex.hasLe.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Finset.toColex.{u1} α A) (Finset.toColex.{u1} α B)))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : LinearOrder.{u2} β] {f : α -> β}, (StrictMono.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) f) -> (forall (A : Finset.{u1} α) (B : Finset.{u1} α), Iff (LE.le.{u2} (Finset.Colex.{u2} β) (instLEColex.{u2} β (Preorder.toLT.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))))) (Finset.toColex.{u2} β (Finset.image.{u1, u2} α β (fun (a : β) (b : β) => instDecidableEq.{u2} β _inst_2 a b) f A)) (Finset.toColex.{u2} β (Finset.image.{u1, u2} α β (fun (a : β) (b : β) => instDecidableEq.{u2} β _inst_2 a b) f B))) (LE.le.{u1} (Finset.Colex.{u1} α) (instLEColex.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))))) (Finset.toColex.{u1} α A) (Finset.toColex.{u1} α B)))
-Case conversion may be inaccurate. Consider using '#align colex.hom_le_iff Colex.hom_le_iffₓ'. -/
+#print Colex.hom_le_iff /-
 /-- Strictly monotone functions preserve the colex ordering. -/
 theorem hom_le_iff {β : Type _} [LinearOrder α] [LinearOrder β] {f : α → β} (h₁ : StrictMono f)
     (A B : Finset α) : (A.image f).toColex ≤ (B.image f).toColex ↔ A.toColex ≤ B.toColex := by
   rw [le_iff_le_iff_lt_iff_lt, hom_lt_iff h₁]
 #align colex.hom_le_iff Colex.hom_le_iff
+-/
 
 /- warning: colex.hom_fin_le_iff -> Colex.hom_fin_le_iff is a dubious translation:
 lean 3 declaration is
@@ -382,18 +378,14 @@ theorem sdiff_lt_sdiff_iff_lt [LT α] [DecidableEq α] (A B : Finset α) :
 #align colex.sdiff_lt_sdiff_iff_lt Colex.sdiff_lt_sdiff_iff_lt
 -/
 
-/- warning: colex.sdiff_le_sdiff_iff_le -> Colex.sdiff_le_sdiff_iff_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (A : Finset.{u1} α) (B : Finset.{u1} α), Iff (LE.le.{u1} (Finset.Colex.{u1} α) (Finset.Colex.hasLe.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Finset.toColex.{u1} α (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.hasSdiff.{u1} α (fun (a : α) (b : α) => Eq.decidable.{u1} α _inst_1 a b)) A B)) (Finset.toColex.{u1} α (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.hasSdiff.{u1} α (fun (a : α) (b : α) => Eq.decidable.{u1} α _inst_1 a b)) B A))) (LE.le.{u1} (Finset.Colex.{u1} α) (Finset.Colex.hasLe.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))))) (Finset.toColex.{u1} α A) (Finset.toColex.{u1} α B))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (A : Finset.{u1} α) (B : Finset.{u1} α), Iff (LE.le.{u1} (Finset.Colex.{u1} α) (instLEColex.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))))) (Finset.toColex.{u1} α (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.instSDiffFinset.{u1} α (fun (a : α) (b : α) => instDecidableEq.{u1} α _inst_1 a b)) A B)) (Finset.toColex.{u1} α (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.instSDiffFinset.{u1} α (fun (a : α) (b : α) => instDecidableEq.{u1} α _inst_1 a b)) B A))) (LE.le.{u1} (Finset.Colex.{u1} α) (instLEColex.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))))) (Finset.toColex.{u1} α A) (Finset.toColex.{u1} α B))
-Case conversion may be inaccurate. Consider using '#align colex.sdiff_le_sdiff_iff_le Colex.sdiff_le_sdiff_iff_leₓ'. -/
+#print Colex.sdiff_le_sdiff_iff_le /-
 /-- Colex doesn't care if you remove the other set -/
 @[simp]
 theorem sdiff_le_sdiff_iff_le [LinearOrder α] (A B : Finset α) :
     (A \ B).toColex ≤ (B \ A).toColex ↔ A.toColex ≤ B.toColex := by
   rw [le_iff_le_iff_lt_iff_lt, sdiff_lt_sdiff_iff_lt]
 #align colex.sdiff_le_sdiff_iff_le Colex.sdiff_le_sdiff_iff_le
+-/
 
 #print Colex.empty_toColex_lt /-
 theorem empty_toColex_lt [LinearOrder α] {A : Finset α} (hA : A.Nonempty) :

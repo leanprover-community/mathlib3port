@@ -2546,12 +2546,7 @@ theorem min'_lt_of_mem_erase_min' [DecidableEq α] {a : α} (ha : a ∈ s.erase�
 #align finset.min'_lt_of_mem_erase_min' Finset.min'_lt_of_mem_erase_min'
 -/
 
-/- warning: finset.max'_image -> Finset.max'_image is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : LinearOrder.{u2} β] {f : α -> β}, (Monotone.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) f) -> (forall (s : Finset.{u1} α) (h : Finset.Nonempty.{u2} β (Finset.image.{u1, u2} α β (fun (a : β) (b : β) => Eq.decidable.{u2} β _inst_2 a b) f s)), Eq.{succ u2} β (Finset.max'.{u2} β _inst_2 (Finset.image.{u1, u2} α β (fun (a : β) (b : β) => Eq.decidable.{u2} β _inst_2 a b) f s) h) (f (Finset.max'.{u1} α _inst_1 s (Iff.mp (Finset.Nonempty.{u2} β (Finset.image.{u1, u2} α β (fun (a : β) (b : β) => Eq.decidable.{u2} β _inst_2 a b) f s)) (Finset.Nonempty.{u1} α s) (Finset.Nonempty.image_iff.{u1, u2} α β (fun (a : β) (b : β) => Eq.decidable.{u2} β _inst_2 a b) s f) h))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : LinearOrder.{u2} β] {f : α -> β}, (Monotone.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) f) -> (forall (s : Finset.{u1} α) (h : Finset.Nonempty.{u2} β (Finset.image.{u1, u2} α β (fun (a : β) (b : β) => instDecidableEq.{u2} β _inst_2 a b) f s)), Eq.{succ u2} β (Finset.max'.{u2} β _inst_2 (Finset.image.{u1, u2} α β (fun (a : β) (b : β) => instDecidableEq.{u2} β _inst_2 a b) f s) h) (f (Finset.max'.{u1} α _inst_1 s (Iff.mp (Finset.Nonempty.{u2} β (Finset.image.{u1, u2} α β (fun (a : β) (b : β) => instDecidableEq.{u2} β _inst_2 a b) f s)) (Finset.Nonempty.{u1} α s) (Finset.Nonempty.image_iff.{u1, u2} α β (fun (a : β) (b : β) => instDecidableEq.{u2} β _inst_2 a b) s f) h))))
-Case conversion may be inaccurate. Consider using '#align finset.max'_image Finset.max'_imageₓ'. -/
+#print Finset.max'_image /-
 @[simp]
 theorem max'_image [LinearOrder β] {f : α → β} (hf : Monotone f) (s : Finset α)
     (h : (s.image f).Nonempty) : (s.image f).max' h = f (s.max' ((Nonempty.image_iff f).mp h)) :=
@@ -2561,13 +2556,9 @@ theorem max'_image [LinearOrder β] {f : α → β} (hf : Monotone f) (s : Finse
   obtain ⟨x, hx, rfl⟩ := mem_image.mp hy
   exact hf (le_max' _ _ hx)
 #align finset.max'_image Finset.max'_image
+-/
 
-/- warning: finset.min'_image -> Finset.min'_image is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : LinearOrder.{u2} β] {f : α -> β}, (Monotone.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) f) -> (forall (s : Finset.{u1} α) (h : Finset.Nonempty.{u2} β (Finset.image.{u1, u2} α β (fun (a : β) (b : β) => Eq.decidable.{u2} β _inst_2 a b) f s)), Eq.{succ u2} β (Finset.min'.{u2} β _inst_2 (Finset.image.{u1, u2} α β (fun (a : β) (b : β) => Eq.decidable.{u2} β _inst_2 a b) f s) h) (f (Finset.min'.{u1} α _inst_1 s (Iff.mp (Finset.Nonempty.{u2} β (Finset.image.{u1, u2} α β (fun (a : β) (b : β) => Eq.decidable.{u2} β _inst_2 a b) f s)) (Finset.Nonempty.{u1} α s) (Finset.Nonempty.image_iff.{u1, u2} α β (fun (a : β) (b : β) => Eq.decidable.{u2} β _inst_2 a b) s f) h))))
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LinearOrder.{u1} α] [_inst_2 : LinearOrder.{u2} β] {f : α -> β}, (Monotone.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) f) -> (forall (s : Finset.{u1} α) (h : Finset.Nonempty.{u2} β (Finset.image.{u1, u2} α β (fun (a : β) (b : β) => instDecidableEq.{u2} β _inst_2 a b) f s)), Eq.{succ u2} β (Finset.min'.{u2} β _inst_2 (Finset.image.{u1, u2} α β (fun (a : β) (b : β) => instDecidableEq.{u2} β _inst_2 a b) f s) h) (f (Finset.min'.{u1} α _inst_1 s (Iff.mp (Finset.Nonempty.{u2} β (Finset.image.{u1, u2} α β (fun (a : β) (b : β) => instDecidableEq.{u2} β _inst_2 a b) f s)) (Finset.Nonempty.{u1} α s) (Finset.Nonempty.image_iff.{u1, u2} α β (fun (a : β) (b : β) => instDecidableEq.{u2} β _inst_2 a b) s f) h))))
-Case conversion may be inaccurate. Consider using '#align finset.min'_image Finset.min'_imageₓ'. -/
+#print Finset.min'_image /-
 @[simp]
 theorem min'_image [LinearOrder β] {f : α → β} (hf : Monotone f) (s : Finset α)
     (h : (s.image f).Nonempty) : (s.image f).min' h = f (s.min' ((Nonempty.image_iff f).mp h)) :=
@@ -2576,6 +2567,7 @@ theorem min'_image [LinearOrder β] {f : α → β} (hf : Monotone f) (s : Finse
     convert h
   rw [nonempty.image_iff]
 #align finset.min'_image Finset.min'_image
+-/
 
 #print Finset.coe_max' /-
 theorem coe_max' {s : Finset α} (hs : s.Nonempty) : ↑(s.max' hs) = s.max :=
@@ -2633,32 +2625,19 @@ theorem min_mem_insert_top_image_coe (s : Finset α) :
   mem_insert.2 <| s.eq_empty_or_nonempty.imp min_eq_top.2 min_mem_image_coe
 #align finset.min_mem_insert_top_image_coe Finset.min_mem_insert_top_image_coe
 
-/- warning: finset.max'_erase_ne_self -> Finset.max'_erase_ne_self is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {x : α} {s : Finset.{u1} α} (s0 : Finset.Nonempty.{u1} α (Finset.erase.{u1} α (fun (a : α) (b : α) => Eq.decidable.{u1} α _inst_1 a b) s x)), Ne.{succ u1} α (Finset.max'.{u1} α _inst_1 (Finset.erase.{u1} α (fun (a : α) (b : α) => Eq.decidable.{u1} α _inst_1 a b) s x) s0) x
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {x : α} {s : Finset.{u1} α} (s0 : Finset.Nonempty.{u1} α (Finset.erase.{u1} α (fun (a : α) (b : α) => instDecidableEq.{u1} α _inst_1 a b) s x)), Ne.{succ u1} α (Finset.max'.{u1} α _inst_1 (Finset.erase.{u1} α (fun (a : α) (b : α) => instDecidableEq.{u1} α _inst_1 a b) s x) s0) x
-Case conversion may be inaccurate. Consider using '#align finset.max'_erase_ne_self Finset.max'_erase_ne_selfₓ'. -/
+#print Finset.max'_erase_ne_self /-
 theorem max'_erase_ne_self {s : Finset α} (s0 : (s.eraseₓ x).Nonempty) : (s.eraseₓ x).max' s0 ≠ x :=
   ne_of_mem_erase (max'_mem _ s0)
 #align finset.max'_erase_ne_self Finset.max'_erase_ne_self
+-/
 
-/- warning: finset.min'_erase_ne_self -> Finset.min'_erase_ne_self is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {x : α} {s : Finset.{u1} α} (s0 : Finset.Nonempty.{u1} α (Finset.erase.{u1} α (fun (a : α) (b : α) => Eq.decidable.{u1} α _inst_1 a b) s x)), Ne.{succ u1} α (Finset.min'.{u1} α _inst_1 (Finset.erase.{u1} α (fun (a : α) (b : α) => Eq.decidable.{u1} α _inst_1 a b) s x) s0) x
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {x : α} {s : Finset.{u1} α} (s0 : Finset.Nonempty.{u1} α (Finset.erase.{u1} α (fun (a : α) (b : α) => instDecidableEq.{u1} α _inst_1 a b) s x)), Ne.{succ u1} α (Finset.min'.{u1} α _inst_1 (Finset.erase.{u1} α (fun (a : α) (b : α) => instDecidableEq.{u1} α _inst_1 a b) s x) s0) x
-Case conversion may be inaccurate. Consider using '#align finset.min'_erase_ne_self Finset.min'_erase_ne_selfₓ'. -/
+#print Finset.min'_erase_ne_self /-
 theorem min'_erase_ne_self {s : Finset α} (s0 : (s.eraseₓ x).Nonempty) : (s.eraseₓ x).min' s0 ≠ x :=
   ne_of_mem_erase (min'_mem _ s0)
 #align finset.min'_erase_ne_self Finset.min'_erase_ne_self
+-/
 
-/- warning: finset.max_erase_ne_self -> Finset.max_erase_ne_self is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {x : α} {s : Finset.{u1} α}, Ne.{succ u1} (WithBot.{u1} α) (Finset.max.{u1} α _inst_1 (Finset.erase.{u1} α (fun (a : α) (b : α) => Eq.decidable.{u1} α _inst_1 a b) s x)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithBot.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithBot.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithBot.{u1} α) (WithBot.hasCoeT.{u1} α))) x)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {x : α} {s : Finset.{u1} α}, Ne.{succ u1} (WithBot.{u1} α) (Finset.max.{u1} α _inst_1 (Finset.erase.{u1} α (fun (a : α) (b : α) => instDecidableEq.{u1} α _inst_1 a b) s x)) (WithBot.some.{u1} α x)
-Case conversion may be inaccurate. Consider using '#align finset.max_erase_ne_self Finset.max_erase_ne_selfₓ'. -/
+#print Finset.max_erase_ne_self /-
 theorem max_erase_ne_self {s : Finset α} : (s.eraseₓ x).max ≠ x :=
   by
   by_cases s0 : (s.erase x).Nonempty
@@ -2667,16 +2646,13 @@ theorem max_erase_ne_self {s : Finset α} : (s.eraseₓ x).max ≠ x :=
   · rw [not_nonempty_iff_eq_empty.mp s0, max_empty]
     exact WithBot.bot_ne_coe
 #align finset.max_erase_ne_self Finset.max_erase_ne_self
+-/
 
-/- warning: finset.min_erase_ne_self -> Finset.min_erase_ne_self is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {x : α} {s : Finset.{u1} α}, Ne.{succ u1} (WithTop.{u1} α) (Finset.min.{u1} α _inst_1 (Finset.erase.{u1} α (fun (a : α) (b : α) => Eq.decidable.{u1} α _inst_1 a b) s x)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (WithTop.{u1} α) (HasLiftT.mk.{succ u1, succ u1} α (WithTop.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} α (WithTop.{u1} α) (WithTop.hasCoeT.{u1} α))) x)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {x : α} {s : Finset.{u1} α}, Ne.{succ u1} (WithTop.{u1} α) (Finset.min.{u1} α _inst_1 (Finset.erase.{u1} α (fun (a : α) (b : α) => instDecidableEq.{u1} α _inst_1 a b) s x)) (WithTop.some.{u1} α x)
-Case conversion may be inaccurate. Consider using '#align finset.min_erase_ne_self Finset.min_erase_ne_selfₓ'. -/
+#print Finset.min_erase_ne_self /-
 theorem min_erase_ne_self {s : Finset α} : (s.eraseₓ x).min ≠ x := by
   convert@max_erase_ne_self αᵒᵈ _ _ _
 #align finset.min_erase_ne_self Finset.min_erase_ne_self
+-/
 
 /- warning: finset.exists_next_right -> Finset.exists_next_right is a dubious translation:
 lean 3 declaration is

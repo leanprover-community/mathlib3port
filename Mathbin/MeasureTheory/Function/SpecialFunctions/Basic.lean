@@ -86,7 +86,7 @@ theorem measurable_im : Measurable im :=
 
 @[measurability]
 theorem measurable_of_real : Measurable (coe : ℝ → ℂ) :=
-  continuous_of_real.Measurable
+  continuous_ofReal.Measurable
 #align complex.measurable_of_real Complex.measurable_of_real
 
 @[measurability]
