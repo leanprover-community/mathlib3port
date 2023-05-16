@@ -382,7 +382,7 @@ theorem submodule_eq_span_le_iff_stable_ge (n₀ : ℕ) :
 
 /-- If the components of a filtration are finitely generated, then the filtration is stable iff
 its associated submodule of is finitely generated.  -/
-theorem submodule_fg_iff_stable (hF' : ∀ i, (F.n i).Fg) : F.Submodule.Fg ↔ F.Stable := by
+theorem submodule_fG_iff_stable (hF' : ∀ i, (F.n i).FG) : F.Submodule.FG ↔ F.Stable := by
   classical
     delta Ideal.Filtration.Stable
     simp_rw [← F.submodule_eq_span_le_iff_stable_ge]
@@ -421,7 +421,7 @@ theorem submodule_fg_iff_stable (hF' : ∀ i, (F.n i).Fg) : F.Submodule.Fg ↔ F
         rfl
       rw [Subtype.coe_mk, ← this]
       exact ⟨_, rfl⟩
-#align ideal.filtration.submodule_fg_iff_stable Ideal.Filtration.submodule_fg_iff_stable
+#align ideal.filtration.submodule_fg_iff_stable Ideal.Filtration.submodule_fG_iff_stable
 
 variable {F}
 

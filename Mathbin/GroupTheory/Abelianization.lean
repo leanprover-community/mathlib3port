@@ -74,7 +74,7 @@ instance commutator_characteristic : (commutator G).Characteristic :=
 #align commutator_characteristic commutator_characteristic
 -/
 
-instance [Finite (commutatorSet G)] : Group.Fg (commutator G) :=
+instance [Finite (commutatorSet G)] : Group.FG (commutator G) :=
   by
   rw [commutator_eq_closure]
   apply Group.closure_finite_fg
@@ -398,12 +398,12 @@ def closureCommutatorRepresentatives : Subgroup G :=
 
 /- warning: closure_commutator_representatives_fg -> closureCommutatorRepresentatives_fg is a dubious translation:
 lean 3 declaration is
-  forall (G : Type.{u1}) [_inst_1 : Group.{u1} G] [_inst_2 : Finite.{succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} G) Type.{u1} (Set.hasCoeToSort.{u1} G) (commutatorSet.{u1} G _inst_1))], Group.Fg.{u1} (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) (closureCommutatorRepresentatives.{u1} G _inst_1)) (Subgroup.toGroup.{u1} G _inst_1 (closureCommutatorRepresentatives.{u1} G _inst_1))
+  forall (G : Type.{u1}) [_inst_1 : Group.{u1} G] [_inst_2 : Finite.{succ u1} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} G) Type.{u1} (Set.hasCoeToSort.{u1} G) (commutatorSet.{u1} G _inst_1))], Group.FG.{u1} (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) (closureCommutatorRepresentatives.{u1} G _inst_1)) (Subgroup.toGroup.{u1} G _inst_1 (closureCommutatorRepresentatives.{u1} G _inst_1))
 but is expected to have type
-  forall (G : Type.{u1}) [_inst_1 : Group.{u1} G] [_inst_2 : Finite.{succ u1} (Set.Elem.{u1} G (commutatorSet.{u1} G _inst_1))], Group.Fg.{u1} (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x (closureCommutatorRepresentatives.{u1} G _inst_1))) (Subgroup.toGroup.{u1} G _inst_1 (closureCommutatorRepresentatives.{u1} G _inst_1))
+  forall (G : Type.{u1}) [_inst_1 : Group.{u1} G] [_inst_2 : Finite.{succ u1} (Set.Elem.{u1} G (commutatorSet.{u1} G _inst_1))], Group.FG.{u1} (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x (closureCommutatorRepresentatives.{u1} G _inst_1))) (Subgroup.toGroup.{u1} G _inst_1 (closureCommutatorRepresentatives.{u1} G _inst_1))
 Case conversion may be inaccurate. Consider using '#align closure_commutator_representatives_fg closureCommutatorRepresentatives_fgₓ'. -/
 instance closureCommutatorRepresentatives_fg [Finite (commutatorSet G)] :
-    Group.Fg (closureCommutatorRepresentatives G) :=
+    Group.FG (closureCommutatorRepresentatives G) :=
   Group.closure_finite_fg _
 #align closure_commutator_representatives_fg closureCommutatorRepresentatives_fg
 

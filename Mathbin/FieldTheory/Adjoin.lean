@@ -957,26 +957,26 @@ def Fg (S : IntermediateField F E) : Prop :=
   ∃ t : Finset E, adjoin F ↑t = S
 #align intermediate_field.fg IntermediateField.Fg
 
-theorem fg_adjoin_finset (t : Finset E) : (adjoin F (↑t : Set E)).Fg :=
+theorem fg_adjoin_finset (t : Finset E) : (adjoin F (↑t : Set E)).FG :=
   ⟨t, rfl⟩
 #align intermediate_field.fg_adjoin_finset IntermediateField.fg_adjoin_finset
 
-theorem fg_def {S : IntermediateField F E} : S.Fg ↔ ∃ t : Set E, Set.Finite t ∧ adjoin F t = S :=
+theorem fg_def {S : IntermediateField F E} : S.FG ↔ ∃ t : Set E, Set.Finite t ∧ adjoin F t = S :=
   Iff.symm Set.exists_finite_iff_finset
 #align intermediate_field.fg_def IntermediateField.fg_def
 
-theorem fg_bot : (⊥ : IntermediateField F E).Fg :=
+theorem fg_bot : (⊥ : IntermediateField F E).FG :=
   ⟨∅, adjoin_empty F E⟩
 #align intermediate_field.fg_bot IntermediateField.fg_bot
 
-theorem fg_of_fg_toSubalgebra (S : IntermediateField F E) (h : S.toSubalgebra.Fg) : S.Fg :=
+theorem fG_of_fG_toSubalgebra (S : IntermediateField F E) (h : S.toSubalgebra.FG) : S.FG :=
   by
   cases' h with t ht
   exact ⟨t, (eq_adjoin_of_eq_algebra_adjoin _ _ _ ht.symm).symm⟩
-#align intermediate_field.fg_of_fg_to_subalgebra IntermediateField.fg_of_fg_toSubalgebra
+#align intermediate_field.fg_of_fg_to_subalgebra IntermediateField.fG_of_fG_toSubalgebra
 
-theorem fg_of_noetherian (S : IntermediateField F E) [IsNoetherian F E] : S.Fg :=
-  S.fg_of_fg_toSubalgebra S.toSubalgebra.fg_of_noetherian
+theorem fg_of_noetherian (S : IntermediateField F E) [IsNoetherian F E] : S.FG :=
+  S.fG_of_fG_toSubalgebra S.toSubalgebra.fg_of_noetherian
 #align intermediate_field.fg_of_noetherian IntermediateField.fg_of_noetherian
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
@@ -993,7 +993,7 @@ theorem induction_on_adjoin_finset (S : Finset E) (P : IntermediateField F E →
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 theorem induction_on_adjoin_fg (P : IntermediateField F E → Prop) (base : P ⊥)
     (ih : ∀ (K : IntermediateField F E) (x : E), P K → P (K⟮⟯.restrictScalars F))
-    (K : IntermediateField F E) (hK : K.Fg) : P K :=
+    (K : IntermediateField F E) (hK : K.FG) : P K :=
   by
   obtain ⟨S, rfl⟩ := hK
   exact induction_on_adjoin_finset S P base fun K x _ hK => ih K x hK

@@ -963,7 +963,7 @@ instance finiteIndex_normalCore [H.FiniteIndex] : H.normalCore.FiniteIndex :=
 variable (G)
 
 #print Subgroup.finiteIndex_center /-
-instance finiteIndex_center [Finite (commutatorSet G)] [Group.Fg G] : FiniteIndex (center G) :=
+instance finiteIndex_center [Finite (commutatorSet G)] [Group.FG G] : FiniteIndex (center G) :=
   by
   obtain ⟨S, -, hS⟩ := Group.rank_spec G
   exact ⟨mt (Finite.card_eq_zero_of_embedding (quotient_center_embedding hS)) finite.card_pos.ne'⟩
@@ -971,7 +971,7 @@ instance finiteIndex_center [Finite (commutatorSet G)] [Group.Fg G] : FiniteInde
 -/
 
 #print Subgroup.index_center_le_pow /-
-theorem index_center_le_pow [Finite (commutatorSet G)] [Group.Fg G] :
+theorem index_center_le_pow [Finite (commutatorSet G)] [Group.FG G] :
     (center G).index ≤ Nat.card (commutatorSet G) ^ Group.rank G :=
   by
   obtain ⟨S, hS1, hS2⟩ := Group.rank_spec G

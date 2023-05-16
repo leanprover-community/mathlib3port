@@ -164,7 +164,7 @@ theorem maximalIdeal_isPrincipal_of_isDedekindDomain [LocalRing R] [IsDomain R]
       · rw [Submodule.ne_bot_iff]
         refine' ⟨_, ⟨a, ha₁, rfl⟩, _⟩
         exact is_fraction_ring.to_map_eq_zero_iff.not.mpr ha₂
-      · apply Submodule.Fg.map
+      · apply Submodule.FG.map
         exact IsNoetherian.noetherian _
     · have :
         (M.map (DistribMulAction.toLinearMap R K x)).comap (Algebra.ofId R K).toLinearMap = ⊤ :=

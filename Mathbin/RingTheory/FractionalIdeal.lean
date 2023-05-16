@@ -853,13 +853,13 @@ theorem isFractional_span_iff {s : Set P} :
 
 include loc
 
-theorem isFractional_of_fg {I : Submodule R P} (hI : I.Fg) : IsFractional S I :=
+theorem isFractional_of_fG {I : Submodule R P} (hI : I.FG) : IsFractional S I :=
   by
   rcases hI with ⟨I, rfl⟩
   rcases exist_integer_multiples_of_finset S I with ⟨⟨s, hs1⟩, hs⟩
   rw [is_fractional_span_iff]
   exact ⟨s, hs1, hs⟩
-#align fractional_ideal.is_fractional_of_fg FractionalIdeal.isFractional_of_fg
+#align fractional_ideal.is_fractional_of_fg FractionalIdeal.isFractional_of_fG
 
 omit loc
 
@@ -870,27 +870,27 @@ theorem mem_span_mul_finite_of_mem_mul {I J : FractionalIdeal S P} {x : P} (hx :
 
 variable (S)
 
-theorem coe_ideal_fg (inj : Function.Injective (algebraMap R P)) (I : Ideal R) :
-    Fg ((I : FractionalIdeal S P) : Submodule R P) ↔ I.Fg :=
+theorem coe_ideal_fG (inj : Function.Injective (algebraMap R P)) (I : Ideal R) :
+    FG ((I : FractionalIdeal S P) : Submodule R P) ↔ I.FG :=
   coeSubmodule_fg _ inj _
-#align fractional_ideal.coe_ideal_fg FractionalIdeal.coe_ideal_fg
+#align fractional_ideal.coe_ideal_fg FractionalIdeal.coe_ideal_fG
 
 variable {S}
 
-theorem fg_unit (I : (FractionalIdeal S P)ˣ) : Fg (I : Submodule R P) :=
+theorem fG_unit (I : (FractionalIdeal S P)ˣ) : FG (I : Submodule R P) :=
   Submodule.fg_unit <| Units.map (coeSubmoduleHom S P).toMonoidHom I
-#align fractional_ideal.fg_unit FractionalIdeal.fg_unit
+#align fractional_ideal.fg_unit FractionalIdeal.fG_unit
 
-theorem fg_of_isUnit (I : FractionalIdeal S P) (h : IsUnit I) : Fg (I : Submodule R P) :=
-  fg_unit h.Unit
-#align fractional_ideal.fg_of_is_unit FractionalIdeal.fg_of_isUnit
+theorem fG_of_isUnit (I : FractionalIdeal S P) (h : IsUnit I) : FG (I : Submodule R P) :=
+  fG_unit h.Unit
+#align fractional_ideal.fg_of_is_unit FractionalIdeal.fG_of_isUnit
 
-theorem Ideal.fg_of_isUnit (inj : Function.Injective (algebraMap R P)) (I : Ideal R)
-    (h : IsUnit (I : FractionalIdeal S P)) : I.Fg :=
+theorem Ideal.fG_of_isUnit (inj : Function.Injective (algebraMap R P)) (I : Ideal R)
+    (h : IsUnit (I : FractionalIdeal S P)) : I.FG :=
   by
   rw [← coe_ideal_fg S inj I]
   exact fg_of_is_unit I h
-#align ideal.fg_of_is_unit Ideal.fg_of_isUnit
+#align ideal.fg_of_is_unit Ideal.fG_of_isUnit
 
 variable (S P P')
 
@@ -1602,7 +1602,7 @@ theorem isNoetherian_zero : IsNoetherian R₁ (0 : FractionalIdeal R₁⁰ K) :=
 #align fractional_ideal.is_noetherian_zero FractionalIdeal.isNoetherian_zero
 
 theorem isNoetherian_iff {I : FractionalIdeal R₁⁰ K} :
-    IsNoetherian R₁ I ↔ ∀ J ≤ I, (J : Submodule R₁ K).Fg :=
+    IsNoetherian R₁ I ↔ ∀ J ≤ I, (J : Submodule R₁ K).FG :=
   isNoetherian_submodule.trans ⟨fun h J hJ => h _ hJ, fun h J hJ => h ⟨J, isFractional_of_le hJ⟩ hJ⟩
 #align fractional_ideal.is_noetherian_iff FractionalIdeal.isNoetherian_iff
 
@@ -1658,7 +1658,7 @@ variable {R P} (S) (x : P) (hx : IsIntegral R x)
 /-- `A[x]` is a fractional ideal for every integral `x`. -/
 theorem isFractional_adjoin_integral :
     IsFractional S (Algebra.adjoin R ({x} : Set P)).toSubmodule :=
-  isFractional_of_fg (fg_adjoin_singleton_of_integral x hx)
+  isFractional_of_fG (fG_adjoin_singleton_of_integral x hx)
 #align fractional_ideal.is_fractional_adjoin_integral FractionalIdeal.isFractional_adjoin_integral
 
 /-- `fractional_ideal.adjoin_integral (S : submonoid R) x hx` is `R[x]` as a fractional ideal,

@@ -374,7 +374,7 @@ open Subgroup
 
 open BigOperators
 
-variable (G) [CommGroup G] [Group.Fg G]
+variable (G) [CommGroup G] [Group.FG G]
 
 @[to_additive]
 theorem card_dvd_exponent_pow_rank : Nat.card G ∣ Monoid.exponent G ^ Group.rank G :=

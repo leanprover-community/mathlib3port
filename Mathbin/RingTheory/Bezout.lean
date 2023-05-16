@@ -32,7 +32,7 @@ variable (R : Type u) [CommRing R]
 
 /-- A Bézout ring is a ring whose finitely generated ideals are principal. -/
 class IsBezout : Prop where
-  isPrincipal_of_fg : ∀ I : Ideal R, I.Fg → I.IsPrincipal
+  isPrincipal_of_fG : ∀ I : Ideal R, I.FG → I.IsPrincipal
 #align is_bezout IsBezout
 
 namespace IsBezout
@@ -145,8 +145,8 @@ theorem tFAE [IsBezout R] [IsDomain R] :
     · rintro ⟨h⟩
       rw [isNoetherianRing_iff, isNoetherian_iff_fg_wellFounded]
       apply RelEmbedding.wellFounded _ h
-      have : ∀ I : { J : Ideal R // J.Fg }, ∃ x : R, (I : Ideal R) = Ideal.span {x} :=
-        fun ⟨I, hI⟩ => (IsBezout.isPrincipal_of_fg I hI).1
+      have : ∀ I : { J : Ideal R // J.FG }, ∃ x : R, (I : Ideal R) = Ideal.span {x} :=
+        fun ⟨I, hI⟩ => (IsBezout.isPrincipal_of_fG I hI).1
       choose f hf
       exact
         { toFun := f
