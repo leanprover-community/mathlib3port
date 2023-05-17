@@ -77,11 +77,11 @@ def getRest (s t : String) : Option String :=
 #align string.get_rest String.getRest
 -/
 
-#print String.popn /-
+#print String.drop /-
 /-- Removes the first `n` elements from the string `s` -/
-def popn (s : String) (n : Nat) : String :=
+def drop (s : String) (n : Nat) : String :=
   (s.mkIterator.nextn n).nextToString
-#align string.popn String.popn
+#align string.popn String.drop
 -/
 
 #print String.isNat /-

@@ -283,28 +283,28 @@ theorem eq_nil_of_infix_nil (h : l <:+: []) : l = [] :=
 #align list.eq_nil_of_infix_nil List.eq_nil_of_infix_nil
 -/
 
-#print List.infix_nil_iff /-
+#print List.infix_nil /-
 @[simp]
-theorem infix_nil_iff : l <:+: [] ↔ l = [] :=
+theorem infix_nil : l <:+: [] ↔ l = [] :=
   ⟨fun h => eq_nil_of_sublist_nil h.Sublist, fun h => h ▸ infix_rfl⟩
-#align list.infix_nil_iff List.infix_nil_iff
+#align list.infix_nil_iff List.infix_nil
 -/
 
 alias infix_nil_iff ↔ eq_nil_of_infix_nil _
 #align list.eq_nil_of_infix_nil List.eq_nil_of_infix_nil
 
-#print List.prefix_nil_iff /-
+#print List.prefix_nil /-
 @[simp]
-theorem prefix_nil_iff : l <+: [] ↔ l = [] :=
+theorem prefix_nil : l <+: [] ↔ l = [] :=
   ⟨fun h => eq_nil_of_infix_nil h.isInfix, fun h => h ▸ prefix_rfl⟩
-#align list.prefix_nil_iff List.prefix_nil_iff
+#align list.prefix_nil_iff List.prefix_nil
 -/
 
-#print List.suffix_nil_iff /-
+#print List.suffix_nil /-
 @[simp]
-theorem suffix_nil_iff : l <:+ [] ↔ l = [] :=
+theorem suffix_nil : l <:+ [] ↔ l = [] :=
   ⟨fun h => eq_nil_of_infix_nil h.isInfix, fun h => h ▸ suffix_rfl⟩
-#align list.suffix_nil_iff List.suffix_nil_iff
+#align list.suffix_nil_iff List.suffix_nil
 -/
 
 alias prefix_nil_iff ↔ eq_nil_of_prefix_nil _
@@ -350,29 +350,46 @@ theorem prefix_of_prefix_length_le :
 #align list.prefix_of_prefix_length_le List.prefix_of_prefix_length_le
 -/
 
-#print List.prefix_or_prefix_of_prefix /-
+/- warning: list.prefix_or_prefix_of_prefix -> List.prefix_or_prefix_of_prefix is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {l₁ : List.{u1} α} {l₂ : List.{u1} α} {l₃ : List.{u1} α}, (List.isPrefix.{u1} α l₁ l₃) -> (List.isPrefix.{u1} α l₂ l₃) -> (Or (List.isPrefix.{u1} α l₁ l₂) (List.isPrefix.{u1} α l₂ l₁))
+but is expected to have type
+  forall {α : Type.{u1}} {l₁ : List.{u1} α} {l₂ : List.{u1} α} {l₃ : List.{u1} α}, (List.isPrefix.{u1} α l₁ l₂) -> (List.isPrefix.{u1} α l₃ l₂) -> (Or (List.isPrefix.{u1} α l₁ l₃) (List.isPrefix.{u1} α l₃ l₁))
+Case conversion may be inaccurate. Consider using '#align list.prefix_or_prefix_of_prefix List.prefix_or_prefix_of_prefixₓ'. -/
 theorem prefix_or_prefix_of_prefix (h₁ : l₁ <+: l₃) (h₂ : l₂ <+: l₃) : l₁ <+: l₂ ∨ l₂ <+: l₁ :=
   (le_total (length l₁) (length l₂)).imp (prefix_of_prefix_length_le h₁ h₂)
     (prefix_of_prefix_length_le h₂ h₁)
 #align list.prefix_or_prefix_of_prefix List.prefix_or_prefix_of_prefix
--/
 
-#print List.suffix_of_suffix_length_le /-
+/- warning: list.suffix_of_suffix_length_le -> List.suffix_of_suffix_length_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {l₁ : List.{u1} α} {l₂ : List.{u1} α} {l₃ : List.{u1} α}, (List.isSuffix.{u1} α l₁ l₃) -> (List.isSuffix.{u1} α l₂ l₃) -> (LE.le.{0} Nat Nat.hasLe (List.length.{u1} α l₁) (List.length.{u1} α l₂)) -> (List.isSuffix.{u1} α l₁ l₂)
+but is expected to have type
+  forall {α : Type.{u1}} {l₁ : List.{u1} α} {l₂ : List.{u1} α} {l₃ : List.{u1} α}, (List.isSuffix.{u1} α l₁ l₂) -> (List.isSuffix.{u1} α l₃ l₂) -> (LE.le.{0} Nat instLENat (List.length.{u1} α l₁) (List.length.{u1} α l₃)) -> (List.isSuffix.{u1} α l₁ l₃)
+Case conversion may be inaccurate. Consider using '#align list.suffix_of_suffix_length_le List.suffix_of_suffix_length_leₓ'. -/
 theorem suffix_of_suffix_length_le (h₁ : l₁ <:+ l₃) (h₂ : l₂ <:+ l₃) (ll : length l₁ ≤ length l₂) :
     l₁ <:+ l₂ :=
   reverse_prefix.1 <|
     prefix_of_prefix_length_le (reverse_prefix.2 h₁) (reverse_prefix.2 h₂) (by simp [ll])
 #align list.suffix_of_suffix_length_le List.suffix_of_suffix_length_le
--/
 
-#print List.suffix_or_suffix_of_suffix /-
+/- warning: list.suffix_or_suffix_of_suffix -> List.suffix_or_suffix_of_suffix is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {l₁ : List.{u1} α} {l₂ : List.{u1} α} {l₃ : List.{u1} α}, (List.isSuffix.{u1} α l₁ l₃) -> (List.isSuffix.{u1} α l₂ l₃) -> (Or (List.isSuffix.{u1} α l₁ l₂) (List.isSuffix.{u1} α l₂ l₁))
+but is expected to have type
+  forall {α : Type.{u1}} {l₁ : List.{u1} α} {l₂ : List.{u1} α} {l₃ : List.{u1} α}, (List.isSuffix.{u1} α l₁ l₂) -> (List.isSuffix.{u1} α l₃ l₂) -> (Or (List.isSuffix.{u1} α l₁ l₃) (List.isSuffix.{u1} α l₃ l₁))
+Case conversion may be inaccurate. Consider using '#align list.suffix_or_suffix_of_suffix List.suffix_or_suffix_of_suffixₓ'. -/
 theorem suffix_or_suffix_of_suffix (h₁ : l₁ <:+ l₃) (h₂ : l₂ <:+ l₃) : l₁ <:+ l₂ ∨ l₂ <:+ l₁ :=
   (prefix_or_prefix_of_prefix (reverse_prefix.2 h₁) (reverse_prefix.2 h₂)).imp reverse_prefix.1
     reverse_prefix.1
 #align list.suffix_or_suffix_of_suffix List.suffix_or_suffix_of_suffix
--/
 
-#print List.suffix_cons_iff /-
+/- warning: list.suffix_cons_iff -> List.suffix_cons_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {l₁ : List.{u1} α} {l₂ : List.{u1} α} {a : α}, Iff (List.isSuffix.{u1} α l₁ (List.cons.{u1} α a l₂)) (Or (Eq.{succ u1} (List.{u1} α) l₁ (List.cons.{u1} α a l₂)) (List.isSuffix.{u1} α l₁ l₂))
+but is expected to have type
+  forall {α : Type.{u1}} {l₁ : List.{u1} α} {l₂ : α} {a : List.{u1} α}, Iff (List.isSuffix.{u1} α l₁ (List.cons.{u1} α l₂ a)) (Or (Eq.{succ u1} (List.{u1} α) l₁ (List.cons.{u1} α l₂ a)) (List.isSuffix.{u1} α l₁ a))
+Case conversion may be inaccurate. Consider using '#align list.suffix_cons_iff List.suffix_cons_iffₓ'. -/
 theorem suffix_cons_iff : l₁ <:+ a :: l₂ ↔ l₁ = a :: l₂ ∨ l₁ <:+ l₂ :=
   by
   constructor
@@ -384,9 +401,13 @@ theorem suffix_cons_iff : l₁ <:+ a :: l₂ ↔ l₁ = a :: l₂ ∨ l₁ <:+ l
     · exact (a :: l₂).suffix_refl
     · exact hl₁.trans (l₂.suffix_cons _)
 #align list.suffix_cons_iff List.suffix_cons_iff
--/
 
-#print List.infix_cons_iff /-
+/- warning: list.infix_cons_iff -> List.infix_cons_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {l₁ : List.{u1} α} {l₂ : List.{u1} α} {a : α}, Iff (List.isInfix.{u1} α l₁ (List.cons.{u1} α a l₂)) (Or (List.isPrefix.{u1} α l₁ (List.cons.{u1} α a l₂)) (List.isInfix.{u1} α l₁ l₂))
+but is expected to have type
+  forall {α : Type.{u1}} {l₁ : List.{u1} α} {l₂ : α} {a : List.{u1} α}, Iff (List.isInfix.{u1} α l₁ (List.cons.{u1} α l₂ a)) (Or (List.isPrefix.{u1} α l₁ (List.cons.{u1} α l₂ a)) (List.isInfix.{u1} α l₁ a))
+Case conversion may be inaccurate. Consider using '#align list.infix_cons_iff List.infix_cons_iffₓ'. -/
 theorem infix_cons_iff : l₁ <:+: a :: l₂ ↔ l₁ <+: a :: l₂ ∨ l₁ <:+: l₂ :=
   by
   constructor
@@ -398,7 +419,6 @@ theorem infix_cons_iff : l₁ <:+: a :: l₂ ↔ l₁ <+: a :: l₂ ∨ l₁ <:+
     · exact h.is_infix
     · exact infix_cons hl₁
 #align list.infix_cons_iff List.infix_cons_iff
--/
 
 #print List.infix_of_mem_join /-
 theorem infix_of_mem_join : ∀ {L : List (List α)}, l ∈ L → l <:+: join L
@@ -455,11 +475,15 @@ theorem drop_subset (n) (l : List α) : drop n l ⊆ l :=
 #align list.drop_subset List.drop_subset
 -/
 
-#print List.mem_of_mem_take /-
+/- warning: list.mem_of_mem_take -> List.mem_of_mem_take is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {l : List.{u1} α} {a : α} {n : Nat}, (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) a (List.take.{u1} α n l)) -> (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) a l)
+but is expected to have type
+  forall {α : Type.{u1}} {l : α} {a : Nat} {n : List.{u1} α}, (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) l (List.take.{u1} α a n)) -> (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) l n)
+Case conversion may be inaccurate. Consider using '#align list.mem_of_mem_take List.mem_of_mem_takeₓ'. -/
 theorem mem_of_mem_take (h : a ∈ l.take n) : a ∈ l :=
   take_subset n l h
 #align list.mem_of_mem_take List.mem_of_mem_take
--/
 
 /- warning: list.mem_of_mem_drop -> List.mem_of_mem_drop is a dubious translation:
 lean 3 declaration is

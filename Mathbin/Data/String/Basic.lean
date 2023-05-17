@@ -138,20 +138,20 @@ theorem asString_inv_toList (s : String) : s.toList.asString = s :=
 #align string.as_string_inv_to_list String.asString_inv_toList
 -/
 
-#print String.toList_singleton /-
+#print String.data_singleton /-
 @[simp]
-theorem toList_singleton (c : Char) : (String.singleton c).toList = [c] :=
+theorem data_singleton (c : Char) : (String.singleton c).toList = [c] :=
   rfl
-#align string.to_list_singleton String.toList_singleton
+#align string.to_list_singleton String.data_singleton
 -/
 
 /- warning: string.to_list_nonempty -> String.toList_nonempty is a dubious translation:
 lean 3 declaration is
-  forall {s : String}, (Ne.{1} String s String.empty) -> (Eq.{1} (List.{0} Char) (String.toList s) (List.cons.{0} Char (String.head s) (String.toList (String.popn s (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))))
+  forall {s : String}, (Ne.{1} String s String.empty) -> (Eq.{1} (List.{0} Char) (String.toList s) (List.cons.{0} Char (String.head s) (String.toList (String.drop s (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))))
 but is expected to have type
-  forall {s : String}, (Ne.{1} String s "") -> (Eq.{1} (List.{0} Char) (String.toList s) (List.cons.{0} Char (String.head s) (String.toList (String.popn s (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))))
+  forall {s : String}, (Ne.{1} String s "") -> (Eq.{1} (List.{0} Char) (String.toList s) (List.cons.{0} Char (String.head s) (String.toList (String.drop s (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))))
 Case conversion may be inaccurate. Consider using '#align string.to_list_nonempty String.toList_nonemptyₓ'. -/
-theorem toList_nonempty : ∀ {s : String}, s ≠ String.empty → s.toList = s.headI :: (s.popn 1).toList
+theorem toList_nonempty : ∀ {s : String}, s ≠ String.empty → s.toList = s.headI :: (s.drop 1).toList
   | ⟨s⟩, h => by cases s <;> [cases h rfl, rfl]
 #align string.to_list_nonempty String.toList_nonempty
 
@@ -166,14 +166,14 @@ theorem head_empty : "".headI = default :=
   rfl
 #align string.head_empty String.head_empty
 
-/- warning: string.popn_empty -> String.popn_empty is a dubious translation:
+/- warning: string.popn_empty -> String.drop_empty is a dubious translation:
 lean 3 declaration is
-  forall {n : Nat}, Eq.{1} String (String.popn String.empty n) String.empty
+  forall {n : Nat}, Eq.{1} String (String.drop String.empty n) String.empty
 but is expected to have type
-  forall {n : Nat}, Eq.{1} String (String.popn "" n) ""
-Case conversion may be inaccurate. Consider using '#align string.popn_empty String.popn_emptyₓ'. -/
+  forall {n : Nat}, Eq.{1} String (String.drop "" n) ""
+Case conversion may be inaccurate. Consider using '#align string.popn_empty String.drop_emptyₓ'. -/
 @[simp]
-theorem popn_empty {n : ℕ} : "".popn n = "" :=
+theorem drop_empty {n : ℕ} : "".drop n = "" :=
   by
   induction' n with n hn
   · rfl
@@ -182,7 +182,7 @@ theorem popn_empty {n : ℕ} : "".popn n = "" :=
       conv_rhs => rw [← hn]
       simp only [popn, mk_iterator, iterator.nextn, iterator.next]
     · simpa only [← to_list_inj] using hs
-#align string.popn_empty String.popn_empty
+#align string.popn_empty String.drop_empty
 
 instance : LinearOrder String where
   lt := (· < ·)
@@ -229,11 +229,11 @@ theorem List.asString_inj {l l' : List Char} : l.asString = l'.asString ↔ l = 
 #align list.as_string_inj List.asString_inj
 -/
 
-#print String.length_toList /-
+#print String.length_data /-
 @[simp]
-theorem String.length_toList (s : String) : s.toList.length = s.length := by
+theorem String.length_data (s : String) : s.toList.length = s.length := by
   rw [← String.asString_inv_toList s, List.toList_inv_asString, List.length_asString]
-#align string.length_to_list String.length_toList
+#align string.length_to_list String.length_data
 -/
 
 #print List.asString_eq /-

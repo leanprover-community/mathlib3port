@@ -176,7 +176,7 @@ unsafe def grouped_by_filename (e : environment) (results : rb_map Name String) 
       results.insert fn (((results.find fn).getD mk_rb_map).insert decl_name linter_warning)
   let l :=
     results.toList.reverse.map fun ⟨fn, results⟩ =>
-      ("-- " ++ fn.popn drop_fn_chars ++ "\n" ++ formatter results : format)
+      ("-- " ++ fn.drop drop_fn_chars ++ "\n" ++ formatter results : format)
   format.intercalate "\n\n" l ++ "\n"
 #align grouped_by_filename grouped_by_filename
 

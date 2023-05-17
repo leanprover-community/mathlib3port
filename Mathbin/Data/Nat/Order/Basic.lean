@@ -262,11 +262,15 @@ theorem add_pos_left {m : ℕ} (h : 0 < m) (n : ℕ) : 0 < m + n :=
 #align nat.add_pos_left Nat.add_pos_left
 -/
 
-#print Nat.add_pos_right /-
+/- warning: nat.add_pos_right -> Nat.add_pos_right is a dubious translation:
+lean 3 declaration is
+  forall (m : Nat) {n : Nat}, (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) -> (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) m n))
+but is expected to have type
+  forall {m : Nat} (n : Nat), (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) m) -> (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n m))
+Case conversion may be inaccurate. Consider using '#align nat.add_pos_right Nat.add_pos_rightₓ'. -/
 theorem add_pos_right (m : ℕ) {n : ℕ} (h : 0 < n) : 0 < m + n := by rw [add_comm];
   exact add_pos_left h m
 #align nat.add_pos_right Nat.add_pos_right
--/
 
 #print Nat.add_pos_iff_pos_or_pos /-
 theorem add_pos_iff_pos_or_pos (m n : ℕ) : 0 < m + n ↔ 0 < m ∨ 0 < n :=

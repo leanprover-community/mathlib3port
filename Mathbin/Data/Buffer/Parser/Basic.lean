@@ -990,7 +990,7 @@ theorem manyChar_eq_done_not_empty {p : Parser Char} {s : String} (h : s ≠ "")
     manyChar p cb n = done n' s ↔
       ∃ np : ℕ,
         p cb n = done np s.headI ∧
-          foldrCore List.cons p List.nil (Buffer.size cb - n) cb np = done n' (s.popn 1).toList :=
+          foldrCore List.cons p List.nil (Buffer.size cb - n) cb np = done n' (s.drop 1).toList :=
   by simp [many_char, List.asString_eq, String.toList_nonempty h, many_eq_done]
 #align parser.many_char_eq_done_not_empty Parser.manyChar_eq_done_not_empty
 
@@ -1046,7 +1046,7 @@ theorem manyChar1_ne_empty {p : Parser Char} : manyChar1 p cb n ≠ done n' "" :
 
 theorem manyChar1_eq_done {p : Parser Char} {s : String} (h : s ≠ "") :
     manyChar1 p cb n = done n' s ↔
-      ∃ np : ℕ, p cb n = done np s.headI ∧ manyChar p cb np = done n' (s.popn 1) :=
+      ∃ np : ℕ, p cb n = done np s.headI ∧ manyChar p cb np = done n' (s.drop 1) :=
   by
   simp [many_char1, List.asString_eq, String.toList_nonempty h, many1_eq_done,
     many_char_eq_many_of_to_list]
