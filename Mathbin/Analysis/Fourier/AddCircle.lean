@@ -222,7 +222,7 @@ theorem fourier_add_half_inv_index {n : ℤ} (hn : n ≠ 0) (hT : 0 < T) (x : Ad
     by
     rw [zsmul_eq_mul, to_circle, Function.Periodic.lift_coe, expMapCircle_apply]
     replace hT := complex.of_real_ne_zero.mpr hT.ne'
-    convert Complex.exp_pi_mul_i using 3
+    convert Complex.exp_pi_mul_I using 3
     field_simp
     ring
   rw [this]

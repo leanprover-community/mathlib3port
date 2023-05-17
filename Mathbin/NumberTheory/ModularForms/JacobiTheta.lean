@@ -85,7 +85,7 @@ theorem jacobiTheta_two_vadd (τ : ℍ) : jacobiTheta ((2 : ℝ) +ᵥ τ) = jaco
   rw [(by
       push_cast
       ring : ↑π * I * ↑n ^ 2 * 2 = ↑(n ^ 2) * (2 * π * I)),
-    Complex.exp_int_mul, Complex.exp_two_pi_mul_i, one_zpow]
+    Complex.exp_int_mul, Complex.exp_two_pi_mul_I, one_zpow]
 #align jacobi_theta_two_vadd jacobiTheta_two_vadd
 
 theorem jacobiTheta_t_sq_smul (τ : ℍ) : jacobiTheta (ModularGroup.t ^ 2 • τ) = jacobiTheta τ :=

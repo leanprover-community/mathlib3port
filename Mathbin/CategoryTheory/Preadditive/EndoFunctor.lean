@@ -29,6 +29,7 @@ variable (C : Type u₁) [Category.{v₁} C] [Preadditive C] (F : C ⥤ C) [Func
 
 open CategoryTheory.Limits Preadditive
 
+#print CategoryTheory.Endofunctor.algebraPreadditive /-
 /-- The category of algebras over an additive endofunctor on a preadditive category is preadditive.
 -/
 @[simps]
@@ -108,10 +109,14 @@ instance Endofunctor.algebraPreadditive : Preadditive (Endofunctor.Algebra F)
     ext
     apply comp_add
 #align category_theory.endofunctor.algebra_preadditive CategoryTheory.Endofunctor.algebraPreadditive
+-/
 
+#print CategoryTheory.Algebra.forget_additive /-
 instance Algebra.forget_additive : (Endofunctor.Algebra.forget F).Additive where
 #align category_theory.algebra.forget_additive CategoryTheory.Algebra.forget_additive
+-/
 
+#print CategoryTheory.Endofunctor.coalgebraPreadditive /-
 @[simps]
 instance Endofunctor.coalgebraPreadditive : Preadditive (Endofunctor.Coalgebra F)
     where
@@ -189,9 +194,12 @@ instance Endofunctor.coalgebraPreadditive : Preadditive (Endofunctor.Coalgebra F
     ext
     apply comp_add
 #align category_theory.endofunctor.coalgebra_preadditive CategoryTheory.Endofunctor.coalgebraPreadditive
+-/
 
+#print CategoryTheory.Coalgebra.forget_additive /-
 instance Coalgebra.forget_additive : (Endofunctor.Coalgebra.forget F).Additive where
 #align category_theory.coalgebra.forget_additive CategoryTheory.Coalgebra.forget_additive
+-/
 
 end CategoryTheory
 

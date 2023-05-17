@@ -277,7 +277,7 @@ theorem algebraMap₀_mul_algebraMap₀ (r s : R) :
   exact algebra_map₀_mul r (@algebra_map₀ R M _ _ _ s)
 #align tensor_power.algebra_map₀_mul_algebra_map₀ TensorPower.algebraMap₀_mul_algebraMap₀
 
-instance gsemiring : DirectSum.Gsemiring fun i => (⨂[R]^i) M :=
+instance gsemiring : DirectSum.GSemiring fun i => (⨂[R]^i) M :=
   { TensorPower.gmonoid with
     mul_zero := fun i j a => LinearMap.map_zero _
     zero_mul := fun i j b => LinearMap.map_zero₂ _ _

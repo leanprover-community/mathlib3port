@@ -586,8 +586,8 @@ theorem Emetric.exists_smooth_forall_closedBall_subset {M} [EMetricSpace M] [Cha
       (∀ x, 0 < δ x) ∧ ∀ (i), ∀ x ∈ K i, EMetric.closedBall x (ENNReal.ofReal (δ x)) ⊆ U i :=
   by
   simpa only [mem_inter_iff, forall_and, mem_preimage, mem_Inter, @forall_swap ι M] using
-    exists_smooth_forall_mem_convex_of_local_const I Emetric.exists_forall_closedBall_subset_aux₂
-      (Emetric.exists_forall_closedBall_subset_aux₁ hK hU hKU hfin)
+    exists_smooth_forall_mem_convex_of_local_const I EMetric.exists_forall_closedBall_subset_aux₂
+      (EMetric.exists_forall_closedBall_subset_aux₁ hK hU hKU hfin)
 #align emetric.exists_smooth_forall_closed_ball_subset Emetric.exists_smooth_forall_closedBall_subset
 
 /-- Let `M` be a smooth σ-compact manifold with a metric. Let `K : ι → set M` be a locally finite

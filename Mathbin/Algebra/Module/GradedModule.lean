@@ -51,14 +51,14 @@ class Gmodule [AddMonoid ι] [∀ i, AddMonoid (A i)] [∀ i, AddMonoid (M i)] [
 #align direct_sum.gmodule DirectSum.Gmodule
 
 /-- A graded version of `semiring.to_module`. -/
-instance Gsemiring.toGmodule [DecidableEq ι] [AddMonoid ι] [∀ i : ι, AddCommMonoid (A i)]
-    [Gsemiring A] : Gmodule A A :=
+instance GSemiring.toGmodule [DecidableEq ι] [AddMonoid ι] [∀ i : ι, AddCommMonoid (A i)]
+    [GSemiring A] : Gmodule A A :=
   { GMonoid.toGMulAction A with
-    smul_add := fun _ _ => Gsemiring.mul_add
-    smul_zero := fun i j => Gsemiring.mul_zero
-    add_smul := fun i j => Gsemiring.add_mul
-    zero_smul := fun i j => Gsemiring.zero_mul }
-#align direct_sum.gsemiring.to_gmodule DirectSum.Gsemiring.toGmodule
+    smul_add := fun _ _ => GSemiring.mul_add
+    smul_zero := fun i j => GSemiring.mul_zero
+    add_smul := fun i j => GSemiring.add_mul
+    zero_smul := fun i j => GSemiring.zero_mul }
+#align direct_sum.gsemiring.to_gmodule DirectSum.GSemiring.toGmodule
 
 variable [AddMonoid ι] [∀ i : ι, AddCommMonoid (A i)] [∀ i, AddCommMonoid (M i)]
 
@@ -125,7 +125,7 @@ private theorem one_smul [DecidableEq ι] [GMonoid A] [Gmodule A M] (x : ⨁ i, 
 #align direct_sum.gmodule.one_smul direct_sum.gmodule.one_smul
 
 -- Almost identical to the proof of `direct_sum.mul_assoc`
-private theorem mul_smul [DecidableEq ι] [Gsemiring A] [Gmodule A M] (a b : ⨁ i, A i)
+private theorem mul_smul [DecidableEq ι] [GSemiring A] [Gmodule A M] (a b : ⨁ i, A i)
     (c : ⨁ i, M i) : (a * b) • c = a • b • c :=
   by
   suffices
@@ -148,7 +148,7 @@ private theorem mul_smul [DecidableEq ι] [Gsemiring A] [Gmodule A M] (a b : ⨁
 #align direct_sum.gmodule.mul_smul direct_sum.gmodule.mul_smul
 
 /-- The `module` derived from `gmodule A M`. -/
-instance module [DecidableEq ι] [Gsemiring A] [Gmodule A M] : Module (⨁ i, A i) (⨁ i, M i)
+instance module [DecidableEq ι] [GSemiring A] [Gmodule A M] : Module (⨁ i, A i) (⨁ i, M i)
     where
   smul := (· • ·)
   one_smul := one_smul _ _

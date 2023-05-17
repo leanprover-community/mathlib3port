@@ -95,7 +95,7 @@ namespace SetLike
 /-- Build a `gnon_unital_non_assoc_semiring` instance for a collection of additive submonoids. -/
 instance gnonUnitalNonAssocSemiring [Add ι] [NonUnitalNonAssocSemiring R] [SetLike σ R]
     [AddSubmonoidClass σ R] (A : ι → σ) [SetLike.GradedMul A] :
-    DirectSum.GnonUnitalNonAssocSemiring fun i => A i :=
+    DirectSum.GNonUnitalNonAssocSemiring fun i => A i :=
   {
     SetLike.gMul
       A with
@@ -107,7 +107,7 @@ instance gnonUnitalNonAssocSemiring [Add ι] [NonUnitalNonAssocSemiring R] [SetL
 
 /-- Build a `gsemiring` instance for a collection of additive submonoids. -/
 instance gsemiring [AddMonoid ι] [Semiring R] [SetLike σ R] [AddSubmonoidClass σ R] (A : ι → σ)
-    [SetLike.GradedMonoid A] : DirectSum.Gsemiring fun i => A i :=
+    [SetLike.GradedMonoid A] : DirectSum.GSemiring fun i => A i :=
   {
     SetLike.gMonoid
       A with
@@ -122,13 +122,13 @@ instance gsemiring [AddMonoid ι] [Semiring R] [SetLike σ R] [AddSubmonoidClass
 
 /-- Build a `gcomm_semiring` instance for a collection of additive submonoids. -/
 instance gcommSemiring [AddCommMonoid ι] [CommSemiring R] [SetLike σ R] [AddSubmonoidClass σ R]
-    (A : ι → σ) [SetLike.GradedMonoid A] : DirectSum.GcommSemiring fun i => A i :=
+    (A : ι → σ) [SetLike.GradedMonoid A] : DirectSum.GCommSemiring fun i => A i :=
   { SetLike.gCommMonoid A, SetLike.gsemiring A with }
 #align set_like.gcomm_semiring SetLike.gcommSemiring
 
 /-- Build a `gring` instance for a collection of additive subgroups. -/
 instance gring [AddMonoid ι] [Ring R] [SetLike σ R] [AddSubgroupClass σ R] (A : ι → σ)
-    [SetLike.GradedMonoid A] : DirectSum.Gring fun i => A i :=
+    [SetLike.GradedMonoid A] : DirectSum.GRing fun i => A i :=
   {
     SetLike.gsemiring
       A with
@@ -139,7 +139,7 @@ instance gring [AddMonoid ι] [Ring R] [SetLike σ R] [AddSubgroupClass σ R] (A
 
 /-- Build a `gcomm_semiring` instance for a collection of additive submonoids. -/
 instance gcommRing [AddCommMonoid ι] [CommRing R] [SetLike σ R] [AddSubgroupClass σ R] (A : ι → σ)
-    [SetLike.GradedMonoid A] : DirectSum.GcommRing fun i => A i :=
+    [SetLike.GradedMonoid A] : DirectSum.GCommRing fun i => A i :=
   { SetLike.gCommMonoid A, SetLike.gring A with }
 #align set_like.gcomm_ring SetLike.gcommRing
 
