@@ -65,7 +65,7 @@ theorem toTensorAlgebra_ghasMul {i j} (a : (⨂[R]^i) M) (b : (⨂[R]^j) M) :
 
 @[simp]
 theorem toTensorAlgebra_galgebra_toFun (r : R) :
-    (@DirectSum.Galgebra.toFun _ R (fun n => (⨂[R]^n) M) _ _ _ _ _ _ _ r).toTensorAlgebra =
+    (@DirectSum.GAlgebra.toFun _ R (fun n => (⨂[R]^n) M) _ _ _ _ _ _ _ r).toTensorAlgebra =
       algebraMap _ _ r :=
   by
   rw [TensorPower.galgebra_toFun_def, TensorPower.algebraMap₀_eq_smul_one, LinearMap.map_smul,

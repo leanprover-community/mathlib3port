@@ -48,27 +48,29 @@ variable [AddMonoid ι] [GSemiring A]
 
 section
 
+#print DirectSum.GAlgebra /-
 /-- A graded version of `algebra`. An instance of `direct_sum.galgebra R A` endows `(⨁ i, A i)`
 with an `R`-algebra structure. -/
-class Galgebra where
+class GAlgebra where
   toFun : R →+ A 0
   map_one : to_fun 1 = GradedMonoid.GOne.one
   map_mul :
     ∀ r s, GradedMonoid.mk _ (to_fun (r * s)) = ⟨_, GradedMonoid.GMul.mul (to_fun r) (to_fun s)⟩
   commutes : ∀ r x, GradedMonoid.mk _ (to_fun r) * x = x * ⟨_, to_fun r⟩
   smul_def : ∀ (r) (x : GradedMonoid A), GradedMonoid.mk x.1 (r • x.2) = ⟨_, to_fun r⟩ * x
-#align direct_sum.galgebra DirectSum.Galgebra
+#align direct_sum.galgebra DirectSum.GAlgebra
+-/
 
 end
 
-variable [Semiring B] [Galgebra R A] [Algebra R B]
+variable [Semiring B] [GAlgebra R A] [Algebra R B]
 
 instance : Algebra R (⨁ i, A i)
     where
-  toFun := (DirectSum.of A 0).comp Galgebra.toFun
+  toFun := (DirectSum.of A 0).comp GAlgebra.toFun
   map_zero' := AddMonoidHom.map_zero _
   map_add' := AddMonoidHom.map_add _
-  map_one' := (DirectSum.of A 0).congr_arg Galgebra.map_one
+  map_one' := (DirectSum.of A 0).congr_arg GAlgebra.map_one
   map_mul' a b := by
     simp only [AddMonoidHom.comp_apply]
     rw [of_mul_of]
@@ -91,16 +93,21 @@ instance : Algebra R (⨁ i, A i)
     rw [DirectSum.of_mul_of, ← of_smul]
     apply Dfinsupp.single_eq_of_sigma_eq (galgebra.smul_def r ⟨i, xi⟩)
 
+#print DirectSum.algebraMap_apply /-
 theorem algebraMap_apply (r : R) :
-    algebraMap R (⨁ i, A i) r = DirectSum.of A 0 (Galgebra.toFun r) :=
+    algebraMap R (⨁ i, A i) r = DirectSum.of A 0 (GAlgebra.toFun r) :=
   rfl
 #align direct_sum.algebra_map_apply DirectSum.algebraMap_apply
+-/
 
+#print DirectSum.algebraMap_toAddMonoid_hom /-
 theorem algebraMap_toAddMonoid_hom :
-    ↑(algebraMap R (⨁ i, A i)) = (DirectSum.of A 0).comp (Galgebra.toFun : R →+ A 0) :=
+    ↑(algebraMap R (⨁ i, A i)) = (DirectSum.of A 0).comp (GAlgebra.toFun : R →+ A 0) :=
   rfl
 #align direct_sum.algebra_map_to_add_monoid_hom DirectSum.algebraMap_toAddMonoid_hom
+-/
 
+#print DirectSum.toAlgebra /-
 /-- A family of `linear_map`s preserving `direct_sum.ghas_one.one` and `direct_sum.ghas_mul.mul`
 describes an `alg_hom` on `⨁ i, A i`. This is a stronger version of `direct_sum.to_semiring`.
 
@@ -111,14 +118,16 @@ can be discharged by `rfl`. -/
 @[simps]
 def toAlgebra (f : ∀ i, A i →ₗ[R] B) (hone : f _ GradedMonoid.GOne.one = 1)
     (hmul : ∀ {i j} (ai : A i) (aj : A j), f _ (GradedMonoid.GMul.mul ai aj) = f _ ai * f _ aj)
-    (hcommutes : ∀ r, (f 0) (Galgebra.toFun r) = (algebraMap R B) r) : (⨁ i, A i) →ₐ[R] B :=
+    (hcommutes : ∀ r, (f 0) (GAlgebra.toFun r) = (algebraMap R B) r) : (⨁ i, A i) →ₐ[R] B :=
   {
     toSemiring (fun i => (f i).toAddMonoidHom) hone
       @hmul with
     toFun := toSemiring (fun i => (f i).toAddMonoidHom) hone @hmul
     commutes' := fun r => (DirectSum.toSemiring_of _ _ _ _ _).trans (hcommutes r) }
 #align direct_sum.to_algebra DirectSum.toAlgebra
+-/
 
+#print DirectSum.algHom_ext' /-
 /-- Two `alg_hom`s out of a direct sum are equal if they agree on the generators.
 
 See note [partially-applied ext lemmas]. -/
@@ -127,22 +136,26 @@ theorem algHom_ext' ⦃f g : (⨁ i, A i) →ₐ[R] B⦄
     (h : ∀ i, f.toLinearMap.comp (lof _ _ A i) = g.toLinearMap.comp (lof _ _ A i)) : f = g :=
   AlgHom.toLinearMap_injective <| DirectSum.linearMap_ext _ h
 #align direct_sum.alg_hom_ext' DirectSum.algHom_ext'
+-/
 
+#print DirectSum.algHom_ext /-
 theorem algHom_ext ⦃f g : (⨁ i, A i) →ₐ[R] B⦄ (h : ∀ i x, f (of A i x) = g (of A i x)) : f = g :=
   algHom_ext' R A fun i => LinearMap.ext <| h i
 #align direct_sum.alg_hom_ext DirectSum.algHom_ext
+-/
 
 end DirectSum
 
 /-! ### Concrete instances -/
 
 
+#print Algebra.directSumGAlgebra /-
 /-- A direct sum of copies of a `algebra` inherits the algebra structure.
 
 -/
 @[simps]
-instance Algebra.directSumGalgebra {R A : Type _} [DecidableEq ι] [AddMonoid ι] [CommSemiring R]
-    [Semiring A] [Algebra R A] : DirectSum.Galgebra R fun i : ι => A
+instance Algebra.directSumGAlgebra {R A : Type _} [DecidableEq ι] [AddMonoid ι] [CommSemiring R]
+    [Semiring A] [Algebra R A] : DirectSum.GAlgebra R fun i : ι => A
     where
   toFun := (algebraMap R A).toAddMonoidHom
   map_one := (algebraMap R A).map_one
@@ -150,7 +163,8 @@ instance Algebra.directSumGalgebra {R A : Type _} [DecidableEq ι] [AddMonoid ι
   commutes := fun r ⟨ai, a⟩ =>
     Sigma.ext ((zero_add _).trans (add_zero _).symm) (hEq_of_eq <| Algebra.commutes _ _)
   smul_def := fun r ⟨ai, a⟩ => Sigma.ext (zero_add _).symm (hEq_of_eq <| Algebra.smul_def _ _)
-#align algebra.direct_sum_galgebra Algebra.directSumGalgebra
+#align algebra.direct_sum_galgebra Algebra.directSumGAlgebra
+-/
 
 namespace Submodule
 

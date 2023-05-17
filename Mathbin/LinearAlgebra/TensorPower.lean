@@ -293,7 +293,7 @@ example : Semiring (⨁ n : ℕ, (⨂[R]^n) M) := by infer_instance
 /-- The tensor powers form a graded algebra.
 
 Note that this instance implies `algebra R (⨁ n : ℕ, ⨂[R]^n M)` via `direct_sum.algebra`. -/
-instance galgebra : DirectSum.Galgebra R fun i => (⨂[R]^i) M
+instance galgebra : DirectSum.GAlgebra R fun i => (⨂[R]^i) M
     where
   toFun := (algebraMap₀ : R ≃ₗ[R] (⨂[R]^0) M).toLinearMap.toAddMonoidHom
   map_one := algebraMap₀_one
@@ -318,7 +318,7 @@ instance galgebra : DirectSum.Galgebra R fun i => (⨂[R]^i) M
 #align tensor_power.galgebra TensorPower.galgebra
 
 theorem galgebra_toFun_def (r : R) :
-    @DirectSum.Galgebra.toFun ℕ R (fun i => (⨂[R]^i) M) _ _ _ _ _ _ _ r = algebraMap₀ r :=
+    @DirectSum.GAlgebra.toFun ℕ R (fun i => (⨂[R]^i) M) _ _ _ _ _ _ _ r = algebraMap₀ r :=
   rfl
 #align tensor_power.galgebra_to_fun_def TensorPower.galgebra_toFun_def
 

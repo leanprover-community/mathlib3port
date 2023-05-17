@@ -298,7 +298,7 @@ namespace Submodule
 
 /-- Build a `galgebra` instance for a collection of `submodule`s. -/
 instance galgebra [AddMonoid ι] [CommSemiring S] [Semiring R] [Algebra S R] (A : ι → Submodule S R)
-    [SetLike.GradedMonoid A] : DirectSum.Galgebra S fun i => A i
+    [SetLike.GradedMonoid A] : DirectSum.GAlgebra S fun i => A i
     where
   toFun :=
     ((Algebra.linearMap S R).codRestrict (A 0) <| SetLike.algebraMap_mem_graded A).toAddMonoidHom
@@ -312,7 +312,7 @@ instance galgebra [AddMonoid ι] [CommSemiring S] [Semiring R] [Algebra S R] (A 
 @[simp]
 theorem setLike.coe_galgebra_toFun [AddMonoid ι] [CommSemiring S] [Semiring R] [Algebra S R]
     (A : ι → Submodule S R) [SetLike.GradedMonoid A] (s : S) :
-    ↑(@DirectSum.Galgebra.toFun _ S (fun i => A i) _ _ _ _ _ _ _ s) = (algebraMap S R s : R) :=
+    ↑(@DirectSum.GAlgebra.toFun _ S (fun i => A i) _ _ _ _ _ _ _ s) = (algebraMap S R s : R) :=
   rfl
 #align submodule.set_like.coe_galgebra_to_fun Submodule.setLike.coe_galgebra_toFun
 
