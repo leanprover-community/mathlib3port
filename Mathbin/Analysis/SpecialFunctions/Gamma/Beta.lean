@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.special_functions.gamma.beta
-! leanprover-community/mathlib commit 7982767093ae38cba236487f9c9dd9cd99f63c16
+! leanprover-community/mathlib commit b76e9f654df09f8a832aeee712511fe5f3e57869
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,6 +32,7 @@ refined properties of the Gamma function using these relations.
   `n ↦ n ^ s * n! / (s * (s + 1) * ... * (s + n))` is `Γ(s)`.
 * `complex.Gamma_mul_Gamma_one_sub`: Euler's reflection formula
   `Gamma s * Gamma (1 - s) = π / sin π s`.
+* `complex.differentiable_one_div_Gamma`: the function `1 / Γ(s)` is differentiable everywhere.
 * `real.Gamma_ne_zero`, `real.Gamma_seq_tendsto_Gamma`,
   `real.Gamma_mul_Gamma_one_sub`: real versions of the above results.
 -/
@@ -607,4 +608,54 @@ theorem gamma_mul_gamma_one_sub (s : ℝ) : gamma s * gamma (1 - s) = π / sin (
 end Real
 
 end GammaReflection
+
+section InvGamma
+
+open Real
+
+namespace Complex
+
+/-! ## The reciprocal Gamma function
+
+We show that the reciprocal Gamma function `1 / Γ(s)` is entire. These lemmas show that (in this
+case at least) mathlib's conventions for division by zero do actually give a mathematically useful
+answer! (These results are useful in the theory of zeta and L-functions.) -/
+
+
+/-- A reformulation of the Gamma recurrence relation which is true for `s = 0` as well. -/
+theorem one_div_gamma_eq_self_mul_one_div_gamma_add_one (s : ℂ) :
+    (gamma s)⁻¹ = s * (gamma (s + 1))⁻¹ :=
+  by
+  rcases ne_or_eq s 0 with (h | rfl)
+  · rw [Gamma_add_one s h, mul_inv, mul_inv_cancel_left₀ h]
+  · rw [zero_add, Gamma_zero, inv_zero, MulZeroClass.zero_mul]
+#align complex.one_div_Gamma_eq_self_mul_one_div_Gamma_add_one Complex.one_div_gamma_eq_self_mul_one_div_gamma_add_one
+
+/-- The reciprocal of the Gamma function is differentiable everywhere (including the points where
+Gamma itself is not). -/
+theorem differentiable_one_div_gamma : Differentiable ℂ fun s : ℂ => (gamma s)⁻¹ :=
+  by
+  suffices : ∀ n : ℕ, ∀ (s : ℂ) (hs : -s.re < n), DifferentiableAt ℂ (fun u : ℂ => (Gamma u)⁻¹) s
+  exact fun s =>
+    let ⟨n, h⟩ := exists_nat_gt (-s.re)
+    this n s h
+  intro n
+  induction' n with m hm
+  · intro s hs
+    rw [Nat.cast_zero, neg_lt_zero] at hs
+    suffices : ∀ m : ℕ, s ≠ -↑m
+    exact (differentiable_at_Gamma _ this).inv (Gamma_ne_zero this)
+    contrapose! hs
+    rcases hs with ⟨m, rfl⟩
+    simpa only [neg_re, ← of_real_nat_cast, of_real_re, neg_nonpos] using Nat.cast_nonneg m
+  · intro s hs
+    rw [funext one_div_Gamma_eq_self_mul_one_div_Gamma_add_one]
+    specialize hm (s + 1) (by rwa [add_re, one_re, neg_add', sub_lt_iff_lt_add, ← Nat.cast_succ])
+    refine' differentiable_at_id.mul (hm.comp s _)
+    exact differentiable_at_id.add (differentiableAt_const _)
+#align complex.differentiable_one_div_Gamma Complex.differentiable_one_div_gamma
+
+end Complex
+
+end InvGamma
 

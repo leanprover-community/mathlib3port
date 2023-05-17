@@ -5,7 +5,7 @@ Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Sébasti
   Rémy Degenne, David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.special_functions.pow.complex
-! leanprover-community/mathlib commit 0b9eaaa7686280fad8cce467f5c3c57ee6ce77f8
+! leanprover-community/mathlib commit 4fa54b337f7d52805480306db1b1439c741848c8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -221,4 +221,62 @@ theorem cpow_conj (x : ℂ) (n : ℂ) (hx : x.arg ≠ π) : x ^ conj n = conj (c
 #align complex.cpow_conj Complex.cpow_conj
 
 end Complex
+
+section Tactics
+
+/-!
+## Tactic extensions for complex powers
+-/
+
+
+namespace NormNum
+
+theorem cpow_pos (a b : ℂ) (b' : ℕ) (c : ℂ) (hb : b = b') (h : a ^ b' = c) : a ^ b = c := by
+  rw [← h, hb, Complex.cpow_nat_cast]
+#align norm_num.cpow_pos NormNum.cpow_pos
+
+theorem cpow_neg (a b : ℂ) (b' : ℕ) (c c' : ℂ) (hb : b = b') (h : a ^ b' = c) (hc : c⁻¹ = c') :
+    a ^ (-b) = c' := by rw [← hc, ← h, hb, Complex.cpow_neg, Complex.cpow_nat_cast]
+#align norm_num.cpow_neg NormNum.cpow_neg
+
+open Tactic
+
+/-- Generalized version of `prove_cpow`, `prove_nnrpow`, `prove_ennrpow`. -/
+unsafe def prove_rpow' (pos neg zero : Name) (α β one a b : expr) : tactic (expr × expr) := do
+  let na ← a.to_rat
+  let icα ← mk_instance_cache α
+  let icβ ← mk_instance_cache β
+  match match_sign b with
+    | Sum.inl b => do
+      let nc ← mk_instance_cache q(ℕ)
+      let (icβ, nc, b', hb) ← prove_nat_uncast icβ nc b
+      let (icα, c, h) ← prove_pow a na icα b'
+      let cr ← c
+      let (icα, c', hc) ← prove_inv icα c cr
+      pure (c', (expr.const neg []).mk_app [a, b, b', c, c', hb, h, hc])
+    | Sum.inr ff => pure (one, expr.const zero [] a)
+    | Sum.inr tt => do
+      let nc ← mk_instance_cache q(ℕ)
+      let (icβ, nc, b', hb) ← prove_nat_uncast icβ nc b
+      let (icα, c, h) ← prove_pow a na icα b'
+      pure (c, (expr.const Pos []).mk_app [a, b, b', c, hb, h])
+#align norm_num.prove_rpow' norm_num.prove_rpow'
+
+/-- Evaluate `complex.cpow a b` where `a` is a rational numeral and `b` is an integer. -/
+unsafe def prove_cpow : expr → expr → tactic (expr × expr) :=
+  prove_rpow' `` cpow_pos `` cpow_neg `` Complex.cpow_zero q(ℂ) q(ℂ) q((1 : ℂ))
+#align norm_num.prove_cpow norm_num.prove_cpow
+
+/-- Evaluates expressions of the form `cpow a b` and `a ^ b` in the special case where
+`b` is an integer and `a` is a positive rational (so it's really just a rational power). -/
+@[norm_num]
+unsafe def eval_cpow : expr → tactic (expr × expr)
+  | q(@Pow.pow _ _ Complex.hasPow $(a) $(b)) => b.to_int >> prove_cpow a b
+  | q(Complex.cpow $(a) $(b)) => b.to_int >> prove_cpow a b
+  | _ => tactic.failed
+#align norm_num.eval_cpow norm_num.eval_cpow
+
+end NormNum
+
+end Tactics
 

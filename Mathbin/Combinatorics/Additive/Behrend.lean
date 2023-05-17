@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module combinatorics.additive.behrend
-! leanprover-community/mathlib commit 0b9eaaa7686280fad8cce467f5c3c57ee6ce77f8
+! leanprover-community/mathlib commit 4fa54b337f7d52805480306db1b1439c741848c8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,7 +12,6 @@ import Mathbin.Analysis.InnerProductSpace.PiL2
 import Mathbin.Combinatorics.Additive.SalemSpencer
 import Mathbin.Combinatorics.Pigeonhole
 import Mathbin.Data.Complex.ExponentialBounds
-import Mathbin.Analysis.SpecialFunctions.Pow.Tactic
 
 /-!
 # Behrend's bound on Roth numbers

@@ -751,7 +751,6 @@ import Mathbin.Analysis.SpecialFunctions.Pow.Continuity
 import Mathbin.Analysis.SpecialFunctions.Pow.Deriv
 import Mathbin.Analysis.SpecialFunctions.Pow.Nnreal
 import Mathbin.Analysis.SpecialFunctions.Pow.Real
-import Mathbin.Analysis.SpecialFunctions.Pow.Tactic
 import Mathbin.Analysis.SpecialFunctions.Sqrt
 import Mathbin.Analysis.SpecialFunctions.Stirling
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.Angle

@@ -4,13 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.special_functions.gamma.basic
-! leanprover-community/mathlib commit 7982767093ae38cba236487f9c9dd9cd99f63c16
+! leanprover-community/mathlib commit b76e9f654df09f8a832aeee712511fe5f3e57869
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.MeasureTheory.Integral.ExpDecay
 import Mathbin.Analysis.SpecialFunctions.ImproperIntegrals
-import Mathbin.Analysis.Calculus.ParametricIntegral
+import Mathbin.Analysis.MellinTransform
 
 /-!
 # The Gamma function
@@ -462,191 +462,39 @@ theorem gamma_conj (s : ℂ) : gamma (conj s) = conj (gamma s) :=
 
 end GammaDef
 
-end Complex
-
 /-! Now check that the `Γ` function is differentiable, wherever this makes sense. -/
 
 
 section GammaHasDeriv
 
-/-- Integrand for the derivative of the `Γ` function -/
-def dGammaIntegrand (s : ℂ) (x : ℝ) : ℂ :=
-  exp (-x) * log x * x ^ (s - 1)
-#align dGamma_integrand dGammaIntegrand
+/-- Rewrite the Gamma integral as an example of a Mellin transform. -/
+theorem gammaIntegral_eq_mellin : gammaIntegral = mellin fun x => Real.exp (-x) :=
+  funext fun s => by simp only [mellin, Gamma_integral, smul_eq_mul, mul_comm]
+#align complex.Gamma_integral_eq_mellin Complex.gammaIntegral_eq_mellin
 
-/-- Integrand for the absolute value of the derivative of the `Γ` function -/
-def dGammaIntegrandReal (s x : ℝ) : ℝ :=
-  |exp (-x) * log x * x ^ (s - 1)|
-#align dGamma_integrand_real dGammaIntegrandReal
-
-theorem dGamma_integrand_isLittleO_atTop (s : ℝ) :
-    (fun x : ℝ => exp (-x) * log x * x ^ (s - 1)) =o[atTop] fun x => exp (-(1 / 2) * x) :=
+/-- The derivative of the `Γ` integral, at any `s ∈ ℂ` with `1 < re s`, is given by the Melllin
+transform of `log t * exp (-t)`. -/
+theorem hasDerivAt_gammaIntegral {s : ℂ} (hs : 0 < s.re) :
+    HasDerivAt gammaIntegral (∫ t : ℝ in Ioi 0, t ^ (s - 1) * (Real.log t * Real.exp (-t))) s :=
   by
-  refine' is_o_of_tendsto (fun x hx => _) _
-  · exfalso
-    exact (-(1 / 2) * x).exp_pos.ne' hx
-  have :
-    eventually_eq at_top (fun x : ℝ => exp (-x) * log x * x ^ (s - 1) / exp (-(1 / 2) * x))
-      (fun x : ℝ => (fun z : ℝ => exp (1 / 2 * z) / z ^ s) x * (fun z : ℝ => z / log z) x)⁻¹ :=
-    by
-    refine' eventually_of_mem (Ioi_mem_at_top 1) _
-    intro x hx
-    dsimp
-    replace hx := lt_trans zero_lt_one (mem_Ioi.mp hx)
-    rw [Real.exp_neg, neg_mul, Real.exp_neg, rpow_sub hx]
-    have : exp x = exp (x / 2) * exp (x / 2) := by rw [← Real.exp_add, add_halves]
-    rw [this]
-    field_simp [hx.ne', exp_ne_zero (x / 2)]
-    ring
-  refine' tendsto.congr' this.symm (tendsto.inv_tendsto_at_top _)
-  apply tendsto.at_top_mul_at_top (tendsto_exp_mul_div_rpow_atTop s (1 / 2) one_half_pos)
-  refine' tendsto.congr' _ ((tendsto_exp_div_pow_at_top 1).comp tendsto_log_at_top)
-  apply eventually_eq_of_mem (Ioi_mem_at_top (0 : ℝ))
-  intro x hx
-  simp [exp_log hx]
-#align dGamma_integrand_is_o_at_top dGamma_integrand_isLittleO_atTop
-
-/-- Absolute convergence of the integral which will give the derivative of the `Γ` function on
-`1 < re s`. -/
-theorem dGamma_integral_abs_convergent (s : ℝ) (hs : 1 < s) :
-    IntegrableOn (fun x : ℝ => ‖exp (-x) * log x * x ^ (s - 1)‖) (Ioi 0) :=
-  by
-  rw [← Ioc_union_Ioi_eq_Ioi (@zero_le_one ℝ _ _ _ _), integrable_on_union]
-  refine' ⟨⟨_, _⟩, _⟩
-  · refine' ContinuousOn.aeStronglyMeasurable (ContinuousOn.mul _ _).norm measurableSet_Ioc
-    · refine' (continuous_exp.comp continuous_neg).ContinuousOn.mul (continuous_on_log.mono _)
-      simp
-    · apply continuous_on_id.rpow_const
-      intro x hx
-      right
-      linarith
-  · apply has_finite_integral_of_bounded
-    swap
-    · exact 1 / (s - 1)
-    refine' (ae_restrict_iff' measurableSet_Ioc).mpr (ae_of_all _ fun x hx => _)
-    rw [norm_norm, norm_eq_abs, mul_assoc, abs_mul, ← one_mul (1 / (s - 1))]
-    refine' mul_le_mul _ _ (abs_nonneg _) zero_le_one
-    · rw [abs_of_pos (exp_pos (-x)), exp_le_one_iff, neg_le, neg_zero]
-      exact hx.1.le
-    · exact (abs_log_mul_self_rpow_lt x (s - 1) hx.1 hx.2 (sub_pos.mpr hs)).le
-  · have := (dGamma_integrand_isLittleO_atTop s).IsBigO.norm_left
-    refine' integrable_of_isBigO_exp_neg one_half_pos (ContinuousOn.mul _ _).norm this
-    · refine' (continuous_exp.comp continuous_neg).ContinuousOn.mul (continuous_on_log.mono _)
-      simp
-    · apply ContinuousAt.continuousOn fun x hx => _
-      apply continuous_at_id.rpow continuousAt_const
-      dsimp
-      right
-      linarith
-#align dGamma_integral_abs_convergent dGamma_integral_abs_convergent
-
-/-- A uniform bound for the `s`-derivative of the `Γ` integrand for `s` in vertical strips. -/
-theorem loc_unif_bound_dGammaIntegrand {t : ℂ} {s1 s2 x : ℝ} (ht1 : s1 ≤ t.re) (ht2 : t.re ≤ s2)
-    (hx : 0 < x) : ‖dGammaIntegrand t x‖ ≤ dGammaIntegrandReal s1 x + dGammaIntegrandReal s2 x :=
-  by
-  rcases le_or_lt 1 x with (h | h)
-  · -- case 1 ≤ x
-    refine' le_add_of_nonneg_of_le (abs_nonneg _) _
-    rw [dGammaIntegrand, dGammaIntegrandReal, Complex.norm_eq_abs, map_mul, abs_mul, ←
-      Complex.ofReal_mul, Complex.abs_ofReal]
-    refine' mul_le_mul_of_nonneg_left _ (abs_nonneg _)
-    rw [Complex.abs_cpow_eq_rpow_re_of_pos hx]
-    refine' le_trans _ (le_abs_self _)
-    apply rpow_le_rpow_of_exponent_le h
-    rw [Complex.sub_re, Complex.one_re]
-    linarith
-  · refine' le_add_of_le_of_nonneg _ (abs_nonneg _)
-    rw [dGammaIntegrand, dGammaIntegrandReal, Complex.norm_eq_abs, map_mul, abs_mul, ←
-      Complex.ofReal_mul, Complex.abs_ofReal]
-    refine' mul_le_mul_of_nonneg_left _ (abs_nonneg _)
-    rw [Complex.abs_cpow_eq_rpow_re_of_pos hx]
-    refine' le_trans _ (le_abs_self _)
-    apply rpow_le_rpow_of_exponent_ge hx h.le
-    rw [Complex.sub_re, Complex.one_re]
-    linarith
-#align loc_unif_bound_dGamma_integrand loc_unif_bound_dGammaIntegrand
-
-namespace Complex
-
-/-- The derivative of the `Γ` integral, at any `s ∈ ℂ` with `1 < re s`, is given by the integral
-of `exp (-x) * log x * x ^ (s - 1)` over `[0, ∞)`. -/
-theorem hasDerivAt_gammaIntegral {s : ℂ} (hs : 1 < s.re) :
-    IntegrableOn (fun x => Real.exp (-x) * Real.log x * x ^ (s - 1) : ℝ → ℂ) (Ioi 0) volume ∧
-      HasDerivAt gammaIntegral (∫ x : ℝ in Ioi 0, Real.exp (-x) * Real.log x * x ^ (s - 1)) s :=
-  by
-  let ε := (s.re - 1) / 2
-  let μ := volume.restrict (Ioi (0 : ℝ))
-  let bound := fun x : ℝ => dGammaIntegrandReal (s.re - ε) x + dGammaIntegrandReal (s.re + ε) x
-  have cont : ∀ t : ℂ, ContinuousOn (fun x => Real.exp (-x) * x ^ (t - 1) : ℝ → ℂ) (Ioi 0) :=
-    by
-    intro t
-    apply (continuous_of_real.comp continuous_neg.exp).ContinuousOn.mul
-    apply ContinuousAt.continuousOn
-    intro x hx
-    refine' (continuousAt_cpow_const _).comp continuous_of_real.continuous_at
-    exact Or.inl hx
-  have eps_pos : 0 < ε := div_pos (sub_pos.mpr hs) zero_lt_two
-  have hF_meas :
-    ∀ᶠ t : ℂ in 𝓝 s, ae_strongly_measurable (fun x => Real.exp (-x) * x ^ (t - 1) : ℝ → ℂ) μ :=
-    by
-    apply eventually_of_forall
-    intro t
-    exact (cont t).AeStronglyMeasurable measurableSet_Ioi
-  have hF'_meas : ae_strongly_measurable (dGammaIntegrand s) μ :=
-    by
-    refine' ContinuousOn.aeStronglyMeasurable _ measurableSet_Ioi
-    have : dGammaIntegrand s = (fun x => Real.exp (-x) * x ^ (s - 1) * Real.log x : ℝ → ℂ) :=
-      by
-      ext1
-      simp only [dGammaIntegrand]
-      ring
-    rw [this]
-    refine' ContinuousOn.mul (cont s) (ContinuousAt.continuousOn _)
-    exact fun x hx => continuous_of_real.continuous_at.comp (continuous_at_log (mem_Ioi.mp hx).ne')
-  have h_bound : ∀ᵐ x : ℝ ∂μ, ∀ t : ℂ, t ∈ Metric.ball s ε → ‖dGammaIntegrand t x‖ ≤ bound x :=
-    by
-    refine' (ae_restrict_iff' measurableSet_Ioi).mpr (ae_of_all _ fun x hx => _)
-    intro t ht
-    rw [Metric.mem_ball, Complex.dist_eq] at ht
-    replace ht := lt_of_le_of_lt (Complex.abs_re_le_abs <| t - s) ht
-    rw [Complex.sub_re, @abs_sub_lt_iff ℝ _ t.re s.re ((s.re - 1) / 2)] at ht
-    refine' loc_unif_bound_dGammaIntegrand _ _ hx
-    all_goals simp only [ε]; linarith
-  have bound_integrable : integrable bound μ :=
-    by
-    apply integrable.add
-    · refine' dGamma_integral_abs_convergent (s.re - ε) _
-      field_simp
-      rw [one_lt_div]
-      · linarith
-      · exact zero_lt_two
-    · refine' dGamma_integral_abs_convergent (s.re + ε) _
-      linarith
-  have h_diff :
-    ∀ᵐ x : ℝ ∂μ,
-      ∀ t : ℂ,
-        t ∈ Metric.ball s ε →
-          HasDerivAt (fun u => Real.exp (-x) * x ^ (u - 1) : ℂ → ℂ) (dGammaIntegrand t x) t :=
-    by
-    refine' (ae_restrict_iff' measurableSet_Ioi).mpr (ae_of_all _ fun x hx => _)
-    intro t ht
-    rw [mem_Ioi] at hx
-    simp only [dGammaIntegrand]
-    rw [mul_assoc]
-    apply HasDerivAt.const_mul
-    rw [of_real_log hx.le, mul_comm]
-    have := ((hasDerivAt_id t).sub_const 1).const_cpow (Or.inl (of_real_ne_zero.mpr hx.ne'))
-    rwa [mul_one] at this
-  exact
-    hasDerivAt_integral_of_dominated_loc_of_deriv_le eps_pos hF_meas
-      (Gamma_integral_convergent (zero_lt_one.trans hs)) hF'_meas h_bound bound_integrable h_diff
+  rw [Gamma_integral_eq_mellin]
+  convert mellin_has_deriv_of_isBigO_rpow _ _ (lt_add_one _) _ hs
+  · refine' (Continuous.continuousOn _).LocallyIntegrableOn measurableSet_Ioi
+    exact continuous_of_real.comp (real.continuous_exp.comp continuous_neg)
+  · rw [← is_O_norm_left]
+    simp_rw [Complex.norm_eq_abs, abs_of_real, ← Real.norm_eq_abs, is_O_norm_left]
+    simpa only [neg_one_mul] using (isLittleO_exp_neg_mul_rpow_atTop zero_lt_one _).IsBigO
+  · simp_rw [neg_zero, rpow_zero]
+    refine' is_O_const_of_tendsto (_ : tendsto _ _ (𝓝 1)) one_ne_zero
+    rw [(by simp : (1 : ℂ) = Real.exp (-0))]
+    exact (continuous_of_real.comp (real.continuous_exp.comp continuous_neg)).ContinuousWithinAt
 #align complex.has_deriv_at_Gamma_integral Complex.hasDerivAt_gammaIntegral
 
 theorem differentiableAt_gammaAux (s : ℂ) (n : ℕ) (h1 : 1 - s.re < n) (h2 : ∀ m : ℕ, s ≠ -m) :
     DifferentiableAt ℂ (gammaAux n) s :=
   by
   induction' n with n hn generalizing s
-  · refine' (has_deriv_at_Gamma_integral _).2.DifferentiableAt
+  · refine' (has_deriv_at_Gamma_integral _).DifferentiableAt
     rw [Nat.cast_zero] at h1
     linarith
   · dsimp only [Gamma_aux]
@@ -690,9 +538,9 @@ theorem differentiableAt_gamma (s : ℂ) (hs : ∀ m : ℕ, s ≠ -m) : Differen
   linarith
 #align complex.differentiable_at_Gamma Complex.differentiableAt_gamma
 
-end Complex
-
 end GammaHasDeriv
+
+end Complex
 
 namespace Real
 
