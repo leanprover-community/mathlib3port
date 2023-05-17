@@ -843,11 +843,15 @@ theorem mem_cycle {a : α} {l : List α} : ∀ h : l ≠ [], a ∈ l → a ∈ c
 #align stream.mem_cycle Stream'.mem_cycle
 -/
 
-#print Stream'.cycle_singleton /-
+/- warning: stream.cycle_singleton -> Stream'.cycle_singleton is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (a : α) (h : Ne.{succ u1} (List.{u1} α) (List.cons.{u1} α a (List.nil.{u1} α)) (List.nil.{u1} α)), Eq.{succ u1} (Stream'.{u1} α) (Stream'.cycle.{u1} α (List.cons.{u1} α a (List.nil.{u1} α)) h) (Stream'.const.{u1} α a)
+but is expected to have type
+  forall {α : Type.{u1}} (a : α), Eq.{succ u1} (Stream'.{u1} α) (Stream'.cycle.{u1} α (List.cons.{u1} α a (List.nil.{u1} α)) (of_eq_true (Not (Eq.{succ u1} (List.{u1} α) (List.cons.{u1} α a (List.nil.{u1} α)) (List.nil.{u1} α))) (Eq.trans.{1} Prop (Not (Eq.{succ u1} (List.{u1} α) (List.cons.{u1} α a (List.nil.{u1} α)) (List.nil.{u1} α))) (Not False) True (congrArg.{1, 1} Prop Prop (Eq.{succ u1} (List.{u1} α) (List.cons.{u1} α a (List.nil.{u1} α)) (List.nil.{u1} α)) False Not (eq_false' (Eq.{succ u1} (List.{u1} α) (List.cons.{u1} α a (List.nil.{u1} α)) (List.nil.{u1} α)) (fun (h : Eq.{succ u1} (List.{u1} α) (List.cons.{u1} α a (List.nil.{u1} α)) (List.nil.{u1} α)) => List.noConfusion.{0, u1} α False (List.cons.{u1} α a (List.nil.{u1} α)) (List.nil.{u1} α) h))) not_false_eq_true))) (Stream'.const.{u1} α a)
+Case conversion may be inaccurate. Consider using '#align stream.cycle_singleton Stream'.cycle_singletonₓ'. -/
 theorem cycle_singleton (a : α) (h : [a] ≠ []) : cycle [a] h = const a :=
   coinduction rfl fun β fr ch => by rwa [cycle_eq, const_eq]
 #align stream.cycle_singleton Stream'.cycle_singleton
--/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.tails_eq /-

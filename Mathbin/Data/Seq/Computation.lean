@@ -1148,7 +1148,7 @@ instance : Alternative Computation :=
 lean 3 declaration is
   forall {α : Type.{u1}} (a : α) (c₂ : Computation.{u1} α), Eq.{succ u1} (Computation.{u1} α) (HasOrelse.orelse.{u1, u1} Computation.{u1} (Alternative.toHasOrelse.{u1, u1} Computation.{u1} Computation.alternative.{u1}) α (Computation.pure.{u1} α a) c₂) (Computation.pure.{u1} α a)
 but is expected to have type
-  forall {α : Type.{u1}} (a : α) (c₂ : Computation.{u1} α), Eq.{succ u1} (Computation.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Computation.{u1} α) (Computation.{u1} α) (Computation.{u1} α) (instHOrElse.{u1} (Computation.{u1} α) (instOrElse.{u1, u1} Computation.{u1} α Computation.instAlternativeComputation.{u1})) (Computation.pure.{u1} α a) (fun (x._@.Mathlib.Data.Seq.Computation._hyg.10376 : Unit) => c₂)) (Computation.pure.{u1} α a)
+  forall {α : Type.{u1}} (a : α) (c₂ : Computation.{u1} α), Eq.{succ u1} (Computation.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Computation.{u1} α) (Computation.{u1} α) (Computation.{u1} α) (instHOrElse.{u1} (Computation.{u1} α) (instOrElse.{u1, u1} Computation.{u1} α Computation.instAlternativeComputation.{u1})) (Computation.pure.{u1} α a) (fun (x._@.Mathlib.Data.Seq.Computation._hyg.10321 : Unit) => c₂)) (Computation.pure.{u1} α a)
 Case conversion may be inaccurate. Consider using '#align computation.ret_orelse Computation.ret_orElseₓ'. -/
 @[simp]
 theorem ret_orElse (a : α) (c₂ : Computation α) : (pure a <|> c₂) = pure a :=
@@ -1159,7 +1159,7 @@ theorem ret_orElse (a : α) (c₂ : Computation α) : (pure a <|> c₂) = pure a
 lean 3 declaration is
   forall {α : Type.{u1}} (c₁ : Computation.{u1} α) (a : α), Eq.{succ u1} (Computation.{u1} α) (HasOrelse.orelse.{u1, u1} Computation.{u1} (Alternative.toHasOrelse.{u1, u1} Computation.{u1} Computation.alternative.{u1}) α (Computation.think.{u1} α c₁) (Computation.pure.{u1} α a)) (Computation.pure.{u1} α a)
 but is expected to have type
-  forall {α : Type.{u1}} (c₁ : Computation.{u1} α) (a : α), Eq.{succ u1} (Computation.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Computation.{u1} α) (Computation.{u1} α) (Computation.{u1} α) (instHOrElse.{u1} (Computation.{u1} α) (instOrElse.{u1, u1} Computation.{u1} α Computation.instAlternativeComputation.{u1})) (Computation.think.{u1} α c₁) (fun (x._@.Mathlib.Data.Seq.Computation._hyg.10404 : Unit) => Computation.pure.{u1} α a)) (Computation.pure.{u1} α a)
+  forall {α : Type.{u1}} (c₁ : Computation.{u1} α) (a : α), Eq.{succ u1} (Computation.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Computation.{u1} α) (Computation.{u1} α) (Computation.{u1} α) (instHOrElse.{u1} (Computation.{u1} α) (instOrElse.{u1, u1} Computation.{u1} α Computation.instAlternativeComputation.{u1})) (Computation.think.{u1} α c₁) (fun (x._@.Mathlib.Data.Seq.Computation._hyg.10349 : Unit) => Computation.pure.{u1} α a)) (Computation.pure.{u1} α a)
 Case conversion may be inaccurate. Consider using '#align computation.orelse_ret Computation.orelse_pureₓ'. -/
 @[simp]
 theorem orelse_pure (c₁ : Computation α) (a : α) : (think c₁ <|> pure a) = pure a :=
@@ -1170,7 +1170,7 @@ theorem orelse_pure (c₁ : Computation α) (a : α) : (think c₁ <|> pure a) =
 lean 3 declaration is
   forall {α : Type.{u1}} (c₁ : Computation.{u1} α) (c₂ : Computation.{u1} α), Eq.{succ u1} (Computation.{u1} α) (HasOrelse.orelse.{u1, u1} Computation.{u1} (Alternative.toHasOrelse.{u1, u1} Computation.{u1} Computation.alternative.{u1}) α (Computation.think.{u1} α c₁) (Computation.think.{u1} α c₂)) (Computation.think.{u1} α (HasOrelse.orelse.{u1, u1} Computation.{u1} (Alternative.toHasOrelse.{u1, u1} Computation.{u1} Computation.alternative.{u1}) α c₁ c₂))
 but is expected to have type
-  forall {α : Type.{u1}} (c₁ : Computation.{u1} α) (c₂ : Computation.{u1} α), Eq.{succ u1} (Computation.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Computation.{u1} α) (Computation.{u1} α) (Computation.{u1} α) (instHOrElse.{u1} (Computation.{u1} α) (instOrElse.{u1, u1} Computation.{u1} α Computation.instAlternativeComputation.{u1})) (Computation.think.{u1} α c₁) (fun (x._@.Mathlib.Data.Seq.Computation._hyg.10440 : Unit) => Computation.think.{u1} α c₂)) (Computation.think.{u1} α (HOrElse.hOrElse.{u1, u1, u1} (Computation.{u1} α) (Computation.{u1} α) (Computation.{u1} α) (instHOrElse.{u1} (Computation.{u1} α) (instOrElse.{u1, u1} Computation.{u1} α Computation.instAlternativeComputation.{u1})) c₁ (fun (x._@.Mathlib.Data.Seq.Computation._hyg.10439 : Unit) => c₂)))
+  forall {α : Type.{u1}} (c₁ : Computation.{u1} α) (c₂ : Computation.{u1} α), Eq.{succ u1} (Computation.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Computation.{u1} α) (Computation.{u1} α) (Computation.{u1} α) (instHOrElse.{u1} (Computation.{u1} α) (instOrElse.{u1, u1} Computation.{u1} α Computation.instAlternativeComputation.{u1})) (Computation.think.{u1} α c₁) (fun (x._@.Mathlib.Data.Seq.Computation._hyg.10385 : Unit) => Computation.think.{u1} α c₂)) (Computation.think.{u1} α (HOrElse.hOrElse.{u1, u1, u1} (Computation.{u1} α) (Computation.{u1} α) (Computation.{u1} α) (instHOrElse.{u1} (Computation.{u1} α) (instOrElse.{u1, u1} Computation.{u1} α Computation.instAlternativeComputation.{u1})) c₁ (fun (x._@.Mathlib.Data.Seq.Computation._hyg.10384 : Unit) => c₂)))
 Case conversion may be inaccurate. Consider using '#align computation.orelse_think Computation.orelse_thinkₓ'. -/
 @[simp]
 theorem orelse_think (c₁ c₂ : Computation α) : (think c₁ <|> think c₂) = think (c₁ <|> c₂) :=
@@ -1181,7 +1181,7 @@ theorem orelse_think (c₁ c₂ : Computation α) : (think c₁ <|> think c₂) 
 lean 3 declaration is
   forall {α : Type.{u1}} (c : Computation.{u1} α), Eq.{succ u1} (Computation.{u1} α) (HasOrelse.orelse.{u1, u1} Computation.{u1} (Alternative.toHasOrelse.{u1, u1} Computation.{u1} Computation.alternative.{u1}) α (Computation.empty.{u1} α) c) c
 but is expected to have type
-  forall {α : Type.{u1}} (c : Computation.{u1} α), Eq.{succ u1} (Computation.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Computation.{u1} α) (Computation.{u1} α) (Computation.{u1} α) (instHOrElse.{u1} (Computation.{u1} α) (instOrElse.{u1, u1} Computation.{u1} α Computation.instAlternativeComputation.{u1})) (Computation.empty.{u1} α) (fun (x._@.Mathlib.Data.Seq.Computation._hyg.10464 : Unit) => c)) c
+  forall {α : Type.{u1}} (c : Computation.{u1} α), Eq.{succ u1} (Computation.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Computation.{u1} α) (Computation.{u1} α) (Computation.{u1} α) (instHOrElse.{u1} (Computation.{u1} α) (instOrElse.{u1, u1} Computation.{u1} α Computation.instAlternativeComputation.{u1})) (Computation.empty.{u1} α) (fun (x._@.Mathlib.Data.Seq.Computation._hyg.10409 : Unit) => c)) c
 Case conversion may be inaccurate. Consider using '#align computation.empty_orelse Computation.empty_orelseₓ'. -/
 @[simp]
 theorem empty_orelse (c) : (empty α <|> c) = c :=
@@ -1196,7 +1196,7 @@ theorem empty_orelse (c) : (empty α <|> c) = c :=
 lean 3 declaration is
   forall {α : Type.{u1}} (c : Computation.{u1} α), Eq.{succ u1} (Computation.{u1} α) (HasOrelse.orelse.{u1, u1} Computation.{u1} (Alternative.toHasOrelse.{u1, u1} Computation.{u1} Computation.alternative.{u1}) α c (Computation.empty.{u1} α)) c
 but is expected to have type
-  forall {α : Type.{u1}} (c : Computation.{u1} α), Eq.{succ u1} (Computation.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Computation.{u1} α) (Computation.{u1} α) (Computation.{u1} α) (instHOrElse.{u1} (Computation.{u1} α) (instOrElse.{u1, u1} Computation.{u1} α Computation.instAlternativeComputation.{u1})) c (fun (x._@.Mathlib.Data.Seq.Computation._hyg.10662 : Unit) => Computation.empty.{u1} α)) c
+  forall {α : Type.{u1}} (c : Computation.{u1} α), Eq.{succ u1} (Computation.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Computation.{u1} α) (Computation.{u1} α) (Computation.{u1} α) (instHOrElse.{u1} (Computation.{u1} α) (instOrElse.{u1, u1} Computation.{u1} α Computation.instAlternativeComputation.{u1})) c (fun (x._@.Mathlib.Data.Seq.Computation._hyg.10607 : Unit) => Computation.empty.{u1} α)) c
 Case conversion may be inaccurate. Consider using '#align computation.orelse_empty Computation.orelse_emptyₓ'. -/
 @[simp]
 theorem orelse_empty (c : Computation α) : (c <|> empty α) = c :=
