@@ -24,25 +24,27 @@ universe u
 
 open CategoryTheory
 
+#print TopCommRingCat /-
 /-- A bundled topological commutative ring. -/
-structure TopCommRing where
+structure TopCommRingCat where
   α : Type u
   [isCommRing : CommRing α]
   [isTopologicalSpace : TopologicalSpace α]
   [is_topologicalRing : TopologicalRing α]
-#align TopCommRing TopCommRing
+#align TopCommRing TopCommRingCat
+-/
 
-namespace TopCommRing
+namespace TopCommRingCat
 
-instance : Inhabited TopCommRing :=
+instance : Inhabited TopCommRingCat :=
   ⟨⟨PUnit⟩⟩
 
-instance : CoeSort TopCommRing (Type u) :=
-  ⟨TopCommRing.α⟩
+instance : CoeSort TopCommRingCat (Type u) :=
+  ⟨TopCommRingCat.α⟩
 
 attribute [instance] is_comm_ring is_topological_space is_topological_ring
 
-instance : Category TopCommRing.{u}
+instance : Category TopCommRingCat.{u}
     where
   Hom R S := { f : R →+* S // Continuous f }
   id R := ⟨RingHom.id R, by obviously⟩
@@ -55,69 +57,124 @@ instance : Category TopCommRing.{u}
       cases g
       dsimp; apply Continuous.comp <;> assumption⟩
 
-instance : ConcreteCategory TopCommRing.{u}
+instance : ConcreteCategory TopCommRingCat.{u}
     where
   forget :=
     { obj := fun R => R
       map := fun R S f => f.val }
   forget_faithful := { }
 
+#print TopCommRingCat.of /-
 /-- Construct a bundled `TopCommRing` from the underlying type and the appropriate typeclasses. -/
-def of (X : Type u) [CommRing X] [TopologicalSpace X] [TopologicalRing X] : TopCommRing :=
+def of (X : Type u) [CommRing X] [TopologicalSpace X] [TopologicalRing X] : TopCommRingCat :=
   ⟨X⟩
-#align TopCommRing.of TopCommRing.of
+#align TopCommRing.of TopCommRingCat.of
+-/
 
+#print TopCommRingCat.coe_of /-
 @[simp]
 theorem coe_of (X : Type u) [CommRing X] [TopologicalSpace X] [TopologicalRing X] :
     (of X : Type u) = X :=
   rfl
-#align TopCommRing.coe_of TopCommRing.coe_of
+#align TopCommRing.coe_of TopCommRingCat.coe_of
+-/
 
-instance forgetTopologicalSpace (R : TopCommRing) : TopologicalSpace ((forget TopCommRing).obj R) :=
+/- warning: TopCommRing.forget_topological_space -> TopCommRingCat.forgetTopologicalSpace is a dubious translation:
+lean 3 declaration is
+  forall (R : TopCommRingCat.{u1}), TopologicalSpace.{u1} (CategoryTheory.Functor.obj.{u1, u1, succ u1, succ u1} TopCommRingCat.{u1} TopCommRingCat.CategoryTheory.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} TopCommRingCat.{u1} TopCommRingCat.CategoryTheory.category.{u1} TopCommRingCat.CategoryTheory.concreteCategory.{u1}) R)
+but is expected to have type
+  forall (R : TopCommRingCat.{u1}), TopologicalSpace.{u1} (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} TopCommRingCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} TopCommRingCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} TopCommRingCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} TopCommRingCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} TopCommRingCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1} TopCommRingCat.instConcreteCategoryTopCommRingCatInstCategoryTopCommRingCat.{u1})) R)
+Case conversion may be inaccurate. Consider using '#align TopCommRing.forget_topological_space TopCommRingCat.forgetTopologicalSpaceₓ'. -/
+instance forgetTopologicalSpace (R : TopCommRingCat) :
+    TopologicalSpace ((forget TopCommRingCat).obj R) :=
   R.isTopologicalSpace
-#align TopCommRing.forget_topological_space TopCommRing.forgetTopologicalSpace
+#align TopCommRing.forget_topological_space TopCommRingCat.forgetTopologicalSpace
 
-instance forgetCommRing (R : TopCommRing) : CommRing ((forget TopCommRing).obj R) :=
+/- warning: TopCommRing.forget_comm_ring -> TopCommRingCat.forgetCommRing is a dubious translation:
+lean 3 declaration is
+  forall (R : TopCommRingCat.{u1}), CommRing.{u1} (CategoryTheory.Functor.obj.{u1, u1, succ u1, succ u1} TopCommRingCat.{u1} TopCommRingCat.CategoryTheory.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} TopCommRingCat.{u1} TopCommRingCat.CategoryTheory.category.{u1} TopCommRingCat.CategoryTheory.concreteCategory.{u1}) R)
+but is expected to have type
+  forall (R : TopCommRingCat.{u1}), CommRing.{u1} (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} TopCommRingCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} TopCommRingCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} TopCommRingCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} TopCommRingCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} TopCommRingCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1} TopCommRingCat.instConcreteCategoryTopCommRingCatInstCategoryTopCommRingCat.{u1})) R)
+Case conversion may be inaccurate. Consider using '#align TopCommRing.forget_comm_ring TopCommRingCat.forgetCommRingₓ'. -/
+instance forgetCommRing (R : TopCommRingCat) : CommRing ((forget TopCommRingCat).obj R) :=
   R.isCommRing
-#align TopCommRing.forget_comm_ring TopCommRing.forgetCommRing
+#align TopCommRing.forget_comm_ring TopCommRingCat.forgetCommRing
 
-instance forget_topologicalRing (R : TopCommRing) : TopologicalRing ((forget TopCommRing).obj R) :=
+/- warning: TopCommRing.forget_topological_ring -> TopCommRingCat.forgetTopologicalRing is a dubious translation:
+lean 3 declaration is
+  forall (R : TopCommRingCat.{u1}), TopologicalRing.{u1} (CategoryTheory.Functor.obj.{u1, u1, succ u1, succ u1} TopCommRingCat.{u1} TopCommRingCat.CategoryTheory.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} TopCommRingCat.{u1} TopCommRingCat.CategoryTheory.category.{u1} TopCommRingCat.CategoryTheory.concreteCategory.{u1}) R) (TopCommRingCat.forgetTopologicalSpace.{u1} R) (NonAssocRing.toNonUnitalNonAssocRing.{u1} (CategoryTheory.Functor.obj.{u1, u1, succ u1, succ u1} TopCommRingCat.{u1} TopCommRingCat.CategoryTheory.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} TopCommRingCat.{u1} TopCommRingCat.CategoryTheory.category.{u1} TopCommRingCat.CategoryTheory.concreteCategory.{u1}) R) (Ring.toNonAssocRing.{u1} (CategoryTheory.Functor.obj.{u1, u1, succ u1, succ u1} TopCommRingCat.{u1} TopCommRingCat.CategoryTheory.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} TopCommRingCat.{u1} TopCommRingCat.CategoryTheory.category.{u1} TopCommRingCat.CategoryTheory.concreteCategory.{u1}) R) (CommRing.toRing.{u1} (CategoryTheory.Functor.obj.{u1, u1, succ u1, succ u1} TopCommRingCat.{u1} TopCommRingCat.CategoryTheory.category.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} TopCommRingCat.{u1} TopCommRingCat.CategoryTheory.category.{u1} TopCommRingCat.CategoryTheory.concreteCategory.{u1}) R) (TopCommRingCat.forgetCommRing.{u1} R))))
+but is expected to have type
+  forall (R : TopCommRingCat.{u1}), TopologicalRing.{u1} (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} TopCommRingCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} TopCommRingCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} TopCommRingCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} TopCommRingCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} TopCommRingCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1} TopCommRingCat.instConcreteCategoryTopCommRingCatInstCategoryTopCommRingCat.{u1})) R) (TopCommRingCat.forgetTopologicalSpace.{u1} R) (NonAssocRing.toNonUnitalNonAssocRing.{u1} (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} TopCommRingCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} TopCommRingCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} TopCommRingCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} TopCommRingCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} TopCommRingCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1} TopCommRingCat.instConcreteCategoryTopCommRingCatInstCategoryTopCommRingCat.{u1})) R) (Ring.toNonAssocRing.{u1} (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} TopCommRingCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} TopCommRingCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} TopCommRingCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} TopCommRingCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} TopCommRingCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1} TopCommRingCat.instConcreteCategoryTopCommRingCatInstCategoryTopCommRingCat.{u1})) R) (CommRing.toRing.{u1} (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} TopCommRingCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} TopCommRingCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} TopCommRingCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1})) Type.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} Type.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} Type.{u1} CategoryTheory.types.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} TopCommRingCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1} Type.{u1} CategoryTheory.types.{u1} (CategoryTheory.forget.{succ u1, u1, u1} TopCommRingCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1} TopCommRingCat.instConcreteCategoryTopCommRingCatInstCategoryTopCommRingCat.{u1})) R) (TopCommRingCat.forgetCommRing.{u1} R))))
+Case conversion may be inaccurate. Consider using '#align TopCommRing.forget_topological_ring TopCommRingCat.forgetTopologicalRingₓ'. -/
+instance forgetTopologicalRing (R : TopCommRingCat) :
+    TopologicalRing ((forget TopCommRingCat).obj R) :=
   R.is_topologicalRing
-#align TopCommRing.forget_topological_ring TopCommRing.forget_topologicalRing
+#align TopCommRing.forget_topological_ring TopCommRingCat.forgetTopologicalRing
 
-instance hasForgetToCommRing : HasForget₂ TopCommRing CommRingCat :=
+/- warning: TopCommRing.has_forget_to_CommRing -> TopCommRingCat.hasForgetToCommRingCat is a dubious translation:
+lean 3 declaration is
+  CategoryTheory.HasForget₂.{succ u1, succ u1, u1, u1, u1} TopCommRingCat.{u1} CommRingCat.{u1} TopCommRingCat.CategoryTheory.category.{u1} TopCommRingCat.CategoryTheory.concreteCategory.{u1} CommRingCat.largeCategory.{u1} CommRingCat.concreteCategory.{u1}
+but is expected to have type
+  CategoryTheory.HasForget₂.{succ u1, succ u1, u1, u1, u1} TopCommRingCat.{u1} CommRingCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1} TopCommRingCat.instConcreteCategoryTopCommRingCatInstCategoryTopCommRingCat.{u1} instCommRingCatLargeCategory.{u1} CommRingCat.instConcreteCategoryCommRingCatInstCommRingCatLargeCategory.{u1}
+Case conversion may be inaccurate. Consider using '#align TopCommRing.has_forget_to_CommRing TopCommRingCat.hasForgetToCommRingCatₓ'. -/
+instance hasForgetToCommRingCat : HasForget₂ TopCommRingCat CommRingCat :=
   HasForget₂.mk' (fun R => CommRingCat.of R) (fun x => rfl) (fun R S f => f.val) fun R S f =>
     HEq.rfl
-#align TopCommRing.has_forget_to_CommRing TopCommRing.hasForgetToCommRing
+#align TopCommRing.has_forget_to_CommRing TopCommRingCat.hasForgetToCommRingCat
 
-instance forgetToCommRingTopologicalSpace (R : TopCommRing) :
-    TopologicalSpace ((forget₂ TopCommRing CommRingCat).obj R) :=
+/- warning: TopCommRing.forget_to_CommRing_topological_space -> TopCommRingCat.forgetToCommRingCatTopologicalSpace is a dubious translation:
+lean 3 declaration is
+  forall (R : TopCommRingCat.{u1}), TopologicalSpace.{u1} (coeSort.{succ (succ u1), succ (succ u1)} CommRingCat.{u1} Type.{u1} CommRingCat.hasCoeToSort.{u1} (CategoryTheory.Functor.obj.{u1, u1, succ u1, succ u1} TopCommRingCat.{u1} TopCommRingCat.CategoryTheory.category.{u1} CommRingCat.{u1} CommRingCat.largeCategory.{u1} (CategoryTheory.forget₂.{succ u1, succ u1, u1, u1, u1} TopCommRingCat.{u1} CommRingCat.{u1} TopCommRingCat.CategoryTheory.category.{u1} TopCommRingCat.CategoryTheory.concreteCategory.{u1} CommRingCat.largeCategory.{u1} CommRingCat.concreteCategory.{u1} TopCommRingCat.hasForgetToCommRingCat.{u1}) R))
+but is expected to have type
+  forall (R : TopCommRingCat.{u1}), TopologicalSpace.{u1} (CategoryTheory.Bundled.α.{u1, u1} CommRing.{u1} (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} TopCommRingCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} TopCommRingCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} TopCommRingCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1})) CommRingCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} CommRingCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} CommRingCat.{u1} instCommRingCatLargeCategory.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} TopCommRingCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1} CommRingCat.{u1} instCommRingCatLargeCategory.{u1} (CategoryTheory.forget₂.{succ u1, succ u1, u1, u1, u1} TopCommRingCat.{u1} CommRingCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1} TopCommRingCat.instConcreteCategoryTopCommRingCatInstCategoryTopCommRingCat.{u1} instCommRingCatLargeCategory.{u1} CommRingCat.instConcreteCategoryCommRingCatInstCommRingCatLargeCategory.{u1} TopCommRingCat.hasForgetToCommRingCat.{u1})) R))
+Case conversion may be inaccurate. Consider using '#align TopCommRing.forget_to_CommRing_topological_space TopCommRingCat.forgetToCommRingCatTopologicalSpaceₓ'. -/
+instance forgetToCommRingCatTopologicalSpace (R : TopCommRingCat) :
+    TopologicalSpace ((forget₂ TopCommRingCat CommRingCat).obj R) :=
   R.isTopologicalSpace
-#align TopCommRing.forget_to_CommRing_topological_space TopCommRing.forgetToCommRingTopologicalSpace
+#align TopCommRing.forget_to_CommRing_topological_space TopCommRingCat.forgetToCommRingCatTopologicalSpace
 
+/- warning: TopCommRing.has_forget_to_Top -> TopCommRingCat.hasForgetToTopCat is a dubious translation:
+lean 3 declaration is
+  CategoryTheory.HasForget₂.{succ u1, succ u1, u1, u1, u1} TopCommRingCat.{u1} TopCat.{u1} TopCommRingCat.CategoryTheory.category.{u1} TopCommRingCat.CategoryTheory.concreteCategory.{u1} TopCat.largeCategory.{u1} TopCat.concreteCategory.{u1}
+but is expected to have type
+  CategoryTheory.HasForget₂.{succ u1, succ u1, u1, u1, u1} TopCommRingCat.{u1} TopCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1} TopCommRingCat.instConcreteCategoryTopCommRingCatInstCategoryTopCommRingCat.{u1} instTopCatLargeCategory.{u1} TopCat.concreteCategory.{u1}
+Case conversion may be inaccurate. Consider using '#align TopCommRing.has_forget_to_Top TopCommRingCat.hasForgetToTopCatₓ'. -/
 /-- The forgetful functor to Top. -/
-instance hasForgetToTop : HasForget₂ TopCommRing TopCat :=
+instance hasForgetToTopCat : HasForget₂ TopCommRingCat TopCat :=
   HasForget₂.mk' (fun R => TopCat.of R) (fun x => rfl) (fun R S f => ⟨⇑f.1, f.2⟩) fun R S f =>
     HEq.rfl
-#align TopCommRing.has_forget_to_Top TopCommRing.hasForgetToTop
+#align TopCommRing.has_forget_to_Top TopCommRingCat.hasForgetToTopCat
 
-instance forgetToTopCommRing (R : TopCommRing) : CommRing ((forget₂ TopCommRing TopCat).obj R) :=
+/- warning: TopCommRing.forget_to_Top_comm_ring -> TopCommRingCat.forgetToTopCatCommRing is a dubious translation:
+lean 3 declaration is
+  forall (R : TopCommRingCat.{u1}), CommRing.{u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} (CategoryTheory.Functor.obj.{u1, u1, succ u1, succ u1} TopCommRingCat.{u1} TopCommRingCat.CategoryTheory.category.{u1} TopCat.{u1} TopCat.largeCategory.{u1} (CategoryTheory.forget₂.{succ u1, succ u1, u1, u1, u1} TopCommRingCat.{u1} TopCat.{u1} TopCommRingCat.CategoryTheory.category.{u1} TopCommRingCat.CategoryTheory.concreteCategory.{u1} TopCat.largeCategory.{u1} TopCat.concreteCategory.{u1} TopCommRingCat.hasForgetToTopCat.{u1}) R))
+but is expected to have type
+  forall (R : TopCommRingCat.{u1}), CommRing.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} TopCommRingCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} TopCommRingCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} TopCommRingCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1})) TopCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} TopCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} TopCommRingCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1} TopCat.{u1} instTopCatLargeCategory.{u1} (CategoryTheory.forget₂.{succ u1, succ u1, u1, u1, u1} TopCommRingCat.{u1} TopCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1} TopCommRingCat.instConcreteCategoryTopCommRingCatInstCategoryTopCommRingCat.{u1} instTopCatLargeCategory.{u1} TopCat.concreteCategory.{u1} TopCommRingCat.hasForgetToTopCat.{u1})) R))
+Case conversion may be inaccurate. Consider using '#align TopCommRing.forget_to_Top_comm_ring TopCommRingCat.forgetToTopCatCommRingₓ'. -/
+instance forgetToTopCatCommRing (R : TopCommRingCat) :
+    CommRing ((forget₂ TopCommRingCat TopCat).obj R) :=
   R.isCommRing
-#align TopCommRing.forget_to_Top_comm_ring TopCommRing.forgetToTopCommRing
+#align TopCommRing.forget_to_Top_comm_ring TopCommRingCat.forgetToTopCatCommRing
 
-instance forget_to_topCat_topologicalRing (R : TopCommRing) :
-    TopologicalRing ((forget₂ TopCommRing TopCat).obj R) :=
+/- warning: TopCommRing.forget_to_Top_topological_ring -> TopCommRingCat.forgetToTopCatTopologicalRing is a dubious translation:
+lean 3 declaration is
+  forall (R : TopCommRingCat.{u1}), TopologicalRing.{u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} (CategoryTheory.Functor.obj.{u1, u1, succ u1, succ u1} TopCommRingCat.{u1} TopCommRingCat.CategoryTheory.category.{u1} TopCat.{u1} TopCat.largeCategory.{u1} (CategoryTheory.forget₂.{succ u1, succ u1, u1, u1, u1} TopCommRingCat.{u1} TopCat.{u1} TopCommRingCat.CategoryTheory.category.{u1} TopCommRingCat.CategoryTheory.concreteCategory.{u1} TopCat.largeCategory.{u1} TopCat.concreteCategory.{u1} TopCommRingCat.hasForgetToTopCat.{u1}) R)) (TopCat.topologicalSpace.{u1} (CategoryTheory.Functor.obj.{u1, u1, succ u1, succ u1} TopCommRingCat.{u1} TopCommRingCat.CategoryTheory.category.{u1} TopCat.{u1} TopCat.largeCategory.{u1} (CategoryTheory.forget₂.{succ u1, succ u1, u1, u1, u1} TopCommRingCat.{u1} TopCat.{u1} TopCommRingCat.CategoryTheory.category.{u1} TopCommRingCat.CategoryTheory.concreteCategory.{u1} TopCat.largeCategory.{u1} TopCat.concreteCategory.{u1} TopCommRingCat.hasForgetToTopCat.{u1}) R)) (NonAssocRing.toNonUnitalNonAssocRing.{u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} (CategoryTheory.Functor.obj.{u1, u1, succ u1, succ u1} TopCommRingCat.{u1} TopCommRingCat.CategoryTheory.category.{u1} TopCat.{u1} TopCat.largeCategory.{u1} (CategoryTheory.forget₂.{succ u1, succ u1, u1, u1, u1} TopCommRingCat.{u1} TopCat.{u1} TopCommRingCat.CategoryTheory.category.{u1} TopCommRingCat.CategoryTheory.concreteCategory.{u1} TopCat.largeCategory.{u1} TopCat.concreteCategory.{u1} TopCommRingCat.hasForgetToTopCat.{u1}) R)) (Ring.toNonAssocRing.{u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} (CategoryTheory.Functor.obj.{u1, u1, succ u1, succ u1} TopCommRingCat.{u1} TopCommRingCat.CategoryTheory.category.{u1} TopCat.{u1} TopCat.largeCategory.{u1} (CategoryTheory.forget₂.{succ u1, succ u1, u1, u1, u1} TopCommRingCat.{u1} TopCat.{u1} TopCommRingCat.CategoryTheory.category.{u1} TopCommRingCat.CategoryTheory.concreteCategory.{u1} TopCat.largeCategory.{u1} TopCat.concreteCategory.{u1} TopCommRingCat.hasForgetToTopCat.{u1}) R)) (CommRing.toRing.{u1} (coeSort.{succ (succ u1), succ (succ u1)} TopCat.{u1} Type.{u1} TopCat.hasCoeToSort.{u1} (CategoryTheory.Functor.obj.{u1, u1, succ u1, succ u1} TopCommRingCat.{u1} TopCommRingCat.CategoryTheory.category.{u1} TopCat.{u1} TopCat.largeCategory.{u1} (CategoryTheory.forget₂.{succ u1, succ u1, u1, u1, u1} TopCommRingCat.{u1} TopCat.{u1} TopCommRingCat.CategoryTheory.category.{u1} TopCommRingCat.CategoryTheory.concreteCategory.{u1} TopCat.largeCategory.{u1} TopCat.concreteCategory.{u1} TopCommRingCat.hasForgetToTopCat.{u1}) R)) (TopCommRingCat.forgetToTopCatCommRing.{u1} R))))
+but is expected to have type
+  forall (R : TopCommRingCat.{u1}), TopologicalRing.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} TopCommRingCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} TopCommRingCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} TopCommRingCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1})) TopCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} TopCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} TopCommRingCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1} TopCat.{u1} instTopCatLargeCategory.{u1} (CategoryTheory.forget₂.{succ u1, succ u1, u1, u1, u1} TopCommRingCat.{u1} TopCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1} TopCommRingCat.instConcreteCategoryTopCommRingCatInstCategoryTopCommRingCat.{u1} instTopCatLargeCategory.{u1} TopCat.concreteCategory.{u1} TopCommRingCat.hasForgetToTopCat.{u1})) R)) (TopCat.topologicalSpace_coe.{u1} (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} TopCommRingCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} TopCommRingCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} TopCommRingCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1})) TopCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} TopCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} TopCommRingCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1} TopCat.{u1} instTopCatLargeCategory.{u1} (CategoryTheory.forget₂.{succ u1, succ u1, u1, u1, u1} TopCommRingCat.{u1} TopCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1} TopCommRingCat.instConcreteCategoryTopCommRingCatInstCategoryTopCommRingCat.{u1} instTopCatLargeCategory.{u1} TopCat.concreteCategory.{u1} TopCommRingCat.hasForgetToTopCat.{u1})) R)) (NonAssocRing.toNonUnitalNonAssocRing.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} TopCommRingCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} TopCommRingCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} TopCommRingCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1})) TopCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} TopCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} TopCommRingCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1} TopCat.{u1} instTopCatLargeCategory.{u1} (CategoryTheory.forget₂.{succ u1, succ u1, u1, u1, u1} TopCommRingCat.{u1} TopCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1} TopCommRingCat.instConcreteCategoryTopCommRingCatInstCategoryTopCommRingCat.{u1} instTopCatLargeCategory.{u1} TopCat.concreteCategory.{u1} TopCommRingCat.hasForgetToTopCat.{u1})) R)) (Ring.toNonAssocRing.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} TopCommRingCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} TopCommRingCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} TopCommRingCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1})) TopCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} TopCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} TopCommRingCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1} TopCat.{u1} instTopCatLargeCategory.{u1} (CategoryTheory.forget₂.{succ u1, succ u1, u1, u1, u1} TopCommRingCat.{u1} TopCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1} TopCommRingCat.instConcreteCategoryTopCommRingCatInstCategoryTopCommRingCat.{u1} instTopCatLargeCategory.{u1} TopCat.concreteCategory.{u1} TopCommRingCat.hasForgetToTopCat.{u1})) R)) (CommRing.toRing.{u1} (CategoryTheory.Bundled.α.{u1, u1} TopologicalSpace.{u1} (Prefunctor.obj.{succ u1, succ u1, succ u1, succ u1} TopCommRingCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} TopCommRingCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} TopCommRingCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1})) TopCat.{u1} (CategoryTheory.CategoryStruct.toQuiver.{u1, succ u1} TopCat.{u1} (CategoryTheory.Category.toCategoryStruct.{u1, succ u1} TopCat.{u1} instTopCatLargeCategory.{u1})) (CategoryTheory.Functor.toPrefunctor.{u1, u1, succ u1, succ u1} TopCommRingCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1} TopCat.{u1} instTopCatLargeCategory.{u1} (CategoryTheory.forget₂.{succ u1, succ u1, u1, u1, u1} TopCommRingCat.{u1} TopCat.{u1} TopCommRingCat.instCategoryTopCommRingCat.{u1} TopCommRingCat.instConcreteCategoryTopCommRingCatInstCategoryTopCommRingCat.{u1} instTopCatLargeCategory.{u1} TopCat.concreteCategory.{u1} TopCommRingCat.hasForgetToTopCat.{u1})) R)) (TopCommRingCat.forgetToTopCatCommRing.{u1} R))))
+Case conversion may be inaccurate. Consider using '#align TopCommRing.forget_to_Top_topological_ring TopCommRingCat.forgetToTopCatTopologicalRingₓ'. -/
+instance forgetToTopCatTopologicalRing (R : TopCommRingCat) :
+    TopologicalRing ((forget₂ TopCommRingCat TopCat).obj R) :=
   R.is_topologicalRing
-#align TopCommRing.forget_to_Top_topological_ring TopCommRing.forget_to_topCat_topologicalRing
+#align TopCommRing.forget_to_Top_topological_ring TopCommRingCat.forgetToTopCatTopologicalRing
 
 /-- The forgetful functors to `Type` do not reflect isomorphisms,
 but the forgetful functor from `TopCommRing` to `Top` does.
 -/
-instance : ReflectsIsomorphisms (forget₂ TopCommRing.{u} TopCat.{u})
+instance : ReflectsIsomorphisms (forget₂ TopCommRingCat.{u} TopCat.{u})
     where reflects X Y f _ := by
     skip
     -- We have an isomorphism in `Top`,
-    let i_Top := as_iso ((forget₂ TopCommRing TopCat).map f)
+    let i_Top := as_iso ((forget₂ TopCommRingCat TopCat).map f)
     -- and a `ring_equiv`.
     let e_Ring : X ≃+* Y := { f.1, ((forget TopCat).mapIso i_Top).toEquiv with }
     -- Putting these together we obtain the isomorphism we're after:
@@ -129,5 +186,5 @@ instance : ReflectsIsomorphisms (forget₂ TopCommRing.{u} TopCat.{u})
             ext x
             exact e_Ring.right_inv x⟩⟩⟩
 
-end TopCommRing
+end TopCommRingCat
 
