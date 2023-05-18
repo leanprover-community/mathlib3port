@@ -560,7 +560,7 @@ theorem LinearIsometryEquiv.norm_iteratedFderivWithin_comp_right (g : G ≃ₗ�
     iteratedFderivWithin 𝕜 i (f ∘ g) (g ⁻¹' s) x =
       (iteratedFderivWithin 𝕜 i f s (g x)).compContinuousLinearMap fun _ => g :=
     g.to_continuous_linear_equiv.iterated_fderiv_within_comp_right f hs hx i
-  rw [this, ContinuousMultilinearMap.norm_comp_continuous_linearIsometryEquiv]
+  rw [this, ContinuousMultilinearMap.norm_compContinuous_linearIsometryEquiv]
 #align linear_isometry_equiv.norm_iterated_fderiv_within_comp_right LinearIsometryEquiv.norm_iteratedFderivWithin_comp_right
 
 /-- Composition with a linear isometry on the right preserves the norm of the iterated derivative

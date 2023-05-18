@@ -35,6 +35,12 @@ namespace MonCat
 
 variable {J : Type v} [SmallCategory J]
 
+/- warning: Mon.monoid_obj -> MonCat.monoidObj is a dubious translation:
+lean 3 declaration is
+  forall {J : Type.{u1}} [_inst_1 : CategoryTheory.SmallCategory.{u1} J] (F : CategoryTheory.Functor.{u1, max u1 u2, u1, succ (max u1 u2)} J _inst_1 MonCat.{max u1 u2} MonCat.largeCategory.{max u1 u2}) (j : J), Monoid.{max u1 u2} (CategoryTheory.Functor.obj.{u1, max u1 u2, u1, succ (max u1 u2)} J _inst_1 Type.{max u1 u2} CategoryTheory.types.{max u1 u2} (CategoryTheory.Functor.comp.{u1, max u1 u2, max u1 u2, u1, succ (max u1 u2), succ (max u1 u2)} J _inst_1 MonCat.{max u1 u2} MonCat.largeCategory.{max u1 u2} Type.{max u1 u2} CategoryTheory.types.{max u1 u2} F (CategoryTheory.forget.{succ (max u1 u2), max u1 u2, max u1 u2} MonCat.{max u1 u2} MonCat.largeCategory.{max u1 u2} MonCat.concreteCategory.{max u1 u2})) j)
+but is expected to have type
+  forall {J : Type.{u1}} [_inst_1 : CategoryTheory.SmallCategory.{u1} J] (F : CategoryTheory.Functor.{u1, max u2 u1, u1, max (succ u2) (succ u1)} J _inst_1 MonCatMax.{u2, u1} instMonCatLargeCategory.{max u2 u1}) (j : J), Monoid.{max u2 u1} (Prefunctor.obj.{succ u1, max (succ u2) (succ u1), u1, max (succ u2) (succ u1)} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} J (CategoryTheory.Category.toCategoryStruct.{u1, u1} J _inst_1)) Type.{max u2 u1} (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max (succ u2) (succ u1)} Type.{max u2 u1} (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max (succ u2) (succ u1)} Type.{max u2 u1} CategoryTheory.types.{max u2 u1})) (CategoryTheory.Functor.toPrefunctor.{u1, max u2 u1, u1, max (succ u2) (succ u1)} J _inst_1 Type.{max u2 u1} CategoryTheory.types.{max u2 u1} (CategoryTheory.Functor.comp.{u1, max u2 u1, max u2 u1, u1, max (succ u2) (succ u1), max (succ u2) (succ u1)} J _inst_1 MonCatMax.{u2, u1} instMonCatLargeCategory.{max u2 u1} Type.{max u2 u1} CategoryTheory.types.{max u2 u1} F (CategoryTheory.forget.{succ (max u2 u1), max u2 u1, max u2 u1} MonCat.{max u2 u1} instMonCatLargeCategory.{max u2 u1} MonCat.concreteCategory.{max u2 u1}))) j)
+Case conversion may be inaccurate. Consider using '#align Mon.monoid_obj MonCat.monoidObjₓ'. -/
 @[to_additive]
 instance monoidObj (F : J ⥤ MonCat.{max v u}) (j) : Monoid ((F ⋙ forget MonCat).obj j) :=
   by
@@ -43,6 +49,12 @@ instance monoidObj (F : J ⥤ MonCat.{max v u}) (j) : Monoid ((F ⋙ forget MonC
 #align Mon.monoid_obj MonCat.monoidObj
 #align AddMon.add_monoid_obj AddMonCat.addMonoidObj
 
+/- warning: Mon.sections_submonoid -> MonCat.sectionsSubmonoid is a dubious translation:
+lean 3 declaration is
+  forall {J : Type.{u1}} [_inst_1 : CategoryTheory.SmallCategory.{u1} J] (F : CategoryTheory.Functor.{u1, max u1 u2, u1, succ (max u1 u2)} J _inst_1 MonCat.{max u1 u2} MonCat.largeCategory.{max u1 u2}), Submonoid.{max u1 u2} (forall (j : J), coeSort.{succ (succ (max u1 u2)), succ (succ (max u1 u2))} MonCat.{max u1 u2} Type.{max u1 u2} MonCat.hasCoeToSort.{max u1 u2} (CategoryTheory.Functor.obj.{u1, max u1 u2, u1, succ (max u1 u2)} J _inst_1 MonCat.{max u1 u2} MonCat.largeCategory.{max u1 u2} F j)) (Pi.mulOneClass.{u1, max u1 u2} J (fun (j : J) => coeSort.{succ (succ (max u1 u2)), succ (succ (max u1 u2))} MonCat.{max u1 u2} Type.{max u1 u2} MonCat.hasCoeToSort.{max u1 u2} (CategoryTheory.Functor.obj.{u1, max u1 u2, u1, succ (max u1 u2)} J _inst_1 MonCat.{max u1 u2} MonCat.largeCategory.{max u1 u2} F j)) (fun (i : J) => Monoid.toMulOneClass.{max u1 u2} (coeSort.{succ (succ (max u1 u2)), succ (succ (max u1 u2))} MonCat.{max u1 u2} Type.{max u1 u2} MonCat.hasCoeToSort.{max u1 u2} (CategoryTheory.Functor.obj.{u1, max u1 u2, u1, succ (max u1 u2)} J _inst_1 MonCat.{max u1 u2} MonCat.largeCategory.{max u1 u2} F i)) (MonCat.monoid.{max u1 u2} (CategoryTheory.Functor.obj.{u1, max u1 u2, u1, succ (max u1 u2)} J _inst_1 MonCat.{max u1 u2} MonCat.largeCategory.{max u1 u2} F i))))
+but is expected to have type
+  forall {J : Type.{u1}} [_inst_1 : CategoryTheory.SmallCategory.{u1} J] (F : CategoryTheory.Functor.{u1, max u2 u1, u1, max (succ u2) (succ u1)} J _inst_1 MonCatMax.{u2, u1} instMonCatLargeCategory.{max u2 u1}), Submonoid.{max u2 u1} (forall (j : J), CategoryTheory.Bundled.α.{max u2 u1, max u2 u1} Monoid.{max u2 u1} (Prefunctor.obj.{succ u1, max (succ u2) (succ u1), u1, max (succ u2) (succ u1)} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} J (CategoryTheory.Category.toCategoryStruct.{u1, u1} J _inst_1)) MonCatMax.{u2, u1} (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max (succ u2) (succ u1)} MonCatMax.{u2, u1} (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max (succ u2) (succ u1)} MonCatMax.{u2, u1} instMonCatLargeCategory.{max u2 u1})) (CategoryTheory.Functor.toPrefunctor.{u1, max u2 u1, u1, max (succ u2) (succ u1)} J _inst_1 MonCatMax.{u2, u1} instMonCatLargeCategory.{max u2 u1} F) j)) (Pi.mulOneClass.{u1, max u2 u1} J (fun (j : J) => CategoryTheory.Bundled.α.{max u2 u1, max u2 u1} Monoid.{max u2 u1} (Prefunctor.obj.{succ u1, max (succ u2) (succ u1), u1, max (succ u2) (succ u1)} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} J (CategoryTheory.Category.toCategoryStruct.{u1, u1} J _inst_1)) MonCatMax.{u2, u1} (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max (succ u2) (succ u1)} MonCatMax.{u2, u1} (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max (succ u2) (succ u1)} MonCatMax.{u2, u1} instMonCatLargeCategory.{max u2 u1})) (CategoryTheory.Functor.toPrefunctor.{u1, max u2 u1, u1, max (succ u2) (succ u1)} J _inst_1 MonCatMax.{u2, u1} instMonCatLargeCategory.{max u2 u1} F) j)) (fun (i : J) => Monoid.toMulOneClass.{max u2 u1} (CategoryTheory.Bundled.α.{max u2 u1, max u2 u1} Monoid.{max u2 u1} (Prefunctor.obj.{succ u1, max (succ u2) (succ u1), u1, max (succ u2) (succ u1)} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} J (CategoryTheory.Category.toCategoryStruct.{u1, u1} J _inst_1)) MonCatMax.{u2, u1} (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max (succ u2) (succ u1)} MonCatMax.{u2, u1} (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max (succ u2) (succ u1)} MonCatMax.{u2, u1} instMonCatLargeCategory.{max u2 u1})) (CategoryTheory.Functor.toPrefunctor.{u1, max u2 u1, u1, max (succ u2) (succ u1)} J _inst_1 MonCatMax.{u2, u1} instMonCatLargeCategory.{max u2 u1} F) i)) (MonCat.instMonoidα.{max u2 u1} (Prefunctor.obj.{succ u1, max (succ u2) (succ u1), u1, max (succ u2) (succ u1)} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} J (CategoryTheory.Category.toCategoryStruct.{u1, u1} J _inst_1)) MonCatMax.{u2, u1} (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max (succ u2) (succ u1)} MonCatMax.{u2, u1} (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max (succ u2) (succ u1)} MonCatMax.{u2, u1} instMonCatLargeCategory.{max u2 u1})) (CategoryTheory.Functor.toPrefunctor.{u1, max u2 u1, u1, max (succ u2) (succ u1)} J _inst_1 MonCatMax.{u2, u1} instMonCatLargeCategory.{max u2 u1} F) i))))
+Case conversion may be inaccurate. Consider using '#align Mon.sections_submonoid MonCat.sectionsSubmonoidₓ'. -/
 /-- The flat sections of a functor into `Mon` form a submonoid of all sections.
 -/
 @[to_additive
@@ -59,13 +71,21 @@ def sectionsSubmonoid (F : J ⥤ MonCat.{max v u}) : Submonoid (∀ j, F.obj j)
 #align Mon.sections_submonoid MonCat.sectionsSubmonoid
 #align AddMon.sections_add_submonoid AddMonCat.sectionsAddSubmonoid
 
+#print MonCat.limitMonoid /-
 @[to_additive]
 instance limitMonoid (F : J ⥤ MonCat.{max v u}) :
     Monoid (Types.limitCone (F ⋙ forget MonCat.{max v u})).pt :=
   (sectionsSubmonoid F).toMonoid
 #align Mon.limit_monoid MonCat.limitMonoid
 #align AddMon.limit_add_monoid AddMonCat.limitAddMonoid
+-/
 
+/- warning: Mon.limit_π_monoid_hom -> MonCat.limitπMonoidHom is a dubious translation:
+lean 3 declaration is
+  forall {J : Type.{u1}} [_inst_1 : CategoryTheory.SmallCategory.{u1} J] (F : CategoryTheory.Functor.{u1, max u1 u2, u1, succ (max u1 u2)} J _inst_1 MonCat.{max u1 u2} MonCat.largeCategory.{max u1 u2}) (j : J), MonoidHom.{max u1 u2, max u1 u2} (CategoryTheory.Limits.Cone.pt.{u1, max u1 u2, u1, succ (max u1 u2)} J _inst_1 Type.{max u1 u2} CategoryTheory.types.{max u1 u2} (CategoryTheory.Functor.comp.{u1, max u1 u2, max u1 u2, u1, succ (max u1 u2), succ (max u1 u2)} J _inst_1 MonCat.{max u1 u2} MonCat.largeCategory.{max u1 u2} Type.{max u1 u2} CategoryTheory.types.{max u1 u2} F (CategoryTheory.forget.{succ (max u1 u2), max u1 u2, max u1 u2} MonCat.{max u1 u2} MonCat.largeCategory.{max u1 u2} MonCat.concreteCategory.{max u1 u2})) (CategoryTheory.Limits.Types.limitCone.{u1, u2} J _inst_1 (CategoryTheory.Functor.comp.{u1, max u1 u2, max u1 u2, u1, succ (max u1 u2), succ (max u1 u2)} J _inst_1 MonCat.{max u1 u2} MonCat.largeCategory.{max u1 u2} Type.{max u1 u2} CategoryTheory.types.{max u1 u2} F (CategoryTheory.forget.{succ (max u1 u2), max u1 u2, max u1 u2} MonCat.{max u1 u2} MonCat.largeCategory.{max u1 u2} MonCat.concreteCategory.{max u1 u2})))) (CategoryTheory.Functor.obj.{u1, max u1 u2, u1, succ (max u1 u2)} J _inst_1 Type.{max u1 u2} CategoryTheory.types.{max u1 u2} (CategoryTheory.Functor.comp.{u1, max u1 u2, max u1 u2, u1, succ (max u1 u2), succ (max u1 u2)} J _inst_1 MonCat.{max u1 u2} MonCat.largeCategory.{max u1 u2} Type.{max u1 u2} CategoryTheory.types.{max u1 u2} F (CategoryTheory.forget.{succ (max u1 u2), max u1 u2, max u1 u2} MonCat.{max u1 u2} MonCat.largeCategory.{max u1 u2} MonCat.concreteCategory.{max u1 u2})) j) (Monoid.toMulOneClass.{max u1 u2} (CategoryTheory.Limits.Cone.pt.{u1, max u1 u2, u1, succ (max u1 u2)} J _inst_1 Type.{max u1 u2} CategoryTheory.types.{max u1 u2} (CategoryTheory.Functor.comp.{u1, max u1 u2, max u1 u2, u1, succ (max u1 u2), succ (max u1 u2)} J _inst_1 MonCat.{max u1 u2} MonCat.largeCategory.{max u1 u2} Type.{max u1 u2} CategoryTheory.types.{max u1 u2} F (CategoryTheory.forget.{succ (max u1 u2), max u1 u2, max u1 u2} MonCat.{max u1 u2} MonCat.largeCategory.{max u1 u2} MonCat.concreteCategory.{max u1 u2})) (CategoryTheory.Limits.Types.limitCone.{u1, u2} J _inst_1 (CategoryTheory.Functor.comp.{u1, max u1 u2, max u1 u2, u1, succ (max u1 u2), succ (max u1 u2)} J _inst_1 MonCat.{max u1 u2} MonCat.largeCategory.{max u1 u2} Type.{max u1 u2} CategoryTheory.types.{max u1 u2} F (CategoryTheory.forget.{succ (max u1 u2), max u1 u2, max u1 u2} MonCat.{max u1 u2} MonCat.largeCategory.{max u1 u2} MonCat.concreteCategory.{max u1 u2})))) (MonCat.limitMonoid.{u1, u2} J _inst_1 F)) (Monoid.toMulOneClass.{max u1 u2} (CategoryTheory.Functor.obj.{u1, max u1 u2, u1, succ (max u1 u2)} J _inst_1 Type.{max u1 u2} CategoryTheory.types.{max u1 u2} (CategoryTheory.Functor.comp.{u1, max u1 u2, max u1 u2, u1, succ (max u1 u2), succ (max u1 u2)} J _inst_1 MonCat.{max u1 u2} MonCat.largeCategory.{max u1 u2} Type.{max u1 u2} CategoryTheory.types.{max u1 u2} F (CategoryTheory.forget.{succ (max u1 u2), max u1 u2, max u1 u2} MonCat.{max u1 u2} MonCat.largeCategory.{max u1 u2} MonCat.concreteCategory.{max u1 u2})) j) (MonCat.monoidObj.{u1, u2} J _inst_1 F j))
+but is expected to have type
+  forall {J : Type.{u1}} [_inst_1 : CategoryTheory.SmallCategory.{u1} J] (F : CategoryTheory.Functor.{u1, max u2 u1, u1, max (succ u2) (succ u1)} J _inst_1 MonCatMax.{u2, u1} instMonCatLargeCategory.{max u2 u1}) (j : J), MonoidHom.{max u2 u1, max u2 u1} (CategoryTheory.Limits.Cone.pt.{u1, max u2 u1, u1, max (succ u2) (succ u1)} J _inst_1 TypeMax.{u1, u2} CategoryTheory.types.{max u2 u1} (CategoryTheory.Functor.comp.{u1, max u2 u1, max u2 u1, u1, max (succ u2) (succ u1), max (succ u2) (succ u1)} J _inst_1 MonCatMax.{u2, u1} instMonCatLargeCategory.{max u2 u1} TypeMax.{u1, u2} CategoryTheory.types.{max u2 u1} F (CategoryTheory.forget.{max (succ u2) (succ u1), max u2 u1, max u2 u1} MonCatMax.{u2, u1} instMonCatLargeCategory.{max u2 u1} MonCat.concreteCategory.{max u2 u1})) (CategoryTheory.Limits.Types.limitCone.{u1, u2} J _inst_1 (CategoryTheory.Functor.comp.{u1, max u2 u1, max u2 u1, u1, max (succ u2) (succ u1), max (succ u2) (succ u1)} J _inst_1 MonCatMax.{u2, u1} instMonCatLargeCategory.{max u2 u1} TypeMax.{u1, u2} CategoryTheory.types.{max u2 u1} F (CategoryTheory.forget.{max (succ u2) (succ u1), max u2 u1, max u2 u1} MonCatMax.{u2, u1} instMonCatLargeCategory.{max u2 u1} MonCat.concreteCategory.{max u2 u1})))) (Prefunctor.obj.{succ u1, max (succ u2) (succ u1), u1, max (succ u2) (succ u1)} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} J (CategoryTheory.Category.toCategoryStruct.{u1, u1} J _inst_1)) Type.{max u2 u1} (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max (succ u2) (succ u1)} Type.{max u2 u1} (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max (succ u2) (succ u1)} Type.{max u2 u1} CategoryTheory.types.{max u2 u1})) (CategoryTheory.Functor.toPrefunctor.{u1, max u2 u1, u1, max (succ u2) (succ u1)} J _inst_1 Type.{max u2 u1} CategoryTheory.types.{max u2 u1} (CategoryTheory.Functor.comp.{u1, max u2 u1, max u2 u1, u1, max (succ u2) (succ u1), max (succ u2) (succ u1)} J _inst_1 MonCatMax.{u2, u1} instMonCatLargeCategory.{max u2 u1} Type.{max u2 u1} CategoryTheory.types.{max u2 u1} F (CategoryTheory.forget.{max (succ u2) (succ u1), max u2 u1, max u2 u1} MonCat.{max u1 u2} instMonCatLargeCategory.{max u2 u1} MonCat.concreteCategory.{max u2 u1}))) j) (Monoid.toMulOneClass.{max u2 u1} (CategoryTheory.Limits.Cone.pt.{u1, max u2 u1, u1, max (succ u2) (succ u1)} J _inst_1 TypeMax.{u1, u2} CategoryTheory.types.{max u2 u1} (CategoryTheory.Functor.comp.{u1, max u2 u1, max u2 u1, u1, max (succ u2) (succ u1), max (succ u2) (succ u1)} J _inst_1 MonCatMax.{u2, u1} instMonCatLargeCategory.{max u2 u1} TypeMax.{u1, u2} CategoryTheory.types.{max u2 u1} F (CategoryTheory.forget.{max (succ u2) (succ u1), max u2 u1, max u2 u1} MonCatMax.{u2, u1} instMonCatLargeCategory.{max u2 u1} MonCat.concreteCategory.{max u2 u1})) (CategoryTheory.Limits.Types.limitCone.{u1, u2} J _inst_1 (CategoryTheory.Functor.comp.{u1, max u2 u1, max u2 u1, u1, max (succ u2) (succ u1), max (succ u2) (succ u1)} J _inst_1 MonCatMax.{u2, u1} instMonCatLargeCategory.{max u2 u1} TypeMax.{u1, u2} CategoryTheory.types.{max u2 u1} F (CategoryTheory.forget.{max (succ u2) (succ u1), max u2 u1, max u2 u1} MonCatMax.{u2, u1} instMonCatLargeCategory.{max u2 u1} MonCat.concreteCategory.{max u2 u1})))) (MonCat.limitMonoid.{u1, u2} J _inst_1 F)) (Monoid.toMulOneClass.{max u2 u1} (Prefunctor.obj.{succ u1, max (succ u2) (succ u1), u1, max (succ u2) (succ u1)} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} J (CategoryTheory.Category.toCategoryStruct.{u1, u1} J _inst_1)) Type.{max u2 u1} (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max (succ u2) (succ u1)} Type.{max u2 u1} (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max (succ u2) (succ u1)} Type.{max u2 u1} CategoryTheory.types.{max u2 u1})) (CategoryTheory.Functor.toPrefunctor.{u1, max u2 u1, u1, max (succ u2) (succ u1)} J _inst_1 Type.{max u2 u1} CategoryTheory.types.{max u2 u1} (CategoryTheory.Functor.comp.{u1, max u2 u1, max u2 u1, u1, max (succ u2) (succ u1), max (succ u2) (succ u1)} J _inst_1 MonCatMax.{u2, u1} instMonCatLargeCategory.{max u2 u1} Type.{max u2 u1} CategoryTheory.types.{max u2 u1} F (CategoryTheory.forget.{max (succ u2) (succ u1), max u2 u1, max u2 u1} MonCat.{max u1 u2} instMonCatLargeCategory.{max u2 u1} MonCat.concreteCategory.{max u2 u1}))) j) (MonCat.monoidObj.{u1, u2} J _inst_1 F j))
+Case conversion may be inaccurate. Consider using '#align Mon.limit_π_monoid_hom MonCat.limitπMonoidHomₓ'. -/
 /-- `limit.π (F ⋙ forget Mon) j` as a `monoid_hom`. -/
 @[to_additive "`limit.π (F ⋙ forget AddMon) j` as an `add_monoid_hom`."]
 def limitπMonoidHom (F : J ⥤ MonCat.{max v u}) (j) :
@@ -79,6 +99,7 @@ def limitπMonoidHom (F : J ⥤ MonCat.{max v u}) (j) :
 
 namespace HasLimits
 
+#print MonCat.HasLimits.limitCone /-
 -- The next two definitions are used in the construction of `has_limits Mon`.
 -- After that, the limits should be constructed using the generic limits API,
 -- e.g. `limit F`, `limit.cone F`, and `limit.is_limit F`.
@@ -95,7 +116,9 @@ def limitCone (F : J ⥤ MonCat.{max v u}) : Cone F
         MonoidHom.coe_inj ((Types.limitCone (F ⋙ forget _)).π.naturality f) }
 #align Mon.has_limits.limit_cone MonCat.HasLimits.limitCone
 #align AddMon.has_limits.limit_cone AddMonCat.HasLimits.limitCone
+-/
 
+#print MonCat.HasLimits.limitConeIsLimit /-
 /-- Witness that the limit cone in `Mon` is a limit cone.
 (Internal use only; use the limits API.)
 -/
@@ -107,11 +130,13 @@ def limitConeIsLimit (F : J ⥤ MonCat.{max v u}) : IsLimit (limitCone F) := by
     tidy
 #align Mon.has_limits.limit_cone_is_limit MonCat.HasLimits.limitConeIsLimit
 #align AddMon.has_limits.limit_cone_is_limit AddMonCat.HasLimits.limitConeIsLimit
+-/
 
 end HasLimits
 
 open HasLimits
 
+#print MonCat.hasLimitsOfSize /-
 /-- The category of monoids has all limits. -/
 @[to_additive "The category of additive monoids has all limits."]
 instance hasLimitsOfSize : HasLimitsOfSize.{v} MonCat.{max v u}
@@ -123,13 +148,17 @@ instance hasLimitsOfSize : HasLimitsOfSize.{v} MonCat.{max v u}
             IsLimit := limit_cone_is_limit F } }
 #align Mon.has_limits_of_size MonCat.hasLimitsOfSize
 #align AddMon.has_limits_of_size AddMonCat.hasLimitsOfSize
+-/
 
+#print MonCat.hasLimits /-
 @[to_additive]
 instance hasLimits : HasLimits MonCat.{u} :=
   MonCat.hasLimitsOfSize.{u, u}
 #align Mon.has_limits MonCat.hasLimits
 #align AddMon.has_limits AddMonCat.hasLimits
+-/
 
+#print MonCat.forgetPreservesLimitsOfSize /-
 /-- The forgetful functor from monoids to types preserves all limits.
 
 This means the underlying type of a limit can be computed as a limit in the category of types. -/
@@ -143,12 +172,15 @@ instance forgetPreservesLimitsOfSize : PreservesLimitsOfSize.{v} (forget MonCat.
           (types.limit_cone_is_limit (F ⋙ forget _)) }
 #align Mon.forget_preserves_limits_of_size MonCat.forgetPreservesLimitsOfSize
 #align AddMon.forget_preserves_limits_of_size AddMonCat.forgetPreservesLimitsOfSize
+-/
 
+#print MonCat.forgetPreservesLimits /-
 @[to_additive]
 instance forgetPreservesLimits : PreservesLimits (forget MonCat.{u}) :=
   MonCat.forgetPreservesLimitsOfSize.{u, u}
 #align Mon.forget_preserves_limits MonCat.forgetPreservesLimits
 #align AddMon.forget_preserves_limits AddMonCat.forgetPreservesLimits
+-/
 
 end MonCat
 
@@ -156,6 +188,12 @@ namespace CommMonCat
 
 variable {J : Type v} [SmallCategory J]
 
+/- warning: CommMon.comm_monoid_obj -> CommMonCat.commMonoidObj is a dubious translation:
+lean 3 declaration is
+  forall {J : Type.{u1}} [_inst_1 : CategoryTheory.SmallCategory.{u1} J] (F : CategoryTheory.Functor.{u1, max u1 u2, u1, succ (max u1 u2)} J _inst_1 CommMonCat.{max u1 u2} CommMonCat.largeCategory.{max u1 u2}) (j : J), CommMonoid.{max u1 u2} (CategoryTheory.Functor.obj.{u1, max u1 u2, u1, succ (max u1 u2)} J _inst_1 Type.{max u1 u2} CategoryTheory.types.{max u1 u2} (CategoryTheory.Functor.comp.{u1, max u1 u2, max u1 u2, u1, succ (max u1 u2), succ (max u1 u2)} J _inst_1 CommMonCat.{max u1 u2} CommMonCat.largeCategory.{max u1 u2} Type.{max u1 u2} CategoryTheory.types.{max u1 u2} F (CategoryTheory.forget.{succ (max u1 u2), max u1 u2, max u1 u2} CommMonCat.{max u1 u2} CommMonCat.largeCategory.{max u1 u2} CommMonCat.concreteCategory.{max u1 u2})) j)
+but is expected to have type
+  forall {J : Type.{u1}} [_inst_1 : CategoryTheory.SmallCategory.{u1} J] (F : CategoryTheory.Functor.{u1, max u2 u1, u1, max (succ u2) (succ u1)} J _inst_1 CommMonCatMax.{u2, u1} instCommMonCatLargeCategory.{max u2 u1}) (j : J), CommMonoid.{max u2 u1} (Prefunctor.obj.{succ u1, max (succ u2) (succ u1), u1, max (succ u2) (succ u1)} J (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} J (CategoryTheory.Category.toCategoryStruct.{u1, u1} J _inst_1)) Type.{max u2 u1} (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max (succ u2) (succ u1)} Type.{max u2 u1} (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max (succ u2) (succ u1)} Type.{max u2 u1} CategoryTheory.types.{max u2 u1})) (CategoryTheory.Functor.toPrefunctor.{u1, max u2 u1, u1, max (succ u2) (succ u1)} J _inst_1 Type.{max u2 u1} CategoryTheory.types.{max u2 u1} (CategoryTheory.Functor.comp.{u1, max u2 u1, max u2 u1, u1, max (succ u2) (succ u1), max (succ u2) (succ u1)} J _inst_1 CommMonCatMax.{u2, u1} instCommMonCatLargeCategory.{max u2 u1} Type.{max u2 u1} CategoryTheory.types.{max u2 u1} F (CategoryTheory.forget.{max (succ u2) (succ u1), max u2 u1, max u2 u1} CommMonCatMax.{u2, u1} instCommMonCatLargeCategory.{max u2 u1} CommMonCat.concreteCategory.{max u2 u1}))) j)
+Case conversion may be inaccurate. Consider using '#align CommMon.comm_monoid_obj CommMonCat.commMonoidObjₓ'. -/
 @[to_additive]
 instance commMonoidObj (F : J ⥤ CommMonCat.{max v u}) (j) :
     CommMonoid ((F ⋙ forget CommMonCat).obj j) :=
@@ -165,6 +203,7 @@ instance commMonoidObj (F : J ⥤ CommMonCat.{max v u}) (j) :
 #align CommMon.comm_monoid_obj CommMonCat.commMonoidObj
 #align AddCommMon.add_comm_monoid_obj AddCommMonCat.addCommMonoidObj
 
+#print CommMonCat.limitCommMonoid /-
 @[to_additive]
 instance limitCommMonoid (F : J ⥤ CommMonCat.{max v u}) :
     CommMonoid (Types.limitCone (F ⋙ forget CommMonCat.{max v u})).pt :=
@@ -172,6 +211,7 @@ instance limitCommMonoid (F : J ⥤ CommMonCat.{max v u}) :
     (MonCat.sectionsSubmonoid (F ⋙ forget₂ CommMonCat MonCat.{max v u}))
 #align CommMon.limit_comm_monoid CommMonCat.limitCommMonoid
 #align AddCommMon.limit_add_comm_monoid AddCommMonCat.limitAddCommMonoid
+-/
 
 /-- We show that the forgetful functor `CommMon ⥤ Mon` creates limits.
 
@@ -193,6 +233,7 @@ instance (F : J ⥤ CommMonCat.{max v u}) : CreatesLimit F (forget₂ CommMonCat
         IsLimit.ofFaithful (forget₂ CommMonCat MonCat.{max v u})
           (MonCat.HasLimits.limitConeIsLimit _) (fun s => _) fun s => rfl }
 
+#print CommMonCat.limitCone /-
 /-- A choice of limit cone for a functor into `CommMon`.
 (Generally, you'll just want to use `limit F`.)
 -/
@@ -202,7 +243,9 @@ def limitCone (F : J ⥤ CommMonCat.{max v u}) : Cone F :=
   liftLimit (limit.isLimit (F ⋙ forget₂ CommMonCat MonCat.{max v u}))
 #align CommMon.limit_cone CommMonCat.limitCone
 #align AddCommMon.limit_cone AddCommMonCat.limitCone
+-/
 
+#print CommMonCat.limitConeIsLimit /-
 /-- The chosen cone is a limit cone.
 (Generally, you'll just want to use `limit.cone F`.)
 -/
@@ -212,7 +255,9 @@ def limitConeIsLimit (F : J ⥤ CommMonCat.{max v u}) : IsLimit (limitCone F) :=
   liftedLimitIsLimit _
 #align CommMon.limit_cone_is_limit CommMonCat.limitConeIsLimit
 #align AddCommMon.limit_cone_is_limit AddCommMonCat.limitConeIsLimit
+-/
 
+#print CommMonCat.hasLimitsOfSize /-
 /-- The category of commutative monoids has all limits. -/
 @[to_additive "The category of commutative monoids has all limits."]
 instance hasLimitsOfSize : HasLimitsOfSize.{v, v} CommMonCat.{max v u}
@@ -220,13 +265,17 @@ instance hasLimitsOfSize : HasLimitsOfSize.{v, v} CommMonCat.{max v u}
     { HasLimit := fun F => has_limit_of_created F (forget₂ CommMonCat MonCat.{max v u}) }
 #align CommMon.has_limits_of_size CommMonCat.hasLimitsOfSize
 #align AddCommMon.has_limits_of_size AddCommMonCat.hasLimitsOfSize
+-/
 
+#print CommMonCat.hasLimits /-
 @[to_additive]
 instance hasLimits : HasLimits CommMonCat.{u} :=
   CommMonCat.hasLimitsOfSize.{u, u}
 #align CommMon.has_limits CommMonCat.hasLimits
 #align AddCommMon.has_limits AddCommMonCat.hasLimits
+-/
 
+#print CommMonCat.forget₂MonPreservesLimitsOfSize /-
 /-- The forgetful functor from commutative monoids to monoids preserves all limits.
 
 This means the underlying type of a limit can be computed as a limit in the category of monoids. -/
@@ -237,13 +286,17 @@ instance forget₂MonPreservesLimitsOfSize :
     where PreservesLimitsOfShape J 𝒥 := { PreservesLimit := fun F => by infer_instance }
 #align CommMon.forget₂_Mon_preserves_limits_of_size CommMonCat.forget₂MonPreservesLimitsOfSize
 #align AddCommMon.forget₂_AddMon_preserves_limits AddCommMonCat.forget₂AddMonPreservesLimits
+-/
 
+#print CommMonCat.forget₂MonPreservesLimits /-
 @[to_additive]
 instance forget₂MonPreservesLimits : PreservesLimits (forget₂ CommMonCat MonCat.{u}) :=
   CommMonCat.forget₂MonPreservesLimitsOfSize.{u, u}
 #align CommMon.forget₂_Mon_preserves_limits CommMonCat.forget₂MonPreservesLimits
 #align AddCommMon.forget₂_Mon_preserves_limits AddCommMonCat.forget₂MonPreservesLimits
+-/
 
+#print CommMonCat.forgetPreservesLimitsOfSize /-
 /-- The forgetful functor from commutative monoids to types preserves all limits.
 
 This means the underlying type of a limit can be computed as a limit in the category of types. -/
@@ -256,12 +309,15 @@ instance forgetPreservesLimitsOfSize : PreservesLimitsOfSize.{v, v} (forget Comm
         limits.comp_preserves_limit (forget₂ CommMonCat MonCat) (forget MonCat) }
 #align CommMon.forget_preserves_limits_of_size CommMonCat.forgetPreservesLimitsOfSize
 #align AddCommMon.forget_preserves_limits_of_size AddCommMonCat.forgetPreservesLimitsOfSize
+-/
 
+#print CommMonCat.forgetPreservesLimits /-
 @[to_additive]
 instance forgetPreservesLimits : PreservesLimits (forget CommMonCat.{u}) :=
   CommMonCat.forgetPreservesLimitsOfSize.{u, u}
 #align CommMon.forget_preserves_limits CommMonCat.forgetPreservesLimits
 #align AddCommMon.forget_preserves_limits AddCommMonCat.forgetPreservesLimits
+-/
 
 end CommMonCat
 
