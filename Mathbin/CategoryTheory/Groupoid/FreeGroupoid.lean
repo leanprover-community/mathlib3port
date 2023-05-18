@@ -55,33 +55,42 @@ universe u v u' v' u'' v''
 
 variable {V : Type u} [Quiver.{v + 1} V]
 
+#print Quiver.Hom.toPosPath /-
 /-- Shorthand for the "forward" arrow corresponding to `f` in `paths $ symmetrify V` -/
 abbrev Quiver.Hom.toPosPath {X Y : V} (f : X ⟶ Y) :
     (CategoryTheory.Paths.categoryPaths <| Quiver.Symmetrify V).Hom X Y :=
   f.toPos.toPath
-#align category_theory.groupoid.free.quiver.hom.to_pos_path CategoryTheory.Groupoid.Free.Quiver.Hom.toPosPath
+#align category_theory.groupoid.free.quiver.hom.to_pos_path Quiver.Hom.toPosPath
+-/
 
+#print Quiver.Hom.toNegPath /-
 /-- Shorthand for the "forward" arrow corresponding to `f` in `paths $ symmetrify V` -/
 abbrev Quiver.Hom.toNegPath {X Y : V} (f : X ⟶ Y) :
     (CategoryTheory.Paths.categoryPaths <| Quiver.Symmetrify V).Hom Y X :=
   f.toNeg.toPath
-#align category_theory.groupoid.free.quiver.hom.to_neg_path CategoryTheory.Groupoid.Free.Quiver.Hom.toNegPath
+#align category_theory.groupoid.free.quiver.hom.to_neg_path Quiver.Hom.toNegPath
+-/
 
+#print CategoryTheory.Groupoid.Free.redStep /-
 /-- The "reduction" relation -/
 inductive redStep : HomRel (Paths (Quiver.Symmetrify V))
   |
   step (X Z : Quiver.Symmetrify V) (f : X ⟶ Z) :
     red_step (𝟙 X) (f.toPath ≫ (Quiver.reverse f).toPath)
 #align category_theory.groupoid.free.red_step CategoryTheory.Groupoid.Free.redStep
+-/
 
+#print CategoryTheory.FreeGroupoid /-
 /-- The underlying vertices of the free groupoid -/
 def CategoryTheory.FreeGroupoid (V) [Q : Quiver V] :=
   Quotient (@redStep V Q)
 #align category_theory.free_groupoid CategoryTheory.FreeGroupoid
+-/
 
 instance {V} [Q : Quiver V] [h : Nonempty V] : Nonempty (FreeGroupoid V) :=
   ⟨⟨h.some⟩⟩
 
+#print CategoryTheory.Groupoid.Free.congr_reverse /-
 theorem congr_reverse {X Y : Paths <| Quiver.Symmetrify V} (p q : X ⟶ Y) :
     Quotient.CompClosure redStep p q → Quotient.CompClosure redStep p.reverse q.reverse :=
   by
@@ -96,7 +105,9 @@ theorem congr_reverse {X Y : Paths <| Quiver.Symmetrify V} (p q : X ⟶ Y) :
     Quiver.Path.reverse_comp, Quiver.reverse_reverse, Quiver.Path.reverse_toPath,
     Quiver.Path.comp_assoc] using this
 #align category_theory.groupoid.free.congr_reverse CategoryTheory.Groupoid.Free.congr_reverse
+-/
 
+#print CategoryTheory.Groupoid.Free.congr_comp_reverse /-
 theorem congr_comp_reverse {X Y : Paths <| Quiver.Symmetrify V} (p : X ⟶ Y) :
     Quot.mk (@Quotient.CompClosure _ _ redStep _ _) (p ≫ p.reverse) =
       Quot.mk (@Quotient.CompClosure _ _ redStep _ _) (𝟙 X) :=
@@ -122,7 +133,9 @@ theorem congr_comp_reverse {X Y : Paths <| Quiver.Symmetrify V} (p : X ⟶ Y) :
       exact this
     · exact ih
 #align category_theory.groupoid.free.congr_comp_reverse CategoryTheory.Groupoid.Free.congr_comp_reverse
+-/
 
+#print CategoryTheory.Groupoid.Free.congr_reverse_comp /-
 theorem congr_reverse_comp {X Y : Paths <| Quiver.Symmetrify V} (p : X ⟶ Y) :
     Quot.mk (@Quotient.CompClosure _ _ redStep _ _) (p.reverse ≫ p) =
       Quot.mk (@Quotient.CompClosure _ _ redStep _ _) (𝟙 Y) :=
@@ -130,15 +143,18 @@ theorem congr_reverse_comp {X Y : Paths <| Quiver.Symmetrify V} (p : X ⟶ Y) :
   nth_rw 2 [← Quiver.Path.reverse_reverse p]
   apply congr_comp_reverse
 #align category_theory.groupoid.free.congr_reverse_comp CategoryTheory.Groupoid.Free.congr_reverse_comp
+-/
 
 instance : Category (FreeGroupoid V) :=
   Quotient.category redStep
 
+#print CategoryTheory.Groupoid.Free.quotInv /-
 /-- The inverse of an arrow in the free groupoid -/
 def quotInv {X Y : FreeGroupoid V} (f : X ⟶ Y) : Y ⟶ X :=
   Quot.liftOn f (fun pp => Quot.mk _ <| pp.reverse) fun pp qq con =>
     Quot.sound <| congr_reverse pp qq Con
 #align category_theory.groupoid.free.quot_inv CategoryTheory.Groupoid.Free.quotInv
+-/
 
 instance : Groupoid (FreeGroupoid V)
     where
@@ -146,13 +162,16 @@ instance : Groupoid (FreeGroupoid V)
   inv_comp' X Y p := Quot.inductionOn p fun pp => congr_reverse_comp pp
   comp_inv' X Y p := Quot.inductionOn p fun pp => congr_comp_reverse pp
 
+#print CategoryTheory.Groupoid.Free.of /-
 /-- The inclusion of the quiver on `V` to the underlying quiver on `free_groupoid V`-/
 def of (V) [Quiver V] : V ⥤q FreeGroupoid V
     where
   obj X := ⟨X⟩
   map X Y f := Quot.mk _ f.toPosPath
 #align category_theory.groupoid.free.of CategoryTheory.Groupoid.Free.of
+-/
 
+#print CategoryTheory.Groupoid.Free.of_eq /-
 theorem of_eq :
     of V =
       (Quiver.Symmetrify.of ⋙q Paths.of).comp (Quotient.functor <| @redStep V _).toPrefunctor :=
@@ -163,11 +182,13 @@ theorem of_eq :
   · rintro X Y f
     rfl
 #align category_theory.groupoid.free.of_eq CategoryTheory.Groupoid.Free.of_eq
+-/
 
 section UniversalProperty
 
 variable {V' : Type u'} [Groupoid V'] (φ : V ⥤q V')
 
+#print CategoryTheory.Groupoid.Free.lift /-
 /-- The lift of a prefunctor to a groupoid, to a functor from `free_groupoid V` -/
 def lift (φ : V ⥤q V') : FreeGroupoid V ⥤ V' :=
   Quotient.lift _ (Paths.lift <| Quiver.Symmetrify.lift φ)
@@ -178,7 +199,14 @@ def lift (φ : V ⥤q V') : FreeGroupoid V ⥤ V' :=
       symm
       apply groupoid.comp_inv)
 #align category_theory.groupoid.free.lift CategoryTheory.Groupoid.Free.lift
+-/
 
+/- warning: category_theory.groupoid.free.lift_spec -> CategoryTheory.Groupoid.Free.lift_spec is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u1}} [_inst_1 : Quiver.{succ u2, u1} V] {V' : Type.{u3}} [_inst_2 : CategoryTheory.Groupoid.{u4, u3} V'] (φ : Prefunctor.{succ u2, succ u4, u1, u3} V _inst_1 V' (CategoryTheory.CategoryStruct.toQuiver.{u4, u3} V' (CategoryTheory.Category.toCategoryStruct.{u4, u3} V' (CategoryTheory.Groupoid.toCategory.{u4, u3} V' _inst_2)))), Eq.{max (max (succ u1) (succ u2) (succ u4)) (succ u1) (succ u3)} (Prefunctor.{succ u2, succ u4, u1, u3} V _inst_1 V' (CategoryTheory.CategoryStruct.toQuiver.{u4, u3} V' (CategoryTheory.Category.toCategoryStruct.{u4, u3} V' (CategoryTheory.Groupoid.toCategory.{u4, u3} V' _inst_2)))) (Prefunctor.comp.{u1, succ u2, u1, succ (max u1 u2), u3, succ u4} V _inst_1 (CategoryTheory.FreeGroupoid.{u1, u2} V _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{max u1 u2, u1} (CategoryTheory.FreeGroupoid.{u1, u2} V _inst_1) (CategoryTheory.Category.toCategoryStruct.{max u1 u2, u1} (CategoryTheory.FreeGroupoid.{u1, u2} V _inst_1) (CategoryTheory.Groupoid.Free.CategoryTheory.FreeGroupoid.CategoryTheory.category.{u1, u2} V _inst_1))) V' (CategoryTheory.CategoryStruct.toQuiver.{u4, u3} V' (CategoryTheory.Category.toCategoryStruct.{u4, u3} V' (CategoryTheory.Groupoid.toCategory.{u4, u3} V' _inst_2))) (CategoryTheory.Groupoid.Free.of.{u1, u2} V _inst_1) (CategoryTheory.Functor.toPrefunctor.{max u1 u2, u4, u1, u3} (CategoryTheory.FreeGroupoid.{u1, u2} V _inst_1) (CategoryTheory.Groupoid.Free.CategoryTheory.FreeGroupoid.CategoryTheory.category.{u1, u2} V _inst_1) V' (CategoryTheory.Groupoid.toCategory.{u4, u3} V' _inst_2) (CategoryTheory.Groupoid.Free.lift.{u1, u2, u3, u4} V _inst_1 V' _inst_2 φ))) φ
+but is expected to have type
+  forall {V : Type.{u2}} [_inst_1 : Quiver.{succ u3, u2} V] {V' : Type.{u4}} [_inst_2 : CategoryTheory.Groupoid.{u1, u4} V'] (φ : Prefunctor.{succ u3, succ u1, u2, u4} V _inst_1 V' (CategoryTheory.CategoryStruct.toQuiver.{u1, u4} V' (CategoryTheory.Category.toCategoryStruct.{u1, u4} V' (CategoryTheory.Groupoid.toCategory.{u1, u4} V' _inst_2)))), Eq.{max (max (max (succ u2) (succ u4)) (succ u3)) (succ u1)} (Prefunctor.{succ u3, succ u1, u2, u4} V _inst_1 V' (CategoryTheory.CategoryStruct.toQuiver.{u1, u4} V' (CategoryTheory.Category.toCategoryStruct.{u1, u4} V' (CategoryTheory.Groupoid.toCategory.{u1, u4} V' _inst_2)))) (Prefunctor.comp.{u2, succ u3, u2, max (succ u2) (succ u3), u4, succ u1} V _inst_1 (CategoryTheory.FreeGroupoid.{u2, u3} V _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u3, u2} (CategoryTheory.FreeGroupoid.{u2, u3} V _inst_1) (CategoryTheory.Category.toCategoryStruct.{max u2 u3, u2} (CategoryTheory.FreeGroupoid.{u2, u3} V _inst_1) (CategoryTheory.Groupoid.Free.instCategoryFreeGroupoid.{u2, u3} V _inst_1))) V' (CategoryTheory.CategoryStruct.toQuiver.{u1, u4} V' (CategoryTheory.Category.toCategoryStruct.{u1, u4} V' (CategoryTheory.Groupoid.toCategory.{u1, u4} V' _inst_2))) (CategoryTheory.Groupoid.Free.of.{u2, u3} V _inst_1) (CategoryTheory.Functor.toPrefunctor.{max u2 u3, u1, u2, u4} (CategoryTheory.FreeGroupoid.{u2, u3} V _inst_1) (CategoryTheory.Groupoid.Free.instCategoryFreeGroupoid.{u2, u3} V _inst_1) V' (CategoryTheory.Groupoid.toCategory.{u1, u4} V' _inst_2) (CategoryTheory.Groupoid.Free.lift.{u2, u3, u4, u1} V _inst_1 V' _inst_2 φ))) φ
+Case conversion may be inaccurate. Consider using '#align category_theory.groupoid.free.lift_spec CategoryTheory.Groupoid.Free.lift_specₓ'. -/
 theorem lift_spec (φ : V ⥤q V') : of V ⋙q (lift φ).toPrefunctor = φ :=
   by
   rw [of_eq, Prefunctor.comp_assoc, Prefunctor.comp_assoc, functor.to_prefunctor_comp]
@@ -186,6 +214,12 @@ theorem lift_spec (φ : V ⥤q V') : of V ⋙q (lift φ).toPrefunctor = φ :=
   rw [quotient.lift_spec, paths.lift_spec, Quiver.Symmetrify.lift_spec]
 #align category_theory.groupoid.free.lift_spec CategoryTheory.Groupoid.Free.lift_spec
 
+/- warning: category_theory.groupoid.free.lift_unique -> CategoryTheory.Groupoid.Free.lift_unique is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u1}} [_inst_1 : Quiver.{succ u2, u1} V] {V' : Type.{u3}} [_inst_2 : CategoryTheory.Groupoid.{u4, u3} V'] (φ : Prefunctor.{succ u2, succ u4, u1, u3} V _inst_1 V' (CategoryTheory.CategoryStruct.toQuiver.{u4, u3} V' (CategoryTheory.Category.toCategoryStruct.{u4, u3} V' (CategoryTheory.Groupoid.toCategory.{u4, u3} V' _inst_2)))) (Φ : CategoryTheory.Functor.{max u1 u2, u4, u1, u3} (CategoryTheory.FreeGroupoid.{u1, u2} V _inst_1) (CategoryTheory.Groupoid.Free.CategoryTheory.FreeGroupoid.CategoryTheory.category.{u1, u2} V _inst_1) V' (CategoryTheory.Groupoid.toCategory.{u4, u3} V' _inst_2)), (Eq.{max (max (succ u1) (succ u2) (succ u4)) (succ u1) (succ u3)} (Prefunctor.{succ u2, succ u4, u1, u3} V _inst_1 V' (CategoryTheory.CategoryStruct.toQuiver.{u4, u3} V' (CategoryTheory.Category.toCategoryStruct.{u4, u3} V' (CategoryTheory.Groupoid.toCategory.{u4, u3} V' _inst_2)))) (Prefunctor.comp.{u1, succ u2, u1, succ (max u1 u2), u3, succ u4} V _inst_1 (CategoryTheory.FreeGroupoid.{u1, u2} V _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{max u1 u2, u1} (CategoryTheory.FreeGroupoid.{u1, u2} V _inst_1) (CategoryTheory.Category.toCategoryStruct.{max u1 u2, u1} (CategoryTheory.FreeGroupoid.{u1, u2} V _inst_1) (CategoryTheory.Groupoid.Free.CategoryTheory.FreeGroupoid.CategoryTheory.category.{u1, u2} V _inst_1))) V' (CategoryTheory.CategoryStruct.toQuiver.{u4, u3} V' (CategoryTheory.Category.toCategoryStruct.{u4, u3} V' (CategoryTheory.Groupoid.toCategory.{u4, u3} V' _inst_2))) (CategoryTheory.Groupoid.Free.of.{u1, u2} V _inst_1) (CategoryTheory.Functor.toPrefunctor.{max u1 u2, u4, u1, u3} (CategoryTheory.FreeGroupoid.{u1, u2} V _inst_1) (CategoryTheory.Groupoid.Free.CategoryTheory.FreeGroupoid.CategoryTheory.category.{u1, u2} V _inst_1) V' (CategoryTheory.Groupoid.toCategory.{u4, u3} V' _inst_2) Φ)) φ) -> (Eq.{succ (max (max u1 u2) u4 u1 u3)} (CategoryTheory.Functor.{max u1 u2, u4, u1, u3} (CategoryTheory.FreeGroupoid.{u1, u2} V _inst_1) (CategoryTheory.Groupoid.Free.CategoryTheory.FreeGroupoid.CategoryTheory.category.{u1, u2} V _inst_1) V' (CategoryTheory.Groupoid.toCategory.{u4, u3} V' _inst_2)) Φ (CategoryTheory.Groupoid.Free.lift.{u1, u2, u3, u4} V _inst_1 V' _inst_2 φ))
+but is expected to have type
+  forall {V : Type.{u2}} [_inst_1 : Quiver.{succ u3, u2} V] {V' : Type.{u4}} [_inst_2 : CategoryTheory.Groupoid.{u1, u4} V'] (φ : Prefunctor.{succ u3, succ u1, u2, u4} V _inst_1 V' (CategoryTheory.CategoryStruct.toQuiver.{u1, u4} V' (CategoryTheory.Category.toCategoryStruct.{u1, u4} V' (CategoryTheory.Groupoid.toCategory.{u1, u4} V' _inst_2)))) (Φ : CategoryTheory.Functor.{max u2 u3, u1, u2, u4} (CategoryTheory.FreeGroupoid.{u2, u3} V _inst_1) (CategoryTheory.Groupoid.Free.instCategoryFreeGroupoid.{u2, u3} V _inst_1) V' (CategoryTheory.Groupoid.toCategory.{u1, u4} V' _inst_2)), (Eq.{max (max (max (succ u2) (succ u4)) (succ u3)) (succ u1)} (Prefunctor.{succ u3, succ u1, u2, u4} V _inst_1 V' (CategoryTheory.CategoryStruct.toQuiver.{u1, u4} V' (CategoryTheory.Category.toCategoryStruct.{u1, u4} V' (CategoryTheory.Groupoid.toCategory.{u1, u4} V' _inst_2)))) (Prefunctor.comp.{u2, succ u3, u2, max (succ u2) (succ u3), u4, succ u1} V _inst_1 (CategoryTheory.FreeGroupoid.{u2, u3} V _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u3, u2} (CategoryTheory.FreeGroupoid.{u2, u3} V _inst_1) (CategoryTheory.Category.toCategoryStruct.{max u2 u3, u2} (CategoryTheory.FreeGroupoid.{u2, u3} V _inst_1) (CategoryTheory.Groupoid.Free.instCategoryFreeGroupoid.{u2, u3} V _inst_1))) V' (CategoryTheory.CategoryStruct.toQuiver.{u1, u4} V' (CategoryTheory.Category.toCategoryStruct.{u1, u4} V' (CategoryTheory.Groupoid.toCategory.{u1, u4} V' _inst_2))) (CategoryTheory.Groupoid.Free.of.{u2, u3} V _inst_1) (CategoryTheory.Functor.toPrefunctor.{max u2 u3, u1, u2, u4} (CategoryTheory.FreeGroupoid.{u2, u3} V _inst_1) (CategoryTheory.Groupoid.Free.instCategoryFreeGroupoid.{u2, u3} V _inst_1) V' (CategoryTheory.Groupoid.toCategory.{u1, u4} V' _inst_2) Φ)) φ) -> (Eq.{max (max (max (succ u2) (succ u4)) (succ u3)) (succ u1)} (CategoryTheory.Functor.{max u2 u3, u1, u2, u4} (CategoryTheory.FreeGroupoid.{u2, u3} V _inst_1) (CategoryTheory.Groupoid.Free.instCategoryFreeGroupoid.{u2, u3} V _inst_1) V' (CategoryTheory.Groupoid.toCategory.{u1, u4} V' _inst_2)) Φ (CategoryTheory.Groupoid.Free.lift.{u2, u3, u4, u1} V _inst_1 V' _inst_2 φ))
+Case conversion may be inaccurate. Consider using '#align category_theory.groupoid.free.lift_unique CategoryTheory.Groupoid.Free.lift_uniqueₓ'. -/
 theorem lift_unique (φ : V ⥤q V') (Φ : FreeGroupoid V ⥤ V') (hΦ : of V ⋙q Φ.toPrefunctor = φ) :
     Φ = lift φ := by
   apply quotient.lift_unique
@@ -209,24 +243,30 @@ section Functoriality
 
 variable {V' : Type u'} [Quiver.{v' + 1} V'] {V'' : Type u''} [Quiver.{v'' + 1} V'']
 
+#print CategoryTheory.freeGroupoidFunctor /-
 /-- The functor of free groupoid induced by a prefunctor of quivers -/
 def CategoryTheory.freeGroupoidFunctor (φ : V ⥤q V') : FreeGroupoid V ⥤ FreeGroupoid V' :=
   lift (φ ⋙q of V')
 #align category_theory.free_groupoid_functor CategoryTheory.freeGroupoidFunctor
+-/
 
+#print CategoryTheory.Groupoid.Free.freeGroupoidFunctor_id /-
 theorem freeGroupoidFunctor_id :
     freeGroupoidFunctor (Prefunctor.id V) = Functor.id (FreeGroupoid V) :=
   by
   dsimp only [free_groupoid_functor]; symm
   apply lift_unique; rfl
 #align category_theory.groupoid.free.free_groupoid_functor_id CategoryTheory.Groupoid.Free.freeGroupoidFunctor_id
+-/
 
+#print CategoryTheory.Groupoid.Free.freeGroupoidFunctor_comp /-
 theorem freeGroupoidFunctor_comp (φ : V ⥤q V') (φ' : V' ⥤q V'') :
     freeGroupoidFunctor (φ ⋙q φ') = freeGroupoidFunctor φ ⋙ freeGroupoidFunctor φ' :=
   by
   dsimp only [free_groupoid_functor]; symm
   apply lift_unique; rfl
 #align category_theory.groupoid.free.free_groupoid_functor_comp CategoryTheory.Groupoid.Free.freeGroupoidFunctor_comp
+-/
 
 end Functoriality
 

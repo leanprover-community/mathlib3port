@@ -235,7 +235,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align Top.inducing_pullback_to_prod TopCat.inducing_pullback_to_prodₓ'. -/
 theorem inducing_pullback_to_prod {X Y Z : TopCat} (f : X ⟶ Z) (g : Y ⟶ Z) :
     Inducing ⇑(prod.lift pullback.fst pullback.snd : pullback f g ⟶ X ⨯ Y) :=
-  ⟨by simp [prod_topology, pullback_topology, induced_compose, ← coe_comp]⟩
+  ⟨by simp [prod_topology, pullbackTopology, induced_compose, ← coe_comp]⟩
 #align Top.inducing_pullback_to_prod TopCat.inducing_pullback_to_prod
 
 /- warning: Top.embedding_pullback_to_prod -> TopCat.embedding_pullback_to_prod is a dubious translation:

@@ -49,7 +49,7 @@ theorem norm_coe {E} [SeminormedAddCommGroup E] (x : E) : ‖(x : Completion E)�
 #align uniform_space.completion.norm_coe UniformSpace.Completion.norm_coe
 
 instance [SeminormedAddCommGroup E] : NormedAddCommGroup (Completion E) :=
-  { Completion.addCommGroup, Completion.metricSpace with
+  { Completion.addCommGroup, Completion.instMetricSpace with
     dist_eq := by
       intro x y
       apply completion.induction_on₂ x y <;> clear x y
