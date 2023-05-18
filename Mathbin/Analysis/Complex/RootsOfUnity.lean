@@ -160,7 +160,7 @@ theorem IsPrimitiveRoot.arg {n : ℕ} {ζ : ℂ} (h : IsPrimitiveRoot ζ n) (hn 
     rw [← Int.natAbs_neg, neg_sub, Int.natAbs_eq_iff]
     exact Or.inl (Int.ofNat_sub h.le).symm
   split_ifs with h₂
-  · convert Complex.arg_cos_add_sin_mul_i _
+  · convert Complex.arg_cos_add_sin_mul_I _
     · push_cast
     · push_cast
     field_simp [hn]
@@ -173,7 +173,7 @@ theorem IsPrimitiveRoot.arg {n : ℕ} {ζ : ℂ} (h : IsPrimitiveRoot ζ n) (hn 
       mul_le_of_le_one_right real.pi_pos.le
         ((div_le_iff' <| by exact_mod_cast pos_of_gt h).mpr <| by exact_mod_cast h₂)
   rw [← Complex.cos_sub_two_pi, ← Complex.sin_sub_two_pi]
-  convert Complex.arg_cos_add_sin_mul_i _
+  convert Complex.arg_cos_add_sin_mul_I _
   · push_cast
     rw [← sub_one_mul, sub_div, div_self]
     exact_mod_cast hn
