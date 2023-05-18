@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller, Adam Topaz, Rémi Bottinelli, Junyan Xu
 
 ! This file was ported from Lean 3 source module category_theory.cofiltered_system
-! leanprover-community/mathlib commit 178a32653e369dce2da68dc6b2694e385d484ef1
+! leanprover-community/mathlib commit 2ed2c6310e6f1c5562bdf6bfbda55ebbf6891abe
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Topology.Category.Top.Limits.Konig
 
 /-!
 # Cofiltered systems
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file deals with properties of cofiltered (and inverse) systems.
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury Kudryashov, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.measure.stieltjes
-! leanprover-community/mathlib commit bf6a01357ff5684b1ebcd0f1a13be314fc82c0bf
+! leanprover-community/mathlib commit 20d5763051978e9bc6428578ed070445df6a18b3
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,6 +34,48 @@ section MoveThis
 open Filter Set
 
 open Topology
+
+theorem iInf_Ioi_eq_iInf_rat_gt {f : ℝ → ℝ} (x : ℝ) (hf : BddBelow (f '' Ioi x))
+    (hf_mono : Monotone f) : (⨅ r : Ioi x, f r) = ⨅ q : { q' : ℚ // x < q' }, f q :=
+  by
+  refine' le_antisymm _ _
+  · have : Nonempty { r' : ℚ // x < ↑r' } :=
+      by
+      obtain ⟨r, hrx⟩ := exists_rat_gt x
+      exact ⟨⟨r, hrx⟩⟩
+    refine' le_ciInf fun r => _
+    obtain ⟨y, hxy, hyr⟩ := exists_rat_btwn r.prop
+    refine' ciInf_set_le hf (hxy.trans _)
+    exact_mod_cast hyr
+  · refine' le_ciInf fun q => _
+    have hq := q.prop
+    rw [mem_Ioi] at hq
+    obtain ⟨y, hxy, hyq⟩ := exists_rat_btwn hq
+    refine' (ciInf_le _ _).trans _
+    · exact ⟨y, hxy⟩
+    · refine' ⟨hf.some, fun z => _⟩
+      rintro ⟨u, rfl⟩
+      suffices hfu : f u ∈ f '' Ioi x
+      exact hf.some_spec hfu
+      exact ⟨u, u.prop, rfl⟩
+    · refine' hf_mono (le_trans _ hyq.le)
+      norm_cast
+#align infi_Ioi_eq_infi_rat_gt iInf_Ioi_eq_iInf_rat_gt
+
+-- todo after the port: move to topology/algebra/order/left_right_lim
+theorem rightLim_eq_of_tendsto {α β : Type _} [LinearOrder α] [TopologicalSpace β]
+    [hα : TopologicalSpace α] [h'α : OrderTopology α] [T2Space β] {f : α → β} {a : α} {y : β}
+    (h : 𝓝[>] a ≠ ⊥) (h' : Tendsto f (𝓝[>] a) (𝓝 y)) : Function.rightLim f a = y :=
+  @leftLim_eq_of_tendsto αᵒᵈ _ _ _ _ _ _ f a y h h'
+#align right_lim_eq_of_tendsto rightLim_eq_of_tendsto
+
+-- todo after the port: move to topology/algebra/order/left_right_lim
+theorem rightLim_eq_sInf {α β : Type _} [LinearOrder α] [TopologicalSpace β]
+    [ConditionallyCompleteLinearOrder β] [OrderTopology β] {f : α → β} (hf : Monotone f) {x : α}
+    [TopologicalSpace α] [OrderTopology α] (h : 𝓝[>] x ≠ ⊥) :
+    Function.rightLim f x = sInf (f '' Ioi x) :=
+  rightLim_eq_of_tendsto h (hf.tendsto_nhdsWithin_Ioi x)
+#align right_lim_eq_Inf rightLim_eq_sInf
 
 -- todo after the port: move to order/filter/at_top_bot
 theorem exists_seq_monotone_tendsto_atTop_atTop (α : Type _) [SemilatticeSup α] [Nonempty α]
@@ -192,6 +234,29 @@ theorem mono : Monotone f :=
 theorem right_continuous (x : ℝ) : ContinuousWithinAt f (Ici x) x :=
   f.right_continuous' x
 #align stieltjes_function.right_continuous StieltjesFunction.right_continuous
+
+theorem rightLim_eq (f : StieltjesFunction) (x : ℝ) : Function.rightLim f x = f x :=
+  by
+  rw [← f.mono.continuous_within_at_Ioi_iff_right_lim_eq, continuousWithinAt_Ioi_iff_Ici]
+  exact f.right_continuous' x
+#align stieltjes_function.right_lim_eq StieltjesFunction.rightLim_eq
+
+theorem iInf_Ioi_eq (f : StieltjesFunction) (x : ℝ) : (⨅ r : Ioi x, f r) = f x :=
+  by
+  suffices Function.rightLim f x = ⨅ r : Ioi x, f r by rw [← this, f.right_lim_eq]
+  rw [rightLim_eq_sInf f.mono, sInf_image']
+  rw [← ne_bot_iff]
+  infer_instance
+#align stieltjes_function.infi_Ioi_eq StieltjesFunction.iInf_Ioi_eq
+
+theorem iInf_rat_gt_eq (f : StieltjesFunction) (x : ℝ) : (⨅ r : { r' : ℚ // x < r' }, f r) = f x :=
+  by
+  rw [← infi_Ioi_eq f x]
+  refine' (iInf_Ioi_eq_iInf_rat_gt _ _ f.mono).symm
+  refine' ⟨f x, fun y => _⟩
+  rintro ⟨y, hy_mem, rfl⟩
+  exact f.mono (le_of_lt hy_mem)
+#align stieltjes_function.infi_rat_gt_eq StieltjesFunction.iInf_rat_gt_eq
 
 /-- The identity of `ℝ` as a Stieltjes function, used to construct Lebesgue measure. -/
 @[simps]

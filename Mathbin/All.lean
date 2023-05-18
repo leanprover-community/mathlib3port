@@ -1837,6 +1837,7 @@ import Mathbin.Geometry.Manifold.PartitionOfUnity
 import Mathbin.Geometry.Manifold.SmoothManifoldWithCorners
 import Mathbin.Geometry.Manifold.VectorBundle.Basic
 import Mathbin.Geometry.Manifold.VectorBundle.FiberwiseLinear
+import Mathbin.Geometry.Manifold.VectorBundle.Hom
 import Mathbin.Geometry.Manifold.VectorBundle.Pullback
 import Mathbin.Geometry.Manifold.VectorBundle.Tangent
 import Mathbin.Geometry.Manifold.WhitneyEmbedding
@@ -2464,6 +2465,7 @@ import Mathbin.Probability.Independence.ZeroOne
 import Mathbin.Probability.Integration
 import Mathbin.Probability.Kernel.Basic
 import Mathbin.Probability.Kernel.Composition
+import Mathbin.Probability.Kernel.CondCdf
 import Mathbin.Probability.Kernel.Invariance
 import Mathbin.Probability.Kernel.MeasurableIntegral
 import Mathbin.Probability.Kernel.WithDensity

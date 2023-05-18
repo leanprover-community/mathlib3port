@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Heather Macbeth
 
 ! This file was ported from Lean 3 source module geometry.manifold.vector_bundle.basic
-! leanprover-community/mathlib commit 0187644979f2d3e10a06e916a869c994facd9a87
+! leanprover-community/mathlib commit c89fe2d59ae06402c3f55f978016d1ada444f57e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,9 +49,13 @@ fields, they can also be C^k vector bundles, etc.
 * `bundle.total_space.smooth_manifold_with_corners`: A smooth vector bundle is naturally a smooth
   manifold.
 
-* `vector_bundle_core.smooth_vector_bundle`: If a (topological) `vector_bundle_core` is smooth, in
-  the sense of having smooth transition functions, then the vector bundle constructed from it is a
-  smooth vector bundle.
+* `vector_bundle_core.smooth_vector_bundle`: If a (topological) `vector_bundle_core` is smooth,
+  in the sense of having smooth transition functions (cf. `vector_bundle_core.is_smooth`),
+  then the vector bundle constructed from it is a smooth vector bundle.
+
+* `vector_prebundle.smooth_vector_bundle`: If a `vector_prebundle` is smooth,
+  in the sense of having smooth transition functions (cf. `vector_prebundle.is_smooth`),
+  then the vector bundle constructed from it is a smooth vector bundle.
 
 * `bundle.prod.smooth_vector_bundle`: The direct sum of two smooth vector bundles is a smooth vector
   bundle.
@@ -258,13 +262,16 @@ end
 /-! ### Smooth vector bundles -/
 
 
-variable [NontriviallyNormedField 𝕜] [∀ x, AddCommMonoid (E x)] [∀ x, Module 𝕜 (E x)]
-  [NormedAddCommGroup F] [NormedSpace 𝕜 F] [TopologicalSpace (TotalSpace E)]
-  [∀ x, TopologicalSpace (E x)] {EB : Type _} [NormedAddCommGroup EB] [NormedSpace 𝕜 EB]
+variable [NontriviallyNormedField 𝕜] {EB : Type _} [NormedAddCommGroup EB] [NormedSpace 𝕜 EB]
   {HB : Type _} [TopologicalSpace HB] (IB : ModelWithCorners 𝕜 EB HB) [TopologicalSpace B]
   [ChartedSpace HB B] [SmoothManifoldWithCorners IB B] {EM : Type _} [NormedAddCommGroup EM]
   [NormedSpace 𝕜 EM] {HM : Type _} [TopologicalSpace HM] {IM : ModelWithCorners 𝕜 EM HM}
   [TopologicalSpace M] [ChartedSpace HM M] [Is : SmoothManifoldWithCorners IM M] {n : ℕ∞}
+  [∀ x, AddCommMonoid (E x)] [∀ x, Module 𝕜 (E x)] [NormedAddCommGroup F] [NormedSpace 𝕜 F]
+
+section WithTopology
+
+variable [TopologicalSpace (TotalSpace E)] [∀ x, TopologicalSpace (E x)]
 
 variable (F E) [FiberBundle F E] [VectorBundle 𝕜 F E]
 
@@ -402,4 +409,80 @@ instance Bundle.Prod.smoothVectorBundle : SmoothVectorBundle (F₁ × F₂) (E�
 #align bundle.prod.smooth_vector_bundle Bundle.Prod.smoothVectorBundle
 
 end Prod
+
+end WithTopology
+
+/-! ### Prebundle construction for smooth vector bundles -/
+
+
+namespace VectorPrebundle
+
+variable {F E}
+
+/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (e e' «expr ∈ » a.pretrivialization_atlas) -/
+/-- Mixin for a `vector_prebundle` stating smoothness of coordinate changes. -/
+class IsSmooth (a : VectorPrebundle 𝕜 F E) : Prop where
+  exists_smooth_coord_change :
+    ∀ (e) (_ : e ∈ a.pretrivializationAtlas) (e') (_ : e' ∈ a.pretrivializationAtlas),
+      ∃ f : B → F →L[𝕜] F,
+        SmoothOn IB 𝓘(𝕜, F →L[𝕜] F) f (e.baseSet ∩ e'.baseSet) ∧
+          ∀ (b : B) (hb : b ∈ e.baseSet ∩ e'.baseSet) (v : F),
+            f b v = (e' (totalSpaceMk b (e.symm b v))).2
+#align vector_prebundle.is_smooth VectorPrebundle.IsSmooth
+
+variable (a : VectorPrebundle 𝕜 F E) [ha : a.IsSmooth IB] {e e' : Pretrivialization F (π E)}
+
+include ha
+
+/-- A randomly chosen coordinate change on a `smooth_vector_prebundle`, given by
+  the field `exists_coord_change`. Note that `a.smooth_coord_change` need not be the same as
+  `a.coord_change`. -/
+noncomputable def smoothCoordChange (he : e ∈ a.pretrivializationAtlas)
+    (he' : e' ∈ a.pretrivializationAtlas) (b : B) : F →L[𝕜] F :=
+  Classical.choose (ha.exists_smooth_coord_change e he e' he') b
+#align vector_prebundle.smooth_coord_change VectorPrebundle.smoothCoordChange
+
+variable {IB}
+
+theorem smoothOn_smoothCoordChange (he : e ∈ a.pretrivializationAtlas)
+    (he' : e' ∈ a.pretrivializationAtlas) :
+    SmoothOn IB 𝓘(𝕜, F →L[𝕜] F) (a.smoothCoordChange IB he he') (e.baseSet ∩ e'.baseSet) :=
+  (Classical.choose_spec (ha.exists_smooth_coord_change e he e' he')).1
+#align vector_prebundle.smooth_on_smooth_coord_change VectorPrebundle.smoothOn_smoothCoordChange
+
+theorem smoothCoordChange_apply (he : e ∈ a.pretrivializationAtlas)
+    (he' : e' ∈ a.pretrivializationAtlas) {b : B} (hb : b ∈ e.baseSet ∩ e'.baseSet) (v : F) :
+    a.smoothCoordChange IB he he' b v = (e' (totalSpaceMk b (e.symm b v))).2 :=
+  (Classical.choose_spec (ha.exists_smooth_coord_change e he e' he')).2 b hb v
+#align vector_prebundle.smooth_coord_change_apply VectorPrebundle.smoothCoordChange_apply
+
+theorem mk_smoothCoordChange (he : e ∈ a.pretrivializationAtlas)
+    (he' : e' ∈ a.pretrivializationAtlas) {b : B} (hb : b ∈ e.baseSet ∩ e'.baseSet) (v : F) :
+    (b, a.smoothCoordChange IB he he' b v) = e' (totalSpaceMk b (e.symm b v)) :=
+  by
+  ext
+  · rw [e.mk_symm hb.1 v, e'.coe_fst', e.proj_symm_apply' hb.1]
+    rw [e.proj_symm_apply' hb.1]
+    exact hb.2
+  · exact a.smooth_coord_change_apply he he' hb v
+#align vector_prebundle.mk_smooth_coord_change VectorPrebundle.mk_smoothCoordChange
+
+variable (IB)
+
+/-- Make a `smooth_vector_bundle` from a `smooth_vector_prebundle`.  -/
+theorem smoothVectorBundle :
+    @SmoothVectorBundle _ _ F E _ _ _ _ _ _ IB _ _ _ _ _ _ _ a.totalSpaceTopology a.fiberTopology
+      a.toFiberBundle a.to_vectorBundle :=
+  {
+    smoothOn_coord_change := by
+      rintro _ _ ⟨e, he, rfl⟩ ⟨e', he', rfl⟩
+      refine' (a.smooth_on_smooth_coord_change he he').congr _
+      intro b hb
+      ext v
+      rw [a.smooth_coord_change_apply he he' hb v, ContinuousLinearEquiv.coe_coe,
+        Trivialization.coordChangeL_apply]
+      exacts[rfl, hb] }
+#align vector_prebundle.smooth_vector_bundle VectorPrebundle.smoothVectorBundle
+
+end VectorPrebundle
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn
 
 ! This file was ported from Lean 3 source module geometry.manifold.cont_mdiff_mfderiv
-! leanprover-community/mathlib commit 0187644979f2d3e10a06e916a869c994facd9a87
+! leanprover-community/mathlib commit 17fe3632366bfefa54c240db521ce21beeb7a28a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -112,6 +112,161 @@ theorem Smooth.mdifferentiableAt (hf : Smooth I I' f) : MdifferentiableAt I I' f
 theorem Smooth.mdifferentiableWithinAt (hf : Smooth I I' f) : MdifferentiableWithinAt I I' f s x :=
   hf.MdifferentiableAt.MdifferentiableWithinAt
 #align smooth.mdifferentiable_within_at Smooth.mdifferentiableWithinAt
+
+/-! ### The derivative of a smooth function is smooth -/
+
+
+section mfderiv
+
+include Is I's Js
+
+/-- The function that sends `x` to the `y`-derivative of `f(x,y)` at `g(x)` is `C^m` at `x₀`,
+where the derivative is taken as a continuous linear map.
+We have to assume that `f` is `C^n` at `(x₀, g(x₀))` for `n ≥ m + 1` and `g` is `C^m` at `x₀`.
+We have to insert a coordinate change from `x₀` to `x` to make the derivative sensible.
+This result is used to show that maps into the 1-jet bundle and cotangent bundle are smooth.
+`cont_mdiff_at.mfderiv_id` and `cont_mdiff_at.mfderiv_const` are special cases of this.
+
+This result should be generalized to a `cont_mdiff_within_at` for `mfderiv_within`.
+If we do that, we can deduce `cont_mdiff_on.cont_mdiff_on_tangent_map_within` from this.
+-/
+theorem ContMdiffAt.mfderiv {x₀ : N} (f : N → M → M') (g : N → M)
+    (hf : ContMdiffAt (J.Prod I) I' n (Function.uncurry f) (x₀, g x₀)) (hg : ContMdiffAt J I m g x₀)
+    (hmn : m + 1 ≤ n) :
+    ContMdiffAt J 𝓘(𝕜, E →L[𝕜] E') m
+      (inTangentCoordinates I I' g (fun x => f x (g x)) (fun x => mfderiv I I' (f x) (g x)) x₀)
+      x₀ :=
+  by
+  have h4f : ContinuousAt (fun x => f x (g x)) x₀ := by
+    apply ContinuousAt.comp (by apply hf.continuous_at) (continuous_at_id.prod hg.continuous_at)
+  have h4f := h4f.preimage_mem_nhds (extChartAt_source_mem_nhds I' (f x₀ (g x₀)))
+  have h3f := cont_mdiff_at_iff_cont_mdiff_at_nhds.mp (hf.of_le <| (self_le_add_left 1 m).trans hmn)
+  have h2f : ∀ᶠ x₂ in 𝓝 x₀, ContMdiffAt I I' 1 (f x₂) (g x₂) :=
+    by
+    refine' ((continuous_at_id.prod hg.continuous_at).Tendsto.Eventually h3f).mono fun x hx => _
+    exact hx.comp (g x) (cont_mdiff_at_const.prod_mk contMdiffAt_id)
+  have h2g := hg.continuous_at.preimage_mem_nhds (extChartAt_source_mem_nhds I (g x₀))
+  have :
+    ContDiffWithinAt 𝕜 m
+      (fun x =>
+        fderivWithin 𝕜
+          (extChartAt I' (f x₀ (g x₀)) ∘ f ((extChartAt J x₀).symm x) ∘ (extChartAt I (g x₀)).symm)
+          (range I) (extChartAt I (g x₀) (g ((extChartAt J x₀).symm x))))
+      (range J) (extChartAt J x₀ x₀) :=
+    by
+    rw [contMdiffAt_iff] at hf hg
+    simp_rw [Function.comp, uncurry, extChartAt_prod, LocalEquiv.prod_coe_symm,
+      ModelWithCorners.range_prod] at hf⊢
+    refine' ContDiffWithinAt.fderivWithin _ hg.2 I.unique_diff hmn (mem_range_self _) _
+    · simp_rw [extChartAt_to_inv]
+      exact hf.2
+    · rw [← image_subset_iff]
+      rintro _ ⟨x, hx, rfl⟩
+      exact mem_range_self _
+  have :
+    ContMdiffAt J 𝓘(𝕜, E →L[𝕜] E') m
+      (fun x =>
+        fderivWithin 𝕜 (extChartAt I' (f x₀ (g x₀)) ∘ f x ∘ (extChartAt I (g x₀)).symm) (range I)
+          (extChartAt I (g x₀) (g x)))
+      x₀ :=
+    by
+    simp_rw [contMdiffAt_iff_source_of_mem_source (mem_chart_source G x₀),
+      contMdiffWithinAt_iff_contDiffWithinAt, Function.comp]
+    exact this
+  have :
+    ContMdiffAt J 𝓘(𝕜, E →L[𝕜] E') m
+      (fun x =>
+        fderivWithin 𝕜
+          (extChartAt I' (f x₀ (g x₀)) ∘
+            (extChartAt I' (f x (g x))).symm ∘
+              writtenInExtChartAt I I' (g x) (f x) ∘
+                extChartAt I (g x) ∘ (extChartAt I (g x₀)).symm)
+          (range I) (extChartAt I (g x₀) (g x)))
+      x₀ :=
+    by
+    refine' this.congr_of_eventually_eq _
+    filter_upwards [h2g, h2f]
+    intro x₂ hx₂ h2x₂
+    have :
+      ∀
+        x ∈
+          (extChartAt I (g x₀)).symm ⁻¹' (extChartAt I (g x₂)).source ∩
+            (extChartAt I (g x₀)).symm ⁻¹' (f x₂ ⁻¹' (extChartAt I' (f x₂ (g x₂))).source),
+        (extChartAt I' (f x₀ (g x₀)) ∘
+              (extChartAt I' (f x₂ (g x₂))).symm ∘
+                writtenInExtChartAt I I' (g x₂) (f x₂) ∘
+                  extChartAt I (g x₂) ∘ (extChartAt I (g x₀)).symm)
+            x =
+          extChartAt I' (f x₀ (g x₀)) (f x₂ ((extChartAt I (g x₀)).symm x)) :=
+      by
+      rintro x ⟨hx, h2x⟩
+      simp_rw [writtenInExtChartAt, Function.comp_apply]
+      rw [(extChartAt I (g x₂)).left_inv hx, (extChartAt I' (f x₂ (g x₂))).left_inv h2x]
+    refine' Filter.EventuallyEq.fderivWithin_eq_nhds (I.unique_diff _ <| mem_range_self _) _
+    refine' eventually_of_mem (inter_mem _ _) this
+    · exact extChartAt_preimage_mem_nhds' _ _ hx₂ (extChartAt_source_mem_nhds I (g x₂))
+    refine' extChartAt_preimage_mem_nhds' _ _ hx₂ _
+    exact h2x₂.continuous_at.preimage_mem_nhds (extChartAt_source_mem_nhds _ _)
+  /- The conclusion is equal to the following, when unfolding coord_change of
+      `tangent_bundle_core` -/
+  have :
+    ContMdiffAt J 𝓘(𝕜, E →L[𝕜] E') m
+      (fun x =>
+        (fderivWithin 𝕜 (extChartAt I' (f x₀ (g x₀)) ∘ (extChartAt I' (f x (g x))).symm) (range I')
+              (extChartAt I' (f x (g x)) (f x (g x)))).comp
+          ((mfderiv I I' (f x) (g x)).comp
+            (fderivWithin 𝕜 (extChartAt I (g x) ∘ (extChartAt I (g x₀)).symm) (range I)
+              (extChartAt I (g x₀) (g x)))))
+      x₀ :=
+    by
+    refine' this.congr_of_eventually_eq _
+    filter_upwards [h2g, h2f, h4f]
+    intro x₂ hx₂ h2x₂ h3x₂
+    symm
+    rw [(h2x₂.mdifferentiable_at le_rfl).mfderiv]
+    have hI :=
+      (contDiffWithinAt_ext_coord_change I (g x₂) (g x₀) <|
+            LocalEquiv.mem_symm_trans_source _ hx₂ <|
+              mem_ext_chart_source I (g x₂)).DifferentiableWithinAt
+        le_top
+    have hI' :=
+      (contDiffWithinAt_ext_coord_change I' (f x₀ (g x₀)) (f x₂ (g x₂)) <|
+            LocalEquiv.mem_symm_trans_source _ (mem_ext_chart_source I' (f x₂ (g x₂)))
+              h3x₂).DifferentiableWithinAt
+        le_top
+    have h3f := (h2x₂.mdifferentiable_at le_rfl).2
+    refine' fderivWithin.comp₃ _ hI' h3f hI _ _ _ _ (I.unique_diff _ <| mem_range_self _)
+    · exact fun x _ => mem_range_self _
+    · exact fun x _ => mem_range_self _
+    ·
+      simp_rw [writtenInExtChartAt, Function.comp_apply,
+        (extChartAt I (g x₂)).left_inv (mem_ext_chart_source I (g x₂))]
+    · simp_rw [Function.comp_apply, (extChartAt I (g x₀)).left_inv hx₂]
+  refine' this.congr_of_eventually_eq _
+  filter_upwards [h2g, h4f]with x hx h2x
+  rw [inTangentCoordinates_eq]
+  · rfl
+  · rwa [extChartAt_source] at hx
+  · rwa [extChartAt_source] at h2x
+#align cont_mdiff_at.mfderiv ContMdiffAt.mfderiv
+
+omit Js
+
+/-- The derivative `D_yf(y)` is `C^m` at `x₀`, where the derivative is taken as a continuous
+linear map. We have to assume that `f` is `C^n` at `x₀` for some `n ≥ m + 1`.
+We have to insert a coordinate change from `x₀` to `x` to make the derivative sensible.
+This is a special case of `cont_mdiff_at.mfderiv` where `f` does not contain any parameters and
+`g = id`.
+-/
+theorem ContMdiffAt.mfderiv_const {x₀ : M} {f : M → M'} (hf : ContMdiffAt I I' n f x₀)
+    (hmn : m + 1 ≤ n) :
+    ContMdiffAt I 𝓘(𝕜, E →L[𝕜] E') m (inTangentCoordinates I I' id f (mfderiv I I' f) x₀) x₀ :=
+  haveI : ContMdiffAt (I.prod I) I' n (fun x : M × M => f x.2) (x₀, x₀) :=
+    ContMdiffAt.comp (x₀, x₀) hf contMdiffAt_snd
+  this.mfderiv (fun x => f) id contMdiffAt_id hmn
+#align cont_mdiff_at.mfderiv_const ContMdiffAt.mfderiv_const
+
+end mfderiv
 
 /-! ### The tangent map of a smooth function is smooth -/
 

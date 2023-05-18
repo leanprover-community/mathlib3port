@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Heather Macbeth
 
 ! This file was ported from Lean 3 source module geometry.manifold.vector_bundle.tangent
-! leanprover-community/mathlib commit 7dfe85833014fb54258a228081ebb76b7e96ec98
+! leanprover-community/mathlib commit 17fe3632366bfefa54c240db521ce21beeb7a28a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,16 +34,18 @@ This defines a smooth vector bundle `tangent_bundle` with fibers `tangent_space`
 -/
 
 
-open Bundle Set SmoothManifoldWithCorners LocalHomeomorph
+open Bundle Set SmoothManifoldWithCorners LocalHomeomorph ContinuousLinearMap
 
 open Manifold Topology Bundle
 
 noncomputable section
 
 variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E]
-  [NormedSpace 𝕜 E] {H : Type _} [TopologicalSpace H] {I : ModelWithCorners 𝕜 E H} {M : Type _}
-  [TopologicalSpace M] [ChartedSpace H M] [SmoothManifoldWithCorners I M] {F : Type _}
-  [NormedAddCommGroup F] [NormedSpace 𝕜 F]
+  [NormedSpace 𝕜 E] {E' : Type _} [NormedAddCommGroup E'] [NormedSpace 𝕜 E'] {H : Type _}
+  [TopologicalSpace H] {I : ModelWithCorners 𝕜 E H} {H' : Type _} [TopologicalSpace H']
+  {I' : ModelWithCorners 𝕜 E' H'} {M : Type _} [TopologicalSpace M] [ChartedSpace H M]
+  [SmoothManifoldWithCorners I M] {M' : Type _} [TopologicalSpace M'] [ChartedSpace H' M']
+  [SmoothManifoldWithCorners I' M'] {F : Type _} [NormedAddCommGroup F] [NormedSpace 𝕜 F]
 
 variable (I)
 
@@ -413,4 +415,49 @@ theorem tangentBundleModelSpaceHomeomorph_coe_symm :
       (Equiv.sigmaEquivProd H E).symm :=
   rfl
 #align tangent_bundle_model_space_homeomorph_coe_symm tangentBundleModelSpaceHomeomorph_coe_symm
+
+section inTangentCoordinates
+
+variable (I I') {M M' H H'} {N : Type _}
+
+/-- The map `in_coordinates` for the tangent bundle is trivial on the model spaces -/
+theorem inCoordinates_tangent_bundle_core_model_space (x₀ x : H) (y₀ y : H') (ϕ : E →L[𝕜] E') :
+    inCoordinates E (TangentSpace I) E' (TangentSpace I') x₀ x y₀ y ϕ = ϕ :=
+  by
+  refine' (vector_bundle_core.in_coordinates_eq _ _ _ _ _).trans _
+  · exact mem_univ x
+  · exact mem_univ y
+  simp_rw [tangentBundleCore_indexAt, tangentBundleCore_coordChange_model_space,
+    ContinuousLinearMap.id_comp, ContinuousLinearMap.comp_id]
+#align in_coordinates_tangent_bundle_core_model_space inCoordinates_tangent_bundle_core_model_space
+
+/-- When `ϕ x` is a continuous linear map that changes vectors in charts around `f x` to vectors
+in charts around `g x`, `in_tangent_coordinates I I' f g ϕ x₀ x` is a coordinate change of
+this continuous linear map that makes sense from charts around `f x₀` to charts around `g x₀`
+by composing it with appropriate coordinate changes.
+Note that the type of `ϕ` is more accurately
+`Π x : N, tangent_space I (f x) →L[𝕜] tangent_space I' (g x)`.
+We are unfolding `tangent_space` in this type so that Lean recognizes that the type of `ϕ` doesn't
+actually depend on `f` or `g`.
+
+This is the underlying function of the trivializations of the hom of (pullbacks of) tangent spaces.
+-/
+def inTangentCoordinates (f : N → M) (g : N → M') (ϕ : N → E →L[𝕜] E') : N → N → E →L[𝕜] E' :=
+  fun x₀ x => inCoordinates E (TangentSpace I) E' (TangentSpace I') (f x₀) (f x) (g x₀) (g x) (ϕ x)
+#align in_tangent_coordinates inTangentCoordinates
+
+theorem inTangentCoordinates_model_space (f : N → H) (g : N → H') (ϕ : N → E →L[𝕜] E') (x₀ : N) :
+    inTangentCoordinates I I' f g ϕ x₀ = ϕ := by
+  simp_rw [inTangentCoordinates, inCoordinates_tangent_bundle_core_model_space]
+#align in_tangent_coordinates_model_space inTangentCoordinates_model_space
+
+theorem inTangentCoordinates_eq (f : N → M) (g : N → M') (ϕ : N → E →L[𝕜] E') {x₀ x : N}
+    (hx : f x ∈ (chartAt H (f x₀)).source) (hy : g x ∈ (chartAt H' (g x₀)).source) :
+    inTangentCoordinates I I' f g ϕ x₀ x =
+      (tangentBundleCore I' M').coordChange (achart H' (g x)) (achart H' (g x₀)) (g x) ∘L
+        ϕ x ∘L (tangentBundleCore I M).coordChange (achart H (f x₀)) (achart H (f x)) (f x) :=
+  (tangentBundleCore I M).inCoordinates_eq (tangentBundleCore I' M') (ϕ x) hx hy
+#align in_tangent_coordinates_eq inTangentCoordinates_eq
+
+end inTangentCoordinates
 

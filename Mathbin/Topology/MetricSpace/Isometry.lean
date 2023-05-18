@@ -5,7 +5,7 @@ Isometries of emetric and metric spaces
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.isometry
-! leanprover-community/mathlib commit 69c6a5a12d8a2b159f20933e60115a4f2de62b58
+! leanprover-community/mathlib commit b1859b6d4636fdbb78c5d5cefd24530653cfd3eb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,7 +30,7 @@ noncomputable section
 
 universe u v w
 
-variable {α : Type u} {β : Type v} {γ : Type w}
+variable {ι : Type _} {α : Type u} {β : Type v} {γ : Type w}
 
 open Function Set
 
@@ -949,6 +949,24 @@ theorem completeSpace_iff (e : α ≃ᵢ β) : CompleteSpace α ↔ CompleteSpac
   exacts[e.symm.complete_space, e.complete_space]
 #align isometry_equiv.complete_space_iff IsometryEquiv.completeSpace_iff
 -/
+
+variable (ι α)
+
+/-- `equiv.fun_unique` as an `isometry_equiv`. -/
+@[simps]
+def funUnique [Unique ι] [Fintype ι] : (ι → α) ≃ᵢ α
+    where
+  toEquiv := Equiv.funUnique ι α
+  isometry_toFun x hx := by simp [edist_pi_def, Finset.univ_unique, Finset.sup_singleton]
+#align isometry_equiv.fun_unique IsometryEquiv.funUnique
+
+/-- `pi_fin_two_equiv` as an `isometry_equiv`. -/
+@[simps]
+def piFinTwo (α : Fin 2 → Type _) [∀ i, PseudoEMetricSpace (α i)] : (∀ i, α i) ≃ᵢ α 0 × α 1
+    where
+  toEquiv := piFinTwoEquiv α
+  isometry_toFun x hx := by simp [edist_pi_def, Fin.univ_succ, Prod.edist_eq]
+#align isometry_equiv.pi_fin_two IsometryEquiv.piFinTwo
 
 end PseudoEMetricSpace
 

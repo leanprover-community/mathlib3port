@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.pi_Lp
-! leanprover-community/mathlib commit e9f2a838ee9090764d63f65168bb11d6ac732145
+! leanprover-community/mathlib commit 8ff51ea9f2f5875755582577883fc99db1cfab88
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -739,7 +739,8 @@ theorem LinearIsometryEquiv.piLpCongrLeft_symm (e : ι ≃ ι') :
 @[simp]
 theorem LinearIsometryEquiv.piLpCongrLeft_single [DecidableEq ι] [DecidableEq ι'] (e : ι ≃ ι')
     (i : ι) (v : E) :
-    LinearIsometryEquiv.piLpCongrLeft p 𝕜 E e (Pi.single i v) = Pi.single (e i) v :=
+    LinearIsometryEquiv.piLpCongrLeft p 𝕜 E e ((PiLp.equiv p fun _ => E).symm <| Pi.single i v) =
+      (PiLp.equiv p fun _ => E).symm (Pi.single (e i) v) :=
   by
   funext x
   simp [LinearIsometryEquiv.piLpCongrLeft, LinearEquiv.piCongrLeft', Equiv.piCongrLeft', Pi.single,
@@ -797,6 +798,64 @@ theorem equiv_smul : PiLp.equiv p β (c • x) = c • PiLp.equiv p β x :=
 theorem equiv_symm_smul : (PiLp.equiv p β).symm (c • x') = c • (PiLp.equiv p β).symm x' :=
   rfl
 #align pi_Lp.equiv_symm_smul PiLp.equiv_symm_smul
+
+section Single
+
+variable (p)
+
+variable [DecidableEq ι]
+
+@[simp]
+theorem nnnorm_equiv_symm_single (i : ι) (b : β i) :
+    ‖(PiLp.equiv p β).symm (Pi.single i b)‖₊ = ‖b‖₊ :=
+  by
+  haveI : Nonempty ι := ⟨i⟩
+  induction p using WithTop.recTopCoe
+  · simp_rw [nnnorm_eq_csupr, equiv_symm_apply]
+    refine' ciSup_eq_of_forall_le_of_forall_lt_exists_gt (fun j => _) fun n hn => ⟨i, hn.trans_eq _⟩
+    · obtain rfl | hij := Decidable.eq_or_ne i j
+      · rw [Pi.single_eq_same]
+      · rw [Pi.single_eq_of_ne' hij, nnnorm_zero]
+        exact zero_le _
+    · rw [Pi.single_eq_same]
+  · have hp0 : (p : ℝ) ≠ 0 := by
+      exact_mod_cast (zero_lt_one.trans_le <| Fact.out (1 ≤ (p : ℝ≥0∞))).ne'
+    rw [nnnorm_eq_sum ENNReal.coe_ne_top, ENNReal.coe_toReal, Fintype.sum_eq_single i,
+      equiv_symm_apply, Pi.single_eq_same, ← NNReal.rpow_mul, one_div, mul_inv_cancel hp0,
+      NNReal.rpow_one]
+    intro j hij
+    rw [equiv_symm_apply, Pi.single_eq_of_ne hij, nnnorm_zero, NNReal.zero_rpow hp0]
+#align pi_Lp.nnnorm_equiv_symm_single PiLp.nnnorm_equiv_symm_single
+
+@[simp]
+theorem norm_equiv_symm_single (i : ι) (b : β i) : ‖(PiLp.equiv p β).symm (Pi.single i b)‖ = ‖b‖ :=
+  congr_arg coe <| nnnorm_equiv_symm_single p β i b
+#align pi_Lp.norm_equiv_symm_single PiLp.norm_equiv_symm_single
+
+@[simp]
+theorem nndist_equiv_symm_single_same (i : ι) (b₁ b₂ : β i) :
+    nndist ((PiLp.equiv p β).symm (Pi.single i b₁)) ((PiLp.equiv p β).symm (Pi.single i b₂)) =
+      nndist b₁ b₂ :=
+  by
+  rw [nndist_eq_nnnorm, nndist_eq_nnnorm, ← equiv_symm_sub, ← Pi.single_sub,
+    nnnorm_equiv_symm_single]
+#align pi_Lp.nndist_equiv_symm_single_same PiLp.nndist_equiv_symm_single_same
+
+@[simp]
+theorem dist_equiv_symm_single_same (i : ι) (b₁ b₂ : β i) :
+    dist ((PiLp.equiv p β).symm (Pi.single i b₁)) ((PiLp.equiv p β).symm (Pi.single i b₂)) =
+      dist b₁ b₂ :=
+  congr_arg coe <| nndist_equiv_symm_single_same p β i b₁ b₂
+#align pi_Lp.dist_equiv_symm_single_same PiLp.dist_equiv_symm_single_same
+
+@[simp]
+theorem edist_equiv_symm_single_same (i : ι) (b₁ b₂ : β i) :
+    edist ((PiLp.equiv p β).symm (Pi.single i b₁)) ((PiLp.equiv p β).symm (Pi.single i b₂)) =
+      edist b₁ b₂ :=
+  by simpa only [edist_nndist] using congr_arg coe (nndist_equiv_symm_single_same p β i b₁ b₂)
+#align pi_Lp.edist_equiv_symm_single_same PiLp.edist_equiv_symm_single_same
+
+end Single
 
 /-- When `p = ∞`, this lemma does not hold without the additional assumption `nonempty ι` because
 the left-hand side simplifies to `0`, while the right-hand side simplifies to `‖b‖₊`. See

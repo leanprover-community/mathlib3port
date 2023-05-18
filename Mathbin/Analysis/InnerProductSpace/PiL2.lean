@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Sébastien Gouëzel, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.pi_L2
-! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
+! leanprover-community/mathlib commit 8ff51ea9f2f5875755582577883fc99db1cfab88
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -268,13 +268,51 @@ theorem EuclideanSpace.inner_single_right [DecidableEq ι] (i : ι) (a : 𝕜) (
     ⟪v, EuclideanSpace.single i (a : 𝕜)⟫ = a * conj (v i) := by simp [apply_ite conj, mul_comm]
 #align euclidean_space.inner_single_right EuclideanSpace.inner_single_right
 
-theorem EuclideanSpace.piLpCongrLeft_single [DecidableEq ι] {ι' : Type _} [Fintype ι']
-    [DecidableEq ι'] (e : ι' ≃ ι) (i' : ι') :
-    LinearIsometryEquiv.piLpCongrLeft 2 𝕜 𝕜 e (EuclideanSpace.single i' (1 : 𝕜)) =
-      EuclideanSpace.single (e i') (1 : 𝕜) :=
+@[simp]
+theorem EuclideanSpace.norm_single [DecidableEq ι] (i : ι) (a : 𝕜) :
+    ‖EuclideanSpace.single i (a : 𝕜)‖ = ‖a‖ :=
+  (PiLp.norm_equiv_symm_single 2 (fun i => 𝕜) i a : _)
+#align euclidean_space.norm_single EuclideanSpace.norm_single
+
+@[simp]
+theorem EuclideanSpace.nnnorm_single [DecidableEq ι] (i : ι) (a : 𝕜) :
+    ‖EuclideanSpace.single i (a : 𝕜)‖₊ = ‖a‖₊ :=
+  (PiLp.nnnorm_equiv_symm_single 2 (fun i => 𝕜) i a : _)
+#align euclidean_space.nnnorm_single EuclideanSpace.nnnorm_single
+
+@[simp]
+theorem EuclideanSpace.dist_single_same [DecidableEq ι] (i : ι) (a b : 𝕜) :
+    dist (EuclideanSpace.single i (a : 𝕜)) (EuclideanSpace.single i (b : 𝕜)) = dist a b :=
+  (PiLp.dist_equiv_symm_single_same 2 (fun i => 𝕜) i a b : _)
+#align euclidean_space.dist_single_same EuclideanSpace.dist_single_same
+
+@[simp]
+theorem EuclideanSpace.nndist_single_same [DecidableEq ι] (i : ι) (a b : 𝕜) :
+    nndist (EuclideanSpace.single i (a : 𝕜)) (EuclideanSpace.single i (b : 𝕜)) = nndist a b :=
+  (PiLp.nndist_equiv_symm_single_same 2 (fun i => 𝕜) i a b : _)
+#align euclidean_space.nndist_single_same EuclideanSpace.nndist_single_same
+
+@[simp]
+theorem EuclideanSpace.edist_single_same [DecidableEq ι] (i : ι) (a b : 𝕜) :
+    edist (EuclideanSpace.single i (a : 𝕜)) (EuclideanSpace.single i (b : 𝕜)) = edist a b :=
+  (PiLp.edist_equiv_symm_single_same 2 (fun i => 𝕜) i a b : _)
+#align euclidean_space.edist_single_same EuclideanSpace.edist_single_same
+
+/-- `euclidean_space.single` forms an orthonormal family. -/
+theorem EuclideanSpace.orthonormalSingle [DecidableEq ι] :
+    Orthonormal 𝕜 fun i : ι => EuclideanSpace.single i (1 : 𝕜) :=
   by
-  ext i
-  simpa using if_congr e.symm_apply_eq rfl rfl
+  simp_rw [orthonormal_iff_ite, EuclideanSpace.inner_single_left, map_one, one_mul,
+    EuclideanSpace.single_apply]
+  intro i j
+  rfl
+#align euclidean_space.orthonormal_single EuclideanSpace.orthonormalSingle
+
+theorem EuclideanSpace.piLpCongrLeft_single [DecidableEq ι] {ι' : Type _} [Fintype ι']
+    [DecidableEq ι'] (e : ι' ≃ ι) (i' : ι') (v : 𝕜) :
+    LinearIsometryEquiv.piLpCongrLeft 2 𝕜 𝕜 e (EuclideanSpace.single i' v) =
+      EuclideanSpace.single (e i') v :=
+  LinearIsometryEquiv.piLpCongrLeft_single e i' _
 #align euclidean_space.pi_Lp_congr_left_single EuclideanSpace.piLpCongrLeft_single
 
 variable (ι 𝕜 E)

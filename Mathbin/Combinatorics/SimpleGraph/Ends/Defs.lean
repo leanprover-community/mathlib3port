@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anand Rao, Rémi Bottinelli
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.ends.defs
-! leanprover-community/mathlib commit b99e2d58a5e6861833fa8de11e51a81144258db4
+! leanprover-community/mathlib commit 2ed2c6310e6f1c5562bdf6bfbda55ebbf6891abe
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Data.SetLike.Basic
 
 /-!
 # Ends
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file contains a definition of the ends of a simple graph, as sections of the inverse system
 assigning, to each finite set of vertices, the connected components of its complement.

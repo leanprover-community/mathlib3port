@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 
 ! This file was ported from Lean 3 source module group_theory.nielsen_schreier
-! leanprover-community/mathlib commit 1bda4fc53de6ade5ab9da36f2192e24e2084a2ce
+! leanprover-community/mathlib commit 2ed2c6310e6f1c5562bdf6bfbda55ebbf6891abe
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.GroupTheory.IsFreeGroup
 
 /-!
 # The Nielsen-Schreier theorem
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file proves that a subgroup of a free group is itself free.
 

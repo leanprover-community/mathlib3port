@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alena Gusakov, Bhavik Mehta, Kyle Miller
 
 ! This file was ported from Lean 3 source module combinatorics.hall.basic
-! leanprover-community/mathlib commit 8195826f5c428fc283510bc67303dd4472d78498
+! leanprover-community/mathlib commit 2ed2c6310e6f1c5562bdf6bfbda55ebbf6891abe
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Data.Rel
 
 /-!
 # Hall's Marriage Theorem
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Given a list of finite subsets $X_1, X_2, \dots, X_n$ of some given set
 $S$, P. Hall in [Hall1935] gave a necessary and sufficient condition for

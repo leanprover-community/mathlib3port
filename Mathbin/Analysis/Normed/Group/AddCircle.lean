@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module analysis.normed.group.add_circle
-! leanprover-community/mathlib commit 084f76e20c88eae536222583331abd9468b08e1c
+! leanprover-community/mathlib commit 2ed2c6310e6f1c5562bdf6bfbda55ebbf6891abe
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Topology.Instances.AddCircle
 
 /-!
 # The additive circle as a normed group
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We define the normed group structure on `add_circle p`, for `p : ℝ`. For example if `p = 1` then:
 `‖(x : add_circle 1)‖ = |x - round x|` for any `x : ℝ` (see `unit_add_circle.norm_eq`).
