@@ -24,6 +24,12 @@ import Mathbin.Data.Nat.Factorization.Basic
 -/
 
 
+/- warning: char_p_zero_or_prime_power -> charP_zero_or_prime_power is a dubious translation:
+lean 3 declaration is
+  forall (R : Type.{u1}) [_inst_1 : CommRing.{u1} R] [_inst_2 : LocalRing.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))] (q : Nat) [char_R_q : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1)))) q], Or (Eq.{1} Nat q (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (IsPrimePow.{0} Nat (LinearOrderedCommMonoidWithZero.toCommMonoidWithZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) q)
+but is expected to have type
+  forall (R : Type.{u1}) [_inst_1 : CommRing.{u1} R] [_inst_2 : LocalRing.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))] (q : Nat) [char_R_q : CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1))) q], Or (Eq.{1} Nat q (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (IsPrimePow.{0} Nat (LinearOrderedCommMonoidWithZero.toCommMonoidWithZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) q)
+Case conversion may be inaccurate. Consider using '#align char_p_zero_or_prime_power charP_zero_or_prime_powerₓ'. -/
 /-- In a local ring the characteristics is either zero or a prime power. -/
 theorem charP_zero_or_prime_power (R : Type _) [CommRing R] [LocalRing R] (q : ℕ)
     [char_R_q : CharP R q] : q = 0 ∨ IsPrimePow q :=
