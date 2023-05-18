@@ -191,7 +191,7 @@ theorem Ideal.IsHomogeneous.radical_eq {I : Ideal A} (hI : I.Homogeneous 𝒜) :
 theorem Ideal.IsHomogeneous.radical {I : Ideal A} (h : I.Homogeneous 𝒜) : I.radical.Homogeneous 𝒜 :=
   by
   rw [h.radical_eq]
-  exact Ideal.IsHomogeneous.inf fun _ => And.left
+  exact Ideal.IsHomogeneous.sInf fun _ => And.left
 #align ideal.is_homogeneous.radical Ideal.IsHomogeneous.radical
 
 /-- The radical of a homogenous ideal, as another homogenous ideal. -/
