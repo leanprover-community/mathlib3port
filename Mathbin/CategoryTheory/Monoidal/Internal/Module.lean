@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.internal.Module
-! leanprover-community/mathlib commit 657df4339ae6ceada048c8a2980fb10e393143ec
+! leanprover-community/mathlib commit 74403a3b2551b0970855e14ef5e8fd0d6af1bfc2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Algebra.Category.Module.Monoidal
+import Mathbin.Algebra.Category.Module.Monoidal.Basic
 import Mathbin.Algebra.Category.Algebra.Basic
 import Mathbin.CategoryTheory.Monoidal.Mon_
 

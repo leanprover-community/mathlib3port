@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Reid Barton, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.constructions.over.products
-! leanprover-community/mathlib commit ac3ae212f394f508df43e37aa093722fa9b65d31
+! leanprover-community/mathlib commit 50251fd6309cca5ca2e747882ffecd2729f38c5d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.CategoryTheory.Limits.Shapes.FiniteProducts
 
 /-!
 # Products in the over category
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Shows that products in the over category can be derived from wide pullbacks in the base category.
 The main result is `over_product_of_wide_pullback`, which says that if `C` has `J`-indexed wide

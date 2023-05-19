@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joanna Choules
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.finsubgraph
-! leanprover-community/mathlib commit c6ef6387ede9983aee397d442974e61f89dfd87b
+! leanprover-community/mathlib commit 50251fd6309cca5ca2e747882ffecd2729f38c5d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Combinatorics.SimpleGraph.Subgraph
 
 /-!
 # Homomorphisms from finite subgraphs
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines the type of finite subgraphs of a `simple_graph` and proves a compactness result
 for homomorphisms to a finite codomain.

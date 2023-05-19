@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 
 ! This file was ported from Lean 3 source module analysis.normed_space.is_R_or_C
-! leanprover-community/mathlib commit 3f655f5297b030a87d641ad4e825af8d9679eb0b
+! leanprover-community/mathlib commit 50251fd6309cca5ca2e747882ffecd2729f38c5d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Analysis.NormedSpace.Pointwise
 
 /-!
 # Normed spaces over R or C
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file is about results on normed spaces over the fields `ℝ` and `ℂ`.
 

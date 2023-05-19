@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.special_functions.polar_coord
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 8f9fea08977f7e450770933ee6abb20733b47c92
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.Analysis.SpecialFunctions.Trigonometric.Deriv
 import Mathbin.MeasureTheory.Function.Jacobian
 
 /-!

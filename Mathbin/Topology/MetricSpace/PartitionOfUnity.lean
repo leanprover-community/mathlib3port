@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.partition_of_unity
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 50251fd6309cca5ca2e747882ffecd2729f38c5d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Analysis.Convex.PartitionOfUnity
 
 /-!
 # Lemmas about (e)metric spaces that need partition of unity
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The main lemma in this file (see `metric.exists_continuous_real_forall_closed_ball_subset`) says the
 following. Let `X` be a metric space. Let `K : ι → set X` be a locally finite family of closed sets,

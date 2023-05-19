@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam
 
 ! This file was ported from Lean 3 source module algebraic_topology.fundamental_groupoid.basic
-! leanprover-community/mathlib commit 3d7987cda72abc473c7cdbbb075170e9ac620042
+! leanprover-community/mathlib commit 50251fd6309cca5ca2e747882ffecd2729f38c5d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Topology.Homotopy.Path
 
 /-!
 # Fundamental groupoid of a space
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Given a topological space `X`, we can define the fundamental groupoid of `X` to be the category with
 objects being points of `X`, and morphisms `x ⟶ y` being paths from `x` to `y`, quotiented by

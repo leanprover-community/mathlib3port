@@ -4,12 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.normed_space.lp_space
-! leanprover-community/mathlib commit f9dd3204df14a0749cd456fac1e6849dfe7d2b88
+! leanprover-community/mathlib commit 8f9fea08977f7e450770933ee6abb20733b47c92
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.MeanInequalities
 import Mathbin.Analysis.MeanInequalitiesPow
+import Mathbin.Analysis.SpecialFunctions.Pow.Continuity
 import Mathbin.Topology.Algebra.Order.LiminfLimsup
 
 /-!

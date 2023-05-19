@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Kuelshammer
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.endo_functor
-! leanprover-community/mathlib commit 829895f162a1f29d0133f4b3538f4cd1fb5bffd3
+! leanprover-community/mathlib commit 50251fd6309cca5ca2e747882ffecd2729f38c5d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.CategoryTheory.Preadditive.AdditiveFunctor
 
 /-!
 # Preadditive structure on algebras over a monad
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 If `C` is a preadditive categories and `F` is an additive endofunctor on `C` then `algebra F` is
 also preadditive. Dually, the category `coalgebra F` is also preadditive.

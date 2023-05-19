@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anand Rao, Rémi Bottinelli
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.ends.properties
-! leanprover-community/mathlib commit db53863fb135228820ee0b08e8dce9349a3d911b
+! leanprover-community/mathlib commit 50251fd6309cca5ca2e747882ffecd2729f38c5d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Combinatorics.SimpleGraph.Ends.Defs
 
 /-!
 # Properties of the ends of graphs
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file is meant to contain results about the ends of (locally finite connected) graphs.
 

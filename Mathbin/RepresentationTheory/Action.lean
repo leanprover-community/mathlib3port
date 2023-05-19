@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module representation_theory.Action
-! leanprover-community/mathlib commit c04bc6e93e23aa0182aba53661a2211e80b6feac
+! leanprover-community/mathlib commit 95a87616d63b3cb49d3fe678d416fbe9c4217bf4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -19,7 +19,7 @@ import Mathbin.CategoryTheory.Monoidal.Rigid.OfEquivalence
 import Mathbin.CategoryTheory.Monoidal.Rigid.FunctorCategory
 import Mathbin.CategoryTheory.Monoidal.Linear
 import Mathbin.CategoryTheory.Monoidal.Braided
-import Mathbin.CategoryTheory.Monoidal.Types
+import Mathbin.CategoryTheory.Monoidal.Types.Symmetric
 import Mathbin.CategoryTheory.Abelian.FunctorCategory
 import Mathbin.CategoryTheory.Abelian.Transfer
 import Mathbin.CategoryTheory.Conj

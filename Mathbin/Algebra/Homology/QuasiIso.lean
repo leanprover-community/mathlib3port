@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Joël Riou
 
 ! This file was ported from Lean 3 source module algebra.homology.quasi_iso
-! leanprover-community/mathlib commit 956af7c76589f444f2e1313911bad16366ea476d
+! leanprover-community/mathlib commit 50251fd6309cca5ca2e747882ffecd2729f38c5d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.CategoryTheory.Abelian.Homology
 
 /-!
 # Quasi-isomorphisms
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A chain map is a quasi-isomorphism if it induces isomorphisms on homology.
 

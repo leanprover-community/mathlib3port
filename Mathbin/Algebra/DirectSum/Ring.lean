@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.direct_sum.ring
-! leanprover-community/mathlib commit 70fd9563a21e7b963887c9360bd29b2393e6225a
+! leanprover-community/mathlib commit 50251fd6309cca5ca2e747882ffecd2729f38c5d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Algebra.DirectSum.Basic
 
 /-!
 # Additively-graded multiplicative structures on `⨁ i, A i`
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This module provides a set of heterogeneous typeclasses for defining a multiplicative structure
 over `⨁ i, A i` such that `(*) : A i → A j → A (i + j)`; that is to say, `A` forms an

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudriashov, Malo Jaffré
 
 ! This file was ported from Lean 3 source module analysis.convex.slope
-! leanprover-community/mathlib commit 814d76e2247d5ba8bc024843552da1278bfe9e5c
+! leanprover-community/mathlib commit a8b2226cfb0a79f5986492053fc49b1a0c6aeffb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -324,6 +324,122 @@ theorem strictConcaveOn_iff_slope_strict_anti_adjacent :
   ⟨fun h => ⟨h.1, fun x y z => h.slope_anti_adjacent⟩, fun h =>
     strictConcaveOn_of_slope_strict_anti_adjacent h.1 h.2⟩
 #align strict_concave_on_iff_slope_strict_anti_adjacent strictConcaveOn_iff_slope_strict_anti_adjacent
+
+theorem ConvexOn.secant_mono_aux1 (hf : ConvexOn 𝕜 s f) {x y z : 𝕜} (hx : x ∈ s) (hz : z ∈ s)
+    (hxy : x < y) (hyz : y < z) : (z - x) * f y ≤ (z - y) * f x + (y - x) * f z :=
+  by
+  have hxy' : 0 < y - x := by linarith
+  have hyz' : 0 < z - y := by linarith
+  have hxz' : 0 < z - x := by linarith
+  rw [← le_div_iff' hxz']
+  have ha : 0 ≤ (z - y) / (z - x) := by positivity
+  have hb : 0 ≤ (y - x) / (z - x) := by positivity
+  calc
+    f y = f ((z - y) / (z - x) * x + (y - x) / (z - x) * z) := _
+    _ ≤ (z - y) / (z - x) * f x + (y - x) / (z - x) * f z := (hf.2 hx hz ha hb _)
+    _ = ((z - y) * f x + (y - x) * f z) / (z - x) := _
+    
+  · congr 1
+    field_simp [hxy'.ne', hyz'.ne', hxz'.ne']
+    ring
+  · field_simp [hxy'.ne', hyz'.ne', hxz'.ne']
+  · field_simp [hxy'.ne', hyz'.ne', hxz'.ne']
+#align convex_on.secant_mono_aux1 ConvexOn.secant_mono_aux1
+
+theorem ConvexOn.secant_mono_aux2 (hf : ConvexOn 𝕜 s f) {x y z : 𝕜} (hx : x ∈ s) (hz : z ∈ s)
+    (hxy : x < y) (hyz : y < z) : (f y - f x) / (y - x) ≤ (f z - f x) / (z - x) :=
+  by
+  have hxy' : 0 < y - x := by linarith
+  have hxz' : 0 < z - x := by linarith
+  rw [div_le_div_iff hxy' hxz']
+  linarith only [hf.secant_mono_aux1 hx hz hxy hyz]
+#align convex_on.secant_mono_aux2 ConvexOn.secant_mono_aux2
+
+theorem ConvexOn.secant_mono_aux3 (hf : ConvexOn 𝕜 s f) {x y z : 𝕜} (hx : x ∈ s) (hz : z ∈ s)
+    (hxy : x < y) (hyz : y < z) : (f z - f x) / (z - x) ≤ (f z - f y) / (z - y) :=
+  by
+  have hyz' : 0 < z - y := by linarith
+  have hxz' : 0 < z - x := by linarith
+  rw [div_le_div_iff hxz' hyz']
+  linarith only [hf.secant_mono_aux1 hx hz hxy hyz]
+#align convex_on.secant_mono_aux3 ConvexOn.secant_mono_aux3
+
+theorem ConvexOn.secant_mono (hf : ConvexOn 𝕜 s f) {a x y : 𝕜} (ha : a ∈ s) (hx : x ∈ s)
+    (hy : y ∈ s) (hxa : x ≠ a) (hya : y ≠ a) (hxy : x ≤ y) :
+    (f x - f a) / (x - a) ≤ (f y - f a) / (y - a) :=
+  by
+  rcases eq_or_lt_of_le hxy with (rfl | hxy)
+  · simp
+  cases' lt_or_gt_of_ne hxa with hxa hxa
+  · cases' lt_or_gt_of_ne hya with hya hya
+    · convert hf.secant_mono_aux3 hx ha hxy hya using 1 <;> rw [← neg_div_neg_eq] <;> field_simp
+    · convert hf.slope_mono_adjacent hx hy hxa hya using 1
+      rw [← neg_div_neg_eq] <;> field_simp
+  · exact hf.secant_mono_aux2 ha hy hxa hxy
+#align convex_on.secant_mono ConvexOn.secant_mono
+
+theorem StrictConvexOn.secant_strict_mono_aux1 (hf : StrictConvexOn 𝕜 s f) {x y z : 𝕜} (hx : x ∈ s)
+    (hz : z ∈ s) (hxy : x < y) (hyz : y < z) : (z - x) * f y < (z - y) * f x + (y - x) * f z :=
+  by
+  have hxy' : 0 < y - x := by linarith
+  have hyz' : 0 < z - y := by linarith
+  have hxz' : 0 < z - x := by linarith
+  rw [← lt_div_iff' hxz']
+  have ha : 0 < (z - y) / (z - x) := by positivity
+  have hb : 0 < (y - x) / (z - x) := by positivity
+  calc
+    f y = f ((z - y) / (z - x) * x + (y - x) / (z - x) * z) := _
+    _ < (z - y) / (z - x) * f x + (y - x) / (z - x) * f z := (hf.2 hx hz (by linarith) ha hb _)
+    _ = ((z - y) * f x + (y - x) * f z) / (z - x) := _
+    
+  · congr 1
+    field_simp [hxy'.ne', hyz'.ne', hxz'.ne']
+    ring
+  · field_simp [hxy'.ne', hyz'.ne', hxz'.ne']
+  · field_simp [hxy'.ne', hyz'.ne', hxz'.ne']
+#align strict_convex_on.secant_strict_mono_aux1 StrictConvexOn.secant_strict_mono_aux1
+
+theorem StrictConvexOn.secant_strict_mono_aux2 (hf : StrictConvexOn 𝕜 s f) {x y z : 𝕜} (hx : x ∈ s)
+    (hz : z ∈ s) (hxy : x < y) (hyz : y < z) : (f y - f x) / (y - x) < (f z - f x) / (z - x) :=
+  by
+  have hxy' : 0 < y - x := by linarith
+  have hxz' : 0 < z - x := by linarith
+  rw [div_lt_div_iff hxy' hxz']
+  linarith only [hf.secant_strict_mono_aux1 hx hz hxy hyz]
+#align strict_convex_on.secant_strict_mono_aux2 StrictConvexOn.secant_strict_mono_aux2
+
+theorem StrictConvexOn.secant_strict_mono_aux3 (hf : StrictConvexOn 𝕜 s f) {x y z : 𝕜} (hx : x ∈ s)
+    (hz : z ∈ s) (hxy : x < y) (hyz : y < z) : (f z - f x) / (z - x) < (f z - f y) / (z - y) :=
+  by
+  have hyz' : 0 < z - y := by linarith
+  have hxz' : 0 < z - x := by linarith
+  rw [div_lt_div_iff hxz' hyz']
+  linarith only [hf.secant_strict_mono_aux1 hx hz hxy hyz]
+#align strict_convex_on.secant_strict_mono_aux3 StrictConvexOn.secant_strict_mono_aux3
+
+theorem StrictConvexOn.secant_strict_mono (hf : StrictConvexOn 𝕜 s f) {a x y : 𝕜} (ha : a ∈ s)
+    (hx : x ∈ s) (hy : y ∈ s) (hxa : x ≠ a) (hya : y ≠ a) (hxy : x < y) :
+    (f x - f a) / (x - a) < (f y - f a) / (y - a) :=
+  by
+  cases' lt_or_gt_of_ne hxa with hxa hxa
+  · cases' lt_or_gt_of_ne hya with hya hya
+    ·
+      convert hf.secant_strict_mono_aux3 hx ha hxy hya using 1 <;> rw [← neg_div_neg_eq] <;>
+        field_simp
+    · convert hf.slope_strict_mono_adjacent hx hy hxa hya using 1
+      rw [← neg_div_neg_eq] <;> field_simp
+  · exact hf.secant_strict_mono_aux2 ha hy hxa hxy
+#align strict_convex_on.secant_strict_mono StrictConvexOn.secant_strict_mono
+
+theorem StrictConcaveOn.secant_strict_mono (hf : StrictConcaveOn 𝕜 s f) {a x y : 𝕜} (ha : a ∈ s)
+    (hx : x ∈ s) (hy : y ∈ s) (hxa : x ≠ a) (hya : y ≠ a) (hxy : x < y) :
+    (f y - f a) / (y - a) < (f x - f a) / (x - a) :=
+  by
+  have key := hf.neg.secant_strict_mono ha hx hy hxa hya hxy
+  simp only [Pi.neg_apply] at key
+  rw [← neg_lt_neg_iff]
+  convert key using 1 <;> field_simp
+#align strict_concave_on.secant_strict_mono StrictConcaveOn.secant_strict_mono
 
 /- warning: convex_on.strict_mono_of_lt -> ConvexOn.strict_mono_of_lt is a dubious translation:
 lean 3 declaration is

@@ -4,12 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module geometry.manifold.instances.sphere
-! leanprover-community/mathlib commit 07992a1d1f7a4176c6d3f160209608be4e198566
+! leanprover-community/mathlib commit 8f9fea08977f7e450770933ee6abb20733b47c92
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Analysis.Complex.Circle
 import Mathbin.Analysis.NormedSpace.BallAction
+import Mathbin.Analysis.SpecialFunctions.ExpDeriv
 import Mathbin.Analysis.InnerProductSpace.Calculus
 import Mathbin.Analysis.InnerProductSpace.PiL2
 import Mathbin.Geometry.Manifold.Algebra.LieGroup

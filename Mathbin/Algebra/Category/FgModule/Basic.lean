@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob von Raumer
 
 ! This file was ported from Lean 3 source module algebra.category.fgModule.basic
-! leanprover-community/mathlib commit b1c23399f01266afe392a0d8f71f599a0dad4f7b
+! leanprover-community/mathlib commit 74403a3b2551b0970855e14ef5e8fd0d6af1bfc2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,7 +12,7 @@ import Mathbin.CategoryTheory.Monoidal.Rigid.Basic
 import Mathbin.CategoryTheory.Monoidal.Subcategory
 import Mathbin.LinearAlgebra.Coevaluation
 import Mathbin.LinearAlgebra.FreeModule.Finite.Matrix
-import Mathbin.Algebra.Category.Module.Monoidal
+import Mathbin.Algebra.Category.Module.Monoidal.Closed
 
 /-!
 # The category of finitely generated modules over a ring

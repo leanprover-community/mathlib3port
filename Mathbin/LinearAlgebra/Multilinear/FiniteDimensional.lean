@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module linear_algebra.multilinear.finite_dimensional
-! leanprover-community/mathlib commit ce11c3c2a285bbe6937e26d9792fda4e51f3fe1a
+! leanprover-community/mathlib commit 50251fd6309cca5ca2e747882ffecd2729f38c5d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.LinearAlgebra.Multilinear.Basic
 import Mathbin.LinearAlgebra.FreeModule.Finite.Matrix
 
 /-! # Multilinear maps over finite dimensional spaces
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The main results are that multilinear maps over finitely-generated, free modules are
 finitely-generated and free.

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.direct_sum.algebra
-! leanprover-community/mathlib commit e5ba338e9ae4e7feae5027fd5198850971f0fa6a
+! leanprover-community/mathlib commit 50251fd6309cca5ca2e747882ffecd2729f38c5d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Algebra.DirectSum.Module
 import Mathbin.Algebra.DirectSum.Ring
 
 /-! # Additively-graded algebra structures on `⨁ i, A i`
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file provides `R`-algebra structures on external direct sums of `R`-modules.
 

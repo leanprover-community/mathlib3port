@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johan Commelin
 
 ! This file was ported from Lean 3 source module field_theory.minpoly.basic
-! leanprover-community/mathlib commit f0c8bf9245297a541f468be517f1bde6195105e9
+! leanprover-community/mathlib commit df0098f0db291900600f32070f6abb3e178be2ba
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -24,7 +24,7 @@ open Classical Polynomial
 
 open Polynomial Set Function
 
-variable {A B : Type _}
+variable {A B B' : Type _}
 
 section MinPolyDef
 
@@ -49,7 +49,7 @@ namespace minpoly
 
 section Ring
 
-variable [CommRing A] [Ring B] [Algebra A B]
+variable [CommRing A] [Ring B] [Ring B'] [Algebra A B] [Algebra A B']
 
 variable {x : B}
 
@@ -69,6 +69,18 @@ theorem ne_zero [Nontrivial A] (hx : IsIntegral A x) : minpoly A x ≠ 0 :=
 theorem eq_zero (hx : ¬IsIntegral A x) : minpoly A x = 0 :=
   dif_neg hx
 #align minpoly.eq_zero minpoly.eq_zero
+
+theorem minpoly_algHom (f : B →ₐ[A] B') (hf : Function.Injective f) (x : B) :
+    minpoly A (f x) = minpoly A x :=
+  by
+  refine' dif_ctx_congr (isIntegral_algHom_iff _ hf) (fun _ => _) fun _ => rfl
+  simp_rw [← Polynomial.aeval_def, aeval_alg_hom, AlgHom.comp_apply, _root_.map_eq_zero_iff f hf]
+#align minpoly.minpoly_alg_hom minpoly.minpoly_algHom
+
+@[simp]
+theorem minpoly_algEquiv (f : B ≃ₐ[A] B') (x : B) : minpoly A (f x) = minpoly A x :=
+  minpoly_algHom (f : B →ₐ[A] B') f.Injective x
+#align minpoly.minpoly_alg_equiv minpoly.minpoly_algEquiv
 
 variable (A x)
 

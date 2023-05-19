@@ -4,12 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.function.lp_space
-! leanprover-community/mathlib commit 24e0c85412ff6adbeca08022c25ba4876eedf37a
+! leanprover-community/mathlib commit 8f9fea08977f7e450770933ee6abb20733b47c92
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.NormedSpace.IndicatorFunction
 import Mathbin.Analysis.Normed.Group.Hom
+import Mathbin.Analysis.SpecialFunctions.Pow.Continuity
 import Mathbin.MeasureTheory.Function.EssSup
 import Mathbin.MeasureTheory.Function.AeEqFun
 import Mathbin.MeasureTheory.Integral.MeanInequalities

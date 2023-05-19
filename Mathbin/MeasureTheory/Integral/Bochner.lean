@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov, Sébastien Gouëzel, Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.integral.bochner
-! leanprover-community/mathlib commit a9545e8a564bac7f24637443f52ae955474e4991
+! leanprover-community/mathlib commit 8f9fea08977f7e450770933ee6abb20733b47c92
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -144,6 +144,8 @@ Bochner integral, simple function, function space, Lebesgue dominated convergenc
 
 -/
 
+
+assert_not_exists differentiable
 
 noncomputable section
 

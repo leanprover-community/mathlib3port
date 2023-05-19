@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir
 
 ! This file was ported from Lean 3 source module data.complex.exponential
-! leanprover-community/mathlib commit caa58cbf5bfb7f81ccbaca4e8b8ac4bc2b39cc1c
+! leanprover-community/mathlib commit a8b2226cfb0a79f5986492053fc49b1a0c6aeffb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2377,6 +2377,31 @@ theorem sinh_three_mul : sinh (3 * x) = 4 * sinh x ^ 3 + 3 * sinh x := by
 
 open IsAbsoluteValue
 
+theorem sum_le_exp_of_nonneg {x : ℝ} (hx : 0 ≤ x) (n : ℕ) : (∑ i in range n, x ^ i / i !) ≤ exp x :=
+  calc
+    (∑ i in range n, x ^ i / i !) ≤ limUnder (⟨_, isCauSeq_re (exp' x)⟩ : CauSeq ℝ Abs.abs) :=
+      by
+      refine' le_lim (CauSeq.le_of_exists ⟨n, fun j hj => _⟩)
+      simp only [exp', const_apply, mk_to_fun, re_sum]
+      norm_cast
+      rw [← Nat.add_sub_of_le hj, Finset.sum_range_add]
+      refine' le_add_of_nonneg_right (sum_nonneg fun i hi => _)
+      positivity
+    _ = exp x := by rw [exp, Complex.exp, ← cau_seq_re, lim_re]
+    
+#align real.sum_le_exp_of_nonneg Real.sum_le_exp_of_nonneg
+
+theorem quadratic_le_exp_of_nonneg {x : ℝ} (hx : 0 ≤ x) : 1 + x + x ^ 2 / 2 ≤ exp x :=
+  calc
+    1 + x + x ^ 2 / 2 = ∑ i in range 3, x ^ i / i ! := by simp [Finset.sum_range_succ]
+    _ ≤ exp x := sum_le_exp_of_nonneg hx 3
+    
+#align real.quadratic_le_exp_of_nonneg Real.quadratic_le_exp_of_nonneg
+
+theorem add_one_lt_exp_of_pos {x : ℝ} (hx : 0 < x) : x + 1 < exp x :=
+  (by nlinarith : x + 1 < 1 + x + x ^ 2 / 2).trans_le (quadratic_le_exp_of_nonneg hx.le)
+#align real.add_one_lt_exp_of_pos Real.add_one_lt_exp_of_pos
+
 /- warning: real.add_one_le_exp_of_nonneg -> Real.add_one_le_exp_of_nonneg is a dubious translation:
 lean 3 declaration is
   forall {x : Real}, (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) x) -> (LE.le.{0} Real Real.hasLe (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) x (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne)))) (Real.exp x))
@@ -2386,23 +2411,10 @@ Case conversion may be inaccurate. Consider using '#align real.add_one_le_exp_of
 /-- This is an intermediate result that is later replaced by `real.add_one_le_exp`; use that lemma
 instead. -/
 theorem add_one_le_exp_of_nonneg {x : ℝ} (hx : 0 ≤ x) : x + 1 ≤ exp x :=
-  calc
-    x + 1 ≤ limUnder (⟨fun n : ℕ => ((exp' x) n).re, isCauSeq_re (exp' x)⟩ : CauSeq ℝ Abs.abs) :=
-      le_lim
-        (CauSeq.le_of_exists
-          ⟨2, fun j hj =>
-            show x + (1 : ℝ) ≤ (∑ m in range j, (x ^ m / m ! : ℂ)).re
-              by
-              have h₁ : (((fun m : ℕ => (x ^ m / m ! : ℂ)) ∘ Nat.succ) 0).re = x := by simp
-              have h₂ : ((x : ℂ) ^ 0 / 0!).re = 1 := by simp
-              rw [← tsub_add_cancel_of_le hj, sum_range_succ', sum_range_succ', add_re, add_re, h₁,
-                h₂, add_assoc, ← coe_re_add_group_hom, re_add_group_hom.map_sum,
-                coe_re_add_group_hom]
-              refine' le_add_of_nonneg_of_le (sum_nonneg fun m hm => _) le_rfl
-              rw [← of_real_pow, ← of_real_nat_cast, ← of_real_div, of_real_re]
-              exact div_nonneg (pow_nonneg hx _) (Nat.cast_nonneg _)⟩)
-    _ = exp x := by rw [exp, Complex.exp, ← cau_seq_re, lim_re]
-    
+  by
+  rcases eq_or_lt_of_le hx with (rfl | h)
+  · simp
+  exact (add_one_lt_exp_of_pos h).le
 #align real.add_one_le_exp_of_nonneg Real.add_one_le_exp_of_nonneg
 
 /- warning: real.one_le_exp -> Real.one_le_exp is a dubious translation:
@@ -3122,23 +3134,19 @@ theorem cos_two_neg : cos 2 < 0 :=
     
 #align real.cos_two_neg Real.cos_two_neg
 
-theorem exp_bound_div_one_sub_of_interval_approx {x : ℝ} (h1 : 0 ≤ x) (h2 : x ≤ 1) :
-    (∑ j : ℕ in Finset.range 3, x ^ j / j.factorial) +
-        x ^ 3 * ((3 : ℕ) + 1) / ((3 : ℕ).factorial * (3 : ℕ)) ≤
-      ∑ j in Finset.range 3, x ^ j :=
-  by
-  norm_num [Finset.sum]
-  rw [add_assoc, add_comm (x + 1) (x ^ 3 * 4 / 18), ← add_assoc, add_le_add_iff_right, ←
-    add_le_add_iff_left (-(x ^ 2 / 2)), ← add_assoc, CommRing.add_left_neg (x ^ 2 / 2), zero_add,
-    neg_add_eq_sub, sub_half, sq, pow_succ, sq]
-  have i1 : x * 4 / 18 ≤ 1 / 2 := by linarith
-  have i2 : 0 ≤ x * 4 / 18 := by linarith
-  have i3 := mul_le_mul h1 h1 le_rfl h1
-  rw [MulZeroClass.zero_mul] at i3
-  have t := mul_le_mul le_rfl i1 i2 i3
-  rw [← mul_assoc]
-  rwa [mul_one_div, ← mul_div_assoc, ← mul_assoc] at t
-#align real.exp_bound_div_one_sub_of_interval_approx Real.exp_bound_div_one_sub_of_interval_approxₓ
+theorem exp_bound_div_one_sub_of_interval' {x : ℝ} (h1 : 0 < x) (h2 : x < 1) :
+    Real.exp x < 1 / (1 - x) :=
+  have H : 0 < 1 - (1 + x + x ^ 2) * (1 - x) :=
+    calc
+      0 < x ^ 3 := by positivity
+      _ = 1 - (1 + x + x ^ 2) * (1 - x) := by ring
+      
+  calc
+    exp x ≤ _ := exp_bound' h1.le h2.le zero_lt_three
+    _ ≤ 1 + x + x ^ 2 := by norm_num [Finset.sum] <;> nlinarith
+    _ < 1 / (1 - x) := by rw [lt_div_iff] <;> nlinarith
+    
+#align real.exp_bound_div_one_sub_of_interval' Real.exp_bound_div_one_sub_of_interval'
 
 /- warning: real.exp_bound_div_one_sub_of_interval -> Real.exp_bound_div_one_sub_of_interval is a dubious translation:
 lean 3 declaration is
@@ -3148,58 +3156,40 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align real.exp_bound_div_one_sub_of_interval Real.exp_bound_div_one_sub_of_intervalₓ'. -/
 theorem exp_bound_div_one_sub_of_interval {x : ℝ} (h1 : 0 ≤ x) (h2 : x < 1) :
     Real.exp x ≤ 1 / (1 - x) :=
-  haveI h : (∑ j in Finset.range 3, x ^ j) ≤ 1 / (1 - x) :=
-    by
-    norm_num [Finset.sum]
-    have h1x : 0 < 1 - x := by simpa
-    rw [le_div_iff h1x]
-    norm_num [← add_assoc, mul_sub_left_distrib, mul_one, add_mul, sub_add_eq_sub_sub,
-      pow_succ' x 2]
-    have hx3 : 0 ≤ x ^ 3 := by
-      norm_num
-      exact h1
-    linarith
-  (exp_bound' h1 h2.le <| by linarith).trans
-    ((exp_bound_div_one_sub_of_interval_approx h1 h2.le).trans h)
+  by
+  rcases eq_or_lt_of_le h1 with (rfl | h1)
+  · simp
+  · exact (exp_bound_div_one_sub_of_interval' h1 h2).le
 #align real.exp_bound_div_one_sub_of_interval Real.exp_bound_div_one_sub_of_interval
 
-/- warning: real.one_sub_le_exp_minus_of_pos -> Real.one_sub_le_exp_minus_of_pos is a dubious translation:
-lean 3 declaration is
-  forall {y : Real}, (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) y) -> (LE.le.{0} Real Real.hasLe (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.hasSub) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))) y) (Real.exp (Neg.neg.{0} Real Real.hasNeg y)))
-but is expected to have type
-  forall {y : Real}, (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) y) -> (LE.le.{0} Real Real.instLEReal (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.instSubReal) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) y) (Real.exp (Neg.neg.{0} Real Real.instNegReal y)))
-Case conversion may be inaccurate. Consider using '#align real.one_sub_le_exp_minus_of_pos Real.one_sub_le_exp_minus_of_posₓ'. -/
-theorem one_sub_le_exp_minus_of_pos {y : ℝ} (h : 0 ≤ y) : 1 - y ≤ Real.exp (-y) :=
+theorem one_sub_lt_exp_minus_of_pos {y : ℝ} (h : 0 < y) : 1 - y < Real.exp (-y) :=
   by
-  rw [Real.exp_neg]
-  have r1 : (1 - y) * Real.exp y ≤ 1 :=
-    by
-    cases le_or_lt (1 - y) 0
-    · have h'' : (1 - y) * y.exp ≤ 0 := by
-        rw [mul_nonpos_iff]
-        right
-        exact ⟨h_1, y.exp_pos.le⟩
-      linarith
-    have hy1 : y < 1 := by linarith
-    rw [← le_div_iff' h_1]
-    exact exp_bound_div_one_sub_of_interval h hy1
-  rw [inv_eq_one_div]
-  rw [le_div_iff' y.exp_pos]
-  rwa [mul_comm] at r1
-#align real.one_sub_le_exp_minus_of_pos Real.one_sub_le_exp_minus_of_pos
+  cases' le_or_lt 1 y with h' h'
+  · linarith [(-y).exp_pos]
+  rw [exp_neg, lt_inv _ y.exp_pos, inv_eq_one_div]
+  · exact exp_bound_div_one_sub_of_interval' h h'
+  · linarith
+#align real.one_sub_lt_exp_minus_of_pos Real.one_sub_lt_exp_minus_of_pos
 
-/- warning: real.add_one_le_exp_of_nonpos -> Real.add_one_le_exp_of_nonpos is a dubious translation:
-lean 3 declaration is
-  forall {x : Real}, (LE.le.{0} Real Real.hasLe x (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (LE.le.{0} Real Real.hasLe (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) x (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne)))) (Real.exp x))
-but is expected to have type
-  forall {x : Real}, (LE.le.{0} Real Real.instLEReal x (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (LE.le.{0} Real Real.instLEReal (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) x (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))) (Real.exp x))
-Case conversion may be inaccurate. Consider using '#align real.add_one_le_exp_of_nonpos Real.add_one_le_exp_of_nonposₓ'. -/
-theorem add_one_le_exp_of_nonpos {x : ℝ} (h : x ≤ 0) : x + 1 ≤ Real.exp x :=
+theorem one_sub_le_exp_minus_of_nonneg {y : ℝ} (h : 0 ≤ y) : 1 - y ≤ Real.exp (-y) :=
   by
-  rw [add_comm]
-  have h1 : 0 ≤ -x := by linarith
-  simpa using one_sub_le_exp_minus_of_pos h1
-#align real.add_one_le_exp_of_nonpos Real.add_one_le_exp_of_nonpos
+  rcases eq_or_lt_of_le h with (rfl | h)
+  · simp
+  · exact (one_sub_lt_exp_minus_of_pos h).le
+#align real.one_sub_le_exp_minus_of_nonneg Real.one_sub_le_exp_minus_of_nonneg
+
+theorem add_one_lt_exp_of_neg {x : ℝ} (h : x < 0) : x + 1 < Real.exp x :=
+  by
+  have h1 : 0 < -x := by linarith
+  simpa [add_comm] using one_sub_lt_exp_minus_of_pos h1
+#align real.add_one_lt_exp_of_neg Real.add_one_lt_exp_of_neg
+
+theorem add_one_lt_exp_of_nonzero {x : ℝ} (hx : x ≠ 0) : x + 1 < Real.exp x :=
+  by
+  cases lt_or_gt_of_ne hx
+  · exact Real.add_one_lt_exp_of_neg h
+  exact add_one_lt_exp_of_pos h
+#align real.add_one_lt_exp_of_nonzero Real.add_one_lt_exp_of_nonzero
 
 /- warning: real.add_one_le_exp -> Real.add_one_le_exp is a dubious translation:
 lean 3 declaration is
@@ -3211,7 +3201,7 @@ theorem add_one_le_exp (x : ℝ) : x + 1 ≤ Real.exp x :=
   by
   cases le_or_lt 0 x
   · exact Real.add_one_le_exp_of_nonneg h
-  exact add_one_le_exp_of_nonpos h.le
+  exact (add_one_lt_exp_of_neg h).le
 #align real.add_one_le_exp Real.add_one_le_exp
 
 /- warning: real.one_sub_div_pow_le_exp_neg -> Real.one_sub_div_pow_le_exp_neg is a dubious translation:

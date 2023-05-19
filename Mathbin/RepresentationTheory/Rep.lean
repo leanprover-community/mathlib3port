@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module representation_theory.Rep
-! leanprover-community/mathlib commit c04bc6e93e23aa0182aba53661a2211e80b6feac
+! leanprover-community/mathlib commit 74403a3b2551b0970855e14ef5e8fd0d6af1bfc2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,7 +12,7 @@ import Mathbin.RepresentationTheory.Basic
 import Mathbin.RepresentationTheory.Action
 import Mathbin.Algebra.Category.Module.Abelian
 import Mathbin.Algebra.Category.Module.Colimits
-import Mathbin.Algebra.Category.Module.Monoidal
+import Mathbin.Algebra.Category.Module.Monoidal.Closed
 import Mathbin.Algebra.Category.Module.Adjunctions
 import Mathbin.CategoryTheory.Closed.FunctorCategory
 

@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.hausdorff_dimension
-! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
+! leanprover-community/mathlib commit 8f9fea08977f7e450770933ee6abb20733b47c92
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.Analysis.Calculus.ContDiff
 import Mathbin.MeasureTheory.Measure.Hausdorff
 
 /-!

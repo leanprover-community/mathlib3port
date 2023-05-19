@@ -4,12 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.integral.divergence_theorem
-! leanprover-community/mathlib commit 2196ab363eb097c008d4497125e0dde23fb36db2
+! leanprover-community/mathlib commit 8f9fea08977f7e450770933ee6abb20733b47c92
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.BoxIntegral.DivergenceTheorem
 import Mathbin.Analysis.BoxIntegral.Integrability
+import Mathbin.Analysis.Calculus.Deriv
 import Mathbin.MeasureTheory.Integral.IntervalIntegral
 
 /-!

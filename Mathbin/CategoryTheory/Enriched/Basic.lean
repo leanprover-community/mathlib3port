@@ -4,11 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.enriched.basic
-! leanprover-community/mathlib commit c3019c79074b0619edb4b27553a91b2e82242395
+! leanprover-community/mathlib commit 95a87616d63b3cb49d3fe678d416fbe9c4217bf4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.CategoryTheory.Monoidal.Types
+import Mathbin.CategoryTheory.Monoidal.Types.Symmetric
+import Mathbin.CategoryTheory.Monoidal.Types.Coyoneda
 import Mathbin.CategoryTheory.Monoidal.Center
 import Mathbin.Tactic.ApplyFun
 

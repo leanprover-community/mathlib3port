@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.complex.circle
-! leanprover-community/mathlib commit ad3dfaca9ea2465198bcf58aa114401c324e29d1
+! leanprover-community/mathlib commit 50251fd6309cca5ca2e747882ffecd2729f38c5d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Analysis.Normed.Field.UnitBall
 
 /-!
 # The circle
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines `circle` to be the metric sphere (`metric.sphere`) in `ℂ` centred at `0` of
 radius `1`.  We equip it with the following structure:

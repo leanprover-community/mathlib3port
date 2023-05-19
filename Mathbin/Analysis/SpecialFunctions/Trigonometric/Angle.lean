@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Calle Sönne
 
 ! This file was ported from Lean 3 source module analysis.special_functions.trigonometric.angle
-! leanprover-community/mathlib commit 213b0cff7bc5ab6696ee07cceec80829ce42efec
+! leanprover-community/mathlib commit 50251fd6309cca5ca2e747882ffecd2729f38c5d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Topology.Instances.Sign
 
 /-!
 # The type of angles
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we define `real.angle` to be the quotient group `ℝ/2πℤ` and prove a few simple lemmas
 about trigonometric functions and angles.

@@ -4,13 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.category.Module.adjunctions
-! leanprover-community/mathlib commit 6e492fdbed778ea815798a5a0c6cb83df8486265
+! leanprover-community/mathlib commit 95a87616d63b3cb49d3fe678d416fbe9c4217bf4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Algebra.Category.Module.Monoidal
+import Mathbin.Algebra.Category.Module.Monoidal.Basic
 import Mathbin.CategoryTheory.Monoidal.Functorial
-import Mathbin.CategoryTheory.Monoidal.Types
+import Mathbin.CategoryTheory.Monoidal.Types.Basic
 import Mathbin.LinearAlgebra.DirectSum.Finsupp
 import Mathbin.CategoryTheory.Linear.LinearFunctor
 

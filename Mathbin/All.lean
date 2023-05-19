@@ -63,7 +63,9 @@ import Mathbin.Algebra.Category.Module.FilteredColimits
 import Mathbin.Algebra.Category.Module.Images
 import Mathbin.Algebra.Category.Module.Kernels
 import Mathbin.Algebra.Category.Module.Limits
-import Mathbin.Algebra.Category.Module.Monoidal
+import Mathbin.Algebra.Category.Module.Monoidal.Basic
+import Mathbin.Algebra.Category.Module.Monoidal.Closed
+import Mathbin.Algebra.Category.Module.Monoidal.Symmetric
 import Mathbin.Algebra.Category.Module.Products
 import Mathbin.Algebra.Category.Module.Projective
 import Mathbin.Algebra.Category.Module.Simple
@@ -598,7 +600,8 @@ import Mathbin.Analysis.Convex.Segment
 import Mathbin.Analysis.Convex.Side
 import Mathbin.Analysis.Convex.SimplicialComplex.Basic
 import Mathbin.Analysis.Convex.Slope
-import Mathbin.Analysis.Convex.SpecificFunctions
+import Mathbin.Analysis.Convex.SpecificFunctions.Basic
+import Mathbin.Analysis.Convex.SpecificFunctions.Deriv
 import Mathbin.Analysis.Convex.Star
 import Mathbin.Analysis.Convex.StoneSeparation
 import Mathbin.Analysis.Convex.Strict
@@ -1027,7 +1030,8 @@ import Mathbin.CategoryTheory.Monoidal.Internal.Types
 import Mathbin.CategoryTheory.Monoidal.Limits
 import Mathbin.CategoryTheory.Monoidal.Linear
 import Mathbin.CategoryTheory.Monoidal.NaturalTransformation
-import Mathbin.CategoryTheory.Monoidal.OfChosenFiniteProducts
+import Mathbin.CategoryTheory.Monoidal.OfChosenFiniteProducts.Basic
+import Mathbin.CategoryTheory.Monoidal.OfChosenFiniteProducts.Symmetric
 import Mathbin.CategoryTheory.Monoidal.OfHasFiniteProducts
 import Mathbin.CategoryTheory.Monoidal.Opposite
 import Mathbin.CategoryTheory.Monoidal.Preadditive
@@ -1038,7 +1042,9 @@ import Mathbin.CategoryTheory.Monoidal.Skeleton
 import Mathbin.CategoryTheory.Monoidal.Subcategory
 import Mathbin.CategoryTheory.Monoidal.Tor
 import Mathbin.CategoryTheory.Monoidal.Transport
-import Mathbin.CategoryTheory.Monoidal.Types
+import Mathbin.CategoryTheory.Monoidal.Types.Basic
+import Mathbin.CategoryTheory.Monoidal.Types.Coyoneda
+import Mathbin.CategoryTheory.Monoidal.Types.Symmetric
 import Mathbin.CategoryTheory.MorphismProperty
 import Mathbin.CategoryTheory.NaturalIsomorphism
 import Mathbin.CategoryTheory.NaturalTransformation
@@ -1509,6 +1515,7 @@ import Mathbin.Data.Nat.EvenOddRec
 import Mathbin.Data.Nat.Factorial.Basic
 import Mathbin.Data.Nat.Factorial.BigOperators
 import Mathbin.Data.Nat.Factorial.Cast
+import Mathbin.Data.Nat.Factorial.DoubleFactorial
 import Mathbin.Data.Nat.Factorization.Basic
 import Mathbin.Data.Nat.Factorization.PrimePow
 import Mathbin.Data.Nat.Factors

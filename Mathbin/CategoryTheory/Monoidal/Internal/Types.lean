@@ -4,13 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.internal.types
-! leanprover-community/mathlib commit 4d0b6301ef962e6bd74462998943ce38b7adb132
+! leanprover-community/mathlib commit 95a87616d63b3cb49d3fe678d416fbe9c4217bf4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Category.Mon.Basic
 import Mathbin.CategoryTheory.Monoidal.CommMon_
-import Mathbin.CategoryTheory.Monoidal.Types
+import Mathbin.CategoryTheory.Monoidal.Types.Symmetric
 
 /-!
 # `Mon_ (Type u) ≌ Mon.{u}`

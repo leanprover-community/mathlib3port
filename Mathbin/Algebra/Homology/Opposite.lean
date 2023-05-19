@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Amelia Livingston
 
 ! This file was ported from Lean 3 source module algebra.homology.opposite
-! leanprover-community/mathlib commit 8c75ef3517d4106e89fe524e6281d0b0545f47fc
+! leanprover-community/mathlib commit 50251fd6309cca5ca2e747882ffecd2729f38c5d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Algebra.Homology.Additive
 
 /-!
 # Opposite categories of complexes
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 Given a preadditive category `V`, the opposite of its category of chain complexes is equivalent to
 the category of cochain complexes of objects in `Vᵒᵖ`. We define this equivalence, and another
 analagous equivalence (for a general category of homological complexes with a general
