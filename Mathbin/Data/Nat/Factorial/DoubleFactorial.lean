@@ -28,6 +28,7 @@ open Nat
 
 namespace Nat
 
+#print Nat.doubleFactorial /-
 /-- `nat.double_factorial n` is the double factorial of `n`. -/
 @[simp]
 def doubleFactorial : ℕ → ℕ
@@ -35,25 +36,33 @@ def doubleFactorial : ℕ → ℕ
   | 1 => 1
   | k + 2 => (k + 2) * double_factorial k
 #align nat.double_factorial Nat.doubleFactorial
+-/
 
 -- mathport name: nat.double_factorial
 -- This notation is `\!!` not two !'s
 scoped notation:10000 n "‼" => Nat.doubleFactorial n
 
+#print Nat.doubleFactorial_add_two /-
 theorem doubleFactorial_add_two (n : ℕ) : (n + 2)‼ = (n + 2) * n‼ :=
   rfl
 #align nat.double_factorial_add_two Nat.doubleFactorial_add_two
+-/
 
+#print Nat.doubleFactorial_add_one /-
 theorem doubleFactorial_add_one (n : ℕ) : (n + 1)‼ = (n + 1) * (n - 1)‼ := by cases n <;> rfl
 #align nat.double_factorial_add_one Nat.doubleFactorial_add_one
+-/
 
+#print Nat.factorial_eq_mul_doubleFactorial /-
 theorem factorial_eq_mul_doubleFactorial : ∀ n : ℕ, (n + 1)! = (n + 1)‼ * n‼
   | 0 => rfl
   | k + 1 => by
     rw [double_factorial_add_two, factorial, factorial_eq_mul_double_factorial, mul_comm _ k‼,
       mul_assoc]
 #align nat.factorial_eq_mul_double_factorial Nat.factorial_eq_mul_doubleFactorial
+-/
 
+#print Nat.doubleFactorial_two_mul /-
 theorem doubleFactorial_two_mul : ∀ n : ℕ, (2 * n)‼ = 2 ^ n * n !
   | 0 => rfl
   | n + 1 =>
@@ -62,9 +71,11 @@ theorem doubleFactorial_two_mul : ∀ n : ℕ, (2 * n)‼ = 2 ^ n * n !
       succ_eq_add_one]
     ring
 #align nat.double_factorial_two_mul Nat.doubleFactorial_two_mul
+-/
 
 open BigOperators
 
+#print Nat.doubleFactorial_eq_prod_even /-
 theorem doubleFactorial_eq_prod_even : ∀ n : ℕ, (2 * n)‼ = ∏ i in Finset.range n, 2 * (i + 1)
   | 0 => rfl
   | n + 1 =>
@@ -73,7 +84,9 @@ theorem doubleFactorial_eq_prod_even : ∀ n : ℕ, (2 * n)‼ = ∏ i in Finset
       (by ring : 2 * (n + 1) = 2 * n + 2)]
     rfl
 #align nat.double_factorial_eq_prod_even Nat.doubleFactorial_eq_prod_even
+-/
 
+#print Nat.doubleFactorial_eq_prod_odd /-
 theorem doubleFactorial_eq_prod_odd : ∀ n : ℕ, (2 * n + 1)‼ = ∏ i in Finset.range n, 2 * (i + 1) + 1
   | 0 => rfl
   | n + 1 =>
@@ -82,6 +95,7 @@ theorem doubleFactorial_eq_prod_odd : ∀ n : ℕ, (2 * n + 1)‼ = ∏ i in Fin
       (by ring : 2 * (n + 1) + 1 = 2 * n + 1 + 2)]
     rfl
 #align nat.double_factorial_eq_prod_odd Nat.doubleFactorial_eq_prod_odd
+-/
 
 end Nat
 
