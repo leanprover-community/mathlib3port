@@ -1018,7 +1018,7 @@ theorem monotone_or {p q : α → Prop} (m_p : Monotone p) (m_q : Monotone q) :
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {x : α}, Monotone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop Prop.partialOrder) (LE.le.{u1} α (Preorder.toHasLe.{u1} α _inst_1) x)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {x : α}, Monotone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop Prop.partialOrder) ((fun (x._@.Mathlib.Order.BoundedOrder._hyg.4313 : α) (x._@.Mathlib.Order.BoundedOrder._hyg.4315 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.BoundedOrder._hyg.4313 x._@.Mathlib.Order.BoundedOrder._hyg.4315) x)
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {x : α}, Monotone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop Prop.partialOrder) ((fun (x._@.Mathlib.Order.BoundedOrder._hyg.4319 : α) (x._@.Mathlib.Order.BoundedOrder._hyg.4321 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Order.BoundedOrder._hyg.4319 x._@.Mathlib.Order.BoundedOrder._hyg.4321) x)
 Case conversion may be inaccurate. Consider using '#align monotone_le monotone_leₓ'. -/
 theorem monotone_le {x : α} : Monotone ((· ≤ ·) x) := fun y z h' h => h.trans h'
 #align monotone_le monotone_le
@@ -1027,7 +1027,7 @@ theorem monotone_le {x : α} : Monotone ((· ≤ ·) x) := fun y z h' h => h.tra
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {x : α}, Monotone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop Prop.partialOrder) (LT.lt.{u1} α (Preorder.toHasLt.{u1} α _inst_1) x)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {x : α}, Monotone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop Prop.partialOrder) ((fun (x._@.Mathlib.Order.BoundedOrder._hyg.4353 : α) (x._@.Mathlib.Order.BoundedOrder._hyg.4355 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.BoundedOrder._hyg.4353 x._@.Mathlib.Order.BoundedOrder._hyg.4355) x)
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {x : α}, Monotone.{u1, 0} α Prop _inst_1 (PartialOrder.toPreorder.{0} Prop Prop.partialOrder) ((fun (x._@.Mathlib.Order.BoundedOrder._hyg.4359 : α) (x._@.Mathlib.Order.BoundedOrder._hyg.4361 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Order.BoundedOrder._hyg.4359 x._@.Mathlib.Order.BoundedOrder._hyg.4361) x)
 Case conversion may be inaccurate. Consider using '#align monotone_lt monotone_ltₓ'. -/
 theorem monotone_lt {x : α} : Monotone ((· < ·) x) := fun y z h' h => h.trans_le h'
 #align monotone_lt monotone_lt

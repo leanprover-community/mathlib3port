@@ -215,7 +215,7 @@ instance nhdsWithinSingleton (a : ℝ) : FTCFilter a (𝓝[{a}] a) ⊥ :=
 
 theorem finite_at_inner {a : ℝ} (l : Filter ℝ) {l'} [h : FTCFilter a l l'] {μ : Measure ℝ}
     [LocallyFiniteMeasure μ] : μ.FiniteAtFilter l' :=
-  (μ.finite_at_nhds a).filter_mono h.le_nhds
+  (μ.finiteAtNhds a).filter_mono h.le_nhds
 #align interval_integral.FTC_filter.finite_at_inner intervalIntegral.FTCFilter.finite_at_inner
 
 instance nhds (a : ℝ) : FTCFilter a (𝓝 a) (𝓝 a)

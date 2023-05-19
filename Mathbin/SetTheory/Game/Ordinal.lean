@@ -28,14 +28,14 @@ The map to surreals is defined in `ordinal.to_surreal`.
 
 universe u
 
-open Pgame
+open PGame
 
-open NaturalOps Pgame
+open NaturalOps PGame
 
 namespace Ordinal
 
 /-- Converts an ordinal into the corresponding pre-game. -/
-noncomputable def toPgame : Ordinal.{u} → Pgame.{u}
+noncomputable def toPgame : Ordinal.{u} → PGame.{u}
   | o =>
     ⟨o.out.α, PEmpty, fun x =>
       let hwf := Ordinal.typein_lt_self x
@@ -161,7 +161,7 @@ theorem toPgame_lf_iff {a b : Ordinal} : a.toPgame ⧏ b.toPgame ↔ a < b :=
 theorem toPgame_le_iff {a b : Ordinal} : a.toPgame ≤ b.toPgame ↔ a ≤ b :=
   ⟨by
     contrapose
-    rw [not_le, Pgame.not_le]
+    rw [not_le, PGame.not_le]
     exact to_pgame_lf, toPgame_le⟩
 #align ordinal.to_pgame_le_iff Ordinal.toPgame_le_iff
 
@@ -175,7 +175,7 @@ theorem toPgame_lt_iff {a b : Ordinal} : a.toPgame < b.toPgame ↔ a < b :=
 
 @[simp]
 theorem toPgame_equiv_iff {a b : Ordinal} : (a.toPgame ≈ b.toPgame) ↔ a = b := by
-  rw [Pgame.Equiv, le_antisymm_iff, to_pgame_le_iff, to_pgame_le_iff]
+  rw [PGame.Equiv, le_antisymm_iff, to_pgame_le_iff, to_pgame_le_iff]
 #align ordinal.to_pgame_equiv_iff Ordinal.toPgame_equiv_iff
 
 theorem toPgame_injective : Function.Injective Ordinal.toPgame := fun a b h =>
@@ -189,7 +189,7 @@ theorem toPgame_eq_iff {a b : Ordinal} : a.toPgame = b.toPgame ↔ a = b :=
 
 /-- The order embedding version of `to_pgame`. -/
 @[simps]
-noncomputable def toPgameEmbedding : Ordinal.{u} ↪o Pgame.{u}
+noncomputable def toPgameEmbedding : Ordinal.{u} ↪o PGame.{u}
     where
   toFun := Ordinal.toPgame
   inj' := toPgame_injective

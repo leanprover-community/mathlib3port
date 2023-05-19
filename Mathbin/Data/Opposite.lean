@@ -162,7 +162,7 @@ def equivToOpposite : α ≃ αᵒᵖ where
 lean 3 declaration is
   forall {α : Sort.{u1}}, Eq.{u1} ((fun (_x : Equiv.{u1, u1} α (Opposite.{u1} α)) => α -> (Opposite.{u1} α)) (Opposite.equivToOpposite.{u1} α)) (coeFn.{max 1 u1, u1} (Equiv.{u1, u1} α (Opposite.{u1} α)) (fun (_x : Equiv.{u1, u1} α (Opposite.{u1} α)) => α -> (Opposite.{u1} α)) (Equiv.hasCoeToFun.{u1, u1} α (Opposite.{u1} α)) (Opposite.equivToOpposite.{u1} α)) (Opposite.op.{u1} α)
 but is expected to have type
-  forall {α : Sort.{u1}}, Eq.{max 1 u1} (forall (a : α), (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => Opposite.{u1} α) a) (FunLike.coe.{max 1 u1, u1, max 1 u1} (Equiv.{u1, max 1 u1} α (Opposite.{u1} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => Opposite.{u1} α) _x) (Equiv.instFunLikeEquiv.{u1, max 1 u1} α (Opposite.{u1} α)) (Opposite.equivToOpposite.{u1} α)) (Opposite.op.{u1} α)
+  forall {α : Sort.{u1}}, Eq.{max 1 u1} (forall (a : α), (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => Opposite.{u1} α) a) (FunLike.coe.{max 1 u1, u1, max 1 u1} (Equiv.{u1, max 1 u1} α (Opposite.{u1} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => Opposite.{u1} α) _x) (Equiv.instFunLikeEquiv.{u1, max 1 u1} α (Opposite.{u1} α)) (Opposite.equivToOpposite.{u1} α)) (Opposite.op.{u1} α)
 Case conversion may be inaccurate. Consider using '#align opposite.equiv_to_opposite_coe Opposite.equivToOpposite_coeₓ'. -/
 @[simp]
 theorem equivToOpposite_coe : (equivToOpposite : α → αᵒᵖ) = op :=
@@ -173,7 +173,7 @@ theorem equivToOpposite_coe : (equivToOpposite : α → αᵒᵖ) = op :=
 lean 3 declaration is
   forall {α : Sort.{u1}}, Eq.{u1} ((fun (_x : Equiv.{u1, u1} (Opposite.{u1} α) α) => (Opposite.{u1} α) -> α) (Equiv.symm.{u1, u1} α (Opposite.{u1} α) (Opposite.equivToOpposite.{u1} α))) (coeFn.{max 1 u1, u1} (Equiv.{u1, u1} (Opposite.{u1} α) α) (fun (_x : Equiv.{u1, u1} (Opposite.{u1} α) α) => (Opposite.{u1} α) -> α) (Equiv.hasCoeToFun.{u1, u1} (Opposite.{u1} α) α) (Equiv.symm.{u1, u1} α (Opposite.{u1} α) (Opposite.equivToOpposite.{u1} α))) (Opposite.unop.{u1} α)
 but is expected to have type
-  forall {α : Sort.{u1}}, Eq.{imax (max 1 u1) u1} (forall (a : Opposite.{u1} α), (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : Opposite.{u1} α) => α) a) (FunLike.coe.{max 1 u1, max 1 u1, u1} (Equiv.{max 1 u1, u1} (Opposite.{u1} α) α) (Opposite.{u1} α) (fun (_x : Opposite.{u1} α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : Opposite.{u1} α) => α) _x) (Equiv.instFunLikeEquiv.{max 1 u1, u1} (Opposite.{u1} α) α) (Equiv.symm.{u1, max 1 u1} α (Opposite.{u1} α) (Opposite.equivToOpposite.{u1} α))) (Opposite.unop.{u1} α)
+  forall {α : Sort.{u1}}, Eq.{imax (max 1 u1) u1} (forall (a : Opposite.{u1} α), (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Opposite.{u1} α) => α) a) (FunLike.coe.{max 1 u1, max 1 u1, u1} (Equiv.{max 1 u1, u1} (Opposite.{u1} α) α) (Opposite.{u1} α) (fun (_x : Opposite.{u1} α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : Opposite.{u1} α) => α) _x) (Equiv.instFunLikeEquiv.{max 1 u1, u1} (Opposite.{u1} α) α) (Equiv.symm.{u1, max 1 u1} α (Opposite.{u1} α) (Opposite.equivToOpposite.{u1} α))) (Opposite.unop.{u1} α)
 Case conversion may be inaccurate. Consider using '#align opposite.equiv_to_opposite_symm_coe Opposite.equivToOpposite_symm_coeₓ'. -/
 @[simp]
 theorem equivToOpposite_symm_coe : (equivToOpposite.symm : αᵒᵖ → α) = unop :=

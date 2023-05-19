@@ -1095,7 +1095,7 @@ theorem ContinuousAt.integral_sub_linear_isLittleO_ae [TopologicalSpace α] [Ope
     {li : Filter ι} (hs : Tendsto s li (𝓝 a).smallSets) (m : ι → ℝ := fun i => (μ (s i)).toReal)
     (hsμ : (fun i => (μ (s i)).toReal) =ᶠ[li] m := by rfl) :
     (fun i => (∫ x in s i, f x ∂μ) - m i • f a) =o[li] m :=
-  (ha.mono_left inf_le_left).integral_sub_linear_isLittleO_ae hfm (μ.finite_at_nhds a) hs m hsμ
+  (ha.mono_left inf_le_left).integral_sub_linear_isLittleO_ae hfm (μ.finiteAtNhds a) hs m hsμ
 #align continuous_at.integral_sub_linear_is_o_ae ContinuousAt.integral_sub_linear_isLittleO_ae
 
 /-- Fundamental theorem of calculus for set integrals, `nhds_within` version: if `μ` is a locally

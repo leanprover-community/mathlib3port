@@ -56,7 +56,7 @@ warning: nat.elim_zero -> Nat.rec_zero is a dubious translation:
 lean 3 declaration is
   forall {C : Sort.{u1}} (a : C) (f : Nat -> C -> C), Eq.{u1} C (Nat.rec.{u1} C a f (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) a
 but is expected to have type
-  forall {C : Nat -> Sort.{u1}} (a : C (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (f : forall (ᾰ : Nat), (C ᾰ) -> (C (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) ᾰ (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))), Eq.{u1} (C (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Nat.rec.{u1} (fun (x._@.Mathlib.Data.Nat.Basic._hyg.2991 : Nat) => C x._@.Mathlib.Data.Nat.Basic._hyg.2991) a f (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) a
+  forall {C : Nat -> Sort.{u1}} (a : C (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (f : forall (ᾰ : Nat), (C ᾰ) -> (C (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) ᾰ (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))), Eq.{u1} (C (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Nat.rec.{u1} (fun (x._@.Mathlib.Data.Nat.Basic._hyg.2994 : Nat) => C x._@.Mathlib.Data.Nat.Basic._hyg.2994) a f (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) a
 Case conversion may be inaccurate. Consider using '#align nat.elim_zero Nat.rec_zeroₓ'. -/
 @[simp]
 theorem rec_zero {C} (a f) : @Nat.rec C a f 0 = a :=
@@ -68,7 +68,7 @@ warning: nat.elim_succ -> Nat.rec_add_one is a dubious translation:
 lean 3 declaration is
   forall {C : Sort.{u1}} (a : C) (f : Nat -> C -> C) (n : Nat), Eq.{u1} C (Nat.rec.{u1} C a f (Nat.succ n)) (f n (Nat.rec.{u1} C a f n))
 but is expected to have type
-  forall {C : Nat -> Sort.{u1}} (a : C (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (f : forall (ᾰ : Nat), (C ᾰ) -> (C (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) ᾰ (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (n : Nat), Eq.{u1} (C (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Nat.rec.{u1} C a f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (f n (Nat.rec.{u1} (fun (x._@.Mathlib.Data.Nat.Basic._hyg.3041 : Nat) => C x._@.Mathlib.Data.Nat.Basic._hyg.3041) a f n))
+  forall {C : Nat -> Sort.{u1}} (a : C (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (f : forall (ᾰ : Nat), (C ᾰ) -> (C (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) ᾰ (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (n : Nat), Eq.{u1} (C (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Nat.rec.{u1} C a f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (f n (Nat.rec.{u1} (fun (x._@.Mathlib.Data.Nat.Basic._hyg.3044 : Nat) => C x._@.Mathlib.Data.Nat.Basic._hyg.3044) a f n))
 Case conversion may be inaccurate. Consider using '#align nat.elim_succ Nat.rec_add_oneₓ'. -/
 @[simp]
 theorem rec_add_one {C} (a f n) : @Nat.rec C a f (succ n) = f n (Nat.rec a f n) :=
@@ -91,7 +91,7 @@ warning: nat.cases_zero -> Nat.rec_zero is a dubious translation:
 lean 3 declaration is
   forall {C : Sort.{u1}} (a : C) (f : Nat -> C), Eq.{u1} C (Nat.casesOn.{u1} C a f (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) a
 but is expected to have type
-  forall {C : Nat -> Sort.{u1}} (a : C (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (f : forall (ᾰ : Nat), (C ᾰ) -> (C (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) ᾰ (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))), Eq.{u1} (C (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Nat.rec.{u1} (fun (x._@.Mathlib.Data.Nat.Basic._hyg.2991 : Nat) => C x._@.Mathlib.Data.Nat.Basic._hyg.2991) a f (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) a
+  forall {C : Nat -> Sort.{u1}} (a : C (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (f : forall (ᾰ : Nat), (C ᾰ) -> (C (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) ᾰ (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))), Eq.{u1} (C (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Nat.rec.{u1} (fun (x._@.Mathlib.Data.Nat.Basic._hyg.2994 : Nat) => C x._@.Mathlib.Data.Nat.Basic._hyg.2994) a f (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) a
 Case conversion may be inaccurate. Consider using '#align nat.cases_zero Nat.rec_zeroₓ'. -/
 @[simp]
 theorem rec_zero {C} (a f) : @Nat.casesOn C a f 0 = a :=
@@ -103,7 +103,7 @@ warning: nat.cases_succ -> Nat.rec_add_one is a dubious translation:
 lean 3 declaration is
   forall {C : Sort.{u1}} (a : C) (f : Nat -> C) (n : Nat), Eq.{u1} C (Nat.casesOn.{u1} C a f (Nat.succ n)) (f n)
 but is expected to have type
-  forall {C : Nat -> Sort.{u1}} (a : C (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (f : forall (ᾰ : Nat), (C ᾰ) -> (C (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) ᾰ (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (n : Nat), Eq.{u1} (C (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Nat.rec.{u1} C a f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (f n (Nat.rec.{u1} (fun (x._@.Mathlib.Data.Nat.Basic._hyg.3041 : Nat) => C x._@.Mathlib.Data.Nat.Basic._hyg.3041) a f n))
+  forall {C : Nat -> Sort.{u1}} (a : C (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (f : forall (ᾰ : Nat), (C ᾰ) -> (C (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) ᾰ (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (n : Nat), Eq.{u1} (C (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Nat.rec.{u1} C a f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (f n (Nat.rec.{u1} (fun (x._@.Mathlib.Data.Nat.Basic._hyg.3044 : Nat) => C x._@.Mathlib.Data.Nat.Basic._hyg.3044) a f n))
 Case conversion may be inaccurate. Consider using '#align nat.cases_succ Nat.rec_add_oneₓ'. -/
 @[simp]
 theorem rec_add_one {C} (a f n) : @Nat.casesOn C a f (succ n) = f n :=
@@ -457,7 +457,7 @@ theorem of_equiv_symm {β} {e : β ≃ α} :
 lean 3 declaration is
   forall {α : Type.{u1}} {σ : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_3 : Primcodable.{u2} σ] {β : Type.{u3}} (e : Equiv.{succ u3, succ u1} β α) {f : σ -> β}, Iff (Primrec.{u2, u1} σ α _inst_3 _inst_1 (fun (a : σ) => coeFn.{max 1 (max (succ u3) (succ u1)) (succ u1) (succ u3), max (succ u3) (succ u1)} (Equiv.{succ u3, succ u1} β α) (fun (_x : Equiv.{succ u3, succ u1} β α) => β -> α) (Equiv.hasCoeToFun.{succ u3, succ u1} β α) e (f a))) (Primrec.{u2, u3} σ β _inst_3 (Primcodable.ofEquiv.{u1, u3} α β _inst_1 e) f)
 but is expected to have type
-  forall {α : Type.{u2}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_3 : Primcodable.{u1} σ] {β : Type.{u3}} (e : Equiv.{succ u3, succ u2} β α) {f : σ -> β}, Iff (Primrec.{u1, u2} σ α _inst_3 _inst_1 (fun (a : σ) => FunLike.coe.{max (succ u2) (succ u3), succ u3, succ u2} (Equiv.{succ u3, succ u2} β α) β (fun (_x : β) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : β) => α) _x) (Equiv.instFunLikeEquiv.{succ u3, succ u2} β α) e (f a))) (Primrec.{u1, u3} σ β _inst_3 (Primcodable.ofEquiv.{u2, u3} α β _inst_1 e) f)
+  forall {α : Type.{u2}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_3 : Primcodable.{u1} σ] {β : Type.{u3}} (e : Equiv.{succ u3, succ u2} β α) {f : σ -> β}, Iff (Primrec.{u1, u2} σ α _inst_3 _inst_1 (fun (a : σ) => FunLike.coe.{max (succ u2) (succ u3), succ u3, succ u2} (Equiv.{succ u3, succ u2} β α) β (fun (_x : β) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : β) => α) _x) (Equiv.instFunLikeEquiv.{succ u3, succ u2} β α) e (f a))) (Primrec.{u1, u3} σ β _inst_3 (Primcodable.ofEquiv.{u2, u3} α β _inst_1 e) f)
 Case conversion may be inaccurate. Consider using '#align primrec.of_equiv_iff Primrec.of_equiv_iffₓ'. -/
 theorem of_equiv_iff {β} (e : β ≃ α) {f : σ → β} :
     haveI := Primcodable.ofEquiv α e
@@ -470,7 +470,7 @@ theorem of_equiv_iff {β} (e : β ≃ α) {f : σ → β} :
 lean 3 declaration is
   forall {α : Type.{u1}} {σ : Type.{u2}} [_inst_1 : Primcodable.{u1} α] [_inst_3 : Primcodable.{u2} σ] {β : Type.{u3}} (e : Equiv.{succ u3, succ u1} β α) {f : σ -> α}, Iff (Primrec.{u2, u3} σ β _inst_3 (Primcodable.ofEquiv.{u1, u3} α β _inst_1 e) (fun (a : σ) => coeFn.{max 1 (max (succ u1) (succ u3)) (succ u3) (succ u1), max (succ u1) (succ u3)} (Equiv.{succ u1, succ u3} α β) (fun (_x : Equiv.{succ u1, succ u3} α β) => α -> β) (Equiv.hasCoeToFun.{succ u1, succ u3} α β) (Equiv.symm.{succ u3, succ u1} β α e) (f a))) (Primrec.{u2, u1} σ α _inst_3 _inst_1 f)
 but is expected to have type
-  forall {α : Type.{u2}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_3 : Primcodable.{u1} σ] {β : Type.{u3}} (e : Equiv.{succ u3, succ u2} β α) {f : σ -> α}, Iff (Primrec.{u1, u3} σ β _inst_3 (Primcodable.ofEquiv.{u2, u3} α β _inst_1 e) (fun (a : σ) => FunLike.coe.{max (succ u2) (succ u3), succ u2, succ u3} (Equiv.{succ u2, succ u3} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.808 : α) => β) _x) (Equiv.instFunLikeEquiv.{succ u2, succ u3} α β) (Equiv.symm.{succ u3, succ u2} β α e) (f a))) (Primrec.{u1, u2} σ α _inst_3 _inst_1 f)
+  forall {α : Type.{u2}} {σ : Type.{u1}} [_inst_1 : Primcodable.{u2} α] [_inst_3 : Primcodable.{u1} σ] {β : Type.{u3}} (e : Equiv.{succ u3, succ u2} β α) {f : σ -> α}, Iff (Primrec.{u1, u3} σ β _inst_3 (Primcodable.ofEquiv.{u2, u3} α β _inst_1 e) (fun (a : σ) => FunLike.coe.{max (succ u2) (succ u3), succ u2, succ u3} (Equiv.{succ u2, succ u3} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : α) => β) _x) (Equiv.instFunLikeEquiv.{succ u2, succ u3} α β) (Equiv.symm.{succ u3, succ u2} β α e) (f a))) (Primrec.{u1, u2} σ α _inst_3 _inst_1 f)
 Case conversion may be inaccurate. Consider using '#align primrec.of_equiv_symm_iff Primrec.of_equiv_symm_iffₓ'. -/
 theorem of_equiv_symm_iff {β} (e : β ≃ α) {f : σ → α} :
     haveI := Primcodable.ofEquiv α e

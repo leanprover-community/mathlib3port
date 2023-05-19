@@ -160,7 +160,7 @@ theorem symmDiff_comm : a ∆ b = b ∆ a := by simp only [(· ∆ ·), sup_comm
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : GeneralizedCoheytingAlgebra.{u1} α], IsCommutative.{u1} α (symmDiff.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α _inst_1))) (GeneralizedCoheytingAlgebra.toHasSdiff.{u1} α _inst_1))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : GeneralizedCoheytingAlgebra.{u1} α], IsCommutative.{u1} α (fun (x._@.Mathlib.Order.SymmDiff._hyg.1545 : α) (x._@.Mathlib.Order.SymmDiff._hyg.1547 : α) => symmDiff.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α _inst_1))) (GeneralizedCoheytingAlgebra.toSDiff.{u1} α _inst_1) x._@.Mathlib.Order.SymmDiff._hyg.1545 x._@.Mathlib.Order.SymmDiff._hyg.1547)
+  forall {α : Type.{u1}} [_inst_1 : GeneralizedCoheytingAlgebra.{u1} α], IsCommutative.{u1} α (fun (x._@.Mathlib.Order.SymmDiff._hyg.1549 : α) (x._@.Mathlib.Order.SymmDiff._hyg.1551 : α) => symmDiff.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α _inst_1))) (GeneralizedCoheytingAlgebra.toSDiff.{u1} α _inst_1) x._@.Mathlib.Order.SymmDiff._hyg.1549 x._@.Mathlib.Order.SymmDiff._hyg.1551)
 Case conversion may be inaccurate. Consider using '#align symm_diff_is_comm symmDiff_isCommutativeₓ'. -/
 instance symmDiff_isCommutative : IsCommutative α (· ∆ ·) :=
   ⟨symmDiff_comm⟩
@@ -421,7 +421,7 @@ theorem bihimp_comm : a ⇔ b = b ⇔ a := by simp only [(· ⇔ ·), inf_comm]
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : GeneralizedHeytingAlgebra.{u1} α], IsCommutative.{u1} α (bihimp.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedHeytingAlgebra.toLattice.{u1} α _inst_1))) (GeneralizedHeytingAlgebra.toHasHimp.{u1} α _inst_1))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : GeneralizedHeytingAlgebra.{u1} α], IsCommutative.{u1} α (fun (x._@.Mathlib.Order.SymmDiff._hyg.3048 : α) (x._@.Mathlib.Order.SymmDiff._hyg.3050 : α) => bihimp.{u1} α (Lattice.toInf.{u1} α (GeneralizedHeytingAlgebra.toLattice.{u1} α _inst_1)) (GeneralizedHeytingAlgebra.toHImp.{u1} α _inst_1) x._@.Mathlib.Order.SymmDiff._hyg.3048 x._@.Mathlib.Order.SymmDiff._hyg.3050)
+  forall {α : Type.{u1}} [_inst_1 : GeneralizedHeytingAlgebra.{u1} α], IsCommutative.{u1} α (fun (x._@.Mathlib.Order.SymmDiff._hyg.3052 : α) (x._@.Mathlib.Order.SymmDiff._hyg.3054 : α) => bihimp.{u1} α (Lattice.toInf.{u1} α (GeneralizedHeytingAlgebra.toLattice.{u1} α _inst_1)) (GeneralizedHeytingAlgebra.toHImp.{u1} α _inst_1) x._@.Mathlib.Order.SymmDiff._hyg.3052 x._@.Mathlib.Order.SymmDiff._hyg.3054)
 Case conversion may be inaccurate. Consider using '#align bihimp_is_comm bihimp_isCommutativeₓ'. -/
 instance bihimp_isCommutative : IsCommutative α (· ⇔ ·) :=
   ⟨bihimp_comm⟩
@@ -949,7 +949,7 @@ theorem symmDiff_assoc : a ∆ b ∆ c = a ∆ (b ∆ c) := by
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], IsAssociative.{u1} α (symmDiff.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], IsAssociative.{u1} α (fun (x._@.Mathlib.Order.SymmDiff._hyg.6053 : α) (x._@.Mathlib.Order.SymmDiff._hyg.6055 : α) => symmDiff.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x._@.Mathlib.Order.SymmDiff._hyg.6053 x._@.Mathlib.Order.SymmDiff._hyg.6055)
+  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α], IsAssociative.{u1} α (fun (x._@.Mathlib.Order.SymmDiff._hyg.6057 : α) (x._@.Mathlib.Order.SymmDiff._hyg.6059 : α) => symmDiff.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x._@.Mathlib.Order.SymmDiff._hyg.6057 x._@.Mathlib.Order.SymmDiff._hyg.6059)
 Case conversion may be inaccurate. Consider using '#align symm_diff_is_assoc symmDiff_isAssociativeₓ'. -/
 instance symmDiff_isAssociative : IsAssociative α (· ∆ ·) :=
   ⟨symmDiff_assoc⟩
@@ -1029,7 +1029,7 @@ theorem symmDiff_left_involutive (a : α) : Involutive (· ∆ a) :=
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] (a : α), Function.Involutive.{succ u1} α (symmDiff.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) a)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] (a : α), Function.Involutive.{succ u1} α ((fun (x._@.Mathlib.Order.SymmDiff._hyg.6382 : α) (x._@.Mathlib.Order.SymmDiff._hyg.6384 : α) => symmDiff.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x._@.Mathlib.Order.SymmDiff._hyg.6382 x._@.Mathlib.Order.SymmDiff._hyg.6384) a)
+  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] (a : α), Function.Involutive.{succ u1} α ((fun (x._@.Mathlib.Order.SymmDiff._hyg.6386 : α) (x._@.Mathlib.Order.SymmDiff._hyg.6388 : α) => symmDiff.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x._@.Mathlib.Order.SymmDiff._hyg.6386 x._@.Mathlib.Order.SymmDiff._hyg.6388) a)
 Case conversion may be inaccurate. Consider using '#align symm_diff_right_involutive symmDiff_right_involutiveₓ'. -/
 theorem symmDiff_right_involutive (a : α) : Involutive ((· ∆ ·) a) :=
   symmDiff_symmDiff_cancel_left _
@@ -1049,7 +1049,7 @@ theorem symmDiff_left_injective (a : α) : Injective (· ∆ a) :=
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] (a : α), Function.Injective.{succ u1, succ u1} α α (symmDiff.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) a)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] (a : α), Function.Injective.{succ u1, succ u1} α α ((fun (x._@.Mathlib.Order.SymmDiff._hyg.6454 : α) (x._@.Mathlib.Order.SymmDiff._hyg.6456 : α) => symmDiff.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x._@.Mathlib.Order.SymmDiff._hyg.6454 x._@.Mathlib.Order.SymmDiff._hyg.6456) a)
+  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] (a : α), Function.Injective.{succ u1, succ u1} α α ((fun (x._@.Mathlib.Order.SymmDiff._hyg.6458 : α) (x._@.Mathlib.Order.SymmDiff._hyg.6460 : α) => symmDiff.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x._@.Mathlib.Order.SymmDiff._hyg.6458 x._@.Mathlib.Order.SymmDiff._hyg.6460) a)
 Case conversion may be inaccurate. Consider using '#align symm_diff_right_injective symmDiff_right_injectiveₓ'. -/
 theorem symmDiff_right_injective (a : α) : Injective ((· ∆ ·) a) :=
   (symmDiff_right_involutive _).Injective
@@ -1069,7 +1069,7 @@ theorem symmDiff_left_surjective (a : α) : Surjective (· ∆ a) :=
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] (a : α), Function.Surjective.{succ u1, succ u1} α α (symmDiff.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toHasSdiff.{u1} α _inst_1) a)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] (a : α), Function.Surjective.{succ u1, succ u1} α α ((fun (x._@.Mathlib.Order.SymmDiff._hyg.6529 : α) (x._@.Mathlib.Order.SymmDiff._hyg.6531 : α) => symmDiff.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x._@.Mathlib.Order.SymmDiff._hyg.6529 x._@.Mathlib.Order.SymmDiff._hyg.6531) a)
+  forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] (a : α), Function.Surjective.{succ u1, succ u1} α α ((fun (x._@.Mathlib.Order.SymmDiff._hyg.6533 : α) (x._@.Mathlib.Order.SymmDiff._hyg.6535 : α) => symmDiff.{u1} α (SemilatticeSup.toSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x._@.Mathlib.Order.SymmDiff._hyg.6533 x._@.Mathlib.Order.SymmDiff._hyg.6535) a)
 Case conversion may be inaccurate. Consider using '#align symm_diff_right_surjective symmDiff_right_surjectiveₓ'. -/
 theorem symmDiff_right_surjective (a : α) : Surjective ((· ∆ ·) a) :=
   (symmDiff_right_involutive _).Surjective
@@ -1280,7 +1280,7 @@ theorem bihimp_assoc : a ⇔ b ⇔ c = a ⇔ (b ⇔ c) :=
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : BooleanAlgebra.{u1} α], IsAssociative.{u1} α (bihimp.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1))))) (BooleanAlgebra.toHasHimp.{u1} α _inst_1))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : BooleanAlgebra.{u1} α], IsAssociative.{u1} α (fun (x._@.Mathlib.Order.SymmDiff._hyg.7452 : α) (x._@.Mathlib.Order.SymmDiff._hyg.7454 : α) => bihimp.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1))))) (BooleanAlgebra.toHImp.{u1} α _inst_1) x._@.Mathlib.Order.SymmDiff._hyg.7452 x._@.Mathlib.Order.SymmDiff._hyg.7454)
+  forall {α : Type.{u1}} [_inst_1 : BooleanAlgebra.{u1} α], IsAssociative.{u1} α (fun (x._@.Mathlib.Order.SymmDiff._hyg.7456 : α) (x._@.Mathlib.Order.SymmDiff._hyg.7458 : α) => bihimp.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1))))) (BooleanAlgebra.toHImp.{u1} α _inst_1) x._@.Mathlib.Order.SymmDiff._hyg.7456 x._@.Mathlib.Order.SymmDiff._hyg.7458)
 Case conversion may be inaccurate. Consider using '#align bihimp_is_assoc bihimp_isAssociativeₓ'. -/
 instance bihimp_isAssociative : IsAssociative α (· ⇔ ·) :=
   ⟨bihimp_assoc⟩
@@ -1358,7 +1358,7 @@ theorem bihimp_left_involutive (a : α) : Involutive (· ⇔ a) :=
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : BooleanAlgebra.{u1} α] (a : α), Function.Involutive.{succ u1} α (bihimp.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1))))) (BooleanAlgebra.toHasHimp.{u1} α _inst_1) a)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : BooleanAlgebra.{u1} α] (a : α), Function.Involutive.{succ u1} α ((fun (x._@.Mathlib.Order.SymmDiff._hyg.7781 : α) (x._@.Mathlib.Order.SymmDiff._hyg.7783 : α) => bihimp.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1))))) (BooleanAlgebra.toHImp.{u1} α _inst_1) x._@.Mathlib.Order.SymmDiff._hyg.7781 x._@.Mathlib.Order.SymmDiff._hyg.7783) a)
+  forall {α : Type.{u1}} [_inst_1 : BooleanAlgebra.{u1} α] (a : α), Function.Involutive.{succ u1} α ((fun (x._@.Mathlib.Order.SymmDiff._hyg.7785 : α) (x._@.Mathlib.Order.SymmDiff._hyg.7787 : α) => bihimp.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1))))) (BooleanAlgebra.toHImp.{u1} α _inst_1) x._@.Mathlib.Order.SymmDiff._hyg.7785 x._@.Mathlib.Order.SymmDiff._hyg.7787) a)
 Case conversion may be inaccurate. Consider using '#align bihimp_right_involutive bihimp_right_involutiveₓ'. -/
 theorem bihimp_right_involutive (a : α) : Involutive ((· ⇔ ·) a) :=
   bihimp_bihimp_cancel_left _
@@ -1378,7 +1378,7 @@ theorem bihimp_left_injective (a : α) : Injective (· ⇔ a) :=
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : BooleanAlgebra.{u1} α] (a : α), Function.Injective.{succ u1, succ u1} α α (bihimp.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1))))) (BooleanAlgebra.toHasHimp.{u1} α _inst_1) a)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : BooleanAlgebra.{u1} α] (a : α), Function.Injective.{succ u1, succ u1} α α ((fun (x._@.Mathlib.Order.SymmDiff._hyg.7854 : α) (x._@.Mathlib.Order.SymmDiff._hyg.7856 : α) => bihimp.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1))))) (BooleanAlgebra.toHImp.{u1} α _inst_1) x._@.Mathlib.Order.SymmDiff._hyg.7854 x._@.Mathlib.Order.SymmDiff._hyg.7856) a)
+  forall {α : Type.{u1}} [_inst_1 : BooleanAlgebra.{u1} α] (a : α), Function.Injective.{succ u1, succ u1} α α ((fun (x._@.Mathlib.Order.SymmDiff._hyg.7858 : α) (x._@.Mathlib.Order.SymmDiff._hyg.7860 : α) => bihimp.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1))))) (BooleanAlgebra.toHImp.{u1} α _inst_1) x._@.Mathlib.Order.SymmDiff._hyg.7858 x._@.Mathlib.Order.SymmDiff._hyg.7860) a)
 Case conversion may be inaccurate. Consider using '#align bihimp_right_injective bihimp_right_injectiveₓ'. -/
 theorem bihimp_right_injective (a : α) : Injective ((· ⇔ ·) a) :=
   @symmDiff_right_injective αᵒᵈ _ _
@@ -1398,7 +1398,7 @@ theorem bihimp_left_surjective (a : α) : Surjective (· ⇔ a) :=
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : BooleanAlgebra.{u1} α] (a : α), Function.Surjective.{succ u1, succ u1} α α (bihimp.{u1} α (SemilatticeInf.toHasInf.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} α _inst_1))))) (BooleanAlgebra.toHasHimp.{u1} α _inst_1) a)
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : BooleanAlgebra.{u1} α] (a : α), Function.Surjective.{succ u1, succ u1} α α ((fun (x._@.Mathlib.Order.SymmDiff._hyg.7931 : α) (x._@.Mathlib.Order.SymmDiff._hyg.7933 : α) => bihimp.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1))))) (BooleanAlgebra.toHImp.{u1} α _inst_1) x._@.Mathlib.Order.SymmDiff._hyg.7931 x._@.Mathlib.Order.SymmDiff._hyg.7933) a)
+  forall {α : Type.{u1}} [_inst_1 : BooleanAlgebra.{u1} α] (a : α), Function.Surjective.{succ u1, succ u1} α α ((fun (x._@.Mathlib.Order.SymmDiff._hyg.7935 : α) (x._@.Mathlib.Order.SymmDiff._hyg.7937 : α) => bihimp.{u1} α (Lattice.toInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} α (BiheytingAlgebra.toCoheytingAlgebra.{u1} α (BooleanAlgebra.toBiheytingAlgebra.{u1} α _inst_1))))) (BooleanAlgebra.toHImp.{u1} α _inst_1) x._@.Mathlib.Order.SymmDiff._hyg.7935 x._@.Mathlib.Order.SymmDiff._hyg.7937) a)
 Case conversion may be inaccurate. Consider using '#align bihimp_right_surjective bihimp_right_surjectiveₓ'. -/
 theorem bihimp_right_surjective (a : α) : Surjective ((· ⇔ ·) a) :=
   @symmDiff_right_surjective αᵒᵈ _ _
