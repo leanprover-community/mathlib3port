@@ -4,12 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.box_integral.partition.measure
-! leanprover-community/mathlib commit d003c55042c3cd08aefd1ae9a42ef89441cdaaf3
+! leanprover-community/mathlib commit fd5edc43dc4f10b85abfe544b88f82cf13c5f844
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.BoxIntegral.Partition.Additive
-import Mathbin.MeasureTheory.Measure.Lebesgue
+import Mathbin.MeasureTheory.Measure.Lebesgue.Basic
 
 /-!
 # Box-additive functions defined by measures

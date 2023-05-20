@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.function.ae_eq_of_integral
-! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
+! leanprover-community/mathlib commit 915591b2bb3ea303648db07284a161a7f2a9e3d4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.Analysis.InnerProductSpace.Basic
 import Mathbin.Analysis.NormedSpace.Dual
 import Mathbin.MeasureTheory.Function.StronglyMeasurable.Lp
 import Mathbin.MeasureTheory.Integral.SetIntegral

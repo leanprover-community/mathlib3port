@@ -4,13 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.local_properties
-! leanprover-community/mathlib commit 831c494092374cfe9f50591ed0ac81a25efc5b86
+! leanprover-community/mathlib commit a7c017d750512a352b623b1824d75da5998457d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.RingTheory.FiniteType
 import Mathbin.RingTheory.Localization.AtPrime
-import Mathbin.RingTheory.Localization.Away
+import Mathbin.RingTheory.Localization.Away.Basic
 import Mathbin.RingTheory.Localization.Integer
 import Mathbin.RingTheory.Localization.Submodule
 import Mathbin.RingTheory.Nilpotent

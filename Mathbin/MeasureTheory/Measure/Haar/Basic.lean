@@ -3,8 +3,8 @@ Copyright (c) 2020 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
-! This file was ported from Lean 3 source module measure_theory.measure.haar
-! leanprover-community/mathlib commit 57ac39bd365c2f80589a700f9fbb664d3a1a30c2
+! This file was ported from Lean 3 source module measure_theory.measure.haar.basic
+! leanprover-community/mathlib commit fd5edc43dc4f10b85abfe544b88f82cf13c5f844
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

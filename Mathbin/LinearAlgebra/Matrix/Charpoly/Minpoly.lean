@@ -1,10 +1,10 @@
 /-
 Copyright (c) 2020 Aaron Anderson, Jalex Stark. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Aaron Anderson, Jalex Stark
+Authors: Aaron Anderson, Jalex Stark, Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.charpoly.minpoly
-! leanprover-community/mathlib commit d1d69e99ed34c95266668af4e288fc1c598b9a7f
+! leanprover-community/mathlib commit 7ae139f966795f684fc689186f9ccbaedd31bf31
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,12 +14,14 @@ import Mathbin.RingTheory.PowerBasis
 
 /-!
 # The minimal polynomial divides the characteristic polynomial of a matrix.
+
+This also includes some miscellaneous results about `minpoly` on matrices.
 -/
 
 
 noncomputable section
 
-universe u v
+universe u v w
 
 open Polynomial Matrix
 
@@ -27,11 +29,26 @@ variable {R : Type u} [CommRing R]
 
 variable {n : Type v} [DecidableEq n] [Fintype n]
 
+variable {N : Type w} [AddCommGroup N] [Module R N]
+
 open Finset
 
-variable {M : Matrix n n R}
-
 namespace Matrix
+
+open Matrix
+
+variable (M : Matrix n n R)
+
+@[simp]
+theorem minpoly_toLin' : minpoly R M.toLin' = minpoly R M :=
+  minpoly.minpoly_algEquiv (toLinAlgEquiv' : Matrix n n R ≃ₐ[R] _) M
+#align matrix.minpoly_to_lin' Matrix.minpoly_toLin'
+
+@[simp]
+theorem minpoly_toLin (b : Basis n R N) (M : Matrix n n R) :
+    minpoly R (toLin b b M) = minpoly R M :=
+  minpoly.minpoly_algEquiv (toLinAlgEquiv b : Matrix n n R ≃ₐ[R] _) M
+#align matrix.minpoly_to_lin Matrix.minpoly_toLin
 
 theorem isIntegral : IsIntegral R M :=
   ⟨M.charpoly, ⟨charpoly_monic M, aeval_self_charpoly M⟩⟩
@@ -42,6 +59,21 @@ theorem minpoly_dvd_charpoly {K : Type _} [Field K] (M : Matrix n n K) : minpoly
 #align matrix.minpoly_dvd_charpoly Matrix.minpoly_dvd_charpoly
 
 end Matrix
+
+namespace LinearMap
+
+@[simp]
+theorem minpoly_toMatrix' (f : (n → R) →ₗ[R] n → R) : minpoly R f.toMatrix' = minpoly R f :=
+  minpoly.minpoly_algEquiv (toMatrixAlgEquiv' : _ ≃ₐ[R] Matrix n n R) f
+#align linear_map.minpoly_to_matrix' LinearMap.minpoly_toMatrix'
+
+@[simp]
+theorem minpoly_toMatrix (b : Basis n R N) (f : N →ₗ[R] N) :
+    minpoly R (toMatrix b b f) = minpoly R f :=
+  minpoly.minpoly_algEquiv (toMatrixAlgEquiv b : _ ≃ₐ[R] Matrix n n R) f
+#align linear_map.minpoly_to_matrix LinearMap.minpoly_toMatrix
+
+end LinearMap
 
 section PowerBasis
 

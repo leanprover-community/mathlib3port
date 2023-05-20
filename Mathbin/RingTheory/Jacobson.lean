@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Devon Tuma
 
 ! This file was ported from Lean 3 source module ring_theory.jacobson
-! leanprover-community/mathlib commit 6ca1a09bc9aa75824bf97388c9e3b441fc4ccf3f
+! leanprover-community/mathlib commit a7c017d750512a352b623b1824d75da5998457d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.RingTheory.Localization.Away
+import Mathbin.RingTheory.Localization.Away.Basic
 import Mathbin.RingTheory.Ideal.Over
 import Mathbin.RingTheory.JacobsonIdeal
 
@@ -453,8 +453,8 @@ theorem isJacobson_polynomial_of_isJacobson (hR : IsJacobson R) : IsJacobson R[X
   have hi' : (Polynomial.mapRingHom i : R[X] →+* R'[X]).ker ≤ I :=
     by
     refine' fun f hf => polynomial_mem_ideal_of_coeff_mem_ideal I f fun n => _
-    replace hf := congr_arg (fun g : Polynomial ((Quotient.mk' I).comp C).range => g.coeff n) hf
-    change (Polynomial.map ((Quotient.mk' I).comp C).range_restrict f).coeff n = 0 at hf
+    replace hf := congr_arg (fun g : Polynomial ((Quotient.mk' I).comp C).range => g.Coeff n) hf
+    change (Polynomial.map ((Quotient.mk' I).comp C).range_restrict f).Coeff n = 0 at hf
     rw [coeff_map, Subtype.ext_iff] at hf
     rwa [mem_comap, ← quotient.eq_zero_iff_mem, ← RingHom.comp_apply]
   haveI :=

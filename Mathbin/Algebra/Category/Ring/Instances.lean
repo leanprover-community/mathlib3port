@@ -4,12 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebra.category.Ring.instances
-! leanprover-community/mathlib commit c1918ac18519732d5bdfa2b6917c016c4d6a8148
+! leanprover-community/mathlib commit a7c017d750512a352b623b1824d75da5998457d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Category.Ring.Basic
-import Mathbin.RingTheory.Localization.Away
+import Mathbin.RingTheory.Localization.Away.Basic
 import Mathbin.RingTheory.Ideal.LocalRing
 
 /-!

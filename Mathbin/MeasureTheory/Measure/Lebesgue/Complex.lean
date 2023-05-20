@@ -3,13 +3,14 @@ Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
-! This file was ported from Lean 3 source module measure_theory.measure.complex_lebesgue
-! leanprover-community/mathlib commit f0c8bf9245297a541f468be517f1bde6195105e9
+! This file was ported from Lean 3 source module measure_theory.measure.lebesgue.complex
+! leanprover-community/mathlib commit fd5edc43dc4f10b85abfe544b88f82cf13c5f844
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.MeasureTheory.Measure.Lebesgue
-import Mathbin.MeasureTheory.Measure.HaarOfBasis
+import Mathbin.MeasureTheory.Constructions.BorelSpace.Complex
+import Mathbin.MeasureTheory.Measure.Lebesgue.Basic
+import Mathbin.MeasureTheory.Measure.Haar.OfBasis
 
 /-!
 # Lebesgue measure on `ℂ`

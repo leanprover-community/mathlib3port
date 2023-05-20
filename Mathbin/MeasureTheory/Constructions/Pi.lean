@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module measure_theory.constructions.pi
-! leanprover-community/mathlib commit 4b83fd2855cbf5e9da1fcf0fc1eba89a48c21551
+! leanprover-community/mathlib commit fd5edc43dc4f10b85abfe544b88f82cf13c5f844
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.MeasureTheory.Constructions.Prod
+import Mathbin.MeasureTheory.Constructions.Prod.Basic
 import Mathbin.MeasureTheory.Group.Measure
 import Mathbin.Topology.Constructions
 

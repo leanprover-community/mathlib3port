@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.function.l2_space
-! leanprover-community/mathlib commit 24e0c85412ff6adbeca08022c25ba4876eedf37a
+! leanprover-community/mathlib commit 83a66c8775fa14ee5180c85cab98e970956401ad
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.Data.IsROrC.Lemmas
 import Mathbin.MeasureTheory.Function.StronglyMeasurable.Inner
 import Mathbin.MeasureTheory.Integral.SetIntegral
 

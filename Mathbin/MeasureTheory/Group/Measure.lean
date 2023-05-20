@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module measure_theory.group.measure
-! leanprover-community/mathlib commit 950605e4b9b4e2827681f637ba997307814a5ca9
+! leanprover-community/mathlib commit fd5edc43dc4f10b85abfe544b88f82cf13c5f844
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,7 +13,7 @@ import Mathbin.MeasureTheory.Measure.Regular
 import Mathbin.MeasureTheory.Group.MeasurableEquiv
 import Mathbin.MeasureTheory.Measure.OpenPos
 import Mathbin.MeasureTheory.Group.Action
-import Mathbin.MeasureTheory.Constructions.Prod
+import Mathbin.MeasureTheory.Constructions.Prod.Basic
 import Mathbin.Topology.ContinuousFunction.CocompactMap
 
 /-!
@@ -842,28 +842,7 @@ instance (priority := 100) IsHaarMeasure.noAtoms [TopologicalGroup G] [BorelSpac
 #align measure_theory.measure.is_haar_measure.has_no_atoms MeasureTheory.Measure.IsHaarMeasure.noAtoms
 #align measure_theory.measure.is_add_haar_measure.has_no_atoms MeasureTheory.Measure.IsAddHaarMeasure.noAtoms
 
-/- The above instance applies in particular to show that an additive Haar measure on a nontrivial
-finite-dimensional real vector space has no atom. -/
-example {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [Nontrivial E] [FiniteDimensional ℝ E]
-    [MeasurableSpace E] [BorelSpace E] (μ : Measure E) [IsAddHaarMeasure μ] : NoAtoms μ := by
-  infer_instance
-
 end
-
-variable [NontriviallyNormedField 𝕜] [TopologicalSpace G] [TopologicalSpace H] [AddCommGroup G]
-  [AddCommGroup H] [TopologicalAddGroup G] [TopologicalAddGroup H] [Module 𝕜 G] [Module 𝕜 H]
-  (μ : Measure G) [IsAddHaarMeasure μ] [BorelSpace G] [BorelSpace H] [T2Space H]
-
-instance MapContinuousLinearEquiv.isAddHaarMeasure (e : G ≃L[𝕜] H) : IsAddHaarMeasure (μ.map e) :=
-  e.toAddEquiv.is_add_haar_measure_map _ e.Continuous e.symm.Continuous
-#align measure_theory.measure.map_continuous_linear_equiv.is_add_haar_measure MeasureTheory.Measure.MapContinuousLinearEquiv.isAddHaarMeasure
-
-variable [CompleteSpace 𝕜] [T2Space G] [FiniteDimensional 𝕜 G] [ContinuousSMul 𝕜 G]
-  [ContinuousSMul 𝕜 H]
-
-instance MapLinearEquiv.isAddHaarMeasure (e : G ≃ₗ[𝕜] H) : IsAddHaarMeasure (μ.map e) :=
-  MapContinuousLinearEquiv.isAddHaarMeasure _ e.toContinuousLinearEquiv
-#align measure_theory.measure.map_linear_equiv.is_add_haar_measure MeasureTheory.Measure.MapLinearEquiv.isAddHaarMeasure
 
 end Measure
 

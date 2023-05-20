@@ -4,11 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.kernel.basic
-! leanprover-community/mathlib commit a9545e8a564bac7f24637443f52ae955474e4991
+! leanprover-community/mathlib commit fd5edc43dc4f10b85abfe544b88f82cf13c5f844
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.MeasureTheory.Constructions.Prod
+import Mathbin.MeasureTheory.Integral.Bochner
+import Mathbin.MeasureTheory.Constructions.Prod.Basic
 
 /-!
 # Markov Kernels

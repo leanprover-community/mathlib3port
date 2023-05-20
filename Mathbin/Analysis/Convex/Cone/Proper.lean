@@ -4,11 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Apurva Nakade
 
 ! This file was ported from Lean 3 source module analysis.convex.cone.proper
-! leanprover-community/mathlib commit f0c8bf9245297a541f468be517f1bde6195105e9
+! leanprover-community/mathlib commit 915591b2bb3ea303648db07284a161a7f2a9e3d4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Convex.Cone.Basic
+import Mathbin.Topology.Algebra.Monoid
 
 /-!
 
@@ -34,8 +35,6 @@ The next steps are:
 
 -/
 
-
-open ContinuousLinearMap Filter
 
 namespace ConvexCone
 

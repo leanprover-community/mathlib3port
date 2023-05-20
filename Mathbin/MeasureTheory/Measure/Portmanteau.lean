@@ -4,12 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 
 ! This file was ported from Lean 3 source module measure_theory.measure.portmanteau
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit fd5edc43dc4f10b85abfe544b88f82cf13c5f844
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.MeasureTheory.Measure.ProbabilityMeasure
-import Mathbin.MeasureTheory.Measure.Lebesgue
+import Mathbin.MeasureTheory.Measure.Lebesgue.Basic
 
 /-!
 # Characterizations of weak convergence of finite measures and probability measures

@@ -4,16 +4,17 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module analysis.convolution
-! leanprover-community/mathlib commit a75898643b2d774cced9ae7c0b28c21663b99666
+! leanprover-community/mathlib commit fd5edc43dc4f10b85abfe544b88f82cf13c5f844
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.Analysis.Calculus.BumpFunctionInner
+import Mathbin.Analysis.Calculus.ParametricIntegral
+import Mathbin.MeasureTheory.Constructions.Prod.Integral
+import Mathbin.MeasureTheory.Function.LocallyIntegrable
 import Mathbin.MeasureTheory.Group.Integration
 import Mathbin.MeasureTheory.Group.Prod
-import Mathbin.MeasureTheory.Function.LocallyIntegrable
-import Mathbin.Analysis.Calculus.BumpFunctionInner
 import Mathbin.MeasureTheory.Integral.IntervalIntegral
-import Mathbin.Analysis.Calculus.ParametricIntegral
 
 /-!
 # Convolution of functions

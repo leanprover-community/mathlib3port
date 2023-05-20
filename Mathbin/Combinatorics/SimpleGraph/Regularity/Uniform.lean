@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.regularity.uniform
-! leanprover-community/mathlib commit 832f7b9162039c28b9361289c8681f155cae758f
+! leanprover-community/mathlib commit f51de8769c34652d82d1c8e5f8f18f8374782bed
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -274,20 +274,14 @@ theorem nonuniformWitness_subset (h : ¬G.IsUniform ε s t) : G.nonuniformWitnes
   · exact G.right_nonuniform_witnesses_subset fun i => h i.symm
 #align simple_graph.nonuniform_witness_subset SimpleGraph.nonuniformWitness_subset
 
-/- warning: simple_graph.nonuniform_witness_card_le -> SimpleGraph.nonuniformWitness_card_le is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {𝕜 : Type.{u2}} [_inst_1 : LinearOrderedField.{u2} 𝕜] (G : SimpleGraph.{u1} α) [_inst_2 : DecidableRel.{succ u1} α (SimpleGraph.Adj.{u1} α G)] {ε : 𝕜} {s : Finset.{u1} α} {t : Finset.{u1} α}, (Not (SimpleGraph.IsUniform.{u1, u2} α 𝕜 _inst_1 G (fun (a : α) (b : α) => _inst_2 a b) ε s t)) -> (LE.le.{u2} 𝕜 (Preorder.toHasLe.{u2} 𝕜 (PartialOrder.toPreorder.{u2} 𝕜 (OrderedAddCommGroup.toPartialOrder.{u2} 𝕜 (StrictOrderedRing.toOrderedAddCommGroup.{u2} 𝕜 (LinearOrderedRing.toStrictOrderedRing.{u2} 𝕜 (LinearOrderedCommRing.toLinearOrderedRing.{u2} 𝕜 (LinearOrderedField.toLinearOrderedCommRing.{u2} 𝕜 _inst_1))))))) (HMul.hMul.{u2, u2, u2} 𝕜 𝕜 𝕜 (instHMul.{u2} 𝕜 (Distrib.toHasMul.{u2} 𝕜 (Ring.toDistrib.{u2} 𝕜 (DivisionRing.toRing.{u2} 𝕜 (Field.toDivisionRing.{u2} 𝕜 (LinearOrderedField.toField.{u2} 𝕜 _inst_1)))))) ((fun (a : Type) (b : Type.{u2}) [self : HasLiftT.{1, succ u2} a b] => self.0) Nat 𝕜 (HasLiftT.mk.{1, succ u2} Nat 𝕜 (CoeTCₓ.coe.{1, succ u2} Nat 𝕜 (Nat.castCoe.{u2} 𝕜 (AddMonoidWithOne.toNatCast.{u2} 𝕜 (AddGroupWithOne.toAddMonoidWithOne.{u2} 𝕜 (AddCommGroupWithOne.toAddGroupWithOne.{u2} 𝕜 (Ring.toAddCommGroupWithOne.{u2} 𝕜 (DivisionRing.toRing.{u2} 𝕜 (Field.toDivisionRing.{u2} 𝕜 (LinearOrderedField.toField.{u2} 𝕜 _inst_1)))))))))) (Finset.card.{u1} α s)) ε) ((fun (a : Type) (b : Type.{u2}) [self : HasLiftT.{1, succ u2} a b] => self.0) Nat 𝕜 (HasLiftT.mk.{1, succ u2} Nat 𝕜 (CoeTCₓ.coe.{1, succ u2} Nat 𝕜 (Nat.castCoe.{u2} 𝕜 (AddMonoidWithOne.toNatCast.{u2} 𝕜 (AddGroupWithOne.toAddMonoidWithOne.{u2} 𝕜 (AddCommGroupWithOne.toAddGroupWithOne.{u2} 𝕜 (Ring.toAddCommGroupWithOne.{u2} 𝕜 (DivisionRing.toRing.{u2} 𝕜 (Field.toDivisionRing.{u2} 𝕜 (LinearOrderedField.toField.{u2} 𝕜 _inst_1)))))))))) (Finset.card.{u1} α (SimpleGraph.nonuniformWitness.{u1, u2} α 𝕜 _inst_1 G (fun (a : α) (b : α) => _inst_2 a b) ε s t))))
-but is expected to have type
-  forall {α : Type.{u2}} {𝕜 : Type.{u1}} [_inst_1 : LinearOrderedField.{u1} 𝕜] (G : SimpleGraph.{u2} α) [_inst_2 : DecidableRel.{succ u2} α (SimpleGraph.Adj.{u2} α G)] {ε : 𝕜} {s : Finset.{u2} α} {t : Finset.{u2} α}, (Not (SimpleGraph.IsUniform.{u2, u1} α 𝕜 _inst_1 G (fun (a : α) (b : α) => _inst_2 a b) ε s t)) -> (LE.le.{u1} 𝕜 (Preorder.toLE.{u1} 𝕜 (PartialOrder.toPreorder.{u1} 𝕜 (StrictOrderedRing.toPartialOrder.{u1} 𝕜 (LinearOrderedRing.toStrictOrderedRing.{u1} 𝕜 (LinearOrderedCommRing.toLinearOrderedRing.{u1} 𝕜 (LinearOrderedField.toLinearOrderedCommRing.{u1} 𝕜 _inst_1)))))) (HMul.hMul.{u1, u1, u1} 𝕜 𝕜 𝕜 (instHMul.{u1} 𝕜 (NonUnitalNonAssocRing.toMul.{u1} 𝕜 (NonAssocRing.toNonUnitalNonAssocRing.{u1} 𝕜 (Ring.toNonAssocRing.{u1} 𝕜 (DivisionRing.toRing.{u1} 𝕜 (Field.toDivisionRing.{u1} 𝕜 (LinearOrderedField.toField.{u1} 𝕜 _inst_1))))))) (Nat.cast.{u1} 𝕜 (Semiring.toNatCast.{u1} 𝕜 (DivisionSemiring.toSemiring.{u1} 𝕜 (Semifield.toDivisionSemiring.{u1} 𝕜 (LinearOrderedSemifield.toSemifield.{u1} 𝕜 (LinearOrderedField.toLinearOrderedSemifield.{u1} 𝕜 _inst_1))))) (Finset.card.{u2} α s)) ε) (Nat.cast.{u1} 𝕜 (Semiring.toNatCast.{u1} 𝕜 (DivisionSemiring.toSemiring.{u1} 𝕜 (Semifield.toDivisionSemiring.{u1} 𝕜 (LinearOrderedSemifield.toSemifield.{u1} 𝕜 (LinearOrderedField.toLinearOrderedSemifield.{u1} 𝕜 _inst_1))))) (Finset.card.{u2} α (SimpleGraph.nonuniformWitness.{u2, u1} α 𝕜 _inst_1 G (fun (a : α) (b : α) => _inst_2 a b) ε s t))))
-Case conversion may be inaccurate. Consider using '#align simple_graph.nonuniform_witness_card_le SimpleGraph.nonuniformWitness_card_leₓ'. -/
-theorem nonuniformWitness_card_le (h : ¬G.IsUniform ε s t) :
+theorem le_card_nonuniformWitness (h : ¬G.IsUniform ε s t) :
     (s.card : 𝕜) * ε ≤ (G.nonuniformWitness ε s t).card :=
   by
   unfold nonuniform_witness
   split_ifs
   · exact G.left_nonuniform_witnesses_card h
   · exact G.right_nonuniform_witnesses_card fun i => h i.symm
-#align simple_graph.nonuniform_witness_card_le SimpleGraph.nonuniformWitness_card_le
+#align simple_graph.le_card_nonuniform_witness SimpleGraph.le_card_nonuniformWitness
 
 /- warning: simple_graph.nonuniform_witness_spec -> SimpleGraph.nonuniformWitness_spec is a dubious translation:
 lean 3 declaration is

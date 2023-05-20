@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module algebraic_geometry.prime_spectrum.basic
-! leanprover-community/mathlib commit d39590fc8728fbf6743249802486f8c91ffe07bc
+! leanprover-community/mathlib commit a7c017d750512a352b623b1824d75da5998457d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,7 +12,7 @@ import Mathbin.Algebra.PunitInstances
 import Mathbin.LinearAlgebra.Finsupp
 import Mathbin.RingTheory.Ideal.Over
 import Mathbin.RingTheory.Ideal.Prod
-import Mathbin.RingTheory.Localization.Away
+import Mathbin.RingTheory.Localization.Away.Basic
 import Mathbin.RingTheory.Nilpotent
 import Mathbin.Topology.Sets.Closeds
 import Mathbin.Topology.Sober

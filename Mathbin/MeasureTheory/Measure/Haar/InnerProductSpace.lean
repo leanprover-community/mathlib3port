@@ -3,13 +3,13 @@ Copyright (c) 2022 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
-! This file was ported from Lean 3 source module measure_theory.measure.haar_of_inner
-! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
+! This file was ported from Lean 3 source module measure_theory.measure.haar.inner_product_space
+! leanprover-community/mathlib commit fd5edc43dc4f10b85abfe544b88f82cf13c5f844
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.InnerProductSpace.Orientation
-import Mathbin.MeasureTheory.Measure.HaarLebesgue
+import Mathbin.MeasureTheory.Measure.Lebesgue.EqHaar
 
 /-!
 # Volume forms and measures on inner product spaces

@@ -4,11 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.ring_hom.integral
-! leanprover-community/mathlib commit b5aecf07a179c60b6b37c1ac9da952f3b565c785
+! leanprover-community/mathlib commit a7c017d750512a352b623b1824d75da5998457d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.RingTheory.RingHomProperties
+import Mathbin.RingTheory.IntegralClosure
 
 /-!
 

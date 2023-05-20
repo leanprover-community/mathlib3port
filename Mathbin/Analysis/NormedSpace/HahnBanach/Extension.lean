@@ -4,13 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.normed_space.hahn_banach.extension
-! leanprover-community/mathlib commit aa1dbeab548d61bc840a099abae4437046eaaf00
+! leanprover-community/mathlib commit 915591b2bb3ea303648db07284a161a7f2a9e3d4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Convex.Cone.Basic
 import Mathbin.Analysis.NormedSpace.IsROrC
 import Mathbin.Analysis.NormedSpace.Extend
+import Mathbin.Data.IsROrC.Lemmas
 
 /-!
 # Extension Hahn-Banach theorem

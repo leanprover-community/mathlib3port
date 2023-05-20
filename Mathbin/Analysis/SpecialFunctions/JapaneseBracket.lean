@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.special_functions.japanese_bracket
-! leanprover-community/mathlib commit 4fa54b337f7d52805480306db1b1439c741848c8
+! leanprover-community/mathlib commit fd5edc43dc4f10b85abfe544b88f82cf13c5f844
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.MeasureTheory.Measure.HaarLebesgue
+import Mathbin.MeasureTheory.Measure.Lebesgue.EqHaar
 import Mathbin.MeasureTheory.Integral.Layercake
 
 /-!

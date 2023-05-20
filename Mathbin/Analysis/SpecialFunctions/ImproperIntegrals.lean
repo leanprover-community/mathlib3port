@@ -4,14 +4,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.special_functions.improper_integrals
-! leanprover-community/mathlib commit ec4528061e02f0acc848ed06eb22573645602c7e
+! leanprover-community/mathlib commit fd5edc43dc4f10b85abfe544b88f82cf13c5f844
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.MeasureTheory.Integral.IntegralEqImproper
+import Mathbin.Analysis.SpecialFunctions.Integrals
 import Mathbin.MeasureTheory.Group.Integration
 import Mathbin.MeasureTheory.Integral.ExpDecay
-import Mathbin.Analysis.SpecialFunctions.Integrals
+import Mathbin.MeasureTheory.Integral.IntegralEqImproper
+import Mathbin.MeasureTheory.Measure.Lebesgue.Integral
 
 /-!
 # Evaluation of specific improper integrals
