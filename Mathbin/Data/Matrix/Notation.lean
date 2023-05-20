@@ -708,15 +708,15 @@ theorem smul_vec3 {R : Type _} [SMul R α] (x : R) (a₀ a₁ a₂ : α) :
 
 variable [AddCommMonoid α] [Mul α]
 
-/- warning: matrix.vec2_dot_product' -> Matrix.vec2_dot_product' is a dubious translation:
+/- warning: matrix.vec2_dot_product' -> Matrix.vec2_dotProduct' is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : AddCommMonoid.{u1} α] [_inst_2 : Mul.{u1} α] {a₀ : α} {a₁ : α} {b₀ : α} {b₁ : α}, Eq.{succ u1} α (Matrix.dotProduct.{u1, 0} (Fin (Nat.succ (Nat.succ (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))))) α (Fin.fintype (Nat.succ (Nat.succ (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))))) _inst_2 _inst_1 (Matrix.vecCons.{u1} α (Nat.succ (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) a₀ (Matrix.vecCons.{u1} α (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) a₁ (Matrix.vecEmpty.{u1} α))) (Matrix.vecCons.{u1} α (Nat.succ (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) b₀ (Matrix.vecCons.{u1} α (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) b₁ (Matrix.vecEmpty.{u1} α)))) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toHasAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α _inst_1)))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_2) a₀ b₀) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_2) a₁ b₁))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : AddCommMonoid.{u1} α] [_inst_2 : Mul.{u1} α] {a₀ : α} {a₁ : α} {b₀ : α} {b₁ : α}, Eq.{succ u1} α (Matrix.dotProduct.{u1, 0} (Fin (Nat.succ (Nat.succ (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))) α (Fin.fintype (Nat.succ (Nat.succ (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))) _inst_2 _inst_1 (Matrix.vecCons.{u1} α (Nat.succ (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) a₀ (Matrix.vecCons.{u1} α (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) a₁ (Matrix.vecEmpty.{u1} α))) (Matrix.vecCons.{u1} α (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) b₀ (Matrix.vecCons.{u1} α (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) b₁ (Matrix.vecEmpty.{u1} α)))) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α _inst_1)))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_2) a₀ b₀) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_2) a₁ b₁))
-Case conversion may be inaccurate. Consider using '#align matrix.vec2_dot_product' Matrix.vec2_dot_product'ₓ'. -/
-theorem vec2_dot_product' {a₀ a₁ b₀ b₁ : α} : ![a₀, a₁] ⬝ᵥ ![b₀, b₁] = a₀ * b₀ + a₁ * b₁ := by
+Case conversion may be inaccurate. Consider using '#align matrix.vec2_dot_product' Matrix.vec2_dotProduct'ₓ'. -/
+theorem vec2_dotProduct' {a₀ a₁ b₀ b₁ : α} : ![a₀, a₁] ⬝ᵥ ![b₀, b₁] = a₀ * b₀ + a₁ * b₁ := by
   rw [cons_dot_product_cons, cons_dot_product_cons, dot_product_empty, add_zero]
-#align matrix.vec2_dot_product' Matrix.vec2_dot_product'
+#align matrix.vec2_dot_product' Matrix.vec2_dotProduct'
 
 /- warning: matrix.vec2_dot_product -> Matrix.vec2_dotProduct is a dubious translation:
 lean 3 declaration is
@@ -726,20 +726,20 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align matrix.vec2_dot_product Matrix.vec2_dotProductₓ'. -/
 @[simp]
 theorem vec2_dotProduct (v w : Fin 2 → α) : v ⬝ᵥ w = v 0 * w 0 + v 1 * w 1 :=
-  vec2_dot_product'
+  vec2_dotProduct'
 #align matrix.vec2_dot_product Matrix.vec2_dotProduct
 
-/- warning: matrix.vec3_dot_product' -> Matrix.vec3_dot_product' is a dubious translation:
+/- warning: matrix.vec3_dot_product' -> Matrix.vec3_dotProduct' is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : AddCommMonoid.{u1} α] [_inst_2 : Mul.{u1} α] {a₀ : α} {a₁ : α} {a₂ : α} {b₀ : α} {b₁ : α} {b₂ : α}, Eq.{succ u1} α (Matrix.dotProduct.{u1, 0} (Fin (Nat.succ (Nat.succ (Nat.succ (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))))))) α (Fin.fintype (Nat.succ (Nat.succ (Nat.succ (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))))))) _inst_2 _inst_1 (Matrix.vecCons.{u1} α (Nat.succ (Nat.succ (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))))) a₀ (Matrix.vecCons.{u1} α (Nat.succ (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) a₁ (Matrix.vecCons.{u1} α (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) a₂ (Matrix.vecEmpty.{u1} α)))) (Matrix.vecCons.{u1} α (Nat.succ (Nat.succ (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))))) b₀ (Matrix.vecCons.{u1} α (Nat.succ (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) b₁ (Matrix.vecCons.{u1} α (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) b₂ (Matrix.vecEmpty.{u1} α))))) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toHasAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α _inst_1)))) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toHasAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α _inst_1)))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_2) a₀ b₀) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_2) a₁ b₁)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_2) a₂ b₂))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : AddCommMonoid.{u1} α] [_inst_2 : Mul.{u1} α] {a₀ : α} {a₁ : α} {a₂ : α} {b₀ : α} {b₁ : α} {b₂ : α}, Eq.{succ u1} α (Matrix.dotProduct.{u1, 0} (Fin (Nat.succ (Nat.succ (Nat.succ (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))) α (Fin.fintype (Nat.succ (Nat.succ (Nat.succ (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))))) _inst_2 _inst_1 (Matrix.vecCons.{u1} α (Nat.succ (Nat.succ (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))) a₀ (Matrix.vecCons.{u1} α (Nat.succ (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) a₁ (Matrix.vecCons.{u1} α (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) a₂ (Matrix.vecEmpty.{u1} α)))) (Matrix.vecCons.{u1} α (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) b₀ (Matrix.vecCons.{u1} α (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) b₁ (Matrix.vecCons.{u1} α (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) b₂ (Matrix.vecEmpty.{u1} α))))) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α _inst_1)))) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α _inst_1)))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_2) a₀ b₀) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_2) a₁ b₁)) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α _inst_2) a₂ b₂))
-Case conversion may be inaccurate. Consider using '#align matrix.vec3_dot_product' Matrix.vec3_dot_product'ₓ'. -/
-theorem vec3_dot_product' {a₀ a₁ a₂ b₀ b₁ b₂ : α} :
+Case conversion may be inaccurate. Consider using '#align matrix.vec3_dot_product' Matrix.vec3_dotProduct'ₓ'. -/
+theorem vec3_dotProduct' {a₀ a₁ a₂ b₀ b₁ b₂ : α} :
     ![a₀, a₁, a₂] ⬝ᵥ ![b₀, b₁, b₂] = a₀ * b₀ + a₁ * b₁ + a₂ * b₂ := by
   rw [cons_dot_product_cons, cons_dot_product_cons, cons_dot_product_cons, dot_product_empty,
     add_zero, add_assoc]
-#align matrix.vec3_dot_product' Matrix.vec3_dot_product'
+#align matrix.vec3_dot_product' Matrix.vec3_dotProduct'
 
 /- warning: matrix.vec3_dot_product -> Matrix.vec3_dotProduct is a dubious translation:
 lean 3 declaration is
@@ -749,7 +749,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align matrix.vec3_dot_product Matrix.vec3_dotProductₓ'. -/
 @[simp]
 theorem vec3_dotProduct (v w : Fin 3 → α) : v ⬝ᵥ w = v 0 * w 0 + v 1 * w 1 + v 2 * w 2 :=
-  vec3_dot_product'
+  vec3_dotProduct'
 #align matrix.vec3_dot_product Matrix.vec3_dotProduct
 
 end Vec2AndVec3

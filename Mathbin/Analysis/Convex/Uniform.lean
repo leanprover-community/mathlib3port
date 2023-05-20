@@ -39,6 +39,7 @@ open Set Metric
 
 open Convex Pointwise
 
+#print UniformConvexSpace /-
 /-- A *uniformly convex space* is a real normed space where the triangle inequality is strict with a
 uniform bound. Namely, over the `x` and `y` of norm `1`, `‖x + y‖` is uniformly bounded above
 by a constant `< 2` when `‖x - y‖` is uniformly bounded below by a positive constant.
@@ -49,6 +50,7 @@ class UniformConvexSpace (E : Type _) [SeminormedAddCommGroup E] : Prop where
     ∀ ⦃ε : ℝ⦄,
       0 < ε → ∃ δ, 0 < δ ∧ ∀ ⦃x : E⦄, ‖x‖ = 1 → ∀ ⦃y⦄, ‖y‖ = 1 → ε ≤ ‖x - y‖ → ‖x + y‖ ≤ 2 - δ
 #align uniform_convex_space UniformConvexSpace
+-/
 
 variable {E : Type _}
 
@@ -56,6 +58,12 @@ section SeminormedAddCommGroup
 
 variable (E) [SeminormedAddCommGroup E] [UniformConvexSpace E] {ε : ℝ}
 
+/- warning: exists_forall_sphere_dist_add_le_two_sub -> exists_forall_sphere_dist_add_le_two_sub is a dubious translation:
+lean 3 declaration is
+  forall (E : Type.{u1}) [_inst_1 : SeminormedAddCommGroup.{u1} E] [_inst_2 : UniformConvexSpace.{u1} E _inst_1] {ε : Real}, (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) ε) -> (Exists.{1} Real (fun (δ : Real) => And (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) δ) (forall {{x : E}}, (Eq.{1} Real (Norm.norm.{u1} E (SeminormedAddCommGroup.toHasNorm.{u1} E _inst_1) x) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne)))) -> (forall {{y : E}}, (Eq.{1} Real (Norm.norm.{u1} E (SeminormedAddCommGroup.toHasNorm.{u1} E _inst_1) y) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne)))) -> (LE.le.{0} Real Real.hasLe ε (Norm.norm.{u1} E (SeminormedAddCommGroup.toHasNorm.{u1} E _inst_1) (HSub.hSub.{u1, u1, u1} E E E (instHSub.{u1} E (SubNegMonoid.toHasSub.{u1} E (AddGroup.toSubNegMonoid.{u1} E (SeminormedAddGroup.toAddGroup.{u1} E (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} E _inst_1))))) x y))) -> (LE.le.{0} Real Real.hasLe (Norm.norm.{u1} E (SeminormedAddCommGroup.toHasNorm.{u1} E _inst_1) (HAdd.hAdd.{u1, u1, u1} E E E (instHAdd.{u1} E (AddZeroClass.toHasAdd.{u1} E (AddMonoid.toAddZeroClass.{u1} E (SubNegMonoid.toAddMonoid.{u1} E (AddGroup.toSubNegMonoid.{u1} E (SeminormedAddGroup.toAddGroup.{u1} E (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} E _inst_1))))))) x y)) (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.hasSub) (OfNat.ofNat.{0} Real 2 (OfNat.mk.{0} Real 2 (bit0.{0} Real Real.hasAdd (One.one.{0} Real Real.hasOne)))) δ))))))
+but is expected to have type
+  forall (E : Type.{u1}) [_inst_1 : SeminormedAddCommGroup.{u1} E] [_inst_2 : UniformConvexSpace.{u1} E _inst_1] {ε : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) ε) -> (Exists.{1} Real (fun (δ : Real) => And (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) δ) (forall {{x : E}}, (Eq.{1} Real (Norm.norm.{u1} E (SeminormedAddCommGroup.toNorm.{u1} E _inst_1) x) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))) -> (forall {{y : E}}, (Eq.{1} Real (Norm.norm.{u1} E (SeminormedAddCommGroup.toNorm.{u1} E _inst_1) y) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))) -> (LE.le.{0} Real Real.instLEReal ε (Norm.norm.{u1} E (SeminormedAddCommGroup.toNorm.{u1} E _inst_1) (HSub.hSub.{u1, u1, u1} E E E (instHSub.{u1} E (SubNegMonoid.toSub.{u1} E (AddGroup.toSubNegMonoid.{u1} E (SeminormedAddGroup.toAddGroup.{u1} E (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} E _inst_1))))) x y))) -> (LE.le.{0} Real Real.instLEReal (Norm.norm.{u1} E (SeminormedAddCommGroup.toNorm.{u1} E _inst_1) (HAdd.hAdd.{u1, u1, u1} E E E (instHAdd.{u1} E (AddZeroClass.toAdd.{u1} E (AddMonoid.toAddZeroClass.{u1} E (SubNegMonoid.toAddMonoid.{u1} E (AddGroup.toSubNegMonoid.{u1} E (SeminormedAddGroup.toAddGroup.{u1} E (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} E _inst_1))))))) x y)) (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.instSubReal) (OfNat.ofNat.{0} Real 2 (instOfNat.{0} Real 2 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))) δ))))))
+Case conversion may be inaccurate. Consider using '#align exists_forall_sphere_dist_add_le_two_sub exists_forall_sphere_dist_add_le_two_subₓ'. -/
 theorem exists_forall_sphere_dist_add_le_two_sub (hε : 0 < ε) :
     ∃ δ, 0 < δ ∧ ∀ ⦃x : E⦄, ‖x‖ = 1 → ∀ ⦃y⦄, ‖y‖ = 1 → ε ≤ ‖x - y‖ → ‖x + y‖ ≤ 2 - δ :=
   UniformConvexSpace.uniform_convex hε
@@ -63,6 +71,12 @@ theorem exists_forall_sphere_dist_add_le_two_sub (hε : 0 < ε) :
 
 variable [NormedSpace ℝ E]
 
+/- warning: exists_forall_closed_ball_dist_add_le_two_sub -> exists_forall_closed_ball_dist_add_le_two_sub is a dubious translation:
+lean 3 declaration is
+  forall (E : Type.{u1}) [_inst_1 : SeminormedAddCommGroup.{u1} E] [_inst_2 : UniformConvexSpace.{u1} E _inst_1] {ε : Real} [_inst_3 : NormedSpace.{0, u1} Real E Real.normedField _inst_1], (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) ε) -> (Exists.{1} Real (fun (δ : Real) => And (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) δ) (forall {{x : E}}, (LE.le.{0} Real Real.hasLe (Norm.norm.{u1} E (SeminormedAddCommGroup.toHasNorm.{u1} E _inst_1) x) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne)))) -> (forall {{y : E}}, (LE.le.{0} Real Real.hasLe (Norm.norm.{u1} E (SeminormedAddCommGroup.toHasNorm.{u1} E _inst_1) y) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne)))) -> (LE.le.{0} Real Real.hasLe ε (Norm.norm.{u1} E (SeminormedAddCommGroup.toHasNorm.{u1} E _inst_1) (HSub.hSub.{u1, u1, u1} E E E (instHSub.{u1} E (SubNegMonoid.toHasSub.{u1} E (AddGroup.toSubNegMonoid.{u1} E (SeminormedAddGroup.toAddGroup.{u1} E (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} E _inst_1))))) x y))) -> (LE.le.{0} Real Real.hasLe (Norm.norm.{u1} E (SeminormedAddCommGroup.toHasNorm.{u1} E _inst_1) (HAdd.hAdd.{u1, u1, u1} E E E (instHAdd.{u1} E (AddZeroClass.toHasAdd.{u1} E (AddMonoid.toAddZeroClass.{u1} E (SubNegMonoid.toAddMonoid.{u1} E (AddGroup.toSubNegMonoid.{u1} E (SeminormedAddGroup.toAddGroup.{u1} E (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} E _inst_1))))))) x y)) (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.hasSub) (OfNat.ofNat.{0} Real 2 (OfNat.mk.{0} Real 2 (bit0.{0} Real Real.hasAdd (One.one.{0} Real Real.hasOne)))) δ))))))
+but is expected to have type
+  forall (E : Type.{u1}) [_inst_1 : SeminormedAddCommGroup.{u1} E] [_inst_2 : UniformConvexSpace.{u1} E _inst_1] {ε : Real} [_inst_3 : NormedSpace.{0, u1} Real E Real.normedField _inst_1], (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) ε) -> (Exists.{1} Real (fun (δ : Real) => And (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) δ) (forall {{x : E}}, (LE.le.{0} Real Real.instLEReal (Norm.norm.{u1} E (SeminormedAddCommGroup.toNorm.{u1} E _inst_1) x) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))) -> (forall {{y : E}}, (LE.le.{0} Real Real.instLEReal (Norm.norm.{u1} E (SeminormedAddCommGroup.toNorm.{u1} E _inst_1) y) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))) -> (LE.le.{0} Real Real.instLEReal ε (Norm.norm.{u1} E (SeminormedAddCommGroup.toNorm.{u1} E _inst_1) (HSub.hSub.{u1, u1, u1} E E E (instHSub.{u1} E (SubNegMonoid.toSub.{u1} E (AddGroup.toSubNegMonoid.{u1} E (SeminormedAddGroup.toAddGroup.{u1} E (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} E _inst_1))))) x y))) -> (LE.le.{0} Real Real.instLEReal (Norm.norm.{u1} E (SeminormedAddCommGroup.toNorm.{u1} E _inst_1) (HAdd.hAdd.{u1, u1, u1} E E E (instHAdd.{u1} E (AddZeroClass.toAdd.{u1} E (AddMonoid.toAddZeroClass.{u1} E (SubNegMonoid.toAddMonoid.{u1} E (AddGroup.toSubNegMonoid.{u1} E (SeminormedAddGroup.toAddGroup.{u1} E (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} E _inst_1))))))) x y)) (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.instSubReal) (OfNat.ofNat.{0} Real 2 (instOfNat.{0} Real 2 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))) δ))))))
+Case conversion may be inaccurate. Consider using '#align exists_forall_closed_ball_dist_add_le_two_sub exists_forall_closed_ball_dist_add_le_two_subₓ'. -/
 theorem exists_forall_closed_ball_dist_add_le_two_sub (hε : 0 < ε) :
     ∃ δ, 0 < δ ∧ ∀ ⦃x : E⦄, ‖x‖ ≤ 1 → ∀ ⦃y⦄, ‖y‖ ≤ 1 → ε ≤ ‖x - y‖ → ‖x + y‖ ≤ 2 - δ :=
   by
@@ -116,6 +130,12 @@ theorem exists_forall_closed_ball_dist_add_le_two_sub (hε : 0 < ε) :
     
 #align exists_forall_closed_ball_dist_add_le_two_sub exists_forall_closed_ball_dist_add_le_two_sub
 
+/- warning: exists_forall_closed_ball_dist_add_le_two_mul_sub -> exists_forall_closed_ball_dist_add_le_two_mul_sub is a dubious translation:
+lean 3 declaration is
+  forall (E : Type.{u1}) [_inst_1 : SeminormedAddCommGroup.{u1} E] [_inst_2 : UniformConvexSpace.{u1} E _inst_1] {ε : Real} [_inst_3 : NormedSpace.{0, u1} Real E Real.normedField _inst_1], (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) ε) -> (forall (r : Real), Exists.{1} Real (fun (δ : Real) => And (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))) δ) (forall {{x : E}}, (LE.le.{0} Real Real.hasLe (Norm.norm.{u1} E (SeminormedAddCommGroup.toHasNorm.{u1} E _inst_1) x) r) -> (forall {{y : E}}, (LE.le.{0} Real Real.hasLe (Norm.norm.{u1} E (SeminormedAddCommGroup.toHasNorm.{u1} E _inst_1) y) r) -> (LE.le.{0} Real Real.hasLe ε (Norm.norm.{u1} E (SeminormedAddCommGroup.toHasNorm.{u1} E _inst_1) (HSub.hSub.{u1, u1, u1} E E E (instHSub.{u1} E (SubNegMonoid.toHasSub.{u1} E (AddGroup.toSubNegMonoid.{u1} E (SeminormedAddGroup.toAddGroup.{u1} E (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} E _inst_1))))) x y))) -> (LE.le.{0} Real Real.hasLe (Norm.norm.{u1} E (SeminormedAddCommGroup.toHasNorm.{u1} E _inst_1) (HAdd.hAdd.{u1, u1, u1} E E E (instHAdd.{u1} E (AddZeroClass.toHasAdd.{u1} E (AddMonoid.toAddZeroClass.{u1} E (SubNegMonoid.toAddMonoid.{u1} E (AddGroup.toSubNegMonoid.{u1} E (SeminormedAddGroup.toAddGroup.{u1} E (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} E _inst_1))))))) x y)) (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.hasSub) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.hasMul) (OfNat.ofNat.{0} Real 2 (OfNat.mk.{0} Real 2 (bit0.{0} Real Real.hasAdd (One.one.{0} Real Real.hasOne)))) r) δ))))))
+but is expected to have type
+  forall (E : Type.{u1}) [_inst_1 : SeminormedAddCommGroup.{u1} E] [_inst_2 : UniformConvexSpace.{u1} E _inst_1] {ε : Real} [_inst_3 : NormedSpace.{0, u1} Real E Real.normedField _inst_1], (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) ε) -> (forall (r : Real), Exists.{1} Real (fun (δ : Real) => And (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) δ) (forall {{x : E}}, (LE.le.{0} Real Real.instLEReal (Norm.norm.{u1} E (SeminormedAddCommGroup.toNorm.{u1} E _inst_1) x) r) -> (forall {{y : E}}, (LE.le.{0} Real Real.instLEReal (Norm.norm.{u1} E (SeminormedAddCommGroup.toNorm.{u1} E _inst_1) y) r) -> (LE.le.{0} Real Real.instLEReal ε (Norm.norm.{u1} E (SeminormedAddCommGroup.toNorm.{u1} E _inst_1) (HSub.hSub.{u1, u1, u1} E E E (instHSub.{u1} E (SubNegMonoid.toSub.{u1} E (AddGroup.toSubNegMonoid.{u1} E (SeminormedAddGroup.toAddGroup.{u1} E (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} E _inst_1))))) x y))) -> (LE.le.{0} Real Real.instLEReal (Norm.norm.{u1} E (SeminormedAddCommGroup.toNorm.{u1} E _inst_1) (HAdd.hAdd.{u1, u1, u1} E E E (instHAdd.{u1} E (AddZeroClass.toAdd.{u1} E (AddMonoid.toAddZeroClass.{u1} E (SubNegMonoid.toAddMonoid.{u1} E (AddGroup.toSubNegMonoid.{u1} E (SeminormedAddGroup.toAddGroup.{u1} E (SeminormedAddCommGroup.toSeminormedAddGroup.{u1} E _inst_1))))))) x y)) (HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.instSubReal) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) (OfNat.ofNat.{0} Real 2 (instOfNat.{0} Real 2 Real.natCast (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))) r) δ))))))
+Case conversion may be inaccurate. Consider using '#align exists_forall_closed_ball_dist_add_le_two_mul_sub exists_forall_closed_ball_dist_add_le_two_mul_subₓ'. -/
 theorem exists_forall_closed_ball_dist_add_le_two_mul_sub (hε : 0 < ε) (r : ℝ) :
     ∃ δ, 0 < δ ∧ ∀ ⦃x : E⦄, ‖x‖ ≤ r → ∀ ⦃y⦄, ‖y‖ ≤ r → ε ≤ ‖x - y‖ → ‖x + y‖ ≤ 2 * r - δ :=
   by
@@ -139,10 +159,12 @@ end SeminormedAddCommGroup
 
 variable [NormedAddCommGroup E] [NormedSpace ℝ E] [UniformConvexSpace E]
 
+#print UniformConvexSpace.toStrictConvexSpace /-
 -- See note [lower instance priority]
-instance (priority := 100) UniformConvexSpace.to_strictConvexSpace : StrictConvexSpace ℝ E :=
+instance (priority := 100) UniformConvexSpace.toStrictConvexSpace : StrictConvexSpace ℝ E :=
   StrictConvexSpace.ofNormAddNeTwo fun x y hx hy hxy =>
     let ⟨δ, hδ, h⟩ := exists_forall_closed_ball_dist_add_le_two_sub E (norm_sub_pos_iff.2 hxy)
     ((h hx.le hy.le le_rfl).trans_lt <| sub_lt_self _ hδ).Ne
-#align uniform_convex_space.to_strict_convex_space UniformConvexSpace.to_strictConvexSpace
+#align uniform_convex_space.to_strict_convex_space UniformConvexSpace.toStrictConvexSpace
+-/
 
