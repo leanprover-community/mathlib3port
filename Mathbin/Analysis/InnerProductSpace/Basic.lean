@@ -1915,7 +1915,7 @@ such an instance by restriction-of-scalars, `inner_product_space.is_R_or_C_to_re
 instance may be not definitionally equal to some other “natural” instance. So, we assume
 `[normed_space ℝ E]`.
 -/
-theorem isBoundedBilinearMapInner [NormedSpace ℝ E] :
+theorem isBoundedBilinearMap_inner [NormedSpace ℝ E] :
     IsBoundedBilinearMap ℝ fun p : E × E => ⟪p.1, p.2⟫ :=
   { add_left := inner_add_left
     smul_left := fun r x y => by
@@ -1927,7 +1927,7 @@ theorem isBoundedBilinearMapInner [NormedSpace ℝ E] :
       ⟨1, zero_lt_one, fun x y => by
         rw [one_mul]
         exact norm_inner_le_norm x y⟩ }
-#align is_bounded_bilinear_map_inner isBoundedBilinearMapInner
+#align is_bounded_bilinear_map_inner isBoundedBilinearMap_inner
 
 end Norm
 

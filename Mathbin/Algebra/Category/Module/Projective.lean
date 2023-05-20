@@ -28,6 +28,7 @@ open LinearMap
 
 open ModuleCat
 
+#print IsProjective.iff_projective /-
 /-- The categorical notion of projective object agrees with the explicit module-theoretic notion. -/
 theorem IsProjective.iff_projective {R : Type u} [Ring R] {P : Type max u v} [AddCommGroup P]
     [Module R P] : Module.Projective R P ↔ Projective (ModuleCat.of R P) :=
@@ -43,18 +44,22 @@ theorem IsProjective.iff_projective {R : Type u} [Ring R] {P : Type max u v} [Ad
     letI : projective (ModuleCat.of R P) := h
     exact ⟨projective.factor_thru (↟g) (↟f), projective.factor_thru_comp (↟g) (↟f)⟩
 #align is_projective.iff_projective IsProjective.iff_projective
+-/
 
 namespace ModuleCat
 
 variable {R : Type u} [Ring R] {M : ModuleCat.{max u v} R}
 
+#print ModuleCat.projective_of_free /-
 -- We transport the corresponding result from `module.projective`.
 /-- Modules that have a basis are projective. -/
 theorem projective_of_free {ι : Type _} (b : Basis ι R M) : Projective M :=
   Projective.of_iso (ModuleCat.ofSelfIso _)
     (IsProjective.iff_projective.mp (Module.Projective.of_basis b))
 #align Module.projective_of_free ModuleCat.projective_of_free
+-/
 
+#print ModuleCat.moduleCat_enoughProjectives /-
 /-- The category of modules has enough projectives, since every module is a quotient of a free
     module. -/
 instance moduleCat_enoughProjectives : EnoughProjectives (ModuleCat.{max u v} R)
@@ -66,6 +71,7 @@ instance moduleCat_enoughProjectives : EnoughProjectives (ModuleCat.{max u v} R)
           (epi_iff_range_eq_top _).mpr
             (range_eq_top.2 fun m => ⟨Finsupp.single m (1 : R), by simp [Basis.constr]⟩) }⟩
 #align Module.Module_enough_projectives ModuleCat.moduleCat_enoughProjectives
+-/
 
 end ModuleCat
 

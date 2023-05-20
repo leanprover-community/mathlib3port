@@ -50,7 +50,7 @@ variable (𝕜) [NormedSpace ℝ E]
 
 /-- Derivative of the inner product. -/
 def fderivInnerClm (p : E × E) : E × E →L[ℝ] 𝕜 :=
-  isBoundedBilinearMapInner.deriv p
+  isBoundedBilinearMap_inner.deriv p
 #align fderiv_inner_clm fderivInnerClm
 
 @[simp]
@@ -59,7 +59,7 @@ theorem fderivInnerClm_apply (p x : E × E) : fderivInnerClm 𝕜 p x = ⟪p.1, 
 #align fderiv_inner_clm_apply fderivInnerClm_apply
 
 theorem contDiff_inner {n} : ContDiff ℝ n fun p : E × E => ⟪p.1, p.2⟫ :=
-  isBoundedBilinearMapInner.ContDiff
+  isBoundedBilinearMap_inner.ContDiff
 #align cont_diff_inner contDiff_inner
 
 theorem contDiffAt_inner {p : E × E} {n} : ContDiffAt ℝ n (fun p : E × E => ⟪p.1, p.2⟫) p :=
@@ -67,7 +67,7 @@ theorem contDiffAt_inner {p : E × E} {n} : ContDiffAt ℝ n (fun p : E × E => 
 #align cont_diff_at_inner contDiffAt_inner
 
 theorem differentiable_inner : Differentiable ℝ fun p : E × E => ⟪p.1, p.2⟫ :=
-  isBoundedBilinearMapInner.DifferentiableAt
+  isBoundedBilinearMap_inner.DifferentiableAt
 #align differentiable_inner differentiable_inner
 
 variable {G : Type _} [NormedAddCommGroup G] [NormedSpace ℝ G] {f g : G → E} {f' g' : G →L[ℝ] E}
@@ -98,17 +98,17 @@ theorem HasFderivWithinAt.inner (hf : HasFderivWithinAt f f' s x)
     (hg : HasFderivWithinAt g g' s x) :
     HasFderivWithinAt (fun t => ⟪f t, g t⟫) ((fderivInnerClm 𝕜 (f x, g x)).comp <| f'.Prod g') s
       x :=
-  (isBoundedBilinearMapInner.HasFderivAt (f x, g x)).comp_hasFderivWithinAt x (hf.Prod hg)
+  (isBoundedBilinearMap_inner.HasFderivAt (f x, g x)).comp_hasFderivWithinAt x (hf.Prod hg)
 #align has_fderiv_within_at.inner HasFderivWithinAt.inner
 
 theorem HasStrictFderivAt.inner (hf : HasStrictFderivAt f f' x) (hg : HasStrictFderivAt g g' x) :
     HasStrictFderivAt (fun t => ⟪f t, g t⟫) ((fderivInnerClm 𝕜 (f x, g x)).comp <| f'.Prod g') x :=
-  (isBoundedBilinearMapInner.HasStrictFderivAt (f x, g x)).comp x (hf.Prod hg)
+  (isBoundedBilinearMap_inner.HasStrictFderivAt (f x, g x)).comp x (hf.Prod hg)
 #align has_strict_fderiv_at.inner HasStrictFderivAt.inner
 
 theorem HasFderivAt.inner (hf : HasFderivAt f f' x) (hg : HasFderivAt g g' x) :
     HasFderivAt (fun t => ⟪f t, g t⟫) ((fderivInnerClm 𝕜 (f x, g x)).comp <| f'.Prod g') x :=
-  (isBoundedBilinearMapInner.HasFderivAt (f x, g x)).comp x (hf.Prod hg)
+  (isBoundedBilinearMap_inner.HasFderivAt (f x, g x)).comp x (hf.Prod hg)
 #align has_fderiv_at.inner HasFderivAt.inner
 
 theorem HasDerivWithinAt.inner {f g : ℝ → E} {f' g' : E} {s : Set ℝ} {x : ℝ}
