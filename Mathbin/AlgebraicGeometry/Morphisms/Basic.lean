@@ -129,11 +129,11 @@ def targetAffineLocally (P : AffineTargetMorphismProperty) : MorphismProperty Sc
   fun {X Y : Scheme} (f : X ⟶ Y) => ∀ U : Y.affineOpens, @P (f ∣_ U) U.Prop
 #align algebraic_geometry.target_affine_locally AlgebraicGeometry.targetAffineLocally
 
-theorem IsAffineOpen.map_isIso {X Y : Scheme} {U : Opens Y.carrier} (hU : IsAffineOpen U)
-    (f : X ⟶ Y) [IsIso f] : IsAffineOpen ((Opens.map f.1.base).obj U) :=
+theorem IsAffineOpen.mapIsIso {X Y : Scheme} {U : Opens Y.carrier} (hU : IsAffineOpen U) (f : X ⟶ Y)
+    [IsIso f] : IsAffineOpen ((Opens.map f.1.base).obj U) :=
   haveI : is_affine _ := hU
   is_affine_of_iso (f ∣_ U)
-#align algebraic_geometry.is_affine_open.map_is_iso AlgebraicGeometry.IsAffineOpen.map_isIso
+#align algebraic_geometry.is_affine_open.map_is_iso AlgebraicGeometry.IsAffineOpen.mapIsIso
 
 theorem targetAffineLocally_respectsIso {P : AffineTargetMorphismProperty}
     (hP : P.toProperty.RespectsIso) : (targetAffineLocally P).RespectsIso :=
@@ -162,11 +162,11 @@ structure AffineTargetMorphismProperty.IsLocal (P : AffineTargetMorphismProperty
   RespectsIso : P.toProperty.RespectsIso
   toBasicOpen :
     ∀ {X Y : Scheme} [IsAffine Y] (f : X ⟶ Y) (r : Y.Presheaf.obj <| op ⊤),
-      P f → @P (f ∣_ Y.basic_open r) ((top_is_affine_open Y).basicOpen_is_affine _)
+      P f → @P (f ∣_ Y.basic_open r) ((top_is_affine_open Y).basicOpenIsAffine _)
   ofBasicOpenCover :
     ∀ {X Y : Scheme} [IsAffine Y] (f : X ⟶ Y) (s : Finset (Y.Presheaf.obj <| op ⊤))
       (hs : Ideal.span (s : Set (Y.Presheaf.obj <| op ⊤)) = ⊤),
-      (∀ r : s, @P (f ∣_ Y.basic_open r.1) ((top_is_affine_open Y).basicOpen_is_affine _)) → P f
+      (∀ r : s, @P (f ∣_ Y.basic_open r.1) ((top_is_affine_open Y).basicOpenIsAffine _)) → P f
 #align algebraic_geometry.affine_target_morphism_property.is_local AlgebraicGeometry.AffineTargetMorphismProperty.IsLocal
 
 theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : P.IsLocal)
@@ -277,7 +277,7 @@ theorem AffineTargetMorphismProperty.isLocalOfOpenCoverImply (P : AffineTargetMo
   refine' ⟨hP, _, _⟩
   · introv h
     skip
-    haveI : is_affine _ := (top_is_affine_open Y).basicOpen_is_affine r
+    haveI : is_affine _ := (top_is_affine_open Y).basicOpenIsAffine r
     delta morphism_restrict
     rw [affine_cancel_left_is_iso hP]
     refine' @H f ⟨Scheme.open_cover_of_is_iso (𝟙 Y), _, _⟩ (Y.of_restrict _) _inst _
@@ -294,10 +294,10 @@ theorem AffineTargetMorphismProperty.isLocalOfOpenCoverImply (P : AffineTargetMo
     rwa [← category.comp_id pullback.snd, ← pullback.condition, affine_cancel_left_is_iso hP] at
       this
     · intro i
-      exact (top_is_affine_open Y).basicOpen_is_affine _
+      exact (top_is_affine_open Y).basicOpenIsAffine _
     · rintro (i : s)
       specialize hs' i
-      haveI : is_affine _ := (top_is_affine_open Y).basicOpen_is_affine i.1
+      haveI : is_affine _ := (top_is_affine_open Y).basicOpenIsAffine i.1
       delta morphism_restrict at hs'
       rwa [affine_cancel_left_is_iso hP] at hs'
 #align algebraic_geometry.affine_target_morphism_property.is_local_of_open_cover_imply AlgebraicGeometry.AffineTargetMorphismProperty.isLocalOfOpenCoverImply

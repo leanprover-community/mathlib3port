@@ -70,6 +70,7 @@ namespace MeasureTheory
 /-! ### Analytic sets -/
 
 
+#print MeasureTheory.AnalyticSet /-
 /-- An analytic set is a set which is the continuous image of some Polish space. There are several
 equivalent characterizations of this definition. For the definition, we pick one that avoids
 universe issues: a set is analytic if and only if it is a continuous image of `ℕ → ℕ` (or if it
@@ -82,13 +83,17 @@ context of complex analysis. -/
 irreducible_def AnalyticSet (s : Set α) : Prop :=
   s = ∅ ∨ ∃ f : (ℕ → ℕ) → α, Continuous f ∧ range f = s
 #align measure_theory.analytic_set MeasureTheory.AnalyticSet
+-/
 
+#print MeasureTheory.analyticSet_empty /-
 theorem analyticSet_empty : AnalyticSet (∅ : Set α) :=
   by
   rw [analytic_set]
   exact Or.inl rfl
 #align measure_theory.analytic_set_empty MeasureTheory.analyticSet_empty
+-/
 
+#print MeasureTheory.analyticSet_range_of_polishSpace /-
 theorem analyticSet_range_of_polishSpace {β : Type _} [TopologicalSpace β] [PolishSpace β]
     {f : β → α} (f_cont : Continuous f) : AnalyticSet (range f) :=
   by
@@ -101,7 +106,9 @@ theorem analyticSet_range_of_polishSpace {β : Type _} [TopologicalSpace β] [Po
     refine' Or.inr ⟨f ∘ g, f_cont.comp g_cont, _⟩
     rwa [hg.range_comp]
 #align measure_theory.analytic_set_range_of_polish_space MeasureTheory.analyticSet_range_of_polishSpace
+-/
 
+#print IsOpen.analyticSet_image /-
 /-- The image of an open set under a continuous map is analytic. -/
 theorem IsOpen.analyticSet_image {β : Type _} [TopologicalSpace β] [PolishSpace β] {s : Set β}
     (hs : IsOpen s) {f : β → α} (f_cont : Continuous f) : AnalyticSet (f '' s) :=
@@ -110,7 +117,9 @@ theorem IsOpen.analyticSet_image {β : Type _} [TopologicalSpace β] [PolishSpac
   haveI : PolishSpace s := hs.polish_space
   exact analytic_set_range_of_polish_space (f_cont.comp continuous_subtype_val)
 #align is_open.analytic_set_image IsOpen.analyticSet_image
+-/
 
+#print MeasureTheory.analyticSet_iff_exists_polishSpace_range /-
 /-- A set is analytic if and only if it is the continuous image of some Polish space. -/
 theorem analyticSet_iff_exists_polishSpace_range {s : Set α} :
     AnalyticSet s ↔
@@ -130,7 +139,9 @@ theorem analyticSet_iff_exists_polishSpace_range {s : Set α} :
     rw [← f_range]
     exact analytic_set_range_of_polish_space f_cont
 #align measure_theory.analytic_set_iff_exists_polish_space_range MeasureTheory.analyticSet_iff_exists_polishSpace_range
+-/
 
+#print MeasureTheory.AnalyticSet.image_of_continuousOn /-
 /-- The continuous image of an analytic set is analytic -/
 theorem AnalyticSet.image_of_continuousOn {β : Type _} [TopologicalSpace β] {s : Set α}
     (hs : AnalyticSet s) {f : α → β} (hf : ContinuousOn f s) : AnalyticSet (f '' s) :=
@@ -144,12 +155,16 @@ theorem AnalyticSet.image_of_continuousOn {β : Type _} [TopologicalSpace β] {s
   rw [← gs]
   exact mem_range_self _
 #align measure_theory.analytic_set.image_of_continuous_on MeasureTheory.AnalyticSet.image_of_continuousOn
+-/
 
+#print MeasureTheory.AnalyticSet.image_of_continuous /-
 theorem AnalyticSet.image_of_continuous {β : Type _} [TopologicalSpace β] {s : Set α}
     (hs : AnalyticSet s) {f : α → β} (hf : Continuous f) : AnalyticSet (f '' s) :=
   hs.image_of_continuousOn hf.ContinuousOn
 #align measure_theory.analytic_set.image_of_continuous MeasureTheory.AnalyticSet.image_of_continuous
+-/
 
+#print MeasureTheory.AnalyticSet.iInter /-
 /-- A countable intersection of analytic sets is analytic. -/
 theorem AnalyticSet.iInter [hι : Nonempty ι] [Countable ι] [T2Space α] {s : ι → Set α}
     (hs : ∀ n, AnalyticSet (s n)) : AnalyticSet (⋂ n, s n) :=
@@ -194,7 +209,9 @@ theorem AnalyticSet.iInter [hι : Nonempty ι] [Countable ι] [T2Space α] {s : 
   rw [← F_range]
   exact analytic_set_range_of_polish_space F_cont
 #align measure_theory.analytic_set.Inter MeasureTheory.AnalyticSet.iInter
+-/
 
+#print MeasureTheory.AnalyticSet.iUnion /-
 /-- A countable union of analytic sets is analytic. -/
 theorem AnalyticSet.iUnion [Countable ι] {s : ι → Set α} (hs : ∀ n, AnalyticSet (s n)) :
     AnalyticSet (⋃ n, s n) :=
@@ -219,14 +236,18 @@ theorem AnalyticSet.iUnion [Countable ι] {s : ι → Set α} (hs : ∀ n, Analy
   rw [← F_range]
   exact analytic_set_range_of_polish_space F_cont
 #align measure_theory.analytic_set.Union MeasureTheory.AnalyticSet.iUnion
+-/
 
+#print IsClosed.analyticSet /-
 theorem IsClosed.analyticSet [PolishSpace α] {s : Set α} (hs : IsClosed s) : AnalyticSet s :=
   by
   haveI : PolishSpace s := hs.polish_space
   rw [← @Subtype.range_val α s]
   exact analytic_set_range_of_polish_space continuous_subtype_val
 #align is_closed.analytic_set IsClosed.analyticSet
+-/
 
+#print MeasurableSet.isClopenable /-
 /-- Given a Borel-measurable set in a Polish space, there exists a finer Polish topology making
 it clopen. This is in fact an equivalence, see `is_clopenable_iff_measurable_set`. -/
 theorem MeasurableSet.isClopenable [PolishSpace α] [MeasurableSpace α] [BorelSpace α] {s : Set α}
@@ -238,7 +259,9 @@ theorem MeasurableSet.isClopenable [PolishSpace α] [MeasurableSpace α] [BorelS
   · exact fun u hu h'u => h'u.compl
   · exact fun f f_disj f_meas hf => is_clopenable.Union hf
 #align measurable_set.is_clopenable MeasurableSet.isClopenable
+-/
 
+#print MeasurableSet.analyticSet /-
 theorem MeasurableSet.analyticSet {α : Type _} [t : TopologicalSpace α] [PolishSpace α]
     [MeasurableSpace α] [BorelSpace α] {s : Set α} (hs : MeasurableSet s) : AnalyticSet s :=
   by
@@ -252,7 +275,14 @@ theorem MeasurableSet.analyticSet {α : Type _} [t : TopologicalSpace α] [Polis
   convert@analytic_set.image_of_continuous α t' α t s A id (continuous_id_of_le t't)
   simp only [id.def, image_id']
 #align measurable_set.analytic_set MeasurableSet.analyticSet
+-/
 
+/- warning: measurable.exists_continuous -> Measurable.exists_continuous is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [t : TopologicalSpace.{u1} α] [_inst_2 : PolishSpace.{u1} α t] [_inst_3 : MeasurableSpace.{u1} α] [_inst_4 : BorelSpace.{u1} α t _inst_3] [tβ : TopologicalSpace.{u2} β] [_inst_5 : TopologicalSpace.SecondCountableTopology.{u2} β tβ] [_inst_6 : MeasurableSpace.{u2} β] [_inst_7 : BorelSpace.{u2} β tβ _inst_6] {f : α -> β}, (Measurable.{u1, u2} α β _inst_3 _inst_6 f) -> (Exists.{succ u1} (TopologicalSpace.{u1} α) (fun (t' : TopologicalSpace.{u1} α) => And (LE.le.{u1} (TopologicalSpace.{u1} α) (Preorder.toHasLe.{u1} (TopologicalSpace.{u1} α) (PartialOrder.toPreorder.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.partialOrder.{u1} α))) t' t) (And (Continuous.{u1, u2} α β t' tβ f) (PolishSpace.{u1} α t'))))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [t : TopologicalSpace.{u2} α] [_inst_2 : PolishSpace.{u2} α t] [_inst_3 : MeasurableSpace.{u2} α] [_inst_4 : BorelSpace.{u2} α t _inst_3] [tβ : TopologicalSpace.{u1} β] [_inst_5 : TopologicalSpace.SecondCountableTopology.{u1} β tβ] [_inst_6 : MeasurableSpace.{u1} β] [_inst_7 : BorelSpace.{u1} β tβ _inst_6] {f : α -> β}, (Measurable.{u2, u1} α β _inst_3 _inst_6 f) -> (Exists.{succ u2} (TopologicalSpace.{u2} α) (fun (t' : TopologicalSpace.{u2} α) => And (LE.le.{u2} (TopologicalSpace.{u2} α) (Preorder.toLE.{u2} (TopologicalSpace.{u2} α) (PartialOrder.toPreorder.{u2} (TopologicalSpace.{u2} α) (TopologicalSpace.instPartialOrderTopologicalSpace.{u2} α))) t' t) (And (Continuous.{u2, u1} α β t' tβ f) (PolishSpace.{u2} α t'))))
+Case conversion may be inaccurate. Consider using '#align measurable.exists_continuous Measurable.exists_continuousₓ'. -/
 /-- Given a Borel-measurable function from a Polish space to a second-countable space, there exists
 a finer Polish topology on the source space for which the function is continuous. -/
 theorem Measurable.exists_continuous {α β : Type _} [t : TopologicalSpace α] [PolishSpace α]
@@ -279,13 +309,21 @@ theorem Measurable.exists_continuous {α β : Type _} [t : TopologicalSpace α] 
 /-! ### Separating sets with measurable sets -/
 
 
+#print MeasureTheory.MeasurablySeparable /-
 /-- Two sets `u` and `v` in a measurable space are measurably separable if there
 exists a measurable set containing `u` and disjoint from `v`.
 This is mostly interesting for Borel-separable sets. -/
 def MeasurablySeparable {α : Type _} [MeasurableSpace α] (s t : Set α) : Prop :=
   ∃ u, s ⊆ u ∧ Disjoint t u ∧ MeasurableSet u
 #align measure_theory.measurably_separable MeasureTheory.MeasurablySeparable
+-/
 
+/- warning: measure_theory.measurably_separable.Union -> MeasureTheory.MeasurablySeparable.iUnion is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} [_inst_2 : Countable.{succ u1} ι] {α : Type.{u2}} [_inst_3 : MeasurableSpace.{u2} α] {s : ι -> (Set.{u2} α)} {t : ι -> (Set.{u2} α)}, (forall (m : ι) (n : ι), MeasureTheory.MeasurablySeparable.{u2} α _inst_3 (s m) (t n)) -> (MeasureTheory.MeasurablySeparable.{u2} α _inst_3 (Set.iUnion.{u2, succ u1} α ι (fun (n : ι) => s n)) (Set.iUnion.{u2, succ u1} α ι (fun (m : ι) => t m)))
+but is expected to have type
+  forall {ι : Type.{u2}} [_inst_2 : Countable.{succ u2} ι] {α : Type.{u1}} [_inst_3 : MeasurableSpace.{u1} α] {s : ι -> (Set.{u1} α)} {t : ι -> (Set.{u1} α)}, (forall (m : ι) (n : ι), MeasureTheory.MeasurablySeparable.{u1} α _inst_3 (s m) (t n)) -> (MeasureTheory.MeasurablySeparable.{u1} α _inst_3 (Set.iUnion.{u1, succ u2} α ι (fun (n : ι) => s n)) (Set.iUnion.{u1, succ u2} α ι (fun (m : ι) => t m)))
+Case conversion may be inaccurate. Consider using '#align measure_theory.measurably_separable.Union MeasureTheory.MeasurablySeparable.iUnionₓ'. -/
 theorem MeasurablySeparable.iUnion [Countable ι] {α : Type _} [MeasurableSpace α] {s t : ι → Set α}
     (h : ∀ m n, MeasurablySeparable (s m) (t n)) : MeasurablySeparable (⋃ n, s n) (⋃ m, t m) :=
   by
@@ -301,6 +339,12 @@ theorem MeasurablySeparable.iUnion [Countable ι] {α : Type _} [MeasurableSpace
     exact MeasurableSet.iInter fun n => hu m n
 #align measure_theory.measurably_separable.Union MeasureTheory.MeasurablySeparable.iUnion
 
+/- warning: measure_theory.measurably_separable_range_of_disjoint -> MeasureTheory.measurablySeparable_range_of_disjoint is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T2Space.{u1} α _inst_1] [_inst_3 : MeasurableSpace.{u1} α] [_inst_4 : BorelSpace.{u1} α _inst_1 _inst_3] {f : (Nat -> Nat) -> α} {g : (Nat -> Nat) -> α}, (Continuous.{0, u1} (Nat -> Nat) α (Pi.topologicalSpace.{0, 0} Nat (fun (ᾰ : Nat) => Nat) (fun (a : Nat) => Nat.topologicalSpace)) _inst_1 f) -> (Continuous.{0, u1} (Nat -> Nat) α (Pi.topologicalSpace.{0, 0} Nat (fun (ᾰ : Nat) => Nat) (fun (a : Nat) => Nat.topologicalSpace)) _inst_1 g) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) (Set.range.{u1, 1} α (Nat -> Nat) f) (Set.range.{u1, 1} α (Nat -> Nat) g)) -> (MeasureTheory.MeasurablySeparable.{u1} α _inst_3 (Set.range.{u1, 1} α (Nat -> Nat) f) (Set.range.{u1, 1} α (Nat -> Nat) g))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T2Space.{u1} α _inst_1] [_inst_3 : MeasurableSpace.{u1} α] [_inst_4 : BorelSpace.{u1} α _inst_1 _inst_3] {f : (Nat -> Nat) -> α} {g : (Nat -> Nat) -> α}, (Continuous.{0, u1} (Nat -> Nat) α (Pi.topologicalSpace.{0, 0} Nat (fun (ᾰ : Nat) => Nat) (fun (a : Nat) => instTopologicalSpaceNat)) _inst_1 f) -> (Continuous.{0, u1} (Nat -> Nat) α (Pi.topologicalSpace.{0, 0} Nat (fun (ᾰ : Nat) => Nat) (fun (a : Nat) => instTopologicalSpaceNat)) _inst_1 g) -> (Disjoint.{u1} (Set.{u1} α) (OmegaCompletePartialOrder.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.instOmegaCompletePartialOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (OmegaCompletePartialOrder.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.instOmegaCompletePartialOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (Set.range.{u1, 1} α (Nat -> Nat) f) (Set.range.{u1, 1} α (Nat -> Nat) g)) -> (MeasureTheory.MeasurablySeparable.{u1} α _inst_3 (Set.range.{u1, 1} α (Nat -> Nat) f) (Set.range.{u1, 1} α (Nat -> Nat) g))
+Case conversion may be inaccurate. Consider using '#align measure_theory.measurably_separable_range_of_disjoint MeasureTheory.measurablySeparable_range_of_disjointₓ'. -/
 /-- The hard part of the Lusin separation theorem saying that two disjoint analytic sets are
 contained in disjoint Borel sets (see the full statement in `analytic_set.measurably_separable`).
 Here, we prove this when our analytic sets are the ranges of functions from `ℕ → ℕ`.
@@ -435,6 +479,12 @@ theorem measurablySeparable_range_of_disjoint [T2Space α] [MeasurableSpace α] 
   exact M n B
 #align measure_theory.measurably_separable_range_of_disjoint MeasureTheory.measurablySeparable_range_of_disjoint
 
+/- warning: measure_theory.analytic_set.measurably_separable -> MeasureTheory.AnalyticSet.measurablySeparable is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T2Space.{u1} α _inst_1] [_inst_3 : MeasurableSpace.{u1} α] [_inst_4 : BorelSpace.{u1} α _inst_1 _inst_3] {s : Set.{u1} α} {t : Set.{u1} α}, (MeasureTheory.AnalyticSet.{u1} α _inst_1 s) -> (MeasureTheory.AnalyticSet.{u1} α _inst_1 t) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) s t) -> (MeasureTheory.MeasurablySeparable.{u1} α _inst_3 s t)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T2Space.{u1} α _inst_1] [_inst_3 : MeasurableSpace.{u1} α] [_inst_4 : BorelSpace.{u1} α _inst_1 _inst_3] {s : Set.{u1} α} {t : Set.{u1} α}, (MeasureTheory.AnalyticSet.{u1} α _inst_1 s) -> (MeasureTheory.AnalyticSet.{u1} α _inst_1 t) -> (Disjoint.{u1} (Set.{u1} α) (OmegaCompletePartialOrder.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.instOmegaCompletePartialOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (OmegaCompletePartialOrder.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.instOmegaCompletePartialOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) s t) -> (MeasureTheory.MeasurablySeparable.{u1} α _inst_3 s t)
+Case conversion may be inaccurate. Consider using '#align measure_theory.analytic_set.measurably_separable MeasureTheory.AnalyticSet.measurablySeparableₓ'. -/
 /-- The Lusin separation theorem: if two analytic sets are disjoint, then they are contained in
 disjoint Borel sets. -/
 theorem AnalyticSet.measurablySeparable [T2Space α] [MeasurableSpace α] [BorelSpace α] {s t : Set α}
@@ -455,6 +505,7 @@ variable {γ : Type _} [tγ : TopologicalSpace γ] [PolishSpace γ]
 
 include tγ
 
+#print MeasureTheory.measurableSet_range_of_continuous_injective /-
 /-- The Lusin-Souslin theorem: the range of a continuous injective function defined on a Polish
 space is Borel-measurable. -/
 theorem measurableSet_range_of_continuous_injective {β : Type _} [TopologicalSpace β] [T2Space β]
@@ -618,7 +669,9 @@ theorem measurableSet_range_of_continuous_injective {β : Type _} [TopologicalSp
     -- the closure of `v`.
     exact disjoint_left.1 (hvw.closure_left w_open) this xw
 #align measure_theory.measurable_set_range_of_continuous_injective MeasureTheory.measurableSet_range_of_continuous_injective
+-/
 
+#print IsClosed.measurableSet_image_of_continuousOn_injOn /-
 theorem IsClosed.measurableSet_image_of_continuousOn_injOn {β : Type _} [TopologicalSpace β]
     [T2Space β] [MeasurableSpace β] [BorelSpace β] {s : Set γ} (hs : IsClosed s) {f : γ → β}
     (f_cont : ContinuousOn f s) (f_inj : InjOn f s) : MeasurableSet (f '' s) :=
@@ -629,12 +682,19 @@ theorem IsClosed.measurableSet_image_of_continuousOn_injOn {β : Type _} [Topolo
   · rwa [continuousOn_iff_continuous_restrict] at f_cont
   · rwa [inj_on_iff_injective] at f_inj
 #align is_closed.measurable_set_image_of_continuous_on_inj_on IsClosed.measurableSet_image_of_continuousOn_injOn
+-/
 
 variable [MeasurableSpace γ] [hγb : BorelSpace γ] {β : Type _} [tβ : TopologicalSpace β] [T2Space β]
   [MeasurableSpace β] [BorelSpace β] {s : Set γ} {f : γ → β}
 
 include tβ hγb
 
+/- warning: measurable_set.image_of_continuous_on_inj_on -> MeasurableSet.image_of_continuousOn_injOn is a dubious translation:
+lean 3 declaration is
+  forall {γ : Type.{u1}} [tγ : TopologicalSpace.{u1} γ] [_inst_2 : PolishSpace.{u1} γ tγ] [_inst_3 : MeasurableSpace.{u1} γ] [hγb : BorelSpace.{u1} γ tγ _inst_3] {β : Type.{u2}} [tβ : TopologicalSpace.{u2} β] [_inst_4 : T2Space.{u2} β tβ] [_inst_5 : MeasurableSpace.{u2} β] [_inst_6 : BorelSpace.{u2} β tβ _inst_5] {s : Set.{u1} γ} {f : γ -> β}, (MeasurableSet.{u1} γ _inst_3 s) -> (ContinuousOn.{u1, u2} γ β tγ tβ f s) -> (Set.InjOn.{u1, u2} γ β f s) -> (MeasurableSet.{u2} β _inst_5 (Set.image.{u1, u2} γ β f s))
+but is expected to have type
+  forall {γ : Type.{u2}} [tγ : TopologicalSpace.{u2} γ] [_inst_2 : PolishSpace.{u2} γ tγ] [_inst_3 : MeasurableSpace.{u2} γ] [hγb : BorelSpace.{u2} γ tγ _inst_3] {β : Type.{u1}} [tβ : TopologicalSpace.{u1} β] [_inst_4 : T2Space.{u1} β tβ] [_inst_5 : MeasurableSpace.{u1} β] [_inst_6 : BorelSpace.{u1} β tβ _inst_5] {s : Set.{u2} γ} {f : γ -> β}, (MeasurableSet.{u2} γ _inst_3 s) -> (ContinuousOn.{u2, u1} γ β tγ tβ f s) -> (Set.InjOn.{u2, u1} γ β f s) -> (MeasurableSet.{u1} β _inst_5 (Set.image.{u2, u1} γ β f s))
+Case conversion may be inaccurate. Consider using '#align measurable_set.image_of_continuous_on_inj_on MeasurableSet.image_of_continuousOn_injOnₓ'. -/
 /-- The Lusin-Souslin theorem: if `s` is Borel-measurable in a Polish space, then its image under
 a continuous injective map is also Borel-measurable. -/
 theorem MeasurableSet.image_of_continuousOn_injOn (hs : MeasurableSet s) (f_cont : ContinuousOn f s)
@@ -648,6 +708,7 @@ theorem MeasurableSet.image_of_continuousOn_injOn (hs : MeasurableSet s) (f_cont
       (f_cont.mono_dom t't) f_inj
 #align measurable_set.image_of_continuous_on_inj_on MeasurableSet.image_of_continuousOn_injOn
 
+#print MeasurableSet.image_of_measurable_injOn /-
 /-- The Lusin-Souslin theorem: if `s` is Borel-measurable in a Polish space, then its image under
 a measurable injective map taking values in a second-countable topological space
 is also Borel-measurable. -/
@@ -673,7 +734,14 @@ theorem MeasurableSet.image_of_measurable_injOn [SecondCountableTopology β] (hs
         rfl)
       β _ _ _ _ s f M (@Continuous.continuousOn γ β t' tβ f s f_cont) f_inj
 #align measurable_set.image_of_measurable_inj_on MeasurableSet.image_of_measurable_injOn
+-/
 
+/- warning: continuous.measurable_embedding -> Continuous.measurableEmbedding is a dubious translation:
+lean 3 declaration is
+  forall {γ : Type.{u1}} [tγ : TopologicalSpace.{u1} γ] [_inst_2 : PolishSpace.{u1} γ tγ] [_inst_3 : MeasurableSpace.{u1} γ] [hγb : BorelSpace.{u1} γ tγ _inst_3] {β : Type.{u2}} [tβ : TopologicalSpace.{u2} β] [_inst_4 : T2Space.{u2} β tβ] [_inst_5 : MeasurableSpace.{u2} β] [_inst_6 : BorelSpace.{u2} β tβ _inst_5] {f : γ -> β}, (Continuous.{u1, u2} γ β tγ tβ f) -> (Function.Injective.{succ u1, succ u2} γ β f) -> (MeasurableEmbedding.{u1, u2} γ β _inst_3 _inst_5 f)
+but is expected to have type
+  forall {γ : Type.{u2}} [tγ : TopologicalSpace.{u2} γ] [_inst_2 : PolishSpace.{u2} γ tγ] [_inst_3 : MeasurableSpace.{u2} γ] [hγb : BorelSpace.{u2} γ tγ _inst_3] {β : Type.{u1}} [tβ : TopologicalSpace.{u1} β] [_inst_4 : T2Space.{u1} β tβ] [_inst_5 : MeasurableSpace.{u1} β] [_inst_6 : BorelSpace.{u1} β tβ _inst_5] {f : γ -> β}, (Continuous.{u2, u1} γ β tγ tβ f) -> (Function.Injective.{succ u2, succ u1} γ β f) -> (MeasurableEmbedding.{u2, u1} γ β _inst_3 _inst_5 f)
+Case conversion may be inaccurate. Consider using '#align continuous.measurable_embedding Continuous.measurableEmbeddingₓ'. -/
 /-- An injective continuous function on a Polish space is a measurable embedding. -/
 theorem Continuous.measurableEmbedding (f_cont : Continuous f) (f_inj : Injective f) :
     MeasurableEmbedding f :=
@@ -683,6 +751,12 @@ theorem Continuous.measurableEmbedding (f_cont : Continuous f) (f_inj : Injectiv
       hu.image_of_continuousOn_injOn f_cont.ContinuousOn (f_inj.InjOn _) }
 #align continuous.measurable_embedding Continuous.measurableEmbedding
 
+/- warning: continuous_on.measurable_embedding -> ContinuousOn.measurableEmbedding is a dubious translation:
+lean 3 declaration is
+  forall {γ : Type.{u1}} [tγ : TopologicalSpace.{u1} γ] [_inst_2 : PolishSpace.{u1} γ tγ] [_inst_3 : MeasurableSpace.{u1} γ] [hγb : BorelSpace.{u1} γ tγ _inst_3] {β : Type.{u2}} [tβ : TopologicalSpace.{u2} β] [_inst_4 : T2Space.{u2} β tβ] [_inst_5 : MeasurableSpace.{u2} β] [_inst_6 : BorelSpace.{u2} β tβ _inst_5] {s : Set.{u1} γ} {f : γ -> β}, (MeasurableSet.{u1} γ _inst_3 s) -> (ContinuousOn.{u1, u2} γ β tγ tβ f s) -> (Set.InjOn.{u1, u2} γ β f s) -> (MeasurableEmbedding.{u1, u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} γ) Type.{u1} (Set.hasCoeToSort.{u1} γ) s) β (Subtype.instMeasurableSpace.{u1} γ (fun (x : γ) => Membership.Mem.{u1, u1} γ (Set.{u1} γ) (Set.hasMem.{u1} γ) x s) _inst_3) _inst_5 (Set.restrict.{u1, u2} γ (fun (ᾰ : γ) => β) s f))
+but is expected to have type
+  forall {γ : Type.{u2}} [tγ : TopologicalSpace.{u2} γ] [_inst_2 : PolishSpace.{u2} γ tγ] [_inst_3 : MeasurableSpace.{u2} γ] [hγb : BorelSpace.{u2} γ tγ _inst_3] {β : Type.{u1}} [tβ : TopologicalSpace.{u1} β] [_inst_4 : T2Space.{u1} β tβ] [_inst_5 : MeasurableSpace.{u1} β] [_inst_6 : BorelSpace.{u1} β tβ _inst_5] {s : Set.{u2} γ} {f : γ -> β}, (MeasurableSet.{u2} γ _inst_3 s) -> (ContinuousOn.{u2, u1} γ β tγ tβ f s) -> (Set.InjOn.{u2, u1} γ β f s) -> (MeasurableEmbedding.{u2, u1} (Set.Elem.{u2} γ s) β (Subtype.instMeasurableSpace.{u2} γ (fun (x : γ) => Membership.mem.{u2, u2} γ (Set.{u2} γ) (Set.instMembershipSet.{u2} γ) x s) _inst_3) _inst_5 (Set.restrict.{u2, u1} γ (fun (ᾰ : γ) => β) s f))
+Case conversion may be inaccurate. Consider using '#align continuous_on.measurable_embedding ContinuousOn.measurableEmbeddingₓ'. -/
 /-- If `s` is Borel-measurable in a Polish space and `f` is continuous injective on `s`, then
 the restriction of `f` to `s` is a measurable embedding. -/
 theorem ContinuousOn.measurableEmbedding (hs : MeasurableSet s) (f_cont : ContinuousOn f s)
@@ -699,6 +773,7 @@ theorem ContinuousOn.measurableEmbedding (hs : MeasurableSet s) (f_cont : Contin
       rwa [← image_comp] at B }
 #align continuous_on.measurable_embedding ContinuousOn.measurableEmbedding
 
+#print Measurable.measurableEmbedding /-
 /-- An injective measurable function from a Polish space to a second-countable topological space
 is a measurable embedding. -/
 theorem Measurable.measurableEmbedding [SecondCountableTopology β] (f_meas : Measurable f)
@@ -707,9 +782,11 @@ theorem Measurable.measurableEmbedding [SecondCountableTopology β] (f_meas : Me
     Measurable := f_meas
     measurableSet_image' := fun u hu => hu.image_of_measurable_injOn f_meas (f_inj.InjOn _) }
 #align measurable.measurable_embedding Measurable.measurableEmbedding
+-/
 
 omit tβ
 
+#print MeasureTheory.isClopenable_iff_measurableSet /-
 /-- In a Polish space, a set is clopenable if and only if it is Borel-measurable. -/
 theorem isClopenable_iff_measurableSet : IsClopenable s ↔ MeasurableSet s :=
   by
@@ -739,9 +816,16 @@ theorem isClopenable_iff_measurableSet : IsClopenable s ↔ MeasurableSet s :=
   convert E.measurable_set_image.2 M
   simp only [id.def, image_id']
 #align measure_theory.is_clopenable_iff_measurable_set MeasureTheory.isClopenable_iff_measurableSet
+-/
 
 omit hγb
 
+/- warning: measure_theory.measurable_set_exists_tendsto -> MeasureTheory.measurableSet_exists_tendsto is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {γ : Type.{u2}} [tγ : TopologicalSpace.{u2} γ] [_inst_2 : PolishSpace.{u2} γ tγ] [_inst_3 : MeasurableSpace.{u2} γ] {β : Type.{u3}} [_inst_5 : MeasurableSpace.{u3} β] [hγ : OpensMeasurableSpace.{u2} γ tγ _inst_3] [_inst_7 : Countable.{succ u1} ι] {l : Filter.{u1} ι} [_inst_8 : Filter.IsCountablyGenerated.{u1} ι l] {f : ι -> β -> γ}, (forall (i : ι), Measurable.{u3, u2} β γ _inst_5 _inst_3 (f i)) -> (MeasurableSet.{u3} β _inst_5 (setOf.{u3} β (fun (x : β) => Exists.{succ u2} γ (fun (c : γ) => Filter.Tendsto.{u1, u2} ι γ (fun (n : ι) => f n x) l (nhds.{u2} γ tγ c)))))
+but is expected to have type
+  forall {ι : Type.{u2}} {γ : Type.{u3}} [tγ : TopologicalSpace.{u3} γ] [_inst_2 : PolishSpace.{u3} γ tγ] [_inst_3 : MeasurableSpace.{u3} γ] {β : Type.{u1}} [_inst_5 : MeasurableSpace.{u1} β] [hγ : OpensMeasurableSpace.{u3} γ tγ _inst_3] [_inst_7 : Countable.{succ u2} ι] {l : Filter.{u2} ι} [_inst_8 : Filter.IsCountablyGenerated.{u2} ι l] {f : ι -> β -> γ}, (forall (i : ι), Measurable.{u1, u3} β γ _inst_5 _inst_3 (f i)) -> (MeasurableSet.{u1} β _inst_5 (setOf.{u1} β (fun (x : β) => Exists.{succ u3} γ (fun (c : γ) => Filter.Tendsto.{u2, u3} ι γ (fun (n : ι) => f n x) l (nhds.{u3} γ tγ c)))))
+Case conversion may be inaccurate. Consider using '#align measure_theory.measurable_set_exists_tendsto MeasureTheory.measurableSet_exists_tendstoₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The set of points for which a measurable sequence of functions converges is measurable. -/
 @[measurability]
@@ -780,6 +864,7 @@ end MeasureTheory
 /-! ### The Borel Isomorphism Theorem -/
 
 
+#print polish_of_countable /-
 --Note: Move to topology/metric_space/polish when porting.
 instance (priority := 50) polish_of_countable [h : Countable α] [DiscreteTopology α] :
     PolishSpace α := by
@@ -790,6 +875,7 @@ instance (priority := 50) polish_of_countable [h : Countable α] [DiscreteTopolo
     exact fun t _ => isClosed_discrete _
   exact this.polish_space
 #align polish_of_countable polish_of_countable
+-/
 
 namespace PolishSpace
 
@@ -808,13 +894,16 @@ variable {β : Type _} [TopologicalSpace β] [PolishSpace α] [PolishSpace β]
 
 variable [MeasurableSpace α] [MeasurableSpace β] [BorelSpace α] [BorelSpace β]
 
+#print PolishSpace.borelSchroederBernstein /-
 /-- If two Polish spaces admit Borel measurable injections to one another,
 then they are Borel isomorphic.-/
 noncomputable def borelSchroederBernstein {f : α → β} {g : β → α} (fmeas : Measurable f)
     (finj : Function.Injective f) (gmeas : Measurable g) (ginj : Function.Injective g) : α ≃ᵐ β :=
   (fmeas.MeasurableEmbedding finj).schroeder_bernstein (gmeas.MeasurableEmbedding ginj)
 #align polish_space.borel_schroeder_bernstein PolishSpace.borelSchroederBernstein
+-/
 
+#print PolishSpace.measurableEquivNatBoolOfNotCountable /-
 /-- Any uncountable Polish space is Borel isomorphic to the Cantor space `ℕ → bool`.-/
 noncomputable def measurableEquivNatBoolOfNotCountable (h : ¬Countable α) : α ≃ᵐ (ℕ → Bool) :=
   by
@@ -825,12 +914,16 @@ noncomputable def measurableEquivNatBoolOfNotCountable (h : ¬Countable α) : α
   obtain ⟨g, gmeas, ginj⟩ := MeasurableSpace.measurable_injection_nat_bool_of_countablyGenerated α
   exact ⟨borel_schroeder_bernstein gmeas ginj fcts.measurable finj⟩
 #align polish_space.measurable_equiv_nat_bool_of_not_countable PolishSpace.measurableEquivNatBoolOfNotCountable
+-/
 
+#print PolishSpace.measurableEquivOfNotCountable /-
 /-- The **Borel Isomorphism Theorem**: Any two uncountable Polish spaces are Borel isomorphic.-/
 noncomputable def measurableEquivOfNotCountable (hα : ¬Countable α) (hβ : ¬Countable β) : α ≃ᵐ β :=
   (measurableEquivNatBoolOfNotCountable hα).trans (measurableEquivNatBoolOfNotCountable hβ).symm
 #align polish_space.measurable_equiv_of_not_countable PolishSpace.measurableEquivOfNotCountable
+-/
 
+#print PolishSpace.Equiv.measurableEquiv /-
 /-- The **Borel Isomorphism Theorem**: If two Polish spaces have the same cardinality,
 they are Borel isomorphic.-/
 noncomputable def Equiv.measurableEquiv (e : α ≃ β) : α ≃ᵐ β :=
@@ -842,6 +935,7 @@ noncomputable def Equiv.measurableEquiv (e : α ≃ β) : α ≃ᵐ β :=
   refine' measurable_equiv_of_not_countable h _
   rwa [e.countable_iff] at h
 #align polish_space.equiv.measurable_equiv PolishSpace.Equiv.measurableEquiv
+-/
 
 end PolishSpace
 
@@ -853,6 +947,12 @@ instance [PolishSpace α] : PolishSpace (univ : Set α) :=
 
 variable (α) [MeasurableSpace α] [PolishSpace α] [BorelSpace α]
 
+/- warning: measure_theory.exists_nat_measurable_equiv_range_coe_fin_of_finite -> MeasureTheory.exists_nat_measurableEquiv_range_coe_fin_of_finite is a dubious translation:
+lean 3 declaration is
+  forall (α : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : PolishSpace.{u1} α _inst_1] [_inst_4 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_5 : Finite.{succ u1} α], Exists.{1} Nat (fun (n : Nat) => Nonempty.{succ u1} (MeasurableEquiv.{u1, 0} α (coeSort.{1, 2} (Set.{0} Real) Type (Set.hasCoeToSort.{0} Real) (Set.range.{0, 1} Real (Fin n) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Fin n) Real (HasLiftT.mk.{1, 1} (Fin n) Real (CoeTCₓ.coe.{1, 1} (Fin n) Real (coeTrans.{1, 1, 1} (Fin n) Nat Real (Nat.castCoe.{0} Real Real.hasNatCast) (Fin.coeToNat n))))))) _inst_2 (Subtype.instMeasurableSpace.{0} Real (fun (x : Real) => Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) x (Set.range.{0, 1} Real (Fin n) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Fin n) Real (HasLiftT.mk.{1, 1} (Fin n) Real (CoeTCₓ.coe.{1, 1} (Fin n) Real (coeTrans.{1, 1, 1} (Fin n) Nat Real (Nat.castCoe.{0} Real Real.hasNatCast) (Fin.coeToNat n))))))) Real.measurableSpace)))
+but is expected to have type
+  forall (α : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : PolishSpace.{u1} α _inst_1] [_inst_4 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_5 : Finite.{succ u1} α], Exists.{1} Nat (fun (n : Nat) => Nonempty.{succ u1} (MeasurableEquiv.{u1, 0} α (Set.Elem.{0} Real (Set.range.{0, 1} Real (Fin n) (fun (x : Fin n) => Nat.cast.{0} Real Real.natCast (Fin.val n x)))) _inst_2 (Subtype.instMeasurableSpace.{0} Real (fun (x : Real) => Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) x (Set.range.{0, 1} Real (Fin n) (fun (x : Fin n) => Nat.cast.{0} Real Real.natCast (Fin.val n x)))) Real.measurableSpace)))
+Case conversion may be inaccurate. Consider using '#align measure_theory.exists_nat_measurable_equiv_range_coe_fin_of_finite MeasureTheory.exists_nat_measurableEquiv_range_coe_fin_of_finiteₓ'. -/
 theorem exists_nat_measurableEquiv_range_coe_fin_of_finite [Finite α] :
     ∃ n : ℕ, Nonempty (α ≃ᵐ range (coe : Fin n → ℝ)) :=
   by
@@ -861,6 +961,12 @@ theorem exists_nat_measurableEquiv_range_coe_fin_of_finite [Finite α] :
   exact Equiv.ofInjective _ (nat.cast_injective.comp Fin.val_injective)
 #align measure_theory.exists_nat_measurable_equiv_range_coe_fin_of_finite MeasureTheory.exists_nat_measurableEquiv_range_coe_fin_of_finite
 
+/- warning: measure_theory.measurable_equiv_range_coe_nat_of_infinite_of_countable -> MeasureTheory.measurableEquiv_range_coe_nat_of_infinite_of_countable is a dubious translation:
+lean 3 declaration is
+  forall (α : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : PolishSpace.{u1} α _inst_1] [_inst_4 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_5 : Infinite.{succ u1} α] [_inst_6 : Countable.{succ u1} α], Nonempty.{succ u1} (MeasurableEquiv.{u1, 0} α (coeSort.{1, 2} (Set.{0} Real) Type (Set.hasCoeToSort.{0} Real) (Set.range.{0, 1} Real Nat ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Real (HasLiftT.mk.{1, 1} Nat Real (CoeTCₓ.coe.{1, 1} Nat Real (Nat.castCoe.{0} Real Real.hasNatCast)))))) _inst_2 (Subtype.instMeasurableSpace.{0} Real (fun (x : Real) => Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) x (Set.range.{0, 1} Real Nat ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Real (HasLiftT.mk.{1, 1} Nat Real (CoeTCₓ.coe.{1, 1} Nat Real (Nat.castCoe.{0} Real Real.hasNatCast)))))) Real.measurableSpace))
+but is expected to have type
+  forall (α : Type.{u1}) [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : MeasurableSpace.{u1} α] [_inst_3 : PolishSpace.{u1} α _inst_1] [_inst_4 : BorelSpace.{u1} α _inst_1 _inst_2] [_inst_5 : Infinite.{succ u1} α] [_inst_6 : Countable.{succ u1} α], Nonempty.{succ u1} (MeasurableEquiv.{u1, 0} α (Set.Elem.{0} Real (Set.range.{0, 1} Real Nat (Nat.cast.{0} Real Real.natCast))) _inst_2 (Subtype.instMeasurableSpace.{0} Real (fun (x : Real) => Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) x (Set.range.{0, 1} Real Nat (Nat.cast.{0} Real Real.natCast))) Real.measurableSpace))
+Case conversion may be inaccurate. Consider using '#align measure_theory.measurable_equiv_range_coe_nat_of_infinite_of_countable MeasureTheory.measurableEquiv_range_coe_nat_of_infinite_of_countableₓ'. -/
 theorem measurableEquiv_range_coe_nat_of_infinite_of_countable [Infinite α] [Countable α] :
     Nonempty (α ≃ᵐ range (coe : ℕ → ℝ)) :=
   by
@@ -871,6 +977,7 @@ theorem measurableEquiv_range_coe_nat_of_infinite_of_countable [Infinite α] [Co
   exact Equiv.ofInjective coe Nat.cast_injective
 #align measure_theory.measurable_equiv_range_coe_nat_of_infinite_of_countable MeasureTheory.measurableEquiv_range_coe_nat_of_infinite_of_countable
 
+#print MeasureTheory.exists_subset_real_measurableEquiv /-
 /-- Any Polish Borel space is measurably equivalent to a subset of the reals. -/
 theorem exists_subset_real_measurableEquiv : ∃ s : Set ℝ, MeasurableSet s ∧ Nonempty (α ≃ᵐ s) :=
   by
@@ -896,13 +1003,16 @@ theorem exists_subset_real_measurableEquiv : ∃ s : Set ℝ, MeasurableSet s �
     rw [countable_coe_iff]
     exact Cardinal.not_countable_real
 #align measure_theory.exists_subset_real_measurable_equiv MeasureTheory.exists_subset_real_measurableEquiv
+-/
 
+#print MeasureTheory.exists_measurableEmbedding_real /-
 /-- Any Polish Borel space embeds measurably into the reals. -/
 theorem exists_measurableEmbedding_real : ∃ f : α → ℝ, MeasurableEmbedding f :=
   by
   obtain ⟨s, hs, ⟨e⟩⟩ := exists_subset_real_measurable_equiv α
   exact ⟨coe ∘ e, (MeasurableEmbedding.subtype_coe hs).comp e.measurable_embedding⟩
 #align measure_theory.exists_measurable_embedding_real MeasureTheory.exists_measurableEmbedding_real
+-/
 
 end MeasureTheory
 

@@ -683,7 +683,7 @@ open LocallyConvexSpace
 variable [Nonempty ι] [NormedField 𝕜] [NormedSpace ℝ 𝕜] [AddCommGroup E] [Module 𝕜 E] [Module ℝ E]
   [IsScalarTower ℝ 𝕜 E] [TopologicalSpace E] [TopologicalAddGroup E]
 
-theorem WithSeminorms.toLocallyConvexSpace {p : SeminormFamily 𝕜 E ι} (hp : WithSeminorms p) :
+theorem WithSeminorms.to_locallyConvexSpace {p : SeminormFamily 𝕜 E ι} (hp : WithSeminorms p) :
     LocallyConvexSpace ℝ E :=
   by
   apply of_basis_zero ℝ E id fun s => s ∈ p.basis_sets
@@ -694,7 +694,7 @@ theorem WithSeminorms.toLocallyConvexSpace {p : SeminormFamily 𝕜 E ι} (hp : 
     simp_rw [Set.mem_iUnion, Set.mem_singleton_iff] at hs
     rcases hs with ⟨I, r, hr, rfl⟩
     exact convex_ball _ _ _
-#align with_seminorms.to_locally_convex_space WithSeminorms.toLocallyConvexSpace
+#align with_seminorms.to_locally_convex_space WithSeminorms.to_locallyConvexSpace
 
 end LocallyConvexSpace
 
@@ -704,16 +704,16 @@ variable (𝕜) [NormedField 𝕜] [NormedSpace ℝ 𝕜] [SeminormedAddCommGrou
 
 /-- Not an instance since `𝕜` can't be inferred. See `normed_space.to_locally_convex_space` for a
 slightly weaker instance version. -/
-theorem NormedSpace.toLocallyConvexSpace' [NormedSpace 𝕜 E] [Module ℝ E] [IsScalarTower ℝ 𝕜 E] :
+theorem NormedSpace.to_locally_convex_space' [NormedSpace 𝕜 E] [Module ℝ E] [IsScalarTower ℝ 𝕜 E] :
     LocallyConvexSpace ℝ E :=
-  (norm_withSeminorms 𝕜 E).toLocallyConvexSpace
-#align normed_space.to_locally_convex_space' NormedSpace.toLocallyConvexSpace'
+  (norm_withSeminorms 𝕜 E).to_locallyConvexSpace
+#align normed_space.to_locally_convex_space' NormedSpace.to_locally_convex_space'
 
 /-- See `normed_space.to_locally_convex_space'` for a slightly stronger version which is not an
 instance. -/
-instance NormedSpace.toLocallyConvexSpace [NormedSpace ℝ E] : LocallyConvexSpace ℝ E :=
-  NormedSpace.toLocallyConvexSpace' ℝ
-#align normed_space.to_locally_convex_space NormedSpace.toLocallyConvexSpace
+instance NormedSpace.to_locallyConvexSpace [NormedSpace ℝ E] : LocallyConvexSpace ℝ E :=
+  NormedSpace.to_locally_convex_space' ℝ
+#align normed_space.to_locally_convex_space NormedSpace.to_locallyConvexSpace
 
 end NormedSpace
 

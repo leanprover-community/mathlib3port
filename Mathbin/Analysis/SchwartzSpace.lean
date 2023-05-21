@@ -597,7 +597,7 @@ instance : UniformAddGroup 𝓢(E, F) :=
   (schwartzSeminormFamily ℝ E F).AddGroupFilterBasis.UniformAddGroup
 
 instance : LocallyConvexSpace ℝ 𝓢(E, F) :=
-  (schwartz_withSeminorms ℝ E F).toLocallyConvexSpace
+  (schwartz_withSeminorms ℝ E F).to_locallyConvexSpace
 
 instance : TopologicalSpace.FirstCountableTopology 𝓢(E, F) :=
   (schwartz_withSeminorms ℝ E F).first_countable

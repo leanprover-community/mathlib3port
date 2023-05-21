@@ -227,7 +227,7 @@ theorem Measurable.lintegral_prod_right' [SigmaFinite ν] :
     ∀ {f : α × β → ℝ≥0∞} (hf : Measurable f), Measurable fun x => ∫⁻ y, f (x, y) ∂ν :=
   by
   have m := @measurable_prod_mk_left
-  refine' Measurable.eNNReal_induction _ _ _
+  refine' Measurable.ennreal_induction _ _ _
   · intro c s hs
     simp only [← indicator_comp_right]
     suffices Measurable fun x => c * ν (Prod.mk x ⁻¹' s) by simpa [lintegral_indicator _ (m hs)]
@@ -723,7 +723,7 @@ theorem lintegral_prod_of_measurable :
     ∀ (f : α × β → ℝ≥0∞) (hf : Measurable f), (∫⁻ z, f z ∂μ.Prod ν) = ∫⁻ x, ∫⁻ y, f (x, y) ∂ν ∂μ :=
   by
   have m := @measurable_prod_mk_left
-  refine' Measurable.eNNReal_induction _ _ _
+  refine' Measurable.ennreal_induction _ _ _
   · intro c s hs
     simp only [← indicator_comp_right]
     simp [lintegral_indicator, m hs, hs, lintegral_const_mul, measurable_measure_prod_mk_left hs,

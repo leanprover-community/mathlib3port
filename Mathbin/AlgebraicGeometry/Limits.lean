@@ -139,12 +139,12 @@ instance initial_isEmpty : IsEmpty (⊥_ Scheme).carrier :=
   ⟨fun x => ((initial.to Scheme.empty : _).1.base x).elim⟩
 #align algebraic_geometry.initial_is_empty AlgebraicGeometry.initial_isEmpty
 
-theorem bot_isAffineOpen (X : Scheme) : IsAffineOpen (⊥ : Opens X.carrier) :=
+theorem botIsAffineOpen (X : Scheme) : IsAffineOpen (⊥ : Opens X.carrier) :=
   by
   convert range_is_affine_open_of_open_immersion (initial.to X)
   ext
   exact (false_iff_iff _).mpr fun x => isEmptyElim (show (⊥_ Scheme).carrier from x.some)
-#align algebraic_geometry.bot_is_affine_open AlgebraicGeometry.bot_isAffineOpen
+#align algebraic_geometry.bot_is_affine_open AlgebraicGeometry.botIsAffineOpen
 
 instance : HasStrictInitialObjects Scheme :=
   hasStrictInitialObjects_of_initial_is_strict fun A f => by infer_instance

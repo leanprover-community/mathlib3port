@@ -54,7 +54,7 @@ theorem lintegral_mul_indicator_eq_lintegral_mul_lintegral_indicator {Mf mΩ : M
   revert f
   have h_mul_indicator : ∀ g, Measurable g → Measurable fun a => g a * T.indicator (fun x => c) a :=
     fun g h_mg => h_mg.mul (measurable_const.indicator h_meas_T)
-  apply Measurable.eNNReal_induction
+  apply Measurable.ennreal_induction
   · intro c' s' h_meas_s'
     simp_rw [← inter_indicator_mul]
     rw [lintegral_indicator _ (MeasurableSet.inter (hMf _ h_meas_s') h_meas_T),
@@ -92,7 +92,7 @@ theorem lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurableSpace
   by
   revert g
   have h_measM_f : Measurable f := h_meas_f.mono hMf le_rfl
-  apply Measurable.eNNReal_induction
+  apply Measurable.ennreal_induction
   · intro c s h_s
     apply lintegral_mul_indicator_eq_lintegral_mul_lintegral_indicator hMf _ (hMg _ h_s) _ h_meas_f
     apply indep_sets_of_indep_sets_of_le_right h_ind

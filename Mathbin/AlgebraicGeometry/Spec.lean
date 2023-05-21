@@ -111,7 +111,7 @@ def Spec.sheafedSpaceMap {R S : CommRingCat.{u}} (f : R ⟶ S) :
 @[simp]
 theorem Spec.sheafedSpaceMap_id {R : CommRingCat} :
     Spec.sheafedSpaceMap (𝟙 R) = 𝟙 (Spec.sheafedSpaceObj R) :=
-  PresheafedSpace.ext _ _ (Spec.topMap_id R) <|
+  AlgebraicGeometry.PresheafedSpace.Hom.ext _ _ (Spec.topMap_id R) <|
     NatTrans.ext _ _ <|
       funext fun U => by
         dsimp
@@ -122,7 +122,7 @@ theorem Spec.sheafedSpaceMap_id {R : CommRingCat} :
 
 theorem Spec.sheafedSpaceMap_comp {R S T : CommRingCat} (f : R ⟶ S) (g : S ⟶ T) :
     Spec.sheafedSpaceMap (f ≫ g) = Spec.sheafedSpaceMap g ≫ Spec.sheafedSpaceMap f :=
-  PresheafedSpace.ext _ _ (Spec.topMap_comp f g) <|
+  AlgebraicGeometry.PresheafedSpace.Hom.ext _ _ (Spec.topMap_comp f g) <|
     NatTrans.ext _ _ <|
       funext fun U => by
         dsimp

@@ -478,7 +478,7 @@ theorem exists_measurable_supersets_limRatio {p q : ℝ≥0} (hpq : p < q) :
 
 theorem aEMeasurable_limRatio : AEMeasurable (v.limRatio ρ) μ :=
   by
-  apply ENNReal.aEMeasurable_of_exist_almost_disjoint_supersets _ _ fun p q hpq => _
+  apply ENNReal.aemeasurable_of_exist_almost_disjoint_supersets _ _ fun p q hpq => _
   exact v.exists_measurable_supersets_lim_ratio hρ hpq
 #align vitali_family.ae_measurable_lim_ratio VitaliFamily.aEMeasurable_limRatio
 
