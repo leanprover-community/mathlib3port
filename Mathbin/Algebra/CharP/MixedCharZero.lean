@@ -61,6 +61,7 @@ variable (R : Type _) [CommRing R]
 -/
 
 
+#print MixedCharZero /-
 /-- A ring of characteristic zero is of "mixed characteristic `(0, p)`" if there exists an ideal
 such that the quotient `R ⧸ I` has caracteristic `p`.
 
@@ -74,9 +75,11 @@ class MixedCharZero (p : ℕ) : Prop where
   [to_charZero : CharZero R]
   charP_quotient : ∃ I : Ideal R, I ≠ ⊤ ∧ CharP (R ⧸ I) p
 #align mixed_char_zero MixedCharZero
+-/
 
 namespace MixedCharZero
 
+#print MixedCharZero.reduce_to_p_prime /-
 /-- Reduction to `p` prime: When proving any statement `P` about mixed characteristic rings we
 can always assume that `p` is prime.
 -/
@@ -105,7 +108,14 @@ theorem reduce_to_p_prime {P : Prop} :
     haveI : CharZero R := q_mixed_char.to_char_zero
     exact ⟨⟨M, hM_max.ne_top, ringChar.of_eq rfl⟩⟩
 #align mixed_char_zero.reduce_to_p_prime MixedCharZero.reduce_to_p_prime
+-/
 
+/- warning: mixed_char_zero.reduce_to_maximal_ideal -> MixedCharZero.reduce_to_maximal_ideal is a dubious translation:
+lean 3 declaration is
+  forall (R : Type.{u1}) [_inst_1 : CommRing.{u1} R] {p : Nat}, (Nat.Prime p) -> (Iff (Exists.{succ u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (fun (I : Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) => And (Ne.{succ u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) I (Top.top.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Submodule.hasTop.{u1, u1} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) (CharP.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (AddGroupWithOne.toAddMonoidWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (AddCommGroupWithOne.toAddGroupWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (Ring.toAddCommGroupWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (CommRing.toRing.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (Ideal.Quotient.commRing.{u1} R _inst_1 I))))) p))) (Exists.{succ u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (fun (I : Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) => And (Ideal.IsMaximal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) I) (CharP.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (AddGroupWithOne.toAddMonoidWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (AddCommGroupWithOne.toAddGroupWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (Ring.toAddCommGroupWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (CommRing.toRing.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (Ideal.Quotient.commRing.{u1} R _inst_1 I))))) p))))
+but is expected to have type
+  forall (R : Type.{u1}) [_inst_1 : CommRing.{u1} R] {p : Nat}, (Nat.Prime p) -> (Iff (Exists.{succ u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (fun (I : Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) => And (Ne.{succ u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) I (Top.top.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Submodule.instTopSubmodule.{u1, u1} R R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))) (CharP.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (AddGroupWithOne.toAddMonoidWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (Ring.toAddGroupWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (CommRing.toRing.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (Ideal.Quotient.commRing.{u1} R _inst_1 I)))) p))) (Exists.{succ u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (fun (I : Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) => And (Ideal.IsMaximal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) I) (CharP.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (AddGroupWithOne.toAddMonoidWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (Ring.toAddGroupWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (CommRing.toRing.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (Ideal.Quotient.commRing.{u1} R _inst_1 I)))) p))))
+Case conversion may be inaccurate. Consider using '#align mixed_char_zero.reduce_to_maximal_ideal MixedCharZero.reduce_to_maximal_idealₓ'. -/
 /-- Reduction to `I` prime ideal: When proving statements about mixed characteristic rings,
 after we reduced to `p` prime, we can assume that the ideal `I` in the definition is maximal.
 -/
@@ -157,11 +167,17 @@ Note: Property `(2)` is denoted as `equal_char_zero` in the statement names belo
 
 section EqualCharZero
 
+/- warning: Q_algebra_to_equal_char_zero -> EqualCharZero.of_algebraRat is a dubious translation:
+lean 3 declaration is
+  forall (R : Type.{u1}) [_inst_1 : CommRing.{u1} R] [_inst_2 : Nontrivial.{u1} R] [_inst_3 : Algebra.{0, u1} Rat R Rat.commSemiring (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))] (I : Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))), (Ne.{succ u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) I (Top.top.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Submodule.hasTop.{u1, u1} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) -> (CharZero.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (AddGroupWithOne.toAddMonoidWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (AddCommGroupWithOne.toAddGroupWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (Ring.toAddCommGroupWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (CommRing.toRing.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (Ideal.Quotient.commRing.{u1} R _inst_1 I))))))
+but is expected to have type
+  forall (R : Type.{u1}) [_inst_1 : CommRing.{u1} R] [_inst_2 : Algebra.{0, u1} Rat R Rat.commSemiring (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))] (_inst_3 : Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))), (Ne.{succ u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) _inst_3 (Top.top.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Submodule.instTopSubmodule.{u1, u1} R R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))) -> (CharZero.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) _inst_3) (AddGroupWithOne.toAddMonoidWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) _inst_3) (Ring.toAddGroupWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) _inst_3) (CommRing.toRing.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) _inst_3) (Ideal.Quotient.commRing.{u1} R _inst_1 _inst_3)))))
+Case conversion may be inaccurate. Consider using '#align Q_algebra_to_equal_char_zero EqualCharZero.of_algebraRatₓ'. -/
 -- argument `[nontrivial R]` is used in the first line of the proof.
 /-- `ℚ`-algebra implies equal characteristic.
 -/
 @[nolint unused_arguments]
-theorem Q_algebra_to_equal_charZero [Nontrivial R] [Algebra ℚ R] :
+theorem EqualCharZero.of_algebraRat [Nontrivial R] [Algebra ℚ R] :
     ∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I) :=
   by
   haveI : CharZero R := algebraRat.charZero R
@@ -173,12 +189,18 @@ theorem Q_algebra_to_equal_charZero [Nontrivial R] [Algebra ℚ R] :
   refine' I.eq_top_of_is_unit_mem _ (IsUnit.map (algebraMap ℚ R) (IsUnit.mk0 (a - b : ℚ) _))
   · simpa only [← Ideal.Quotient.eq_zero_iff_mem, map_sub, sub_eq_zero, map_natCast]
   simpa only [Ne.def, sub_eq_zero] using (@Nat.cast_injective ℚ _ _).Ne hI
-#align Q_algebra_to_equal_char_zero Q_algebra_to_equal_charZero
+#align Q_algebra_to_equal_char_zero EqualCharZero.of_algebraRat
 
 section ConstructionOfQAlgebra
 
+/- warning: equal_char_zero.pnat_coe_is_unit -> EqualCharZero.PNat.isUnit_natCast is a dubious translation:
+lean 3 declaration is
+  forall (R : Type.{u1}) [_inst_1 : CommRing.{u1} R] [h : Fact (forall (I : Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))), (Ne.{succ u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) I (Top.top.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Submodule.hasTop.{u1, u1} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) -> (CharZero.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (AddGroupWithOne.toAddMonoidWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (AddCommGroupWithOne.toAddGroupWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (Ring.toAddCommGroupWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (CommRing.toRing.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (Ideal.Quotient.commRing.{u1} R _inst_1 I)))))))] (n : PNat), IsUnit.{u1} R (Ring.toMonoid.{u1} R (CommRing.toRing.{u1} R _inst_1)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) PNat R (HasLiftT.mk.{1, succ u1} PNat R (CoeTCₓ.coe.{1, succ u1} PNat R (coeTrans.{1, 1, succ u1} PNat Nat R (Nat.castCoe.{u1} R (AddMonoidWithOne.toNatCast.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) coePNatNat))) n)
+but is expected to have type
+  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] [h : Fact (forall (I : Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))), (Ne.{succ u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) I (Top.top.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Submodule.instTopSubmodule.{u1, u1} R R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))) -> (CharZero.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (AddGroupWithOne.toAddMonoidWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (Ring.toAddGroupWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (CommRing.toRing.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (Ideal.Quotient.commRing.{u1} R _inst_1 I))))))] (n : PNat), IsUnit.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))) (Nat.cast.{u1} R (Semiring.toNatCast.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (PNat.val n))
+Case conversion may be inaccurate. Consider using '#align equal_char_zero.pnat_coe_is_unit EqualCharZero.PNat.isUnit_natCastₓ'. -/
 /-- Internal: Not intended to be used outside this local construction. -/
-theorem EqualCharZero.pNat_coe_isUnit [h : Fact (∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I))]
+theorem EqualCharZero.PNat.isUnit_natCast [h : Fact (∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I))]
     (n : ℕ+) : IsUnit (n : R) :=
   by
   -- `n : R` is a unit iff `(n)` is not a proper ideal in `R`.
@@ -191,45 +213,69 @@ theorem EqualCharZero.pNat_coe_isUnit [h : Fact (∀ I : Ideal R, I ≠ ⊤ → 
   -- But `n` generates the ideal, so its image is clearly zero.
   rw [← map_natCast (Ideal.Quotient.mk _), Nat.cast_zero, Ideal.Quotient.eq_zero_iff_mem]
   exact Ideal.subset_span (Set.mem_singleton _)
-#align equal_char_zero.pnat_coe_is_unit EqualCharZero.pNat_coe_isUnit
+#align equal_char_zero.pnat_coe_is_unit EqualCharZero.PNat.isUnit_natCast
 
+/- warning: equal_char_zero.pnat_has_coe_units -> EqualCharZero.coePNatUnits is a dubious translation:
+lean 3 declaration is
+  forall (R : Type.{u1}) [_inst_1 : CommRing.{u1} R] [_inst_2 : Fact (forall (I : Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))), (Ne.{succ u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) I (Top.top.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Submodule.hasTop.{u1, u1} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) -> (CharZero.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (AddGroupWithOne.toAddMonoidWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (AddCommGroupWithOne.toAddGroupWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (Ring.toAddCommGroupWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (CommRing.toRing.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (Ideal.Quotient.commRing.{u1} R _inst_1 I)))))))], CoeTCₓ.{1, succ u1} PNat (Units.{u1} R (Ring.toMonoid.{u1} R (CommRing.toRing.{u1} R _inst_1)))
+but is expected to have type
+  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] [_inst_2 : Fact (forall (I : Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))), (Ne.{succ u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) I (Top.top.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Submodule.instTopSubmodule.{u1, u1} R R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))) -> (CharZero.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (AddGroupWithOne.toAddMonoidWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (Ring.toAddGroupWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (CommRing.toRing.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (Ideal.Quotient.commRing.{u1} R _inst_1 I))))))], Coe.{1, succ u1} PNat (Units.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))
+Case conversion may be inaccurate. Consider using '#align equal_char_zero.pnat_has_coe_units EqualCharZero.coePNatUnitsₓ'. -/
 /-- Internal: Not intended to be used outside this local construction. -/
-noncomputable instance EqualCharZero.pnatHasCoeUnits
-    [Fact (∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I))] : CoeTC ℕ+ Rˣ :=
-  ⟨fun n => (EqualCharZero.pNat_coe_isUnit R n).Unit⟩
-#align equal_char_zero.pnat_has_coe_units EqualCharZero.pnatHasCoeUnits
+noncomputable instance EqualCharZero.coePNatUnits [Fact (∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I))] :
+    CoeTC ℕ+ Rˣ :=
+  ⟨fun n => (EqualCharZero.PNat.isUnit_natCast R n).Unit⟩
+#align equal_char_zero.pnat_has_coe_units EqualCharZero.coePNatUnits
 
+/- warning: equal_char_zero.pnat_coe_units_eq_one -> EqualCharZero.pnatCast_one is a dubious translation:
+lean 3 declaration is
+  forall (R : Type.{u1}) [_inst_1 : CommRing.{u1} R] [_inst_2 : Fact (forall (I : Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))), (Ne.{succ u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) I (Top.top.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Submodule.hasTop.{u1, u1} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) -> (CharZero.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (AddGroupWithOne.toAddMonoidWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (AddCommGroupWithOne.toAddGroupWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (Ring.toAddCommGroupWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (CommRing.toRing.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (Ideal.Quotient.commRing.{u1} R _inst_1 I)))))))], Eq.{succ u1} (Units.{u1} R (Ring.toMonoid.{u1} R (CommRing.toRing.{u1} R _inst_1))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) PNat (Units.{u1} R (Ring.toMonoid.{u1} R (CommRing.toRing.{u1} R _inst_1))) (HasLiftT.mk.{1, succ u1} PNat (Units.{u1} R (Ring.toMonoid.{u1} R (CommRing.toRing.{u1} R _inst_1))) (CoeTCₓ.coe.{1, succ u1} PNat (Units.{u1} R (Ring.toMonoid.{u1} R (CommRing.toRing.{u1} R _inst_1))) (EqualCharZero.coePNatUnits.{u1} R _inst_1 _inst_2))) (OfNat.ofNat.{0} PNat 1 (OfNat.mk.{0} PNat 1 (One.one.{0} PNat PNat.hasOne)))) (OfNat.ofNat.{u1} (Units.{u1} R (Ring.toMonoid.{u1} R (CommRing.toRing.{u1} R _inst_1))) 1 (OfNat.mk.{u1} (Units.{u1} R (Ring.toMonoid.{u1} R (CommRing.toRing.{u1} R _inst_1))) 1 (One.one.{u1} (Units.{u1} R (Ring.toMonoid.{u1} R (CommRing.toRing.{u1} R _inst_1))) (MulOneClass.toHasOne.{u1} (Units.{u1} R (Ring.toMonoid.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Units.mulOneClass.{u1} R (Ring.toMonoid.{u1} R (CommRing.toRing.{u1} R _inst_1)))))))
+but is expected to have type
+  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] [_inst_2 : Fact (forall (I : Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))), (Ne.{succ u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) I (Top.top.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Submodule.instTopSubmodule.{u1, u1} R R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))) -> (CharZero.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (AddGroupWithOne.toAddMonoidWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (Ring.toAddGroupWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (CommRing.toRing.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (Ideal.Quotient.commRing.{u1} R _inst_1 I))))))], Eq.{succ u1} (Units.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))) (EqualCharZero.pnatCast.{u1} R _inst_1 _inst_2 (OfNat.ofNat.{0} PNat 1 (instOfNatPNatHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))) (OfNat.ofNat.{u1} (Units.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))) 1 (One.toOfNat1.{u1} (Units.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))) (InvOneClass.toOne.{u1} (Units.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))) (DivInvOneMonoid.toInvOneClass.{u1} (Units.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))) (DivisionMonoid.toDivInvOneMonoid.{u1} (Units.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))) (DivisionCommMonoid.toDivisionMonoid.{u1} (Units.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))) (CommGroup.toDivisionCommMonoid.{u1} (Units.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))) (Units.instCommGroupUnitsToMonoid.{u1} R (CommRing.toCommMonoid.{u1} R _inst_1)))))))))
+Case conversion may be inaccurate. Consider using '#align equal_char_zero.pnat_coe_units_eq_one EqualCharZero.pnatCast_oneₓ'. -/
 /-- Internal: Not intended to be used outside this local construction. -/
-theorem EqualCharZero.pNat_coe_units_eq_one [Fact (∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I))] :
+theorem EqualCharZero.pnatCast_one [Fact (∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I))] :
     ((1 : ℕ+) : Rˣ) = 1 := by
   apply Units.ext
   rw [Units.val_one]
-  change ((EqualCharZero.pNat_coe_isUnit R 1).Unit : R) = 1
-  rw [IsUnit.unit_spec (EqualCharZero.pNat_coe_isUnit R 1)]
+  change ((EqualCharZero.PNat.isUnit_natCast R 1).Unit : R) = 1
+  rw [IsUnit.unit_spec (EqualCharZero.PNat.isUnit_natCast R 1)]
   rw [coe_coe, PNat.one_coe, Nat.cast_one]
-#align equal_char_zero.pnat_coe_units_eq_one EqualCharZero.pNat_coe_units_eq_one
+#align equal_char_zero.pnat_coe_units_eq_one EqualCharZero.pnatCast_one
 
+/- warning: equal_char_zero.pnat_coe_units_coe_eq_coe -> EqualCharZero.pnatCast_eq_natCast is a dubious translation:
+lean 3 declaration is
+  forall (R : Type.{u1}) [_inst_1 : CommRing.{u1} R] [_inst_2 : Fact (forall (I : Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))), (Ne.{succ u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) I (Top.top.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Submodule.hasTop.{u1, u1} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) -> (CharZero.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (AddGroupWithOne.toAddMonoidWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (AddCommGroupWithOne.toAddGroupWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (Ring.toAddCommGroupWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (CommRing.toRing.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (Ideal.Quotient.commRing.{u1} R _inst_1 I)))))))] (n : PNat), Eq.{succ u1} R ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Units.{u1} R (Ring.toMonoid.{u1} R (CommRing.toRing.{u1} R _inst_1))) R (HasLiftT.mk.{succ u1, succ u1} (Units.{u1} R (Ring.toMonoid.{u1} R (CommRing.toRing.{u1} R _inst_1))) R (CoeTCₓ.coe.{succ u1, succ u1} (Units.{u1} R (Ring.toMonoid.{u1} R (CommRing.toRing.{u1} R _inst_1))) R (coeBase.{succ u1, succ u1} (Units.{u1} R (Ring.toMonoid.{u1} R (CommRing.toRing.{u1} R _inst_1))) R (Units.hasCoe.{u1} R (Ring.toMonoid.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) PNat (Units.{u1} R (Ring.toMonoid.{u1} R (CommRing.toRing.{u1} R _inst_1))) (HasLiftT.mk.{1, succ u1} PNat (Units.{u1} R (Ring.toMonoid.{u1} R (CommRing.toRing.{u1} R _inst_1))) (CoeTCₓ.coe.{1, succ u1} PNat (Units.{u1} R (Ring.toMonoid.{u1} R (CommRing.toRing.{u1} R _inst_1))) (EqualCharZero.coePNatUnits.{u1} R _inst_1 _inst_2))) n)) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) PNat R (HasLiftT.mk.{1, succ u1} PNat R (CoeTCₓ.coe.{1, succ u1} PNat R (coeTrans.{1, 1, succ u1} PNat Nat R (Nat.castCoe.{u1} R (AddMonoidWithOne.toNatCast.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) coePNatNat))) n)
+but is expected to have type
+  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] [_inst_2 : Fact (forall (I : Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))), (Ne.{succ u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) I (Top.top.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Submodule.instTopSubmodule.{u1, u1} R R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))) -> (CharZero.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (AddGroupWithOne.toAddMonoidWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (Ring.toAddGroupWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (CommRing.toRing.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (Ideal.Quotient.commRing.{u1} R _inst_1 I))))))] (n : PNat), Eq.{succ u1} R (Units.val.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))) (EqualCharZero.pnatCast.{u1} R _inst_1 _inst_2 n)) (Nat.cast.{u1} R (Semiring.toNatCast.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (PNat.val n))
+Case conversion may be inaccurate. Consider using '#align equal_char_zero.pnat_coe_units_coe_eq_coe EqualCharZero.pnatCast_eq_natCastₓ'. -/
 /-- Internal: Not intended to be used outside this local construction. -/
-theorem EqualCharZero.pNat_coe_units_coe_eq_coe [Fact (∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I))]
+theorem EqualCharZero.pnatCast_eq_natCast [Fact (∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I))]
     (n : ℕ+) : ((n : Rˣ) : R) = ↑n :=
   by
-  change ((EqualCharZero.pNat_coe_isUnit R n).Unit : R) = ↑n
+  change ((EqualCharZero.PNat.isUnit_natCast R n).Unit : R) = ↑n
   simp only [IsUnit.unit_spec]
-#align equal_char_zero.pnat_coe_units_coe_eq_coe EqualCharZero.pNat_coe_units_coe_eq_coe
+#align equal_char_zero.pnat_coe_units_coe_eq_coe EqualCharZero.pnatCast_eq_natCast
 
+/- warning: equal_char_zero_to_Q_algebra -> EqualCharZero.algebraRat is a dubious translation:
+lean 3 declaration is
+  forall (R : Type.{u1}) [_inst_1 : CommRing.{u1} R], (forall (I : Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))), (Ne.{succ u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) I (Top.top.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Submodule.hasTop.{u1, u1} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) -> (CharZero.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (AddGroupWithOne.toAddMonoidWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (AddCommGroupWithOne.toAddGroupWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (Ring.toAddCommGroupWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (CommRing.toRing.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (Ideal.Quotient.commRing.{u1} R _inst_1 I))))))) -> (Algebra.{0, u1} Rat R Rat.commSemiring (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))
+but is expected to have type
+  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R], (forall (I : Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))), (Ne.{succ u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) I (Top.top.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Submodule.instTopSubmodule.{u1, u1} R R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))) -> (CharZero.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (AddGroupWithOne.toAddMonoidWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (Ring.toAddGroupWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (CommRing.toRing.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (Ideal.Quotient.commRing.{u1} R _inst_1 I)))))) -> (Algebra.{0, u1} Rat R Rat.commSemiring (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))
+Case conversion may be inaccurate. Consider using '#align equal_char_zero_to_Q_algebra EqualCharZero.algebraRatₓ'. -/
 /-- Equal characteristic implies `ℚ`-algebra.
 -/
-noncomputable def equalCharZeroToQAlgebra (h : ∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I)) :
+noncomputable def EqualCharZero.algebraRat (h : ∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I)) :
     Algebra ℚ R :=
   haveI : Fact (∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I)) := ⟨h⟩
   RingHom.toAlgebra
     { toFun := fun x => x.num /ₚ ↑x.pnatDen
       map_zero' := by simp [divp]
-      map_one' := by simp [EqualCharZero.pNat_coe_units_eq_one]
+      map_one' := by simp [EqualCharZero.pnatCast_one]
       map_mul' := by
         intro a b
         field_simp
-        repeat' rw [EqualCharZero.pNat_coe_units_coe_eq_coe R]
+        repeat' rw [EqualCharZero.pnatCast_eq_natCast R]
         trans (↑((a * b).num * a.denom * b.denom) : R)
         · simp_rw [Int.cast_mul, Int.cast_ofNat, coe_coe, Rat.coe_pnatDen]
           ring
@@ -238,21 +284,27 @@ noncomputable def equalCharZeroToQAlgebra (h : ∀ I : Ideal R, I ≠ ⊤ → Ch
       map_add' := by
         intro a b
         field_simp
-        repeat' rw [EqualCharZero.pNat_coe_units_coe_eq_coe R]
+        repeat' rw [EqualCharZero.pnatCast_eq_natCast R]
         trans (↑((a + b).num * a.denom * b.denom) : R)
         · simp_rw [Int.cast_mul, Int.cast_ofNat, coe_coe, Rat.coe_pnatDen]
           ring
         rw [Rat.add_num_den' a b]
         simp }
-#align equal_char_zero_to_Q_algebra equalCharZeroToQAlgebra
+#align equal_char_zero_to_Q_algebra EqualCharZero.algebraRat
 
 end ConstructionOfQAlgebra
 
 end EqualCharZero
 
+/- warning: not_mixed_char_to_equal_char_zero -> EqualCharZero.of_not_mixedCharZero is a dubious translation:
+lean 3 declaration is
+  forall (R : Type.{u1}) [_inst_1 : CommRing.{u1} R] [_inst_2 : CharZero.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1))))], (forall (p : Nat), (GT.gt.{0} Nat Nat.hasLt p (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Not (MixedCharZero.{u1} R _inst_1 p))) -> (forall (I : Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))), (Ne.{succ u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) I (Top.top.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Submodule.hasTop.{u1, u1} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) -> (CharZero.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (AddGroupWithOne.toAddMonoidWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (AddCommGroupWithOne.toAddGroupWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (Ring.toAddCommGroupWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (CommRing.toRing.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (Ideal.Quotient.commRing.{u1} R _inst_1 I)))))))
+but is expected to have type
+  forall (R : Type.{u1}) [_inst_1 : CommRing.{u1} R] [_inst_2 : CharZero.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1)))], (forall (p : Nat), (GT.gt.{0} Nat instLTNat p (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Not (MixedCharZero.{u1} R _inst_1 p))) -> (forall (I : Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))), (Ne.{succ u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) I (Top.top.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Submodule.instTopSubmodule.{u1, u1} R R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))) -> (CharZero.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (AddGroupWithOne.toAddMonoidWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (Ring.toAddGroupWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (CommRing.toRing.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (Ideal.Quotient.commRing.{u1} R _inst_1 I))))))
+Case conversion may be inaccurate. Consider using '#align not_mixed_char_to_equal_char_zero EqualCharZero.of_not_mixedCharZeroₓ'. -/
 /-- Not mixed characteristic implies equal characteristic.
 -/
-theorem not_mixed_char_to_equal_charZero [CharZero R] (h : ∀ p > 0, ¬MixedCharZero R p) :
+theorem EqualCharZero.of_not_mixedCharZero [CharZero R] (h : ∀ p > 0, ¬MixedCharZero R p) :
     ∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I) :=
   by
   intro I hI_ne_top
@@ -262,51 +314,75 @@ theorem not_mixed_char_to_equal_charZero [CharZero R] (h : ∀ p > 0, ¬MixedCha
   · exact hp
   · have h_mixed : MixedCharZero R p.succ := ⟨⟨I, ⟨hI_ne_top, hp⟩⟩⟩
     exact absurd h_mixed (h p.succ p.succ_pos)
-#align not_mixed_char_to_equal_char_zero not_mixed_char_to_equal_charZero
+#align not_mixed_char_to_equal_char_zero EqualCharZero.of_not_mixedCharZero
 
+/- warning: equal_char_zero_to_not_mixed_char -> EqualCharZero.to_not_mixedCharZero is a dubious translation:
+lean 3 declaration is
+  forall (R : Type.{u1}) [_inst_1 : CommRing.{u1} R], (forall (I : Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))), (Ne.{succ u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) I (Top.top.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Submodule.hasTop.{u1, u1} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) -> (CharZero.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (AddGroupWithOne.toAddMonoidWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (AddCommGroupWithOne.toAddGroupWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (Ring.toAddCommGroupWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (CommRing.toRing.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (Ideal.Quotient.commRing.{u1} R _inst_1 I))))))) -> (forall (p : Nat), (GT.gt.{0} Nat Nat.hasLt p (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Not (MixedCharZero.{u1} R _inst_1 p)))
+but is expected to have type
+  forall (R : Type.{u1}) [_inst_1 : CommRing.{u1} R], (forall (I : Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))), (Ne.{succ u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) I (Top.top.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Submodule.instTopSubmodule.{u1, u1} R R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))) -> (CharZero.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (AddGroupWithOne.toAddMonoidWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (Ring.toAddGroupWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (CommRing.toRing.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (Ideal.Quotient.commRing.{u1} R _inst_1 I)))))) -> (forall (p : Nat), (GT.gt.{0} Nat instLTNat p (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Not (MixedCharZero.{u1} R _inst_1 p)))
+Case conversion may be inaccurate. Consider using '#align equal_char_zero_to_not_mixed_char EqualCharZero.to_not_mixedCharZeroₓ'. -/
 /-- Equal characteristic implies not mixed characteristic.
 -/
-theorem equal_charZero_to_not_mixed_char (h : ∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I)) :
+theorem EqualCharZero.to_not_mixedCharZero (h : ∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I)) :
     ∀ p > 0, ¬MixedCharZero R p := by
   intro p p_pos
   by_contra hp_mixed_char
   rcases hp_mixed_char.char_p_quotient with ⟨I, hI_ne_top, hI_p⟩
   replace hI_zero : CharP (R ⧸ I) 0 := @CharP.ofCharZero _ _ (h I hI_ne_top)
   exact absurd (CharP.eq (R ⧸ I) hI_p hI_zero) (ne_of_gt p_pos)
-#align equal_char_zero_to_not_mixed_char equal_charZero_to_not_mixed_char
+#align equal_char_zero_to_not_mixed_char EqualCharZero.to_not_mixedCharZero
 
+/- warning: equal_char_zero_iff_not_mixed_char -> EqualCharZero.iff_not_mixedCharZero is a dubious translation:
+lean 3 declaration is
+  forall (R : Type.{u1}) [_inst_1 : CommRing.{u1} R] [_inst_2 : CharZero.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1))))], Iff (forall (I : Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))), (Ne.{succ u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) I (Top.top.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Submodule.hasTop.{u1, u1} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) -> (CharZero.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (AddGroupWithOne.toAddMonoidWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (AddCommGroupWithOne.toAddGroupWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (Ring.toAddCommGroupWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (CommRing.toRing.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (Ideal.Quotient.commRing.{u1} R _inst_1 I))))))) (forall (p : Nat), (GT.gt.{0} Nat Nat.hasLt p (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Not (MixedCharZero.{u1} R _inst_1 p)))
+but is expected to have type
+  forall (R : Type.{u1}) [_inst_1 : CommRing.{u1} R] [_inst_2 : CharZero.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1)))], Iff (forall (I : Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))), (Ne.{succ u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) I (Top.top.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Submodule.instTopSubmodule.{u1, u1} R R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))) -> (CharZero.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (AddGroupWithOne.toAddMonoidWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (Ring.toAddGroupWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (CommRing.toRing.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (Ideal.Quotient.commRing.{u1} R _inst_1 I)))))) (forall (p : Nat), (GT.gt.{0} Nat instLTNat p (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Not (MixedCharZero.{u1} R _inst_1 p)))
+Case conversion may be inaccurate. Consider using '#align equal_char_zero_iff_not_mixed_char EqualCharZero.iff_not_mixedCharZeroₓ'. -/
 /-- A ring of characteristic zero has equal characteristic iff it does not
 have mixed characteristic for any `p`.
 -/
-theorem equal_charZero_iff_not_mixed_char [CharZero R] :
+theorem EqualCharZero.iff_not_mixedCharZero [CharZero R] :
     (∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I)) ↔ ∀ p > 0, ¬MixedCharZero R p :=
-  ⟨equal_charZero_to_not_mixed_char R, not_mixed_char_to_equal_charZero R⟩
-#align equal_char_zero_iff_not_mixed_char equal_charZero_iff_not_mixed_char
+  ⟨EqualCharZero.to_not_mixedCharZero R, EqualCharZero.of_not_mixedCharZero R⟩
+#align equal_char_zero_iff_not_mixed_char EqualCharZero.iff_not_mixedCharZero
 
+/- warning: Q_algebra_iff_equal_char_zero -> EqualCharZero.nonempty_algebraRat_iff is a dubious translation:
+lean 3 declaration is
+  forall (R : Type.{u1}) [_inst_1 : CommRing.{u1} R] [_inst_2 : Nontrivial.{u1} R], Iff (Nonempty.{succ u1} (Algebra.{0, u1} Rat R Rat.commSemiring (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))) (forall (I : Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))), (Ne.{succ u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) I (Top.top.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Submodule.hasTop.{u1, u1} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))))) -> (CharZero.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (AddGroupWithOne.toAddMonoidWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (AddCommGroupWithOne.toAddGroupWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (Ring.toAddCommGroupWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (CommRing.toRing.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (Ideal.Quotient.commRing.{u1} R _inst_1 I)))))))
+but is expected to have type
+  forall (R : Type.{u1}) [_inst_1 : CommRing.{u1} R], Iff (Nonempty.{succ u1} (Algebra.{0, u1} Rat R Rat.commSemiring (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))) (forall (I : Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))), (Ne.{succ u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) I (Top.top.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Submodule.instTopSubmodule.{u1, u1} R R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))) -> (CharZero.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (AddGroupWithOne.toAddMonoidWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (Ring.toAddGroupWithOne.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (CommRing.toRing.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (Ideal.Quotient.commRing.{u1} R _inst_1 I))))))
+Case conversion may be inaccurate. Consider using '#align Q_algebra_iff_equal_char_zero EqualCharZero.nonempty_algebraRat_iffₓ'. -/
 /-- A ring is a `ℚ`-algebra iff it has equal characteristic zero.
 -/
-theorem Q_algebra_iff_equal_charZero [Nontrivial R] :
+theorem EqualCharZero.nonempty_algebraRat_iff [Nontrivial R] :
     Nonempty (Algebra ℚ R) ↔ ∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I) :=
   by
   constructor
   · intro h_alg
     haveI h_alg' : Algebra ℚ R := h_alg.some
-    apply Q_algebra_to_equal_charZero
+    apply EqualCharZero.of_algebraRat
   · intro h
     apply Nonempty.intro
-    exact equalCharZeroToQAlgebra R h
-#align Q_algebra_iff_equal_char_zero Q_algebra_iff_equal_charZero
+    exact EqualCharZero.algebraRat R h
+#align Q_algebra_iff_equal_char_zero EqualCharZero.nonempty_algebraRat_iff
 
+/- warning: not_Q_algebra_iff_not_equal_char_zero -> isEmpty_algebraRat_iff_mixedCharZero is a dubious translation:
+lean 3 declaration is
+  forall (R : Type.{u1}) [_inst_1 : CommRing.{u1} R] [_inst_2 : CharZero.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1))))], Iff (IsEmpty.{succ u1} (Algebra.{0, u1} Rat R Rat.commSemiring (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))) (Exists.{1} Nat (fun (p : Nat) => Exists.{0} (GT.gt.{0} Nat Nat.hasLt p (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (fun (H : GT.gt.{0} Nat Nat.hasLt p (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) => MixedCharZero.{u1} R _inst_1 p)))
+but is expected to have type
+  forall (R : Type.{u1}) [_inst_1 : CommRing.{u1} R] [_inst_2 : CharZero.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1)))], Iff (IsEmpty.{succ u1} (Algebra.{0, u1} Rat R Rat.commSemiring (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))) (Exists.{1} Nat (fun (p : Nat) => And (GT.gt.{0} Nat instLTNat p (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (MixedCharZero.{u1} R _inst_1 p)))
+Case conversion may be inaccurate. Consider using '#align not_Q_algebra_iff_not_equal_char_zero isEmpty_algebraRat_iff_mixedCharZeroₓ'. -/
 /-- A ring of characteristic zero is not a `ℚ`-algebra iff it has mixed characteristic for some `p`.
 -/
-theorem not_Q_algebra_iff_not_equal_charZero [CharZero R] :
+theorem isEmpty_algebraRat_iff_mixedCharZero [CharZero R] :
     IsEmpty (Algebra ℚ R) ↔ ∃ p > 0, MixedCharZero R p :=
   by
   rw [← not_iff_not]
   push_neg
-  rw [not_isEmpty_iff, ← equal_charZero_iff_not_mixed_char]
-  apply Q_algebra_iff_equal_charZero
-#align not_Q_algebra_iff_not_equal_char_zero not_Q_algebra_iff_not_equal_charZero
+  rw [not_isEmpty_iff, ← EqualCharZero.iff_not_mixedCharZero]
+  apply EqualCharZero.nonempty_algebraRat_iff
+#align not_Q_algebra_iff_not_equal_char_zero isEmpty_algebraRat_iff_mixedCharZero
 
 /-!
 # Splitting statements into different characteristic
@@ -323,9 +399,15 @@ section MainStatements
 
 variable {P : Prop}
 
+/- warning: split_equal_mixed_char -> split_equalCharZero_mixedCharZero is a dubious translation:
+lean 3 declaration is
+  forall (R : Type.{u1}) [_inst_1 : CommRing.{u1} R] {P : Prop} [_inst_2 : CharZero.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1))))], ((Algebra.{0, u1} Rat R Rat.commSemiring (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) -> P) -> (forall (p : Nat), (Nat.Prime p) -> (MixedCharZero.{u1} R _inst_1 p) -> P) -> P
+but is expected to have type
+  forall (R : Type.{u1}) [_inst_1 : CommRing.{u1} R] {P : Prop} [_inst_2 : CharZero.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1)))], ((Algebra.{0, u1} Rat R Rat.commSemiring (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) -> P) -> (forall (p : Nat), (Nat.Prime p) -> (MixedCharZero.{u1} R _inst_1 p) -> P) -> P
+Case conversion may be inaccurate. Consider using '#align split_equal_mixed_char split_equalCharZero_mixedCharZeroₓ'. -/
 /-- Split a `Prop` in characteristic zero into equal and mixed characteristic.
 -/
-theorem split_equal_mixed_char [CharZero R] (h_equal : Algebra ℚ R → P)
+theorem split_equalCharZero_mixedCharZero [CharZero R] (h_equal : Algebra ℚ R → P)
     (h_mixed : ∀ p : ℕ, Nat.Prime p → MixedCharZero R p → P) : P :=
   by
   by_cases h : ∃ p > 0, MixedCharZero R p
@@ -333,13 +415,19 @@ theorem split_equal_mixed_char [CharZero R] (h_equal : Algebra ℚ R → P)
     rw [← MixedCharZero.reduce_to_p_prime] at h_mixed
     exact h_mixed p H hp
   · apply h_equal
-    rw [← not_Q_algebra_iff_not_equal_charZero, not_isEmpty_iff] at h
+    rw [← isEmpty_algebraRat_iff_mixedCharZero, not_isEmpty_iff] at h
     exact h.some
-#align split_equal_mixed_char split_equal_mixed_char
+#align split_equal_mixed_char split_equalCharZero_mixedCharZero
 
 example (n : ℕ) (h : n ≠ 0) : 0 < n :=
   zero_lt_iff.mpr h
 
+/- warning: split_by_characteristic -> split_by_characteristic is a dubious translation:
+lean 3 declaration is
+  forall (R : Type.{u1}) [_inst_1 : CommRing.{u1} R] {P : Prop}, (forall (p : Nat), (Ne.{1} Nat p (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1)))) p) -> P) -> ((Algebra.{0, u1} Rat R Rat.commSemiring (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) -> P) -> (forall (p : Nat), (Nat.Prime p) -> (MixedCharZero.{u1} R _inst_1 p) -> P) -> P
+but is expected to have type
+  forall (R : Type.{u1}) [_inst_1 : CommRing.{u1} R] {P : Prop}, (forall (p : Nat), (Ne.{1} Nat p (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1))) p) -> P) -> ((Algebra.{0, u1} Rat R Rat.commSemiring (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) -> P) -> (forall (p : Nat), (Nat.Prime p) -> (MixedCharZero.{u1} R _inst_1 p) -> P) -> P
+Case conversion may be inaccurate. Consider using '#align split_by_characteristic split_by_characteristicₓ'. -/
 /-- Split any `Prop` over `R` into the three cases:
 - positive characteristic.
 - equal characteristic zero.
@@ -354,10 +442,16 @@ theorem split_by_characteristic (h_pos : ∀ p : ℕ, p ≠ 0 → CharP R p → 
     skip
     -- make `p_char : char_p R 0` an instance.
     haveI h0 : CharZero R := CharP.charP_to_charZero R
-    exact split_equal_mixed_char R h_equal h_mixed
+    exact split_equalCharZero_mixedCharZero R h_equal h_mixed
   exact h_pos p h p_char
 #align split_by_characteristic split_by_characteristic
 
+/- warning: split_by_characteristic_domain -> split_by_characteristic_domain is a dubious translation:
+lean 3 declaration is
+  forall (R : Type.{u1}) [_inst_1 : CommRing.{u1} R] {P : Prop} [_inst_2 : IsDomain.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))], (forall (p : Nat), (Nat.Prime p) -> (CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1)))) p) -> P) -> ((Algebra.{0, u1} Rat R Rat.commSemiring (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) -> P) -> (forall (p : Nat), (Nat.Prime p) -> (MixedCharZero.{u1} R _inst_1 p) -> P) -> P
+but is expected to have type
+  forall (R : Type.{u1}) [_inst_1 : CommRing.{u1} R] {P : Prop} [_inst_2 : IsDomain.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))], (forall (p : Nat), (Nat.Prime p) -> (CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1))) p) -> P) -> ((Algebra.{0, u1} Rat R Rat.commSemiring (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) -> P) -> (forall (p : Nat), (Nat.Prime p) -> (MixedCharZero.{u1} R _inst_1 p) -> P) -> P
+Case conversion may be inaccurate. Consider using '#align split_by_characteristic_domain split_by_characteristic_domainₓ'. -/
 /-- In a `is_domain R`, split any `Prop` over `R` into the three cases:
 - *prime* characteristic.
 - equal characteristic zero.
@@ -372,6 +466,12 @@ theorem split_by_characteristic_domain [IsDomain R] (h_pos : ∀ p : ℕ, Nat.Pr
   exact h_pos p p_prime p_char
 #align split_by_characteristic_domain split_by_characteristic_domain
 
+/- warning: split_by_characteristic_local_ring -> split_by_characteristic_localRing is a dubious translation:
+lean 3 declaration is
+  forall (R : Type.{u1}) [_inst_1 : CommRing.{u1} R] {P : Prop} [_inst_2 : LocalRing.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))], (forall (p : Nat), (IsPrimePow.{0} Nat (LinearOrderedCommMonoidWithZero.toCommMonoidWithZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) p) -> (CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (AddCommGroupWithOne.toAddGroupWithOne.{u1} R (Ring.toAddCommGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1)))) p) -> P) -> ((Algebra.{0, u1} Rat R Rat.commSemiring (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) -> P) -> (forall (p : Nat), (Nat.Prime p) -> (MixedCharZero.{u1} R _inst_1 p) -> P) -> P
+but is expected to have type
+  forall (R : Type.{u1}) [_inst_1 : CommRing.{u1} R] {P : Prop} [_inst_2 : LocalRing.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))], (forall (p : Nat), (IsPrimePow.{0} Nat (LinearOrderedCommMonoidWithZero.toCommMonoidWithZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) p) -> (CharP.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R (Ring.toAddGroupWithOne.{u1} R (CommRing.toRing.{u1} R _inst_1))) p) -> P) -> ((Algebra.{0, u1} Rat R Rat.commSemiring (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) -> P) -> (forall (p : Nat), (Nat.Prime p) -> (MixedCharZero.{u1} R _inst_1 p) -> P) -> P
+Case conversion may be inaccurate. Consider using '#align split_by_characteristic_local_ring split_by_characteristic_localRingₓ'. -/
 /-- In a `local_ring R`, split any `Prop` over `R` into the three cases:
 - *prime power* characteristic.
 - equal characteristic zero.
