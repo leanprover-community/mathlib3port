@@ -1611,7 +1611,7 @@ theorem integral_tsum {ι} [Countable ι] {f : ι → α → E} (hf : ∀ i, AeS
   have hhh : ∀ᵐ a : α ∂μ, Summable fun n => (‖f n a‖₊ : ℝ) :=
     by
     rw [← lintegral_tsum hf''] at hf'
-    refine' (ae_lt_top' (AEMeasurable.eNNReal_tsum hf'') hf').mono _
+    refine' (ae_lt_top' (AEMeasurable.ennreal_tsum hf'') hf').mono _
     intro x hx
     rw [← ENNReal.tsum_coe_ne_top_iff_summable_coe]
     exact hx.ne
@@ -1623,8 +1623,8 @@ theorem integral_tsum {ι} [Countable ι] {f : ι → α → E} (hf : ∀ i, AeS
     rfl
   · simp_rw [← coe_nnnorm, ← NNReal.coe_tsum]
     rw [aeStronglyMeasurable_iff_aEMeasurable]
-    apply AEMeasurable.coe_nNReal_real
-    apply AEMeasurable.nNReal_tsum
+    apply AEMeasurable.coe_nnreal_real
+    apply AEMeasurable.nnreal_tsum
     exact fun i => (hf i).nnnorm.AEMeasurable
   · dsimp [has_finite_integral]
     have : (∫⁻ a, ∑' n, ‖f n a‖₊ ∂μ) < ⊤ := by rwa [lintegral_tsum hf'', lt_top_iff_ne_top]
@@ -1849,8 +1849,8 @@ theorem integral_mul_norm_le_Lp_mul_Lq {E} [NormedAddCommGroup E] {f g : α → 
       · exact ENNReal.coe_ne_top
   ·
     exact
-      ENNReal.lintegral_mul_le_Lp_mul_Lq μ hpq hf.1.nnnorm.AEMeasurable.coe_nNReal_eNNReal
-        hg.1.nnnorm.AEMeasurable.coe_nNReal_eNNReal
+      ENNReal.lintegral_mul_le_Lp_mul_Lq μ hpq hf.1.nnnorm.AEMeasurable.coe_nnreal_ennreal
+        hg.1.nnnorm.AEMeasurable.coe_nnreal_ennreal
 #align measure_theory.integral_mul_norm_le_Lp_mul_Lq MeasureTheory.integral_mul_norm_le_Lp_mul_Lq
 
 /-- Hölder's inequality for functions `α → ℝ`. The integral of the product of two nonnegative

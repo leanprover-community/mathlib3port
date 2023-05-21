@@ -184,7 +184,7 @@ theorem measurable_measure_prod_mk_left_finite [FiniteMeasure ν] {s : Set (α �
       measure_Union (fun i j hij => Disjoint.preimage _ (h1f hij)) fun i =>
         measurable_prod_mk_left (h2f i)
     simp_rw [this]
-    apply Measurable.eNNReal_tsum h3f
+    apply Measurable.ennreal_tsum h3f
 #align measurable_measure_prod_mk_left_finite measurable_measure_prod_mk_left_finite
 
 /-- If `ν` is a σ-finite measure, and `s ⊆ α × β` is measurable, then `x ↦ ν { y | (x, y) ∈ s }` is

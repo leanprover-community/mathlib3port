@@ -194,7 +194,7 @@ theorem measurable_compProdFun (κ : kernel α β) [IsSFiniteKernel κ] (η : ke
     [IsSFiniteKernel η] (hs : MeasurableSet s) : Measurable fun a => compProdFun κ η a s :=
   by
   simp_rw [comp_prod_fun_tsum_right κ η _ hs]
-  refine' Measurable.eNNReal_tsum fun n => _
+  refine' Measurable.ennreal_tsum fun n => _
   simp only [comp_prod_fun]
   have h_meas : Measurable (Function.uncurry fun a b => seq η n (a, b) { c : γ | (b, c) ∈ s }) :=
     by

@@ -1030,7 +1030,7 @@ theorem mem_ℒ1_toReal_of_lintegral_ne_top {f : α → ℝ≥0∞} (hfm : AEMea
   by
   rw [mem_ℒp, snorm_one_eq_lintegral_nnnorm]
   exact
-    ⟨(AEMeasurable.eNNReal_toReal hfm).AeStronglyMeasurable,
+    ⟨(AEMeasurable.ennreal_toReal hfm).AeStronglyMeasurable,
       has_finite_integral_to_real_of_lintegral_ne_top hfi⟩
 #align measure_theory.mem_ℒ1_to_real_of_lintegral_ne_top MeasureTheory.mem_ℒ1_toReal_of_lintegral_ne_top
 

@@ -53,7 +53,7 @@ theorem measurable_of_tendsto_eNNReal {f : ℕ → α → ℝ≥0∞} {g : α �
 theorem measurable_of_tendsto_nnreal' {ι} {f : ι → α → ℝ≥0} {g : α → ℝ≥0} (u : Filter ι) [NeBot u]
     [IsCountablyGenerated u] (hf : ∀ i, Measurable (f i)) (lim : Tendsto f u (𝓝 g)) :
     Measurable g := by
-  simp_rw [← measurable_coe_nNReal_eNNReal_iff] at hf⊢
+  simp_rw [← measurable_coe_nnreal_ennreal_iff] at hf⊢
   refine' measurable_of_tendsto_ennreal' u hf _
   rw [tendsto_pi_nhds] at lim⊢
   exact fun x => (ennreal.continuous_coe.tendsto (g x)).comp (limUnder x)

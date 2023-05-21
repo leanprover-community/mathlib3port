@@ -273,7 +273,7 @@ protected theorem sq [Pow γ ℕ] [MeasurablePow γ ℕ] (h : IdentDistrib f g �
 
 protected theorem coe_nNReal_eNNReal {f : α → ℝ≥0} {g : β → ℝ≥0} (h : IdentDistrib f g μ ν) :
     IdentDistrib (fun x => (f x : ℝ≥0∞)) (fun x => (g x : ℝ≥0∞)) μ ν :=
-  h.comp measurable_coe_nNReal_eNNReal
+  h.comp measurable_coe_nnreal_ennreal
 #align probability_theory.ident_distrib.coe_nnreal_ennreal ProbabilityTheory.IdentDistrib.coe_nNReal_eNNReal
 
 @[to_additive]
@@ -307,7 +307,7 @@ theorem const_div [Div γ] [MeasurableDiv γ] (h : IdentDistrib f g μ ν) (c : 
 theorem evariance_eq {f : α → ℝ} {g : β → ℝ} (h : IdentDistrib f g μ ν) :
     evariance f μ = evariance g ν :=
   by
-  convert(h.sub_const (∫ x, f x ∂μ)).nnnorm.coe_nNReal_eNNReal.sq.lintegral_eq
+  convert(h.sub_const (∫ x, f x ∂μ)).nnnorm.coe_nnreal_ennreal.sq.lintegral_eq
   rw [h.integral_eq]
   rfl
 #align probability_theory.ident_distrib.evariance_eq ProbabilityTheory.IdentDistrib.evariance_eq

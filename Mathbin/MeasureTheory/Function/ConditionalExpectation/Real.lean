@@ -206,8 +206,8 @@ theorem ae_bdd_condexp_of_ae_bdd {R : ℝ≥0} {f : α → ℝ} (hbdd : ∀ᵐ x
         lt_of_le_of_lt _
           (integrable_condexp.integrable_on : integrable_on (μ[f|m]) { x | ↑R < |(μ[f|m]) x| } μ).2⟩
     refine'
-      set_lintegral_mono (Measurable.nnnorm _).coe_nNReal_eNNReal
-        (strongly_measurable_condexp.mono hnm).Measurable.nnnorm.coe_nNReal_eNNReal fun x hx => _
+      set_lintegral_mono (Measurable.nnnorm _).coe_nnreal_ennreal
+        (strongly_measurable_condexp.mono hnm).Measurable.nnnorm.coe_nnreal_ennreal fun x hx => _
     · exact measurable_const
     · rw [ENNReal.coe_le_coe, Real.nnnorm_of_nonneg R.coe_nonneg]
       exact Subtype.mk_le_mk.2 (le_of_lt hx)

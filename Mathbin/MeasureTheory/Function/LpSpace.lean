@@ -1008,7 +1008,7 @@ theorem snorm'_trim (hm : m ≤ m0) {f : α → E} (hf : strongly_measurable[m] 
   simp_rw [snorm']
   congr 1
   refine' lintegral_trim hm _
-  refine' @Measurable.pow_const _ _ _ _ _ _ _ m _ (@Measurable.coe_nNReal_eNNReal _ m _ _) _
+  refine' @Measurable.pow_const _ _ _ _ _ _ _ m _ (@Measurable.coe_nnreal_ennreal _ m _ _) _
   apply @strongly_measurable.measurable
   exact @strongly_measurable.nnnorm α m _ _ _ hf
 #align measure_theory.snorm'_trim MeasureTheory.snorm'_trim
@@ -1599,9 +1599,9 @@ theorem ae_bdd_liminf_atTop_rpow_of_snorm_bdd {p : ℝ≥0∞} {f : ℕ → α �
   have hp : p ≠ 0 := fun h => by simpa [h] using hp0
   have hp' : p ≠ ∞ := fun h => by simpa [h] using hp0
   refine'
-    ae_lt_top (measurable_liminf fun n => (hfmeas n).nnnorm.coe_nNReal_eNNReal.pow_const p.to_real)
+    ae_lt_top (measurable_liminf fun n => (hfmeas n).nnnorm.coe_nnreal_ennreal.pow_const p.to_real)
       (lt_of_le_of_lt
-          (lintegral_liminf_le fun n => (hfmeas n).nnnorm.coe_nNReal_eNNReal.pow_const p.to_real)
+          (lintegral_liminf_le fun n => (hfmeas n).nnnorm.coe_nnreal_ennreal.pow_const p.to_real)
           (lt_of_le_of_lt _
             (ENNReal.rpow_lt_top_of_nonneg ENNReal.toReal_nonneg ENNReal.coe_ne_top :
               ↑R ^ p.to_real < ∞))).Ne
@@ -2964,7 +2964,7 @@ private theorem tsum_nnnorm_sub_ae_lt_top {f : ℕ → α → E} (hf : ∀ n, Ae
   have rpow_ae_lt_top : ∀ᵐ x ∂μ, (∑' i, ‖f (i + 1) x - f i x‖₊ : ℝ≥0∞) ^ p < ∞ :=
     by
     refine' ae_lt_top' (AEMeasurable.pow_const _ _) h_integral.ne
-    exact AEMeasurable.eNNReal_tsum fun n => ((hf (n + 1)).sub (hf n)).ennnorm
+    exact AEMeasurable.ennreal_tsum fun n => ((hf (n + 1)).sub (hf n)).ennnorm
   refine' rpow_ae_lt_top.mono fun x hx => _
   rwa [← ENNReal.lt_rpow_one_div_iff hp_pos,
     ENNReal.top_rpow_of_pos (by simp [hp_pos] : 0 < 1 / p)] at hx

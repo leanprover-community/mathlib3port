@@ -128,7 +128,7 @@ theorem withDensity_tsum [Countable ι] (κ : kernel α β) [IsSFiniteKernel κ]
       rw [tsum_apply h_sum, tsum_apply (h_sum_a _), tsum_apply]
       exact pi.summable.mpr fun p => ENNReal.summable
     rw [this]
-    exact Measurable.eNNReal_tsum' hf
+    exact Measurable.ennreal_tsum' hf
   have : (∫⁻ b in s, (∑' n, f n) a b ∂κ a) = ∫⁻ b in s, ∑' n, (fun b => f n a b) b ∂κ a :=
     by
     congr with b

@@ -340,7 +340,7 @@ theorem MonotoneOn.integrableOn_of_measure_ne_top (hmono : MonotoneOn f s) {a b 
   have A : integrable_on (fun x => C) s μ := by
     simp only [hs.lt_top, integrable_on_const, or_true_iff]
   refine'
-    integrable.mono' A (aEMeasurable_restrict_of_monotoneOn h's hmono).AeStronglyMeasurable
+    integrable.mono' A (aemeasurable_restrict_of_monotoneOn h's hmono).AeStronglyMeasurable
       ((ae_restrict_iff' h's).mpr <| ae_of_all _ fun y hy => hC (f y) (mem_image_of_mem f hy))
 #align monotone_on.integrable_on_of_measure_ne_top MonotoneOn.integrableOn_of_measure_ne_top
 

@@ -102,7 +102,7 @@ theorem MeasureTheory.StronglyMeasurable.integral_prod_right [SigmaFinite ν] �
       exact ⟨(x, z), rfl⟩
     simp only [simple_func.integral_eq_sum_of_subset (this _)]
     refine' Finset.stronglyMeasurable_sum _ fun x _ => _
-    refine' (Measurable.eNNReal_toReal _).StronglyMeasurable.smul_const _
+    refine' (Measurable.ennreal_toReal _).StronglyMeasurable.smul_const _
     simp (config := { singlePass := true }) only [simple_func.coe_comp, preimage_comp]
     apply measurable_measure_prod_mk_left
     exact (s n).measurableSet_fiber x
@@ -169,7 +169,7 @@ variable [SigmaFinite ν]
 theorem integrable_measure_prod_mk_left {s : Set (α × β)} (hs : MeasurableSet s)
     (h2s : (μ.Prod ν) s ≠ ∞) : Integrable (fun x => (ν (Prod.mk x ⁻¹' s)).toReal) μ :=
   by
-  refine' ⟨(measurable_measure_prod_mk_left hs).eNNReal_toReal.AEMeasurable.AeStronglyMeasurable, _⟩
+  refine' ⟨(measurable_measure_prod_mk_left hs).ennreal_toReal.AEMeasurable.AeStronglyMeasurable, _⟩
   simp_rw [has_finite_integral, ennnorm_eq_of_real to_real_nonneg]
   convert h2s.lt_top using 1; simp_rw [prod_apply hs]; apply lintegral_congr_ae
   refine' (ae_measure_lt_top hs h2s).mp _; apply eventually_of_forall; intro x hx

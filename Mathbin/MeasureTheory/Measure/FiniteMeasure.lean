@@ -317,7 +317,7 @@ def testAgainstNn (μ : FiniteMeasureCat Ω) (f : Ω →ᵇ ℝ≥0) : ℝ≥0 :
 theorem BoundedContinuousFunction.Nnreal.to_eNNReal_comp_measurable {Ω : Type _}
     [TopologicalSpace Ω] [MeasurableSpace Ω] [OpensMeasurableSpace Ω] (f : Ω →ᵇ ℝ≥0) :
     Measurable fun ω => (f ω : ℝ≥0∞) :=
-  measurable_coe_nNReal_eNNReal.comp f.Continuous.Measurable
+  measurable_coe_nnreal_ennreal.comp f.Continuous.Measurable
 #align bounded_continuous_function.nnreal.to_ennreal_comp_measurable BoundedContinuousFunction.Nnreal.to_eNNReal_comp_measurable
 
 theorem MeasureTheory.lintegral_lt_top_of_bounded_continuous_to_nNReal (μ : Measure Ω)

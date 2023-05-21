@@ -104,7 +104,7 @@ theorem measurable_kernel_prod_mk_left_of_finite {t : Set (α × β)} (ht : Meas
           Set.mem_empty_iff_false] using h_disj hij habi habj
       · exact fun i => (@measurable_prod_mk_left α β _ _ a) _ (hf_meas i)
     rw [h_tsum]
-    exact Measurable.eNNReal_tsum hf
+    exact Measurable.ennreal_tsum hf
 #align probability_theory.kernel.measurable_kernel_prod_mk_left_of_finite ProbabilityTheory.kernel.measurable_kernel_prod_mk_left_of_finite
 
 theorem measurable_kernel_prod_mk_left [IsSFiniteKernel κ] {t : Set (α × β)}
@@ -114,7 +114,7 @@ theorem measurable_kernel_prod_mk_left [IsSFiniteKernel κ] {t : Set (α × β)}
   have : ∀ a, kernel.sum (seq κ) a (Prod.mk a ⁻¹' t) = ∑' n, seq κ n a (Prod.mk a ⁻¹' t) := fun a =>
     kernel.sum_apply' _ _ (measurable_prod_mk_left ht)
   simp_rw [this]
-  refine' Measurable.eNNReal_tsum fun n => _
+  refine' Measurable.ennreal_tsum fun n => _
   exact measurable_kernel_prod_mk_left_of_finite ht inferInstance
 #align probability_theory.kernel.measurable_kernel_prod_mk_left ProbabilityTheory.kernel.measurable_kernel_prod_mk_left
 
@@ -285,7 +285,7 @@ theorem StronglyMeasurable.integral_kernel_prod_right ⦃f : α → β → E⦄
         exact ⟨(x, z), rfl⟩
       simp only [simple_func.integral_eq_sum_of_subset (this _)]
       refine' Finset.stronglyMeasurable_sum _ fun x _ => _
-      refine' (Measurable.eNNReal_toReal _).StronglyMeasurable.smul_const _
+      refine' (Measurable.ennreal_toReal _).StronglyMeasurable.smul_const _
       simp (config := { singlePass := true }) only [simple_func.coe_comp, preimage_comp]
       apply measurable_kernel_prod_mk_left
       exact (s n).measurableSet_fiber x

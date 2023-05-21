@@ -661,7 +661,7 @@ theorem MeasurableSet.image_of_measurable_injOn [SecondCountableTopology β] (hs
     f_meas.exists_continuous
   have M : measurable_set[@borel γ t'] s :=
     @Continuous.measurable γ γ t' (@borel γ t')
-      (@BorelSpace.opens_measurable γ t' (@borel γ t')
+      (@BorelSpace.opensMeasurable γ t' (@borel γ t')
         (by
           constructor
           rfl))
@@ -730,7 +730,7 @@ theorem isClopenable_iff_measurableSet : IsClopenable s ↔ MeasurableSet s :=
   -- the set `s` is measurable for `t'` as it is closed.
   have M : @MeasurableSet γ (@borel γ t') s :=
     @IsClosed.measurableSet γ s t' (@borel γ t')
-      (@BorelSpace.opens_measurable γ t' (@borel γ t')
+      (@BorelSpace.opensMeasurable γ t' (@borel γ t')
         (by
           constructor
           rfl))

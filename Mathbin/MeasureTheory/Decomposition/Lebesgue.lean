@@ -751,7 +751,7 @@ instance (priority := 100) haveLebesgueDecomposition_of_sigmaFinite (μ ν : Mea
     refine' ⟨⟨ξ, f⟩, _, _, _⟩
     ·
       exact
-        Measurable.eNNReal_tsum' fun n =>
+        Measurable.ennreal_tsum' fun n =>
           Measurable.indicator (measurable_rn_deriv (μn n) (νn n)) (S.set_mem n)
     -- We show that `ξ` is mutually singular with respect to `ν`
     · choose A hA₁ hA₂ hA₃ using fun n => mutually_singular_singular_part (μn n) (νn n)

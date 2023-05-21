@@ -625,7 +625,7 @@ theorem set_integral_gt_gt {R : ℝ} {f : α → ℝ} (hR : 0 ≤ R) (hfm : Meas
     by
     refine' ⟨ae_strongly_measurable_const, lt_of_le_of_lt _ hfint.2⟩
     refine'
-      set_lintegral_mono (Measurable.nnnorm _).coe_nNReal_eNNReal hfm.nnnorm.coe_nnreal_ennreal
+      set_lintegral_mono (Measurable.nnnorm _).coe_nnreal_ennreal hfm.nnnorm.coe_nnreal_ennreal
         fun x hx => _
     · exact measurable_const
     · simp only [ENNReal.coe_le_coe, Real.nnnorm_of_nonneg hR,

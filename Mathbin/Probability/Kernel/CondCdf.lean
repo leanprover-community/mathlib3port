@@ -960,7 +960,7 @@ theorem measurable_condCdf (ρ : Measure (α × ℝ)) (x : ℝ) : Measurable fun
     rw [coe_coe, cond_cdf_eq_cond_cdf_rat]
   rw [this]
   exact
-    measurable_cinfi (fun q => measurable_cond_cdf_rat ρ q) fun a =>
+    measurable_ciInf (fun q => measurable_cond_cdf_rat ρ q) fun a =>
       bdd_below_range_cond_cdf_rat_gt ρ a _
 #align probability_theory.measurable_cond_cdf ProbabilityTheory.measurable_condCdf
 
@@ -1006,7 +1006,7 @@ theorem set_lintegral_condCdf (ρ : Measure (α × ℝ)) [FiniteMeasure ρ] (x :
   simp_rw [ENNReal.ofReal_cinfi]
   have h_coe : ∀ b : { r' : ℚ // x < ↑r' }, (b : ℝ) = ((b : ℚ) : ℝ) := fun _ => by congr
   rw [lintegral_iInf_directed_of_measurable hρ_zero fun q : { r' : ℚ // x < ↑r' } =>
-      (measurable_cond_cdf ρ q).eNNReal_ofReal]
+      (measurable_cond_cdf ρ q).ennreal_ofReal]
   rotate_left
   · intro b
     simp_rw [h_coe]

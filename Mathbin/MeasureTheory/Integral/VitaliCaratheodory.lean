@@ -189,7 +189,7 @@ theorem exists_le_lowerSemicontinuous_lintegral_ge (f : α → ℝ≥0∞) (hf :
   ·
     calc
       (∫⁻ x, ∑' n : ℕ, g n x ∂μ) = ∑' n, ∫⁻ x, g n x ∂μ := by
-        rw [lintegral_tsum fun n => (gcont n).Measurable.coe_nNReal_eNNReal.AEMeasurable]
+        rw [lintegral_tsum fun n => (gcont n).Measurable.coe_nnreal_ennreal.AEMeasurable]
       _ ≤ ∑' n, (∫⁻ x, eapprox_diff f n x ∂μ) + δ n := (ENNReal.tsum_le_tsum hg)
       _ = (∑' n, ∫⁻ x, eapprox_diff f n x ∂μ) + ∑' n, δ n := ENNReal.tsum_add
       _ ≤ (∫⁻ x : α, f x ∂μ) + ε := by
@@ -197,7 +197,7 @@ theorem exists_le_lowerSemicontinuous_lintegral_ge (f : α → ℝ≥0∞) (hf :
         rw [← lintegral_tsum]
         · simp_rw [tsum_eapprox_diff f hf, le_refl]
         · intro n
-          exact (simple_func.measurable _).coe_nNReal_eNNReal.AEMeasurable
+          exact (simple_func.measurable _).coe_nnreal_ennreal.AEMeasurable
       
 #align measure_theory.exists_le_lower_semicontinuous_lintegral_ge MeasureTheory.exists_le_lowerSemicontinuous_lintegral_ge
 
@@ -213,7 +213,7 @@ theorem exists_lt_lowerSemicontinuous_lintegral_ge [SigmaFinite μ] (f : α → 
   have : ε / 2 ≠ 0 := (ENNReal.half_pos ε0).ne'
   rcases exists_pos_lintegral_lt_of_sigma_finite μ this with ⟨w, wpos, wmeas, wint⟩
   let f' x := ((f x + w x : ℝ≥0) : ℝ≥0∞)
-  rcases exists_le_lower_semicontinuous_lintegral_ge μ f' (fmeas.add wmeas).coe_nNReal_eNNReal
+  rcases exists_le_lower_semicontinuous_lintegral_ge μ f' (fmeas.add wmeas).coe_nnreal_ennreal
       this with
     ⟨g, le_g, gcont, gint⟩
   refine' ⟨g, fun x => _, gcont, _⟩

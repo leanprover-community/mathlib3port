@@ -327,9 +327,9 @@ basic open set `D(f.denom)`-/
 def sectionInBasicOpen (x : ProjectiveSpectrum.top 𝒜) :
     ∀ f : at x, (Proj.structureSheaf 𝒜).1.obj (op (ProjectiveSpectrum.basicOpen 𝒜 f.den)) :=
   fun f =>
-  ⟨fun y => Quotient.mk'' ⟨f.deg, ⟨f.num, f.num_mem_deg⟩, ⟨f.den, f.denom_mem_deg⟩, y.2⟩, fun y =>
+  ⟨fun y => Quotient.mk'' ⟨f.deg, ⟨f.num, f.num_mem_deg⟩, ⟨f.den, f.den_mem_deg⟩, y.2⟩, fun y =>
     ⟨ProjectiveSpectrum.basicOpen 𝒜 f.den, y.2,
-      ⟨𝟙 _, ⟨f.deg, ⟨⟨f.num, f.num_mem_deg⟩, ⟨f.den, f.denom_mem_deg⟩, fun z => ⟨z.2, rfl⟩⟩⟩⟩⟩⟩
+      ⟨𝟙 _, ⟨f.deg, ⟨⟨f.num, f.num_mem_deg⟩, ⟨f.den, f.den_mem_deg⟩, fun z => ⟨z.2, rfl⟩⟩⟩⟩⟩⟩
 #align algebraic_geometry.section_in_basic_open AlgebraicGeometry.sectionInBasicOpen
 
 /-- Given any point `x` and `f` in the homogeneous localization at `x`, there is an element in the

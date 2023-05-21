@@ -154,9 +154,9 @@ theorem IndepFunCat.integrable_mul {β : Type _} [MeasurableSpace β] {X Y : Ω 
   have hXY' : indep_fun (fun a => ‖X a‖₊) (fun a => ‖Y a‖₊) μ :=
     hXY.comp measurable_nnnorm measurable_nnnorm
   have hXY'' : indep_fun nX nY μ :=
-    hXY'.comp measurable_coe_nNReal_eNNReal measurable_coe_nNReal_eNNReal
-  have hnX : AEMeasurable nX μ := hX.1.AEMeasurable.nnnorm.coe_nNReal_eNNReal
-  have hnY : AEMeasurable nY μ := hY.1.AEMeasurable.nnnorm.coe_nNReal_eNNReal
+    hXY'.comp measurable_coe_nnreal_ennreal measurable_coe_nnreal_ennreal
+  have hnX : AEMeasurable nX μ := hX.1.AEMeasurable.nnnorm.coe_nnreal_ennreal
+  have hnY : AEMeasurable nY μ := hY.1.AEMeasurable.nnnorm.coe_nnreal_ennreal
   have hmul : (∫⁻ a, nX a * nY a ∂μ) = (∫⁻ a, nX a ∂μ) * ∫⁻ a, nY a ∂μ := by
     convert lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun' hnX hnY hXY''
   refine' ⟨hX.1.mul hY.1, _⟩

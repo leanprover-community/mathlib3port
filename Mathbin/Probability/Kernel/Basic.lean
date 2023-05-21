@@ -231,7 +231,7 @@ protected noncomputable def sum [Countable ι] (κ : ι → kernel α β) : kern
   property := by
     refine' measure.measurable_of_measurable_coe _ fun s hs => _
     simp_rw [measure.sum_apply _ hs]
-    exact Measurable.eNNReal_tsum fun n => kernel.measurable_coe (κ n) hs
+    exact Measurable.ennreal_tsum fun n => kernel.measurable_coe (κ n) hs
 #align probability_theory.kernel.sum ProbabilityTheory.kernel.sum
 
 theorem sum_apply [Countable ι] (κ : ι → kernel α β) (a : α) :
