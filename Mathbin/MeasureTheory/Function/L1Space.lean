@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou
 
 ! This file was ported from Lean 3 source module measure_theory.function.l1_space
-! leanprover-community/mathlib commit 24e0c85412ff6adbeca08022c25ba4876eedf37a
+! leanprover-community/mathlib commit 9b33e5f30c5f161e1d1b16b6b9b922bf49943377
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -403,23 +403,32 @@ end PosPart
 
 section NormedSpace
 
-variable {𝕜 : Type _} [NormedField 𝕜] [NormedSpace 𝕜 β]
+variable {𝕜 : Type _}
 
-theorem HasFiniteIntegral.smul (c : 𝕜) {f : α → β} :
+theorem HasFiniteIntegral.smul' [SMul 𝕜 β] [NNNorm 𝕜] (c : 𝕜) {f : α → β}
+    (h : ∀ (k : 𝕜) (b : β), ‖k • b‖₊ ≤ ‖k‖₊ * ‖b‖₊) :
     HasFiniteIntegral f μ → HasFiniteIntegral (c • f) μ :=
   by
   simp only [has_finite_integral]; intro hfi
   calc
-    (∫⁻ a : α, ‖c • f a‖₊ ∂μ) = ∫⁻ a : α, ‖c‖₊ * ‖f a‖₊ ∂μ := by
-      simp only [nnnorm_smul, ENNReal.coe_mul]
+    (∫⁻ a : α, ‖c • f a‖₊ ∂μ) ≤ ∫⁻ a : α, ‖c‖₊ * ‖f a‖₊ ∂μ :=
+      by
+      refine' lintegral_mono _
+      intro i
+      exact_mod_cast h c (f i)
     _ < ∞ := by
       rw [lintegral_const_mul']
       exacts[mul_lt_top coe_ne_top hfi.ne, coe_ne_top]
     
+#align measure_theory.has_finite_integral.smul' MeasureTheory.HasFiniteIntegral.smul'
+
+theorem HasFiniteIntegral.smul [NormedField 𝕜] [NormedSpace 𝕜 β] (c : 𝕜) {f : α → β} :
+    HasFiniteIntegral f μ → HasFiniteIntegral (c • f) μ :=
+  HasFiniteIntegral.smul' _ fun a b => nnnorm_smul_le a b
 #align measure_theory.has_finite_integral.smul MeasureTheory.HasFiniteIntegral.smul
 
-theorem hasFiniteIntegral_smul_iff {c : 𝕜} (hc : c ≠ 0) (f : α → β) :
-    HasFiniteIntegral (c • f) μ ↔ HasFiniteIntegral f μ :=
+theorem hasFiniteIntegral_smul_iff [NormedField 𝕜] [NormedSpace 𝕜 β] {c : 𝕜} (hc : c ≠ 0)
+    (f : α → β) : HasFiniteIntegral (c • f) μ ↔ HasFiniteIntegral f μ :=
   by
   constructor
   · intro h
@@ -427,13 +436,16 @@ theorem hasFiniteIntegral_smul_iff {c : 𝕜} (hc : c ≠ 0) (f : α → β) :
   exact has_finite_integral.smul _
 #align measure_theory.has_finite_integral_smul_iff MeasureTheory.hasFiniteIntegral_smul_iff
 
-theorem HasFiniteIntegral.const_mul {f : α → ℝ} (h : HasFiniteIntegral f μ) (c : ℝ) :
+theorem HasFiniteIntegral.const_mul [NormedRing 𝕜] {f : α → 𝕜} (h : HasFiniteIntegral f μ) (c : 𝕜) :
     HasFiniteIntegral (fun x => c * f x) μ :=
-  (HasFiniteIntegral.smul c h : _)
+  (HasFiniteIntegral.smul' c nnnorm_mul_le h : _)
 #align measure_theory.has_finite_integral.const_mul MeasureTheory.HasFiniteIntegral.const_mul
 
-theorem HasFiniteIntegral.mul_const {f : α → ℝ} (h : HasFiniteIntegral f μ) (c : ℝ) :
-    HasFiniteIntegral (fun x => f x * c) μ := by simp_rw [mul_comm, h.const_mul _]
+theorem HasFiniteIntegral.mul_const [NormedRing 𝕜] {f : α → 𝕜} (h : HasFiniteIntegral f μ) (c : 𝕜) :
+    HasFiniteIntegral (fun x => f x * c) μ :=
+  (HasFiniteIntegral.smul' (MulOpposite.op c)
+      (fun a b => (nnnorm_mul_le b a.unop).trans_eq <| mul_comm _ _) h :
+    _)
 #align measure_theory.has_finite_integral.mul_const MeasureTheory.HasFiniteIntegral.mul_const
 
 end NormedSpace
@@ -1097,22 +1109,23 @@ theorem integrable_smul_const {f : α → 𝕜} {c : E} (hc : c ≠ 0) :
 
 end NormedSpaceOverCompleteField
 
-section IsROrC
+section NormedRing
 
-variable {𝕜 : Type _} [IsROrC 𝕜] {f : α → 𝕜}
+variable {𝕜 : Type _} [NormedRing 𝕜] {f : α → 𝕜}
 
 theorem Integrable.const_mul {f : α → 𝕜} (h : Integrable f μ) (c : 𝕜) :
     Integrable (fun x => c * f x) μ :=
-  Integrable.smul c h
+  ⟨h.AeStronglyMeasurable.const_smul c, h.HasFiniteIntegral.const_mul c⟩
 #align measure_theory.integrable.const_mul MeasureTheory.Integrable.const_mul
 
 theorem Integrable.const_mul' {f : α → 𝕜} (h : Integrable f μ) (c : 𝕜) :
     Integrable ((fun x : α => c) * f) μ :=
-  Integrable.smul c h
+  Integrable.const_mul h c
 #align measure_theory.integrable.const_mul' MeasureTheory.Integrable.const_mul'
 
 theorem Integrable.mul_const {f : α → 𝕜} (h : Integrable f μ) (c : 𝕜) :
-    Integrable (fun x => f x * c) μ := by simp_rw [mul_comm, h.const_mul _]
+    Integrable (fun x => f x * c) μ :=
+  ⟨h.AeStronglyMeasurable.const_smul (MulOpposite.op c), h.HasFiniteIntegral.mul_const c⟩
 #align measure_theory.integrable.mul_const MeasureTheory.Integrable.mul_const
 
 theorem Integrable.mul_const' {f : α → 𝕜} (h : Integrable f μ) (c : 𝕜) :
@@ -1120,9 +1133,17 @@ theorem Integrable.mul_const' {f : α → 𝕜} (h : Integrable f μ) (c : 𝕜)
   Integrable.mul_const h c
 #align measure_theory.integrable.mul_const' MeasureTheory.Integrable.mul_const'
 
-theorem Integrable.div_const {f : α → 𝕜} (h : Integrable f μ) (c : 𝕜) :
-    Integrable (fun x => f x / c) μ := by simp_rw [div_eq_mul_inv, h.mul_const]
-#align measure_theory.integrable.div_const MeasureTheory.Integrable.div_const
+theorem integrable_const_mul_iff {c : 𝕜} (hc : IsUnit c) (f : α → 𝕜) :
+    Integrable (fun x => c * f x) μ ↔ Integrable f μ :=
+  let ⟨u, hc⟩ := hc
+  hc ▸ ⟨fun h => by simpa using h.const_mul ↑u⁻¹, fun h => h.const_mul _⟩
+#align measure_theory.integrable_const_mul_iff MeasureTheory.integrable_const_mul_iff
+
+theorem integrable_mul_const_iff {c : 𝕜} (hc : IsUnit c) (f : α → 𝕜) :
+    Integrable (fun x => f x * c) μ ↔ Integrable f μ :=
+  let ⟨u, hc⟩ := hc
+  hc ▸ ⟨fun h => by simpa using h.mul_const ↑u⁻¹, fun h => h.mul_const _⟩
+#align measure_theory.integrable_mul_const_iff MeasureTheory.integrable_mul_const_iff
 
 theorem Integrable.bdd_mul' {f g : α → 𝕜} {c : ℝ} (hg : Integrable g μ)
     (hf : AeStronglyMeasurable f μ) (hf_bound : ∀ᵐ x ∂μ, ‖f x‖ ≤ c) :
@@ -1133,6 +1154,22 @@ theorem Integrable.bdd_mul' {f g : α → 𝕜} {c : ℝ} (hg : Integrable g μ)
   rw [Pi.smul_apply, smul_eq_mul]
   exact (norm_mul_le _ _).trans (mul_le_mul_of_nonneg_right hx (norm_nonneg _))
 #align measure_theory.integrable.bdd_mul' MeasureTheory.Integrable.bdd_mul'
+
+end NormedRing
+
+section NormedDivisionRing
+
+variable {𝕜 : Type _} [NormedDivisionRing 𝕜] {f : α → 𝕜}
+
+theorem Integrable.div_const {f : α → 𝕜} (h : Integrable f μ) (c : 𝕜) :
+    Integrable (fun x => f x / c) μ := by simp_rw [div_eq_mul_inv, h.mul_const]
+#align measure_theory.integrable.div_const MeasureTheory.Integrable.div_const
+
+end NormedDivisionRing
+
+section IsROrC
+
+variable {𝕜 : Type _} [IsROrC 𝕜] {f : α → 𝕜}
 
 theorem Integrable.of_real {f : α → ℝ} (hf : Integrable f μ) : Integrable (fun x => (f x : 𝕜)) μ :=
   by

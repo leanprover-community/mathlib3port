@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.normed_space.completion
-! leanprover-community/mathlib commit d3af0609f6db8691dffdc3e1fb7feb7da72698f2
+! leanprover-community/mathlib commit 33c67ae661dd8988516ff7f247b0be3018cdd952
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Topology.Algebra.UniformRing
 
 /-!
 # Normed space structure on the completion of a normed space
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 If `E` is a normed space over `𝕜`, then so is `uniform_space.completion E`. In this file we provide
 necessary instances and define `uniform_space.completion.to_complₗᵢ` - coercion

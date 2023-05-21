@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam
 
 ! This file was ported from Lean 3 source module linear_algebra.unitary_group
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit 33c67ae661dd8988516ff7f247b0be3018cdd952
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Algebra.Star.Unitary
 
 /-!
 # The Unitary Group
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines elements of the unitary group `unitary_group n α`, where `α` is a `star_ring`.
 This consists of all `n` by `n` matrices with entries in `α` such that the star-transpose is its

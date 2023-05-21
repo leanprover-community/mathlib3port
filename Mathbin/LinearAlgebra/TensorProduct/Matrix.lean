@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.tensor_product.matrix
-! leanprover-community/mathlib commit f784cc6142443d9ee623a20788c282112c322081
+! leanprover-community/mathlib commit 33c67ae661dd8988516ff7f247b0be3018cdd952
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.LinearAlgebra.TensorProductBasis
 
 /-!
 # Connections between `tensor_product` and `matrix`
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file contains results about the matrices corresponding to maps between tensor product types,
 where the correspondance is induced by `basis.tensor_product`

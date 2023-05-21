@@ -4,13 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.regularity.energy
-! leanprover-community/mathlib commit f47581155c818e6361af4e4fda60d27d020c226b
+! leanprover-community/mathlib commit bf7ef0e83e5b7e6c1169e97f055e58a2e4e9d52d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.BigOperators.Order
 import Mathbin.Algebra.Module.Basic
 import Mathbin.Combinatorics.SimpleGraph.Density
+import Mathbin.Data.Rat.BigOperators
 
 /-!
 # Energy of a partition
@@ -23,6 +24,10 @@ This file defines the energy of a partition.
 The energy is the auxiliary quantity that drives the induction process in the proof of Szemerédi's
 Regularity Lemma. As long as we do not have a suitable equipartition, we will find a new one that
 has an energy greater than the previous one plus some fixed constant.
+
+## References
+
+[Yaël Dillies, Bhavik Mehta, *Formalising Szemerédi’s Regularity Lemma in Lean*][srl_itp]
 -/
 
 
@@ -75,6 +80,14 @@ theorem energy_le_one : P.energy G ≤ 1 :=
         exact tsub_le_self
       
 #align finpartition.energy_le_one Finpartition.energy_le_one
+
+@[simp, norm_cast]
+theorem coe_energy {𝕜 : Type _} [LinearOrderedField 𝕜] :
+    (P.energy G : 𝕜) = (∑ uv in P.parts.offDiag, G.edgeDensity uv.1 uv.2 ^ 2) / P.parts.card ^ 2 :=
+  by
+  rw [energy]
+  norm_cast
+#align finpartition.coe_energy Finpartition.coe_energy
 
 end Finpartition
 

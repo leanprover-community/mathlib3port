@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.regularity.chunk
-! leanprover-community/mathlib commit f51de8769c34652d82d1c8e5f8f18f8374782bed
+! leanprover-community/mathlib commit bf7ef0e83e5b7e6c1169e97f055e58a2e4e9d52d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,6 +33,10 @@ This entire file is internal to the proof of Szemerédi Regularity Lemma.
 
 Once ported to mathlib4, this file will be a great golfing ground for Heather's new tactic
 `rel_congr`.
+
+## References
+
+[Yaël Dillies, Bhavik Mehta, *Formalising Szemerédi’s Regularity Lemma in Lean*][srl_itp]
 -/
 
 
@@ -60,9 +64,9 @@ contained in the corresponding witness of non-uniformity.
 
 /-- The portion of `szemeredi_regularity.increment` which partitions `U`. -/
 noncomputable def chunk : Finpartition U :=
-  dite (U.card = m * 4 ^ P.parts.card + (card α / P.parts.card - m * 4 ^ P.parts.card))
-    (fun hUcard => (atomise U <| P.nonuniformWitnesses G ε U).equitabilise <| card_aux₁ hUcard)
-    fun hUcard => (atomise U <| P.nonuniformWitnesses G ε U).equitabilise <| card_aux₂ hP hU hUcard
+  if hUcard : U.card = m * 4 ^ P.parts.card + (card α / P.parts.card - m * 4 ^ P.parts.card) then
+    (atomise U <| P.nonuniformWitnesses G ε U).equitabilise <| card_aux₁ hUcard
+  else (atomise U <| P.nonuniformWitnesses G ε U).equitabilise <| card_aux₂ hP hU hUcard
 #align szemeredi_regularity.chunk SzemerediRegularity.chunk
 
 -- `hP` and `hU` are used to get that `U` has size

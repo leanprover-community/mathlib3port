@@ -4,12 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.G_delta
-! leanprover-community/mathlib commit 50832daea47b195a48b5b33b1c8b2162c48c3afc
+! leanprover-community/mathlib commit b9e46fe101fc897fb2e7edaf0bf1f09ea49eb81a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Topology.UniformSpace.Basic
 import Mathbin.Topology.Separation
+import Mathbin.Order.Filter.CountableInter
 
 /-!
 # `Gδ` sets
@@ -24,11 +25,8 @@ In this file we define `Gδ` sets and prove their basic properties.
 * `is_Gδ`: a set `s` is a `Gδ` set if it can be represented as an intersection
   of countably many open sets;
 
-* `residual`: the filter of residual sets. A set `s` is called *residual* if it includes a dense
-  `Gδ` set. In a Baire space (e.g., in a complete (e)metric space), residual sets form a filter.
-
-  For technical reasons, we define `residual` in any topological space but the definition agrees
-  with the description above only in Baire spaces.
+* `residual`: the σ-filter of residual sets. A set `s` is called *residual* if it includes a
+  countable intersection of dense open sets.
 
 ## Main results
 
@@ -277,14 +275,41 @@ theorem isGδ_setOf_continuousAt [UniformSpace β] [IsCountablyGenerated (𝓤 �
 
 end ContinuousAt
 
-#print residual /-
-/-- A set `s` is called *residual* if it includes a dense `Gδ` set. If `α` is a Baire space
-(e.g., a complete metric space), then residual sets form a filter, see `mem_residual`.
+section residual
 
-For technical reasons we define the filter `residual` in any topological space but in a non-Baire
-space it is not useful because it may contain some non-residual sets. -/
+variable [TopologicalSpace α]
+
+#print residual /-
+/-- A set `s` is called *residual* if it includes a countable intersection of dense open sets. -/
 def residual (α : Type _) [TopologicalSpace α] : Filter α :=
-  ⨅ (t) (ht : IsGδ t) (ht' : Dense t), 𝓟 t
+  Filter.countableGenerate { t | IsOpen t ∧ Dense t }deriving CountableInterFilter
 #align residual residual
 -/
+
+instance countableInterFilter_residual : CountableInterFilter (residual α) := by
+  rw [residual] <;> infer_instance
+#align countable_Inter_filter_residual countableInterFilter_residual
+
+/-- Dense open sets are residual. -/
+theorem residual_of_dense_open {s : Set α} (ho : IsOpen s) (hd : Dense s) : s ∈ residual α :=
+  CountableGenerateSets.basic ⟨ho, hd⟩
+#align residual_of_dense_open residual_of_dense_open
+
+/-- Dense Gδ sets are residual. -/
+theorem residual_of_dense_Gδ {s : Set α} (ho : IsGδ s) (hd : Dense s) : s ∈ residual α :=
+  by
+  rcases ho with ⟨T, To, Tct, rfl⟩
+  exact
+    (countable_sInter_mem Tct).mpr fun t tT =>
+      residual_of_dense_open (To t tT) (hd.mono (sInter_subset_of_mem tT))
+#align residual_of_dense_Gδ residual_of_dense_Gδ
+
+/-- A set is residual iff it includes a countable intersection of dense open sets. -/
+theorem mem_residual_iff {s : Set α} :
+    s ∈ residual α ↔
+      ∃ S : Set (Set α), (∀ t ∈ S, IsOpen t) ∧ (∀ t ∈ S, Dense t) ∧ S.Countable ∧ ⋂₀ S ⊆ s :=
+  mem_countableGenerate_iff.trans <| by simp_rw [subset_def, mem_set_of, forall_and, and_assoc']
+#align mem_residual_iff mem_residual_iff
+
+end residual
 

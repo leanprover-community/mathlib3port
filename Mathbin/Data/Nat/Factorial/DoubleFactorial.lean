@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jake Levinson
 
 ! This file was ported from Lean 3 source module data.nat.factorial.double_factorial
-! leanprover-community/mathlib commit 7daeaf3072304c498b653628add84a88d0e78767
+! leanprover-community/mathlib commit 33c67ae661dd8988516ff7f247b0be3018cdd952
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Tactic.Ring
 
 /-!
 # Double factorials
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines the double factorial,
   `n‼ := n * (n - 2) * (n - 4) * ...`.

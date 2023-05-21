@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.module.bimodule
-! leanprover-community/mathlib commit 58cef51f7a819e7227224461e392dee423302f2d
+! leanprover-community/mathlib commit 33c67ae661dd8988516ff7f247b0be3018cdd952
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.RingTheory.TensorProduct
 
 /-!
 # Bimodules
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 One frequently encounters situations in which several sets of scalars act on a single space, subject
 to compatibility condition(s). A distinguished instance of this is the theory of bimodules: one has

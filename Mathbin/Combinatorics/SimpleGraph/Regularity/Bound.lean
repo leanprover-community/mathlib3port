@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.regularity.bound
-! leanprover-community/mathlib commit 4fa54b337f7d52805480306db1b1439c741848c8
+! leanprover-community/mathlib commit bf7ef0e83e5b7e6c1169e97f055e58a2e4e9d52d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -26,6 +26,10 @@ This entire file is internal to the proof of Szemerédi Regularity Lemma.
 * `szemeredi_regularity.initial_bound`: The size of the partition we start the induction with.
 * `szemeredi_regularity.bound`: The upper bound on the size of the partition produced by our version
   of Szemerédi's regularity lemma.
+
+## References
+
+[Yaël Dillies, Bhavik Mehta, *Formalising Szemerédi’s Regularity Lemma in Lean*][srl_itp]
 -/
 
 

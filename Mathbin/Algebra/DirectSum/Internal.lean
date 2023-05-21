@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Kevin Buzzard, Jujian Zhang
 
 ! This file was ported from Lean 3 source module algebra.direct_sum.internal
-! leanprover-community/mathlib commit 9936c3dfc04e5876f4368aeb2e60f8d8358d095a
+! leanprover-community/mathlib commit 33c67ae661dd8988516ff7f247b0be3018cdd952
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Algebra.DirectSum.Algebra
 
 /-!
 # Internally graded rings and algebras
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This module provides `gsemiring` and `gcomm_semiring` instances for a collection of subobjects `A`
 when a `set_like.graded_monoid` instance is available:

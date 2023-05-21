@@ -1189,6 +1189,7 @@ import Mathbin.Combinatorics.SimpleGraph.Regularity.Bound
 import Mathbin.Combinatorics.SimpleGraph.Regularity.Chunk
 import Mathbin.Combinatorics.SimpleGraph.Regularity.Energy
 import Mathbin.Combinatorics.SimpleGraph.Regularity.Equitabilise
+import Mathbin.Combinatorics.SimpleGraph.Regularity.Increment
 import Mathbin.Combinatorics.SimpleGraph.Regularity.Uniform
 import Mathbin.Combinatorics.SimpleGraph.StronglyRegular
 import Mathbin.Combinatorics.SimpleGraph.Subgraph

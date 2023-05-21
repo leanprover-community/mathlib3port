@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Eric Wieser
 
 ! This file was ported from Lean 3 source module ring_theory.matrix_algebra
-! leanprover-community/mathlib commit 6c351a8fb9b06e5a542fdf427bfb9f46724f9453
+! leanprover-community/mathlib commit 33c67ae661dd8988516ff7f247b0be3018cdd952
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Data.Matrix.Basis
 import Mathbin.RingTheory.TensorProduct
 
 /-!
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
+
 We show `matrix n n A ≃ₐ[R] (A ⊗[R] matrix n n R)`.
 -/
 

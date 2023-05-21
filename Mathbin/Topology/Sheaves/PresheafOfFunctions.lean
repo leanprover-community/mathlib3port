@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.sheaves.presheaf_of_functions
-! leanprover-community/mathlib commit 6c31dd6563a3745bf8e0b80bdd077167583ebb8f
+! leanprover-community/mathlib commit 33c67ae661dd8988516ff7f247b0be3018cdd952
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Topology.ContinuousFunction.Algebra
 
 /-!
 # Presheaves of functions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We construct some simple examples of presheaves of functions on a topological space.
 * `presheaf_to_Types X T`, where `T : X → Type`,
