@@ -474,11 +474,13 @@ theorem starₗᵢ_apply {x : E} : starₗᵢ 𝕜 x = star x :=
   rfl
 #align starₗᵢ_apply starₗᵢ_apply
 
+#print starₗᵢ_toContinuousLinearEquiv /-
 @[simp]
 theorem starₗᵢ_toContinuousLinearEquiv :
     (starₗᵢ 𝕜 : E ≃ₗᵢ⋆[𝕜] E).toContinuousLinearEquiv = (starL 𝕜 : E ≃L⋆[𝕜] E) :=
   ContinuousLinearEquiv.ext rfl
 #align starₗᵢ_to_continuous_linear_equiv starₗᵢ_toContinuousLinearEquiv
+-/
 
 end starₗᵢ
 
