@@ -44,16 +44,16 @@ with derivative `f'`. -/
 theorem has_fderiv_at_boundary_of_tendsto_fderiv {f : E → F} {s : Set E} {x : E} {f' : E →L[ℝ] F}
     (f_diff : DifferentiableOn ℝ f s) (s_conv : Convex ℝ s) (s_open : IsOpen s)
     (f_cont : ∀ y ∈ closure s, ContinuousWithinAt f s y)
-    (h : Tendsto (fun y => fderiv ℝ f y) (𝓝[s] x) (𝓝 f')) : HasFderivWithinAt f f' (closure s) x :=
+    (h : Tendsto (fun y => fderiv ℝ f y) (𝓝[s] x) (𝓝 f')) : HasFDerivWithinAt f f' (closure s) x :=
   by
   classical
     -- one can assume without loss of generality that `x` belongs to the closure of `s`, as the
     -- statement is empty otherwise
     by_cases hx : x ∉ closure s
     · rw [← closure_closure] at hx
-      exact hasFderivWithinAt_of_not_mem_closure hx
+      exact hasFDerivWithinAt_of_not_mem_closure hx
     push_neg  at hx
-    rw [HasFderivWithinAt, HasFderivAtFilter, Asymptotics.isLittleO_iff]
+    rw [HasFDerivWithinAt, HasFDerivAtFilter, Asymptotics.isLittleO_iff]
     /- One needs to show that `‖f y - f x - f' (y - x)‖ ≤ ε ‖y - x‖` for `y` close to `x` in `closure
       s`, where `ε` is an arbitrary positive constant. By continuity of the functions, it suffices to
       prove this for nearby points inside `s`. In a neighborhood of `x`, the derivative of `f` is
@@ -152,7 +152,7 @@ theorem has_deriv_at_interval_left_endpoint_of_tendsto_deriv {s : Set ℝ} {e : 
   -- now we can apply `has_fderiv_at_boundary_of_differentiable`
   have : HasDerivWithinAt f e (Icc a b) a :=
     by
-    rw [hasDerivWithinAt_iff_hasFderivWithinAt, ← t_closure]
+    rw [hasDerivWithinAt_iff_hasFDerivWithinAt, ← t_closure]
     exact has_fderiv_at_boundary_of_tendsto_fderiv t_diff t_conv t_open t_cont t_diff'
   exact this.nhds_within (Icc_mem_nhdsWithin_Ici <| left_mem_Ico.2 ab)
 #align has_deriv_at_interval_left_endpoint_of_tendsto_deriv has_deriv_at_interval_left_endpoint_of_tendsto_deriv
@@ -193,7 +193,7 @@ theorem has_deriv_at_interval_right_endpoint_of_tendsto_deriv {s : Set ℝ} {e :
   -- now we can apply `has_fderiv_at_boundary_of_differentiable`
   have : HasDerivWithinAt f e (Icc b a) a :=
     by
-    rw [hasDerivWithinAt_iff_hasFderivWithinAt, ← t_closure]
+    rw [hasDerivWithinAt_iff_hasFDerivWithinAt, ← t_closure]
     exact has_fderiv_at_boundary_of_tendsto_fderiv t_diff t_conv t_open t_cont t_diff'
   exact this.nhds_within (Icc_mem_nhdsWithin_Iic <| right_mem_Ioc.2 ba)
 #align has_deriv_at_interval_right_endpoint_of_tendsto_deriv has_deriv_at_interval_right_endpoint_of_tendsto_deriv

@@ -60,10 +60,10 @@ variable {b : E × F → G} {u : Set (E × F)}
 
 open NormedField
 
-theorem IsBoundedBilinearMap.hasStrictFderivAt (h : IsBoundedBilinearMap 𝕜 b) (p : E × F) :
-    HasStrictFderivAt b (h.deriv p) p :=
+theorem IsBoundedBilinearMap.hasStrictFDerivAt (h : IsBoundedBilinearMap 𝕜 b) (p : E × F) :
+    HasStrictFDerivAt b (h.deriv p) p :=
   by
-  rw [HasStrictFderivAt]
+  rw [HasStrictFDerivAt]
   set T := (E × F) × E × F
   have : (fun q : T => b (q.1 - q.2)) =o[𝓝 (p, p)] fun q : T => ‖q.1 - q.2‖ * 1 :=
     by
@@ -90,21 +90,21 @@ theorem IsBoundedBilinearMap.hasStrictFderivAt (h : IsBoundedBilinearMap 𝕜 b)
   exact
     (((h.is_bounded_linear_map_deriv.is_O_id ⊤).comp_tendsto le_top : _).trans_isLittleO
         this).norm_left
-#align is_bounded_bilinear_map.has_strict_fderiv_at IsBoundedBilinearMap.hasStrictFderivAt
+#align is_bounded_bilinear_map.has_strict_fderiv_at IsBoundedBilinearMap.hasStrictFDerivAt
 
-theorem IsBoundedBilinearMap.hasFderivAt (h : IsBoundedBilinearMap 𝕜 b) (p : E × F) :
-    HasFderivAt b (h.deriv p) p :=
-  (h.HasStrictFderivAt p).HasFderivAt
-#align is_bounded_bilinear_map.has_fderiv_at IsBoundedBilinearMap.hasFderivAt
+theorem IsBoundedBilinearMap.hasFDerivAt (h : IsBoundedBilinearMap 𝕜 b) (p : E × F) :
+    HasFDerivAt b (h.deriv p) p :=
+  (h.HasStrictFDerivAt p).HasFDerivAt
+#align is_bounded_bilinear_map.has_fderiv_at IsBoundedBilinearMap.hasFDerivAt
 
-theorem IsBoundedBilinearMap.hasFderivWithinAt (h : IsBoundedBilinearMap 𝕜 b) (p : E × F) :
-    HasFderivWithinAt b (h.deriv p) u p :=
-  (h.HasFderivAt p).HasFderivWithinAt
-#align is_bounded_bilinear_map.has_fderiv_within_at IsBoundedBilinearMap.hasFderivWithinAt
+theorem IsBoundedBilinearMap.hasFDerivWithinAt (h : IsBoundedBilinearMap 𝕜 b) (p : E × F) :
+    HasFDerivWithinAt b (h.deriv p) u p :=
+  (h.HasFDerivAt p).HasFDerivWithinAt
+#align is_bounded_bilinear_map.has_fderiv_within_at IsBoundedBilinearMap.hasFDerivWithinAt
 
 theorem IsBoundedBilinearMap.differentiableAt (h : IsBoundedBilinearMap 𝕜 b) (p : E × F) :
     DifferentiableAt 𝕜 b p :=
-  (h.HasFderivAt p).DifferentiableAt
+  (h.HasFDerivAt p).DifferentiableAt
 #align is_bounded_bilinear_map.differentiable_at IsBoundedBilinearMap.differentiableAt
 
 theorem IsBoundedBilinearMap.differentiableWithinAt (h : IsBoundedBilinearMap 𝕜 b) (p : E × F) :
@@ -114,7 +114,7 @@ theorem IsBoundedBilinearMap.differentiableWithinAt (h : IsBoundedBilinearMap �
 
 theorem IsBoundedBilinearMap.fderiv (h : IsBoundedBilinearMap 𝕜 b) (p : E × F) :
     fderiv 𝕜 b p = h.deriv p :=
-  HasFderivAt.fderiv (h.HasFderivAt p)
+  HasFDerivAt.fderiv (h.HasFDerivAt p)
 #align is_bounded_bilinear_map.fderiv IsBoundedBilinearMap.fderiv
 
 theorem IsBoundedBilinearMap.fderivWithin (h : IsBoundedBilinearMap 𝕜 b) (p : E × F)
@@ -135,33 +135,33 @@ theorem IsBoundedBilinearMap.differentiableOn (h : IsBoundedBilinearMap 𝕜 b) 
 
 variable (B : E →L[𝕜] F →L[𝕜] G)
 
-theorem ContinuousLinearMap.hasFderivWithinAt_of_bilinear {f : G' → E} {g : G' → F}
-    {f' : G' →L[𝕜] E} {g' : G' →L[𝕜] F} {x : G'} {s : Set G'} (hf : HasFderivWithinAt f f' s x)
-    (hg : HasFderivWithinAt g g' s x) :
-    HasFderivWithinAt (fun y => B (f y) (g y)) (B.precompR G' (f x) g' + B.precompL G' f' (g x)) s
+theorem ContinuousLinearMap.hasFDerivWithinAt_of_bilinear {f : G' → E} {g : G' → F}
+    {f' : G' →L[𝕜] E} {g' : G' →L[𝕜] F} {x : G'} {s : Set G'} (hf : HasFDerivWithinAt f f' s x)
+    (hg : HasFDerivWithinAt g g' s x) :
+    HasFDerivWithinAt (fun y => B (f y) (g y)) (B.precompR G' (f x) g' + B.precompL G' f' (g x)) s
       x :=
-  (B.IsBoundedBilinearMap.HasFderivAt (f x, g x)).comp_hasFderivWithinAt x (hf.Prod hg)
-#align continuous_linear_map.has_fderiv_within_at_of_bilinear ContinuousLinearMap.hasFderivWithinAt_of_bilinear
+  (B.IsBoundedBilinearMap.HasFDerivAt (f x, g x)).comp_hasFDerivWithinAt x (hf.Prod hg)
+#align continuous_linear_map.has_fderiv_within_at_of_bilinear ContinuousLinearMap.hasFDerivWithinAt_of_bilinear
 
-theorem ContinuousLinearMap.hasFderivAt_of_bilinear {f : G' → E} {g : G' → F} {f' : G' →L[𝕜] E}
-    {g' : G' →L[𝕜] F} {x : G'} (hf : HasFderivAt f f' x) (hg : HasFderivAt g g' x) :
-    HasFderivAt (fun y => B (f y) (g y)) (B.precompR G' (f x) g' + B.precompL G' f' (g x)) x :=
-  (B.IsBoundedBilinearMap.HasFderivAt (f x, g x)).comp x (hf.Prod hg)
-#align continuous_linear_map.has_fderiv_at_of_bilinear ContinuousLinearMap.hasFderivAt_of_bilinear
+theorem ContinuousLinearMap.hasFDerivAt_of_bilinear {f : G' → E} {g : G' → F} {f' : G' →L[𝕜] E}
+    {g' : G' →L[𝕜] F} {x : G'} (hf : HasFDerivAt f f' x) (hg : HasFDerivAt g g' x) :
+    HasFDerivAt (fun y => B (f y) (g y)) (B.precompR G' (f x) g' + B.precompL G' f' (g x)) x :=
+  (B.IsBoundedBilinearMap.HasFDerivAt (f x, g x)).comp x (hf.Prod hg)
+#align continuous_linear_map.has_fderiv_at_of_bilinear ContinuousLinearMap.hasFDerivAt_of_bilinear
 
 theorem ContinuousLinearMap.fderivWithin_of_bilinear {f : G' → E} {g : G' → F} {x : G'} {s : Set G'}
     (hf : DifferentiableWithinAt 𝕜 f s x) (hg : DifferentiableWithinAt 𝕜 g s x)
     (hs : UniqueDiffWithinAt 𝕜 s x) :
     fderivWithin 𝕜 (fun y => B (f y) (g y)) s x =
       B.precompR G' (f x) (fderivWithin 𝕜 g s x) + B.precompL G' (fderivWithin 𝕜 f s x) (g x) :=
-  (B.hasFderivWithinAt_of_bilinear hf.HasFderivWithinAt hg.HasFderivWithinAt).fderivWithin hs
+  (B.hasFDerivWithinAt_of_bilinear hf.HasFDerivWithinAt hg.HasFDerivWithinAt).fderivWithin hs
 #align continuous_linear_map.fderiv_within_of_bilinear ContinuousLinearMap.fderivWithin_of_bilinear
 
 theorem ContinuousLinearMap.fderiv_of_bilinear {f : G' → E} {g : G' → F} {x : G'}
     (hf : DifferentiableAt 𝕜 f x) (hg : DifferentiableAt 𝕜 g x) :
     fderiv 𝕜 (fun y => B (f y) (g y)) x =
       B.precompR G' (f x) (fderiv 𝕜 g x) + B.precompL G' (fderiv 𝕜 f x) (g x) :=
-  (B.hasFderivAt_of_bilinear hf.HasFderivAt hg.HasFderivAt).fderiv
+  (B.hasFDerivAt_of_bilinear hf.HasFDerivAt hg.HasFDerivAt).fderiv
 #align continuous_linear_map.fderiv_of_bilinear ContinuousLinearMap.fderiv_of_bilinear
 
 end BilinearMap

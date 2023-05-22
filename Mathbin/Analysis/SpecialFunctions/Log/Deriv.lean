@@ -143,30 +143,30 @@ section fderiv
 variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] {f : E → ℝ} {x : E} {f' : E →L[ℝ] ℝ}
   {s : Set E}
 
-theorem HasFderivWithinAt.log (hf : HasFderivWithinAt f f' s x) (hx : f x ≠ 0) :
-    HasFderivWithinAt (fun x => log (f x)) ((f x)⁻¹ • f') s x :=
-  (hasDerivAt_log hx).comp_hasFderivWithinAt x hf
-#align has_fderiv_within_at.log HasFderivWithinAt.log
+theorem HasFDerivWithinAt.log (hf : HasFDerivWithinAt f f' s x) (hx : f x ≠ 0) :
+    HasFDerivWithinAt (fun x => log (f x)) ((f x)⁻¹ • f') s x :=
+  (hasDerivAt_log hx).comp_hasFDerivWithinAt x hf
+#align has_fderiv_within_at.log HasFDerivWithinAt.log
 
-theorem HasFderivAt.log (hf : HasFderivAt f f' x) (hx : f x ≠ 0) :
-    HasFderivAt (fun x => log (f x)) ((f x)⁻¹ • f') x :=
-  (hasDerivAt_log hx).comp_hasFderivAt x hf
-#align has_fderiv_at.log HasFderivAt.log
+theorem HasFDerivAt.log (hf : HasFDerivAt f f' x) (hx : f x ≠ 0) :
+    HasFDerivAt (fun x => log (f x)) ((f x)⁻¹ • f') x :=
+  (hasDerivAt_log hx).comp_hasFDerivAt x hf
+#align has_fderiv_at.log HasFDerivAt.log
 
-theorem HasStrictFderivAt.log (hf : HasStrictFderivAt f f' x) (hx : f x ≠ 0) :
-    HasStrictFderivAt (fun x => log (f x)) ((f x)⁻¹ • f') x :=
-  (hasStrictDerivAt_log hx).comp_hasStrictFderivAt x hf
-#align has_strict_fderiv_at.log HasStrictFderivAt.log
+theorem HasStrictFDerivAt.log (hf : HasStrictFDerivAt f f' x) (hx : f x ≠ 0) :
+    HasStrictFDerivAt (fun x => log (f x)) ((f x)⁻¹ • f') x :=
+  (hasStrictDerivAt_log hx).comp_hasStrictFDerivAt x hf
+#align has_strict_fderiv_at.log HasStrictFDerivAt.log
 
 theorem DifferentiableWithinAt.log (hf : DifferentiableWithinAt ℝ f s x) (hx : f x ≠ 0) :
     DifferentiableWithinAt ℝ (fun x => log (f x)) s x :=
-  (hf.HasFderivWithinAt.log hx).DifferentiableWithinAt
+  (hf.HasFDerivWithinAt.log hx).DifferentiableWithinAt
 #align differentiable_within_at.log DifferentiableWithinAt.log
 
 @[simp]
 theorem DifferentiableAt.log (hf : DifferentiableAt ℝ f x) (hx : f x ≠ 0) :
     DifferentiableAt ℝ (fun x => log (f x)) x :=
-  (hf.HasFderivAt.log hx).DifferentiableAt
+  (hf.HasFDerivAt.log hx).DifferentiableAt
 #align differentiable_at.log DifferentiableAt.log
 
 theorem ContDiffAt.log {n} (hf : ContDiffAt ℝ n f x) (hx : f x ≠ 0) :
@@ -200,13 +200,13 @@ theorem Differentiable.log (hf : Differentiable ℝ f) (hx : ∀ x, f x ≠ 0) :
 theorem fderivWithin.log (hf : DifferentiableWithinAt ℝ f s x) (hx : f x ≠ 0)
     (hxs : UniqueDiffWithinAt ℝ s x) :
     fderivWithin ℝ (fun x => log (f x)) s x = (f x)⁻¹ • fderivWithin ℝ f s x :=
-  (hf.HasFderivWithinAt.log hx).fderivWithin hxs
+  (hf.HasFDerivWithinAt.log hx).fderivWithin hxs
 #align fderiv_within.log fderivWithin.log
 
 @[simp]
 theorem fderiv.log (hf : DifferentiableAt ℝ f x) (hx : f x ≠ 0) :
     fderiv ℝ (fun x => log (f x)) x = (f x)⁻¹ • fderiv ℝ f x :=
-  (hf.HasFderivAt.log hx).fderiv
+  (hf.HasFDerivAt.log hx).fderiv
 #align fderiv.log fderiv.log
 
 end fderiv

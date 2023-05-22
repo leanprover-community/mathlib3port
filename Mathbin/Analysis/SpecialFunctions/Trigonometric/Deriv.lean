@@ -307,30 +307,30 @@ variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℂ E] {f : E → ℂ}
 /-! #### `complex.cos` -/
 
 
-theorem HasStrictFderivAt.ccos (hf : HasStrictFderivAt f f' x) :
-    HasStrictFderivAt (fun x => Complex.cos (f x)) (-Complex.sin (f x) • f') x :=
-  (Complex.hasStrictDerivAt_cos (f x)).comp_hasStrictFderivAt x hf
-#align has_strict_fderiv_at.ccos HasStrictFderivAt.ccos
+theorem HasStrictFDerivAt.ccos (hf : HasStrictFDerivAt f f' x) :
+    HasStrictFDerivAt (fun x => Complex.cos (f x)) (-Complex.sin (f x) • f') x :=
+  (Complex.hasStrictDerivAt_cos (f x)).comp_hasStrictFDerivAt x hf
+#align has_strict_fderiv_at.ccos HasStrictFDerivAt.ccos
 
-theorem HasFderivAt.ccos (hf : HasFderivAt f f' x) :
-    HasFderivAt (fun x => Complex.cos (f x)) (-Complex.sin (f x) • f') x :=
-  (Complex.hasDerivAt_cos (f x)).comp_hasFderivAt x hf
-#align has_fderiv_at.ccos HasFderivAt.ccos
+theorem HasFDerivAt.ccos (hf : HasFDerivAt f f' x) :
+    HasFDerivAt (fun x => Complex.cos (f x)) (-Complex.sin (f x) • f') x :=
+  (Complex.hasDerivAt_cos (f x)).comp_hasFDerivAt x hf
+#align has_fderiv_at.ccos HasFDerivAt.ccos
 
-theorem HasFderivWithinAt.ccos (hf : HasFderivWithinAt f f' s x) :
-    HasFderivWithinAt (fun x => Complex.cos (f x)) (-Complex.sin (f x) • f') s x :=
-  (Complex.hasDerivAt_cos (f x)).comp_hasFderivWithinAt x hf
-#align has_fderiv_within_at.ccos HasFderivWithinAt.ccos
+theorem HasFDerivWithinAt.ccos (hf : HasFDerivWithinAt f f' s x) :
+    HasFDerivWithinAt (fun x => Complex.cos (f x)) (-Complex.sin (f x) • f') s x :=
+  (Complex.hasDerivAt_cos (f x)).comp_hasFDerivWithinAt x hf
+#align has_fderiv_within_at.ccos HasFDerivWithinAt.ccos
 
 theorem DifferentiableWithinAt.ccos (hf : DifferentiableWithinAt ℂ f s x) :
     DifferentiableWithinAt ℂ (fun x => Complex.cos (f x)) s x :=
-  hf.HasFderivWithinAt.ccos.DifferentiableWithinAt
+  hf.HasFDerivWithinAt.ccos.DifferentiableWithinAt
 #align differentiable_within_at.ccos DifferentiableWithinAt.ccos
 
 @[simp]
 theorem DifferentiableAt.ccos (hc : DifferentiableAt ℂ f x) :
     DifferentiableAt ℂ (fun x => Complex.cos (f x)) x :=
-  hc.HasFderivAt.ccos.DifferentiableAt
+  hc.HasFDerivAt.ccos.DifferentiableAt
 #align differentiable_at.ccos DifferentiableAt.ccos
 
 theorem DifferentiableOn.ccos (hc : DifferentiableOn ℂ f s) :
@@ -344,13 +344,13 @@ theorem Differentiable.ccos (hc : Differentiable ℂ f) :
 
 theorem fderivWithin_ccos (hf : DifferentiableWithinAt ℂ f s x) (hxs : UniqueDiffWithinAt ℂ s x) :
     fderivWithin ℂ (fun x => Complex.cos (f x)) s x = -Complex.sin (f x) • fderivWithin ℂ f s x :=
-  hf.HasFderivWithinAt.ccos.fderivWithin hxs
+  hf.HasFDerivWithinAt.ccos.fderivWithin hxs
 #align fderiv_within_ccos fderivWithin_ccos
 
 @[simp]
 theorem fderiv_ccos (hc : DifferentiableAt ℂ f x) :
     fderiv ℂ (fun x => Complex.cos (f x)) x = -Complex.sin (f x) • fderiv ℂ f x :=
-  hc.HasFderivAt.ccos.fderiv
+  hc.HasFDerivAt.ccos.fderiv
 #align fderiv_ccos fderiv_ccos
 
 theorem ContDiff.ccos {n} (h : ContDiff ℂ n f) : ContDiff ℂ n fun x => Complex.cos (f x) :=
@@ -375,30 +375,30 @@ theorem ContDiffWithinAt.ccos {n} (hf : ContDiffWithinAt ℂ n f s x) :
 /-! #### `complex.sin` -/
 
 
-theorem HasStrictFderivAt.csin (hf : HasStrictFderivAt f f' x) :
-    HasStrictFderivAt (fun x => Complex.sin (f x)) (Complex.cos (f x) • f') x :=
-  (Complex.hasStrictDerivAt_sin (f x)).comp_hasStrictFderivAt x hf
-#align has_strict_fderiv_at.csin HasStrictFderivAt.csin
+theorem HasStrictFDerivAt.csin (hf : HasStrictFDerivAt f f' x) :
+    HasStrictFDerivAt (fun x => Complex.sin (f x)) (Complex.cos (f x) • f') x :=
+  (Complex.hasStrictDerivAt_sin (f x)).comp_hasStrictFDerivAt x hf
+#align has_strict_fderiv_at.csin HasStrictFDerivAt.csin
 
-theorem HasFderivAt.csin (hf : HasFderivAt f f' x) :
-    HasFderivAt (fun x => Complex.sin (f x)) (Complex.cos (f x) • f') x :=
-  (Complex.hasDerivAt_sin (f x)).comp_hasFderivAt x hf
-#align has_fderiv_at.csin HasFderivAt.csin
+theorem HasFDerivAt.csin (hf : HasFDerivAt f f' x) :
+    HasFDerivAt (fun x => Complex.sin (f x)) (Complex.cos (f x) • f') x :=
+  (Complex.hasDerivAt_sin (f x)).comp_hasFDerivAt x hf
+#align has_fderiv_at.csin HasFDerivAt.csin
 
-theorem HasFderivWithinAt.csin (hf : HasFderivWithinAt f f' s x) :
-    HasFderivWithinAt (fun x => Complex.sin (f x)) (Complex.cos (f x) • f') s x :=
-  (Complex.hasDerivAt_sin (f x)).comp_hasFderivWithinAt x hf
-#align has_fderiv_within_at.csin HasFderivWithinAt.csin
+theorem HasFDerivWithinAt.csin (hf : HasFDerivWithinAt f f' s x) :
+    HasFDerivWithinAt (fun x => Complex.sin (f x)) (Complex.cos (f x) • f') s x :=
+  (Complex.hasDerivAt_sin (f x)).comp_hasFDerivWithinAt x hf
+#align has_fderiv_within_at.csin HasFDerivWithinAt.csin
 
 theorem DifferentiableWithinAt.csin (hf : DifferentiableWithinAt ℂ f s x) :
     DifferentiableWithinAt ℂ (fun x => Complex.sin (f x)) s x :=
-  hf.HasFderivWithinAt.csin.DifferentiableWithinAt
+  hf.HasFDerivWithinAt.csin.DifferentiableWithinAt
 #align differentiable_within_at.csin DifferentiableWithinAt.csin
 
 @[simp]
 theorem DifferentiableAt.csin (hc : DifferentiableAt ℂ f x) :
     DifferentiableAt ℂ (fun x => Complex.sin (f x)) x :=
-  hc.HasFderivAt.csin.DifferentiableAt
+  hc.HasFDerivAt.csin.DifferentiableAt
 #align differentiable_at.csin DifferentiableAt.csin
 
 theorem DifferentiableOn.csin (hc : DifferentiableOn ℂ f s) :
@@ -412,13 +412,13 @@ theorem Differentiable.csin (hc : Differentiable ℂ f) :
 
 theorem fderivWithin_csin (hf : DifferentiableWithinAt ℂ f s x) (hxs : UniqueDiffWithinAt ℂ s x) :
     fderivWithin ℂ (fun x => Complex.sin (f x)) s x = Complex.cos (f x) • fderivWithin ℂ f s x :=
-  hf.HasFderivWithinAt.csin.fderivWithin hxs
+  hf.HasFDerivWithinAt.csin.fderivWithin hxs
 #align fderiv_within_csin fderivWithin_csin
 
 @[simp]
 theorem fderiv_csin (hc : DifferentiableAt ℂ f x) :
     fderiv ℂ (fun x => Complex.sin (f x)) x = Complex.cos (f x) • fderiv ℂ f x :=
-  hc.HasFderivAt.csin.fderiv
+  hc.HasFDerivAt.csin.fderiv
 #align fderiv_csin fderiv_csin
 
 theorem ContDiff.csin {n} (h : ContDiff ℂ n f) : ContDiff ℂ n fun x => Complex.sin (f x) :=
@@ -443,30 +443,30 @@ theorem ContDiffWithinAt.csin {n} (hf : ContDiffWithinAt ℂ n f s x) :
 /-! #### `complex.cosh` -/
 
 
-theorem HasStrictFderivAt.ccosh (hf : HasStrictFderivAt f f' x) :
-    HasStrictFderivAt (fun x => Complex.cosh (f x)) (Complex.sinh (f x) • f') x :=
-  (Complex.hasStrictDerivAt_cosh (f x)).comp_hasStrictFderivAt x hf
-#align has_strict_fderiv_at.ccosh HasStrictFderivAt.ccosh
+theorem HasStrictFDerivAt.ccosh (hf : HasStrictFDerivAt f f' x) :
+    HasStrictFDerivAt (fun x => Complex.cosh (f x)) (Complex.sinh (f x) • f') x :=
+  (Complex.hasStrictDerivAt_cosh (f x)).comp_hasStrictFDerivAt x hf
+#align has_strict_fderiv_at.ccosh HasStrictFDerivAt.ccosh
 
-theorem HasFderivAt.ccosh (hf : HasFderivAt f f' x) :
-    HasFderivAt (fun x => Complex.cosh (f x)) (Complex.sinh (f x) • f') x :=
-  (Complex.hasDerivAt_cosh (f x)).comp_hasFderivAt x hf
-#align has_fderiv_at.ccosh HasFderivAt.ccosh
+theorem HasFDerivAt.ccosh (hf : HasFDerivAt f f' x) :
+    HasFDerivAt (fun x => Complex.cosh (f x)) (Complex.sinh (f x) • f') x :=
+  (Complex.hasDerivAt_cosh (f x)).comp_hasFDerivAt x hf
+#align has_fderiv_at.ccosh HasFDerivAt.ccosh
 
-theorem HasFderivWithinAt.ccosh (hf : HasFderivWithinAt f f' s x) :
-    HasFderivWithinAt (fun x => Complex.cosh (f x)) (Complex.sinh (f x) • f') s x :=
-  (Complex.hasDerivAt_cosh (f x)).comp_hasFderivWithinAt x hf
-#align has_fderiv_within_at.ccosh HasFderivWithinAt.ccosh
+theorem HasFDerivWithinAt.ccosh (hf : HasFDerivWithinAt f f' s x) :
+    HasFDerivWithinAt (fun x => Complex.cosh (f x)) (Complex.sinh (f x) • f') s x :=
+  (Complex.hasDerivAt_cosh (f x)).comp_hasFDerivWithinAt x hf
+#align has_fderiv_within_at.ccosh HasFDerivWithinAt.ccosh
 
 theorem DifferentiableWithinAt.ccosh (hf : DifferentiableWithinAt ℂ f s x) :
     DifferentiableWithinAt ℂ (fun x => Complex.cosh (f x)) s x :=
-  hf.HasFderivWithinAt.ccosh.DifferentiableWithinAt
+  hf.HasFDerivWithinAt.ccosh.DifferentiableWithinAt
 #align differentiable_within_at.ccosh DifferentiableWithinAt.ccosh
 
 @[simp]
 theorem DifferentiableAt.ccosh (hc : DifferentiableAt ℂ f x) :
     DifferentiableAt ℂ (fun x => Complex.cosh (f x)) x :=
-  hc.HasFderivAt.ccosh.DifferentiableAt
+  hc.HasFDerivAt.ccosh.DifferentiableAt
 #align differentiable_at.ccosh DifferentiableAt.ccosh
 
 theorem DifferentiableOn.ccosh (hc : DifferentiableOn ℂ f s) :
@@ -480,13 +480,13 @@ theorem Differentiable.ccosh (hc : Differentiable ℂ f) :
 
 theorem fderivWithin_ccosh (hf : DifferentiableWithinAt ℂ f s x) (hxs : UniqueDiffWithinAt ℂ s x) :
     fderivWithin ℂ (fun x => Complex.cosh (f x)) s x = Complex.sinh (f x) • fderivWithin ℂ f s x :=
-  hf.HasFderivWithinAt.ccosh.fderivWithin hxs
+  hf.HasFDerivWithinAt.ccosh.fderivWithin hxs
 #align fderiv_within_ccosh fderivWithin_ccosh
 
 @[simp]
 theorem fderiv_ccosh (hc : DifferentiableAt ℂ f x) :
     fderiv ℂ (fun x => Complex.cosh (f x)) x = Complex.sinh (f x) • fderiv ℂ f x :=
-  hc.HasFderivAt.ccosh.fderiv
+  hc.HasFDerivAt.ccosh.fderiv
 #align fderiv_ccosh fderiv_ccosh
 
 theorem ContDiff.ccosh {n} (h : ContDiff ℂ n f) : ContDiff ℂ n fun x => Complex.cosh (f x) :=
@@ -511,30 +511,30 @@ theorem ContDiffWithinAt.ccosh {n} (hf : ContDiffWithinAt ℂ n f s x) :
 /-! #### `complex.sinh` -/
 
 
-theorem HasStrictFderivAt.csinh (hf : HasStrictFderivAt f f' x) :
-    HasStrictFderivAt (fun x => Complex.sinh (f x)) (Complex.cosh (f x) • f') x :=
-  (Complex.hasStrictDerivAt_sinh (f x)).comp_hasStrictFderivAt x hf
-#align has_strict_fderiv_at.csinh HasStrictFderivAt.csinh
+theorem HasStrictFDerivAt.csinh (hf : HasStrictFDerivAt f f' x) :
+    HasStrictFDerivAt (fun x => Complex.sinh (f x)) (Complex.cosh (f x) • f') x :=
+  (Complex.hasStrictDerivAt_sinh (f x)).comp_hasStrictFDerivAt x hf
+#align has_strict_fderiv_at.csinh HasStrictFDerivAt.csinh
 
-theorem HasFderivAt.csinh (hf : HasFderivAt f f' x) :
-    HasFderivAt (fun x => Complex.sinh (f x)) (Complex.cosh (f x) • f') x :=
-  (Complex.hasDerivAt_sinh (f x)).comp_hasFderivAt x hf
-#align has_fderiv_at.csinh HasFderivAt.csinh
+theorem HasFDerivAt.csinh (hf : HasFDerivAt f f' x) :
+    HasFDerivAt (fun x => Complex.sinh (f x)) (Complex.cosh (f x) • f') x :=
+  (Complex.hasDerivAt_sinh (f x)).comp_hasFDerivAt x hf
+#align has_fderiv_at.csinh HasFDerivAt.csinh
 
-theorem HasFderivWithinAt.csinh (hf : HasFderivWithinAt f f' s x) :
-    HasFderivWithinAt (fun x => Complex.sinh (f x)) (Complex.cosh (f x) • f') s x :=
-  (Complex.hasDerivAt_sinh (f x)).comp_hasFderivWithinAt x hf
-#align has_fderiv_within_at.csinh HasFderivWithinAt.csinh
+theorem HasFDerivWithinAt.csinh (hf : HasFDerivWithinAt f f' s x) :
+    HasFDerivWithinAt (fun x => Complex.sinh (f x)) (Complex.cosh (f x) • f') s x :=
+  (Complex.hasDerivAt_sinh (f x)).comp_hasFDerivWithinAt x hf
+#align has_fderiv_within_at.csinh HasFDerivWithinAt.csinh
 
 theorem DifferentiableWithinAt.csinh (hf : DifferentiableWithinAt ℂ f s x) :
     DifferentiableWithinAt ℂ (fun x => Complex.sinh (f x)) s x :=
-  hf.HasFderivWithinAt.csinh.DifferentiableWithinAt
+  hf.HasFDerivWithinAt.csinh.DifferentiableWithinAt
 #align differentiable_within_at.csinh DifferentiableWithinAt.csinh
 
 @[simp]
 theorem DifferentiableAt.csinh (hc : DifferentiableAt ℂ f x) :
     DifferentiableAt ℂ (fun x => Complex.sinh (f x)) x :=
-  hc.HasFderivAt.csinh.DifferentiableAt
+  hc.HasFDerivAt.csinh.DifferentiableAt
 #align differentiable_at.csinh DifferentiableAt.csinh
 
 theorem DifferentiableOn.csinh (hc : DifferentiableOn ℂ f s) :
@@ -548,13 +548,13 @@ theorem Differentiable.csinh (hc : Differentiable ℂ f) :
 
 theorem fderivWithin_csinh (hf : DifferentiableWithinAt ℂ f s x) (hxs : UniqueDiffWithinAt ℂ s x) :
     fderivWithin ℂ (fun x => Complex.sinh (f x)) s x = Complex.cosh (f x) • fderivWithin ℂ f s x :=
-  hf.HasFderivWithinAt.csinh.fderivWithin hxs
+  hf.HasFDerivWithinAt.csinh.fderivWithin hxs
 #align fderiv_within_csinh fderivWithin_csinh
 
 @[simp]
 theorem fderiv_csinh (hc : DifferentiableAt ℂ f x) :
     fderiv ℂ (fun x => Complex.sinh (f x)) x = Complex.cosh (f x) • fderiv ℂ f x :=
-  hc.HasFderivAt.csinh.fderiv
+  hc.HasFDerivAt.csinh.fderiv
 #align fderiv_csinh fderiv_csinh
 
 theorem ContDiff.csinh {n} (h : ContDiff ℂ n f) : ContDiff ℂ n fun x => Complex.sinh (f x) :=
@@ -930,30 +930,30 @@ variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] {f : E → ℝ}
 /-! #### `real.cos` -/
 
 
-theorem HasStrictFderivAt.cos (hf : HasStrictFderivAt f f' x) :
-    HasStrictFderivAt (fun x => Real.cos (f x)) (-Real.sin (f x) • f') x :=
-  (Real.hasStrictDerivAt_cos (f x)).comp_hasStrictFderivAt x hf
-#align has_strict_fderiv_at.cos HasStrictFderivAt.cos
+theorem HasStrictFDerivAt.cos (hf : HasStrictFDerivAt f f' x) :
+    HasStrictFDerivAt (fun x => Real.cos (f x)) (-Real.sin (f x) • f') x :=
+  (Real.hasStrictDerivAt_cos (f x)).comp_hasStrictFDerivAt x hf
+#align has_strict_fderiv_at.cos HasStrictFDerivAt.cos
 
-theorem HasFderivAt.cos (hf : HasFderivAt f f' x) :
-    HasFderivAt (fun x => Real.cos (f x)) (-Real.sin (f x) • f') x :=
-  (Real.hasDerivAt_cos (f x)).comp_hasFderivAt x hf
-#align has_fderiv_at.cos HasFderivAt.cos
+theorem HasFDerivAt.cos (hf : HasFDerivAt f f' x) :
+    HasFDerivAt (fun x => Real.cos (f x)) (-Real.sin (f x) • f') x :=
+  (Real.hasDerivAt_cos (f x)).comp_hasFDerivAt x hf
+#align has_fderiv_at.cos HasFDerivAt.cos
 
-theorem HasFderivWithinAt.cos (hf : HasFderivWithinAt f f' s x) :
-    HasFderivWithinAt (fun x => Real.cos (f x)) (-Real.sin (f x) • f') s x :=
-  (Real.hasDerivAt_cos (f x)).comp_hasFderivWithinAt x hf
-#align has_fderiv_within_at.cos HasFderivWithinAt.cos
+theorem HasFDerivWithinAt.cos (hf : HasFDerivWithinAt f f' s x) :
+    HasFDerivWithinAt (fun x => Real.cos (f x)) (-Real.sin (f x) • f') s x :=
+  (Real.hasDerivAt_cos (f x)).comp_hasFDerivWithinAt x hf
+#align has_fderiv_within_at.cos HasFDerivWithinAt.cos
 
 theorem DifferentiableWithinAt.cos (hf : DifferentiableWithinAt ℝ f s x) :
     DifferentiableWithinAt ℝ (fun x => Real.cos (f x)) s x :=
-  hf.HasFderivWithinAt.cos.DifferentiableWithinAt
+  hf.HasFDerivWithinAt.cos.DifferentiableWithinAt
 #align differentiable_within_at.cos DifferentiableWithinAt.cos
 
 @[simp]
 theorem DifferentiableAt.cos (hc : DifferentiableAt ℝ f x) :
     DifferentiableAt ℝ (fun x => Real.cos (f x)) x :=
-  hc.HasFderivAt.cos.DifferentiableAt
+  hc.HasFDerivAt.cos.DifferentiableAt
 #align differentiable_at.cos DifferentiableAt.cos
 
 theorem DifferentiableOn.cos (hc : DifferentiableOn ℝ f s) :
@@ -967,13 +967,13 @@ theorem Differentiable.cos (hc : Differentiable ℝ f) : Differentiable ℝ fun 
 
 theorem fderivWithin_cos (hf : DifferentiableWithinAt ℝ f s x) (hxs : UniqueDiffWithinAt ℝ s x) :
     fderivWithin ℝ (fun x => Real.cos (f x)) s x = -Real.sin (f x) • fderivWithin ℝ f s x :=
-  hf.HasFderivWithinAt.cos.fderivWithin hxs
+  hf.HasFDerivWithinAt.cos.fderivWithin hxs
 #align fderiv_within_cos fderivWithin_cos
 
 @[simp]
 theorem fderiv_cos (hc : DifferentiableAt ℝ f x) :
     fderiv ℝ (fun x => Real.cos (f x)) x = -Real.sin (f x) • fderiv ℝ f x :=
-  hc.HasFderivAt.cos.fderiv
+  hc.HasFDerivAt.cos.fderiv
 #align fderiv_cos fderiv_cos
 
 theorem ContDiff.cos {n} (h : ContDiff ℝ n f) : ContDiff ℝ n fun x => Real.cos (f x) :=
@@ -996,30 +996,30 @@ theorem ContDiffWithinAt.cos {n} (hf : ContDiffWithinAt ℝ n f s x) :
 /-! #### `real.sin` -/
 
 
-theorem HasStrictFderivAt.sin (hf : HasStrictFderivAt f f' x) :
-    HasStrictFderivAt (fun x => Real.sin (f x)) (Real.cos (f x) • f') x :=
-  (Real.hasStrictDerivAt_sin (f x)).comp_hasStrictFderivAt x hf
-#align has_strict_fderiv_at.sin HasStrictFderivAt.sin
+theorem HasStrictFDerivAt.sin (hf : HasStrictFDerivAt f f' x) :
+    HasStrictFDerivAt (fun x => Real.sin (f x)) (Real.cos (f x) • f') x :=
+  (Real.hasStrictDerivAt_sin (f x)).comp_hasStrictFDerivAt x hf
+#align has_strict_fderiv_at.sin HasStrictFDerivAt.sin
 
-theorem HasFderivAt.sin (hf : HasFderivAt f f' x) :
-    HasFderivAt (fun x => Real.sin (f x)) (Real.cos (f x) • f') x :=
-  (Real.hasDerivAt_sin (f x)).comp_hasFderivAt x hf
-#align has_fderiv_at.sin HasFderivAt.sin
+theorem HasFDerivAt.sin (hf : HasFDerivAt f f' x) :
+    HasFDerivAt (fun x => Real.sin (f x)) (Real.cos (f x) • f') x :=
+  (Real.hasDerivAt_sin (f x)).comp_hasFDerivAt x hf
+#align has_fderiv_at.sin HasFDerivAt.sin
 
-theorem HasFderivWithinAt.sin (hf : HasFderivWithinAt f f' s x) :
-    HasFderivWithinAt (fun x => Real.sin (f x)) (Real.cos (f x) • f') s x :=
-  (Real.hasDerivAt_sin (f x)).comp_hasFderivWithinAt x hf
-#align has_fderiv_within_at.sin HasFderivWithinAt.sin
+theorem HasFDerivWithinAt.sin (hf : HasFDerivWithinAt f f' s x) :
+    HasFDerivWithinAt (fun x => Real.sin (f x)) (Real.cos (f x) • f') s x :=
+  (Real.hasDerivAt_sin (f x)).comp_hasFDerivWithinAt x hf
+#align has_fderiv_within_at.sin HasFDerivWithinAt.sin
 
 theorem DifferentiableWithinAt.sin (hf : DifferentiableWithinAt ℝ f s x) :
     DifferentiableWithinAt ℝ (fun x => Real.sin (f x)) s x :=
-  hf.HasFderivWithinAt.sin.DifferentiableWithinAt
+  hf.HasFDerivWithinAt.sin.DifferentiableWithinAt
 #align differentiable_within_at.sin DifferentiableWithinAt.sin
 
 @[simp]
 theorem DifferentiableAt.sin (hc : DifferentiableAt ℝ f x) :
     DifferentiableAt ℝ (fun x => Real.sin (f x)) x :=
-  hc.HasFderivAt.sin.DifferentiableAt
+  hc.HasFDerivAt.sin.DifferentiableAt
 #align differentiable_at.sin DifferentiableAt.sin
 
 theorem DifferentiableOn.sin (hc : DifferentiableOn ℝ f s) :
@@ -1033,13 +1033,13 @@ theorem Differentiable.sin (hc : Differentiable ℝ f) : Differentiable ℝ fun 
 
 theorem fderivWithin_sin (hf : DifferentiableWithinAt ℝ f s x) (hxs : UniqueDiffWithinAt ℝ s x) :
     fderivWithin ℝ (fun x => Real.sin (f x)) s x = Real.cos (f x) • fderivWithin ℝ f s x :=
-  hf.HasFderivWithinAt.sin.fderivWithin hxs
+  hf.HasFDerivWithinAt.sin.fderivWithin hxs
 #align fderiv_within_sin fderivWithin_sin
 
 @[simp]
 theorem fderiv_sin (hc : DifferentiableAt ℝ f x) :
     fderiv ℝ (fun x => Real.sin (f x)) x = Real.cos (f x) • fderiv ℝ f x :=
-  hc.HasFderivAt.sin.fderiv
+  hc.HasFDerivAt.sin.fderiv
 #align fderiv_sin fderiv_sin
 
 theorem ContDiff.sin {n} (h : ContDiff ℝ n f) : ContDiff ℝ n fun x => Real.sin (f x) :=
@@ -1062,30 +1062,30 @@ theorem ContDiffWithinAt.sin {n} (hf : ContDiffWithinAt ℝ n f s x) :
 /-! #### `real.cosh` -/
 
 
-theorem HasStrictFderivAt.cosh (hf : HasStrictFderivAt f f' x) :
-    HasStrictFderivAt (fun x => Real.cosh (f x)) (Real.sinh (f x) • f') x :=
-  (Real.hasStrictDerivAt_cosh (f x)).comp_hasStrictFderivAt x hf
-#align has_strict_fderiv_at.cosh HasStrictFderivAt.cosh
+theorem HasStrictFDerivAt.cosh (hf : HasStrictFDerivAt f f' x) :
+    HasStrictFDerivAt (fun x => Real.cosh (f x)) (Real.sinh (f x) • f') x :=
+  (Real.hasStrictDerivAt_cosh (f x)).comp_hasStrictFDerivAt x hf
+#align has_strict_fderiv_at.cosh HasStrictFDerivAt.cosh
 
-theorem HasFderivAt.cosh (hf : HasFderivAt f f' x) :
-    HasFderivAt (fun x => Real.cosh (f x)) (Real.sinh (f x) • f') x :=
-  (Real.hasDerivAt_cosh (f x)).comp_hasFderivAt x hf
-#align has_fderiv_at.cosh HasFderivAt.cosh
+theorem HasFDerivAt.cosh (hf : HasFDerivAt f f' x) :
+    HasFDerivAt (fun x => Real.cosh (f x)) (Real.sinh (f x) • f') x :=
+  (Real.hasDerivAt_cosh (f x)).comp_hasFDerivAt x hf
+#align has_fderiv_at.cosh HasFDerivAt.cosh
 
-theorem HasFderivWithinAt.cosh (hf : HasFderivWithinAt f f' s x) :
-    HasFderivWithinAt (fun x => Real.cosh (f x)) (Real.sinh (f x) • f') s x :=
-  (Real.hasDerivAt_cosh (f x)).comp_hasFderivWithinAt x hf
-#align has_fderiv_within_at.cosh HasFderivWithinAt.cosh
+theorem HasFDerivWithinAt.cosh (hf : HasFDerivWithinAt f f' s x) :
+    HasFDerivWithinAt (fun x => Real.cosh (f x)) (Real.sinh (f x) • f') s x :=
+  (Real.hasDerivAt_cosh (f x)).comp_hasFDerivWithinAt x hf
+#align has_fderiv_within_at.cosh HasFDerivWithinAt.cosh
 
 theorem DifferentiableWithinAt.cosh (hf : DifferentiableWithinAt ℝ f s x) :
     DifferentiableWithinAt ℝ (fun x => Real.cosh (f x)) s x :=
-  hf.HasFderivWithinAt.cosh.DifferentiableWithinAt
+  hf.HasFDerivWithinAt.cosh.DifferentiableWithinAt
 #align differentiable_within_at.cosh DifferentiableWithinAt.cosh
 
 @[simp]
 theorem DifferentiableAt.cosh (hc : DifferentiableAt ℝ f x) :
     DifferentiableAt ℝ (fun x => Real.cosh (f x)) x :=
-  hc.HasFderivAt.cosh.DifferentiableAt
+  hc.HasFDerivAt.cosh.DifferentiableAt
 #align differentiable_at.cosh DifferentiableAt.cosh
 
 theorem DifferentiableOn.cosh (hc : DifferentiableOn ℝ f s) :
@@ -1099,13 +1099,13 @@ theorem Differentiable.cosh (hc : Differentiable ℝ f) : Differentiable ℝ fun
 
 theorem fderivWithin_cosh (hf : DifferentiableWithinAt ℝ f s x) (hxs : UniqueDiffWithinAt ℝ s x) :
     fderivWithin ℝ (fun x => Real.cosh (f x)) s x = Real.sinh (f x) • fderivWithin ℝ f s x :=
-  hf.HasFderivWithinAt.cosh.fderivWithin hxs
+  hf.HasFDerivWithinAt.cosh.fderivWithin hxs
 #align fderiv_within_cosh fderivWithin_cosh
 
 @[simp]
 theorem fderiv_cosh (hc : DifferentiableAt ℝ f x) :
     fderiv ℝ (fun x => Real.cosh (f x)) x = Real.sinh (f x) • fderiv ℝ f x :=
-  hc.HasFderivAt.cosh.fderiv
+  hc.HasFDerivAt.cosh.fderiv
 #align fderiv_cosh fderiv_cosh
 
 theorem ContDiff.cosh {n} (h : ContDiff ℝ n f) : ContDiff ℝ n fun x => Real.cosh (f x) :=
@@ -1130,30 +1130,30 @@ theorem ContDiffWithinAt.cosh {n} (hf : ContDiffWithinAt ℝ n f s x) :
 /-! #### `real.sinh` -/
 
 
-theorem HasStrictFderivAt.sinh (hf : HasStrictFderivAt f f' x) :
-    HasStrictFderivAt (fun x => Real.sinh (f x)) (Real.cosh (f x) • f') x :=
-  (Real.hasStrictDerivAt_sinh (f x)).comp_hasStrictFderivAt x hf
-#align has_strict_fderiv_at.sinh HasStrictFderivAt.sinh
+theorem HasStrictFDerivAt.sinh (hf : HasStrictFDerivAt f f' x) :
+    HasStrictFDerivAt (fun x => Real.sinh (f x)) (Real.cosh (f x) • f') x :=
+  (Real.hasStrictDerivAt_sinh (f x)).comp_hasStrictFDerivAt x hf
+#align has_strict_fderiv_at.sinh HasStrictFDerivAt.sinh
 
-theorem HasFderivAt.sinh (hf : HasFderivAt f f' x) :
-    HasFderivAt (fun x => Real.sinh (f x)) (Real.cosh (f x) • f') x :=
-  (Real.hasDerivAt_sinh (f x)).comp_hasFderivAt x hf
-#align has_fderiv_at.sinh HasFderivAt.sinh
+theorem HasFDerivAt.sinh (hf : HasFDerivAt f f' x) :
+    HasFDerivAt (fun x => Real.sinh (f x)) (Real.cosh (f x) • f') x :=
+  (Real.hasDerivAt_sinh (f x)).comp_hasFDerivAt x hf
+#align has_fderiv_at.sinh HasFDerivAt.sinh
 
-theorem HasFderivWithinAt.sinh (hf : HasFderivWithinAt f f' s x) :
-    HasFderivWithinAt (fun x => Real.sinh (f x)) (Real.cosh (f x) • f') s x :=
-  (Real.hasDerivAt_sinh (f x)).comp_hasFderivWithinAt x hf
-#align has_fderiv_within_at.sinh HasFderivWithinAt.sinh
+theorem HasFDerivWithinAt.sinh (hf : HasFDerivWithinAt f f' s x) :
+    HasFDerivWithinAt (fun x => Real.sinh (f x)) (Real.cosh (f x) • f') s x :=
+  (Real.hasDerivAt_sinh (f x)).comp_hasFDerivWithinAt x hf
+#align has_fderiv_within_at.sinh HasFDerivWithinAt.sinh
 
 theorem DifferentiableWithinAt.sinh (hf : DifferentiableWithinAt ℝ f s x) :
     DifferentiableWithinAt ℝ (fun x => Real.sinh (f x)) s x :=
-  hf.HasFderivWithinAt.sinh.DifferentiableWithinAt
+  hf.HasFDerivWithinAt.sinh.DifferentiableWithinAt
 #align differentiable_within_at.sinh DifferentiableWithinAt.sinh
 
 @[simp]
 theorem DifferentiableAt.sinh (hc : DifferentiableAt ℝ f x) :
     DifferentiableAt ℝ (fun x => Real.sinh (f x)) x :=
-  hc.HasFderivAt.sinh.DifferentiableAt
+  hc.HasFDerivAt.sinh.DifferentiableAt
 #align differentiable_at.sinh DifferentiableAt.sinh
 
 theorem DifferentiableOn.sinh (hc : DifferentiableOn ℝ f s) :
@@ -1167,13 +1167,13 @@ theorem Differentiable.sinh (hc : Differentiable ℝ f) : Differentiable ℝ fun
 
 theorem fderivWithin_sinh (hf : DifferentiableWithinAt ℝ f s x) (hxs : UniqueDiffWithinAt ℝ s x) :
     fderivWithin ℝ (fun x => Real.sinh (f x)) s x = Real.cosh (f x) • fderivWithin ℝ f s x :=
-  hf.HasFderivWithinAt.sinh.fderivWithin hxs
+  hf.HasFDerivWithinAt.sinh.fderivWithin hxs
 #align fderiv_within_sinh fderivWithin_sinh
 
 @[simp]
 theorem fderiv_sinh (hc : DifferentiableAt ℝ f x) :
     fderiv ℝ (fun x => Real.sinh (f x)) x = Real.cosh (f x) • fderiv ℝ f x :=
-  hc.HasFderivAt.sinh.fderiv
+  hc.HasFDerivAt.sinh.fderiv
 #align fderiv_sinh fderiv_sinh
 
 theorem ContDiff.sinh {n} (h : ContDiff ℝ n f) : ContDiff ℝ n fun x => Real.sinh (f x) :=

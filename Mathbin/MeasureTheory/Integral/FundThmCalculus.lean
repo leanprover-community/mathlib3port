@@ -603,10 +603,10 @@ In this section we prove that for a measurable function `f` integrable on `a..b`
 limits `ca` and `cb` almost surely as `x` tends to `a` and `b`, respectively, then
 `(u, v) ↦ ∫ x in u..v, f x` has derivative `(u, v) ↦ v • cb - u • ca` at `(a, b)`
 in the sense of strict differentiability. -/
-theorem integral_hasStrictFderivAt_of_tendsto_ae (hf : IntervalIntegrable f volume a b)
+theorem integral_hasStrictFDerivAt_of_tendsto_ae (hf : IntervalIntegrable f volume a b)
     (hmeas_a : StronglyMeasurableAtFilter f (𝓝 a)) (hmeas_b : StronglyMeasurableAtFilter f (𝓝 b))
     (ha : Tendsto f (𝓝 a ⊓ volume.ae) (𝓝 ca)) (hb : Tendsto f (𝓝 b ⊓ volume.ae) (𝓝 cb)) :
-    HasStrictFderivAt (fun p : ℝ × ℝ => ∫ x in p.1 ..p.2, f x)
+    HasStrictFDerivAt (fun p : ℝ × ℝ => ∫ x in p.1 ..p.2, f x)
       ((snd ℝ ℝ ℝ).smul_right cb - (fst ℝ ℝ ℝ).smul_right ca) (a, b) :=
   by
   have :=
@@ -619,19 +619,19 @@ theorem integral_hasStrictFderivAt_of_tendsto_ae (hf : IntervalIntegrable f volu
   · intro x
     simp [sub_smul]
   · exact is_O_fst_prod.norm_left.add is_O_snd_prod.norm_left
-#align interval_integral.integral_has_strict_fderiv_at_of_tendsto_ae intervalIntegral.integral_hasStrictFderivAt_of_tendsto_ae
+#align interval_integral.integral_has_strict_fderiv_at_of_tendsto_ae intervalIntegral.integral_hasStrictFDerivAt_of_tendsto_ae
 
 /-- Fundamental theorem of calculus-1: if `f : ℝ → E` is integrable on `a..b` and `f` is continuous
 at `a` and `b`, then `(u, v) ↦ ∫ x in u..v, f x` has derivative `(u, v) ↦ v • cb - u • ca`
 at `(a, b)` in the sense of strict differentiability. -/
-theorem integral_hasStrictFderivAt (hf : IntervalIntegrable f volume a b)
+theorem integral_hasStrictFDerivAt (hf : IntervalIntegrable f volume a b)
     (hmeas_a : StronglyMeasurableAtFilter f (𝓝 a)) (hmeas_b : StronglyMeasurableAtFilter f (𝓝 b))
     (ha : ContinuousAt f a) (hb : ContinuousAt f b) :
-    HasStrictFderivAt (fun p : ℝ × ℝ => ∫ x in p.1 ..p.2, f x)
+    HasStrictFDerivAt (fun p : ℝ × ℝ => ∫ x in p.1 ..p.2, f x)
       ((snd ℝ ℝ ℝ).smul_right (f b) - (fst ℝ ℝ ℝ).smul_right (f a)) (a, b) :=
-  integral_hasStrictFderivAt_of_tendsto_ae hf hmeas_a hmeas_b (ha.mono_left inf_le_left)
+  integral_hasStrictFDerivAt_of_tendsto_ae hf hmeas_a hmeas_b (ha.mono_left inf_le_left)
     (hb.mono_left inf_le_left)
-#align interval_integral.integral_has_strict_fderiv_at intervalIntegral.integral_hasStrictFderivAt
+#align interval_integral.integral_has_strict_fderiv_at intervalIntegral.integral_hasStrictFDerivAt
 
 /-- **First Fundamental Theorem of Calculus**: if `f : ℝ → E` is integrable on `a..b` and `f x` has
 a finite limit `c` almost surely at `b`, then `u ↦ ∫ x in a..u, f x` has derivative `c` at `b` in
@@ -697,24 +697,24 @@ In this subsection we restate results from the previous subsection in terms of `
 /-- Fundamental theorem of calculus-1: if `f : ℝ → E` is integrable on `a..b` and `f x` has finite
 limits `ca` and `cb` almost surely as `x` tends to `a` and `b`, respectively, then
 `(u, v) ↦ ∫ x in u..v, f x` has derivative `(u, v) ↦ v • cb - u • ca` at `(a, b)`. -/
-theorem integral_hasFderivAt_of_tendsto_ae (hf : IntervalIntegrable f volume a b)
+theorem integral_hasFDerivAt_of_tendsto_ae (hf : IntervalIntegrable f volume a b)
     (hmeas_a : StronglyMeasurableAtFilter f (𝓝 a)) (hmeas_b : StronglyMeasurableAtFilter f (𝓝 b))
     (ha : Tendsto f (𝓝 a ⊓ volume.ae) (𝓝 ca)) (hb : Tendsto f (𝓝 b ⊓ volume.ae) (𝓝 cb)) :
-    HasFderivAt (fun p : ℝ × ℝ => ∫ x in p.1 ..p.2, f x)
+    HasFDerivAt (fun p : ℝ × ℝ => ∫ x in p.1 ..p.2, f x)
       ((snd ℝ ℝ ℝ).smul_right cb - (fst ℝ ℝ ℝ).smul_right ca) (a, b) :=
-  (integral_hasStrictFderivAt_of_tendsto_ae hf hmeas_a hmeas_b ha hb).HasFderivAt
-#align interval_integral.integral_has_fderiv_at_of_tendsto_ae intervalIntegral.integral_hasFderivAt_of_tendsto_ae
+  (integral_hasStrictFDerivAt_of_tendsto_ae hf hmeas_a hmeas_b ha hb).HasFDerivAt
+#align interval_integral.integral_has_fderiv_at_of_tendsto_ae intervalIntegral.integral_hasFDerivAt_of_tendsto_ae
 
 /-- Fundamental theorem of calculus-1: if `f : ℝ → E` is integrable on `a..b` and `f` is continuous
 at `a` and `b`, then `(u, v) ↦ ∫ x in u..v, f x` has derivative `(u, v) ↦ v • cb - u • ca`
 at `(a, b)`. -/
-theorem integral_hasFderivAt (hf : IntervalIntegrable f volume a b)
+theorem integral_hasFDerivAt (hf : IntervalIntegrable f volume a b)
     (hmeas_a : StronglyMeasurableAtFilter f (𝓝 a)) (hmeas_b : StronglyMeasurableAtFilter f (𝓝 b))
     (ha : ContinuousAt f a) (hb : ContinuousAt f b) :
-    HasFderivAt (fun p : ℝ × ℝ => ∫ x in p.1 ..p.2, f x)
+    HasFDerivAt (fun p : ℝ × ℝ => ∫ x in p.1 ..p.2, f x)
       ((snd ℝ ℝ ℝ).smul_right (f b) - (fst ℝ ℝ ℝ).smul_right (f a)) (a, b) :=
-  (integral_hasStrictFderivAt hf hmeas_a hmeas_b ha hb).HasFderivAt
-#align interval_integral.integral_has_fderiv_at intervalIntegral.integral_hasFderivAt
+  (integral_hasStrictFDerivAt hf hmeas_a hmeas_b ha hb).HasFDerivAt
+#align interval_integral.integral_has_fderiv_at intervalIntegral.integral_hasFDerivAt
 
 /-- Fundamental theorem of calculus-1: if `f : ℝ → E` is integrable on `a..b` and `f x` has finite
 limits `ca` and `cb` almost surely as `x` tends to `a` and `b`, respectively, then `fderiv`
@@ -724,7 +724,7 @@ theorem fderiv_integral_of_tendsto_ae (hf : IntervalIntegrable f volume a b)
     (ha : Tendsto f (𝓝 a ⊓ volume.ae) (𝓝 ca)) (hb : Tendsto f (𝓝 b ⊓ volume.ae) (𝓝 cb)) :
     fderiv ℝ (fun p : ℝ × ℝ => ∫ x in p.1 ..p.2, f x) (a, b) =
       (snd ℝ ℝ ℝ).smul_right cb - (fst ℝ ℝ ℝ).smul_right ca :=
-  (integral_hasFderivAt_of_tendsto_ae hf hmeas_a hmeas_b ha hb).fderiv
+  (integral_hasFDerivAt_of_tendsto_ae hf hmeas_a hmeas_b ha hb).fderiv
 #align interval_integral.fderiv_integral_of_tendsto_ae intervalIntegral.fderiv_integral_of_tendsto_ae
 
 /-- Fundamental theorem of calculus-1: if `f : ℝ → E` is integrable on `a..b` and `f` is continuous
@@ -735,7 +735,7 @@ theorem fderiv_integral (hf : IntervalIntegrable f volume a b)
     (ha : ContinuousAt f a) (hb : ContinuousAt f b) :
     fderiv ℝ (fun p : ℝ × ℝ => ∫ x in p.1 ..p.2, f x) (a, b) =
       (snd ℝ ℝ ℝ).smul_right (f b) - (fst ℝ ℝ ℝ).smul_right (f a) :=
-  (integral_hasFderivAt hf hmeas_a hmeas_b ha hb).fderiv
+  (integral_hasFDerivAt hf hmeas_a hmeas_b ha hb).fderiv
 #align interval_integral.fderiv_integral intervalIntegral.fderiv_integral
 
 /-- Fundamental theorem of calculus-1: if `f : ℝ → E` is integrable on `a..b` and `f x` has a finite
@@ -820,14 +820,14 @@ and `cb` almost surely at the filters `la` and `lb` from the following table.
 | `{a}`   | `⊥`      | `{b}`   | `⊥`      |
 | `univ`  | `𝓝 a`    | `univ`  | `𝓝 b`    |
 -/
-theorem integral_hasFderivWithinAt_of_tendsto_ae (hf : IntervalIntegrable f volume a b)
+theorem integral_hasFDerivWithinAt_of_tendsto_ae (hf : IntervalIntegrable f volume a b)
     {s t : Set ℝ} [FTCFilter a (𝓝[s] a) la] [FTCFilter b (𝓝[t] b) lb]
     (hmeas_a : StronglyMeasurableAtFilter f la) (hmeas_b : StronglyMeasurableAtFilter f lb)
     (ha : Tendsto f (la ⊓ volume.ae) (𝓝 ca)) (hb : Tendsto f (lb ⊓ volume.ae) (𝓝 cb)) :
-    HasFderivWithinAt (fun p : ℝ × ℝ => ∫ x in p.1 ..p.2, f x)
+    HasFDerivWithinAt (fun p : ℝ × ℝ => ∫ x in p.1 ..p.2, f x)
       ((snd ℝ ℝ ℝ).smul_right cb - (fst ℝ ℝ ℝ).smul_right ca) (s ×ˢ t) (a, b) :=
   by
-  rw [HasFderivWithinAt, nhdsWithin_prod_eq]
+  rw [HasFDerivWithinAt, nhdsWithin_prod_eq]
   have :=
     integral_sub_integral_sub_linear_is_o_of_tendsto_ae hf hmeas_a hmeas_b ha hb
       (tendsto_const_pure.mono_right FTC_filter.pure_le : tendsto _ _ (𝓝[s] a)) tendsto_fst
@@ -836,7 +836,7 @@ theorem integral_hasFderivWithinAt_of_tendsto_ae (hf : IntervalIntegrable f volu
   · intro x
     simp [sub_smul]
   · exact is_O_fst_prod.norm_left.add is_O_snd_prod.norm_left
-#align interval_integral.integral_has_fderiv_within_at_of_tendsto_ae intervalIntegral.integral_hasFderivWithinAt_of_tendsto_ae
+#align interval_integral.integral_has_fderiv_within_at_of_tendsto_ae intervalIntegral.integral_hasFDerivWithinAt_of_tendsto_ae
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Let `f` be a measurable function integrable on `a..b`. The function `(u, v) ↦ ∫ x in u..v, f x`
@@ -852,15 +852,15 @@ is definitionally equal `continuous_at f _` or `continuous_within_at f _ _`.
 | `{a}`   | `⊥`      | `{b}`   | `⊥`      |
 | `univ`  | `𝓝 a`    | `univ`  | `𝓝 b`    |
 -/
-theorem integral_hasFderivWithinAt (hf : IntervalIntegrable f volume a b)
+theorem integral_hasFDerivWithinAt (hf : IntervalIntegrable f volume a b)
     (hmeas_a : StronglyMeasurableAtFilter f la) (hmeas_b : StronglyMeasurableAtFilter f lb)
     {s t : Set ℝ} [FTCFilter a (𝓝[s] a) la] [FTCFilter b (𝓝[t] b) lb] (ha : Tendsto f la (𝓝 <| f a))
     (hb : Tendsto f lb (𝓝 <| f b)) :
-    HasFderivWithinAt (fun p : ℝ × ℝ => ∫ x in p.1 ..p.2, f x)
+    HasFDerivWithinAt (fun p : ℝ × ℝ => ∫ x in p.1 ..p.2, f x)
       ((snd ℝ ℝ ℝ).smul_right (f b) - (fst ℝ ℝ ℝ).smul_right (f a)) (s ×ˢ t) (a, b) :=
-  integral_hasFderivWithinAt_of_tendsto_ae hf hmeas_a hmeas_b (ha.mono_left inf_le_left)
+  integral_hasFDerivWithinAt_of_tendsto_ae hf hmeas_a hmeas_b (ha.mono_left inf_le_left)
     (hb.mono_left inf_le_left)
-#align interval_integral.integral_has_fderiv_within_at intervalIntegral.integral_hasFderivWithinAt
+#align interval_integral.integral_has_fderiv_within_at intervalIntegral.integral_hasFDerivWithinAt
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
 /-- An auxiliary tactic closing goals `unique_diff_within_at ℝ s a` where
@@ -890,7 +890,7 @@ theorem fderivWithin_integral_of_tendsto_ae (hf : IntervalIntegrable f volume a 
     (ht : UniqueDiffWithinAt ℝ t b := by uniqueDiffWithinAt_Ici_Iic_univ) :
     fderivWithin ℝ (fun p : ℝ × ℝ => ∫ x in p.1 ..p.2, f x) (s ×ˢ t) (a, b) =
       (snd ℝ ℝ ℝ).smul_right cb - (fst ℝ ℝ ℝ).smul_right ca :=
-  (integral_hasFderivWithinAt_of_tendsto_ae hf hmeas_a hmeas_b ha hb).fderivWithin <| hs.Prod ht
+  (integral_hasFDerivWithinAt_of_tendsto_ae hf hmeas_a hmeas_b ha hb).fderivWithin <| hs.Prod ht
 #align interval_integral.fderiv_within_integral_of_tendsto_ae intervalIntegral.fderivWithin_integral_of_tendsto_ae
 
 /-- Fundamental theorem of calculus: if `f : ℝ → E` is integrable on `a..b` and `f x` has a finite

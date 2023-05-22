@@ -61,25 +61,25 @@ There are currently two variants of these in mathlib, the bundled version
 predicate `is_bounded_linear_map`). We give statements for both versions. -/
 
 
-protected theorem ContinuousLinearMap.hasStrictFderivAt {x : E} : HasStrictFderivAt e e x :=
+protected theorem ContinuousLinearMap.hasStrictFDerivAt {x : E} : HasStrictFDerivAt e e x :=
   (isLittleO_zero _ _).congr_left fun x => by simp only [e.map_sub, sub_self]
-#align continuous_linear_map.has_strict_fderiv_at ContinuousLinearMap.hasStrictFderivAt
+#align continuous_linear_map.has_strict_fderiv_at ContinuousLinearMap.hasStrictFDerivAt
 
-protected theorem ContinuousLinearMap.hasFderivAtFilter : HasFderivAtFilter e e x L :=
+protected theorem ContinuousLinearMap.hasFDerivAtFilter : HasFDerivAtFilter e e x L :=
   (isLittleO_zero _ _).congr_left fun x => by simp only [e.map_sub, sub_self]
-#align continuous_linear_map.has_fderiv_at_filter ContinuousLinearMap.hasFderivAtFilter
+#align continuous_linear_map.has_fderiv_at_filter ContinuousLinearMap.hasFDerivAtFilter
 
-protected theorem ContinuousLinearMap.hasFderivWithinAt : HasFderivWithinAt e e s x :=
-  e.HasFderivAtFilter
-#align continuous_linear_map.has_fderiv_within_at ContinuousLinearMap.hasFderivWithinAt
+protected theorem ContinuousLinearMap.hasFDerivWithinAt : HasFDerivWithinAt e e s x :=
+  e.HasFDerivAtFilter
+#align continuous_linear_map.has_fderiv_within_at ContinuousLinearMap.hasFDerivWithinAt
 
-protected theorem ContinuousLinearMap.hasFderivAt : HasFderivAt e e x :=
-  e.HasFderivAtFilter
-#align continuous_linear_map.has_fderiv_at ContinuousLinearMap.hasFderivAt
+protected theorem ContinuousLinearMap.hasFDerivAt : HasFDerivAt e e x :=
+  e.HasFDerivAtFilter
+#align continuous_linear_map.has_fderiv_at ContinuousLinearMap.hasFDerivAt
 
 @[simp]
 protected theorem ContinuousLinearMap.differentiableAt : DifferentiableAt 𝕜 e x :=
-  e.HasFderivAt.DifferentiableAt
+  e.HasFDerivAt.DifferentiableAt
 #align continuous_linear_map.differentiable_at ContinuousLinearMap.differentiableAt
 
 protected theorem ContinuousLinearMap.differentiableWithinAt : DifferentiableWithinAt 𝕜 e s x :=
@@ -88,7 +88,7 @@ protected theorem ContinuousLinearMap.differentiableWithinAt : DifferentiableWit
 
 @[simp]
 protected theorem ContinuousLinearMap.fderiv : fderiv 𝕜 e x = e :=
-  e.HasFderivAt.fderiv
+  e.HasFDerivAt.fderiv
 #align continuous_linear_map.fderiv ContinuousLinearMap.fderiv
 
 protected theorem ContinuousLinearMap.fderivWithin (hxs : UniqueDiffWithinAt 𝕜 s x) :
@@ -107,23 +107,23 @@ protected theorem ContinuousLinearMap.differentiableOn : DifferentiableOn 𝕜 e
   e.Differentiable.DifferentiableOn
 #align continuous_linear_map.differentiable_on ContinuousLinearMap.differentiableOn
 
-theorem IsBoundedLinearMap.hasFderivAtFilter (h : IsBoundedLinearMap 𝕜 f) :
-    HasFderivAtFilter f h.toContinuousLinearMap x L :=
-  h.toContinuousLinearMap.HasFderivAtFilter
-#align is_bounded_linear_map.has_fderiv_at_filter IsBoundedLinearMap.hasFderivAtFilter
+theorem IsBoundedLinearMap.hasFDerivAtFilter (h : IsBoundedLinearMap 𝕜 f) :
+    HasFDerivAtFilter f h.toContinuousLinearMap x L :=
+  h.toContinuousLinearMap.HasFDerivAtFilter
+#align is_bounded_linear_map.has_fderiv_at_filter IsBoundedLinearMap.hasFDerivAtFilter
 
-theorem IsBoundedLinearMap.hasFderivWithinAt (h : IsBoundedLinearMap 𝕜 f) :
-    HasFderivWithinAt f h.toContinuousLinearMap s x :=
-  h.HasFderivAtFilter
-#align is_bounded_linear_map.has_fderiv_within_at IsBoundedLinearMap.hasFderivWithinAt
+theorem IsBoundedLinearMap.hasFDerivWithinAt (h : IsBoundedLinearMap 𝕜 f) :
+    HasFDerivWithinAt f h.toContinuousLinearMap s x :=
+  h.HasFDerivAtFilter
+#align is_bounded_linear_map.has_fderiv_within_at IsBoundedLinearMap.hasFDerivWithinAt
 
-theorem IsBoundedLinearMap.hasFderivAt (h : IsBoundedLinearMap 𝕜 f) :
-    HasFderivAt f h.toContinuousLinearMap x :=
-  h.HasFderivAtFilter
-#align is_bounded_linear_map.has_fderiv_at IsBoundedLinearMap.hasFderivAt
+theorem IsBoundedLinearMap.hasFDerivAt (h : IsBoundedLinearMap 𝕜 f) :
+    HasFDerivAt f h.toContinuousLinearMap x :=
+  h.HasFDerivAtFilter
+#align is_bounded_linear_map.has_fderiv_at IsBoundedLinearMap.hasFDerivAt
 
 theorem IsBoundedLinearMap.differentiableAt (h : IsBoundedLinearMap 𝕜 f) : DifferentiableAt 𝕜 f x :=
-  h.HasFderivAt.DifferentiableAt
+  h.HasFDerivAt.DifferentiableAt
 #align is_bounded_linear_map.differentiable_at IsBoundedLinearMap.differentiableAt
 
 theorem IsBoundedLinearMap.differentiableWithinAt (h : IsBoundedLinearMap 𝕜 f) :
@@ -133,7 +133,7 @@ theorem IsBoundedLinearMap.differentiableWithinAt (h : IsBoundedLinearMap 𝕜 f
 
 theorem IsBoundedLinearMap.fderiv (h : IsBoundedLinearMap 𝕜 f) :
     fderiv 𝕜 f x = h.toContinuousLinearMap :=
-  HasFderivAt.fderiv h.HasFderivAt
+  HasFDerivAt.fderiv h.HasFDerivAt
 #align is_bounded_linear_map.fderiv IsBoundedLinearMap.fderiv
 
 theorem IsBoundedLinearMap.fderivWithin (h : IsBoundedLinearMap 𝕜 f)

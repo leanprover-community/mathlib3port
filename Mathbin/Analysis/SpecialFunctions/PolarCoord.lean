@@ -102,19 +102,19 @@ def polarCoord : LocalHomeomorph (ℝ × ℝ) (ℝ × ℝ)
     · exact complex.equiv_real_prod_clm.symm.continuous.continuous_on
 #align polar_coord polarCoord
 
-theorem hasFderivAt_polarCoord_symm (p : ℝ × ℝ) :
-    HasFderivAt polarCoord.symm
+theorem hasFDerivAt_polarCoord_symm (p : ℝ × ℝ) :
+    HasFDerivAt polarCoord.symm
       (Matrix.toLin (Basis.finTwoProd ℝ) (Basis.finTwoProd ℝ)
           !![cos p.2, -p.1 * sin p.2; sin p.2, p.1 * cos p.2]).toContinuousLinearMap
       p :=
   by
   rw [Matrix.toLin_finTwoProd_toContinuousLinearMap]
-  convert HasFderivAt.prod
-        (has_fderiv_at_fst.mul ((has_deriv_at_cos p.2).comp_hasFderivAt p hasFderivAt_snd))
-        (has_fderiv_at_fst.mul ((has_deriv_at_sin p.2).comp_hasFderivAt p hasFderivAt_snd)) using
+  convert HasFDerivAt.prod
+        (has_fderiv_at_fst.mul ((has_deriv_at_cos p.2).comp_hasFDerivAt p hasFDerivAt_snd))
+        (has_fderiv_at_fst.mul ((has_deriv_at_sin p.2).comp_hasFDerivAt p hasFDerivAt_snd)) using
       2 <;>
     simp only [smul_smul, add_comm, neg_mul, neg_smul, smul_neg]
-#align has_fderiv_at_polar_coord_symm hasFderivAt_polarCoord_symm
+#align has_fderiv_at_polar_coord_symm hasFDerivAt_polarCoord_symm
 
 theorem polarCoord_source_ae_eq_univ : polarCoord.source =ᵐ[volume] univ :=
   by
@@ -143,8 +143,8 @@ theorem integral_comp_polarCoord_symm {E : Type _} [NormedAddCommGroup E] [Norme
     (Matrix.toLin (Basis.finTwoProd ℝ) (Basis.finTwoProd ℝ)
         !![cos p.2, -p.1 * sin p.2; sin p.2, p.1 * cos p.2]).toContinuousLinearMap with
     hB
-  have A : ∀ p ∈ polar_coord.symm.source, HasFderivAt polar_coord.symm (B p) p := fun p hp =>
-    hasFderivAt_polarCoord_symm p
+  have A : ∀ p ∈ polar_coord.symm.source, HasFDerivAt polar_coord.symm (B p) p := fun p hp =>
+    hasFDerivAt_polarCoord_symm p
   have B_det : ∀ p, (B p).det = p.1 := by
     intro p
     conv_rhs => rw [← one_mul p.1, ← cos_sq_add_sin_sq p.2]

@@ -108,16 +108,16 @@ section Real
 
 variable {F : Type _} [NormedAddCommGroup F] [InnerProductSpace ℝ F]
 
-theorem LinearMap.IsSymmetric.hasStrictFderivAt_reApplyInnerSelf {T : F →L[ℝ] F}
+theorem LinearMap.IsSymmetric.hasStrictFDerivAt_reApplyInnerSelf {T : F →L[ℝ] F}
     (hT : (T : F →ₗ[ℝ] F).IsSymmetric) (x₀ : F) :
-    HasStrictFderivAt T.reApplyInnerSelf (bit0 (innerSL ℝ (T x₀))) x₀ :=
+    HasStrictFDerivAt T.reApplyInnerSelf (bit0 (innerSL ℝ (T x₀))) x₀ :=
   by
-  convert T.has_strict_fderiv_at.inner _ (hasStrictFderivAt_id x₀)
+  convert T.has_strict_fderiv_at.inner _ (hasStrictFDerivAt_id x₀)
   ext y
   simp_rw [_root_.bit0, ContinuousLinearMap.comp_apply, ContinuousLinearMap.add_apply,
     innerSL_apply, fderivInnerClm_apply, id.def, ContinuousLinearMap.prod_apply,
     ContinuousLinearMap.id_apply, hT.apply_clm x₀ y, real_inner_comm _ x₀]
-#align linear_map.is_symmetric.has_strict_fderiv_at_re_apply_inner_self LinearMap.IsSymmetric.hasStrictFderivAt_reApplyInnerSelf
+#align linear_map.is_symmetric.has_strict_fderiv_at_re_apply_inner_self LinearMap.IsSymmetric.hasStrictFDerivAt_reApplyInnerSelf
 
 variable [CompleteSpace F] {T : F →L[ℝ] F}
 
@@ -136,7 +136,7 @@ theorem linearly_dependent_of_isLocalExtrOn (hT : IsSelfAdjoint T) {x₀ : F}
   -- find Lagrange multipliers for the function `T.re_apply_inner_self` and the
   -- hypersurface-defining function `λ x, ‖x‖ ^ 2`
   obtain ⟨a, b, h₁, h₂⟩ :=
-    IsLocalExtrOn.exists_multipliers_of_hasStrictFderivAt_1d H (hasStrictFderivAt_norm_sq x₀)
+    IsLocalExtrOn.exists_multipliers_of_hasStrictFDerivAt_1d H (hasStrictFDerivAt_norm_sq x₀)
       (hT.is_symmetric.has_strict_fderiv_at_re_apply_inner_self x₀)
   refine' ⟨a, b, h₁, _⟩
   apply (InnerProductSpace.toDualMap ℝ F).Injective

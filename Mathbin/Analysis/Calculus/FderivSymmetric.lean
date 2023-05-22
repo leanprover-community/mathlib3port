@@ -57,8 +57,8 @@ open Topology
 
 variable {E F : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [NormedAddCommGroup F]
   [NormedSpace ℝ F] {s : Set E} (s_conv : Convex ℝ s) {f : E → F} {f' : E → E →L[ℝ] F}
-  {f'' : E →L[ℝ] E →L[ℝ] F} (hf : ∀ x ∈ interior s, HasFderivAt f (f' x) x) {x : E} (xs : x ∈ s)
-  (hx : HasFderivWithinAt f' f'' (interior s) x)
+  {f'' : E →L[ℝ] E →L[ℝ] F} (hf : ∀ x ∈ interior s, HasFDerivAt f (f' x) x) {x : E} (xs : x ∈ s)
+  (hx : HasFDerivWithinAt f' f'' (interior s) x)
 
 include s_conv xs hx hf
 
@@ -82,7 +82,7 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ interior s)
   apply is_o.trans_is_O (is_o_iff.2 fun ε εpos => _) (is_O_const_mul_self ((‖v‖ + ‖w‖) * ‖w‖) _ _)
   -- consider a ball of radius `δ` around `x` in which the Taylor approximation for `f''` is
   -- good up to `δ`.
-  rw [HasFderivWithinAt, HasFderivAtFilter, is_o_iff] at hx
+  rw [HasFDerivWithinAt, HasFDerivAtFilter, is_o_iff] at hx
   rcases Metric.mem_nhdsWithin_iff.1 (hx εpos) with ⟨δ, δpos, sδ⟩
   have E1 : ∀ᶠ h in 𝓝[>] (0 : ℝ), h * (‖v‖ + ‖w‖) < δ :=
     by
@@ -299,8 +299,8 @@ omit s_conv xs hx hf
 derivative at a point of this convex set, then this second derivative is symmetric. -/
 theorem Convex.second_derivative_within_at_symmetric {s : Set E} (s_conv : Convex ℝ s)
     (hne : (interior s).Nonempty) {f : E → F} {f' : E → E →L[ℝ] F} {f'' : E →L[ℝ] E →L[ℝ] F}
-    (hf : ∀ x ∈ interior s, HasFderivAt f (f' x) x) {x : E} (xs : x ∈ s)
-    (hx : HasFderivWithinAt f' f'' (interior s) x) (v w : E) : f'' v w = f'' w v :=
+    (hf : ∀ x ∈ interior s, HasFDerivAt f (f' x) x) {x : E} (xs : x ∈ s)
+    (hx : HasFDerivWithinAt f' f'' (interior s) x) (v w : E) : f'' v w = f'' w v :=
   by
   /- we work around a point `x + 4 z` in the interior of `s`. For any vector `m`,
     then `x + 4 (z + t m)` also belongs to the interior of `s` for small enough `t`. This means that
@@ -354,7 +354,7 @@ theorem Convex.second_derivative_within_at_symmetric {s : Set E} (s_conv : Conve
 /-- If a function is differentiable around `x`, and has two derivatives at `x`, then the second
 derivative is symmetric. -/
 theorem second_derivative_symmetric_of_eventually {f : E → F} {f' : E → E →L[ℝ] F}
-    {f'' : E →L[ℝ] E →L[ℝ] F} (hf : ∀ᶠ y in 𝓝 x, HasFderivAt f (f' y) y) (hx : HasFderivAt f' f'' x)
+    {f'' : E →L[ℝ] E →L[ℝ] F} (hf : ∀ᶠ y in 𝓝 x, HasFDerivAt f (f' y) y) (hx : HasFDerivAt f' f'' x)
     (v w : E) : f'' v w = f'' w v :=
   by
   rcases Metric.mem_nhds_iff.1 hf with ⟨ε, εpos, hε⟩
@@ -368,7 +368,7 @@ theorem second_derivative_symmetric_of_eventually {f : E → F} {f' : E → E �
 /-- If a function is differentiable, and has two derivatives at `x`, then the second
 derivative is symmetric. -/
 theorem second_derivative_symmetric {f : E → F} {f' : E → E →L[ℝ] F} {f'' : E →L[ℝ] E →L[ℝ] F}
-    (hf : ∀ y, HasFderivAt f (f' y) y) (hx : HasFderivAt f' f'' x) (v w : E) : f'' v w = f'' w v :=
+    (hf : ∀ y, HasFDerivAt f (f' y) y) (hx : HasFDerivAt f' f'' x) (v w : E) : f'' v w = f'' w v :=
   second_derivative_symmetric_of_eventually (Filter.eventually_of_forall hf) hx v w
 #align second_derivative_symmetric second_derivative_symmetric
 

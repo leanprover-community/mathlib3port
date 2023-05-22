@@ -94,22 +94,22 @@ theorem ContDiff.inner (hf : ContDiff ℝ n f) (hg : ContDiff ℝ n g) :
   contDiff_inner.comp (hf.Prod hg)
 #align cont_diff.inner ContDiff.inner
 
-theorem HasFderivWithinAt.inner (hf : HasFderivWithinAt f f' s x)
-    (hg : HasFderivWithinAt g g' s x) :
-    HasFderivWithinAt (fun t => ⟪f t, g t⟫) ((fderivInnerClm 𝕜 (f x, g x)).comp <| f'.Prod g') s
+theorem HasFDerivWithinAt.inner (hf : HasFDerivWithinAt f f' s x)
+    (hg : HasFDerivWithinAt g g' s x) :
+    HasFDerivWithinAt (fun t => ⟪f t, g t⟫) ((fderivInnerClm 𝕜 (f x, g x)).comp <| f'.Prod g') s
       x :=
-  (isBoundedBilinearMap_inner.HasFderivAt (f x, g x)).comp_hasFderivWithinAt x (hf.Prod hg)
-#align has_fderiv_within_at.inner HasFderivWithinAt.inner
+  (isBoundedBilinearMap_inner.HasFDerivAt (f x, g x)).comp_hasFDerivWithinAt x (hf.Prod hg)
+#align has_fderiv_within_at.inner HasFDerivWithinAt.inner
 
-theorem HasStrictFderivAt.inner (hf : HasStrictFderivAt f f' x) (hg : HasStrictFderivAt g g' x) :
-    HasStrictFderivAt (fun t => ⟪f t, g t⟫) ((fderivInnerClm 𝕜 (f x, g x)).comp <| f'.Prod g') x :=
-  (isBoundedBilinearMap_inner.HasStrictFderivAt (f x, g x)).comp x (hf.Prod hg)
-#align has_strict_fderiv_at.inner HasStrictFderivAt.inner
+theorem HasStrictFDerivAt.inner (hf : HasStrictFDerivAt f f' x) (hg : HasStrictFDerivAt g g' x) :
+    HasStrictFDerivAt (fun t => ⟪f t, g t⟫) ((fderivInnerClm 𝕜 (f x, g x)).comp <| f'.Prod g') x :=
+  (isBoundedBilinearMap_inner.HasStrictFDerivAt (f x, g x)).comp x (hf.Prod hg)
+#align has_strict_fderiv_at.inner HasStrictFDerivAt.inner
 
-theorem HasFderivAt.inner (hf : HasFderivAt f f' x) (hg : HasFderivAt g g' x) :
-    HasFderivAt (fun t => ⟪f t, g t⟫) ((fderivInnerClm 𝕜 (f x, g x)).comp <| f'.Prod g') x :=
-  (isBoundedBilinearMap_inner.HasFderivAt (f x, g x)).comp x (hf.Prod hg)
-#align has_fderiv_at.inner HasFderivAt.inner
+theorem HasFDerivAt.inner (hf : HasFDerivAt f f' x) (hg : HasFDerivAt g g' x) :
+    HasFDerivAt (fun t => ⟪f t, g t⟫) ((fderivInnerClm 𝕜 (f x, g x)).comp <| f'.Prod g') x :=
+  (isBoundedBilinearMap_inner.HasFDerivAt (f x, g x)).comp x (hf.Prod hg)
+#align has_fderiv_at.inner HasFDerivAt.inner
 
 theorem HasDerivWithinAt.inner {f g : ℝ → E} {f' g' : E} {s : Set ℝ} {x : ℝ}
     (hf : HasDerivWithinAt f f' s x) (hg : HasDerivWithinAt g g' s x) :
@@ -125,8 +125,8 @@ theorem HasDerivAt.inner {f g : ℝ → E} {f' g' : E} {x : ℝ} :
 
 theorem DifferentiableWithinAt.inner (hf : DifferentiableWithinAt ℝ f s x)
     (hg : DifferentiableWithinAt ℝ g s x) : DifferentiableWithinAt ℝ (fun x => ⟪f x, g x⟫) s x :=
-  ((differentiable_inner _).HasFderivAt.comp_hasFderivWithinAt x
-      (hf.Prod hg).HasFderivWithinAt).DifferentiableWithinAt
+  ((differentiable_inner _).HasFDerivAt.comp_hasFDerivWithinAt x
+      (hf.Prod hg).HasFDerivWithinAt).DifferentiableWithinAt
 #align differentiable_within_at.inner DifferentiableWithinAt.inner
 
 theorem DifferentiableAt.inner (hf : DifferentiableAt ℝ f x) (hg : DifferentiableAt ℝ g x) :
@@ -228,14 +228,14 @@ theorem ContDiff.dist (hf : ContDiff ℝ n f) (hg : ContDiff ℝ n g) (hne : ∀
 
 omit 𝕜
 
-theorem hasStrictFderivAt_norm_sq (x : F) :
-    HasStrictFderivAt (fun x => ‖x‖ ^ 2) (bit0 (innerSL ℝ x)) x :=
+theorem hasStrictFDerivAt_norm_sq (x : F) :
+    HasStrictFDerivAt (fun x => ‖x‖ ^ 2) (bit0 (innerSL ℝ x)) x :=
   by
   simp only [sq, ← @inner_self_eq_norm_mul_norm ℝ]
-  convert(hasStrictFderivAt_id x).inner ℝ (hasStrictFderivAt_id x)
+  convert(hasStrictFDerivAt_id x).inner ℝ (hasStrictFDerivAt_id x)
   ext y
   simp [bit0, real_inner_comm]
-#align has_strict_fderiv_at_norm_sq hasStrictFderivAt_norm_sq
+#align has_strict_fderiv_at_norm_sq hasStrictFDerivAt_norm_sq
 
 include 𝕜
 
@@ -336,21 +336,21 @@ theorem differentiable_euclidean : Differentiable 𝕜 f ↔ ∀ i, Differentiab
   rfl
 #align differentiable_euclidean differentiable_euclidean
 
-theorem hasStrictFderivAt_euclidean :
-    HasStrictFderivAt f f' y ↔
-      ∀ i, HasStrictFderivAt (fun x => f x i) (EuclideanSpace.proj i ∘L f') y :=
+theorem hasStrictFDerivAt_euclidean :
+    HasStrictFDerivAt f f' y ↔
+      ∀ i, HasStrictFDerivAt (fun x => f x i) (EuclideanSpace.proj i ∘L f') y :=
   by
-  rw [← (EuclideanSpace.equiv ι 𝕜).comp_hasStrictFderivAt_iff, hasStrictFderivAt_pi']
+  rw [← (EuclideanSpace.equiv ι 𝕜).comp_hasStrictFDerivAt_iff, hasStrictFDerivAt_pi']
   rfl
-#align has_strict_fderiv_at_euclidean hasStrictFderivAt_euclidean
+#align has_strict_fderiv_at_euclidean hasStrictFDerivAt_euclidean
 
-theorem hasFderivWithinAt_euclidean :
-    HasFderivWithinAt f f' t y ↔
-      ∀ i, HasFderivWithinAt (fun x => f x i) (EuclideanSpace.proj i ∘L f') t y :=
+theorem hasFDerivWithinAt_euclidean :
+    HasFDerivWithinAt f f' t y ↔
+      ∀ i, HasFDerivWithinAt (fun x => f x i) (EuclideanSpace.proj i ∘L f') t y :=
   by
-  rw [← (EuclideanSpace.equiv ι 𝕜).comp_hasFderivWithinAt_iff, hasFderivWithinAt_pi']
+  rw [← (EuclideanSpace.equiv ι 𝕜).comp_hasFDerivWithinAt_iff, hasFDerivWithinAt_pi']
   rfl
-#align has_fderiv_within_at_euclidean hasFderivWithinAt_euclidean
+#align has_fderiv_within_at_euclidean hasFDerivWithinAt_euclidean
 
 theorem contDiffWithinAt_euclidean {n : ℕ∞} :
     ContDiffWithinAt 𝕜 n f t y ↔ ∀ i, ContDiffWithinAt 𝕜 n (fun x => f x i) t y :=

@@ -60,20 +60,20 @@ open LinearIsometry ContinuousLinearMap
 
 /-- A map `f` is said to be conformal if it has a conformal differential `f'`. -/
 def ConformalAt (f : X → Y) (x : X) :=
-  ∃ f' : X →L[ℝ] Y, HasFderivAt f f' x ∧ IsConformalMap f'
+  ∃ f' : X →L[ℝ] Y, HasFDerivAt f f' x ∧ IsConformalMap f'
 #align conformal_at ConformalAt
 
 theorem conformalAt_id (x : X) : ConformalAt id x :=
-  ⟨id ℝ X, hasFderivAt_id _, isConformalMap_id⟩
+  ⟨id ℝ X, hasFDerivAt_id _, isConformalMap_id⟩
 #align conformal_at_id conformalAt_id
 
 theorem conformalAt_const_smul {c : ℝ} (h : c ≠ 0) (x : X) : ConformalAt (fun x' : X => c • x') x :=
-  ⟨c • ContinuousLinearMap.id ℝ X, (hasFderivAt_id x).const_smul c, isConformalMap_const_smul h⟩
+  ⟨c • ContinuousLinearMap.id ℝ X, (hasFDerivAt_id x).const_smul c, isConformalMap_const_smul h⟩
 #align conformal_at_const_smul conformalAt_const_smul
 
 @[nontriviality]
 theorem Subsingleton.conformalAt [Subsingleton X] (f : X → Y) (x : X) : ConformalAt f x :=
-  ⟨0, hasFderivAt_of_subsingleton _ _, isConformalMap_of_subsingleton _⟩
+  ⟨0, hasFDerivAt_of_subsingleton _ _, isConformalMap_of_subsingleton _⟩
 #align subsingleton.conformal_at Subsingleton.conformalAt
 
 /-- A function is a conformal map if and only if its differential is a conformal linear map-/

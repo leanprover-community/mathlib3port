@@ -60,7 +60,7 @@ theorem differentiableOn_compl_singleton_and_continuousAt_iff {f : ℂ → E} {s
     refine' eventually_nhdsWithin_iff.2 ((eventually_mem_nhds.2 hs).mono fun z hz hzx => _)
     exact hd.differentiable_at (inter_mem hz (is_open_ne.mem_nhds hzx))
   ·
-    simpa only [DifferentiableWithinAt, HasFderivWithinAt, hne.nhds_within_diff_singleton] using
+    simpa only [DifferentiableWithinAt, HasFDerivWithinAt, hne.nhds_within_diff_singleton] using
       hd x ⟨hx, hne⟩
 #align complex.differentiable_on_compl_singleton_and_continuous_at_iff Complex.differentiableOn_compl_singleton_and_continuousAt_iff
 

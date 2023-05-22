@@ -1292,14 +1292,14 @@ variable [NormedSpace 𝕜 G] [SigmaFinite μ] [IsAddLeftInvariant μ]
 /-- Compute the total derivative of `f ⋆ g` if `g` is `C^1` with compact support and `f` is locally
 integrable. To write down the total derivative as a convolution, we use
 `continuous_linear_map.precompR`. -/
-theorem HasCompactSupport.hasFderivAt_convolution_right (hcg : HasCompactSupport g)
+theorem HasCompactSupport.hasFDerivAt_convolution_right (hcg : HasCompactSupport g)
     (hf : LocallyIntegrable f μ) (hg : ContDiff 𝕜 1 g) (x₀ : G) :
-    HasFderivAt (f ⋆[L, μ] g) ((f ⋆[L.precompR G, μ] fderiv 𝕜 g) x₀) x₀ :=
+    HasFDerivAt (f ⋆[L, μ] g) ((f ⋆[L.precompR G, μ] fderiv 𝕜 g) x₀) x₀ :=
   by
   rcases hcg.eq_zero_or_finite_dimensional 𝕜 hg.continuous with (rfl | fin_dim)
   · have : fderiv 𝕜 (0 : G → E') = 0 := fderiv_const (0 : E')
     simp only [this, convolution_zero, Pi.zero_apply]
-    exact hasFderivAt_const (0 : F) x₀
+    exact hasFDerivAt_const (0 : F) x₀
   skip
   have : ProperSpace G := FiniteDimensional.proper_isROrC 𝕜 G
   set L' := L.precompR G
@@ -1309,15 +1309,15 @@ theorem HasCompactSupport.hasFderivAt_convolution_right (hcg : HasCompactSupport
   have h2 : ∀ x, ae_strongly_measurable (fun t => L' (f t) (fderiv 𝕜 g (x - t))) μ :=
     hf.ae_strongly_measurable.convolution_integrand_snd L'
       (hg.continuous_fderiv le_rfl).AeStronglyMeasurable
-  have h3 : ∀ x t, HasFderivAt (fun x => g (x - t)) (fderiv 𝕜 g (x - t)) x :=
+  have h3 : ∀ x t, HasFDerivAt (fun x => g (x - t)) (fderiv 𝕜 g (x - t)) x :=
     by
     intro x t
     simpa using
-      (hg.differentiable le_rfl).DifferentiableAt.HasFderivAt.comp x
-        ((hasFderivAt_id x).sub (hasFderivAt_const t x))
+      (hg.differentiable le_rfl).DifferentiableAt.HasFDerivAt.comp x
+        ((hasFDerivAt_id x).sub (hasFDerivAt_const t x))
   let K' := -tsupport (fderiv 𝕜 g) + closed_ball x₀ 1
   have hK' : IsCompact K' := (hcg.fderiv 𝕜).neg.add (is_compact_closed_ball x₀ 1)
-  refine' hasFderivAt_integral_of_dominated_of_fderiv_le zero_lt_one h1 _ (h2 x₀) _ _ _
+  refine' hasFDerivAt_integral_of_dominated_of_fderiv_le zero_lt_one h1 _ (h2 x₀) _ _ _
   · exact K'.indicator fun t => ‖L'‖ * ‖f t‖ * ⨆ x, ‖fderiv 𝕜 g x‖
   · exact hcg.convolution_exists_right L hf hg.continuous x₀
   · refine' eventually_of_forall fun t x hx => _
@@ -1326,16 +1326,16 @@ theorem HasCompactSupport.hasFderivAt_convolution_right (hcg : HasCompactSupport
         (ball_subset_closed_ball hx)
   · rw [integrable_indicator_iff hK'.measurable_set]
     exact ((hf.integrable_on_is_compact hK').norm.const_mul _).mul_const _
-  · exact eventually_of_forall fun t x hx => (L _).HasFderivAt.comp x (h3 x t)
-#align has_compact_support.has_fderiv_at_convolution_right HasCompactSupport.hasFderivAt_convolution_right
+  · exact eventually_of_forall fun t x hx => (L _).HasFDerivAt.comp x (h3 x t)
+#align has_compact_support.has_fderiv_at_convolution_right HasCompactSupport.hasFDerivAt_convolution_right
 
-theorem HasCompactSupport.hasFderivAt_convolution_left [IsNegInvariant μ]
+theorem HasCompactSupport.hasFDerivAt_convolution_left [IsNegInvariant μ]
     (hcf : HasCompactSupport f) (hf : ContDiff 𝕜 1 f) (hg : LocallyIntegrable g μ) (x₀ : G) :
-    HasFderivAt (f ⋆[L, μ] g) ((fderiv 𝕜 f ⋆[L.precompL G, μ] g) x₀) x₀ :=
+    HasFDerivAt (f ⋆[L, μ] g) ((fderiv 𝕜 f ⋆[L.precompL G, μ] g) x₀) x₀ :=
   by
   simp (config := { singlePass := true }) only [← convolution_flip]
   exact hcf.has_fderiv_at_convolution_right L.flip hg hf x₀
-#align has_compact_support.has_fderiv_at_convolution_left HasCompactSupport.hasFderivAt_convolution_left
+#align has_compact_support.has_fderiv_at_convolution_left HasCompactSupport.hasFDerivAt_convolution_left
 
 end IsROrC
 
@@ -1403,11 +1403,11 @@ variable [IsROrC 𝕜] [NormedSpace 𝕜 E] [NormedSpace 𝕜 E'] [NormedSpace �
 and `g` is `C^1` and compactly supported. Version where `g` depends on an additional parameter in an
 open subset `s` of a parameter space `P` (and the compact support `k` is independent of the
 parameter in `s`). -/
-theorem hasFderivAt_convolution_right_with_param {g : P → G → E'} {s : Set P} {k : Set G}
+theorem hasFDerivAt_convolution_right_with_param {g : P → G → E'} {s : Set P} {k : Set G}
     (hs : IsOpen s) (hk : IsCompact k) (hgs : ∀ p, ∀ x, p ∈ s → x ∉ k → g p x = 0)
     (hf : LocallyIntegrable f μ) (hg : ContDiffOn 𝕜 1 (↿g) (s ×ˢ univ)) (q₀ : P × G)
     (hq₀ : q₀.1 ∈ s) :
-    HasFderivAt (fun q : P × G => (f ⋆[L, μ] g q.1) q.2)
+    HasFDerivAt (fun q : P × G => (f ⋆[L, μ] g q.1) q.2)
       ((f ⋆[L.precompR (P × G), μ] fun x : G => fderiv 𝕜 (↿g) (q₀.1, x)) q₀.2) q₀ :=
   by
   let g' := fderiv 𝕜 ↿g
@@ -1424,7 +1424,7 @@ theorem hasFderivAt_convolution_right_with_param {g : P → G → E'} {s : Set P
   have g'_zero : ∀ p x, p ∈ s → x ∉ k → g' (p, x) = 0 :=
     by
     intro p x hp hx
-    refine' (hasFderivAt_zero_of_eventually_const 0 _).fderiv
+    refine' (hasFDerivAt_zero_of_eventually_const 0 _).fderiv
     have M2 : kᶜ ∈ 𝓝 x := IsOpen.mem_nhds hk.is_closed.is_open_compl hx
     have M1 : s ∈ 𝓝 p := hs.mem_nhds hp
     rw [nhds_prod_eq]
@@ -1541,27 +1541,27 @@ theorem hasFderivAt_convolution_right_with_param {g : P → G → E'} {s : Set P
     ∀ᵐ a : G ∂μ,
       ∀ x : P × G,
         dist x q₀ < δ →
-          HasFderivAt (fun x : P × G => L (f a) (g x.1 (x.2 - a)))
+          HasFDerivAt (fun x : P × G => L (f a) (g x.1 (x.2 - a)))
             ((L (f a)).comp (g' (x.fst, x.snd - a))) x :=
     by
     apply eventually_of_forall
     intro a x hx
-    apply (L _).HasFderivAt.comp x
+    apply (L _).HasFDerivAt.comp x
     have N : s ×ˢ univ ∈ 𝓝 (x.1, x.2 - a) := by
       apply A'
       apply h₀ε
       rw [Prod.dist_eq] at hx
       exact lt_of_lt_of_le (lt_of_le_of_lt (le_max_left _ _) hx) δε
-    have Z := ((hg.differentiable_on le_rfl).DifferentiableAt N).HasFderivAt
-    have Z' : HasFderivAt (fun x : P × G => (x.1, x.2 - a)) (ContinuousLinearMap.id 𝕜 (P × G)) x :=
+    have Z := ((hg.differentiable_on le_rfl).DifferentiableAt N).HasFDerivAt
+    have Z' : HasFDerivAt (fun x : P × G => (x.1, x.2 - a)) (ContinuousLinearMap.id 𝕜 (P × G)) x :=
       by
       have : (fun x : P × G => (x.1, x.2 - a)) = id - fun x => (0, a) := by
         ext x <;> simp only [Pi.sub_apply, id.def, Prod.fst_sub, sub_zero, Prod.snd_sub]
       simp_rw [this]
-      exact (hasFderivAt_id x).sub_const (0, a)
+      exact (hasFDerivAt_id x).sub_const (0, a)
     exact Z.comp x Z'
-  exact hasFderivAt_integral_of_dominated_of_fderiv_le δpos I1 I2 I3 I4 I5 I6
-#align has_fderiv_at_convolution_right_with_param hasFderivAt_convolution_right_with_param
+  exact hasFDerivAt_integral_of_dominated_of_fderiv_le δpos I1 I2 I3 I4 I5 I6
+#align has_fderiv_at_convolution_right_with_param hasFDerivAt_convolution_right_with_param
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -1592,8 +1592,8 @@ theorem contDiffOn_convolution_right_with_param_aux {G : Type uP} {E' : Type uP}
       (f ⋆[L.precompR (P × G), μ] fun x : G => fderiv 𝕜 (uncurry g) (p, x)) a
     have A :
       ∀ q₀ : P × G,
-        q₀.1 ∈ s → HasFderivAt (fun q : P × G => (f ⋆[L, μ] g q.1) q.2) (f' q₀.1 q₀.2) q₀ :=
-      hasFderivAt_convolution_right_with_param L hs hk hgs hf hg.one_of_succ
+        q₀.1 ∈ s → HasFDerivAt (fun q : P × G => (f ⋆[L, μ] g q.1) q.2) (f' q₀.1 q₀.2) q₀ :=
+      hasFDerivAt_convolution_right_with_param L hs hk hgs hf hg.one_of_succ
     rw [contDiffOn_succ_iff_fderiv_of_open (hs.prod (@isOpen_univ G _))] at hg⊢
     constructor
     · rintro ⟨p, x⟩ ⟨hp, hx⟩
@@ -1605,7 +1605,7 @@ theorem contDiffOn_convolution_right_with_param_aux {G : Type uP} {E' : Type uP}
       have B : ∀ (p : P) (x : G), p ∈ s → x ∉ k → fderiv 𝕜 (uncurry g) (p, x) = 0 :=
         by
         intro p x hp hx
-        apply (hasFderivAt_zero_of_eventually_const (0 : E') _).fderiv
+        apply (hasFDerivAt_zero_of_eventually_const (0 : E') _).fderiv
         have M2 : kᶜ ∈ 𝓝 x := IsOpen.mem_nhds hk.is_closed.is_open_compl hx
         have M1 : s ∈ 𝓝 p := hs.mem_nhds hp
         rw [nhds_prod_eq]

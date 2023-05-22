@@ -121,8 +121,8 @@ theorem posTangentConeAt_univ : posTangentConeAt univ a = univ :=
 
 /-- If `f` has a local max on `s` at `a`, `f'` is the derivative of `f` at `a` within `s`, and
 `y` belongs to the positive tangent cone of `s` at `a`, then `f' y ≤ 0`. -/
-theorem IsLocalMaxOn.hasFderivWithinAt_nonpos {s : Set E} (h : IsLocalMaxOn f s a)
-    (hf : HasFderivWithinAt f f' s a) {y} (hy : y ∈ posTangentConeAt s a) : f' y ≤ 0 :=
+theorem IsLocalMaxOn.hasFDerivWithinAt_nonpos {s : Set E} (h : IsLocalMaxOn f s a)
+    (hf : HasFDerivWithinAt f f' s a) {y} (hy : y ∈ posTangentConeAt s a) : f' y ≤ 0 :=
   by
   rcases hy with ⟨c, d, hd, hc, hcd⟩
   have hc' : tendsto (fun n => ‖c n‖) at_top at_top :=
@@ -141,13 +141,13 @@ theorem IsLocalMaxOn.hasFderivWithinAt_nonpos {s : Set E} (h : IsLocalMaxOn f s 
   simp only [smul_eq_mul, mem_preimage, subset_def]
   intro n hnf hn
   exact mul_nonpos_of_nonneg_of_nonpos hn (sub_nonpos.2 hnf)
-#align is_local_max_on.has_fderiv_within_at_nonpos IsLocalMaxOn.hasFderivWithinAt_nonpos
+#align is_local_max_on.has_fderiv_within_at_nonpos IsLocalMaxOn.hasFDerivWithinAt_nonpos
 
 /-- If `f` has a local max on `s` at `a` and `y` belongs to the positive tangent cone
 of `s` at `a`, then `f' y ≤ 0`. -/
 theorem IsLocalMaxOn.fderivWithin_nonpos {s : Set E} (h : IsLocalMaxOn f s a) {y}
     (hy : y ∈ posTangentConeAt s a) : (fderivWithin ℝ f s a : E → ℝ) y ≤ 0 :=
-  if hf : DifferentiableWithinAt ℝ f s a then h.hasFderivWithinAt_nonpos hf.HasFderivWithinAt hy
+  if hf : DifferentiableWithinAt ℝ f s a then h.hasFDerivWithinAt_nonpos hf.HasFDerivWithinAt hy
   else by
     rw [fderivWithin_zero_of_not_differentiableWithinAt hf]
     rfl
@@ -155,12 +155,12 @@ theorem IsLocalMaxOn.fderivWithin_nonpos {s : Set E} (h : IsLocalMaxOn f s a) {y
 
 /-- If `f` has a local max on `s` at `a`, `f'` is a derivative of `f` at `a` within `s`, and
 both `y` and `-y` belong to the positive tangent cone of `s` at `a`, then `f' y ≤ 0`. -/
-theorem IsLocalMaxOn.hasFderivWithinAt_eq_zero {s : Set E} (h : IsLocalMaxOn f s a)
-    (hf : HasFderivWithinAt f f' s a) {y} (hy : y ∈ posTangentConeAt s a)
+theorem IsLocalMaxOn.hasFDerivWithinAt_eq_zero {s : Set E} (h : IsLocalMaxOn f s a)
+    (hf : HasFDerivWithinAt f f' s a) {y} (hy : y ∈ posTangentConeAt s a)
     (hy' : -y ∈ posTangentConeAt s a) : f' y = 0 :=
-  le_antisymm (h.hasFderivWithinAt_nonpos hf hy) <| by
+  le_antisymm (h.hasFDerivWithinAt_nonpos hf hy) <| by
     simpa using h.has_fderiv_within_at_nonpos hf hy'
-#align is_local_max_on.has_fderiv_within_at_eq_zero IsLocalMaxOn.hasFderivWithinAt_eq_zero
+#align is_local_max_on.has_fderiv_within_at_eq_zero IsLocalMaxOn.hasFDerivWithinAt_eq_zero
 
 /-- If `f` has a local max on `s` at `a` and both `y` and `-y` belong to the positive tangent cone
 of `s` at `a`, then `f' y = 0`. -/
@@ -168,7 +168,7 @@ theorem IsLocalMaxOn.fderivWithin_eq_zero {s : Set E} (h : IsLocalMaxOn f s a) {
     (hy : y ∈ posTangentConeAt s a) (hy' : -y ∈ posTangentConeAt s a) :
     (fderivWithin ℝ f s a : E → ℝ) y = 0 :=
   if hf : DifferentiableWithinAt ℝ f s a then
-    h.hasFderivWithinAt_eq_zero hf.HasFderivWithinAt hy hy'
+    h.hasFDerivWithinAt_eq_zero hf.HasFDerivWithinAt hy hy'
   else by
     rw [fderivWithin_zero_of_not_differentiableWithinAt hf]
     rfl
@@ -176,16 +176,16 @@ theorem IsLocalMaxOn.fderivWithin_eq_zero {s : Set E} (h : IsLocalMaxOn f s a) {
 
 /-- If `f` has a local min on `s` at `a`, `f'` is the derivative of `f` at `a` within `s`, and
 `y` belongs to the positive tangent cone of `s` at `a`, then `0 ≤ f' y`. -/
-theorem IsLocalMinOn.hasFderivWithinAt_nonneg {s : Set E} (h : IsLocalMinOn f s a)
-    (hf : HasFderivWithinAt f f' s a) {y} (hy : y ∈ posTangentConeAt s a) : 0 ≤ f' y := by
+theorem IsLocalMinOn.hasFDerivWithinAt_nonneg {s : Set E} (h : IsLocalMinOn f s a)
+    (hf : HasFDerivWithinAt f f' s a) {y} (hy : y ∈ posTangentConeAt s a) : 0 ≤ f' y := by
   simpa using h.neg.has_fderiv_within_at_nonpos hf.neg hy
-#align is_local_min_on.has_fderiv_within_at_nonneg IsLocalMinOn.hasFderivWithinAt_nonneg
+#align is_local_min_on.has_fderiv_within_at_nonneg IsLocalMinOn.hasFDerivWithinAt_nonneg
 
 /-- If `f` has a local min on `s` at `a` and `y` belongs to the positive tangent cone
 of `s` at `a`, then `0 ≤ f' y`. -/
 theorem IsLocalMinOn.fderivWithin_nonneg {s : Set E} (h : IsLocalMinOn f s a) {y}
     (hy : y ∈ posTangentConeAt s a) : (0 : ℝ) ≤ (fderivWithin ℝ f s a : E → ℝ) y :=
-  if hf : DifferentiableWithinAt ℝ f s a then h.hasFderivWithinAt_nonneg hf.HasFderivWithinAt hy
+  if hf : DifferentiableWithinAt ℝ f s a then h.hasFDerivWithinAt_nonneg hf.HasFDerivWithinAt hy
   else by
     rw [fderivWithin_zero_of_not_differentiableWithinAt hf]
     rfl
@@ -193,11 +193,11 @@ theorem IsLocalMinOn.fderivWithin_nonneg {s : Set E} (h : IsLocalMinOn f s a) {y
 
 /-- If `f` has a local max on `s` at `a`, `f'` is a derivative of `f` at `a` within `s`, and
 both `y` and `-y` belong to the positive tangent cone of `s` at `a`, then `f' y ≤ 0`. -/
-theorem IsLocalMinOn.hasFderivWithinAt_eq_zero {s : Set E} (h : IsLocalMinOn f s a)
-    (hf : HasFderivWithinAt f f' s a) {y} (hy : y ∈ posTangentConeAt s a)
+theorem IsLocalMinOn.hasFDerivWithinAt_eq_zero {s : Set E} (h : IsLocalMinOn f s a)
+    (hf : HasFDerivWithinAt f f' s a) {y} (hy : y ∈ posTangentConeAt s a)
     (hy' : -y ∈ posTangentConeAt s a) : f' y = 0 := by
   simpa using h.neg.has_fderiv_within_at_eq_zero hf.neg hy hy'
-#align is_local_min_on.has_fderiv_within_at_eq_zero IsLocalMinOn.hasFderivWithinAt_eq_zero
+#align is_local_min_on.has_fderiv_within_at_eq_zero IsLocalMinOn.hasFDerivWithinAt_eq_zero
 
 /-- If `f` has a local min on `s` at `a` and both `y` and `-y` belong to the positive tangent cone
 of `s` at `a`, then `f' y = 0`. -/
@@ -205,42 +205,42 @@ theorem IsLocalMinOn.fderivWithin_eq_zero {s : Set E} (h : IsLocalMinOn f s a) {
     (hy : y ∈ posTangentConeAt s a) (hy' : -y ∈ posTangentConeAt s a) :
     (fderivWithin ℝ f s a : E → ℝ) y = 0 :=
   if hf : DifferentiableWithinAt ℝ f s a then
-    h.hasFderivWithinAt_eq_zero hf.HasFderivWithinAt hy hy'
+    h.hasFDerivWithinAt_eq_zero hf.HasFDerivWithinAt hy hy'
   else by
     rw [fderivWithin_zero_of_not_differentiableWithinAt hf]
     rfl
 #align is_local_min_on.fderiv_within_eq_zero IsLocalMinOn.fderivWithin_eq_zero
 
 /-- **Fermat's Theorem**: the derivative of a function at a local minimum equals zero. -/
-theorem IsLocalMin.hasFderivAt_eq_zero (h : IsLocalMin f a) (hf : HasFderivAt f f' a) : f' = 0 :=
+theorem IsLocalMin.hasFDerivAt_eq_zero (h : IsLocalMin f a) (hf : HasFDerivAt f f' a) : f' = 0 :=
   by
   ext y
-  apply (h.on univ).hasFderivWithinAt_eq_zero hf.has_fderiv_within_at <;>
+  apply (h.on univ).hasFDerivWithinAt_eq_zero hf.has_fderiv_within_at <;>
       rw [posTangentConeAt_univ] <;>
     apply mem_univ
-#align is_local_min.has_fderiv_at_eq_zero IsLocalMin.hasFderivAt_eq_zero
+#align is_local_min.has_fderiv_at_eq_zero IsLocalMin.hasFDerivAt_eq_zero
 
 /-- **Fermat's Theorem**: the derivative of a function at a local minimum equals zero. -/
 theorem IsLocalMin.fderiv_eq_zero (h : IsLocalMin f a) : fderiv ℝ f a = 0 :=
-  if hf : DifferentiableAt ℝ f a then h.hasFderivAt_eq_zero hf.HasFderivAt
+  if hf : DifferentiableAt ℝ f a then h.hasFDerivAt_eq_zero hf.HasFDerivAt
   else fderiv_zero_of_not_differentiableAt hf
 #align is_local_min.fderiv_eq_zero IsLocalMin.fderiv_eq_zero
 
 /-- **Fermat's Theorem**: the derivative of a function at a local maximum equals zero. -/
-theorem IsLocalMax.hasFderivAt_eq_zero (h : IsLocalMax f a) (hf : HasFderivAt f f' a) : f' = 0 :=
-  neg_eq_zero.1 <| h.neg.hasFderivAt_eq_zero hf.neg
-#align is_local_max.has_fderiv_at_eq_zero IsLocalMax.hasFderivAt_eq_zero
+theorem IsLocalMax.hasFDerivAt_eq_zero (h : IsLocalMax f a) (hf : HasFDerivAt f f' a) : f' = 0 :=
+  neg_eq_zero.1 <| h.neg.hasFDerivAt_eq_zero hf.neg
+#align is_local_max.has_fderiv_at_eq_zero IsLocalMax.hasFDerivAt_eq_zero
 
 /-- **Fermat's Theorem**: the derivative of a function at a local maximum equals zero. -/
 theorem IsLocalMax.fderiv_eq_zero (h : IsLocalMax f a) : fderiv ℝ f a = 0 :=
-  if hf : DifferentiableAt ℝ f a then h.hasFderivAt_eq_zero hf.HasFderivAt
+  if hf : DifferentiableAt ℝ f a then h.hasFDerivAt_eq_zero hf.HasFDerivAt
   else fderiv_zero_of_not_differentiableAt hf
 #align is_local_max.fderiv_eq_zero IsLocalMax.fderiv_eq_zero
 
 /-- **Fermat's Theorem**: the derivative of a function at a local extremum equals zero. -/
-theorem IsLocalExtr.hasFderivAt_eq_zero (h : IsLocalExtr f a) : HasFderivAt f f' a → f' = 0 :=
-  h.elim IsLocalMin.hasFderivAt_eq_zero IsLocalMax.hasFderivAt_eq_zero
-#align is_local_extr.has_fderiv_at_eq_zero IsLocalExtr.hasFderivAt_eq_zero
+theorem IsLocalExtr.hasFDerivAt_eq_zero (h : IsLocalExtr f a) : HasFDerivAt f f' a → f' = 0 :=
+  h.elim IsLocalMin.hasFDerivAt_eq_zero IsLocalMax.hasFDerivAt_eq_zero
+#align is_local_extr.has_fderiv_at_eq_zero IsLocalExtr.hasFDerivAt_eq_zero
 
 /-- **Fermat's Theorem**: the derivative of a function at a local extremum equals zero. -/
 theorem IsLocalExtr.fderiv_eq_zero (h : IsLocalExtr f a) : fderiv ℝ f a = 0 :=
@@ -256,7 +256,7 @@ variable {f : ℝ → ℝ} {f' : ℝ} {a b : ℝ}
 /-- **Fermat's Theorem**: the derivative of a function at a local minimum equals zero. -/
 theorem IsLocalMin.hasDerivAt_eq_zero (h : IsLocalMin f a) (hf : HasDerivAt f f' a) : f' = 0 := by
   simpa using
-    ContinuousLinearMap.ext_iff.1 (h.has_fderiv_at_eq_zero (hasDerivAt_iff_hasFderivAt.1 hf)) 1
+    ContinuousLinearMap.ext_iff.1 (h.has_fderiv_at_eq_zero (hasDerivAt_iff_hasFDerivAt.1 hf)) 1
 #align is_local_min.has_deriv_at_eq_zero IsLocalMin.hasDerivAt_eq_zero
 
 /-- **Fermat's Theorem**: the derivative of a function at a local minimum equals zero. -/

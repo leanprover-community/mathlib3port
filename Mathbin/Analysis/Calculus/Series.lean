@@ -111,8 +111,8 @@ variable {f : α → E → F} {f' : α → E → E →L[𝕜] F} {v : ℕ → α
 /-- Consider a series of functions `∑' n, f n x` on a preconnected open set. If the series converges
 at a point, and all functions in the series are differentiable with a summable bound on the
 derivatives, then the series converges everywhere on the set. -/
-theorem summable_of_summable_hasFderivAt_of_isPreconnected (hu : Summable u) (hs : IsOpen s)
-    (h's : IsPreconnected s) (hf : ∀ n x, x ∈ s → HasFderivAt (f n) (f' n x) x)
+theorem summable_of_summable_hasFDerivAt_of_isPreconnected (hu : Summable u) (hs : IsOpen s)
+    (h's : IsPreconnected s) (hf : ∀ n x, x ∈ s → HasFDerivAt (f n) (f' n x) x)
     (hf' : ∀ n x, x ∈ s → ‖f' n x‖ ≤ u n) (hx₀ : x₀ ∈ s) (hf0 : Summable fun n => f n x₀) {x : E}
     (hx : x ∈ s) : Summable fun n => f n x :=
   by
@@ -120,67 +120,67 @@ theorem summable_of_summable_hasFderivAt_of_isPreconnected (hu : Summable u) (hs
   have A : UniformCauchySeqOn (fun t : Finset α => fun x => ∑ i in t, f' i x) at_top s :=
     (tendstoUniformlyOn_tsum hu hf').UniformCauchySeqOn
   apply cauchy_map_of_uniformCauchySeqOn_fderiv hs h's A (fun t y hy => _) hx₀ hx hf0
-  exact HasFderivAt.sum fun i hi => hf i y hy
-#align summable_of_summable_has_fderiv_at_of_is_preconnected summable_of_summable_hasFderivAt_of_isPreconnected
+  exact HasFDerivAt.sum fun i hi => hf i y hy
+#align summable_of_summable_has_fderiv_at_of_is_preconnected summable_of_summable_hasFDerivAt_of_isPreconnected
 
 /-- Consider a series of functions `∑' n, f n x` on a preconnected open set. If the series converges
 at a point, and all functions in the series are differentiable with a summable bound on the
 derivatives, then the series is differentiable on the set and its derivative is the sum of the
 derivatives. -/
-theorem hasFderivAt_tsum_of_isPreconnected (hu : Summable u) (hs : IsOpen s)
-    (h's : IsPreconnected s) (hf : ∀ n x, x ∈ s → HasFderivAt (f n) (f' n x) x)
+theorem hasFDerivAt_tsum_of_isPreconnected (hu : Summable u) (hs : IsOpen s)
+    (h's : IsPreconnected s) (hf : ∀ n x, x ∈ s → HasFDerivAt (f n) (f' n x) x)
     (hf' : ∀ n x, x ∈ s → ‖f' n x‖ ≤ u n) (hx₀ : x₀ ∈ s) (hf0 : Summable fun n => f n x₀)
-    (hx : x ∈ s) : HasFderivAt (fun y => ∑' n, f n y) (∑' n, f' n x) x := by
+    (hx : x ∈ s) : HasFDerivAt (fun y => ∑' n, f n y) (∑' n, f' n x) x := by
   classical
     have A :
       ∀ x : E, x ∈ s → tendsto (fun t : Finset α => ∑ n in t, f n x) at_top (𝓝 (∑' n, f n x)) :=
       by
       intro y hy
       apply Summable.hasSum
-      exact summable_of_summable_hasFderivAt_of_isPreconnected hu hs h's hf hf' hx₀ hf0 hy
+      exact summable_of_summable_hasFDerivAt_of_isPreconnected hu hs h's hf hf' hx₀ hf0 hy
     apply
-      hasFderivAt_of_tendstoUniformlyOn hs (tendstoUniformlyOn_tsum hu hf') (fun t y hy => _) A _ hx
-    exact HasFderivAt.sum fun n hn => hf n y hy
-#align has_fderiv_at_tsum_of_is_preconnected hasFderivAt_tsum_of_isPreconnected
+      hasFDerivAt_of_tendstoUniformlyOn hs (tendstoUniformlyOn_tsum hu hf') (fun t y hy => _) A _ hx
+    exact HasFDerivAt.sum fun n hn => hf n y hy
+#align has_fderiv_at_tsum_of_is_preconnected hasFDerivAt_tsum_of_isPreconnected
 
 /-- Consider a series of functions `∑' n, f n x`. If the series converges at a
 point, and all functions in the series are differentiable with a summable bound on the derivatives,
 then the series converges everywhere. -/
-theorem summable_of_summable_hasFderivAt (hu : Summable u)
-    (hf : ∀ n x, HasFderivAt (f n) (f' n x) x) (hf' : ∀ n x, ‖f' n x‖ ≤ u n)
+theorem summable_of_summable_hasFDerivAt (hu : Summable u)
+    (hf : ∀ n x, HasFDerivAt (f n) (f' n x) x) (hf' : ∀ n x, ‖f' n x‖ ≤ u n)
     (hf0 : Summable fun n => f n x₀) (x : E) : Summable fun n => f n x :=
   by
   let : NormedSpace ℝ E; exact NormedSpace.restrictScalars ℝ 𝕜 _
   apply
-    summable_of_summable_hasFderivAt_of_isPreconnected hu isOpen_univ
+    summable_of_summable_hasFDerivAt_of_isPreconnected hu isOpen_univ
       is_connected_univ.is_preconnected (fun n x hx => hf n x) (fun n x hx => hf' n x) (mem_univ _)
       hf0 (mem_univ _)
-#align summable_of_summable_has_fderiv_at summable_of_summable_hasFderivAt
+#align summable_of_summable_has_fderiv_at summable_of_summable_hasFDerivAt
 
 /-- Consider a series of functions `∑' n, f n x`. If the series converges at a
 point, and all functions in the series are differentiable with a summable bound on the derivatives,
 then the series is differentiable and its derivative is the sum of the derivatives. -/
-theorem hasFderivAt_tsum (hu : Summable u) (hf : ∀ n x, HasFderivAt (f n) (f' n x) x)
+theorem hasFDerivAt_tsum (hu : Summable u) (hf : ∀ n x, HasFDerivAt (f n) (f' n x) x)
     (hf' : ∀ n x, ‖f' n x‖ ≤ u n) (hf0 : Summable fun n => f n x₀) (x : E) :
-    HasFderivAt (fun y => ∑' n, f n y) (∑' n, f' n x) x :=
+    HasFDerivAt (fun y => ∑' n, f n y) (∑' n, f' n x) x :=
   by
   let : NormedSpace ℝ E; exact NormedSpace.restrictScalars ℝ 𝕜 _
   exact
-    hasFderivAt_tsum_of_isPreconnected hu isOpen_univ is_connected_univ.is_preconnected
+    hasFDerivAt_tsum_of_isPreconnected hu isOpen_univ is_connected_univ.is_preconnected
       (fun n x hx => hf n x) (fun n x hx => hf' n x) (mem_univ _) hf0 (mem_univ _)
-#align has_fderiv_at_tsum hasFderivAt_tsum
+#align has_fderiv_at_tsum hasFDerivAt_tsum
 
 /-- Consider a series of functions `∑' n, f n x`. If all functions in the series are differentiable
 with a summable bound on the derivatives, then the series is differentiable.
 Note that our assumptions do not ensure the pointwise convergence, but if there is no pointwise
 convergence then the series is zero everywhere so the result still holds. -/
-theorem differentiable_tsum (hu : Summable u) (hf : ∀ n x, HasFderivAt (f n) (f' n x) x)
+theorem differentiable_tsum (hu : Summable u) (hf : ∀ n x, HasFDerivAt (f n) (f' n x) x)
     (hf' : ∀ n x, ‖f' n x‖ ≤ u n) : Differentiable 𝕜 fun y => ∑' n, f n y :=
   by
   by_cases h : ∃ x₀, Summable fun n => f n x₀
   · rcases h with ⟨x₀, hf0⟩
     intro x
-    exact (hasFderivAt_tsum hu hf hf' hf0 x).DifferentiableAt
+    exact (hasFDerivAt_tsum hu hf hf' hf0 x).DifferentiableAt
   · push_neg  at h
     have : (fun x => ∑' n, f n x) = 0 := by
       ext1 x
@@ -192,7 +192,7 @@ theorem differentiable_tsum (hu : Summable u) (hf : ∀ n x, HasFderivAt (f n) (
 theorem fderiv_tsum_apply (hu : Summable u) (hf : ∀ n, Differentiable 𝕜 (f n))
     (hf' : ∀ n x, ‖fderiv 𝕜 (f n) x‖ ≤ u n) (hf0 : Summable fun n => f n x₀) (x : E) :
     fderiv 𝕜 (fun y => ∑' n, f n y) x = ∑' n, fderiv 𝕜 (f n) x :=
-  (hasFderivAt_tsum hu (fun n x => (hf n x).HasFderivAt) hf' hf0 _).fderiv
+  (hasFDerivAt_tsum hu (fun n x => (hf n x).HasFDerivAt) hf' hf0 _).fderiv
 #align fderiv_tsum_apply fderiv_tsum_apply
 
 theorem fderiv_tsum (hu : Summable u) (hf : ∀ n, Differentiable 𝕜 (f n))
@@ -263,8 +263,8 @@ theorem contDiff_tsum (hf : ∀ i, ContDiff 𝕜 N (f i)) (hv : ∀ k : ℕ, (k 
       simpa only [ENat.coe_add, Nat.cast_withBot, ENat.coe_one] using ENat.add_one_le_of_lt hm
     rw [iteratedFderiv_tsum hf hv h'f hm.le]
     have A :
-      ∀ n x, HasFderivAt (iteratedFderiv 𝕜 m (f n)) (fderiv 𝕜 (iteratedFderiv 𝕜 m (f n)) x) x :=
-      fun n x => (ContDiff.differentiable_iteratedFderiv hm (hf n)).DifferentiableAt.HasFderivAt
+      ∀ n x, HasFDerivAt (iteratedFderiv 𝕜 m (f n)) (fderiv 𝕜 (iteratedFderiv 𝕜 m (f n)) x) x :=
+      fun n x => (ContDiff.differentiable_iteratedFderiv hm (hf n)).DifferentiableAt.HasFDerivAt
     apply differentiable_tsum (hv _ h'm) A fun n x => _
     rw [fderiv_iteratedFderiv, LinearIsometryEquiv.norm_map]
     exact h'f _ _ _ h'm

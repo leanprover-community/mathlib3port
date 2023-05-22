@@ -43,9 +43,9 @@ variable {E F : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpac
 /-- Lagrange multipliers theorem: if `φ : E → ℝ` has a local extremum on the set `{x | f x = f x₀}`
 at `x₀`, both `f : E → F` and `φ` are strictly differentiable at `x₀`, and the codomain of `f` is
 a complete space, then the linear map `x ↦ (f' x, φ' x)` is not surjective. -/
-theorem IsLocalExtrOn.range_ne_top_of_hasStrictFderivAt
-    (hextr : IsLocalExtrOn φ { x | f x = f x₀ } x₀) (hf' : HasStrictFderivAt f f' x₀)
-    (hφ' : HasStrictFderivAt φ φ' x₀) : LinearMap.range (f'.Prod φ') ≠ ⊤ :=
+theorem IsLocalExtrOn.range_ne_top_of_hasStrictFDerivAt
+    (hextr : IsLocalExtrOn φ { x | f x = f x₀ } x₀) (hf' : HasStrictFDerivAt f f' x₀)
+    (hφ' : HasStrictFDerivAt φ φ' x₀) : LinearMap.range (f'.Prod φ') ≠ ⊤ :=
   by
   intro htop
   set fφ := fun x => (f x, φ x)
@@ -55,15 +55,15 @@ theorem IsLocalExtrOn.range_ne_top_of_hasStrictFderivAt
     rw [← map_map, nhdsWithin, map_inf_principal_preimage, (hf'.prod hφ').map_nhds_eq_of_surj htop]
     exact map_snd_nhdsWithin _
   exact hextr.not_nhds_le_map A.ge
-#align is_local_extr_on.range_ne_top_of_has_strict_fderiv_at IsLocalExtrOn.range_ne_top_of_hasStrictFderivAt
+#align is_local_extr_on.range_ne_top_of_has_strict_fderiv_at IsLocalExtrOn.range_ne_top_of_hasStrictFDerivAt
 
 /-- Lagrange multipliers theorem: if `φ : E → ℝ` has a local extremum on the set `{x | f x = f x₀}`
 at `x₀`, both `f : E → F` and `φ` are strictly differentiable at `x₀`, and the codomain of `f` is
 a complete space, then there exist `Λ : dual ℝ F` and `Λ₀ : ℝ` such that `(Λ, Λ₀) ≠ 0` and
 `Λ (f' x) + Λ₀ • φ' x = 0` for all `x`. -/
-theorem IsLocalExtrOn.exists_linear_map_of_hasStrictFderivAt
-    (hextr : IsLocalExtrOn φ { x | f x = f x₀ } x₀) (hf' : HasStrictFderivAt f f' x₀)
-    (hφ' : HasStrictFderivAt φ φ' x₀) :
+theorem IsLocalExtrOn.exists_linear_map_of_hasStrictFDerivAt
+    (hextr : IsLocalExtrOn φ { x | f x = f x₀ } x₀) (hf' : HasStrictFDerivAt f f' x₀)
+    (hφ' : HasStrictFDerivAt φ φ' x₀) :
     ∃ (Λ : Module.Dual ℝ F)(Λ₀ : ℝ), (Λ, Λ₀) ≠ 0 ∧ ∀ x, Λ (f' x) + Λ₀ • φ' x = 0 :=
   by
   rcases Submodule.exists_le_ker_of_lt_top _
@@ -80,14 +80,14 @@ theorem IsLocalExtrOn.exists_linear_map_of_hasStrictFderivAt
     LinearEquiv.refl_apply, LinearMap.ringLmapEquivSelf_symm_apply, LinearMap.coprodEquiv_apply,
     [anonymous], ContinuousLinearMap.coe_prod, LinearMap.coprod_comp_prod, LinearMap.add_apply,
     LinearMap.coe_comp, ContinuousLinearMap.coe_coe, LinearMap.coe_smulRight, LinearMap.one_apply]
-#align is_local_extr_on.exists_linear_map_of_has_strict_fderiv_at IsLocalExtrOn.exists_linear_map_of_hasStrictFderivAt
+#align is_local_extr_on.exists_linear_map_of_has_strict_fderiv_at IsLocalExtrOn.exists_linear_map_of_hasStrictFDerivAt
 
 /-- Lagrange multipliers theorem: if `φ : E → ℝ` has a local extremum on the set `{x | f x = f x₀}`
 at `x₀`, and both `f : E → ℝ` and `φ` are strictly differentiable at `x₀`, then there exist
 `a b : ℝ` such that `(a, b) ≠ 0` and `a • f' + b • φ' = 0`. -/
-theorem IsLocalExtrOn.exists_multipliers_of_hasStrictFderivAt_1d {f : E → ℝ} {f' : E →L[ℝ] ℝ}
-    (hextr : IsLocalExtrOn φ { x | f x = f x₀ } x₀) (hf' : HasStrictFderivAt f f' x₀)
-    (hφ' : HasStrictFderivAt φ φ' x₀) : ∃ a b : ℝ, (a, b) ≠ 0 ∧ a • f' + b • φ' = 0 :=
+theorem IsLocalExtrOn.exists_multipliers_of_hasStrictFDerivAt_1d {f : E → ℝ} {f' : E →L[ℝ] ℝ}
+    (hextr : IsLocalExtrOn φ { x | f x = f x₀ } x₀) (hf' : HasStrictFDerivAt f f' x₀)
+    (hφ' : HasStrictFDerivAt φ φ' x₀) : ∃ a b : ℝ, (a, b) ≠ 0 ∧ a • f' + b • φ' = 0 :=
   by
   obtain ⟨Λ, Λ₀, hΛ, hfΛ⟩ := hextr.exists_linear_map_of_has_strict_fderiv_at hf' hφ'
   refine' ⟨Λ 1, Λ₀, _, _⟩
@@ -100,7 +100,7 @@ theorem IsLocalExtrOn.exists_multipliers_of_hasStrictFderivAt_1d {f : E → ℝ}
       simpa only [mul_one, Algebra.id.smul_eq_mul] using Λ.map_smul (f' x) 1
     have H₂ : f' x * Λ 1 + Λ₀ * φ' x = 0 := by simpa only [Algebra.id.smul_eq_mul, H₁] using hfΛ x
     simpa [mul_comm] using H₂
-#align is_local_extr_on.exists_multipliers_of_has_strict_fderiv_at_1d IsLocalExtrOn.exists_multipliers_of_hasStrictFderivAt_1d
+#align is_local_extr_on.exists_multipliers_of_has_strict_fderiv_at_1d IsLocalExtrOn.exists_multipliers_of_hasStrictFDerivAt_1d
 
 /-- Lagrange multipliers theorem, 1d version. Let `f : ι → E → ℝ` be a finite family of functions.
 Suppose that `φ : E → ℝ` has a local extremum on the set `{x | ∀ i, f i x = f i x₀}` at `x₀`.
@@ -110,15 +110,15 @@ there exist `Λ : ι → ℝ` and `Λ₀ : ℝ`, `(Λ, Λ₀) ≠ 0`, such that 
 
 See also `is_local_extr_on.linear_dependent_of_has_strict_fderiv_at` for a version that
 states `¬linear_independent ℝ _` instead of existence of `Λ` and `Λ₀`. -/
-theorem IsLocalExtrOn.exists_multipliers_of_hasStrictFderivAt {ι : Type _} [Fintype ι]
+theorem IsLocalExtrOn.exists_multipliers_of_hasStrictFDerivAt {ι : Type _} [Fintype ι]
     {f : ι → E → ℝ} {f' : ι → E →L[ℝ] ℝ} (hextr : IsLocalExtrOn φ { x | ∀ i, f i x = f i x₀ } x₀)
-    (hf' : ∀ i, HasStrictFderivAt (f i) (f' i) x₀) (hφ' : HasStrictFderivAt φ φ' x₀) :
+    (hf' : ∀ i, HasStrictFDerivAt (f i) (f' i) x₀) (hφ' : HasStrictFDerivAt φ φ' x₀) :
     ∃ (Λ : ι → ℝ)(Λ₀ : ℝ), (Λ, Λ₀) ≠ 0 ∧ (∑ i, Λ i • f' i) + Λ₀ • φ' = 0 :=
   by
   letI := Classical.decEq ι
   replace hextr : IsLocalExtrOn φ { x | (fun i => f i x) = fun i => f i x₀ } x₀
   · simpa only [Function.funext_iff] using hextr
-  rcases hextr.exists_linear_map_of_has_strict_fderiv_at (hasStrictFderivAt_pi.2 fun i => hf' i)
+  rcases hextr.exists_linear_map_of_has_strict_fderiv_at (hasStrictFDerivAt_pi.2 fun i => hf' i)
       hφ' with
     ⟨Λ, Λ₀, h0, hsum⟩
   rcases(LinearEquiv.piRing ℝ ℝ ι ℝ).symm.Surjective Λ with ⟨Λ, rfl⟩
@@ -126,7 +126,7 @@ theorem IsLocalExtrOn.exists_multipliers_of_hasStrictFderivAt {ι : Type _} [Fin
   · simpa only [Ne.def, Prod.ext_iff, LinearEquiv.map_eq_zero_iff, Prod.fst_zero] using h0
   · ext x
     simpa [mul_comm] using hsum x
-#align is_local_extr_on.exists_multipliers_of_has_strict_fderiv_at IsLocalExtrOn.exists_multipliers_of_hasStrictFderivAt
+#align is_local_extr_on.exists_multipliers_of_has_strict_fderiv_at IsLocalExtrOn.exists_multipliers_of_hasStrictFDerivAt
 
 /-- Lagrange multipliers theorem. Let `f : ι → E → ℝ` be a finite family of functions.
 Suppose that `φ : E → ℝ` has a local extremum on the set `{x | ∀ i, f i x = f i x₀}` at `x₀`.
@@ -136,9 +136,9 @@ Then the derivatives `f' i : E → L[ℝ] ℝ` and `φ' : E →L[ℝ] ℝ` are l
 See also `is_local_extr_on.exists_multipliers_of_has_strict_fderiv_at` for a version that
 that states existence of Lagrange multipliers `Λ` and `Λ₀` instead of using
 `¬linear_independent ℝ _` -/
-theorem IsLocalExtrOn.linear_dependent_of_hasStrictFderivAt {ι : Type _} [Finite ι] {f : ι → E → ℝ}
+theorem IsLocalExtrOn.linear_dependent_of_hasStrictFDerivAt {ι : Type _} [Finite ι] {f : ι → E → ℝ}
     {f' : ι → E →L[ℝ] ℝ} (hextr : IsLocalExtrOn φ { x | ∀ i, f i x = f i x₀ } x₀)
-    (hf' : ∀ i, HasStrictFderivAt (f i) (f' i) x₀) (hφ' : HasStrictFderivAt φ φ' x₀) :
+    (hf' : ∀ i, HasStrictFDerivAt (f i) (f' i) x₀) (hφ' : HasStrictFDerivAt φ φ' x₀) :
     ¬LinearIndependent ℝ (Option.elim' φ' f' : Option ι → E →L[ℝ] ℝ) :=
   by
   cases nonempty_fintype ι
@@ -147,5 +147,5 @@ theorem IsLocalExtrOn.linear_dependent_of_hasStrictFderivAt {ι : Type _} [Finit
   refine' ⟨Option.elim' Λ₀ Λ, _, _⟩
   · simpa [add_comm] using hΛf
   · simpa [Function.funext_iff, not_and_or, or_comm', Option.exists] using hΛ
-#align is_local_extr_on.linear_dependent_of_has_strict_fderiv_at IsLocalExtrOn.linear_dependent_of_hasStrictFderivAt
+#align is_local_extr_on.linear_dependent_of_has_strict_fderiv_at IsLocalExtrOn.linear_dependent_of_hasStrictFDerivAt
 

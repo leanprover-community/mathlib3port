@@ -145,7 +145,7 @@ Bochner integral, simple function, function space, Lebesgue dominated convergenc
 -/
 
 
-assert_not_exists differentiable
+assert_not_exists Differentiable
 
 noncomputable section
 

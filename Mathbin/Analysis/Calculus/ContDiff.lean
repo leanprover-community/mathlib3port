@@ -281,7 +281,7 @@ theorem HasFtaylorSeriesUpToOn.continuousLinearMapComp (g : F →L[𝕜] G)
   constructor
   · exact fun x hx => congr_arg g (hf.zero_eq x hx)
   · intro m hm x hx
-    convert(L m).HasFderivAt.comp_hasFderivWithinAt x (hf.fderiv_within m hm x hx)
+    convert(L m).HasFDerivAt.comp_hasFDerivWithinAt x (hf.fderiv_within m hm x hx)
   · intro m hm
     convert(L m).Continuous.comp_continuousOn (hf.cont m hm)
 #align has_ftaylor_series_up_to_on.continuous_linear_map_comp HasFtaylorSeriesUpToOn.continuousLinearMapComp
@@ -458,7 +458,7 @@ theorem HasFtaylorSeriesUpToOn.compContinuousLinearMap (hf : HasFtaylorSeriesUpT
     rw [ContinuousLinearMap.map_zero]
     rfl
   · intro m hm x hx
-    convert(hA m).HasFderivAt.comp_hasFderivWithinAt x
+    convert(hA m).HasFDerivAt.comp_hasFDerivWithinAt x
         ((hf.fderiv_within m hm (g x) hx).comp x g.has_fderiv_within_at (subset.refl _))
     ext (y v)
     change p (g x) (Nat.succ m) (g ∘ cons y v) = p (g x) m.succ (cons (g y) (g ∘ v))
@@ -632,7 +632,7 @@ theorem HasFtaylorSeriesUpToOn.prod (hf : HasFtaylorSeriesUpToOn n f p s) {g : E
     rw [← hf.zero_eq x hx, ← hg.zero_eq x hx]
     rfl
   · intro m hm x hx
-    convert(L m).HasFderivAt.comp_hasFderivWithinAt x
+    convert(L m).HasFDerivAt.comp_hasFDerivWithinAt x
         ((hf.fderiv_within m hm x hx).Prod (hg.fderiv_within m hm x hx))
   · intro m hm
     exact (L m).Continuous.comp_continuousOn ((hf.cont m hm).Prod (hg.cont m hm))
@@ -710,9 +710,9 @@ private theorem cont_diff_on.comp_same_univ {Eu : Type u} [NormedAddCommGroup Eu
   induction' n using ENat.nat_induction with n IH Itop generalizing Eu Fu Gu
   · rw [contDiffOn_zero] at hf hg⊢
     exact ContinuousOn.comp hg hf st
-  · rw [contDiffOn_succ_iff_hasFderivWithinAt] at hg⊢
+  · rw [contDiffOn_succ_iff_hasFDerivWithinAt] at hg⊢
     intro x hx
-    rcases(contDiffOn_succ_iff_hasFderivWithinAt.1 hf) x hx with ⟨u, hu, f', hf', f'_diff⟩
+    rcases(contDiffOn_succ_iff_hasFDerivWithinAt.1 hf) x hx with ⟨u, hu, f', hf', f'_diff⟩
     rcases hg (f x) (st hx) with ⟨v, hv, g', hg', g'_diff⟩
     rw [insert_eq_of_mem hx] at hu⊢
     have xu : x ∈ u := mem_of_mem_nhdsWithin hx hu
@@ -729,7 +729,7 @@ private theorem cont_diff_on.comp_same_univ {Eu : Type u} [NormedAddCommGroup Eu
         exact (hf' x xu).DifferentiableWithinAt.ContinuousWithinAt.mono (inter_subset_right _ _)
       · apply nhdsWithin_mono _ _ hv
         exact subset.trans (image_subset_iff.mpr st) (subset_insert (f x) t)
-    show ∀ y ∈ w, HasFderivWithinAt (g ∘ f) ((g' (f y)).comp (f' y)) w y
+    show ∀ y ∈ w, HasFDerivWithinAt (g ∘ f) ((g' (f y)).comp (f' y)) w y
     · rintro y ⟨ys, yu, yv⟩
       exact (hg' (f y) yv).comp y ((hf' y yu).mono wu) wv
     show ContDiffOn 𝕜 n (fun y => (g' (f y)).comp (f' y)) w
@@ -1080,13 +1080,13 @@ theorem contDiff_prodAssoc_symm : ContDiff 𝕜 ⊤ <| (Equiv.prodAssoc E F G).s
 	`s ∪ {x₀}`.
 	We need one additional condition, namely that `t` is a neighborhood of `g(x₀)` within `g '' s`.
 	-/
-theorem ContDiffWithinAt.hasFderivWithinAt_nhds {f : E → F → G} {g : E → F} {t : Set F} {n : ℕ}
+theorem ContDiffWithinAt.hasFDerivWithinAt_nhds {f : E → F → G} {g : E → F} {t : Set F} {n : ℕ}
     {x₀ : E} (hf : ContDiffWithinAt 𝕜 (n + 1) (uncurry f) (insert x₀ s ×ˢ t) (x₀, g x₀))
     (hg : ContDiffWithinAt 𝕜 n g s x₀) (hgt : t ∈ 𝓝[g '' s] g x₀) :
     ∃ v ∈ 𝓝[insert x₀ s] x₀,
       v ⊆ insert x₀ s ∧
         ∃ f' : E → F →L[𝕜] G,
-          (∀ x ∈ v, HasFderivWithinAt (f x) (f' x) t (g x)) ∧
+          (∀ x ∈ v, HasFDerivWithinAt (f x) (f' x) t (g x)) ∧
             ContDiffWithinAt 𝕜 n (fun x => f' x) s x₀ :=
   by
   have hst : insert x₀ s ×ˢ t ∈ 𝓝[(fun x => (x, g x)) '' s] (x₀, g x₀) :=
@@ -1106,7 +1106,7 @@ theorem ContDiffWithinAt.hasFderivWithinAt_nhds {f : E → F → G} {g : E → F
     refine' (hst.trans <| nhdsWithin_mono _ <| subset_insert _ _).trans hv
   · intro z hz
     have := hvf' (z, g z) hz.1
-    refine' this.comp _ (hasFderivAt_prod_mk_right _ _).HasFderivWithinAt _
+    refine' this.comp _ (hasFDerivAt_prod_mk_right _ _).HasFDerivWithinAt _
     exact maps_to'.mpr (image_prod_mk_subset_prod_right hz.2)
   ·
     exact
@@ -1114,7 +1114,7 @@ theorem ContDiffWithinAt.hasFderivWithinAt_nhds {f : E → F → G} {g : E → F
             (ContinuousLinearMap.compL 𝕜 F (E × F) G).flip
               (ContinuousLinearMap.inr 𝕜 E F)).comp_of_mem
         x₀ (cont_diff_within_at_id.prod hg) hst
-#align cont_diff_within_at.has_fderiv_within_at_nhds ContDiffWithinAt.hasFderivWithinAt_nhds
+#align cont_diff_within_at.has_fderiv_within_at_nhds ContDiffWithinAt.hasFDerivWithinAt_nhds
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The most general lemma stating that `x ↦ fderiv_within 𝕜 (f x) t (g x)` is `C^n`
@@ -1136,7 +1136,7 @@ theorem ContDiffWithinAt.fderiv_within'' {f : E → F → G} {g : E → F} {t : 
     by
     intro k hkm
     obtain ⟨v, hv, -, f', hvf', hf'⟩ :=
-      (hf.of_le <| (add_le_add_right hkm 1).trans hmn).hasFderivWithinAt_nhds (hg.of_le hkm) hgt
+      (hf.of_le <| (add_le_add_right hkm 1).trans hmn).hasFDerivWithinAt_nhds (hg.of_le hkm) hgt
     refine' hf'.congr_of_eventually_eq_insert _
     filter_upwards [hv, ht]
     exact fun y hy h2y => (hvf' y hy).fderivWithin h2y
@@ -1291,8 +1291,8 @@ theorem hasFtaylorSeriesUpToOn_pi :
   · ext1 i
     exact (h i).zero_eq x hx
   · intro m hm x hx
-    have := hasFderivWithinAt_pi.2 fun i => (h i).fderivWithin m hm x hx
-    convert(L m).HasFderivAt.comp_hasFderivWithinAt x this
+    have := hasFDerivWithinAt_pi.2 fun i => (h i).fderivWithin m hm x hx
+    convert(L m).HasFDerivAt.comp_hasFDerivWithinAt x this
   · intro m hm
     have := continuousOn_pi.2 fun i => (h i).cont m hm
     convert(L m).Continuous.comp_continuousOn this
@@ -1904,7 +1904,7 @@ theorem contDiffAt_ring_inverse [CompleteSpace R] (x : Rˣ) : ContDiffAt 𝕜 n 
     · refine' ⟨{ y : R | IsUnit y }, x.nhds, _⟩
       rintro _ ⟨y, rfl⟩
       rw [inverse_unit]
-      exact hasFderivAt_ring_inverse y
+      exact hasFDerivAt_ring_inverse y
     ·
       convert(mul_left_right_is_bounded_bilinear 𝕜 R).ContDiff.neg.comp_contDiffAt (x : R)
           (IH.prod IH)
@@ -2016,7 +2016,7 @@ This is one of the easy parts of the inverse function theorem: it assumes that w
 an inverse function. -/
 theorem LocalHomeomorph.contDiffAt_symm [CompleteSpace E] (f : LocalHomeomorph E F)
     {f₀' : E ≃L[𝕜] F} {a : F} (ha : a ∈ f.target)
-    (hf₀' : HasFderivAt f (f₀' : E →L[𝕜] F) (f.symm a)) (hf : ContDiffAt 𝕜 n f (f.symm a)) :
+    (hf₀' : HasFDerivAt f (f₀' : E →L[𝕜] F) (f.symm a)) (hf : ContDiffAt 𝕜 n f (f.symm a)) :
     ContDiffAt 𝕜 n f.symm a :=
   by
   -- We prove this by induction on `n`
@@ -2043,7 +2043,7 @@ theorem LocalHomeomorph.contDiffAt_symm [CompleteSpace E] (f : LocalHomeomorph E
       · exact mem_inter ha (mem_preimage.mpr htf)
       intro x hx
       obtain ⟨hxu, e, he⟩ := htu hx.2
-      have h_deriv : HasFderivAt f (↑e) (f.symm x) :=
+      have h_deriv : HasFDerivAt f (↑e) (f.symm x) :=
         by
         rw [he]
         exact hff' (f.symm x) hxu
@@ -2073,7 +2073,7 @@ then `f.symm` is `n` times continuously differentiable.
 This is one of the easy parts of the inverse function theorem: it assumes that we already have
 an inverse function. -/
 theorem Homeomorph.contDiff_symm [CompleteSpace E] (f : E ≃ₜ F) {f₀' : E → E ≃L[𝕜] F}
-    (hf₀' : ∀ a, HasFderivAt f (f₀' a : E →L[𝕜] F) a) (hf : ContDiff 𝕜 n (f : E → F)) :
+    (hf₀' : ∀ a, HasFDerivAt f (f₀' a : E →L[𝕜] F) a) (hf : ContDiff 𝕜 n (f : E → F)) :
     ContDiff 𝕜 n (f.symm : F → E) :=
   contDiff_iff_contDiffAt.2 fun x =>
     f.toLocalHomeomorph.contDiffAt_symm (mem_univ x) (hf₀' _) hf.ContDiffAt
@@ -2088,7 +2088,7 @@ an inverse function. -/
 theorem LocalHomeomorph.contDiffAt_symm_deriv [CompleteSpace 𝕜] (f : LocalHomeomorph 𝕜 𝕜)
     {f₀' a : 𝕜} (h₀ : f₀' ≠ 0) (ha : a ∈ f.target) (hf₀' : HasDerivAt f f₀' (f.symm a))
     (hf : ContDiffAt 𝕜 n f (f.symm a)) : ContDiffAt 𝕜 n f.symm a :=
-  f.contDiffAt_symm ha (hf₀'.hasFderivAt_equiv h₀) hf
+  f.contDiffAt_symm ha (hf₀'.hasFDerivAt_equiv h₀) hf
 #align local_homeomorph.cont_diff_at_symm_deriv LocalHomeomorph.contDiffAt_symm_deriv
 
 /-- Let `f` be an `n` times continuously differentiable homeomorphism of a nontrivially normed
@@ -2176,17 +2176,17 @@ variable {𝕂 : Type _} [IsROrC 𝕂] {E' : Type _} [NormedAddCommGroup E'] [No
 
 /-- If a function has a Taylor series at order at least 1, then at points in the interior of the
     domain of definition, the term of order 1 of this series is a strict derivative of `f`. -/
-theorem HasFtaylorSeriesUpToOn.hasStrictFderivAt {s : Set E'} {f : E' → F'} {x : E'}
+theorem HasFtaylorSeriesUpToOn.hasStrictFDerivAt {s : Set E'} {f : E' → F'} {x : E'}
     {p : E' → FormalMultilinearSeries 𝕂 E' F'} (hf : HasFtaylorSeriesUpToOn n f p s) (hn : 1 ≤ n)
-    (hs : s ∈ 𝓝 x) : HasStrictFderivAt f ((continuousMultilinearCurryFin1 𝕂 E' F') (p x 1)) x :=
-  hasStrictFderivAt_of_hasFderivAt_of_continuousAt (hf.eventually_hasFderivAt hn hs) <|
+    (hs : s ∈ 𝓝 x) : HasStrictFDerivAt f ((continuousMultilinearCurryFin1 𝕂 E' F') (p x 1)) x :=
+  hasStrictFDerivAt_of_hasFDerivAt_of_continuousAt (hf.eventually_hasFDerivAt hn hs) <|
     (continuousMultilinearCurryFin1 𝕂 E' F').ContinuousAt.comp <| (hf.cont 1 hn).ContinuousAt hs
-#align has_ftaylor_series_up_to_on.has_strict_fderiv_at HasFtaylorSeriesUpToOn.hasStrictFderivAt
+#align has_ftaylor_series_up_to_on.has_strict_fderiv_at HasFtaylorSeriesUpToOn.hasStrictFDerivAt
 
 /-- If a function is `C^n` with `1 ≤ n` around a point, and its derivative at that point is given to
 us as `f'`, then `f'` is also a strict derivative. -/
 theorem ContDiffAt.has_strict_fderiv_at' {f : E' → F'} {f' : E' →L[𝕂] F'} {x : E'}
-    (hf : ContDiffAt 𝕂 n f x) (hf' : HasFderivAt f f' x) (hn : 1 ≤ n) : HasStrictFderivAt f f' x :=
+    (hf : ContDiffAt 𝕂 n f x) (hf' : HasFDerivAt f f' x) (hn : 1 ≤ n) : HasStrictFDerivAt f f' x :=
   by
   rcases hf 1 hn with ⟨u, H, p, hp⟩
   simp only [nhdsWithin_univ, mem_univ, insert_eq_of_mem] at H
@@ -2203,23 +2203,23 @@ theorem ContDiffAt.has_strict_deriv_at' {f : 𝕂 → F'} {f' : F'} {x : 𝕂} (
 
 /-- If a function is `C^n` with `1 ≤ n` around a point, then the derivative of `f` at this point
 is also a strict derivative. -/
-theorem ContDiffAt.hasStrictFderivAt {f : E' → F'} {x : E'} (hf : ContDiffAt 𝕂 n f x) (hn : 1 ≤ n) :
-    HasStrictFderivAt f (fderiv 𝕂 f x) x :=
-  hf.has_strict_fderiv_at' (hf.DifferentiableAt hn).HasFderivAt hn
-#align cont_diff_at.has_strict_fderiv_at ContDiffAt.hasStrictFderivAt
+theorem ContDiffAt.hasStrictFDerivAt {f : E' → F'} {x : E'} (hf : ContDiffAt 𝕂 n f x) (hn : 1 ≤ n) :
+    HasStrictFDerivAt f (fderiv 𝕂 f x) x :=
+  hf.has_strict_fderiv_at' (hf.DifferentiableAt hn).HasFDerivAt hn
+#align cont_diff_at.has_strict_fderiv_at ContDiffAt.hasStrictFDerivAt
 
 /-- If a function is `C^n` with `1 ≤ n` around a point, then the derivative of `f` at this point
 is also a strict derivative. -/
 theorem ContDiffAt.hasStrictDerivAt {f : 𝕂 → F'} {x : 𝕂} (hf : ContDiffAt 𝕂 n f x) (hn : 1 ≤ n) :
     HasStrictDerivAt f (deriv f x) x :=
-  (hf.HasStrictFderivAt hn).HasStrictDerivAt
+  (hf.HasStrictFDerivAt hn).HasStrictDerivAt
 #align cont_diff_at.has_strict_deriv_at ContDiffAt.hasStrictDerivAt
 
 /-- If a function is `C^n` with `1 ≤ n`, then the derivative of `f` is also a strict derivative. -/
-theorem ContDiff.hasStrictFderivAt {f : E' → F'} {x : E'} (hf : ContDiff 𝕂 n f) (hn : 1 ≤ n) :
-    HasStrictFderivAt f (fderiv 𝕂 f x) x :=
-  hf.ContDiffAt.HasStrictFderivAt hn
-#align cont_diff.has_strict_fderiv_at ContDiff.hasStrictFderivAt
+theorem ContDiff.hasStrictFDerivAt {f : E' → F'} {x : E'} (hf : ContDiff 𝕂 n f) (hn : 1 ≤ n) :
+    HasStrictFDerivAt f (fderiv 𝕂 f x) x :=
+  hf.ContDiffAt.HasStrictFDerivAt hn
+#align cont_diff.has_strict_fderiv_at ContDiff.hasStrictFDerivAt
 
 /-- If a function is `C^n` with `1 ≤ n`, then the derivative of `f` is also a strict derivative. -/
 theorem ContDiff.hasStrictDerivAt {f : 𝕂 → F'} {x : 𝕂} (hf : ContDiff 𝕂 n f) (hn : 1 ≤ n) :
@@ -2236,7 +2236,7 @@ theorem HasFtaylorSeriesUpToOn.exists_lipschitzOnWith_of_nnnorm_lt {E F : Type _
     (hK : ‖p x 1‖₊ < K) : ∃ t ∈ 𝓝[s] x, LipschitzOnWith K f t :=
   by
   set f' := fun y => continuousMultilinearCurryFin1 ℝ E F (p y 1)
-  have hder : ∀ y ∈ s, HasFderivWithinAt f (f' y) s y := fun y hy =>
+  have hder : ∀ y ∈ s, HasFDerivWithinAt f (f' y) s y := fun y hy =>
     (hf.has_fderiv_within_at le_rfl (subset_insert x s hy)).mono (subset_insert x s)
   have hcont : ContinuousWithinAt f' s x :=
     (continuousMultilinearCurryFin1 ℝ E F).ContinuousAt.comp_continuousWithinAt
@@ -2280,13 +2280,13 @@ theorem ContDiffWithinAt.exists_lipschitzOnWith {E F : Type _} [NormedAddCommGro
 theorem ContDiffAt.exists_lipschitzOnWith_of_nnnorm_lt {f : E' → F'} {x : E'}
     (hf : ContDiffAt 𝕂 1 f x) (K : ℝ≥0) (hK : ‖fderiv 𝕂 f x‖₊ < K) :
     ∃ t ∈ 𝓝 x, LipschitzOnWith K f t :=
-  (hf.HasStrictFderivAt le_rfl).exists_lipschitzOnWith_of_nnnorm_lt K hK
+  (hf.HasStrictFDerivAt le_rfl).exists_lipschitzOnWith_of_nnnorm_lt K hK
 #align cont_diff_at.exists_lipschitz_on_with_of_nnnorm_lt ContDiffAt.exists_lipschitzOnWith_of_nnnorm_lt
 
 /-- If `f` is `C^1` at `x`, then `f` is Lipschitz in a neighborhood of `x`. -/
 theorem ContDiffAt.exists_lipschitzOnWith {f : E' → F'} {x : E'} (hf : ContDiffAt 𝕂 1 f x) :
     ∃ K, ∃ t ∈ 𝓝 x, LipschitzOnWith K f t :=
-  (hf.HasStrictFderivAt le_rfl).exists_lipschitzOnWith
+  (hf.HasStrictFDerivAt le_rfl).exists_lipschitzOnWith
 #align cont_diff_at.exists_lipschitz_on_with ContDiffAt.exists_lipschitzOnWith
 
 end Real
@@ -2465,7 +2465,7 @@ theorem HasFtaylorSeriesUpToOn.restrictScalars (h : HasFtaylorSeriesUpToOn n f p
   { zero_eq := fun x hx => h.zero_eq x hx
     fderivWithin := by
       intro m hm x hx
-      convert(ContinuousMultilinearMap.restrictScalarsLinear 𝕜).HasFderivAt.comp_hasFderivWithinAt _
+      convert(ContinuousMultilinearMap.restrictScalarsLinear 𝕜).HasFDerivAt.comp_hasFDerivWithinAt _
           ((h.fderiv_within m hm x hx).restrictScalars 𝕜)
     cont := fun m hm =>
       ContinuousMultilinearMap.continuous_restrictScalars.comp_continuousOn (h.cont m hm) }

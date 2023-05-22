@@ -699,7 +699,7 @@ theorem integrable_of_bounded_continuous_to_real (μ : Measure Ω) [FiniteMeasur
   have aux : (coe : ℝ≥0 → ℝ) ∘ ⇑f.nnnorm = fun x => ‖f x‖ :=
     by
     ext ω
-    simp only [Function.comp_apply, BoundedContinuousFunction.nnnorm_coe_fun_eq, coe_nnnorm]
+    simp only [Function.comp_apply, BoundedContinuousFunction.nnnorm_coeFn_eq, coe_nnnorm]
   apply (has_finite_integral_iff_norm ⇑f).mpr
   rw [← of_real_integral_eq_lintegral_of_real]
   · exact ENNReal.ofReal_lt_top

@@ -168,11 +168,11 @@ rectangle, and $\frac{\partial f}{\partial \bar z}$ is integrable on this rectan
 integral of `f` over the boundary of the rectangle is equal to the integral of
 $2i\frac{\partial f}{\partial \bar z}=i\frac{\partial f}{\partial x}-\frac{\partial f}{\partial y}$
 over the rectangle. -/
-theorem integral_boundary_rect_of_hasFderivAt_real_off_countable (f : ℂ → E) (f' : ℂ → ℂ →L[ℝ] E)
+theorem integral_boundary_rect_of_hasFDerivAt_real_off_countable (f : ℂ → E) (f' : ℂ → ℂ →L[ℝ] E)
     (z w : ℂ) (s : Set ℂ) (hs : s.Countable) (Hc : ContinuousOn f ([z.re, w.re] ×ℂ [z.im, w.im]))
     (Hd :
       ∀ x ∈ Ioo (min z.re w.re) (max z.re w.re) ×ℂ Ioo (min z.im w.im) (max z.im w.im) \ s,
-        HasFderivAt f (f' x) x)
+        HasFDerivAt f (f' x) x)
     (Hi : IntegrableOn (fun z => I • f' z 1 - f' z I) ([z.re, w.re] ×ℂ [z.im, w.im])) :
     ((((∫ x : ℝ in z.re..w.re, f (x + z.im * I)) - ∫ x : ℝ in z.re..w.re, f (x + w.im * I)) +
           I • ∫ y : ℝ in z.im..w.im, f (re w + y * I)) -
@@ -200,7 +200,7 @@ theorem integral_boundary_rect_of_hasFderivAt_real_off_countable (f : ℂ → E)
   have htc : ContinuousOn F R := Hc.comp e.continuous_on hR.ge
   have htd :
     ∀ p ∈ Ioo (min z.re w.re) (max z.re w.re) ×ˢ Ioo (min w.im z.im) (max w.im z.im) \ t,
-      HasFderivAt F (F' p) p :=
+      HasFDerivAt F (F' p) p :=
     fun p hp => (Hd (e p) hp).comp p e.has_fderiv_at
   simp_rw [← intervalIntegral.integral_smul, intervalIntegral.integral_symm w.im z.im, ←
     intervalIntegral.integral_neg, ← hF']
@@ -213,7 +213,7 @@ theorem integral_boundary_rect_of_hasFderivAt_real_off_countable (f : ℂ → E)
       (MeasurableEquiv.measurableEmbedding _)] at
     Hi
   simpa only [hF'] using Hi.neg
-#align complex.integral_boundary_rect_of_has_fderiv_at_real_off_countable Complex.integral_boundary_rect_of_hasFderivAt_real_off_countable
+#align complex.integral_boundary_rect_of_has_fderiv_at_real_off_countable Complex.integral_boundary_rect_of_hasFDerivAt_real_off_countable
 
 /-- Suppose that a function `f : ℂ → E` is continuous on a closed rectangle with opposite corners at
 `z w : ℂ`, is *real* differentiable on the corresponding open rectangle, and
@@ -221,19 +221,19 @@ $\frac{\partial f}{\partial \bar z}$ is integrable on this rectangle. Then the i
 the boundary of the rectangle is equal to the integral of
 $2i\frac{\partial f}{\partial \bar z}=i\frac{\partial f}{\partial x}-\frac{\partial f}{\partial y}$
 over the rectangle. -/
-theorem integral_boundary_rect_of_continuousOn_of_hasFderivAt_real (f : ℂ → E) (f' : ℂ → ℂ →L[ℝ] E)
+theorem integral_boundary_rect_of_continuousOn_of_hasFDerivAt_real (f : ℂ → E) (f' : ℂ → ℂ →L[ℝ] E)
     (z w : ℂ) (Hc : ContinuousOn f ([z.re, w.re] ×ℂ [z.im, w.im]))
     (Hd :
       ∀ x ∈ Ioo (min z.re w.re) (max z.re w.re) ×ℂ Ioo (min z.im w.im) (max z.im w.im),
-        HasFderivAt f (f' x) x)
+        HasFDerivAt f (f' x) x)
     (Hi : IntegrableOn (fun z => I • f' z 1 - f' z I) ([z.re, w.re] ×ℂ [z.im, w.im])) :
     ((((∫ x : ℝ in z.re..w.re, f (x + z.im * I)) - ∫ x : ℝ in z.re..w.re, f (x + w.im * I)) +
           I • ∫ y : ℝ in z.im..w.im, f (re w + y * I)) -
         I • ∫ y : ℝ in z.im..w.im, f (re z + y * I)) =
       ∫ x : ℝ in z.re..w.re, ∫ y : ℝ in z.im..w.im, I • f' (x + y * I) 1 - f' (x + y * I) I :=
-  integral_boundary_rect_of_hasFderivAt_real_off_countable f f' z w ∅ countable_empty Hc
+  integral_boundary_rect_of_hasFDerivAt_real_off_countable f f' z w ∅ countable_empty Hc
     (fun x hx => Hd x hx.1) Hi
-#align complex.integral_boundary_rect_of_continuous_on_of_has_fderiv_at_real Complex.integral_boundary_rect_of_continuousOn_of_hasFderivAt_real
+#align complex.integral_boundary_rect_of_continuous_on_of_has_fderiv_at_real Complex.integral_boundary_rect_of_continuousOn_of_hasFDerivAt_real
 
 /-- Suppose that a function `f : ℂ → E` is *real* differentiable on a closed rectangle with opposite
 corners at `z w : ℂ` and $\frac{\partial f}{\partial \bar z}$ is integrable on this rectangle. Then
@@ -249,10 +249,10 @@ theorem integral_boundary_rect_of_differentiableOn_real (f : ℂ → E) (z w : �
         I • ∫ y : ℝ in z.im..w.im, f (re z + y * I)) =
       ∫ x : ℝ in z.re..w.re,
         ∫ y : ℝ in z.im..w.im, I • fderiv ℝ f (x + y * I) 1 - fderiv ℝ f (x + y * I) I :=
-  integral_boundary_rect_of_hasFderivAt_real_off_countable f (fderiv ℝ f) z w ∅ countable_empty
+  integral_boundary_rect_of_hasFDerivAt_real_off_countable f (fderiv ℝ f) z w ∅ countable_empty
     Hd.ContinuousOn
     (fun x hx =>
-      Hd.HasFderivAt <| by
+      Hd.HasFDerivAt <| by
         simpa only [← mem_interior_iff_mem_nhds, interior_re_prod_im, uIcc, interior_Icc] using
           hx.1)
     Hi
@@ -275,7 +275,7 @@ theorem integral_boundary_rect_eq_zero_of_differentiable_on_off_countable (f : �
   refine'
       (integral_boundary_rect_of_has_fderiv_at_real_off_countable f
             (fun z => (fderiv ℂ f z).restrictScalars ℝ) z w s hs Hc
-            (fun x hx => (Hd x hx).HasFderivAt.restrictScalars ℝ) _).trans
+            (fun x hx => (Hd x hx).HasFDerivAt.restrictScalars ℝ) _).trans
         _ <;>
     simp [← ContinuousLinearMap.map_smul]
 #align complex.integral_boundary_rect_eq_zero_of_differentiable_on_off_countable Complex.integral_boundary_rect_eq_zero_of_differentiable_on_off_countable

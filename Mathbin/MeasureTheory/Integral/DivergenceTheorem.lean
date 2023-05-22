@@ -112,9 +112,9 @@ in several aspects.
 `measure_theory.integral_divergence_of_has_fderiv_within_at_off_countable`. This is exactly
 `box_integral.has_integral_GP_divergence_of_forall_has_deriv_within_at` reformulated for the
 Bochner integral. -/
-theorem integral_divergence_of_hasFderivWithinAt_off_countable_aux₁ (I : Box (Fin (n + 1)))
+theorem integral_divergence_of_hasFDerivWithinAt_off_countable_aux₁ (I : Box (Fin (n + 1)))
     (f : ℝⁿ⁺¹ → Eⁿ⁺¹) (f' : ℝⁿ⁺¹ → ℝⁿ⁺¹ →L[ℝ] Eⁿ⁺¹) (s : Set ℝⁿ⁺¹) (hs : s.Countable)
-    (Hc : ContinuousOn f I.Icc) (Hd : ∀ x ∈ I.Icc \ s, HasFderivWithinAt f (f' x) I.Icc x)
+    (Hc : ContinuousOn f I.Icc) (Hd : ∀ x ∈ I.Icc \ s, HasFDerivWithinAt f (f' x) I.Icc x)
     (Hi : IntegrableOn (fun x => ∑ i, f' x (e i) i) I.Icc) :
     (∫ x in I.Icc, ∑ i, f' x (e i) i) =
       ∑ i : Fin (n + 1),
@@ -138,14 +138,14 @@ theorem integral_divergence_of_hasFderivWithinAt_off_countable_aux₁ (I : Box (
     have := (this.integrable_on_compact (box.is_compact_Icc _)).mono_set box.coe_subset_Icc
     exact (this.has_box_integral ⊥ rfl).integral_eq
     infer_instance
-#align measure_theory.integral_divergence_of_has_fderiv_within_at_off_countable_aux₁ MeasureTheory.integral_divergence_of_hasFderivWithinAt_off_countable_aux₁
+#align measure_theory.integral_divergence_of_has_fderiv_within_at_off_countable_aux₁ MeasureTheory.integral_divergence_of_hasFDerivWithinAt_off_countable_aux₁
 
 /-- An auxiliary lemma for
 `measure_theory.integral_divergence_of_has_fderiv_within_at_off_countable`. Compared to the previous
 lemma, here we drop the assumption of differentiability on the boundary of the box. -/
 theorem integral_divergence_of_has_fderiv_within_at_off_countable_aux₂ (I : Box (Fin (n + 1)))
     (f : ℝⁿ⁺¹ → Eⁿ⁺¹) (f' : ℝⁿ⁺¹ → ℝⁿ⁺¹ →L[ℝ] Eⁿ⁺¹) (s : Set ℝⁿ⁺¹) (hs : s.Countable)
-    (Hc : ContinuousOn f I.Icc) (Hd : ∀ x ∈ I.Ioo \ s, HasFderivAt f (f' x) x)
+    (Hc : ContinuousOn f I.Icc) (Hd : ∀ x ∈ I.Ioo \ s, HasFDerivAt f (f' x) x)
     (Hi : IntegrableOn (fun x => ∑ i, f' x (e i) i) I.Icc) :
     (∫ x in I.Icc, ∑ i, f' x (e i) i) =
       ∑ i : Fin (n + 1),
@@ -158,8 +158,8 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable_aux₂ (I : Bo
   have hJ_sub' : ∀ k, (J k).Icc ⊆ I.Icc := fun k => (hJ_sub k).trans I.Ioo_subset_Icc
   have hJ_le : ∀ k, J k ≤ I := fun k => box.le_iff_Icc.2 (hJ_sub' k)
   have HcJ : ∀ k, ContinuousOn f (J k).Icc := fun k => Hc.mono (hJ_sub' k)
-  have HdJ : ∀ (k), ∀ x ∈ (J k).Icc \ s, HasFderivWithinAt f (f' x) (J k).Icc x := fun k x hx =>
-    (Hd x ⟨hJ_sub k hx.1, hx.2⟩).HasFderivWithinAt
+  have HdJ : ∀ (k), ∀ x ∈ (J k).Icc \ s, HasFDerivWithinAt f (f' x) (J k).Icc x := fun k x hx =>
+    (Hd x ⟨hJ_sub k hx.1, hx.2⟩).HasFDerivWithinAt
   have HiJ : ∀ k, integrable_on (fun x => ∑ i, f' x (e i) i) (J k).Icc := fun k =>
     Hi.mono_set (hJ_sub' k)
   -- Apply the previous lemma to `J k`.
@@ -287,7 +287,7 @@ of `f : ℝⁿ⁺¹ → Eⁿ⁺¹` to these faces are given by `f ∘ back_face 
 `ℝⁿ → ℝⁿ⁺¹` that take `y : ℝⁿ` and insert `a i` (resp., `b i`) as `i`-th coordinate. -/
 theorem integral_divergence_of_has_fderiv_within_at_off_countable (hle : a ≤ b) (f : ℝⁿ⁺¹ → Eⁿ⁺¹)
     (f' : ℝⁿ⁺¹ → ℝⁿ⁺¹ →L[ℝ] Eⁿ⁺¹) (s : Set ℝⁿ⁺¹) (hs : s.Countable) (Hc : ContinuousOn f (Icc a b))
-    (Hd : ∀ x ∈ (Set.pi univ fun i => Ioo (a i) (b i)) \ s, HasFderivAt f (f' x) x)
+    (Hd : ∀ x ∈ (Set.pi univ fun i => Ioo (a i) (b i)) \ s, HasFDerivAt f (f' x) x)
     (Hi : IntegrableOn (fun x => ∑ i, f' x (e i) i) (Icc a b)) :
     (∫ x in Icc a b, ∑ i, f' x (e i) i) =
       ∑ i : Fin (n + 1),
@@ -318,14 +318,14 @@ in terms of a vector-valued function `f : ℝⁿ⁺¹ → Eⁿ⁺¹`. -/
 theorem integral_divergence_of_has_fderiv_within_at_off_countable' (hle : a ≤ b)
     (f : Fin (n + 1) → ℝⁿ⁺¹ → E) (f' : Fin (n + 1) → ℝⁿ⁺¹ → ℝⁿ⁺¹ →L[ℝ] E) (s : Set ℝⁿ⁺¹)
     (hs : s.Countable) (Hc : ∀ i, ContinuousOn (f i) (Icc a b))
-    (Hd : ∀ x ∈ (pi Set.univ fun i => Ioo (a i) (b i)) \ s, ∀ (i), HasFderivAt (f i) (f' i x) x)
+    (Hd : ∀ x ∈ (pi Set.univ fun i => Ioo (a i) (b i)) \ s, ∀ (i), HasFDerivAt (f i) (f' i x) x)
     (Hi : IntegrableOn (fun x => ∑ i, f' i x (e i)) (Icc a b)) :
     (∫ x in Icc a b, ∑ i, f' i x (e i)) =
       ∑ i : Fin (n + 1),
         (∫ x in face i, f i ((front_face (i)) x)) - ∫ x in face i, f i ((back_face (i)) x) :=
   integral_divergence_of_has_fderiv_within_at_off_countable a b hle (fun x i => f i x)
     (fun x => ContinuousLinearMap.pi fun i => f' i x) s hs (continuousOn_pi.2 Hc)
-    (fun x hx => hasFderivAt_pi.2 (Hd x hx)) Hi
+    (fun x hx => hasFDerivAt_pi.2 (Hd x hx)) Hi
 #align measure_theory.integral_divergence_of_has_fderiv_within_at_off_countable' MeasureTheory.integral_divergence_of_has_fderiv_within_at_off_countable'
 
 end
@@ -338,7 +338,7 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable_of_equiv {F : 
     (he_vol : MeasurePreserving eL volume volume) (f : Fin (n + 1) → F → E)
     (f' : Fin (n + 1) → F → F →L[ℝ] E) (s : Set F) (hs : s.Countable) (a b : F) (hle : a ≤ b)
     (Hc : ∀ i, ContinuousOn (f i) (Icc a b))
-    (Hd : ∀ x ∈ interior (Icc a b) \ s, ∀ (i), HasFderivAt (f i) (f' i x) x) (DF : F → E)
+    (Hd : ∀ x ∈ interior (Icc a b) \ s, ∀ (i), HasFDerivAt (f i) (f' i x) x) (DF : F → E)
     (hDF : ∀ x, DF x = ∑ i, f' i x (eL.symm <| e i)) (Hi : IntegrableOn DF (Icc a b)) :
     (∫ x in Icc a b, DF x) =
       ∑ i : Fin (n + 1),
@@ -478,8 +478,8 @@ over `Icc a b`. -/
 theorem integral_divergence_prod_Icc_of_has_fderiv_within_at_off_countable_of_le (f g : ℝ × ℝ → E)
     (f' g' : ℝ × ℝ → ℝ × ℝ →L[ℝ] E) (a b : ℝ × ℝ) (hle : a ≤ b) (s : Set (ℝ × ℝ)) (hs : s.Countable)
     (Hcf : ContinuousOn f (Icc a b)) (Hcg : ContinuousOn g (Icc a b))
-    (Hdf : ∀ x ∈ Ioo a.1 b.1 ×ˢ Ioo a.2 b.2 \ s, HasFderivAt f (f' x) x)
-    (Hdg : ∀ x ∈ Ioo a.1 b.1 ×ˢ Ioo a.2 b.2 \ s, HasFderivAt g (g' x) x)
+    (Hdf : ∀ x ∈ Ioo a.1 b.1 ×ˢ Ioo a.2 b.2 \ s, HasFDerivAt f (f' x) x)
+    (Hdg : ∀ x ∈ Ioo a.1 b.1 ×ˢ Ioo a.2 b.2 \ s, HasFDerivAt g (g' x) x)
     (Hi : IntegrableOn (fun x => f' x (1, 0) + g' x (0, 1)) (Icc a b)) :
     (∫ x in Icc a b, f' x (1, 0) + g' x (0, 1)) =
       (((∫ x in a.1 ..b.1, g (x, b.2)) - ∫ x in a.1 ..b.1, g (x, a.2)) +
@@ -548,9 +548,9 @@ theorem integral2_divergence_prod_of_has_fderiv_within_at_off_countable (f g : �
     (f' g' : ℝ × ℝ → ℝ × ℝ →L[ℝ] E) (a₁ a₂ b₁ b₂ : ℝ) (s : Set (ℝ × ℝ)) (hs : s.Countable)
     (Hcf : ContinuousOn f ([a₁, b₁] ×ˢ [a₂, b₂])) (Hcg : ContinuousOn g ([a₁, b₁] ×ˢ [a₂, b₂]))
     (Hdf :
-      ∀ x ∈ Ioo (min a₁ b₁) (max a₁ b₁) ×ˢ Ioo (min a₂ b₂) (max a₂ b₂) \ s, HasFderivAt f (f' x) x)
+      ∀ x ∈ Ioo (min a₁ b₁) (max a₁ b₁) ×ˢ Ioo (min a₂ b₂) (max a₂ b₂) \ s, HasFDerivAt f (f' x) x)
     (Hdg :
-      ∀ x ∈ Ioo (min a₁ b₁) (max a₁ b₁) ×ˢ Ioo (min a₂ b₂) (max a₂ b₂) \ s, HasFderivAt g (g' x) x)
+      ∀ x ∈ Ioo (min a₁ b₁) (max a₁ b₁) ×ˢ Ioo (min a₂ b₂) (max a₂ b₂) \ s, HasFDerivAt g (g' x) x)
     (Hi : IntegrableOn (fun x => f' x (1, 0) + g' x (0, 1)) ([a₁, b₁] ×ˢ [a₂, b₂])) :
     (∫ x in a₁..b₁, ∫ y in a₂..b₂, f' (x, y) (1, 0) + g' (x, y) (0, 1)) =
       (((∫ x in a₁..b₁, g (x, b₂)) - ∫ x in a₁..b₁, g (x, a₂)) + ∫ y in a₂..b₂, f (b₁, y)) -

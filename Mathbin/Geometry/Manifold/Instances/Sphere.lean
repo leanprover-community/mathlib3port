@@ -148,35 +148,35 @@ theorem stereoInvFunAux_mem (hv : ‖v‖ = 1) {w : E} (hw : w ∈ (ℝ ∙ v)�
   ring
 #align stereo_inv_fun_aux_mem stereoInvFunAux_mem
 
-theorem hasFderivAt_stereoInvFunAux (v : E) :
-    HasFderivAt (stereoInvFunAux v) (ContinuousLinearMap.id ℝ E) 0 :=
+theorem hasFDerivAt_stereoInvFunAux (v : E) :
+    HasFDerivAt (stereoInvFunAux v) (ContinuousLinearMap.id ℝ E) 0 :=
   by
-  have h₀ : HasFderivAt (fun w : E => ‖w‖ ^ 2) (0 : E →L[ℝ] ℝ) 0 :=
+  have h₀ : HasFDerivAt (fun w : E => ‖w‖ ^ 2) (0 : E →L[ℝ] ℝ) 0 :=
     by
-    convert(hasStrictFderivAt_norm_sq _).HasFderivAt
+    convert(hasStrictFDerivAt_norm_sq _).HasFDerivAt
     simp
-  have h₁ : HasFderivAt (fun w : E => (‖w‖ ^ 2 + 4)⁻¹) (0 : E →L[ℝ] ℝ) 0 := by
-    convert(hasFderivAt_inv _).comp _ (h₀.add (hasFderivAt_const 4 0)) <;> simp
+  have h₁ : HasFDerivAt (fun w : E => (‖w‖ ^ 2 + 4)⁻¹) (0 : E →L[ℝ] ℝ) 0 := by
+    convert(hasFDerivAt_inv _).comp _ (h₀.add (hasFDerivAt_const 4 0)) <;> simp
   have h₂ :
-    HasFderivAt (fun w => (4 : ℝ) • w + (‖w‖ ^ 2 - 4) • v) ((4 : ℝ) • ContinuousLinearMap.id ℝ E)
+    HasFDerivAt (fun w => (4 : ℝ) • w + (‖w‖ ^ 2 - 4) • v) ((4 : ℝ) • ContinuousLinearMap.id ℝ E)
       0 :=
     by
-    convert((hasFderivAt_const (4 : ℝ) 0).smul (hasFderivAt_id 0)).add
-        ((h₀.sub (hasFderivAt_const (4 : ℝ) 0)).smul (hasFderivAt_const v 0))
+    convert((hasFDerivAt_const (4 : ℝ) 0).smul (hasFDerivAt_id 0)).add
+        ((h₀.sub (hasFDerivAt_const (4 : ℝ) 0)).smul (hasFDerivAt_const v 0))
     ext w
     simp
   convert h₁.smul h₂
   ext w
   simp
-#align has_fderiv_at_stereo_inv_fun_aux hasFderivAt_stereoInvFunAux
+#align has_fderiv_at_stereo_inv_fun_aux hasFDerivAt_stereoInvFunAux
 
-theorem hasFderivAt_stereoInvFunAux_comp_coe (v : E) :
-    HasFderivAt (stereoInvFunAux v ∘ (coe : (ℝ ∙ v)ᗮ → E)) (ℝ ∙ v)ᗮ.subtypeL 0 :=
+theorem hasFDerivAt_stereoInvFunAux_comp_coe (v : E) :
+    HasFDerivAt (stereoInvFunAux v ∘ (coe : (ℝ ∙ v)ᗮ → E)) (ℝ ∙ v)ᗮ.subtypeL 0 :=
   by
-  have : HasFderivAt (stereoInvFunAux v) (ContinuousLinearMap.id ℝ E) ((ℝ ∙ v)ᗮ.subtypeL 0) :=
-    hasFderivAt_stereoInvFunAux v
-  convert this.comp (0 : (ℝ ∙ v)ᗮ) (by apply ContinuousLinearMap.hasFderivAt)
-#align has_fderiv_at_stereo_inv_fun_aux_comp_coe hasFderivAt_stereoInvFunAux_comp_coe
+  have : HasFDerivAt (stereoInvFunAux v) (ContinuousLinearMap.id ℝ E) ((ℝ ∙ v)ᗮ.subtypeL 0) :=
+    hasFDerivAt_stereoInvFunAux v
+  convert this.comp (0 : (ℝ ∙ v)ᗮ) (by apply ContinuousLinearMap.hasFDerivAt)
+#align has_fderiv_at_stereo_inv_fun_aux_comp_coe hasFDerivAt_stereoInvFunAux_comp_coe
 
 theorem contDiff_stereoInvFunAux : ContDiff ℝ ⊤ (stereoInvFunAux v) :=
   by
@@ -539,10 +539,10 @@ theorem range_mfderiv_coe_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] (v : s
   let U := (OrthonormalBasis.fromOrthogonalSpanSingleton n (ne_zero_of_mem_unit_sphere (-v))).repr
   change (fderiv ℝ ((stereoInvFunAux (-v : E) ∘ coe) ∘ U.symm) 0).range = (ℝ ∙ (v : E))ᗮ
   have :
-    HasFderivAt (stereoInvFunAux (-v : E) ∘ (coe : (ℝ ∙ (↑(-v) : E))ᗮ → E))
+    HasFDerivAt (stereoInvFunAux (-v : E) ∘ (coe : (ℝ ∙ (↑(-v) : E))ᗮ → E))
       (ℝ ∙ (↑(-v) : E))ᗮ.subtypeL (U.symm 0) :=
     by
-    convert hasFderivAt_stereoInvFunAux_comp_coe (-v : E)
+    convert hasFDerivAt_stereoInvFunAux_comp_coe (-v : E)
     simp
   rw [(this.comp 0 U.symm.to_continuous_linear_equiv.has_fderiv_at).fderiv]
   convert(U.symm : EuclideanSpace ℝ (Fin n) ≃ₗᵢ[ℝ] (ℝ ∙ (↑(-v) : E))ᗮ).range_comp
@@ -572,10 +572,10 @@ theorem mfderiv_coe_sphere_injective {n : ℕ} [Fact (finrank ℝ E = n + 1)] (v
   let U := (OrthonormalBasis.fromOrthogonalSpanSingleton n (ne_zero_of_mem_unit_sphere (-v))).repr
   change injective (fderiv ℝ ((stereoInvFunAux (-v : E) ∘ coe) ∘ U.symm) 0)
   have :
-    HasFderivAt (stereoInvFunAux (-v : E) ∘ (coe : (ℝ ∙ (↑(-v) : E))ᗮ → E))
+    HasFDerivAt (stereoInvFunAux (-v : E) ∘ (coe : (ℝ ∙ (↑(-v) : E))ᗮ → E))
       (ℝ ∙ (↑(-v) : E))ᗮ.subtypeL (U.symm 0) :=
     by
-    convert hasFderivAt_stereoInvFunAux_comp_coe (-v : E)
+    convert hasFDerivAt_stereoInvFunAux_comp_coe (-v : E)
     simp
   rw [(this.comp 0 U.symm.to_continuous_linear_equiv.has_fderiv_at).fderiv]
   simpa using Subtype.coe_injective

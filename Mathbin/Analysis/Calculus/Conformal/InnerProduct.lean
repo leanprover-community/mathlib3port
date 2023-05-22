@@ -38,7 +38,7 @@ theorem conformalAt_iff' {f : E → F} {x : E} :
 
 /-- A real differentiable map `f` is conformal at point `x` if and only if its
     differential `f'` at that point scales every inner product by a positive scalar. -/
-theorem conformalAt_iff {f : E → F} {x : E} {f' : E →L[ℝ] F} (h : HasFderivAt f f' x) :
+theorem conformalAt_iff {f : E → F} {x : E} {f' : E →L[ℝ] F} (h : HasFDerivAt f f' x) :
     ConformalAt f x ↔ ∃ c : ℝ, 0 < c ∧ ∀ u v : E, ⟪f' u, f' v⟫ = c * ⟪u, v⟫ := by
   simp only [conformalAt_iff', h.fderiv]
 #align conformal_at_iff conformalAt_iff
@@ -59,8 +59,8 @@ theorem conformalFactorAt_inner_eq_mul_inner' {f : E → F} {x : E} (h : Conform
 #align conformal_factor_at_inner_eq_mul_inner' conformalFactorAt_inner_eq_mul_inner'
 
 theorem conformalFactorAt_inner_eq_mul_inner {f : E → F} {x : E} {f' : E →L[ℝ] F}
-    (h : HasFderivAt f f' x) (H : ConformalAt f x) (u v : E) :
+    (h : HasFDerivAt f f' x) (H : ConformalAt f x) (u v : E) :
     ⟪f' u, f' v⟫ = (conformalFactorAt H : ℝ) * ⟪u, v⟫ :=
-  H.DifferentiableAt.HasFderivAt.unique h ▸ conformalFactorAt_inner_eq_mul_inner' H u v
+  H.DifferentiableAt.HasFDerivAt.unique h ▸ conformalFactorAt_inner_eq_mul_inner' H u v
 #align conformal_factor_at_inner_eq_mul_inner conformalFactorAt_inner_eq_mul_inner
 
