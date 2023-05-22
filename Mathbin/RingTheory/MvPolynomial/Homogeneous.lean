@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Eric Wieser
 
 ! This file was ported from Lean 3 source module ring_theory.mv_polynomial.homogeneous
-! leanprover-community/mathlib commit 2f5b500a507264de86d666a5f87ddb976e2d8de4
+! leanprover-community/mathlib commit 1b0a28e1c93409dbf6d69526863cd9984ef652ce
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Data.MvPolynomial.Variables
 
 /-!
 # Homogeneous polynomials
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A multivariate polynomial `φ` is homogeneous of degree `n`
 if all monomials occuring in `φ` have degree `n`.

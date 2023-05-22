@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.monoid_algebra.to_direct_sum
-! leanprover-community/mathlib commit c0a51cf2de54089d69301befc4c73bbc2f5c7342
+! leanprover-community/mathlib commit 1b0a28e1c93409dbf6d69526863cd9984ef652ce
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Data.Finsupp.ToDfinsupp
 
 /-!
 # Conversion between `add_monoid_algebra` and homogenous `direct_sum`
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This module provides conversions between `add_monoid_algebra` and `direct_sum`.
 The latter is essentially a dependent version of the former.

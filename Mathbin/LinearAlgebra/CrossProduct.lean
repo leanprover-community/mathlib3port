@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Martin Dvorak, Kyle Miller, Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.cross_product
-! leanprover-community/mathlib commit 91288e351d51b3f0748f0a38faa7613fb0ae2ada
+! leanprover-community/mathlib commit 1b0a28e1c93409dbf6d69526863cd9984ef652ce
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Algebra.Lie.Basic
 
 /-!
 # Cross products
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This module defines the cross product of vectors in $R^3$ for $R$ a commutative ring,
 as a bilinear map.

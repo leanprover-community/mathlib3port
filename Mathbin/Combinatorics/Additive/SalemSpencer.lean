@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module combinatorics.additive.salem_spencer
-! leanprover-community/mathlib commit acf5258c81d0bc7cb254ed026c1352e685df306c
+! leanprover-community/mathlib commit 1b0a28e1c93409dbf6d69526863cd9984ef652ce
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Analysis.Convex.StrictConvexSpace
 
 /-!
 # Salem-Spencer sets and Roth numbers
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines Salem-Spencer sets and the Roth number of a set.
 

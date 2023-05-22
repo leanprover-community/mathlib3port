@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.normed_space.finite_dimension
-! leanprover-community/mathlib commit 9425b6f8220e53b059f5a4904786c3c4b50fc057
+! leanprover-community/mathlib commit 1b0a28e1c93409dbf6d69526863cd9984ef652ce
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -19,6 +19,9 @@ import Mathbin.Topology.Instances.Matrix
 
 /-!
 # Finite dimensional normed spaces over complete fields
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Over a complete nontrivially normed field, in finite dimension, all norms are equivalent and all
 linear maps are continuous. Moreover, a finite-dimensional subspace is always complete and closed.

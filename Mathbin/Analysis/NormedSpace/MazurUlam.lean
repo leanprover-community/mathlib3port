@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.normed_space.mazur_ulam
-! leanprover-community/mathlib commit 78261225eb5cedc61c5c74ecb44e5b385d13b733
+! leanprover-community/mathlib commit 1b0a28e1c93409dbf6d69526863cd9984ef652ce
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Analysis.NormedSpace.AffineIsometry
 
 /-!
 # Mazur-Ulam Theorem
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Mazur-Ulam theorem states that an isometric bijection between two normed affine spaces over `ℝ` is
 affine. We formalize it in three definitions:

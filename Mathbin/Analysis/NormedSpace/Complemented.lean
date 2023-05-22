@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.normed_space.complemented
-! leanprover-community/mathlib commit 3397560e65278e5f31acefcdea63138bd53d1cd4
+! leanprover-community/mathlib commit 1b0a28e1c93409dbf6d69526863cd9984ef652ce
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Analysis.NormedSpace.FiniteDimension
 
 /-!
 # Complemented subspaces of normed vector spaces
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A submodule `p` of a topological module `E` over `R` is called *complemented* if there exists
 a continuous linear projection `f : E →ₗ[R] p`, `∀ x : p, f x = x`. We prove that for

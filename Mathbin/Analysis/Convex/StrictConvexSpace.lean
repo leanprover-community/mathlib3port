@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.convex.strict_convex_space
-! leanprover-community/mathlib commit a63928c34ec358b5edcda2bf7513c50052a5230f
+! leanprover-community/mathlib commit 1b0a28e1c93409dbf6d69526863cd9984ef652ce
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -17,6 +17,9 @@ import Mathbin.Analysis.NormedSpace.AffineIsometry
 
 /-!
 # Strictly convex spaces
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines strictly convex spaces. A normed space is strictly convex if all closed balls are
 strictly convex. This does **not** mean that the norm is strictly convex (in fact, it never is).

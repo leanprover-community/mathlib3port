@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module data.is_R_or_C.lemmas
-! leanprover-community/mathlib commit 468b141b14016d54b479eb7a0fff1e360b7e3cf6
+! leanprover-community/mathlib commit 1b0a28e1c93409dbf6d69526863cd9984ef652ce
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,7 +12,10 @@ import Mathbin.Analysis.NormedSpace.FiniteDimension
 import Mathbin.FieldTheory.Tower
 import Mathbin.Data.IsROrC.Basic
 
-/-! # Further lemmas about `is_R_or_C` -/
+/-! # Further lemmas about `is_R_or_C` 
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.-/
 
 
 variable {K E : Type _} [IsROrC K]
