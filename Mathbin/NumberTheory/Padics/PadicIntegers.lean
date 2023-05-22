@@ -367,7 +367,7 @@ variable (p)
 instance complete : CauSeq.IsComplete ℤ_[p] norm :=
   ⟨fun f =>
     have hqn : ‖CauSeq.lim (cauSeqToRatCauSeq f)‖ ≤ 1 :=
-      padic_norm_e_lim_le zero_lt_one fun _ => norm_le_one _
+      padicNormE_lim_le zero_lt_one fun _ => norm_le_one _
     ⟨⟨_, hqn⟩, fun ε => by
       simpa [norm, norm_def] using CauSeq.equiv_lim (cau_seq_to_rat_cau_seq f) ε⟩⟩
 #align padic_int.complete PadicInt.complete

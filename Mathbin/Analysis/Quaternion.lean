@@ -242,17 +242,15 @@ variable {α : Type _}
 
 @[simp, norm_cast]
 theorem hasSum_coe {f : α → ℝ} {r : ℝ} : HasSum (fun a => (f a : ℍ)) (↑r : ℍ) ↔ HasSum f r :=
-  ⟨fun h => by
-    simpa only using h.map (show ℍ →ₗ[ℝ] ℝ from QuaternionAlgebra.reLm _ _) continuous_re, fun h =>
-    by simpa only using h.map (algebraMap ℝ ℍ) (continuous_algebraMap _ _)⟩
+  ⟨fun h => by simpa only using h.map (show ℍ →ₗ[ℝ] ℝ from QuaternionAlgebra.reₗ _ _) continuous_re,
+    fun h => by simpa only using h.map (algebraMap ℝ ℍ) (continuous_algebraMap _ _)⟩
 #align quaternion.has_sum_coe Quaternion.hasSum_coe
 
 @[simp, norm_cast]
 theorem summable_coe {f : α → ℝ} : (Summable fun a => (f a : ℍ)) ↔ Summable f := by
   simpa only using
-    Summable.map_iff_of_leftInverse (algebraMap ℝ ℍ)
-      (show ℍ →ₗ[ℝ] ℝ from QuaternionAlgebra.reLm _ _) (continuous_algebraMap _ _) continuous_re
-      coe_re
+    Summable.map_iff_of_leftInverse (algebraMap ℝ ℍ) (show ℍ →ₗ[ℝ] ℝ from QuaternionAlgebra.reₗ _ _)
+      (continuous_algebraMap _ _) continuous_re coe_re
 #align quaternion.summable_coe Quaternion.summable_coe
 
 @[norm_cast]
