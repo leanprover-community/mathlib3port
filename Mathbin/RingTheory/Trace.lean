@@ -220,8 +220,8 @@ theorem traceForm_apply (x y : S) : traceForm R S x y = trace R S (x * y) :=
   rfl
 #align algebra.trace_form_apply Algebra.traceForm_apply
 
-theorem traceFormIsSymm : (traceForm R S).IsSymm := fun x y => congr_arg (trace R S) (mul_comm _ _)
-#align algebra.trace_form_is_symm Algebra.traceFormIsSymm
+theorem traceForm_isSymm : (traceForm R S).IsSymm := fun x y => congr_arg (trace R S) (mul_comm _ _)
+#align algebra.trace_form_is_symm Algebra.traceForm_isSymm
 
 theorem traceForm_toMatrix [DecidableEq ι] (i j) :
     BilinForm.toMatrix b (traceForm R S) i j = trace R S (b i * b j) := by
@@ -282,7 +282,7 @@ theorem trace_gen_eq_zero {x : L} (hx : ¬IsIntegral K x) :
   rw [trace_eq_zero_of_not_exists_basis, LinearMap.zero_apply]
   contrapose! hx
   obtain ⟨s, ⟨b⟩⟩ := hx
-  refine' isIntegral_of_mem_of_fG K⟮⟯.toSubalgebra _ x _
+  refine' isIntegral_of_mem_of_FG K⟮⟯.toSubalgebra _ x _
   · exact (Submodule.fg_iff_finiteDimensional _).mpr (FiniteDimensional.of_fintype_basis b)
   · exact subset_adjoin K _ (Set.mem_singleton x)
 #align intermediate_field.adjoin_simple.trace_gen_eq_zero IntermediateField.AdjoinSimple.trace_gen_eq_zero
@@ -641,11 +641,11 @@ theorem det_traceForm_ne_zero [IsSeparable K L] [DecidableEq ι] (b : Basis ι K
 
 variable (K L)
 
-theorem traceFormNondegenerate [FiniteDimensional K L] [IsSeparable K L] :
+theorem traceForm_nondegenerate [FiniteDimensional K L] [IsSeparable K L] :
     (traceForm K L).Nondegenerate :=
-  BilinForm.nondegenerateOfDetNeZero (traceForm K L) _
+  BilinForm.nondegenerate_of_det_ne_zero (traceForm K L) _
     (det_traceForm_ne_zero (FiniteDimensional.finBasis K L))
-#align trace_form_nondegenerate traceFormNondegenerate
+#align trace_form_nondegenerate traceForm_nondegenerate
 
 end DetNeZero
 

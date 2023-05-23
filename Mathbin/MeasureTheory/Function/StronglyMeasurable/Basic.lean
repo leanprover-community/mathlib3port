@@ -1689,7 +1689,7 @@ theorem aeStronglyMeasurable_of_tendsto_ae {ι : Type _} [PseudoMetrizableSpace 
     AeStronglyMeasurable g μ := by
   borelize β
   refine' aeStronglyMeasurable_iff_aEMeasurable_separable.2 ⟨_, _⟩
-  · exact aEMeasurable_of_tendsto_metrizable_ae _ (fun n => (hf n).AEMeasurable) limUnder
+  · exact aemeasurable_of_tendsto_metrizable_ae _ (fun n => (hf n).AEMeasurable) limUnder
   · rcases u.exists_seq_tendsto with ⟨v, hv⟩
     have : ∀ n : ℕ, ∃ t : Set β, is_separable t ∧ f (v n) ⁻¹' t ∈ μ.ae := fun n =>
       (aeStronglyMeasurable_iff_aEMeasurable_separable.1 (hf (v n))).2

@@ -76,12 +76,12 @@ structure HalfBraiding (X : C) where
 
 restate_axiom half_braiding.monoidal'
 
-attribute [reassoc.1, simp] half_braiding.monoidal
+attribute [reassoc, simp] half_braiding.monoidal
 
 -- the reassoc lemma is redundant as a simp lemma
 restate_axiom half_braiding.naturality'
 
-attribute [simp, reassoc.1] half_braiding.naturality
+attribute [simp, reassoc] half_braiding.naturality
 
 variable (C)
 
@@ -108,7 +108,7 @@ structure Hom (X Y : Center C) where
 
 restate_axiom hom.comm'
 
-attribute [simp, reassoc.1] hom.comm
+attribute [simp, reassoc] hom.comm
 
 instance : Category (Center C) where
   Hom := Hom

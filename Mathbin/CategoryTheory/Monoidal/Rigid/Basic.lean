@@ -106,11 +106,11 @@ notation "ε_" => ExactPairing.evaluation
 
 restate_axiom coevaluation_evaluation'
 
-attribute [simp, reassoc.1] exact_pairing.coevaluation_evaluation
+attribute [simp, reassoc] exact_pairing.coevaluation_evaluation
 
 restate_axiom evaluation_coevaluation'
 
-attribute [simp, reassoc.1] exact_pairing.evaluation_coevaluation
+attribute [simp, reassoc] exact_pairing.evaluation_coevaluation
 
 instance exactPairingUnit : ExactPairing (𝟙_ C) (𝟙_ C)
     where
@@ -255,7 +255,7 @@ theorem leftAdjointMate_comp {X Y Z : C} [HasLeftDual X] [HasLeftDual Y] {f : X 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The composition of right adjoint mates is the adjoint mate of the composition. -/
-@[reassoc.1]
+@[reassoc]
 theorem comp_rightAdjointMate {X Y Z : C} [HasRightDual X] [HasRightDual Y] [HasRightDual Z]
     {f : X ⟶ Y} {g : Y ⟶ Z} : (f ≫ g)ᘁ = gᘁ ≫ fᘁ :=
   by
@@ -290,7 +290,7 @@ theorem comp_rightAdjointMate {X Y Z : C} [HasRightDual X] [HasRightDual Y] [Has
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The composition of left adjoint mates is the adjoint mate of the composition. -/
-@[reassoc.1]
+@[reassoc]
 theorem comp_leftAdjointMate {X Y Z : C} [HasLeftDual X] [HasLeftDual Y] [HasLeftDual Z] {f : X ⟶ Y}
     {g : Y ⟶ Z} : (ᘁf ≫ g) = (ᘁg) ≫ ᘁf :=
   by

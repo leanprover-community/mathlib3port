@@ -464,7 +464,7 @@ theorem trunc_C_mul_T (n : ℤ) (r : R) : trunc (C r * T n) = ite (0 ≤ n) (mon
     erw [comap_domain_single, to_finsupp_iso_symm_apply]
     simp only [Int.coe_nat_nonneg, Int.toNat_coe_nat, if_true, to_finsupp_iso_apply,
       to_finsupp_monomial]
-  · lift -n to ℕ using (neg_pos.mpr (not_le.mp n0)).le with m
+  · lift -n to ℕ using (neg_pos.mpr (not_le.mp n0)).le
     rw [to_finsupp_iso_apply, to_finsupp_inj, if_neg n0]
     erw [to_finsupp_iso_symm_apply]
     ext a

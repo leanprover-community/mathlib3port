@@ -77,7 +77,7 @@ structure Hom (A₀ A₁ : Algebra F) where
 
 restate_axiom hom.h'
 
-attribute [simp, reassoc.1] hom.h
+attribute [simp, reassoc] hom.h
 
 namespace Hom
 
@@ -396,7 +396,7 @@ structure Hom (V₀ V₁ : Coalgebra F) where
 
 restate_axiom hom.h'
 
-attribute [simp, reassoc.1] hom.h
+attribute [simp, reassoc] hom.h
 
 namespace Hom
 

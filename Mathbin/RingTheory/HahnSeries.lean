@@ -1217,7 +1217,7 @@ theorem ofPowerSeries_apply_coeff (x : PowerSeries R) (n : ℕ) :
 #align hahn_series.of_power_series_apply_coeff HahnSeries.ofPowerSeries_apply_coeff
 
 @[simp]
-theorem ofPowerSeries_c (r : R) : ofPowerSeries Γ R (PowerSeries.c R r) = HahnSeries.c r :=
+theorem ofPowerSeries_c (r : R) : ofPowerSeries Γ R (PowerSeries.C R r) = HahnSeries.c r :=
   by
   ext n
   simp only [C, single_coeff, of_power_series_apply, RingHom.coe_mk]
@@ -1226,13 +1226,13 @@ theorem ofPowerSeries_c (r : R) : ofPowerSeries Γ R (PowerSeries.c R r) = HahnS
     convert@emb_domain_coeff _ _ _ _ _ _ _ _ 0 <;> simp
   · rw [emb_domain_notin_image_support]
     simp only [not_exists, Set.mem_image, to_power_series_symm_apply_coeff, mem_support,
-      PowerSeries.coeff_c]
+      PowerSeries.coeff_C]
     intro
     simp (config := { contextual := true }) [Ne.symm hn]
 #align hahn_series.of_power_series_C HahnSeries.ofPowerSeries_c
 
 @[simp]
-theorem ofPowerSeries_x : ofPowerSeries Γ R PowerSeries.x = single 1 1 :=
+theorem ofPowerSeries_x : ofPowerSeries Γ R PowerSeries.X = single 1 1 :=
   by
   ext n
   simp only [single_coeff, of_power_series_apply, RingHom.coe_mk]
@@ -1241,14 +1241,14 @@ theorem ofPowerSeries_x : ofPowerSeries Γ R PowerSeries.x = single 1 1 :=
     convert@emb_domain_coeff _ _ _ _ _ _ _ _ 1 <;> simp
   · rw [emb_domain_notin_image_support]
     simp only [not_exists, Set.mem_image, to_power_series_symm_apply_coeff, mem_support,
-      PowerSeries.coeff_x]
+      PowerSeries.coeff_X]
     intro
     simp (config := { contextual := true }) [Ne.symm hn]
 #align hahn_series.of_power_series_X HahnSeries.ofPowerSeries_x
 
 @[simp]
 theorem ofPowerSeries_x_pow {R} [CommSemiring R] (n : ℕ) :
-    ofPowerSeries Γ R (PowerSeries.x ^ n) = single (n : Γ) 1 :=
+    ofPowerSeries Γ R (PowerSeries.X ^ n) = single (n : Γ) 1 :=
   by
   rw [RingHom.map_pow]
   induction' n with n ih
@@ -1321,7 +1321,7 @@ def toPowerSeriesAlg : HahnSeries ℕ A ≃ₐ[R] PowerSeries A :=
       · simp only [PowerSeries.coeff_zero_eq_constantCoeff, single_coeff_same]
         rfl
       · simp only [n.succ_ne_zero, Ne.def, not_false_iff, single_coeff_of_ne]
-        rw [PowerSeries.coeff_c, if_neg n.succ_ne_zero] }
+        rw [PowerSeries.coeff_C, if_neg n.succ_ne_zero] }
 #align hahn_series.to_power_series_alg HahnSeries.toPowerSeriesAlg
 
 variable (Γ R) [StrictOrderedSemiring Γ]

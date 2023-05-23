@@ -827,7 +827,7 @@ noncomputable def pullbackIsoUnopPushout {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z)
 -/
 
 #print CategoryTheory.Limits.pullbackIsoUnopPushout_inv_fst /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem pullbackIsoUnopPushout_inv_fst {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) [HasPullback f g]
     [HasPushout f.op g.op] :
     (pullbackIsoUnopPushout f g).inv ≫ pullback.fst = (pushout.inl : _ ⟶ pushout f.op g.op).unop :=
@@ -836,7 +836,7 @@ theorem pullbackIsoUnopPushout_inv_fst {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) [
 -/
 
 #print CategoryTheory.Limits.pullbackIsoUnopPushout_inv_snd /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem pullbackIsoUnopPushout_inv_snd {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) [HasPullback f g]
     [HasPushout f.op g.op] :
     (pullbackIsoUnopPushout f g).inv ≫ pullback.snd = (pushout.inr : _ ⟶ pushout f.op g.op).unop :=
@@ -845,7 +845,7 @@ theorem pullbackIsoUnopPushout_inv_snd {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) [
 -/
 
 #print CategoryTheory.Limits.pullbackIsoUnopPushout_hom_inl /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem pullbackIsoUnopPushout_hom_inl {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) [HasPullback f g]
     [HasPushout f.op g.op] : pushout.inl ≫ (pullbackIsoUnopPushout f g).hom.op = pullback.fst.op :=
   by
@@ -856,7 +856,7 @@ theorem pullbackIsoUnopPushout_hom_inl {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) [
 -/
 
 #print CategoryTheory.Limits.pullbackIsoUnopPushout_hom_inr /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem pullbackIsoUnopPushout_hom_inr {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) [HasPullback f g]
     [HasPushout f.op g.op] : pushout.inr ≫ (pullbackIsoUnopPushout f g).hom.op = pullback.snd.op :=
   by
@@ -881,7 +881,7 @@ noncomputable def pushoutIsoUnopPullback {X Y Z : C} (f : X ⟶ Z) (g : X ⟶ Y)
 -/
 
 #print CategoryTheory.Limits.pushoutIsoUnopPullback_inl_hom /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem pushoutIsoUnopPullback_inl_hom {X Y Z : C} (f : X ⟶ Z) (g : X ⟶ Y) [HasPushout f g]
     [HasPullback f.op g.op] :
     pushout.inl ≫ (pushoutIsoUnopPullback f g).hom = (pullback.fst : pullback f.op g.op ⟶ _).unop :=
@@ -890,7 +890,7 @@ theorem pushoutIsoUnopPullback_inl_hom {X Y Z : C} (f : X ⟶ Z) (g : X ⟶ Y) [
 -/
 
 #print CategoryTheory.Limits.pushoutIsoUnopPullback_inr_hom /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem pushoutIsoUnopPullback_inr_hom {X Y Z : C} (f : X ⟶ Z) (g : X ⟶ Y) [HasPushout f g]
     [HasPullback f.op g.op] :
     pushout.inr ≫ (pushoutIsoUnopPullback f g).hom = (pullback.snd : pullback f.op g.op ⟶ _).unop :=

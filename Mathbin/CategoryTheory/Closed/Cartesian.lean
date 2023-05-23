@@ -110,12 +110,12 @@ notation:20 A " ⟹ " B:19 => (exp A).obj B
 -- mathport name: «expr ^^ »
 notation:30 B " ^^ " A:30 => (exp A).obj B
 
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem ev_coev : Limits.prod.map (𝟙 A) ((coev A).app B) ≫ (ev A).app (A ⨯ B) = 𝟙 (A ⨯ B) :=
   ihom.ev_coev A B
 #align category_theory.exp.ev_coev CategoryTheory.exp.ev_coev
 
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem coev_ev : (coev A).app (A ⟹ B) ≫ (exp A).map ((ev A).app B) = 𝟙 (A ⟹ B) :=
   ihom.coev_ev A B
 #align category_theory.exp.coev_ev CategoryTheory.exp.coev_ev
@@ -151,25 +151,25 @@ theorem homEquiv_symm_apply_eq (f : Y ⟶ A ⟹ X) :
   rfl
 #align category_theory.cartesian_closed.hom_equiv_symm_apply_eq CategoryTheory.CartesianClosed.homEquiv_symm_apply_eq
 
-@[reassoc.1]
+@[reassoc]
 theorem curry_natural_left (f : X ⟶ X') (g : A ⨯ X' ⟶ Y) :
     curry (Limits.prod.map (𝟙 _) f ≫ g) = f ≫ curry g :=
   Adjunction.homEquiv_naturality_left _ _ _
 #align category_theory.cartesian_closed.curry_natural_left CategoryTheory.CartesianClosed.curry_natural_left
 
-@[reassoc.1]
+@[reassoc]
 theorem curry_natural_right (f : A ⨯ X ⟶ Y) (g : Y ⟶ Y') :
     curry (f ≫ g) = curry f ≫ (exp _).map g :=
   Adjunction.homEquiv_naturality_right _ _ _
 #align category_theory.cartesian_closed.curry_natural_right CategoryTheory.CartesianClosed.curry_natural_right
 
-@[reassoc.1]
+@[reassoc]
 theorem uncurry_natural_right (f : X ⟶ A ⟹ Y) (g : Y ⟶ Y') :
     uncurry (f ≫ (exp _).map g) = uncurry f ≫ g :=
   Adjunction.homEquiv_naturality_right_symm _ _ _
 #align category_theory.cartesian_closed.uncurry_natural_right CategoryTheory.CartesianClosed.uncurry_natural_right
 
-@[reassoc.1]
+@[reassoc]
 theorem uncurry_natural_left (f : X ⟶ X') (g : X' ⟶ A ⟹ Y) :
     uncurry (f ≫ g) = Limits.prod.map (𝟙 _) f ≫ uncurry g :=
   Adjunction.homEquiv_naturality_left_symm _ _ _

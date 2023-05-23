@@ -41,7 +41,7 @@ Case conversion may be inaccurate. Consider using '#align zpow_le_of_le zpow_le_
 theorem zpow_le_of_le (ha : 1 ≤ a) (h : m ≤ n) : a ^ m ≤ a ^ n :=
   by
   have ha₀ : 0 < a := one_pos.trans_le ha
-  lift n - m to ℕ using sub_nonneg.2 h with k hk
+  lift n - m to ℕ using sub_nonneg.2 h
   calc
     a ^ m = a ^ m * 1 := (mul_one _).symm
     _ ≤ a ^ m * a ^ k :=

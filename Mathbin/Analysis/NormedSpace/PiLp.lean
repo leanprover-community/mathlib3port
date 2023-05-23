@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.pi_Lp
-! leanprover-community/mathlib commit 8f9fea08977f7e450770933ee6abb20733b47c92
+! leanprover-community/mathlib commit 13bce9a6b6c44f6b4c91ac1c1d2a816e2533d395
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -957,6 +957,11 @@ theorem basisFun_apply [DecidableEq ι] (i) :
 theorem basisFun_repr (x : PiLp p fun i : ι => 𝕜) (i : ι) : (basisFun p 𝕜 ι).repr x i = x i :=
   rfl
 #align pi_Lp.basis_fun_repr PiLp.basisFun_repr
+
+@[simp]
+theorem basisFun_equivFun : (basisFun p 𝕜 ι).equivFun = PiLp.linearEquiv p 𝕜 fun _ : ι => 𝕜 :=
+  Basis.equivFun_ofEquivFun _
+#align pi_Lp.basis_fun_equiv_fun PiLp.basisFun_equivFun
 
 theorem basisFun_eq_pi_basisFun :
     basisFun p 𝕜 ι = (Pi.basisFun 𝕜 ι).map (PiLp.linearEquiv p 𝕜 fun _ : ι => 𝕜).symm :=

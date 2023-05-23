@@ -136,7 +136,7 @@ theorem coe_algebraMap [CommSemiring R] :
 /-- The localization map from power series to Laurent series. -/
 @[simps]
 instance of_powerSeries_localization [CommRing R] :
-    IsLocalization (Submonoid.powers (PowerSeries.x : PowerSeries R)) (LaurentSeries R)
+    IsLocalization (Submonoid.powers (PowerSeries.X : PowerSeries R)) (LaurentSeries R)
     where
   map_units := by
     rintro ⟨_, n, rfl⟩
@@ -149,11 +149,11 @@ instance of_powerSeries_localization [CommRing R] :
   surj := by
     intro z
     by_cases h : 0 ≤ z.order
-    · refine' ⟨⟨PowerSeries.x ^ Int.natAbs z.order * power_series_part z, 1⟩, _⟩
+    · refine' ⟨⟨PowerSeries.X ^ Int.natAbs z.order * power_series_part z, 1⟩, _⟩
       simp only [RingHom.map_one, mul_one, RingHom.map_mul, coe_algebra_map, of_power_series_X_pow,
         Submonoid.coe_one]
       rw [Int.natAbs_of_nonneg h, ← coe_power_series, single_order_mul_power_series_part]
-    · refine' ⟨⟨power_series_part z, PowerSeries.x ^ Int.natAbs z.order, ⟨_, rfl⟩⟩, _⟩
+    · refine' ⟨⟨power_series_part z, PowerSeries.X ^ Int.natAbs z.order, ⟨_, rfl⟩⟩, _⟩
       simp only [coe_algebra_map, of_power_series_power_series_part]
       rw [mul_comm _ z]
       refine' congr rfl _
@@ -170,14 +170,14 @@ instance of_powerSeries_localization [CommRing R] :
       rw [← sub_eq_zero, PowerSeries.ext_iff]
       intro m
       have h := hc (m + n)
-      rwa [LinearMap.map_zero, Subtype.coe_mk, PowerSeries.x_pow_eq, PowerSeries.monomial,
+      rwa [LinearMap.map_zero, Subtype.coe_mk, PowerSeries.X_pow_eq, PowerSeries.monomial,
         add_comm m, PowerSeries.coeff, Finsupp.single_add, MvPowerSeries.coeff_add_monomial_mul,
         one_mul] at h
 #align laurent_series.of_power_series_localization LaurentSeries.of_powerSeries_localization
 
 instance {K : Type u} [Field K] : IsFractionRing (PowerSeries K) (LaurentSeries K) :=
-  IsLocalization.of_le (Submonoid.powers (PowerSeries.x : PowerSeries K)) _
-    (powers_le_nonZeroDivisors_of_noZeroDivisors PowerSeries.x_ne_zero) fun f hf =>
+  IsLocalization.of_le (Submonoid.powers (PowerSeries.X : PowerSeries K)) _
+    (powers_le_nonZeroDivisors_of_noZeroDivisors PowerSeries.X_ne_zero) fun f hf =>
     isUnit_of_mem_nonZeroDivisors <| map_mem_nonZeroDivisors _ HahnSeries.ofPowerSeries_injective hf
 
 end LaurentSeries
@@ -234,12 +234,12 @@ theorem coeff_coe (i : ℤ) :
 #align power_series.coeff_coe PowerSeries.coeff_coe
 
 @[simp, norm_cast]
-theorem coe_c (r : R) : ((c R r : PowerSeries R) : LaurentSeries R) = HahnSeries.c r :=
+theorem coe_c (r : R) : ((C R r : PowerSeries R) : LaurentSeries R) = HahnSeries.c r :=
   ofPowerSeries_c _
 #align power_series.coe_C PowerSeries.coe_c
 
 @[simp]
-theorem coe_x : ((x : PowerSeries R) : LaurentSeries R) = single 1 1 :=
+theorem coe_x : ((X : PowerSeries R) : LaurentSeries R) = single 1 1 :=
   ofPowerSeries_x
 #align power_series.coe_X PowerSeries.coe_x
 

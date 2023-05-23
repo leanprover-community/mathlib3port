@@ -51,7 +51,7 @@ attribute [local ext] TensorProduct.ext
 expression of the fact that `L` acts by linear endomorphisms. It simplifies the proofs in
 `lie_ring_module` below. -/
 def hasBracketAux (x : L) : Module.End R (M ⊗[R] N) :=
-  (toEndomorphism R L M x).rtensor N + (toEndomorphism R L N x).ltensor M
+  (toEndomorphism R L M x).rTensor N + (toEndomorphism R L N x).lTensor M
 #align tensor_product.lie_module.has_bracket_aux TensorProduct.LieModule.hasBracketAux
 
 /-- The tensor product of two Lie modules is a Lie ring module. -/
@@ -60,7 +60,7 @@ instance lieRingModule : LieRingModule L (M ⊗[R] N)
   bracket x := hasBracketAux x
   add_lie x y t :=
     by
-    simp only [has_bracket_aux, LinearMap.ltensor_add, LinearMap.rtensor_add, LieHom.map_add,
+    simp only [has_bracket_aux, LinearMap.lTensor_add, LinearMap.rTensor_add, LieHom.map_add,
       LinearMap.add_apply]
     abel
   lie_add x := LinearMap.map_add _
@@ -75,9 +75,9 @@ instance lieRingModule : LieRingModule L (M ⊗[R] N)
       rfl
     ext (m n)
     simp only [has_bracket_aux, LieRing.of_associative_ring_bracket, LinearMap.mul_apply, mk_apply,
-      LinearMap.ltensor_sub, LinearMap.compr₂_apply, Function.comp_apply, LinearMap.coe_comp,
-      LinearMap.rtensor_tmul, LieHom.map_lie, to_endomorphism_apply_apply, LinearMap.add_apply,
-      LinearMap.map_add, LinearMap.rtensor_sub, LinearMap.sub_apply, LinearMap.ltensor_tmul]
+      LinearMap.lTensor_sub, LinearMap.compr₂_apply, Function.comp_apply, LinearMap.coe_comp,
+      LinearMap.rTensor_tmul, LieHom.map_lie, to_endomorphism_apply_apply, LinearMap.add_apply,
+      LinearMap.map_add, LinearMap.rTensor_sub, LinearMap.sub_apply, LinearMap.lTensor_tmul]
     abel
 #align tensor_product.lie_module.lie_ring_module TensorProduct.LieModule.lieRingModule
 
@@ -86,16 +86,16 @@ instance lieModule : LieModule R L (M ⊗[R] N)
     where
   smul_lie c x t := by
     change has_bracket_aux (c • x) _ = c • has_bracket_aux _ _
-    simp only [has_bracket_aux, smul_add, LinearMap.rtensor_smul, LinearMap.smul_apply,
-      LinearMap.ltensor_smul, LieHom.map_smul, LinearMap.add_apply]
+    simp only [has_bracket_aux, smul_add, LinearMap.rTensor_smul, LinearMap.smul_apply,
+      LinearMap.lTensor_smul, LieHom.map_smul, LinearMap.add_apply]
   lie_smul c x := LinearMap.map_smul _ c
 #align tensor_product.lie_module.lie_module TensorProduct.LieModule.lieModule
 
 @[simp]
 theorem lie_tmul_right (x : L) (m : M) (n : N) : ⁅x, m ⊗ₜ[R] n⁆ = ⁅x, m⁆ ⊗ₜ n + m ⊗ₜ ⁅x, n⁆ :=
   show hasBracketAux x (m ⊗ₜ[R] n) = _ by
-    simp only [has_bracket_aux, LinearMap.rtensor_tmul, to_endomorphism_apply_apply,
-      LinearMap.add_apply, LinearMap.ltensor_tmul]
+    simp only [has_bracket_aux, LinearMap.rTensor_tmul, to_endomorphism_apply_apply,
+      LinearMap.add_apply, LinearMap.lTensor_tmul]
 #align tensor_product.lie_module.lie_tmul_right TensorProduct.LieModule.lie_tmul_right
 
 variable (R L M N P Q)

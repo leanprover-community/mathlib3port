@@ -776,7 +776,7 @@ class IsEquivalence (F : C ⥤ D) where mk' ::
 
 restate_axiom is_equivalence.functor_unit_iso_comp'
 
-attribute [simp, reassoc.1] is_equivalence.functor_unit_iso_comp
+attribute [simp, reassoc] is_equivalence.functor_unit_iso_comp
 
 namespace IsEquivalence
 

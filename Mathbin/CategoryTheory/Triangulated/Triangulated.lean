@@ -73,7 +73,7 @@ instance (X : C) :
 
 namespace Octahedron
 
-attribute [reassoc.1] comm₁ comm₂ comm₃ comm₄
+attribute [reassoc] comm₁ comm₂ comm₃ comm₄
 
 variable {comm h₁₂ h₂₃ h₁₃} (h : Octahedron comm h₁₂ h₂₃ h₁₃)
 

@@ -611,20 +611,20 @@ theorem nondegenerate_toBilin'_iff_det_ne_zero {M : Matrix ι ι A} :
   rw [Matrix.nondegenerate_toBilin'_iff, Matrix.nondegenerate_iff_det_ne_zero]
 #align bilin_form.nondegenerate_to_bilin'_iff_det_ne_zero BilinForm.nondegenerate_toBilin'_iff_det_ne_zero
 
-theorem nondegenerateToBilin'OfDetNeZero' (M : Matrix ι ι A) (h : M.det ≠ 0) :
+theorem nondegenerate_toBilin'_of_det_ne_zero' (M : Matrix ι ι A) (h : M.det ≠ 0) :
     M.toBilin'.Nondegenerate :=
   nondegenerate_toBilin'_iff_det_ne_zero.mpr h
-#align bilin_form.nondegenerate_to_bilin'_of_det_ne_zero' BilinForm.nondegenerateToBilin'OfDetNeZero'
+#align bilin_form.nondegenerate_to_bilin'_of_det_ne_zero' BilinForm.nondegenerate_toBilin'_of_det_ne_zero'
 
 theorem nondegenerate_iff_det_ne_zero {B : BilinForm A M₃} (b : Basis ι A M₃) :
     B.Nondegenerate ↔ (toMatrix b B).det ≠ 0 := by
   rw [← Matrix.nondegenerate_iff_det_ne_zero, nondegenerate_to_matrix_iff]
 #align bilin_form.nondegenerate_iff_det_ne_zero BilinForm.nondegenerate_iff_det_ne_zero
 
-theorem nondegenerateOfDetNeZero (b : Basis ι A M₃) (h : (toMatrix b B₃).det ≠ 0) :
+theorem nondegenerate_of_det_ne_zero (b : Basis ι A M₃) (h : (toMatrix b B₃).det ≠ 0) :
     B₃.Nondegenerate :=
   (nondegenerate_iff_det_ne_zero b).mpr h
-#align bilin_form.nondegenerate_of_det_ne_zero BilinForm.nondegenerateOfDetNeZero
+#align bilin_form.nondegenerate_of_det_ne_zero BilinForm.nondegenerate_of_det_ne_zero
 
 end Det
 

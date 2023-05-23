@@ -387,7 +387,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align tendsto_zpow_at_top_zero tendsto_zpow_atTop_zeroₓ'. -/
 theorem tendsto_zpow_atTop_zero {n : ℤ} (hn : n < 0) : Tendsto (fun x : α => x ^ n) atTop (𝓝 0) :=
   by
-  lift -n to ℕ using le_of_lt (neg_pos.mpr hn) with N
+  lift -n to ℕ using le_of_lt (neg_pos.mpr hn)
   rw [← neg_pos, ← h, Nat.cast_pos] at hn
   simpa only [h, neg_neg] using tendsto_pow_neg_atTop hn.ne'
 #align tendsto_zpow_at_top_zero tendsto_zpow_atTop_zero

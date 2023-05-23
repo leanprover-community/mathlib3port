@@ -283,7 +283,7 @@ theorem TendstoInMeasure.aEMeasurable {u : Filter ι} [NeBot u] [IsCountablyGene
     (h_tendsto : TendstoInMeasure μ f u g) : AEMeasurable g μ :=
   by
   obtain ⟨ns, hns⟩ := h_tendsto.exists_seq_tendsto_ae'
-  exact aEMeasurable_of_tendsto_metrizable_ae at_top (fun n => hf (ns n)) hns
+  exact aemeasurable_of_tendsto_metrizable_ae at_top (fun n => hf (ns n)) hns
 #align measure_theory.tendsto_in_measure.ae_measurable MeasureTheory.TendstoInMeasure.aEMeasurable
 
 end AeMeasurableOf

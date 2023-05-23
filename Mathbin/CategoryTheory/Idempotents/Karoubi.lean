@@ -65,7 +65,7 @@ namespace Karoubi
 
 variable {C}
 
-attribute [simp, reassoc.1] idem
+attribute [simp, reassoc] idem
 
 /- warning: category_theory.idempotents.karoubi.ext -> CategoryTheory.Idempotents.Karoubi.ext is a dubious translation:
 lean 3 declaration is
@@ -120,7 +120,7 @@ lean 3 declaration is
 but is expected to have type
   forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {P : CategoryTheory.Idempotents.Karoubi.{u2, u1} C _inst_1} {Q : CategoryTheory.Idempotents.Karoubi.{u2, u1} C _inst_1} (f : CategoryTheory.Idempotents.Karoubi.Hom.{u2, u1} C _inst_1 P Q), Eq.{succ u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Idempotents.Karoubi.X.{u2, u1} C _inst_1 P) (CategoryTheory.Idempotents.Karoubi.X.{u2, u1} C _inst_1 Q)) (CategoryTheory.CategoryStruct.comp.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.Karoubi.X.{u2, u1} C _inst_1 P) (CategoryTheory.Idempotents.Karoubi.X.{u2, u1} C _inst_1 P) (CategoryTheory.Idempotents.Karoubi.X.{u2, u1} C _inst_1 Q) (CategoryTheory.Idempotents.Karoubi.p.{u2, u1} C _inst_1 P) (CategoryTheory.Idempotents.Karoubi.Hom.f.{u2, u1} C _inst_1 P Q f)) (CategoryTheory.Idempotents.Karoubi.Hom.f.{u2, u1} C _inst_1 P Q f)
 Case conversion may be inaccurate. Consider using '#align category_theory.idempotents.karoubi.p_comp CategoryTheory.Idempotents.Karoubi.p_compₓ'. -/
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem p_comp {P Q : Karoubi C} (f : Hom P Q) : P.p ≫ f.f = f.f := by rw [f.comm, ← assoc, P.idem]
 #align category_theory.idempotents.karoubi.p_comp CategoryTheory.Idempotents.Karoubi.p_comp
 
@@ -130,7 +130,7 @@ lean 3 declaration is
 but is expected to have type
   forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {P : CategoryTheory.Idempotents.Karoubi.{u2, u1} C _inst_1} {Q : CategoryTheory.Idempotents.Karoubi.{u2, u1} C _inst_1} (f : CategoryTheory.Idempotents.Karoubi.Hom.{u2, u1} C _inst_1 P Q), Eq.{succ u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) (CategoryTheory.Idempotents.Karoubi.X.{u2, u1} C _inst_1 P) (CategoryTheory.Idempotents.Karoubi.X.{u2, u1} C _inst_1 Q)) (CategoryTheory.CategoryStruct.comp.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1) (CategoryTheory.Idempotents.Karoubi.X.{u2, u1} C _inst_1 P) (CategoryTheory.Idempotents.Karoubi.X.{u2, u1} C _inst_1 Q) (CategoryTheory.Idempotents.Karoubi.X.{u2, u1} C _inst_1 Q) (CategoryTheory.Idempotents.Karoubi.Hom.f.{u2, u1} C _inst_1 P Q f) (CategoryTheory.Idempotents.Karoubi.p.{u2, u1} C _inst_1 Q)) (CategoryTheory.Idempotents.Karoubi.Hom.f.{u2, u1} C _inst_1 P Q f)
 Case conversion may be inaccurate. Consider using '#align category_theory.idempotents.karoubi.comp_p CategoryTheory.Idempotents.Karoubi.comp_pₓ'. -/
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem comp_p {P Q : Karoubi C} (f : Hom P Q) : f.f ≫ Q.p = f.f := by
   rw [f.comm, assoc, assoc, Q.idem]
 #align category_theory.idempotents.karoubi.comp_p CategoryTheory.Idempotents.Karoubi.comp_p

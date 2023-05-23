@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.special_functions.complex.circle
-! leanprover-community/mathlib commit f333194f5ecd1482191452c5ea60b37d4d6afa08
+! leanprover-community/mathlib commit 4280f5f32e16755ec7985ce11e189b6cd6ff6735
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Analysis.SpecialFunctions.Complex.Log
 
 /-!
 # Maps on the unit circle
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we prove some basic lemmas about `exp_map_circle` and the restriction of `complex.arg`
 to the unit circle. These two maps define a local equivalence between `circle` and `ℝ`, see

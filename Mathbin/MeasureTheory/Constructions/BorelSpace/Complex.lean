@@ -4,14 +4,17 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.constructions.borel_space.complex
-! leanprover-community/mathlib commit bf6a01357ff5684b1ebcd0f1a13be314fc82c0bf
+! leanprover-community/mathlib commit 4280f5f32e16755ec7985ce11e189b6cd6ff6735
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Complex.Basic
 import Mathbin.MeasureTheory.Constructions.BorelSpace.Basic
 
-/-! # Equip `ℂ` with the Borel sigma-algebra -/
+/-! # Equip `ℂ` with the Borel sigma-algebra 
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.-/
 
 
 noncomputable section

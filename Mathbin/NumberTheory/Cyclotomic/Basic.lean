@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module number_theory.cyclotomic.basic
-! leanprover-community/mathlib commit f0c8bf9245297a541f468be517f1bde6195105e9
+! leanprover-community/mathlib commit b353176c24d96c23f0ce1cc63efc3f55019702d9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -322,7 +322,7 @@ theorem finite_of_singleton [IsDomain B] [h : IsCyclotomicExtension {n} A B] : M
   by
   classical
     rw [Module.finite_def, ← top_to_submodule, ← ((iff_adjoin_eq_top _ _ _).1 h).2]
-    refine' fG_adjoin_of_finite _ fun b hb => _
+    refine' FG_adjoin_of_finite _ fun b hb => _
     · simp only [mem_singleton_iff, exists_eq_left]
       have : { b : B | b ^ (n : ℕ) = 1 } = (nth_roots n (1 : B)).toFinset :=
         Set.ext fun x => ⟨fun h => by simpa using h, fun h => by simpa using h⟩
@@ -579,13 +579,15 @@ variable [IsDomain A] [Algebra A K] [IsFractionRing A K]
 section CyclotomicRing
 
 /-- If `K` is the fraction field of `A`, the `A`-algebra structure on `cyclotomic_field n K`.
-This is not an instance since it causes diamonds when `A = ℤ`. -/
+-/
 @[nolint unused_arguments]
-def CyclotomicField.algebraBase : Algebra A (CyclotomicField n K) :=
-  ((algebraMap K (CyclotomicField n K)).comp (algebraMap A K)).toAlgebra
+instance CyclotomicField.algebraBase : Algebra A (CyclotomicField n K) :=
+  SplittingField.algebra' (cyclotomic n K)
 #align cyclotomic_field.algebra_base CyclotomicField.algebraBase
 
-attribute [local instance] CyclotomicField.algebraBase
+/-- Ensure there are no diamonds when `A = ℤ`. -/
+example : algebraInt (CyclotomicField n ℚ) = CyclotomicField.algebraBase _ _ _ :=
+  rfl
 
 instance CyclotomicField.noZeroSMulDivisors : NoZeroSMulDivisors A (CyclotomicField n K) :=
   NoZeroSMulDivisors.of_algebraMap_injective <|

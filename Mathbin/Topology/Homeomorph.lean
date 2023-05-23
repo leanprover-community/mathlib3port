@@ -1193,8 +1193,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] (e : Homeomorph.{u1, u2} α β _inst_1 _inst_2) (s : Set.{u1} α), Homeomorph.{u1, u2} (Set.Elem.{u1} α s) (Set.Elem.{u2} β (Set.image.{u1, u2} α β (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (Homeomorph.{u1, u2} α β _inst_1 _inst_2) α (fun (_x : α) => β) (EmbeddingLike.toFunLike.{max (succ u1) (succ u2), succ u1, succ u2} (Homeomorph.{u1, u2} α β _inst_1 _inst_2) α β (EquivLike.toEmbeddingLike.{max (succ u1) (succ u2), succ u1, succ u2} (Homeomorph.{u1, u2} α β _inst_1 _inst_2) α β (Homeomorph.instEquivLikeHomeomorph.{u1, u2} α β _inst_1 _inst_2))) e) s)) (instTopologicalSpaceSubtype.{u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) _inst_1) (instTopologicalSpaceSubtype.{u2} β (fun (x : β) => Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) x (Set.image.{u1, u2} α β (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (Homeomorph.{u1, u2} α β _inst_1 _inst_2) α (fun (_x : α) => β) (EmbeddingLike.toFunLike.{max (succ u1) (succ u2), succ u1, succ u2} (Homeomorph.{u1, u2} α β _inst_1 _inst_2) α β (EquivLike.toEmbeddingLike.{max (succ u1) (succ u2), succ u1, succ u2} (Homeomorph.{u1, u2} α β _inst_1 _inst_2) α β (Homeomorph.instEquivLikeHomeomorph.{u1, u2} α β _inst_1 _inst_2))) e) s)) _inst_2)
 Case conversion may be inaccurate. Consider using '#align homeomorph.image Homeomorph.imageₓ'. -/
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:301:22: continuitity! not supported at the moment -/
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:301:22: continuitity! not supported at the moment -/
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:304:22: continuitity! not supported at the moment -/
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:304:22: continuitity! not supported at the moment -/
 /-- A subset of a topological space is homeomorphic to its image under a homeomorphism.
 -/
 @[simps]

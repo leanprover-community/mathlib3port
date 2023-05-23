@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Eugster
 
 ! This file was ported from Lean 3 source module algebra.char_p.mixed_char_zero
-! leanprover-community/mathlib commit 70fd9563a21e7b963887c9360bd29b2393e6225a
+! leanprover-community/mathlib commit 4280f5f32e16755ec7985ce11e189b6cd6ff6735
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Tactic.FieldSimp
 
 /-!
 # Equal and mixed characteristic
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In commutative algebra, some statments are simpler when working over a `ℚ`-algebra `R`, in which
 case one also says that the ring has "equal characteristic zero". A ring that is not a

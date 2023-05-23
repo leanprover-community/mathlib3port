@@ -67,7 +67,7 @@ attribute [simp] Functor.map_id
 
 restate_axiom functor.map_comp'
 
-attribute [reassoc.1, simp] functor.map_comp
+attribute [reassoc, simp] functor.map_comp
 
 namespace Functor
 

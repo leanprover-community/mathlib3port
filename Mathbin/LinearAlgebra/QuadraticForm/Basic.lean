@@ -801,9 +801,9 @@ theorem associated_apply (x y : M) : associatedHom S Q x y = ⅟ 2 * (Q (x + y) 
   rfl
 #align quadratic_form.associated_apply QuadraticForm.associated_apply
 
-theorem associatedIsSymm : (associatedHom S Q).IsSymm := fun x y => by
+theorem associated_isSymm : (associatedHom S Q).IsSymm := fun x y => by
   simp only [associated_apply, add_comm, add_left_comm, sub_eq_add_neg]
-#align quadratic_form.associated_is_symm QuadraticForm.associatedIsSymm
+#align quadratic_form.associated_is_symm QuadraticForm.associated_isSymm
 
 @[simp]
 theorem associated_comp {N : Type v} [AddCommGroup N] [Module R N] (f : N →ₗ[R] M) :
@@ -930,14 +930,14 @@ section Ring
 variable [Ring R] [AddCommGroup M] [Module R M]
 
 /-- The associated bilinear form of an anisotropic quadratic form is nondegenerate. -/
-theorem nondegenerateOfAnisotropic [Invertible (2 : R)] (Q : QuadraticForm R M)
+theorem nondegenerate_of_anisotropic [Invertible (2 : R)] (Q : QuadraticForm R M)
     (hB : Q.Anisotropic) : Q.associated'.Nondegenerate :=
   by
   intro x hx
   refine' hB _ _
   rw [← hx x]
   exact (associated_eq_self_apply _ _ x).symm
-#align quadratic_form.nondegenerate_of_anisotropic QuadraticForm.nondegenerateOfAnisotropic
+#align quadratic_form.nondegenerate_of_anisotropic QuadraticForm.nondegenerate_of_anisotropic
 
 end Ring
 
@@ -1089,9 +1089,9 @@ section Semiring
 variable [Semiring R] [AddCommMonoid M] [Module R M]
 
 /-- A bilinear form is nondegenerate if the quadratic form it is associated with is anisotropic. -/
-theorem nondegenerateOfAnisotropic {B : BilinForm R M} (hB : B.toQuadraticForm.Anisotropic) :
+theorem nondegenerate_of_anisotropic {B : BilinForm R M} (hB : B.toQuadraticForm.Anisotropic) :
     B.Nondegenerate := fun x hx => hB _ (hx x)
-#align bilin_form.nondegenerate_of_anisotropic BilinForm.nondegenerateOfAnisotropic
+#align bilin_form.nondegenerate_of_anisotropic BilinForm.nondegenerate_of_anisotropic
 
 end Semiring
 
@@ -1103,7 +1103,7 @@ on a module `M` over a ring `R` with invertible `2`, i.e. there exists some
 theorem exists_bilinForm_self_ne_zero [htwo : Invertible (2 : R)] {B : BilinForm R M} (hB₁ : B ≠ 0)
     (hB₂ : B.IsSymm) : ∃ x, ¬B.IsOrtho x x :=
   by
-  lift B to QuadraticForm R M using hB₂ with Q
+  lift B to QuadraticForm R M using hB₂
   obtain ⟨x, hx⟩ := QuadraticForm.exists_quadraticForm_ne_zero hB₁
   exact ⟨x, fun h => hx (Q.associated_eq_self_apply ℕ x ▸ h)⟩
 #align bilin_form.exists_bilin_form_self_ne_zero BilinForm.exists_bilinForm_self_ne_zero
@@ -1208,7 +1208,7 @@ theorem weightedSumSquares_apply [Monoid S] [DistribMulAction S R₁] [SMulCommC
 #align quadratic_form.weighted_sum_squares_apply QuadraticForm.weightedSumSquares_apply
 
 /-- On an orthogonal basis, the basis representation of `Q` is just a sum of squares. -/
-theorem basisRepr_eq_of_isOrthoCat {R₁ M} [CommRing R₁] [AddCommGroup M] [Module R₁ M]
+theorem basisRepr_eq_of_iIsOrtho {R₁ M} [CommRing R₁] [AddCommGroup M] [Module R₁ M]
     [Invertible (2 : R₁)] (Q : QuadraticForm R₁ M) (v : Basis ι R₁ M)
     (hv₂ : (associated Q).IsOrthoᵢ v) : Q.basis_repr v = weightedSumSquares _ fun i => Q (v i) :=
   by
@@ -1221,7 +1221,7 @@ theorem basisRepr_eq_of_isOrthoCat {R₁ M} [CommRing R₁] [AddCommGroup M] [Mo
   · intro i _ hij
     rw [smul_left, smul_right, show associated_hom R₁ Q (v j) (v i) = 0 from hv₂ hij.symm,
       MulZeroClass.mul_zero, MulZeroClass.mul_zero]
-#align quadratic_form.basis_repr_eq_of_is_Ortho QuadraticForm.basisRepr_eq_of_isOrthoCat
+#align quadratic_form.basis_repr_eq_of_is_Ortho QuadraticForm.basisRepr_eq_of_iIsOrtho
 
 end QuadraticForm
 

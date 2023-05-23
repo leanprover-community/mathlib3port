@@ -71,9 +71,9 @@ open IsFractionRing IsLocalization Polynomial UniqueFactorizationMonoid
 /-- Rational root theorem part 1:
 if `r : f.codomain` is a root of a polynomial over the ufd `A`,
 then the numerator of `r` divides the constant coefficient -/
-theorem num_dvd_of_is_root {p : A[X]} {r : K} (hr : aeval r p = 0) : Num A r ∣ p.coeff 0 :=
+theorem num_dvd_of_is_root {p : A[X]} {r : K} (hr : aeval r p = 0) : Num A r ∣ p.Coeff 0 :=
   by
-  suffices Num A r ∣ (scale_roots p (denom A r)).coeff 0
+  suffices Num A r ∣ (scale_roots p (denom A r)).Coeff 0
     by
     simp only [coeff_scale_roots, tsub_zero] at this
     haveI := Classical.propDecidable

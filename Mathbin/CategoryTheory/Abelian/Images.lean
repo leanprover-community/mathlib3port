@@ -69,7 +69,7 @@ protected abbrev factorThruImage : P ⟶ Abelian.image f :=
 
 #print CategoryTheory.Abelian.image.fac /-
 /-- `f` factors through its image via the canonical morphism `p`. -/
-@[simp, reassoc.1]
+@[simp, reassoc]
 protected theorem image.fac : Abelian.factorThruImage f ≫ image.ι f = f :=
   kernel.lift_ι _ _ _
 #align category_theory.abelian.image.fac CategoryTheory.Abelian.image.fac
@@ -159,7 +159,7 @@ theorem coimageImageComparison_eq_coimageImageComparison' :
 -/
 
 #print CategoryTheory.Abelian.coimage_image_factorisation /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem coimage_image_factorisation : coimage.π f ≫ coimageImageComparison f ≫ image.ι f = f := by
   simp [coimage_image_comparison]
 #align category_theory.abelian.coimage_image_factorisation CategoryTheory.Abelian.coimage_image_factorisation

@@ -4,11 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.special_functions.non_integrable
-! leanprover-community/mathlib commit 2c1d8ca2812b64f88992a5294ea3dba144755cd1
+! leanprover-community/mathlib commit 55ec6e9af7d3e0043f57e394cb06a72f6275273e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Analysis.SpecialFunctions.Integrals
+import Mathbin.Analysis.SpecialFunctions.Log.Deriv
+import Mathbin.MeasureTheory.Integral.FundThmCalculus
 
 /-!
 # Non integrable functions
@@ -177,9 +178,9 @@ theorem intervalIntegrable_sub_inv_iff {a b c : ℝ} :
   · refine' fun h => or_iff_not_imp_left.2 fun hne hc => _
     exact not_intervalIntegrable_of_sub_inv_isBigO_punctured (is_O_refl _ _) hne hc h
   · rintro (rfl | h₀)
-    exacts[IntervalIntegrable.refl,
-      interval_integrable_inv (fun x hx => sub_ne_zero.2 <| ne_of_mem_of_not_mem hx h₀)
-        (continuous_on_id.sub continuousOn_const)]
+    · exact IntervalIntegrable.refl
+    refine' ((continuous_sub_right c).ContinuousOn.inv₀ _).IntervalIntegrable
+    exact fun x hx => sub_ne_zero.2 <| ne_of_mem_of_not_mem hx h₀
 #align interval_integrable_sub_inv_iff intervalIntegrable_sub_inv_iff
 
 /-- The function `λ x, x⁻¹` is integrable on `a..b` if and only if `a = b` or `0 ∉ [a, b]`. -/

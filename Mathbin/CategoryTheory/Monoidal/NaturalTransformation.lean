@@ -58,11 +58,11 @@ structure MonoidalNatTrans (F G : LaxMonoidalFunctor C D) extends
 
 restate_axiom monoidal_nat_trans.tensor'
 
-attribute [simp, reassoc.1] monoidal_nat_trans.tensor
+attribute [simp, reassoc] monoidal_nat_trans.tensor
 
 restate_axiom monoidal_nat_trans.unit'
 
-attribute [simp, reassoc.1] monoidal_nat_trans.unit
+attribute [simp, reassoc] monoidal_nat_trans.unit
 
 namespace MonoidalNatTrans
 

@@ -715,7 +715,7 @@ that the triangle below commutes, provided `P` is a sheaf for `S`
    yX
 
 -/
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem IsSheafFor.functorInclusion_comp_extend {P : Cᵒᵖ ⥤ Type v₁} (h : IsSheafFor P S)
     (f : S.Functor ⟶ P) : S.functorInclusion ≫ h.extend f = f :=
   (isSheafFor_iff_yonedaSheafCondition.1 h f).exists.choose_spec

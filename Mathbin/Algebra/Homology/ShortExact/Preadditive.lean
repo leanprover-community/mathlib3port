@@ -275,18 +275,18 @@ section HasZeroMorphisms
 
 variable [HasZeroMorphisms 𝒜] [HasBinaryBiproducts 𝒜]
 
-attribute [simp, reassoc.1] comp_iso_eq_inl iso_comp_snd_eq
+attribute [simp, reassoc] comp_iso_eq_inl iso_comp_snd_eq
 
 variable (h : Splitting f g)
 
 #print CategoryTheory.Splitting.inl_comp_iso_eq /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem inl_comp_iso_eq : biprod.inl ≫ h.Iso.inv = f := by rw [iso.comp_inv_eq, h.comp_iso_eq_inl]
 #align category_theory.splitting.inl_comp_iso_eq CategoryTheory.Splitting.inl_comp_iso_eq
 -/
 
 #print CategoryTheory.Splitting.iso_comp_eq_snd /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem iso_comp_eq_snd : h.Iso.inv ≫ g = biprod.snd := by rw [iso.inv_comp_eq, h.iso_comp_snd_eq]
 #align category_theory.splitting.iso_comp_eq_snd CategoryTheory.Splitting.iso_comp_eq_snd
 -/
@@ -308,7 +308,7 @@ def retraction : B ⟶ A :=
 -/
 
 #print CategoryTheory.Splitting.section_π /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem section_π : h.section ≫ g = 𝟙 C :=
   by
   delta splitting.section
@@ -317,7 +317,7 @@ theorem section_π : h.section ≫ g = 𝟙 C :=
 -/
 
 #print CategoryTheory.Splitting.ι_retraction /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem ι_retraction : f ≫ h.retraction = 𝟙 A :=
   by
   delta retraction
@@ -326,7 +326,7 @@ theorem ι_retraction : f ≫ h.retraction = 𝟙 A :=
 -/
 
 #print CategoryTheory.Splitting.section_retraction /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem section_retraction : h.section ≫ h.retraction = 0 :=
   by
   delta splitting.section retraction
@@ -349,14 +349,14 @@ protected def splitEpi : SplitEpi g :=
 -/
 
 #print CategoryTheory.Splitting.inr_iso_inv /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem inr_iso_inv : biprod.inr ≫ h.Iso.inv = h.section :=
   rfl
 #align category_theory.splitting.inr_iso_inv CategoryTheory.Splitting.inr_iso_inv
 -/
 
 #print CategoryTheory.Splitting.iso_hom_fst /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem iso_hom_fst : h.Iso.Hom ≫ biprod.fst = h.retraction :=
   rfl
 #align category_theory.splitting.iso_hom_fst CategoryTheory.Splitting.iso_hom_fst
@@ -428,7 +428,7 @@ lean 3 declaration is
 but is expected to have type
   forall {𝒜 : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} 𝒜] {A : 𝒜} {B : 𝒜} {C : 𝒜} {f : Quiver.Hom.{succ u2, u1} 𝒜 (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} 𝒜 (CategoryTheory.Category.toCategoryStruct.{u2, u1} 𝒜 _inst_1)) A B} {g : Quiver.Hom.{succ u2, u1} 𝒜 (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} 𝒜 (CategoryTheory.Category.toCategoryStruct.{u2, u1} 𝒜 _inst_1)) B C} [_inst_2 : CategoryTheory.Preadditive.{u2, u1} 𝒜 _inst_1] [_inst_3 : CategoryTheory.Limits.HasBinaryBiproducts.{u2, u1} 𝒜 _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u1} 𝒜 _inst_1 _inst_2)] (h : CategoryTheory.Splitting.{u1, u2} 𝒜 _inst_1 A B C f g (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u1} 𝒜 _inst_1 _inst_2) _inst_3), Eq.{succ u2} (Quiver.Hom.{succ u2, u1} 𝒜 (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} 𝒜 (CategoryTheory.Category.toCategoryStruct.{u2, u1} 𝒜 _inst_1)) B B) (CategoryTheory.CategoryStruct.comp.{u2, u1} 𝒜 (CategoryTheory.Category.toCategoryStruct.{u2, u1} 𝒜 _inst_1) B A B (CategoryTheory.Splitting.retraction.{u1, u2} 𝒜 _inst_1 A B C f g (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u1} 𝒜 _inst_1 _inst_2) _inst_3 h) f) (HSub.hSub.{u2, u2, u2} (Quiver.Hom.{succ u2, u1} 𝒜 (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} 𝒜 (CategoryTheory.Category.toCategoryStruct.{u2, u1} 𝒜 _inst_1)) B B) (Quiver.Hom.{succ u2, u1} 𝒜 (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} 𝒜 (CategoryTheory.Category.toCategoryStruct.{u2, u1} 𝒜 _inst_1)) B B) (Quiver.Hom.{succ u2, u1} 𝒜 (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} 𝒜 (CategoryTheory.Category.toCategoryStruct.{u2, u1} 𝒜 _inst_1)) B B) (instHSub.{u2} (Quiver.Hom.{succ u2, u1} 𝒜 (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} 𝒜 (CategoryTheory.Category.toCategoryStruct.{u2, u1} 𝒜 _inst_1)) B B) (SubNegMonoid.toSub.{u2} (Quiver.Hom.{succ u2, u1} 𝒜 (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} 𝒜 (CategoryTheory.Category.toCategoryStruct.{u2, u1} 𝒜 _inst_1)) B B) (AddGroup.toSubNegMonoid.{u2} (Quiver.Hom.{succ u2, u1} 𝒜 (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} 𝒜 (CategoryTheory.Category.toCategoryStruct.{u2, u1} 𝒜 _inst_1)) B B) (AddCommGroup.toAddGroup.{u2} (Quiver.Hom.{succ u2, u1} 𝒜 (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} 𝒜 (CategoryTheory.Category.toCategoryStruct.{u2, u1} 𝒜 _inst_1)) B B) (CategoryTheory.Preadditive.homGroup.{u2, u1} 𝒜 _inst_1 _inst_2 B B))))) (CategoryTheory.CategoryStruct.id.{u2, u1} 𝒜 (CategoryTheory.Category.toCategoryStruct.{u2, u1} 𝒜 _inst_1) B) (CategoryTheory.CategoryStruct.comp.{u2, u1} 𝒜 (CategoryTheory.Category.toCategoryStruct.{u2, u1} 𝒜 _inst_1) B C B g (CategoryTheory.Splitting.section.{u1, u2} 𝒜 _inst_1 A B C f g (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u1} 𝒜 _inst_1 _inst_2) _inst_3 h)))
 Case conversion may be inaccurate. Consider using '#align category_theory.splitting.retraction_ι_eq_id_sub CategoryTheory.Splitting.retraction_ι_eq_id_subₓ'. -/
-@[reassoc.1]
+@[reassoc]
 theorem retraction_ι_eq_id_sub : h.retraction ≫ f = 𝟙 _ - g ≫ h.section :=
   eq_sub_iff_add_eq.mpr h.split_add
 #align category_theory.splitting.retraction_ι_eq_id_sub CategoryTheory.Splitting.retraction_ι_eq_id_sub
@@ -439,7 +439,7 @@ lean 3 declaration is
 but is expected to have type
   forall {𝒜 : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} 𝒜] {A : 𝒜} {B : 𝒜} {C : 𝒜} {f : Quiver.Hom.{succ u2, u1} 𝒜 (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} 𝒜 (CategoryTheory.Category.toCategoryStruct.{u2, u1} 𝒜 _inst_1)) A B} {g : Quiver.Hom.{succ u2, u1} 𝒜 (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} 𝒜 (CategoryTheory.Category.toCategoryStruct.{u2, u1} 𝒜 _inst_1)) B C} [_inst_2 : CategoryTheory.Preadditive.{u2, u1} 𝒜 _inst_1] [_inst_3 : CategoryTheory.Limits.HasBinaryBiproducts.{u2, u1} 𝒜 _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u1} 𝒜 _inst_1 _inst_2)] (h : CategoryTheory.Splitting.{u1, u2} 𝒜 _inst_1 A B C f g (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u1} 𝒜 _inst_1 _inst_2) _inst_3), Eq.{succ u2} (Quiver.Hom.{succ u2, u1} 𝒜 (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} 𝒜 (CategoryTheory.Category.toCategoryStruct.{u2, u1} 𝒜 _inst_1)) B B) (CategoryTheory.CategoryStruct.comp.{u2, u1} 𝒜 (CategoryTheory.Category.toCategoryStruct.{u2, u1} 𝒜 _inst_1) B C B g (CategoryTheory.Splitting.section.{u1, u2} 𝒜 _inst_1 A B C f g (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u1} 𝒜 _inst_1 _inst_2) _inst_3 h)) (HSub.hSub.{u2, u2, u2} (Quiver.Hom.{succ u2, u1} 𝒜 (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} 𝒜 (CategoryTheory.Category.toCategoryStruct.{u2, u1} 𝒜 _inst_1)) B B) (Quiver.Hom.{succ u2, u1} 𝒜 (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} 𝒜 (CategoryTheory.Category.toCategoryStruct.{u2, u1} 𝒜 _inst_1)) B B) (Quiver.Hom.{succ u2, u1} 𝒜 (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} 𝒜 (CategoryTheory.Category.toCategoryStruct.{u2, u1} 𝒜 _inst_1)) B B) (instHSub.{u2} (Quiver.Hom.{succ u2, u1} 𝒜 (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} 𝒜 (CategoryTheory.Category.toCategoryStruct.{u2, u1} 𝒜 _inst_1)) B B) (SubNegMonoid.toSub.{u2} (Quiver.Hom.{succ u2, u1} 𝒜 (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} 𝒜 (CategoryTheory.Category.toCategoryStruct.{u2, u1} 𝒜 _inst_1)) B B) (AddGroup.toSubNegMonoid.{u2} (Quiver.Hom.{succ u2, u1} 𝒜 (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} 𝒜 (CategoryTheory.Category.toCategoryStruct.{u2, u1} 𝒜 _inst_1)) B B) (AddCommGroup.toAddGroup.{u2} (Quiver.Hom.{succ u2, u1} 𝒜 (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} 𝒜 (CategoryTheory.Category.toCategoryStruct.{u2, u1} 𝒜 _inst_1)) B B) (CategoryTheory.Preadditive.homGroup.{u2, u1} 𝒜 _inst_1 _inst_2 B B))))) (CategoryTheory.CategoryStruct.id.{u2, u1} 𝒜 (CategoryTheory.Category.toCategoryStruct.{u2, u1} 𝒜 _inst_1) B) (CategoryTheory.CategoryStruct.comp.{u2, u1} 𝒜 (CategoryTheory.Category.toCategoryStruct.{u2, u1} 𝒜 _inst_1) B A B (CategoryTheory.Splitting.retraction.{u1, u2} 𝒜 _inst_1 A B C f g (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u2, u1} 𝒜 _inst_1 _inst_2) _inst_3 h) f))
 Case conversion may be inaccurate. Consider using '#align category_theory.splitting.π_section_eq_id_sub CategoryTheory.Splitting.π_section_eq_id_subₓ'. -/
-@[reassoc.1]
+@[reassoc]
 theorem π_section_eq_id_sub : g ≫ h.section = 𝟙 _ - h.retraction ≫ f :=
   eq_sub_iff_add_eq.mpr ((add_comm _ _).trans h.split_add)
 #align category_theory.splitting.π_section_eq_id_sub CategoryTheory.Splitting.π_section_eq_id_sub
@@ -475,7 +475,7 @@ theorem split : Split f g := by
 #align category_theory.splitting.split CategoryTheory.Splitting.split
 
 #print CategoryTheory.Splitting.comp_eq_zero /-
-@[reassoc.1]
+@[reassoc]
 theorem comp_eq_zero : f ≫ g = 0 :=
   h.split.1.choose_spec.choose_spec.2.2.1
 #align category_theory.splitting.comp_eq_zero CategoryTheory.Splitting.comp_eq_zero

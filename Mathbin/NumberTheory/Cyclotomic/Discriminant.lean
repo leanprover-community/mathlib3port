@@ -153,7 +153,7 @@ theorem discr_prime_pow [hcycl : IsCyclotomicExtension {p ^ k} K L] [hp : Fact (
       show 1 / 2 = 0 by rfl, discr, trace_matrix]
     have hζone : ζ = 1 := by simpa using hζ
     rw [hζ.power_basis_dim _, hζone, ← (algebraMap K L).map_one,
-      minpoly.eq_x_sub_c_of_algebraMap_inj _ (algebraMap K L).Injective, nat_degree_X_sub_C]
+      minpoly.eq_X_sub_C_of_algebraMap_inj _ (algebraMap K L).Injective, nat_degree_X_sub_C]
     simp only [trace_matrix, map_one, one_pow, Matrix.det_unique, trace_form_apply, mul_one]
     rw [← (algebraMap K L).map_one, trace_algebra_map, finrank _ hirr]
     · simp
@@ -174,7 +174,7 @@ theorem discr_prime_pow [hcycl : IsCyclotomicExtension {p ^ k} K L] [hp : Fact (
       simp only [hp, hk, show 1 / 2 = 0 by rfl, coe_basis, pow_one, power_basis_gen, PNat.coe_bit0,
         PNat.one_coe, totient_two, pow_zero, mul_one, MulZeroClass.mul_zero]
       rw [power_basis_dim, hζ.eq_neg_one_of_two_right, show (-1 : L) = algebraMap K L (-1) by simp,
-        minpoly.eq_x_sub_c_of_algebraMap_inj _ (algebraMap K L).Injective, nat_degree_X_sub_C]
+        minpoly.eq_X_sub_C_of_algebraMap_inj _ (algebraMap K L).Injective, nat_degree_X_sub_C]
       simp only [discr, trace_matrix_apply, Matrix.det_unique, Fin.default_eq_zero, Fin.val_zero,
         pow_zero, trace_form_apply, mul_one]
       rw [← (algebraMap K L).map_one, trace_algebra_map, finrank _ hirr, hp, hk]

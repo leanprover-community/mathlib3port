@@ -251,7 +251,7 @@ theorem Submartingale.ae_tendsto_limitProcess [FiniteMeasure μ] (hf : Submartin
       simp_rw [g', dif_pos hω]
       exact hω.some_spec
     have hg'm : @ae_strongly_measurable _ _ _ (⨆ n, ℱ n) g' (μ.trim hle) :=
-      (@aEMeasurable_of_tendsto_metrizable_ae' _ _ (⨆ n, ℱ n) _ _ _ _ _ _ _
+      (@aemeasurable_of_tendsto_metrizable_ae' _ _ (⨆ n, ℱ n) _ _ _ _ _ _ _
           (fun n =>
             ((hf.strongly_measurable n).Measurable.mono (le_sSup ⟨n, rfl⟩ : ℱ n ≤ ⨆ n, ℱ n)
                 le_rfl).AEMeasurable)

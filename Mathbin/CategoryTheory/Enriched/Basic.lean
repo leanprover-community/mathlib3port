@@ -96,20 +96,20 @@ def eComp (X Y Z : C) : ((X ⟶[V] Y) ⊗ Y ⟶[V] Z) ⟶ X ⟶[V] Z :=
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 -- We don't just use `restate_axiom` here; that would leave `V` as an implicit argument.
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem eId_comp (X Y : C) : (λ_ (X ⟶[V] Y)).inv ≫ (eId V X ⊗ 𝟙 _) ≫ eComp V X X Y = 𝟙 (X ⟶[V] Y) :=
   EnrichedCategory.id_comp X Y
 #align category_theory.e_id_comp CategoryTheory.eId_comp
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem eComp_id (X Y : C) : (ρ_ (X ⟶[V] Y)).inv ≫ (𝟙 _ ⊗ eId V Y) ≫ eComp V X Y Y = 𝟙 (X ⟶[V] Y) :=
   EnrichedCategory.comp_id X Y
 #align category_theory.e_comp_id CategoryTheory.eComp_id
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem e_assoc (W X Y Z : C) :
     (α_ _ _ _).inv ≫ (eComp V W X Y ⊗ 𝟙 _) ≫ eComp V W Y Z =
       (𝟙 _ ⊗ eComp V X Y Z) ≫ eComp V W X Z :=
@@ -332,9 +332,9 @@ restate_axiom enriched_functor.map_id'
 
 restate_axiom enriched_functor.map_comp'
 
-attribute [simp, reassoc.1] enriched_functor.map_id
+attribute [simp, reassoc] enriched_functor.map_id
 
-attribute [simp, reassoc.1] enriched_functor.map_comp
+attribute [simp, reassoc] enriched_functor.map_comp
 
 /-- The identity enriched functor. -/
 @[simps]

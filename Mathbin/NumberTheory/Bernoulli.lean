@@ -170,7 +170,7 @@ def bernoulli'PowerSeries :=
   mk fun n => algebraMap ℚ A (bernoulli' n / n !)
 #align bernoulli'_power_series bernoulli'PowerSeries
 
-theorem bernoulli'PowerSeries_mul_exp_sub_one : bernoulli'PowerSeries A * (exp A - 1) = x * exp A :=
+theorem bernoulli'PowerSeries_mul_exp_sub_one : bernoulli'PowerSeries A * (exp A - 1) = X * exp A :=
   by
   ext n
   -- constant coefficient is a special case
@@ -290,7 +290,7 @@ def bernoulliPowerSeries :=
   mk fun n => algebraMap ℚ A (bernoulli n / n !)
 #align bernoulli_power_series bernoulliPowerSeries
 
-theorem bernoulliPowerSeries_mul_exp_sub_one : bernoulliPowerSeries A * (exp A - 1) = x :=
+theorem bernoulliPowerSeries_mul_exp_sub_one : bernoulliPowerSeries A * (exp A - 1) = X :=
   by
   ext n
   -- constant coefficient is a special case

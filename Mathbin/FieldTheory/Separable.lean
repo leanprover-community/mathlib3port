@@ -532,7 +532,7 @@ end CommRing
 instance isSeparable_self (F : Type _) [Field F] : IsSeparable F F :=
   ⟨fun x => isIntegral_algebraMap, fun x =>
     by
-    rw [minpoly.eq_x_sub_C']
+    rw [minpoly.eq_X_sub_C']
     exact separable_X_sub_C⟩
 #align is_separable_self isSeparable_self
 

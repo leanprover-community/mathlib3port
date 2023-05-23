@@ -53,7 +53,7 @@ structure CommSq {W X Y Z : C} (f : W ⟶ X) (g : W ⟶ Y) (h : X ⟶ Z) (i : Y 
 #align category_theory.comm_sq CategoryTheory.CommSq
 -/
 
-attribute [reassoc.1] comm_sq.w
+attribute [reassoc] comm_sq.w
 
 namespace CommSq
 
@@ -317,7 +317,7 @@ lean 3 declaration is
 but is expected to have type
   forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {A : C} {B : C} {X : C} {Y : C} {f : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) A X} {i : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) A B} {p : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) X Y} {g : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) B Y} (sq : CategoryTheory.CommSq.{u2, u1} C _inst_1 A X B Y f i p g) [hsq : CategoryTheory.CommSq.HasLift.{u2, u1} C _inst_1 A B X Y f i p g sq], Eq.{succ u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) A X) (CategoryTheory.CategoryStruct.comp.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1) A B X i (CategoryTheory.CommSq.lift.{u2, u1} C _inst_1 A B X Y f i p g sq hsq)) f
 Case conversion may be inaccurate. Consider using '#align category_theory.comm_sq.fac_left CategoryTheory.CommSq.fac_leftₓ'. -/
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem fac_left [hsq : HasLift sq] : i ≫ sq.lift = f :=
   hsq.exists_lift.some.fac_left
 #align category_theory.comm_sq.fac_left CategoryTheory.CommSq.fac_left
@@ -328,7 +328,7 @@ lean 3 declaration is
 but is expected to have type
   forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {A : C} {B : C} {X : C} {Y : C} {f : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) A X} {i : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) A B} {p : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) X Y} {g : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) B Y} (sq : CategoryTheory.CommSq.{u2, u1} C _inst_1 A X B Y f i p g) [hsq : CategoryTheory.CommSq.HasLift.{u2, u1} C _inst_1 A B X Y f i p g sq], Eq.{succ u1} (Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) B Y) (CategoryTheory.CategoryStruct.comp.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1) B X Y (CategoryTheory.CommSq.lift.{u2, u1} C _inst_1 A B X Y f i p g sq hsq) p) g
 Case conversion may be inaccurate. Consider using '#align category_theory.comm_sq.fac_right CategoryTheory.CommSq.fac_rightₓ'. -/
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem fac_right [hsq : HasLift sq] : sq.lift ≫ p = g :=
   hsq.exists_lift.some.fac_right
 #align category_theory.comm_sq.fac_right CategoryTheory.CommSq.fac_right

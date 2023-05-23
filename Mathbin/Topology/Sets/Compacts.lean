@@ -187,11 +187,19 @@ theorem coe_map {f : α → β} (hf : Continuous f) (s : Compacts α) : (s.map f
   rfl
 #align topological_space.compacts.coe_map TopologicalSpace.Compacts.coe_map
 
+#print TopologicalSpace.Compacts.map_id /-
 @[simp]
 theorem map_id (K : Compacts α) : K.map id continuous_id = K :=
   Compacts.ext <| Set.image_id _
 #align topological_space.compacts.map_id TopologicalSpace.Compacts.map_id
+-/
 
+/- warning: topological_space.compacts.map_comp -> TopologicalSpace.Compacts.map_comp is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : TopologicalSpace.{u3} γ] (f : β -> γ) (g : α -> β) (hf : Continuous.{u2, u3} β γ _inst_2 _inst_3 f) (hg : Continuous.{u1, u2} α β _inst_1 _inst_2 g) (K : TopologicalSpace.Compacts.{u1} α _inst_1), Eq.{succ u3} (TopologicalSpace.Compacts.{u3} γ _inst_3) (TopologicalSpace.Compacts.map.{u1, u3} α γ _inst_1 _inst_3 (Function.comp.{succ u1, succ u2, succ u3} α β γ f g) (Continuous.comp.{u1, u2, u3} α β γ _inst_1 _inst_2 _inst_3 f g hf hg) K) (TopologicalSpace.Compacts.map.{u2, u3} β γ _inst_2 _inst_3 f hf (TopologicalSpace.Compacts.map.{u1, u2} α β _inst_1 _inst_2 g hg K))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u3}} {γ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u3} β] [_inst_3 : TopologicalSpace.{u2} γ] (f : β -> γ) (g : α -> β) (hf : Continuous.{u3, u2} β γ _inst_2 _inst_3 f) (hg : Continuous.{u1, u3} α β _inst_1 _inst_2 g) (K : TopologicalSpace.Compacts.{u1} α _inst_1), Eq.{succ u2} (TopologicalSpace.Compacts.{u2} γ _inst_3) (TopologicalSpace.Compacts.map.{u1, u2} α γ _inst_1 _inst_3 (Function.comp.{succ u1, succ u3, succ u2} α β γ f g) (Continuous.comp.{u1, u2, u3} α β γ _inst_1 _inst_2 _inst_3 f g hf hg) K) (TopologicalSpace.Compacts.map.{u3, u2} β γ _inst_2 _inst_3 f hf (TopologicalSpace.Compacts.map.{u1, u3} α β _inst_1 _inst_2 g hg K))
+Case conversion may be inaccurate. Consider using '#align topological_space.compacts.map_comp TopologicalSpace.Compacts.map_compₓ'. -/
 theorem map_comp (f : β → γ) (g : α → β) (hf : Continuous f) (hg : Continuous g) (K : Compacts α) :
     K.map (f ∘ g) (hf.comp hg) = (K.map g hg).map f hf :=
   Compacts.ext <| Set.image_comp _ _ _
@@ -213,22 +221,42 @@ protected def equiv (f : α ≃ₜ β) : Compacts α ≃ Compacts β
 #align topological_space.compacts.equiv TopologicalSpace.Compacts.equiv
 -/
 
+#print TopologicalSpace.Compacts.equiv_refl /-
 @[simp]
 theorem equiv_refl : Compacts.equiv (Homeomorph.refl α) = Equiv.refl _ :=
   Equiv.ext map_id
 #align topological_space.compacts.equiv_refl TopologicalSpace.Compacts.equiv_refl
+-/
 
+/- warning: topological_space.compacts.equiv_trans -> TopologicalSpace.Compacts.equiv_trans is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : TopologicalSpace.{u3} γ] (f : Homeomorph.{u1, u2} α β _inst_1 _inst_2) (g : Homeomorph.{u2, u3} β γ _inst_2 _inst_3), Eq.{max 1 (max (succ u1) (succ u3)) (succ u3) (succ u1)} (Equiv.{succ u1, succ u3} (TopologicalSpace.Compacts.{u1} α _inst_1) (TopologicalSpace.Compacts.{u3} γ _inst_3)) (TopologicalSpace.Compacts.equiv.{u1, u3} α γ _inst_1 _inst_3 (Homeomorph.trans.{u1, u2, u3} α β γ _inst_1 _inst_2 _inst_3 f g)) (Equiv.trans.{succ u1, succ u2, succ u3} (TopologicalSpace.Compacts.{u1} α _inst_1) (TopologicalSpace.Compacts.{u2} β _inst_2) (TopologicalSpace.Compacts.{u3} γ _inst_3) (TopologicalSpace.Compacts.equiv.{u1, u2} α β _inst_1 _inst_2 f) (TopologicalSpace.Compacts.equiv.{u2, u3} β γ _inst_2 _inst_3 g))
+but is expected to have type
+  forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} [_inst_1 : TopologicalSpace.{u3} α] [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : TopologicalSpace.{u1} γ] (f : Homeomorph.{u3, u2} α β _inst_1 _inst_2) (g : Homeomorph.{u2, u1} β γ _inst_2 _inst_3), Eq.{max (succ u3) (succ u1)} (Equiv.{succ u3, succ u1} (TopologicalSpace.Compacts.{u3} α _inst_1) (TopologicalSpace.Compacts.{u1} γ _inst_3)) (TopologicalSpace.Compacts.equiv.{u3, u1} α γ _inst_1 _inst_3 (Homeomorph.trans.{u3, u2, u1} α β γ _inst_1 _inst_2 _inst_3 f g)) (Equiv.trans.{succ u3, succ u2, succ u1} (TopologicalSpace.Compacts.{u3} α _inst_1) (TopologicalSpace.Compacts.{u2} β _inst_2) (TopologicalSpace.Compacts.{u1} γ _inst_3) (TopologicalSpace.Compacts.equiv.{u3, u2} α β _inst_1 _inst_2 f) (TopologicalSpace.Compacts.equiv.{u2, u1} β γ _inst_2 _inst_3 g))
+Case conversion may be inaccurate. Consider using '#align topological_space.compacts.equiv_trans TopologicalSpace.Compacts.equiv_transₓ'. -/
 @[simp]
 theorem equiv_trans (f : α ≃ₜ β) (g : β ≃ₜ γ) :
     Compacts.equiv (f.trans g) = (Compacts.equiv f).trans (Compacts.equiv g) :=
   Equiv.ext <| map_comp _ _ _ _
 #align topological_space.compacts.equiv_trans TopologicalSpace.Compacts.equiv_trans
 
+/- warning: topological_space.compacts.equiv_symm -> TopologicalSpace.Compacts.equiv_symm is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] (f : Homeomorph.{u1, u2} α β _inst_1 _inst_2), Eq.{max 1 (max (succ u2) (succ u1)) (succ u1) (succ u2)} (Equiv.{succ u2, succ u1} (TopologicalSpace.Compacts.{u2} β _inst_2) (TopologicalSpace.Compacts.{u1} α _inst_1)) (TopologicalSpace.Compacts.equiv.{u2, u1} β α _inst_2 _inst_1 (Homeomorph.symm.{u1, u2} α β _inst_1 _inst_2 f)) (Equiv.symm.{succ u1, succ u2} (TopologicalSpace.Compacts.{u1} α _inst_1) (TopologicalSpace.Compacts.{u2} β _inst_2) (TopologicalSpace.Compacts.equiv.{u1, u2} α β _inst_1 _inst_2 f))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] (f : Homeomorph.{u2, u1} α β _inst_1 _inst_2), Eq.{max (succ u2) (succ u1)} (Equiv.{succ u1, succ u2} (TopologicalSpace.Compacts.{u1} β _inst_2) (TopologicalSpace.Compacts.{u2} α _inst_1)) (TopologicalSpace.Compacts.equiv.{u1, u2} β α _inst_2 _inst_1 (Homeomorph.symm.{u2, u1} α β _inst_1 _inst_2 f)) (Equiv.symm.{succ u2, succ u1} (TopologicalSpace.Compacts.{u2} α _inst_1) (TopologicalSpace.Compacts.{u1} β _inst_2) (TopologicalSpace.Compacts.equiv.{u2, u1} α β _inst_1 _inst_2 f))
+Case conversion may be inaccurate. Consider using '#align topological_space.compacts.equiv_symm TopologicalSpace.Compacts.equiv_symmₓ'. -/
 @[simp]
 theorem equiv_symm (f : α ≃ₜ β) : Compacts.equiv f.symm = (Compacts.equiv f).symm :=
   rfl
 #align topological_space.compacts.equiv_symm TopologicalSpace.Compacts.equiv_symm
 
+/- warning: topological_space.compacts.coe_equiv_apply_eq_preimage -> TopologicalSpace.Compacts.coe_equiv_apply_eq_preimage is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] (f : Homeomorph.{u1, u2} α β _inst_1 _inst_2) (K : TopologicalSpace.Compacts.{u1} α _inst_1), Eq.{succ u2} (Set.{u2} β) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (TopologicalSpace.Compacts.{u2} β _inst_2) (Set.{u2} β) (HasLiftT.mk.{succ u2, succ u2} (TopologicalSpace.Compacts.{u2} β _inst_2) (Set.{u2} β) (CoeTCₓ.coe.{succ u2, succ u2} (TopologicalSpace.Compacts.{u2} β _inst_2) (Set.{u2} β) (SetLike.Set.hasCoeT.{u2, u2} (TopologicalSpace.Compacts.{u2} β _inst_2) β (TopologicalSpace.Compacts.setLike.{u2} β _inst_2)))) (coeFn.{max 1 (max (succ u1) (succ u2)) (succ u2) (succ u1), max (succ u1) (succ u2)} (Equiv.{succ u1, succ u2} (TopologicalSpace.Compacts.{u1} α _inst_1) (TopologicalSpace.Compacts.{u2} β _inst_2)) (fun (_x : Equiv.{succ u1, succ u2} (TopologicalSpace.Compacts.{u1} α _inst_1) (TopologicalSpace.Compacts.{u2} β _inst_2)) => (TopologicalSpace.Compacts.{u1} α _inst_1) -> (TopologicalSpace.Compacts.{u2} β _inst_2)) (Equiv.hasCoeToFun.{succ u1, succ u2} (TopologicalSpace.Compacts.{u1} α _inst_1) (TopologicalSpace.Compacts.{u2} β _inst_2)) (TopologicalSpace.Compacts.equiv.{u1, u2} α β _inst_1 _inst_2 f) K)) (Set.preimage.{u2, u1} β α (coeFn.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (Homeomorph.{u2, u1} β α _inst_2 _inst_1) (fun (_x : Homeomorph.{u2, u1} β α _inst_2 _inst_1) => β -> α) (Homeomorph.hasCoeToFun.{u2, u1} β α _inst_2 _inst_1) (Homeomorph.symm.{u1, u2} α β _inst_1 _inst_2 f)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (TopologicalSpace.Compacts.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (TopologicalSpace.Compacts.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (TopologicalSpace.Compacts.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (TopologicalSpace.Compacts.{u1} α _inst_1) α (TopologicalSpace.Compacts.setLike.{u1} α _inst_1)))) K))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] (f : Homeomorph.{u2, u1} α β _inst_1 _inst_2) (K : TopologicalSpace.Compacts.{u2} α _inst_1), Eq.{succ u1} (Set.{u1} β) (SetLike.coe.{u1, u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : TopologicalSpace.Compacts.{u2} α _inst_1) => TopologicalSpace.Compacts.{u1} β _inst_2) K) β (TopologicalSpace.Compacts.instSetLikeCompacts.{u1} β _inst_2) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} (TopologicalSpace.Compacts.{u2} α _inst_1) (TopologicalSpace.Compacts.{u1} β _inst_2)) (TopologicalSpace.Compacts.{u2} α _inst_1) (fun (_x : TopologicalSpace.Compacts.{u2} α _inst_1) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.812 : TopologicalSpace.Compacts.{u2} α _inst_1) => TopologicalSpace.Compacts.{u1} β _inst_2) _x) (Equiv.instFunLikeEquiv.{succ u2, succ u1} (TopologicalSpace.Compacts.{u2} α _inst_1) (TopologicalSpace.Compacts.{u1} β _inst_2)) (TopologicalSpace.Compacts.equiv.{u2, u1} α β _inst_1 _inst_2 f) K)) (Set.preimage.{u1, u2} β α (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (Homeomorph.{u1, u2} β α _inst_2 _inst_1) β (fun (_x : β) => α) (EmbeddingLike.toFunLike.{max (succ u1) (succ u2), succ u1, succ u2} (Homeomorph.{u1, u2} β α _inst_2 _inst_1) β α (EquivLike.toEmbeddingLike.{max (succ u1) (succ u2), succ u1, succ u2} (Homeomorph.{u1, u2} β α _inst_2 _inst_1) β α (Homeomorph.instEquivLikeHomeomorph.{u1, u2} β α _inst_2 _inst_1))) (Homeomorph.symm.{u2, u1} α β _inst_1 _inst_2 f)) (SetLike.coe.{u2, u2} (TopologicalSpace.Compacts.{u2} α _inst_1) α (TopologicalSpace.Compacts.instSetLikeCompacts.{u2} α _inst_1) K))
+Case conversion may be inaccurate. Consider using '#align topological_space.compacts.coe_equiv_apply_eq_preimage TopologicalSpace.Compacts.coe_equiv_apply_eq_preimageₓ'. -/
 /-- The image of a compact set under a homeomorphism can also be expressed as a preimage. -/
 theorem coe_equiv_apply_eq_preimage (f : α ≃ₜ β) (K : Compacts α) :
     (Compacts.equiv f K : Set β) = f.symm ⁻¹' (K : Set α) :=
@@ -497,6 +525,7 @@ theorem coe_top [CompactSpace α] [Nonempty α] : (↑(⊤ : PositiveCompacts α
 #align topological_space.positive_compacts.coe_top TopologicalSpace.PositiveCompacts.coe_top
 -/
 
+#print TopologicalSpace.PositiveCompacts.map /-
 /-- The image of a positive compact set under a continuous open map. -/
 protected def map (f : α → β) (hf : Continuous f) (hf' : IsOpenMap f) (K : PositiveCompacts α) :
     PositiveCompacts β :=
@@ -504,18 +533,33 @@ protected def map (f : α → β) (hf : Continuous f) (hf' : IsOpenMap f) (K : P
     interior_nonempty' :=
       (K.interior_nonempty'.image _).mono (hf'.image_interior_subset K.toCompacts) }
 #align topological_space.positive_compacts.map TopologicalSpace.PositiveCompacts.map
+-/
 
+/- warning: topological_space.positive_compacts.coe_map -> TopologicalSpace.PositiveCompacts.coe_map is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} (hf : Continuous.{u1, u2} α β _inst_1 _inst_2 f) (hf' : IsOpenMap.{u1, u2} α β _inst_1 _inst_2 f) (s : TopologicalSpace.PositiveCompacts.{u1} α _inst_1), Eq.{succ u2} (Set.{u2} β) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (TopologicalSpace.PositiveCompacts.{u2} β _inst_2) (Set.{u2} β) (HasLiftT.mk.{succ u2, succ u2} (TopologicalSpace.PositiveCompacts.{u2} β _inst_2) (Set.{u2} β) (CoeTCₓ.coe.{succ u2, succ u2} (TopologicalSpace.PositiveCompacts.{u2} β _inst_2) (Set.{u2} β) (SetLike.Set.hasCoeT.{u2, u2} (TopologicalSpace.PositiveCompacts.{u2} β _inst_2) β (TopologicalSpace.PositiveCompacts.setLike.{u2} β _inst_2)))) (TopologicalSpace.PositiveCompacts.map.{u1, u2} α β _inst_1 _inst_2 f hf hf' s)) (Set.image.{u1, u2} α β f ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (TopologicalSpace.PositiveCompacts.{u1} α _inst_1) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (TopologicalSpace.PositiveCompacts.{u1} α _inst_1) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (TopologicalSpace.PositiveCompacts.{u1} α _inst_1) (Set.{u1} α) (SetLike.Set.hasCoeT.{u1, u1} (TopologicalSpace.PositiveCompacts.{u1} α _inst_1) α (TopologicalSpace.PositiveCompacts.setLike.{u1} α _inst_1)))) s))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β} (hf : Continuous.{u2, u1} α β _inst_1 _inst_2 f) (hf' : IsOpenMap.{u2, u1} α β _inst_1 _inst_2 f) (s : TopologicalSpace.PositiveCompacts.{u2} α _inst_1), Eq.{succ u1} (Set.{u1} β) (SetLike.coe.{u1, u1} (TopologicalSpace.PositiveCompacts.{u1} β _inst_2) β (TopologicalSpace.PositiveCompacts.instSetLikePositiveCompacts.{u1} β _inst_2) (TopologicalSpace.PositiveCompacts.map.{u2, u1} α β _inst_1 _inst_2 f hf hf' s)) (Set.image.{u2, u1} α β f (SetLike.coe.{u2, u2} (TopologicalSpace.PositiveCompacts.{u2} α _inst_1) α (TopologicalSpace.PositiveCompacts.instSetLikePositiveCompacts.{u2} α _inst_1) s))
+Case conversion may be inaccurate. Consider using '#align topological_space.positive_compacts.coe_map TopologicalSpace.PositiveCompacts.coe_mapₓ'. -/
 @[simp, norm_cast]
 theorem coe_map {f : α → β} (hf : Continuous f) (hf' : IsOpenMap f) (s : PositiveCompacts α) :
     (s.map f hf hf' : Set β) = f '' s :=
   rfl
 #align topological_space.positive_compacts.coe_map TopologicalSpace.PositiveCompacts.coe_map
 
+#print TopologicalSpace.PositiveCompacts.map_id /-
 @[simp]
 theorem map_id (K : PositiveCompacts α) : K.map id continuous_id IsOpenMap.id = K :=
   PositiveCompacts.ext <| Set.image_id _
 #align topological_space.positive_compacts.map_id TopologicalSpace.PositiveCompacts.map_id
+-/
 
+/- warning: topological_space.positive_compacts.map_comp -> TopologicalSpace.PositiveCompacts.map_comp is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : TopologicalSpace.{u3} γ] (f : β -> γ) (g : α -> β) (hf : Continuous.{u2, u3} β γ _inst_2 _inst_3 f) (hg : Continuous.{u1, u2} α β _inst_1 _inst_2 g) (hf' : IsOpenMap.{u2, u3} β γ _inst_2 _inst_3 f) (hg' : IsOpenMap.{u1, u2} α β _inst_1 _inst_2 g) (K : TopologicalSpace.PositiveCompacts.{u1} α _inst_1), Eq.{succ u3} (TopologicalSpace.PositiveCompacts.{u3} γ _inst_3) (TopologicalSpace.PositiveCompacts.map.{u1, u3} α γ _inst_1 _inst_3 (Function.comp.{succ u1, succ u2, succ u3} α β γ f g) (Continuous.comp.{u1, u2, u3} α β γ _inst_1 _inst_2 _inst_3 f g hf hg) (IsOpenMap.comp.{u1, u2, u3} α β γ _inst_1 _inst_2 _inst_3 f g hf' hg') K) (TopologicalSpace.PositiveCompacts.map.{u2, u3} β γ _inst_2 _inst_3 f hf hf' (TopologicalSpace.PositiveCompacts.map.{u1, u2} α β _inst_1 _inst_2 g hg hg' K))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u3}} {γ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u3} β] [_inst_3 : TopologicalSpace.{u2} γ] (f : β -> γ) (g : α -> β) (hf : Continuous.{u3, u2} β γ _inst_2 _inst_3 f) (hg : Continuous.{u1, u3} α β _inst_1 _inst_2 g) (hf' : IsOpenMap.{u3, u2} β γ _inst_2 _inst_3 f) (hg' : IsOpenMap.{u1, u3} α β _inst_1 _inst_2 g) (K : TopologicalSpace.PositiveCompacts.{u1} α _inst_1), Eq.{succ u2} (TopologicalSpace.PositiveCompacts.{u2} γ _inst_3) (TopologicalSpace.PositiveCompacts.map.{u1, u2} α γ _inst_1 _inst_3 (Function.comp.{succ u1, succ u3, succ u2} α β γ f g) (Continuous.comp.{u1, u2, u3} α β γ _inst_1 _inst_2 _inst_3 f g hf hg) (IsOpenMap.comp.{u1, u2, u3} α β γ _inst_1 _inst_2 _inst_3 f g hf' hg') K) (TopologicalSpace.PositiveCompacts.map.{u3, u2} β γ _inst_2 _inst_3 f hf hf' (TopologicalSpace.PositiveCompacts.map.{u1, u3} α β _inst_1 _inst_2 g hg hg' K))
+Case conversion may be inaccurate. Consider using '#align topological_space.positive_compacts.map_comp TopologicalSpace.PositiveCompacts.map_compₓ'. -/
 theorem map_comp (f : β → γ) (g : α → β) (hf : Continuous f) (hg : Continuous g) (hf' : IsOpenMap f)
     (hg' : IsOpenMap g) (K : PositiveCompacts α) :
     K.map (f ∘ g) (hf.comp hg) (hf'.comp hg') = (K.map g hg hg').map f hf hf' :=
@@ -756,11 +800,19 @@ theorem coe_map {f : α → β} (hf : Continuous f) (hf' : IsOpenMap f) (s : Com
   rfl
 #align topological_space.compact_opens.coe_map TopologicalSpace.CompactOpens.coe_map
 
+#print TopologicalSpace.CompactOpens.map_id /-
 @[simp]
 theorem map_id (K : CompactOpens α) : K.map id continuous_id IsOpenMap.id = K :=
   CompactOpens.ext <| Set.image_id _
 #align topological_space.compact_opens.map_id TopologicalSpace.CompactOpens.map_id
+-/
 
+/- warning: topological_space.compact_opens.map_comp -> TopologicalSpace.CompactOpens.map_comp is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : TopologicalSpace.{u3} γ] (f : β -> γ) (g : α -> β) (hf : Continuous.{u2, u3} β γ _inst_2 _inst_3 f) (hg : Continuous.{u1, u2} α β _inst_1 _inst_2 g) (hf' : IsOpenMap.{u2, u3} β γ _inst_2 _inst_3 f) (hg' : IsOpenMap.{u1, u2} α β _inst_1 _inst_2 g) (K : TopologicalSpace.CompactOpens.{u1} α _inst_1), Eq.{succ u3} (TopologicalSpace.CompactOpens.{u3} γ _inst_3) (TopologicalSpace.CompactOpens.map.{u1, u3} α γ _inst_1 _inst_3 (Function.comp.{succ u1, succ u2, succ u3} α β γ f g) (Continuous.comp.{u1, u2, u3} α β γ _inst_1 _inst_2 _inst_3 f g hf hg) (IsOpenMap.comp.{u1, u2, u3} α β γ _inst_1 _inst_2 _inst_3 f g hf' hg') K) (TopologicalSpace.CompactOpens.map.{u2, u3} β γ _inst_2 _inst_3 f hf hf' (TopologicalSpace.CompactOpens.map.{u1, u2} α β _inst_1 _inst_2 g hg hg' K))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u3}} {γ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u3} β] [_inst_3 : TopologicalSpace.{u2} γ] (f : β -> γ) (g : α -> β) (hf : Continuous.{u3, u2} β γ _inst_2 _inst_3 f) (hg : Continuous.{u1, u3} α β _inst_1 _inst_2 g) (hf' : IsOpenMap.{u3, u2} β γ _inst_2 _inst_3 f) (hg' : IsOpenMap.{u1, u3} α β _inst_1 _inst_2 g) (K : TopologicalSpace.CompactOpens.{u1} α _inst_1), Eq.{succ u2} (TopologicalSpace.CompactOpens.{u2} γ _inst_3) (TopologicalSpace.CompactOpens.map.{u1, u2} α γ _inst_1 _inst_3 (Function.comp.{succ u1, succ u3, succ u2} α β γ f g) (Continuous.comp.{u1, u2, u3} α β γ _inst_1 _inst_2 _inst_3 f g hf hg) (IsOpenMap.comp.{u1, u2, u3} α β γ _inst_1 _inst_2 _inst_3 f g hf' hg') K) (TopologicalSpace.CompactOpens.map.{u3, u2} β γ _inst_2 _inst_3 f hf hf' (TopologicalSpace.CompactOpens.map.{u1, u3} α β _inst_1 _inst_2 g hg hg' K))
+Case conversion may be inaccurate. Consider using '#align topological_space.compact_opens.map_comp TopologicalSpace.CompactOpens.map_compₓ'. -/
 theorem map_comp (f : β → γ) (g : α → β) (hf : Continuous f) (hg : Continuous g) (hf' : IsOpenMap f)
     (hg' : IsOpenMap g) (K : CompactOpens α) :
     K.map (f ∘ g) (hf.comp hg) (hf'.comp hg') = (K.map g hg hg').map f hf hf' :=

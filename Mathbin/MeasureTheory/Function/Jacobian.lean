@@ -799,7 +799,7 @@ theorem aEMeasurable_fderiv_within (hs : MeasurableSet s)
     `approximates_linear_on.norm_fderiv_sub_le` that `f'` is uniformly approximated by `A n`, which
     gives the conclusion. -/
   -- fix a precision `ε`
-  refine' aEMeasurable_of_unif_approx fun ε εpos => _
+  refine' aemeasurable_of_unif_approx fun ε εpos => _
   let δ : ℝ≥0 := ⟨ε, le_of_lt εpos⟩
   have δpos : 0 < δ := εpos
   -- partition `s` into sets `s ∩ t n` on which `f` is approximated by linear maps `A n`.

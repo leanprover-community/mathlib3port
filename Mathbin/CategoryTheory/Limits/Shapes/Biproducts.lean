@@ -84,14 +84,14 @@ structure Bicone (F : J → C) where
 -/
 
 #print CategoryTheory.Limits.bicone_ι_π_self /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem bicone_ι_π_self {F : J → C} (B : Bicone F) (j : J) : B.ι j ≫ B.π j = 𝟙 (F j) := by
   simpa using B.ι_π j j
 #align category_theory.limits.bicone_ι_π_self CategoryTheory.Limits.bicone_ι_π_self
 -/
 
 #print CategoryTheory.Limits.bicone_ι_π_ne /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem bicone_ι_π_ne {F : J → C} (B : Bicone F) {j j' : J} (h : j ≠ j') : B.ι j ≫ B.π j' = 0 := by
   simpa [h] using B.ι_π j j'
 #align category_theory.limits.bicone_ι_π_ne CategoryTheory.Limits.bicone_ι_π_ne
@@ -509,7 +509,7 @@ theorem biproduct.bicone_ι (f : J → C) [HasBiproduct f] (b : J) :
 #print CategoryTheory.Limits.biproduct.ι_π /-
 /-- Note that as this lemma has a `if` in the statement, we include a `decidable_eq` argument.
 This means you may not be able to `simp` using this lemma unless you `open_locale classical`. -/
-@[reassoc.1]
+@[reassoc]
 theorem biproduct.ι_π [DecidableEq J] (f : J → C) [HasBiproduct f] (j j' : J) :
     biproduct.ι f j ≫ biproduct.π f j' = if h : j = j' then eqToHom (congr_arg f h) else 0 := by
   convert(biproduct.bicone f).ι_π j j'
@@ -517,14 +517,14 @@ theorem biproduct.ι_π [DecidableEq J] (f : J → C) [HasBiproduct f] (j j' : J
 -/
 
 #print CategoryTheory.Limits.biproduct.ι_π_self /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem biproduct.ι_π_self (f : J → C) [HasBiproduct f] (j : J) :
     biproduct.ι f j ≫ biproduct.π f j = 𝟙 _ := by simp [biproduct.ι_π]
 #align category_theory.limits.biproduct.ι_π_self CategoryTheory.Limits.biproduct.ι_π_self
 -/
 
 #print CategoryTheory.Limits.biproduct.ι_π_ne /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem biproduct.ι_π_ne (f : J → C) [HasBiproduct f] {j j' : J} (h : j ≠ j') :
     biproduct.ι f j ≫ biproduct.π f j' = 0 := by simp [biproduct.ι_π, h]
 #align category_theory.limits.biproduct.ι_π_ne CategoryTheory.Limits.biproduct.ι_π_ne
@@ -545,7 +545,7 @@ abbrev biproduct.desc {f : J → C} [HasBiproduct f] {P : C} (p : ∀ b, f b ⟶
 -/
 
 #print CategoryTheory.Limits.biproduct.lift_π /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem biproduct.lift_π {f : J → C} [HasBiproduct f] {P : C} (p : ∀ b, P ⟶ f b) (j : J) :
     biproduct.lift p ≫ biproduct.π f j = p j :=
   (biproduct.isLimit f).fac _ ⟨j⟩
@@ -553,7 +553,7 @@ theorem biproduct.lift_π {f : J → C} [HasBiproduct f] {P : C} (p : ∀ b, P �
 -/
 
 #print CategoryTheory.Limits.biproduct.ι_desc /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem biproduct.ι_desc {f : J → C} [HasBiproduct f] {P : C} (p : ∀ b, f b ⟶ P) (j : J) :
     biproduct.ι f j ≫ biproduct.desc p = p j :=
   (biproduct.isColimit f).fac _ ⟨j⟩
@@ -660,7 +660,7 @@ theorem biproduct.map_eq_map' {f g : J → C} [HasBiproduct f] [HasBiproduct g] 
 -/
 
 #print CategoryTheory.Limits.biproduct.map_π /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem biproduct.map_π {f g : J → C} [HasBiproduct f] [HasBiproduct g] (p : ∀ j, f j ⟶ g j)
     (j : J) : biproduct.map p ≫ biproduct.π g j = biproduct.π f j ≫ p j :=
   Limits.IsLimit.map_π _ _ _ (Discrete.mk j)
@@ -668,7 +668,7 @@ theorem biproduct.map_π {f g : J → C} [HasBiproduct f] [HasBiproduct g] (p : 
 -/
 
 #print CategoryTheory.Limits.biproduct.ι_map /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem biproduct.ι_map {f g : J → C} [HasBiproduct f] [HasBiproduct g] (p : ∀ j, f j ⟶ g j)
     (j : J) : biproduct.ι f j ≫ biproduct.map p = p j ≫ biproduct.ι g j :=
   by
@@ -678,7 +678,7 @@ theorem biproduct.ι_map {f g : J → C} [HasBiproduct f] [HasBiproduct g] (p : 
 -/
 
 #print CategoryTheory.Limits.biproduct.map_desc /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem biproduct.map_desc {f g : J → C} [HasBiproduct f] [HasBiproduct g] (p : ∀ j, f j ⟶ g j)
     {P : C} (k : ∀ j, g j ⟶ P) :
     biproduct.map p ≫ biproduct.desc k = biproduct.desc fun j => p j ≫ k j :=
@@ -689,7 +689,7 @@ theorem biproduct.map_desc {f g : J → C} [HasBiproduct f] [HasBiproduct g] (p 
 -/
 
 #print CategoryTheory.Limits.biproduct.lift_map /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem biproduct.lift_map {f g : J → C} [HasBiproduct f] [HasBiproduct g] {P : C}
     (k : ∀ j, P ⟶ f j) (p : ∀ j, f j ⟶ g j) :
     biproduct.lift k ≫ biproduct.map p = biproduct.lift fun j => k j ≫ p j :=
@@ -735,7 +735,7 @@ def biproduct.toSubtype : ⨁ f ⟶ ⨁ Subtype.restrict p f :=
 -/
 
 #print CategoryTheory.Limits.biproduct.fromSubtype_π /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem biproduct.fromSubtype_π [DecidablePred p] (j : J) :
     biproduct.fromSubtype f p ≫ biproduct.π f j =
       if h : p j then biproduct.π (Subtype.restrict p f) ⟨j, h⟩ else 0 :=
@@ -759,7 +759,7 @@ theorem biproduct.fromSubtype_eq_lift [DecidablePred p] :
 -/
 
 #print CategoryTheory.Limits.biproduct.fromSubtype_π_subtype /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem biproduct.fromSubtype_π_subtype (j : Subtype p) :
     biproduct.fromSubtype f p ≫ biproduct.π f j = biproduct.π (Subtype.restrict p f) j :=
   by
@@ -771,7 +771,7 @@ theorem biproduct.fromSubtype_π_subtype (j : Subtype p) :
 -/
 
 #print CategoryTheory.Limits.biproduct.toSubtype_π /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem biproduct.toSubtype_π (j : Subtype p) :
     biproduct.toSubtype f p ≫ biproduct.π (Subtype.restrict p f) j = biproduct.π f j :=
   biproduct.lift_π _ _
@@ -779,7 +779,7 @@ theorem biproduct.toSubtype_π (j : Subtype p) :
 -/
 
 #print CategoryTheory.Limits.biproduct.ι_toSubtype /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem biproduct.ι_toSubtype [DecidablePred p] (j : J) :
     biproduct.ι f j ≫ biproduct.toSubtype f p =
       if h : p j then biproduct.ι (Subtype.restrict p f) ⟨j, h⟩ else 0 :=
@@ -803,7 +803,7 @@ theorem biproduct.toSubtype_eq_desc [DecidablePred p] :
 -/
 
 #print CategoryTheory.Limits.biproduct.ι_toSubtype_subtype /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem biproduct.ι_toSubtype_subtype (j : Subtype p) :
     biproduct.ι f j ≫ biproduct.toSubtype f p = biproduct.ι (Subtype.restrict p f) j :=
   by
@@ -815,7 +815,7 @@ theorem biproduct.ι_toSubtype_subtype (j : Subtype p) :
 -/
 
 #print CategoryTheory.Limits.biproduct.ι_fromSubtype /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem biproduct.ι_fromSubtype (j : Subtype p) :
     biproduct.ι (Subtype.restrict p f) j ≫ biproduct.fromSubtype f p = biproduct.ι f j :=
   biproduct.ι_desc _ _
@@ -823,7 +823,7 @@ theorem biproduct.ι_fromSubtype (j : Subtype p) :
 -/
 
 #print CategoryTheory.Limits.biproduct.fromSubtype_toSubtype /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem biproduct.fromSubtype_toSubtype :
     biproduct.fromSubtype f p ≫ biproduct.toSubtype f p = 𝟙 (⨁ Subtype.restrict p f) :=
   by
@@ -833,7 +833,7 @@ theorem biproduct.fromSubtype_toSubtype :
 -/
 
 #print CategoryTheory.Limits.biproduct.toSubtype_fromSubtype /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem biproduct.toSubtype_fromSubtype [DecidablePred p] :
     biproduct.toSubtype f p ≫ biproduct.fromSubtype f p =
       biproduct.map fun j => if p j then 𝟙 (f j) else 0 :=
@@ -1030,7 +1030,7 @@ def biproduct.matrix (m : ∀ j k, f j ⟶ g k) : ⨁ f ⟶ ⨁ g :=
 -/
 
 #print CategoryTheory.Limits.biproduct.matrix_π /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem biproduct.matrix_π (m : ∀ j k, f j ⟶ g k) (k : K) :
     biproduct.matrix m ≫ biproduct.π g k = biproduct.desc fun j => m j k :=
   by
@@ -1040,7 +1040,7 @@ theorem biproduct.matrix_π (m : ∀ j k, f j ⟶ g k) (k : K) :
 -/
 
 #print CategoryTheory.Limits.biproduct.ι_matrix /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem biproduct.ι_matrix (m : ∀ j k, f j ⟶ g k) (j : J) :
     biproduct.ι f j ≫ biproduct.matrix m = biproduct.lift fun k => m j k :=
   by
@@ -1224,7 +1224,7 @@ restate_axiom binary_bicone.inr_fst'
 
 restate_axiom binary_bicone.inr_snd'
 
-attribute [simp, reassoc.1]
+attribute [simp, reassoc]
   binary_bicone.inl_fst binary_bicone.inl_snd binary_bicone.inr_fst binary_bicone.inr_snd
 
 namespace BinaryBicone
@@ -1698,7 +1698,7 @@ theorem BinaryBiproduct.bicone_inr : (BinaryBiproduct.bicone X Y).inr = biprod.i
 end
 
 #print CategoryTheory.Limits.biprod.inl_fst /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem biprod.inl_fst {X Y : C} [HasBinaryBiproduct X Y] :
     (biprod.inl : X ⟶ X ⊞ Y) ≫ (biprod.fst : X ⊞ Y ⟶ X) = 𝟙 X :=
   (BinaryBiproduct.bicone X Y).inl_fst
@@ -1706,7 +1706,7 @@ theorem biprod.inl_fst {X Y : C} [HasBinaryBiproduct X Y] :
 -/
 
 #print CategoryTheory.Limits.biprod.inl_snd /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem biprod.inl_snd {X Y : C} [HasBinaryBiproduct X Y] :
     (biprod.inl : X ⟶ X ⊞ Y) ≫ (biprod.snd : X ⊞ Y ⟶ Y) = 0 :=
   (BinaryBiproduct.bicone X Y).inl_snd
@@ -1714,7 +1714,7 @@ theorem biprod.inl_snd {X Y : C} [HasBinaryBiproduct X Y] :
 -/
 
 #print CategoryTheory.Limits.biprod.inr_fst /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem biprod.inr_fst {X Y : C} [HasBinaryBiproduct X Y] :
     (biprod.inr : Y ⟶ X ⊞ Y) ≫ (biprod.fst : X ⊞ Y ⟶ X) = 0 :=
   (BinaryBiproduct.bicone X Y).inr_fst
@@ -1722,7 +1722,7 @@ theorem biprod.inr_fst {X Y : C} [HasBinaryBiproduct X Y] :
 -/
 
 #print CategoryTheory.Limits.biprod.inr_snd /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem biprod.inr_snd {X Y : C} [HasBinaryBiproduct X Y] :
     (biprod.inr : Y ⟶ X ⊞ Y) ≫ (biprod.snd : X ⊞ Y ⟶ Y) = 𝟙 Y :=
   (BinaryBiproduct.bicone X Y).inr_snd
@@ -1746,7 +1746,7 @@ abbrev biprod.desc {W X Y : C} [HasBinaryBiproduct X Y] (f : X ⟶ W) (g : Y ⟶
 -/
 
 #print CategoryTheory.Limits.biprod.lift_fst /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem biprod.lift_fst {W X Y : C} [HasBinaryBiproduct X Y] (f : W ⟶ X) (g : W ⟶ Y) :
     biprod.lift f g ≫ biprod.fst = f :=
   (BinaryBiproduct.isLimit X Y).fac _ ⟨WalkingPair.left⟩
@@ -1754,7 +1754,7 @@ theorem biprod.lift_fst {W X Y : C} [HasBinaryBiproduct X Y] (f : W ⟶ X) (g : 
 -/
 
 #print CategoryTheory.Limits.biprod.lift_snd /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem biprod.lift_snd {W X Y : C} [HasBinaryBiproduct X Y] (f : W ⟶ X) (g : W ⟶ Y) :
     biprod.lift f g ≫ biprod.snd = g :=
   (BinaryBiproduct.isLimit X Y).fac _ ⟨WalkingPair.right⟩
@@ -1762,7 +1762,7 @@ theorem biprod.lift_snd {W X Y : C} [HasBinaryBiproduct X Y] (f : W ⟶ X) (g : 
 -/
 
 #print CategoryTheory.Limits.biprod.inl_desc /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem biprod.inl_desc {W X Y : C} [HasBinaryBiproduct X Y] (f : X ⟶ W) (g : Y ⟶ W) :
     biprod.inl ≫ biprod.desc f g = f :=
   (BinaryBiproduct.isColimit X Y).fac _ ⟨WalkingPair.left⟩
@@ -1770,7 +1770,7 @@ theorem biprod.inl_desc {W X Y : C} [HasBinaryBiproduct X Y] (f : X ⟶ W) (g : 
 -/
 
 #print CategoryTheory.Limits.biprod.inr_desc /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem biprod.inr_desc {W X Y : C} [HasBinaryBiproduct X Y] (f : X ⟶ W) (g : Y ⟶ W) :
     biprod.inr ≫ biprod.desc f g = g :=
   (BinaryBiproduct.isColimit X Y).fac _ ⟨WalkingPair.right⟩
@@ -1937,7 +1937,7 @@ instance biprod.snd_epi {X Y : C} [HasBinaryBiproduct X Y] : IsSplitEpi (biprod.
 -/
 
 #print CategoryTheory.Limits.biprod.map_fst /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem biprod.map_fst {W X Y Z : C} [HasBinaryBiproduct W X] [HasBinaryBiproduct Y Z] (f : W ⟶ Y)
     (g : X ⟶ Z) : biprod.map f g ≫ biprod.fst = biprod.fst ≫ f :=
   IsLimit.map_π _ _ _ (⟨WalkingPair.left⟩ : Discrete WalkingPair)
@@ -1945,7 +1945,7 @@ theorem biprod.map_fst {W X Y Z : C} [HasBinaryBiproduct W X] [HasBinaryBiproduc
 -/
 
 #print CategoryTheory.Limits.biprod.map_snd /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem biprod.map_snd {W X Y Z : C} [HasBinaryBiproduct W X] [HasBinaryBiproduct Y Z] (f : W ⟶ Y)
     (g : X ⟶ Z) : biprod.map f g ≫ biprod.snd = biprod.snd ≫ g :=
   IsLimit.map_π _ _ _ (⟨WalkingPair.right⟩ : Discrete WalkingPair)
@@ -1955,7 +1955,7 @@ theorem biprod.map_snd {W X Y Z : C} [HasBinaryBiproduct W X] [HasBinaryBiproduc
 #print CategoryTheory.Limits.biprod.inl_map /-
 -- Because `biprod.map` is defined in terms of `lim` rather than `colim`,
 -- we need to provide additional `simp` lemmas.
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem biprod.inl_map {W X Y Z : C} [HasBinaryBiproduct W X] [HasBinaryBiproduct Y Z] (f : W ⟶ Y)
     (g : X ⟶ Z) : biprod.inl ≫ biprod.map f g = f ≫ biprod.inl :=
   by
@@ -1965,7 +1965,7 @@ theorem biprod.inl_map {W X Y Z : C} [HasBinaryBiproduct W X] [HasBinaryBiproduc
 -/
 
 #print CategoryTheory.Limits.biprod.inr_map /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem biprod.inr_map {W X Y Z : C} [HasBinaryBiproduct W X] [HasBinaryBiproduct Y Z] (f : W ⟶ Y)
     (g : X ⟶ Z) : biprod.inr ≫ biprod.map f g = g ≫ biprod.inr :=
   by
@@ -2396,7 +2396,7 @@ theorem biprod.braiding'_eq_braiding {P Q : C} : biprod.braiding' P Q = biprod.b
 
 #print CategoryTheory.Limits.biprod.braid_natural /-
 /-- The braiding isomorphism can be passed through a map by swapping the order. -/
-@[reassoc.1]
+@[reassoc]
 theorem biprod.braid_natural {W X Y Z : C} (f : X ⟶ Y) (g : Z ⟶ W) :
     biprod.map f g ≫ (biprod.braiding _ _).hom = (biprod.braiding _ _).hom ≫ biprod.map g f := by
   tidy
@@ -2404,7 +2404,7 @@ theorem biprod.braid_natural {W X Y Z : C} (f : X ⟶ Y) (g : Z ⟶ W) :
 -/
 
 #print CategoryTheory.Limits.biprod.braiding_map_braiding /-
-@[reassoc.1]
+@[reassoc]
 theorem biprod.braiding_map_braiding {W X Y Z : C} (f : W ⟶ Y) (g : X ⟶ Z) :
     (biprod.braiding X W).hom ≫ biprod.map f g ≫ (biprod.braiding Y Z).hom = biprod.map g f := by
   tidy
@@ -2412,7 +2412,7 @@ theorem biprod.braiding_map_braiding {W X Y Z : C} (f : W ⟶ Y) (g : X ⟶ Z) :
 -/
 
 #print CategoryTheory.Limits.biprod.symmetry' /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem biprod.symmetry' (P Q : C) :
     biprod.lift biprod.snd biprod.fst ≫ biprod.lift biprod.snd biprod.fst = 𝟙 (P ⊞ Q) := by tidy
 #align category_theory.limits.biprod.symmetry' CategoryTheory.Limits.biprod.symmetry'
@@ -2420,7 +2420,7 @@ theorem biprod.symmetry' (P Q : C) :
 
 #print CategoryTheory.Limits.biprod.symmetry /-
 /-- The braiding isomorphism is symmetric. -/
-@[reassoc.1]
+@[reassoc]
 theorem biprod.symmetry (P Q : C) : (biprod.braiding P Q).hom ≫ (biprod.braiding Q P).hom = 𝟙 _ :=
   by simp
 #align category_theory.limits.biprod.symmetry CategoryTheory.Limits.biprod.symmetry

@@ -534,7 +534,7 @@ theorem exists_of_not_isSquare (h₀ : 0 < d) (hd : ¬IsSquare d) :
   have P : ∃ x' : ℕ, 1 < x' ∧ ∃ y' : ℤ, 0 < y' ∧ (x' : ℤ) ^ 2 - d * y' ^ 2 = 1 :=
     by
     have hax := a.prop
-    lift a.x to ℕ using by positivity with ax
+    lift a.x to ℕ using by positivity
     norm_cast  at ha₁
     exact ⟨ax, ha₁, a.y, ha₂, hax⟩
   classical
@@ -697,7 +697,7 @@ theorem mul_inv_x_lt_x {a₁ : Solution₁ d} (h : IsFundamental a₁) {a : Solu
 theorem eq_pow_of_nonneg {a₁ : Solution₁ d} (h : IsFundamental a₁) {a : Solution₁ d} (hax : 0 < a.x)
     (hay : 0 ≤ a.y) : ∃ n : ℕ, a = a₁ ^ n :=
   by
-  lift a.x to ℕ using hax.le with ax hax'
+  lift a.x to ℕ using hax.le
   induction' ax using Nat.strong_induction_on with x ih generalizing a
   cases' hay.eq_or_lt with hy hy
   · -- case 1: `a = 1`
@@ -716,7 +716,7 @@ theorem eq_pow_of_nonneg {a₁ : Solution₁ d} (h : IsFundamental a₁) {a : So
     have hxx₁ := h.mul_inv_x_pos hx₁ hy
     have hxx₂ := h.mul_inv_x_lt_x hx₁ hy
     have hyy := h.mul_inv_y_nonneg hx₁ hy
-    lift (a * a₁⁻¹).x to ℕ using hxx₁.le with x' hx'
+    lift (a * a₁⁻¹).x to ℕ using hxx₁.le
     obtain ⟨n, hn⟩ := ih x' (by exact_mod_cast hxx₂.trans_eq hax'.symm) hxx₁ hyy hx'
     exact ⟨n + 1, by rw [pow_succ, ← hn, mul_comm a, ← mul_assoc, mul_inv_self, one_mul]⟩
 #align pell.is_fundamental.eq_pow_of_nonneg Pell.IsFundamental.eq_pow_of_nonneg

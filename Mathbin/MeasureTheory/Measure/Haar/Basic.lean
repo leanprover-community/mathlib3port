@@ -625,7 +625,7 @@ def haarContent (K₀ : PositiveCompacts G) : Content G
     rfl
   sup_le' K₁ K₂ := by simp only [← NNReal.coe_le_coe, NNReal.coe_add, Subtype.coe_mk, chaar_sup_le]
 #align measure_theory.measure.haar.haar_content MeasureTheory.Measure.Haar.haarContent
-#align measure_theory.measure.haar.add_haar_content MeasureTheory.Measure.Haar.add_haar_content
+#align measure_theory.measure.haar.add_haar_content MeasureTheory.Measure.Haar.addHaarContent
 
 /-! We only prove the properties for `haar_content` that we use at least twice below. -/
 
@@ -644,7 +644,7 @@ theorem haarContent_self {K₀ : PositiveCompacts G} : haarContent K₀ K₀.toC
   simp_rw [← ENNReal.coe_one, haar_content_apply, ENNReal.coe_eq_coe, chaar_self]
   rfl
 #align measure_theory.measure.haar.haar_content_self MeasureTheory.Measure.Haar.haarContent_self
-#align measure_theory.measure.haar.add_haar_content_self MeasureTheory.Measure.Haar.add_haar_content_self
+#align measure_theory.measure.haar.add_haar_content_self MeasureTheory.Measure.Haar.add_haarContent_self
 
 /-- The variant of `is_left_invariant_chaar` for `haar_content` -/
 @[to_additive "The variant of `is_left_invariant_add_chaar` for `add_haar_content`"]
@@ -653,7 +653,7 @@ theorem is_left_invariant_haarContent {K₀ : PositiveCompacts G} (g : G) (K : C
   simpa only [ENNReal.coe_eq_coe, ← NNReal.coe_eq, haar_content_apply] using
     is_left_invariant_chaar g K
 #align measure_theory.measure.haar.is_left_invariant_haar_content MeasureTheory.Measure.Haar.is_left_invariant_haarContent
-#align measure_theory.measure.haar.is_left_invariant_add_haar_content MeasureTheory.Measure.Haar.is_left_invariant_add_haar_content
+#align measure_theory.measure.haar.is_left_invariant_add_haar_content MeasureTheory.Measure.Haar.is_left_invariant_add_haarContent
 
 @[to_additive]
 theorem haarContent_outerMeasure_self_pos {K₀ : PositiveCompacts G} :
@@ -664,7 +664,7 @@ theorem haarContent_outerMeasure_self_pos {K₀ : PositiveCompacts G} :
   refine' le_iInf₂ fun U hU => le_iInf fun hK₀ => le_trans _ <| le_iSup₂ K₀.to_compacts hK₀
   exact haar_content_self.ge
 #align measure_theory.measure.haar.haar_content_outer_measure_self_pos MeasureTheory.Measure.Haar.haarContent_outerMeasure_self_pos
-#align measure_theory.measure.haar.add_haar_content_outer_measure_self_pos MeasureTheory.Measure.Haar.add_haar_content_outer_measure_self_pos
+#align measure_theory.measure.haar.add_haar_content_outer_measure_self_pos MeasureTheory.Measure.Haar.add_haarContent_outerMeasure_self_pos
 
 end Haar
 
@@ -692,7 +692,7 @@ theorem haarMeasure_apply {K₀ : PositiveCompacts G} {s : Set G} (hs : Measurab
   change ((haar_content K₀).OuterMeasure K₀)⁻¹ * (haar_content K₀).Measure s = _
   simp only [hs, div_eq_mul_inv, mul_comm, content.measure_apply]
 #align measure_theory.measure.haar_measure_apply MeasureTheory.Measure.haarMeasure_apply
-#align measure_theory.measure.add_haar_measure_apply MeasureTheory.Measure.add_haar_measure_apply
+#align measure_theory.measure.add_haar_measure_apply MeasureTheory.Measure.add_haarMeasure_apply
 
 @[to_additive]
 instance isMulLeftInvariant_haarMeasure (K₀ : PositiveCompacts G) :

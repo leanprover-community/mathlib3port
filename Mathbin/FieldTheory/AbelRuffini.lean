@@ -405,7 +405,7 @@ theorem isSolvable (α : solvableByRad F E) : IsSolvable (minpoly F α).Gal :=
   apply solvableByRad.induction
   ·
     exact fun α => by
-      rw [minpoly.eq_x_sub_c]
+      rw [minpoly.eq_X_sub_C]
       exact gal_x_sub_c_isSolvable α
   ·
     exact fun α β =>

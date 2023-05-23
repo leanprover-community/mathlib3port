@@ -323,7 +323,7 @@ theorem den_div_cast_eq_one_iff (m n : ℤ) (hn : n ≠ 0) : ((m : ℚ) / n).den
   replace hn : (n : ℚ) ≠ 0; · rwa [Ne.def, ← Int.cast_zero, coe_int_inj]
   constructor
   · intro h
-    lift (m : ℚ) / n to ℤ using h with k hk
+    lift (m : ℚ) / n to ℤ using h
     use k
     rwa [eq_div_iff_mul_eq hn, ← Int.cast_mul, mul_comm, eq_comm, coe_int_inj] at hk
   · rintro ⟨d, rfl⟩

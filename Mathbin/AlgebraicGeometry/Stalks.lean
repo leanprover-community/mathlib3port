@@ -55,7 +55,7 @@ def stalkMap {X Y : PresheafedSpace.{v} C} (α : X ⟶ Y) (x : X) : Y.stalk (α.
   (stalkFunctor C (α.base x)).map α.c ≫ X.Presheaf.stalkPushforward C α.base x
 #align algebraic_geometry.PresheafedSpace.stalk_map AlgebraicGeometry.PresheafedSpace.stalkMap
 
-@[simp, elementwise, reassoc.1]
+@[simp, elementwise, reassoc]
 theorem stalkMap_germ {X Y : PresheafedSpace.{v} C} (α : X ⟶ Y) (U : Opens Y.carrier)
     (x : (Opens.map α.base).obj U) :
     Y.Presheaf.germ ⟨α.base x, x.2⟩ ≫ stalkMap α ↑x = α.c.app (op U) ≫ X.Presheaf.germ x := by
@@ -77,7 +77,7 @@ def restrictStalkIso {U : TopCat} (X : PresheafedSpace.{v} C) {f : U ⟶ (X : To
     (h.is_open_map.functor_nhds x).op ((open_nhds.inclusion (f x)).op ⋙ X.presheaf)
 #align algebraic_geometry.PresheafedSpace.restrict_stalk_iso AlgebraicGeometry.PresheafedSpace.restrictStalkIso
 
-@[simp, elementwise, reassoc.1]
+@[simp, elementwise, reassoc]
 theorem restrictStalkIso_hom_eq_germ {U : TopCat} (X : PresheafedSpace.{v} C)
     {f : U ⟶ (X : TopCat.{v})} (h : OpenEmbedding f) (V : Opens U) (x : U) (hx : x ∈ V) :
     (X.restrict h).Presheaf.germ ⟨x, hx⟩ ≫ (restrictStalkIso X h x).Hom =
@@ -86,7 +86,7 @@ theorem restrictStalkIso_hom_eq_germ {U : TopCat} (X : PresheafedSpace.{v} C)
     (op ⟨V, hx⟩)
 #align algebraic_geometry.PresheafedSpace.restrict_stalk_iso_hom_eq_germ AlgebraicGeometry.PresheafedSpace.restrictStalkIso_hom_eq_germ
 
-@[simp, elementwise, reassoc.1]
+@[simp, elementwise, reassoc]
 theorem restrictStalkIso_inv_eq_germ {U : TopCat} (X : PresheafedSpace.{v} C)
     {f : U ⟶ (X : TopCat.{v})} (h : OpenEmbedding f) (V : Opens U) (x : U) (hx : x ∈ V) :
     X.Presheaf.germ ⟨f x, show f x ∈ h.IsOpenMap.Functor.obj V from ⟨x, hx, rfl⟩⟩ ≫
@@ -210,7 +210,7 @@ def stalkIso {X Y : PresheafedSpace.{v} C} (α : X ≅ Y) (x : X) :
   asIso (stalkMap α.Hom x)
 #align algebraic_geometry.PresheafedSpace.stalk_map.stalk_iso AlgebraicGeometry.PresheafedSpace.stalkMap.stalkIso
 
-@[simp, reassoc.1, elementwise]
+@[simp, reassoc, elementwise]
 theorem stalkSpecializes_stalkMap {X Y : PresheafedSpace.{v} C} (f : X ⟶ Y) {x y : X} (h : x ⤳ y) :
     Y.Presheaf.stalkSpecializes (f.base.map_specializes h) ≫ stalkMap f x =
       stalkMap f y ≫ X.Presheaf.stalkSpecializes h :=

@@ -68,7 +68,7 @@ restate_axiom iso.hom_inv_id'
 
 restate_axiom iso.inv_hom_id'
 
-attribute [simp, reassoc.1] iso.hom_inv_id iso.inv_hom_id
+attribute [simp, reassoc] iso.hom_inv_id iso.inv_hom_id
 
 -- mathport name: «expr ≅ »
 infixr:10 " ≅ " => Iso
@@ -343,14 +343,14 @@ noncomputable def inv (f : X ⟶ Y) [I : IsIso f] :=
 namespace IsIso
 
 #print CategoryTheory.IsIso.hom_inv_id /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem hom_inv_id (f : X ⟶ Y) [I : IsIso f] : f ≫ inv f = 𝟙 X :=
   (Classical.choose_spec I.1).left
 #align category_theory.is_iso.hom_inv_id CategoryTheory.IsIso.hom_inv_id
 -/
 
 #print CategoryTheory.IsIso.inv_hom_id /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem inv_hom_id (f : X ⟶ Y) [I : IsIso f] : inv f ≫ f = 𝟙 Y :=
   (Classical.choose_spec I.1).right
 #align category_theory.is_iso.inv_hom_id CategoryTheory.IsIso.inv_hom_id

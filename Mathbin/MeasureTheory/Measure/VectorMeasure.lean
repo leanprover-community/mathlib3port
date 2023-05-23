@@ -1536,7 +1536,7 @@ theorem toSignedMeasure_toMeasureOfZeroLe :
       μ :=
   by
   refine' measure.ext fun i hi => _
-  lift μ i to ℝ≥0 using (measure_lt_top _ _).Ne with m hm
+  lift μ i to ℝ≥0 using (measure_lt_top _ _).Ne
   simp [signed_measure.to_measure_of_zero_le_apply _ _ _ hi,
     measure.to_signed_measure_apply_measurable hi, ← hm]
 #align measure_theory.measure.to_signed_measure_to_measure_of_zero_le MeasureTheory.Measure.toSignedMeasure_toMeasureOfZeroLe

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Sébastien Gouëzel, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.pi_L2
-! leanprover-community/mathlib commit 8ff51ea9f2f5875755582577883fc99db1cfab88
+! leanprover-community/mathlib commit 13bce9a6b6c44f6b4c91ac1c1d2a816e2533d395
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -393,11 +393,7 @@ protected theorem coe_toBasis (b : OrthonormalBasis ι 𝕜 E) : (⇑b.toBasis :
 @[simp]
 protected theorem coe_toBasis_repr (b : OrthonormalBasis ι 𝕜 E) :
     b.toBasis.equivFun = b.repr.toLinearEquiv :=
-  by
-  change (Basis.ofEquivFun b.repr.to_linear_equiv).equivFun = b.repr.to_linear_equiv
-  ext (x j)
-  simp only [Basis.ofEquivFun_repr_apply, LinearIsometryEquiv.coe_toLinearEquiv,
-    Basis.equivFun_apply]
+  Basis.equivFun_ofEquivFun _
 #align orthonormal_basis.coe_to_basis_repr OrthonormalBasis.coe_toBasis_repr
 
 @[simp]

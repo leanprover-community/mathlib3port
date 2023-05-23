@@ -1689,7 +1689,7 @@ theorem coe_div :
 
 @[simp, norm_cast]
 theorem coe_c (r : F) : ((c r : Ratfunc F) : LaurentSeries F) = HahnSeries.c r := by
-  rw [coe_num_denom, num_C, denom_C, coe_coe, Polynomial.coe_c, coe_C, coe_coe, Polynomial.coe_one,
+  rw [coe_num_denom, num_C, denom_C, coe_coe, Polynomial.coe_C, coe_C, coe_coe, Polynomial.coe_one,
     PowerSeries.coe_one, div_one]
 #align ratfunc.coe_C Ratfunc.coe_c
 
@@ -1701,7 +1701,7 @@ theorem coe_smul (r : F) : ((r • f : Ratfunc F) : LaurentSeries F) = r • f :
 
 @[simp, norm_cast]
 theorem coe_x : ((x : Ratfunc F) : LaurentSeries F) = single 1 1 := by
-  rw [coe_num_denom, num_X, denom_X, coe_coe, Polynomial.coe_x, coe_X, coe_coe, Polynomial.coe_one,
+  rw [coe_num_denom, num_X, denom_X, coe_coe, Polynomial.coe_X, coe_X, coe_coe, Polynomial.coe_one,
     PowerSeries.coe_one, div_one]
 #align ratfunc.coe_X Ratfunc.coe_x
 

@@ -68,7 +68,7 @@ def t (i j : 𝒰.J) : v 𝒰 f g i j ⟶ v 𝒰 f g j i :=
   rw [category.comp_id, category.id_comp]
 #align algebraic_geometry.Scheme.pullback.t AlgebraicGeometry.Scheme.Pullback.t
 
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem t_fst_fst (i j : 𝒰.J) : t 𝒰 f g i j ≫ pullback.fst ≫ pullback.fst = pullback.snd :=
   by
   delta t
@@ -77,7 +77,7 @@ theorem t_fst_fst (i j : 𝒰.J) : t 𝒰 f g i j ≫ pullback.fst ≫ pullback.
     pullback_assoc_inv_fst_fst, pullback_symmetry_hom_comp_fst]
 #align algebraic_geometry.Scheme.pullback.t_fst_fst AlgebraicGeometry.Scheme.Pullback.t_fst_fst
 
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem t_fst_snd (i j : 𝒰.J) :
     t 𝒰 f g i j ≫ pullback.fst ≫ pullback.snd = pullback.fst ≫ pullback.snd :=
   by
@@ -87,7 +87,7 @@ theorem t_fst_snd (i j : 𝒰.J) :
     pullback_assoc_inv_snd]
 #align algebraic_geometry.Scheme.pullback.t_fst_snd AlgebraicGeometry.Scheme.Pullback.t_fst_snd
 
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem t_snd (i j : 𝒰.J) : t 𝒰 f g i j ≫ pullback.snd = pullback.fst ≫ pullback.fst :=
   by
   delta t
@@ -129,7 +129,7 @@ section
 
 end
 
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem t'_fst_fst_fst (i j k : 𝒰.J) :
     t' 𝒰 f g i j k ≫ pullback.fst ≫ pullback.fst ≫ pullback.fst = pullback.fst ≫ pullback.snd :=
   by
@@ -139,7 +139,7 @@ theorem t'_fst_fst_fst (i j k : 𝒰.J) :
     pullback_right_pullback_fst_iso_hom_fst_assoc]
 #align algebraic_geometry.Scheme.pullback.t'_fst_fst_fst AlgebraicGeometry.Scheme.Pullback.t'_fst_fst_fst
 
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem t'_fst_fst_snd (i j k : 𝒰.J) :
     t' 𝒰 f g i j k ≫ pullback.fst ≫ pullback.fst ≫ pullback.snd =
       pullback.fst ≫ pullback.fst ≫ pullback.snd :=
@@ -150,7 +150,7 @@ theorem t'_fst_fst_snd (i j k : 𝒰.J) :
     pullback_right_pullback_fst_iso_hom_fst_assoc]
 #align algebraic_geometry.Scheme.pullback.t'_fst_fst_snd AlgebraicGeometry.Scheme.Pullback.t'_fst_fst_snd
 
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem t'_fst_snd (i j k : 𝒰.J) :
     t' 𝒰 f g i j k ≫ pullback.fst ≫ pullback.snd = pullback.snd ≫ pullback.snd :=
   by
@@ -160,7 +160,7 @@ theorem t'_fst_snd (i j k : 𝒰.J) :
     pullback_right_pullback_fst_iso_hom_snd]
 #align algebraic_geometry.Scheme.pullback.t'_fst_snd AlgebraicGeometry.Scheme.Pullback.t'_fst_snd
 
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem t'_snd_fst_fst (i j k : 𝒰.J) :
     t' 𝒰 f g i j k ≫ pullback.snd ≫ pullback.fst ≫ pullback.fst = pullback.fst ≫ pullback.snd :=
   by
@@ -170,7 +170,7 @@ theorem t'_snd_fst_fst (i j k : 𝒰.J) :
     pullback_right_pullback_fst_iso_hom_fst_assoc]
 #align algebraic_geometry.Scheme.pullback.t'_snd_fst_fst AlgebraicGeometry.Scheme.Pullback.t'_snd_fst_fst
 
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem t'_snd_fst_snd (i j k : 𝒰.J) :
     t' 𝒰 f g i j k ≫ pullback.snd ≫ pullback.fst ≫ pullback.snd =
       pullback.fst ≫ pullback.fst ≫ pullback.snd :=
@@ -181,7 +181,7 @@ theorem t'_snd_fst_snd (i j k : 𝒰.J) :
     pullback_right_pullback_fst_iso_hom_fst_assoc]
 #align algebraic_geometry.Scheme.pullback.t'_snd_fst_snd AlgebraicGeometry.Scheme.Pullback.t'_snd_fst_snd
 
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem t'_snd_snd (i j k : 𝒰.J) :
     t' 𝒰 f g i j k ≫ pullback.snd ≫ pullback.snd = pullback.fst ≫ pullback.fst ≫ pullback.fst :=
   by
@@ -327,7 +327,7 @@ def gluedLiftPullbackMap (i j : 𝒰.J) :
   · simp only [category.comp_id, category.id_comp]
 #align algebraic_geometry.Scheme.pullback.glued_lift_pullback_map AlgebraicGeometry.Scheme.Pullback.gluedLiftPullbackMap
 
-@[reassoc.1]
+@[reassoc]
 theorem gluedLiftPullbackMap_fst (i j : 𝒰.J) :
     gluedLiftPullbackMap 𝒰 f g s i j ≫ pullback.fst =
       pullback.fst ≫
@@ -339,7 +339,7 @@ theorem gluedLiftPullbackMap_fst (i j : 𝒰.J) :
     pullback_right_pullback_fst_iso_hom_fst_assoc]
 #align algebraic_geometry.Scheme.pullback.glued_lift_pullback_map_fst AlgebraicGeometry.Scheme.Pullback.gluedLiftPullbackMap_fst
 
-@[reassoc.1]
+@[reassoc]
 theorem gluedLiftPullbackMap_snd (i j : 𝒰.J) :
     gluedLiftPullbackMap 𝒰 f g s i j ≫ pullback.snd = pullback.snd ≫ pullback.snd :=
   by
@@ -425,7 +425,7 @@ def pullbackFstιToV (i j : 𝒰.J) :
     (pullback.congrHom (Multicoequalizer.π_desc _ _ _ _ _) rfl).Hom
 #align algebraic_geometry.Scheme.pullback.pullback_fst_ι_to_V AlgebraicGeometry.Scheme.Pullback.pullbackFstιToV
 
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem pullbackFstιToV_fst (i j : 𝒰.J) : pullbackFstιToV 𝒰 f g i j ≫ pullback.fst = pullback.snd :=
   by
   delta pullback_fst_ι_to_V
@@ -433,7 +433,7 @@ theorem pullbackFstιToV_fst (i j : 𝒰.J) : pullbackFstιToV 𝒰 f g i j ≫ 
     category.comp_id, pullback_right_pullback_fst_iso_hom_fst, pullback_symmetry_hom_comp_fst]
 #align algebraic_geometry.Scheme.pullback.pullback_fst_ι_to_V_fst AlgebraicGeometry.Scheme.Pullback.pullbackFstιToV_fst
 
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem pullbackFstιToV_snd (i j : 𝒰.J) :
     pullbackFstιToV 𝒰 f g i j ≫ pullback.snd = pullback.fst ≫ pullback.snd :=
   by
@@ -490,7 +490,7 @@ def pullbackP1Iso (i : 𝒰.J) : pullback (p1 𝒰 f g) (𝒰.map i) ≅ pullbac
       erw [multicoequalizer.π_desc]
 #align algebraic_geometry.Scheme.pullback.pullback_p1_iso AlgebraicGeometry.Scheme.Pullback.pullbackP1Iso
 
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem pullbackP1Iso_hom_fst (i : 𝒰.J) :
     (pullbackP1Iso 𝒰 f g i).Hom ≫ pullback.fst = pullback.snd :=
   by
@@ -498,7 +498,7 @@ theorem pullbackP1Iso_hom_fst (i : 𝒰.J) :
   simp only [pullback.lift_fst]
 #align algebraic_geometry.Scheme.pullback.pullback_p1_iso_hom_fst AlgebraicGeometry.Scheme.Pullback.pullbackP1Iso_hom_fst
 
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem pullbackP1Iso_hom_snd (i : 𝒰.J) :
     (pullbackP1Iso 𝒰 f g i).Hom ≫ pullback.snd = pullback.fst ≫ p2 𝒰 f g :=
   by
@@ -506,7 +506,7 @@ theorem pullbackP1Iso_hom_snd (i : 𝒰.J) :
   simp only [pullback.lift_snd]
 #align algebraic_geometry.Scheme.pullback.pullback_p1_iso_hom_snd AlgebraicGeometry.Scheme.Pullback.pullbackP1Iso_hom_snd
 
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem pullbackP1Iso_inv_fst (i : 𝒰.J) :
     (pullbackP1Iso 𝒰 f g i).inv ≫ pullback.fst = (gluing 𝒰 f g).ι i :=
   by
@@ -514,7 +514,7 @@ theorem pullbackP1Iso_inv_fst (i : 𝒰.J) :
   simp only [pullback.lift_fst]
 #align algebraic_geometry.Scheme.pullback.pullback_p1_iso_inv_fst AlgebraicGeometry.Scheme.Pullback.pullbackP1Iso_inv_fst
 
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem pullbackP1Iso_inv_snd (i : 𝒰.J) :
     (pullbackP1Iso 𝒰 f g i).inv ≫ pullback.snd = pullback.fst :=
   by
@@ -522,7 +522,7 @@ theorem pullbackP1Iso_inv_snd (i : 𝒰.J) :
   simp only [pullback.lift_snd]
 #align algebraic_geometry.Scheme.pullback.pullback_p1_iso_inv_snd AlgebraicGeometry.Scheme.Pullback.pullbackP1Iso_inv_snd
 
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem pullbackP1Iso_hom_ι (i : 𝒰.J) :
     (pullbackP1Iso 𝒰 f g i).Hom ≫ (gluing 𝒰 f g).ι i = pullback.fst := by
   rw [← pullback_p1_iso_inv_fst, iso.hom_inv_id_assoc]

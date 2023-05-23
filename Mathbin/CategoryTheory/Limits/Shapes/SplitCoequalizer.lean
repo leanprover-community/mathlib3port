@@ -81,9 +81,9 @@ instance {X : C} : Inhabited (IsSplitCoequalizer (𝟙 X) (𝟙 X) (𝟙 X)) :=
 
 open IsSplitCoequalizer
 
-attribute [reassoc.1] condition
+attribute [reassoc] condition
 
-attribute [simp, reassoc.1] right_section_π left_section_bottom left_section_top
+attribute [simp, reassoc] right_section_π left_section_bottom left_section_top
 
 variable {f g}
 

@@ -41,7 +41,7 @@ restate_axiom Mod_.one_act'
 
 restate_axiom Mod_.assoc'
 
-attribute [simp, reassoc.1] Mod_.one_act Mod_.assoc
+attribute [simp, reassoc] Mod_.one_act Mod_.assoc
 
 namespace Mod_
 
@@ -63,7 +63,7 @@ structure Hom (M N : Mod_ A) where
 
 restate_axiom hom.act_hom'
 
-attribute [simp, reassoc.1] hom.act_hom
+attribute [simp, reassoc] hom.act_hom
 
 /-- The identity morphism on a module object. -/
 @[simps]

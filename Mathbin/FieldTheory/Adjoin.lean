@@ -517,7 +517,7 @@ theorem adjoin_algebraic_toSubalgebra {S : Set E} (hS : ∀ x ∈ S, IsAlgebraic
   simp only [isAlgebraic_iff_isIntegral] at hS
   have : Algebra.IsIntegral F (Algebra.adjoin F S) := by
     rwa [← le_integralClosure_iff_isIntegral, Algebra.adjoin_le_iff]
-  have := isField_of_isIntegral_of_is_field' this (Field.toIsField F)
+  have := isField_of_isIntegral_of_isField' this (Field.toIsField F)
   rw [← ((Algebra.adjoin F S).toIntermediateField' this).eq_adjoin_of_eq_algebra_adjoin F S] <;> rfl
 #align intermediate_field.adjoin_algebraic_to_subalgebra IntermediateField.adjoin_algebraic_toSubalgebra
 
@@ -1232,7 +1232,7 @@ theorem sup_toSubalgebra [h1 : FiniteDimensional K E1] [h2 : FiniteDimensional K
     · obtain ⟨y, h⟩ := this.mul_inv_cancel hx'
       exact (congr_arg (· ∈ S1 ⊔ S2) <| eq_inv_of_mul_eq_one_right <| subtype.ext_iff.mp h).mp y.2
   exact
-    isField_of_isIntegral_of_is_field'
+    isField_of_isIntegral_of_isField'
       (is_integral_sup.mpr ⟨Algebra.isIntegral_of_finite K E1, Algebra.isIntegral_of_finite K E2⟩)
       (Field.toIsField K)
 #align intermediate_field.sup_to_subalgebra IntermediateField.sup_toSubalgebra

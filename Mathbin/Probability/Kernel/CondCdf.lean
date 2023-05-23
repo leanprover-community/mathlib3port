@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.kernel.cond_cdf
-! leanprover-community/mathlib commit 20d5763051978e9bc6428578ed070445df6a18b3
+! leanprover-community/mathlib commit 3b88f4005dc2e28d42f974cc1ce838f0dafb39b8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -459,7 +459,7 @@ theorem tendsto_preCdf_atTop_one (ρ : Measure (α × ℝ)) [FiniteMeasure ρ] :
       filter_upwards [h_tendsto_ℚ]with a ha using ha.comp tendsto_nat_cast_atTop_atTop
     have hF_ae_meas : AEMeasurable F ρ.fst :=
       by
-      refine' aEMeasurable_of_tendsto_metrizable_ae _ (fun n => _) h_tendsto_ℚ
+      refine' aemeasurable_of_tendsto_metrizable_ae _ (fun n => _) h_tendsto_ℚ
       exact measurable_pre_cdf.ae_measurable
     have hF_le_one : ∀ᵐ a ∂ρ.fst, F a ≤ 1 := by
       filter_upwards [h_tendsto_ℚ, h_le_one]with a ha ha_le using le_of_tendsto' ha ha_le
@@ -541,7 +541,7 @@ theorem tendsto_preCdf_atBot_zero (ρ : Measure (α × ℝ)) [FiniteMeasure ρ] 
     suffices h_lintegral_eq : (∫⁻ a, F a ∂ρ.fst) = 0
     · have hF_ae_meas : AEMeasurable F ρ.fst :=
         by
-        refine' aEMeasurable_of_tendsto_metrizable_ae _ (fun n => _) h_tendsto
+        refine' aemeasurable_of_tendsto_metrizable_ae _ (fun n => _) h_tendsto
         exact measurable_pre_cdf.ae_measurable
       rw [lintegral_eq_zero_iff' hF_ae_meas] at h_lintegral_eq
       filter_upwards [h_tendsto, h_lintegral_eq]with a ha_tendsto ha_eq
@@ -1074,6 +1074,51 @@ theorem integral_condCdf (ρ : Measure (α × ℝ)) [FiniteMeasure ρ] (x : ℝ)
     (∫ a, condCdf ρ a x ∂ρ.fst) = (ρ (univ ×ˢ Iic x)).toReal := by
   rw [← set_integral_cond_cdf ρ _ MeasurableSet.univ, measure.restrict_univ]
 #align probability_theory.integral_cond_cdf ProbabilityTheory.integral_condCdf
+
+section Measure
+
+theorem measure_condCdf_Iic (ρ : Measure (α × ℝ)) (a : α) (x : ℝ) :
+    (condCdf ρ a).Measure (Iic x) = ENNReal.ofReal (condCdf ρ a x) :=
+  by
+  rw [← sub_zero (cond_cdf ρ a x)]
+  exact (cond_cdf ρ a).measure_Iic (tendsto_cond_cdf_at_bot ρ a) _
+#align probability_theory.measure_cond_cdf_Iic ProbabilityTheory.measure_condCdf_Iic
+
+theorem measure_condCdf_univ (ρ : Measure (α × ℝ)) (a : α) : (condCdf ρ a).Measure univ = 1 :=
+  by
+  rw [← ENNReal.ofReal_one, ← sub_zero (1 : ℝ)]
+  exact StieltjesFunction.measure_univ _ (tendsto_cond_cdf_at_bot ρ a) (tendsto_cond_cdf_at_top ρ a)
+#align probability_theory.measure_cond_cdf_univ ProbabilityTheory.measure_condCdf_univ
+
+instance (ρ : Measure (α × ℝ)) (a : α) : ProbabilityMeasure (condCdf ρ a).Measure :=
+  ⟨measure_condCdf_univ ρ a⟩
+
+/-- The function `a ↦ (cond_cdf ρ a).measure` is measurable. -/
+theorem measurable_measure_condCdf (ρ : Measure (α × ℝ)) :
+    Measurable fun a => (condCdf ρ a).Measure :=
+  by
+  rw [measure.measurable_measure]
+  refine' fun s hs =>
+    MeasurableSpace.induction_on_inter (borel_eq_generateFrom_Iic ℝ) isPiSystem_Iic _ _ _ _ hs
+  · simp only [measure_empty, measurable_const]
+  · rintro S ⟨u, rfl⟩
+    simp_rw [measure_cond_cdf_Iic ρ _ u]
+    exact (measurable_cond_cdf ρ u).ennreal_ofReal
+  · intro t ht ht_cd_meas
+    have :
+      (fun a => (cond_cdf ρ a).Measure (tᶜ)) =
+        (fun a => (cond_cdf ρ a).Measure univ) - fun a => (cond_cdf ρ a).Measure t :=
+      by
+      ext1 a
+      rw [measure_compl ht (measure_ne_top (cond_cdf ρ a).Measure _), Pi.sub_apply]
+    simp_rw [this, measure_cond_cdf_univ ρ]
+    exact Measurable.sub measurable_const ht_cd_meas
+  · intro f hf_disj hf_meas hf_cd_meas
+    simp_rw [measure_Union hf_disj hf_meas]
+    exact Measurable.ennreal_tsum hf_cd_meas
+#align probability_theory.measurable_measure_cond_cdf ProbabilityTheory.measurable_measure_condCdf
+
+end Measure
 
 end ProbabilityTheory
 

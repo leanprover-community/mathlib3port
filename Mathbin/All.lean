@@ -1190,6 +1190,7 @@ import Mathbin.Combinatorics.SimpleGraph.Regularity.Chunk
 import Mathbin.Combinatorics.SimpleGraph.Regularity.Energy
 import Mathbin.Combinatorics.SimpleGraph.Regularity.Equitabilise
 import Mathbin.Combinatorics.SimpleGraph.Regularity.Increment
+import Mathbin.Combinatorics.SimpleGraph.Regularity.Lemma
 import Mathbin.Combinatorics.SimpleGraph.Regularity.Uniform
 import Mathbin.Combinatorics.SimpleGraph.StronglyRegular
 import Mathbin.Combinatorics.SimpleGraph.Subgraph
@@ -2480,6 +2481,7 @@ import Mathbin.Probability.Integration
 import Mathbin.Probability.Kernel.Basic
 import Mathbin.Probability.Kernel.Composition
 import Mathbin.Probability.Kernel.CondCdf
+import Mathbin.Probability.Kernel.Disintegration
 import Mathbin.Probability.Kernel.Invariance
 import Mathbin.Probability.Kernel.MeasurableIntegral
 import Mathbin.Probability.Kernel.WithDensity

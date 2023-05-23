@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module field_theory.splitting_field
-! leanprover-community/mathlib commit 6a5a6494968741677358457a806f487c7e293d39
+! leanprover-community/mathlib commit b353176c24d96c23f0ce1cc63efc3f55019702d9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.Algebra.CharP.Algebra
 import Mathbin.FieldTheory.IntermediateField
 import Mathbin.RingTheory.Adjoin.Field
 
@@ -125,47 +126,308 @@ theorem succ (n : ℕ) (f : K[X]) :
   rfl
 #align polynomial.splitting_field_aux.succ Polynomial.SplittingFieldAux.succ
 
-instance field (n : ℕ) : ∀ {K : Type u} [Field K], ∀ {f : K[X]}, Field (splitting_field_aux n f) :=
-  Nat.recOn n (fun K _ _ => ‹Field K›) fun n ih K _ f => ih
+section LiftInstances
+
+/-! ### Instances on `splitting_field_aux`
+
+In order to avoid diamond issues, we have to be careful to define each data field of algebraic
+instances on `splitting_field_aux` by recursion, rather than defining the whole structure by
+recursion at once.
+
+The important detail is that the `smul` instances can be lifted _before_ we create the algebraic
+instances; if we do not do this, this creates a mutual dependence on both on each other, and it
+is impossible to untangle this mess. In order to do this, we need that these `smul` instances
+are distributive in the sense of `distrib_smul`, which is weak enough to be guaranteed at this
+stage. This is sufficient to lift an action to `adjoin_root f` (remember that this is a quotient,
+so these conditions are equivalent to well-definedness), which is all we need.
+-/
+
+
+/-- Splitting fields have a zero. -/
+protected def zero (n : ℕ) : ∀ {K : Type u} [Field K], ∀ {f : K[X]}, splitting_field_aux n f :=
+  Nat.recOn n (fun K fK f => @Zero.zero K _) fun n ih K fK f => ih
+#align polynomial.splitting_field_aux.zero Polynomial.SplittingFieldAux.zero
+
+/-- Splitting fields have an addition. -/
+protected def add (n : ℕ) :
+    ∀ {K : Type u} [Field K],
+      ∀ {f : K[X]}, splitting_field_aux n f → splitting_field_aux n f → splitting_field_aux n f :=
+  Nat.recOn n (fun K fK f => @Add.add K _) fun n ih K fK f => ih
+#align polynomial.splitting_field_aux.add Polynomial.SplittingFieldAux.add
+
+/-- Splitting fields inherit scalar multiplication. -/
+protected def smul (n : ℕ) :
+    ∀ (α : Type _) {K : Type u} [Field K],
+      ∀ [DistribSMul α K],
+        ∀ [IsScalarTower α K K] {f : K[X]}, α → splitting_field_aux n f → splitting_field_aux n f :=
+  Nat.recOn n (fun α K fK ds ist f => @SMul.smul _ K _) fun n ih α K fK ds ist f => ih α
+#align polynomial.splitting_field_aux.smul Polynomial.SplittingFieldAux.smul
+
+instance hasSmul (α : Type _) (n : ℕ) {K : Type u} [Field K] [DistribSMul α K] [IsScalarTower α K K]
+    {f : K[X]} : SMul α (SplittingFieldAux n f) :=
+  ⟨SplittingFieldAux.smul n α⟩
+#align polynomial.splitting_field_aux.has_smul Polynomial.SplittingFieldAux.hasSmul
+
+instance isScalarTower (n : ℕ) :
+    ∀ (R₁ R₂ : Type _) {K : Type u} [SMul R₁ R₂] [Field K],
+      ∀ [DistribSMul R₂ K] [DistribSMul R₁ K],
+        ∀ [IsScalarTower R₁ K K] [IsScalarTower R₂ K K] [IsScalarTower R₁ R₂ K] {f : K[X]},
+          IsScalarTower R₁ R₂ (splitting_field_aux n f) :=
+  Nat.recOn n
+    (fun R₁ R₂ K _ _ hs₂ hs₁ _ _ h f =>
+      by
+      rcases hs₁ with @⟨@⟨⟨hs₁⟩, _⟩, _⟩
+      rcases hs₂ with @⟨@⟨⟨hs₂⟩, _⟩, _⟩
+      exact h)
+    fun n ih R₁ R₂ K _ _ _ _ _ _ _ f => ih R₁ R₂
+#align polynomial.splitting_field_aux.is_scalar_tower Polynomial.SplittingFieldAux.isScalarTower
+
+/-- Splitting fields have a negation. -/
+protected def neg (n : ℕ) :
+    ∀ {K : Type u} [Field K], ∀ {f : K[X]}, splitting_field_aux n f → splitting_field_aux n f :=
+  Nat.recOn n (fun K fK f => @Neg.neg K _) fun n ih K fK f => ih
+#align polynomial.splitting_field_aux.neg Polynomial.SplittingFieldAux.neg
+
+/-- Splitting fields have subtraction. -/
+protected def sub (n : ℕ) :
+    ∀ {K : Type u} [Field K],
+      ∀ {f : K[X]}, splitting_field_aux n f → splitting_field_aux n f → splitting_field_aux n f :=
+  Nat.recOn n (fun K fK f => @Sub.sub K _) fun n ih K fK f => ih
+#align polynomial.splitting_field_aux.sub Polynomial.SplittingFieldAux.sub
+
+/-- Splitting fields have a one. -/
+protected def one (n : ℕ) : ∀ {K : Type u} [Field K], ∀ {f : K[X]}, splitting_field_aux n f :=
+  Nat.recOn n (fun K fK f => @One.one K _) fun n ih K fK f => ih
+#align polynomial.splitting_field_aux.one Polynomial.SplittingFieldAux.one
+
+/-- Splitting fields have a multiplication. -/
+protected def mul (n : ℕ) :
+    ∀ {K : Type u} [Field K],
+      ∀ {f : K[X]}, splitting_field_aux n f → splitting_field_aux n f → splitting_field_aux n f :=
+  Nat.recOn n (fun K fK f => @Mul.mul K _) fun n ih K fK f => ih
+#align polynomial.splitting_field_aux.mul Polynomial.SplittingFieldAux.mul
+
+/-- Splitting fields have a power operation. -/
+protected def npow (n : ℕ) :
+    ∀ {K : Type u} [Field K], ∀ {f : K[X]}, ℕ → splitting_field_aux n f → splitting_field_aux n f :=
+  Nat.recOn n (fun K fK f n x => @Pow.pow K _ _ x n) fun n ih K fK f => ih
+#align polynomial.splitting_field_aux.npow Polynomial.SplittingFieldAux.npow
+
+/-- Splitting fields have an injection from the base field. -/
+protected def mk (n : ℕ) : ∀ {K : Type u} [Field K], ∀ {f : K[X]}, K → splitting_field_aux n f :=
+  Nat.recOn n (fun K fK f => id) fun n ih K fK f => ih ∘ coe
+#align polynomial.splitting_field_aux.mk Polynomial.SplittingFieldAux.mk
+
+-- note that `coe` goes from `K → adjoin_root f`, and then `ih` lifts to the full splitting field
+-- (as we generalise over all fields in this recursion!)
+/-- Splitting fields have an inverse. -/
+protected def inv (n : ℕ) :
+    ∀ {K : Type u} [Field K], ∀ {f : K[X]}, splitting_field_aux n f → splitting_field_aux n f :=
+  Nat.recOn n (fun K fK f => @Inv.inv K _) fun n ih K fK f => ih
+#align polynomial.splitting_field_aux.inv Polynomial.SplittingFieldAux.inv
+
+/-- Splitting fields have a division. -/
+protected def div (n : ℕ) :
+    ∀ {K : Type u} [Field K],
+      ∀ {f : K[X]}, splitting_field_aux n f → splitting_field_aux n f → splitting_field_aux n f :=
+  Nat.recOn n (fun K fK f => @Div.div K _) fun n ih K fK f => ih
+#align polynomial.splitting_field_aux.div Polynomial.SplittingFieldAux.div
+
+/-- Splitting fields have powers by integers. -/
+protected def zpow (n : ℕ) :
+    ∀ {K : Type u} [Field K], ∀ {f : K[X]}, ℤ → splitting_field_aux n f → splitting_field_aux n f :=
+  Nat.recOn n (fun K fK f n x => @Pow.pow K _ _ x n) fun n ih K fK f => ih
+#align polynomial.splitting_field_aux.zpow Polynomial.SplittingFieldAux.zpow
+
+-- I'm not sure why these two lemmas break, but inlining them seems to not work.
+private theorem nsmul_zero (n : ℕ) :
+    ∀ {K : Type u} [Field K],
+      ∀ {f : K[X]} (x : splitting_field_aux n f), (0 : ℕ) • x = splitting_field_aux.zero n :=
+  Nat.recOn n (fun K fK f => zero_nsmul) fun n ih K fK f => ih
+#align polynomial.splitting_field_aux.nsmul_zero polynomial.splitting_field_aux.nsmul_zero
+
+private theorem nsmul_succ (n : ℕ) :
+    ∀ {K : Type u} [Field K],
+      ∀ {f : K[X]} (k : ℕ) (x : splitting_field_aux n f),
+        (k + 1) • x = splitting_field_aux.add n x (k • x) :=
+  Nat.recOn n (fun K fK f n x => succ_nsmul x n) fun n ih K fK f => ih
+#align polynomial.splitting_field_aux.nsmul_succ polynomial.splitting_field_aux.nsmul_succ
+
+instance field (n : ℕ) {K : Type u} [Field K] {f : K[X]} : Field (SplittingFieldAux n f) :=
+  by
+  refine'
+    { zero := splitting_field_aux.zero n
+      one := splitting_field_aux.one n
+      add := splitting_field_aux.add n
+      zero_add :=
+        have h := @zero_add
+        _
+      add_zero :=
+        have h := @add_zero
+        _
+      add_assoc :=
+        have h := @add_assoc
+        _
+      add_comm :=
+        have h := @add_comm
+        _
+      neg := splitting_field_aux.neg n
+      add_left_neg :=
+        have h := @add_left_neg
+        _
+      sub := splitting_field_aux.sub n
+      sub_eq_add_neg :=
+        have h := @sub_eq_add_neg
+        _
+      mul := splitting_field_aux.mul n
+      one_mul :=
+        have h := @one_mul
+        _
+      mul_one :=
+        have h := @mul_one
+        _
+      mul_assoc :=
+        have h := @mul_assoc
+        _
+      left_distrib :=
+        have h := @left_distrib
+        _
+      right_distrib :=
+        have h := @right_distrib
+        _
+      mul_comm :=
+        have h := @mul_comm
+        _
+      inv := splitting_field_aux.inv n
+      inv_zero :=
+        have h := @inv_zero
+        _
+      div := splitting_field_aux.div n
+      div_eq_mul_inv :=
+        have h := @div_eq_mul_inv
+        _
+      mul_inv_cancel :=
+        have h := @mul_inv_cancel
+        _
+      exists_pair_ne :=
+        have h := @exists_pair_ne
+        _
+      natCast := splitting_field_aux.mk n ∘ (coe : ℕ → K)
+      natCast_zero :=
+        have h := @CommRing.natCast_zero
+        _
+      natCast_succ :=
+        have h := @CommRing.natCast_succ
+        _
+      nsmul := (· • ·)
+      nsmul_zero := nsmul_zero n
+      nsmul_succ := nsmul_succ n
+      intCast := splitting_field_aux.mk n ∘ (coe : ℤ → K)
+      intCast_ofNat :=
+        have h := @CommRing.intCast_ofNat
+        _
+      intCast_negSucc :=
+        have h := @CommRing.intCast_neg_succ_ofNat
+        _
+      zsmul := (· • ·)
+      zsmul_zero' :=
+        have h := @SubtractionCommMonoid.zsmul_zero'
+        _
+      zsmul_succ' :=
+        have h := @SubtractionCommMonoid.zsmul_succ'
+        _
+      zsmul_neg' :=
+        have h := @SubtractionCommMonoid.zsmul_neg'
+        _
+      ratCast := splitting_field_aux.mk n ∘ (coe : ℚ → K)
+      ratCast_mk :=
+        have h := @Field.ratCast_mk
+        _
+      qsmul := (· • ·)
+      qsmul_eq_mul' :=
+        have h := @Field.qsmul_eq_mul'
+        _
+      npow := splitting_field_aux.npow n
+      npow_zero :=
+        have h := @CommRing.npow_zero'
+        _
+      npow_succ :=
+        have h := @CommRing.npow_succ'
+        _
+      zpow := splitting_field_aux.zpow n
+      zpow_zero' :=
+        have h := @Field.zpow_zero'
+        _
+      zpow_succ' :=
+        have h := @Field.zpow_succ'
+        _
+      zpow_neg' :=
+        have h := @Field.zpow_neg'
+        _ }
+  all_goals
+    induction' n with n ih generalizing K
+    · apply @h K
+    · exact @ih _ _ _
 #align polynomial.splitting_field_aux.field Polynomial.SplittingFieldAux.field
 
 instance inhabited {n : ℕ} {f : K[X]} : Inhabited (SplittingFieldAux n f) :=
   ⟨37⟩
 #align polynomial.splitting_field_aux.inhabited Polynomial.SplittingFieldAux.inhabited
 
-/-
-Note that the recursive nature of this definition and `splitting_field_aux.field` creates
-non-definitionally-equal diamonds in the `ℕ`- and `ℤ`- actions.
-```lean
-example (n : ℕ) {K : Type u} [field K] {f : K[X]} (hfn : f.nat_degree = n) :
-    (add_comm_monoid.nat_module : module ℕ (splitting_field_aux n f hfn)) =
-  @algebra.to_module _ _ _ _ (splitting_field_aux.algebra n _ hfn) :=
-rfl  -- fails
-```
-It's not immediately clear whether this _can_ be fixed; the failure is much the same as the reason
-that the following fails:
-```lean
-def cases_twice {α} (a₀ aₙ : α) : ℕ → α × α
-| 0 := (a₀, a₀)
-| (n + 1) := (aₙ, aₙ)
+/-- The injection from the base field as a ring homomorphism. -/
+@[simps]
+protected def mkHom (n : ℕ) {K : Type u} [Field K] {f : K[X]} : K →+* SplittingFieldAux n f
+    where
+  toFun := SplittingFieldAux.mk n
+  map_one' := by
+    induction' n with k hk generalizing K
+    · simp [splitting_field_aux.mk]
+    exact hk
+  map_mul' := by
+    induction' n with k hk generalizing K
+    · simp [splitting_field_aux.mk]
+    intro x y
+    change (splitting_field_aux.mk k) ((AdjoinRoot.of f.factor) _) = _
+    rw [map_mul]
+    exact hk _ _
+  map_zero' := by
+    induction' n with k hk generalizing K
+    · simp [splitting_field_aux.mk]
+    change (splitting_field_aux.mk k) ((AdjoinRoot.of f.factor) 0) = _
+    rw [map_zero, hk]
+  map_add' := by
+    induction' n with k hk generalizing K
+    · simp [splitting_field_aux.mk]
+    intro x y
+    change (splitting_field_aux.mk k) ((AdjoinRoot.of f.factor) _) = _
+    rw [map_add]
+    exact hk _ _
+#align polynomial.splitting_field_aux.mk_hom Polynomial.SplittingFieldAux.mkHom
 
-example (x : ℕ) {α} (a₀ aₙ : α) : (cases_twice a₀ aₙ x).1 = (cases_twice a₀ aₙ x).2 := rfl  -- fails
-```
-We don't really care at this point because this is an implementation detail (which is why this is
-not a docstring), but we do in `splitting_field.algebra'` below. -/
-instance algebra (n : ℕ) :
-    ∀ (R : Type _) {K : Type u} [CommSemiring R] [Field K],
-      ∀ [Algebra R K] {f : K[X]}, Algebra R (splitting_field_aux n f) :=
-  Nat.recOn n (fun R K _ _ _ _ => ‹Algebra R K›) fun n ih R K _ _ _ f => ih R
+instance algebra (n : ℕ) (R : Type _) {K : Type u} [CommSemiring R] [Field K] [Algebra R K]
+    {f : K[X]} : Algebra R (SplittingFieldAux n f) :=
+  {
+    (SplittingFieldAux.mkHom n).comp
+      (algebraMap R
+        K) with
+    toFun := (SplittingFieldAux.mkHom n).comp (algebraMap R K)
+    smul := (· • ·)
+    smul_def' := by
+      induction' n with k hk generalizing K
+      · exact Algebra.smul_def
+      exact hk
+    commutes' := fun a b => mul_comm _ _ }
 #align polynomial.splitting_field_aux.algebra Polynomial.SplittingFieldAux.algebra
 
-instance isScalarTower (n : ℕ) :
-    ∀ (R₁ R₂ : Type _) {K : Type u} [CommSemiring R₁] [CommSemiring R₂] [SMul R₁ R₂] [Field K],
-      ∀ [Algebra R₁ K] [Algebra R₂ K],
-        ∀ [IsScalarTower R₁ R₂ K] {f : K[X]}, IsScalarTower R₁ R₂ (splitting_field_aux n f) :=
-  Nat.recOn n (fun R₁ R₂ K _ _ _ _ _ _ _ _ => ‹IsScalarTower R₁ R₂ K›)
-    fun n ih R₁ R₂ K _ _ _ _ _ _ _ f => ih R₁ R₂
-#align polynomial.splitting_field_aux.is_scalar_tower Polynomial.SplittingFieldAux.isScalarTower
+/-- Because `splitting_field_aux` is defined by recursion, we have to make sure all instances
+on `splitting_field_aux` are defined by recursion within the fields. Otherwise, there will be
+instance diamonds such as the following: -/
+example (n : ℕ) {K : Type u} [Field K] {f : K[X]} :
+    (AddCommMonoid.natModule : Module ℕ (SplittingFieldAux n f)) =
+      @Algebra.toModule _ _ _ _ (SplittingFieldAux.algebra n _) :=
+  rfl
+
+end LiftInstances
 
 instance algebra''' {n : ℕ} {f : K[X]} :
     Algebra (AdjoinRoot f.factor) (SplittingFieldAux n f.removeFactor) :=
@@ -293,37 +555,36 @@ instance inhabited : Inhabited (SplittingField f) :=
   ⟨37⟩
 #align polynomial.splitting_field.inhabited Polynomial.SplittingField.inhabited
 
-/-- This should be an instance globally, but it creates diamonds with the `ℕ`, `ℤ`, and `ℚ` algebras
-(via their `smul` and `to_fun` fields):
-
-```lean
-example :
-  (algebra_nat : algebra ℕ (splitting_field f)) = splitting_field.algebra' f :=
-rfl  -- fails
-
-example :
-  (algebra_int _ : algebra ℤ (splitting_field f)) = splitting_field.algebra' f :=
-rfl  -- fails
-
-example [char_zero K] [char_zero (splitting_field f)] :
-  (algebra_rat : algebra ℚ (splitting_field f)) = splitting_field.algebra' f :=
-rfl  -- fails
-```
-
-Until we resolve these diamonds, it's more convenient to only turn this instance on with
-`local attribute [instance]` in places where the benefit of having the instance outweighs the cost.
-
-In the meantime, the `splitting_field.algebra` instance below is immune to these particular diamonds
-since `K = ℕ` and `K = ℤ` are not possible due to the `field K` assumption. Diamonds in
-`algebra ℚ (splitting_field f)` instances are still possible via this instance unfortunately, but
-these are less common as they require suitable `char_zero` instances to be present.
--/
 instance algebra' {R} [CommSemiring R] [Algebra R K] : Algebra R (SplittingField f) :=
   SplittingFieldAux.algebra _ _
 #align polynomial.splitting_field.algebra' Polynomial.SplittingField.algebra'
 
 instance : Algebra K (SplittingField f) :=
   SplittingFieldAux.algebra _ _
+
+instance [CharZero K] : CharZero (SplittingField f) :=
+  charZero_of_injective_algebraMap (algebraMap K _).Injective
+
+-- The algebra instance deriving from `K` should be definitionally equal to that
+-- deriving from the field structure on `splitting_field f`.
+example :
+    (AddCommMonoid.natModule : Module ℕ (SplittingField f)) =
+      @Algebra.toModule _ _ _ _ (SplittingField.algebra' f) :=
+  rfl
+
+example :
+    (AddCommGroup.intModule _ : Module ℤ (SplittingField f)) =
+      @Algebra.toModule _ _ _ _ (SplittingField.algebra' f) :=
+  rfl
+
+example [CharZero K] : SplittingField.algebra' f = algebraRat :=
+  rfl
+
+example [CharZero K] : SplittingField.algebra' f = algebraRat :=
+  rfl
+
+example {q : ℚ[X]} : algebraInt (SplittingField q) = SplittingField.algebra' q :=
+  rfl
 
 protected theorem splits : Splits (algebraMap K (SplittingField f)) f :=
   SplittingFieldAux.splits _ _ rfl
@@ -451,7 +712,7 @@ def lift [Algebra K F] (f : K[X]) [IsSplittingField K L f]
 theorem finiteDimensional (f : K[X]) [IsSplittingField K L f] : FiniteDimensional K L :=
   ⟨@Algebra.top_toSubmodule K L _ _ _ ▸
       adjoin_roots L f ▸
-        fG_adjoin_of_finite (Finset.finite_toSet _) fun y hy =>
+        FG_adjoin_of_finite (Finset.finite_toSet _) fun y hy =>
           if hf : f = 0 then by
             rw [hf, Polynomial.map_zero, roots_zero] at hy
             cases hy

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial_algebra
-! leanprover-community/mathlib commit 565eb991e264d0db702722b4bde52ee5173c9950
+! leanprover-community/mathlib commit 4280f5f32e16755ec7985ce11e189b6cd6ff6735
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Data.Matrix.Dmatrix
 
 /-!
 # Algebra isomorphism between matrices of polynomials and polynomials of matrices
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Given `[comm_ring R] [ring A] [algebra R A]`
 we show `A[X] ≃ₐ[R] (A ⊗[R] R[X])`.

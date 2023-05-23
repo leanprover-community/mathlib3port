@@ -75,13 +75,13 @@ class BraidedCategory (C : Type u) [Category.{v} C] [MonoidalCategory.{v} C] whe
 
 restate_axiom braided_category.braiding_naturality'
 
-attribute [simp, reassoc.1] braided_category.braiding_naturality
+attribute [simp, reassoc] braided_category.braiding_naturality
 
 restate_axiom braided_category.hexagon_forward'
 
 restate_axiom braided_category.hexagon_reverse'
 
-attribute [reassoc.1] braided_category.hexagon_forward braided_category.hexagon_reverse
+attribute [reassoc] braided_category.hexagon_forward braided_category.hexagon_reverse
 
 open Category
 
@@ -328,7 +328,7 @@ class SymmetricCategory (C : Type u) [Category.{v} C] [MonoidalCategory.{v} C] e
 
 restate_axiom symmetric_category.symmetry'
 
-attribute [simp, reassoc.1] symmetric_category.symmetry
+attribute [simp, reassoc] symmetric_category.symmetry
 
 initialize_simps_projections SymmetricCategory (to_braided_category_braiding → braiding,
   -toBraidedCategory)

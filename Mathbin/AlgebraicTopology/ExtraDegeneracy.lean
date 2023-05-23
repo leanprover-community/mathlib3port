@@ -95,7 +95,7 @@ restate_axiom s_comp_δ'
 
 restate_axiom s_comp_σ'
 
-attribute [reassoc.1] s'_comp_ε s₀_comp_δ₁ s_comp_δ₀ s_comp_δ s_comp_σ
+attribute [reassoc] s'_comp_ε s₀_comp_δ₁ s_comp_δ₀ s_comp_δ s_comp_σ
 
 attribute [simp] s'_comp_ε s_comp_δ₀
 

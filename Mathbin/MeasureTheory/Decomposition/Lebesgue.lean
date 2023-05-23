@@ -444,10 +444,9 @@ theorem exists_positive_of_not_mutuallySingular (μ ν : Measure α) [FiniteMeas
     have := nonpos_of_restrict_le_zero _ (hA₂ n)
     rwa [to_signed_measure_sub_apply hAmeas, sub_nonpos, ENNReal.toReal_le_toReal] at this
     exacts[ne_of_lt (measure_lt_top _ _), ne_of_lt (measure_lt_top _ _)]
-  have hμ : μ A = 0 :=
-    by
-    lift μ A to ℝ≥0 using ne_of_lt (measure_lt_top _ _) with μA
-    lift ν A to ℝ≥0 using ne_of_lt (measure_lt_top _ _) with νA
+  have hμ : μ A = 0 := by
+    lift μ A to ℝ≥0 using ne_of_lt (measure_lt_top _ _)
+    lift ν A to ℝ≥0 using ne_of_lt (measure_lt_top _ _)
     rw [ENNReal.coe_eq_zero]
     by_cases hb : 0 < νA
     · suffices ∀ b, 0 < b → μA ≤ b by

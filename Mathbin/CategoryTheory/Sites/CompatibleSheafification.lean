@@ -130,7 +130,7 @@ theorem sheafificationWhiskerRightIso_inv_app :
   erw [category.id_comp]
 #align category_theory.grothendieck_topology.sheafification_whisker_right_iso_inv_app CategoryTheory.GrothendieckTopology.sheafificationWhiskerRightIso_inv_app
 
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem whiskerRight_toSheafify_sheafifyCompIso_hom :
     whiskerRight (J.toSheafify _) _ ≫ (J.sheafifyCompIso F P).Hom = J.toSheafify _ :=
   by
@@ -142,7 +142,7 @@ theorem whiskerRight_toSheafify_sheafifyCompIso_hom :
   rfl
 #align category_theory.grothendieck_topology.whisker_right_to_sheafify_sheafify_comp_iso_hom CategoryTheory.GrothendieckTopology.whiskerRight_toSheafify_sheafifyCompIso_hom
 
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem toSheafify_comp_sheafifyCompIso_inv :
     J.toSheafify _ ≫ (J.sheafifyCompIso F P).inv = whiskerRight (J.toSheafify _) _ :=
   by

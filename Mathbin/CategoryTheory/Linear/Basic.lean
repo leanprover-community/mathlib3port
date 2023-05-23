@@ -65,9 +65,9 @@ restate_axiom linear.smul_comp'
 
 restate_axiom linear.comp_smul'
 
-attribute [simp, reassoc.1] linear.smul_comp
+attribute [simp, reassoc] linear.smul_comp
 
-attribute [reassoc.1, simp] linear.comp_smul
+attribute [reassoc, simp] linear.comp_smul
 
 -- (the linter doesn't like `simp` on the `_assoc` lemma)
 end CategoryTheory

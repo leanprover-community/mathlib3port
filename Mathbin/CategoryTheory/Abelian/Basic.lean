@@ -565,7 +565,7 @@ def epiDesc [Epi f] {T : C} (g : X ⟶ T) (hg : kernel.ι f ≫ g = 0) : Y ⟶ T
 -/
 
 #print CategoryTheory.Abelian.comp_epiDesc /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem comp_epiDesc [Epi f] {T : C} (g : X ⟶ T) (hg : kernel.ι f ≫ g = 0) :
     f ≫ epiDesc f g hg = g :=
   (epiIsCokernelOfKernel _ (limit.isLimit _)).fac (CokernelCofork.ofπ _ hg) WalkingParallelPair.one
@@ -581,7 +581,7 @@ def monoLift [Mono f] {T : C} (g : T ⟶ Y) (hg : g ≫ cokernel.π f = 0) : T �
 -/
 
 #print CategoryTheory.Abelian.monoLift_comp /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem monoLift_comp [Mono f] {T : C} (g : T ⟶ Y) (hg : g ≫ cokernel.π f = 0) :
     monoLift f g hg ≫ f = g :=
   (monoIsKernelOfCokernel _ (colimit.isColimit _)).fac (KernelFork.ofι _ hg)

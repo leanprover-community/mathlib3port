@@ -171,7 +171,7 @@ instance isThin {X : C} : Quiver.IsThin (MonoOver X) := fun f g =>
 -/
 
 #print CategoryTheory.MonoOver.w /-
-@[reassoc.1]
+@[reassoc]
 theorem w {f g : MonoOver X} (k : f ⟶ g) : k.left ≫ g.arrow = f.arrow :=
   Over.w _
 #align category_theory.mono_over.w CategoryTheory.MonoOver.w

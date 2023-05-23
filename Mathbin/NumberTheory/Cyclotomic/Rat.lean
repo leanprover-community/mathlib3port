@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module number_theory.cyclotomic.rat
-! leanprover-community/mathlib commit 2032a878972d5672e7c27c957e7a6e297b044973
+! leanprover-community/mathlib commit b353176c24d96c23f0ce1cc63efc3f55019702d9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -133,34 +133,20 @@ theorem isIntegralClosure_adjoin_singleton_of_prime [hcycl : IsCyclotomicExtensi
   exact is_integral_closure_adjoin_singleton_of_prime_pow hζ
 #align is_cyclotomic_extension.rat.is_integral_closure_adjoin_singleton_of_prime IsCyclotomicExtension.Rat.isIntegralClosure_adjoin_singleton_of_prime
 
-attribute [-instance] CyclotomicField.algebra
-
 /-- The integral closure of `ℤ` inside `cyclotomic_field (p ^ k) ℚ` is
 `cyclotomic_ring (p ^ k) ℤ ℚ`. -/
 theorem cyclotomicRing_isIntegralClosure_of_prime_pow :
     IsIntegralClosure (CyclotomicRing (p ^ k) ℤ ℚ) ℤ (CyclotomicField (p ^ k) ℚ) :=
   by
   haveI : CharZero ℚ := StrictOrderedSemiring.to_charZero
-  have : IsCyclotomicExtension {p ^ k} ℚ (CyclotomicField (p ^ k) ℚ) :=
-    by
-    convert CyclotomicField.isCyclotomicExtension (p ^ k) _
-    · exact Subsingleton.elim _ _
-    · exact NeZero.charZero
   have hζ := zeta_spec (p ^ k) ℚ (CyclotomicField (p ^ k) ℚ)
   refine' ⟨IsFractionRing.injective _ _, fun x => ⟨fun h => ⟨⟨x, _⟩, rfl⟩, _⟩⟩
   · have := (is_integral_closure_adjoin_singleton_of_prime_pow hζ).isIntegral_iff
     obtain ⟨y, rfl⟩ := this.1 h
-    convert adjoin_mono _ y.2
-    · simp only [eq_iff_true_of_subsingleton]
-    · simp only [eq_iff_true_of_subsingleton]
-    · simp only [PNat.pow_coe, Set.singleton_subset_iff, Set.mem_setOf_eq]
-      exact hζ.pow_eq_one
-  · have : IsCyclotomicExtension {p ^ k} ℤ (CyclotomicRing (p ^ k) ℤ ℚ) :=
-      by
-      convert CyclotomicRing.isCyclotomicExtension _ ℤ ℚ
-      · exact Subsingleton.elim _ _
-      · exact NeZero.charZero
-    rintro ⟨y, rfl⟩
+    refine' adjoin_mono _ y.2
+    simp only [PNat.pow_coe, Set.singleton_subset_iff, Set.mem_setOf_eq]
+    exact hζ.pow_eq_one
+  · rintro ⟨y, rfl⟩
     exact IsIntegral.algebraMap ((IsCyclotomicExtension.integral {p ^ k} ℤ _) _)
 #align is_cyclotomic_extension.rat.cyclotomic_ring_is_integral_closure_of_prime_pow IsCyclotomicExtension.Rat.cyclotomicRing_isIntegralClosure_of_prime_pow
 

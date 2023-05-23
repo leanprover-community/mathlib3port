@@ -60,7 +60,7 @@ theorem eqToHom_refl (X : C) (p : X = X) : eqToHom p = 𝟙 X :=
 -/
 
 #print CategoryTheory.eqToHom_trans /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem eqToHom_trans {X Y Z : C} (p : X = Y) (q : Y = Z) :
     eqToHom p ≫ eqToHom q = eqToHom (p.trans q) :=
   by

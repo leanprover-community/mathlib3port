@@ -63,7 +63,7 @@ restate_axiom nat_trans.naturality'
 
 -- Rather arbitrarily, we say that the 'simpler' form is
 -- components of natural transfomations moving earlier.
-attribute [simp, reassoc.1] nat_trans.naturality
+attribute [simp, reassoc] nat_trans.naturality
 
 /- warning: category_theory.congr_app -> CategoryTheory.congr_app is a dubious translation:
 lean 3 declaration is

@@ -140,7 +140,7 @@ restate_axiom Bimod.right_assoc'
 
 restate_axiom Bimod.middle_assoc'
 
-attribute [simp, reassoc.1]
+attribute [simp, reassoc]
   Bimod.one_actLeft Bimod.actRight_one Bimod.left_assoc Bimod.right_assoc Bimod.middle_assoc
 
 namespace Bimod
@@ -161,7 +161,7 @@ restate_axiom hom.left_act_hom'
 
 restate_axiom hom.right_act_hom'
 
-attribute [simp, reassoc.1] hom.left_act_hom hom.right_act_hom
+attribute [simp, reassoc] hom.left_act_hom hom.right_act_hom
 
 /-- The identity morphism on a bimodule object. -/
 @[simps]

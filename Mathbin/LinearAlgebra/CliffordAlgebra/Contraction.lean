@@ -55,7 +55,7 @@ variable (Q : QuadraticForm R M)
 
 namespace CliffordAlgebra
 
-section ContractLeft
+section contractLeft
 
 variable (d d' : Module.Dual R M)
 
@@ -231,7 +231,7 @@ theorem contractRight_comm (x : CliffordAlgebra Q) : x⌊d⌊d' = -(x⌊d'⌊d) 
 /- TODO:
 lemma contract_right_contract_left (x : clifford_algebra Q) : (d ⌋ x) ⌊ d' = d ⌋ (x ⌊ d') :=
 -/
-end ContractLeft
+end contractLeft
 
 -- mathport name: «expr ⌋ »
 local infixl:70 "⌋" => contractLeft
@@ -243,7 +243,7 @@ local infixl:70 "⌊" => contractRight
 @[simps]
 def changeFormAux (B : BilinForm R M) : M →ₗ[R] CliffordAlgebra Q →ₗ[R] CliffordAlgebra Q :=
   haveI v_mul := (Algebra.lmul R (CliffordAlgebra Q)).toLinearMap ∘ₗ ι Q
-  v_mul - contract_left ∘ₗ B.to_lin
+  v_mul - contractLeft ∘ₗ B.to_lin
 #align clifford_algebra.change_form_aux CliffordAlgebra.changeFormAux
 
 theorem changeFormAux_changeFormAux (B : BilinForm R M) (v : M) (x : CliffordAlgebra Q) :

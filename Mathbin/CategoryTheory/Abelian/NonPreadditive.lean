@@ -340,19 +340,19 @@ abbrev σ {A : C} : A ⨯ A ⟶ A :=
 end
 
 #print CategoryTheory.NonPreadditiveAbelian.diag_σ /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem diag_σ {X : C} : diag X ≫ σ = 0 := by rw [cokernel.condition_assoc, zero_comp]
 #align category_theory.non_preadditive_abelian.diag_σ CategoryTheory.NonPreadditiveAbelian.diag_σ
 -/
 
 #print CategoryTheory.NonPreadditiveAbelian.lift_σ /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem lift_σ {X : C} : prod.lift (𝟙 X) 0 ≫ σ = 𝟙 X := by rw [← category.assoc, is_iso.hom_inv_id]
 #align category_theory.non_preadditive_abelian.lift_σ CategoryTheory.NonPreadditiveAbelian.lift_σ
 -/
 
 #print CategoryTheory.NonPreadditiveAbelian.lift_map /-
-@[reassoc.1]
+@[reassoc]
 theorem lift_map {X Y : C} (f : X ⟶ Y) :
     prod.lift (𝟙 X) 0 ≫ Limits.prod.map f f = f ≫ prod.lift (𝟙 Y) 0 := by simp
 #align category_theory.non_preadditive_abelian.lift_map CategoryTheory.NonPreadditiveAbelian.lift_map

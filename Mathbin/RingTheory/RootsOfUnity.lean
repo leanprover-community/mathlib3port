@@ -600,7 +600,7 @@ theorem zpow_eq_one_iff_dvd (h : IsPrimitiveRoot ζ k) (l : ℤ) : ζ ^ l = 1 �
   · have : 0 ≤ -l := by
       simp only [not_le, neg_nonneg] at h0⊢
       exact le_of_lt h0
-    lift -l to ℕ using this with l' hl'
+    lift -l to ℕ using this
     rw [← dvd_neg, ← hl']
     norm_cast
     rw [← h.pow_eq_one_iff_dvd, ← inv_inj, ← zpow_neg, ← hl', zpow_ofNat, inv_one]
@@ -632,7 +632,7 @@ theorem zpow_of_gcd_eq_one (h : IsPrimitiveRoot ζ k) (i : ℤ) (hi : i.gcd k = 
   have : 0 ≤ -i := by
     simp only [not_le, neg_nonneg] at h0⊢
     exact le_of_lt h0
-  lift -i to ℕ using this with i' hi'
+  lift -i to ℕ using this
   rw [← inv_iff, ← zpow_neg, ← hi', zpow_ofNat]
   apply h.pow_of_coprime
   rw [Int.gcd, ← Int.natAbs_neg, ← hi'] at hi
@@ -820,7 +820,7 @@ theorem eq_pow_of_mem_rootsOfUnity {k : ℕ+} {ζ ξ : Rˣ} (h : IsPrimitiveRoot
   have hk0 : (0 : ℤ) < k := by exact_mod_cast k.pos
   let i := n % k
   have hi0 : 0 ≤ i := Int.emod_nonneg _ (ne_of_gt hk0)
-  lift i to ℕ using hi0 with i₀ hi₀
+  lift i to ℕ using hi0
   refine' ⟨i₀, _, _⟩
   · zify
     rw [hi₀]

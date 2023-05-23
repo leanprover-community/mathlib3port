@@ -65,7 +65,7 @@ structure Hom (X Y : DifferentialObject C) where
 
 restate_axiom hom.comm'
 
-attribute [simp, reassoc.1] hom.comm
+attribute [simp, reassoc] hom.comm
 
 namespace Hom
 

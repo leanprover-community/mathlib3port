@@ -70,7 +70,7 @@ variable (F K)
 
 instance normal_self : Normal F F :=
   ⟨fun x => isIntegral_algebraMap.IsAlgebraic F, fun x =>
-    (minpoly.eq_x_sub_C' x).symm ▸ splits_X_sub_C _⟩
+    (minpoly.eq_X_sub_C' x).symm ▸ splits_X_sub_C _⟩
 #align normal_self normal_self
 
 variable {K}

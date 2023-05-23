@@ -32,7 +32,7 @@ structure CommMon_ extends Mon_ C where
 
 restate_axiom CommMon_.mul_comm'
 
-attribute [simp, reassoc.1] CommMon_.mul_comm
+attribute [simp, reassoc] CommMon_.mul_comm
 
 namespace CommMon_
 

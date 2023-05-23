@@ -55,7 +55,7 @@ class RegularMono (f : X ⟶ Y) where
 #align category_theory.regular_mono CategoryTheory.RegularMono
 -/
 
-attribute [reassoc.1] regular_mono.w
+attribute [reassoc] regular_mono.w
 
 #print CategoryTheory.RegularMono.mono /-
 /-- Every regular monomorphism is a monomorphism. -/
@@ -217,7 +217,7 @@ class RegularEpi (f : X ⟶ Y) where
 #align category_theory.regular_epi CategoryTheory.RegularEpi
 -/
 
-attribute [reassoc.1] regular_epi.w
+attribute [reassoc] regular_epi.w
 
 #print CategoryTheory.RegularEpi.epi /-
 /-- Every regular epimorphism is an epimorphism. -/

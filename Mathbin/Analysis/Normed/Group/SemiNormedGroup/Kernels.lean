@@ -195,7 +195,7 @@ theorem explicitCokernelπ_surjective {X Y : SemiNormedGroup.{u}} {f : X ⟶ Y} 
   surjective_quot_mk _
 #align SemiNormedGroup.explicit_cokernel_π_surjective SemiNormedGroup.explicitCokernelπ_surjective
 
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem comp_explicitCokernelπ {X Y : SemiNormedGroup.{u}} (f : X ⟶ Y) :
     f ≫ explicitCokernelπ f = 0 :=
   by
@@ -212,7 +212,7 @@ theorem explicitCokernelπ_apply_dom_eq_zero {X Y : SemiNormedGroup.{u}} {f : X 
     rfl
 #align SemiNormedGroup.explicit_cokernel_π_apply_dom_eq_zero SemiNormedGroup.explicitCokernelπ_apply_dom_eq_zero
 
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem explicitCokernelπ_desc {X Y Z : SemiNormedGroup.{u}} {f : X ⟶ Y} {g : Y ⟶ Z}
     (w : f ≫ g = 0) : explicitCokernelπ f ≫ explicitCokernelDesc w = g :=
   (isColimitCokernelCocone f).fac _ _

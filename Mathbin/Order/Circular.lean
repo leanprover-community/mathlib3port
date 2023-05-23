@@ -120,10 +120,10 @@ class CircularPreorder (α : Type _) extends Btw α, SBtw α where
   btw_refl (a : α) : btw a a a
   btw_cyclic_left {a b c : α} : btw a b c → btw b c a
   Sbtw := fun a b c => btw a b c ∧ ¬btw c b a
-  sbtw_iff_btw_not_btw {a b c : α} : sbtw a b c ↔ btw a b c ∧ ¬btw c b a := by
+  sbtw_iff_btw_not_btw {a b c : α} : Sbtw a b c ↔ btw a b c ∧ ¬btw c b a := by
     run_tac
       order_laws_tac
-  sbtw_trans_left {a b c d : α} : sbtw a b c → sbtw b d c → sbtw a d c
+  sbtw_trans_left {a b c d : α} : Sbtw a b c → Sbtw b d c → Sbtw a d c
 #align circular_preorder CircularPreorder
 -/
 

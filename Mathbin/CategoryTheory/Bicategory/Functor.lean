@@ -254,7 +254,7 @@ restate_axiom map₂_right_unitor'
 
 attribute [simp] map_comp_naturality_left map_comp_naturality_right map₂_id map₂_associator
 
-attribute [reassoc.1]
+attribute [reassoc]
   map_comp_naturality_left map_comp_naturality_right map₂_comp map₂_associator map₂_left_unitor map₂_right_unitor
 
 attribute [simp] map₂_comp map₂_left_unitor map₂_right_unitor
@@ -485,7 +485,7 @@ restate_axiom map₂_left_unitor'
 
 restate_axiom map₂_right_unitor'
 
-attribute [reassoc.1]
+attribute [reassoc]
   map₂_comp map₂_whisker_left map₂_whisker_right map₂_associator map₂_left_unitor map₂_right_unitor
 
 attribute [simp]

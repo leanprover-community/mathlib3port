@@ -99,9 +99,9 @@ variable {A K L}
 theorem IsIntegralClosure.range_le_span_dualBasis [IsSeparable K L] {ι : Type _} [Fintype ι]
     [DecidableEq ι] (b : Basis ι K L) (hb_int : ∀ i, IsIntegral A (b i)) [IsIntegrallyClosed A] :
     ((Algebra.linearMap C L).restrictScalars A).range ≤
-      Submodule.span A (Set.range <| (traceForm K L).dualBasis (traceFormNondegenerate K L) b) :=
+      Submodule.span A (Set.range <| (traceForm K L).dualBasis (traceForm_nondegenerate K L) b) :=
   by
-  let db := (trace_form K L).dualBasis (traceFormNondegenerate K L) b
+  let db := (trace_form K L).dualBasis (traceForm_nondegenerate K L) b
   rintro _ ⟨x, rfl⟩
   simp only [LinearMap.coe_restrictScalars, Algebra.linearMap_apply]
   have hx : IsIntegral A (algebraMap C L x) := (IsIntegralClosure.isIntegral A L x).algebraMap
@@ -127,7 +127,7 @@ theorem IsIntegralClosure.range_le_span_dualBasis [IsSeparable K L] {ι : Type _
 theorem integralClosure_le_span_dualBasis [IsSeparable K L] {ι : Type _} [Fintype ι] [DecidableEq ι]
     (b : Basis ι K L) (hb_int : ∀ i, IsIntegral A (b i)) [IsIntegrallyClosed A] :
     (integralClosure A L).toSubmodule ≤
-      Submodule.span A (Set.range <| (traceForm K L).dualBasis (traceFormNondegenerate K L) b) :=
+      Submodule.span A (Set.range <| (traceForm K L).dualBasis (traceForm_nondegenerate K L) b) :=
   by
   refine' le_trans _ (IsIntegralClosure.range_le_span_dualBasis (integralClosure A L) b hb_int)
   intro x hx
@@ -214,7 +214,7 @@ theorem IsIntegralClosure.isNoetherian [IsIntegrallyClosed A] [IsNoetherianRing 
     IsNoetherian A C := by
   haveI := Classical.decEq L
   obtain ⟨s, b, hb_int⟩ := FiniteDimensional.exists_is_basis_integral A K L
-  let b' := (trace_form K L).dualBasis (traceFormNondegenerate K L) b
+  let b' := (trace_form K L).dualBasis (traceForm_nondegenerate K L) b
   letI := isNoetherian_span_of_finite A (Set.finite_range b')
   let f : C →ₗ[A] Submodule.span A (Set.range b') :=
     (Submodule.ofLe (IsIntegralClosure.range_le_span_dualBasis C b hb_int)).comp

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module data.finset.pi
-! leanprover-community/mathlib commit 4c586d291f189eecb9d00581aeb3dd998ac34442
+! leanprover-community/mathlib commit b2c89893177f66a48daf993b7ba5ef7cddeff8c9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -114,15 +114,15 @@ theorem Pi.cons_ne {s : Finset α} {a a' : α} {b : δ a} {f : ∀ a, a ∈ s �
   Multiset.Pi.cons_ne _ _
 #align finset.pi.cons_ne Finset.Pi.cons_ne
 
-/- warning: finset.pi_cons_injective -> Finset.pi_cons_injective is a dubious translation:
+/- warning: finset.pi.cons_injective -> Finset.Pi.cons_injective is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {δ : α -> Sort.{u2}} [_inst_1 : DecidableEq.{succ u1} α] {a : α} {b : δ a} {s : Finset.{u1} α}, (Not (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s)) -> (Function.Injective.{imax (succ u1) u2, imax (succ u1) u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a s) -> (δ a)) (forall (a' : α), (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) a' (Insert.insert.{u1, u1} α (Finset.{u1} α) (Finset.hasInsert.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) a s)) -> (δ a')) (Finset.Pi.cons.{u1, u2} α (fun {a : α} => δ a) (fun (a : α) (b : α) => _inst_1 a b) s a b))
 but is expected to have type
   forall {α : Type.{u1}} {δ : α -> Sort.{u2}} [_inst_1 : DecidableEq.{succ u1} α] {a : α} {b : δ a} {s : Finset.{u1} α}, (Not (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s)) -> (Function.Injective.{imax (succ u1) u2, imax (succ u1) u2} (forall (a : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s) -> (δ a)) (forall (a' : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a' (Insert.insert.{u1, u1} α (Finset.{u1} α) (Finset.instInsertFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) a s)) -> (δ a')) (Finset.Pi.cons.{u2, u1} α δ (fun (a : α) (b : α) => _inst_1 a b) s a b))
-Case conversion may be inaccurate. Consider using '#align finset.pi_cons_injective Finset.pi_cons_injectiveₓ'. -/
-theorem pi_cons_injective {a : α} {b : δ a} {s : Finset α} (hs : a ∉ s) :
+Case conversion may be inaccurate. Consider using '#align finset.pi.cons_injective Finset.Pi.cons_injectiveₓ'. -/
+theorem Pi.cons_injective {a : α} {b : δ a} {s : Finset α} (hs : a ∉ s) :
     Function.Injective (Pi.cons s a b) := fun e₁ e₂ eq =>
-  @Multiset.pi_cons_injective α _ δ a b s.1 hs _ _ <|
+  @Multiset.Pi.cons_injective α _ δ a b s.1 hs _ _ <|
     funext fun e =>
       funext fun h =>
         have :
@@ -130,7 +130,7 @@ theorem pi_cons_injective {a : α} {b : δ a} {s : Finset α} (hs : a ∉ s) :
             Pi.cons s a b e₂ e (by simpa only [Multiset.mem_cons, mem_insert] using h) :=
           by rw [Eq]
         this
-#align finset.pi_cons_injective Finset.pi_cons_injective
+#align finset.pi.cons_injective Finset.Pi.cons_injective
 
 /- warning: finset.pi_empty -> Finset.pi_empty is a dubious translation:
 lean 3 declaration is
@@ -168,7 +168,7 @@ theorem pi_insert [∀ a, DecidableEq (β a)] {s : Finset α} {t : ∀ a : α, F
   subst s'; rw [pi_cons]
   congr ; funext b
   refine' ((pi s t).Nodup.map _).dedup.symm
-  exact Multiset.pi_cons_injective ha
+  exact Multiset.Pi.cons_injective ha
 #align finset.pi_insert Finset.pi_insert
 
 /- warning: finset.pi_singletons -> Finset.pi_singletons is a dubious translation:

@@ -56,7 +56,7 @@ restate_axiom algebra.unit'
 
 restate_axiom algebra.assoc'
 
-attribute [reassoc.1] algebra.unit algebra.assoc
+attribute [reassoc] algebra.unit algebra.assoc
 
 namespace Algebra
 
@@ -73,7 +73,7 @@ structure Hom (A B : Algebra T) where
 
 restate_axiom hom.h'
 
-attribute [simp, reassoc.1] hom.h
+attribute [simp, reassoc] hom.h
 
 namespace Hom
 
@@ -421,7 +421,7 @@ restate_axiom coalgebra.counit'
 
 restate_axiom coalgebra.coassoc'
 
-attribute [reassoc.1] coalgebra.counit coalgebra.coassoc
+attribute [reassoc] coalgebra.counit coalgebra.coassoc
 
 namespace Coalgebra
 
@@ -438,7 +438,7 @@ structure Hom (A B : Coalgebra G) where
 
 restate_axiom hom.h'
 
-attribute [simp, reassoc.1] hom.h
+attribute [simp, reassoc] hom.h
 
 namespace Hom
 

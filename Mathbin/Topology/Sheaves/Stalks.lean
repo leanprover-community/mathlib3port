@@ -120,7 +120,7 @@ theorem stalk_hom_ext (F : X.Presheaf C) {x} {Y : C} {f₁ f₂ : F.stalk x ⟶ 
     exact ih U hxU
 #align Top.presheaf.stalk_hom_ext TopCat.Presheaf.stalk_hom_ext
 
-@[simp, reassoc.1, elementwise]
+@[simp, reassoc, elementwise]
 theorem stalkFunctor_map_germ {F G : X.Presheaf C} (U : Opens X) (x : U) (f : F ⟶ G) :
     germ F x ≫ (stalkFunctor C x.1).map f = f.app (op U) ≫ germ G x :=
   colimit.ι_map (whiskerLeft (OpenNhds.inclusion x.1).op f) (op ⟨U, x.2⟩)
@@ -140,7 +140,7 @@ def stalkPushforward (f : X ⟶ Y) (F : X.Presheaf C) (x : X) : (f _* F).stalk (
   exact colim.map (whisker_right (nat_trans.op (open_nhds.inclusion_map_iso f x).inv) F)
 #align Top.presheaf.stalk_pushforward TopCat.Presheaf.stalkPushforward
 
-@[simp, elementwise, reassoc.1]
+@[simp, elementwise, reassoc]
 theorem stalkPushforward_germ (f : X ⟶ Y) (F : X.Presheaf C) (U : Opens Y)
     (x : (Opens.map f).obj U) : (f _* F).germ ⟨f x, x.2⟩ ≫ F.stalkPushforward C f x = F.germ x :=
   by
@@ -331,13 +331,13 @@ noncomputable def stalkSpecializes (F : X.Presheaf C) {x y : X} (h : x ⤳ y) :
     exact colimit.w ((open_nhds.inclusion x).op ⋙ F) (show V' ⟶ U' from i.unop).op
 #align Top.presheaf.stalk_specializes TopCat.Presheaf.stalkSpecializes
 
-@[simp, reassoc.1, elementwise]
+@[simp, reassoc, elementwise]
 theorem germ_stalkSpecializes (F : X.Presheaf C) {U : Opens X} {y : U} {x : X} (h : x ⤳ y) :
     F.germ y ≫ F.stalkSpecializes h = F.germ (⟨x, h.mem_open U.IsOpen y.Prop⟩ : U) :=
   colimit.ι_desc _ _
 #align Top.presheaf.germ_stalk_specializes TopCat.Presheaf.germ_stalkSpecializes
 
-@[simp, reassoc.1, elementwise]
+@[simp, reassoc, elementwise]
 theorem germ_stalk_specializes' (F : X.Presheaf C) {U : Opens X} {x y : X} (h : x ⤳ y)
     (hy : y ∈ U) : F.germ ⟨y, hy⟩ ≫ F.stalkSpecializes h = F.germ ⟨x, h.mem_open U.IsOpen hy⟩ :=
   colimit.ι_desc _ _
@@ -351,14 +351,14 @@ theorem stalkSpecializes_refl {C : Type _} [Category C] [Limits.HasColimits C] {
     simpa
 #align Top.presheaf.stalk_specializes_refl TopCat.Presheaf.stalkSpecializes_refl
 
-@[simp, reassoc.1, elementwise]
+@[simp, reassoc, elementwise]
 theorem stalkSpecializes_comp {C : Type _} [Category C] [Limits.HasColimits C] {X : TopCat}
     (F : X.Presheaf C) {x y z : X} (h : x ⤳ y) (h' : y ⤳ z) :
     F.stalkSpecializes h' ≫ F.stalkSpecializes h = F.stalkSpecializes (h.trans h') :=
   F.stalk_hom_ext fun _ _ => by simp
 #align Top.presheaf.stalk_specializes_comp TopCat.Presheaf.stalkSpecializes_comp
 
-@[simp, reassoc.1, elementwise]
+@[simp, reassoc, elementwise]
 theorem stalkSpecializes_stalkFunctor_map {F G : X.Presheaf C} (f : F ⟶ G) {x y : X} (h : x ⤳ y) :
     F.stalkSpecializes h ≫ (stalkFunctor C x).map f =
       (stalkFunctor C y).map f ≫ G.stalkSpecializes h :=
@@ -368,7 +368,7 @@ theorem stalkSpecializes_stalkFunctor_map {F G : X.Presheaf C} (f : F ⟶ G) {x 
   simpa [stalk_specializes]
 #align Top.presheaf.stalk_specializes_stalk_functor_map TopCat.Presheaf.stalkSpecializes_stalkFunctor_map
 
-@[simp, reassoc.1, elementwise]
+@[simp, reassoc, elementwise]
 theorem stalkSpecializes_stalkPushforward (f : X ⟶ Y) (F : X.Presheaf C) {x y : X} (h : x ⤳ y) :
     (f _* F).stalkSpecializes (f.map_specializes h) ≫ F.stalkPushforward _ f x =
       F.stalkPushforward _ f y ≫ F.stalkSpecializes h :=

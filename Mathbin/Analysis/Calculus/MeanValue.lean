@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.calculus.mean_value
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 75e7fca56381d056096ce5d05e938f63a6567828
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -464,7 +464,7 @@ variable {𝕜 G : Type _} [IsROrC 𝕜] [NormedSpace 𝕜 E] [NormedAddCommGrou
 
 namespace Convex
 
-variable {f : E → G} {C : ℝ} {s : Set E} {x y : E} {f' : E → E →L[𝕜] G} {φ : E →L[𝕜] G}
+variable {f g : E → G} {C : ℝ} {s : Set E} {x y : E} {f' g' : E → E →L[𝕜] G} {φ : E →L[𝕜] G}
 
 /-- The mean value theorem on a convex set: if the derivative of a function is bounded by `C`, then
 the function is `C`-Lipschitz. Version with `has_fderiv_within`. -/
@@ -635,6 +635,26 @@ theorem is_const_of_fderiv_eq_zero (hf : Differentiable 𝕜 f) (hf' : ∀ x, fd
   convex_univ.is_const_of_fderivWithin_eq_zero hf.DifferentiableOn
     (fun x _ => by rw [fderivWithin_univ] <;> exact hf' x) trivial trivial
 #align is_const_of_fderiv_eq_zero is_const_of_fderiv_eq_zero
+
+/-- If two functions have equal Fréchet derivatives at every point of a convex set, and are equal at
+one point in that set, then they are equal on that set. -/
+theorem eqOn_of_fderivWithin_eq (hs : Convex ℝ s) (hf : DifferentiableOn 𝕜 f s)
+    (hg : DifferentiableOn 𝕜 g s) (hs' : UniqueDiffOn 𝕜 s)
+    (hf' : ∀ x ∈ s, fderivWithin 𝕜 f s x = fderivWithin 𝕜 g s x) (hx : x ∈ s) (hfgx : f x = g x) :
+    s.EqOn f g := by
+  intro y hy
+  suffices f x - g x = f y - g y by rwa [hfgx, sub_self, eq_comm, sub_eq_zero] at this
+  refine' hs.is_const_of_fderiv_within_eq_zero (hf.sub hg) _ hx hy
+  intro z hz
+  rw [fderivWithin_sub (hs' _ hz) (hf _ hz) (hg _ hz), sub_eq_zero, hf' _ hz]
+#align convex.eq_on_of_fderiv_within_eq Convex.eqOn_of_fderivWithin_eq
+
+theorem eq_of_fderiv_eq (hf : Differentiable 𝕜 f) (hg : Differentiable 𝕜 g)
+    (hf' : ∀ x, fderiv 𝕜 f x = fderiv 𝕜 g x) (x : E) (hfgx : f x = g x) : f = g :=
+  suffices Set.univ.EqOn f g from funext fun x => this <| mem_univ x
+  convex_univ.eqOn_of_fderivWithin_eq hf.DifferentiableOn hg.DifferentiableOn uniqueDiffOn_univ
+    (fun x hx => by simpa using hf' _) (mem_univ _) hfgx
+#align eq_of_fderiv_eq eq_of_fderiv_eq
 
 end Convex
 

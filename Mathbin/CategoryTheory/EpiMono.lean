@@ -67,7 +67,7 @@ structure SplitMono {X Y : C} (f : X ⟶ Y) where
 
 restate_axiom split_mono.id'
 
-attribute [simp, reassoc.1] split_mono.id
+attribute [simp, reassoc] split_mono.id
 
 #print CategoryTheory.IsSplitMono /-
 /-- `is_split_mono f` is the assertion that `f` admits a retraction -/
@@ -99,7 +99,7 @@ structure SplitEpi {X Y : C} (f : X ⟶ Y) where
 
 restate_axiom split_epi.id'
 
-attribute [simp, reassoc.1] split_epi.id
+attribute [simp, reassoc] split_epi.id
 
 #print CategoryTheory.IsSplitEpi /-
 /-- `is_split_epi f` is the assertion that `f` admits a section -/
@@ -123,7 +123,7 @@ noncomputable def retraction {X Y : C} (f : X ⟶ Y) [hf : IsSplitMono f] : Y �
 -/
 
 #print CategoryTheory.IsSplitMono.id /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem IsSplitMono.id {X Y : C} (f : X ⟶ Y) [hf : IsSplitMono f] : f ≫ retraction f = 𝟙 X :=
   hf.exists_splitMono.some.id
 #align category_theory.is_split_mono.id CategoryTheory.IsSplitMono.id
@@ -161,7 +161,7 @@ noncomputable def section_ {X Y : C} (f : X ⟶ Y) [hf : IsSplitEpi f] : Y ⟶ X
 -/
 
 #print CategoryTheory.IsSplitEpi.id /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem IsSplitEpi.id {X Y : C} (f : X ⟶ Y) [hf : IsSplitEpi f] : section_ f ≫ f = 𝟙 Y :=
   hf.exists_splitEpi.some.id
 #align category_theory.is_split_epi.id CategoryTheory.IsSplitEpi.id

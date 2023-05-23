@@ -621,13 +621,13 @@ instance (x : PrimeSpectrum R) : IsIso (stalkToFiberRingHom R x) :=
 instance (x : PrimeSpectrum R) : IsIso (localizationToStalk R x) :=
   IsIso.of_iso (stalkIso R x).symm
 
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem stalkToFiberRingHom_localizationToStalk (x : PrimeSpectrum.top R) :
     stalkToFiberRingHom R x ≫ localizationToStalk R x = 𝟙 _ :=
   (stalkIso R x).hom_inv_id
 #align algebraic_geometry.structure_sheaf.stalk_to_fiber_ring_hom_localization_to_stalk AlgebraicGeometry.StructureSheaf.stalkToFiberRingHom_localizationToStalk
 
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem localizationToStalk_stalkToFiberRingHom (x : PrimeSpectrum.top R) :
     localizationToStalk R x ≫ stalkToFiberRingHom R x = 𝟙 _ :=
   (stalkIso R x).inv_hom_id
@@ -1015,7 +1015,7 @@ theorem globalSectionsIso_hom (R : CommRingCat) : (globalSectionsIso R).hom = to
   rfl
 #align algebraic_geometry.structure_sheaf.global_sections_iso_hom AlgebraicGeometry.StructureSheaf.globalSectionsIso_hom
 
-@[simp, reassoc.1, elementwise]
+@[simp, reassoc, elementwise]
 theorem toStalk_stalkSpecializes {R : Type _} [CommRing R] {x y : PrimeSpectrum R} (h : x ⤳ y) :
     toStalk R y ≫ (structureSheaf R).Presheaf.stalkSpecializes h = toStalk R x :=
   by
@@ -1023,7 +1023,7 @@ theorem toStalk_stalkSpecializes {R : Type _} [CommRing R] {x y : PrimeSpectrum 
   simpa [-to_open_germ]
 #align algebraic_geometry.structure_sheaf.to_stalk_stalk_specializes AlgebraicGeometry.StructureSheaf.toStalk_stalkSpecializes
 
-@[simp, reassoc.1, elementwise]
+@[simp, reassoc, elementwise]
 theorem localizationToStalk_stalkSpecializes {R : Type _} [CommRing R] {x y : PrimeSpectrum R}
     (h : x ⤳ y) :
     StructureSheaf.localizationToStalk R y ≫ (structureSheaf R).Presheaf.stalkSpecializes h =
@@ -1039,7 +1039,7 @@ theorem localizationToStalk_stalkSpecializes {R : Type _} [CommRing R] {x y : Pr
   exact to_stalk_stalk_specializes h
 #align algebraic_geometry.structure_sheaf.localization_to_stalk_stalk_specializes AlgebraicGeometry.StructureSheaf.localizationToStalk_stalkSpecializes
 
-@[simp, reassoc.1, elementwise]
+@[simp, reassoc, elementwise]
 theorem stalkSpecializes_stalk_to_fiber {R : Type _} [CommRing R] {x y : PrimeSpectrum R}
     (h : x ⤳ y) :
     (structureSheaf R).Presheaf.stalkSpecializes h ≫ StructureSheaf.stalkToFiberRingHom R x =
@@ -1218,7 +1218,7 @@ theorem comap_comp (f : R →+* S) (g : S →+* P) (U : Opens (PrimeSpectrum.top
         rfl
 #align algebraic_geometry.structure_sheaf.comap_comp AlgebraicGeometry.StructureSheaf.comap_comp
 
-@[elementwise, reassoc.1]
+@[elementwise, reassoc]
 theorem toOpen_comp_comap (f : R →+* S) (U : Opens (PrimeSpectrum.top R)) :
     (toOpen R U ≫ comap f U (Opens.comap (PrimeSpectrum.comap f) U) fun _ => id) =
       CommRingCat.ofHom f ≫ toOpen S _ :=

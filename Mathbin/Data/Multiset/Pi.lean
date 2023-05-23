@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module data.multiset.pi
-! leanprover-community/mathlib commit 4c586d291f189eecb9d00581aeb3dd998ac34442
+! leanprover-community/mathlib commit b2c89893177f66a48daf993b7ba5ef7cddeff8c9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -89,6 +89,42 @@ theorem Pi.cons_swap {a a' : α} {b : δ a} {b' : δ a'} {m : Multiset α} {f : 
   all_goals simp [*, pi.cons_same, pi.cons_ne]
 #align multiset.pi.cons_swap Multiset.Pi.cons_swap
 
+/- warning: multiset.pi.cons_eta -> Multiset.pi.cons_eta is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {δ : α -> Sort.{u2}} {m : Multiset.{u1} α} {a : α} (f : forall (a' : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a' (Multiset.cons.{u1} α a m)) -> (δ a')), Eq.{imax (succ u1) u2} (forall (a' : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a' (Multiset.cons.{u1} α a m)) -> (δ a')) (Multiset.Pi.cons.{u1, u2} α (fun (a : α) (b : α) => _inst_1 a b) (fun {a : α} => δ a) m a (f a (Multiset.mem_cons_self.{u1} α a m)) (fun (a' : α) (ha' : Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a' m) => f a' (Multiset.mem_cons_of_mem.{u1} α a' a m ha'))) f
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {δ : α -> Sort.{u2}} {m : Multiset.{u1} α} {a : α} (f : forall (a' : α), (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a' (Multiset.cons.{u1} α a m)) -> (δ a')), Eq.{imax (succ u1) u2} (forall (a' : α), (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a' (Multiset.cons.{u1} α a m)) -> (δ a')) (Multiset.Pi.cons.{u2, u1} α (fun (a : α) (b : α) => _inst_1 a b) δ m a (f a (Multiset.mem_cons_self.{u1} α a m)) (fun (a' : α) (ha' : Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a' m) => f a' (Multiset.mem_cons_of_mem.{u1} α a' a m ha'))) f
+Case conversion may be inaccurate. Consider using '#align multiset.pi.cons_eta Multiset.pi.cons_etaₓ'. -/
+@[simp]
+theorem pi.cons_eta {m : Multiset α} {a : α} (f : ∀ a' ∈ a ::ₘ m, δ a') :
+    (Pi.cons m a (f _ (mem_cons_self _ _)) fun a' ha' => f a' (mem_cons_of_mem ha')) = f :=
+  by
+  ext (a' h')
+  by_cases a' = a
+  · subst h
+    rw [pi.cons_same]
+  · rw [pi.cons_ne _ h]
+#align multiset.pi.cons_eta Multiset.pi.cons_eta
+
+/- warning: multiset.pi.cons_injective -> Multiset.Pi.cons_injective is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {δ : α -> Sort.{u2}} {a : α} {b : δ a} {s : Multiset.{u1} α}, (Not (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a s)) -> (Function.Injective.{imax (succ u1) u2, imax (succ u1) u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a s) -> (δ a)) (forall (a' : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a' (Multiset.cons.{u1} α a s)) -> (δ a')) (Multiset.Pi.cons.{u1, u2} α (fun (a : α) (b : α) => _inst_1 a b) (fun {a : α} => δ a) s a b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {δ : α -> Sort.{u2}} {a : α} {b : δ a} {s : Multiset.{u1} α}, (Not (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a s)) -> (Function.Injective.{imax (succ u1) u2, imax (succ u1) u2} (forall (a : α), (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a s) -> (δ a)) (forall (a' : α), (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a' (Multiset.cons.{u1} α a s)) -> (δ a')) (Multiset.Pi.cons.{u2, u1} α (fun (a : α) (b : α) => _inst_1 a b) δ s a b))
+Case conversion may be inaccurate. Consider using '#align multiset.pi.cons_injective Multiset.Pi.cons_injectiveₓ'. -/
+theorem Pi.cons_injective {a : α} {b : δ a} {s : Multiset α} (hs : a ∉ s) :
+    Function.Injective (Pi.cons s a b) := fun f₁ f₂ eq =>
+  funext fun a' =>
+    funext fun h' =>
+      have ne : a ≠ a' := fun h => hs <| h.symm ▸ h'
+      have : a' ∈ a ::ₘ s := mem_cons_of_mem h'
+      calc
+        f₁ a' h' = Pi.cons s a b f₁ a' this := by rw [pi.cons_ne this Ne.symm]
+        _ = Pi.cons s a b f₂ a' this := by rw [Eq]
+        _ = f₂ a' h' := by rw [pi.cons_ne this Ne.symm]
+        
+#align multiset.pi.cons_injective Multiset.Pi.cons_injective
+
 /- warning: multiset.pi -> Multiset.pi is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {β : α -> Type.{u2}} (m : Multiset.{u1} α), (forall (a : α), Multiset.{u2} (β a)) -> (Multiset.{max u1 u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a m) -> (β a)))
@@ -139,25 +175,6 @@ theorem pi_cons (m : Multiset α) (t : ∀ a, Multiset (β a)) (a : α) :
   recOn_cons a m
 #align multiset.pi_cons Multiset.pi_cons
 
-/- warning: multiset.pi_cons_injective -> Multiset.pi_cons_injective is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {δ : α -> Sort.{u2}} {a : α} {b : δ a} {s : Multiset.{u1} α}, (Not (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a s)) -> (Function.Injective.{imax (succ u1) u2, imax (succ u1) u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a s) -> (δ a)) (forall (a' : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a' (Multiset.cons.{u1} α a s)) -> (δ a')) (Multiset.Pi.cons.{u1, u2} α (fun (a : α) (b : α) => _inst_1 a b) (fun {a : α} => δ a) s a b))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {δ : α -> Sort.{u2}} {a : α} {b : δ a} {s : Multiset.{u1} α}, (Not (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a s)) -> (Function.Injective.{imax (succ u1) u2, imax (succ u1) u2} (forall (a : α), (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a s) -> (δ a)) (forall (a' : α), (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a' (Multiset.cons.{u1} α a s)) -> (δ a')) (Multiset.Pi.cons.{u2, u1} α (fun (a : α) (b : α) => _inst_1 a b) δ s a b))
-Case conversion may be inaccurate. Consider using '#align multiset.pi_cons_injective Multiset.pi_cons_injectiveₓ'. -/
-theorem pi_cons_injective {a : α} {b : δ a} {s : Multiset α} (hs : a ∉ s) :
-    Function.Injective (Pi.cons s a b) := fun f₁ f₂ eq =>
-  funext fun a' =>
-    funext fun h' =>
-      have ne : a ≠ a' := fun h => hs <| h.symm ▸ h'
-      have : a' ∈ a ::ₘ s := mem_cons_of_mem h'
-      calc
-        f₁ a' h' = Pi.cons s a b f₁ a' this := by rw [pi.cons_ne this Ne.symm]
-        _ = Pi.cons s a b f₂ a' this := by rw [Eq]
-        _ = f₂ a' h' := by rw [pi.cons_ne this Ne.symm]
-        
-#align multiset.pi_cons_injective Multiset.pi_cons_injective
-
 /- warning: multiset.card_pi -> Multiset.card_pi is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {β : α -> Type.{u2}} (m : Multiset.{u1} α) (t : forall (a : α), Multiset.{u2} (β a)), Eq.{1} Nat (coeFn.{succ (max u1 u2), succ (max u1 u2)} (AddMonoidHom.{max u1 u2, 0} (Multiset.{max u1 u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a m) -> (β a))) Nat (AddMonoid.toAddZeroClass.{max u1 u2} (Multiset.{max u1 u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a m) -> (β a))) (AddRightCancelMonoid.toAddMonoid.{max u1 u2} (Multiset.{max u1 u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a m) -> (β a))) (AddCancelMonoid.toAddRightCancelMonoid.{max u1 u2} (Multiset.{max u1 u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a m) -> (β a))) (AddCancelCommMonoid.toAddCancelMonoid.{max u1 u2} (Multiset.{max u1 u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a m) -> (β a))) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{max u1 u2} (Multiset.{max u1 u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a m) -> (β a))) (Multiset.orderedCancelAddCommMonoid.{max u1 u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a m) -> (β a)))))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (fun (_x : AddMonoidHom.{max u1 u2, 0} (Multiset.{max u1 u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a m) -> (β a))) Nat (AddMonoid.toAddZeroClass.{max u1 u2} (Multiset.{max u1 u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a m) -> (β a))) (AddRightCancelMonoid.toAddMonoid.{max u1 u2} (Multiset.{max u1 u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a m) -> (β a))) (AddCancelMonoid.toAddRightCancelMonoid.{max u1 u2} (Multiset.{max u1 u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a m) -> (β a))) (AddCancelCommMonoid.toAddCancelMonoid.{max u1 u2} (Multiset.{max u1 u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a m) -> (β a))) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{max u1 u2} (Multiset.{max u1 u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a m) -> (β a))) (Multiset.orderedCancelAddCommMonoid.{max u1 u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a m) -> (β a)))))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) => (Multiset.{max u1 u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a m) -> (β a))) -> Nat) (AddMonoidHom.hasCoeToFun.{max u1 u2, 0} (Multiset.{max u1 u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a m) -> (β a))) Nat (AddMonoid.toAddZeroClass.{max u1 u2} (Multiset.{max u1 u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a m) -> (β a))) (AddRightCancelMonoid.toAddMonoid.{max u1 u2} (Multiset.{max u1 u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a m) -> (β a))) (AddCancelMonoid.toAddRightCancelMonoid.{max u1 u2} (Multiset.{max u1 u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a m) -> (β a))) (AddCancelCommMonoid.toAddCancelMonoid.{max u1 u2} (Multiset.{max u1 u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a m) -> (β a))) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{max u1 u2} (Multiset.{max u1 u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a m) -> (β a))) (Multiset.orderedCancelAddCommMonoid.{max u1 u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a m) -> (β a)))))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.card.{max u1 u2} (forall (a : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a m) -> (β a))) (Multiset.pi.{u1, u2} α (fun (a : α) (b : α) => _inst_1 a b) (fun (a : α) => β a) m t)) (Multiset.prod.{0} Nat Nat.commMonoid (Multiset.map.{u1, 0} α Nat (fun (a : α) => coeFn.{succ u2, succ u2} (AddMonoidHom.{u2, 0} (Multiset.{u2} (β a)) Nat (AddMonoid.toAddZeroClass.{u2} (Multiset.{u2} (β a)) (AddRightCancelMonoid.toAddMonoid.{u2} (Multiset.{u2} (β a)) (AddCancelMonoid.toAddRightCancelMonoid.{u2} (Multiset.{u2} (β a)) (AddCancelCommMonoid.toAddCancelMonoid.{u2} (Multiset.{u2} (β a)) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u2} (Multiset.{u2} (β a)) (Multiset.orderedCancelAddCommMonoid.{u2} (β a))))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (fun (_x : AddMonoidHom.{u2, 0} (Multiset.{u2} (β a)) Nat (AddMonoid.toAddZeroClass.{u2} (Multiset.{u2} (β a)) (AddRightCancelMonoid.toAddMonoid.{u2} (Multiset.{u2} (β a)) (AddCancelMonoid.toAddRightCancelMonoid.{u2} (Multiset.{u2} (β a)) (AddCancelCommMonoid.toAddCancelMonoid.{u2} (Multiset.{u2} (β a)) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u2} (Multiset.{u2} (β a)) (Multiset.orderedCancelAddCommMonoid.{u2} (β a))))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) => (Multiset.{u2} (β a)) -> Nat) (AddMonoidHom.hasCoeToFun.{u2, 0} (Multiset.{u2} (β a)) Nat (AddMonoid.toAddZeroClass.{u2} (Multiset.{u2} (β a)) (AddRightCancelMonoid.toAddMonoid.{u2} (Multiset.{u2} (β a)) (AddCancelMonoid.toAddRightCancelMonoid.{u2} (Multiset.{u2} (β a)) (AddCancelCommMonoid.toAddCancelMonoid.{u2} (Multiset.{u2} (β a)) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u2} (Multiset.{u2} (β a)) (Multiset.orderedCancelAddCommMonoid.{u2} (β a))))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.card.{u2} (β a)) (t a)) m))
@@ -184,7 +201,7 @@ protected theorem Nodup.pi {s : Multiset α} {t : ∀ a, Multiset (β a)} :
       have hs : nodup s := by simp at hs <;> exact hs.2
       simp
       refine'
-        ⟨fun b hb => (ih hs fun a' h' => ht a' <| mem_cons_of_mem h').map (pi_cons_injective has),
+        ⟨fun b hb => (ih hs fun a' h' => ht a' <| mem_cons_of_mem h').map (pi.cons_injective has),
           _⟩
       refine' (ht a <| mem_cons_self _ _).Pairwise _
       exact fun b₁ hb₁ b₂ hb₂ neb =>
@@ -193,23 +210,6 @@ protected theorem Nodup.pi {s : Multiset α} {t : ∀ a, Multiset (β a)} :
             by rw [Eq]
           neb <| show b₁ = b₂ by rwa [pi.cons_same, pi.cons_same] at this)
 #align multiset.nodup.pi Multiset.Nodup.pi
-
-/- warning: multiset.pi.cons_ext -> Multiset.pi.cons_ext is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {δ : α -> Sort.{u2}} {m : Multiset.{u1} α} {a : α} (f : forall (a' : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a' (Multiset.cons.{u1} α a m)) -> (δ a')), Eq.{imax (succ u1) u2} (forall (a' : α), (Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a' (Multiset.cons.{u1} α a m)) -> (δ a')) (Multiset.Pi.cons.{u1, u2} α (fun (a : α) (b : α) => _inst_1 a b) (fun {a : α} => δ a) m a (f a (Multiset.mem_cons_self.{u1} α a m)) (fun (a' : α) (ha' : Membership.Mem.{u1, u1} α (Multiset.{u1} α) (Multiset.hasMem.{u1} α) a' m) => f a' (Multiset.mem_cons_of_mem.{u1} α a' a m ha'))) f
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {δ : α -> Sort.{u2}} {m : Multiset.{u1} α} {a : α} (f : forall (a' : α), (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a' (Multiset.cons.{u1} α a m)) -> (δ a')), Eq.{imax (succ u1) u2} (forall (a' : α), (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a' (Multiset.cons.{u1} α a m)) -> (δ a')) (Multiset.Pi.cons.{u2, u1} α (fun (a : α) (b : α) => _inst_1 a b) δ m a (f a (Multiset.mem_cons_self.{u1} α a m)) (fun (a' : α) (ha' : Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a' m) => f a' (Multiset.mem_cons_of_mem.{u1} α a' a m ha'))) f
-Case conversion may be inaccurate. Consider using '#align multiset.pi.cons_ext Multiset.pi.cons_extₓ'. -/
-@[simp]
-theorem pi.cons_ext {m : Multiset α} {a : α} (f : ∀ a' ∈ a ::ₘ m, δ a') :
-    (Pi.cons m a (f _ (mem_cons_self _ _)) fun a' ha' => f a' (mem_cons_of_mem ha')) = f :=
-  by
-  ext (a' h')
-  by_cases a' = a
-  · subst h
-    rw [pi.cons_same]
-  · rw [pi.cons_ne _ h]
-#align multiset.pi.cons_ext Multiset.pi.cons_ext
 
 /- warning: multiset.mem_pi -> Multiset.mem_pi is a dubious translation:
 lean 3 declaration is
@@ -233,7 +233,7 @@ theorem mem_pi (m : Multiset α) (t : ∀ a, Multiset (β a)) :
       apply hf'
   · intro hf
     refine' ⟨_, hf a (mem_cons_self _ _), _, fun a ha => hf a (mem_cons_of_mem ha), _⟩
-    rw [pi.cons_ext]
+    rw [pi.cons_eta]
 #align multiset.mem_pi Multiset.mem_pi
 
 end Pi

@@ -149,7 +149,7 @@ theorem pullback_base (i j k : D.J) (S : Set (D.V (i, j)).carrier) :
 #align algebraic_geometry.PresheafedSpace.glue_data.pullback_base AlgebraicGeometry.PresheafedSpace.GlueData.pullback_base
 
 /-- The red and the blue arrows in ![this diagram](https://i.imgur.com/0GiBUh6.png) commute. -/
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem f_invApp_f_app (i j k : D.J) (U : Opens (D.V (i, j)).carrier) :
     (D.f_open i j).invApp U ≫ (D.f i k).c.app _ =
       (π₁ i, j, k).c.app (op U) ≫
@@ -206,7 +206,7 @@ theorem snd_invApp_t_app' (i j k : D.J) (U : Opens (pullback (D.f i j) (D.f i k)
 #align algebraic_geometry.PresheafedSpace.glue_data.snd_inv_app_t_app' AlgebraicGeometry.PresheafedSpace.GlueData.snd_invApp_t_app'
 
 /-- The red and the blue arrows in ![this diagram](https://i.imgur.com/q6X1GJ9.png) commute. -/
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem snd_invApp_t_app (i j k : D.J) (U : Opens (pullback (D.f i j) (D.f i k)).carrier) :
     (π₂⁻¹ i, j, k) U ≫ (D.t k i).c.app _ =
       (D.t' k i j).c.app _ ≫

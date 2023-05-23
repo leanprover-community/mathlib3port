@@ -292,7 +292,7 @@ instance isIso_toSpecΓ (R : CommRingCat) : IsIso (toSpecΓ R) :=
   apply structure_sheaf.is_iso_to_global
 #align algebraic_geometry.is_iso_to_Spec_Γ AlgebraicGeometry.isIso_toSpecΓ
 
-@[reassoc.1]
+@[reassoc]
 theorem Spec_Γ_naturality {R S : CommRingCat} (f : R ⟶ S) :
     f ≫ toSpecΓ S = toSpecΓ R ≫ Γ.map (Spec.toLocallyRingedSpace.map f.op).op :=
   by
@@ -342,7 +342,7 @@ def toPushforwardStalk : S ⟶ (Spec.topMap f _* (structureSheaf S).1).stalk p :
     @TopCat.Presheaf.germ _ _ _ _ (Spec.topMap f _* (structureSheaf S).1) ⊤ ⟨p, trivial⟩
 #align algebraic_geometry.structure_sheaf.to_pushforward_stalk AlgebraicGeometry.StructureSheaf.toPushforwardStalk
 
-@[reassoc.1]
+@[reassoc]
 theorem toPushforwardStalk_comp :
     f ≫ StructureSheaf.toPushforwardStalk f p =
       StructureSheaf.toStalk R p ≫

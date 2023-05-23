@@ -107,7 +107,7 @@ instance CommaMorphism.inhabited [Inhabited (Comma L R)] :
 
 restate_axiom comma_morphism.w'
 
-attribute [simp, reassoc.1] comma_morphism.w
+attribute [simp, reassoc] comma_morphism.w
 
 #print CategoryTheory.commaCategory /-
 instance commaCategory : Category (Comma L R)

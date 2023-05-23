@@ -234,7 +234,7 @@ instance (ex : Exact f g) [Epi g] : IsIso (cokernel.desc f g ex.w) :=
   isIso_of_mono_of_epi (Limits.cokernel.desc f g ex.w)
 
 #print CategoryTheory.Abelian.cokernel.desc.inv /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem cokernel.desc.inv [Epi g] (ex : Exact f g) :
     g ≫ inv (cokernel.desc _ _ ex.w) = cokernel.π _ := by simp
 #align category_theory.abelian.cokernel.desc.inv CategoryTheory.Abelian.cokernel.desc.inv
@@ -244,7 +244,7 @@ instance (ex : Exact f g) [Mono f] : IsIso (kernel.lift g f ex.w) :=
   isIso_of_mono_of_epi (Limits.kernel.lift g f ex.w)
 
 #print CategoryTheory.Abelian.kernel.lift.inv /-
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem kernel.lift.inv [Mono f] (ex : Exact f g) : inv (kernel.lift _ _ ex.w) ≫ f = kernel.ι g :=
   by simp
 #align category_theory.abelian.kernel.lift.inv CategoryTheory.Abelian.kernel.lift.inv

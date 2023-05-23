@@ -73,7 +73,7 @@ structure Presieve.CoverByImageStructure (G : C ⥤ D) {V U : D} (f : V ⟶ U) w
 
 restate_axiom presieve.cover_by_image_structure.fac'
 
-attribute [simp, reassoc.1] presieve.cover_by_image_structure.fac
+attribute [simp, reassoc] presieve.cover_by_image_structure.fac
 
 #print CategoryTheory.Presieve.coverByImage /-
 /-- For a functor `G : C ⥤ D`, and an object `U : D`, `presieve.cover_by_image G U` is the presieve

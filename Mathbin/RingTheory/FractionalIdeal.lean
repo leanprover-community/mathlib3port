@@ -1658,7 +1658,7 @@ variable {R P} (S) (x : P) (hx : IsIntegral R x)
 /-- `A[x]` is a fractional ideal for every integral `x`. -/
 theorem isFractional_adjoin_integral :
     IsFractional S (Algebra.adjoin R ({x} : Set P)).toSubmodule :=
-  isFractional_of_fG (fG_adjoin_singleton_of_integral x hx)
+  isFractional_of_fG (FG_adjoin_singleton_of_integral x hx)
 #align fractional_ideal.is_fractional_adjoin_integral FractionalIdeal.isFractional_adjoin_integral
 
 /-- `fractional_ideal.adjoin_integral (S : submonoid R) x hx` is `R[x]` as a fractional ideal,

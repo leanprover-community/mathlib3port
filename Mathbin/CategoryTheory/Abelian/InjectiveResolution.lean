@@ -98,7 +98,7 @@ def desc {Y Z : C} (f : Z ⟶ Y) (I : InjectiveResolution Y) (J : InjectiveResol
 #align category_theory.InjectiveResolution.desc CategoryTheory.InjectiveResolution.desc
 
 /-- The resolution maps intertwine the descent of a morphism and that morphism. -/
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem desc_commutes {Y Z : C} (f : Z ⟶ Y) (I : InjectiveResolution Y)
     (J : InjectiveResolution Z) : J.ι ≫ desc f I J = (CochainComplex.single₀ C).map f ≫ I.ι :=
   by
@@ -183,12 +183,12 @@ def homotopyEquiv {X : C} (I J : InjectiveResolution X) : HomotopyEquiv I.cocomp
       simpa [category.id_comp] using desc_id_homotopy _ _
 #align category_theory.InjectiveResolution.homotopy_equiv CategoryTheory.InjectiveResolution.homotopyEquiv
 
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem homotopyEquiv_hom_ι {X : C} (I J : InjectiveResolution X) :
     I.ι ≫ (homotopyEquiv I J).Hom = J.ι := by simp [HomotopyEquiv]
 #align category_theory.InjectiveResolution.homotopy_equiv_hom_ι CategoryTheory.InjectiveResolution.homotopyEquiv_hom_ι
 
-@[simp, reassoc.1]
+@[simp, reassoc]
 theorem homotopyEquiv_inv_ι {X : C} (I J : InjectiveResolution X) :
     J.ι ≫ (homotopyEquiv I J).inv = I.ι := by simp [HomotopyEquiv]
 #align category_theory.InjectiveResolution.homotopy_equiv_inv_ι CategoryTheory.InjectiveResolution.homotopyEquiv_inv_ι

@@ -234,7 +234,7 @@ theorem exponent_ne_zero_iff_range_orderOf_finite (h : ∀ g : G, 0 < orderOf g)
   · by_contra h
     obtain ⟨m, ⟨t, rfl⟩, het⟩ := Set.Infinite.exists_gt h (exponent G)
     exact pow_ne_one_of_lt_orderOf' he het (pow_exponent_eq_one t)
-  · lift Set.range orderOf to Finset ℕ using he with t ht
+  · lift Set.range orderOf to Finset ℕ using he
     have htpos : 0 < t.prod id :=
       by
       refine' Finset.prod_pos fun a ha => _

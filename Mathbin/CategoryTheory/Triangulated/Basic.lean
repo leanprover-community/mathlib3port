@@ -143,7 +143,7 @@ restate_axiom triangle_morphism.comm₂'
 
 restate_axiom triangle_morphism.comm₃'
 
-attribute [simp, reassoc.1] triangle_morphism.comm₁ triangle_morphism.comm₂ triangle_morphism.comm₃
+attribute [simp, reassoc] triangle_morphism.comm₁ triangle_morphism.comm₂ triangle_morphism.comm₃
 
 /- warning: category_theory.pretriangulated.triangle_morphism_id -> CategoryTheory.Pretriangulated.triangleMorphismId is a dubious translation:
 lean 3 declaration is
