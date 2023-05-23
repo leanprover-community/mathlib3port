@@ -627,7 +627,7 @@ theorem IsSeparable.image {β : Type _} [TopologicalSpace β] {s : Set α} (hs :
 #print TopologicalSpace.isSeparable_of_separableSpace_subtype /-
 theorem isSeparable_of_separableSpace_subtype (s : Set α) [SeparableSpace s] : IsSeparable s :=
   by
-  have : is_separable ((coe : s → α) '' (univ : Set s)) :=
+  have : IsSeparable ((coe : s → α) '' (univ : Set s)) :=
     (is_separable_of_separable_space _).image continuous_subtype_val
   simpa only [image_univ, Subtype.range_coe_subtype]
 #align topological_space.is_separable_of_separable_space_subtype TopologicalSpace.isSeparable_of_separableSpace_subtype

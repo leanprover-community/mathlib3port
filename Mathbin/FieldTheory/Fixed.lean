@@ -310,7 +310,7 @@ instance separable : IsSeparable (FixedPoints.subfield G F) F :=
     -- this was a plain rw when we were using unbundled subrings
     erw [← minpoly_eq_minpoly, ← Polynomial.separable_map (FixedPoints.subfield G F).Subtype,
       minpoly, Polynomial.map_toSubring _ (Subfield G F).toSubring]
-    exact Polynomial.separable_prod_x_sub_c_iff.2 (injective_of_quotient_stabilizer G x)⟩
+    exact Polynomial.separable_prod_X_sub_C_iff.2 (injective_of_quotient_stabilizer G x)⟩
 #align fixed_points.separable FixedPoints.separable
 
 instance : FiniteDimensional (subfield G F) F :=

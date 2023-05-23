@@ -612,7 +612,7 @@ end CommMonoid
 theorem isSeparable_range {m : MeasurableSpace α} [TopologicalSpace β] (hf : StronglyMeasurable f) :
     TopologicalSpace.IsSeparable (range f) :=
   by
-  have : is_separable (closure (⋃ n, range (hf.approx n))) :=
+  have : IsSeparable (closure (⋃ n, range (hf.approx n))) :=
     (is_separable_Union fun n => (simple_func.finite_range (hf.approx n)).IsSeparable).closure
   apply this.mono
   rintro _ ⟨x, rfl⟩
@@ -728,7 +728,7 @@ theorem Embedding.comp_stronglyMeasurable_iff {m : MeasurableSpace α} [Topologi
           exact mem_range_self x }
     have : Measurable (G ∘ f) := Measurable.subtype_mk H.measurable
     exact hG.measurable_embedding.measurable_comp_iff.1 this
-  · have : is_separable (g ⁻¹' range (g ∘ f)) := hg.is_separable_preimage H.is_separable_range
+  · have : IsSeparable (g ⁻¹' range (g ∘ f)) := hg.is_separable_preimage H.is_separable_range
     convert this
     ext x
     simp [hg.inj.eq_iff]
@@ -743,7 +743,7 @@ theorem stronglyMeasurable_of_tendsto {ι : Type _} {m : MeasurableSpace α} [To
   refine' stronglyMeasurable_iff_measurable_separable.2 ⟨_, _⟩
   · exact measurable_of_tendsto_metrizable' u (fun i => (hf i).Measurable) limUnder
   · rcases u.exists_seq_tendsto with ⟨v, hv⟩
-    have : is_separable (closure (⋃ i, range (f (v i)))) :=
+    have : IsSeparable (closure (⋃ i, range (f (v i)))) :=
       (is_separable_Union fun i => (hf (v i)).isSeparable_range).closure
     apply this.mono
     rintro _ ⟨x, rfl⟩
@@ -1691,7 +1691,7 @@ theorem aeStronglyMeasurable_of_tendsto_ae {ι : Type _} [PseudoMetrizableSpace 
   refine' aeStronglyMeasurable_iff_aEMeasurable_separable.2 ⟨_, _⟩
   · exact aemeasurable_of_tendsto_metrizable_ae _ (fun n => (hf n).AEMeasurable) limUnder
   · rcases u.exists_seq_tendsto with ⟨v, hv⟩
-    have : ∀ n : ℕ, ∃ t : Set β, is_separable t ∧ f (v n) ⁻¹' t ∈ μ.ae := fun n =>
+    have : ∀ n : ℕ, ∃ t : Set β, IsSeparable t ∧ f (v n) ⁻¹' t ∈ μ.ae := fun n =>
       (aeStronglyMeasurable_iff_aEMeasurable_separable.1 (hf (v n))).2
     choose t t_sep ht using this
     refine' ⟨closure (⋃ i, t i), (is_separable_Union fun i => t_sep i).closure, _⟩
@@ -1727,7 +1727,7 @@ theorem sum_measure [PseudoMetrizableSpace β] {m : MeasurableSpace α} {μ : ι
   refine'
     aeStronglyMeasurable_iff_aEMeasurable_separable.2
       ⟨AEMeasurable.sum_measure fun i => (h i).AEMeasurable, _⟩
-  have A : ∀ i : ι, ∃ t : Set β, is_separable t ∧ f ⁻¹' t ∈ (μ i).ae := fun i =>
+  have A : ∀ i : ι, ∃ t : Set β, IsSeparable t ∧ f ⁻¹' t ∈ (μ i).ae := fun i =>
     (aeStronglyMeasurable_iff_aEMeasurable_separable.1 (h i)).2
   choose t t_sep ht using A
   refine' ⟨⋃ i, t i, is_separable_Union t_sep, _⟩
@@ -2088,7 +2088,7 @@ theorem stronglyMeasurable_uncurry_of_continuous_of_stronglyMeasurable {α β ι
         rfl
       rw [this, measurable_swap_iff]
       exact measurable_from_prod_countable fun j => (h j).Measurable
-    · have : is_separable (⋃ i : (t_sf n).range, range (u i)) :=
+    · have : IsSeparable (⋃ i : (t_sf n).range, range (u i)) :=
         is_separable_Union fun i => (h i).isSeparable_range
       apply this.mono
       rintro _ ⟨⟨i, x⟩, rfl⟩

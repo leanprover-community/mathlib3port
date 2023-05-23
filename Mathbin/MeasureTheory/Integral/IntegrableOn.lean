@@ -552,7 +552,7 @@ theorem ContinuousOn.aeStronglyMeasurable [TopologicalSpace α] [TopologicalSpac
   cases h.out
   · let f' : s → β := s.restrict f
     have A : Continuous f' := continuousOn_iff_continuous_restrict.1 hf
-    have B : is_separable (univ : Set s) := is_separable_of_separable_space _
+    have B : IsSeparable (univ : Set s) := is_separable_of_separable_space _
     convert is_separable.image B A using 1
     ext x
     simp
