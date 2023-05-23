@@ -386,6 +386,12 @@ section
 
 variable (𝕜 E)
 
+/- warning: formal_multilinear_series.id -> FormalMultilinearSeries.id is a dubious translation:
+lean 3 declaration is
+  forall (𝕜 : Type.{u1}) (E : Type.{u2}) [_inst_1 : NontriviallyNormedField.{u1} 𝕜] [_inst_2 : NormedAddCommGroup.{u2} E] [_inst_3 : NormedSpace.{u1, u2} 𝕜 E (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2)], FormalMultilinearSeries.{u1, u2, u2} 𝕜 E E (NormedRing.toRing.{u1} 𝕜 (NormedCommRing.toNormedRing.{u1} 𝕜 (NormedField.toNormedCommRing.{u1} 𝕜 (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1)))) (NormedAddCommGroup.toAddCommGroup.{u2} E _inst_2) (NormedSpace.toModule.{u1, u2} 𝕜 E (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2) _inst_3) (UniformSpace.toTopologicalSpace.{u2} E (PseudoMetricSpace.toUniformSpace.{u2} E (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} E (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2)))) (FormalMultilinearSeries.Id._proof_1.{u2} E _inst_2) (FormalMultilinearSeries.Id._proof_2.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3) (NormedAddCommGroup.toAddCommGroup.{u2} E _inst_2) (NormedSpace.toModule.{u1, u2} 𝕜 E (NontriviallyNormedField.toNormedField.{u1} 𝕜 _inst_1) (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2) _inst_3) (UniformSpace.toTopologicalSpace.{u2} E (PseudoMetricSpace.toUniformSpace.{u2} E (SeminormedAddCommGroup.toPseudoMetricSpace.{u2} E (NormedAddCommGroup.toSeminormedAddCommGroup.{u2} E _inst_2)))) (FormalMultilinearSeries.Id._proof_3.{u2} E _inst_2) (FormalMultilinearSeries.Id._proof_4.{u1, u2} 𝕜 E _inst_1 _inst_2 _inst_3)
+but is expected to have type
+  PUnit.{max (succ (succ u1)) (succ (succ u2))}
+Case conversion may be inaccurate. Consider using '#align formal_multilinear_series.id FormalMultilinearSeries.idₓ'. -/
 /-- The identity formal multilinear series, with all coefficients equal to `0` except for `n = 1`
 where it is (the continuous multilinear version of) the identity. -/
 def id : FormalMultilinearSeries 𝕜 E E

@@ -339,33 +339,33 @@ theorem exists_row_one_eq_and_min_re {cd : Fin 2 → ℤ} (hcd : IsCoprime (cd 0
     exact hg ⟨g1, this⟩
 #align modular_group.exists_row_one_eq_and_min_re ModularGroup.exists_row_one_eq_and_min_re
 
-theorem coe_t_zpow_smul_eq {n : ℤ} : (↑(t ^ n • z) : ℂ) = z + n := by simp [coe_T_zpow]
+theorem coe_t_zpow_smul_eq {n : ℤ} : (↑(T ^ n • z) : ℂ) = z + n := by simp [coe_T_zpow]
 #align modular_group.coe_T_zpow_smul_eq ModularGroup.coe_t_zpow_smul_eq
 
-theorem re_t_zpow_smul (n : ℤ) : (t ^ n • z).re = z.re + n := by
+theorem re_t_zpow_smul (n : ℤ) : (T ^ n • z).re = z.re + n := by
   rw [← coe_re, coe_T_zpow_smul_eq, add_re, int_cast_re, coe_re]
 #align modular_group.re_T_zpow_smul ModularGroup.re_t_zpow_smul
 
-theorem im_t_zpow_smul (n : ℤ) : (t ^ n • z).im = z.im := by
+theorem im_t_zpow_smul (n : ℤ) : (T ^ n • z).im = z.im := by
   rw [← coe_im, coe_T_zpow_smul_eq, add_im, int_cast_im, add_zero, coe_im]
 #align modular_group.im_T_zpow_smul ModularGroup.im_t_zpow_smul
 
-theorem re_t_smul : (t • z).re = z.re + 1 := by simpa using re_T_zpow_smul z 1
+theorem re_t_smul : (T • z).re = z.re + 1 := by simpa using re_T_zpow_smul z 1
 #align modular_group.re_T_smul ModularGroup.re_t_smul
 
-theorem im_t_smul : (t • z).im = z.im := by simpa using im_T_zpow_smul z 1
+theorem im_t_smul : (T • z).im = z.im := by simpa using im_T_zpow_smul z 1
 #align modular_group.im_T_smul ModularGroup.im_t_smul
 
-theorem re_t_inv_smul : (t⁻¹ • z).re = z.re - 1 := by simpa using re_T_zpow_smul z (-1)
+theorem re_t_inv_smul : (T⁻¹ • z).re = z.re - 1 := by simpa using re_T_zpow_smul z (-1)
 #align modular_group.re_T_inv_smul ModularGroup.re_t_inv_smul
 
-theorem im_t_inv_smul : (t⁻¹ • z).im = z.im := by simpa using im_T_zpow_smul z (-1)
+theorem im_t_inv_smul : (T⁻¹ • z).im = z.im := by simpa using im_T_zpow_smul z (-1)
 #align modular_group.im_T_inv_smul ModularGroup.im_t_inv_smul
 
 variable {z}
 
 -- If instead we had `g` and `T` of type `PSL(2, ℤ)`, then we could simply state `g = T^n`.
-theorem exists_eq_t_zpow_of_c_eq_zero (hc : ↑ₘg 1 0 = 0) : ∃ n : ℤ, ∀ z : ℍ, g • z = t ^ n • z :=
+theorem exists_eq_t_zpow_of_c_eq_zero (hc : ↑ₘg 1 0 = 0) : ∃ n : ℤ, ∀ z : ℍ, g • z = T ^ n • z :=
   by
   have had := g.det_coe
   replace had : ↑ₘg 0 0 * ↑ₘg 1 1 = 1;
@@ -388,7 +388,7 @@ theorem exists_eq_t_zpow_of_c_eq_zero (hc : ↑ₘg 1 0 = 0) : ∃ n : ℤ, ∀ 
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, ",", expr _, ";", expr _, ",", expr _, "]"] [])]] -/
 -- If `c = 1`, then `g` factorises into a product terms involving only `T` and `S`.
-theorem g_eq_of_c_eq_one (hc : ↑ₘg 1 0 = 1) : g = t ^ ↑ₘg 0 0 * s * t ^ ↑ₘg 1 1 :=
+theorem g_eq_of_c_eq_one (hc : ↑ₘg 1 0 = 1) : g = T ^ ↑ₘg 0 0 * S * T ^ ↑ₘg 1 1 :=
   by
   have hg := g.det_coe.symm
   replace hg : ↑ₘg 0 1 = ↑ₘg 0 0 * ↑ₘg 1 1 - 1;
@@ -404,12 +404,12 @@ theorem g_eq_of_c_eq_one (hc : ↑ₘg 1 0 = 1) : g = t ^ ↑ₘg 0 0 * s * t ^ 
 #align modular_group.g_eq_of_c_eq_one ModularGroup.g_eq_of_c_eq_one
 
 /-- If `1 < |z|`, then `|S • z| < 1`. -/
-theorem normSq_s_smul_lt_one (h : 1 < normSq z) : normSq ↑(s • z) < 1 := by
+theorem normSq_s_smul_lt_one (h : 1 < normSq z) : normSq ↑(S • z) < 1 := by
   simpa [coe_S] using (inv_lt_inv z.norm_sq_pos zero_lt_one).mpr h
 #align modular_group.norm_sq_S_smul_lt_one ModularGroup.normSq_s_smul_lt_one
 
 /-- If `|z| < 1`, then applying `S` strictly decreases `im`. -/
-theorem im_lt_im_s_smul (h : normSq z < 1) : z.im < (s • z).im :=
+theorem im_lt_im_s_smul (h : normSq z < 1) : z.im < (S • z).im :=
   by
   have : z.im < z.im / norm_sq (z : ℂ) :=
     by
@@ -451,7 +451,7 @@ theorem three_lt_four_mul_im_sq_of_mem_fdo (h : z ∈ 𝒟ᵒ) : 3 < 4 * z.im ^ 
 #align modular_group.three_lt_four_mul_im_sq_of_mem_fdo ModularGroup.three_lt_four_mul_im_sq_of_mem_fdo
 
 /-- If `z ∈ 𝒟ᵒ`, and `n : ℤ`, then `|z + n| > 1`. -/
-theorem one_lt_normSq_t_zpow_smul (hz : z ∈ 𝒟ᵒ) (n : ℤ) : 1 < normSq (t ^ n • z : ℍ) :=
+theorem one_lt_normSq_t_zpow_smul (hz : z ∈ 𝒟ᵒ) (n : ℤ) : 1 < normSq (T ^ n • z : ℍ) :=
   by
   have hz₁ : 1 < z.re * z.re + z.im * z.im := hz.1
   have hzn := Int.nneg_mul_add_sq_of_abs_le_one n (abs_two_mul_re_lt_one_of_mem_fdo hz).le
@@ -459,7 +459,7 @@ theorem one_lt_normSq_t_zpow_smul (hz : z ∈ 𝒟ᵒ) (n : ℤ) : 1 < normSq (t
   simpa [coe_T_zpow, norm_sq]
 #align modular_group.one_lt_norm_sq_T_zpow_smul ModularGroup.one_lt_normSq_t_zpow_smul
 
-theorem eq_zero_of_mem_fdo_of_t_zpow_mem_fdo {n : ℤ} (hz : z ∈ 𝒟ᵒ) (hg : t ^ n • z ∈ 𝒟ᵒ) : n = 0 :=
+theorem eq_zero_of_mem_fdo_of_t_zpow_mem_fdo {n : ℤ} (hz : z ∈ 𝒟ᵒ) (hg : T ^ n • z ∈ 𝒟ᵒ) : n = 0 :=
   by
   suffices |(n : ℝ)| < 1 by
     rwa [← Int.cast_abs, ← Int.cast_one, Int.cast_lt, Int.abs_lt_one_iff] at this

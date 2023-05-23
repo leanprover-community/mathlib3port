@@ -286,15 +286,20 @@ def residual (α : Type _) [TopologicalSpace α] : Filter α :=
 #align residual residual
 -/
 
+#print countableInterFilter_residual /-
 instance countableInterFilter_residual : CountableInterFilter (residual α) := by
   rw [residual] <;> infer_instance
 #align countable_Inter_filter_residual countableInterFilter_residual
+-/
 
+#print residual_of_dense_open /-
 /-- Dense open sets are residual. -/
 theorem residual_of_dense_open {s : Set α} (ho : IsOpen s) (hd : Dense s) : s ∈ residual α :=
   CountableGenerateSets.basic ⟨ho, hd⟩
 #align residual_of_dense_open residual_of_dense_open
+-/
 
+#print residual_of_dense_Gδ /-
 /-- Dense Gδ sets are residual. -/
 theorem residual_of_dense_Gδ {s : Set α} (ho : IsGδ s) (hd : Dense s) : s ∈ residual α :=
   by
@@ -303,13 +308,16 @@ theorem residual_of_dense_Gδ {s : Set α} (ho : IsGδ s) (hd : Dense s) : s ∈
     (countable_sInter_mem Tct).mpr fun t tT =>
       residual_of_dense_open (To t tT) (hd.mono (sInter_subset_of_mem tT))
 #align residual_of_dense_Gδ residual_of_dense_Gδ
+-/
 
+#print mem_residual_iff /-
 /-- A set is residual iff it includes a countable intersection of dense open sets. -/
 theorem mem_residual_iff {s : Set α} :
     s ∈ residual α ↔
       ∃ S : Set (Set α), (∀ t ∈ S, IsOpen t) ∧ (∀ t ∈ S, Dense t) ∧ S.Countable ∧ ⋂₀ S ⊆ s :=
   mem_countableGenerate_iff.trans <| by simp_rw [subset_def, mem_set_of, forall_and, and_assoc']
 #align mem_residual_iff mem_residual_iff
+-/
 
 end residual
 

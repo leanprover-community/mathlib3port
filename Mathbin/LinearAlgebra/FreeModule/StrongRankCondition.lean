@@ -40,6 +40,7 @@ variable (R : Type _) [CommRing R] [Nontrivial R]
 
 open Polynomial Function Fin LinearMap
 
+#print commRing_strongRankCondition /-
 /-- Any commutative ring satisfies the `strong_rank_condition`. -/
 instance (priority := 100) commRing_strongRankCondition : StrongRankCondition R :=
   by
@@ -66,4 +67,5 @@ instance (priority := 100) commRing_strongRankCondition : StrongRankCondition R 
     simpa [hnex] using heval
   contradiction
 #align comm_ring_strong_rank_condition commRing_strongRankCondition
+-/
 

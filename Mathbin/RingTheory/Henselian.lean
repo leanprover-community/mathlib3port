@@ -67,6 +67,12 @@ open BigOperators Polynomial
 
 open LocalRing Polynomial Function
 
+/- warning: is_local_ring_hom_of_le_jacobson_bot -> isLocalRingHom_of_le_jacobson_bot is a dubious translation:
+lean 3 declaration is
+  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (I : Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))), (LE.le.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Preorder.toHasLe.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (PartialOrder.toPreorder.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (CompleteSemilatticeInf.toPartialOrder.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Submodule.completeLattice.{u1, u1} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)))))))) I (Ideal.jacobson.{u1} R (CommRing.toRing.{u1} R _inst_1) (Bot.bot.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Submodule.hasBot.{u1, u1} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))))) -> (IsLocalRingHom.{u1, u1} R (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (Ring.toSemiring.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (CommRing.toRing.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Ideal.hasQuotient.{u1} R _inst_1) I) (Ideal.Quotient.commRing.{u1} R _inst_1 I))) (Ideal.Quotient.mk.{u1} R _inst_1 I))
+but is expected to have type
+  forall {R : Type.{u1}} [_inst_1 : CommRing.{u1} R] (I : Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))), (LE.le.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Preorder.toLE.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (PartialOrder.toPreorder.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (OmegaCompletePartialOrder.toPartialOrder.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (CompleteLattice.instOmegaCompletePartialOrder.{u1} (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Submodule.completeLattice.{u1, u1} R R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)))))))) I (Ideal.jacobson.{u1} R (CommRing.toRing.{u1} R _inst_1) (Bot.bot.{u1} (Ideal.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))) (Submodule.instBotSubmodule.{u1, u1} R R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))) (Semiring.toModule.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))))))) -> (IsLocalRingHom.{u1, u1} R (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1)) (CommSemiring.toSemiring.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (CommRing.toCommSemiring.{u1} (HasQuotient.Quotient.{u1, u1} R (Ideal.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))) (Ideal.instHasQuotientIdealToSemiringToCommSemiring.{u1} R _inst_1) I) (Ideal.Quotient.commRing.{u1} R _inst_1 I))) (Ideal.Quotient.mk.{u1} R _inst_1 I))
+Case conversion may be inaccurate. Consider using '#align is_local_ring_hom_of_le_jacobson_bot isLocalRingHom_of_le_jacobson_botₓ'. -/
 theorem isLocalRingHom_of_le_jacobson_bot {R : Type _} [CommRing R] (I : Ideal R)
     (h : I ≤ Ideal.jacobson ⊥) : IsLocalRingHom (Ideal.Quotient.mk I) :=
   by
@@ -89,6 +95,7 @@ theorem isLocalRingHom_of_le_jacobson_bot {R : Type _} [CommRing R] (I : Ideal R
   exact h1.1
 #align is_local_ring_hom_of_le_jacobson_bot isLocalRingHom_of_le_jacobson_bot
 
+#print HenselianRing /-
 /-- A ring `R` is *Henselian* at an ideal `I` if the following condition holds:
 for every polynomial `f` over `R`, with a *simple* root `a₀` over the quotient ring `R/I`,
 there exists a lift `a : R` of `a₀` that is a root of `f`.
@@ -103,7 +110,9 @@ class HenselianRing (R : Type _) [CommRing R] (I : Ideal R) : Prop where
     ∀ (f : R[X]) (hf : f.Monic) (a₀ : R) (h₁ : f.eval a₀ ∈ I)
       (h₂ : IsUnit (Ideal.Quotient.mk I (f.derivative.eval a₀))), ∃ a : R, f.IsRoot a ∧ a - a₀ ∈ I
 #align henselian_ring HenselianRing
+-/
 
+#print HenselianLocalRing /-
 /-- A local ring `R` is *Henselian* if the following condition holds:
 for every polynomial `f` over `R`, with a *simple* root `a₀` over the residue field,
 there exists a lift `a : R` of `a₀` that is a root of `f`.
@@ -117,7 +126,9 @@ class HenselianLocalRing (R : Type _) [CommRing R] extends LocalRing R : Prop wh
     ∀ (f : R[X]) (hf : f.Monic) (a₀ : R) (h₁ : f.eval a₀ ∈ maximalIdeal R)
       (h₂ : IsUnit (f.derivative.eval a₀)), ∃ a : R, f.IsRoot a ∧ a - a₀ ∈ maximalIdeal R
 #align henselian_local_ring HenselianLocalRing
+-/
 
+#print Field.henselian /-
 -- see Note [lower instance priority]
 instance (priority := 100) Field.henselian (K : Type _) [Field K] : HenselianLocalRing K
     where is_henselian f hf a₀ h₁ h₂ :=
@@ -125,8 +136,10 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] : HenselianLoc
     refine' ⟨a₀, _, _⟩ <;> rwa [(maximal_ideal K).eq_bot_of_prime, Ideal.mem_bot] at *
     rw [sub_self]
 #align field.henselian Field.henselian
+-/
 
-theorem HenselianLocalRing.tFAE (R : Type u) [CommRing R] [LocalRing R] :
+#print HenselianLocalRing.TFAE /-
+theorem HenselianLocalRing.TFAE (R : Type u) [CommRing R] [LocalRing R] :
     TFAE
       [HenselianLocalRing R,
         ∀ (f : R[X]) (hf : f.Monic) (a₀ : ResidueField R) (h₁ : aeval a₀ f = 0)
@@ -163,7 +176,8 @@ theorem HenselianLocalRing.tFAE (R : Type u) [CommRing R] [LocalRing R] :
       rwa [← mem_nonunits_iff, ← LocalRing.mem_maximalIdeal, ← LocalRing.ker_eq_maximalIdeal φ hφ,
         φ.mem_ker] at h₂
   tfae_finish
-#align henselian_local_ring.tfae HenselianLocalRing.tFAE
+#align henselian_local_ring.tfae HenselianLocalRing.TFAE
+-/
 
 instance (R : Type _) [CommRing R] [hR : HenselianLocalRing R] : HenselianRing R (maximalIdeal R)
     where
@@ -179,6 +193,7 @@ instance (R : Type _) [CommRing R] [hR : HenselianLocalRing R] : HenselianRing R
     rw [h₂]
     exact not_isUnit_zero
 
+#print IsAdicComplete.henselianRing /-
 -- see Note [lower instance priority]
 /-- A ring `R` that is `I`-adically complete is Henselian at `I`. -/
 instance (priority := 100) IsAdicComplete.henselianRing (R : Type _) [CommRing R] (I : Ideal R)
@@ -278,4 +293,5 @@ instance (priority := 100) IsAdicComplete.henselianRing (R : Type _) [CommRing R
         rw [SModEq.zero, Ideal.neg_mem_iff]
         exact Ideal.mul_mem_right _ _ h₁
 #align is_adic_complete.henselian_ring IsAdicComplete.henselianRing
+-/
 

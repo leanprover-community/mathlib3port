@@ -87,16 +87,16 @@ theorem jacobiTheta_two_add (z : ℂ) : jacobiTheta (2 + z) = jacobiTheta z :=
     Complex.exp_int_mul, Complex.exp_two_pi_mul_I, one_zpow]
 #align jacobi_theta_two_add jacobiTheta_two_add
 
-theorem jacobiTheta_t_sq_smul (τ : ℍ) : jacobiTheta ↑(ModularGroup.t ^ 2 • τ) = jacobiTheta τ :=
+theorem jacobiTheta_t_sq_smul (τ : ℍ) : jacobiTheta ↑(ModularGroup.T ^ 2 • τ) = jacobiTheta τ :=
   by
-  suffices ↑(ModularGroup.t ^ 2 • τ) = (2 : ℂ) + ↑τ by simp_rw [this, jacobiTheta_two_add]
-  have : ModularGroup.t ^ (2 : ℕ) = ModularGroup.t ^ (2 : ℤ) := by rfl
+  suffices ↑(ModularGroup.T ^ 2 • τ) = (2 : ℂ) + ↑τ by simp_rw [this, jacobiTheta_two_add]
+  have : ModularGroup.T ^ (2 : ℕ) = ModularGroup.T ^ (2 : ℤ) := by rfl
   simp_rw [this, UpperHalfPlane.modular_t_zpow_smul, UpperHalfPlane.coe_vadd]
   push_cast
 #align jacobi_theta_T_sq_smul jacobiTheta_t_sq_smul
 
 theorem jacobiTheta_s_smul (τ : ℍ) :
-    jacobiTheta ↑(ModularGroup.s • τ) = (-I * τ) ^ (1 / 2 : ℂ) * jacobiTheta τ :=
+    jacobiTheta ↑(ModularGroup.S • τ) = (-I * τ) ^ (1 / 2 : ℂ) * jacobiTheta τ :=
   by
   unfold jacobiTheta
   rw [UpperHalfPlane.modular_s_smul, UpperHalfPlane.coe_mk]

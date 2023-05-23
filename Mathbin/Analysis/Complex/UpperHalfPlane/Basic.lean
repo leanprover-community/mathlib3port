@@ -462,21 +462,21 @@ end RealAddAction
 
 /- these next few lemmas are *not* flagged `@simp` because of the constructors on the RHS;
 instead we use the versions with coercions to `ℂ` as simp lemmas instead. -/
-theorem modular_s_smul (z : ℍ) : ModularGroup.s • z = mk (-z : ℂ)⁻¹ z.im_inv_neg_coe_pos :=
+theorem modular_s_smul (z : ℍ) : ModularGroup.S • z = mk (-z : ℂ)⁻¹ z.im_inv_neg_coe_pos :=
   by
   rw [special_linear_group_apply]
-  simp [ModularGroup.s, neg_div, inv_neg]
+  simp [ModularGroup.S, neg_div, inv_neg]
 #align upper_half_plane.modular_S_smul UpperHalfPlane.modular_s_smul
 
-theorem modular_t_zpow_smul (z : ℍ) (n : ℤ) : ModularGroup.t ^ n • z = (n : ℝ) +ᵥ z :=
+theorem modular_t_zpow_smul (z : ℍ) (n : ℤ) : ModularGroup.T ^ n • z = (n : ℝ) +ᵥ z :=
   by
   rw [← Subtype.coe_inj, coe_vadd, add_comm, special_linear_group_apply, coe_mk,
-    ModularGroup.coe_t_zpow]
+    ModularGroup.coe_T_zpow]
   simp only [of_apply, cons_val_zero, algebraMap.coe_one, Complex.ofReal_one, one_mul, cons_val_one,
     head_cons, algebraMap.coe_zero, MulZeroClass.zero_mul, zero_add, div_one]
 #align upper_half_plane.modular_T_zpow_smul UpperHalfPlane.modular_t_zpow_smul
 
-theorem modular_t_smul (z : ℍ) : ModularGroup.t • z = (1 : ℝ) +ᵥ z := by
+theorem modular_t_smul (z : ℍ) : ModularGroup.T • z = (1 : ℝ) +ᵥ z := by
   simpa only [algebraMap.coe_one] using modular_T_zpow_smul z 1
 #align upper_half_plane.modular_T_smul UpperHalfPlane.modular_t_smul
 
@@ -498,7 +498,7 @@ theorem exists_SL2_smul_eq_of_apply_zero_one_ne_zero (g : SL(2, ℝ)) (hc : ↑�
     ∃ (u : { x : ℝ // 0 < x })(v w : ℝ),
       ((· • ·) g : ℍ → ℍ) =
         ((· +ᵥ ·) w : ℍ → ℍ) ∘
-          ((· • ·) ModularGroup.s : ℍ → ℍ) ∘ ((· +ᵥ ·) v : ℍ → ℍ) ∘ ((· • ·) u : ℍ → ℍ) :=
+          ((· • ·) ModularGroup.S : ℍ → ℍ) ∘ ((· +ᵥ ·) v : ℍ → ℍ) ∘ ((· • ·) u : ℍ → ℍ) :=
   by
   have h_denom := denom_ne_zero g
   induction' g using Matrix.SpecialLinearGroup.fin_two_induction with a b c d h
