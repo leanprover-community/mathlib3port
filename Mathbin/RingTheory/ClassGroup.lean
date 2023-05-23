@@ -230,7 +230,7 @@ theorem ClassGroup.mk_canonicalEquiv (K' : Type _) [Field K'] [Algebra R K'] [Is
 /-- Send a nonzero integral ideal to an invertible fractional ideal. -/
 noncomputable def FractionalIdeal.mk0 [IsDedekindDomain R] : (Ideal R)⁰ →* (FractionalIdeal R⁰ K)ˣ
     where
-  toFun I := Units.mk0 I (coe_ideal_ne_zero.mpr <| mem_nonZeroDivisors_iff_ne_zero.mp I.2)
+  toFun I := Units.mk0 I (coeIdeal_ne_zero.mpr <| mem_nonZeroDivisors_iff_ne_zero.mp I.2)
   map_one' := by simp
   map_mul' x y := by simp
 #align fractional_ideal.mk0 FractionalIdeal.mk0
@@ -244,7 +244,7 @@ theorem FractionalIdeal.coe_mk0 [IsDedekindDomain R] (I : (Ideal R)⁰) :
 theorem FractionalIdeal.canonicalEquiv_mk0 [IsDedekindDomain R] (K' : Type _) [Field K']
     [Algebra R K'] [IsFractionRing R K'] (I : (Ideal R)⁰) :
     FractionalIdeal.canonicalEquiv R⁰ K K' (FractionalIdeal.mk0 K I) = FractionalIdeal.mk0 K' I :=
-  by simp only [FractionalIdeal.coe_mk0, coe_coe, FractionalIdeal.canonicalEquiv_coe_ideal]
+  by simp only [FractionalIdeal.coe_mk0, coe_coe, FractionalIdeal.canonicalEquiv_coeIdeal]
 #align fractional_ideal.canonical_equiv_mk0 FractionalIdeal.canonicalEquiv_mk0
 
 @[simp]
@@ -309,14 +309,14 @@ theorem ClassGroup.mk0_eq_mk0_iff [IsDedekindDomain R] {I J : (Ideal R)⁰} :
     · rintro hx
       apply hz
       rw [hx, IsFractionRing.mk'_eq_div, _root_.map_zero, zero_div]
-    · exact (FractionalIdeal.mk'_mul_coe_ideal_eq_coe_ideal _ hy).mp h
+    · exact (FractionalIdeal.mk'_mul_coeIdeal_eq_coeIdeal _ hy).mp h
   · rintro ⟨x, y, hx, hy, h⟩
     have hy' : y ∈ R⁰ := mem_non_zero_divisors_iff_ne_zero.mpr hy
     refine' ⟨IsLocalization.mk' _ x ⟨y, hy'⟩, _, _⟩
     · contrapose! hx
       rwa [mk'_eq_iff_eq_mul, MulZeroClass.zero_mul, ← (algebraMap R (FractionRing R)).map_zero,
         (IsFractionRing.injective R (FractionRing R)).eq_iff] at hx
-    · exact (FractionalIdeal.mk'_mul_coe_ideal_eq_coe_ideal _ hy').mpr h
+    · exact (FractionalIdeal.mk'_mul_coeIdeal_eq_coeIdeal _ hy').mpr h
 #align class_group.mk0_eq_mk0_iff ClassGroup.mk0_eq_mk0_iff
 
 theorem ClassGroup.mk0_surjective [IsDedekindDomain R] :

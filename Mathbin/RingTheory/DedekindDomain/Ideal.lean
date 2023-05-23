@@ -113,7 +113,7 @@ theorem le_self_mul_inv {I : FractionalIdeal R₁⁰ K} (hI : I ≤ (1 : Fractio
 variable (K)
 
 theorem coe_ideal_le_self_mul_inv (I : Ideal R₁) : (I : FractionalIdeal R₁⁰ K) ≤ I * I⁻¹ :=
-  le_self_mul_inv coe_ideal_le_one
+  le_self_mul_inv coeIdeal_le_one
 #align fractional_ideal.coe_ideal_le_self_mul_inv FractionalIdeal.coe_ideal_le_self_mul_inv
 
 /-- `I⁻¹` is the inverse of `I` if `I` has an inverse. -/
@@ -650,7 +650,7 @@ open Ideal
 
 noncomputable instance FractionalIdeal.semifield : Semifield (FractionalIdeal A⁰ K) :=
   { FractionalIdeal.commSemiring,
-    coe_ideal_injective.Nontrivial with
+    coeIdeal_injective.Nontrivial with
     inv := fun I => I⁻¹
     inv_zero := inv_zero' _
     div := (· / ·)
@@ -673,9 +673,8 @@ instance FractionalIdeal.cancelCommMonoidWithZero :
 
 instance Ideal.cancelCommMonoidWithZero : CancelCommMonoidWithZero (Ideal A) :=
   { Ideal.idemCommSemiring,
-    Function.Injective.cancelCommMonoidWithZero (coeIdealHom A⁰ (FractionRing A))
-      coe_ideal_injective (RingHom.map_zero _) (RingHom.map_one _) (RingHom.map_mul _)
-      (RingHom.map_pow _) with }
+    Function.Injective.cancelCommMonoidWithZero (coeIdealHom A⁰ (FractionRing A)) coeIdeal_injective
+      (RingHom.map_zero _) (RingHom.map_one _) (RingHom.map_mul _) (RingHom.map_pow _) with }
 #align ideal.cancel_comm_monoid_with_zero Ideal.cancelCommMonoidWithZero
 
 instance Ideal.isDomain : IsDomain (Ideal A) :=
