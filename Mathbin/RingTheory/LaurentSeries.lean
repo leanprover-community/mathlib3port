@@ -234,13 +234,13 @@ theorem coeff_coe (i : ℤ) :
 #align power_series.coeff_coe PowerSeries.coeff_coe
 
 @[simp, norm_cast]
-theorem coe_c (r : R) : ((C R r : PowerSeries R) : LaurentSeries R) = HahnSeries.c r :=
-  ofPowerSeries_c _
+theorem coe_c (r : R) : ((C R r : PowerSeries R) : LaurentSeries R) = HahnSeries.C r :=
+  ofPowerSeries_C _
 #align power_series.coe_C PowerSeries.coe_c
 
 @[simp]
 theorem coe_x : ((X : PowerSeries R) : LaurentSeries R) = single 1 1 :=
-  ofPowerSeries_x
+  ofPowerSeries_X
 #align power_series.coe_X PowerSeries.coe_x
 
 @[simp, norm_cast]

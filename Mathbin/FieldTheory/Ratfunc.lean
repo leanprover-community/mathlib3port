@@ -1688,7 +1688,7 @@ theorem coe_div :
 #align ratfunc.coe_div Ratfunc.coe_div
 
 @[simp, norm_cast]
-theorem coe_c (r : F) : ((c r : Ratfunc F) : LaurentSeries F) = HahnSeries.c r := by
+theorem coe_c (r : F) : ((c r : Ratfunc F) : LaurentSeries F) = HahnSeries.C r := by
   rw [coe_num_denom, num_C, denom_C, coe_coe, Polynomial.coe_C, coe_C, coe_coe, Polynomial.coe_one,
     PowerSeries.coe_one, div_one]
 #align ratfunc.coe_C Ratfunc.coe_c
