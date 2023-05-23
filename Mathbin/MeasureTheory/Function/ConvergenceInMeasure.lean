@@ -132,10 +132,10 @@ theorem tendstoInMeasure_of_tendsto_ae_of_stronglyMeasurable [FiniteMeasure μ]
 #align measure_theory.tendsto_in_measure_of_tendsto_ae_of_strongly_measurable MeasureTheory.tendstoInMeasure_of_tendsto_ae_of_stronglyMeasurable
 
 /-- Convergence a.e. implies convergence in measure in a finite measure space. -/
-theorem tendstoInMeasure_of_tendsto_ae [FiniteMeasure μ] (hf : ∀ n, AeStronglyMeasurable (f n) μ)
+theorem tendstoInMeasure_of_tendsto_ae [FiniteMeasure μ] (hf : ∀ n, AEStronglyMeasurable (f n) μ)
     (hfg : ∀ᵐ x ∂μ, Tendsto (fun n => f n x) atTop (𝓝 (g x))) : TendstoInMeasure μ f atTop g :=
   by
-  have hg : ae_strongly_measurable g μ := aeStronglyMeasurable_of_tendsto_ae _ hf hfg
+  have hg : ae_strongly_measurable g μ := aestronglyMeasurable_of_tendsto_ae _ hf hfg
   refine' tendsto_in_measure.congr (fun i => (hf i).ae_eq_mk.symm) hg.ae_eq_mk.symm _
   refine'
     tendsto_in_measure_of_tendsto_ae_of_strongly_measurable (fun i => (hf i).stronglyMeasurable_mk)
@@ -312,7 +312,7 @@ theorem tendstoInMeasure_of_tendsto_snorm_of_stronglyMeasurable (hp_ne_zero : p 
   refine' le_trans _ hn
   rw [ENNReal.ofReal_div_of_pos (Real.rpow_pos_of_pos hε _), ENNReal.ofReal_one, mul_comm,
     mul_one_div, ENNReal.le_div_iff_mul_le _ (Or.inl ENNReal.ofReal_ne_top), mul_comm]
-  · convert mul_meas_ge_le_pow_snorm' μ hp_ne_zero hp_ne_top ((hf n).sub hg).AeStronglyMeasurable
+  · convert mul_meas_ge_le_pow_snorm' μ hp_ne_zero hp_ne_top ((hf n).sub hg).AEStronglyMeasurable
         (ENNReal.ofReal ε)
     · exact (ENNReal.ofReal_rpow_of_pos hε).symm
     · ext x
@@ -325,7 +325,7 @@ theorem tendstoInMeasure_of_tendsto_snorm_of_stronglyMeasurable (hp_ne_zero : p 
 /-- This lemma is superceded by `measure_theory.tendsto_in_measure_of_tendsto_snorm` where we
 allow `p = ∞`. -/
 theorem tendstoInMeasure_of_tendsto_snorm_of_ne_top (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞)
-    (hf : ∀ n, AeStronglyMeasurable (f n) μ) (hg : AeStronglyMeasurable g μ) {l : Filter ι}
+    (hf : ∀ n, AEStronglyMeasurable (f n) μ) (hg : AEStronglyMeasurable g μ) {l : Filter ι}
     (hfg : Tendsto (fun n => snorm (f n - g) p μ) l (𝓝 0)) : TendstoInMeasure μ f l g :=
   by
   refine' tendsto_in_measure.congr (fun i => (hf i).ae_eq_mk.symm) hg.ae_eq_mk.symm _
@@ -368,7 +368,7 @@ theorem tendstoInMeasure_of_tendsto_snorm_top {E} [NormedAddCommGroup E] {f : ι
 
 /-- Convergence in Lp implies convergence in measure. -/
 theorem tendstoInMeasure_of_tendsto_snorm {l : Filter ι} (hp_ne_zero : p ≠ 0)
-    (hf : ∀ n, AeStronglyMeasurable (f n) μ) (hg : AeStronglyMeasurable g μ)
+    (hf : ∀ n, AEStronglyMeasurable (f n) μ) (hg : AEStronglyMeasurable g μ)
     (hfg : Tendsto (fun n => snorm (f n - g) p μ) l (𝓝 0)) : TendstoInMeasure μ f l g :=
   by
   by_cases hp_ne_top : p = ∞
@@ -381,7 +381,7 @@ theorem tendstoInMeasure_of_tendsto_snorm {l : Filter ι} (hp_ne_zero : p ≠ 0)
 theorem tendstoInMeasure_of_tendsto_lp [hp : Fact (1 ≤ p)] {f : ι → lp E p μ} {g : lp E p μ}
     {l : Filter ι} (hfg : Tendsto f l (𝓝 g)) : TendstoInMeasure μ (fun n => f n) l g :=
   tendstoInMeasure_of_tendsto_snorm (zero_lt_one.trans_le hp.elim).Ne.symm
-    (fun n => lp.aeStronglyMeasurable _) (lp.aeStronglyMeasurable _)
+    (fun n => lp.aEStronglyMeasurable _) (lp.aEStronglyMeasurable _)
     ((lp.tendsto_lp_iff_tendsto_ℒp' _ _).mp hfg)
 #align measure_theory.tendsto_in_measure_of_tendsto_Lp MeasureTheory.tendstoInMeasure_of_tendsto_lp
 

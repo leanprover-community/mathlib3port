@@ -1411,10 +1411,10 @@ theorem setToFun_undef (hT : DominatedFinMeasAdditive μ T C) (hf : ¬Integrable
   dif_neg hf
 #align measure_theory.set_to_fun_undef MeasureTheory.setToFun_undef
 
-theorem setToFun_non_aeStronglyMeasurable (hT : DominatedFinMeasAdditive μ T C)
-    (hf : ¬AeStronglyMeasurable f μ) : setToFun μ T hT f = 0 :=
+theorem setToFun_non_aEStronglyMeasurable (hT : DominatedFinMeasAdditive μ T C)
+    (hf : ¬AEStronglyMeasurable f μ) : setToFun μ T hT f = 0 :=
   setToFun_undef hT (not_and_of_not_left _ hf)
-#align measure_theory.set_to_fun_non_ae_strongly_measurable MeasureTheory.setToFun_non_aeStronglyMeasurable
+#align measure_theory.set_to_fun_non_ae_strongly_measurable MeasureTheory.setToFun_non_aEStronglyMeasurable
 
 theorem setToFun_congr_left (hT : DominatedFinMeasAdditive μ T C)
     (hT' : DominatedFinMeasAdditive μ T' C') (h : T = T') (f : α → E) :
@@ -1901,14 +1901,14 @@ theorem norm_setToFun_le' (hT : DominatedFinMeasAdditive μ T C) (hf : Integrabl
   is easier. -/
 theorem tendsto_setToFun_of_dominated_convergence (hT : DominatedFinMeasAdditive μ T C)
     {fs : ℕ → α → E} {f : α → E} (bound : α → ℝ)
-    (fs_measurable : ∀ n, AeStronglyMeasurable (fs n) μ) (bound_integrable : Integrable bound μ)
+    (fs_measurable : ∀ n, AEStronglyMeasurable (fs n) μ) (bound_integrable : Integrable bound μ)
     (h_bound : ∀ n, ∀ᵐ a ∂μ, ‖fs n a‖ ≤ bound a)
     (h_lim : ∀ᵐ a ∂μ, Tendsto (fun n => fs n a) atTop (𝓝 (f a))) :
     Tendsto (fun n => setToFun μ T hT (fs n)) atTop (𝓝 <| setToFun μ T hT f) :=
   by
   -- `f` is a.e.-measurable, since it is the a.e.-pointwise limit of a.e.-measurable functions.
   have f_measurable : ae_strongly_measurable f μ :=
-    aeStronglyMeasurable_of_tendsto_ae _ fs_measurable h_lim
+    aestronglyMeasurable_of_tendsto_ae _ fs_measurable h_lim
   -- all functions we consider are integrable
   have fs_int : ∀ n, integrable (fs n) μ := fun n =>
     bound_integrable.mono' (fs_measurable n) (h_bound _)
@@ -1948,7 +1948,7 @@ theorem tendsto_setToFun_of_dominated_convergence (hT : DominatedFinMeasAdditive
 /-- Lebesgue dominated convergence theorem for filters with a countable basis -/
 theorem tendsto_setToFun_filter_of_dominated_convergence (hT : DominatedFinMeasAdditive μ T C) {ι}
     {l : Filter ι} [l.IsCountablyGenerated] {fs : ι → α → E} {f : α → E} (bound : α → ℝ)
-    (hfs_meas : ∀ᶠ n in l, AeStronglyMeasurable (fs n) μ)
+    (hfs_meas : ∀ᶠ n in l, AEStronglyMeasurable (fs n) μ)
     (h_bound : ∀ᶠ n in l, ∀ᵐ a ∂μ, ‖fs n a‖ ≤ bound a) (bound_integrable : Integrable bound μ)
     (h_lim : ∀ᵐ a ∂μ, Tendsto (fun n => fs n a) l (𝓝 (f a))) :
     Tendsto (fun n => setToFun μ T hT (fs n)) l (𝓝 <| setToFun μ T hT f) :=
@@ -1976,7 +1976,7 @@ variable {X : Type _} [TopologicalSpace X] [FirstCountableTopology X]
 
 theorem continuousWithinAt_setToFun_of_dominated (hT : DominatedFinMeasAdditive μ T C)
     {fs : X → α → E} {x₀ : X} {bound : α → ℝ} {s : Set X}
-    (hfs_meas : ∀ᶠ x in 𝓝[s] x₀, AeStronglyMeasurable (fs x) μ)
+    (hfs_meas : ∀ᶠ x in 𝓝[s] x₀, AEStronglyMeasurable (fs x) μ)
     (h_bound : ∀ᶠ x in 𝓝[s] x₀, ∀ᵐ a ∂μ, ‖fs x a‖ ≤ bound a) (bound_integrable : Integrable bound μ)
     (h_cont : ∀ᵐ a ∂μ, ContinuousWithinAt (fun x => fs x a) s x₀) :
     ContinuousWithinAt (fun x => setToFun μ T hT (fs x)) s x₀ :=
@@ -1984,7 +1984,7 @@ theorem continuousWithinAt_setToFun_of_dominated (hT : DominatedFinMeasAdditive 
 #align measure_theory.continuous_within_at_set_to_fun_of_dominated MeasureTheory.continuousWithinAt_setToFun_of_dominated
 
 theorem continuousAt_setToFun_of_dominated (hT : DominatedFinMeasAdditive μ T C) {fs : X → α → E}
-    {x₀ : X} {bound : α → ℝ} (hfs_meas : ∀ᶠ x in 𝓝 x₀, AeStronglyMeasurable (fs x) μ)
+    {x₀ : X} {bound : α → ℝ} (hfs_meas : ∀ᶠ x in 𝓝 x₀, AEStronglyMeasurable (fs x) μ)
     (h_bound : ∀ᶠ x in 𝓝 x₀, ∀ᵐ a ∂μ, ‖fs x a‖ ≤ bound a) (bound_integrable : Integrable bound μ)
     (h_cont : ∀ᵐ a ∂μ, ContinuousAt (fun x => fs x a) x₀) :
     ContinuousAt (fun x => setToFun μ T hT (fs x)) x₀ :=
@@ -1992,7 +1992,7 @@ theorem continuousAt_setToFun_of_dominated (hT : DominatedFinMeasAdditive μ T C
 #align measure_theory.continuous_at_set_to_fun_of_dominated MeasureTheory.continuousAt_setToFun_of_dominated
 
 theorem continuousOn_setToFun_of_dominated (hT : DominatedFinMeasAdditive μ T C) {fs : X → α → E}
-    {bound : α → ℝ} {s : Set X} (hfs_meas : ∀ x ∈ s, AeStronglyMeasurable (fs x) μ)
+    {bound : α → ℝ} {s : Set X} (hfs_meas : ∀ x ∈ s, AEStronglyMeasurable (fs x) μ)
     (h_bound : ∀ x ∈ s, ∀ᵐ a ∂μ, ‖fs x a‖ ≤ bound a) (bound_integrable : Integrable bound μ)
     (h_cont : ∀ᵐ a ∂μ, ContinuousOn (fun x => fs x a) s) :
     ContinuousOn (fun x => setToFun μ T hT (fs x)) s :=
@@ -2005,7 +2005,7 @@ theorem continuousOn_setToFun_of_dominated (hT : DominatedFinMeasAdditive μ T C
 #align measure_theory.continuous_on_set_to_fun_of_dominated MeasureTheory.continuousOn_setToFun_of_dominated
 
 theorem continuous_setToFun_of_dominated (hT : DominatedFinMeasAdditive μ T C) {fs : X → α → E}
-    {bound : α → ℝ} (hfs_meas : ∀ x, AeStronglyMeasurable (fs x) μ)
+    {bound : α → ℝ} (hfs_meas : ∀ x, AEStronglyMeasurable (fs x) μ)
     (h_bound : ∀ x, ∀ᵐ a ∂μ, ‖fs x a‖ ≤ bound a) (bound_integrable : Integrable bound μ)
     (h_cont : ∀ᵐ a ∂μ, Continuous fun x => fs x a) : Continuous fun x => setToFun μ T hT (fs x) :=
   continuous_iff_continuousAt.mpr fun x₀ =>

@@ -33,9 +33,9 @@ namespace intervalIntegral
 (with a ball radius independent of `a`) with integrable Lipschitz bound, and `F x` is ae-measurable
 for `x` in a possibly smaller neighborhood of `x₀`. -/
 theorem hasFDerivAt_integral_of_dominated_loc_of_lip {F : H → ℝ → E} {F' : ℝ → H →L[𝕜] E} {x₀ : H}
-    (ε_pos : 0 < ε) (hF_meas : ∀ᶠ x in 𝓝 x₀, AeStronglyMeasurable (F x) (μ.restrict (Ι a b)))
+    (ε_pos : 0 < ε) (hF_meas : ∀ᶠ x in 𝓝 x₀, AEStronglyMeasurable (F x) (μ.restrict (Ι a b)))
     (hF_int : IntervalIntegrable (F x₀) μ a b)
-    (hF'_meas : AeStronglyMeasurable F' (μ.restrict (Ι a b)))
+    (hF'_meas : AEStronglyMeasurable F' (μ.restrict (Ι a b)))
     (h_lip :
       ∀ᵐ t ∂μ, t ∈ Ι a b → LipschitzOnWith (Real.nnabs <| bound t) (fun x => F x t) (ball x₀ ε))
     (bound_integrable : IntervalIntegrable bound μ a b)
@@ -57,9 +57,9 @@ derivative norm uniformly bounded by an integrable function (the ball radius is 
 and `F x` is ae-measurable for `x` in a possibly smaller neighborhood of `x₀`. -/
 theorem hasFDerivAt_integral_of_dominated_of_fderiv_le {F : H → ℝ → E} {F' : H → ℝ → H →L[𝕜] E}
     {x₀ : H} (ε_pos : 0 < ε)
-    (hF_meas : ∀ᶠ x in 𝓝 x₀, AeStronglyMeasurable (F x) (μ.restrict (Ι a b)))
+    (hF_meas : ∀ᶠ x in 𝓝 x₀, AEStronglyMeasurable (F x) (μ.restrict (Ι a b)))
     (hF_int : IntervalIntegrable (F x₀) μ a b)
-    (hF'_meas : AeStronglyMeasurable (F' x₀) (μ.restrict (Ι a b)))
+    (hF'_meas : AEStronglyMeasurable (F' x₀) (μ.restrict (Ι a b)))
     (h_bound : ∀ᵐ t ∂μ, t ∈ Ι a b → ∀ x ∈ ball x₀ ε, ‖F' x t‖ ≤ bound t)
     (bound_integrable : IntervalIntegrable bound μ a b)
     (h_diff : ∀ᵐ t ∂μ, t ∈ Ι a b → ∀ x ∈ ball x₀ ε, HasFDerivAt (fun x => F x t) (F' x t) x) :
@@ -78,9 +78,9 @@ assuming `F x₀` is integrable, `x ↦ F x a` is locally Lipschitz on a ball ar
 (with ball radius independent of `a`) with integrable Lipschitz bound, and `F x` is
 ae-measurable for `x` in a possibly smaller neighborhood of `x₀`. -/
 theorem hasDerivAt_integral_of_dominated_loc_of_lip {F : 𝕜 → ℝ → E} {F' : ℝ → E} {x₀ : 𝕜}
-    (ε_pos : 0 < ε) (hF_meas : ∀ᶠ x in 𝓝 x₀, AeStronglyMeasurable (F x) (μ.restrict (Ι a b)))
+    (ε_pos : 0 < ε) (hF_meas : ∀ᶠ x in 𝓝 x₀, AEStronglyMeasurable (F x) (μ.restrict (Ι a b)))
     (hF_int : IntervalIntegrable (F x₀) μ a b)
-    (hF'_meas : AeStronglyMeasurable F' (μ.restrict (Ι a b)))
+    (hF'_meas : AEStronglyMeasurable F' (μ.restrict (Ι a b)))
     (h_lipsch :
       ∀ᵐ t ∂μ, t ∈ Ι a b → LipschitzOnWith (Real.nnabs <| bound t) (fun x => F x t) (ball x₀ ε))
     (bound_integrable : IntervalIntegrable (bound : ℝ → ℝ) μ a b)
@@ -101,9 +101,9 @@ assuming `F x₀` is integrable, `x ↦ F x a` is differentiable on an interval 
 (with interval radius independent of `a`) with derivative uniformly bounded by an integrable
 function, and `F x` is ae-measurable for `x` in a possibly smaller neighborhood of `x₀`. -/
 theorem hasDerivAt_integral_of_dominated_loc_of_deriv_le {F : 𝕜 → ℝ → E} {F' : 𝕜 → ℝ → E} {x₀ : 𝕜}
-    (ε_pos : 0 < ε) (hF_meas : ∀ᶠ x in 𝓝 x₀, AeStronglyMeasurable (F x) (μ.restrict (Ι a b)))
+    (ε_pos : 0 < ε) (hF_meas : ∀ᶠ x in 𝓝 x₀, AEStronglyMeasurable (F x) (μ.restrict (Ι a b)))
     (hF_int : IntervalIntegrable (F x₀) μ a b)
-    (hF'_meas : AeStronglyMeasurable (F' x₀) (μ.restrict (Ι a b)))
+    (hF'_meas : AEStronglyMeasurable (F' x₀) (μ.restrict (Ι a b)))
     (h_bound : ∀ᵐ t ∂μ, t ∈ Ι a b → ∀ x ∈ ball x₀ ε, ‖F' x t‖ ≤ bound t)
     (bound_integrable : IntervalIntegrable bound μ a b)
     (h_diff : ∀ᵐ t ∂μ, t ∈ Ι a b → ∀ x ∈ ball x₀ ε, HasDerivAt (fun x => F x t) (F' x t) x) :

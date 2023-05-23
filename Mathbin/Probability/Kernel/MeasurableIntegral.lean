@@ -296,7 +296,7 @@ theorem StronglyMeasurable.integral_kernel_prod_right ⦃f : α → β → E⦄
       by_cases hfx : integrable (f x) (κ x)
       · have : ∀ n, integrable (s' n x) (κ x) := by
           intro n
-          apply (hfx.norm.add hfx.norm).mono' (s' n x).AeStronglyMeasurable
+          apply (hfx.norm.add hfx.norm).mono' (s' n x).AEStronglyMeasurable
           apply eventually_of_forall
           intro y
           simp_rw [s', simple_func.coe_comp]
@@ -305,7 +305,7 @@ theorem StronglyMeasurable.integral_kernel_prod_right ⦃f : α → β → E⦄
           mem_set_of_eq]
         refine'
           tendsto_integral_of_dominated_convergence (fun y => ‖f x y‖ + ‖f x y‖)
-            (fun n => (s' n x).AeStronglyMeasurable) (hfx.norm.add hfx.norm) _ _
+            (fun n => (s' n x).AEStronglyMeasurable) (hfx.norm.add hfx.norm) _ _
         ·
           exact fun n =>
             eventually_of_forall fun y => simple_func.norm_approx_on_zero_le _ _ (x, y) n

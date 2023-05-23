@@ -58,13 +58,13 @@ section MellinConvergent
 /-- Auxiliary lemma to reduce convergence statements from vector-valued functions to real
 scalar-valued functions. -/
 theorem mellin_convergent_iff_norm [NormedSpace ℂ E] {f : ℝ → E} {T : Set ℝ} (hT : T ⊆ Ioi 0)
-    (hT' : MeasurableSet T) (hfc : AeStronglyMeasurable f <| volume.restrict <| Ioi 0) {s : ℂ} :
+    (hT' : MeasurableSet T) (hfc : AEStronglyMeasurable f <| volume.restrict <| Ioi 0) {s : ℂ} :
     IntegrableOn (fun t : ℝ => (t : ℂ) ^ (s - 1) • f t) T ↔
       IntegrableOn (fun t : ℝ => t ^ (s.re - 1) * ‖f t‖) T :=
   by
   have : ae_strongly_measurable (fun t : ℝ => (t : ℂ) ^ (s - 1) • f t) (volume.restrict T) :=
     by
-    refine' ((ContinuousAt.continuousOn _).AeStronglyMeasurable hT').smul (hfc.mono_set hT)
+    refine' ((ContinuousAt.continuousOn _).AEStronglyMeasurable hT').smul (hfc.mono_set hT)
     exact fun t ht => continuous_at_of_real_cpow_const _ _ (Or.inr <| ne_of_gt (hT ht))
   rw [integrable_on, ← integrable_norm_iff this, ← integrable_on]
   refine' integrable_on_congr_fun (fun t ht => _) hT'
@@ -74,7 +74,7 @@ theorem mellin_convergent_iff_norm [NormedSpace ℂ E] {f : ℝ → E} {T : Set 
 /-- If `f` is a locally integrable real-valued function which is `O(x ^ (-a))` at `∞`, then for any
 `s < a`, its Mellin transform converges on some neighbourhood of `+∞`. -/
 theorem mellin_convergent_top_of_isBigO {f : ℝ → ℝ}
-    (hfc : AeStronglyMeasurable f <| volume.restrict (Ioi 0)) {a s : ℝ}
+    (hfc : AEStronglyMeasurable f <| volume.restrict (Ioi 0)) {a s : ℝ}
     (hf : IsBigO atTop f fun t => t ^ (-a)) (hs : s < a) :
     ∃ c : ℝ, 0 < c ∧ IntegrableOn (fun t : ℝ => t ^ (s - 1) * f t) (Ioi c) :=
   by
@@ -84,7 +84,7 @@ theorem mellin_convergent_top_of_isBigO {f : ℝ → ℝ}
   have he' : 0 < max e 1 := zero_lt_one.trans_le (le_max_right _ _)
   refine' ⟨max e 1, he', _, _⟩
   · refine' ae_strongly_measurable.mul _ (hfc.mono_set (Ioi_subset_Ioi he'.le))
-    refine' (ContinuousAt.continuousOn fun t ht => _).AeStronglyMeasurable measurableSet_Ioi
+    refine' (ContinuousAt.continuousOn fun t ht => _).AEStronglyMeasurable measurableSet_Ioi
     exact continuous_at_rpow_const _ _ (Or.inl <| (he'.trans ht).ne')
   · have : ∀ᵐ t : ℝ ∂volume.restrict (Ioi <| max e 1), ‖t ^ (s - 1) * f t‖ ≤ t ^ (s - 1 + -a) * d :=
       by
@@ -102,7 +102,7 @@ theorem mellin_convergent_top_of_isBigO {f : ℝ → ℝ}
 /-- If `f` is a locally integrable real-valued function which is `O(x ^ (-b))` at `0`, then for any
 `b < s`, its Mellin transform converges on some right neighbourhood of `0`. -/
 theorem mellin_convergent_zero_of_isBigO {b : ℝ} {f : ℝ → ℝ}
-    (hfc : AeStronglyMeasurable f <| volume.restrict (Ioi 0))
+    (hfc : AEStronglyMeasurable f <| volume.restrict (Ioi 0))
     (hf : IsBigO (𝓝[Ioi 0] 0) f fun t => t ^ (-b)) {s : ℝ} (hs : b < s) :
     ∃ c : ℝ, 0 < c ∧ IntegrableOn (fun t : ℝ => t ^ (s - 1) * f t) (Ioc 0 c) :=
   by
@@ -111,7 +111,7 @@ theorem mellin_convergent_zero_of_isBigO {b : ℝ} {f : ℝ → ℝ}
   obtain ⟨ε, hε, hε'⟩ := hd'
   refine' ⟨ε, hε, integrable_on_Ioc_iff_integrable_on_Ioo.mpr ⟨_, _⟩⟩
   · refine' ae_strongly_measurable.mul _ (hfc.mono_set Ioo_subset_Ioi_self)
-    refine' (ContinuousAt.continuousOn fun t ht => _).AeStronglyMeasurable measurableSet_Ioo
+    refine' (ContinuousAt.continuousOn fun t ht => _).AEStronglyMeasurable measurableSet_Ioo
     exact continuous_at_rpow_const _ _ (Or.inl ht.1.ne')
   · apply has_finite_integral.mono'
     · show has_finite_integral (fun t => d * t ^ (s - b - 1)) _
@@ -224,7 +224,7 @@ theorem mellin_has_deriv_of_isBigO_rpow [CompleteSpace E] [NormedSpace ℂ E] {a
   have h1 : ∀ᶠ z : ℂ in 𝓝 s, ae_strongly_measurable (F z) (volume.restrict <| Ioi 0) :=
     by
     refine' eventually_of_forall fun z => ae_strongly_measurable.smul _ hfc.ae_strongly_measurable
-    refine' ContinuousOn.aeStronglyMeasurable _ measurableSet_Ioi
+    refine' ContinuousOn.aEStronglyMeasurable _ measurableSet_Ioi
     refine' ContinuousAt.continuousOn fun t ht => _
     exact continuous_at_of_real_cpow_const _ _ (Or.inr <| ne_of_gt ht)
   have h2 : integrable_on (F s) (Ioi 0) :=

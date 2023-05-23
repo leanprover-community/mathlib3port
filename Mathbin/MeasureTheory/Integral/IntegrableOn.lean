@@ -40,7 +40,7 @@ variable [TopologicalSpace β] {l l' : Filter α} {f g : α → β} {μ ν : Mea
 ae strongly measurable w.r.t. `μ.restrict s` for some `s ∈ l`. -/
 def StronglyMeasurableAtFilter (f : α → β) (l : Filter α)
     (μ : Measure α := by exact MeasureTheory.MeasureSpace.volume) :=
-  ∃ s ∈ l, AeStronglyMeasurable f (μ.restrict s)
+  ∃ s ∈ l, AEStronglyMeasurable f (μ.restrict s)
 #align strongly_measurable_at_filter StronglyMeasurableAtFilter
 
 @[simp]
@@ -49,8 +49,8 @@ theorem strongly_measurable_at_bot {f : α → β} : StronglyMeasurableAtFilter 
 #align strongly_measurable_at_bot strongly_measurable_at_bot
 
 protected theorem StronglyMeasurableAtFilter.eventually (h : StronglyMeasurableAtFilter f l μ) :
-    ∀ᶠ s in l.smallSets, AeStronglyMeasurable f (μ.restrict s) :=
-  (eventually_small_sets' fun s t => AeStronglyMeasurable.mono_set).2 h
+    ∀ᶠ s in l.smallSets, AEStronglyMeasurable f (μ.restrict s) :=
+  (eventually_small_sets' fun s t => AEStronglyMeasurable.mono_set).2 h
 #align strongly_measurable_at_filter.eventually StronglyMeasurableAtFilter.eventually
 
 protected theorem StronglyMeasurableAtFilter.filter_mono (h : StronglyMeasurableAtFilter f l μ)
@@ -59,19 +59,19 @@ protected theorem StronglyMeasurableAtFilter.filter_mono (h : StronglyMeasurable
   ⟨s, h' hsl, hs⟩
 #align strongly_measurable_at_filter.filter_mono StronglyMeasurableAtFilter.filter_mono
 
-protected theorem MeasureTheory.AeStronglyMeasurable.stronglyMeasurableAtFilter
-    (h : AeStronglyMeasurable f μ) : StronglyMeasurableAtFilter f l μ :=
+protected theorem MeasureTheory.AEStronglyMeasurable.stronglyMeasurableAtFilter
+    (h : AEStronglyMeasurable f μ) : StronglyMeasurableAtFilter f l μ :=
   ⟨univ, univ_mem, by rwa [measure.restrict_univ]⟩
-#align measure_theory.ae_strongly_measurable.strongly_measurable_at_filter MeasureTheory.AeStronglyMeasurable.stronglyMeasurableAtFilter
+#align measure_theory.ae_strongly_measurable.strongly_measurable_at_filter MeasureTheory.AEStronglyMeasurable.stronglyMeasurableAtFilter
 
 theorem AeStronglyMeasurable.stronglyMeasurableAtFilter_of_mem {s}
-    (h : AeStronglyMeasurable f (μ.restrict s)) (hl : s ∈ l) : StronglyMeasurableAtFilter f l μ :=
+    (h : AEStronglyMeasurable f (μ.restrict s)) (hl : s ∈ l) : StronglyMeasurableAtFilter f l μ :=
   ⟨s, hl, h⟩
 #align ae_strongly_measurable.strongly_measurable_at_filter_of_mem AeStronglyMeasurable.stronglyMeasurableAtFilter_of_mem
 
 protected theorem MeasureTheory.StronglyMeasurable.stronglyMeasurableAtFilter
     (h : StronglyMeasurable f) : StronglyMeasurableAtFilter f l μ :=
-  h.AeStronglyMeasurable.StronglyMeasurableAtFilter
+  h.AEStronglyMeasurable.StronglyMeasurableAtFilter
 #align measure_theory.strongly_measurable.strongly_measurable_at_filter MeasureTheory.StronglyMeasurable.stronglyMeasurableAtFilter
 
 end
@@ -264,7 +264,7 @@ theorem MeasurePreserving.integrableOn_image [MeasurableSpace β] {e : α → β
 theorem integrable_indicator_iff (hs : MeasurableSet s) :
     Integrable (indicator s f) μ ↔ IntegrableOn f s μ := by
   simp [integrable_on, integrable, has_finite_integral, nnnorm_indicator_eq_indicator_nnnorm,
-    ENNReal.coe_indicator, lintegral_indicator _ hs, aeStronglyMeasurable_indicator_iff hs]
+    ENNReal.coe_indicator, lintegral_indicator _ hs, aestronglyMeasurable_indicator_iff hs]
 #align measure_theory.integrable_indicator_iff MeasureTheory.integrable_indicator_iff
 
 theorem IntegrableOn.integrable_indicator (h : IntegrableOn f s μ) (hs : MeasurableSet s) :
@@ -524,29 +524,29 @@ theorem ContinuousOn.aEMeasurable [TopologicalSpace α] [OpensMeasurableSpace α
 
 /-- A function which is continuous on a separable set `s` is almost everywhere strongly measurable
 with respect to `μ.restrict s`. -/
-theorem ContinuousOn.aeStronglyMeasurable_of_isSeparable [TopologicalSpace α]
+theorem ContinuousOn.aEStronglyMeasurable_of_isSeparable [TopologicalSpace α]
     [PseudoMetrizableSpace α] [OpensMeasurableSpace α] [TopologicalSpace β]
     [PseudoMetrizableSpace β] {f : α → β} {s : Set α} {μ : Measure α} (hf : ContinuousOn f s)
     (hs : MeasurableSet s) (h's : TopologicalSpace.IsSeparable s) :
-    AeStronglyMeasurable f (μ.restrict s) :=
+    AEStronglyMeasurable f (μ.restrict s) :=
   by
   letI := pseudo_metrizable_space_pseudo_metric α
   borelize β
-  rw [aeStronglyMeasurable_iff_aEMeasurable_separable]
+  rw [aestronglyMeasurable_iff_aemeasurable_separable]
   refine' ⟨hf.ae_measurable hs, f '' s, hf.is_separable_image h's, _⟩
   exact mem_of_superset (self_mem_ae_restrict hs) (subset_preimage_image _ _)
-#align continuous_on.ae_strongly_measurable_of_is_separable ContinuousOn.aeStronglyMeasurable_of_isSeparable
+#align continuous_on.ae_strongly_measurable_of_is_separable ContinuousOn.aEStronglyMeasurable_of_isSeparable
 
 /-- A function which is continuous on a set `s` is almost everywhere strongly measurable with
 respect to `μ.restrict s` when either the source space or the target space is second-countable. -/
-theorem ContinuousOn.aeStronglyMeasurable [TopologicalSpace α] [TopologicalSpace β]
+theorem ContinuousOn.aEStronglyMeasurable [TopologicalSpace α] [TopologicalSpace β]
     [h : SecondCountableTopologyEither α β] [OpensMeasurableSpace α] [PseudoMetrizableSpace β]
     {f : α → β} {s : Set α} {μ : Measure α} (hf : ContinuousOn f s) (hs : MeasurableSet s) :
-    AeStronglyMeasurable f (μ.restrict s) :=
+    AEStronglyMeasurable f (μ.restrict s) :=
   by
   borelize β
   refine'
-    aeStronglyMeasurable_iff_aEMeasurable_separable.2
+    aestronglyMeasurable_iff_aemeasurable_separable.2
       ⟨hf.ae_measurable hs, f '' s, _,
         mem_of_superset (self_mem_ae_restrict hs) (subset_preimage_image _ _)⟩
   cases h.out
@@ -557,22 +557,22 @@ theorem ContinuousOn.aeStronglyMeasurable [TopologicalSpace α] [TopologicalSpac
     ext x
     simp
   · exact is_separable_of_separable_space _
-#align continuous_on.ae_strongly_measurable ContinuousOn.aeStronglyMeasurable
+#align continuous_on.ae_strongly_measurable ContinuousOn.aEStronglyMeasurable
 
 /-- A function which is continuous on a compact set `s` is almost everywhere strongly measurable
 with respect to `μ.restrict s`. -/
-theorem ContinuousOn.aeStronglyMeasurable_of_isCompact [TopologicalSpace α] [OpensMeasurableSpace α]
+theorem ContinuousOn.aEStronglyMeasurable_of_isCompact [TopologicalSpace α] [OpensMeasurableSpace α]
     [TopologicalSpace β] [PseudoMetrizableSpace β] {f : α → β} {s : Set α} {μ : Measure α}
     (hf : ContinuousOn f s) (hs : IsCompact s) (h's : MeasurableSet s) :
-    AeStronglyMeasurable f (μ.restrict s) :=
+    AEStronglyMeasurable f (μ.restrict s) :=
   by
   letI := pseudo_metrizable_space_pseudo_metric β
   borelize β
-  rw [aeStronglyMeasurable_iff_aEMeasurable_separable]
+  rw [aestronglyMeasurable_iff_aemeasurable_separable]
   refine' ⟨hf.ae_measurable h's, f '' s, _, _⟩
   · exact (hs.image_of_continuous_on hf).IsSeparable
   · exact mem_of_superset (self_mem_ae_restrict h's) (subset_preimage_image _ _)
-#align continuous_on.ae_strongly_measurable_of_is_compact ContinuousOn.aeStronglyMeasurable_of_isCompact
+#align continuous_on.ae_strongly_measurable_of_is_compact ContinuousOn.aEStronglyMeasurable_of_isCompact
 
 theorem ContinuousOn.integrable_at_nhdsWithin_of_isSeparable [TopologicalSpace α]
     [PseudoMetrizableSpace α] [OpensMeasurableSpace α] {μ : Measure α} [LocallyFiniteMeasure μ]
@@ -607,7 +607,7 @@ theorem ContinuousOn.stronglyMeasurableAtFilter [TopologicalSpace α] [OpensMeas
     [TopologicalSpace β] [PseudoMetrizableSpace β] [SecondCountableTopologyEither α β] {f : α → β}
     {s : Set α} {μ : Measure α} (hs : IsOpen s) (hf : ContinuousOn f s) :
     ∀ x ∈ s, StronglyMeasurableAtFilter f (𝓝 x) μ := fun x hx =>
-  ⟨s, IsOpen.mem_nhds hs hx, hf.AeStronglyMeasurable hs.MeasurableSet⟩
+  ⟨s, IsOpen.mem_nhds hs hx, hf.AEStronglyMeasurable hs.MeasurableSet⟩
 #align continuous_on.strongly_measurable_at_filter ContinuousOn.stronglyMeasurableAtFilter
 
 theorem ContinuousAt.stronglyMeasurableAtFilter [TopologicalSpace α] [OpensMeasurableSpace α]
@@ -629,7 +629,7 @@ theorem ContinuousOn.stronglyMeasurableAtFilter_nhdsWithin {α β : Type _} [Mea
     [SecondCountableTopologyEither α β] {f : α → β} {s : Set α} {μ : Measure α}
     (hf : ContinuousOn f s) (hs : MeasurableSet s) (x : α) :
     StronglyMeasurableAtFilter f (𝓝[s] x) μ :=
-  ⟨s, self_mem_nhdsWithin, hf.AeStronglyMeasurable hs⟩
+  ⟨s, self_mem_nhdsWithin, hf.AEStronglyMeasurable hs⟩
 #align continuous_on.strongly_measurable_at_filter_nhds_within ContinuousOn.stronglyMeasurableAtFilter_nhdsWithin
 
 /-! ### Lemmas about adding and removing interval boundaries

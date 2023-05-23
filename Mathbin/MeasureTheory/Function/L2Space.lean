@@ -44,7 +44,7 @@ theorem Memℒp.integrable_sq {f : α → ℝ} (h : Memℒp f 2 μ) : Integrable
   simpa [← mem_ℒp_one_iff_integrable] using h.norm_rpow two_ne_zero ENNReal.two_ne_top
 #align measure_theory.mem_ℒp.integrable_sq MeasureTheory.Memℒp.integrable_sq
 
-theorem memℒp_two_iff_integrable_sq_norm {f : α → F} (hf : AeStronglyMeasurable f μ) :
+theorem memℒp_two_iff_integrable_sq_norm {f : α → F} (hf : AEStronglyMeasurable f μ) :
     Memℒp f 2 μ ↔ Integrable (fun x => ‖f x‖ ^ 2) μ :=
   by
   rw [← mem_ℒp_one_iff_integrable]
@@ -53,7 +53,7 @@ theorem memℒp_two_iff_integrable_sq_norm {f : α → F} (hf : AeStronglyMeasur
   · rw [div_eq_mul_inv, ENNReal.mul_inv_cancel two_ne_zero ENNReal.two_ne_top]
 #align measure_theory.mem_ℒp_two_iff_integrable_sq_norm MeasureTheory.memℒp_two_iff_integrable_sq_norm
 
-theorem memℒp_two_iff_integrable_sq {f : α → ℝ} (hf : AeStronglyMeasurable f μ) :
+theorem memℒp_two_iff_integrable_sq {f : α → ℝ} (hf : AEStronglyMeasurable f μ) :
     Memℒp f 2 μ ↔ Integrable (fun x => f x ^ 2) μ :=
   by
   convert mem_ℒp_two_iff_integrable_sq_norm hf
@@ -73,12 +73,12 @@ variable {E 𝕜 : Type _} [IsROrC 𝕜] [NormedAddCommGroup E] [InnerProductSpa
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 E _ x y
 
 theorem Memℒp.const_inner (c : E) {f : α → E} (hf : Memℒp f p μ) : Memℒp (fun a => ⟪c, f a⟫) p μ :=
-  hf.of_le_mul (AeStronglyMeasurable.inner aeStronglyMeasurable_const hf.1)
+  hf.of_le_mul (AEStronglyMeasurable.inner aestronglyMeasurable_const hf.1)
     (eventually_of_forall fun x => norm_inner_le_norm _ _)
 #align measure_theory.mem_ℒp.const_inner MeasureTheory.Memℒp.const_inner
 
 theorem Memℒp.inner_const {f : α → E} (hf : Memℒp f p μ) (c : E) : Memℒp (fun a => ⟪f a, c⟫) p μ :=
-  hf.of_le_mul (AeStronglyMeasurable.inner hf.1 aeStronglyMeasurable_const)
+  hf.of_le_mul (AEStronglyMeasurable.inner hf.1 aestronglyMeasurable_const)
     (eventually_of_forall fun x => by
       rw [mul_comm]
       exact norm_inner_le_norm _ _)
@@ -149,8 +149,8 @@ theorem snorm_inner_lt_top (f g : α →₂[μ] E) : snorm (fun x : α => ⟪f x
       _ ≤ ‖‖f x‖ ^ 2 + ‖g x‖ ^ 2‖ := (two_mul_le_add_sq _ _).trans (le_abs_self _)
       
   refine' (snorm_mono_ae (ae_of_all _ h)).trans_lt ((snorm_add_le _ _ le_rfl).trans_lt _)
-  · exact ((Lp.ae_strongly_measurable f).norm.AEMeasurable.pow_const _).AeStronglyMeasurable
-  · exact ((Lp.ae_strongly_measurable g).norm.AEMeasurable.pow_const _).AeStronglyMeasurable
+  · exact ((Lp.ae_strongly_measurable f).norm.AEMeasurable.pow_const _).AEStronglyMeasurable
+  · exact ((Lp.ae_strongly_measurable g).norm.AEMeasurable.pow_const _).AEStronglyMeasurable
   rw [ENNReal.add_lt_top]
   exact ⟨snorm_rpow_two_norm_lt_top f, snorm_rpow_two_norm_lt_top g⟩
 #align measure_theory.L2.snorm_inner_lt_top MeasureTheory.L2.snorm_inner_lt_top
@@ -176,7 +176,7 @@ theorem integral_inner_eq_sq_snorm (f : α →₂[μ] E) :
   rw [integral_eq_lintegral_of_nonneg_ae]
   rotate_left
   · exact Filter.eventually_of_forall fun x => sq_nonneg _
-  · exact ((Lp.ae_strongly_measurable f).norm.AEMeasurable.pow_const _).AeStronglyMeasurable
+  · exact ((Lp.ae_strongly_measurable f).norm.AEMeasurable.pow_const _).AEStronglyMeasurable
   congr
   ext1 x
   have h_two : (2 : ℝ) = ((2 : ℕ) : ℝ) := by simp
@@ -200,7 +200,7 @@ private theorem norm_sq_eq_inner' (f : α →₂[μ] E) : ‖f‖ ^ 2 = IsROrC.r
 
 theorem mem_L1_inner (f g : α →₂[μ] E) :
     AeEqFun.mk (fun x => ⟪f x, g x⟫)
-        ((lp.aeStronglyMeasurable f).inner (lp.aeStronglyMeasurable g)) ∈
+        ((lp.aEStronglyMeasurable f).inner (lp.aEStronglyMeasurable g)) ∈
       lp 𝕜 1 μ :=
   by
   simp_rw [mem_Lp_iff_snorm_lt_top, snorm_ae_eq_fun]
@@ -210,7 +210,7 @@ theorem mem_L1_inner (f g : α →₂[μ] E) :
 theorem integrable_inner (f g : α →₂[μ] E) : Integrable (fun x : α => ⟪f x, g x⟫) μ :=
   (integrable_congr
         (AeEqFun.coeFn_mk (fun x => ⟪f x, g x⟫)
-          ((lp.aeStronglyMeasurable f).inner (lp.aeStronglyMeasurable g)))).mp
+          ((lp.aEStronglyMeasurable f).inner (lp.aEStronglyMeasurable g)))).mp
     (AeEqFun.integrable_iff_mem_L1.mpr (mem_L1_inner f g))
 #align measure_theory.L2.integrable_inner MeasureTheory.L2.integrable_inner
 

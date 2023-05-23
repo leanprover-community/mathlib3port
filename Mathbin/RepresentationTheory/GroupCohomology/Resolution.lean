@@ -227,7 +227,7 @@ the lefthand side is `tensor_product.left_module`, whilst that of the righthand 
 of the righthand side. -/
 def ofMulActionBasisAux :
     MonoidAlgebra k G ⊗[k] ((Fin n → G) →₀ k) ≃ₗ[MonoidAlgebra k G]
-      (ofMulAction k G (Fin (n + 1) → G)).AsModule :=
+      (ofMulAction k G (Fin (n + 1) → G)).asModule :=
   { (Rep.equivalenceModuleMonoidAlgebra.1.mapIso (diagonalSucc k G n).symm).toLinearEquiv with
     map_smul' := fun r x =>
       by
@@ -244,7 +244,7 @@ def ofMulActionBasisAux :
 /-- A `k[G]`-basis of `k[Gⁿ⁺¹]`, coming from the `k[G]`-linear isomorphism
 `k[G] ⊗ₖ k[Gⁿ] ≃ k[Gⁿ⁺¹].` -/
 def ofMulActionBasis :
-    Basis (Fin n → G) (MonoidAlgebra k G) (ofMulAction k G (Fin (n + 1) → G)).AsModule :=
+    Basis (Fin n → G) (MonoidAlgebra k G) (ofMulAction k G (Fin (n + 1) → G)).asModule :=
   @Basis.map _ (MonoidAlgebra k G) (MonoidAlgebra k G ⊗[k] ((Fin n → G) →₀ k)) _ _ _ _ _ _
     (@Algebra.TensorProduct.basis k _ (MonoidAlgebra k G) _ _ ((Fin n → G) →₀ k) _ _ (Fin n → G)
       ⟨LinearEquiv.refl k _⟩)
@@ -252,7 +252,7 @@ def ofMulActionBasis :
 #align group_cohomology.resolution.of_mul_action_basis GroupCohomology.Resolution.ofMulActionBasis
 
 theorem ofMulAction_free :
-    Module.Free (MonoidAlgebra k G) (ofMulAction k G (Fin (n + 1) → G)).AsModule :=
+    Module.Free (MonoidAlgebra k G) (ofMulAction k G (Fin (n + 1) → G)).asModule :=
   Module.Free.of_basis (ofMulActionBasis k G n)
 #align group_cohomology.resolution.of_mul_action_free GroupCohomology.Resolution.ofMulAction_free
 
@@ -466,7 +466,7 @@ theorem x_projective (G : Type u) [Group G] (n : ℕ) :
     Projective ((GroupCohomology.resolution k G).pt n) :=
   Rep.equivalenceModuleMonoidAlgebra.toAdjunction.projective_of_map_projective _ <|
     @ModuleCat.projective_of_free.{u} _ _
-      (ModuleCat.of (MonoidAlgebra k G) (Representation.ofMulAction k G (Fin (n + 1) → G)).AsModule)
+      (ModuleCat.of (MonoidAlgebra k G) (Representation.ofMulAction k G (Fin (n + 1) → G)).asModule)
       _ (ofMulActionBasis k G n)
 #align group_cohomology.resolution.X_projective GroupCohomology.resolution.x_projective
 

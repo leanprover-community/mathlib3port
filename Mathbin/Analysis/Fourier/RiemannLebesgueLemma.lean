@@ -204,7 +204,7 @@ theorem tendsto_integral_exp_inner_smul_cocompact_of_continuous_compact_support 
     exact one_half_pos
   have bdA2 := norm_set_integral_le_of_norm_le_const (hB_vol.trans_lt ENNReal.coe_lt_top) bdA _
   swap
-  · apply Continuous.aeStronglyMeasurable
+  · apply Continuous.aestronglyMeasurable
     exact
       continuous_norm.comp <|
         Continuous.sub hf1 <| Continuous.comp hf1 <| continuous_id'.add continuous_const

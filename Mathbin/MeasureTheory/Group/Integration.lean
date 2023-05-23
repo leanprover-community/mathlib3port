@@ -171,7 +171,7 @@ variable [MeasurableInv G]
 @[to_additive]
 theorem Integrable.comp_div_left {f : G → F} [IsInvInvariant μ] [IsMulLeftInvariant μ]
     (hf : Integrable f μ) (g : G) : Integrable (fun t => f (g / t)) μ :=
-  ((measurePreserving_div_left μ g).integrable_comp hf.AeStronglyMeasurable).mpr hf
+  ((measurePreserving_div_left μ g).integrable_comp hf.AEStronglyMeasurable).mpr hf
 #align measure_theory.integrable.comp_div_left MeasureTheory.Integrable.comp_div_left
 #align measure_theory.integrable.comp_sub_left MeasureTheory.Integrable.comp_sub_left
 

@@ -377,34 +377,34 @@ protected theorem measure_eq (hs : IsFundamentalDomain G s μ) (ht : IsFundament
 #align measure_theory.is_add_fundamental_domain.measure_eq MeasureTheory.IsAddFundamentalDomain.measure_eq
 
 @[to_additive]
-protected theorem aeStronglyMeasurable_on_iff {β : Type _} [TopologicalSpace β]
+protected theorem aEStronglyMeasurable_on_iff {β : Type _} [TopologicalSpace β]
     [PseudoMetrizableSpace β] (hs : IsFundamentalDomain G s μ) (ht : IsFundamentalDomain G t μ)
     {f : α → β} (hf : ∀ (g : G) (x), f (g • x) = f x) :
-    AeStronglyMeasurable f (μ.restrict s) ↔ AeStronglyMeasurable f (μ.restrict t) :=
+    AEStronglyMeasurable f (μ.restrict s) ↔ AEStronglyMeasurable f (μ.restrict t) :=
   calc
-    AeStronglyMeasurable f (μ.restrict s) ↔
-        AeStronglyMeasurable f (Measure.sum fun g : G => μ.restrict (g • t ∩ s)) :=
+    AEStronglyMeasurable f (μ.restrict s) ↔
+        AEStronglyMeasurable f (Measure.sum fun g : G => μ.restrict (g • t ∩ s)) :=
       by
       simp only [← ht.restrict_restrict,
         ht.sum_restrict_of_ac restrict_le_self.absolutely_continuous]
-    _ ↔ ∀ g : G, AeStronglyMeasurable f (μ.restrict (g • (g⁻¹ • s ∩ t))) := by
-      simp only [smul_set_inter, inter_comm, smul_inv_smul, aeStronglyMeasurable_sum_measure_iff]
-    _ ↔ ∀ g : G, AeStronglyMeasurable f (μ.restrict (g⁻¹ • (g⁻¹⁻¹ • s ∩ t))) :=
+    _ ↔ ∀ g : G, AEStronglyMeasurable f (μ.restrict (g • (g⁻¹ • s ∩ t))) := by
+      simp only [smul_set_inter, inter_comm, smul_inv_smul, aestronglyMeasurable_sum_measure_iff]
+    _ ↔ ∀ g : G, AEStronglyMeasurable f (μ.restrict (g⁻¹ • (g⁻¹⁻¹ • s ∩ t))) :=
       inv_surjective.forall
-    _ ↔ ∀ g : G, AeStronglyMeasurable f (μ.restrict (g⁻¹ • (g • s ∩ t))) := by simp only [inv_inv]
-    _ ↔ ∀ g : G, AeStronglyMeasurable f (μ.restrict (g • s ∩ t)) :=
+    _ ↔ ∀ g : G, AEStronglyMeasurable f (μ.restrict (g⁻¹ • (g • s ∩ t))) := by simp only [inv_inv]
+    _ ↔ ∀ g : G, AEStronglyMeasurable f (μ.restrict (g • s ∩ t)) :=
       by
       refine' forall_congr' fun g => _
       have he : MeasurableEmbedding ((· • ·) g⁻¹ : α → α) := measurableEmbedding_const_smul _
       rw [← image_smul, ←
-        ((measure_preserving_smul g⁻¹ μ).restrict_image_emb he _).aeStronglyMeasurable_comp_iff he]
+        ((measure_preserving_smul g⁻¹ μ).restrict_image_emb he _).aestronglyMeasurable_comp_iff he]
       simp only [(· ∘ ·), hf]
-    _ ↔ AeStronglyMeasurable f (μ.restrict t) := by
-      simp only [← aeStronglyMeasurable_sum_measure_iff, ← hs.restrict_restrict,
+    _ ↔ AEStronglyMeasurable f (μ.restrict t) := by
+      simp only [← aestronglyMeasurable_sum_measure_iff, ← hs.restrict_restrict,
         hs.sum_restrict_of_ac restrict_le_self.absolutely_continuous]
     
-#align measure_theory.is_fundamental_domain.ae_strongly_measurable_on_iff MeasureTheory.IsFundamentalDomain.aeStronglyMeasurable_on_iff
-#align measure_theory.is_add_fundamental_domain.ae_strongly_measurable_on_iff MeasureTheory.IsAddFundamentalDomain.aeStronglyMeasurable_on_iff
+#align measure_theory.is_fundamental_domain.ae_strongly_measurable_on_iff MeasureTheory.IsFundamentalDomain.aEStronglyMeasurable_on_iff
+#align measure_theory.is_add_fundamental_domain.ae_strongly_measurable_on_iff MeasureTheory.IsAddFundamentalDomain.aEStronglyMeasurable_on_iff
 
 @[to_additive]
 protected theorem hasFiniteIntegral_on_iff (hs : IsFundamentalDomain G s μ)
@@ -420,7 +420,7 @@ protected theorem hasFiniteIntegral_on_iff (hs : IsFundamentalDomain G s μ)
 @[to_additive]
 protected theorem integrableOn_iff (hs : IsFundamentalDomain G s μ) (ht : IsFundamentalDomain G t μ)
     {f : α → E} (hf : ∀ (g : G) (x), f (g • x) = f x) : IntegrableOn f s μ ↔ IntegrableOn f t μ :=
-  and_congr (hs.aeStronglyMeasurable_on_iff ht hf) (hs.hasFiniteIntegral_on_iff ht hf)
+  and_congr (hs.aEStronglyMeasurable_on_iff ht hf) (hs.hasFiniteIntegral_on_iff ht hf)
 #align measure_theory.is_fundamental_domain.integrable_on_iff MeasureTheory.IsFundamentalDomain.integrableOn_iff
 #align measure_theory.is_add_fundamental_domain.integrable_on_iff MeasureTheory.IsAddFundamentalDomain.integrableOn_iff
 

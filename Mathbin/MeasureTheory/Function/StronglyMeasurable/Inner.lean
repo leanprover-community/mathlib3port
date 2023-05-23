@@ -42,21 +42,21 @@ variable {m : MeasurableSpace α} {μ : Measure α} {𝕜 : Type _} {E : Type _}
 -- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 
-protected theorem re {f : α → 𝕜} (hf : AeStronglyMeasurable f μ) :
-    AeStronglyMeasurable (fun x => IsROrC.re (f x)) μ :=
-  IsROrC.continuous_re.comp_aeStronglyMeasurable hf
-#align measure_theory.ae_strongly_measurable.re MeasureTheory.AeStronglyMeasurable.re
+protected theorem re {f : α → 𝕜} (hf : AEStronglyMeasurable f μ) :
+    AEStronglyMeasurable (fun x => IsROrC.re (f x)) μ :=
+  IsROrC.continuous_re.comp_aestronglyMeasurable hf
+#align measure_theory.ae_strongly_measurable.re MeasureTheory.AEStronglyMeasurable.re
 
-protected theorem im {f : α → 𝕜} (hf : AeStronglyMeasurable f μ) :
-    AeStronglyMeasurable (fun x => IsROrC.im (f x)) μ :=
-  IsROrC.continuous_im.comp_aeStronglyMeasurable hf
-#align measure_theory.ae_strongly_measurable.im MeasureTheory.AeStronglyMeasurable.im
+protected theorem im {f : α → 𝕜} (hf : AEStronglyMeasurable f μ) :
+    AEStronglyMeasurable (fun x => IsROrC.im (f x)) μ :=
+  IsROrC.continuous_im.comp_aestronglyMeasurable hf
+#align measure_theory.ae_strongly_measurable.im MeasureTheory.AEStronglyMeasurable.im
 
 protected theorem inner {m : MeasurableSpace α} {μ : Measure α} {f g : α → E}
-    (hf : AeStronglyMeasurable f μ) (hg : AeStronglyMeasurable g μ) :
-    AeStronglyMeasurable (fun x => ⟪f x, g x⟫) μ :=
-  continuous_inner.comp_aeStronglyMeasurable (hf.prod_mk hg)
-#align measure_theory.ae_strongly_measurable.inner MeasureTheory.AeStronglyMeasurable.inner
+    (hf : AEStronglyMeasurable f μ) (hg : AEStronglyMeasurable g μ) :
+    AEStronglyMeasurable (fun x => ⟪f x, g x⟫) μ :=
+  continuous_inner.comp_aestronglyMeasurable (hf.prod_mk hg)
+#align measure_theory.ae_strongly_measurable.inner MeasureTheory.AEStronglyMeasurable.inner
 
 end AeStronglyMeasurable
 

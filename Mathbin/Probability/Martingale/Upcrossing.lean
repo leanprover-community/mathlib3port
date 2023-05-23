@@ -936,7 +936,7 @@ theorem Adapted.integrable_upcrossingsBefore [FiniteMeasure μ] (hf : Adapted �
     refine' eventually_of_forall fun ω => _
     rw [Real.norm_eq_abs, Nat.abs_cast, Nat.cast_le]
     refine' upcrossings_before_le _ _ hab
-  ⟨Measurable.aeStronglyMeasurable
+  ⟨Measurable.aestronglyMeasurable
       (measurable_from_top.comp (hf.measurable_upcrossings_before hab)),
     has_finite_integral_of_bounded this⟩
 #align measure_theory.adapted.integrable_upcrossings_before MeasureTheory.Adapted.integrable_upcrossingsBefore

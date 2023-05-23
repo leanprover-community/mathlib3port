@@ -151,26 +151,26 @@ theorem ae_mem_snd (h : IdentDistrib f g μ ν) {t : Set γ} (tmeas : Measurable
 /-- In a second countable topology, the first function in an identically distributed pair is a.e.
 strongly measurable. So is the second function, but use `h.symm.ae_strongly_measurable_fst` as
 `h.ae_strongly_measurable_snd` has a different meaning.-/
-theorem aeStronglyMeasurable_fst [TopologicalSpace γ] [MetrizableSpace γ] [OpensMeasurableSpace γ]
-    [SecondCountableTopology γ] (h : IdentDistrib f g μ ν) : AeStronglyMeasurable f μ :=
-  h.aEMeasurable_fst.AeStronglyMeasurable
-#align probability_theory.ident_distrib.ae_strongly_measurable_fst ProbabilityTheory.IdentDistrib.aeStronglyMeasurable_fst
+theorem aEStronglyMeasurable_fst [TopologicalSpace γ] [MetrizableSpace γ] [OpensMeasurableSpace γ]
+    [SecondCountableTopology γ] (h : IdentDistrib f g μ ν) : AEStronglyMeasurable f μ :=
+  h.aEMeasurable_fst.AEStronglyMeasurable
+#align probability_theory.ident_distrib.ae_strongly_measurable_fst ProbabilityTheory.IdentDistrib.aEStronglyMeasurable_fst
 
 /-- If `f` and `g` are identically distributed and `f` is a.e. strongly measurable, so is `g`. -/
-theorem aeStronglyMeasurable_snd [TopologicalSpace γ] [MetrizableSpace γ] [BorelSpace γ]
-    (h : IdentDistrib f g μ ν) (hf : AeStronglyMeasurable f μ) : AeStronglyMeasurable g ν :=
+theorem aEStronglyMeasurable_snd [TopologicalSpace γ] [MetrizableSpace γ] [BorelSpace γ]
+    (h : IdentDistrib f g μ ν) (hf : AEStronglyMeasurable f μ) : AEStronglyMeasurable g ν :=
   by
-  refine' aeStronglyMeasurable_iff_aEMeasurable_separable.2 ⟨h.ae_measurable_snd, _⟩
-  rcases(aeStronglyMeasurable_iff_aEMeasurable_separable.1 hf).2 with ⟨t, t_sep, ht⟩
+  refine' aestronglyMeasurable_iff_aemeasurable_separable.2 ⟨h.ae_measurable_snd, _⟩
+  rcases(aestronglyMeasurable_iff_aemeasurable_separable.1 hf).2 with ⟨t, t_sep, ht⟩
   refine' ⟨closure t, t_sep.closure, _⟩
   apply h.ae_mem_snd is_closed_closure.measurable_set
   filter_upwards [ht]with x hx using subset_closure hx
-#align probability_theory.ident_distrib.ae_strongly_measurable_snd ProbabilityTheory.IdentDistrib.aeStronglyMeasurable_snd
+#align probability_theory.ident_distrib.ae_strongly_measurable_snd ProbabilityTheory.IdentDistrib.aEStronglyMeasurable_snd
 
-theorem aeStronglyMeasurable_iff [TopologicalSpace γ] [MetrizableSpace γ] [BorelSpace γ]
-    (h : IdentDistrib f g μ ν) : AeStronglyMeasurable f μ ↔ AeStronglyMeasurable g ν :=
-  ⟨fun hf => h.aeStronglyMeasurable_snd hf, fun hg => h.symm.aeStronglyMeasurable_snd hg⟩
-#align probability_theory.ident_distrib.ae_strongly_measurable_iff ProbabilityTheory.IdentDistrib.aeStronglyMeasurable_iff
+theorem aEStronglyMeasurable_iff [TopologicalSpace γ] [MetrizableSpace γ] [BorelSpace γ]
+    (h : IdentDistrib f g μ ν) : AEStronglyMeasurable f μ ↔ AEStronglyMeasurable g ν :=
+  ⟨fun hf => h.aEStronglyMeasurable_snd hf, fun hg => h.symm.aEStronglyMeasurable_snd hg⟩
+#align probability_theory.ident_distrib.ae_strongly_measurable_iff ProbabilityTheory.IdentDistrib.aEStronglyMeasurable_iff
 
 theorem essSup_eq [ConditionallyCompleteLinearOrder γ] [TopologicalSpace γ] [OpensMeasurableSpace γ]
     [OrderClosedTopology γ] (h : IdentDistrib f g μ ν) : essSup f μ = essSup g ν :=
@@ -194,8 +194,8 @@ theorem integral_eq [NormedAddCommGroup γ] [NormedSpace ℝ γ] [CompleteSpace 
   by_cases hf : ae_strongly_measurable f μ
   · have A : ae_strongly_measurable id (measure.map f μ) :=
       by
-      rw [aeStronglyMeasurable_iff_aEMeasurable_separable]
-      rcases(aeStronglyMeasurable_iff_aEMeasurable_separable.1 hf).2 with ⟨t, t_sep, ht⟩
+      rw [aestronglyMeasurable_iff_aemeasurable_separable]
+      rcases(aestronglyMeasurable_iff_aemeasurable_separable.1 hf).2 with ⟨t, t_sep, ht⟩
       refine' ⟨aemeasurable_id, ⟨closure t, t_sep.closure, _⟩⟩
       rw [ae_map_iff h.ae_measurable_fst]
       · filter_upwards [ht]with x hx using subset_closure hx
@@ -361,7 +361,7 @@ theorem Memℒp.uniformIntegrable_of_identDistrib {ι : Type _} {f : ι → α �
     UniformIntegrable f p μ :=
   by
   have hfmeas : ∀ i, ae_strongly_measurable (f i) μ := fun i =>
-    (hf i).aeStronglyMeasurable_iff.2 hℒp.1
+    (hf i).aEStronglyMeasurable_iff.2 hℒp.1
   set g : ι → α → E := fun i => (hfmeas i).some
   have hgmeas : ∀ i, strongly_measurable (g i) := fun i => (Exists.choose_spec <| hfmeas i).1
   have hgeq : ∀ i, g i =ᵐ[μ] f i := fun i => (Exists.choose_spec <| hfmeas i).2.symm

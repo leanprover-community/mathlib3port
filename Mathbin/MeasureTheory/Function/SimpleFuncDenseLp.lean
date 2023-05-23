@@ -146,11 +146,11 @@ theorem memℒp_approxOn [BorelSpace E] {f : β → E} {μ : Measure β} (fmeas 
     (hf : Memℒp f p μ) {s : Set E} {y₀ : E} (h₀ : y₀ ∈ s) [SeparableSpace s]
     (hi₀ : Memℒp (fun x => y₀) p μ) (n : ℕ) : Memℒp (approxOn f fmeas s y₀ h₀ n) p μ :=
   by
-  refine' ⟨(approx_on f fmeas s y₀ h₀ n).AeStronglyMeasurable, _⟩
+  refine' ⟨(approx_on f fmeas s y₀ h₀ n).AEStronglyMeasurable, _⟩
   suffices snorm (fun x => approx_on f fmeas s y₀ h₀ n x - y₀) p μ < ⊤
     by
     have : mem_ℒp (fun x => approx_on f fmeas s y₀ h₀ n x - y₀) p μ :=
-      ⟨(approx_on f fmeas s y₀ h₀ n - const β y₀).AeStronglyMeasurable, this⟩
+      ⟨(approx_on f fmeas s y₀ h₀ n - const β y₀).AEStronglyMeasurable, this⟩
     convert snorm_add_lt_top this hi₀
     ext x
     simp
@@ -308,12 +308,12 @@ theorem exists_forall_norm_le (f : α →ₛ F) : ∃ C, ∀ x, ‖f x‖ ≤ C 
 #align measure_theory.simple_func.exists_forall_norm_le MeasureTheory.SimpleFunc.exists_forall_norm_le
 
 theorem memℒp_zero (f : α →ₛ E) (μ : Measure α) : Memℒp f 0 μ :=
-  memℒp_zero_iff_aeStronglyMeasurable.mpr f.AeStronglyMeasurable
+  memℒp_zero_iff_aEStronglyMeasurable.mpr f.AEStronglyMeasurable
 #align measure_theory.simple_func.mem_ℒp_zero MeasureTheory.SimpleFunc.memℒp_zero
 
 theorem memℒp_top (f : α →ₛ E) (μ : Measure α) : Memℒp f ∞ μ :=
   let ⟨C, hfC⟩ := f.exists_forall_norm_le
-  memℒp_top_of_bound f.AeStronglyMeasurable C <| eventually_of_forall hfC
+  memℒp_top_of_bound f.AEStronglyMeasurable C <| eventually_of_forall hfC
 #align measure_theory.simple_func.mem_ℒp_top MeasureTheory.SimpleFunc.memℒp_top
 
 protected theorem snorm'_eq {p : ℝ} (f : α →ₛ F) (μ : Measure α) :
@@ -409,7 +409,7 @@ theorem integrable_pair {f : α →ₛ E} {g : α →ₛ F} :
 theorem memℒp_of_finiteMeasure (f : α →ₛ E) (p : ℝ≥0∞) (μ : Measure α) [FiniteMeasure μ] :
     Memℒp f p μ :=
   let ⟨C, hfC⟩ := f.exists_forall_norm_le
-  Memℒp.of_bound f.AeStronglyMeasurable C <| eventually_of_forall hfC
+  Memℒp.of_bound f.AEStronglyMeasurable C <| eventually_of_forall hfC
 #align measure_theory.simple_func.mem_ℒp_of_is_finite_measure MeasureTheory.SimpleFunc.memℒp_of_finiteMeasure
 
 theorem integrable_of_finiteMeasure [FiniteMeasure μ] (f : α →ₛ E) : Integrable f μ :=
@@ -469,7 +469,7 @@ variable (E)
     function. -/
 def simpleFunc : AddSubgroup (lp E p μ)
     where
-  carrier := { f : lp E p μ | ∃ s : α →ₛ E, (AeEqFun.mk s s.AeStronglyMeasurable : α →ₘ[μ] E) = f }
+  carrier := { f : lp E p μ | ∃ s : α →ₛ E, (AeEqFun.mk s s.AEStronglyMeasurable : α →ₘ[μ] E) = f }
   zero_mem' := ⟨0, rfl⟩
   add_mem' := fun f g ⟨s, hs⟩ ⟨t, ht⟩ =>
     ⟨s + t, by
@@ -577,7 +577,7 @@ theorem toLp_eq_toLp (f : α →ₛ E) (hf : Memℒp f p μ) : (toLp f hf : lp E
 #align measure_theory.Lp.simple_func.to_Lp_eq_to_Lp MeasureTheory.lp.simpleFunc.toLp_eq_toLp
 
 theorem toLp_eq_mk (f : α →ₛ E) (hf : Memℒp f p μ) :
-    (toLp f hf : α →ₘ[μ] E) = AeEqFun.mk f f.AeStronglyMeasurable :=
+    (toLp f hf : α →ₘ[μ] E) = AeEqFun.mk f f.AEStronglyMeasurable :=
   rfl
 #align measure_theory.Lp.simple_func.to_Lp_eq_mk MeasureTheory.lp.simpleFunc.toLp_eq_mk
 
@@ -640,16 +640,16 @@ protected theorem aEMeasurable [MeasurableSpace E] (f : lp.simpleFunc E p μ) :
   (simpleFunc.measurable f).AEMeasurable
 #align measure_theory.Lp.simple_func.ae_measurable MeasureTheory.lp.simpleFunc.aEMeasurable
 
-protected theorem aeStronglyMeasurable (f : lp.simpleFunc E p μ) :
-    AeStronglyMeasurable (toSimpleFunc f) μ :=
-  (simpleFunc.stronglyMeasurable f).AeStronglyMeasurable
-#align measure_theory.Lp.simple_func.ae_strongly_measurable MeasureTheory.lp.simpleFunc.aeStronglyMeasurable
+protected theorem aEStronglyMeasurable (f : lp.simpleFunc E p μ) :
+    AEStronglyMeasurable (toSimpleFunc f) μ :=
+  (simpleFunc.stronglyMeasurable f).AEStronglyMeasurable
+#align measure_theory.Lp.simple_func.ae_strongly_measurable MeasureTheory.lp.simpleFunc.aEStronglyMeasurable
 
 theorem toSimpleFunc_eq_to_fun (f : lp.simpleFunc E p μ) : toSimpleFunc f =ᵐ[μ] f :=
   show ⇑(toSimpleFunc f) =ᵐ[μ] ⇑(f : α →ₘ[μ] E)
     by
     convert(ae_eq_fun.coe_fn_mk (to_simple_func f)
-          (to_simple_func f).AeStronglyMeasurable).symm using
+          (to_simple_func f).AEStronglyMeasurable).symm using
       2
     exact (Classical.choose_spec f.2).symm
 #align measure_theory.Lp.simple_func.to_simple_func_eq_to_fun MeasureTheory.lp.simpleFunc.toSimpleFunc_eq_to_fun
@@ -1083,7 +1083,7 @@ theorem Memℒp.induction_dense (hp_ne_top : p ≠ ∞) (P : (α → E) → Prop
         MeasurableSet s →
           μ s < ∞ →
             ∀ {ε : ℝ≥0∞}, ε ≠ 0 → ∃ g : α → E, snorm (g - s.indicator fun x => c) p μ ≤ ε ∧ P g)
-    (h1P : ∀ f g, P f → P g → P (f + g)) (h2P : ∀ f, P f → AeStronglyMeasurable f μ) {f : α → E}
+    (h1P : ∀ f g, P f → P g → P (f + g)) (h2P : ∀ f, P f → AEStronglyMeasurable f μ) {f : α → E}
     (hf : Memℒp f p μ) {ε : ℝ≥0∞} (hε : ε ≠ 0) : ∃ g : α → E, snorm (f - g) p μ ≤ ε ∧ P g :=
   by
   rcases eq_or_ne p 0 with (rfl | hp_pos)

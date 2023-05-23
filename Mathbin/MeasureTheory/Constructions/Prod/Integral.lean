@@ -113,7 +113,7 @@ theorem MeasureTheory.StronglyMeasurable.integral_prod_right [SigmaFinite ν] �
     by_cases hfx : integrable (f x) ν
     · have : ∀ n, integrable (s' n x) ν := by
         intro n
-        apply (hfx.norm.add hfx.norm).mono' (s' n x).AeStronglyMeasurable
+        apply (hfx.norm.add hfx.norm).mono' (s' n x).AEStronglyMeasurable
         apply eventually_of_forall
         intro y
         simp_rw [s', simple_func.coe_comp]
@@ -122,7 +122,7 @@ theorem MeasureTheory.StronglyMeasurable.integral_prod_right [SigmaFinite ν] �
         mem_set_of_eq]
       refine'
         tendsto_integral_of_dominated_convergence (fun y => ‖f x y‖ + ‖f x y‖)
-          (fun n => (s' n x).AeStronglyMeasurable) (hfx.norm.add hfx.norm) _ _
+          (fun n => (s' n x).AEStronglyMeasurable) (hfx.norm.add hfx.norm) _ _
       · exact fun n => eventually_of_forall fun y => simple_func.norm_approx_on_zero_le _ _ (x, y) n
       · refine' eventually_of_forall fun y => simple_func.tendsto_approx_on _ _ _
         apply subset_closure
@@ -169,7 +169,7 @@ variable [SigmaFinite ν]
 theorem integrable_measure_prod_mk_left {s : Set (α × β)} (hs : MeasurableSet s)
     (h2s : (μ.Prod ν) s ≠ ∞) : Integrable (fun x => (ν (Prod.mk x ⁻¹' s)).toReal) μ :=
   by
-  refine' ⟨(measurable_measure_prod_mk_left hs).ennreal_toReal.AEMeasurable.AeStronglyMeasurable, _⟩
+  refine' ⟨(measurable_measure_prod_mk_left hs).ennreal_toReal.AEMeasurable.AEStronglyMeasurable, _⟩
   simp_rw [has_finite_integral, ennnorm_eq_of_real to_real_nonneg]
   convert h2s.lt_top using 1; simp_rw [prod_apply hs]; apply lintegral_congr_ae
   refine' (ae_measure_lt_top hs h2s).mp _; apply eventually_of_forall; intro x hx
@@ -186,41 +186,41 @@ open MeasureTheory.Measure
 
 section
 
-theorem MeasureTheory.AeStronglyMeasurable.prod_swap {γ : Type _} [TopologicalSpace γ]
-    [SigmaFinite μ] [SigmaFinite ν] {f : β × α → γ} (hf : AeStronglyMeasurable f (ν.Prod μ)) :
-    AeStronglyMeasurable (fun z : α × β => f z.symm) (μ.Prod ν) :=
+theorem MeasureTheory.AEStronglyMeasurable.prod_swap {γ : Type _} [TopologicalSpace γ]
+    [SigmaFinite μ] [SigmaFinite ν] {f : β × α → γ} (hf : AEStronglyMeasurable f (ν.Prod μ)) :
+    AEStronglyMeasurable (fun z : α × β => f z.symm) (μ.Prod ν) :=
   by
   rw [← prod_swap] at hf
   exact hf.comp_measurable measurable_swap
-#align measure_theory.ae_strongly_measurable.prod_swap MeasureTheory.AeStronglyMeasurable.prod_swap
+#align measure_theory.ae_strongly_measurable.prod_swap MeasureTheory.AEStronglyMeasurable.prod_swap
 
-theorem MeasureTheory.AeStronglyMeasurable.fst {γ} [TopologicalSpace γ] [SigmaFinite ν] {f : α → γ}
-    (hf : AeStronglyMeasurable f μ) : AeStronglyMeasurable (fun z : α × β => f z.1) (μ.Prod ν) :=
+theorem MeasureTheory.AEStronglyMeasurable.fst {γ} [TopologicalSpace γ] [SigmaFinite ν] {f : α → γ}
+    (hf : AEStronglyMeasurable f μ) : AEStronglyMeasurable (fun z : α × β => f z.1) (μ.Prod ν) :=
   hf.comp_quasiMeasurePreserving quasiMeasurePreserving_fst
-#align measure_theory.ae_strongly_measurable.fst MeasureTheory.AeStronglyMeasurable.fst
+#align measure_theory.ae_strongly_measurable.fst MeasureTheory.AEStronglyMeasurable.fst
 
-theorem MeasureTheory.AeStronglyMeasurable.snd {γ} [TopologicalSpace γ] [SigmaFinite ν] {f : β → γ}
-    (hf : AeStronglyMeasurable f ν) : AeStronglyMeasurable (fun z : α × β => f z.2) (μ.Prod ν) :=
+theorem MeasureTheory.AEStronglyMeasurable.snd {γ} [TopologicalSpace γ] [SigmaFinite ν] {f : β → γ}
+    (hf : AEStronglyMeasurable f ν) : AEStronglyMeasurable (fun z : α × β => f z.2) (μ.Prod ν) :=
   hf.comp_quasiMeasurePreserving quasiMeasurePreserving_snd
-#align measure_theory.ae_strongly_measurable.snd MeasureTheory.AeStronglyMeasurable.snd
+#align measure_theory.ae_strongly_measurable.snd MeasureTheory.AEStronglyMeasurable.snd
 
 /-- The Bochner integral is a.e.-measurable.
   This shows that the integrand of (the right-hand-side of) Fubini's theorem is a.e.-measurable. -/
-theorem MeasureTheory.AeStronglyMeasurable.integral_prod_right' [SigmaFinite ν] [NormedSpace ℝ E]
-    [CompleteSpace E] ⦃f : α × β → E⦄ (hf : AeStronglyMeasurable f (μ.Prod ν)) :
-    AeStronglyMeasurable (fun x => ∫ y, f (x, y) ∂ν) μ :=
+theorem MeasureTheory.AEStronglyMeasurable.integral_prod_right' [SigmaFinite ν] [NormedSpace ℝ E]
+    [CompleteSpace E] ⦃f : α × β → E⦄ (hf : AEStronglyMeasurable f (μ.Prod ν)) :
+    AEStronglyMeasurable (fun x => ∫ y, f (x, y) ∂ν) μ :=
   ⟨fun x => ∫ y, hf.mk f (x, y) ∂ν, hf.stronglyMeasurable_mk.integral_prod_right', by
     filter_upwards [ae_ae_of_ae_prod hf.ae_eq_mk]with _ hx using integral_congr_ae hx⟩
-#align measure_theory.ae_strongly_measurable.integral_prod_right' MeasureTheory.AeStronglyMeasurable.integral_prod_right'
+#align measure_theory.ae_strongly_measurable.integral_prod_right' MeasureTheory.AEStronglyMeasurable.integral_prod_right'
 
-theorem MeasureTheory.AeStronglyMeasurable.prod_mk_left {γ : Type _} [SigmaFinite ν]
-    [TopologicalSpace γ] {f : α × β → γ} (hf : AeStronglyMeasurable f (μ.Prod ν)) :
-    ∀ᵐ x ∂μ, AeStronglyMeasurable (fun y => f (x, y)) ν :=
+theorem MeasureTheory.AEStronglyMeasurable.prod_mk_left {γ : Type _} [SigmaFinite ν]
+    [TopologicalSpace γ] {f : α × β → γ} (hf : AEStronglyMeasurable f (μ.Prod ν)) :
+    ∀ᵐ x ∂μ, AEStronglyMeasurable (fun y => f (x, y)) ν :=
   by
   filter_upwards [ae_ae_of_ae_prod hf.ae_eq_mk]with x hx
   exact
     ⟨fun y => hf.mk f (x, y), hf.strongly_measurable_mk.comp_measurable measurable_prod_mk_left, hx⟩
-#align measure_theory.ae_strongly_measurable.prod_mk_left MeasureTheory.AeStronglyMeasurable.prod_mk_left
+#align measure_theory.ae_strongly_measurable.prod_mk_left MeasureTheory.AEStronglyMeasurable.prod_mk_left
 
 end
 
@@ -235,8 +235,8 @@ section
 
 theorem Integrable.swap [SigmaFinite μ] ⦃f : α × β → E⦄ (hf : Integrable f (μ.Prod ν)) :
     Integrable (f ∘ Prod.swap) (ν.Prod μ) :=
-  ⟨hf.AeStronglyMeasurable.prod_swap,
-    (lintegral_prod_swap _ hf.AeStronglyMeasurable.ennnorm : _).le.trans_lt hf.HasFiniteIntegral⟩
+  ⟨hf.AEStronglyMeasurable.prod_swap,
+    (lintegral_prod_swap _ hf.AEStronglyMeasurable.ennnorm : _).le.trans_lt hf.HasFiniteIntegral⟩
 #align measure_theory.integrable.swap MeasureTheory.Integrable.swap
 
 theorem integrable_swap_iff [SigmaFinite μ] ⦃f : α × β → E⦄ :
@@ -255,7 +255,7 @@ theorem hasFiniteIntegral_prod_iff ⦃f : α × β → E⦄ (h1f : StronglyMeasu
   simp only [has_finite_integral, lintegral_prod_of_measurable _ h1f.ennnorm]
   have : ∀ x, ∀ᵐ y ∂ν, 0 ≤ ‖f (x, y)‖ := fun x => eventually_of_forall fun y => norm_nonneg _
   simp_rw [integral_eq_lintegral_of_nonneg_ae (this _)
-      (h1f.norm.comp_measurable measurable_prod_mk_left).AeStronglyMeasurable,
+      (h1f.norm.comp_measurable measurable_prod_mk_left).AEStronglyMeasurable,
     ennnorm_eq_of_real to_real_nonneg, ofReal_norm_eq_coe_nnnorm]
   -- this fact is probably too specialized to be its own lemma
   have : ∀ {p q r : Prop} (h1 : r → p), (r ↔ p ∧ q) ↔ p → (r ↔ q) := fun p q r h1 => by
@@ -275,7 +275,7 @@ theorem hasFiniteIntegral_prod_iff ⦃f : α × β → E⦄ (h1f : StronglyMeasu
     exact h1f.ennnorm.lintegral_prod_right'
 #align measure_theory.has_finite_integral_prod_iff MeasureTheory.hasFiniteIntegral_prod_iff
 
-theorem hasFiniteIntegral_prod_iff' ⦃f : α × β → E⦄ (h1f : AeStronglyMeasurable f (μ.Prod ν)) :
+theorem hasFiniteIntegral_prod_iff' ⦃f : α × β → E⦄ (h1f : AEStronglyMeasurable f (μ.Prod ν)) :
     HasFiniteIntegral f (μ.Prod ν) ↔
       (∀ᵐ x ∂μ, HasFiniteIntegral (fun y => f (x, y)) ν) ∧
         HasFiniteIntegral (fun x => ∫ y, ‖f (x, y)‖ ∂ν) μ :=
@@ -295,7 +295,7 @@ theorem hasFiniteIntegral_prod_iff' ⦃f : α × β → E⦄ (h1f : AeStronglyMe
 
 /-- A binary function is integrable if the function `y ↦ f (x, y)` is integrable for almost every
   `x` and the function `x ↦ ∫ ‖f (x, y)‖ dy` is integrable. -/
-theorem integrable_prod_iff ⦃f : α × β → E⦄ (h1f : AeStronglyMeasurable f (μ.Prod ν)) :
+theorem integrable_prod_iff ⦃f : α × β → E⦄ (h1f : AEStronglyMeasurable f (μ.Prod ν)) :
     Integrable f (μ.Prod ν) ↔
       (∀ᵐ x ∂μ, Integrable (fun y => f (x, y)) ν) ∧ Integrable (fun x => ∫ y, ‖f (x, y)‖ ∂ν) μ :=
   by
@@ -306,7 +306,7 @@ theorem integrable_prod_iff ⦃f : α × β → E⦄ (h1f : AeStronglyMeasurable
 /-- A binary function is integrable if the function `x ↦ f (x, y)` is integrable for almost every
   `y` and the function `y ↦ ∫ ‖f (x, y)‖ dx` is integrable. -/
 theorem integrable_prod_iff' [SigmaFinite μ] ⦃f : α × β → E⦄
-    (h1f : AeStronglyMeasurable f (μ.Prod ν)) :
+    (h1f : AEStronglyMeasurable f (μ.Prod ν)) :
     Integrable f (μ.Prod ν) ↔
       (∀ᵐ y ∂ν, Integrable (fun x => f (x, y)) μ) ∧ Integrable (fun y => ∫ x, ‖f (x, y)‖ ∂μ) ν :=
   by
@@ -316,7 +316,7 @@ theorem integrable_prod_iff' [SigmaFinite μ] ⦃f : α × β → E⦄
 
 theorem Integrable.prod_left_ae [SigmaFinite μ] ⦃f : α × β → E⦄ (hf : Integrable f (μ.Prod ν)) :
     ∀ᵐ y ∂ν, Integrable (fun x => f (x, y)) μ :=
-  ((integrable_prod_iff' hf.AeStronglyMeasurable).mp hf).1
+  ((integrable_prod_iff' hf.AEStronglyMeasurable).mp hf).1
 #align measure_theory.integrable.prod_left_ae MeasureTheory.Integrable.prod_left_ae
 
 theorem Integrable.prod_right_ae [SigmaFinite μ] ⦃f : α × β → E⦄ (hf : Integrable f (μ.Prod ν)) :
@@ -326,7 +326,7 @@ theorem Integrable.prod_right_ae [SigmaFinite μ] ⦃f : α × β → E⦄ (hf :
 
 theorem Integrable.integral_norm_prod_left ⦃f : α × β → E⦄ (hf : Integrable f (μ.Prod ν)) :
     Integrable (fun x => ∫ y, ‖f (x, y)‖ ∂ν) μ :=
-  ((integrable_prod_iff hf.AeStronglyMeasurable).mp hf).2
+  ((integrable_prod_iff hf.AEStronglyMeasurable).mp hf).2
 #align measure_theory.integrable.integral_norm_prod_left MeasureTheory.Integrable.integral_norm_prod_left
 
 theorem Integrable.integral_norm_prod_right [SigmaFinite μ] ⦃f : α × β → E⦄
@@ -349,7 +349,7 @@ variable [NormedSpace ℝ E] [CompleteSpace E]
 
 theorem Integrable.integral_prod_left ⦃f : α × β → E⦄ (hf : Integrable f (μ.Prod ν)) :
     Integrable (fun x => ∫ y, f (x, y) ∂ν) μ :=
-  Integrable.mono hf.integral_norm_prod_left hf.AeStronglyMeasurable.integral_prod_right' <|
+  Integrable.mono hf.integral_norm_prod_left hf.AEStronglyMeasurable.integral_prod_right' <|
     eventually_of_forall fun x =>
       (norm_integral_le_integral_norm _).trans_eq <|
         (norm_of_nonneg <|
@@ -367,7 +367,7 @@ theorem Integrable.integral_prod_right [SigmaFinite μ] ⦃f : α × β → E⦄
 
 variable [SigmaFinite μ]
 
-theorem integral_prod_swap (f : α × β → E) (hf : AeStronglyMeasurable f (μ.Prod ν)) :
+theorem integral_prod_swap (f : α × β → E) (hf : AEStronglyMeasurable f (μ.Prod ν)) :
     (∫ z, f z.symm ∂ν.Prod μ) = ∫ z, f z ∂μ.Prod ν :=
   by
   rw [← prod_swap] at hf

@@ -121,7 +121,7 @@ theorem intervalIntegrable_cpow {r : ℂ} (h : 0 ≤ r.re ∨ (0 : ℝ) ∉ [a, 
     exact (Complex.continuous_of_real_cpow_const h').IntervalIntegrable _ _
   -- Now the hard case: re r = 0 and 0 is in the interval.
   refine' (IntervalIntegrable.intervalIntegrable_norm_iff _).mp _
-  · refine' (measurable_of_continuousOn_compl_singleton (0 : ℝ) _).AeStronglyMeasurable
+  · refine' (measurable_of_continuousOn_compl_singleton (0 : ℝ) _).AEStronglyMeasurable
     exact
       ContinuousAt.continuousOn fun x hx => Complex.continuousAt_of_real_cpow_const x r (Or.inr hx)
   -- reduce to case of integral over `[0, c]`
@@ -182,7 +182,7 @@ theorem intervalIntegrable_cpow' {r : ℂ} (h : -1 < r.re) :
         dsimp only
         rw [Complex.norm_eq_abs, Complex.abs_cpow_eq_rpow_re_of_pos hx.1]
       · exact measurableSet_uIoc
-    · refine' ContinuousOn.aeStronglyMeasurable _ measurableSet_uIoc
+    · refine' ContinuousOn.aEStronglyMeasurable _ measurableSet_uIoc
       refine' ContinuousAt.continuousOn fun x hx => _
       rw [uIoc_of_le hc] at hx
       refine' (continuousAt_cpow_const (Or.inl _)).comp complex.continuous_of_real.continuous_at

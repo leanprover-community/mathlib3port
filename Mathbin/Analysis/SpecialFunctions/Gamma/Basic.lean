@@ -103,7 +103,7 @@ theorem Gamma_integral_convergent {s : ℂ} (hs : 0 < s.re) :
     IntegrableOn (fun x => (-x).exp * x ^ (s - 1) : ℝ → ℂ) (Ioi 0) :=
   by
   constructor
-  · refine' ContinuousOn.aeStronglyMeasurable _ measurableSet_Ioi
+  · refine' ContinuousOn.aEStronglyMeasurable _ measurableSet_Ioi
     apply (continuous_of_real.comp continuous_neg.exp).ContinuousOn.mul
     apply ContinuousAt.continuousOn
     intro x hx
@@ -203,7 +203,7 @@ private theorem Gamma_integrand_deriv_integrable_B {s : ℂ} (hs : 0 < s.re) {Y 
     ring
   rw [this, intervalIntegrable_iff_integrable_Ioc_of_le hY]
   constructor
-  · refine' (continuous_on_const.mul _).AeStronglyMeasurable measurableSet_Ioc
+  · refine' (continuous_on_const.mul _).AEStronglyMeasurable measurableSet_Ioc
     apply (continuous_of_real.comp continuous_neg.exp).ContinuousOn.mul
     apply ContinuousAt.continuousOn
     intro x hx

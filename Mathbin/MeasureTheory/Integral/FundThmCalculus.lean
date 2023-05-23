@@ -982,7 +982,7 @@ theorem derivWithin_integral_left (hf : IntervalIntegrable f volume a b) {s t : 
 theorem differentiableOn_integral_of_continuous {s : Set ℝ}
     (hintg : ∀ x ∈ s, IntervalIntegrable f volume a x) (hcont : Continuous f) :
     DifferentiableOn ℝ (fun u => ∫ x in a..u, f x) s := fun y hy =>
-  (integral_hasDerivAt_right (hintg y hy) hcont.AeStronglyMeasurable.StronglyMeasurableAtFilter
+  (integral_hasDerivAt_right (hintg y hy) hcont.AEStronglyMeasurable.StronglyMeasurableAtFilter
         hcont.ContinuousAt).DifferentiableAt.DifferentiableWithinAt
 #align interval_integral.differentiable_on_integral_of_continuous intervalIntegral.differentiableOn_integral_of_continuous
 

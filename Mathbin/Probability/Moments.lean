@@ -244,8 +244,8 @@ theorem IndepFunCat.exp_mul {X Y : Ω → ℝ} (h_indep : IndepFunCat X Y μ) (s
 #align probability_theory.indep_fun.exp_mul ProbabilityTheory.IndepFunCat.exp_mul
 
 theorem IndepFunCat.mgf_add {X Y : Ω → ℝ} (h_indep : IndepFunCat X Y μ)
-    (hX : AeStronglyMeasurable (fun ω => exp (t * X ω)) μ)
-    (hY : AeStronglyMeasurable (fun ω => exp (t * Y ω)) μ) :
+    (hX : AEStronglyMeasurable (fun ω => exp (t * X ω)) μ)
+    (hY : AEStronglyMeasurable (fun ω => exp (t * Y ω)) μ) :
     mgf (X + Y) μ t = mgf X μ t * mgf Y μ t :=
   by
   simp_rw [mgf, Pi.add_apply, mul_add, exp_add]
@@ -253,7 +253,7 @@ theorem IndepFunCat.mgf_add {X Y : Ω → ℝ} (h_indep : IndepFunCat X Y μ)
 #align probability_theory.indep_fun.mgf_add ProbabilityTheory.IndepFunCat.mgf_add
 
 theorem IndepFunCat.mgf_add' {X Y : Ω → ℝ} (h_indep : IndepFunCat X Y μ)
-    (hX : AeStronglyMeasurable X μ) (hY : AeStronglyMeasurable Y μ) :
+    (hX : AEStronglyMeasurable X μ) (hY : AEStronglyMeasurable Y μ) :
     mgf (X + Y) μ t = mgf X μ t * mgf Y μ t :=
   by
   have A : Continuous fun x : ℝ => exp (t * x) := by continuity
@@ -274,18 +274,18 @@ theorem IndepFunCat.cgf_add {X Y : Ω → ℝ} (h_indep : IndepFunCat X Y μ)
   exact log_mul (mgf_pos' hμ h_int_X).ne' (mgf_pos' hμ h_int_Y).ne'
 #align probability_theory.indep_fun.cgf_add ProbabilityTheory.IndepFunCat.cgf_add
 
-theorem aeStronglyMeasurable_exp_mul_add {X Y : Ω → ℝ}
-    (h_int_X : AeStronglyMeasurable (fun ω => exp (t * X ω)) μ)
-    (h_int_Y : AeStronglyMeasurable (fun ω => exp (t * Y ω)) μ) :
-    AeStronglyMeasurable (fun ω => exp (t * (X + Y) ω)) μ :=
+theorem aEStronglyMeasurable_exp_mul_add {X Y : Ω → ℝ}
+    (h_int_X : AEStronglyMeasurable (fun ω => exp (t * X ω)) μ)
+    (h_int_Y : AEStronglyMeasurable (fun ω => exp (t * Y ω)) μ) :
+    AEStronglyMeasurable (fun ω => exp (t * (X + Y) ω)) μ :=
   by
   simp_rw [Pi.add_apply, mul_add, exp_add]
   exact ae_strongly_measurable.mul h_int_X h_int_Y
-#align probability_theory.ae_strongly_measurable_exp_mul_add ProbabilityTheory.aeStronglyMeasurable_exp_mul_add
+#align probability_theory.ae_strongly_measurable_exp_mul_add ProbabilityTheory.aEStronglyMeasurable_exp_mul_add
 
-theorem aeStronglyMeasurable_exp_mul_sum {X : ι → Ω → ℝ} {s : Finset ι}
-    (h_int : ∀ i ∈ s, AeStronglyMeasurable (fun ω => exp (t * X i ω)) μ) :
-    AeStronglyMeasurable (fun ω => exp (t * (∑ i in s, X i) ω)) μ := by
+theorem aEStronglyMeasurable_exp_mul_sum {X : ι → Ω → ℝ} {s : Finset ι}
+    (h_int : ∀ i ∈ s, AEStronglyMeasurable (fun ω => exp (t * X i ω)) μ) :
+    AEStronglyMeasurable (fun ω => exp (t * (∑ i in s, X i) ω)) μ := by
   classical
     induction' s using Finset.induction_on with i s hi_notin_s h_rec h_int
     · simp only [Pi.zero_apply, sum_apply, sum_empty, MulZeroClass.mul_zero, exp_zero]
@@ -295,7 +295,7 @@ theorem aeStronglyMeasurable_exp_mul_sum {X : ι → Ω → ℝ} {s : Finset ι}
       specialize h_rec this
       rw [sum_insert hi_notin_s]
       apply ae_strongly_measurable_exp_mul_add (h_int i (mem_insert_self _ _)) h_rec
-#align probability_theory.ae_strongly_measurable_exp_mul_sum ProbabilityTheory.aeStronglyMeasurable_exp_mul_sum
+#align probability_theory.ae_strongly_measurable_exp_mul_sum ProbabilityTheory.aEStronglyMeasurable_exp_mul_sum
 
 theorem IndepFunCat.integrable_exp_mul_add {X Y : Ω → ℝ} (h_indep : IndepFunCat X Y μ)
     (h_int_X : Integrable (fun ω => exp (t * X ω)) μ)
@@ -329,7 +329,7 @@ theorem IndepFun.mgf_sum [ProbabilityMeasure μ] {X : ι → Ω → ℝ}
     induction' s using Finset.induction_on with i s hi_notin_s h_rec h_int
     · simp only [sum_empty, mgf_zero_fun, measure_univ, ENNReal.one_toReal, prod_empty]
     · have h_int' : ∀ i : ι, ae_strongly_measurable (fun ω : Ω => exp (t * X i ω)) μ := fun i =>
-        ((h_meas i).const_mul t).exp.AeStronglyMeasurable
+        ((h_meas i).const_mul t).exp.AEStronglyMeasurable
       rw [sum_insert hi_notin_s,
         indep_fun.mgf_add (h_indep.indep_fun_finset_sum_of_not_mem h_meas hi_notin_s).symm
           (h_int' i) (ae_strongly_measurable_exp_mul_sum fun i hi => h_int' i),

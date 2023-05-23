@@ -110,7 +110,7 @@ theorem withDensityᵥ_rnDeriv_eq (s : SignedMeasure α) (μ : Measure α) [Sigm
       rw [← integrable_on_univ]
       refine' integrable_on.restrict _ MeasurableSet.univ
       refine' ⟨_, has_finite_integral_to_real_of_lintegral_ne_top _⟩
-      · apply Measurable.aeStronglyMeasurable
+      · apply Measurable.aestronglyMeasurable
         measurability
       · rw [set_lintegral_univ]
         exact (lintegral_rn_deriv_lt_top _ _).Ne

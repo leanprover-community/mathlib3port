@@ -97,7 +97,7 @@ theorem snorm_one_condexp_le_snorm (f : α → ℝ) : snorm (μ[f|m]) 1 μ ≤ s
       rw [snorm_one_eq_lintegral_nnnorm, snorm_one_eq_lintegral_nnnorm, ←
         ENNReal.toReal_eq_toReal (ne_of_lt integrable_condexp.2) (ne_of_lt hf.2), ←
         integral_norm_eq_lintegral_nnnorm
-          (strongly_measurable_condexp.mono hm).AeStronglyMeasurable,
+          (strongly_measurable_condexp.mono hm).AEStronglyMeasurable,
         ← integral_norm_eq_lintegral_nnnorm hf.1]
       simp_rw [Real.norm_eq_abs]
       rw [← @integral_condexp _ _ _ _ _ m m0 μ _ hm hsig hf.abs]
@@ -134,7 +134,7 @@ theorem integral_abs_condexp_le (f : α → ℝ) : (∫ x, |(μ[f|m]) x| ∂μ) 
     exact hfint.1.norm
   · exact eventually_of_forall fun x => abs_nonneg _
   · simp_rw [← Real.norm_eq_abs]
-    exact (strongly_measurable_condexp.mono hm).AeStronglyMeasurable.norm
+    exact (strongly_measurable_condexp.mono hm).AEStronglyMeasurable.norm
 #align measure_theory.integral_abs_condexp_le MeasureTheory.integral_abs_condexp_le
 
 theorem set_integral_abs_condexp_le {s : Set α} (hs : measurable_set[m] s) (f : α → ℝ) :
@@ -225,14 +225,14 @@ theorem Integrable.uniformIntegrable_condexp {ι : Type _} [FiniteMeasure μ] {g
   have hg : mem_ℒp g 1 μ := mem_ℒp_one_iff_integrable.2 hint
   refine'
     uniform_integrable_of le_rfl ENNReal.one_ne_top
-      (fun n => (strongly_measurable_condexp.mono (hℱ n)).AeStronglyMeasurable) fun ε hε => _
+      (fun n => (strongly_measurable_condexp.mono (hℱ n)).AEStronglyMeasurable) fun ε hε => _
   by_cases hne : snorm g 1 μ = 0
   · rw [snorm_eq_zero_iff hg.1 one_ne_zero] at hne
     refine'
       ⟨0, fun n =>
         (le_of_eq <|
               (snorm_eq_zero_iff
-                    ((strongly_measurable_condexp.mono (hℱ n)).AeStronglyMeasurable.indicator
+                    ((strongly_measurable_condexp.mono (hℱ n)).AEStronglyMeasurable.indicator
                       (hmeas n 0))
                     one_ne_zero).2
                 _).trans
@@ -247,7 +247,7 @@ theorem Integrable.uniformIntegrable_condexp {ι : Type _} [FiniteMeasure μ] {g
     intro n
     have :=
       mul_meas_ge_le_pow_snorm' μ one_ne_zero ENNReal.one_ne_top
-        ((@strongly_measurable_condexp _ _ _ _ _ (ℱ n) _ μ g).mono (hℱ n)).AeStronglyMeasurable C
+        ((@strongly_measurable_condexp _ _ _ _ _ (ℱ n) _ μ g).mono (hℱ n)).AEStronglyMeasurable C
     rw [ENNReal.one_toReal, ENNReal.rpow_one, ENNReal.rpow_one, mul_comm, ←
       ENNReal.le_div_iff_mul_le (Or.inl (ENNReal.coe_ne_zero.2 hCpos.ne.symm))
         (Or.inl ennreal.coe_lt_top.ne)] at
@@ -321,19 +321,19 @@ theorem condexp_stronglyMeasurable_mul_of_bound (hm : m ≤ m0) [FiniteMeasure �
   have : μ[f * μ[g|m]|m] = f * μ[g|m] :=
     by
     refine' condexp_of_strongly_measurable hm (hf.mul strongly_measurable_condexp) _
-    exact integrable_condexp.bdd_mul' (hf.mono hm).AeStronglyMeasurable hf_bound
+    exact integrable_condexp.bdd_mul' (hf.mono hm).AEStronglyMeasurable hf_bound
   rw [← this]
   refine'
     tendsto_condexp_unique (fun n x => fs n x * g x) (fun n x => fs n x * (μ[g|m]) x) (f * g)
       (f * μ[g|m]) _ _ _ _ (fun x => c * ‖g x‖) _ (fun x => c * ‖(μ[g|m]) x‖) _ _ _ _
   ·
     exact fun n =>
-      hg.bdd_mul' ((simple_func.strongly_measurable (fs n)).mono hm).AeStronglyMeasurable
+      hg.bdd_mul' ((simple_func.strongly_measurable (fs n)).mono hm).AEStronglyMeasurable
         (eventually_of_forall (hfs_bound n))
   ·
     exact fun n =>
       integrable_condexp.bdd_mul'
-        ((simple_func.strongly_measurable (fs n)).mono hm).AeStronglyMeasurable
+        ((simple_func.strongly_measurable (fs n)).mono hm).AEStronglyMeasurable
         (eventually_of_forall (hfs_bound n))
   · filter_upwards [hfs_tendsto]with x hx
     rw [Pi.mul_apply]
@@ -356,7 +356,7 @@ theorem condexp_stronglyMeasurable_mul_of_bound (hm : m ≤ m0) [FiniteMeasure �
     · infer_instance
     exact
       integrable_condexp.bdd_mul'
-        ((simple_func.strongly_measurable (fs n)).mono hm).AeStronglyMeasurable
+        ((simple_func.strongly_measurable (fs n)).mono hm).AEStronglyMeasurable
         (eventually_of_forall (hfs_bound n))
 #align measure_theory.condexp_strongly_measurable_mul_of_bound MeasureTheory.condexp_stronglyMeasurable_mul_of_bound
 

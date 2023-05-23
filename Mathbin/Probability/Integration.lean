@@ -168,7 +168,7 @@ theorem IndepFunCat.integrable_mul {β : Type _} [MeasurableSpace β] {X Y : Ω 
 the second one is not almost everywhere zero, then the first one is integrable. -/
 theorem IndepFunCat.integrable_left_of_integrable_mul {β : Type _} [MeasurableSpace β] {X Y : Ω → β}
     [NormedDivisionRing β] [BorelSpace β] (hXY : IndepFunCat X Y μ) (h'XY : Integrable (X * Y) μ)
-    (hX : AeStronglyMeasurable X μ) (hY : AeStronglyMeasurable Y μ) (h'Y : ¬Y =ᵐ[μ] 0) :
+    (hX : AEStronglyMeasurable X μ) (hY : AEStronglyMeasurable Y μ) (h'Y : ¬Y =ᵐ[μ] 0) :
     Integrable X μ := by
   refine' ⟨hX, _⟩
   have I : (∫⁻ ω, ‖Y ω‖₊ ∂μ) ≠ 0 := by
@@ -192,7 +192,7 @@ theorem IndepFunCat.integrable_left_of_integrable_mul {β : Type _} [MeasurableS
 first one is not almost everywhere zero, then the second one is integrable. -/
 theorem IndepFunCat.integrable_right_of_integrable_mul {β : Type _} [MeasurableSpace β]
     {X Y : Ω → β} [NormedDivisionRing β] [BorelSpace β] (hXY : IndepFunCat X Y μ)
-    (h'XY : Integrable (X * Y) μ) (hX : AeStronglyMeasurable X μ) (hY : AeStronglyMeasurable Y μ)
+    (h'XY : Integrable (X * Y) μ) (hX : AEStronglyMeasurable X μ) (hY : AEStronglyMeasurable Y μ)
     (h'X : ¬X =ᵐ[μ] 0) : Integrable Y μ :=
   by
   refine' ⟨hY, _⟩
@@ -285,8 +285,8 @@ theorem IndepFunCat.integral_mul_of_integrable (hXY : IndepFunCat X Y μ) (hX : 
 
 /-- The (Bochner) integral of the product of two independent random
   variables is the product of their integrals. -/
-theorem IndepFunCat.integral_mul (hXY : IndepFunCat X Y μ) (hX : AeStronglyMeasurable X μ)
-    (hY : AeStronglyMeasurable Y μ) : integral μ (X * Y) = integral μ X * integral μ Y :=
+theorem IndepFunCat.integral_mul (hXY : IndepFunCat X Y μ) (hX : AEStronglyMeasurable X μ)
+    (hY : AEStronglyMeasurable Y μ) : integral μ (X * Y) = integral μ X * integral μ Y :=
   by
   by_cases h'X : X =ᵐ[μ] 0
   · have h' : X * Y =ᵐ[μ] 0 := by
@@ -312,8 +312,8 @@ theorem IndepFunCat.integral_mul (hXY : IndepFunCat X Y μ) (hX : AeStronglyMeas
     cases I <;> simp [integral_undef, I, h]
 #align probability_theory.indep_fun.integral_mul ProbabilityTheory.IndepFunCat.integral_mul
 
-theorem IndepFunCat.integral_mul' (hXY : IndepFunCat X Y μ) (hX : AeStronglyMeasurable X μ)
-    (hY : AeStronglyMeasurable Y μ) :
+theorem IndepFunCat.integral_mul' (hXY : IndepFunCat X Y μ) (hX : AEStronglyMeasurable X μ)
+    (hY : AEStronglyMeasurable Y μ) :
     (integral μ fun ω => X ω * Y ω) = integral μ X * integral μ Y :=
   hXY.integral_mul hX hY
 #align probability_theory.indep_fun.integral_mul' ProbabilityTheory.IndepFunCat.integral_mul'

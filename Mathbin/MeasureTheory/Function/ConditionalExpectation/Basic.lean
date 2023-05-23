@@ -306,7 +306,7 @@ theorem lpMeas.aeStronglyMeasurable' {m m0 : MeasurableSpace α} {μ : Measure �
 
 theorem mem_lpMeas_self {m0 : MeasurableSpace α} (μ : Measure α) (f : lp F p μ) :
     f ∈ lpMeas F 𝕜 m0 p μ :=
-  mem_lpMeas_iff_aeStronglyMeasurable'.mpr (lp.aeStronglyMeasurable f)
+  mem_lpMeas_iff_aeStronglyMeasurable'.mpr (lp.aEStronglyMeasurable f)
 #align measure_theory.mem_Lp_meas_self MeasureTheory.mem_lpMeas_self
 
 theorem lpMeasSubgroup_coe {m m0 : MeasurableSpace α} {μ : Measure α} {f : lpMeasSubgroup F m p μ} :
@@ -2441,7 +2441,7 @@ theorem condexp_nonpos {E} [NormedLatticeAddCommGroup E] [CompleteSpace E] [Norm
   `condexp_L1`. -/
 theorem tendsto_condexpL1_of_dominated_convergence (hm : m ≤ m0) [SigmaFinite (μ.trim hm)]
     {fs : ℕ → α → F'} {f : α → F'} (bound_fs : α → ℝ)
-    (hfs_meas : ∀ n, AeStronglyMeasurable (fs n) μ) (h_int_bound_fs : Integrable bound_fs μ)
+    (hfs_meas : ∀ n, AEStronglyMeasurable (fs n) μ) (h_int_bound_fs : Integrable bound_fs μ)
     (hfs_bound : ∀ n, ∀ᵐ x ∂μ, ‖fs n x‖ ≤ bound_fs x)
     (hfs : ∀ᵐ x ∂μ, Tendsto (fun n => fs n x) atTop (𝓝 (f x))) :
     Tendsto (fun n => condexpL1 hm μ (fs n)) atTop (𝓝 (condexpL1 hm μ f)) :=

@@ -61,7 +61,7 @@ theorem integrable_of_isBigO_exp_neg {f : ℝ → ℝ} {a b : ℝ} (h0 : 0 < b)
     simpa only [Ioc_union_Ioi_eq_Ioi, le_max_iff, le_refl, true_or_iff] using t
   -- now show integrable on `(v, ∞)` from asymptotic
   constructor
-  · exact (h1.mono <| Ioi_subset_Ici <| le_max_left a r).AeStronglyMeasurable measurableSet_Ioi
+  · exact (h1.mono <| Ioi_subset_Ici <| le_max_left a r).AEStronglyMeasurable measurableSet_Ioi
   have : has_finite_integral (fun x : ℝ => c * exp (-b * x)) (volume.restrict (Ioi v)) :=
     (exp_neg_integrableOn_Ioi v h0).HasFiniteIntegral.const_mul c
   apply this.mono

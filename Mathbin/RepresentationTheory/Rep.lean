@@ -513,7 +513,7 @@ theorem to_Module_monoidAlgebra_map_aux {k G : Type _} [CommRing k] [Monoid G] (
 
 /-- Auxilliary definition for `to_Module_monoid_algebra`. -/
 def toModuleMonoidAlgebraMap {V W : Rep k G} (f : V ⟶ W) :
-    ModuleCat.of (MonoidAlgebra k G) V.ρ.AsModule ⟶ ModuleCat.of (MonoidAlgebra k G) W.ρ.AsModule :=
+    ModuleCat.of (MonoidAlgebra k G) V.ρ.asModule ⟶ ModuleCat.of (MonoidAlgebra k G) W.ρ.asModule :=
   { f.hom with
     map_smul' := fun r x => to_Module_monoidAlgebra_map_aux V.V W.V V.ρ W.ρ f.hom f.comm r x }
 #align Rep.to_Module_monoid_algebra_map Rep.toModuleMonoidAlgebraMap
@@ -521,7 +521,7 @@ def toModuleMonoidAlgebraMap {V W : Rep k G} (f : V ⟶ W) :
 /-- Functorially convert a representation of `G` into a module over `monoid_algebra k G`. -/
 def toModuleMonoidAlgebra : Rep k G ⥤ ModuleCat.{u} (MonoidAlgebra k G)
     where
-  obj V := ModuleCat.of _ V.ρ.AsModule
+  obj V := ModuleCat.of _ V.ρ.asModule
   map V W f := toModuleMonoidAlgebraMap f
 #align Rep.to_Module_monoid_algebra Rep.toModuleMonoidAlgebra
 

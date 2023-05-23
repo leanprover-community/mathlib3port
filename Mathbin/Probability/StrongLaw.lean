@@ -78,12 +78,12 @@ def truncation (f : α → ℝ) (A : ℝ) :=
 
 variable {m : MeasurableSpace α} {μ : Measure α} {f : α → ℝ}
 
-theorem MeasureTheory.AeStronglyMeasurable.truncation (hf : AeStronglyMeasurable f μ) {A : ℝ} :
-    AeStronglyMeasurable (truncation f A) μ :=
+theorem MeasureTheory.AEStronglyMeasurable.truncation (hf : AEStronglyMeasurable f μ) {A : ℝ} :
+    AEStronglyMeasurable (truncation f A) μ :=
   by
   apply ae_strongly_measurable.comp_ae_measurable _ hf.ae_measurable
-  exact (strongly_measurable_id.indicator measurableSet_Ioc).AeStronglyMeasurable
-#align measure_theory.ae_strongly_measurable.truncation MeasureTheory.AeStronglyMeasurable.truncation
+  exact (strongly_measurable_id.indicator measurableSet_Ioc).AEStronglyMeasurable
+#align measure_theory.ae_strongly_measurable.truncation MeasureTheory.AEStronglyMeasurable.truncation
 
 theorem abs_truncation_le_bound (f : α → ℝ) (A : ℝ) (x : α) : |truncation f A x| ≤ |A| :=
   by
@@ -130,19 +130,19 @@ theorem truncation_nonneg {f : α → ℝ} (A : ℝ) {x : α} (h : 0 ≤ f x) : 
   Set.indicator_apply_nonneg fun _ => h
 #align probability_theory.truncation_nonneg ProbabilityTheory.truncation_nonneg
 
-theorem MeasureTheory.AeStronglyMeasurable.memℒp_truncation [FiniteMeasure μ]
-    (hf : AeStronglyMeasurable f μ) {A : ℝ} {p : ℝ≥0∞} : Memℒp (truncation f A) p μ :=
+theorem MeasureTheory.AEStronglyMeasurable.memℒp_truncation [FiniteMeasure μ]
+    (hf : AEStronglyMeasurable f μ) {A : ℝ} {p : ℝ≥0∞} : Memℒp (truncation f A) p μ :=
   Memℒp.of_bound hf.truncation (|A|) (eventually_of_forall fun x => abs_truncation_le_bound _ _ _)
-#align measure_theory.ae_strongly_measurable.mem_ℒp_truncation MeasureTheory.AeStronglyMeasurable.memℒp_truncation
+#align measure_theory.ae_strongly_measurable.mem_ℒp_truncation MeasureTheory.AEStronglyMeasurable.memℒp_truncation
 
-theorem MeasureTheory.AeStronglyMeasurable.integrable_truncation [FiniteMeasure μ]
-    (hf : AeStronglyMeasurable f μ) {A : ℝ} : Integrable (truncation f A) μ :=
+theorem MeasureTheory.AEStronglyMeasurable.integrable_truncation [FiniteMeasure μ]
+    (hf : AEStronglyMeasurable f μ) {A : ℝ} : Integrable (truncation f A) μ :=
   by
   rw [← mem_ℒp_one_iff_integrable]
   exact hf.mem_ℒp_truncation
-#align measure_theory.ae_strongly_measurable.integrable_truncation MeasureTheory.AeStronglyMeasurable.integrable_truncation
+#align measure_theory.ae_strongly_measurable.integrable_truncation MeasureTheory.AEStronglyMeasurable.integrable_truncation
 
-theorem moment_truncation_eq_intervalIntegral (hf : AeStronglyMeasurable f μ) {A : ℝ} (hA : 0 ≤ A)
+theorem moment_truncation_eq_intervalIntegral (hf : AEStronglyMeasurable f μ) {A : ℝ} (hA : 0 ≤ A)
     {n : ℕ} (hn : n ≠ 0) : (∫ x, truncation f A x ^ n ∂μ) = ∫ y in -A..A, y ^ n ∂Measure.map f μ :=
   by
   have M : MeasurableSet (Set.Ioc (-A) A) := measurableSet_Ioc
@@ -150,10 +150,10 @@ theorem moment_truncation_eq_intervalIntegral (hf : AeStronglyMeasurable f μ) {
   rw [← integral_map hf.ae_measurable, intervalIntegral.integral_of_le, ← integral_indicator M]
   · simp only [indicator, zero_pow' _ hn, id.def, ite_pow]
   · linarith
-  · exact ((measurable_id.indicator M).pow_const n).AeStronglyMeasurable
+  · exact ((measurable_id.indicator M).pow_const n).AEStronglyMeasurable
 #align probability_theory.moment_truncation_eq_interval_integral ProbabilityTheory.moment_truncation_eq_intervalIntegral
 
-theorem moment_truncation_eq_intervalIntegral_of_nonneg (hf : AeStronglyMeasurable f μ) {A : ℝ}
+theorem moment_truncation_eq_intervalIntegral_of_nonneg (hf : AEStronglyMeasurable f μ) {A : ℝ}
     {n : ℕ} (hn : n ≠ 0) (h'f : 0 ≤ f) :
     (∫ x, truncation f A x ^ n ∂μ) = ∫ y in 0 ..A, y ^ n ∂Measure.map f μ :=
   by
@@ -164,7 +164,7 @@ theorem moment_truncation_eq_intervalIntegral_of_nonneg (hf : AeStronglyMeasurab
   rcases le_or_lt 0 A with (hA | hA)
   · rw [← integral_map hf.ae_measurable, intervalIntegral.integral_of_le hA, ← integral_indicator M]
     · simp only [indicator, zero_pow' _ hn, id.def, ite_pow]
-    · exact ((measurable_id.indicator M).pow_const n).AeStronglyMeasurable
+    · exact ((measurable_id.indicator M).pow_const n).AEStronglyMeasurable
   · rw [← integral_map hf.ae_measurable, intervalIntegral.integral_of_ge hA.le, ←
       integral_indicator M']
     · simp only [Set.Ioc_eq_empty_of_le hA.le, zero_pow' _ hn, Set.indicator_empty, integral_zero,
@@ -177,15 +177,15 @@ theorem moment_truncation_eq_intervalIntegral_of_nonneg (hf : AeStronglyMeasurab
       intro h'x h''x
       have : x = 0 := by linarith
       simp [this, zero_pow' _ hn]
-    · exact ((measurable_id.indicator M).pow_const n).AeStronglyMeasurable
+    · exact ((measurable_id.indicator M).pow_const n).AEStronglyMeasurable
 #align probability_theory.moment_truncation_eq_interval_integral_of_nonneg ProbabilityTheory.moment_truncation_eq_intervalIntegral_of_nonneg
 
-theorem integral_truncation_eq_intervalIntegral (hf : AeStronglyMeasurable f μ) {A : ℝ}
+theorem integral_truncation_eq_intervalIntegral (hf : AEStronglyMeasurable f μ) {A : ℝ}
     (hA : 0 ≤ A) : (∫ x, truncation f A x ∂μ) = ∫ y in -A..A, y ∂Measure.map f μ := by
   simpa using moment_truncation_eq_interval_integral hf hA one_ne_zero
 #align probability_theory.integral_truncation_eq_interval_integral ProbabilityTheory.integral_truncation_eq_intervalIntegral
 
-theorem integral_truncation_eq_intervalIntegral_of_nonneg (hf : AeStronglyMeasurable f μ) {A : ℝ}
+theorem integral_truncation_eq_intervalIntegral_of_nonneg (hf : AEStronglyMeasurable f μ) {A : ℝ}
     (h'f : 0 ≤ f) : (∫ x, truncation f A x ∂μ) = ∫ y in 0 ..A, y ∂Measure.map f μ := by
   simpa using moment_truncation_eq_interval_integral_of_nonneg hf one_ne_zero h'f
 #align probability_theory.integral_truncation_eq_interval_integral_of_nonneg ProbabilityTheory.integral_truncation_eq_intervalIntegral_of_nonneg
@@ -482,7 +482,7 @@ theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
   have c_pos : 0 < c := zero_lt_one.trans c_one
   let ρ : Measure ℝ := measure.map (X 0) ℙ
   have hX : ∀ i, ae_strongly_measurable (X i) ℙ := fun i =>
-    (hident i).symm.aeStronglyMeasurable_snd hint.1
+    (hident i).symm.aEStronglyMeasurable_snd hint.1
   have A : ∀ i, strongly_measurable (indicator (Set.Ioc (-i : ℝ) i) id) := fun i =>
     strongly_measurable_id.indicator measurableSet_Ioc
   set Y := fun n : ℕ => truncation (X n) n with hY
@@ -514,7 +514,7 @@ theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
         congr 1
         rw [hS, indep_fun.variance_sum]
         · intro j hj
-          exact (hident j).aeStronglyMeasurable_fst.memℒp_truncation
+          exact (hident j).aEStronglyMeasurable_fst.memℒp_truncation
         · intro k hk l hl hkl
           exact (hindep hkl).comp (A k).Measurable (A l).Measurable
       _ =
@@ -571,7 +571,7 @@ theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
         apply meas_ge_le_variance_div_sq
         ·
           exact
-            mem_ℒp_finset_sum' _ fun j hj => (hident j).aeStronglyMeasurable_fst.memℒp_truncation
+            mem_ℒp_finset_sum' _ fun j hj => (hident j).aEStronglyMeasurable_fst.memℒp_truncation
         · apply mul_pos (Nat.cast_pos.2 _) εpos
           refine' zero_lt_one.trans_le _
           apply Nat.le_floor
@@ -786,7 +786,7 @@ theorem strong_law_Lp {p : ℝ≥0∞} (hp : 1 ≤ p) (hp' : p ≠ ∞) (X : ℕ
     Tendsto (fun n => snorm (fun ω => (∑ i in range n, X i ω) / n - 𝔼[X 0]) p ℙ) atTop (𝓝 0) :=
   by
   have hmeas : ∀ i, ae_strongly_measurable (X i) ℙ := fun i =>
-    (hident i).aeStronglyMeasurable_iff.2 hℒp.1
+    (hident i).aEStronglyMeasurable_iff.2 hℒp.1
   have hint : integrable (X 0) ℙ := hℒp.integrable hp
   have havg : ∀ n, ae_strongly_measurable (fun ω => (∑ i in range n, X i ω) / n) ℙ :=
     by

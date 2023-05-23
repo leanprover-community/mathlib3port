@@ -179,7 +179,7 @@ theorem norm (h : IntervalIntegrable f μ a b) : IntervalIntegrable (fun x => �
 #align interval_integrable.norm IntervalIntegrable.norm
 
 theorem intervalIntegrable_norm_iff {f : ℝ → E} {μ : Measure ℝ} {a b : ℝ}
-    (hf : AeStronglyMeasurable f (μ.restrict (Ι a b))) :
+    (hf : AEStronglyMeasurable f (μ.restrict (Ι a b))) :
     IntervalIntegrable (fun t => ‖f t‖) μ a b ↔ IntervalIntegrable f μ a b :=
   by
   simp_rw [intervalIntegrable_iff, integrable_on]
@@ -216,25 +216,25 @@ theorem mono_set' (hf : IntervalIntegrable f μ a b) (hsub : Ι c d ⊆ Ι a b) 
 #align interval_integrable.mono_set' IntervalIntegrable.mono_set'
 
 theorem mono_fun [NormedAddCommGroup F] {g : ℝ → F} (hf : IntervalIntegrable f μ a b)
-    (hgm : AeStronglyMeasurable g (μ.restrict (Ι a b)))
+    (hgm : AEStronglyMeasurable g (μ.restrict (Ι a b)))
     (hle : (fun x => ‖g x‖) ≤ᵐ[μ.restrict (Ι a b)] fun x => ‖f x‖) : IntervalIntegrable g μ a b :=
   intervalIntegrable_iff.2 <| hf.def.Integrable.mono hgm hle
 #align interval_integrable.mono_fun IntervalIntegrable.mono_fun
 
 theorem mono_fun' {g : ℝ → ℝ} (hg : IntervalIntegrable g μ a b)
-    (hfm : AeStronglyMeasurable f (μ.restrict (Ι a b)))
+    (hfm : AEStronglyMeasurable f (μ.restrict (Ι a b)))
     (hle : (fun x => ‖f x‖) ≤ᵐ[μ.restrict (Ι a b)] g) : IntervalIntegrable f μ a b :=
   intervalIntegrable_iff.2 <| hg.def.Integrable.mono' hfm hle
 #align interval_integrable.mono_fun' IntervalIntegrable.mono_fun'
 
-protected theorem aeStronglyMeasurable (h : IntervalIntegrable f μ a b) :
-    AeStronglyMeasurable f (μ.restrict (Ioc a b)) :=
-  h.1.AeStronglyMeasurable
-#align interval_integrable.ae_strongly_measurable IntervalIntegrable.aeStronglyMeasurable
+protected theorem aEStronglyMeasurable (h : IntervalIntegrable f μ a b) :
+    AEStronglyMeasurable f (μ.restrict (Ioc a b)) :=
+  h.1.AEStronglyMeasurable
+#align interval_integrable.ae_strongly_measurable IntervalIntegrable.aEStronglyMeasurable
 
 protected theorem ae_strongly_measurable' (h : IntervalIntegrable f μ a b) :
-    AeStronglyMeasurable f (μ.restrict (Ioc b a)) :=
-  h.2.AeStronglyMeasurable
+    AEStronglyMeasurable f (μ.restrict (Ioc b a)) :=
+  h.2.AEStronglyMeasurable
 #align interval_integrable.ae_strongly_measurable' IntervalIntegrable.ae_strongly_measurable'
 
 end
@@ -536,15 +536,15 @@ theorem intervalIntegrable_of_integral_ne_zero {a b : ℝ} {f : ℝ → E} {μ :
   exact intervalIntegral.integral_undef h
 #align interval_integral.interval_integrable_of_integral_ne_zero intervalIntegral.intervalIntegrable_of_integral_ne_zero
 
-theorem integral_non_aeStronglyMeasurable (hf : ¬AeStronglyMeasurable f (μ.restrict (Ι a b))) :
+theorem integral_non_aEStronglyMeasurable (hf : ¬AEStronglyMeasurable f (μ.restrict (Ι a b))) :
     (∫ x in a..b, f x ∂μ) = 0 := by
   rw [interval_integral_eq_integral_uIoc, integral_non_ae_strongly_measurable hf, smul_zero]
-#align interval_integral.integral_non_ae_strongly_measurable intervalIntegral.integral_non_aeStronglyMeasurable
+#align interval_integral.integral_non_ae_strongly_measurable intervalIntegral.integral_non_aEStronglyMeasurable
 
-theorem integral_non_aeStronglyMeasurable_of_le (h : a ≤ b)
-    (hf : ¬AeStronglyMeasurable f (μ.restrict (Ioc a b))) : (∫ x in a..b, f x ∂μ) = 0 :=
-  integral_non_aeStronglyMeasurable <| by rwa [uIoc_of_le h]
-#align interval_integral.integral_non_ae_strongly_measurable_of_le intervalIntegral.integral_non_aeStronglyMeasurable_of_le
+theorem integral_non_aEStronglyMeasurable_of_le (h : a ≤ b)
+    (hf : ¬AEStronglyMeasurable f (μ.restrict (Ioc a b))) : (∫ x in a..b, f x ∂μ) = 0 :=
+  integral_non_aEStronglyMeasurable <| by rwa [uIoc_of_le h]
+#align interval_integral.integral_non_ae_strongly_measurable_of_le intervalIntegral.integral_non_aEStronglyMeasurable_of_le
 
 theorem norm_integral_min_max (f : ℝ → E) :
     ‖∫ x in min a b..max a b, f x ∂μ‖ = ‖∫ x in a..b, f x ∂μ‖ := by
@@ -1038,7 +1038,7 @@ theorem integral_indicator {a₁ a₂ a₃ : ℝ} (h : a₂ ∈ Icc a₁ a₃) :
 /-- Lebesgue dominated convergence theorem for filters with a countable basis -/
 theorem tendsto_integral_filter_of_dominated_convergence {ι} {l : Filter ι} [l.IsCountablyGenerated]
     {F : ι → ℝ → E} (bound : ℝ → ℝ)
-    (hF_meas : ∀ᶠ n in l, AeStronglyMeasurable (F n) (μ.restrict (Ι a b)))
+    (hF_meas : ∀ᶠ n in l, AEStronglyMeasurable (F n) (μ.restrict (Ι a b)))
     (h_bound : ∀ᶠ n in l, ∀ᵐ x ∂μ, x ∈ Ι a b → ‖F n x‖ ≤ bound x)
     (bound_integrable : IntervalIntegrable bound μ a b)
     (h_lim : ∀ᵐ x ∂μ, x ∈ Ι a b → Tendsto (fun n => F n x) l (𝓝 (f x))) :
@@ -1054,7 +1054,7 @@ theorem tendsto_integral_filter_of_dominated_convergence {ι} {l : Filter ι} [l
 
 /-- Lebesgue dominated convergence theorem for series. -/
 theorem hasSum_integral_of_dominated_convergence {ι} [Countable ι] {F : ι → ℝ → E}
-    (bound : ι → ℝ → ℝ) (hF_meas : ∀ n, AeStronglyMeasurable (F n) (μ.restrict (Ι a b)))
+    (bound : ι → ℝ → ℝ) (hF_meas : ∀ n, AEStronglyMeasurable (F n) (μ.restrict (Ι a b)))
     (h_bound : ∀ n, ∀ᵐ t ∂μ, t ∈ Ι a b → ‖F n t‖ ≤ bound n t)
     (bound_summable : ∀ᵐ t ∂μ, t ∈ Ι a b → Summable fun n => bound n t)
     (bound_integrable : IntervalIntegrable (fun t => ∑' n, bound n t) μ a b)
@@ -1080,7 +1080,7 @@ theorem hasSum_intervalIntegral_of_summable_norm [Countable ι] {f : ι → C(�
   refine'
     has_sum_integral_of_dominated_convergence
       (fun i (x : ℝ) => ‖(f i).restrict ↑(⟨uIcc a b, isCompact_uIcc⟩ : compacts ℝ)‖)
-      (fun i => (map_continuous <| f i).AeStronglyMeasurable)
+      (fun i => (map_continuous <| f i).AEStronglyMeasurable)
       (fun i =>
         ae_of_all _ fun x hx =>
           ((f i).restrict ↑(⟨uIcc a b, isCompact_uIcc⟩ : compacts ℝ)).norm_coe_le_norm
@@ -1106,7 +1106,7 @@ variable {X : Type _} [TopologicalSpace X] [FirstCountableTopology X]
   is continuous at `x₀` within `s` for almost every `t` in `[a, b]`
   then the same holds for `(λ x, ∫ t in a..b, F x t ∂μ) s x₀`. -/
 theorem continuousWithinAt_of_dominated_interval {F : X → ℝ → E} {x₀ : X} {bound : ℝ → ℝ} {a b : ℝ}
-    {s : Set X} (hF_meas : ∀ᶠ x in 𝓝[s] x₀, AeStronglyMeasurable (F x) (μ.restrict <| Ι a b))
+    {s : Set X} (hF_meas : ∀ᶠ x in 𝓝[s] x₀, AEStronglyMeasurable (F x) (μ.restrict <| Ι a b))
     (h_bound : ∀ᶠ x in 𝓝[s] x₀, ∀ᵐ t ∂μ, t ∈ Ι a b → ‖F x t‖ ≤ bound t)
     (bound_integrable : IntervalIntegrable bound μ a b)
     (h_cont : ∀ᵐ t ∂μ, t ∈ Ι a b → ContinuousWithinAt (fun x => F x t) s x₀) :
@@ -1121,7 +1121,7 @@ theorem continuousWithinAt_of_dominated_interval {F : X → ℝ → E} {x₀ : X
   is continuous at `x₀` for almost every `t` in `[a, b]`
   then the same holds for `(λ x, ∫ t in a..b, F x t ∂μ) s x₀`. -/
 theorem continuousAt_of_dominated_interval {F : X → ℝ → E} {x₀ : X} {bound : ℝ → ℝ} {a b : ℝ}
-    (hF_meas : ∀ᶠ x in 𝓝 x₀, AeStronglyMeasurable (F x) (μ.restrict <| Ι a b))
+    (hF_meas : ∀ᶠ x in 𝓝 x₀, AEStronglyMeasurable (F x) (μ.restrict <| Ι a b))
     (h_bound : ∀ᶠ x in 𝓝 x₀, ∀ᵐ t ∂μ, t ∈ Ι a b → ‖F x t‖ ≤ bound t)
     (bound_integrable : IntervalIntegrable bound μ a b)
     (h_cont : ∀ᵐ t ∂μ, t ∈ Ι a b → ContinuousAt (fun x => F x t) x₀) :
@@ -1135,7 +1135,7 @@ theorem continuousAt_of_dominated_interval {F : X → ℝ → E} {x₀ : X} {bou
   If `(λ x, F x t)` is continuous for almost every `t` in `[a, b]`
   then the same holds for `(λ x, ∫ t in a..b, F x t ∂μ) s x₀`. -/
 theorem continuous_of_dominated_interval {F : X → ℝ → E} {bound : ℝ → ℝ} {a b : ℝ}
-    (hF_meas : ∀ x, AeStronglyMeasurable (F x) <| μ.restrict <| Ι a b)
+    (hF_meas : ∀ x, AEStronglyMeasurable (F x) <| μ.restrict <| Ι a b)
     (h_bound : ∀ x, ∀ᵐ t ∂μ, t ∈ Ι a b → ‖F x t‖ ≤ bound t)
     (bound_integrable : IntervalIntegrable bound μ a b)
     (h_cont : ∀ᵐ t ∂μ, t ∈ Ι a b → Continuous fun x => F x t) :
@@ -1200,9 +1200,9 @@ theorem continuousWithinAt_primitive (hb₀ : μ {b₀} = 0)
     refine' continuous_within_at_of_dominated_interval _ _ this _ <;> clear this
     · apply eventually.mono self_mem_nhdsWithin
       intro x hx
-      erw [aeStronglyMeasurable_indicator_iff, measure.restrict_restrict, Iic_inter_Ioc_of_le]
+      erw [aestronglyMeasurable_indicator_iff, measure.restrict_restrict, Iic_inter_Ioc_of_le]
       · rw [min₁₂]
-        exact (h_int' hx).1.AeStronglyMeasurable
+        exact (h_int' hx).1.AEStronglyMeasurable
       · exact le_max_of_le_right hx.2
       exacts[measurableSet_Iic, measurableSet_Iic]
     · refine' eventually_of_forall fun x => eventually_of_forall fun t => _

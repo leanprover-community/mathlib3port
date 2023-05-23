@@ -91,7 +91,7 @@ variable (β)
 
 /-- The equivalence relation of being almost everywhere equal for almost everywhere strongly
 measurable functions. -/
-def Measure.aeEqSetoid (μ : Measure α) : Setoid { f : α → β // AeStronglyMeasurable f μ } :=
+def Measure.aeEqSetoid (μ : Measure α) : Setoid { f : α → β // AEStronglyMeasurable f μ } :=
   ⟨fun f g => (f : α → β) =ᵐ[μ] g, fun f => ae_eq_refl f, fun f g => ae_eq_symm, fun f g h =>
     ae_eq_trans⟩
 #align measure_theory.measure.ae_eq_setoid MeasureTheory.Measure.aeEqSetoid
@@ -118,26 +118,26 @@ variable [TopologicalSpace β] [TopologicalSpace γ] [TopologicalSpace δ]
 
 /-- Construct the equivalence class `[f]` of an almost everywhere measurable function `f`, based
     on the equivalence relation of being almost everywhere equal. -/
-def mk {β : Type _} [TopologicalSpace β] (f : α → β) (hf : AeStronglyMeasurable f μ) : α →ₘ[μ] β :=
+def mk {β : Type _} [TopologicalSpace β] (f : α → β) (hf : AEStronglyMeasurable f μ) : α →ₘ[μ] β :=
   Quotient.mk'' ⟨f, hf⟩
 #align measure_theory.ae_eq_fun.mk MeasureTheory.AeEqFun.mk
 
 /-- A measurable representative of an `ae_eq_fun` [f] -/
 instance : CoeFun (α →ₘ[μ] β) fun _ => α → β :=
   ⟨fun f =>
-    AeStronglyMeasurable.mk _ (Quotient.out' f : { f : α → β // AeStronglyMeasurable f μ }).2⟩
+    AEStronglyMeasurable.mk _ (Quotient.out' f : { f : α → β // AEStronglyMeasurable f μ }).2⟩
 
 protected theorem stronglyMeasurable (f : α →ₘ[μ] β) : StronglyMeasurable f :=
-  AeStronglyMeasurable.stronglyMeasurable_mk _
+  AEStronglyMeasurable.stronglyMeasurable_mk _
 #align measure_theory.ae_eq_fun.strongly_measurable MeasureTheory.AeEqFun.stronglyMeasurable
 
-protected theorem aeStronglyMeasurable (f : α →ₘ[μ] β) : AeStronglyMeasurable f μ :=
-  f.StronglyMeasurable.AeStronglyMeasurable
-#align measure_theory.ae_eq_fun.ae_strongly_measurable MeasureTheory.AeEqFun.aeStronglyMeasurable
+protected theorem aEStronglyMeasurable (f : α →ₘ[μ] β) : AEStronglyMeasurable f μ :=
+  f.StronglyMeasurable.AEStronglyMeasurable
+#align measure_theory.ae_eq_fun.ae_strongly_measurable MeasureTheory.AeEqFun.aEStronglyMeasurable
 
 protected theorem measurable [PseudoMetrizableSpace β] [MeasurableSpace β] [BorelSpace β]
     (f : α →ₘ[μ] β) : Measurable f :=
-  AeStronglyMeasurable.measurable_mk _
+  AEStronglyMeasurable.measurable_mk _
 #align measure_theory.ae_eq_fun.measurable MeasureTheory.AeEqFun.measurable
 
 protected theorem aEMeasurable [PseudoMetrizableSpace β] [MeasurableSpace β] [BorelSpace β]
@@ -157,7 +157,7 @@ theorem mk_eq_mk {f g : α → β} {hf hg} : (mk f hf : α →ₘ[μ] β) = mk g
 #align measure_theory.ae_eq_fun.mk_eq_mk MeasureTheory.AeEqFun.mk_eq_mk
 
 @[simp]
-theorem mk_coeFn (f : α →ₘ[μ] β) : mk f f.AeStronglyMeasurable = f :=
+theorem mk_coeFn (f : α →ₘ[μ] β) : mk f f.AEStronglyMeasurable = f :=
   by
   conv_rhs => rw [← Quotient.out_eq' f]
   set g : { f : α → β // ae_strongly_measurable f μ } := Quotient.out' f with hg
@@ -206,18 +206,18 @@ theorem induction_on₃ {α' β' : Type _} [MeasurableSpace α'] [TopologicalSpa
     return the equivalence class of `g ∘ f`, i.e., the almost everywhere equal function
     `[g ∘ f] : α →ₘ γ`. -/
 def comp (g : β → γ) (hg : Continuous g) (f : α →ₘ[μ] β) : α →ₘ[μ] γ :=
-  Quotient.liftOn' f (fun f => mk (g ∘ (f : α → β)) (hg.comp_aeStronglyMeasurable f.2))
+  Quotient.liftOn' f (fun f => mk (g ∘ (f : α → β)) (hg.comp_aestronglyMeasurable f.2))
     fun f f' H => mk_eq_mk.2 <| H.fun_comp g
 #align measure_theory.ae_eq_fun.comp MeasureTheory.AeEqFun.comp
 
 @[simp]
 theorem comp_mk (g : β → γ) (hg : Continuous g) (f : α → β) (hf) :
-    comp g hg (mk f hf : α →ₘ[μ] β) = mk (g ∘ f) (hg.comp_aeStronglyMeasurable hf) :=
+    comp g hg (mk f hf : α →ₘ[μ] β) = mk (g ∘ f) (hg.comp_aestronglyMeasurable hf) :=
   rfl
 #align measure_theory.ae_eq_fun.comp_mk MeasureTheory.AeEqFun.comp_mk
 
 theorem comp_eq_mk (g : β → γ) (hg : Continuous g) (f : α →ₘ[μ] β) :
-    comp g hg f = mk (g ∘ f) (hg.comp_aeStronglyMeasurable f.AeStronglyMeasurable) := by
+    comp g hg f = mk (g ∘ f) (hg.comp_aestronglyMeasurable f.AEStronglyMeasurable) := by
   rw [← comp_mk g hg f f.ae_strongly_measurable, mk_coe_fn]
 #align measure_theory.ae_eq_fun.comp_eq_mk MeasureTheory.AeEqFun.comp_eq_mk
 
@@ -237,20 +237,20 @@ variable [MeasurableSpace β] [PseudoMetrizableSpace β] [BorelSpace β] [Measur
     `[g ∘ f] : α →ₘ γ`. This requires that `γ` has a second countable topology. -/
 def compMeasurable (g : β → γ) (hg : Measurable g) (f : α →ₘ[μ] β) : α →ₘ[μ] γ :=
   Quotient.liftOn' f
-    (fun f' => mk (g ∘ (f' : α → β)) (hg.comp_aemeasurable f'.2.AEMeasurable).AeStronglyMeasurable)
+    (fun f' => mk (g ∘ (f' : α → β)) (hg.comp_aemeasurable f'.2.AEMeasurable).AEStronglyMeasurable)
     fun f f' H => mk_eq_mk.2 <| H.fun_comp g
 #align measure_theory.ae_eq_fun.comp_measurable MeasureTheory.AeEqFun.compMeasurable
 
 @[simp]
 theorem compMeasurable_mk (g : β → γ) (hg : Measurable g) (f : α → β)
-    (hf : AeStronglyMeasurable f μ) :
+    (hf : AEStronglyMeasurable f μ) :
     compMeasurable g hg (mk f hf : α →ₘ[μ] β) =
-      mk (g ∘ f) (hg.comp_aemeasurable hf.AEMeasurable).AeStronglyMeasurable :=
+      mk (g ∘ f) (hg.comp_aemeasurable hf.AEMeasurable).AEStronglyMeasurable :=
   rfl
 #align measure_theory.ae_eq_fun.comp_measurable_mk MeasureTheory.AeEqFun.compMeasurable_mk
 
 theorem compMeasurable_eq_mk (g : β → γ) (hg : Measurable g) (f : α →ₘ[μ] β) :
-    compMeasurable g hg f = mk (g ∘ f) (hg.comp_aemeasurable f.AEMeasurable).AeStronglyMeasurable :=
+    compMeasurable g hg f = mk (g ∘ f) (hg.comp_aemeasurable f.AEMeasurable).AEStronglyMeasurable :=
   by rw [← comp_measurable_mk g hg f f.ae_strongly_measurable, mk_coe_fn]
 #align measure_theory.ae_eq_fun.comp_measurable_eq_mk MeasureTheory.AeEqFun.compMeasurable_eq_mk
 
@@ -276,7 +276,7 @@ theorem pair_mk_mk (f : α → β) (hf) (g : α → γ) (hg) :
 #align measure_theory.ae_eq_fun.pair_mk_mk MeasureTheory.AeEqFun.pair_mk_mk
 
 theorem pair_eq_mk (f : α →ₘ[μ] β) (g : α →ₘ[μ] γ) :
-    f.pair g = mk (fun x => (f x, g x)) (f.AeStronglyMeasurable.prod_mk g.AeStronglyMeasurable) :=
+    f.pair g = mk (fun x => (f x, g x)) (f.AEStronglyMeasurable.prod_mk g.AEStronglyMeasurable) :=
   by simp only [← pair_mk_mk, mk_coe_fn]
 #align measure_theory.ae_eq_fun.pair_eq_mk MeasureTheory.AeEqFun.pair_eq_mk
 
@@ -299,7 +299,7 @@ def comp₂ (g : β → γ → δ) (hg : Continuous (uncurry g)) (f₁ : α →�
 theorem comp₂_mk_mk (g : β → γ → δ) (hg : Continuous (uncurry g)) (f₁ : α → β) (f₂ : α → γ)
     (hf₁ hf₂) :
     comp₂ g hg (mk f₁ hf₁ : α →ₘ[μ] β) (mk f₂ hf₂) =
-      mk (fun a => g (f₁ a) (f₂ a)) (hg.comp_aeStronglyMeasurable (hf₁.prod_mk hf₂)) :=
+      mk (fun a => g (f₁ a) (f₂ a)) (hg.comp_aestronglyMeasurable (hf₁.prod_mk hf₂)) :=
   rfl
 #align measure_theory.ae_eq_fun.comp₂_mk_mk MeasureTheory.AeEqFun.comp₂_mk_mk
 
@@ -312,7 +312,7 @@ theorem comp₂_eq_mk (g : β → γ → δ) (hg : Continuous (uncurry g)) (f₁
     (f₂ : α →ₘ[μ] γ) :
     comp₂ g hg f₁ f₂ =
       mk (fun a => g (f₁ a) (f₂ a))
-        (hg.comp_aeStronglyMeasurable (f₁.AeStronglyMeasurable.prod_mk f₂.AeStronglyMeasurable)) :=
+        (hg.comp_aestronglyMeasurable (f₁.AEStronglyMeasurable.prod_mk f₂.AEStronglyMeasurable)) :=
   by rw [comp₂_eq_pair, pair_eq_mk, comp_mk] <;> rfl
 #align measure_theory.ae_eq_fun.comp₂_eq_mk MeasureTheory.AeEqFun.comp₂_eq_mk
 
@@ -343,7 +343,7 @@ theorem comp₂Measurable_mk_mk (g : β → γ → δ) (hg : Measurable (uncurry
     (f₂ : α → γ) (hf₁ hf₂) :
     comp₂Measurable g hg (mk f₁ hf₁ : α →ₘ[μ] β) (mk f₂ hf₂) =
       mk (fun a => g (f₁ a) (f₂ a))
-        (hg.comp_aemeasurable (hf₁.AEMeasurable.prod_mk hf₂.AEMeasurable)).AeStronglyMeasurable :=
+        (hg.comp_aemeasurable (hf₁.AEMeasurable.prod_mk hf₂.AEMeasurable)).AEStronglyMeasurable :=
   rfl
 #align measure_theory.ae_eq_fun.comp₂_measurable_mk_mk MeasureTheory.AeEqFun.comp₂Measurable_mk_mk
 
@@ -356,7 +356,7 @@ theorem comp₂Measurable_eq_mk (g : β → γ → δ) (hg : Measurable (uncurry
     (f₂ : α →ₘ[μ] γ) :
     comp₂Measurable g hg f₁ f₂ =
       mk (fun a => g (f₁ a) (f₂ a))
-        (hg.comp_aemeasurable (f₁.AEMeasurable.prod_mk f₂.AEMeasurable)).AeStronglyMeasurable :=
+        (hg.comp_aemeasurable (f₁.AEMeasurable.prod_mk f₂.AEMeasurable)).AEStronglyMeasurable :=
   by rw [comp₂_measurable_eq_pair, pair_eq_mk, comp_measurable_mk] <;> rfl
 #align measure_theory.ae_eq_fun.comp₂_measurable_eq_mk MeasureTheory.AeEqFun.comp₂Measurable_eq_mk
 
@@ -546,7 +546,7 @@ variable (α)
 /-- The equivalence class of a constant function: `[λ a:α, b]`, based on the equivalence relation of
     being almost everywhere equal -/
 def const (b : β) : α →ₘ[μ] β :=
-  mk (fun a : α => b) aeStronglyMeasurable_const
+  mk (fun a : α => b) aestronglyMeasurable_const
 #align measure_theory.ae_eq_fun.const MeasureTheory.AeEqFun.const
 
 theorem coeFn_const (b : β) : (const α b : α →ₘ[μ] β) =ᵐ[μ] Function.const α b :=
@@ -563,7 +563,7 @@ instance [One β] : One (α →ₘ[μ] β) :=
   ⟨const α 1⟩
 
 @[to_additive]
-theorem one_def [One β] : (1 : α →ₘ[μ] β) = mk (fun a : α => 1) aeStronglyMeasurable_const :=
+theorem one_def [One β] : (1 : α →ₘ[μ] β) = mk (fun a : α => 1) aestronglyMeasurable_const :=
   rfl
 #align measure_theory.ae_eq_fun.one_def MeasureTheory.AeEqFun.one_def
 #align measure_theory.ae_eq_fun.zero_def MeasureTheory.AeEqFun.zero_def
@@ -594,7 +594,7 @@ instance : SMul 𝕜 (α →ₘ[μ] γ) :=
   ⟨fun c f => comp ((· • ·) c) (continuous_id.const_smul c) f⟩
 
 @[simp]
-theorem smul_mk (c : 𝕜) (f : α → γ) (hf : AeStronglyMeasurable f μ) :
+theorem smul_mk (c : 𝕜) (f : α → γ) (hf : AEStronglyMeasurable f μ) :
     c • (mk f hf : α →ₘ[μ] γ) = mk (c • f) (hf.const_smul _) :=
   rfl
 #align measure_theory.ae_eq_fun.smul_mk MeasureTheory.AeEqFun.smul_mk
@@ -627,7 +627,7 @@ instance : Mul (α →ₘ[μ] γ) :=
   ⟨comp₂ (· * ·) continuous_mul⟩
 
 @[simp, to_additive]
-theorem mk_mul_mk (f g : α → γ) (hf : AeStronglyMeasurable f μ) (hg : AeStronglyMeasurable g μ) :
+theorem mk_mul_mk (f g : α → γ) (hf : AEStronglyMeasurable f μ) (hg : AEStronglyMeasurable g μ) :
     (mk f hf : α →ₘ[μ] γ) * mk g hg = mk (f * g) (hf.mul hg) :=
   rfl
 #align measure_theory.ae_eq_fun.mk_mul_mk MeasureTheory.AeEqFun.mk_mul_mk
@@ -662,7 +662,7 @@ instance : Pow (α →ₘ[μ] γ) ℕ :=
 
 @[simp]
 theorem mk_pow (f : α → γ) (hf) (n : ℕ) :
-    (mk f hf : α →ₘ[μ] γ) ^ n = mk (f ^ n) ((continuous_pow n).comp_aeStronglyMeasurable hf) :=
+    (mk f hf : α →ₘ[μ] γ) ^ n = mk (f ^ n) ((continuous_pow n).comp_aestronglyMeasurable hf) :=
   rfl
 #align measure_theory.ae_eq_fun.mk_pow MeasureTheory.AeEqFun.mk_pow
 
@@ -732,7 +732,7 @@ instance : Div (α →ₘ[μ] γ) :=
   ⟨comp₂ Div.div continuous_div'⟩
 
 @[simp, to_additive]
-theorem mk_div (f g : α → γ) (hf : AeStronglyMeasurable f μ) (hg : AeStronglyMeasurable g μ) :
+theorem mk_div (f g : α → γ) (hf : AEStronglyMeasurable f μ) (hg : AEStronglyMeasurable g μ) :
     mk (f / g) (hf.div hg) = (mk f hf : α →ₘ[μ] γ) / mk g hg :=
   rfl
 #align measure_theory.ae_eq_fun.mk_div MeasureTheory.AeEqFun.mk_div
@@ -760,7 +760,7 @@ instance hasIntPow : Pow (α →ₘ[μ] γ) ℤ :=
 
 @[simp]
 theorem mk_zpow (f : α → γ) (hf) (n : ℤ) :
-    (mk f hf : α →ₘ[μ] γ) ^ n = mk (f ^ n) ((continuous_zpow n).comp_aeStronglyMeasurable hf) :=
+    (mk f hf : α →ₘ[μ] γ) ^ n = mk (f ^ n) ((continuous_zpow n).comp_aestronglyMeasurable hf) :=
   rfl
 #align measure_theory.ae_eq_fun.mk_zpow MeasureTheory.AeEqFun.mk_zpow
 
@@ -870,7 +870,7 @@ def posPart (f : α →ₘ[μ] γ) : α →ₘ[μ] γ :=
 theorem posPart_mk (f : α → γ) (hf) :
     posPart (mk f hf : α →ₘ[μ] γ) =
       mk (fun x => max (f x) 0)
-        ((continuous_id.max continuous_const).comp_aeStronglyMeasurable hf) :=
+        ((continuous_id.max continuous_const).comp_aestronglyMeasurable hf) :=
   rfl
 #align measure_theory.ae_eq_fun.pos_part_mk MeasureTheory.AeEqFun.posPart_mk
 
@@ -895,7 +895,7 @@ variable [TopologicalSpace β] [SecondCountableTopologyEither α β] [PseudoMetr
 /-- The equivalence class of `μ`-almost-everywhere measurable functions associated to a continuous
 map. -/
 def toAeEqFun (f : C(α, β)) : α →ₘ[μ] β :=
-  AeEqFun.mk f f.Continuous.AeStronglyMeasurable
+  AeEqFun.mk f f.Continuous.AEStronglyMeasurable
 #align continuous_map.to_ae_eq_fun ContinuousMap.toAeEqFun
 
 theorem coeFn_toAeEqFun (f : C(α, β)) : f.toAeEqFun μ =ᵐ[μ] f :=
@@ -913,7 +913,7 @@ def toAeEqFunMulHom : C(α, β) →* α →ₘ[μ] β
   toFun := ContinuousMap.toAeEqFun μ
   map_one' := rfl
   map_mul' f g :=
-    AeEqFun.mk_mul_mk _ _ f.Continuous.AeStronglyMeasurable g.Continuous.AeStronglyMeasurable
+    AeEqFun.mk_mul_mk _ _ f.Continuous.AEStronglyMeasurable g.Continuous.AEStronglyMeasurable
 #align continuous_map.to_ae_eq_fun_mul_hom ContinuousMap.toAeEqFunMulHom
 #align continuous_map.to_ae_eq_fun_add_hom ContinuousMap.toAeEqFunAddHom
 
@@ -926,7 +926,7 @@ variable [TopologicalSpace γ] [PseudoMetrizableSpace γ] [AddCommGroup γ] [Mod
 classes of `μ`-almost-everywhere measurable functions. -/
 def toAeEqFunLinearMap : C(α, γ) →ₗ[𝕜] α →ₘ[μ] γ :=
   { toAeEqFunAddHom μ with
-    map_smul' := fun c f => AeEqFun.smul_mk c f f.Continuous.AeStronglyMeasurable }
+    map_smul' := fun c f => AeEqFun.smul_mk c f f.Continuous.AEStronglyMeasurable }
 #align continuous_map.to_ae_eq_fun_linear_map ContinuousMap.toAeEqFunLinearMap
 
 end ContinuousMap

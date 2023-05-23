@@ -71,7 +71,7 @@ theorem MeasureTheory.Memℒp.evariance_lt_top [FiniteMeasure μ] (hX : Memℒp 
   exact this
 #align measure_theory.mem_ℒp.evariance_lt_top MeasureTheory.Memℒp.evariance_lt_top
 
-theorem evariance_eq_top [FiniteMeasure μ] (hXm : AeStronglyMeasurable X μ) (hX : ¬Memℒp X 2 μ) :
+theorem evariance_eq_top [FiniteMeasure μ] (hXm : AEStronglyMeasurable X μ) (hX : ¬Memℒp X 2 μ) :
     evariance X μ = ∞ := by
   by_contra h
   rw [← Ne.def, ← lt_top_iff_ne_top] at h
@@ -87,7 +87,7 @@ theorem evariance_eq_top [FiniteMeasure μ] (hXm : AeStronglyMeasurable X μ) (h
   rw [Pi.add_apply, sub_add_cancel]
 #align probability_theory.evariance_eq_top ProbabilityTheory.evariance_eq_top
 
-theorem evariance_lt_top_iff_memℒp [FiniteMeasure μ] (hX : AeStronglyMeasurable X μ) :
+theorem evariance_lt_top_iff_memℒp [FiniteMeasure μ] (hX : AEStronglyMeasurable X μ) :
     evariance X μ < ∞ ↔ Memℒp X 2 μ :=
   by
   refine' ⟨_, MeasureTheory.Memℒp.evariance_lt_top⟩
@@ -235,7 +235,7 @@ theorem variance_def' [ProbabilityMeasure (ℙ : Measure Ω)] {X : Ω → ℝ} (
 #align probability_theory.variance_def' ProbabilityTheory.variance_def'
 
 theorem variance_le_expectation_sq [ProbabilityMeasure (ℙ : Measure Ω)] {X : Ω → ℝ}
-    (hm : AeStronglyMeasurable X ℙ) : Var[X] ≤ 𝔼[X ^ 2] :=
+    (hm : AEStronglyMeasurable X ℙ) : Var[X] ≤ 𝔼[X ^ 2] :=
   by
   by_cases hX : mem_ℒp X 2
   · rw [variance_def' hX]
@@ -255,11 +255,11 @@ theorem variance_le_expectation_sq [ProbabilityMeasure (ℙ : Measure Ω)] {X : 
       convert A.add B
       simp
   · exact ae_of_all _ fun x => sq_nonneg _
-  · exact (AEMeasurable.pow_const (hm.ae_measurable.sub_const _) _).AeStronglyMeasurable
+  · exact (AEMeasurable.pow_const (hm.ae_measurable.sub_const _) _).AEStronglyMeasurable
 #align probability_theory.variance_le_expectation_sq ProbabilityTheory.variance_le_expectation_sq
 
 theorem evariance_def' [ProbabilityMeasure (ℙ : Measure Ω)] {X : Ω → ℝ}
-    (hX : AeStronglyMeasurable X ℙ) : eVar[X] = (∫⁻ ω, ‖X ω‖₊ ^ 2) - ENNReal.ofReal (𝔼[X] ^ 2) :=
+    (hX : AEStronglyMeasurable X ℙ) : eVar[X] = (∫⁻ ω, ‖X ω‖₊ ^ 2) - ENNReal.ofReal (𝔼[X] ^ 2) :=
   by
   by_cases hℒ : mem_ℒp X 2
   · rw [← hℒ.of_real_variance_eq, variance_def' hℒ, ENNReal.ofReal_sub _ (sq_nonneg _)]
@@ -282,7 +282,7 @@ theorem evariance_def' [ProbabilityMeasure (ℙ : Measure Ω)] {X : Ω → ℝ}
 #align probability_theory.evariance_def' ProbabilityTheory.evariance_def'
 
 /-- *Chebyshev's inequality* for `ℝ≥0∞`-valued variance. -/
-theorem meas_ge_le_evariance_div_sq {X : Ω → ℝ} (hX : AeStronglyMeasurable X ℙ) {c : ℝ≥0}
+theorem meas_ge_le_evariance_div_sq {X : Ω → ℝ} (hX : AEStronglyMeasurable X ℙ) {c : ℝ≥0}
     (hc : c ≠ 0) : ℙ { ω | ↑c ≤ |X ω - 𝔼[X]| } ≤ eVar[X] / c ^ 2 :=
   by
   have A : (c : ℝ≥0∞) ≠ 0 := by rwa [Ne.def, ENNReal.coe_eq_zero]

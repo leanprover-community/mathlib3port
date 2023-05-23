@@ -361,7 +361,7 @@ theorem stronglyMeasurable_limit_process' : strongly_measurable[m] (limitProcess
 #align measure_theory.filtration.strongly_measurable_limit_process' MeasureTheory.Filtration.stronglyMeasurable_limit_process'
 
 theorem memℒp_limitProcess_of_snorm_bdd {R : ℝ≥0} {p : ℝ≥0∞} {F : Type _} [NormedAddCommGroup F]
-    {ℱ : Filtration ℕ m} {f : ℕ → Ω → F} (hfm : ∀ n, AeStronglyMeasurable (f n) μ)
+    {ℱ : Filtration ℕ m} {f : ℕ → Ω → F} (hfm : ∀ n, AEStronglyMeasurable (f n) μ)
     (hbdd : ∀ n, snorm (f n) p μ ≤ R) : Memℒp (limitProcess f ℱ μ) p μ :=
   by
   rw [limit_process]

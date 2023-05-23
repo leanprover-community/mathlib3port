@@ -687,7 +687,7 @@ variable {Ω : Type _} [MeasurableSpace Ω] [TopologicalSpace Ω] [OpensMeasurab
 theorem integrable_of_bounded_continuous_to_nNReal (μ : Measure Ω) [FiniteMeasure μ]
     (f : Ω →ᵇ ℝ≥0) : Integrable ((coe : ℝ≥0 → ℝ) ∘ ⇑f) μ :=
   by
-  refine' ⟨(nnreal.continuous_coe.comp f.continuous).Measurable.AeStronglyMeasurable, _⟩
+  refine' ⟨(nnreal.continuous_coe.comp f.continuous).Measurable.AEStronglyMeasurable, _⟩
   simp only [has_finite_integral, NNReal.nnnorm_eq]
   exact lintegral_lt_top_of_bounded_continuous_to_nnreal _ f
 #align measure_theory.finite_measure.integrable_of_bounded_continuous_to_nnreal MeasureTheory.FiniteMeasureCat.integrable_of_bounded_continuous_to_nNReal
@@ -753,7 +753,7 @@ theorem BoundedContinuousFunction.Nnreal.toReal_lintegral_eq_integral (f : Ω �
     (μ : Measure Ω) : (∫⁻ x, (f x : ℝ≥0∞) ∂μ).toReal = ∫ x, f x ∂μ :=
   by
   rw [integral_eq_lintegral_of_nonneg_ae _
-      (nnreal.continuous_coe.comp f.continuous).Measurable.AeStronglyMeasurable]
+      (nnreal.continuous_coe.comp f.continuous).Measurable.AEStronglyMeasurable]
   · simp only [ENNReal.ofReal_coe_nnreal]
   · apply eventually_of_forall
     simp only [Pi.zero_apply, NNReal.zero_le_coe, imp_true_iff]

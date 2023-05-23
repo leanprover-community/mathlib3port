@@ -896,9 +896,9 @@ theorem integral_undef (h : ¬Integrable f μ) : (∫ a, f a ∂μ) = 0 :=
   exact @dif_neg _ (id _) h _ _ _
 #align measure_theory.integral_undef MeasureTheory.integral_undef
 
-theorem integral_non_aeStronglyMeasurable (h : ¬AeStronglyMeasurable f μ) : (∫ a, f a ∂μ) = 0 :=
+theorem integral_non_aEStronglyMeasurable (h : ¬AEStronglyMeasurable f μ) : (∫ a, f a ∂μ) = 0 :=
   integral_undef <| not_and_of_not_left _ h
-#align measure_theory.integral_non_ae_strongly_measurable MeasureTheory.integral_non_aeStronglyMeasurable
+#align measure_theory.integral_non_ae_strongly_measurable MeasureTheory.integral_non_aEStronglyMeasurable
 
 variable (α E)
 
@@ -1068,7 +1068,7 @@ theorem tendsto_integral_of_L1 {ι} (f : α → E) (hfi : Integrable f μ) {F : 
   (i.e. not requiring that `bound` is measurable), but in all applications proving integrability
   is easier. -/
 theorem tendsto_integral_of_dominated_convergence {F : ℕ → α → E} {f : α → E} (bound : α → ℝ)
-    (F_measurable : ∀ n, AeStronglyMeasurable (F n) μ) (bound_integrable : Integrable bound μ)
+    (F_measurable : ∀ n, AEStronglyMeasurable (F n) μ) (bound_integrable : Integrable bound μ)
     (h_bound : ∀ n, ∀ᵐ a ∂μ, ‖F n a‖ ≤ bound a)
     (h_lim : ∀ᵐ a ∂μ, Tendsto (fun n => F n a) atTop (𝓝 (f a))) :
     Tendsto (fun n => ∫ a, F n a ∂μ) atTop (𝓝 <| ∫ a, f a ∂μ) :=
@@ -1081,7 +1081,7 @@ theorem tendsto_integral_of_dominated_convergence {F : ℕ → α → E} {f : α
 
 /-- Lebesgue dominated convergence theorem for filters with a countable basis -/
 theorem tendsto_integral_filter_of_dominated_convergence {ι} {l : Filter ι} [l.IsCountablyGenerated]
-    {F : ι → α → E} {f : α → E} (bound : α → ℝ) (hF_meas : ∀ᶠ n in l, AeStronglyMeasurable (F n) μ)
+    {F : ι → α → E} {f : α → E} (bound : α → ℝ) (hF_meas : ∀ᶠ n in l, AEStronglyMeasurable (F n) μ)
     (h_bound : ∀ᶠ n in l, ∀ᵐ a ∂μ, ‖F n a‖ ≤ bound a) (bound_integrable : Integrable bound μ)
     (h_lim : ∀ᵐ a ∂μ, Tendsto (fun n => F n a) l (𝓝 (f a))) :
     Tendsto (fun n => ∫ a, F n a ∂μ) l (𝓝 <| ∫ a, f a ∂μ) :=
@@ -1094,7 +1094,7 @@ theorem tendsto_integral_filter_of_dominated_convergence {ι} {l : Filter ι} [l
 
 /-- Lebesgue dominated convergence theorem for series. -/
 theorem hasSum_integral_of_dominated_convergence {ι} [Countable ι] {F : ι → α → E} {f : α → E}
-    (bound : ι → α → ℝ) (hF_meas : ∀ n, AeStronglyMeasurable (F n) μ)
+    (bound : ι → α → ℝ) (hF_meas : ∀ n, AEStronglyMeasurable (F n) μ)
     (h_bound : ∀ n, ∀ᵐ a ∂μ, ‖F n a‖ ≤ bound n a)
     (bound_summable : ∀ᵐ a ∂μ, Summable fun n => bound n a)
     (bound_integrable : Integrable (fun a => ∑' n, bound n a) μ)
@@ -1116,7 +1116,7 @@ theorem hasSum_integral_of_dominated_convergence {ι} [Countable ι] {F : ι →
   refine'
     tendsto_integral_filter_of_dominated_convergence (fun a => ∑' n, bound n a) _ _ bound_integrable
       h_lim
-  · exact eventually_of_forall fun s => s.aeStronglyMeasurable_sum fun n hn => hF_meas n
+  · exact eventually_of_forall fun s => s.aestronglyMeasurable_sum fun n hn => hF_meas n
   · refine' eventually_of_forall fun s => _
     filter_upwards [eventually_countable_forall.2 h_bound, hb_nonneg,
       bound_summable]with a hFa ha0 has
@@ -1129,7 +1129,7 @@ theorem hasSum_integral_of_dominated_convergence {ι} [Countable ι] {F : ι →
 variable {X : Type _} [TopologicalSpace X] [FirstCountableTopology X]
 
 theorem continuousWithinAt_of_dominated {F : X → α → E} {x₀ : X} {bound : α → ℝ} {s : Set X}
-    (hF_meas : ∀ᶠ x in 𝓝[s] x₀, AeStronglyMeasurable (F x) μ)
+    (hF_meas : ∀ᶠ x in 𝓝[s] x₀, AEStronglyMeasurable (F x) μ)
     (h_bound : ∀ᶠ x in 𝓝[s] x₀, ∀ᵐ a ∂μ, ‖F x a‖ ≤ bound a) (bound_integrable : Integrable bound μ)
     (h_cont : ∀ᵐ a ∂μ, ContinuousWithinAt (fun x => F x a) s x₀) :
     ContinuousWithinAt (fun x => ∫ a, F x a ∂μ) s x₀ :=
@@ -1141,7 +1141,7 @@ theorem continuousWithinAt_of_dominated {F : X → α → E} {x₀ : X} {bound :
 #align measure_theory.continuous_within_at_of_dominated MeasureTheory.continuousWithinAt_of_dominated
 
 theorem continuousAt_of_dominated {F : X → α → E} {x₀ : X} {bound : α → ℝ}
-    (hF_meas : ∀ᶠ x in 𝓝 x₀, AeStronglyMeasurable (F x) μ)
+    (hF_meas : ∀ᶠ x in 𝓝 x₀, AEStronglyMeasurable (F x) μ)
     (h_bound : ∀ᶠ x in 𝓝 x₀, ∀ᵐ a ∂μ, ‖F x a‖ ≤ bound a) (bound_integrable : Integrable bound μ)
     (h_cont : ∀ᵐ a ∂μ, ContinuousAt (fun x => F x a) x₀) :
     ContinuousAt (fun x => ∫ a, F x a ∂μ) x₀ :=
@@ -1153,7 +1153,7 @@ theorem continuousAt_of_dominated {F : X → α → E} {x₀ : X} {bound : α �
 #align measure_theory.continuous_at_of_dominated MeasureTheory.continuousAt_of_dominated
 
 theorem continuousOn_of_dominated {F : X → α → E} {bound : α → ℝ} {s : Set X}
-    (hF_meas : ∀ x ∈ s, AeStronglyMeasurable (F x) μ)
+    (hF_meas : ∀ x ∈ s, AEStronglyMeasurable (F x) μ)
     (h_bound : ∀ x ∈ s, ∀ᵐ a ∂μ, ‖F x a‖ ≤ bound a) (bound_integrable : Integrable bound μ)
     (h_cont : ∀ᵐ a ∂μ, ContinuousOn (fun x => F x a) s) : ContinuousOn (fun x => ∫ a, F x a ∂μ) s :=
   by
@@ -1164,7 +1164,7 @@ theorem continuousOn_of_dominated {F : X → α → E} {bound : α → ℝ} {s :
 #align measure_theory.continuous_on_of_dominated MeasureTheory.continuousOn_of_dominated
 
 theorem continuous_of_dominated {F : X → α → E} {bound : α → ℝ}
-    (hF_meas : ∀ x, AeStronglyMeasurable (F x) μ) (h_bound : ∀ x, ∀ᵐ a ∂μ, ‖F x a‖ ≤ bound a)
+    (hF_meas : ∀ x, AEStronglyMeasurable (F x) μ) (h_bound : ∀ x, ∀ᵐ a ∂μ, ‖F x a‖ ≤ bound a)
     (bound_integrable : Integrable bound μ) (h_cont : ∀ᵐ a ∂μ, Continuous fun x => F x a) :
     Continuous fun x => ∫ a, F x a ∂μ :=
   by
@@ -1211,7 +1211,7 @@ theorem integral_eq_lintegral_pos_part_sub_lintegral_neg_part {f : α → ℝ} (
 #align measure_theory.integral_eq_lintegral_pos_part_sub_lintegral_neg_part MeasureTheory.integral_eq_lintegral_pos_part_sub_lintegral_neg_part
 
 theorem integral_eq_lintegral_of_nonneg_ae {f : α → ℝ} (hf : 0 ≤ᵐ[μ] f)
-    (hfm : AeStronglyMeasurable f μ) :
+    (hfm : AEStronglyMeasurable f μ) :
     (∫ a, f a ∂μ) = ENNReal.toReal (∫⁻ a, ENNReal.ofReal <| f a ∂μ) :=
   by
   by_cases hfi : integrable f μ
@@ -1237,7 +1237,7 @@ theorem integral_eq_lintegral_of_nonneg_ae {f : α → ℝ} (hf : 0 ≤ᵐ[μ] f
 #align measure_theory.integral_eq_lintegral_of_nonneg_ae MeasureTheory.integral_eq_lintegral_of_nonneg_ae
 
 theorem integral_norm_eq_lintegral_nnnorm {G} [NormedAddCommGroup G] {f : α → G}
-    (hf : AeStronglyMeasurable f μ) : (∫ x, ‖f x‖ ∂μ) = ENNReal.toReal (∫⁻ x, ‖f x‖₊ ∂μ) :=
+    (hf : AEStronglyMeasurable f μ) : (∫ x, ‖f x‖ ∂μ) = ENNReal.toReal (∫⁻ x, ‖f x‖₊ ∂μ) :=
   by
   rw [integral_eq_lintegral_of_nonneg_ae _ hf.norm]
   · simp_rw [ofReal_norm_eq_coe_nnnorm]
@@ -1391,7 +1391,7 @@ theorem Memℒp.snorm_eq_integral_rpow_norm {f : α → H} {p : ℝ≥0∞} (hp1
   rw [integral_eq_lintegral_of_nonneg_ae]
   rotate_left
   · exact eventually_of_forall fun x => Real.rpow_nonneg_of_nonneg (norm_nonneg _) _
-  · exact (hf.ae_strongly_measurable.norm.ae_measurable.pow_const _).AeStronglyMeasurable
+  · exact (hf.ae_strongly_measurable.norm.ae_measurable.pow_const _).AEStronglyMeasurable
   rw [A, ← of_real_rpow_of_nonneg to_real_nonneg (inv_nonneg.2 to_real_nonneg), of_real_to_real]
   exact (lintegral_rpow_nnnorm_lt_top_of_snorm_lt_top hp1 hp2 hf.2).Ne
 #align measure_theory.mem_ℒp.snorm_eq_integral_rpow_norm MeasureTheory.Memℒp.snorm_eq_integral_rpow_norm
@@ -1438,13 +1438,13 @@ theorem integral_mono_measure {f : α → ℝ} {ν} (hle : μ ≤ ν) (hf : 0 �
 theorem norm_integral_le_integral_norm (f : α → E) : ‖∫ a, f a ∂μ‖ ≤ ∫ a, ‖f a‖ ∂μ :=
   have le_ae : ∀ᵐ a ∂μ, 0 ≤ ‖f a‖ := eventually_of_forall fun a => norm_nonneg _
   by_cases
-    (fun h : AeStronglyMeasurable f μ =>
+    (fun h : AEStronglyMeasurable f μ =>
       calc
         ‖∫ a, f a ∂μ‖ ≤ ENNReal.toReal (∫⁻ a, ENNReal.ofReal ‖f a‖ ∂μ) :=
           norm_integral_le_lintegral_norm _
         _ = ∫ a, ‖f a‖ ∂μ := (integral_eq_lintegral_of_nonneg_ae le_ae <| h.norm).symm
         )
-    fun h : ¬AeStronglyMeasurable f μ =>
+    fun h : ¬AEStronglyMeasurable f μ =>
     by
     rw [integral_non_ae_strongly_measurable h, norm_zero]
     exact integral_nonneg_of_ae le_ae
@@ -1603,7 +1603,7 @@ theorem integral_sum_measure {ι} {m : MeasurableSpace α} {f : α → E} {μ : 
 #align measure_theory.integral_sum_measure MeasureTheory.integral_sum_measure
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:38: in filter_upwards #[[], ["with", ident x], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error @ arg 0: next failed, no more args -/
-theorem integral_tsum {ι} [Countable ι] {f : ι → α → E} (hf : ∀ i, AeStronglyMeasurable (f i) μ)
+theorem integral_tsum {ι} [Countable ι] {f : ι → α → E} (hf : ∀ i, AEStronglyMeasurable (f i) μ)
     (hf' : (∑' i, ∫⁻ a : α, ‖f i a‖₊ ∂μ) ≠ ∞) :
     (∫ a : α, ∑' i, f i a ∂μ) = ∑' i, ∫ a : α, f i a ∂μ :=
   by
@@ -1622,7 +1622,7 @@ theorem integral_tsum {ι} [Countable ι] {f : ι → α → E} (hf : ∀ i, AeS
       "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:38: in filter_upwards #[[], [\"with\", ident x], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error @ arg 0: next failed, no more args"
     rfl
   · simp_rw [← coe_nnnorm, ← NNReal.coe_tsum]
-    rw [aeStronglyMeasurable_iff_aEMeasurable]
+    rw [aestronglyMeasurable_iff_aemeasurable]
     apply AEMeasurable.coe_nnreal_real
     apply AEMeasurable.nnreal_tsum
     exact fun i => (hf i).nnnorm.AEMeasurable
@@ -1678,7 +1678,7 @@ theorem integral_map_of_stronglyMeasurable {β} [MeasurableSpace β] {φ : α �
 #align measure_theory.integral_map_of_strongly_measurable MeasureTheory.integral_map_of_stronglyMeasurable
 
 theorem integral_map {β} [MeasurableSpace β] {φ : α → β} (hφ : AEMeasurable φ μ) {f : β → E}
-    (hfm : AeStronglyMeasurable f (Measure.map φ μ)) :
+    (hfm : AEStronglyMeasurable f (Measure.map φ μ)) :
     (∫ y, f y ∂Measure.map φ μ) = ∫ x, f (φ x) ∂μ :=
   let g := hfm.mk f
   calc
@@ -1812,9 +1812,9 @@ theorem integral_mul_norm_le_Lp_mul_Lq {E} [NormedAddCommGroup E] {f g : α → 
     integral_eq_lintegral_of_nonneg_ae]
   rotate_left
   · exact eventually_of_forall fun x => Real.rpow_nonneg_of_nonneg (norm_nonneg _) _
-  · exact (hg.1.norm.AEMeasurable.pow aemeasurable_const).AeStronglyMeasurable
+  · exact (hg.1.norm.AEMeasurable.pow aemeasurable_const).AEStronglyMeasurable
   · exact eventually_of_forall fun x => Real.rpow_nonneg_of_nonneg (norm_nonneg _) _
-  · exact (hf.1.norm.AEMeasurable.pow aemeasurable_const).AeStronglyMeasurable
+  · exact (hf.1.norm.AEMeasurable.pow aemeasurable_const).AEStronglyMeasurable
   · exact eventually_of_forall fun x => mul_nonneg (norm_nonneg _) (norm_nonneg _)
   · exact hf.1.norm.mul hg.1.norm
   rw [ENNReal.toReal_rpow, ENNReal.toReal_rpow, ← ENNReal.toReal_mul]
@@ -1963,7 +1963,7 @@ theorem integral_trim (hm : m ≤ m0) {f : β → F} (hf : strongly_measurable[m
   exact tendsto_nhds_unique h_lim_1 h_lim_2
 #align measure_theory.integral_trim MeasureTheory.integral_trim
 
-theorem integral_trim_ae (hm : m ≤ m0) {f : β → F} (hf : AeStronglyMeasurable f (μ.trim hm)) :
+theorem integral_trim_ae (hm : m ≤ m0) {f : β → F} (hf : AEStronglyMeasurable f (μ.trim hm)) :
     (∫ x, f x ∂μ) = ∫ x, f x ∂μ.trim hm :=
   by
   rw [integral_congr_ae (ae_eq_of_ae_eq_trim hf.ae_eq_mk), integral_congr_ae hf.ae_eq_mk]

@@ -170,7 +170,7 @@ theorem function_integrable [NormedSpace ℂ E] (hf : TorusIntegrable f c R) :
       (Icc (0 : ℝⁿ) fun _ => 2 * π) volume :=
   by
   refine' (hf.norm.const_mul (∏ i, |R i|)).mono' _ _
-  · refine' (Continuous.aeStronglyMeasurable _).smul hf.1
+  · refine' (Continuous.aestronglyMeasurable _).smul hf.1
     exact
       continuous_finset_prod Finset.univ fun i hi =>
         (continuous_const.mul

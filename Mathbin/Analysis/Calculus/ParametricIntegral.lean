@@ -74,8 +74,8 @@ ae-measurable for `x` in the same ball. See `has_fderiv_at_integral_of_dominated
 slightly less general but usually more useful version. -/
 theorem hasFDerivAt_integral_of_dominated_loc_of_lip' {F : H → α → E} {F' : α → H →L[𝕜] E} {x₀ : H}
     {bound : α → ℝ} {ε : ℝ} (ε_pos : 0 < ε)
-    (hF_meas : ∀ x ∈ ball x₀ ε, AeStronglyMeasurable (F x) μ) (hF_int : Integrable (F x₀) μ)
-    (hF'_meas : AeStronglyMeasurable F' μ)
+    (hF_meas : ∀ x ∈ ball x₀ ε, AEStronglyMeasurable (F x) μ) (hF_int : Integrable (F x₀) μ)
+    (hF'_meas : AEStronglyMeasurable F' μ)
     (h_lipsch : ∀ᵐ a ∂μ, ∀ x ∈ ball x₀ ε, ‖F x a - F x₀ a‖ ≤ bound a * ‖x - x₀‖)
     (bound_integrable : Integrable (bound : α → ℝ) μ)
     (h_diff : ∀ᵐ a ∂μ, HasFDerivAt (fun x => F x a) (F' a) x₀) :
@@ -169,8 +169,8 @@ theorem hasFDerivAt_integral_of_dominated_loc_of_lip' {F : H → α → E} {F' :
 (with a ball radius independent of `a`) with integrable Lipschitz bound, and `F x` is ae-measurable
 for `x` in a possibly smaller neighborhood of `x₀`. -/
 theorem hasFDerivAt_integral_of_dominated_loc_of_lip {F : H → α → E} {F' : α → H →L[𝕜] E} {x₀ : H}
-    {bound : α → ℝ} {ε : ℝ} (ε_pos : 0 < ε) (hF_meas : ∀ᶠ x in 𝓝 x₀, AeStronglyMeasurable (F x) μ)
-    (hF_int : Integrable (F x₀) μ) (hF'_meas : AeStronglyMeasurable F' μ)
+    {bound : α → ℝ} {ε : ℝ} (ε_pos : 0 < ε) (hF_meas : ∀ᶠ x in 𝓝 x₀, AEStronglyMeasurable (F x) μ)
+    (hF_int : Integrable (F x₀) μ) (hF'_meas : AEStronglyMeasurable F' μ)
     (h_lip : ∀ᵐ a ∂μ, LipschitzOnWith (Real.nnabs <| bound a) (fun x => F x a) (ball x₀ ε))
     (bound_integrable : Integrable (bound : α → ℝ) μ)
     (h_diff : ∀ᵐ a ∂μ, HasFDerivAt (fun x => F x a) (F' a) x₀) :
@@ -191,8 +191,8 @@ derivative norm uniformly bounded by an integrable function (the ball radius is 
 and `F x` is ae-measurable for `x` in a possibly smaller neighborhood of `x₀`. -/
 theorem hasFDerivAt_integral_of_dominated_of_fderiv_le {F : H → α → E} {F' : H → α → H →L[𝕜] E}
     {x₀ : H} {bound : α → ℝ} {ε : ℝ} (ε_pos : 0 < ε)
-    (hF_meas : ∀ᶠ x in 𝓝 x₀, AeStronglyMeasurable (F x) μ) (hF_int : Integrable (F x₀) μ)
-    (hF'_meas : AeStronglyMeasurable (F' x₀) μ)
+    (hF_meas : ∀ᶠ x in 𝓝 x₀, AEStronglyMeasurable (F x) μ) (hF_int : Integrable (F x₀) μ)
+    (hF'_meas : AEStronglyMeasurable (F' x₀) μ)
     (h_bound : ∀ᵐ a ∂μ, ∀ x ∈ ball x₀ ε, ‖F' x a‖ ≤ bound a)
     (bound_integrable : Integrable (bound : α → ℝ) μ)
     (h_diff : ∀ᵐ a ∂μ, ∀ x ∈ ball x₀ ε, HasFDerivAt (fun x => F x a) (F' x a) x) :
@@ -221,8 +221,8 @@ assuming `F x₀` is integrable, `x ↦ F x a` is locally Lipschitz on a ball ar
 (with ball radius independent of `a`) with integrable Lipschitz bound, and `F x` is
 ae-measurable for `x` in a possibly smaller neighborhood of `x₀`. -/
 theorem hasDerivAt_integral_of_dominated_loc_of_lip {F : 𝕜 → α → E} {F' : α → E} {x₀ : 𝕜} {ε : ℝ}
-    (ε_pos : 0 < ε) (hF_meas : ∀ᶠ x in 𝓝 x₀, AeStronglyMeasurable (F x) μ)
-    (hF_int : Integrable (F x₀) μ) (hF'_meas : AeStronglyMeasurable F' μ) {bound : α → ℝ}
+    (ε_pos : 0 < ε) (hF_meas : ∀ᶠ x in 𝓝 x₀, AEStronglyMeasurable (F x) μ)
+    (hF_int : Integrable (F x₀) μ) (hF'_meas : AEStronglyMeasurable F' μ) {bound : α → ℝ}
     (h_lipsch : ∀ᵐ a ∂μ, LipschitzOnWith (Real.nnabs <| bound a) (fun x => F x a) (ball x₀ ε))
     (bound_integrable : Integrable (bound : α → ℝ) μ)
     (h_diff : ∀ᵐ a ∂μ, HasDerivAt (fun x => F x a) (F' a) x₀) :
@@ -253,8 +253,8 @@ theorem hasDerivAt_integral_of_dominated_loc_of_lip {F : 𝕜 → α → E} {F' 
 (with interval radius independent of `a`) with derivative uniformly bounded by an integrable
 function, and `F x` is ae-measurable for `x` in a possibly smaller neighborhood of `x₀`. -/
 theorem hasDerivAt_integral_of_dominated_loc_of_deriv_le {F : 𝕜 → α → E} {F' : 𝕜 → α → E} {x₀ : 𝕜}
-    {ε : ℝ} (ε_pos : 0 < ε) (hF_meas : ∀ᶠ x in 𝓝 x₀, AeStronglyMeasurable (F x) μ)
-    (hF_int : Integrable (F x₀) μ) (hF'_meas : AeStronglyMeasurable (F' x₀) μ) {bound : α → ℝ}
+    {ε : ℝ} (ε_pos : 0 < ε) (hF_meas : ∀ᶠ x in 𝓝 x₀, AEStronglyMeasurable (F x) μ)
+    (hF_int : Integrable (F x₀) μ) (hF'_meas : AEStronglyMeasurable (F' x₀) μ) {bound : α → ℝ}
     (h_bound : ∀ᵐ a ∂μ, ∀ x ∈ ball x₀ ε, ‖F' x a‖ ≤ bound a) (bound_integrable : Integrable bound μ)
     (h_diff : ∀ᵐ a ∂μ, ∀ x ∈ ball x₀ ε, HasDerivAt (fun x => F x a) (F' x a) x) :
     Integrable (F' x₀) μ ∧ HasDerivAt (fun n => ∫ a, F n a ∂μ) (∫ a, F' x₀ a ∂μ) x₀ :=

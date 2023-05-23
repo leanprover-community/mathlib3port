@@ -989,7 +989,7 @@ theorem measurable_rnDeriv (s : SignedMeasure α) (μ : Measure α) : Measurable
 theorem integrable_rnDeriv (s : SignedMeasure α) (μ : Measure α) : Integrable (rnDeriv s μ) μ := by
   refine' integrable.sub _ _ <;>
     · constructor
-      · apply Measurable.aeStronglyMeasurable
+      · apply Measurable.aestronglyMeasurable
         measurability
       exact has_finite_integral_to_real_of_lintegral_ne_top (lintegral_rn_deriv_lt_top _ μ).Ne
 #align measure_theory.signed_measure.integrable_rn_deriv MeasureTheory.SignedMeasure.integrable_rnDeriv

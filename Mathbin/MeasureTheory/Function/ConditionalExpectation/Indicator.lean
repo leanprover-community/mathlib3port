@@ -161,7 +161,7 @@ theorem condexp_restrict_ae_eq_restrict (hm : m ≤ m0) [SigmaFinite (μ.trim hm
         rw [integral_indicator (hm _ hs_m), measure.restrict_restrict (hm _ hs_m),
           measure.restrict_restrict (hm _ ht), Set.inter_comm]
       
-  · exact (strongly_measurable_condexp.indicator hs_m).ae_strongly_measurable'
+  · exact (strongly_measurable_condexp.indicator hs_m).aestronglyMeasurable'
 #align measure_theory.condexp_restrict_ae_eq_restrict MeasureTheory.condexp_restrict_ae_eq_restrict
 
 /-- If the restriction to a `m`-measurable set `s` of a σ-algebra `m` is equal to the restriction

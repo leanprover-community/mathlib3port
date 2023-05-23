@@ -442,7 +442,7 @@ theorem set_integral_eq_integral_of_forall_compl_eq_zero (h : ∀ x, x ∉ s →
 #align measure_theory.set_integral_eq_integral_of_forall_compl_eq_zero MeasureTheory.set_integral_eq_integral_of_forall_compl_eq_zero
 
 theorem set_integral_neg_eq_set_integral_nonpos [LinearOrder E] {f : α → E}
-    (hf : AeStronglyMeasurable f μ) :
+    (hf : AEStronglyMeasurable f μ) :
     (∫ x in { x | f x < 0 }, f x ∂μ) = ∫ x in { x | f x ≤ 0 }, f x ∂μ :=
   by
   have h_union : { x | f x ≤ 0 } = { x | f x < 0 } ∪ { x | f x = 0 } :=
@@ -461,7 +461,7 @@ theorem set_integral_neg_eq_set_integral_nonpos [LinearOrder E] {f : α → E}
 theorem integral_norm_eq_pos_sub_neg {f : α → ℝ} (hfi : Integrable f μ) :
     (∫ x, ‖f x‖ ∂μ) = (∫ x in { x | 0 ≤ f x }, f x ∂μ) - ∫ x in { x | f x ≤ 0 }, f x ∂μ :=
   have h_meas : NullMeasurableSet { x | 0 ≤ f x } μ :=
-    aeStronglyMeasurable_const.nullMeasurableSet_le hfi.1
+    aestronglyMeasurable_const.nullMeasurableSet_le hfi.1
   calc
     (∫ x, ‖f x‖ ∂μ) = (∫ x in { x | 0 ≤ f x }, ‖f x‖ ∂μ) + ∫ x in { x | 0 ≤ f x }ᶜ, ‖f x‖ ∂μ := by
       rw [← integral_add_compl₀ h_meas hfi.norm]
@@ -527,7 +527,7 @@ theorem integral_indicatorConstLp {p : ℝ≥0∞} (ht : MeasurableSet t) (hμt 
 #align measure_theory.integral_indicator_const_Lp MeasureTheory.integral_indicatorConstLp
 
 theorem set_integral_map {β} [MeasurableSpace β] {g : α → β} {f : β → E} {s : Set β}
-    (hs : MeasurableSet s) (hf : AeStronglyMeasurable f (Measure.map g μ)) (hg : AEMeasurable g μ) :
+    (hs : MeasurableSet s) (hf : AEStronglyMeasurable f (Measure.map g μ)) (hg : AEMeasurable g μ) :
     (∫ y in s, f y ∂Measure.map g μ) = ∫ x in g ⁻¹' s, f (g x) ∂μ :=
   by
   rw [measure.restrict_map_of_ae_measurable hg hs,
@@ -573,7 +573,7 @@ theorem norm_set_integral_le_of_norm_le_const_ae {C : ℝ} (hs : μ s < ∞)
 #align measure_theory.norm_set_integral_le_of_norm_le_const_ae MeasureTheory.norm_set_integral_le_of_norm_le_const_ae
 
 theorem norm_set_integral_le_of_norm_le_const_ae' {C : ℝ} (hs : μ s < ∞)
-    (hC : ∀ᵐ x ∂μ, x ∈ s → ‖f x‖ ≤ C) (hfm : AeStronglyMeasurable f (μ.restrict s)) :
+    (hC : ∀ᵐ x ∂μ, x ∈ s → ‖f x‖ ≤ C) (hfm : AEStronglyMeasurable f (μ.restrict s)) :
     ‖∫ x in s, f x ∂μ‖ ≤ C * (μ s).toReal :=
   by
   apply norm_set_integral_le_of_norm_le_const_ae hs
@@ -595,7 +595,7 @@ theorem norm_set_integral_le_of_norm_le_const_ae'' {C : ℝ} (hs : μ s < ∞) (
 #align measure_theory.norm_set_integral_le_of_norm_le_const_ae'' MeasureTheory.norm_set_integral_le_of_norm_le_const_ae''
 
 theorem norm_set_integral_le_of_norm_le_const {C : ℝ} (hs : μ s < ∞) (hC : ∀ x ∈ s, ‖f x‖ ≤ C)
-    (hfm : AeStronglyMeasurable f (μ.restrict s)) : ‖∫ x in s, f x ∂μ‖ ≤ C * (μ s).toReal :=
+    (hfm : AEStronglyMeasurable f (μ.restrict s)) : ‖∫ x in s, f x ∂μ‖ ≤ C * (μ s).toReal :=
   norm_set_integral_le_of_norm_le_const_ae' hs (eventually_of_forall hC) hfm
 #align measure_theory.norm_set_integral_le_of_norm_le_const MeasureTheory.norm_set_integral_le_of_norm_le_const
 
@@ -912,7 +912,7 @@ theorem Antitone.tendsto_set_integral (hsm : ∀ i, MeasurableSet (s i)) (h_anti
   rw [← integral_indicator (MeasurableSet.iInter hsm)]
   refine' tendsto_integral_of_dominated_convergence bound _ _ _ _
   · intro n
-    rw [aeStronglyMeasurable_indicator_iff (hsm n)]
+    rw [aestronglyMeasurable_indicator_iff (hsm n)]
     exact (integrable_on.mono_set hfi (h_anti (zero_le n))).1
   · rw [integrable_indicator_iff (hsm 0)]
     exact hfi.norm
@@ -1114,7 +1114,7 @@ theorem ContinuousOn.integral_sub_linear_isLittleO_ae [TopologicalSpace α] [Ope
     (hsμ : (fun i => (μ (s i)).toReal) =ᶠ[li] m := by rfl) :
     (fun i => (∫ x in s i, f x ∂μ) - m i • f a) =o[li] m :=
   (hft a ha).integral_sub_linear_isLittleO_ae ht
-    ⟨t, self_mem_nhdsWithin, hft.AeStronglyMeasurable ht⟩ hs m hsμ
+    ⟨t, self_mem_nhdsWithin, hft.AEStronglyMeasurable ht⟩ hs m hsμ
 #align continuous_on.integral_sub_linear_is_o_ae ContinuousOn.integral_sub_linear_isLittleO_ae
 
 section
@@ -1302,7 +1302,7 @@ theorem integral_withDensity_eq_integral_smul {f : α → ℝ≥0} (f_meas : Mea
     rw [lintegral_coe_eq_integral, ENNReal.toReal_ofReal, ← integral_smul_const]
     · rfl
     · exact integral_nonneg fun x => NNReal.coe_nonneg _
-    · refine' ⟨f_meas.coe_nnreal_real.AEMeasurable.AeStronglyMeasurable, _⟩
+    · refine' ⟨f_meas.coe_nnreal_real.AEMeasurable.AEStronglyMeasurable, _⟩
       rw [with_density_apply _ s_meas] at hs
       rw [has_finite_integral]
       convert hs

@@ -262,7 +262,7 @@ theorem out [NormedSpace ℂ E] (hf : CircleIntegrable f c R) :
   refine' (hf.norm.const_mul (|R|)).mono' _ _
   ·
     exact
-      ((continuous_circleMap _ _).AeStronglyMeasurable.mul_const I).smul hf.ae_strongly_measurable
+      ((continuous_circleMap _ _).AEStronglyMeasurable.mul_const I).smul hf.ae_strongly_measurable
   · simp [norm_smul]
 #align circle_integrable.out CircleIntegrable.out
 
@@ -285,8 +285,8 @@ theorem circleIntegrable_iff [NormedSpace ℂ E] {f : ℂ → E} {c : ℂ} (R : 
   refine' (h.norm.const_mul (|R|)⁻¹).mono' _ _
   · have H : ∀ {θ}, circleMap 0 R θ * I ≠ 0 := fun θ => by simp [h₀, I_ne_zero]
     simpa only [inv_smul_smul₀ H] using
-      ((continuous_circleMap 0 R).AeStronglyMeasurable.mul_const
-                  I).AEMeasurable.inv.AeStronglyMeasurable.smul
+      ((continuous_circleMap 0 R).AEStronglyMeasurable.mul_const
+                  I).AEMeasurable.inv.AEStronglyMeasurable.smul
         h.ae_strongly_measurable
   · simp [norm_smul, h₀]
 #align circle_integrable_iff circleIntegrable_iff
@@ -636,7 +636,7 @@ theorem hasSum_two_pi_I_cauchy_power_series_integral {f : ℂ → E} {c : ℂ} {
       (fun n θ => ‖f (circleMap c R θ)‖ * (abs w / R) ^ n) (fun n => _) (fun n => _) _ _ _
   · simp only [deriv_circleMap]
     apply_rules [ae_strongly_measurable.smul, hf.def.1] <;>
-      · apply Measurable.aeStronglyMeasurable
+      · apply Measurable.aestronglyMeasurable
         measurability
   · simp [norm_smul, abs_of_pos hR, mul_left_comm R, mul_inv_cancel_left₀ hR.ne', mul_comm ‖_‖]
   · exact eventually_of_forall fun _ _ => (summable_geometric_of_lt_1 hwR.1 hwR.2).mul_left _

@@ -1044,7 +1044,7 @@ theorem integrable_condCdf (ρ : Measure (α × ℝ)) [FiniteMeasure ρ] (x : �
     Integrable (fun a => condCdf ρ a x) ρ.fst :=
   by
   refine' integrable_of_forall_fin_meas_le _ (measure_lt_top ρ.fst univ) _ fun t ht hρt => _
-  · exact (strongly_measurable_cond_cdf ρ _).AeStronglyMeasurable
+  · exact (strongly_measurable_cond_cdf ρ _).AEStronglyMeasurable
   · have : ∀ y, (‖cond_cdf ρ y x‖₊ : ℝ≥0∞) ≤ 1 :=
       by
       intro y

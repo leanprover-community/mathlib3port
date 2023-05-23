@@ -255,7 +255,7 @@ theorem Submartingale.ae_tendsto_limitProcess [FiniteMeasure μ] (hf : Submartin
           (fun n =>
             ((hf.strongly_measurable n).Measurable.mono (le_sSup ⟨n, rfl⟩ : ℱ n ≤ ⨆ n, ℱ n)
                 le_rfl).AEMeasurable)
-          hg').AeStronglyMeasurable
+          hg').AEStronglyMeasurable
     obtain ⟨g, hgm, hae⟩ := hg'm
     have hg : ∀ᵐ ω ∂μ.trim hle, tendsto (fun n => f n ω) at_top (𝓝 (g ω)) :=
       by
@@ -268,7 +268,7 @@ theorem Submartingale.ae_tendsto_limitProcess [FiniteMeasure μ] (hf : Submartin
 theorem Submartingale.memℒp_limitProcess {p : ℝ≥0∞} (hf : Submartingale f ℱ μ)
     (hbdd : ∀ n, snorm (f n) p μ ≤ R) : Memℒp (ℱ.limitProcess f μ) p μ :=
   memℒp_limitProcess_of_snorm_bdd
-    (fun n => ((hf.StronglyMeasurable n).mono (ℱ.le n)).AeStronglyMeasurable) hbdd
+    (fun n => ((hf.StronglyMeasurable n).mono (ℱ.le n)).AEStronglyMeasurable) hbdd
 #align measure_theory.submartingale.mem_ℒp_limit_process MeasureTheory.Submartingale.memℒp_limitProcess
 
 end AeConvergence
@@ -350,7 +350,7 @@ theorem Submartingale.tendsto_snorm_one_limitProcess (hf : Submartingale f ℱ �
   by
   obtain ⟨R, hR⟩ := hunif.2.2
   have hmeas : ∀ n, ae_strongly_measurable (f n) μ := fun n =>
-    ((hf.strongly_measurable n).mono (ℱ.le _)).AeStronglyMeasurable
+    ((hf.strongly_measurable n).mono (ℱ.le _)).AEStronglyMeasurable
   exact
     tendsto_Lp_of_tendsto_in_measure _ le_rfl ENNReal.one_ne_top hmeas
       (mem_ℒp_limit_process_of_snorm_bdd hmeas hR) hunif.2.1
@@ -373,7 +373,7 @@ theorem Martingale.eq_condexp_of_tendsto_snorm {μ : Measure Ω} (hf : Martingal
   rw [← sub_ae_eq_zero, ←
     snorm_eq_zero_iff
       (((hf.strongly_measurable n).mono (ℱ.le _)).sub
-          (strongly_measurable_condexp.mono (ℱ.le _))).AeStronglyMeasurable
+          (strongly_measurable_condexp.mono (ℱ.le _))).AEStronglyMeasurable
       one_ne_zero]
   have ht : tendsto (fun m => snorm (μ[f m - g|ℱ n]) 1 μ) at_top (𝓝 0) :=
     haveI hint : ∀ m, integrable (f m - g) μ := fun m => (hf.integrable m).sub hg
@@ -472,10 +472,10 @@ theorem Integrable.tendsto_snorm_condexp (hg : Integrable g μ)
     (hgmeas : strongly_measurable[⨆ n, ℱ n] g) :
     Tendsto (fun n => snorm (μ[g|ℱ n] - g) 1 μ) atTop (𝓝 0) :=
   tendsto_Lp_of_tendstoInMeasure _ le_rfl ENNReal.one_ne_top
-    (fun n => (stronglyMeasurable_condexp.mono (ℱ.le n)).AeStronglyMeasurable)
+    (fun n => (stronglyMeasurable_condexp.mono (ℱ.le n)).AEStronglyMeasurable)
     (memℒp_one_iff_integrable.2 hg) hg.uniformIntegrable_condexp_filtration.2.1
     (tendstoInMeasure_of_tendsto_ae
-      (fun n => (stronglyMeasurable_condexp.mono (ℱ.le n)).AeStronglyMeasurable)
+      (fun n => (stronglyMeasurable_condexp.mono (ℱ.le n)).AEStronglyMeasurable)
       (hg.tendsto_ae_condexp hgmeas))
 #align measure_theory.integrable.tendsto_snorm_condexp MeasureTheory.Integrable.tendsto_snorm_condexp
 

@@ -65,7 +65,7 @@ theorem integrableOn_peak_smul_of_integrableOn_of_continuousWithinAt (hs : Measu
     apply integrable.smul_of_top_right (hmg.mono (diff_subset _ _) le_rfl)
     apply
       mem_ℒp_top_of_bound
-        ((integrable_of_integral_eq_one h'i).AeStronglyMeasurable.mono_set (diff_subset _ _)) 1
+        ((integrable_of_integral_eq_one h'i).AEStronglyMeasurable.mono_set (diff_subset _ _)) 1
     filter_upwards [self_mem_ae_restrict (hs.diff u_open.measurable_set)]with x hx
     simpa only [Pi.zero_apply, dist_zero_left] using (hi x hx).le
   have B : integrable_on (fun x => φ i x • g x) (s ∩ u) μ :=
@@ -73,7 +73,7 @@ theorem integrableOn_peak_smul_of_integrableOn_of_continuousWithinAt (hs : Measu
     apply integrable.smul_of_top_left
     · exact integrable_on.mono_set (integrable_of_integral_eq_one h'i) (inter_subset_left _ _)
     · apply
-        mem_ℒp_top_of_bound (hmg.mono_set (inter_subset_left _ _)).AeStronglyMeasurable (‖g x₀‖ + 1)
+        mem_ℒp_top_of_bound (hmg.mono_set (inter_subset_left _ _)).AEStronglyMeasurable (‖g x₀‖ + 1)
       filter_upwards [self_mem_ae_restrict (hs.inter u_open.measurable_set)]with x hx
       rw [inter_comm] at hx
       exact (norm_lt_of_mem_ball (hu x hx)).le

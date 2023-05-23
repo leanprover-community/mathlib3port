@@ -110,7 +110,7 @@ theorem integrable_rpow_mul_exp_neg_mul_sq {b : ℝ} (hb : 0 < b) {s : ℝ} (hs 
       (Homeomorph.neg ℝ).toMeasurableEquiv.MeasurableEmbedding]
   simp only [Function.comp, neg_sq, neg_preimage, preimage_neg_Iio, neg_neg, neg_zero]
   apply integrable.mono' (integrableOn_rpow_mul_exp_neg_mul_sq hb hs)
-  · apply Measurable.aeStronglyMeasurable
+  · apply Measurable.aestronglyMeasurable
     exact
       (measurable_id'.neg.pow measurable_const).mul
         ((measurable_id'.pow measurable_const).const_mul (-b)).exp
@@ -161,7 +161,7 @@ theorem integrable_cexp_neg_mul_sq {b : ℂ} (hb : 0 < b.re) :
   by
   refine'
     ⟨(complex.continuous_exp.comp
-          (continuous_const.mul (continuous_of_real.pow 2))).AeStronglyMeasurable,
+          (continuous_const.mul (continuous_of_real.pow 2))).AEStronglyMeasurable,
       _⟩
   rw [← has_finite_integral_norm_iff]
   simp_rw [norm_cexp_neg_mul_sq]
@@ -171,7 +171,7 @@ theorem integrable_cexp_neg_mul_sq {b : ℂ} (hb : 0 < b.re) :
 theorem integrable_mul_cexp_neg_mul_sq {b : ℂ} (hb : 0 < b.re) :
     Integrable fun x : ℝ => ↑x * cexp (-b * x ^ 2) :=
   by
-  refine' ⟨(continuous_of_real.mul (complex.continuous_exp.comp _)).AeStronglyMeasurable, _⟩
+  refine' ⟨(continuous_of_real.mul (complex.continuous_exp.comp _)).AEStronglyMeasurable, _⟩
   · exact continuous_const.mul (continuous_of_real.pow 2)
   have := (integrable_mul_exp_neg_mul_sq hb).HasFiniteIntegral
   rw [← has_finite_integral_norm_iff] at this⊢
@@ -272,7 +272,7 @@ theorem continuousAt_gaussian_integral (b : ℂ) (hb : 0 < re b) :
   obtain ⟨d, hd, hd'⟩ := exists_between hb
   have f_meas : ∀ c : ℂ, ae_strongly_measurable (f c) volume := fun c =>
     by
-    apply Continuous.aeStronglyMeasurable
+    apply Continuous.aestronglyMeasurable
     exact complex.continuous_exp.comp (continuous_const.mul (continuous_of_real.pow 2))
   have f_int : integrable (f b) volume :=
     by
@@ -523,7 +523,7 @@ theorem integrable_cexp_neg_mul_sq_add_real_mul_i (hb : 0 < b.re) (c : ℝ) :
   refine'
     ⟨(complex.continuous_exp.comp
           (continuous_const.mul
-            ((continuous_of_real.add continuous_const).pow 2))).AeStronglyMeasurable,
+            ((continuous_of_real.add continuous_const).pow 2))).AEStronglyMeasurable,
       _⟩
   rw [← has_finite_integral_norm_iff]
   simp_rw [norm_cexp_neg_mul_sq_add_mul_I' hb.ne', neg_sub _ (c ^ 2 * _),

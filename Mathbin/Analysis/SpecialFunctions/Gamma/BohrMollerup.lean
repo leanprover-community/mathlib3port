@@ -86,7 +86,7 @@ theorem gamma_mul_add_mul_le_rpow_gamma_mul_rpow_gamma {s t a b : ℝ} (hs : 0 <
       rw [fpow hc u hx]
       congr 1
       exact (norm_of_nonneg (posf _ _ x hx)).symm
-    · refine' ContinuousOn.aeStronglyMeasurable _ measurableSet_Ioi
+    · refine' ContinuousOn.aEStronglyMeasurable _ measurableSet_Ioi
       refine' (Continuous.continuousOn _).mul (ContinuousAt.continuousOn fun x hx => _)
       · exact continuous_exp.comp (continuous_const.mul continuous_id')
       · exact continuous_at_rpow_const _ _ (Or.inl (ne_of_lt hx).symm)

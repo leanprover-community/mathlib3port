@@ -268,7 +268,7 @@ theorem Memℒp.exists_bounded_continuous_snorm_sub_le [μ.WeaklyRegular] (hp : 
     let g' : α →ᵇ E := ⟨⟨g, g_cont⟩, Metric.bounded_range_iff.1 g_bd⟩
     exact (f' + g').bounded_range
   -- ae strong measurability
-  · exact fun f ⟨_, h, _⟩ => h.AeStronglyMeasurable
+  · exact fun f ⟨_, h, _⟩ => h.AEStronglyMeasurable
   -- We are left with approximating characteristic functions.
   -- This follows from `exists_continuous_snorm_sub_le_of_closed`.
   intro c t ht htμ ε hε

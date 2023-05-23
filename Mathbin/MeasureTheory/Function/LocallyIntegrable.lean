@@ -77,8 +77,8 @@ theorem LocallyIntegrableOn.integrableOn_compact_subset (hf : LocallyIntegrableO
   (hf.mono hst).integrableOn_isCompact ht
 #align measure_theory.locally_integrable_on.integrable_on_compact_subset MeasureTheory.LocallyIntegrableOn.integrableOn_compact_subset
 
-theorem LocallyIntegrableOn.aeStronglyMeasurable [SecondCountableTopology X]
-    (hf : LocallyIntegrableOn f s μ) : AeStronglyMeasurable f (μ.restrict s) :=
+theorem LocallyIntegrableOn.aEStronglyMeasurable [SecondCountableTopology X]
+    (hf : LocallyIntegrableOn f s μ) : AEStronglyMeasurable f (μ.restrict s) :=
   by
   have : ∀ x : s, ∃ u, IsOpen u ∧ x.1 ∈ u ∧ integrable_on f (u ∩ s) μ :=
     by
@@ -96,9 +96,9 @@ theorem LocallyIntegrableOn.aeStronglyMeasurable [SecondCountableTopology X]
     rw [← Union_inter, eq_comm, inter_eq_right_iff_subset]
     exact this
   have : Countable T := countable_coe_iff.mpr T_count
-  rw [hT, aeStronglyMeasurable_iUnion_iff]
-  exact fun i : T => (hu i).AeStronglyMeasurable
-#align measure_theory.locally_integrable_on.ae_strongly_measurable MeasureTheory.LocallyIntegrableOn.aeStronglyMeasurable
+  rw [hT, aestronglyMeasurable_iUnion_iff]
+  exact fun i : T => (hu i).AEStronglyMeasurable
+#align measure_theory.locally_integrable_on.ae_strongly_measurable MeasureTheory.LocallyIntegrableOn.aEStronglyMeasurable
 
 /-- If `s` is either open, or closed, then `f` is locally integrable on `s` iff it is integrable on
 every compact subset contained in `s`. -/
@@ -205,10 +205,10 @@ theorem locallyIntegrable_iff [LocallyCompactSpace X] :
     ⟨K, h2K, hf K hK⟩⟩
 #align measure_theory.locally_integrable_iff MeasureTheory.locallyIntegrable_iff
 
-theorem LocallyIntegrable.aeStronglyMeasurable [SecondCountableTopology X]
-    (hf : LocallyIntegrable f μ) : AeStronglyMeasurable f μ := by
-  simpa only [restrict_univ] using (locally_integrable_on_univ.mpr hf).AeStronglyMeasurable
-#align measure_theory.locally_integrable.ae_strongly_measurable MeasureTheory.LocallyIntegrable.aeStronglyMeasurable
+theorem LocallyIntegrable.aEStronglyMeasurable [SecondCountableTopology X]
+    (hf : LocallyIntegrable f μ) : AEStronglyMeasurable f μ := by
+  simpa only [restrict_univ] using (locally_integrable_on_univ.mpr hf).AEStronglyMeasurable
+#align measure_theory.locally_integrable.ae_strongly_measurable MeasureTheory.LocallyIntegrable.aEStronglyMeasurable
 
 theorem locallyIntegrable_const [LocallyFiniteMeasure μ] (c : E) :
     LocallyIntegrable (fun x => c) μ := by
@@ -340,7 +340,7 @@ theorem MonotoneOn.integrableOn_of_measure_ne_top (hmono : MonotoneOn f s) {a b 
   have A : integrable_on (fun x => C) s μ := by
     simp only [hs.lt_top, integrable_on_const, or_true_iff]
   refine'
-    integrable.mono' A (aemeasurable_restrict_of_monotoneOn h's hmono).AeStronglyMeasurable
+    integrable.mono' A (aemeasurable_restrict_of_monotoneOn h's hmono).AEStronglyMeasurable
       ((ae_restrict_iff' h's).mpr <| ae_of_all _ fun y hy => hC (f y) (mem_image_of_mem f hy))
 #align monotone_on.integrable_on_of_measure_ne_top MonotoneOn.integrableOn_of_measure_ne_top
 
@@ -407,7 +407,7 @@ theorem IntegrableOn.mul_continuousOn_of_subset (hg : IntegrableOn g A μ) (hg' 
     rw [mul_comm]
     apply mul_le_mul_of_nonneg_right (hC x (hAK hx)) (norm_nonneg _)
   exact
-    mem_ℒp.of_le_mul hg (hg.ae_strongly_measurable.mul <| (hg'.mono hAK).AeStronglyMeasurable hA)
+    mem_ℒp.of_le_mul hg (hg.ae_strongly_measurable.mul <| (hg'.mono hAK).AEStronglyMeasurable hA)
       this
 #align measure_theory.integrable_on.mul_continuous_on_of_subset MeasureTheory.IntegrableOn.mul_continuousOn_of_subset
 
@@ -428,7 +428,7 @@ theorem IntegrableOn.continuousOn_mul_of_subset (hg : ContinuousOn g K) (hg' : I
     refine' (norm_mul_le _ _).trans _
     apply mul_le_mul_of_nonneg_right (hC x (hAK hx)) (norm_nonneg _)
   exact
-    mem_ℒp.of_le_mul hg' (((hg.mono hAK).AeStronglyMeasurable hA).mul hg'.ae_strongly_measurable)
+    mem_ℒp.of_le_mul hg' (((hg.mono hAK).AEStronglyMeasurable hA).mul hg'.ae_strongly_measurable)
       this
 #align measure_theory.integrable_on.continuous_on_mul_of_subset MeasureTheory.IntegrableOn.continuousOn_mul_of_subset
 

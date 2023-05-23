@@ -308,16 +308,16 @@ theorem AeCover.aEMeasurable {β : Type _} [MeasurableSpace β] [l.IsCountablyGe
     mem_Union.mpr ⟨i, hi⟩
 #align measure_theory.ae_cover.ae_measurable MeasureTheory.AeCover.aEMeasurable
 
-theorem AeCover.aeStronglyMeasurable {β : Type _} [TopologicalSpace β] [PseudoMetrizableSpace β]
+theorem AeCover.aEStronglyMeasurable {β : Type _} [TopologicalSpace β] [PseudoMetrizableSpace β]
     [l.IsCountablyGenerated] [l.ne_bot] {f : α → β} {φ : ι → Set α} (hφ : AeCover μ l φ)
-    (hfm : ∀ i, AeStronglyMeasurable f (μ.restrict <| φ i)) : AeStronglyMeasurable f μ :=
+    (hfm : ∀ i, AEStronglyMeasurable f (μ.restrict <| φ i)) : AEStronglyMeasurable f μ :=
   by
   obtain ⟨u, hu⟩ := l.exists_seq_tendsto
   have := ae_strongly_measurable_Union_iff.mpr fun n : ℕ => hfm (u n)
   rwa [measure.restrict_eq_self_of_ae_mem] at this
   filter_upwards [hφ.ae_eventually_mem]with x hx using let ⟨i, hi⟩ := (hu.eventually hx).exists
     mem_Union.mpr ⟨i, hi⟩
-#align measure_theory.ae_cover.ae_strongly_measurable MeasureTheory.AeCover.aeStronglyMeasurable
+#align measure_theory.ae_cover.ae_strongly_measurable MeasureTheory.AeCover.aEStronglyMeasurable
 
 end AeCover
 
@@ -418,7 +418,7 @@ section Integrable
 variable {α ι E : Type _} [MeasurableSpace α] {μ : Measure α} {l : Filter ι} [NormedAddCommGroup E]
 
 theorem AeCover.integrable_of_lintegral_nnnorm_bounded [l.ne_bot] [l.IsCountablyGenerated]
-    {φ : ι → Set α} (hφ : AeCover μ l φ) {f : α → E} (I : ℝ) (hfm : AeStronglyMeasurable f μ)
+    {φ : ι → Set α} (hφ : AeCover μ l φ) {f : α → E} (I : ℝ) (hfm : AEStronglyMeasurable f μ)
     (hbounded : ∀ᶠ i in l, (∫⁻ x in φ i, ‖f x‖₊ ∂μ) ≤ ENNReal.ofReal I) : Integrable f μ :=
   by
   refine' ⟨hfm, (le_of_tendsto _ hbounded).trans_lt ENNReal.ofReal_lt_top⟩
@@ -426,7 +426,7 @@ theorem AeCover.integrable_of_lintegral_nnnorm_bounded [l.ne_bot] [l.IsCountably
 #align measure_theory.ae_cover.integrable_of_lintegral_nnnorm_bounded MeasureTheory.AeCover.integrable_of_lintegral_nnnorm_bounded
 
 theorem AeCover.integrable_of_lintegral_nnnorm_tendsto [l.ne_bot] [l.IsCountablyGenerated]
-    {φ : ι → Set α} (hφ : AeCover μ l φ) {f : α → E} (I : ℝ) (hfm : AeStronglyMeasurable f μ)
+    {φ : ι → Set α} (hφ : AeCover μ l φ) {f : α → E} (I : ℝ) (hfm : AEStronglyMeasurable f μ)
     (htendsto : Tendsto (fun i => ∫⁻ x in φ i, ‖f x‖₊ ∂μ) l (𝓝 <| ENNReal.ofReal I)) :
     Integrable f μ :=
   by
@@ -437,14 +437,14 @@ theorem AeCover.integrable_of_lintegral_nnnorm_tendsto [l.ne_bot] [l.IsCountably
 #align measure_theory.ae_cover.integrable_of_lintegral_nnnorm_tendsto MeasureTheory.AeCover.integrable_of_lintegral_nnnorm_tendsto
 
 theorem AeCover.integrable_of_lintegral_nnnorm_bounded' [l.ne_bot] [l.IsCountablyGenerated]
-    {φ : ι → Set α} (hφ : AeCover μ l φ) {f : α → E} (I : ℝ≥0) (hfm : AeStronglyMeasurable f μ)
+    {φ : ι → Set α} (hφ : AeCover μ l φ) {f : α → E} (I : ℝ≥0) (hfm : AEStronglyMeasurable f μ)
     (hbounded : ∀ᶠ i in l, (∫⁻ x in φ i, ‖f x‖₊ ∂μ) ≤ I) : Integrable f μ :=
   hφ.integrable_of_lintegral_nnnorm_bounded I hfm
     (by simpa only [ENNReal.ofReal_coe_nnreal] using hbounded)
 #align measure_theory.ae_cover.integrable_of_lintegral_nnnorm_bounded' MeasureTheory.AeCover.integrable_of_lintegral_nnnorm_bounded'
 
 theorem AeCover.integrable_of_lintegral_nnnorm_tendsto' [l.ne_bot] [l.IsCountablyGenerated]
-    {φ : ι → Set α} (hφ : AeCover μ l φ) {f : α → E} (I : ℝ≥0) (hfm : AeStronglyMeasurable f μ)
+    {φ : ι → Set α} (hφ : AeCover μ l φ) {f : α → E} (I : ℝ≥0) (hfm : AEStronglyMeasurable f μ)
     (htendsto : Tendsto (fun i => ∫⁻ x in φ i, ‖f x‖₊ ∂μ) l (𝓝 I)) : Integrable f μ :=
   hφ.integrable_of_lintegral_nnnorm_tendsto I hfm
     (by simpa only [ENNReal.ofReal_coe_nnreal] using htendsto)
@@ -455,7 +455,7 @@ theorem AeCover.integrable_of_integral_norm_bounded [l.ne_bot] [l.IsCountablyGen
     (hbounded : ∀ᶠ i in l, (∫ x in φ i, ‖f x‖ ∂μ) ≤ I) : Integrable f μ :=
   by
   have hfm : ae_strongly_measurable f μ :=
-    hφ.ae_strongly_measurable fun i => (hfi i).AeStronglyMeasurable
+    hφ.ae_strongly_measurable fun i => (hfi i).AEStronglyMeasurable
   refine' hφ.integrable_of_lintegral_nnnorm_bounded I hfm _
   conv at hbounded in integral _ _ =>
     rw [integral_eq_lintegral_of_nonneg_ae (ae_of_all _ fun x => @norm_nonneg E _ (f x))
@@ -508,7 +508,7 @@ theorem AeCover.integral_tendsto_of_countably_generated [l.IsCountablyGenerated]
     ext n
     rw [integral_indicator (hφ.measurable n)]
   tendsto_integral_filter_of_dominated_convergence (fun x => ‖f x‖)
-    (eventually_of_forall fun i => hfi.AeStronglyMeasurable.indicator <| hφ.Measurable i)
+    (eventually_of_forall fun i => hfi.AEStronglyMeasurable.indicator <| hφ.Measurable i)
     (eventually_of_forall fun i => ae_of_all _ fun x => norm_indicator_le_norm_self _ _) hfi.norm
     (hφ.ae_tendsto_indicator f)
 #align measure_theory.ae_cover.integral_tendsto_of_countably_generated MeasureTheory.AeCover.integral_tendsto_of_countably_generated
