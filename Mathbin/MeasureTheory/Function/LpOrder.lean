@@ -91,15 +91,15 @@ instance : Lattice (lp E p μ) :=
     exact (mem_ℒp_congr_ae (ae_eq_fun.coe_fn_inf _ _)).mpr (hf.inf hg)
 
 theorem coeFn_sup (f g : lp E p μ) : ⇑(f ⊔ g) =ᵐ[μ] ⇑f ⊔ ⇑g :=
-  AeEqFun.coeFn_sup _ _
+  AEEqFun.coeFn_sup _ _
 #align measure_theory.Lp.coe_fn_sup MeasureTheory.lp.coeFn_sup
 
 theorem coeFn_inf (f g : lp E p μ) : ⇑(f ⊓ g) =ᵐ[μ] ⇑f ⊓ ⇑g :=
-  AeEqFun.coeFn_inf _ _
+  AEEqFun.coeFn_inf _ _
 #align measure_theory.Lp.coe_fn_inf MeasureTheory.lp.coeFn_inf
 
 theorem coeFn_abs (f : lp E p μ) : ⇑(|f|) =ᵐ[μ] fun x => |f x| :=
-  AeEqFun.coeFn_abs _
+  AEEqFun.coeFn_abs _
 #align measure_theory.Lp.coe_fn_abs MeasureTheory.lp.coeFn_abs
 
 noncomputable instance [Fact (1 ≤ p)] : NormedLatticeAddCommGroup (lp E p μ) :=

@@ -199,7 +199,7 @@ private theorem norm_sq_eq_inner' (f : α →₂[μ] E) : ‖f‖ ^ 2 = IsROrC.r
 #align measure_theory.L2.norm_sq_eq_inner' measure_theory.L2.norm_sq_eq_inner'
 
 theorem mem_L1_inner (f g : α →₂[μ] E) :
-    AeEqFun.mk (fun x => ⟪f x, g x⟫)
+    AEEqFun.mk (fun x => ⟪f x, g x⟫)
         ((lp.aEStronglyMeasurable f).inner (lp.aEStronglyMeasurable g)) ∈
       lp 𝕜 1 μ :=
   by
@@ -209,9 +209,9 @@ theorem mem_L1_inner (f g : α →₂[μ] E) :
 
 theorem integrable_inner (f g : α →₂[μ] E) : Integrable (fun x : α => ⟪f x, g x⟫) μ :=
   (integrable_congr
-        (AeEqFun.coeFn_mk (fun x => ⟪f x, g x⟫)
+        (AEEqFun.coeFn_mk (fun x => ⟪f x, g x⟫)
           ((lp.aEStronglyMeasurable f).inner (lp.aEStronglyMeasurable g)))).mp
-    (AeEqFun.integrable_iff_mem_L1.mpr (mem_L1_inner f g))
+    (AEEqFun.integrable_iff_mem_L1.mpr (mem_L1_inner f g))
 #align measure_theory.L2.integrable_inner MeasureTheory.L2.integrable_inner
 
 private theorem add_left' (f f' g : α →₂[μ] E) : ⟪f + f', g⟫ = inner f g + inner f' g :=

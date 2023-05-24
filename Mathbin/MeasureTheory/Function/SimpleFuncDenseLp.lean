@@ -469,7 +469,7 @@ variable (E)
     function. -/
 def simpleFunc : AddSubgroup (lp E p μ)
     where
-  carrier := { f : lp E p μ | ∃ s : α →ₛ E, (AeEqFun.mk s s.AEStronglyMeasurable : α →ₘ[μ] E) = f }
+  carrier := { f : lp E p μ | ∃ s : α →ₛ E, (AEEqFun.mk s s.AEStronglyMeasurable : α →ₘ[μ] E) = f }
   zero_mem' := ⟨0, rfl⟩
   add_mem' := fun f g ⟨s, hs⟩ ⟨t, ht⟩ =>
     ⟨s + t, by
@@ -577,7 +577,7 @@ theorem toLp_eq_toLp (f : α →ₛ E) (hf : Memℒp f p μ) : (toLp f hf : lp E
 #align measure_theory.Lp.simple_func.to_Lp_eq_to_Lp MeasureTheory.lp.simpleFunc.toLp_eq_toLp
 
 theorem toLp_eq_mk (f : α →ₛ E) (hf : Memℒp f p μ) :
-    (toLp f hf : α →ₘ[μ] E) = AeEqFun.mk f f.AEStronglyMeasurable :=
+    (toLp f hf : α →ₘ[μ] E) = AEEqFun.mk f f.AEStronglyMeasurable :=
   rfl
 #align measure_theory.Lp.simple_func.to_Lp_eq_mk MeasureTheory.lp.simpleFunc.toLp_eq_mk
 

@@ -1252,7 +1252,7 @@ section
 is integrable. -/
 def Integrable (f : α →ₘ[μ] β) : Prop :=
   Integrable f μ
-#align measure_theory.ae_eq_fun.integrable MeasureTheory.AeEqFun.Integrable
+#align measure_theory.ae_eq_fun.integrable MeasureTheory.AEEqFun.Integrable
 
 theorem integrable_mk {f : α → β} (hf : AEStronglyMeasurable f μ) :
     Integrable (mk f hf : α →ₘ[μ] β) ↔ MeasureTheory.Integrable f μ :=
@@ -1260,15 +1260,15 @@ theorem integrable_mk {f : α → β} (hf : AEStronglyMeasurable f μ) :
   simp [integrable]
   apply integrable_congr
   exact coe_fn_mk f hf
-#align measure_theory.ae_eq_fun.integrable_mk MeasureTheory.AeEqFun.integrable_mk
+#align measure_theory.ae_eq_fun.integrable_mk MeasureTheory.AEEqFun.integrable_mk
 
 theorem integrable_coeFn {f : α →ₘ[μ] β} : MeasureTheory.Integrable f μ ↔ Integrable f := by
   rw [← integrable_mk, mk_coe_fn]
-#align measure_theory.ae_eq_fun.integrable_coe_fn MeasureTheory.AeEqFun.integrable_coeFn
+#align measure_theory.ae_eq_fun.integrable_coe_fn MeasureTheory.AEEqFun.integrable_coeFn
 
 theorem integrable_zero : Integrable (0 : α →ₘ[μ] β) :=
   (integrable_zero α β μ).congr (coeFn_mk _ _).symm
-#align measure_theory.ae_eq_fun.integrable_zero MeasureTheory.AeEqFun.integrable_zero
+#align measure_theory.ae_eq_fun.integrable_zero MeasureTheory.AEEqFun.integrable_zero
 
 end
 
@@ -1276,25 +1276,25 @@ section
 
 theorem Integrable.neg {f : α →ₘ[μ] β} : Integrable f → Integrable (-f) :=
   induction_on f fun f hfm hfi => (integrable_mk _).2 ((integrable_mk hfm).1 hfi).neg
-#align measure_theory.ae_eq_fun.integrable.neg MeasureTheory.AeEqFun.Integrable.neg
+#align measure_theory.ae_eq_fun.integrable.neg MeasureTheory.AEEqFun.Integrable.neg
 
 section
 
 theorem integrable_iff_mem_L1 {f : α →ₘ[μ] β} : Integrable f ↔ f ∈ (α →₁[μ] β) := by
   rw [← integrable_coe_fn, ← mem_ℒp_one_iff_integrable, Lp.mem_Lp_iff_mem_ℒp]
-#align measure_theory.ae_eq_fun.integrable_iff_mem_L1 MeasureTheory.AeEqFun.integrable_iff_mem_L1
+#align measure_theory.ae_eq_fun.integrable_iff_mem_L1 MeasureTheory.AEEqFun.integrable_iff_mem_L1
 
 theorem Integrable.add {f g : α →ₘ[μ] β} : Integrable f → Integrable g → Integrable (f + g) :=
   by
   refine' induction_on₂ f g fun f hf g hg hfi hgi => _
   simp only [integrable_mk, mk_add_mk] at hfi hgi⊢
   exact hfi.add hgi
-#align measure_theory.ae_eq_fun.integrable.add MeasureTheory.AeEqFun.Integrable.add
+#align measure_theory.ae_eq_fun.integrable.add MeasureTheory.AEEqFun.Integrable.add
 
 theorem Integrable.sub {f g : α →ₘ[μ] β} (hf : Integrable f) (hg : Integrable g) :
     Integrable (f - g) :=
   (sub_eq_add_neg f g).symm ▸ hf.add hg.neg
-#align measure_theory.ae_eq_fun.integrable.sub MeasureTheory.AeEqFun.Integrable.sub
+#align measure_theory.ae_eq_fun.integrable.sub MeasureTheory.AEEqFun.Integrable.sub
 
 end
 
@@ -1304,7 +1304,7 @@ variable {𝕜 : Type _} [NormedField 𝕜] [NormedSpace 𝕜 β]
 
 theorem Integrable.smul {c : 𝕜} {f : α →ₘ[μ] β} : Integrable f → Integrable (c • f) :=
   induction_on f fun f hfm hfi => (integrable_mk _).2 <| ((integrable_mk hfm).1 hfi).smul _
-#align measure_theory.ae_eq_fun.integrable.smul MeasureTheory.AeEqFun.Integrable.smul
+#align measure_theory.ae_eq_fun.integrable.smul MeasureTheory.AEEqFun.Integrable.smul
 
 end NormedSpace
 
@@ -1403,7 +1403,7 @@ theorem toL1_coeFn (f : α →₁[μ] β) (hf : Integrable f μ) : hf.toL1 f = f
 #align measure_theory.integrable.to_L1_coe_fn MeasureTheory.Integrable.toL1_coeFn
 
 theorem coeFn_toL1 {f : α → β} (hf : Integrable f μ) : hf.toL1 f =ᵐ[μ] f :=
-  AeEqFun.coeFn_mk _ _
+  AEEqFun.coeFn_mk _ _
 #align measure_theory.integrable.coe_fn_to_L1 MeasureTheory.Integrable.coeFn_toL1
 
 @[simp]
@@ -1413,7 +1413,7 @@ theorem toL1_zero (h : Integrable (0 : α → β) μ) : h.toL1 0 = 0 :=
 
 @[simp]
 theorem toL1_eq_mk (f : α → β) (hf : Integrable f μ) :
-    (hf.toL1 f : α →ₘ[μ] β) = AeEqFun.mk f hf.AEStronglyMeasurable :=
+    (hf.toL1 f : α →ₘ[μ] β) = AEEqFun.mk f hf.AEStronglyMeasurable :=
   rfl
 #align measure_theory.integrable.to_L1_eq_mk MeasureTheory.Integrable.toL1_eq_mk
 

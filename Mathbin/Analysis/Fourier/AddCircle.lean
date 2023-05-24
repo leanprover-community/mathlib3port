@@ -500,7 +500,7 @@ variable (f : C(AddCircle T, ℂ))
 theorem fourierCoeff_toLp (n : ℤ) : fourierCoeff (toLp 2 haarAddCircle ℂ f) n = fourierCoeff f n :=
   integral_congr_ae
     (Filter.EventuallyEq.mul (Filter.eventually_of_forall (by tauto))
-      (ContinuousMap.coeFn_toAeEqFun haarAddCircle f))
+      (ContinuousMap.coeFn_toAEEqFun haarAddCircle f))
 #align fourier_coeff_to_Lp fourierCoeff_toLp
 
 variable {f}

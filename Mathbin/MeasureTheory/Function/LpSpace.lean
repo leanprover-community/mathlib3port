@@ -1657,15 +1657,15 @@ The space of equivalence classes of measurable functions for which `snorm f p μ
 
 
 @[simp]
-theorem snorm_aeEqFun {α E : Type _} [MeasurableSpace α] {μ : Measure α} [NormedAddCommGroup E]
+theorem snorm_aEEqFun {α E : Type _} [MeasurableSpace α] {μ : Measure α} [NormedAddCommGroup E]
     {p : ℝ≥0∞} {f : α → E} (hf : AEStronglyMeasurable f μ) :
-    snorm (AeEqFun.mk f hf) p μ = snorm f p μ :=
-  snorm_congr_ae (AeEqFun.coeFn_mk _ _)
-#align measure_theory.snorm_ae_eq_fun MeasureTheory.snorm_aeEqFun
+    snorm (AEEqFun.mk f hf) p μ = snorm f p μ :=
+  snorm_congr_ae (AEEqFun.coeFn_mk _ _)
+#align measure_theory.snorm_ae_eq_fun MeasureTheory.snorm_aEEqFun
 
 theorem Memℒp.snorm_mk_lt_top {α E : Type _} [MeasurableSpace α] {μ : Measure α}
     [NormedAddCommGroup E] {p : ℝ≥0∞} {f : α → E} (hfp : Memℒp f p μ) :
-    snorm (AeEqFun.mk f hfp.1) p μ < ∞ := by simp [hfp.2]
+    snorm (AEEqFun.mk f hfp.1) p μ < ∞ := by simp [hfp.2]
 #align measure_theory.mem_ℒp.snorm_mk_lt_top MeasureTheory.Memℒp.snorm_mk_lt_top
 
 /-- Lp space -/
@@ -1690,11 +1690,11 @@ namespace Memℒp
 
 /-- make an element of Lp from a function verifying `mem_ℒp` -/
 def toLp (f : α → E) (h_mem_ℒp : Memℒp f p μ) : lp E p μ :=
-  ⟨AeEqFun.mk f h_mem_ℒp.1, h_mem_ℒp.snorm_mk_lt_top⟩
+  ⟨AEEqFun.mk f h_mem_ℒp.1, h_mem_ℒp.snorm_mk_lt_top⟩
 #align measure_theory.mem_ℒp.to_Lp MeasureTheory.Memℒp.toLp
 
 theorem coeFn_toLp {f : α → E} (hf : Memℒp f p μ) : hf.toLp f =ᵐ[μ] f :=
-  AeEqFun.coeFn_mk _ _
+  AEEqFun.coeFn_mk _ _
 #align measure_theory.mem_ℒp.coe_fn_to_Lp MeasureTheory.Memℒp.coeFn_toLp
 
 theorem toLp_congr {f g : α → E} (hf : Memℒp f p μ) (hg : Memℒp g p μ) (hfg : f =ᵐ[μ] g) :
@@ -1799,25 +1799,25 @@ protected theorem memℒp (f : lp E p μ) : Memℒp f p μ :=
 variable (E p μ)
 
 theorem coeFn_zero : ⇑(0 : lp E p μ) =ᵐ[μ] 0 :=
-  AeEqFun.coeFn_zero
+  AEEqFun.coeFn_zero
 #align measure_theory.Lp.coe_fn_zero MeasureTheory.lp.coeFn_zero
 
 variable {E p μ}
 
 theorem coeFn_neg (f : lp E p μ) : ⇑(-f) =ᵐ[μ] -f :=
-  AeEqFun.coeFn_neg _
+  AEEqFun.coeFn_neg _
 #align measure_theory.Lp.coe_fn_neg MeasureTheory.lp.coeFn_neg
 
 theorem coeFn_add (f g : lp E p μ) : ⇑(f + g) =ᵐ[μ] f + g :=
-  AeEqFun.coeFn_add _ _
+  AEEqFun.coeFn_add _ _
 #align measure_theory.Lp.coe_fn_add MeasureTheory.lp.coeFn_add
 
 theorem coeFn_sub (f g : lp E p μ) : ⇑(f - g) =ᵐ[μ] f - g :=
-  AeEqFun.coeFn_sub _ _
+  AEEqFun.coeFn_sub _ _
 #align measure_theory.Lp.coe_fn_sub MeasureTheory.lp.coeFn_sub
 
 theorem mem_lp_const (α) {m : MeasurableSpace α} (μ : Measure α) (c : E) [FiniteMeasure μ] :
-    @AeEqFun.const α _ _ μ _ c ∈ lp E p μ :=
+    @AEEqFun.const α _ _ μ _ c ∈ lp E p μ :=
   (memℒp_const c).snorm_mk_lt_top
 #align measure_theory.Lp.mem_Lp_const MeasureTheory.lp.mem_lp_const
 
@@ -2003,7 +2003,7 @@ instance : Module 𝕜 (lp E p μ) :=
   { (lpSubmodule E p μ 𝕜).Module with }
 
 theorem coeFn_smul (c : 𝕜) (f : lp E p μ) : ⇑(c • f) =ᵐ[μ] c • f :=
-  AeEqFun.coeFn_smul _ _
+  AEEqFun.coeFn_smul _ _
 #align measure_theory.Lp.coe_fn_smul MeasureTheory.lp.coeFn_smul
 
 theorem norm_const_smul (c : 𝕜) (f : lp E p μ) : ‖c • f‖ = ‖c‖ * ‖f‖ := by
@@ -2401,7 +2401,7 @@ theorem memℒp_comp_iff_of_antilipschitz {α E F} {K K'} [MeasurableSpace α] {
 /-- When `g` is a Lipschitz function sending `0` to `0` and `f` is in `Lp`, then `g ∘ f` is well
 defined as an element of `Lp`. -/
 def compLp (hg : LipschitzWith c g) (g0 : g 0 = 0) (f : lp E p μ) : lp F p μ :=
-  ⟨AeEqFun.comp g hg.Continuous (f : α →ₘ[μ] E),
+  ⟨AEEqFun.comp g hg.Continuous (f : α →ₘ[μ] E),
     by
     suffices ∀ᵐ x ∂μ, ‖ae_eq_fun.comp g hg.continuous (f : α →ₘ[μ] E) x‖ ≤ c * ‖f x‖ by
       exact Lp.mem_Lp_of_ae_le_mul this
@@ -2413,7 +2413,7 @@ def compLp (hg : LipschitzWith c g) (g0 : g 0 = 0) (f : lp E p μ) : lp F p μ :
 
 theorem coeFn_compLp (hg : LipschitzWith c g) (g0 : g 0 = 0) (f : lp E p μ) :
     hg.compLp g0 f =ᵐ[μ] g ∘ f :=
-  AeEqFun.coeFn_comp _ _ _
+  AEEqFun.coeFn_comp _ _ _
 #align lipschitz_with.coe_fn_comp_Lp LipschitzWith.coeFn_compLp
 
 @[simp]
@@ -2646,7 +2646,7 @@ theorem coe_posPart (f : lp ℝ p μ) : (posPart f : α →ₘ[μ] ℝ) = (f : �
 #align measure_theory.Lp.coe_pos_part MeasureTheory.lp.coe_posPart
 
 theorem coeFn_posPart (f : lp ℝ p μ) : ⇑(posPart f) =ᵐ[μ] fun a => max (f a) 0 :=
-  AeEqFun.coeFn_posPart _
+  AEEqFun.coeFn_posPart _
 #align measure_theory.Lp.coe_fn_pos_part MeasureTheory.lp.coeFn_posPart
 
 theorem coeFn_negPart_eq_max (f : lp ℝ p μ) : ∀ᵐ a ∂μ, negPart f a = max (-f a) 0 :=
@@ -3147,7 +3147,7 @@ variable (E p μ)
 bounded continuous representative. -/
 def MeasureTheory.lp.boundedContinuousFunction : AddSubgroup (lp E p μ) :=
   AddSubgroup.addSubgroupOf
-    ((ContinuousMap.toAeEqFunAddHom μ).comp (toContinuousMapAddHom α E)).range (lp E p μ)
+    ((ContinuousMap.toAEEqFunAddHom μ).comp (toContinuousMapAddHom α E)).range (lp E p μ)
 #align measure_theory.Lp.bounded_continuous_function MeasureTheory.lp.boundedContinuousFunction
 
 variable {E p μ}
@@ -3156,7 +3156,7 @@ variable {E p μ}
 `Lp E p μ` which contain a bounded continuous representative. -/
 theorem MeasureTheory.lp.mem_boundedContinuousFunction_iff {f : lp E p μ} :
     f ∈ MeasureTheory.lp.boundedContinuousFunction E p μ ↔
-      ∃ f₀ : α →ᵇ E, f₀.toContinuousMap.toAeEqFun μ = (f : α →ₘ[μ] E) :=
+      ∃ f₀ : α →ᵇ E, f₀.toContinuousMap.toAEEqFun μ = (f : α →ₘ[μ] E) :=
   AddSubgroup.mem_addSubgroupOf
 #align measure_theory.Lp.mem_bounded_continuous_function_iff MeasureTheory.lp.mem_boundedContinuousFunction_iff
 
@@ -3165,7 +3165,7 @@ namespace BoundedContinuousFunction
 variable [FiniteMeasure μ]
 
 /-- A bounded continuous function on a finite-measure space is in `Lp`. -/
-theorem mem_lp (f : α →ᵇ E) : f.toContinuousMap.toAeEqFun μ ∈ lp E p μ :=
+theorem mem_lp (f : α →ᵇ E) : f.toContinuousMap.toAEEqFun μ ∈ lp E p μ :=
   by
   refine' Lp.mem_Lp_of_ae_bound ‖f‖ _
   filter_upwards [f.to_continuous_map.coe_fn_to_ae_eq_fun μ]with x _
@@ -3175,7 +3175,7 @@ theorem mem_lp (f : α →ᵇ E) : f.toContinuousMap.toAeEqFun μ ∈ lp E p μ 
 /-- The `Lp`-norm of a bounded continuous function is at most a constant (depending on the measure
 of the whole space) times its sup-norm. -/
 theorem lp_norm_le (f : α →ᵇ E) :
-    ‖(⟨f.toContinuousMap.toAeEqFun μ, mem_lp f⟩ : lp E p μ)‖ ≤
+    ‖(⟨f.toContinuousMap.toAEEqFun μ, mem_lp f⟩ : lp E p μ)‖ ≤
       measureUnivNNReal μ ^ p.toReal⁻¹ * ‖f‖ :=
   by
   apply Lp.norm_le_of_ae_bound (norm_nonneg f)
@@ -3191,7 +3191,7 @@ variable (p μ)
 space as an element of `Lp`. -/
 def toLpHom [Fact (1 ≤ p)] : NormedAddGroupHom (α →ᵇ E) (lp E p μ) :=
   {
-    AddMonoidHom.codRestrict ((ContinuousMap.toAeEqFunAddHom μ).comp (toContinuousMapAddHom α E))
+    AddMonoidHom.codRestrict ((ContinuousMap.toAEEqFunAddHom μ).comp (toContinuousMapAddHom α E))
       (lp E p μ) mem_lp with
     bound' := ⟨_, lp_norm_le⟩ }
 #align bounded_continuous_function.to_Lp_hom BoundedContinuousFunction.toLpHom
@@ -3202,7 +3202,7 @@ theorem range_toLpHom [Fact (1 ≤ p)] :
   by
   symm
   convert AddMonoidHom.addSubgroupOf_range_eq_of_le
-      ((ContinuousMap.toAeEqFunAddHom μ).comp (to_continuous_map_add_hom α E))
+      ((ContinuousMap.toAEEqFunAddHom μ).comp (to_continuous_map_add_hom α E))
       (by
         rintro - ⟨f, rfl⟩
         exact mem_Lp f : _ ≤ Lp E p μ)
@@ -3215,12 +3215,12 @@ as an element of `Lp`. -/
 def toLp [NormedField 𝕜] [NormedSpace 𝕜 E] : (α →ᵇ E) →L[𝕜] lp E p μ :=
   LinearMap.mkContinuous
     (LinearMap.codRestrict (lp.lpSubmodule E p μ 𝕜)
-      ((ContinuousMap.toAeEqFunLinearMap μ).comp (toContinuousMapLinearMap α E 𝕜)) mem_lp)
+      ((ContinuousMap.toAEEqFunLinearMap μ).comp (toContinuousMapLinearMap α E 𝕜)) mem_lp)
     _ lp_norm_le
 #align bounded_continuous_function.to_Lp BoundedContinuousFunction.toLp
 
 theorem coeFn_toLp [NormedField 𝕜] [NormedSpace 𝕜 E] (f : α →ᵇ E) : toLp p μ 𝕜 f =ᵐ[μ] f :=
-  AeEqFun.coeFn_mk f _
+  AEEqFun.coeFn_mk f _
 #align bounded_continuous_function.coe_fn_to_Lp BoundedContinuousFunction.coeFn_toLp
 
 variable {𝕜}
@@ -3284,7 +3284,7 @@ theorem range_toLp [NormedField 𝕜] [NormedSpace 𝕜 E] :
 variable {p}
 
 theorem coeFn_toLp [NormedField 𝕜] [NormedSpace 𝕜 E] (f : C(α, E)) : toLp p μ 𝕜 f =ᵐ[μ] f :=
-  AeEqFun.coeFn_mk f _
+  AEEqFun.coeFn_mk f _
 #align continuous_map.coe_fn_to_Lp ContinuousMap.coeFn_toLp
 
 theorem toLp_def [NormedField 𝕜] [NormedSpace 𝕜 E] (f : C(α, E)) :
@@ -3300,7 +3300,7 @@ theorem toLp_comp_toContinuousMap [NormedField 𝕜] [NormedSpace 𝕜 E] (f : �
 
 @[simp]
 theorem coe_toLp [NormedField 𝕜] [NormedSpace 𝕜 E] (f : C(α, E)) :
-    (toLp p μ 𝕜 f : α →ₘ[μ] E) = f.toAeEqFun μ :=
+    (toLp p μ 𝕜 f : α →ₘ[μ] E) = f.toAEEqFun μ :=
   rfl
 #align continuous_map.coe_to_Lp ContinuousMap.coe_toLp
 

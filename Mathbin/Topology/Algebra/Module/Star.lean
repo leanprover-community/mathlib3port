@@ -33,6 +33,7 @@ def starL (R : Type _) {A : Type _} [CommSemiring R] [StarRing R] [AddCommMonoid
 #align starL starL
 -/
 
+#print starL' /-
 -- TODO: this could be replaced with something like `(starL R).restrict_scalarsₛₗ h` if we
 -- implemented the idea in
 -- https://leanprover.zulipchat.com/#narrow/stream/217875-Is-there-code-for-X.3F/topic/Star-semilinear.20maps.20are.20semilinear.20when.20star.20is.20trivial/near/359557835
@@ -49,6 +50,7 @@ def starL' (R : Type _) {A : Type _} [CommSemiring R] [StarRing R] [TrivialStar 
         continuous_invFun := continuous_id } :
       A ≃L⋆[R] A)
 #align starL' starL'
+-/
 
 variable (R : Type _) (A : Type _) [Semiring R] [StarSemigroup R] [TrivialStar R] [AddCommGroup A]
   [Module R A] [StarAddMonoid A] [StarModule R A] [Invertible (2 : R)] [TopologicalSpace A]
