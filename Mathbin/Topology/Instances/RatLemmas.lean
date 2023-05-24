@@ -43,14 +43,32 @@ namespace Rat
 
 variable {p q : ℚ} {s t : Set ℚ}
 
+/- warning: rat.interior_compact_eq_empty -> Rat.interior_compact_eq_empty is a dubious translation:
+lean 3 declaration is
+  forall {s : Set.{0} Rat}, (IsCompact.{0} Rat (UniformSpace.toTopologicalSpace.{0} Rat (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.metricSpace))) s) -> (Eq.{1} (Set.{0} Rat) (interior.{0} Rat (UniformSpace.toTopologicalSpace.{0} Rat (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.metricSpace))) s) (EmptyCollection.emptyCollection.{0} (Set.{0} Rat) (Set.hasEmptyc.{0} Rat)))
+but is expected to have type
+  forall {s : Set.{0} Rat}, (IsCompact.{0} Rat (UniformSpace.toTopologicalSpace.{0} Rat (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.instMetricSpaceRat))) s) -> (Eq.{1} (Set.{0} Rat) (interior.{0} Rat (UniformSpace.toTopologicalSpace.{0} Rat (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.instMetricSpaceRat))) s) (EmptyCollection.emptyCollection.{0} (Set.{0} Rat) (Set.instEmptyCollectionSet.{0} Rat)))
+Case conversion may be inaccurate. Consider using '#align rat.interior_compact_eq_empty Rat.interior_compact_eq_emptyₓ'. -/
 theorem interior_compact_eq_empty (hs : IsCompact s) : interior s = ∅ :=
   denseEmbedding_coe_real.to_denseInducing.interior_compact_eq_empty dense_irrational hs
 #align rat.interior_compact_eq_empty Rat.interior_compact_eq_empty
 
+/- warning: rat.dense_compl_compact -> Rat.dense_compl_compact is a dubious translation:
+lean 3 declaration is
+  forall {s : Set.{0} Rat}, (IsCompact.{0} Rat (UniformSpace.toTopologicalSpace.{0} Rat (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.metricSpace))) s) -> (Dense.{0} Rat (UniformSpace.toTopologicalSpace.{0} Rat (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.metricSpace))) (HasCompl.compl.{0} (Set.{0} Rat) (BooleanAlgebra.toHasCompl.{0} (Set.{0} Rat) (Set.booleanAlgebra.{0} Rat)) s))
+but is expected to have type
+  forall {s : Set.{0} Rat}, (IsCompact.{0} Rat (UniformSpace.toTopologicalSpace.{0} Rat (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.instMetricSpaceRat))) s) -> (Dense.{0} Rat (UniformSpace.toTopologicalSpace.{0} Rat (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.instMetricSpaceRat))) (HasCompl.compl.{0} (Set.{0} Rat) (BooleanAlgebra.toHasCompl.{0} (Set.{0} Rat) (Set.instBooleanAlgebraSet.{0} Rat)) s))
+Case conversion may be inaccurate. Consider using '#align rat.dense_compl_compact Rat.dense_compl_compactₓ'. -/
 theorem dense_compl_compact (hs : IsCompact s) : Dense (sᶜ) :=
   interior_eq_empty_iff_dense_compl.1 (interior_compact_eq_empty hs)
 #align rat.dense_compl_compact Rat.dense_compl_compact
 
+/- warning: rat.cocompact_inf_nhds_ne_bot -> Rat.cocompact_inf_nhds_neBot is a dubious translation:
+lean 3 declaration is
+  forall {p : Rat}, Filter.NeBot.{0} Rat (Inf.inf.{0} (Filter.{0} Rat) (Filter.hasInf.{0} Rat) (Filter.cocompact.{0} Rat (UniformSpace.toTopologicalSpace.{0} Rat (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.metricSpace)))) (nhds.{0} Rat (UniformSpace.toTopologicalSpace.{0} Rat (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.metricSpace))) p))
+but is expected to have type
+  forall {p : Rat}, Filter.NeBot.{0} Rat (Inf.inf.{0} (Filter.{0} Rat) (Filter.instInfFilter.{0} Rat) (Filter.cocompact.{0} Rat (UniformSpace.toTopologicalSpace.{0} Rat (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.instMetricSpaceRat)))) (nhds.{0} Rat (UniformSpace.toTopologicalSpace.{0} Rat (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.instMetricSpaceRat))) p))
+Case conversion may be inaccurate. Consider using '#align rat.cocompact_inf_nhds_ne_bot Rat.cocompact_inf_nhds_neBotₓ'. -/
 instance cocompact_inf_nhds_neBot : NeBot (cocompact ℚ ⊓ 𝓝 p) :=
   by
   refine' (has_basis_cocompact.inf (nhds_basis_opens _)).neBot_iff.2 _
@@ -58,6 +76,7 @@ instance cocompact_inf_nhds_neBot : NeBot (cocompact ℚ ⊓ 𝓝 p) :=
   exact (dense_compl_compact hs).inter_open_nonempty _ ho ⟨p, hpo⟩
 #align rat.cocompact_inf_nhds_ne_bot Rat.cocompact_inf_nhds_neBot
 
+#print Rat.not_countably_generated_cocompact /-
 theorem not_countably_generated_cocompact : ¬IsCountablyGenerated (cocompact ℚ) :=
   by
   intro H
@@ -67,7 +86,14 @@ theorem not_countably_generated_cocompact : ¬IsCountablyGenerated (cocompact �
   exact (hxc.eventually hx0.is_compact_insert_range.compl_mem_cocompact).exists
   exact hn (Or.inr ⟨n, rfl⟩)
 #align rat.not_countably_generated_cocompact Rat.not_countably_generated_cocompact
+-/
 
+/- warning: rat.not_countably_generated_nhds_infty_alexandroff -> Rat.not_countably_generated_nhds_infty_alexandroff is a dubious translation:
+lean 3 declaration is
+  Not (Filter.IsCountablyGenerated.{0} (Alexandroff.{0} Rat) (nhds.{0} (Alexandroff.{0} Rat) (Alexandroff.topologicalSpace.{0} Rat (UniformSpace.toTopologicalSpace.{0} Rat (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.metricSpace)))) (Alexandroff.infty.{0} Rat)))
+but is expected to have type
+  Not (Filter.IsCountablyGenerated.{0} (Alexandroff.{0} Rat) (nhds.{0} (Alexandroff.{0} Rat) (Alexandroff.instTopologicalSpaceAlexandroff.{0} Rat (UniformSpace.toTopologicalSpace.{0} Rat (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.instMetricSpaceRat)))) (Alexandroff.infty.{0} Rat)))
+Case conversion may be inaccurate. Consider using '#align rat.not_countably_generated_nhds_infty_alexandroff Rat.not_countably_generated_nhds_infty_alexandroffₓ'. -/
 theorem not_countably_generated_nhds_infty_alexandroff : ¬IsCountablyGenerated (𝓝 (∞ : ℚ∞)) :=
   by
   intro
@@ -76,12 +102,24 @@ theorem not_countably_generated_nhds_infty_alexandroff : ¬IsCountablyGenerated 
   exact not_countably_generated_cocompact this
 #align rat.not_countably_generated_nhds_infty_alexandroff Rat.not_countably_generated_nhds_infty_alexandroff
 
+/- warning: rat.not_first_countable_topology_alexandroff -> Rat.not_firstCountableTopology_alexandroff is a dubious translation:
+lean 3 declaration is
+  Not (TopologicalSpace.FirstCountableTopology.{0} (Alexandroff.{0} Rat) (Alexandroff.topologicalSpace.{0} Rat (UniformSpace.toTopologicalSpace.{0} Rat (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.metricSpace)))))
+but is expected to have type
+  Not (TopologicalSpace.FirstCountableTopology.{0} (Alexandroff.{0} Rat) (Alexandroff.instTopologicalSpaceAlexandroff.{0} Rat (UniformSpace.toTopologicalSpace.{0} Rat (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.instMetricSpaceRat)))))
+Case conversion may be inaccurate. Consider using '#align rat.not_first_countable_topology_alexandroff Rat.not_firstCountableTopology_alexandroffₓ'. -/
 theorem not_firstCountableTopology_alexandroff : ¬FirstCountableTopology ℚ∞ :=
   by
   intro
   exact not_countably_generated_nhds_infty_alexandroff inferInstance
 #align rat.not_first_countable_topology_alexandroff Rat.not_firstCountableTopology_alexandroff
 
+/- warning: rat.not_second_countable_topology_alexandroff -> Rat.not_secondCountableTopology_alexandroff is a dubious translation:
+lean 3 declaration is
+  Not (TopologicalSpace.SecondCountableTopology.{0} (Alexandroff.{0} Rat) (Alexandroff.topologicalSpace.{0} Rat (UniformSpace.toTopologicalSpace.{0} Rat (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.metricSpace)))))
+but is expected to have type
+  Not (TopologicalSpace.SecondCountableTopology.{0} (Alexandroff.{0} Rat) (Alexandroff.instTopologicalSpaceAlexandroff.{0} Rat (UniformSpace.toTopologicalSpace.{0} Rat (PseudoMetricSpace.toUniformSpace.{0} Rat (MetricSpace.toPseudoMetricSpace.{0} Rat Rat.instMetricSpaceRat)))))
+Case conversion may be inaccurate. Consider using '#align rat.not_second_countable_topology_alexandroff Rat.not_secondCountableTopology_alexandroffₓ'. -/
 theorem not_secondCountableTopology_alexandroff : ¬SecondCountableTopology ℚ∞ :=
   by
   intro
