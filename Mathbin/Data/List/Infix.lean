@@ -524,7 +524,7 @@ but is expected to have type
   forall {α : Type.{u1}} {l : List.{u1} α} (p : α -> Bool), List.isPrefix.{u1} α (List.takeWhile.{u1} α p l) l
 Case conversion may be inaccurate. Consider using '#align list.take_while_prefix List.takeWhile_prefixₓ'. -/
 theorem takeWhile_prefix (p : α → Prop) [DecidablePred p] : l.takeWhile p <+: l :=
-  ⟨l.dropWhileₓ p, takeWhile_append_drop p l⟩
+  ⟨l.dropWhileₓ p, takeWhile_append_dropWhile p l⟩
 #align list.take_while_prefix List.takeWhile_prefix
 
 /- warning: list.drop_while_suffix -> List.dropWhile_suffix is a dubious translation:
@@ -534,7 +534,7 @@ but is expected to have type
   forall {α : Type.{u1}} {l : List.{u1} α} (p : α -> Bool), List.isSuffix.{u1} α (List.dropWhile.{u1} α p l) l
 Case conversion may be inaccurate. Consider using '#align list.drop_while_suffix List.dropWhile_suffixₓ'. -/
 theorem dropWhile_suffix (p : α → Prop) [DecidablePred p] : l.dropWhileₓ p <:+ l :=
-  ⟨l.takeWhile p, takeWhile_append_drop p l⟩
+  ⟨l.takeWhile p, takeWhile_append_dropWhile p l⟩
 #align list.drop_while_suffix List.dropWhile_suffix
 
 #print List.dropLast_prefix /-
@@ -1011,7 +1011,7 @@ theorem mem_insert_iff : a ∈ insert b l ↔ a = b ∨ a ∈ l :=
 #print List.suffix_insert /-
 @[simp]
 theorem suffix_insert (a : α) (l : List α) : l <:+ insert a l := by
-  by_cases a ∈ l <;> [simp only [insert_of_mem h], simp only [insert_of_not_mem h, suffix_cons]]
+  by_cases a ∈ l <;> [simp only [insert_of_mem h];simp only [insert_of_not_mem h, suffix_cons]]
 #align list.suffix_insert List.suffix_insert
 -/
 

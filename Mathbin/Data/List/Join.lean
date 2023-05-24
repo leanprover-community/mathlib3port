@@ -44,7 +44,7 @@ theorem join_eq_nil : ∀ {L : List (List α)}, join L = [] ↔ ∀ l ∈ L, l =
 #print List.join_append /-
 @[simp]
 theorem join_append (L₁ L₂ : List (List α)) : join (L₁ ++ L₂) = join L₁ ++ join L₂ := by
-  induction L₁ <;> [rfl, simp only [*, join, cons_append, append_assoc]]
+  induction L₁ <;> [rfl;simp only [*, join, cons_append, append_assoc]]
 #align list.join_append List.join_append
 -/
 
@@ -91,7 +91,7 @@ theorem join_join (l : List (List (List α))) : l.join.join = (l.map join).join 
 #print List.length_join /-
 @[simp]
 theorem length_join (L : List (List α)) : length (join L) = sum (map length L) := by
-  induction L <;> [rfl, simp only [*, join, map, sum_cons, length_append]]
+  induction L <;> [rfl;simp only [*, join, map, sum_cons, length_append]]
 #align list.length_join List.length_join
 -/
 

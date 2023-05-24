@@ -776,7 +776,7 @@ def ofRepeat {α : Sort _} : ∀ {n i}, repeat n α i → α
 
 #print TypeVec.const_iff_true /-
 theorem const_iff_true {α : TypeVec n} {i x p} : ofRepeat (TypeVec.const p α i x) ↔ p := by
-  induction i <;> [rfl, erw [TypeVec.const, @i_ih (drop α) x]]
+  induction i <;> [rfl;erw [TypeVec.const, @i_ih (drop α) x]]
 #align typevec.const_iff_true TypeVec.const_iff_true
 -/
 
@@ -846,32 +846,32 @@ scoped[MvFunctor] infixl:45 " ⊗' " => TypeVec.prod.map
 #print TypeVec.fst_prod_mk /-
 theorem fst_prod_mk {α α' β β' : TypeVec n} (f : α ⟹ β) (g : α' ⟹ β') :
     TypeVec.prod.fst ⊚ (f ⊗' g) = f ⊚ TypeVec.prod.fst := by
-  ext i <;> induction i <;> [rfl, apply i_ih]
+  ext i <;> induction i <;> [rfl;apply i_ih]
 #align typevec.fst_prod_mk TypeVec.fst_prod_mk
 -/
 
 #print TypeVec.snd_prod_mk /-
 theorem snd_prod_mk {α α' β β' : TypeVec n} (f : α ⟹ β) (g : α' ⟹ β') :
     TypeVec.prod.snd ⊚ (f ⊗' g) = g ⊚ TypeVec.prod.snd := by
-  ext i <;> induction i <;> [rfl, apply i_ih]
+  ext i <;> induction i <;> [rfl;apply i_ih]
 #align typevec.snd_prod_mk TypeVec.snd_prod_mk
 -/
 
 #print TypeVec.fst_diag /-
 theorem fst_diag {α : TypeVec n} : TypeVec.prod.fst ⊚ (prod.diag : α ⟹ _) = id := by
-  ext i <;> induction i <;> [rfl, apply i_ih]
+  ext i <;> induction i <;> [rfl;apply i_ih]
 #align typevec.fst_diag TypeVec.fst_diag
 -/
 
 #print TypeVec.snd_diag /-
 theorem snd_diag {α : TypeVec n} : TypeVec.prod.snd ⊚ (prod.diag : α ⟹ _) = id := by
-  ext i <;> induction i <;> [rfl, apply i_ih]
+  ext i <;> induction i <;> [rfl;apply i_ih]
 #align typevec.snd_diag TypeVec.snd_diag
 -/
 
 #print TypeVec.repeatEq_iff_eq /-
 theorem repeatEq_iff_eq {α : TypeVec n} {i x y} : ofRepeat (repeatEq α i (prod.mk _ x y)) ↔ x = y :=
-  by induction i <;> [rfl, erw [repeat_eq, @i_ih (drop α) x y]]
+  by induction i <;> [rfl;erw [repeat_eq, @i_ih (drop α) x y]]
 #align typevec.repeat_eq_iff_eq TypeVec.repeatEq_iff_eq
 -/
 
@@ -952,7 +952,7 @@ theorem subtypeVal_nil {α : TypeVec.{u} 0} (ps : α ⟹ repeat 0 Prop) :
 
 #print TypeVec.diag_sub_val /-
 theorem diag_sub_val {n} {α : TypeVec.{u} n} : subtypeVal (repeatEq α) ⊚ diagSub = prod.diag := by
-  ext i <;> induction i <;> [rfl, apply i_ih]
+  ext i <;> induction i <;> [rfl;apply i_ih]
 #align typevec.diag_sub_val TypeVec.diag_sub_val
 -/
 
@@ -973,7 +973,7 @@ theorem prod_id : ∀ {n} {α β : TypeVec.{u} n}, (id ⊗' id) = (id : α ⊗ �
 theorem append_prod_appendFun {n} {α α' β β' : TypeVec.{u} n} {φ φ' ψ ψ' : Type u} {f₀ : α ⟹ α'}
     {g₀ : β ⟹ β'} {f₁ : φ → φ'} {g₁ : ψ → ψ'} :
     (f₀ ⊗' g₀ ::: Prod.map f₁ g₁) = ((f₀ ::: f₁) ⊗' (g₀ ::: g₁)) := by
-  ext (i a) <;> cases i <;> [cases a, skip] <;> rfl
+  ext (i a) <;> cases i <;> [cases a;skip] <;> rfl
 #align typevec.append_prod_append_fun TypeVec.append_prod_appendFun
 -/
 
@@ -1113,7 +1113,7 @@ theorem subtypeVal_diagSub {α : TypeVec n} : subtypeVal (repeatEq α) ⊚ diagS
   by
   clear * -
   ext i
-  induction i <;> [rfl, apply i_ih]
+  induction i <;> [rfl;apply i_ih]
 #align typevec.subtype_val_diag_sub TypeVec.subtypeVal_diagSub
 -/
 

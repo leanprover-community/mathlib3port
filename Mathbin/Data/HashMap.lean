@@ -510,8 +510,9 @@ theorem keys_empty (hash_fn : α → Nat) (n) : (@mkHashMap α _ β hash_fn n).k
 #align hash_map.keys_empty HashMap.keys_empty
 
 theorem find_empty (hash_fn : α → Nat) (n a) : (@mkHashMap α _ β hash_fn n).find a = none := by
-  induction' h : (@mkHashMap α _ β hash_fn n).find a with <;> [rfl,
-    · have := (find_iff _ _ _).1 h
+  induction' h : (@mkHashMap α _ β hash_fn n).find a with <;>
+    [rfl;·
+      have := (find_iff _ _ _).1 h
       rw [entries_empty] at this
       contradiction]
 #align hash_map.find_empty HashMap.find_empty

@@ -40,7 +40,7 @@ local prefix:1024 "↑ₘ" => @coe _ (Matrix (Fin 2) (Fin 2) _) _
 local notation "↑ₘ[" R "]" => @coe _ (Matrix (Fin 2) (Fin 2) R) _
 
 -- mathport name: «exprGL( , )⁺»
-local notation "GL(" n ", " R ")" "⁺" => Matrix.gLPos (Fin n) R
+local notation "GL(" n ", " R ")" "⁺" => Matrix.GLPos (Fin n) R
 
 -- mathport name: «exprSL( , )»
 local notation "SL(" n ", " R ")" => Matrix.SpecialLinearGroup (Fin n) R
@@ -197,7 +197,7 @@ theorem SL_slash (γ : SL(2, ℤ)) : f ∣[k] γ = f ∣[k] (γ : GL(2, ℝ)⁺)
 theorem is_invariant_one (A : SL(2, ℤ)) : (1 : ℍ → ℂ) ∣[(0 : ℤ)] A = (1 : ℍ → ℂ) :=
   by
   have : ((↑ₘ(A : GL(2, ℝ)⁺)).det : ℝ) = 1 := by
-    simp only [coe_coe, Matrix.SpecialLinearGroup.coe_gLPos_coe_GL_coe_matrix,
+    simp only [coe_coe, Matrix.SpecialLinearGroup.coe_GLPos_coe_GL_coe_matrix,
       Matrix.SpecialLinearGroup.det_coe]
   funext
   rw [SL_slash, slash_def, slash, zero_sub, this]
@@ -213,7 +213,7 @@ theorem slash_action_eq'_iff (k : ℤ) (Γ : Subgroup SL(2, ℤ)) (f : ℍ → �
   simp only [subgroup_slash, slash_def, ModularForm.slash]
   convert inv_mul_eq_iff_eq_mul₀ _ using 2
   · rw [mul_comm]
-    simp only [denom, coe_coe, Matrix.SpecialLinearGroup.coe_gLPos_coe_GL_coe_matrix, zpow_neg,
+    simp only [denom, coe_coe, Matrix.SpecialLinearGroup.coe_GLPos_coe_GL_coe_matrix, zpow_neg,
       Matrix.SpecialLinearGroup.det_coe, of_real_one, one_zpow, mul_one, subgroup_to_sl_moeb,
       sl_moeb]
     rfl
@@ -232,7 +232,7 @@ theorem mul_slash (k1 k2 : ℤ) (A : GL(2, ℝ)⁺) (f g : ℍ → ℂ) :
     have : d ≠ 0 := by
       dsimp [d]
       norm_cast
-      exact Matrix.gLPos.det_ne_zero A
+      exact Matrix.GLPos.det_ne_zero A
     rw [← zpow_one_add₀ this, ← zpow_add₀ this]
     ring
   have h22 : denom A x ^ (-(k1 + k2)) = denom A x ^ (-k1) * denom A x ^ (-k2) :=

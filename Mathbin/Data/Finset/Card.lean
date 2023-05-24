@@ -158,7 +158,7 @@ theorem card_insert_le (a : α) (s : Finset α) : card (insert a s) ≤ s.card +
   by_cases a ∈ s <;>
     [·
       rw [insert_eq_of_mem h]
-      exact Nat.le_succ _, rw [card_insert_of_not_mem h]]
+      exact Nat.le_succ _;rw [card_insert_of_not_mem h]]
 #align finset.card_insert_le Finset.card_insert_le
 -/
 

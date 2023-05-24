@@ -120,7 +120,7 @@ theorem preErgodic_of_preErgodic_conjugate (hg : MeasurePreserving g μ μ') (hf
   ⟨by
     intro s hs₀ hs₁
     replace hs₁ : f ⁻¹' (g ⁻¹' s) = g ⁻¹' s; · rw [← preimage_comp, h_comm, preimage_comp, hs₁]
-    cases' hf.ae_empty_or_univ (hg.measurable hs₀) hs₁ with hs₂ hs₂ <;> [left, right]
+    cases' hf.ae_empty_or_univ (hg.measurable hs₀) hs₁ with hs₂ hs₂ <;> [left;right]
     · simpa only [ae_eq_empty, hg.measure_preimage hs₀] using hs₂
     · simpa only [ae_eq_univ, ← preimage_compl, hg.measure_preimage hs₀.compl] using hs₂⟩
 #align measure_theory.measure_preserving.pre_ergodic_of_pre_ergodic_conjugate MeasureTheory.MeasurePreserving.preErgodic_of_preErgodic_conjugate
@@ -171,7 +171,7 @@ theorem ae_empty_or_univ' (hf : QuasiErgodic f μ) (hs : MeasurableSet s) (hs' :
     s =ᵐ[μ] (∅ : Set α) ∨ s =ᵐ[μ] univ :=
   by
   obtain ⟨t, h₀, h₁, h₂⟩ := hf.to_quasi_measure_preserving.exists_preimage_eq_of_preimage_ae hs hs'
-  rcases hf.ae_empty_or_univ h₀ h₂ with (h₃ | h₃) <;> [left, right] <;> exact ae_eq_trans h₁.symm h₃
+  rcases hf.ae_empty_or_univ h₀ h₂ with (h₃ | h₃) <;> [left;right] <;> exact ae_eq_trans h₁.symm h₃
 #align quasi_ergodic.ae_empty_or_univ' QuasiErgodic.ae_empty_or_univ'
 -/
 

@@ -56,7 +56,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.map_sublists'_aux [anonymous]ₓ'. -/
 theorem [anonymous] (g : List β → List γ) (l : List α) (f r) :
     map g (sublists'Aux l f r) = sublists'Aux l (g ∘ f) (map g r) := by
-  induction l generalizing f r <;> [rfl, simp only [*, sublists'_aux]]
+  induction l generalizing f r <;> [rfl;simp only [*, sublists'_aux]]
 #align list.map_sublists'_aux [anonymous]
 
 /- warning: list.sublists'_aux_append clashes with [anonymous] -> [anonymous]
@@ -68,7 +68,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.sublists'_aux_append [anonymous]ₓ'. -/
 theorem [anonymous] (r' : List (List β)) (l : List α) (f r) :
     sublists'Aux l f (r ++ r') = sublists'Aux l f r ++ r' := by
-  induction l generalizing f r <;> [rfl, simp only [*, sublists'_aux]]
+  induction l generalizing f r <;> [rfl;simp only [*, sublists'_aux]]
 #align list.sublists'_aux_append [anonymous]
 
 /- warning: list.sublists'_aux_eq_sublists' clashes with [anonymous] -> [anonymous]
@@ -297,9 +297,10 @@ theorem sublists_concat (l : List α) (a : α) :
 
 #print List.sublists_reverse /-
 theorem sublists_reverse (l : List α) : sublists (reverse l) = map reverse (sublists' l) := by
-  induction' l with hd tl ih <;> [rfl,
-    simp only [reverse_cons, sublists_append, sublists'_cons, map_append, ih, sublists_singleton,
-      map_eq_map, bind_eq_bind, map_map, cons_bind, append_nil, nil_bind, (· ∘ ·)]]
+  induction' l with hd tl ih <;>
+    [rfl;simp only [reverse_cons, sublists_append, sublists'_cons, map_append, ih,
+      sublists_singleton, map_eq_map, bind_eq_bind, map_map, cons_bind, append_nil, nil_bind,
+      (· ∘ ·)]]
 #align list.sublists_reverse List.sublists_reverse
 -/
 
@@ -628,7 +629,7 @@ theorem revzip_sublists (l : List α) : ∀ l₁ l₂, (l₁, l₂) ∈ revzip l
   · intro l a IH l₁ l₂ h
     rw [sublists_concat, reverse_append, zip_append, ← map_reverse, zip_map_right, zip_map_left] at
         h <;>
-      [skip, · simp]
+      [skip;· simp]
     simp only [Prod.mk.inj_iff, mem_map, mem_append, Prod.map_mk, Prod.exists] at h
     rcases h with (⟨l₁, l₂', h, rfl, rfl⟩ | ⟨l₁', l₂, h, rfl, rfl⟩)
     · rw [← append_assoc]
@@ -648,7 +649,7 @@ theorem revzip_sublists' (l : List α) : ∀ l₁ l₂, (l₁, l₂) ∈ revzip 
   · simp at h
     simp [h]
   · rw [sublists'_cons, reverse_append, zip_append, ← map_reverse, zip_map_right, zip_map_left] at
-        h <;> [simp at h, simp]
+        h <;> [simp at h;simp]
     rcases h with (⟨l₁, l₂', h, rfl, rfl⟩ | ⟨l₁', h, rfl⟩)
     · exact perm_middle.trans ((IH _ _ h).cons _)
     · exact (IH _ _ h).cons _

@@ -4041,7 +4041,7 @@ theorem comap_fst_neBot_iff {f : Filter α} :
     (f.comap (Prod.fst : α × β → α)).ne_bot ↔ f.ne_bot ∧ Nonempty β :=
   by
   cases isEmpty_or_nonempty β
-  · rw [filter_eq_bot_of_is_empty (f.comap _), ← not_iff_not] <;> [simp [*], infer_instance]
+  · rw [filter_eq_bot_of_is_empty (f.comap _), ← not_iff_not] <;> [simp [*];infer_instance]
   · simp [comap_ne_bot_iff_frequently, h]
 #align filter.comap_fst_ne_bot_iff Filter.comap_fst_neBot_iff
 -/
@@ -4060,7 +4060,7 @@ theorem comap_snd_neBot_iff {f : Filter β} :
     (f.comap (Prod.snd : α × β → β)).ne_bot ↔ Nonempty α ∧ f.ne_bot :=
   by
   cases' isEmpty_or_nonempty α with hα hα
-  · rw [filter_eq_bot_of_is_empty (f.comap _), ← not_iff_not] <;> [simp, infer_instance]
+  · rw [filter_eq_bot_of_is_empty (f.comap _), ← not_iff_not] <;> [simp;infer_instance]
   · simp [comap_ne_bot_iff_frequently, hα]
 #align filter.comap_snd_ne_bot_iff Filter.comap_snd_neBot_iff
 -/
@@ -4083,7 +4083,7 @@ theorem comap_eval_neBot_iff' {ι : Type _} {α : ι → Type _} {i : ι} {f : F
     (comap (eval i) f).ne_bot ↔ (∀ j, Nonempty (α j)) ∧ NeBot f :=
   by
   cases' isEmpty_or_nonempty (∀ j, α j) with H H
-  · rw [filter_eq_bot_of_is_empty (f.comap _), ← not_iff_not] <;> [skip, assumption]
+  · rw [filter_eq_bot_of_is_empty (f.comap _), ← not_iff_not] <;> [skip;assumption]
     simp [← Classical.nonempty_pi]
   · have : ∀ j, Nonempty (α j) := Classical.nonempty_pi.1 H
     simp [comap_ne_bot_iff_frequently, *]

@@ -960,7 +960,7 @@ theorem upcrossings_lt_top_iff :
     by
     constructor
     · intro h
-      lift upcrossings a b f ω to ℝ≥0 using h.ne
+      lift upcrossings a b f ω to ℝ≥0 using h.ne with r hr
       exact ⟨r, le_rfl⟩
     · rintro ⟨k, hk⟩
       exact lt_of_le_of_lt hk ENNReal.coe_lt_top

@@ -133,7 +133,7 @@ theorem getD_coe (x y : α) : Option.getD (↑x) y = x :=
 
 #print Option.getD_of_ne_none /-
 theorem getD_of_ne_none {x : Option α} (hx : x ≠ none) (y : α) : some (x.getD y) = x := by
-  cases x <;> [contradiction, rw [get_or_else_some]]
+  cases x <;> [contradiction;rw [get_or_else_some]]
 #align option.get_or_else_of_ne_none Option.getD_of_ne_none
 -/
 

@@ -50,8 +50,8 @@ theorem chain_of_chain_cons {a b : α} {l : List α} (p : Chain R a (b :: l)) : 
 #print List.Chain.imp' /-
 theorem Chain.imp' {S : α → α → Prop} (HRS : ∀ ⦃a b⦄, R a b → S a b) {a b : α}
     (Hab : ∀ ⦃c⦄, R a c → S b c) {l : List α} (p : Chain R a l) : Chain S b l := by
-  induction' p with _ a c l r p IH generalizing b <;> constructor <;> [exact Hab r,
-    exact IH (@HRS _)]
+  induction' p with _ a c l r p IH generalizing b <;> constructor <;>
+    [exact Hab r;exact IH (@HRS _)]
 #align list.chain.imp' List.Chain.imp'
 -/
 
@@ -74,8 +74,9 @@ theorem Chain.iff_mem {a : α} {l : List α} :
     Chain R a l ↔ Chain (fun x y => x ∈ a :: l ∧ y ∈ l ∧ R x y) a l :=
   ⟨fun p => by
     induction' p with _ a b l r p IH <;> constructor <;>
-      [exact ⟨mem_cons_self _ _, mem_cons_self _ _, r⟩,
-      exact IH.imp fun a b ⟨am, bm, h⟩ => ⟨mem_cons_of_mem _ am, mem_cons_of_mem _ bm, h⟩],
+      [exact
+        ⟨mem_cons_self _ _, mem_cons_self _ _,
+          r⟩;exact IH.imp fun a b ⟨am, bm, h⟩ => ⟨mem_cons_of_mem _ am, mem_cons_of_mem _ bm, h⟩],
     Chain.imp fun a b h => h.2.2⟩
 #align list.chain.iff_mem List.Chain.iff_mem
 -/
@@ -237,7 +238,7 @@ theorem chain_iff_nthLe {R} :
 
 #print List.Chain'.imp /-
 theorem Chain'.imp {S : α → α → Prop} (H : ∀ a b, R a b → S a b) {l : List α} (p : Chain' R l) :
-    Chain' S l := by cases l <;> [trivial, exact p.imp H]
+    Chain' S l := by cases l <;> [trivial;exact p.imp H]
 #align list.chain'.imp List.Chain'.imp
 -/
 
@@ -307,7 +308,7 @@ theorem chain'_append_cons_cons {b c : α} {l₁ l₂ : List α} :
 #print List.chain'_map /-
 theorem chain'_map (f : β → α) {l : List β} :
     Chain' R (map f l) ↔ Chain' (fun a b : β => R (f a) (f b)) l := by
-  cases l <;> [rfl, exact chain_map _]
+  cases l <;> [rfl;exact chain_map _]
 #align list.chain'_map List.chain'_map
 -/
 

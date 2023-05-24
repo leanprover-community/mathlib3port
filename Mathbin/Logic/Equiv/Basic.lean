@@ -787,7 +787,7 @@ def sumCompl {α : Type _} (p : α → Prop) [DecidablePred p] : Sum { a // p a 
     where
   toFun := Sum.elim coe coe
   invFun a := if h : p a then Sum.inl ⟨a, h⟩ else Sum.inr ⟨a, h⟩
-  left_inv := by rintro (⟨x, hx⟩ | ⟨x, hx⟩) <;> dsimp <;> [rw [dif_pos], rw [dif_neg]]
+  left_inv := by rintro (⟨x, hx⟩ | ⟨x, hx⟩) <;> dsimp <;> [rw [dif_pos];rw [dif_neg]]
   right_inv a := by
     dsimp
     split_ifs <;> rfl
@@ -945,7 +945,7 @@ def subtypePreimage : { x : α → β // x ∘ coe = x₀ } ≃ ({ a // ¬p a } 
     Subtype.val_injective <|
       funext fun a => by
         dsimp
-        split_ifs <;> [rw [← hx], skip] <;> rfl
+        split_ifs <;> [rw [← hx];skip] <;> rfl
   right_inv x :=
     funext fun ⟨a, h⟩ =>
       show dite (p a) _ _ = _ by

@@ -383,8 +383,8 @@ Case conversion may be inaccurate. Consider using '#align ennreal.tendsto_coe_nh
 @[simp, norm_cast]
 theorem tendsto_coe_nhds_top {f : α → ℝ≥0} {l : Filter α} :
     Tendsto (fun x => (f x : ℝ≥0∞)) l (𝓝 ∞) ↔ Tendsto f l atTop := by
-  rw [tendsto_nhds_top_iff_nnreal, at_top_basis_Ioi.tendsto_right_iff] <;> [simp, infer_instance,
-    infer_instance]
+  rw [tendsto_nhds_top_iff_nnreal, at_top_basis_Ioi.tendsto_right_iff] <;>
+    [simp;infer_instance;infer_instance]
 #align ennreal.tendsto_coe_nhds_top ENNReal.tendsto_coe_nhds_top
 
 /- warning: ennreal.tendsto_of_real_at_top -> ENNReal.tendsto_ofReal_atTop is a dubious translation:
@@ -1540,7 +1540,7 @@ Case conversion may be inaccurate. Consider using '#align ennreal.tsum_coe_ne_to
 theorem tsum_coe_ne_top_iff_summable {f : β → ℝ≥0} : (∑' b, (f b : ℝ≥0∞)) ≠ ∞ ↔ Summable f :=
   by
   refine' ⟨fun h => _, fun h => ENNReal.coe_tsum h ▸ ENNReal.coe_ne_top⟩
-  lift ∑' b, (f b : ℝ≥0∞) to ℝ≥0 using h
+  lift ∑' b, (f b : ℝ≥0∞) to ℝ≥0 using h with a ha
   refine' ⟨a, ENNReal.hasSum_coe.1 _⟩
   rw [ha]
   exact ennreal.summable.has_sum

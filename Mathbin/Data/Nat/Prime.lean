@@ -432,14 +432,14 @@ theorem minFac_prime {n : ℕ} (n1 : n ≠ 1) : Prime (minFac n) :=
 
 #print Nat.minFac_le_of_dvd /-
 theorem minFac_le_of_dvd {n : ℕ} : ∀ {m : ℕ}, 2 ≤ m → m ∣ n → minFac n ≤ m := by
-  by_cases n1 : n = 1 <;> [exact fun m m2 d => n1.symm ▸ le_trans (by decide) m2,
-    exact (min_fac_has_prop n1).2.2]
+  by_cases n1 : n = 1 <;>
+    [exact fun m m2 d => n1.symm ▸ le_trans (by decide) m2;exact (min_fac_has_prop n1).2.2]
 #align nat.min_fac_le_of_dvd Nat.minFac_le_of_dvd
 -/
 
 #print Nat.minFac_pos /-
 theorem minFac_pos (n : ℕ) : 0 < minFac n := by
-  by_cases n1 : n = 1 <;> [exact n1.symm ▸ by decide, exact (min_fac_prime n1).Pos]
+  by_cases n1 : n = 1 <;> [exact n1.symm ▸ by decide;exact (min_fac_prime n1).Pos]
 #align nat.min_fac_pos Nat.minFac_pos
 -/
 
@@ -823,8 +823,8 @@ theorem Prime.mul_eq_prime_sq_iff {x y p : ℕ} (hp : p.Prime) (hx : x ≠ 1) (h
     have pdvdxy : p ∣ x * y := by rw [h] <;> simp [sq]
     -- Could be `wlog := hp.dvd_mul.1 pdvdxy using x y`, but that imports more than we want.
     suffices ∀ x' y' : ℕ, x' ≠ 1 → y' ≠ 1 → x' * y' = p ^ 2 → p ∣ x' → x' = p ∧ y' = p by
-      obtain hx | hy := hp.dvd_mul.1 pdvdxy <;> [skip, rw [and_comm']] <;> [skip,
-            rw [mul_comm] at h pdvdxy] <;>
+      obtain hx | hy := hp.dvd_mul.1 pdvdxy <;> [skip;rw [and_comm']] <;>
+            [skip;rw [mul_comm] at h pdvdxy] <;>
           apply this <;>
         assumption
     clear! x y

@@ -355,7 +355,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align cau_seq.completion.inv_zero CauSeq.Completion.inv_zeroₓ'. -/
 @[simp]
 theorem inv_zero : (0 : Cauchy abv)⁻¹ = 0 :=
-  congr_arg mk <| by rw [dif_pos] <;> [rfl, exact zero_lim_zero]
+  congr_arg mk <| by rw [dif_pos] <;> [rfl;exact zero_lim_zero]
 #align cau_seq.completion.inv_zero CauSeq.Completion.inv_zero
 
 /- warning: cau_seq.completion.inv_mk -> CauSeq.Completion.inv_mk is a dubious translation:
@@ -421,7 +421,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedField.{u1} α] {β : Type.{u2}} [_inst_2 : DivisionRing.{u2} β] {abv : β -> α} [_inst_3 : IsAbsoluteValue.{u1, u2} α (OrderedCommSemiring.toOrderedSemiring.{u1} α (StrictOrderedCommSemiring.toOrderedCommSemiring.{u1} α (LinearOrderedCommSemiring.toStrictOrderedCommSemiring.{u1} α (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u1} α (LinearOrderedField.toLinearOrderedSemifield.{u1} α _inst_1))))) β (DivisionSemiring.toSemiring.{u2} β (DivisionRing.toDivisionSemiring.{u2} β _inst_2)) abv] (x : β), Eq.{succ u2} (CauSeq.Completion.Cauchy.{u1, u2} α _inst_1 β (DivisionRing.toRing.{u2} β _inst_2) abv _inst_3) (CauSeq.Completion.ofRat.{u1, u2} α _inst_1 β (DivisionRing.toRing.{u2} β _inst_2) abv _inst_3 (Inv.inv.{u2} β (DivisionRing.toInv.{u2} β _inst_2) x)) (Inv.inv.{u2} (CauSeq.Completion.Cauchy.{u1, u2} α _inst_1 β (DivisionRing.toRing.{u2} β _inst_2) abv _inst_3) (CauSeq.Completion.instInvCauchyToRing.{u1, u2} α _inst_1 β _inst_2 abv _inst_3) (CauSeq.Completion.ofRat.{u1, u2} α _inst_1 β (DivisionRing.toRing.{u2} β _inst_2) abv _inst_3 x))
 Case conversion may be inaccurate. Consider using '#align cau_seq.completion.of_rat_inv CauSeq.Completion.ofRat_invₓ'. -/
 theorem ofRat_inv (x : β) : ofRat x⁻¹ = ((ofRat x)⁻¹ : Cauchy abv) :=
-  congr_arg mk <| by split_ifs with h <;> [simp [const_lim_zero.1 h], rfl]
+  congr_arg mk <| by split_ifs with h <;> [simp [const_lim_zero.1 h];rfl]
 #align cau_seq.completion.of_rat_inv CauSeq.Completion.ofRat_inv
 
 /-- The Cauchy completion forms a division ring. -/

@@ -406,7 +406,7 @@ theorem head?_lookupAll (a : α) : ∀ l : List (Sigma β), head? (lookupAll a l
     by_cases h : a = a' <;>
       [·
         subst h
-        simp, simp [*]]
+        simp;simp [*]]
 #align list.head_lookup_all List.head?_lookupAll
 -/
 
@@ -418,7 +418,7 @@ theorem mem_lookupAll {a : α} {b : β a} :
     by_cases h : a = a' <;>
       [·
         subst h
-        simp [*], simp [*]]
+        simp [*];simp [*]]
 #align list.mem_lookup_all List.mem_lookupAll
 -/
 
@@ -564,8 +564,9 @@ theorem kerase_cons_ne {a} {s : Sigma β} {l : List (Sigma β)} (h : a ≠ s.1) 
 #print List.kerase_of_not_mem_keys /-
 @[simp]
 theorem kerase_of_not_mem_keys {a} {l : List (Sigma β)} (h : a ∉ l.keys) : kerase a l = l := by
-  induction' l with _ _ ih <;> [rfl,
-    · simp [not_or] at h
+  induction' l with _ _ ih <;>
+    [rfl;·
+      simp [not_or] at h
       simp [h.1, ih h.2]]
 #align list.kerase_of_not_mem_keys List.kerase_of_not_mem_keys
 -/
@@ -712,7 +713,7 @@ theorem kerase_append_left {a} :
   | [], _, h => by cases h
   | s :: l₁, l₂, h₁ =>
     if h₂ : a = s.1 then by simp [h₂]
-    else by simp at h₁ <;> cases h₁ <;> [exact absurd h₁ h₂, simp [h₂, kerase_append_left h₁]]
+    else by simp at h₁ <;> cases h₁ <;> [exact absurd h₁ h₂;simp [h₂, kerase_append_left h₁]]
 #align list.kerase_append_left List.kerase_append_left
 -/
 
@@ -947,7 +948,7 @@ theorem mem_keys_kunion {a} {l₁ l₂ : List (Sigma β)} :
   by
   induction l₁ generalizing l₂
   case nil => simp
-  case cons s l₁ ih => by_cases h : a = s.1 <;> [simp [h], simp [h, ih]]
+  case cons s l₁ ih => by_cases h : a = s.1 <;> [simp [h];simp [h, ih]]
 #align list.mem_keys_kunion List.mem_keys_kunion
 -/
 

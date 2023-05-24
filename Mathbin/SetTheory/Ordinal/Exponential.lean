@@ -77,8 +77,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ordinal.opow_zero Ordinal.opow_zeroₓ'. -/
 @[simp]
 theorem opow_zero (a : Ordinal) : (a^0) = 1 := by
-  by_cases a = 0 <;> [simp only [opow_def, if_pos h, sub_zero],
-    simp only [opow_def, if_neg h, limit_rec_on_zero]]
+  by_cases a = 0 <;>
+    [simp only [opow_def, if_pos h, sub_zero];simp only [opow_def, if_neg h, limit_rec_on_zero]]
 #align ordinal.opow_zero Ordinal.opow_zero
 
 /- warning: ordinal.opow_succ -> Ordinal.opow_succ is a dubious translation:

@@ -477,7 +477,7 @@ Case conversion may be inaccurate. Consider using '#align complex.abs_cpow_of_im
 theorem abs_cpow_of_imp {z w : ℂ} (h : z = 0 → w.re = 0 → w = 0) :
     abs (z ^ w) = abs z ^ w.re / Real.exp (arg z * im w) :=
   by
-  rcases ne_or_eq z 0 with (hz | rfl) <;> [exact abs_cpow_of_ne_zero hz w, rw [map_zero]]
+  rcases ne_or_eq z 0 with (hz | rfl) <;> [exact abs_cpow_of_ne_zero hz w;rw [map_zero]]
   cases' eq_or_ne w.re 0 with hw hw
   · simp [hw, h rfl hw]
   · rw [Real.zero_rpow hw, zero_div, zero_cpow, map_zero]
@@ -492,7 +492,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align complex.abs_cpow_le Complex.abs_cpow_leₓ'. -/
 theorem abs_cpow_le (z w : ℂ) : abs (z ^ w) ≤ abs z ^ w.re / Real.exp (arg z * im w) :=
   by
-  rcases ne_or_eq z 0 with (hz | rfl) <;> [exact (abs_cpow_of_ne_zero hz w).le, rw [map_zero]]
+  rcases ne_or_eq z 0 with (hz | rfl) <;> [exact (abs_cpow_of_ne_zero hz w).le;rw [map_zero]]
   rcases eq_or_ne w 0 with (rfl | hw); · simp
   rw [zero_cpow hw, map_zero]
   exact div_nonneg (Real.rpow_nonneg_of_nonneg le_rfl _) (Real.exp_pos _).le
@@ -506,7 +506,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align complex.abs_cpow_real Complex.abs_cpow_realₓ'. -/
 @[simp]
 theorem abs_cpow_real (x : ℂ) (y : ℝ) : abs (x ^ (y : ℂ)) = x.abs ^ y := by
-  rcases eq_or_ne x 0 with (rfl | hx) <;> [rcases eq_or_ne y 0 with (rfl | hy), skip] <;>
+  rcases eq_or_ne x 0 with (rfl | hx) <;> [rcases eq_or_ne y 0 with (rfl | hy);skip] <;>
     simp [*, abs_cpow_of_ne_zero]
 #align complex.abs_cpow_real Complex.abs_cpow_real
 

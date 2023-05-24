@@ -931,7 +931,7 @@ theorem subset_singleton_iff {a : α} {L : List α} : L ⊆ [a] ↔ ∃ n, L = r
 #print List.map_replicate /-
 @[simp]
 theorem map_replicate (f : α → β) (n a) : map f (replicate n a) = replicate n (f a) := by
-  induction n <;> [rfl, simp only [*, replicate, map]] <;> constructor <;> rfl
+  induction n <;> [rfl;simp only [*, replicate, map]] <;> constructor <;> rfl
 #align list.map_replicate List.map_replicate
 -/
 
@@ -949,7 +949,7 @@ theorem tail_replicate (n) (a : α) : tail (replicate n a) = replicate (n - 1) a
 #print List.join_replicate_nil /-
 @[simp]
 theorem join_replicate_nil (n : ℕ) : join (replicate n []) = @nil α := by
-  induction n <;> [rfl, simp only [*, replicate, join, append_nil]]
+  induction n <;> [rfl;simp only [*, replicate, join, append_nil]]
 #align list.join_replicate_nil List.join_replicate_nil
 -/
 
@@ -1137,15 +1137,14 @@ attribute [local simp] reverse_core
 @[simp]
 theorem reverse_cons (a : α) (l : List α) : reverse (a :: l) = reverse l ++ [a] :=
   have aux : ∀ l₁ l₂, reverseAux l₁ l₂ ++ [a] = reverseAux l₁ (l₂ ++ [a]) := by
-    intro l₁ <;> induction l₁ <;> intros <;> [rfl, simp only [*, reverse_core, cons_append]]
+    intro l₁ <;> induction l₁ <;> intros <;> [rfl;simp only [*, reverse_core, cons_append]]
   (aux l nil).symm
 #align list.reverse_cons List.reverse_cons
 -/
 
 #print List.reverseAux_eq /-
 theorem reverseAux_eq (l₁ l₂ : List α) : reverseAux l₁ l₂ = reverse l₁ ++ l₂ := by
-  induction l₁ generalizing l₂ <;> [rfl,
-      simp only [*, reverse_core, reverse_cons, append_assoc]] <;>
+  induction l₁ generalizing l₂ <;> [rfl;simp only [*, reverse_core, reverse_cons, append_assoc]] <;>
     rfl
 #align list.reverse_core_eq List.reverseAux_eq
 -/
@@ -1166,8 +1165,9 @@ theorem reverse_singleton (a : α) : reverse [a] = [a] :=
 #print List.reverse_append /-
 @[simp]
 theorem reverse_append (s t : List α) : reverse (s ++ t) = reverse t ++ reverse s := by
-  induction s <;> [rw [nil_append, reverse_nil, append_nil],
-    simp only [*, cons_append, reverse_cons, append_assoc]]
+  induction s <;>
+    [rw [nil_append, reverse_nil,
+      append_nil];simp only [*, cons_append, reverse_cons, append_assoc]]
 #align list.reverse_append List.reverse_append
 -/
 
@@ -1180,7 +1180,7 @@ theorem reverse_concat (l : List α) (a : α) : reverse (concat l a) = a :: reve
 #print List.reverse_reverse /-
 @[simp]
 theorem reverse_reverse (l : List α) : reverse (reverse l) = l := by
-  induction l <;> [rfl, simp only [*, reverse_cons, reverse_append]] <;> rfl
+  induction l <;> [rfl;simp only [*, reverse_cons, reverse_append]] <;> rfl
 #align list.reverse_reverse List.reverse_reverse
 -/
 
@@ -1239,14 +1239,14 @@ theorem concat_eq_reverse_cons (a : α) (l : List α) : concat l a = reverse (a 
 #print List.length_reverse /-
 @[simp]
 theorem length_reverse (l : List α) : length (reverse l) = length l := by
-  induction l <;> [rfl, simp only [*, reverse_cons, length_append, length]]
+  induction l <;> [rfl;simp only [*, reverse_cons, length_append, length]]
 #align list.length_reverse List.length_reverse
 -/
 
 #print List.map_reverse /-
 @[simp]
 theorem map_reverse (f : α → β) (l : List α) : map f (reverse l) = reverse (map f l) := by
-  induction l <;> [rfl, simp only [*, map, reverse_cons, map_append]]
+  induction l <;> [rfl;simp only [*, map, reverse_cons, map_append]]
 #align list.map_reverse List.map_reverse
 -/
 
@@ -1260,9 +1260,9 @@ theorem map_reverseAux (f : α → β) (l₁ l₂ : List α) :
 #print List.mem_reverse' /-
 @[simp]
 theorem mem_reverse' {a : α} {l : List α} : a ∈ reverse l ↔ a ∈ l := by
-  induction l <;> [rfl,
-    simp only [*, reverse_cons, mem_append, mem_singleton, mem_cons_iff, not_mem_nil, false_or_iff,
-      or_false_iff, or_comm']]
+  induction l <;>
+    [rfl;simp only [*, reverse_cons, mem_append, mem_singleton, mem_cons_iff, not_mem_nil,
+      false_or_iff, or_false_iff, or_comm']]
 #align list.mem_reverse List.mem_reverse'
 -/
 
@@ -1318,8 +1318,8 @@ theorem getLast_cons {a : α} {l : List α} :
 @[simp]
 theorem getLast_append_singleton {a : α} (l : List α) :
     getLast (l ++ [a]) (append_ne_nil_of_ne_nil_right l _ (cons_ne_nil a _)) = a := by
-  induction l <;> [rfl,
-    simp only [cons_append, last_cons fun H => cons_ne_nil _ _ (append_eq_nil.1 H).2, *]]
+  induction l <;>
+    [rfl;simp only [cons_append, last_cons fun H => cons_ne_nil _ _ (append_eq_nil.1 H).2, *]]
 #align list.last_append_singleton List.getLast_append_singleton
 -/
 
@@ -1971,7 +1971,7 @@ Case conversion may be inaccurate. Consider using '#align list.replicate_sublist
 @[simp]
 theorem replicate_sublist_replicate (a : α) {m n} : replicate m a <+ replicate n a ↔ m ≤ n :=
   ⟨fun h => by simpa only [length_replicate] using h.length_le, fun h => by
-    induction h <;> [rfl, simp only [*, replicate_succ, sublist.cons]]⟩
+    induction h <;> [rfl;simp only [*, replicate_succ, sublist.cons]]⟩
 #align list.replicate_sublist_replicate List.replicate_sublist_replicate
 
 /- warning: list.sublist_replicate_iff -> List.sublist_replicate_iff is a dubious translation:
@@ -3013,7 +3013,7 @@ theorem map_eq_map_iff {f g : α → β} {l : List α} : map f l = map g l ↔ �
 #print List.map_concat /-
 theorem map_concat (f : α → β) (a : α) (l : List α) : map f (concat l a) = concat (map f l) (f a) :=
   by
-  induction l <;> [rfl, simp only [*, concat_eq_append, cons_append, map, map_append]] <;>
+  induction l <;> [rfl;simp only [*, concat_eq_append, cons_append, map, map_append]] <;>
       constructor <;>
     rfl
 #align list.map_concat List.map_concat
@@ -3041,7 +3041,7 @@ theorem eq_nil_of_map_eq_nil {f : α → β} {l : List α} (h : map f l = nil) :
 #print List.map_join /-
 @[simp]
 theorem map_join (f : α → β) (L : List (List α)) : map f (join L) = join (map (map f) L) := by
-  induction L <;> [rfl, simp only [*, join, map, map_append]]
+  induction L <;> [rfl;simp only [*, join, map, map_append]]
 #align list.map_join List.map_join
 -/
 
@@ -3621,7 +3621,7 @@ theorem nthLe_drop (L : List α) {i j : ℕ} (h : i + j < L.length) :
 lean 3 declaration is
   forall {α : Type.{u1}} (L : List.{u1} α) {i : Nat} {j : Nat} (h : LT.lt.{0} Nat Nat.hasLt j (List.length.{u1} α (List.drop.{u1} α i L))), Eq.{succ u1} α (List.nthLe.{u1} α (List.drop.{u1} α i L) j h) (List.nthLe.{u1} α L (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) i j) (Iff.mp (LT.lt.{0} Nat (Preorder.toHasLt.{0} Nat (PartialOrder.toPreorder.{0} Nat (SemilatticeInf.toPartialOrder.{0} Nat (Lattice.toSemilatticeInf.{0} Nat (LinearOrder.toLattice.{0} Nat Nat.linearOrder))))) j (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (List.length.{u1} α L) i)) (LT.lt.{0} Nat (Preorder.toHasLt.{0} Nat (PartialOrder.toPreorder.{0} Nat (SemilatticeInf.toPartialOrder.{0} Nat (Lattice.toSemilatticeInf.{0} Nat (LinearOrder.toLattice.{0} Nat Nat.linearOrder))))) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat (AddSemigroup.toHasAdd.{0} Nat (AddCommSemigroup.toAddSemigroup.{0} Nat Nat.addCommSemigroup))) i j) (List.length.{u1} α L)) (lt_tsub_iff_left.{0} Nat j (List.length.{u1} α L) i Nat.linearOrder Nat.addCommSemigroup Nat.hasSub Nat.orderedSub) (Eq.subst.{1} Nat (fun (_x : Nat) => LT.lt.{0} Nat (Preorder.toHasLt.{0} Nat (PartialOrder.toPreorder.{0} Nat (SemilatticeInf.toPartialOrder.{0} Nat (Lattice.toSemilatticeInf.{0} Nat (LinearOrder.toLattice.{0} Nat Nat.linearOrder))))) j _x) (List.length.{u1} α (List.drop.{u1} α i L)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (List.length.{u1} α L) i) (List.length_drop.{u1} α i L) h)))
 but is expected to have type
-  forall {α : Type.{u1}} (L : List.{u1} α) {i : Nat} {j : Nat} (h : LT.lt.{0} Nat instLTNat j (List.length.{u1} α (List.drop.{u1} α i L))), Eq.{succ u1} α (List.nthLe.{u1} α (List.drop.{u1} α i L) j h) (List.nthLe.{u1} α L (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) i j) (Iff.mp (LT.lt.{0} Nat (Preorder.toLT.{0} Nat (PartialOrder.toPreorder.{0} Nat (SemilatticeInf.toPartialOrder.{0} Nat (Lattice.toSemilatticeInf.{0} Nat (DistribLattice.toLattice.{0} Nat (instDistribLattice.{0} Nat Nat.linearOrder)))))) j (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (List.length.{u1} α L) i)) (LT.lt.{0} Nat (Preorder.toLT.{0} Nat (PartialOrder.toPreorder.{0} Nat (SemilatticeInf.toPartialOrder.{0} Nat (Lattice.toSemilatticeInf.{0} Nat (DistribLattice.toLattice.{0} Nat (instDistribLattice.{0} Nat Nat.linearOrder)))))) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat (AddSemigroup.toAdd.{0} Nat (AddCommSemigroup.toAddSemigroup.{0} Nat Nat.addCommSemigroup))) i j) (List.length.{u1} α L)) (lt_tsub_iff_left.{0} Nat j (List.length.{u1} α L) i Nat.linearOrder Nat.addCommSemigroup instSubNat Nat.instOrderedSubNatInstLENatInstAddNatInstSubNat) (Eq.rec.{0, 1} Nat (List.length.{u1} α (List.drop.{u1} α i L)) (fun (x._@.Mathlib.Data.List.Basic._hyg.24309 : Nat) (h._@.Mathlib.Data.List.Basic._hyg.24310 : Eq.{1} Nat (List.length.{u1} α (List.drop.{u1} α i L)) x._@.Mathlib.Data.List.Basic._hyg.24309) => LT.lt.{0} Nat (Preorder.toLT.{0} Nat (PartialOrder.toPreorder.{0} Nat (SemilatticeInf.toPartialOrder.{0} Nat (Lattice.toSemilatticeInf.{0} Nat (DistribLattice.toLattice.{0} Nat (instDistribLattice.{0} Nat Nat.linearOrder)))))) j x._@.Mathlib.Data.List.Basic._hyg.24309) h (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (List.length.{u1} α L) i) (List.length_drop.{u1} α i L))))
+  forall {α : Type.{u1}} (L : List.{u1} α) {i : Nat} {j : Nat} (h : LT.lt.{0} Nat instLTNat j (List.length.{u1} α (List.drop.{u1} α i L))), Eq.{succ u1} α (List.nthLe.{u1} α (List.drop.{u1} α i L) j h) (List.nthLe.{u1} α L (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) i j) (Iff.mp (LT.lt.{0} Nat (Preorder.toLT.{0} Nat (PartialOrder.toPreorder.{0} Nat (SemilatticeInf.toPartialOrder.{0} Nat (Lattice.toSemilatticeInf.{0} Nat (DistribLattice.toLattice.{0} Nat (instDistribLattice.{0} Nat Nat.linearOrder)))))) j (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (List.length.{u1} α L) i)) (LT.lt.{0} Nat (Preorder.toLT.{0} Nat (PartialOrder.toPreorder.{0} Nat (SemilatticeInf.toPartialOrder.{0} Nat (Lattice.toSemilatticeInf.{0} Nat (DistribLattice.toLattice.{0} Nat (instDistribLattice.{0} Nat Nat.linearOrder)))))) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat (AddSemigroup.toAdd.{0} Nat (AddCommSemigroup.toAddSemigroup.{0} Nat Nat.addCommSemigroup))) i j) (List.length.{u1} α L)) (lt_tsub_iff_left.{0} Nat j (List.length.{u1} α L) i Nat.linearOrder Nat.addCommSemigroup instSubNat Nat.instOrderedSubNatInstLENatInstAddNatInstSubNat) (Eq.rec.{0, 1} Nat (List.length.{u1} α (List.drop.{u1} α i L)) (fun (x._@.Mathlib.Data.List.Basic._hyg.24310 : Nat) (h._@.Mathlib.Data.List.Basic._hyg.24311 : Eq.{1} Nat (List.length.{u1} α (List.drop.{u1} α i L)) x._@.Mathlib.Data.List.Basic._hyg.24310) => LT.lt.{0} Nat (Preorder.toLT.{0} Nat (PartialOrder.toPreorder.{0} Nat (SemilatticeInf.toPartialOrder.{0} Nat (Lattice.toSemilatticeInf.{0} Nat (DistribLattice.toLattice.{0} Nat (instDistribLattice.{0} Nat Nat.linearOrder)))))) j x._@.Mathlib.Data.List.Basic._hyg.24310) h (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (List.length.{u1} α L) i) (List.length_drop.{u1} α i L))))
 Case conversion may be inaccurate. Consider using '#align list.nth_le_drop' List.nthLe_drop'ₓ'. -/
 /-- The `i + j`-th element of a list coincides with the `j`-th element of the list obtained by
 dropping the first `i` elements. Version designed to rewrite from the small list to the big list. -/
@@ -3910,7 +3910,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.foldl_reverse List.foldl_reverseₓ'. -/
 theorem foldl_reverse (f : α → β → α) (a : α) (l : List β) :
     foldl f a (reverse l) = foldr (fun x y => f y x) a l := by
-  induction l <;> [rfl, simp only [*, reverse_cons, foldl_append, foldl_cons, foldl_nil, foldr]]
+  induction l <;> [rfl;simp only [*, reverse_cons, foldl_append, foldl_cons, foldl_nil, foldr]]
 #align list.foldl_reverse List.foldl_reverse
 
 /- warning: list.foldr_reverse -> List.foldr_reverse is a dubious translation:
@@ -3950,7 +3950,7 @@ Case conversion may be inaccurate. Consider using '#align list.foldl_map List.fo
 @[simp]
 theorem foldl_map (g : β → γ) (f : α → γ → α) (a : α) (l : List β) :
     foldl f a (map g l) = foldl (fun x y => f x (g y)) a l := by
-  revert a <;> induction l <;> intros <;> [rfl, simp only [*, map, foldl]]
+  revert a <;> induction l <;> intros <;> [rfl;simp only [*, map, foldl]]
 #align list.foldl_map List.foldl_map
 
 /- warning: list.foldr_map -> List.foldr_map is a dubious translation:
@@ -3962,7 +3962,7 @@ Case conversion may be inaccurate. Consider using '#align list.foldr_map List.fo
 @[simp]
 theorem foldr_map (g : β → γ) (f : γ → α → α) (a : α) (l : List β) :
     foldr f a (map g l) = foldr (f ∘ g) a l := by
-  revert a <;> induction l <;> intros <;> [rfl, simp only [*, map, foldr]]
+  revert a <;> induction l <;> intros <;> [rfl;simp only [*, map, foldr]]
 #align list.foldr_map List.foldr_map
 
 #print List.foldl_map' /-
@@ -3995,7 +3995,7 @@ theorem foldl_hom (l : List γ) (f : α → β) (op : α → γ → α) (op' : �
     (h : ∀ a x, f (op a x) = op' (f a) x) : foldl op' (f a) l = f (foldl op a l) :=
   Eq.symm <| by
     revert a
-    induction l <;> intros <;> [rfl, simp only [*, foldl]]
+    induction l <;> intros <;> [rfl;simp only [*, foldl]]
 #align list.foldl_hom List.foldl_hom
 
 /- warning: list.foldr_hom -> List.foldr_hom is a dubious translation:
@@ -4008,7 +4008,7 @@ theorem foldr_hom (l : List γ) (f : α → β) (op : γ → α → α) (op' : �
     (h : ∀ x a, f (op x a) = op' x (f a)) : foldr op' (f a) l = f (foldr op a l) :=
   by
   revert a
-  induction l <;> intros <;> [rfl, simp only [*, foldr]]
+  induction l <;> intros <;> [rfl;simp only [*, foldr]]
 #align list.foldr_hom List.foldr_hom
 
 /- warning: list.foldl_hom₂ -> List.foldl_hom₂ is a dubious translation:
@@ -4022,7 +4022,7 @@ theorem foldl_hom₂ (l : List ι) (f : α → β → γ) (op₁ : α → ι →
     foldl op₃ (f a b) l = f (foldl op₁ a l) (foldl op₂ b l) :=
   Eq.symm <| by
     revert a b
-    induction l <;> intros <;> [rfl, simp only [*, foldl]]
+    induction l <;> intros <;> [rfl;simp only [*, foldl]]
 #align list.foldl_hom₂ List.foldl_hom₂
 
 /- warning: list.foldr_hom₂ -> List.foldr_hom₂ is a dubious translation:
@@ -4036,7 +4036,7 @@ theorem foldr_hom₂ (l : List ι) (f : α → β → γ) (op₁ : ι → α →
     foldr op₃ (f a b) l = f (foldr op₁ a l) (foldr op₂ b l) :=
   by
   revert a
-  induction l <;> intros <;> [rfl, simp only [*, foldr]]
+  induction l <;> intros <;> [rfl;simp only [*, foldr]]
 #align list.foldr_hom₂ List.foldr_hom₂
 
 #print List.injective_foldl_comp /-
@@ -4732,7 +4732,7 @@ theorem sizeOf_lt_sizeOf_of_mem [SizeOf α] {x : α} {l : List α} (hx : x ∈ l
 @[simp]
 theorem pmap_eq_map (p : α → Prop) (f : α → β) (l : List α) (H) :
     @pmap _ _ p (fun a _ => f a) l H = map f l := by
-  induction l <;> [rfl, simp only [*, pmap, map]] <;> constructor <;> rfl
+  induction l <;> [rfl;simp only [*, pmap, map]] <;> constructor <;> rfl
 #align list.pmap_eq_map List.pmap_eq_map
 -/
 
@@ -4749,14 +4749,14 @@ theorem pmap_congr {p q : α → Prop} {f : ∀ a, p a → β} {g : ∀ a, q a �
 #print List.map_pmap /-
 theorem map_pmap {p : α → Prop} (g : β → γ) (f : ∀ a, p a → β) (l H) :
     map g (pmap f l H) = pmap (fun a h => g (f a h)) l H := by
-  induction l <;> [rfl, simp only [*, pmap, map]] <;> constructor <;> rfl
+  induction l <;> [rfl;simp only [*, pmap, map]] <;> constructor <;> rfl
 #align list.map_pmap List.map_pmap
 -/
 
 #print List.pmap_map /-
 theorem pmap_map {p : β → Prop} (g : ∀ b, p b → γ) (f : α → β) (l H) :
     pmap g (map f l) H = pmap (fun a h => g (f a) h) l fun a h => H _ (mem_map_of_mem _ h) := by
-  induction l <;> [rfl, simp only [*, pmap, map]] <;> constructor <;> rfl
+  induction l <;> [rfl;simp only [*, pmap, map]] <;> constructor <;> rfl
 #align list.pmap_map List.pmap_map
 -/
 
@@ -4816,7 +4816,7 @@ theorem mem_pmap {p : α → Prop} {f : ∀ a, p a → β} {l H b} :
 #print List.length_pmap /-
 @[simp]
 theorem length_pmap {p : α → Prop} {f : ∀ a, p a → β} {l H} : length (pmap f l H) = length l := by
-  induction l <;> [rfl, simp only [*, pmap, length]]
+  induction l <;> [rfl;simp only [*, pmap, length]]
 #align list.length_pmap List.length_pmap
 -/
 
@@ -5178,7 +5178,7 @@ theorem filterMap_eq_map (f : α → β) : filterMap (some ∘ f) = map f :=
 lean 3 declaration is
   forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p], Eq.{succ u1} ((List.{u1} α) -> (List.{u1} α)) (List.filterMap.{u1, u1} α α (Option.guard.{u1} α p (fun (a : α) => _inst_1 a))) (List.filterₓ.{u1} α p (fun (a : α) => _inst_1 a))
 but is expected to have type
-  forall {α : Type.{u1}} (p : α -> Bool), Eq.{succ u1} ((List.{u1} α) -> (List.{u1} α)) (List.filterMap.{u1, u1} α α (Option.guard.{u1} α (fun (x._@.Std.Data.List.Lemmas._hyg.24165 : α) => Eq.{1} Bool (p x._@.Std.Data.List.Lemmas._hyg.24165) Bool.true) (fun (a : α) => instDecidableEqBool (p a) Bool.true))) (List.filter.{u1} α p)
+  forall {α : Type.{u1}} (p : α -> Bool), Eq.{succ u1} ((List.{u1} α) -> (List.{u1} α)) (List.filterMap.{u1, u1} α α (Option.guard.{u1} α (fun (x._@.Std.Data.List.Lemmas._hyg.24241 : α) => Eq.{1} Bool (p x._@.Std.Data.List.Lemmas._hyg.24241) Bool.true) (fun (a : α) => instDecidableEqBool (p a) Bool.true))) (List.filter.{u1} α p)
 Case conversion may be inaccurate. Consider using '#align list.filter_map_eq_filter List.filterMap_eq_filterₓ'. -/
 theorem filterMap_eq_filter (p : α → Prop) [DecidablePred p] :
     filterMap (Option.guard p) = filter p := by
@@ -5204,8 +5204,9 @@ theorem filterMap_filterMap (f : α → Option β) (g : β → Option γ) (l : L
   · rw [filter_map_cons_none _ _ h, filter_map_cons_none, IH]
     simp only [h, Option.none_bind']
   rw [filter_map_cons_some _ _ _ h]
-  cases' h' : g b with c <;> [rw [filter_map_cons_none _ _ h', filter_map_cons_none, IH],
-      rw [filter_map_cons_some _ _ _ h', filter_map_cons_some, IH]] <;>
+  cases' h' : g b with c <;>
+      [rw [filter_map_cons_none _ _ h', filter_map_cons_none,
+        IH];rw [filter_map_cons_some _ _ _ h', filter_map_cons_some, IH]] <;>
     simp only [h, h', Option.some_bind']
 #align list.filter_map_filter_map List.filterMap_filterMap
 
@@ -5535,8 +5536,9 @@ theorem filter_congr' {p q : α → Prop} [DecidablePred p] [DecidablePred q] :
   | [], _ => rfl
   | a :: l, h => by
     rw [forall_mem_cons] at h <;> by_cases pa : p a <;>
-          [simp only [filter_cons_of_pos _ pa, filter_cons_of_pos _ (h.1.1 pa), filter_congr' h.2],
-          simp only [filter_cons_of_neg _ pa, filter_cons_of_neg _ (mt h.1.2 pa),
+          [simp only [filter_cons_of_pos _ pa, filter_cons_of_pos _ (h.1.1 pa),
+            filter_congr'
+              h.2];simp only [filter_cons_of_neg _ pa, filter_cons_of_neg _ (mt h.1.2 pa),
             filter_congr' h.2]] <;>
         constructor <;>
       rfl
@@ -5717,7 +5719,7 @@ theorem filter_filter (q) [DecidablePred q] :
 lean 3 declaration is
   forall {α : Type.{u1}} {h : DecidablePred.{succ u1} α (fun (a : α) => True)} (l : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.filterₓ.{u1} α (fun (_x : α) => True) h l) l
 but is expected to have type
-  forall {α : Type.{u1}} (h : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.filter.{u1} α (fun (x._@.Mathlib.Data.List.Basic._hyg.41375 : α) => Bool.true) h) h
+  forall {α : Type.{u1}} (h : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.filter.{u1} α (fun (x._@.Mathlib.Data.List.Basic._hyg.40772 : α) => Bool.true) h) h
 Case conversion may be inaccurate. Consider using '#align list.filter_true List.filter_trueₓ'. -/
 @[simp]
 theorem filter_true {h : DecidablePred fun a : α => True} (l : List α) :
@@ -5728,7 +5730,7 @@ theorem filter_true {h : DecidablePred fun a : α => True} (l : List α) :
 lean 3 declaration is
   forall {α : Type.{u1}} {h : DecidablePred.{succ u1} α (fun (a : α) => False)} (l : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.filterₓ.{u1} α (fun (_x : α) => False) h l) (List.nil.{u1} α)
 but is expected to have type
-  forall {α : Type.{u1}} (h : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.filter.{u1} α (fun (x._@.Mathlib.Data.List.Basic._hyg.41425 : α) => Bool.false) h) (List.nil.{u1} α)
+  forall {α : Type.{u1}} (h : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.filter.{u1} α (fun (x._@.Mathlib.Data.List.Basic._hyg.40822 : α) => Bool.false) h) (List.nil.{u1} α)
 Case conversion may be inaccurate. Consider using '#align list.filter_false List.filter_falseₓ'. -/
 @[simp]
 theorem filter_false {h : DecidablePred fun a : α => False} (l : List α) :
@@ -5749,20 +5751,20 @@ theorem span_eq_take_drop : ∀ l : List α, span p l = (takeWhile p l, dropWhil
     else by simp only [span, take_while, drop_while, if_neg pa]
 #align list.span_eq_take_drop List.span_eq_take_drop
 
-/- warning: list.take_while_append_drop -> List.takeWhile_append_drop is a dubious translation:
+/- warning: list.take_while_append_drop -> List.takeWhile_append_dropWhile is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] (l : List.{u1} α), Eq.{succ u1} (List.{u1} α) (Append.append.{u1} (List.{u1} α) (List.hasAppend.{u1} α) (List.takeWhile.{u1} α p (fun (a : α) => _inst_1 a) l) (List.dropWhileₓ.{u1} α p (fun (a : α) => _inst_1 a) l)) l
 but is expected to have type
   forall {α : Type.{u1}} (p : α -> Bool) (_inst_1 : List.{u1} α), Eq.{succ u1} (List.{u1} α) (HAppend.hAppend.{u1, u1, u1} (List.{u1} α) (List.{u1} α) (List.{u1} α) (instHAppend.{u1} (List.{u1} α) (List.instAppendList.{u1} α)) (List.takeWhile.{u1} α p _inst_1) (List.dropWhile.{u1} α p _inst_1)) _inst_1
-Case conversion may be inaccurate. Consider using '#align list.take_while_append_drop List.takeWhile_append_dropₓ'. -/
+Case conversion may be inaccurate. Consider using '#align list.take_while_append_drop List.takeWhile_append_dropWhileₓ'. -/
 @[simp]
-theorem takeWhile_append_drop : ∀ l : List α, takeWhile p l ++ dropWhile p l = l
+theorem takeWhile_append_dropWhile : ∀ l : List α, takeWhile p l ++ dropWhile p l = l
   | [] => rfl
   | a :: l =>
     if pa : p a then by
       rw [take_while, drop_while, if_pos pa, if_pos pa, cons_append, take_while_append_drop l]
     else by rw [take_while, drop_while, if_neg pa, if_neg pa, nil_append]
-#align list.take_while_append_drop List.takeWhile_append_drop
+#align list.take_while_append_drop List.takeWhile_append_dropWhile
 
 /- warning: list.drop_while_nth_le_zero_not -> List.dropWhile_nthLe_zero_not is a dubious translation:
 lean 3 declaration is
@@ -5898,7 +5900,7 @@ theorem eraseP_cons_of_neg {a : α} {l : List α} (h : ¬p a) :
 #align list.erasep_cons_of_neg List.eraseP_cons_of_negₓ
 
 theorem eraseP_of_forall_not {l : List α} (h : ∀ a ∈ l, ¬p a) : l.erasePₓ p = l := by
-  induction' l with _ _ ih <;> [rfl, simp [h _ (Or.inl rfl), ih (forall_mem_of_forall_mem_cons h)]]
+  induction' l with _ _ ih <;> [rfl;simp [h _ (Or.inl rfl), ih (forall_mem_of_forall_mem_cons h)]]
 #align list.erasep_of_forall_not List.eraseP_of_forall_notₓ
 
 theorem exists_of_eraseP {l : List α} {a} (al : a ∈ l) (pa : p a) :
@@ -5957,8 +5959,9 @@ theorem eraseP_append_right :
 #align list.erasep_append_right List.eraseP_append_rightₓ
 
 theorem eraseP_sublist (l : List α) : l.erasePₓ p <+ l := by
-  rcases exists_or_eq_self_of_erasep p l with (h | ⟨c, l₁, l₂, h₁, h₂, h₃, h₄⟩) <;> [rw [h],
-    · rw [h₄, h₃]
+  rcases exists_or_eq_self_of_erasep p l with (h | ⟨c, l₁, l₂, h₁, h₂, h₃, h₄⟩) <;>
+    [rw [h];·
+      rw [h₄, h₃]
       simp]
 #align list.erasep_sublist List.eraseP_sublistₓ
 
@@ -6042,7 +6045,7 @@ theorem erase_eq_eraseP (a : α) (l : List α) : l.eraseₓ a = l.erasePₓ (Eq 
   by
   induction' l with b l
   · rfl
-  by_cases a = b <;> [simp [h], simp [h, Ne.symm h, *]]
+  by_cases a = b <;> [simp [h];simp [h, Ne.symm h, *]]
 #align list.erase_eq_erasep List.erase_eq_erasePₓ
 
 @[simp]
@@ -6136,7 +6139,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.map_foldl_erase List.map_foldl_eraseₓ'. -/
 theorem map_foldl_erase [DecidableEq β] {f : α → β} (finj : Injective f) {l₁ l₂ : List α} :
     map f (foldl List.erase l₁ l₂) = foldl (fun l a => l.eraseₓ (f a)) (map f l₁) l₂ := by
-  induction l₂ generalizing l₁ <;> [rfl, simp only [foldl_cons, map_erase finj, *]]
+  induction l₂ generalizing l₁ <;> [rfl;simp only [foldl_cons, map_erase finj, *]]
 #align list.map_foldl_erase List.map_foldl_erase
 
 end Erase
@@ -6198,7 +6201,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.nil_diff List.nil_diffₓ'. -/
 @[simp]
 theorem nil_diff (l : List α) : [].diffₓ l = [] := by
-  induction l <;> [rfl, simp only [*, diff_cons, erase_of_not_mem (not_mem_nil _)]]
+  induction l <;> [rfl;simp only [*, diff_cons, erase_of_not_mem (not_mem_nil _)]]
 #align list.nil_diff List.nil_diff
 
 /- warning: list.cons_diff -> List.cons_diff is a dubious translation:
@@ -6955,8 +6958,8 @@ Case conversion may be inaccurate. Consider using '#align list.to_chunks_aux_joi
 theorem [anonymous] {n} : ∀ {xs i l L}, @toChunksAux α n xs i = (l, L) → l ++ L.join = xs
   | [], _, _, _, rfl => rfl
   | x :: xs, i, l, L, e => by
-    cases i <;> [cases' e' : to_chunks_aux n xs n with l L,
-        cases' e' : to_chunks_aux n xs i with l L] <;>
+    cases i <;>
+        [cases' e' : to_chunks_aux n xs n with l L;cases' e' : to_chunks_aux n xs i with l L] <;>
       · rw [to_chunks_aux, e', to_chunks_aux] at e
         cases e
         exact (congr_arg (cons x) (to_chunks_aux_join e') : _)
@@ -7272,7 +7275,7 @@ theorem getD_default_eq_getI : l.getD n default = l.getI n :=
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : Inhabited.{succ u1} α] (l : List.{u1} α) (l' : List.{u1} α) (n : Nat) (h : LT.lt.{0} Nat Nat.hasLt n (List.length.{u1} α l)), (optParam.{0} (LT.lt.{0} Nat (Preorder.toHasLt.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring)))) n (List.length.{u1} α (Append.append.{u1} (List.{u1} α) (List.hasAppend.{u1} α) l l'))) (LT.lt.trans_le.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) n (List.length.{u1} α l) (List.length.{u1} α (Append.append.{u1} (List.{u1} α) (List.hasAppend.{u1} α) l l')) h (Eq.subst.{1} Nat (fun (_x : Nat) => LE.le.{0} Nat (Preorder.toHasLe.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring)))) (List.length.{u1} α l) _x) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (List.length.{u1} α l) (List.length.{u1} α l')) (List.length.{u1} α (Append.append.{u1} (List.{u1} α) (List.hasAppend.{u1} α) l l')) (Eq.symm.{1} Nat (List.length.{u1} α (Append.append.{u1} (List.{u1} α) (List.hasAppend.{u1} α) l l')) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (List.length.{u1} α l) (List.length.{u1} α l')) (List.length_append.{u1} α l l')) (le_self_add.{0} Nat (CanonicallyOrderedCommSemiring.toCanonicallyOrderedAddMonoid.{0} Nat Nat.canonicallyOrderedCommSemiring) (List.length.{u1} α l) (List.length.{u1} α l'))))) -> (Eq.{succ u1} α (List.getI.{u1} α _inst_1 (Append.append.{u1} (List.{u1} α) (List.hasAppend.{u1} α) l l') n) (List.getI.{u1} α _inst_1 l n))
 but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : Inhabited.{succ u1} α] (l : List.{u1} α) (l' : List.{u1} α) (n : Nat) (h : LT.lt.{0} Nat instLTNat n (List.length.{u1} α l)), (optParam.{0} (LT.lt.{0} Nat instLTNat n (List.length.{u1} α (HAppend.hAppend.{u1, u1, u1} (List.{u1} α) (List.{u1} α) (List.{u1} α) (instHAppend.{u1} (List.{u1} α) (List.instAppendList.{u1} α)) l l'))) (LT.lt.trans_le.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) n (List.length.{u1} α l) (List.length.{u1} α (HAppend.hAppend.{u1, u1, u1} (List.{u1} α) (List.{u1} α) (List.{u1} α) (instHAppend.{u1} (List.{u1} α) (List.instAppendList.{u1} α)) l l')) h (Eq.rec.{0, 1} Nat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (List.length.{u1} α l) (List.length.{u1} α l')) (fun (x._@.Mathlib.Data.List.Basic._hyg.50174 : Nat) (h._@.Mathlib.Data.List.Basic._hyg.50175 : Eq.{1} Nat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (List.length.{u1} α l) (List.length.{u1} α l')) x._@.Mathlib.Data.List.Basic._hyg.50174) => LE.le.{0} Nat (Preorder.toLE.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring))) (List.length.{u1} α l) x._@.Mathlib.Data.List.Basic._hyg.50174) (le_self_add.{0} Nat (CanonicallyOrderedCommSemiring.toCanonicallyOrderedAddMonoid.{0} Nat Nat.canonicallyOrderedCommSemiring) (List.length.{u1} α l) (List.length.{u1} α l')) (List.length.{u1} α (HAppend.hAppend.{u1, u1, u1} (List.{u1} α) (List.{u1} α) (List.{u1} α) (instHAppend.{u1} (List.{u1} α) (List.instAppendList.{u1} α)) l l')) (Eq.symm.{1} Nat (List.length.{u1} α (HAppend.hAppend.{u1, u1, u1} (List.{u1} α) (List.{u1} α) (List.{u1} α) (instHAppend.{u1} (List.{u1} α) (List.instAppendList.{u1} α)) l l')) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (List.length.{u1} α l) (List.length.{u1} α l')) (List.length_append.{u1} α l l'))))) -> (Eq.{succ u1} α (List.getI.{u1} α _inst_1 (HAppend.hAppend.{u1, u1, u1} (List.{u1} α) (List.{u1} α) (List.{u1} α) (instHAppend.{u1} (List.{u1} α) (List.instAppendList.{u1} α)) l l') n) (List.getI.{u1} α _inst_1 l n))
+  forall {α : Type.{u1}} [_inst_1 : Inhabited.{succ u1} α] (l : List.{u1} α) (l' : List.{u1} α) (n : Nat) (h : LT.lt.{0} Nat instLTNat n (List.length.{u1} α l)), (optParam.{0} (LT.lt.{0} Nat instLTNat n (List.length.{u1} α (HAppend.hAppend.{u1, u1, u1} (List.{u1} α) (List.{u1} α) (List.{u1} α) (instHAppend.{u1} (List.{u1} α) (List.instAppendList.{u1} α)) l l'))) (LT.lt.trans_le.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) n (List.length.{u1} α l) (List.length.{u1} α (HAppend.hAppend.{u1, u1, u1} (List.{u1} α) (List.{u1} α) (List.{u1} α) (instHAppend.{u1} (List.{u1} α) (List.instAppendList.{u1} α)) l l')) h (Eq.rec.{0, 1} Nat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (List.length.{u1} α l) (List.length.{u1} α l')) (fun (x._@.Mathlib.Data.List.Basic._hyg.49479 : Nat) (h._@.Mathlib.Data.List.Basic._hyg.49480 : Eq.{1} Nat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (List.length.{u1} α l) (List.length.{u1} α l')) x._@.Mathlib.Data.List.Basic._hyg.49479) => LE.le.{0} Nat (Preorder.toLE.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring))) (List.length.{u1} α l) x._@.Mathlib.Data.List.Basic._hyg.49479) (le_self_add.{0} Nat (CanonicallyOrderedCommSemiring.toCanonicallyOrderedAddMonoid.{0} Nat Nat.canonicallyOrderedCommSemiring) (List.length.{u1} α l) (List.length.{u1} α l')) (List.length.{u1} α (HAppend.hAppend.{u1, u1, u1} (List.{u1} α) (List.{u1} α) (List.{u1} α) (instHAppend.{u1} (List.{u1} α) (List.instAppendList.{u1} α)) l l')) (Eq.symm.{1} Nat (List.length.{u1} α (HAppend.hAppend.{u1, u1, u1} (List.{u1} α) (List.{u1} α) (List.{u1} α) (instHAppend.{u1} (List.{u1} α) (List.instAppendList.{u1} α)) l l')) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (List.length.{u1} α l) (List.length.{u1} α l')) (List.length_append.{u1} α l l'))))) -> (Eq.{succ u1} α (List.getI.{u1} α _inst_1 (HAppend.hAppend.{u1, u1, u1} (List.{u1} α) (List.{u1} α) (List.{u1} α) (instHAppend.{u1} (List.{u1} α) (List.instAppendList.{u1} α)) l l') n) (List.getI.{u1} α _inst_1 l n))
 Case conversion may be inaccurate. Consider using '#align list.inth_append List.getI_appendₓ'. -/
 theorem getI_append (l l' : List α) (n : ℕ) (h : n < l.length)
     (h' : n < (l ++ l').length := h.trans_le ((length_append l l').symm ▸ le_self_add)) :

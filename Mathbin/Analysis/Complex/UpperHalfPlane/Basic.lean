@@ -49,7 +49,7 @@ local prefix:1024 "↑ₘ" => @coe _ (Matrix (Fin 2) (Fin 2) _) _
 local notation:1024 "↑ₘ[" R "]" => @coe _ (Matrix (Fin 2) (Fin 2) R) _
 
 -- mathport name: «exprGL( , )⁺»
-local notation "GL(" n ", " R ")" "⁺" => Matrix.gLPos (Fin n) R
+local notation "GL(" n ", " R ")" "⁺" => Matrix.GLPos (Fin n) R
 
 /- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler λ α,
 has_coe[has_coe] α exprℂ() -/

@@ -1870,11 +1870,11 @@ theorem cmp_to_int : ∀ m n, (Ordering.casesOn (cmp m n) ((m : ℤ) < n) (m = n
   | Pos a, Pos b => by
     have := PosNum.cmp_to_nat a b <;> revert this <;> dsimp [cmp] <;> cases PosNum.cmp a b <;>
         dsimp <;>
-      [simp, exact congr_arg Pos, simp [GT.gt]]
+      [simp;exact congr_arg Pos;simp [GT.gt]]
   | neg a, neg b => by
     have := PosNum.cmp_to_nat b a <;> revert this <;> dsimp [cmp] <;> cases PosNum.cmp b a <;>
         dsimp <;>
-      [simp, simp (config := { contextual := true }), simp [GT.gt]]
+      [simp;simp (config := { contextual := true });simp [GT.gt]]
   | Pos a, 0 => PosNum.cast_pos _
   | Pos a, neg b => lt_trans (neg_lt_zero.2 <| PosNum.cast_pos _) (PosNum.cast_pos _)
   | 0, neg b => neg_lt_zero.2 <| PosNum.cast_pos _

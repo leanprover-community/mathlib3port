@@ -240,7 +240,7 @@ theorem tendsto_lcRow0 {cd : Fin 2 → ℤ} (hcd : IsCoprime (cd 0) (cd 1)) :
     (lc_row0_extend hcd).toContinuousLinearEquiv.toHomeomorph.ClosedEmbedding
   convert hf₂.tendsto_cocompact.comp (hf₁.comp subtype.coe_injective.tendsto_cofinite) using 1
   ext (⟨g, rfl⟩i j) : 3
-  fin_cases i <;> [fin_cases j, skip]
+  fin_cases i <;> [fin_cases j;skip]
   -- the following are proved by `simp`, but it is replaced by `simp only` to avoid timeouts.
   ·
     simp only [mB, mul_vec, dot_product, Fin.sum_univ_two, _root_.coe_coe, coe_matrix_coe,

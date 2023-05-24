@@ -115,7 +115,7 @@ theorem mem_iff (a : α) (b : β a) : b ∈ Part.fix f a ↔ ∃ i, b ∈ approx
     generalize succ (Nat.find h₀) = j
     intro
     wlog case : i ≤ j
-    · cases' le_total i j with H H <;> [skip, symm] <;> apply_assumption <;> assumption
+    · cases' le_total i j with H H <;> [skip;symm] <;> apply_assumption <;> assumption
     replace hh := approx_mono f case _ _ hh
     apply Part.mem_unique h₁ hh
   · simp only [fix_def' (⇑f) h₀, not_exists, false_iff_iff, not_mem_none]

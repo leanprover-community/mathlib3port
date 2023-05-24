@@ -406,7 +406,7 @@ protected def union' {α} {s t : Set α} (p : α → Prop) [DecidablePred p] (hs
     | Sum.inr x => ⟨x, Or.inr x.2⟩
   left_inv := fun ⟨x, h'⟩ => by by_cases p x <;> simp [union'._match_1, h] <;> congr
   right_inv o := by
-    rcases o with (⟨x, h⟩ | ⟨x, h⟩) <;> dsimp [union'._match_1] <;> [simp [hs _ h], simp [ht _ h]]
+    rcases o with (⟨x, h⟩ | ⟨x, h⟩) <;> dsimp [union'._match_1] <;> [simp [hs _ h];simp [ht _ h]]
 #align equiv.set.union' Equiv.Set.union'
 
 /- warning: equiv.set.union -> Equiv.Set.union is a dubious translation:

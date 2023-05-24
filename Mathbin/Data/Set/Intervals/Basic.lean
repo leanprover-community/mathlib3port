@@ -2282,8 +2282,8 @@ Case conversion may be inaccurate. Consider using '#align set.Ico_eq_Ico_iff Set
 theorem Ico_eq_Ico_iff (h : a₁ < b₁ ∨ a₂ < b₂) : Ico a₁ b₁ = Ico a₂ b₂ ↔ a₁ = a₂ ∧ b₁ = b₂ :=
   ⟨fun e => by
     simp [subset.antisymm_iff] at e; simp [le_antisymm_iff]
-    cases h <;> simp [Ico_subset_Ico_iff h] at e <;> [rcases e with ⟨⟨h₁, h₂⟩, e'⟩,
-          rcases e with ⟨e', ⟨h₁, h₂⟩⟩] <;>
+    cases h <;> simp [Ico_subset_Ico_iff h] at e <;>
+          [rcases e with ⟨⟨h₁, h₂⟩, e'⟩;rcases e with ⟨e', ⟨h₁, h₂⟩⟩] <;>
         have := (Ico_subset_Ico_iff <| h₁.trans_lt <| h.trans_le h₂).1 e' <;>
       tauto,
     fun ⟨h₁, h₂⟩ => by rw [h₁, h₂]⟩

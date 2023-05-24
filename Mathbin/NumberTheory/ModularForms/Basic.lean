@@ -33,7 +33,7 @@ noncomputable section
 local prefix:1024 "↑ₘ" => @coe _ (Matrix (Fin 2) (Fin 2) _) _
 
 -- mathport name: «exprGL( , )⁺»
-local notation "GL(" n ", " R ")" "⁺" => Matrix.gLPos (Fin n) R
+local notation "GL(" n ", " R ")" "⁺" => Matrix.GLPos (Fin n) R
 
 -- mathport name: «exprSL( , )»
 local notation "SL(" n ", " R ")" => Matrix.SpecialLinearGroup (Fin n) R

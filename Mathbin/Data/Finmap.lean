@@ -730,7 +730,7 @@ theorem toFinmap_cons (a : α) (b : β a) (xs : List (Sigma β)) :
 theorem mem_list_toFinmap (a : α) (xs : List (Sigma β)) :
     a ∈ xs.toFinmap ↔ ∃ b : β a, Sigma.mk a b ∈ xs :=
   by
-  induction' xs with x xs <;> [skip, cases x] <;>
+  induction' xs with x xs <;> [skip;cases x] <;>
       simp only [to_finmap_cons, *, not_mem_empty, exists_or, not_mem_nil, to_finmap_nil,
         exists_false, mem_cons_iff, mem_insert, exists_and_left] <;>
     apply or_congr _ Iff.rfl

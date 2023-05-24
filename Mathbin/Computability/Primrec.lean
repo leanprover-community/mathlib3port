@@ -850,7 +850,7 @@ theorem nat_iff {f : α → β → σ} :
       Option.map (fun p : α × β => f p.1 p.2)
           (Option.bind a fun a : α => Option.map (Prod.mk a) b) =
         Option.bind a fun a => Option.map (f a) b :=
-    by intros <;> cases a <;> [rfl, · cases b <;> rfl]
+    by intros <;> cases a <;> [rfl;· cases b <;> rfl]
   simp [Primrec₂, Primrec, this]
 #align primrec₂.nat_iff Primrec₂.nat_iff
 
@@ -1749,7 +1749,7 @@ theorem list_findIdx {f : α → List β} {p : α → β → Prop} [∀ a b, Dec
     (hp : PrimrecRel p) : Primrec fun a => (f a).findIndex (p a) :=
   (list_foldr hf (const 0) <|
         to₂ <| ite (hp.comp fst <| fst.comp snd) (const 0) (succ.comp <| snd.comp snd)).of_eq
-    fun a => Eq.symm <| by dsimp <;> induction' f a with b l <;> [rfl, simp [*, List.findIndex]]
+    fun a => Eq.symm <| by dsimp <;> induction' f a with b l <;> [rfl;simp [*, List.findIndex]]
 #align primrec.list_find_index Primrec.list_findIdx
 
 theorem list_indexOf [DecidableEq α] : Primrec₂ (@List.indexOf α _) :=

@@ -310,7 +310,7 @@ protected theorem continuousMul : ContinuousMul Γ₀ :=
     wlog hle : x ≤ y generalizing x y
     · have := tendsto.comp (this y x (le_of_not_le hle)) (continuous_swap.tendsto (x, y))
       simpa only [mul_comm, Function.comp, Prod.swap]
-    rcases eq_or_ne x 0 with (rfl | hx) <;> [rcases eq_or_ne y 0 with (rfl | hy), skip]
+    rcases eq_or_ne x 0 with (rfl | hx) <;> [rcases eq_or_ne y 0 with (rfl | hy);skip]
     · rw [ContinuousAt, MulZeroClass.zero_mul]
       refine'
         ((has_basis_nhds_zero.prod_nhds has_basis_nhds_zero).tendsto_iffₓ has_basis_nhds_zero).2

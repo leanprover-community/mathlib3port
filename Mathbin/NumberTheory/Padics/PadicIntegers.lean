@@ -575,7 +575,7 @@ theorem norm_le_pow_iff_le_valuation (x : ℤ_[p]) (hx : x ≠ 0) (n : ℕ) :
     ‖x‖ ≤ p ^ (-n : ℤ) ↔ ↑n ≤ x.Valuation :=
   by
   rw [norm_eq_pow_val hx]
-  lift x.valuation to ℕ using x.valuation_nonneg
+  lift x.valuation to ℕ using x.valuation_nonneg with k hk
   simp only [Int.ofNat_le, zpow_neg, zpow_ofNat]
   have aux : ∀ n : ℕ, 0 < (p ^ n : ℝ) := by
     apply pow_pos
@@ -599,7 +599,7 @@ theorem mem_span_pow_iff_le_valuation (x : ℤ_[p]) (hx : x ≠ 0) (n : ℕ) :
     contrapose! hx
     rw [hx, MulZeroClass.mul_zero]
   · rw [unit_coeff_spec hx]
-    lift x.valuation to ℕ using x.valuation_nonneg
+    lift x.valuation to ℕ using x.valuation_nonneg with k hk
     simp only [Int.natAbs_ofNat, Units.isUnit, IsUnit.dvd_mul_left, Int.ofNat_le]
     intro H
     obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le H

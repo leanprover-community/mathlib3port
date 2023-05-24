@@ -1508,7 +1508,7 @@ Case conversion may be inaccurate. Consider using '#align decidable.iff_iff_and_
 protected theorem Decidable.iff_iff_and_or_not_and_not [Decidable b] : (a ↔ b) ↔ a ∧ b ∨ ¬a ∧ ¬b :=
   by
   constructor <;> intro h
-  · rw [h] <;> by_cases b <;> [left, right] <;> constructor <;> assumption
+  · rw [h] <;> by_cases b <;> [left;right] <;> constructor <;> assumption
   · cases' h with h h <;> cases h <;> constructor <;> intro <;> · first |contradiction|assumption
 #align decidable.iff_iff_and_or_not_and_not Decidable.iff_iff_and_or_not_and_not
 
@@ -1798,7 +1798,7 @@ theorem eq_equivalence : Equivalence (@Eq α) :=
 lean 3 declaration is
   forall {α : Sort.{u1}} {a : α} {a' : α} {β : Sort.{u2}} (y : β) (h : Eq.{u1} α a a'), Eq.{u2} ((fun (a : α) => β) a') (Eq.ndrec.{u2, u1} α a (fun (a : α) => β) y a' h) y
 but is expected to have type
-  forall {α : Sort.{u2}} {a : α} {a' : α} {β : Sort.{u1}} (y : β) (h : Eq.{u2} α a a'), Eq.{u1} β (Eq.rec.{u1, u2} α a (fun (a_1 : α) (x._@.Std.Logic._hyg.12313 : Eq.{u2} α a a_1) => β) y a' h) y
+  forall {α : Sort.{u2}} {a : α} {a' : α} {β : Sort.{u1}} (y : β) (h : Eq.{u2} α a a'), Eq.{u1} β (Eq.rec.{u1, u2} α a (fun (a_1 : α) (x._@.Std.Logic._hyg.12340 : Eq.{u2} α a a_1) => β) y a' h) y
 Case conversion may be inaccurate. Consider using '#align eq_rec_constant eq_rec_constantₓ'. -/
 /-- Transport through trivial families is the identity. -/
 @[simp]

@@ -659,7 +659,7 @@ theorem xy_succ_succ (n) :
   have := pell_zd_succ_succ a1 n; unfold pell_zd at this
   erw [Zsqrtd.smul_val (2 * a : ℕ)] at this
   injection this with h₁ h₂
-  constructor <;> apply Int.ofNat.inj <;> [simpa using h₁, simpa using h₂]
+  constructor <;> apply Int.ofNat.inj <;> [simpa using h₁;simpa using h₂]
 #align pell.xy_succ_succ Pell.xy_succ_succ
 -/
 
@@ -1186,7 +1186,7 @@ theorem eq_pow_of_pell {m n k} :
         _ < (w + 1) ^ w := (Nat.pow_lt_pow_of_lt_left (Nat.lt_succ_of_le nw) wpos)
         _ ≤ a := xn_ge_a_pow w1 w
         
-    lift (2 * a * n - n * n - 1 : ℤ) to ℕ using (Nat.cast_nonneg _).trans nt.le
+    lift (2 * a * n - n * n - 1 : ℤ) to ℕ using (Nat.cast_nonneg _).trans nt.le with t te
     have tm : x ≡ y * (a - n) + n ^ k [MOD t] :=
       by
       apply modeq_of_dvd

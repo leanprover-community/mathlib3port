@@ -390,7 +390,7 @@ def fix (f : α →. Sum β α) : α →. β := fun a =>
     @WellFounded.fixF _ (fun x y => Sum.inr x ∈ f y) _
       (fun a IH =>
         Part.assert (f a).Dom fun hf => by
-          cases' e : (f a).get hf with b a' <;> [exact Part.some b, exact IH _ ⟨hf, e⟩])
+          cases' e : (f a).get hf with b a' <;> [exact Part.some b;exact IH _ ⟨hf, e⟩])
       a h
 #align pfun.fix PFun.fix
 -/

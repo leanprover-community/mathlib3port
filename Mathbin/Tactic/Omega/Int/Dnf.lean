@@ -71,9 +71,9 @@ theorem isNnf_pushNeg : ∀ p : Preform, IsNnf p → IsNnf (pushNeg p) :=
     preform.induce sorry
   · cases p <;> try cases h1 <;> trivial
   · cases h1
-    constructor <;> [· apply ihp, · apply ihq] <;> assumption
+    constructor <;> [· apply ihp;· apply ihq] <;> assumption
   · cases h1
-    constructor <;> [· apply ihp, · apply ihq] <;> assumption
+    constructor <;> [· apply ihp;· apply ihq] <;> assumption
 #align omega.int.is_nnf_push_neg Omega.Int.isNnf_pushNeg
 
 /-- Argument is free of negations -/
@@ -128,9 +128,9 @@ theorem negFree_negElim : ∀ p : Preform, IsNnf p → NegFree (negElim p) :=
   · cases p <;> try cases h1 <;> try trivial
     constructor <;> trivial
   · cases h1
-    constructor <;> [· apply ihp, · apply ihq] <;> assumption
+    constructor <;> [· apply ihp;· apply ihq] <;> assumption
   · cases h1
-    constructor <;> [· apply ihp, · apply ihq] <;> assumption
+    constructor <;> [· apply ihp;· apply ihq] <;> assumption
 #align omega.int.neg_free_neg_elim Omega.Int.negFree_negElim
 
 theorem le_and_le_iff_eq {α : Type} [PartialOrder α] {a b : α} : a ≤ b ∧ b ≤ a ↔ a = b :=
@@ -159,8 +159,8 @@ theorem implies_negElim : ∀ {p : Preform}, Preform.Implies p (negElim p) :=
     cases h <;>
         [·
           left
-          apply ihp,
-        · right
+          apply ihp;·
+          right
           apply ihq] <;>
       assumption
   · apply And.imp (ihp _) (ihq _) h
@@ -203,11 +203,11 @@ theorem exists_clause_holds {v : Nat → Int} :
       assumption
   · cases h1
   ·
-    cases' h2 with h2 h2 <;> [· cases' ihp h1.left h2 with c h3,
-              · cases' ihq h1.right h2 with c h3] <;>
+    cases' h2 with h2 h2 <;>
+              [· cases' ihp h1.left h2 with c h3;· cases' ihq h1.right h2 with c h3] <;>
             cases' h3 with h3 h4 <;>
           refine' ⟨c, list.mem_append.elim_right _, h4⟩ <;>
-        [left, right] <;>
+        [left;right] <;>
       assumption
   · rcases ihp h1.left h2.left with ⟨cp, hp1, hp2⟩
     rcases ihq h1.right h2.right with ⟨cq, hq1, hq2⟩

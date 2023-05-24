@@ -153,7 +153,7 @@ def transReflReparamAux (t : I) : ℝ :=
 theorem continuous_transReflReparamAux : Continuous transReflReparamAux :=
   by
   refine' continuous_if_le _ _ (Continuous.continuousOn _) (Continuous.continuousOn _) _ <;>
-    [continuity, continuity, continuity, continuity, skip]
+    [continuity;continuity;continuity;continuity;skip]
   intro x hx
   norm_num [hx]
 #align path.homotopy.continuous_trans_refl_reparam_aux Path.Homotopy.continuous_transReflReparamAux
@@ -238,8 +238,7 @@ theorem continuous_transAssocReparamAux : Continuous transAssocReparamAux := by
           (continuous_if_le _ _ (Continuous.continuousOn _) (Continuous.continuousOn _)
               _).ContinuousOn
           _ <;>
-      [continuity, continuity, continuity, continuity, continuity, continuity, continuity, skip,
-      skip] <;>
+      [continuity;continuity;continuity;continuity;continuity;continuity;continuity;skip;skip] <;>
     · intro x hx
       norm_num [hx]
 #align path.homotopy.continuous_trans_assoc_reparam_aux Path.Homotopy.continuous_transAssocReparamAux

@@ -622,7 +622,7 @@ private theorem tmul_apply (a : ι → M) (b : ι₂ → M) :
 private def tmul_symm : (⨂[R] i : Sum ι ι₂, M) →ₗ[R] (⨂[R] i : ι, M) ⊗[R] ⨂[R] i : ι₂, M :=
   -- by using tactic mode, we avoid the need for a lot of `@`s and `_`s
     PiTensorProduct.lift <|
-    by apply MultilinearMap.domCoprod <;> [exact tprod R, exact tprod R]
+    by apply MultilinearMap.domCoprod <;> [exact tprod R;exact tprod R]
 #align pi_tensor_product.tmul_symm pi_tensor_product.tmul_symm
 
 private theorem tmul_symm_apply (a : Sum ι ι₂ → M) :

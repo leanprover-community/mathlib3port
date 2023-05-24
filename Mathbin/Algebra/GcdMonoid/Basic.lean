@@ -1138,7 +1138,7 @@ theorem lcm_eq_zero_iff [GCDMonoid α] (a b : α) : lcm a b = 0 ↔ a = 0 ∨ b 
       have : Associated (a * b) 0 :=
         (gcd_mul_lcm a b).symm.trans <| by rw [h, MulZeroClass.mul_zero]
       simpa only [associated_zero_iff_eq_zero, mul_eq_zero] )
-    (by rintro (rfl | rfl) <;> [apply lcm_zero_left, apply lcm_zero_right])
+    (by rintro (rfl | rfl) <;> [apply lcm_zero_left;apply lcm_zero_right])
 #align lcm_eq_zero_iff lcm_eq_zero_iff
 
 /- warning: normalize_lcm -> normalize_lcm is a dubious translation:

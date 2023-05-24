@@ -106,7 +106,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.prod_join List.prod_joinₓ'. -/
 @[simp, to_additive]
 theorem prod_join {l : List (List M)} : l.join.Prod = (l.map List.prod).Prod := by
-  induction l <;> [rfl, simp only [*, List.join, map, prod_append, prod_cons]]
+  induction l <;> [rfl;simp only [*, List.join, map, prod_append, prod_cons]]
 #align list.prod_join List.prod_join
 #align list.sum_join List.sum_join
 
@@ -389,7 +389,7 @@ the list to be nonempty. -/
 @[to_additive
       "Same as `nth_zero_add_tail_sum`, but avoiding the `list.head` garbage complication\nby requiring the list to be nonempty."]
 theorem headI_mul_tail_prod_of_ne_nil [Inhabited M] (l : List M) (h : l ≠ []) :
-    l.headI * l.tail.Prod = l.Prod := by cases l <;> [contradiction, simp]
+    l.headI * l.tail.Prod = l.Prod := by cases l <;> [contradiction;simp]
 #align list.head_mul_tail_prod_of_ne_nil List.headI_mul_tail_prod_of_ne_nil
 #align list.head_add_tail_sum_of_ne_nil List.headI_add_tail_sum_of_ne_nil
 

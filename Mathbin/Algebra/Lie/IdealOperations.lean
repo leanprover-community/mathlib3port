@@ -205,7 +205,7 @@ theorem lie_sup : ⁅I, N ⊔ N'⁆ = ⁅I, N⁆ ⊔ ⁅I, N'⁆ :=
   have h : ⁅I, N⁆ ⊔ ⁅I, N'⁆ ≤ ⁅I, N ⊔ N'⁆ :=
     by
     rw [sup_le_iff]
-    constructor <;> apply mono_lie_right <;> [exact le_sup_left, exact le_sup_right]
+    constructor <;> apply mono_lie_right <;> [exact le_sup_left;exact le_sup_right]
   suffices ⁅I, N ⊔ N'⁆ ≤ ⁅I, N⁆ ⊔ ⁅I, N'⁆ by exact le_antisymm this h
   clear h
   rw [lie_ideal_oper_eq_span, lie_span_le]
@@ -227,7 +227,7 @@ theorem sup_lie : ⁅I ⊔ J, N⁆ = ⁅I, N⁆ ⊔ ⁅J, N⁆ :=
   by
   have h : ⁅I, N⁆ ⊔ ⁅J, N⁆ ≤ ⁅I ⊔ J, N⁆ := by
     rw [sup_le_iff]
-    constructor <;> apply mono_lie_left <;> [exact le_sup_left, exact le_sup_right]
+    constructor <;> apply mono_lie_left <;> [exact le_sup_left;exact le_sup_right]
   suffices ⁅I ⊔ J, N⁆ ≤ ⁅I, N⁆ ⊔ ⁅J, N⁆ by exact le_antisymm this h
   clear h
   rw [lie_ideal_oper_eq_span, lie_span_le]
@@ -248,14 +248,14 @@ theorem sup_lie : ⁅I ⊔ J, N⁆ = ⁅I, N⁆ ⊔ ⁅J, N⁆ :=
 theorem lie_inf : ⁅I, N ⊓ N'⁆ ≤ ⁅I, N⁆ ⊓ ⁅I, N'⁆ :=
   by
   rw [le_inf_iff]
-  constructor <;> apply mono_lie_right <;> [exact inf_le_left, exact inf_le_right]
+  constructor <;> apply mono_lie_right <;> [exact inf_le_left;exact inf_le_right]
 #align lie_submodule.lie_inf LieSubmodule.lie_inf
 
 @[simp]
 theorem inf_lie : ⁅I ⊓ J, N⁆ ≤ ⁅I, N⁆ ⊓ ⁅J, N⁆ :=
   by
   rw [le_inf_iff]
-  constructor <;> apply mono_lie_left <;> [exact inf_le_left, exact inf_le_right]
+  constructor <;> apply mono_lie_left <;> [exact inf_le_left;exact inf_le_right]
 #align lie_submodule.inf_lie LieSubmodule.inf_lie
 
 variable (f : M →ₗ⁅R,L⁆ M₂)

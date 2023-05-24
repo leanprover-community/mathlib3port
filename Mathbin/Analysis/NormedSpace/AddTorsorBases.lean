@@ -124,7 +124,7 @@ theorem IsOpen.exists_between_affineIndependent_span_eq_top {s u : Set P} (hu : 
       by_cases hps : p ∈ s <;>
           simp only [w, hps, line_map_apply_one, Units.val_mk0, dif_neg, dif_pos, not_false_iff,
             Units.val_one, Subtype.coe_mk] <;>
-        [exact hsu hps, exact hf p]
+        [exact hsu hps;exact hf p]
     · exact (ht₂.units_line_map ⟨q, ht₁ hq⟩ w).range
     · rw [affineSpan_eq_affineSpan_lineMap_units (ht₁ hq) w, ht₃]
 #align is_open.exists_between_affine_independent_span_eq_top IsOpen.exists_between_affineIndependent_span_eq_top

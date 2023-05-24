@@ -131,7 +131,7 @@ theorem cyclotomic_pos_and_nonneg (n : ℕ) {R} [LinearOrderedCommRing R] (x : R
       and_self_iff]
   · constructor <;> intro <;> linarith
   · have : 2 < n + 3 := by decide
-    constructor <;> intro <;> [skip, apply le_of_lt] <;> apply cyclotomic_pos this
+    constructor <;> intro <;> [skip;apply le_of_lt] <;> apply cyclotomic_pos this
 #align polynomial.cyclotomic_pos_and_nonneg Polynomial.cyclotomic_pos_and_nonneg
 
 /-- Cyclotomic polynomials are always positive on inputs larger than one.

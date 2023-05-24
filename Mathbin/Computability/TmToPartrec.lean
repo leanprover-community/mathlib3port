@@ -638,7 +638,7 @@ theorem Cont.then_eval {k k' : Cont} {v} : (k.then k').eval v = k.eval v >>= k'.
   by
   induction k generalizing v <;> simp only [cont.eval, cont.then, bind_assoc, pure_bind, *]
   · simp only [← k_ih]
-  · split_ifs <;> [rfl, simp only [← k_ih, bind_assoc]]
+  · split_ifs <;> [rfl;simp only [← k_ih, bind_assoc]]
 #align turing.to_partrec.cont.then_eval Turing.ToPartrec.Cont.then_eval
 
 #print Turing.ToPartrec.Cfg.then /-
@@ -718,7 +718,7 @@ theorem stepNormal.is_ret (c k v) : ∃ k' v', stepNormal c k v = Cfg.ret k' v' 
   case cons f fs IHf IHfs => apply IHf
   case comp f g IHf IHg => apply IHg
   case case f g IHf IHg => rw [step_normal];
-    cases v.head <;> simp only [Nat.rec] <;> [apply IHf, apply IHg]
+    cases v.head <;> simp only [Nat.rec] <;> [apply IHf;apply IHg]
   case fix f IHf => apply IHf
 #align turing.to_partrec.step_normal.is_ret Turing.ToPartrec.stepNormal.is_ret
 -/
@@ -778,8 +778,7 @@ theorem cont_eval_fix {f k v} (fok : Code.Ok f) :
           IH (step_ret (k₀.then (cont.fix f k)) v₀) _ v'.tail _ step_ret_then _
         · refine' ⟨_, PFun.mem_fix_iff.2 _, h₃⟩
           simp only [Part.eq_some_iff.2 hv₁, Part.map_some, Part.mem_some_iff]
-          split_ifs  at hv₂⊢ <;> [exact Or.inl (Part.mem_some_iff.1 hv₂),
-            exact Or.inr ⟨_, rfl, hv₂⟩]
+          split_ifs  at hv₂⊢ <;> [exact Or.inl (Part.mem_some_iff.1 hv₂);exact Or.inr ⟨_, rfl, hv₂⟩]
         · rw [step_ret, if_neg he, e₁]
           rfl
         · apply refl_trans_gen.single
@@ -828,7 +827,7 @@ theorem code_is_ok (c) : Code.Ok c :=
     rw [reaches_eval]; swap; exact refl_trans_gen.single rfl
     rw [step_ret, IHf]
   case case f g IHf IHg => simp only [code.eval];
-    cases v.head <;> simp only [Nat.rec, code.eval] <;> [apply IHf, apply IHg]
+    cases v.head <;> simp only [Nat.rec, code.eval] <;> [apply IHf;apply IHg]
   case fix f IHf => rw [cont_eval_fix IHf]
 #align turing.to_partrec.code_is_ok Turing.ToPartrec.code_is_ok
 -/

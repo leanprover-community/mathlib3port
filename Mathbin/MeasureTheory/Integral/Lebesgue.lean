@@ -372,7 +372,7 @@ theorem exists_simpleFunc_forall_lintegral_sub_lt_of_pos {f : α → ℝ≥0∞}
   by
   rw [lintegral_eq_nnreal] at h
   have := ENNReal.lt_add_right h hε
-  erw [ENNReal.biSup_add] at this <;> [skip, exact ⟨0, fun x => zero_le _⟩]
+  erw [ENNReal.biSup_add] at this <;> [skip;exact ⟨0, fun x => zero_le _⟩]
   simp_rw [lt_iSup_iff, iSup_lt_iff, iSup_le_iff] at this
   rcases this with ⟨φ, hle : ∀ x, ↑(φ x) ≤ f x, b, hbφ, hb⟩
   refine' ⟨φ, hle, fun ψ hψ => _⟩
@@ -2381,7 +2381,7 @@ theorem ae_lt_top {f : α → ℝ≥0∞} (hf : Measurable f) (h2f : (∫⁻ x, 
   apply h2f.lt_top.not_le
   have : (f ⁻¹' {∞}).indicator ⊤ ≤ f := by
     intro x
-    by_cases hx : x ∈ f ⁻¹' {∞} <;> [simpa [hx] , simp [hx]]
+    by_cases hx : x ∈ f ⁻¹' {∞} <;> [simpa [hx] ;simp [hx]]
   convert lintegral_mono this
   rw [lintegral_indicator _ (hf (measurable_set_singleton ∞))]
   simp [ENNReal.top_mul', preimage, h]

@@ -238,7 +238,7 @@ theorem tendsto_fract_left' [OrderClosedTopology α] [TopologicalAddGroup α] (n
   convert(tendsto_nhdsWithin_of_tendsto_nhds tendsto_id).sub (tendsto_floor_left' n) <;>
     [·
       norm_cast
-      ring, infer_instance, infer_instance]
+      ring;infer_instance;infer_instance]
 #align tendsto_fract_left' tendsto_fract_left'
 
 /- warning: tendsto_fract_left -> tendsto_fract_left is a dubious translation:
@@ -262,7 +262,7 @@ Case conversion may be inaccurate. Consider using '#align tendsto_fract_right' t
 theorem tendsto_fract_right' [OrderClosedTopology α] [TopologicalAddGroup α] (n : ℤ) :
     Tendsto (fract : α → α) (𝓝[≥] n) (𝓝 0) := by
   convert(tendsto_nhdsWithin_of_tendsto_nhds tendsto_id).sub (tendsto_floor_right' n) <;>
-    [exact (sub_self _).symm, infer_instance, infer_instance]
+    [exact (sub_self _).symm;infer_instance;infer_instance]
 #align tendsto_fract_right' tendsto_fract_right'
 
 /- warning: tendsto_fract_right -> tendsto_fract_right is a dubious translation:

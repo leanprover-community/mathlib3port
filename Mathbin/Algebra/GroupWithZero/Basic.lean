@@ -300,7 +300,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mul_eq_mul_right_iff mul_eq_mul_right_iffₓ'. -/
 @[simp]
 theorem mul_eq_mul_right_iff : a * c = b * c ↔ a = b ∨ c = 0 := by
-  by_cases hc : c = 0 <;> [simp [hc], simp [mul_left_inj', hc]]
+  by_cases hc : c = 0 <;> [simp [hc];simp [mul_left_inj', hc]]
 #align mul_eq_mul_right_iff mul_eq_mul_right_iff
 
 /- warning: mul_eq_mul_left_iff -> mul_eq_mul_left_iff is a dubious translation:
@@ -311,7 +311,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mul_eq_mul_left_iff mul_eq_mul_left_iffₓ'. -/
 @[simp]
 theorem mul_eq_mul_left_iff : a * b = a * c ↔ b = c ∨ a = 0 := by
-  by_cases ha : a = 0 <;> [simp [ha], simp [mul_right_inj', ha]]
+  by_cases ha : a = 0 <;> [simp [ha];simp [mul_right_inj', ha]]
 #align mul_eq_mul_left_iff mul_eq_mul_left_iff
 
 /- warning: mul_right_eq_self₀ -> mul_right_eq_self₀ is a dubious translation:

@@ -437,8 +437,8 @@ theorem IsCompact.elim_finite_subcover_image {b : Set ι} {c : ι → Set α} (h
     (hc₁ : ∀ i ∈ b, IsOpen (c i)) (hc₂ : s ⊆ ⋃ i ∈ b, c i) :
     ∃ (b' : _)(_ : b' ⊆ b), Set.Finite b' ∧ s ⊆ ⋃ i ∈ b', c i :=
   by
-  rcases hs.elim_finite_subcover (fun i => c i : b → Set α) _ _ with ⟨d, hd⟩ <;> [skip,
-    simpa using hc₁, simpa using hc₂]
+  rcases hs.elim_finite_subcover (fun i => c i : b → Set α) _ _ with ⟨d, hd⟩ <;>
+    [skip;simpa using hc₁;simpa using hc₂]
   refine' ⟨↑(d.image coe), _, Finset.finite_toSet _, _⟩
   · simp
   · rwa [Finset.coe_image, bUnion_image]

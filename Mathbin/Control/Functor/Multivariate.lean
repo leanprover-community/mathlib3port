@@ -146,7 +146,7 @@ variable (F)
 theorem exists_iff_exists_of_mono {p : F α → Prop} {q : F β → Prop} (f : α ⟹ β) (g : β ⟹ α)
     (h₀ : f ⊚ g = id) (h₁ : ∀ u : F α, p u ↔ q (f <$$> u)) : (∃ u : F α, p u) ↔ ∃ u : F β, q u :=
   by
-  constructor <;> rintro ⟨u, h₂⟩ <;> [use f <$$> u, use g <$$> u]
+  constructor <;> rintro ⟨u, h₂⟩ <;> [use f <$$> u;use g <$$> u]
   · apply (h₁ u).mp h₂
   · apply (h₁ _).mpr _
     simp only [MvFunctor.map_map, h₀, LawfulMvFunctor.id_map, h₂]

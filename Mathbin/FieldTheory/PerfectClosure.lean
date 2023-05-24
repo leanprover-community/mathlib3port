@@ -496,7 +496,7 @@ but is expected to have type
   forall (K : Type.{u1}) [_inst_1 : CommRing.{u1} K] (p : Nat) [_inst_2 : Fact (Nat.Prime p)] [_inst_3 : CharP.{u1} K (AddGroupWithOne.toAddMonoidWithOne.{u1} K (Ring.toAddGroupWithOne.{u1} K (CommRing.toRing.{u1} K _inst_1))) p] (n : Nat), Eq.{succ u1} (PerfectClosure.{u1} K _inst_1 p _inst_2 _inst_3) (PerfectClosure.mk.{u1} K _inst_1 p _inst_2 _inst_3 (Prod.mk.{0, u1} Nat K n (OfNat.ofNat.{u1} K 0 (Zero.toOfNat0.{u1} K (CommMonoidWithZero.toZero.{u1} K (CommSemiring.toCommMonoidWithZero.{u1} K (CommRing.toCommSemiring.{u1} K _inst_1))))))) (OfNat.ofNat.{u1} (PerfectClosure.{u1} K _inst_1 p _inst_2 _inst_3) 0 (Zero.toOfNat0.{u1} (PerfectClosure.{u1} K _inst_1 p _inst_2 _inst_3) (PerfectClosure.instZeroPerfectClosure.{u1} K _inst_1 p _inst_2 _inst_3)))
 Case conversion may be inaccurate. Consider using '#align perfect_closure.mk_zero PerfectClosure.mk_zeroₓ'. -/
 theorem mk_zero (n : ℕ) : mk K p (n, 0) = 0 := by
-  induction' n with n ih <;> [rfl, rw [← ih]] <;> symm <;> apply Quot.sound <;>
+  induction' n with n ih <;> [rfl;rw [← ih]] <;> symm <;> apply Quot.sound <;>
       have := r.intro n (0 : K) <;>
     rwa [frobenius_zero K p] at this
 #align perfect_closure.mk_zero PerfectClosure.mk_zero
@@ -509,8 +509,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align perfect_closure.r.sound PerfectClosure.R.soundₓ'. -/
 theorem R.sound (m n : ℕ) (x y : K) (H : (frobenius K p^[m]) x = y) :
     mk K p (n, x) = mk K p (m + n, y) := by
-  subst H <;> induction' m with m ih <;> [simp only [zero_add, iterate_zero_apply],
-        rw [ih, Nat.succ_add, iterate_succ']] <;>
+  subst H <;> induction' m with m ih <;>
+        [simp only [zero_add, iterate_zero_apply];rw [ih, Nat.succ_add, iterate_succ']] <;>
       apply Quot.sound <;>
     apply r.intro
 #align perfect_closure.r.sound PerfectClosure.R.sound

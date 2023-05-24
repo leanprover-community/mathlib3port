@@ -662,8 +662,7 @@ theorem LiftRel.refl (R : α → α → Prop) (H : Reflexive R) : Reflexive (Lif
 #print Stream'.WSeq.LiftRelO.swap /-
 theorem LiftRelO.swap (R : α → β → Prop) (C) : swap (LiftRelO R C) = LiftRelO (swap R) (swap C) :=
   by
-  funext x y <;> cases' x with x <;> [skip, cases x] <;>
-    · cases' y with y <;> [skip, cases y] <;> rfl
+  funext x y <;> cases' x with x <;> [skip;cases x] <;> · cases' y with y <;> [skip;cases y] <;> rfl
 #align stream.wseq.lift_rel_o.swap Stream'.WSeq.LiftRelO.swap
 -/
 
@@ -1120,8 +1119,8 @@ def toSeq (s : WSeq α) [Productive s] : Seq α :=
 #print Stream'.WSeq.get?_terminates_le /-
 theorem get?_terminates_le {s : WSeq α} {m n} (h : m ≤ n) :
     Terminates (get? s n) → Terminates (get? s m) := by
-  induction' h with m' h IH <;> [exact id,
-    exact fun T => IH (@head_terminates_of_head_tail_terminates _ _ T)]
+  induction' h with m' h IH <;>
+    [exact id;exact fun T => IH (@head_terminates_of_head_tail_terminates _ _ T)]
 #align stream.wseq.nth_terminates_le Stream'.WSeq.get?_terminates_le
 -/
 

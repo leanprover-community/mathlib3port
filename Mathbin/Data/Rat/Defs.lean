@@ -537,7 +537,7 @@ theorem inv_def' {a b : ℤ} : (a /. b)⁻¹ = b /. a :=
   cases' x with n d h c
   rw [num_denom'] at ha
   refine' Eq.trans (_ : Rat.inv ⟨n, d, h, c⟩ = d /. n) _
-  · cases' n with n <;> [cases' n with n, skip]
+  · cases' n with n <;> [cases' n with n;skip]
     · rfl
     · change Int.ofNat n.succ with (n + 1 : ℕ)
       unfold Rat.inv

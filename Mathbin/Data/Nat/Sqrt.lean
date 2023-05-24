@@ -159,8 +159,8 @@ private theorem sqrt_aux_is_sqrt (n) :
         n < (r + 2 ^ (m + 1)) * (r + 2 ^ (m + 1)) →
           IsSqrt n ([anonymous] (2 ^ m * 2 ^ m) (2 * r * 2 ^ m) (n - r * r))
   | 0, r, h₁, h₂ => by
-    apply sqrt_aux_is_sqrt_lemma 0 r n h₁ 0 rfl <;> intro h <;> simp <;> [exact ⟨h₁, h⟩,
-      exact ⟨h, h₂⟩]
+    apply sqrt_aux_is_sqrt_lemma 0 r n h₁ 0 rfl <;> intro h <;> simp <;>
+      [exact ⟨h₁, h⟩;exact ⟨h, h₂⟩]
   | m + 1, r, h₁, h₂ =>
     by
     apply

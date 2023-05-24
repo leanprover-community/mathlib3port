@@ -82,10 +82,11 @@ but is expected to have type
   forall {α : Type.{u1}} (p : α -> Bool) (_inst_1 : List.{u1} α), Eq.{1} Nat (List.length.{u1} α _inst_1) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (List.countp.{u1} α p _inst_1) (List.countp.{u1} α (fun (a : α) => Decidable.decide (Not (Eq.{1} Bool (p a) Bool.true)) (instDecidableNot (Eq.{1} Bool (p a) Bool.true) (instDecidableEqBool (p a) Bool.true))) _inst_1))
 Case conversion may be inaccurate. Consider using '#align list.length_eq_countp_add_countp List.length_eq_countp_add_countpₓ'. -/
 theorem length_eq_countp_add_countp (l) : length l = countp p l + countp (fun a => ¬p a) l := by
-  induction' l with x h ih <;> [rfl, by_cases p x] <;>
+  induction' l with x h ih <;> [rfl;by_cases p x] <;>
       [simp only [countp_cons_of_pos _ _ h,
-        countp_cons_of_neg (fun a => ¬p a) _ (Decidable.not_not.2 h), ih, length],
-      simp only [countp_cons_of_pos (fun a => ¬p a) _ h, countp_cons_of_neg _ _ h, ih, length]] <;>
+        countp_cons_of_neg (fun a => ¬p a) _ (Decidable.not_not.2 h), ih,
+        length];simp only [countp_cons_of_pos (fun a => ¬p a) _ h, countp_cons_of_neg _ _ h, ih,
+        length]] <;>
     ac_rfl
 #align list.length_eq_countp_add_countp List.length_eq_countp_add_countp
 
@@ -96,9 +97,9 @@ but is expected to have type
   forall {α : Type.{u1}} (p : α -> Bool) (_inst_1 : List.{u1} α), Eq.{1} Nat (List.countp.{u1} α p _inst_1) (List.length.{u1} α (List.filter.{u1} α p _inst_1))
 Case conversion may be inaccurate. Consider using '#align list.countp_eq_length_filter List.countp_eq_length_filterₓ'. -/
 theorem countp_eq_length_filter (l) : countp p l = length (filter p l) := by
-  induction' l with x l ih <;> [rfl, by_cases p x] <;>
-      [simp only [filter_cons_of_pos _ h, countp, ih, if_pos h],
-      simp only [countp_cons_of_neg _ _ h, ih, filter_cons_of_neg _ h]] <;>
+  induction' l with x l ih <;> [rfl;by_cases p x] <;>
+      [simp only [filter_cons_of_pos _ h, countp, ih,
+        if_pos h];simp only [countp_cons_of_neg _ _ h, ih, filter_cons_of_neg _ h]] <;>
     rfl
 #align list.countp_eq_length_filter List.countp_eq_length_filter
 

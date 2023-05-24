@@ -171,7 +171,7 @@ theorem map_traverse {G : Type _ → Type _} [Applicative G] [CommApplicative G]
 theorem traverse_map {G : Type _ → Type _} [Applicative G] [CommApplicative G] {α β γ : Type _}
     (g : α → β) (h : β → G γ) (x : Multiset α) : traverse h (map g x) = traverse (h ∘ g) x :=
   Quotient.inductionOn x
-    (by intro <;> simp [traverse] <;> rw [← Traversable.traverse_map h g] <;> [rfl, infer_instance])
+    (by intro <;> simp [traverse] <;> rw [← Traversable.traverse_map h g] <;> [rfl;infer_instance])
 #align multiset.traverse_map Multiset.traverse_map
 -/
 

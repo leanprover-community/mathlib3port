@@ -133,10 +133,11 @@ def mkDerivation (f : σ → A) : Derivation R (MvPolynomial σ R) A
     (leibniz_iff_x (mkDerivationₗ R f) (mkDerivationₗ_c _ 1)).2 fun s i =>
       by
       simp only [mk_derivationₗ_monomial, X, monomial_mul, one_smul, one_mul]
-      rw [Finsupp.sum_add_index'] <;> [skip, · simp,
-        · intros
+      rw [Finsupp.sum_add_index'] <;>
+        [skip;· simp;·
+          intros
           simp only [Nat.cast_add, (monomial _).map_add, add_smul]]
-      rw [Finsupp.sum_single_index, Finsupp.sum_single_index] <;> [skip, · simp, · simp]
+      rw [Finsupp.sum_single_index, Finsupp.sum_single_index] <;> [skip;· simp;· simp]
       rw [tsub_self, add_tsub_cancel_right, Nat.cast_one, ← C_apply, C_1, one_smul, add_comm,
         Finsupp.smul_sum]
       refine' congr_arg₂ (· + ·) rfl (Finset.sum_congr rfl fun j hj => _); dsimp only

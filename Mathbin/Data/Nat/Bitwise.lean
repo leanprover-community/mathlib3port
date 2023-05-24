@@ -383,11 +383,11 @@ theorem lxor'_trichotomy {a b c : ℕ} (h : a ≠ lxor' b c) :
       rcases this with (h | h | h) <;>
       [·
         left
-        rw [hbc],
-      · right
+        rw [hbc];·
+        right
         left
-        rw [hac],
-      · right
+        rw [hac];·
+        right
         right
         rw [hab]] <;>
     exact lt_of_test_bit i (by simp [h, hi]) h fun j hj => by simp [hi' _ hj]

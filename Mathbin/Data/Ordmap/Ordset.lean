@@ -138,7 +138,7 @@ theorem size_eq_realSize : ∀ {t : Ordnode α}, Sized t → size t = realSize t
 
 @[simp]
 theorem Sized.size_eq_zero {t : Ordnode α} (ht : Sized t) : size t = 0 ↔ t = nil := by
-  cases t <;> [simp, simp [ht.1]]
+  cases t <;> [simp;simp [ht.1]]
 #align ordnode.sized.size_eq_zero Ordnode.Sized.size_eq_zero
 
 theorem Sized.pos {s l x r} (h : Sized (@node α s l x r)) : 0 < s := by
@@ -358,7 +358,7 @@ theorem Sized.node3R {l x m y r} (hl : @Sized α l) (hm : Sized m) (hr : Sized r
 
 theorem Sized.node4L {l x m y r} (hl : @Sized α l) (hm : Sized m) (hr : Sized r) :
     Sized (node4L l x m y r) := by
-  cases m <;> [exact (hl.node' hm).node' hr, exact (hl.node' hm.2.1).node' (hm.2.2.node' hr)]
+  cases m <;> [exact (hl.node' hm).node' hr;exact (hl.node' hm.2.1).node' (hm.2.2.node' hr)]
 #align ordnode.sized.node4_l Ordnode.Sized.node4L
 
 theorem node3L_size {l x m y r} : size (@node3L α l x m y r) = size l + size m + size r + 2 := by
@@ -371,8 +371,8 @@ theorem node3R_size {l x m y r} : size (@node3R α l x m y r) = size l + size m 
 
 theorem node4L_size {l x m y r} (hm : Sized m) :
     size (@node4L α l x m y r) = size l + size m + size r + 2 := by
-  cases m <;> simp [node4_l, node3_l, node', add_comm, add_left_comm] <;> [skip,
-        simp [size, hm.1]] <;>
+  cases m <;> simp [node4_l, node3_l, node', add_comm, add_left_comm] <;>
+        [skip;simp [size, hm.1]] <;>
       rw [← add_assoc, ← bit0] <;>
     simp [add_comm, add_left_comm]
 #align ordnode.node4_l_size Ordnode.node4L_size
@@ -1788,7 +1788,7 @@ def Empty (s : Ordset α) : Prop :=
 #align ordset.empty Ordset.Empty
 
 theorem empty_iff {s : Ordset α} : s = ∅ ↔ s.1.Empty :=
-  ⟨fun h => by cases h <;> exact rfl, fun h => by cases s <;> cases s_val <;> [exact rfl, cases h]⟩
+  ⟨fun h => by cases h <;> exact rfl, fun h => by cases s <;> cases s_val <;> [exact rfl;cases h]⟩
 #align ordset.empty_iff Ordset.empty_iff
 
 instance : DecidablePred (@Empty α _) := fun s => decidable_of_iff' _ empty_iff

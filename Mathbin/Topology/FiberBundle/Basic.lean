@@ -397,7 +397,7 @@ theorem FiberBundle.exists_trivialization_Icc_subset [ConditionallyCompleteLinea
       ⟨trivialization_at F E a, mem_base_set_trivialization_at F E a⟩
     -- If `a < b`, then `[a, b] = ∅`, and the statement is trivial
       cases' le_or_lt a b with hab hab <;>
-      [skip, exact ⟨ea, by simp [*]⟩]
+      [skip;exact ⟨ea, by simp [*]⟩]
     /- Let `s` be the set of points `x ∈ [a, b]` such that `E` is trivializable over `[a, x]`.
       We need to show that `b ∈ s`. Let `c = Sup s`. We will show that `c ∈ s` and `c = b`. -/
     set s : Set B := { x ∈ Icc a b | ∃ e : Trivialization F (π E), Icc a x ⊆ e.baseSet }

@@ -58,8 +58,9 @@ theorem xgcd_zero_left {s t r' s' t'} : xgcdAux 0 s t r' s' t' = (r', s', t') :=
 #print Nat.xgcd_aux_rec /-
 theorem xgcd_aux_rec {r s t r' s' t'} (h : 0 < r) :
     xgcdAux r s t r' s' t' = xgcdAux (r' % r) (s' - r' / r * s) (t' - r' / r * t) r s t := by
-  cases r <;> [exact absurd h (lt_irrefl _),
-    · simp only [xgcd_aux]
+  cases r <;>
+    [exact absurd h (lt_irrefl _);·
+      simp only [xgcd_aux]
       rfl]
 #align nat.xgcd_aux_rec Nat.xgcd_aux_rec
 -/

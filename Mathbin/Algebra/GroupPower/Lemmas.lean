@@ -711,7 +711,7 @@ theorem abs_zsmul (n : ℤ) (a : α) : |n • a| = |n| • |a| :=
   obtain n0 | n0 := le_total 0 n
   · lift n to ℕ using n0
     simp only [abs_nsmul, abs_coe_nat, coe_nat_zsmul]
-  · lift -n to ℕ using neg_nonneg.2 n0
+  · lift -n to ℕ using neg_nonneg.2 n0 with m h
     rw [← abs_neg (n • a), ← neg_zsmul, ← abs_neg n, ← h, coe_nat_zsmul, abs_coe_nat, coe_nat_zsmul]
     exact abs_nsmul m _
 #align abs_zsmul abs_zsmul
@@ -762,8 +762,9 @@ theorem WithBot.coe_nsmul [AddMonoid A] (a : A) (n : ℕ) : ((n • a : A) : Wit
 -/
 
 theorem nsmul_eq_mul' [NonAssocSemiring R] (a : R) (n : ℕ) : n • a = a * n := by
-  induction' n with n ih <;> [rw [zero_nsmul, Nat.cast_zero, MulZeroClass.mul_zero],
-    rw [succ_nsmul', ih, Nat.cast_succ, mul_add, mul_one]]
+  induction' n with n ih <;>
+    [rw [zero_nsmul, Nat.cast_zero,
+      MulZeroClass.mul_zero];rw [succ_nsmul', ih, Nat.cast_succ, mul_add, mul_one]]
 #align nsmul_eq_mul' nsmul_eq_mul'ₓ
 
 @[simp]
@@ -820,7 +821,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align int.coe_nat_pow Int.coe_nat_powₓ'. -/
 @[simp, norm_cast]
 theorem Int.coe_nat_pow (n m : ℕ) : ((n ^ m : ℕ) : ℤ) = n ^ m := by
-  induction' m with m ih <;> [exact Int.ofNat_one, rw [pow_succ', pow_succ', Int.ofNat_mul, ih]]
+  induction' m with m ih <;> [exact Int.ofNat_one;rw [pow_succ', pow_succ', Int.ofNat_mul, ih]]
 #align int.coe_nat_pow Int.coe_nat_pow
 
 /- warning: int.nat_abs_pow -> Int.natAbs_pow is a dubious translation:
@@ -830,7 +831,7 @@ but is expected to have type
   forall (n : Int) (k : Nat), Eq.{1} Nat (Int.natAbs (HPow.hPow.{0, 0, 0} Int Nat Int Int.instHPowIntNat n k)) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (Int.natAbs n) k)
 Case conversion may be inaccurate. Consider using '#align int.nat_abs_pow Int.natAbs_powₓ'. -/
 theorem Int.natAbs_pow (n : ℤ) (k : ℕ) : Int.natAbs (n ^ k) = Int.natAbs n ^ k := by
-  induction' k with k ih <;> [rfl, rw [pow_succ', Int.natAbs_mul, pow_succ', ih]]
+  induction' k with k ih <;> [rfl;rw [pow_succ', Int.natAbs_mul, pow_succ', ih]]
 #align int.nat_abs_pow Int.natAbs_pow
 
 /- warning: bit0_mul -> bit0_mul is a dubious translation:

@@ -393,8 +393,8 @@ theorem natAbs_add_le (a b : ℤ) : natAbs (a + b) ≤ natAbs a + natAbs b :=
     · apply succ_le_succ
       rw [← succ.inj e, ← add_assoc, add_comm]
       apply Nat.le_add_right
-  cases a <;> cases' b with b b <;> simp [nat_abs, Nat.succ_add] <;> try rfl <;> [skip,
-      rw [add_comm a b]] <;>
+  cases a <;> cases' b with b b <;> simp [nat_abs, Nat.succ_add] <;> try rfl <;>
+      [skip;rw [add_comm a b]] <;>
     apply this
 #align int.nat_abs_add_le Int.natAbs_add_le
 -/

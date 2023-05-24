@@ -114,7 +114,7 @@ theorem IsTorsion.extension_closed {f : G →* H} (hN : N = f.ker) (tH : IsTorsi
     by
     obtain ⟨ngn, ngnpos, hngn⟩ := (isOfFinOrder_iff_pow_eq_one _).mp (tH <| f g)
     have hmem := f.mem_ker.mpr ((f.map_pow g ngn).trans hngn)
-    lift g ^ ngn to N using hN.symm ▸ hmem
+    lift g ^ ngn to N using hN.symm ▸ hmem with gn
     obtain ⟨nn, nnpos, hnn⟩ := (isOfFinOrder_iff_pow_eq_one _).mp (tN gn)
     exact
       ⟨ngn * nn, mul_pos ngnpos nnpos, by

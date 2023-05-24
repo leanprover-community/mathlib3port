@@ -546,12 +546,12 @@ Case conversion may be inaccurate. Consider using '#align finsupp.support_single
 theorem support_single_subset : (single a b).support ⊆ {a} := by
   classical
     show ite _ _ _ ⊆ _
-    split_ifs <;> [exact empty_subset _, exact subset.refl _]
+    split_ifs <;> [exact empty_subset _;exact subset.refl _]
 #align finsupp.support_single_subset Finsupp.support_single_subset
 
 #print Finsupp.single_apply_mem /-
 theorem single_apply_mem (x) : single a b x ∈ ({0, b} : Set M) := by
-  rcases em (a = x) with (rfl | hx) <;> [simp, simp [single_eq_of_ne hx]]
+  rcases em (a = x) with (rfl | hx) <;> [simp;simp [single_eq_of_ne hx]]
 #align finsupp.single_apply_mem Finsupp.single_apply_mem
 -/
 
@@ -957,7 +957,7 @@ def erase (a : α) (f : α →₀ M) : α →₀ M
     if a' = a then 0 else f a'
   mem_support_toFun a' := by
     rw [mem_erase, mem_support_iff] <;> split_ifs <;>
-      [exact ⟨fun H _ => H.1 h, fun H => (H rfl).elim⟩, exact and_iff_right h]
+      [exact ⟨fun H _ => H.1 h, fun H => (H rfl).elim⟩;exact and_iff_right h]
 #align finsupp.erase Finsupp.erase
 -/
 

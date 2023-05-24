@@ -3052,7 +3052,7 @@ theorem range_piecewise (f g : α → β) : range (s.piecewise f g) = f '' s ∪
   by
   ext y; constructor
   · rintro ⟨x, rfl⟩
-    by_cases h : x ∈ s <;> [left, right] <;> use x <;> simp [h]
+    by_cases h : x ∈ s <;> [left;right] <;> use x <;> simp [h]
   · rintro (⟨x, hx, rfl⟩ | ⟨x, hx, rfl⟩) <;> use x <;> simp_all
 #align set.range_piecewise Set.range_piecewise
 

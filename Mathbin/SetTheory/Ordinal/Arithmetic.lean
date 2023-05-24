@@ -1068,8 +1068,8 @@ theorem one_add_omega : 1 + ω = ω :=
     exact fun _ => 0
     exact Nat.succ
   · intro a b
-    cases a <;> cases b <;> intro H <;> cases' H with _ _ H _ _ H <;> [cases H,
-      exact Nat.succ_pos _, exact Nat.succ_lt_succ H]
+    cases a <;> cases b <;> intro H <;> cases' H with _ _ H _ _ H <;>
+      [cases H;exact Nat.succ_pos _;exact Nat.succ_lt_succ H]
 #align ordinal.one_add_omega Ordinal.one_add_omega
 
 /- warning: ordinal.one_add_of_omega_le -> Ordinal.one_add_of_omega_le is a dubious translation:
@@ -1293,7 +1293,7 @@ private theorem mul_le_of_limit_aux {α β r s} [IsWellOrder α r] [IsWellOrder 
     · subst b₁
       simp only [subrel_val, Prod.lex_def, e₂, Prod.lex_def, dif_pos, subrel_val, eq_self_iff_true,
         or_false_iff, dif_neg, not_false_iff, Sum.lex_inr_inl, false_and_iff] at h⊢
-      cases h₂ <;> [exact asymm h h₂_h, exact e₂ rfl]
+      cases h₂ <;> [exact asymm h h₂_h;exact e₂ rfl]
     · simp [e₂, dif_neg e₁, show b₂ ≠ b₁ by cc]
     ·
       simpa only [dif_neg e₁, dif_neg e₂, Prod.lex_def, subrel_val, Subtype.mk_eq_mk,

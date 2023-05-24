@@ -192,13 +192,13 @@ theorem valExcept_eq_valExcept {k : Nat} {is js : List Int} {v w : Nat → Int} 
   intro h1 h2; unfold val_except
   apply fun_mono_2
   ·
-    apply val_between_eq_val_between <;> intro x h3 h4 <;> [· apply h1, · apply h2] <;>
+    apply val_between_eq_val_between <;> intro x h3 h4 <;> [· apply h1;· apply h2] <;>
           apply ne_of_lt <;>
         rw [zero_add] at h4 <;>
       apply h4
   · repeat' rw [← val_between_eq_of_le (max is.length js.length - (k + 1))]
     ·
-      apply val_between_eq_val_between <;> intro x h3 h4 <;> [· apply h1, · apply h2] <;>
+      apply val_between_eq_val_between <;> intro x h3 h4 <;> [· apply h1;· apply h2] <;>
               apply Ne.symm <;>
             apply ne_of_lt <;>
           rw [Nat.lt_iff_add_one_le] <;>

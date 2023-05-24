@@ -322,7 +322,7 @@ theorem bool_ofNat_mem_Icc_of_mem_Icc_toNat (x y : Bool) (n : ℕ) :
     n ∈ (x.toNat .. y.toNat) → Bool.ofNat n ∈ (x .. y) :=
   by
   simp only [and_imp, Set.mem_Icc]; intro h₀ h₁
-  constructor <;> [have h₂ := Bool.ofNat_le_ofNat h₀, have h₂ := Bool.ofNat_le_ofNat h₁] <;>
+  constructor <;> [have h₂ := Bool.ofNat_le_ofNat h₀;have h₂ := Bool.ofNat_le_ofNat h₁] <;>
       rw [Bool.ofNat_toNat] at h₂ <;>
     exact h₂
 #align bool_of_nat_mem_Icc_of_mem_Icc_to_nat bool_ofNat_mem_Icc_of_mem_Icc_toNat

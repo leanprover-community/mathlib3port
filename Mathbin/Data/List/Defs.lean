@@ -975,8 +975,8 @@ attribute [simp] pairwise.nil
 
 #print List.instDecidablePairwise /-
 instance instDecidablePairwise [DecidableRel R] (l : List α) : Decidable (Pairwise R l) := by
-  induction' l with hd tl ih <;> [exact is_true pairwise.nil,
-    exact decidable_of_iff' _ pairwise_cons]
+  induction' l with hd tl ih <;>
+    [exact is_true pairwise.nil;exact decidable_of_iff' _ pairwise_cons]
 #align list.decidable_pairwise List.instDecidablePairwise
 -/
 
@@ -1089,7 +1089,12 @@ def destutter (R : α → α → Prop) [DecidableRel R] : List α → List α
 #align list.destutter List.destutter
 -/
 
-#print List.range' /-
+/- warning: list.range' -> List.range' is a dubious translation:
+lean 3 declaration is
+  Nat -> Nat -> (List.{0} Nat)
+but is expected to have type
+  Nat -> Nat -> (optParam.{1} Nat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) -> (List.{0} Nat)
+Case conversion may be inaccurate. Consider using '#align list.range' List.range'ₓ'. -/
 /-- `range' s n` is the list of numbers `[s, s+1, ..., s+n-1]`.
   It is intended mainly for proving properties of `range` and `iota`. -/
 @[simp]
@@ -1097,7 +1102,6 @@ def range' : ℕ → ℕ → List ℕ
   | s, 0 => []
   | s, n + 1 => s :: range' (s + 1) n
 #align list.range' List.range'
--/
 
 #print List.reduceOption /-
 /-- Drop `none`s from a list, and replace each remaining `some a` with `a`. -/

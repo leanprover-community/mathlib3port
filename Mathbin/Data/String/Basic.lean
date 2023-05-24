@@ -152,7 +152,7 @@ but is expected to have type
   forall {s : String}, (Ne.{1} String s "") -> (Eq.{1} (List.{0} Char) (String.toList s) (List.cons.{0} Char (String.head s) (String.toList (String.drop s (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))))
 Case conversion may be inaccurate. Consider using '#align string.to_list_nonempty String.toList_nonemptyₓ'. -/
 theorem toList_nonempty : ∀ {s : String}, s ≠ String.empty → s.toList = s.headI :: (s.drop 1).toList
-  | ⟨s⟩, h => by cases s <;> [cases h rfl, rfl]
+  | ⟨s⟩, h => by cases s <;> [cases h rfl;rfl]
 #align string.to_list_nonempty String.toList_nonempty
 
 /- warning: string.head_empty -> String.head_empty is a dubious translation:

@@ -145,7 +145,7 @@ theorem forall_bool {p : Bool → Prop} : (∀ b, p b) ↔ p false ∧ p true :=
 #print Bool.exists_bool /-
 @[simp]
 theorem exists_bool {p : Bool → Prop} : (∃ b, p b) ↔ p false ∨ p true :=
-  ⟨fun ⟨b, h⟩ => by cases b <;> [exact Or.inl h, exact Or.inr h], fun h => by
+  ⟨fun ⟨b, h⟩ => by cases b <;> [exact Or.inl h;exact Or.inr h], fun h => by
     cases h <;> exact ⟨_, h⟩⟩
 #align bool.exists_bool Bool.exists_bool
 -/
@@ -669,7 +669,7 @@ but is expected to have type
   forall {b₀ : Bool} {b₁ : Bool}, (LE.le.{0} Bool (Preorder.toLE.{0} Bool (PartialOrder.toPreorder.{0} Bool (LinearOrder.toPartialOrder.{0} Bool Bool.linearOrder))) b₀ b₁) -> (LE.le.{0} Nat instLENat (Bool.toNat b₀) (Bool.toNat b₁))
 Case conversion may be inaccurate. Consider using '#align bool.to_nat_le_to_nat Bool.toNat_le_toNatₓ'. -/
 theorem toNat_le_toNat {b₀ b₁ : Bool} (h : b₀ ≤ b₁) : toNat b₀ ≤ toNat b₁ := by
-  cases h <;> subst h <;> [cases b₁, cases b₀] <;> simp [toNat, Nat.zero_le]
+  cases h <;> subst h <;> [cases b₁;cases b₀] <;> simp [toNat, Nat.zero_le]
 #align bool.to_nat_le_to_nat Bool.toNat_le_toNat
 
 #print Bool.ofNat_toNat /-

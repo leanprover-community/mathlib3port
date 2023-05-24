@@ -68,9 +68,9 @@ theorem isNnf_pushNeg : ∀ p : Preform, IsNnf p → IsNnf (pushNeg p) :=
     preform.induce sorry
   · cases p <;> try cases h1 <;> trivial
   · cases h1
-    constructor <;> [· apply ihp, · apply ihq] <;> assumption
+    constructor <;> [· apply ihp;· apply ihq] <;> assumption
   · cases h1
-    constructor <;> [· apply ihp, · apply ihq] <;> assumption
+    constructor <;> [· apply ihp;· apply ihq] <;> assumption
 #align omega.nat.is_nnf_push_neg Omega.Nat.isNnf_pushNeg
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic omega.nat.preform.induce -/
@@ -115,9 +115,9 @@ theorem negFree_negElimCore : ∀ p, IsNnf p → (negElimCore p).NegFree :=
   · cases p <;> try cases h1 <;> try trivial
     constructor <;> trivial
   · cases h1
-    constructor <;> [· apply ihp, · apply ihq] <;> assumption
+    constructor <;> [· apply ihp;· apply ihq] <;> assumption
   · cases h1
-    constructor <;> [· apply ihp, · apply ihq] <;> assumption
+    constructor <;> [· apply ihp;· apply ihq] <;> assumption
 #align omega.nat.neg_free_neg_elim_core Omega.Nat.negFree_negElimCore
 
 theorem le_and_le_iff_eq {α : Type} [PartialOrder α] {a b : α} : a ≤ b ∧ b ≤ a ↔ a = b :=
@@ -142,8 +142,8 @@ theorem implies_negElimCore : ∀ {p : Preform}, Preform.Implies p (negElimCore 
     cases h <;>
         [·
           left
-          apply ihp,
-        · right
+          apply ihp;·
+          right
           apply ihq] <;>
       assumption
   apply And.imp (ihp _) (ihq _) h

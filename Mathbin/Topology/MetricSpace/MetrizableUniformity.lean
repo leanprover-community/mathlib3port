@@ -160,7 +160,7 @@ theorem le_two_mul_dist_ofPrenndist (d : X → X → ℝ≥0) (dist_self : ∀ x
       rw [mem_set_of_eq, take_all_of_le hLm, two_mul, add_le_iff_nonpos_left, nonpos_iff_eq_zero,
           sum_eq_zero_iff, ← all₂_iff_forall, all₂_zip_with, ←
           chain_append_singleton_iff_forall₂] at hm <;>
-        [skip, · simp]
+        [skip;· simp]
       exact hd₀ (hm.rel (mem_append.2 <| Or.inr <| mem_singleton_self _))
     have hs_bdd : BddAbove s := ⟨length l, hs_ub⟩
     exact ⟨Sup s, csSup_le hsne hs_ub, ⟨Nat.sSup_mem hsne hs_bdd, fun k => le_csSup hs_bdd⟩⟩

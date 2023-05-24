@@ -214,8 +214,8 @@ theorem isEquivalent_const_iff_tendsto {c : β} (h : c ≠ 0) : u ~[l] const _ c
   constructor <;> intro h <;>
           [·
             have := h.sub tendsto_const_nhds
-            rw [zero_sub (-c)] at this,
-          · have := h.sub tendsto_const_nhds
+            rw [zero_sub (-c)] at this;·
+            have := h.sub tendsto_const_nhds
             rw [← sub_self c]] <;>
         convert this <;>
       try ext <;>
@@ -334,7 +334,7 @@ theorem isEquivalent_iff_exists_eq_mul :
     u ~[l] v ↔ ∃ (φ : α → β)(hφ : Tendsto φ l (𝓝 1)), u =ᶠ[l] φ * v :=
   by
   rw [is_equivalent, is_o_iff_exists_eq_mul]
-  constructor <;> rintro ⟨φ, hφ, h⟩ <;> [use φ + 1, use φ - 1] <;> constructor
+  constructor <;> rintro ⟨φ, hφ, h⟩ <;> [use φ + 1;use φ - 1] <;> constructor
   · conv in 𝓝 _ => rw [← zero_add (1 : β)]
     exact hφ.add tendsto_const_nhds
   · convert h.add (eventually_eq.refl l v) <;> ext <;> simp [add_mul]

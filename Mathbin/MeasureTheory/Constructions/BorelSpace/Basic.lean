@@ -156,7 +156,7 @@ theorem borel_eq_generateFrom_Iio : borel α = generateFrom (range Iio) :=
     letI : MeasurableSpace α := MeasurableSpace.generateFrom (range Iio)
     have H : ∀ a : α, MeasurableSet (Iio a) := fun a => generate_measurable.basic _ ⟨_, rfl⟩
     refine' generate_from_le _
-    rintro _ ⟨a, rfl | rfl⟩ <;> [skip, apply H]
+    rintro _ ⟨a, rfl | rfl⟩ <;> [skip;apply H]
     by_cases h : ∃ a', ∀ b, a < b ↔ a' ≤ b
     · rcases h with ⟨a', ha'⟩
       rw [(_ : Ioi a = Iio a'ᶜ)]

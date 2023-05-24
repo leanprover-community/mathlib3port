@@ -361,7 +361,7 @@ theorem integral_eq_sum_of_subset [DecidablePred fun x : F => x ≠ 0] {f : α �
   by
   rw [simple_func.integral_eq_sum_filter, Finset.sum_subset hs]
   rintro x - hx; rw [Finset.mem_filter, not_and_or, Ne.def, Classical.not_not] at hx
-  rcases hx with (hx | rfl) <;> [skip, simp]
+  rcases hx with (hx | rfl) <;> [skip;simp]
   rw [simple_func.mem_range] at hx;
   rw [preimage_eq_empty] <;> simp [Set.disjoint_singleton_left, hx]
 #align measure_theory.simple_func.integral_eq_sum_of_subset MeasureTheory.SimpleFunc.integral_eq_sum_of_subset

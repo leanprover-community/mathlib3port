@@ -125,7 +125,7 @@ theorem Pairwise.iff {S : α → α → Prop} (H : ∀ a b, R a b ↔ S a b) {l 
 
 #print List.pairwise_of_forall /-
 theorem pairwise_of_forall {l : List α} (H : ∀ x y, R x y) : Pairwise R l := by
-  induction l <;> [exact pairwise.nil, simp only [*, pairwise_cons, forall₂_true_iff, and_true_iff]]
+  induction l <;> [exact pairwise.nil;simp only [*, pairwise_cons, forall₂_true_iff, and_true_iff]]
 #align list.pairwise_of_forall List.pairwise_of_forall
 -/
 
@@ -209,9 +209,9 @@ theorem pairwise_append {l₁ l₂ : List α} :
     Pairwise R (l₁ ++ l₂) ↔ Pairwise R l₁ ∧ Pairwise R l₂ ∧ ∀ x ∈ l₁, ∀ y ∈ l₂, R x y := by
   induction' l₁ with x l₁ IH <;>
     [simp only [List.Pairwise.nil, forall_prop_of_false (not_mem_nil _), forall_true_iff,
-      and_true_iff, true_and_iff, nil_append],
-    simp only [cons_append, pairwise_cons, forall_mem_append, IH, forall_mem_cons, forall_and,
-      and_assoc', and_left_comm]]
+      and_true_iff, true_and_iff,
+      nil_append];simp only [cons_append, pairwise_cons, forall_mem_append, IH, forall_mem_cons,
+      forall_and, and_assoc', and_left_comm]]
 #align list.pairwise_append List.pairwise_append
 -/
 
@@ -380,8 +380,9 @@ theorem pairwise_reverse :
   suffices ∀ {R l}, @Pairwise α R l → Pairwise (fun x y => R y x) (reverse l) from fun R l =>
     ⟨fun p => reverse_reverse l ▸ this p, this⟩
   fun R l p => by
-  induction' p with a l h p IH <;> [apply pairwise.nil,
-    simpa only [reverse_cons, pairwise_append, IH, pairwise_cons,
+  induction' p with a l h p IH <;>
+    [apply
+      pairwise.nil;simpa only [reverse_cons, pairwise_append, IH, pairwise_cons,
       forall_prop_of_false (not_mem_nil _), forall_true_iff, pairwise.nil, mem_reverse,
       mem_singleton, forall_eq, true_and_iff] using h]
 #align list.pairwise_reverse List.pairwise_reverse

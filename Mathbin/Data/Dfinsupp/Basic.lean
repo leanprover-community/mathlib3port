@@ -1409,7 +1409,7 @@ protected theorem induction {p : (Π₀ i, β i) → Prop} (f : Π₀ i, β i) (
         · left
           exact H3
       right
-      split_ifs <;> [rfl, exact H2]
+      split_ifs <;> [rfl;exact H2]
     have H3 :
       (⟨fun j : ι => ite (j = i) 0 (f j), Trunc.mk ⟨i ::ₘ s, _⟩⟩ : Π₀ i, β i) =
         ⟨fun j : ι => ite (j = i) 0 (f j), Trunc.mk ⟨s, H2⟩⟩ :=
@@ -1505,7 +1505,7 @@ Case conversion may be inaccurate. Consider using '#align dfinsupp.mk_add Dfinsu
 @[simp]
 theorem mk_add [∀ i, AddZeroClass (β i)] {s : Finset ι} {x y : ∀ i : (↑s : Set ι), β i} :
     mk s (x + y) = mk s x + mk s y :=
-  ext fun i => by simp only [add_apply, mk_apply] <;> split_ifs <;> [rfl, rw [zero_add]]
+  ext fun i => by simp only [add_apply, mk_apply] <;> split_ifs <;> [rfl;rw [zero_add]]
 #align dfinsupp.mk_add Dfinsupp.mk_add
 
 #print Dfinsupp.mk_zero /-
@@ -1524,7 +1524,7 @@ Case conversion may be inaccurate. Consider using '#align dfinsupp.mk_neg Dfinsu
 @[simp]
 theorem mk_neg [∀ i, AddGroup (β i)] {s : Finset ι} {x : ∀ i : (↑s : Set ι), β i.1} :
     mk s (-x) = -mk s x :=
-  ext fun i => by simp only [neg_apply, mk_apply] <;> split_ifs <;> [rfl, rw [neg_zero]]
+  ext fun i => by simp only [neg_apply, mk_apply] <;> split_ifs <;> [rfl;rw [neg_zero]]
 #align dfinsupp.mk_neg Dfinsupp.mk_neg
 
 /- warning: dfinsupp.mk_sub -> Dfinsupp.mk_sub is a dubious translation:
@@ -1536,7 +1536,7 @@ Case conversion may be inaccurate. Consider using '#align dfinsupp.mk_sub Dfinsu
 @[simp]
 theorem mk_sub [∀ i, AddGroup (β i)] {s : Finset ι} {x y : ∀ i : (↑s : Set ι), β i.1} :
     mk s (x - y) = mk s x - mk s y :=
-  ext fun i => by simp only [sub_apply, mk_apply] <;> split_ifs <;> [rfl, rw [sub_zero]]
+  ext fun i => by simp only [sub_apply, mk_apply] <;> split_ifs <;> [rfl;rw [sub_zero]]
 #align dfinsupp.mk_sub Dfinsupp.mk_sub
 
 /- warning: dfinsupp.mk_add_group_hom -> Dfinsupp.mkAddGroupHom is a dubious translation:
@@ -1567,7 +1567,7 @@ Case conversion may be inaccurate. Consider using '#align dfinsupp.mk_smul Dfins
 @[simp]
 theorem mk_smul {s : Finset ι} (c : γ) (x : ∀ i : (↑s : Set ι), β (i : ι)) :
     mk s (c • x) = c • mk s x :=
-  ext fun i => by simp only [smul_apply, mk_apply] <;> split_ifs <;> [rfl, rw [smul_zero]]
+  ext fun i => by simp only [smul_apply, mk_apply] <;> split_ifs <;> [rfl;rw [smul_zero]]
 #align dfinsupp.mk_smul Dfinsupp.mk_smul
 
 /- warning: dfinsupp.single_smul -> Dfinsupp.single_smul is a dubious translation:
@@ -1579,7 +1579,7 @@ Case conversion may be inaccurate. Consider using '#align dfinsupp.single_smul D
 @[simp]
 theorem single_smul {i : ι} (c : γ) (x : β i) : single i (c • x) = c • single i x :=
   ext fun i => by
-    simp only [smul_apply, single_apply] <;> split_ifs <;> [cases h, rw [smul_zero]] <;> rfl
+    simp only [smul_apply, single_apply] <;> split_ifs <;> [cases h;rw [smul_zero]] <;> rfl
 #align dfinsupp.single_smul Dfinsupp.single_smul
 
 end
@@ -1637,7 +1637,7 @@ theorem eq_mk_support (f : Π₀ i, β i) : f = mk f.support fun i => f i :=
   by
   change f = mk f.support fun i => f i.1
   ext i
-  by_cases h : f i ≠ 0 <;> [skip, rw [Classical.not_not] at h] <;> simp [h]
+  by_cases h : f i ≠ 0 <;> [skip;rw [Classical.not_not] at h] <;> simp [h]
 #align dfinsupp.eq_mk_support Dfinsupp.eq_mk_support
 -/
 
@@ -1719,7 +1719,7 @@ theorem mapRange_single {f : ∀ i, β₁ i → β₂ i} {hf : ∀ i, f i 0 = 0}
     by_cases i = i' <;>
       [·
         subst i'
-        simp, simp [h, hf]]
+        simp;simp [h, hf]]
 #align dfinsupp.map_range_single Dfinsupp.mapRange_single
 -/
 

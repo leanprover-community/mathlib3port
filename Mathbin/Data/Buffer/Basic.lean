@@ -68,8 +68,8 @@ theorem toList_appendList {b : Buffer α} : toList (appendList b xs) = toList b 
 
 @[simp]
 theorem appendList_mkBuffer : appendList mkBuffer xs = Array'.toBuffer ([anonymous] xs) := by
-  ext x : 1 <;> simp [Array'.toBuffer, to_list, to_list_append_list] <;> induction xs <;> [rfl,
-        skip] <;>
+  ext x : 1 <;> simp [Array'.toBuffer, to_list, to_list_append_list] <;> induction xs <;>
+        [rfl;skip] <;>
       simp [to_array] <;>
     rfl
 #align buffer.append_list_mk_buffer Buffer.appendList_mkBuffer

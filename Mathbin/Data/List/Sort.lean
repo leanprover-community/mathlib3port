@@ -267,8 +267,9 @@ open Perm
 theorem perm_orderedInsert (a) : ∀ l : List α, orderedInsert r a l ~ a :: l
   | [] => Perm.refl _
   | b :: l => by
-    by_cases a ≼ b <;> [simp [ordered_insert, h],
-      simpa [ordered_insert, h] using ((perm_ordered_insert l).cons _).trans (perm.swap _ _ _)]
+    by_cases a ≼ b <;>
+      [simp [ordered_insert,
+        h];simpa [ordered_insert, h] using ((perm_ordered_insert l).cons _).trans (perm.swap _ _ _)]
 #align list.perm_ordered_insert List.perm_orderedInsert
 -/
 

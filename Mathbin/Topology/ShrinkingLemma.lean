@@ -160,7 +160,7 @@ theorem apply_eq_of_chain {c : Set (PartialRefinement u s)} (hc : IsChain (· �
     (h₁ : v₁ ∈ c) (h₂ : v₂ ∈ c) {i} (hi₁ : i ∈ v₁.carrier) (hi₂ : i ∈ v₂.carrier) : v₁ i = v₂ i :=
   by
   wlog hle : v₁ ≤ v₂
-  · cases hc.total h₁ h₂ <;> [skip, symm] <;> apply_assumption <;> assumption'
+  · cases hc.total h₁ h₂ <;> [skip;symm] <;> apply_assumption <;> assumption'
   exact hle.2 _ hi₁
 #align shrinking_lemma.partial_refinement.apply_eq_of_chain ShrinkingLemma.PartialRefinement.apply_eq_of_chain
 

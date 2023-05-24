@@ -123,8 +123,8 @@ theorem dedup_append (l₁ l₂ : List α) : dedup (l₁ ++ l₂) = l₁ ∪ ded
   by
   induction' l₁ with a l₁ IH; · rfl; rw [cons_union, ← IH]
   show dedup (a :: (l₁ ++ l₂)) = insert a (dedup (l₁ ++ l₂))
-  by_cases a ∈ dedup (l₁ ++ l₂) <;> [rw [dedup_cons_of_mem' h, insert_of_mem h],
-    rw [dedup_cons_of_not_mem' h, insert_of_not_mem h]]
+  by_cases a ∈ dedup (l₁ ++ l₂) <;>
+    [rw [dedup_cons_of_mem' h, insert_of_mem h];rw [dedup_cons_of_not_mem' h, insert_of_not_mem h]]
 #align list.dedup_append List.dedup_append
 -/
 

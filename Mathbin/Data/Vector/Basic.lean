@@ -943,7 +943,7 @@ protected theorem comp_traverse (f : β → F γ) (g : α → G β) :
   by
   rintro ⟨x, rfl⟩ <;> dsimp [Vector.traverse, cast] <;> induction' x with x xs <;>
       simp! [cast, *, functor_norm] <;>
-    [rfl, simp [(· ∘ ·)]]
+    [rfl;simp [(· ∘ ·)]]
 #align vector.comp_traverse Vector.comp_traverse
 
 /- warning: vector.traverse_eq_map_id -> Vector.traverse_eq_map_id is a dubious translation:

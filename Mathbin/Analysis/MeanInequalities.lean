@@ -128,7 +128,7 @@ theorem geom_mean_le_arith_mean_weighted (w z : ι → ℝ) (hw : ∀ i ∈ s, 0
   · simp only [not_exists, not_and, Ne.def, Classical.not_not] at A
     have := convex_on_exp.map_sum_le hw hw' fun i _ => Set.mem_univ <| log (z i)
     simp only [exp_sum, (· ∘ ·), smul_eq_mul, mul_comm (w _) (log _)] at this
-    convert this using 1 <;> [apply prod_congr rfl, apply sum_congr rfl] <;> intro i hi
+    convert this using 1 <;> [apply prod_congr rfl;apply sum_congr rfl] <;> intro i hi
     · cases' eq_or_lt_of_le (hz i hi) with hz hz
       · simp [A i hi hz.symm]
       · exact rpow_def_of_pos hz _
@@ -700,7 +700,7 @@ theorem Lp_add_le_of_nonneg (hp : 1 ≤ p) (hf : ∀ i ∈ s, 0 ≤ f i) (hg : �
     (∑ i in s, (f i + g i) ^ p) ^ (1 / p) ≤
       (∑ i in s, f i ^ p) ^ (1 / p) + (∑ i in s, g i ^ p) ^ (1 / p) :=
   by
-  convert Lp_add_le s f g hp using 2 <;> [skip, congr 1, congr 1] <;> apply sum_congr rfl <;>
+  convert Lp_add_le s f g hp using 2 <;> [skip;congr 1;congr 1] <;> apply sum_congr rfl <;>
       intro i hi <;>
     simp only [abs_of_nonneg, hf i hi, hg i hi, add_nonneg]
 #align real.Lp_add_le_of_nonneg Real.Lp_add_le_of_nonneg
@@ -785,7 +785,7 @@ theorem inner_le_Lp_mul_Lq (hpq : p.IsConjugateExponent q) :
         (fun i => ENNReal.toNNReal (g i)) _ _ hpq)
   simp [← ENNReal.coe_rpow_of_nonneg, le_of_lt hpq.pos, le_of_lt hpq.one_div_pos,
     le_of_lt hpq.symm.pos, le_of_lt hpq.symm.one_div_pos] at this
-  convert this using 1 <;> [skip, congr 2] <;> [skip, skip, simp, skip, simp] <;>
+  convert this using 1 <;> [skip;congr 2] <;> [skip;skip;simp;skip;simp] <;>
     · apply Finset.sum_congr rfl fun i hi => _
       simp [H'.1 i hi, H'.2 i hi, -WithZero.coe_mul, with_top.coe_mul.symm]
 #align ennreal.inner_le_Lp_mul_Lq ENNReal.inner_le_Lp_mul_Lq
@@ -826,7 +826,7 @@ theorem Lp_add_le (hp : 1 ≤ p) :
       (@NNReal.Lp_add_le _ s (fun i => ENNReal.toNNReal (f i)) (fun i => ENNReal.toNNReal (g i)) _
         hp)
   push_cast [← ENNReal.coe_rpow_of_nonneg, le_of_lt Pos, le_of_lt (one_div_pos.2 Pos)] at this
-  convert this using 2 <;> [skip, congr 1, congr 1] <;>
+  convert this using 2 <;> [skip;congr 1;congr 1] <;>
     · apply Finset.sum_congr rfl fun i hi => _
       simp [H'.1 i hi, H'.2 i hi]
 #align ennreal.Lp_add_le ENNReal.Lp_add_le

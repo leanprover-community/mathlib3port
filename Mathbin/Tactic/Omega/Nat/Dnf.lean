@@ -57,11 +57,13 @@ theorem exists_clause_holds_core {v : Nat → Nat} :
     assumption
   · cases h1
   ·
-    cases' h2 with h2 h2 <;> [· cases' ihp h1.left h0.left h2 with c h3,
-              · cases' ihq h1.right h0.right h2 with c h3] <;>
+    cases' h2 with h2 h2 <;>
+              [·
+                cases' ihp h1.left h0.left h2 with
+                  c h3;· cases' ihq h1.right h0.right h2 with c h3] <;>
             cases' h3 with h3 h4 <;>
           refine' ⟨c, list.mem_append.elim_right _, h4⟩ <;>
-        [left, right] <;>
+        [left;right] <;>
       assumption
   · rcases ihp h1.left h0.left h2.left with ⟨cp, hp1, hp2⟩
     rcases ihq h1.right h0.right h2.right with ⟨cq, hq1, hq2⟩

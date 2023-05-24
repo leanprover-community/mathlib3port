@@ -180,7 +180,7 @@ theorem cast_mono [OrderedRing α] : Monotone (coe : ℤ → α) :=
   by
   intro m n h
   rw [← sub_nonneg] at h
-  lift n - m to ℕ using h
+  lift n - m to ℕ using h with k
   rw [← sub_nonneg, ← cast_sub, ← h_1, cast_coe_nat]
   exact k.cast_nonneg
 #align int.cast_mono Int.cast_mono

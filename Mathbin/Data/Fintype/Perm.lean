@@ -101,7 +101,7 @@ theorem mem_of_mem_permsOfList :
             mem_of_mem_permsOfList hg₁ <| by
               rw [eq_inv_mul_iff_mul_eq.2 hg₂, mul_apply, swap_inv, swap_apply_def] <;>
                   split_ifs <;>
-                [exact Ne.symm hxy, exact Ne.symm hxa, exact hx]
+                [exact Ne.symm hxy;exact Ne.symm hxa;exact hx]
 #align mem_of_mem_perms_of_list mem_of_mem_permsOfList
 -/
 
