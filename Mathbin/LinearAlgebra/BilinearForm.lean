@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andreas Swerdlow, Kexing Ying
 
 ! This file was ported from Lean 3 source module linear_algebra.bilinear_form
-! leanprover-community/mathlib commit f0c8bf9245297a541f468be517f1bde6195105e9
+! leanprover-community/mathlib commit 38df578a6450a8c5142b3727e3ae894c2300cae0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.LinearAlgebra.FreeModule.Finite.Matrix
 
 /-!
 # Bilinear form
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines a bilinear form over a module. Basic ideas
 such as orthogonality are also introduced, as well as reflexivive,

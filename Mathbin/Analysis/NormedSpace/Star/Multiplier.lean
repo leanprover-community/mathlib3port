@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux, Jon Bannon
 
 ! This file was ported from Lean 3 source module analysis.normed_space.star.multiplier
-! leanprover-community/mathlib commit 0b9eaaa7686280fad8cce467f5c3c57ee6ce77f8
+! leanprover-community/mathlib commit ba5ff5ad5d120fb0ef094ad2994967e9bfaf5112
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -547,7 +547,8 @@ theorem nnnorm_def' (a : 𝓜(𝕜, A)) : ‖a‖₊ = ‖a.toProdMulOppositeHom
 #align double_centralizer.nnnorm_def' DoubleCentralizer.nnnorm_def'
 
 instance : NormedSpace 𝕜 𝓜(𝕜, A) :=
-  { DoubleCentralizer.module with norm_smul_le := fun k a => norm_smul_le k a.toProdMulOpposite }
+  { DoubleCentralizer.module with
+    norm_smul_le := fun k a => (norm_smul_le k a.toProdMulOpposite : _) }
 
 instance : NormedAlgebra 𝕜 𝓜(𝕜, A) :=
   { DoubleCentralizer.algebra, DoubleCentralizer.normedSpace with }

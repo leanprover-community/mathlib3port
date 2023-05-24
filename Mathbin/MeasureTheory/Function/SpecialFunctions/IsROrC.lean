@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.function.special_functions.is_R_or_C
-! leanprover-community/mathlib commit 83a66c8775fa14ee5180c85cab98e970956401ad
+! leanprover-community/mathlib commit 38df578a6450a8c5142b3727e3ae894c2300cae0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Data.IsROrC.Lemmas
 
 /-!
 # Measurability of the basic `is_R_or_C` functions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 -/
 

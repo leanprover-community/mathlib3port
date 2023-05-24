@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.kernel.composition
-! leanprover-community/mathlib commit 28b2a92f2996d28e580450863c130955de0ed398
+! leanprover-community/mathlib commit c0d694db494dd4f9aa57f2714b6e4c82b4ebc113
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -254,6 +254,120 @@ theorem compProd_apply (κ : kernel α β) [IsSFiniteKernel κ] (η : kernel (α
   compProd_apply_eq_compProdFun κ η a hs
 #align probability_theory.kernel.comp_prod_apply ProbabilityTheory.kernel.compProd_apply
 
+theorem le_compProd_apply (κ : kernel α β) [IsSFiniteKernel κ] (η : kernel (α × β) γ)
+    [IsSFiniteKernel η] (a : α) (s : Set (β × γ)) :
+    (∫⁻ b, η (a, b) { c | (b, c) ∈ s } ∂κ a) ≤ (κ ⊗ₖ η) a s :=
+  calc
+    (∫⁻ b, η (a, b) { c | (b, c) ∈ s } ∂κ a) ≤
+        ∫⁻ b, η (a, b) { c | (b, c) ∈ toMeasurable ((κ ⊗ₖ η) a) s } ∂κ a :=
+      lintegral_mono fun b => measure_mono fun _ h_mem => subset_toMeasurable _ _ h_mem
+    _ = (κ ⊗ₖ η) a (toMeasurable ((κ ⊗ₖ η) a) s) :=
+      (kernel.compProd_apply_eq_compProdFun κ η a (measurableSet_toMeasurable _ _)).symm
+    _ = (κ ⊗ₖ η) a s := measure_toMeasurable s
+    
+#align probability_theory.kernel.le_comp_prod_apply ProbabilityTheory.kernel.le_compProd_apply
+
+section Ae
+
+/-! ### `ae` filter of the composition-product -/
+
+
+variable {κ : kernel α β} [IsSFiniteKernel κ] {η : kernel (α × β) γ} [IsSFiniteKernel η] {a : α}
+
+theorem ae_kernel_lt_top (a : α) (h2s : (κ ⊗ₖ η) a s ≠ ∞) :
+    ∀ᵐ b ∂κ a, η (a, b) (Prod.mk b ⁻¹' s) < ∞ :=
+  by
+  let t := to_measurable ((κ ⊗ₖ η) a) s
+  have : ∀ b : β, η (a, b) (Prod.mk b ⁻¹' s) ≤ η (a, b) (Prod.mk b ⁻¹' t) := fun b =>
+    measure_mono (Set.preimage_mono (subset_to_measurable _ _))
+  have ht : MeasurableSet t := measurable_set_to_measurable _ _
+  have h2t : (κ ⊗ₖ η) a t ≠ ∞ := by rwa [measure_to_measurable]
+  have ht_lt_top : ∀ᵐ b ∂κ a, η (a, b) (Prod.mk b ⁻¹' t) < ∞ :=
+    by
+    rw [kernel.comp_prod_apply _ _ _ ht] at h2t
+    exact ae_lt_top (kernel.measurable_kernel_prod_mk_left' ht a) h2t
+  filter_upwards [ht_lt_top]with b hb
+  exact (this b).trans_lt hb
+#align probability_theory.kernel.ae_kernel_lt_top ProbabilityTheory.kernel.ae_kernel_lt_top
+
+theorem compProd_null (a : α) (hs : MeasurableSet s) :
+    (κ ⊗ₖ η) a s = 0 ↔ (fun b => η (a, b) (Prod.mk b ⁻¹' s)) =ᵐ[κ a] 0 :=
+  by
+  rw [kernel.comp_prod_apply _ _ _ hs, lintegral_eq_zero_iff]
+  · rfl
+  · exact kernel.measurable_kernel_prod_mk_left' hs a
+#align probability_theory.kernel.comp_prod_null ProbabilityTheory.kernel.compProd_null
+
+theorem ae_null_of_compProd_null (h : (κ ⊗ₖ η) a s = 0) :
+    (fun b => η (a, b) (Prod.mk b ⁻¹' s)) =ᵐ[κ a] 0 :=
+  by
+  obtain ⟨t, hst, mt, ht⟩ := exists_measurable_superset_of_null h
+  simp_rw [comp_prod_null a mt] at ht
+  rw [Filter.eventuallyLE_antisymm_iff]
+  exact
+    ⟨Filter.EventuallyLE.trans_eq
+        (Filter.eventually_of_forall fun x => (measure_mono (Set.preimage_mono hst) : _)) ht,
+      Filter.eventually_of_forall fun x => zero_le _⟩
+#align probability_theory.kernel.ae_null_of_comp_prod_null ProbabilityTheory.kernel.ae_null_of_compProd_null
+
+theorem ae_ae_of_ae_compProd {p : β × γ → Prop} (h : ∀ᵐ bc ∂(κ ⊗ₖ η) a, p bc) :
+    ∀ᵐ b ∂κ a, ∀ᵐ c ∂η (a, b), p (b, c) :=
+  ae_null_of_compProd_null h
+#align probability_theory.kernel.ae_ae_of_ae_comp_prod ProbabilityTheory.kernel.ae_ae_of_ae_compProd
+
+end Ae
+
+section Restrict
+
+variable {κ : kernel α β} [IsSFiniteKernel κ] {η : kernel (α × β) γ} [IsSFiniteKernel η] {a : α}
+
+theorem compProd_restrict {s : Set β} {t : Set γ} (hs : MeasurableSet s) (ht : MeasurableSet t) :
+    kernel.restrict κ hs ⊗ₖ kernel.restrict η ht = kernel.restrict (κ ⊗ₖ η) (hs.Prod ht) :=
+  by
+  ext (a u hu) : 2
+  rw [comp_prod_apply _ _ _ hu, restrict_apply' _ _ _ hu,
+    comp_prod_apply _ _ _ (hu.inter (hs.prod ht))]
+  simp only [kernel.restrict_apply, measure.restrict_apply' ht, Set.mem_inter_iff,
+    Set.prod_mk_mem_set_prod_eq]
+  have :
+    ∀ b,
+      η (a, b) { c : γ | (b, c) ∈ u ∧ b ∈ s ∧ c ∈ t } =
+        s.indicator (fun b => η (a, b) ({ c : γ | (b, c) ∈ u } ∩ t)) b :=
+    by
+    intro b
+    classical
+      rw [Set.indicator_apply]
+      split_ifs with h
+      · simp only [h, true_and_iff]
+        rfl
+      · simp only [h, false_and_iff, and_false_iff, Set.setOf_false, measure_empty]
+  simp_rw [this]
+  rw [lintegral_indicator _ hs]
+#align probability_theory.kernel.comp_prod_restrict ProbabilityTheory.kernel.compProd_restrict
+
+theorem compProd_restrict_left {s : Set β} (hs : MeasurableSet s) :
+    kernel.restrict κ hs ⊗ₖ η = kernel.restrict (κ ⊗ₖ η) (hs.Prod MeasurableSet.univ) :=
+  by
+  rw [← comp_prod_restrict]
+  congr
+  exact kernel.restrict_univ.symm
+#align probability_theory.kernel.comp_prod_restrict_left ProbabilityTheory.kernel.compProd_restrict_left
+
+theorem compProd_restrict_right {t : Set γ} (ht : MeasurableSet t) :
+    κ ⊗ₖ kernel.restrict η ht = kernel.restrict (κ ⊗ₖ η) (MeasurableSet.univ.Prod ht) :=
+  by
+  rw [← comp_prod_restrict]
+  congr
+  exact kernel.restrict_univ.symm
+#align probability_theory.kernel.comp_prod_restrict_right ProbabilityTheory.kernel.compProd_restrict_right
+
+end Restrict
+
+section Lintegral
+
+/-! ### Lebesgue integral -/
+
+
 /-- Lebesgue integral against the composition-product of two kernels. -/
 theorem lintegral_comp_prod' (κ : kernel α β) [IsSFiniteKernel κ] (η : kernel (α × β) γ)
     [IsSFiniteKernel η] (a : α) {f : β → γ → ℝ≥0∞} (hf : Measurable (Function.uncurry f)) :
@@ -333,6 +447,47 @@ theorem lintegral_compProd (κ : kernel α β) [IsSFiniteKernel κ] (η : kernel
   · simp_rw [g, Function.uncurry_curry]
     exact hf
 #align probability_theory.kernel.lintegral_comp_prod ProbabilityTheory.kernel.lintegral_compProd
+
+/-- Lebesgue integral against the composition-product of two kernels. -/
+theorem lintegral_comp_prod₀ (κ : kernel α β) [IsSFiniteKernel κ] (η : kernel (α × β) γ)
+    [IsSFiniteKernel η] (a : α) {f : β × γ → ℝ≥0∞} (hf : AEMeasurable f ((κ ⊗ₖ η) a)) :
+    (∫⁻ z, f z ∂(κ ⊗ₖ η) a) = ∫⁻ x, ∫⁻ y, f (x, y) ∂η (a, x) ∂κ a :=
+  by
+  have A : (∫⁻ z, f z ∂(κ ⊗ₖ η) a) = ∫⁻ z, hf.mk f z ∂(κ ⊗ₖ η) a := lintegral_congr_ae hf.ae_eq_mk
+  have B : (∫⁻ x, ∫⁻ y, f (x, y) ∂η (a, x) ∂κ a) = ∫⁻ x, ∫⁻ y, hf.mk f (x, y) ∂η (a, x) ∂κ a :=
+    by
+    apply lintegral_congr_ae
+    filter_upwards [ae_ae_of_ae_comp_prod hf.ae_eq_mk]with _ ha using lintegral_congr_ae ha
+  rw [A, B, lintegral_comp_prod]
+  exact hf.measurable_mk
+#align probability_theory.kernel.lintegral_comp_prod₀ ProbabilityTheory.kernel.lintegral_comp_prod₀
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem set_lintegral_compProd (κ : kernel α β) [IsSFiniteKernel κ] (η : kernel (α × β) γ)
+    [IsSFiniteKernel η] (a : α) {f : β × γ → ℝ≥0∞} (hf : Measurable f) {s : Set β} {t : Set γ}
+    (hs : MeasurableSet s) (ht : MeasurableSet t) :
+    (∫⁻ z in s ×ˢ t, f z ∂(κ ⊗ₖ η) a) = ∫⁻ x in s, ∫⁻ y in t, f (x, y) ∂η (a, x) ∂κ a := by
+  simp_rw [← kernel.restrict_apply (κ ⊗ₖ η) (hs.prod ht), ← comp_prod_restrict,
+    lintegral_comp_prod _ _ _ hf, kernel.restrict_apply]
+#align probability_theory.kernel.set_lintegral_comp_prod ProbabilityTheory.kernel.set_lintegral_compProd
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem set_lintegral_compProd_univ_right (κ : kernel α β) [IsSFiniteKernel κ]
+    (η : kernel (α × β) γ) [IsSFiniteKernel η] (a : α) {f : β × γ → ℝ≥0∞} (hf : Measurable f)
+    {s : Set β} (hs : MeasurableSet s) :
+    (∫⁻ z in s ×ˢ Set.univ, f z ∂(κ ⊗ₖ η) a) = ∫⁻ x in s, ∫⁻ y, f (x, y) ∂η (a, x) ∂κ a := by
+  simp_rw [set_lintegral_comp_prod κ η a hf hs MeasurableSet.univ, measure.restrict_univ]
+#align probability_theory.kernel.set_lintegral_comp_prod_univ_right ProbabilityTheory.kernel.set_lintegral_compProd_univ_right
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem set_lintegral_compProd_univ_left (κ : kernel α β) [IsSFiniteKernel κ] (η : kernel (α × β) γ)
+    [IsSFiniteKernel η] (a : α) {f : β × γ → ℝ≥0∞} (hf : Measurable f) {t : Set γ}
+    (ht : MeasurableSet t) :
+    (∫⁻ z in Set.univ ×ˢ t, f z ∂(κ ⊗ₖ η) a) = ∫⁻ x, ∫⁻ y in t, f (x, y) ∂η (a, x) ∂κ a := by
+  simp_rw [set_lintegral_comp_prod κ η a hf MeasurableSet.univ ht, measure.restrict_univ]
+#align probability_theory.kernel.set_lintegral_comp_prod_univ_left ProbabilityTheory.kernel.set_lintegral_compProd_univ_left
+
+end Lintegral
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (n m) -/
 theorem compProd_eq_tsum_compProd (κ : kernel α β) [IsSFiniteKernel κ] (η : kernel (α × β) γ)

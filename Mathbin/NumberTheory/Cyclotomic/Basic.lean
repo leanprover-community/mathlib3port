@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module number_theory.cyclotomic.basic
-! leanprover-community/mathlib commit b353176c24d96c23f0ce1cc63efc3f55019702d9
+! leanprover-community/mathlib commit b602702a58f74f5317862a24893693e80bee6d41
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -604,13 +604,14 @@ def CyclotomicRing : Type w :=
 
 namespace CyclotomicRing
 
-/-- The `A`-algebra structure on `cyclotomic_ring n A K`.
-This is not an instance since it causes diamonds when `A = ℤ`. -/
-def algebraBase : Algebra A (CyclotomicRing n A K) :=
+/-- The `A`-algebra structure on `cyclotomic_ring n A K`. -/
+instance algebraBase : Algebra A (CyclotomicRing n A K) :=
   (adjoin A _).Algebra
 #align cyclotomic_ring.algebra_base CyclotomicRing.algebraBase
 
-attribute [local instance] CyclotomicRing.algebraBase
+-- Ensure that there is no diamonds with ℤ.
+example {n : ℕ+} : CyclotomicRing.algebraBase n ℤ ℚ = algebraInt _ :=
+  rfl
 
 instance : NoZeroSMulDivisors A (CyclotomicRing n A K) :=
   (adjoin A _).noZeroSMulDivisors_bot

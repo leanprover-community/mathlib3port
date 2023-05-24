@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.algebraic
-! leanprover-community/mathlib commit 2196ab363eb097c008d4497125e0dde23fb36db2
+! leanprover-community/mathlib commit 38df578a6450a8c5142b3727e3ae894c2300cae0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Data.Polynomial.IntegralNormalization
 
 /-!
 # Algebraic elements and algebraic extensions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 An element of an R-algebra is algebraic over R if it is the root of a nonzero polynomial.
 An R-algebra is algebraic over R if and only if all its elements are algebraic over R.

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gabriel Ebner, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.deriv
-! leanprover-community/mathlib commit e3fb84046afd187b710170887195d50bada934ee
+! leanprover-community/mathlib commit ad84a13c884fd19e286fb7abb36f4b9ba7e2f615
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,7 @@ import Mathbin.Analysis.Calculus.Fderiv.Add
 import Mathbin.Analysis.Calculus.Fderiv.Mul
 import Mathbin.Analysis.Calculus.Fderiv.Equiv
 import Mathbin.Analysis.Calculus.Fderiv.RestrictScalars
+import Mathbin.Analysis.Calculus.Fderiv.Star
 import Mathbin.Data.Polynomial.AlgebraMap
 import Mathbin.Data.Polynomial.Derivative
 import Mathbin.LinearAlgebra.AffineSpace.Slope
@@ -61,6 +62,7 @@ We also show the existence and compute the derivatives of:
   - negation
   - subtraction
   - multiplication
+  - star
   - inverse `x → x⁻¹`
   - multiplication of two functions in `𝕜 → 𝕜`
   - multiplication of a function in `𝕜 → 𝕜` and of a function in `𝕜 → E`
@@ -1963,6 +1965,50 @@ theorem deriv_div_const (d : 𝕜') : deriv (fun x => c x / d) x = deriv c x / d
 #align deriv_div_const deriv_div_const
 
 end Division
+
+section Star
+
+/-! ### Derivative of `x ↦ star x` -/
+
+
+variable [StarRing 𝕜] [TrivialStar 𝕜] [StarAddMonoid F] [ContinuousStar F]
+
+variable [StarModule 𝕜 F]
+
+protected theorem HasDerivAtFilter.star (h : HasDerivAtFilter f f' x L) :
+    HasDerivAtFilter (fun x => star (f x)) (star f') x L := by
+  simpa using h.star.has_deriv_at_filter
+#align has_deriv_at_filter.star HasDerivAtFilter.star
+
+protected theorem HasDerivWithinAt.star (h : HasDerivWithinAt f f' s x) :
+    HasDerivWithinAt (fun x => star (f x)) (star f') s x :=
+  h.unit
+#align has_deriv_within_at.star HasDerivWithinAt.star
+
+protected theorem HasDerivAt.star (h : HasDerivAt f f' x) :
+    HasDerivAt (fun x => star (f x)) (star f') x :=
+  h.unit
+#align has_deriv_at.star HasDerivAt.star
+
+protected theorem HasStrictDerivAt.star (h : HasStrictDerivAt f f' x) :
+    HasStrictDerivAt (fun x => star (f x)) (star f') x := by simpa using h.star.has_strict_deriv_at
+#align has_strict_deriv_at.star HasStrictDerivAt.star
+
+protected theorem derivWithin.star (hxs : UniqueDiffWithinAt 𝕜 s x) :
+    derivWithin (fun y => star (f y)) s x = star (derivWithin f s x) :=
+  FunLike.congr_fun (fderivWithin_star hxs) _
+#align deriv_within.star derivWithin.star
+
+protected theorem deriv.star : deriv (fun y => star (f y)) x = star (deriv f x) :=
+  FunLike.congr_fun fderiv_star _
+#align deriv.star deriv.star
+
+@[simp]
+protected theorem deriv.star' : (deriv fun y => star (f y)) = fun x => star (deriv f x) :=
+  funext fun x => deriv.star
+#align deriv.star' deriv.star'
+
+end Star
 
 section ClmCompApply
 

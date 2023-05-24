@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash, Antoine Labelle
 
 ! This file was ported from Lean 3 source module linear_algebra.contraction
-! leanprover-community/mathlib commit 657df4339ae6ceada048c8a2980fb10e393143ec
+! leanprover-community/mathlib commit 38df578a6450a8c5142b3727e3ae894c2300cae0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.LinearAlgebra.Matrix.ToLin
 
 /-!
 # Contractions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Given modules $M, N$ over a commutative ring $R$, this file defines the natural linear maps:
 $M^* \otimes M \to R$, $M \otimes M^* \to R$, and $M^* \otimes N → Hom(M, N)$, as well as proving

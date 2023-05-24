@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz, Junyan Xu
 
 ! This file was ported from Lean 3 source module ring_theory.localization.as_subring
-! leanprover-community/mathlib commit 649ca66bf4d62796b5eefef966e622d91aa471f3
+! leanprover-community/mathlib commit 38df578a6450a8c5142b3727e3ae894c2300cae0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.RingTheory.Localization.LocalizationLocalization
 /-!
 
 # Localizations of domains as subalgebras of the fraction field.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Given a domain `A` with fraction field `K`, and a submonoid `S` of `A` which
 does not contain zero, this file constructs the localization of `A` at `S`

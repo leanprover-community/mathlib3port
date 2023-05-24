@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Best, Riccardo Brasca, Eric Rodriguez
 
 ! This file was ported from Lean 3 source module number_theory.cyclotomic.primitive_roots
-! leanprover-community/mathlib commit 8631e2d5ea77f6c13054d9151d82b83069680cb1
+! leanprover-community/mathlib commit b602702a58f74f5317862a24893693e80bee6d41
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -17,14 +17,14 @@ import Mathbin.RingTheory.Norm
 
 /-!
 # Primitive roots in cyclotomic fields
-If `is_cyclotomic_extension {n} A B`, we define an element `zeta n A B : B` that is (under certain
-assumptions) a primitive `n`-root of unity in `B` and we study its properties. We also prove related
-theorems under the more general assumption of just being a primitive root, for reasons described
-in the implementation details section.
+If `is_cyclotomic_extension {n} A B`, we define an element `zeta n A B : B` that is a primitive
+`n`th-root of unity in `B` and we study its properties. We also prove related theorems under the
+more general assumption of just being a primitive root, for reasons described in the implementation
+details section.
 
 ## Main definitions
 * `is_cyclotomic_extension.zeta n A B`: if `is_cyclotomic_extension {n} A B`, than `zeta n A B`
-  is an element of `B` that plays the role of a primitive `n`-th root of unity.
+  is a primitive `n`-th root of unity in `B`.
 * `is_primitive_root.power_basis`: if `K` and `L` are fields such that
   `is_cyclotomic_extension {n} K L`, then `is_primitive_root.power_basis`
   gives a K-power basis for L given a primitive root `ζ`.
@@ -39,7 +39,7 @@ in the implementation details section.
   the norm of a primitive root is `1` if `n ≠ 2`.
 * `is_primitive_root.sub_one_norm_eq_eval_cyclotomic`: if `irreducible (cyclotomic n K)`
   (in particular for `K = ℚ`), then the norm of `ζ - 1` is `eval 1 (cyclotomic n ℤ)`, for a
-  primitive root ζ. We also prove the analogous of this result for `zeta`.
+  primitive root `ζ`. We also prove the analogous of this result for `zeta`.
 * `is_primitive_root.pow_sub_one_norm_prime_pow_ne_two` : if
   `irreducible (cyclotomic (p ^ (k + 1)) K)` (in particular for `K = ℚ`) and `p` is a prime,
   then the norm of `ζ ^ (p ^ s) - 1` is `p ^ (p ^ s)` `p ^ (k - s + 1) ≠ 2`. See the following
@@ -51,9 +51,9 @@ in the implementation details section.
   and `primitive_roots n A` given by the choice of `ζ`.
 
 ## Implementation details
-`zeta n A B` is defined as any primitive root of unity in `B`, that exists by definition. It is not
-true in general that it is a root of `cyclotomic n B`, but this holds if `is_domain B` and
-`ne_zero (↑n : B)`.
+`zeta n A B` is defined as any primitive root of unity in `B`, - this must exist, by definition of
+`is_cyclotomic_extension`. It is not true in general that it is a root of `cyclotomic n B`,
+but this holds if `is_domain B` and `ne_zero (↑n : B)`.
 
 `zeta n A B` is defined using `exists.some`, which means we cannot control it.
 For example, in normal mathematics, we can demand that `(zeta p ℤ ℤ[ζₚ] : ℚ(ζₚ))` is equal to
@@ -328,9 +328,7 @@ theorem minpoly_sub_one_eq_cyclotomic_comp [Algebra K A] [IsDomain A] {ζ : A}
   simp
 #align is_primitive_root.minpoly_sub_one_eq_cyclotomic_comp IsPrimitiveRoot.minpoly_sub_one_eq_cyclotomic_comp
 
-attribute [local instance] IsCyclotomicExtension.finiteDimensional
-
-attribute [local instance] IsCyclotomicExtension.isGalois
+open Cyclotomic
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/

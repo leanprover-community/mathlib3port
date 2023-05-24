@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.power_series.basic
-! leanprover-community/mathlib commit 2d5739b61641ee4e7e53eca5688a08f66f2e6a60
+! leanprover-community/mathlib commit 38df578a6450a8c5142b3727e3ae894c2300cae0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -19,6 +19,9 @@ import Mathbin.Tactic.Linarith.Default
 
 /-!
 # Formal power series
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines (multivariate) formal power series
 and develops the basic properties of these objects.

@@ -529,6 +529,7 @@ import Mathbin.Analysis.Calculus.Fderiv.Linear
 import Mathbin.Analysis.Calculus.Fderiv.Mul
 import Mathbin.Analysis.Calculus.Fderiv.Prod
 import Mathbin.Analysis.Calculus.Fderiv.RestrictScalars
+import Mathbin.Analysis.Calculus.Fderiv.Star
 import Mathbin.Analysis.Calculus.FderivAnalytic
 import Mathbin.Analysis.Calculus.FderivMeasurable
 import Mathbin.Analysis.Calculus.FderivSymmetric
@@ -665,6 +666,7 @@ import Mathbin.Analysis.Normed.Group.InfiniteSum
 import Mathbin.Analysis.Normed.Group.Pointwise
 import Mathbin.Analysis.Normed.Group.Quotient
 import Mathbin.Analysis.Normed.Group.Seminorm
+import Mathbin.Analysis.Normed.MulAction
 import Mathbin.Analysis.Normed.Order.Basic
 import Mathbin.Analysis.Normed.Order.Lattice
 import Mathbin.Analysis.Normed.Order.UpperLower
@@ -2482,6 +2484,7 @@ import Mathbin.Probability.Kernel.Basic
 import Mathbin.Probability.Kernel.Composition
 import Mathbin.Probability.Kernel.CondCdf
 import Mathbin.Probability.Kernel.Disintegration
+import Mathbin.Probability.Kernel.IntegralCompProd
 import Mathbin.Probability.Kernel.Invariance
 import Mathbin.Probability.Kernel.MeasurableIntegral
 import Mathbin.Probability.Kernel.WithDensity
@@ -3016,6 +3019,7 @@ import Mathbin.Topology.Filter
 import Mathbin.Topology.Gluing
 import Mathbin.Topology.Hom.Open
 import Mathbin.Topology.Homeomorph
+import Mathbin.Topology.Homotopy.HSpaces
 import Mathbin.Topology.Homotopy.Basic
 import Mathbin.Topology.Homotopy.Contractible
 import Mathbin.Topology.Homotopy.Equiv

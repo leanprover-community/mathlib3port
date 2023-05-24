@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca, Johan Commelin
 
 ! This file was ported from Lean 3 source module field_theory.minpoly.field
-! leanprover-community/mathlib commit cbdf7b565832144d024caa5a550117c6df0204a5
+! leanprover-community/mathlib commit 38df578a6450a8c5142b3727e3ae894c2300cae0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.RingTheory.Algebraic
 
 /-!
 # Minimal polynomials on an algebra over a field
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file specializes the theory of minpoly to the setting of field extensions
 and derives some well-known properties, amongst which the fact that minimal polynomials

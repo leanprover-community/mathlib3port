@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module analysis.locally_convex.strong_topology
-! leanprover-community/mathlib commit 47b12e7f2502f14001f891ca87fbae2b4acaed3f
+! leanprover-community/mathlib commit 38df578a6450a8c5142b3727e3ae894c2300cae0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Topology.Algebra.Module.LocallyConvex
 
 /-!
 # Local convexity of the strong topology
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we prove that the strong topology on `E →L[ℝ] F` is locally convex provided that `F` is
 locally convex.

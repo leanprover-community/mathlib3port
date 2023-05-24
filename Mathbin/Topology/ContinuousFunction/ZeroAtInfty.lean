@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module topology.continuous_function.zero_at_infty
-! leanprover-community/mathlib commit d3af0609f6db8691dffdc3e1fb7feb7da72698f2
+! leanprover-community/mathlib commit ba5ff5ad5d120fb0ef094ad2994967e9bfaf5112
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -513,7 +513,7 @@ theorem norm_toBcf_eq_norm {f : C₀(α, β)} : ‖f.toBcf‖ = ‖f‖ :=
   rfl
 #align zero_at_infty_continuous_map.norm_to_bcf_eq_norm ZeroAtInftyContinuousMap.norm_toBcf_eq_norm
 
-instance : NormedSpace 𝕜 C₀(α, β) where norm_smul_le k f := norm_smul_le k f.toBcf
+instance : NormedSpace 𝕜 C₀(α, β) where norm_smul_le k f := (norm_smul_le k f.toBcf : _)
 
 end NormedSpace
 

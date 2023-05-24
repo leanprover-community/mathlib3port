@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 
 ! This file was ported from Lean 3 source module ring_theory.localization.cardinality
-! leanprover-community/mathlib commit 3b09a2601bb7690643936643e99bba0fedfbf6ed
+! leanprover-community/mathlib commit 38df578a6450a8c5142b3727e3ae894c2300cae0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.RingTheory.Artinian
 
 /-!
 # Cardinality of localizations
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file, we establish the cardinality of localizations. In most cases, a localization has
 cardinality equal to the base ring. If there are zero-divisors, however, this is no longer true -

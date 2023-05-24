@@ -4,14 +4,17 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.integral.lebesgue_normed_space
-! leanprover-community/mathlib commit bf6a01357ff5684b1ebcd0f1a13be314fc82c0bf
+! leanprover-community/mathlib commit 38df578a6450a8c5142b3727e3ae894c2300cae0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.MeasureTheory.Integral.Lebesgue
 import Mathbin.Analysis.NormedSpace.Basic
 
-/-! # A lemma about measurability with density under scalar multiplication in normed spaces -/
+/-! # A lemma about measurability with density under scalar multiplication in normed spaces 
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.-/
 
 
 open MeasureTheory Filter ENNReal Set

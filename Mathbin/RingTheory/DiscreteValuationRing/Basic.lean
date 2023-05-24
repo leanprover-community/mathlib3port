@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard
 
 ! This file was ported from Lean 3 source module ring_theory.discrete_valuation_ring.basic
-! leanprover-community/mathlib commit c163ec99dfc664628ca15d215fce0a5b9c265b68
+! leanprover-community/mathlib commit 38df578a6450a8c5142b3727e3ae894c2300cae0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.LinearAlgebra.AdicCompletion
 
 /-!
 # Discrete valuation rings
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines discrete valuation rings (DVRs) and develops a basic interface
 for them.

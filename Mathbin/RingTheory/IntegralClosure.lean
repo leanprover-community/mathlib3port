@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.integral_closure
-! leanprover-community/mathlib commit 641b6a82006416ec431b2987b354af9311fed4f2
+! leanprover-community/mathlib commit 38df578a6450a8c5142b3727e3ae894c2300cae0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -19,6 +19,9 @@ import Mathbin.RingTheory.TensorProduct
 
 /-!
 # Integral closure of a subring.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 If A is an R-algebra then `a : A` is integral over R if it is a root of a monic polynomial
 with coefficients in R. Enough theory is developed to prove that integral elements

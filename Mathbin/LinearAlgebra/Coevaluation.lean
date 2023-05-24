@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob von Raumer
 
 ! This file was ported from Lean 3 source module linear_algebra.coevaluation
-! leanprover-community/mathlib commit d6814c584384ddf2825ff038e868451a7c956f31
+! leanprover-community/mathlib commit 38df578a6450a8c5142b3727e3ae894c2300cae0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.LinearAlgebra.Dual
 
 /-!
 # The coevaluation map on finite dimensional vector spaces
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Given a finite dimensional vector space `V` over a field `K` this describes the canonical linear map
 from `K` to `V ⊗ dual K V` which corresponds to the identity function on `V`.

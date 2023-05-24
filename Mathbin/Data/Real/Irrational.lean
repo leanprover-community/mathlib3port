@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.real.irrational
-! leanprover-community/mathlib commit 7e7aaccf9b0182576cabdde36cf1b5ad3585b70d
+! leanprover-community/mathlib commit 38df578a6450a8c5142b3727e3ae894c2300cae0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.RingTheory.Int.Basic
 
 /-!
 # Irrational real numbers
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we define a predicate `irrational` on `ℝ`, prove that the `n`-th root of an integer
 number is irrational if it is not integer, and that `sqrt q` is irrational if and only if

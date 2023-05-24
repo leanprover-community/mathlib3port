@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jesse Reimann, Kalle Kytölä
 
 ! This file was ported from Lean 3 source module measure_theory.integral.riesz_markov_kakutani
-! leanprover-community/mathlib commit b2ff9a3d7a15fd5b0f060b135421d6a89a999c2f
+! leanprover-community/mathlib commit 38df578a6450a8c5142b3727e3ae894c2300cae0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Topology.Sets.Compacts
 
 /-!
 #  Riesz–Markov–Kakutani representation theorem
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file will prove different versions of the Riesz-Markov-Kakutani representation theorem.
 The theorem is first proven for compact spaces, from which the statements about linear functionals

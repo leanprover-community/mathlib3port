@@ -4,11 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.kernel.with_density
-! leanprover-community/mathlib commit 28b2a92f2996d28e580450863c130955de0ed398
+! leanprover-community/mathlib commit c0d694db494dd4f9aa57f2714b6e4c82b4ebc113
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Probability.Kernel.MeasurableIntegral
+import Mathbin.MeasureTheory.Integral.SetIntegral
 
 /-!
 # With Density
@@ -87,6 +88,16 @@ theorem lintegral_withDensity (κ : kernel α β) [IsSFiniteKernel κ]
     lintegral_with_density_eq_lintegral_mul _ (Measurable.of_uncurry_left hf) hg]
   simp_rw [Pi.mul_apply]
 #align probability_theory.kernel.lintegral_with_density ProbabilityTheory.kernel.lintegral_withDensity
+
+theorem integral_withDensity {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
+    {f : β → E} [IsSFiniteKernel κ] {a : α} {g : α → β → ℝ≥0}
+    (hg : Measurable (Function.uncurry g)) :
+    (∫ b, f b ∂withDensity κ (fun a b => g a b) a) = ∫ b, g a b • f b ∂κ a :=
+  by
+  rw [kernel.with_density_apply, integral_withDensity_eq_integral_smul]
+  · exact Measurable.of_uncurry_left hg
+  · exact measurable_coe_nnreal_ennreal.comp hg
+#align probability_theory.kernel.integral_with_density ProbabilityTheory.kernel.integral_withDensity
 
 theorem withDensity_add_left (κ η : kernel α β) [IsSFiniteKernel κ] [IsSFiniteKernel η]
     (f : α → β → ℝ≥0∞) : withDensity (κ + η) f = withDensity κ f + withDensity η f :=

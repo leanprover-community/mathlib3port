@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.urysohns_bounded
-! leanprover-community/mathlib commit af683b11d1bd89d1e85a03bf1eb5519379aabdc9
+! leanprover-community/mathlib commit 38df578a6450a8c5142b3727e3ae894c2300cae0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Topology.ContinuousFunction.Bounded
 
 /-!
 # Urysohn's lemma for bounded continuous functions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we reformulate Urysohn's lemma `exists_continuous_zero_one_of_closed` in terms of
 bounded continuous functions `X →ᵇ ℝ`. These lemmas live in a separate file because

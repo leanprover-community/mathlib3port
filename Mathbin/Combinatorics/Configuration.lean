@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 
 ! This file was ported from Lean 3 source module combinatorics.configuration
-! leanprover-community/mathlib commit d2d8742b0c21426362a9dacebc6005db895ca963
+! leanprover-community/mathlib commit 38df578a6450a8c5142b3727e3ae894c2300cae0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.SetTheory.Cardinal.Finite
 
 /-!
 # Configurations of Points and lines
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 This file introduces abstract configurations of points and lines, and proves some basic properties.
 
 ## Main definitions

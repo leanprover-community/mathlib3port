@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module number_theory.padics.padic_numbers
-! leanprover-community/mathlib commit b9b2114f7711fec1c1e055d507f082f8ceb2c3b7
+! leanprover-community/mathlib commit 38df578a6450a8c5142b3727e3ae894c2300cae0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Analysis.Normed.Field.Basic
 
 /-!
 # p-adic numbers
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines the `p`-adic numbers (rationals) `ℚ_[p]` as
 the completion of `ℚ` with respect to the `p`-adic norm.
