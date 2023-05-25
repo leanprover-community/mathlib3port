@@ -38,7 +38,7 @@ theorem finite_of_fg_torsion [AddCommGroup M] [Module ℤ M] [Module.Finite ℤ 
   haveI : ∀ i : ι, NeZero (p i ^ e i).natAbs := fun i =>
     ⟨Int.natAbs_ne_zero_of_ne_zero <| pow_ne_zero (e i) (h i).NeZero⟩
   haveI : ∀ i : ι, _root_.finite <| ℤ ⧸ Submodule.span ℤ {p i ^ e i} := fun i =>
-    Finite.of_equiv _ (p i ^ e i).quotientSpanEquivZmod.symm.toEquiv
+    Finite.of_equiv _ (p i ^ e i).quotientSpanEquivZMod.symm.toEquiv
   haveI : _root_.finite (⨁ i, ℤ ⧸ (Submodule.span ℤ {p i ^ e i} : Submodule ℤ ℤ)) :=
     Finite.of_equiv _ dfinsupp.equiv_fun_on_fintype.symm
   exact Finite.of_equiv _ l.symm.to_equiv
@@ -68,7 +68,7 @@ theorem equiv_free_prod_directSum_zMod [hG : AddGroup.FG G] :
     f.to_add_equiv.trans
       ((AddEquiv.refl _).prodCongr <|
         Dfinsupp.mapRange.addEquiv fun i =>
-          ((Int.quotientSpanEquivZmod _).trans <|
+          ((Int.quotientSpanEquivZMod _).trans <|
               ZMod.ringEquivCongr <| (p i).natAbs_pow _).toAddEquiv)
 #align add_comm_group.equiv_free_prod_direct_sum_zmod AddCommGroup.equiv_free_prod_directSum_zMod
 

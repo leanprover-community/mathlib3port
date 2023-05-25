@@ -311,7 +311,7 @@ theorem filter_apply_ne_zero_iff (a : α) : (p.filterₓ s h) a ≠ 0 ↔ a ∈ 
 
 end Filter
 
-section Bernoulli
+section bernoulli
 
 /-- A `pmf` which assigns probability `p` to `tt` and `1 - p` to `ff`. -/
 def bernoulli (p : ℝ≥0∞) (h : p ≤ 1) : Pmf Bool :=
@@ -338,7 +338,7 @@ theorem support_bernoulli : (bernoulli p h).support = { b | cond b (p ≠ 0) (p 
 theorem mem_support_bernoulli_iff : b ∈ (bernoulli p h).support ↔ cond b (p ≠ 0) (p ≠ 1) := by simp
 #align pmf.mem_support_bernoulli_iff Pmf.mem_support_bernoulli_iff
 
-end Bernoulli
+end bernoulli
 
 end Pmf
 

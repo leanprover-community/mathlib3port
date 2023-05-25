@@ -55,6 +55,7 @@ section Monoid
 
 variable (G) [Monoid G]
 
+#print Monoid.ExponentExists /-
 /-- A predicate on a monoid saying that there is a positive integer `n` such that `g ^ n = 1`
   for all `g`.-/
 @[to_additive
@@ -63,7 +64,9 @@ def ExponentExists :=
   ∃ n, 0 < n ∧ ∀ g : G, g ^ n = 1
 #align monoid.exponent_exists Monoid.ExponentExists
 #align add_monoid.exponent_exists AddMonoid.ExponentExists
+-/
 
+#print Monoid.exponent /-
 /-- The exponent of a group is the smallest positive integer `n` such that `g ^ n = 1` for all
   `g ∈ G` if it exists, otherwise it is zero by convention.-/
 @[to_additive
@@ -72,9 +75,11 @@ noncomputable def exponent :=
   if h : ExponentExists G then Nat.find h else 0
 #align monoid.exponent Monoid.exponent
 #align add_monoid.exponent AddMonoid.exponent
+-/
 
 variable {G}
 
+#print Monoid.exponentExists_iff_ne_zero /-
 @[to_additive]
 theorem exponentExists_iff_ne_zero : ExponentExists G ↔ exponent G ≠ 0 :=
   by
@@ -85,19 +90,30 @@ theorem exponentExists_iff_ne_zero : ExponentExists G ↔ exponent G ≠ 0 :=
   · tauto
 #align monoid.exponent_exists_iff_ne_zero Monoid.exponentExists_iff_ne_zero
 #align add_monoid.exponent_exists_iff_ne_zero AddMonoid.exponentExists_iff_ne_zero
+-/
 
+#print Monoid.exponent_eq_zero_iff /-
 @[to_additive]
 theorem exponent_eq_zero_iff : exponent G = 0 ↔ ¬ExponentExists G := by
   simp only [exponent_exists_iff_ne_zero, Classical.not_not]
 #align monoid.exponent_eq_zero_iff Monoid.exponent_eq_zero_iff
 #align add_monoid.exponent_eq_zero_iff AddMonoid.exponent_eq_zero_iff
+-/
 
+#print Monoid.exponent_eq_zero_of_order_zero /-
 @[to_additive]
 theorem exponent_eq_zero_of_order_zero {g : G} (hg : orderOf g = 0) : exponent G = 0 :=
   exponent_eq_zero_iff.mpr fun ⟨n, hn, hgn⟩ => orderOf_eq_zero_iff'.mp hg n hn <| hgn g
 #align monoid.exponent_eq_zero_of_order_zero Monoid.exponent_eq_zero_of_order_zero
-#align add_monoid.exponent_eq_zero_of_order_zero AddMonoid.exponent_eq_zero_of_order_zero
+#align add_monoid.exponent_eq_zero_of_order_zero AddMonoid.exponent_eq_zero_addOrder_zero
+-/
 
+/- warning: monoid.pow_exponent_eq_one -> Monoid.pow_exponent_eq_one is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} [_inst_1 : Monoid.{u1} G] (g : G), Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G _inst_1)) g (Monoid.exponent.{u1} G _inst_1)) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G _inst_1)))))
+but is expected to have type
+  forall {G : Type.{u1}} [_inst_1 : Monoid.{u1} G] (g : G), Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G _inst_1)) g (Monoid.exponent.{u1} G _inst_1)) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (Monoid.toOne.{u1} G _inst_1)))
+Case conversion may be inaccurate. Consider using '#align monoid.pow_exponent_eq_one Monoid.pow_exponent_eq_oneₓ'. -/
 @[to_additive exponent_nsmul_eq_zero]
 theorem pow_exponent_eq_one (g : G) : g ^ exponent G = 1 :=
   by
@@ -108,6 +124,7 @@ theorem pow_exponent_eq_one (g : G) : g ^ exponent G = 1 :=
 #align monoid.pow_exponent_eq_one Monoid.pow_exponent_eq_one
 #align add_monoid.exponent_nsmul_eq_zero AddMonoid.exponent_nsmul_eq_zero
 
+#print Monoid.pow_eq_mod_exponent /-
 @[to_additive]
 theorem pow_eq_mod_exponent {n : ℕ} (g : G) : g ^ n = g ^ (n % exponent G) :=
   calc
@@ -116,7 +133,14 @@ theorem pow_eq_mod_exponent {n : ℕ} (g : G) : g ^ n = g ^ (n % exponent G) :=
     
 #align monoid.pow_eq_mod_exponent Monoid.pow_eq_mod_exponent
 #align add_monoid.nsmul_eq_mod_exponent AddMonoid.nsmul_eq_mod_exponent
+-/
 
+/- warning: monoid.exponent_pos_of_exists -> Monoid.exponent_pos_of_exists is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} [_inst_1 : Monoid.{u1} G] (n : Nat), (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) -> (forall (g : G), Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G _inst_1)) g n) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G _inst_1)))))) -> (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) (Monoid.exponent.{u1} G _inst_1))
+but is expected to have type
+  forall {G : Type.{u1}} [_inst_1 : Monoid.{u1} G] (n : Nat), (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) -> (forall (g : G), Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G _inst_1)) g n) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (Monoid.toOne.{u1} G _inst_1)))) -> (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (Monoid.exponent.{u1} G _inst_1))
+Case conversion may be inaccurate. Consider using '#align monoid.exponent_pos_of_exists Monoid.exponent_pos_of_existsₓ'. -/
 @[to_additive]
 theorem exponent_pos_of_exists (n : ℕ) (hpos : 0 < n) (hG : ∀ g : G, g ^ n = 1) : 0 < exponent G :=
   by
@@ -126,6 +150,12 @@ theorem exponent_pos_of_exists (n : ℕ) (hpos : 0 < n) (hG : ∀ g : G, g ^ n =
 #align monoid.exponent_pos_of_exists Monoid.exponent_pos_of_exists
 #align add_monoid.exponent_pos_of_exists AddMonoid.exponent_pos_of_exists
 
+/- warning: monoid.exponent_min' -> Monoid.exponent_min' is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} [_inst_1 : Monoid.{u1} G] (n : Nat), (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) n) -> (forall (g : G), Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G _inst_1)) g n) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G _inst_1)))))) -> (LE.le.{0} Nat Nat.hasLe (Monoid.exponent.{u1} G _inst_1) n)
+but is expected to have type
+  forall {G : Type.{u1}} [_inst_1 : Monoid.{u1} G] (n : Nat), (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) -> (forall (g : G), Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G _inst_1)) g n) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (Monoid.toOne.{u1} G _inst_1)))) -> (LE.le.{0} Nat instLENat (Monoid.exponent.{u1} G _inst_1) n)
+Case conversion may be inaccurate. Consider using '#align monoid.exponent_min' Monoid.exponent_min'ₓ'. -/
 @[to_additive]
 theorem exponent_min' (n : ℕ) (hpos : 0 < n) (hG : ∀ g : G, g ^ n = 1) : exponent G ≤ n :=
   by
@@ -136,6 +166,12 @@ theorem exponent_min' (n : ℕ) (hpos : 0 < n) (hG : ∀ g : G, g ^ n = 1) : exp
 #align monoid.exponent_min' Monoid.exponent_min'
 #align add_monoid.exponent_min' AddMonoid.exponent_min'
 
+/- warning: monoid.exponent_min -> Monoid.exponent_min is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} [_inst_1 : Monoid.{u1} G] (m : Nat), (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) m) -> (LT.lt.{0} Nat Nat.hasLt m (Monoid.exponent.{u1} G _inst_1)) -> (Exists.{succ u1} G (fun (g : G) => Ne.{succ u1} G (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G _inst_1)) g m) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G _inst_1)))))))
+but is expected to have type
+  forall {G : Type.{u1}} [_inst_1 : Monoid.{u1} G] (m : Nat), (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) m) -> (LT.lt.{0} Nat instLTNat m (Monoid.exponent.{u1} G _inst_1)) -> (Exists.{succ u1} G (fun (g : G) => Ne.{succ u1} G (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G _inst_1)) g m) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (Monoid.toOne.{u1} G _inst_1)))))
+Case conversion may be inaccurate. Consider using '#align monoid.exponent_min Monoid.exponent_minₓ'. -/
 @[to_additive]
 theorem exponent_min (m : ℕ) (hpos : 0 < m) (hm : m < exponent G) : ∃ g : G, g ^ m ≠ 1 :=
   by
@@ -145,6 +181,7 @@ theorem exponent_min (m : ℕ) (hpos : 0 < m) (hm : m < exponent G) : ∃ g : G,
 #align monoid.exponent_min Monoid.exponent_min
 #align add_monoid.exponent_min AddMonoid.exponent_min
 
+#print Monoid.exp_eq_one_of_subsingleton /-
 @[simp, to_additive]
 theorem exp_eq_one_of_subsingleton [Subsingleton G] : exponent G = 1 :=
   by
@@ -156,15 +193,24 @@ theorem exp_eq_one_of_subsingleton [Subsingleton G] : exponent G = 1 :=
     simp
 #align monoid.exp_eq_one_of_subsingleton Monoid.exp_eq_one_of_subsingleton
 #align add_monoid.exp_eq_zero_of_subsingleton AddMonoid.exp_eq_zero_of_subsingleton
+-/
 
+#print Monoid.order_dvd_exponent /-
 @[to_additive add_order_dvd_exponent]
 theorem order_dvd_exponent (g : G) : orderOf g ∣ exponent G :=
   orderOf_dvd_of_pow_eq_one <| pow_exponent_eq_one g
 #align monoid.order_dvd_exponent Monoid.order_dvd_exponent
-#align add_monoid.add_order_dvd_exponent AddMonoid.add_order_dvd_exponent
+#align add_monoid.add_order_dvd_exponent AddMonoid.addOrder_dvd_exponent
+-/
 
 variable (G)
 
+/- warning: monoid.exponent_dvd_of_forall_pow_eq_one -> Monoid.exponent_dvd_of_forall_pow_eq_one is a dubious translation:
+lean 3 declaration is
+  forall (G : Type.{u1}) [_inst_2 : Monoid.{u1} G] (n : Nat), (forall (g : G), Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G _inst_2)) g n) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G _inst_2)))))) -> (Dvd.Dvd.{0} Nat Nat.hasDvd (Monoid.exponent.{u1} G _inst_2) n)
+but is expected to have type
+  forall (G : Type.{u1}) [_inst_2 : Monoid.{u1} G] (n : Nat), (forall (g : G), Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G _inst_2)) g n) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (Monoid.toOne.{u1} G _inst_2)))) -> (Dvd.dvd.{0} Nat Nat.instDvdNat (Monoid.exponent.{u1} G _inst_2) n)
+Case conversion may be inaccurate. Consider using '#align monoid.exponent_dvd_of_forall_pow_eq_one Monoid.exponent_dvd_of_forall_pow_eq_oneₓ'. -/
 @[to_additive]
 theorem exponent_dvd_of_forall_pow_eq_one (G) [Monoid G] (n : ℕ) (hG : ∀ g : G, g ^ n = 1) :
     exponent G ∣ n := by
@@ -183,6 +229,12 @@ theorem exponent_dvd_of_forall_pow_eq_one (G) [Monoid G] (n : ℕ) (hG : ∀ g :
 #align monoid.exponent_dvd_of_forall_pow_eq_one Monoid.exponent_dvd_of_forall_pow_eq_one
 #align add_monoid.exponent_dvd_of_forall_nsmul_eq_zero AddMonoid.exponent_dvd_of_forall_nsmul_eq_zero
 
+/- warning: monoid.lcm_order_of_dvd_exponent -> Monoid.lcm_orderOf_dvd_exponent is a dubious translation:
+lean 3 declaration is
+  forall (G : Type.{u1}) [_inst_1 : Monoid.{u1} G] [_inst_2 : Fintype.{u1} G], Dvd.Dvd.{0} Nat Nat.hasDvd (Finset.lcm.{0, u1} Nat G Nat.cancelCommMonoidWithZero Nat.normalizedGcdMonoid (Finset.univ.{u1} G _inst_2) (orderOf.{u1} G _inst_1)) (Monoid.exponent.{u1} G _inst_1)
+but is expected to have type
+  forall (G : Type.{u1}) [_inst_1 : Monoid.{u1} G] [_inst_2 : Fintype.{u1} G], Dvd.dvd.{0} Nat Nat.instDvdNat (Finset.lcm.{0, u1} Nat G Nat.cancelCommMonoidWithZero instNormalizedGCDMonoidNatCancelCommMonoidWithZero (Finset.univ.{u1} G _inst_2) (orderOf.{u1} G _inst_1)) (Monoid.exponent.{u1} G _inst_1)
+Case conversion may be inaccurate. Consider using '#align monoid.lcm_order_of_dvd_exponent Monoid.lcm_orderOf_dvd_exponentₓ'. -/
 @[to_additive lcm_add_order_of_dvd_exponent]
 theorem lcm_orderOf_dvd_exponent [Fintype G] : (Finset.univ : Finset G).lcm orderOf ∣ exponent G :=
   by
@@ -190,8 +242,9 @@ theorem lcm_orderOf_dvd_exponent [Fintype G] : (Finset.univ : Finset G).lcm orde
   intro g hg
   exact order_dvd_exponent g
 #align monoid.lcm_order_of_dvd_exponent Monoid.lcm_orderOf_dvd_exponent
-#align add_monoid.lcm_add_order_of_dvd_exponent AddMonoid.lcm_add_orderOf_dvd_exponent
+#align add_monoid.lcm_add_order_of_dvd_exponent AddMonoid.lcm_addOrderOf_dvd_exponent
 
+#print Nat.Prime.exists_orderOf_eq_pow_factorization_exponent /-
 @[to_additive exists_order_of_eq_pow_padic_val_nat_add_exponent]
 theorem Nat.Prime.exists_orderOf_eq_pow_factorization_exponent {p : ℕ} (hp : p.Prime) :
     ∃ g : G, orderOf g = p ^ (exponent G).factorization p :=
@@ -222,10 +275,12 @@ theorem Nat.Prime.exists_orderOf_eq_pow_factorization_exponent {p : ℕ} (hp : p
   · rw [← Nat.succ_eq_add_one, ← ht, ← pow_mul, mul_comm, ← hk]
     exact pow_exponent_eq_one g
 #align nat.prime.exists_order_of_eq_pow_factorization_exponent Nat.Prime.exists_orderOf_eq_pow_factorization_exponent
-#align nat.prime.exists_order_of_eq_pow_padic_val_nat_add_exponent Nat.Prime.exists_orderOf_eq_pow_padic_val_nat_add_exponent
+#align nat.prime.exists_order_of_eq_pow_padic_val_nat_add_exponent Nat.Prime.exists_addOrderOf_eq_pow_padic_val_nat_add_exponent
+-/
 
 variable {G}
 
+#print Monoid.exponent_ne_zero_iff_range_orderOf_finite /-
 @[to_additive]
 theorem exponent_ne_zero_iff_range_orderOf_finite (h : ∀ g : G, 0 < orderOf g) :
     exponent G ≠ 0 ↔ (Set.range (orderOf : G → ℕ)).Finite :=
@@ -251,8 +306,10 @@ theorem exponent_ne_zero_iff_range_orderOf_finite (h : ∀ g : G, 0 < orderOf g)
     rw [← Finset.mem_coe, ht]
     exact Set.mem_range_self g
 #align monoid.exponent_ne_zero_iff_range_order_of_finite Monoid.exponent_ne_zero_iff_range_orderOf_finite
-#align add_monoid.exponent_ne_zero_iff_range_order_of_finite AddMonoid.exponent_ne_zero_iff_range_orderOf_finite
+#align add_monoid.exponent_ne_zero_iff_range_order_of_finite AddMonoid.exponent_ne_zero_iff_range_addOrderOf_finite
+-/
 
+#print Monoid.exponent_eq_zero_iff_range_orderOf_infinite /-
 @[to_additive]
 theorem exponent_eq_zero_iff_range_orderOf_infinite (h : ∀ g : G, 0 < orderOf g) :
     exponent G = 0 ↔ (Set.range (orderOf : G → ℕ)).Infinite :=
@@ -260,8 +317,15 @@ theorem exponent_eq_zero_iff_range_orderOf_infinite (h : ∀ g : G, 0 < orderOf 
   have := exponent_ne_zero_iff_range_orderOf_finite h
   rwa [Ne.def, not_iff_comm, Iff.comm] at this
 #align monoid.exponent_eq_zero_iff_range_order_of_infinite Monoid.exponent_eq_zero_iff_range_orderOf_infinite
-#align add_monoid.exponent_eq_zero_iff_range_order_of_infinite AddMonoid.exponent_eq_zero_iff_range_orderOf_infinite
+#align add_monoid.exponent_eq_zero_iff_range_order_of_infinite AddMonoid.exponent_eq_zero_iff_range_addOrderOf_infinite
+-/
 
+/- warning: monoid.lcm_order_eq_exponent -> Monoid.lcm_order_eq_exponent is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} [_inst_1 : Monoid.{u1} G] [_inst_2 : Fintype.{u1} G], Eq.{1} Nat (Finset.lcm.{0, u1} Nat G Nat.cancelCommMonoidWithZero Nat.normalizedGcdMonoid (Finset.univ.{u1} G _inst_2) (orderOf.{u1} G _inst_1)) (Monoid.exponent.{u1} G _inst_1)
+but is expected to have type
+  forall {G : Type.{u1}} [_inst_1 : Monoid.{u1} G] [_inst_2 : Fintype.{u1} G], Eq.{1} Nat (Finset.lcm.{0, u1} Nat G Nat.cancelCommMonoidWithZero instNormalizedGCDMonoidNatCancelCommMonoidWithZero (Finset.univ.{u1} G _inst_2) (orderOf.{u1} G _inst_1)) (Monoid.exponent.{u1} G _inst_1)
+Case conversion may be inaccurate. Consider using '#align monoid.lcm_order_eq_exponent Monoid.lcm_order_eq_exponentₓ'. -/
 @[to_additive lcm_add_order_eq_exponent]
 theorem lcm_order_eq_exponent [Fintype G] : (Finset.univ : Finset G).lcm orderOf = exponent G :=
   by
@@ -270,7 +334,7 @@ theorem lcm_order_eq_exponent [Fintype G] : (Finset.univ : Finset G).lcm orderOf
   obtain ⟨m, hm⟩ : orderOf g ∣ finset.univ.lcm orderOf := Finset.dvd_lcm (Finset.mem_univ g)
   rw [hm, pow_mul, pow_orderOf_eq_one, one_pow]
 #align monoid.lcm_order_eq_exponent Monoid.lcm_order_eq_exponent
-#align add_monoid.lcm_add_order_eq_exponent AddMonoid.lcm_add_order_eq_exponent
+#align add_monoid.lcm_add_order_eq_exponent AddMonoid.lcm_addOrder_eq_exponent
 
 end Monoid
 
@@ -278,6 +342,7 @@ section LeftCancelMonoid
 
 variable [LeftCancelMonoid G]
 
+#print Monoid.exponent_ne_zero_of_finite /-
 @[to_additive]
 theorem exponent_ne_zero_of_finite [Finite G] : exponent G ≠ 0 :=
   by
@@ -285,6 +350,7 @@ theorem exponent_ne_zero_of_finite [Finite G] : exponent G ≠ 0 :=
   simpa [← lcm_order_eq_exponent, Finset.lcm_eq_zero_iff] using fun x => (orderOf_pos x).ne'
 #align monoid.exponent_ne_zero_of_finite Monoid.exponent_ne_zero_of_finite
 #align add_monoid.exponent_ne_zero_of_finite AddMonoid.exponent_ne_zero_of_finite
+-/
 
 end LeftCancelMonoid
 
@@ -292,6 +358,7 @@ section CommMonoid
 
 variable [CommMonoid G]
 
+#print Monoid.exponent_eq_iSup_orderOf /-
 @[to_additive]
 theorem exponent_eq_iSup_orderOf (h : ∀ g : G, 0 < orderOf g) : exponent G = ⨆ g : G, orderOf g :=
   by
@@ -335,10 +402,12 @@ theorem exponent_eq_iSup_orderOf (h : ∀ g : G, 0 < orderOf g) : exponent G = �
   exact one_lt_pow hp.one_lt a.succ_ne_zero
   exact hpk
 #align monoid.exponent_eq_supr_order_of Monoid.exponent_eq_iSup_orderOf
-#align add_monoid.exponent_eq_supr_order_of AddMonoid.exponent_eq_iSup_orderOf
+#align add_monoid.exponent_eq_supr_order_of AddMonoid.exponent_eq_iSup_addOrderOf
+-/
 
+#print Monoid.exponent_eq_iSup_orderOf' /-
 @[to_additive]
-theorem exponent_eq_iSup_order_of' :
+theorem exponent_eq_iSup_orderOf' :
     exponent G = if ∃ g : G, orderOf g = 0 then 0 else ⨆ g : G, orderOf g :=
   by
   split_ifs
@@ -346,8 +415,9 @@ theorem exponent_eq_iSup_order_of' :
     exact exponent_eq_zero_of_order_zero hg
   · have := not_exists.mp h
     exact exponent_eq_supr_order_of fun g => Ne.bot_lt <| this g
-#align monoid.exponent_eq_supr_order_of' Monoid.exponent_eq_iSup_order_of'
-#align add_monoid.exponent_eq_supr_order_of' AddMonoid.exponent_eq_iSup_order_of'
+#align monoid.exponent_eq_supr_order_of' Monoid.exponent_eq_iSup_orderOf'
+#align add_monoid.exponent_eq_supr_order_of' AddMonoid.exponent_eq_iSup_addOrderOf'
+-/
 
 end CommMonoid
 
@@ -355,6 +425,12 @@ section CancelCommMonoid
 
 variable [CancelCommMonoid G]
 
+/- warning: monoid.exponent_eq_max'_order_of -> Monoid.exponent_eq_max'_orderOf is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} [_inst_1 : CancelCommMonoid.{u1} G] [_inst_2 : Fintype.{u1} G], Eq.{1} Nat (Monoid.exponent.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1)))) (Finset.max'.{0} Nat Nat.linearOrder (Finset.image.{u1, 0} G Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (orderOf.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1)))) (Finset.univ.{u1} G _inst_2)) (Exists.intro.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) x (Finset.image.{u1, 0} G Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (orderOf.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1)))) (Finset.univ.{u1} G _inst_2))) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) (Eq.mpr.{0} (Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) (Finset.image.{u1, 0} G Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (orderOf.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1)))) (Finset.univ.{u1} G _inst_2))) True (id_tag Tactic.IdTag.simp (Eq.{1} Prop (Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) (Finset.image.{u1, 0} G Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (orderOf.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1)))) (Finset.univ.{u1} G _inst_2))) True) (Eq.trans.{1} Prop (Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) (Finset.image.{u1, 0} G Nat (fun (a : Nat) (b : Nat) => (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) a b) (orderOf.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1)))) (Finset.univ.{u1} G _inst_2))) (Exists.{succ u1} G (fun (a : G) => Eq.{succ u1} G a (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1)))))))))) True (Eq.trans.{1} Prop (Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) (Finset.image.{u1, 0} G Nat (fun (a : Nat) (b : Nat) => (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) a b) (orderOf.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1)))) (Finset.univ.{u1} G _inst_2))) (Exists.{succ u1} G (fun (a : G) => Exists.{0} (Membership.Mem.{u1, u1} G (Finset.{u1} G) (Finset.hasMem.{u1} G) a (Finset.univ.{u1} G _inst_2)) (fun (H : Membership.Mem.{u1, u1} G (Finset.{u1} G) (Finset.hasMem.{u1} G) a (Finset.univ.{u1} G _inst_2)) => Eq.{1} Nat (orderOf.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1))) a) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) (Exists.{succ u1} G (fun (a : G) => Eq.{succ u1} G a (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1)))))))))) (propext (Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) (Finset.image.{u1, 0} G Nat (fun (a : Nat) (b : Nat) => (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) a b) (orderOf.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1)))) (Finset.univ.{u1} G _inst_2))) (Exists.{succ u1} G (fun (a : G) => Exists.{0} (Membership.Mem.{u1, u1} G (Finset.{u1} G) (Finset.hasMem.{u1} G) a (Finset.univ.{u1} G _inst_2)) (fun (H : Membership.Mem.{u1, u1} G (Finset.{u1} G) (Finset.hasMem.{u1} G) a (Finset.univ.{u1} G _inst_2)) => Eq.{1} Nat (orderOf.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1))) a) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) (Finset.mem_image.{u1, 0} G Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (orderOf.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1)))) (Finset.univ.{u1} G _inst_2) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) ((fun (p : G -> Prop) (p_1 : G -> Prop) (e_1 : Eq.{succ u1} (G -> Prop) p p_1) => congr_arg.{succ u1, 1} (G -> Prop) Prop p p_1 (Exists.{succ u1} G) e_1) (fun (a : G) => Exists.{0} (Membership.Mem.{u1, u1} G (Finset.{u1} G) (Finset.hasMem.{u1} G) a (Finset.univ.{u1} G _inst_2)) (fun (H : Membership.Mem.{u1, u1} G (Finset.{u1} G) (Finset.hasMem.{u1} G) a (Finset.univ.{u1} G _inst_2)) => Eq.{1} Nat (orderOf.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1))) a) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (fun (a : G) => Eq.{succ u1} G a (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1))))))))) (funext.{succ u1, 1} G (fun (x : G) => Prop) (fun (x : G) => Exists.{0} (Membership.Mem.{u1, u1} G (Finset.{u1} G) (Finset.hasMem.{u1} G) x (Finset.univ.{u1} G _inst_2)) (fun (H : Membership.Mem.{u1, u1} G (Finset.{u1} G) (Finset.hasMem.{u1} G) x (Finset.univ.{u1} G _inst_2)) => Eq.{1} Nat (orderOf.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1))) x) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (fun (x : G) => (fun (x_1 : True) => Eq.{succ u1} G x (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1))))))))) True.intro) (fun (a : G) => Eq.trans.{1} Prop (Exists.{0} (Membership.Mem.{u1, u1} G (Finset.{u1} G) (Finset.hasMem.{u1} G) a (Finset.univ.{u1} G _inst_2)) (fun (H : Membership.Mem.{u1, u1} G (Finset.{u1} G) (Finset.hasMem.{u1} G) a (Finset.univ.{u1} G _inst_2)) => Eq.{1} Nat (orderOf.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1))) a) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (Exists.{0} True (fun (h : True) => (fun (h : Membership.Mem.{u1, u1} G (Finset.{u1} G) (Finset.hasMem.{u1} G) a (Finset.univ.{u1} G _inst_2)) => Eq.{succ u1} G a (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1))))))))) (Iff.mpr (Membership.Mem.{u1, u1} G (Finset.{u1} G) (Finset.hasMem.{u1} G) a (Finset.univ.{u1} G _inst_2)) True ((fun {α : Type.{u1}} [_inst_1 : Fintype.{u1} α] (x : α) => iff_true_intro (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x (Finset.univ.{u1} α _inst_1)) (Finset.mem_univ.{u1} α _inst_1 x)) G _inst_2 a) h))) ((fun (x : True) => Eq.{succ u1} G a (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1))))))))) True.intro) (exists_prop_congr' (Membership.Mem.{u1, u1} G (Finset.{u1} G) (Finset.hasMem.{u1} G) a (Finset.univ.{u1} G _inst_2)) True (fun (H : Membership.Mem.{u1, u1} G (Finset.{u1} G) (Finset.hasMem.{u1} G) a (Finset.univ.{u1} G _inst_2)) => Eq.{1} Nat (orderOf.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1))) a) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (fun (h : Membership.Mem.{u1, u1} G (Finset.{u1} G) (Finset.hasMem.{u1} G) a (Finset.univ.{u1} G _inst_2)) => Eq.{succ u1} G a (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1))))))))) (fun (h : Membership.Mem.{u1, u1} G (Finset.{u1} G) (Finset.hasMem.{u1} G) a (Finset.univ.{u1} G _inst_2)) => orderOf_eq_one_iff.{u1} G a (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1)))) ((fun {α : Type.{u1}} [_inst_1 : Fintype.{u1} α] (x : α) => iff_true_intro (Membership.Mem.{u1, u1} α (Finset.{u1} α) (Finset.hasMem.{u1} α) x (Finset.univ.{u1} α _inst_1)) (Finset.mem_univ.{u1} α _inst_1 x)) G _inst_2 a)) (propext (Exists.{0} True (fun (x : True) => (fun (x : True) => Eq.{succ u1} G a (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1))))))))) x)) ((fun (x : True) => Eq.{succ u1} G a (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1))))))))) True.intro) (exists_true_left (fun (x : True) => Eq.{succ u1} G a (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1))))))))))))))) (propext (Exists.{succ u1} G (fun (a : G) => Eq.{succ u1} G ((fun (a : G) => a) a) ((fun (a : G) => a) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1))))))))))) True ((fun {α : Type.{u1}} {β : Type.{u1}} (f : α -> β) (a' : α) => iff_true_intro (Exists.{succ u1} α (fun (a : α) => Eq.{succ u1} β (f a) (f a'))) (exists_apply_eq_apply.{succ u1, succ u1} α β f a')) G G (fun (a : G) => a) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1)))))))))))) trivial)))
+but is expected to have type
+  forall {G : Type.{u1}} [_inst_1 : CancelCommMonoid.{u1} G] [_inst_2 : Fintype.{u1} G], Eq.{1} Nat (Monoid.exponent.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1)))) (Finset.max'.{0} Nat Nat.linearOrder (Finset.image.{u1, 0} G Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (orderOf.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1)))) (Finset.univ.{u1} G _inst_2)) (Exists.intro.{1} Nat (fun (x : Nat) => Membership.mem.{0, 0} Nat (Finset.{0} Nat) (Finset.instMembershipFinset.{0} Nat) x (Finset.image.{u1, 0} G Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (orderOf.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1)))) (Finset.univ.{u1} G _inst_2))) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (of_eq_true (Membership.mem.{0, 0} Nat (Finset.{0} Nat) (Finset.instMembershipFinset.{0} Nat) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (Finset.image.{u1, 0} G Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (orderOf.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1)))) (Finset.univ.{u1} G _inst_2))) (Eq.trans.{1} Prop (Membership.mem.{0, 0} Nat (Finset.{0} Nat) (Finset.instMembershipFinset.{0} Nat) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (Finset.image.{u1, 0} G Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (orderOf.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1)))) (Finset.univ.{u1} G _inst_2))) (Exists.{succ u1} G (fun (x : G) => Eq.{succ u1} G x (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (Monoid.toOne.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1)))))))) True (Eq.trans.{1} Prop (Membership.mem.{0, 0} Nat (Finset.{0} Nat) (Finset.instMembershipFinset.{0} Nat) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (Finset.image.{u1, 0} G Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (orderOf.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1)))) (Finset.univ.{u1} G _inst_2))) (Exists.{succ u1} G (fun (a : G) => And (Membership.mem.{u1, u1} G (Finset.{u1} G) (Finset.instMembershipFinset.{u1} G) a (Finset.univ.{u1} G _inst_2)) (Eq.{1} Nat (orderOf.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1))) a) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (Exists.{succ u1} G (fun (x : G) => Eq.{succ u1} G x (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (Monoid.toOne.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1)))))))) (Mathlib.Data.Finset.Image._auxLemma.23.{u1, 0} G Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (orderOf.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1)))) (Finset.univ.{u1} G _inst_2) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (congrArg.{succ u1, 1} (G -> Prop) Prop (fun (x : G) => And (Membership.mem.{u1, u1} G (Finset.{u1} G) (Finset.instMembershipFinset.{u1} G) x (Finset.univ.{u1} G _inst_2)) (Eq.{1} Nat (orderOf.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1))) x) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (x : G) => Eq.{succ u1} G x (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (Monoid.toOne.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1))))))) (Exists.{succ u1} G) (funext.{succ u1, 1} G (fun (x : G) => Prop) (fun (x : G) => And (Membership.mem.{u1, u1} G (Finset.{u1} G) (Finset.instMembershipFinset.{u1} G) x (Finset.univ.{u1} G _inst_2)) (Eq.{1} Nat (orderOf.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1))) x) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (x : G) => Eq.{succ u1} G x (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (Monoid.toOne.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1))))))) (fun (a : G) => Eq.trans.{1} Prop (And (Membership.mem.{u1, u1} G (Finset.{u1} G) (Finset.instMembershipFinset.{u1} G) a (Finset.univ.{u1} G _inst_2)) (Eq.{1} Nat (orderOf.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1))) a) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (And True (Eq.{succ u1} G a (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (Monoid.toOne.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1)))))))) (Eq.{succ u1} G a (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (Monoid.toOne.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1))))))) (congr.{1, 1} Prop Prop (And (Membership.mem.{u1, u1} G (Finset.{u1} G) (Finset.instMembershipFinset.{u1} G) a (Finset.univ.{u1} G _inst_2))) (And True) (Eq.{1} Nat (orderOf.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1))) a) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (Eq.{succ u1} G a (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (Monoid.toOne.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1))))))) (congrArg.{1, 1} Prop (Prop -> Prop) (Membership.mem.{u1, u1} G (Finset.{u1} G) (Finset.instMembershipFinset.{u1} G) a (Finset.univ.{u1} G _inst_2)) True And (Mathlib.Data.Fintype.Basic._auxLemma.1.{u1} G _inst_2 a)) (Mathlib.GroupTheory.OrderOfElement._auxLemma.8.{u1} G a (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1))))) (true_and (Eq.{succ u1} G a (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (Monoid.toOne.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1)))))))))))) (Std.Logic._auxLemma.35.{succ u1} G (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (Monoid.toOne.{u1} G (RightCancelMonoid.toMonoid.{u1} G (CancelMonoid.toRightCancelMonoid.{u1} G (CancelCommMonoid.toCancelMonoid.{u1} G _inst_1)))))))))))
+Case conversion may be inaccurate. Consider using '#align monoid.exponent_eq_max'_order_of Monoid.exponent_eq_max'_orderOfₓ'. -/
 @[to_additive]
 theorem exponent_eq_max'_orderOf [Fintype G] :
     exponent G = ((@Finset.univ G _).image orderOf).max' ⟨1, by simp⟩ :=
@@ -362,7 +438,7 @@ theorem exponent_eq_max'_orderOf [Fintype G] :
   rw [← Finset.Nonempty.cSup_eq_max', Finset.coe_image, Finset.coe_univ, Set.image_univ, ← iSup]
   exact exponent_eq_supr_order_of orderOf_pos
 #align monoid.exponent_eq_max'_order_of Monoid.exponent_eq_max'_orderOf
-#align add_monoid.exponent_eq_max'_order_of AddMonoid.exponent_eq_max'_order_of
+#align add_monoid.exponent_eq_max'_order_of AddMonoid.exponent_eq_max'_addOrderOf
 
 end CancelCommMonoid
 
@@ -376,6 +452,7 @@ open BigOperators
 
 variable (G) [CommGroup G] [Group.FG G]
 
+#print card_dvd_exponent_pow_rank /-
 @[to_additive]
 theorem card_dvd_exponent_pow_rank : Nat.card G ∣ Monoid.exponent G ^ Group.rank G :=
   by
@@ -393,7 +470,14 @@ theorem card_dvd_exponent_pow_rank : Nat.card G ∣ Monoid.exponent G ^ Group.ra
   exact Monoid.order_dvd_exponent (g : G)
 #align card_dvd_exponent_pow_rank card_dvd_exponent_pow_rank
 #align card_dvd_exponent_nsmul_rank card_dvd_exponent_nsmul_rank
+-/
 
+/- warning: card_dvd_exponent_pow_rank' -> card_dvd_exponent_pow_rank' is a dubious translation:
+lean 3 declaration is
+  forall (G : Type.{u1}) [_inst_1 : CommGroup.{u1} G] [_inst_2 : Group.FG.{u1} G (CommGroup.toGroup.{u1} G _inst_1)] {n : Nat}, (forall (g : G), Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G (CommGroup.toGroup.{u1} G _inst_1))))) g n) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G (CommGroup.toGroup.{u1} G _inst_1))))))))) -> (Dvd.Dvd.{0} Nat Nat.hasDvd (Nat.card.{u1} G) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.Pow.{0} Nat Nat.monoid)) n (Group.rank.{u1} G (CommGroup.toGroup.{u1} G _inst_1) _inst_2)))
+but is expected to have type
+  forall (G : Type.{u1}) [_inst_1 : CommGroup.{u1} G] [_inst_2 : Group.FG.{u1} G (CommGroup.toGroup.{u1} G _inst_1)] {n : Nat}, (forall (g : G), Eq.{succ u1} G (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G (CommGroup.toGroup.{u1} G _inst_1))))) g n) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (DivisionCommMonoid.toDivisionMonoid.{u1} G (CommGroup.toDivisionCommMonoid.{u1} G _inst_1)))))))) -> (Dvd.dvd.{0} Nat Nat.instDvdNat (Nat.card.{u1} G) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) n (Group.rank.{u1} G (CommGroup.toGroup.{u1} G _inst_1) _inst_2)))
+Case conversion may be inaccurate. Consider using '#align card_dvd_exponent_pow_rank' card_dvd_exponent_pow_rank'ₓ'. -/
 @[to_additive]
 theorem card_dvd_exponent_pow_rank' {n : ℕ} (hG : ∀ g : G, g ^ n = 1) :
     Nat.card G ∣ n ^ Group.rank G :=

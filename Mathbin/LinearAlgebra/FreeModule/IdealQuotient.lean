@@ -95,7 +95,7 @@ noncomputable def Ideal.quotientEquivPiZmod (I : Ideal S) (b : Basis ι ℤ S) (
   let a := I.smithCoeffs b hI
   let e := I.quotientEquivPiSpan b hI
   let e' : (∀ i : ι, ℤ ⧸ Ideal.span ({a i} : Set ℤ)) ≃+ ∀ i : ι, ZMod (a i).natAbs :=
-    AddEquiv.piCongrRight fun i => ↑(Int.quotientSpanEquivZmod (a i))
+    AddEquiv.piCongrRight fun i => ↑(Int.quotientSpanEquivZMod (a i))
   (↑(e : (S ⧸ I) ≃ₗ[ℤ] _) : S ⧸ I ≃+ _).trans e'
 #align ideal.quotient_equiv_pi_zmod Ideal.quotientEquivPiZmod
 

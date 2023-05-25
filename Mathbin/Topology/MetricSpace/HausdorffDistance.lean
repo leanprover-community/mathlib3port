@@ -323,12 +323,18 @@ theorem infEdist_image (hΦ : Isometry Φ) : infEdist (Φ x) (Φ '' t) = infEdis
 #align emetric.inf_edist_image EMetric.infEdist_image
 -/
 
+/- warning: emetric.inf_edist_smul -> EMetric.infEdist_smul is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : PseudoEMetricSpace.{u1} α] {M : Type.{u2}} [_inst_3 : SMul.{u2, u1} M α] [_inst_4 : IsometricSMul.{u2, u1} M α _inst_1 _inst_3] (c : M) (x : α) (s : Set.{u1} α), Eq.{1} ENNReal (EMetric.infEdist.{u1} α _inst_1 (SMul.smul.{u2, u1} M α _inst_3 c x) (SMul.smul.{u2, u1} M (Set.{u1} α) (Set.smulSet.{u2, u1} M α _inst_3) c s)) (EMetric.infEdist.{u1} α _inst_1 x s)
+but is expected to have type
+  forall {α : Type.{u2}} [_inst_1 : PseudoEMetricSpace.{u2} α] {M : Type.{u1}} [_inst_3 : SMul.{u1, u2} M α] [_inst_4 : IsometricSMul.{u1, u2} M α _inst_1 _inst_3] (c : M) (x : α) (s : Set.{u2} α), Eq.{1} ENNReal (EMetric.infEdist.{u2} α _inst_1 (HSMul.hSMul.{u1, u2, u2} M α α (instHSMul.{u1, u2} M α _inst_3) c x) (HSMul.hSMul.{u1, u2, u2} M (Set.{u2} α) (Set.{u2} α) (instHSMul.{u1, u2} M (Set.{u2} α) (Set.smulSet.{u1, u2} M α _inst_3)) c s)) (EMetric.infEdist.{u2} α _inst_1 x s)
+Case conversion may be inaccurate. Consider using '#align emetric.inf_edist_smul EMetric.infEdist_smulₓ'. -/
 @[simp, to_additive]
 theorem infEdist_smul {M} [SMul M α] [IsometricSMul M α] (c : M) (x : α) (s : Set α) :
     infEdist (c • x) (c • s) = infEdist x s :=
   infEdist_image (isometry_smul _ _)
-#align emetric.inf_edist_smul Emetric.infEdist_smul
-#align emetric.inf_edist_vadd Emetric.infEdist_vadd
+#align emetric.inf_edist_smul EMetric.infEdist_smul
+#align emetric.inf_edist_vadd EMetric.infEdist_vadd
 
 /- warning: is_open.exists_Union_is_closed -> IsOpen.exists_iUnion_isClosed is a dubious translation:
 lean 3 declaration is

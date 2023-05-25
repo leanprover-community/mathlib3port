@@ -66,6 +66,7 @@ variable (A : Type _) [CommRing A] [Algebra ℚ A]
 /-! ### Definitions -/
 
 
+#print bernoulli' /-
 /-- The Bernoulli numbers:
 the $n$-th Bernoulli number $B_n$ is defined recursively via
 $$B_n = 1 - \sum_{k < n} \binom{n}{k}\frac{B_k}{n+1-k}$$ -/
@@ -73,12 +74,25 @@ def bernoulli' : ℕ → ℚ :=
   WellFounded.fix lt_wfRel fun n bernoulli' =>
     1 - ∑ k : Fin n, n.choose k / (n - k + 1) * bernoulli' k k.2
 #align bernoulli' bernoulli'
+-/
 
+/- warning: bernoulli'_def' -> bernoulli'_def' is a dubious translation:
+lean 3 declaration is
+  forall (n : Nat), Eq.{1} Rat (bernoulli' n) (HSub.hSub.{0, 0, 0} Rat Rat Rat (instHSub.{0} Rat (SubNegMonoid.toHasSub.{0} Rat (AddGroup.toSubNegMonoid.{0} Rat Rat.addGroup))) (OfNat.ofNat.{0} Rat 1 (OfNat.mk.{0} Rat 1 (One.one.{0} Rat Rat.hasOne))) (Finset.sum.{0, 0} Rat (Fin n) Rat.addCommMonoid (Finset.univ.{0} (Fin n) (Fin.fintype n)) (fun (k : Fin n) => HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.hasMul) (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.hasDiv) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing)))))))) (Nat.choose n ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Fin n) Nat (HasLiftT.mk.{1, 1} (Fin n) Nat (CoeTCₓ.coe.{1, 1} (Fin n) Nat (coeBase.{1, 1} (Fin n) Nat (Fin.coeToNat n)))) k))) (HAdd.hAdd.{0, 0, 0} Rat Rat Rat (instHAdd.{0} Rat Rat.hasAdd) (HSub.hSub.{0, 0, 0} Rat Rat Rat (instHSub.{0} Rat (SubNegMonoid.toHasSub.{0} Rat (AddGroup.toSubNegMonoid.{0} Rat Rat.addGroup))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing)))))))) n) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Fin n) Rat (HasLiftT.mk.{1, 1} (Fin n) Rat (CoeTCₓ.coe.{1, 1} (Fin n) Rat (coeTrans.{1, 1, 1} (Fin n) Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing)))))) (Fin.coeToNat n)))) k)) (OfNat.ofNat.{0} Rat 1 (OfNat.mk.{0} Rat 1 (One.one.{0} Rat Rat.hasOne))))) (bernoulli' ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Fin n) Nat (HasLiftT.mk.{1, 1} (Fin n) Nat (CoeTCₓ.coe.{1, 1} (Fin n) Nat (coeBase.{1, 1} (Fin n) Nat (Fin.coeToNat n)))) k)))))
+but is expected to have type
+  forall (n : Nat), Eq.{1} Rat (bernoulli' n) (HSub.hSub.{0, 0, 0} Rat Rat Rat (instHSub.{0} Rat Rat.instSubRat) (OfNat.ofNat.{0} Rat 1 (Rat.instOfNatRat 1)) (Finset.sum.{0, 0} Rat (Fin n) Rat.addCommMonoid (Finset.univ.{0} (Fin n) (Fin.fintype n)) (fun (k : Fin n) => HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.instMulRat) (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.instDivRat) (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) (Nat.choose n (Fin.val n k))) (HAdd.hAdd.{0, 0, 0} Rat Rat Rat (instHAdd.{0} Rat Rat.instAddRat) (HSub.hSub.{0, 0, 0} Rat Rat Rat (instHSub.{0} Rat Rat.instSubRat) (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) n) (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) (Fin.val n k))) (OfNat.ofNat.{0} Rat 1 (Rat.instOfNatRat 1)))) (bernoulli' (Fin.val n k)))))
+Case conversion may be inaccurate. Consider using '#align bernoulli'_def' bernoulli'_def'ₓ'. -/
 theorem bernoulli'_def' (n : ℕ) :
     bernoulli' n = 1 - ∑ k : Fin n, n.choose k / (n - k + 1) * bernoulli' k :=
   WellFounded.fix_eq _ _ _
 #align bernoulli'_def' bernoulli'_def'
 
+/- warning: bernoulli'_def -> bernoulli'_def is a dubious translation:
+lean 3 declaration is
+  forall (n : Nat), Eq.{1} Rat (bernoulli' n) (HSub.hSub.{0, 0, 0} Rat Rat Rat (instHSub.{0} Rat (SubNegMonoid.toHasSub.{0} Rat (AddGroup.toSubNegMonoid.{0} Rat Rat.addGroup))) (OfNat.ofNat.{0} Rat 1 (OfNat.mk.{0} Rat 1 (One.one.{0} Rat Rat.hasOne))) (Finset.sum.{0, 0} Rat Nat Rat.addCommMonoid (Finset.range n) (fun (k : Nat) => HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.hasMul) (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.hasDiv) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing)))))))) (Nat.choose n k)) (HAdd.hAdd.{0, 0, 0} Rat Rat Rat (instHAdd.{0} Rat Rat.hasAdd) (HSub.hSub.{0, 0, 0} Rat Rat Rat (instHSub.{0} Rat (SubNegMonoid.toHasSub.{0} Rat (AddGroup.toSubNegMonoid.{0} Rat Rat.addGroup))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing)))))))) n) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing)))))))) k)) (OfNat.ofNat.{0} Rat 1 (OfNat.mk.{0} Rat 1 (One.one.{0} Rat Rat.hasOne))))) (bernoulli' k))))
+but is expected to have type
+  forall (n : Nat), Eq.{1} Rat (bernoulli' n) (HSub.hSub.{0, 0, 0} Rat Rat Rat (instHSub.{0} Rat Rat.instSubRat) (OfNat.ofNat.{0} Rat 1 (Rat.instOfNatRat 1)) (Finset.sum.{0, 0} Rat Nat Rat.addCommMonoid (Finset.range n) (fun (k : Nat) => HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.instMulRat) (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.instDivRat) (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) (Nat.choose n k)) (HAdd.hAdd.{0, 0, 0} Rat Rat Rat (instHAdd.{0} Rat Rat.instAddRat) (HSub.hSub.{0, 0, 0} Rat Rat Rat (instHSub.{0} Rat Rat.instSubRat) (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) n) (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) k)) (OfNat.ofNat.{0} Rat 1 (Rat.instOfNatRat 1)))) (bernoulli' k))))
+Case conversion may be inaccurate. Consider using '#align bernoulli'_def bernoulli'_defₓ'. -/
 theorem bernoulli'_def (n : ℕ) :
     bernoulli' n = 1 - ∑ k in range n, n.choose k / (n - k + 1) * bernoulli' k :=
   by
@@ -86,6 +100,12 @@ theorem bernoulli'_def (n : ℕ) :
   rfl
 #align bernoulli'_def bernoulli'_def
 
+/- warning: bernoulli'_spec -> bernoulli'_spec is a dubious translation:
+lean 3 declaration is
+  forall (n : Nat), Eq.{1} Rat (Finset.sum.{0, 0} Rat Nat Rat.addCommMonoid (Finset.range (Nat.succ n)) (fun (k : Nat) => HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.hasMul) (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.hasDiv) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing)))))))) (Nat.choose n (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) n k))) (HAdd.hAdd.{0, 0, 0} Rat Rat Rat (instHAdd.{0} Rat Rat.hasAdd) (HSub.hSub.{0, 0, 0} Rat Rat Rat (instHSub.{0} Rat (SubNegMonoid.toHasSub.{0} Rat (AddGroup.toSubNegMonoid.{0} Rat Rat.addGroup))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing)))))))) n) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing)))))))) k)) (OfNat.ofNat.{0} Rat 1 (OfNat.mk.{0} Rat 1 (One.one.{0} Rat Rat.hasOne))))) (bernoulli' k))) (OfNat.ofNat.{0} Rat 1 (OfNat.mk.{0} Rat 1 (One.one.{0} Rat Rat.hasOne)))
+but is expected to have type
+  forall (n : Nat), Eq.{1} Rat (Finset.sum.{0, 0} Rat Nat Rat.addCommMonoid (Finset.range (Nat.succ n)) (fun (k : Nat) => HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.instMulRat) (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.instDivRat) (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) (Nat.choose n (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) n k))) (HAdd.hAdd.{0, 0, 0} Rat Rat Rat (instHAdd.{0} Rat Rat.instAddRat) (HSub.hSub.{0, 0, 0} Rat Rat Rat (instHSub.{0} Rat Rat.instSubRat) (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) n) (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) k)) (OfNat.ofNat.{0} Rat 1 (Rat.instOfNatRat 1)))) (bernoulli' k))) (OfNat.ofNat.{0} Rat 1 (Rat.instOfNatRat 1))
+Case conversion may be inaccurate. Consider using '#align bernoulli'_spec bernoulli'_specₓ'. -/
 theorem bernoulli'_spec (n : ℕ) :
     (∑ k in range n.succ, (n.choose (n - k) : ℚ) / (n - k + 1) * bernoulli' k) = 1 :=
   by
@@ -94,6 +114,12 @@ theorem bernoulli'_spec (n : ℕ) :
   simp only [one_mul, cast_one, sub_self, sub_add_cancel, choose_zero_right, zero_add, div_one]
 #align bernoulli'_spec bernoulli'_spec
 
+/- warning: bernoulli'_spec' -> bernoulli'_spec' is a dubious translation:
+lean 3 declaration is
+  forall (n : Nat), Eq.{1} Rat (Finset.sum.{0, 0} Rat (Prod.{0, 0} Nat Nat) Rat.addCommMonoid (Finset.Nat.antidiagonal n) (fun (k : Prod.{0, 0} Nat Nat) => HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.hasMul) (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.hasDiv) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing)))))))) (Nat.choose (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (Prod.fst.{0, 0} Nat Nat k) (Prod.snd.{0, 0} Nat Nat k)) (Prod.snd.{0, 0} Nat Nat k))) (HAdd.hAdd.{0, 0, 0} Rat Rat Rat (instHAdd.{0} Rat Rat.hasAdd) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing)))))))) (Prod.snd.{0, 0} Nat Nat k)) (OfNat.ofNat.{0} Rat 1 (OfNat.mk.{0} Rat 1 (One.one.{0} Rat Rat.hasOne))))) (bernoulli' (Prod.fst.{0, 0} Nat Nat k)))) (OfNat.ofNat.{0} Rat 1 (OfNat.mk.{0} Rat 1 (One.one.{0} Rat Rat.hasOne)))
+but is expected to have type
+  forall (n : Nat), Eq.{1} Rat (Finset.sum.{0, 0} Rat (Prod.{0, 0} Nat Nat) Rat.addCommMonoid (Finset.Nat.antidiagonal n) (fun (k : Prod.{0, 0} Nat Nat) => HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.instMulRat) (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.instDivRat) (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) (Nat.choose (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (Prod.fst.{0, 0} Nat Nat k) (Prod.snd.{0, 0} Nat Nat k)) (Prod.snd.{0, 0} Nat Nat k))) (HAdd.hAdd.{0, 0, 0} Rat Rat Rat (instHAdd.{0} Rat Rat.instAddRat) (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) (Prod.snd.{0, 0} Nat Nat k)) (OfNat.ofNat.{0} Rat 1 (Rat.instOfNatRat 1)))) (bernoulli' (Prod.fst.{0, 0} Nat Nat k)))) (OfNat.ofNat.{0} Rat 1 (Rat.instOfNatRat 1))
+Case conversion may be inaccurate. Consider using '#align bernoulli'_spec' bernoulli'_spec'ₓ'. -/
 theorem bernoulli'_spec' (n : ℕ) :
     (∑ k in antidiagonal n, ((k.1 + k.2).choose k.2 : ℚ) / (k.2 + 1) * bernoulli' k.1) = 1 :=
   by
@@ -107,34 +133,43 @@ theorem bernoulli'_spec' (n : ℕ) :
 
 section Examples
 
+#print bernoulli'_zero /-
 @[simp]
 theorem bernoulli'_zero : bernoulli' 0 = 1 :=
   by
   rw [bernoulli'_def]
   norm_num
 #align bernoulli'_zero bernoulli'_zero
+-/
 
+#print bernoulli'_one /-
 @[simp]
 theorem bernoulli'_one : bernoulli' 1 = 1 / 2 :=
   by
   rw [bernoulli'_def]
   norm_num
 #align bernoulli'_one bernoulli'_one
+-/
 
+#print bernoulli'_two /-
 @[simp]
 theorem bernoulli'_two : bernoulli' 2 = 1 / 6 :=
   by
   rw [bernoulli'_def]
   norm_num [sum_range_succ]
 #align bernoulli'_two bernoulli'_two
+-/
 
+#print bernoulli'_three /-
 @[simp]
 theorem bernoulli'_three : bernoulli' 3 = 0 :=
   by
   rw [bernoulli'_def]
   norm_num [sum_range_succ]
 #align bernoulli'_three bernoulli'_three
+-/
 
+#print bernoulli'_four /-
 @[simp]
 theorem bernoulli'_four : bernoulli' 4 = -1 / 30 :=
   by
@@ -143,9 +178,16 @@ theorem bernoulli'_four : bernoulli' 4 = -1 / 30 :=
   rw [bernoulli'_def]
   norm_num [sum_range_succ, this]
 #align bernoulli'_four bernoulli'_four
+-/
 
 end Examples
 
+/- warning: sum_bernoulli' -> sum_bernoulli' is a dubious translation:
+lean 3 declaration is
+  forall (n : Nat), Eq.{1} Rat (Finset.sum.{0, 0} Rat Nat Rat.addCommMonoid (Finset.range n) (fun (k : Nat) => HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.hasMul) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing)))))))) (Nat.choose n k)) (bernoulli' k))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing)))))))) n)
+but is expected to have type
+  forall (n : Nat), Eq.{1} Rat (Finset.sum.{0, 0} Rat Nat Rat.addCommMonoid (Finset.range n) (fun (k : Nat) => HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.instMulRat) (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) (Nat.choose n k)) (bernoulli' k))) (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) n)
+Case conversion may be inaccurate. Consider using '#align sum_bernoulli' sum_bernoulli'ₓ'. -/
 @[simp]
 theorem sum_bernoulli' (n : ℕ) : (∑ k in range n, (n.choose k : ℚ) * bernoulli' k) = n :=
   by
@@ -165,11 +207,19 @@ theorem sum_bernoulli' (n : ℕ) : (∑ k in range n, (n.choose k : ℚ) * berno
   rw_mod_cast [tsub_add_eq_add_tsub (mem_range.1 hk).le, choose_mul_succ_eq]
 #align sum_bernoulli' sum_bernoulli'
 
+#print bernoulli'PowerSeries /-
 /-- The exponential generating function for the Bernoulli numbers `bernoulli' n`. -/
 def bernoulli'PowerSeries :=
   mk fun n => algebraMap ℚ A (bernoulli' n / n !)
 #align bernoulli'_power_series bernoulli'PowerSeries
+-/
 
+/- warning: bernoulli'_power_series_mul_exp_sub_one -> bernoulli'PowerSeries_mul_exp_sub_one is a dubious translation:
+lean 3 declaration is
+  forall (A : Type.{u1}) [_inst_1 : CommRing.{u1} A] [_inst_2 : Algebra.{0, u1} Rat A Rat.commSemiring (Ring.toSemiring.{u1} A (CommRing.toRing.{u1} A _inst_1))], Eq.{succ u1} (PowerSeries.{u1} A) (HMul.hMul.{u1, u1, u1} (PowerSeries.{u1} A) (PowerSeries.{u1} A) (PowerSeries.{u1} A) (instHMul.{u1} (PowerSeries.{u1} A) (Distrib.toHasMul.{u1} (PowerSeries.{u1} A) (Ring.toDistrib.{u1} (PowerSeries.{u1} A) (PowerSeries.ring.{u1} A (CommRing.toRing.{u1} A _inst_1))))) (bernoulli'PowerSeries.{u1} A _inst_1 _inst_2) (HSub.hSub.{u1, u1, u1} (PowerSeries.{u1} A) (PowerSeries.{u1} A) (PowerSeries.{u1} A) (instHSub.{u1} (PowerSeries.{u1} A) (SubNegMonoid.toHasSub.{u1} (PowerSeries.{u1} A) (AddGroup.toSubNegMonoid.{u1} (PowerSeries.{u1} A) (PowerSeries.addGroup.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (AddCommGroupWithOne.toAddGroupWithOne.{u1} A (Ring.toAddCommGroupWithOne.{u1} A (CommRing.toRing.{u1} A _inst_1)))))))) (PowerSeries.exp.{u1} A (CommRing.toRing.{u1} A _inst_1) _inst_2) (OfNat.ofNat.{u1} (PowerSeries.{u1} A) 1 (OfNat.mk.{u1} (PowerSeries.{u1} A) 1 (One.one.{u1} (PowerSeries.{u1} A) (AddMonoidWithOne.toOne.{u1} (PowerSeries.{u1} A) (AddGroupWithOne.toAddMonoidWithOne.{u1} (PowerSeries.{u1} A) (AddCommGroupWithOne.toAddGroupWithOne.{u1} (PowerSeries.{u1} A) (Ring.toAddCommGroupWithOne.{u1} (PowerSeries.{u1} A) (PowerSeries.ring.{u1} A (CommRing.toRing.{u1} A _inst_1))))))))))) (HMul.hMul.{u1, u1, u1} (PowerSeries.{u1} A) (PowerSeries.{u1} A) (PowerSeries.{u1} A) (instHMul.{u1} (PowerSeries.{u1} A) (Distrib.toHasMul.{u1} (PowerSeries.{u1} A) (Ring.toDistrib.{u1} (PowerSeries.{u1} A) (PowerSeries.ring.{u1} A (CommRing.toRing.{u1} A _inst_1))))) (PowerSeries.X.{u1} A (Ring.toSemiring.{u1} A (CommRing.toRing.{u1} A _inst_1))) (PowerSeries.exp.{u1} A (CommRing.toRing.{u1} A _inst_1) _inst_2))
+but is expected to have type
+  forall (A : Type.{u1}) [_inst_1 : CommRing.{u1} A] [_inst_2 : Algebra.{0, u1} Rat A Rat.commSemiring (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_1))], Eq.{succ u1} (PowerSeries.{u1} A) (HMul.hMul.{u1, u1, u1} (PowerSeries.{u1} A) (PowerSeries.{u1} A) (PowerSeries.{u1} A) (instHMul.{u1} (PowerSeries.{u1} A) (NonUnitalNonAssocRing.toMul.{u1} (PowerSeries.{u1} A) (NonAssocRing.toNonUnitalNonAssocRing.{u1} (PowerSeries.{u1} A) (Ring.toNonAssocRing.{u1} (PowerSeries.{u1} A) (PowerSeries.instRingPowerSeries.{u1} A (CommRing.toRing.{u1} A _inst_1)))))) (bernoulli'PowerSeries.{u1} A _inst_1 _inst_2) (HSub.hSub.{u1, u1, u1} (PowerSeries.{u1} A) (PowerSeries.{u1} A) (PowerSeries.{u1} A) (instHSub.{u1} (PowerSeries.{u1} A) (Ring.toSub.{u1} (PowerSeries.{u1} A) (PowerSeries.instRingPowerSeries.{u1} A (CommRing.toRing.{u1} A _inst_1)))) (PowerSeries.exp.{u1} A (CommRing.toRing.{u1} A _inst_1) _inst_2) (OfNat.ofNat.{u1} (PowerSeries.{u1} A) 1 (One.toOfNat1.{u1} (PowerSeries.{u1} A) (Semiring.toOne.{u1} (PowerSeries.{u1} A) (PowerSeries.instSemiringPowerSeries.{u1} A (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_1)))))))) (HMul.hMul.{u1, u1, u1} (PowerSeries.{u1} A) (PowerSeries.{u1} A) (PowerSeries.{u1} A) (instHMul.{u1} (PowerSeries.{u1} A) (NonUnitalNonAssocRing.toMul.{u1} (PowerSeries.{u1} A) (NonAssocRing.toNonUnitalNonAssocRing.{u1} (PowerSeries.{u1} A) (Ring.toNonAssocRing.{u1} (PowerSeries.{u1} A) (PowerSeries.instRingPowerSeries.{u1} A (CommRing.toRing.{u1} A _inst_1)))))) (PowerSeries.X.{u1} A (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_1))) (PowerSeries.exp.{u1} A (CommRing.toRing.{u1} A _inst_1) _inst_2))
+Case conversion may be inaccurate. Consider using '#align bernoulli'_power_series_mul_exp_sub_one bernoulli'PowerSeries_mul_exp_sub_oneₓ'. -/
 theorem bernoulli'PowerSeries_mul_exp_sub_one : bernoulli'PowerSeries A * (exp A - 1) = X * exp A :=
   by
   ext n
@@ -195,6 +245,7 @@ theorem bernoulli'PowerSeries_mul_exp_sub_one : bernoulli'PowerSeries A * (exp A
   rwa [Nat.cast_succ]
 #align bernoulli'_power_series_mul_exp_sub_one bernoulli'PowerSeries_mul_exp_sub_one
 
+#print bernoulli'_odd_eq_zero /-
 /-- Odd Bernoulli numbers (greater than 1) are zero. -/
 theorem bernoulli'_odd_eq_zero {n : ℕ} (h_odd : Odd n) (hlt : 1 < n) : bernoulli' n = 0 :=
   by
@@ -214,24 +265,34 @@ theorem bernoulli'_odd_eq_zero {n : ℕ} (h_odd : Odd n) (hlt : 1 < n) : bernoul
     simpa [mul_assoc, sub_mul, mul_comm (eval_neg_hom (exp ℚ)), exp_mul_exp_neg_eq_one]
   congr
 #align bernoulli'_odd_eq_zero bernoulli'_odd_eq_zero
+-/
 
+#print bernoulli /-
 /-- The Bernoulli numbers are defined to be `bernoulli'` with a parity sign. -/
 def bernoulli (n : ℕ) : ℚ :=
   (-1) ^ n * bernoulli' n
 #align bernoulli bernoulli
+-/
 
+#print bernoulli'_eq_bernoulli /-
 theorem bernoulli'_eq_bernoulli (n : ℕ) : bernoulli' n = (-1) ^ n * bernoulli n := by
   simp [bernoulli, ← mul_assoc, ← sq, ← pow_mul, mul_comm n 2, pow_mul]
 #align bernoulli'_eq_bernoulli bernoulli'_eq_bernoulli
+-/
 
+#print bernoulli_zero /-
 @[simp]
 theorem bernoulli_zero : bernoulli 0 = 1 := by simp [bernoulli]
 #align bernoulli_zero bernoulli_zero
+-/
 
+#print bernoulli_one /-
 @[simp]
 theorem bernoulli_one : bernoulli 1 = -1 / 2 := by norm_num [bernoulli]
 #align bernoulli_one bernoulli_one
+-/
 
+#print bernoulli_eq_bernoulli'_of_ne_one /-
 theorem bernoulli_eq_bernoulli'_of_ne_one {n : ℕ} (hn : n ≠ 1) : bernoulli n = bernoulli' n :=
   by
   by_cases h0 : n = 0; · simp [h0]
@@ -239,7 +300,14 @@ theorem bernoulli_eq_bernoulli'_of_ne_one {n : ℕ} (hn : n ≠ 1) : bernoulli n
   cases mod_two_eq_zero_or_one n; · simp [h]
   simp [bernoulli'_odd_eq_zero (odd_iff.mpr h) (one_lt_iff_ne_zero_and_ne_one.mpr ⟨h0, hn⟩)]
 #align bernoulli_eq_bernoulli'_of_ne_one bernoulli_eq_bernoulli'_of_ne_one
+-/
 
+/- warning: sum_bernoulli -> sum_bernoulli is a dubious translation:
+lean 3 declaration is
+  forall (n : Nat), Eq.{1} Rat (Finset.sum.{0, 0} Rat Nat Rat.addCommMonoid (Finset.range n) (fun (k : Nat) => HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.hasMul) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing)))))))) (Nat.choose n k)) (bernoulli k))) (ite.{1} Rat (Eq.{1} Nat n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (Nat.decidableEq n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (OfNat.ofNat.{0} Rat 1 (OfNat.mk.{0} Rat 1 (One.one.{0} Rat Rat.hasOne))) (OfNat.ofNat.{0} Rat 0 (OfNat.mk.{0} Rat 0 (Zero.zero.{0} Rat Rat.hasZero))))
+but is expected to have type
+  forall (n : Nat), Eq.{1} Rat (Finset.sum.{0, 0} Rat Nat Rat.addCommMonoid (Finset.range n) (fun (k : Nat) => HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.instMulRat) (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) (Nat.choose n k)) (bernoulli k))) (ite.{1} Rat (Eq.{1} Nat n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (instDecidableEqNat n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (OfNat.ofNat.{0} Rat 1 (Rat.instOfNatRat 1)) (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)))
+Case conversion may be inaccurate. Consider using '#align sum_bernoulli sum_bernoulliₓ'. -/
 @[simp]
 theorem sum_bernoulli (n : ℕ) :
     (∑ k in range n, (n.choose k : ℚ) * bernoulli k) = if n = 1 then 1 else 0 :=
@@ -262,6 +330,12 @@ theorem sum_bernoulli (n : ℕ) :
     ring
 #align sum_bernoulli sum_bernoulli
 
+/- warning: bernoulli_spec' -> bernoulli_spec' is a dubious translation:
+lean 3 declaration is
+  forall (n : Nat), Eq.{1} Rat (Finset.sum.{0, 0} Rat (Prod.{0, 0} Nat Nat) Rat.addCommMonoid (Finset.Nat.antidiagonal n) (fun (k : Prod.{0, 0} Nat Nat) => HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.hasMul) (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.hasDiv) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing)))))))) (Nat.choose (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (Prod.fst.{0, 0} Nat Nat k) (Prod.snd.{0, 0} Nat Nat k)) (Prod.snd.{0, 0} Nat Nat k))) (HAdd.hAdd.{0, 0, 0} Rat Rat Rat (instHAdd.{0} Rat Rat.hasAdd) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing)))))))) (Prod.snd.{0, 0} Nat Nat k)) (OfNat.ofNat.{0} Rat 1 (OfNat.mk.{0} Rat 1 (One.one.{0} Rat Rat.hasOne))))) (bernoulli (Prod.fst.{0, 0} Nat Nat k)))) (ite.{1} Rat (Eq.{1} Nat n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (Nat.decidableEq n (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (OfNat.ofNat.{0} Rat 1 (OfNat.mk.{0} Rat 1 (One.one.{0} Rat Rat.hasOne))) (OfNat.ofNat.{0} Rat 0 (OfNat.mk.{0} Rat 0 (Zero.zero.{0} Rat Rat.hasZero))))
+but is expected to have type
+  forall (n : Nat), Eq.{1} Rat (Finset.sum.{0, 0} Rat (Prod.{0, 0} Nat Nat) Rat.addCommMonoid (Finset.Nat.antidiagonal n) (fun (k : Prod.{0, 0} Nat Nat) => HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.instMulRat) (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.instDivRat) (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) (Nat.choose (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (Prod.fst.{0, 0} Nat Nat k) (Prod.snd.{0, 0} Nat Nat k)) (Prod.snd.{0, 0} Nat Nat k))) (HAdd.hAdd.{0, 0, 0} Rat Rat Rat (instHAdd.{0} Rat Rat.instAddRat) (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) (Prod.snd.{0, 0} Nat Nat k)) (OfNat.ofNat.{0} Rat 1 (Rat.instOfNatRat 1)))) (bernoulli (Prod.fst.{0, 0} Nat Nat k)))) (ite.{1} Rat (Eq.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (instDecidableEqNat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (OfNat.ofNat.{0} Rat 1 (Rat.instOfNatRat 1)) (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)))
+Case conversion may be inaccurate. Consider using '#align bernoulli_spec' bernoulli_spec'ₓ'. -/
 theorem bernoulli_spec' (n : ℕ) :
     (∑ k in antidiagonal n, ((k.1 + k.2).choose k.2 : ℚ) / (k.2 + 1) * bernoulli k.1) =
       if n = 0 then 1 else 0 :=
@@ -285,11 +359,19 @@ theorem bernoulli_spec' (n : ℕ) :
     norm_num
 #align bernoulli_spec' bernoulli_spec'
 
+#print bernoulliPowerSeries /-
 /-- The exponential generating function for the Bernoulli numbers `bernoulli n`. -/
 def bernoulliPowerSeries :=
   mk fun n => algebraMap ℚ A (bernoulli n / n !)
 #align bernoulli_power_series bernoulliPowerSeries
+-/
 
+/- warning: bernoulli_power_series_mul_exp_sub_one -> bernoulliPowerSeries_mul_exp_sub_one is a dubious translation:
+lean 3 declaration is
+  forall (A : Type.{u1}) [_inst_1 : CommRing.{u1} A] [_inst_2 : Algebra.{0, u1} Rat A Rat.commSemiring (Ring.toSemiring.{u1} A (CommRing.toRing.{u1} A _inst_1))], Eq.{succ u1} (PowerSeries.{u1} A) (HMul.hMul.{u1, u1, u1} (PowerSeries.{u1} A) (PowerSeries.{u1} A) (PowerSeries.{u1} A) (instHMul.{u1} (PowerSeries.{u1} A) (Distrib.toHasMul.{u1} (PowerSeries.{u1} A) (Ring.toDistrib.{u1} (PowerSeries.{u1} A) (PowerSeries.ring.{u1} A (CommRing.toRing.{u1} A _inst_1))))) (bernoulliPowerSeries.{u1} A _inst_1 _inst_2) (HSub.hSub.{u1, u1, u1} (PowerSeries.{u1} A) (PowerSeries.{u1} A) (PowerSeries.{u1} A) (instHSub.{u1} (PowerSeries.{u1} A) (SubNegMonoid.toHasSub.{u1} (PowerSeries.{u1} A) (AddGroup.toSubNegMonoid.{u1} (PowerSeries.{u1} A) (PowerSeries.addGroup.{u1} A (AddGroupWithOne.toAddGroup.{u1} A (AddCommGroupWithOne.toAddGroupWithOne.{u1} A (Ring.toAddCommGroupWithOne.{u1} A (CommRing.toRing.{u1} A _inst_1)))))))) (PowerSeries.exp.{u1} A (CommRing.toRing.{u1} A _inst_1) _inst_2) (OfNat.ofNat.{u1} (PowerSeries.{u1} A) 1 (OfNat.mk.{u1} (PowerSeries.{u1} A) 1 (One.one.{u1} (PowerSeries.{u1} A) (AddMonoidWithOne.toOne.{u1} (PowerSeries.{u1} A) (AddGroupWithOne.toAddMonoidWithOne.{u1} (PowerSeries.{u1} A) (AddCommGroupWithOne.toAddGroupWithOne.{u1} (PowerSeries.{u1} A) (Ring.toAddCommGroupWithOne.{u1} (PowerSeries.{u1} A) (PowerSeries.ring.{u1} A (CommRing.toRing.{u1} A _inst_1))))))))))) (PowerSeries.X.{u1} A (Ring.toSemiring.{u1} A (CommRing.toRing.{u1} A _inst_1)))
+but is expected to have type
+  forall (A : Type.{u1}) [_inst_1 : CommRing.{u1} A] [_inst_2 : Algebra.{0, u1} Rat A Rat.commSemiring (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_1))], Eq.{succ u1} (PowerSeries.{u1} A) (HMul.hMul.{u1, u1, u1} (PowerSeries.{u1} A) (PowerSeries.{u1} A) (PowerSeries.{u1} A) (instHMul.{u1} (PowerSeries.{u1} A) (NonUnitalNonAssocRing.toMul.{u1} (PowerSeries.{u1} A) (NonAssocRing.toNonUnitalNonAssocRing.{u1} (PowerSeries.{u1} A) (Ring.toNonAssocRing.{u1} (PowerSeries.{u1} A) (PowerSeries.instRingPowerSeries.{u1} A (CommRing.toRing.{u1} A _inst_1)))))) (bernoulliPowerSeries.{u1} A _inst_1 _inst_2) (HSub.hSub.{u1, u1, u1} (PowerSeries.{u1} A) (PowerSeries.{u1} A) (PowerSeries.{u1} A) (instHSub.{u1} (PowerSeries.{u1} A) (Ring.toSub.{u1} (PowerSeries.{u1} A) (PowerSeries.instRingPowerSeries.{u1} A (CommRing.toRing.{u1} A _inst_1)))) (PowerSeries.exp.{u1} A (CommRing.toRing.{u1} A _inst_1) _inst_2) (OfNat.ofNat.{u1} (PowerSeries.{u1} A) 1 (One.toOfNat1.{u1} (PowerSeries.{u1} A) (Semiring.toOne.{u1} (PowerSeries.{u1} A) (PowerSeries.instSemiringPowerSeries.{u1} A (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_1)))))))) (PowerSeries.X.{u1} A (CommSemiring.toSemiring.{u1} A (CommRing.toCommSemiring.{u1} A _inst_1)))
+Case conversion may be inaccurate. Consider using '#align bernoulli_power_series_mul_exp_sub_one bernoulliPowerSeries_mul_exp_sub_oneₓ'. -/
 theorem bernoulliPowerSeries_mul_exp_sub_one : bernoulliPowerSeries A * (exp A - 1) = X :=
   by
   ext n
@@ -316,6 +398,12 @@ theorem bernoulliPowerSeries_mul_exp_sub_one : bernoulliPowerSeries A * (exp A -
 
 section Faulhaber
 
+/- warning: sum_range_pow -> sum_range_pow is a dubious translation:
+lean 3 declaration is
+  forall (n : Nat) (p : Nat), Eq.{1} Rat (Finset.sum.{0, 0} Rat Nat Rat.addCommMonoid (Finset.range n) (fun (k : Nat) => HPow.hPow.{0, 0, 0} Rat Nat Rat (instHPow.{0, 0} Rat Nat (Monoid.Pow.{0} Rat Rat.monoid)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing)))))))) k) p)) (Finset.sum.{0, 0} Rat Nat Rat.addCommMonoid (Finset.range (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) p (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (fun (i : Nat) => HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.hasDiv) (HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.hasMul) (HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.hasMul) (bernoulli i) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing)))))))) (Nat.choose (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) p (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) i))) (HPow.hPow.{0, 0, 0} Rat Nat Rat (instHPow.{0, 0} Rat Nat (Monoid.Pow.{0} Rat Rat.monoid)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing)))))))) n) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) p (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) i))) (HAdd.hAdd.{0, 0, 0} Rat Rat Rat (instHAdd.{0} Rat Rat.hasAdd) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing)))))))) p) (OfNat.ofNat.{0} Rat 1 (OfNat.mk.{0} Rat 1 (One.one.{0} Rat Rat.hasOne))))))
+but is expected to have type
+  forall (n : Nat) (p : Nat), Eq.{1} Rat (Finset.sum.{0, 0} Rat Nat Rat.addCommMonoid (Finset.range n) (fun (k : Nat) => HPow.hPow.{0, 0, 0} Rat Nat Rat (instHPow.{0, 0} Rat Nat (Monoid.Pow.{0} Rat Rat.monoid)) (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) k) p)) (Finset.sum.{0, 0} Rat Nat Rat.addCommMonoid (Finset.range (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) p (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (i : Nat) => HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.instDivRat) (HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.instMulRat) (HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.instMulRat) (bernoulli i) (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) (Nat.choose (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) p (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) i))) (HPow.hPow.{0, 0, 0} Rat Nat Rat (instHPow.{0, 0} Rat Nat (Monoid.Pow.{0} Rat Rat.monoid)) (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) n) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) p (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) i))) (HAdd.hAdd.{0, 0, 0} Rat Rat Rat (instHAdd.{0} Rat Rat.instAddRat) (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) p) (OfNat.ofNat.{0} Rat 1 (Rat.instOfNatRat 1)))))
+Case conversion may be inaccurate. Consider using '#align sum_range_pow sum_range_powₓ'. -/
 /-- **Faulhaber's theorem** relating the **sum of of p-th powers** to the Bernoulli numbers:
 $$\sum_{k=0}^{n-1} k^p = \sum_{i=0}^p B_i\binom{p+1}{i}\frac{n^{p+1-i}}{p+1}.$$
 See https://proofwiki.org/wiki/Faulhaber%27s_Formula and [orosi2018faulhaber] for
@@ -380,6 +468,12 @@ theorem sum_range_pow (n p : ℕ) :
   field_simp [mul_right_comm _ ↑p !, ← mul_assoc _ _ ↑p !, cast_add_one_ne_zero, hne]
 #align sum_range_pow sum_range_pow
 
+/- warning: sum_Ico_pow -> sum_Ico_pow is a dubious translation:
+lean 3 declaration is
+  forall (n : Nat) (p : Nat), Eq.{1} Rat (Finset.sum.{0, 0} Rat Nat Rat.addCommMonoid (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) Nat.locallyFiniteOrder (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (fun (k : Nat) => HPow.hPow.{0, 0, 0} Rat Nat Rat (instHPow.{0, 0} Rat Nat (Monoid.Pow.{0} Rat Rat.monoid)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing)))))))) k) p)) (Finset.sum.{0, 0} Rat Nat Rat.addCommMonoid (Finset.range (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) p (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (fun (i : Nat) => HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.hasDiv) (HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.hasMul) (HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.hasMul) (bernoulli' i) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing)))))))) (Nat.choose (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) p (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) i))) (HPow.hPow.{0, 0, 0} Rat Nat Rat (instHPow.{0, 0} Rat Nat (Monoid.Pow.{0} Rat Rat.monoid)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing)))))))) n) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) p (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) i))) (HAdd.hAdd.{0, 0, 0} Rat Rat Rat (instHAdd.{0} Rat Rat.hasAdd) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (AddCommGroupWithOne.toAddGroupWithOne.{0} Rat (Ring.toAddCommGroupWithOne.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing)))))))) p) (OfNat.ofNat.{0} Rat 1 (OfNat.mk.{0} Rat 1 (One.one.{0} Rat Rat.hasOne))))))
+but is expected to have type
+  forall (n : Nat) (p : Nat), Eq.{1} Rat (Finset.sum.{0, 0} Rat Nat Rat.addCommMonoid (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (k : Nat) => HPow.hPow.{0, 0, 0} Rat Nat Rat (instHPow.{0, 0} Rat Nat (Monoid.Pow.{0} Rat Rat.monoid)) (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) k) p)) (Finset.sum.{0, 0} Rat Nat Rat.addCommMonoid (Finset.range (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) p (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (i : Nat) => HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.instDivRat) (HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.instMulRat) (HMul.hMul.{0, 0, 0} Rat Rat Rat (instHMul.{0} Rat Rat.instMulRat) (bernoulli' i) (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) (Nat.choose (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) p (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) i))) (HPow.hPow.{0, 0, 0} Rat Nat Rat (instHPow.{0, 0} Rat Nat (Monoid.Pow.{0} Rat Rat.monoid)) (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) n) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) p (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) i))) (HAdd.hAdd.{0, 0, 0} Rat Rat Rat (instHAdd.{0} Rat Rat.instAddRat) (Nat.cast.{0} Rat (Semiring.toNatCast.{0} Rat Rat.semiring) p) (OfNat.ofNat.{0} Rat 1 (Rat.instOfNatRat 1)))))
+Case conversion may be inaccurate. Consider using '#align sum_Ico_pow sum_Ico_powₓ'. -/
 /-- Alternate form of **Faulhaber's theorem**, relating the sum of p-th powers to the Bernoulli
 numbers: $$\sum_{k=1}^{n} k^p = \sum_{i=0}^p (-1)^iB_i\binom{p+1}{i}\frac{n^{p+1-i}}{p+1}.$$
 Deduced from `sum_range_pow`. -/
