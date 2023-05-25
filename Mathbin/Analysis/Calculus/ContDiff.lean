@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn
 
 ! This file was ported from Lean 3 source module analysis.calculus.cont_diff
-! leanprover-community/mathlib commit 066ecdb4834c7a4693e0f0e5154935a6f3d3f90c
+! leanprover-community/mathlib commit 3a69562db5a458db8322b190ec8d9a8bbd8a5b14
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -355,7 +355,7 @@ theorem ContinuousLinearEquiv.iteratedFderivWithin_comp_left (g : F ≃L[𝕜] G
             g.comp_continuous_multilinear_mapL (fun j : Fin i => E)
               (iteratedFderivWithin 𝕜 i f s y))
           s x :=
-      fderivWithin_congr' (hs x hx) (fun y hy => IH hy) hx
+      fderivWithin_congr' (@IH) hx
     simp_rw [Z]
     rw [(g.comp_continuous_multilinear_mapL fun j : Fin i => E).comp_fderivWithin (hs x hx)]
     simp only [ContinuousLinearMap.coe_comp', ContinuousLinearEquiv.coe_coe, comp_app,
@@ -527,7 +527,7 @@ theorem ContinuousLinearEquiv.iteratedFderivWithin_comp_right (g : G ≃L[𝕜] 
             ContinuousMultilinearMap.compContinuousLinearMapEquivL _ (fun _x : Fin i => g)
               (iteratedFderivWithin 𝕜 i f s (g y)))
           (g ⁻¹' s) x :=
-      fderivWithin_congr' (g.unique_diff_on_preimage_iff.2 hs x hx) (fun y hy => IH hy) hx
+      fderivWithin_congr' (@IH) hx
     rw [this]
     rw [ContinuousLinearEquiv.comp_fderivWithin _ (g.unique_diff_on_preimage_iff.2 hs x hx)]
     simp only [ContinuousLinearMap.coe_comp', ContinuousLinearEquiv.coe_coe, comp_app,
@@ -1414,13 +1414,15 @@ theorem iteratedFderivWithin_add_apply {f g : E → F} (hf : ContDiffOn 𝕜 i f
           fderivWithin 𝕜 (iteratedFderivWithin 𝕜 i f s + iteratedFderivWithin 𝕜 i g s) s x (h 0)
             (Fin.tail h) :=
         by
-        congr 2
-        exact fderivWithin_congr (hu x hx) (fun _ => hi hcdf hcdg) (hi hcdf hcdg hx)
+        rw [fderivWithin_congr' (fun _ => hi hcdf hcdg) hx]
+        rfl
       _ =
           (fderivWithin 𝕜 (iteratedFderivWithin 𝕜 i f s) s +
               fderivWithin 𝕜 (iteratedFderivWithin 𝕜 i g s) s)
             x (h 0) (Fin.tail h) :=
-        by rw [Pi.add_def, fderivWithin_add (hu x hx) (hdf x hx) (hdg x hx)] <;> rfl
+        by
+        rw [Pi.add_def, fderivWithin_add (hu x hx) (hdf x hx) (hdg x hx)]
+        rfl
       _ = (iteratedFderivWithin 𝕜 (i + 1) f s + iteratedFderivWithin 𝕜 (i + 1) g s) x h := rfl
       
 #align iterated_fderiv_within_add_apply iteratedFderivWithin_add_apply
@@ -1499,10 +1501,12 @@ theorem iteratedFderivWithin_neg_apply {f : E → F} (hu : UniqueDiffOn 𝕜 s) 
         rfl
       _ = fderivWithin 𝕜 (-iteratedFderivWithin 𝕜 i f s) s x (h 0) (Fin.tail h) :=
         by
-        congr 2
-        exact fderivWithin_congr (hu x hx) (fun _ => hi) (hi hx)
-      _ = -(fderivWithin 𝕜 (iteratedFderivWithin 𝕜 i f s) s) x (h 0) (Fin.tail h) := by
-        rw [Pi.neg_def, fderivWithin_neg (hu x hx)] <;> rfl
+        rw [fderivWithin_congr' (@hi) hx]
+        rfl
+      _ = -(fderivWithin 𝕜 (iteratedFderivWithin 𝕜 i f s) s) x (h 0) (Fin.tail h) :=
+        by
+        rw [Pi.neg_def, fderivWithin_neg (hu x hx)]
+        rfl
       _ = -(iteratedFderivWithin 𝕜 (i + 1) f s) x h := rfl
       
 #align iterated_fderiv_within_neg_apply iteratedFderivWithin_neg_apply
@@ -1785,10 +1789,12 @@ theorem iteratedFderivWithin_const_smul_apply (hf : ContDiffOn 𝕜 i f s) (hu :
         rfl
       _ = fderivWithin 𝕜 (a • iteratedFderivWithin 𝕜 i f s) s x (h 0) (Fin.tail h) :=
         by
-        congr 2
-        exact fderivWithin_congr (hu x hx) (fun _ => hi hcdf) (hi hcdf hx)
-      _ = (a • fderivWithin 𝕜 (iteratedFderivWithin 𝕜 i f s)) s x (h 0) (Fin.tail h) := by
-        rw [Pi.smul_def, fderivWithin_const_smul (hu x hx) (hdf x hx)] <;> rfl
+        rw [fderivWithin_congr' (fun _ => hi hcdf) hx]
+        rfl
+      _ = (a • fderivWithin 𝕜 (iteratedFderivWithin 𝕜 i f s)) s x (h 0) (Fin.tail h) :=
+        by
+        rw [Pi.smul_def, fderivWithin_const_smul (hu x hx) (hdf x hx)]
+        rfl
       _ = a • iteratedFderivWithin 𝕜 (i + 1) f s x h := rfl
       
 #align iterated_fderiv_within_const_smul_apply iteratedFderivWithin_const_smul_apply
@@ -2582,7 +2588,7 @@ theorem ContinuousLinearMap.norm_iteratedFderivWithin_le_of_bilinear_aux {Du Eu 
             B.precompR Du (f y) (fderivWithin 𝕜 g s y) + B.precompL Du (fderivWithin 𝕜 f s y) (g y))
           s x :=
       by
-      apply iteratedFderivWithin_congr hs (fun y hy => _) hx
+      apply iteratedFderivWithin_congr (fun y hy => _) hx
       have L : (1 : ℕ∞) ≤ n.succ := by
         simpa only [ENat.coe_one, Nat.one_le_cast] using Nat.succ_pos n
       exact
@@ -2886,7 +2892,7 @@ theorem norm_iteratedFderivWithin_comp_le_aux {Fu Gu : Type u} [NormedAddCommGro
       by
       have L : (1 : ℕ∞) ≤ n.succ := by simpa only [ENat.coe_one, Nat.one_le_cast] using n.succ_pos
       congr 1
-      apply iteratedFderivWithin_congr hs (fun y hy => _) hx
+      refine' iteratedFderivWithin_congr (fun y hy => _) hx _
       apply fderivWithin.comp _ _ _ hst (hs y hy)
       · exact hg.differentiable_on L _ (hst hy)
       · exact hf.differentiable_on L _ hy

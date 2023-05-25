@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.cyclotomic.eval
-! leanprover-community/mathlib commit 3f655f5297b030a87d641ad4e825af8d9679eb0b
+! leanprover-community/mathlib commit 5bfbcca0a7ffdd21cf1682e59106d6c942434a32
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.RingTheory.Polynomial.Cyclotomic.Basic
+import Mathbin.RingTheory.Polynomial.Cyclotomic.Roots
 import Mathbin.Tactic.ByContra
 import Mathbin.Topology.Algebra.Polynomial
 import Mathbin.NumberTheory.Padics.PadicVal

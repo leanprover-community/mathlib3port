@@ -4,14 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.eisenstein.is_integral
-! leanprover-community/mathlib commit ceb887ddf3344dab425292e497fa2af91498437c
+! leanprover-community/mathlib commit 5bfbcca0a7ffdd21cf1682e59106d6c942434a32
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Data.Nat.Choose.Dvd
 import Mathbin.RingTheory.IntegrallyClosed
 import Mathbin.RingTheory.Norm
-import Mathbin.RingTheory.Polynomial.Cyclotomic.Basic
+import Mathbin.RingTheory.Polynomial.Cyclotomic.Expand
 
 /-!
 # Eisenstein polynomials

@@ -4,12 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.kernel.disintegration
-! leanprover-community/mathlib commit 3b88f4005dc2e28d42f974cc1ce838f0dafb39b8
+! leanprover-community/mathlib commit 6315581f5650ffa2fbdbbbedc41243c8d7070981
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Probability.Kernel.CondCdf
 import Mathbin.MeasureTheory.Constructions.Polish
+import Mathbin.Probability.Kernel.IntegralCompProd
 
 /-!
 # Disintegration of measures on product spaces
@@ -456,6 +457,30 @@ theorem lintegral_condKernel_mem {s : Set (α × Ω)} (hs : MeasurableSet s) :
   simp_rw [kernel.comp_prod_apply _ _ _ hs, kernel.const_apply, kernel.prod_mk_left_apply]
 #align probability_theory.lintegral_cond_kernel_mem ProbabilityTheory.lintegral_condKernel_mem
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem set_lintegral_condKernel_eq_measure_prod {s : Set α} (hs : MeasurableSet s) {t : Set Ω}
+    (ht : MeasurableSet t) : (∫⁻ a in s, ρ.condKernel a t ∂ρ.fst) = ρ (s ×ˢ t) :=
+  by
+  have :
+    ρ (s ×ˢ t) =
+      ((kernel.const Unit ρ.fst ⊗ₖ kernel.prod_mk_left Unit ρ.cond_kernel) ()) (s ×ˢ t) :=
+    by
+    congr
+    exact measure_eq_comp_prod ρ
+  rw [this, kernel.comp_prod_apply _ _ _ (hs.prod ht)]
+  simp only [prod_mk_mem_set_prod_eq, kernel.lintegral_const, kernel.prod_mk_left_apply]
+  rw [← lintegral_indicator _ hs]
+  congr
+  ext1 x
+  classical
+    rw [indicator_apply]
+    split_ifs with hx
+    · simp only [hx, if_true, true_and_iff, set_of_mem_eq]
+    · simp only [hx, if_false, false_and_iff, set_of_false, measure_empty]
+#align probability_theory.set_lintegral_cond_kernel_eq_measure_prod ProbabilityTheory.set_lintegral_condKernel_eq_measure_prod
+
 theorem lintegral_condKernel {f : α × Ω → ℝ≥0∞} (hf : Measurable f) :
     (∫⁻ a, ∫⁻ ω, f (a, ω) ∂ρ.condKernel a ∂ρ.fst) = ∫⁻ x, f x ∂ρ :=
   by
@@ -464,7 +489,153 @@ theorem lintegral_condKernel {f : α × Ω → ℝ≥0∞} (hf : Measurable f) :
   simp_rw [kernel.prod_mk_left_apply]
 #align probability_theory.lintegral_cond_kernel ProbabilityTheory.lintegral_condKernel
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem set_lintegral_condKernel {f : α × Ω → ℝ≥0∞} (hf : Measurable f) {s : Set α}
+    (hs : MeasurableSet s) {t : Set Ω} (ht : MeasurableSet t) :
+    (∫⁻ a in s, ∫⁻ ω in t, f (a, ω) ∂ρ.condKernel a ∂ρ.fst) = ∫⁻ x in s ×ˢ t, f x ∂ρ :=
+  by
+  conv_rhs => rw [measure_eq_comp_prod ρ]
+  simp_rw [← kernel.restrict_apply _ (hs.prod ht), ← kernel.comp_prod_restrict,
+    kernel.lintegral_comp_prod _ _ _ hf, kernel.restrict_apply, kernel.const_apply,
+    kernel.prod_mk_left_apply]
+#align probability_theory.set_lintegral_cond_kernel ProbabilityTheory.set_lintegral_condKernel
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem set_lintegral_condKernel_univ_right {f : α × Ω → ℝ≥0∞} (hf : Measurable f) {s : Set α}
+    (hs : MeasurableSet s) :
+    (∫⁻ a in s, ∫⁻ ω, f (a, ω) ∂ρ.condKernel a ∂ρ.fst) = ∫⁻ x in s ×ˢ univ, f x ∂ρ :=
+  by
+  rw [← set_lintegral_cond_kernel ρ hf hs MeasurableSet.univ]
+  simp_rw [measure.restrict_univ]
+#align probability_theory.set_lintegral_cond_kernel_univ_right ProbabilityTheory.set_lintegral_condKernel_univ_right
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem set_lintegral_condKernel_univ_left {f : α × Ω → ℝ≥0∞} (hf : Measurable f) {t : Set Ω}
+    (ht : MeasurableSet t) :
+    (∫⁻ a, ∫⁻ ω in t, f (a, ω) ∂ρ.condKernel a ∂ρ.fst) = ∫⁻ x in univ ×ˢ t, f x ∂ρ :=
+  by
+  rw [← set_lintegral_cond_kernel ρ hf MeasurableSet.univ ht]
+  simp_rw [measure.restrict_univ]
+#align probability_theory.set_lintegral_cond_kernel_univ_left ProbabilityTheory.set_lintegral_condKernel_univ_left
+
+section IntegralCondKernel
+
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
+
+theorem MeasureTheory.AEStronglyMeasurable.integral_condKernel {ρ : Measure (α × Ω)}
+    [FiniteMeasure ρ] {f : α × Ω → E} (hf : AEStronglyMeasurable f ρ) :
+    AEStronglyMeasurable (fun x => ∫ y, f (x, y) ∂ρ.condKernel x) ρ.fst :=
+  by
+  rw [measure_eq_comp_prod ρ] at hf
+  exact ae_strongly_measurable.integral_kernel_comp_prod hf
+#align measure_theory.ae_strongly_measurable.integral_cond_kernel MeasureTheory.AEStronglyMeasurable.integral_condKernel
+
+theorem integral_condKernel {ρ : Measure (α × Ω)} [FiniteMeasure ρ] {f : α × Ω → E}
+    (hf : Integrable f ρ) : (∫ a, ∫ x, f (a, x) ∂ρ.condKernel a ∂ρ.fst) = ∫ ω, f ω ∂ρ :=
+  by
+  conv_rhs => rw [measure_eq_comp_prod ρ]
+  have hf' :
+    integrable f ((kernel.const Unit ρ.fst ⊗ₖ kernel.prod_mk_left Unit ρ.cond_kernel) ()) := by
+    rwa [measure_eq_comp_prod ρ] at hf
+  rw [integral_comp_prod hf', kernel.const_apply]
+  simp_rw [kernel.prod_mk_left_apply]
+#align probability_theory.integral_cond_kernel ProbabilityTheory.integral_condKernel
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem set_integral_condKernel {ρ : Measure (α × Ω)} [FiniteMeasure ρ] {f : α × Ω → E} {s : Set α}
+    (hs : MeasurableSet s) {t : Set Ω} (ht : MeasurableSet t) (hf : IntegrableOn f (s ×ˢ t) ρ) :
+    (∫ a in s, ∫ ω in t, f (a, ω) ∂ρ.condKernel a ∂ρ.fst) = ∫ x in s ×ˢ t, f x ∂ρ :=
+  by
+  conv_rhs => rw [measure_eq_comp_prod ρ]
+  rw [set_integral_comp_prod hs ht]
+  · simp_rw [kernel.prod_mk_left_apply, kernel.const_apply]
+  · rwa [measure_eq_comp_prod ρ] at hf
+#align probability_theory.set_integral_cond_kernel ProbabilityTheory.set_integral_condKernel
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem set_integral_condKernel_univ_right {ρ : Measure (α × Ω)} [FiniteMeasure ρ] {f : α × Ω → E}
+    {s : Set α} (hs : MeasurableSet s) (hf : IntegrableOn f (s ×ˢ univ) ρ) :
+    (∫ a in s, ∫ ω, f (a, ω) ∂ρ.condKernel a ∂ρ.fst) = ∫ x in s ×ˢ univ, f x ∂ρ :=
+  by
+  rw [← set_integral_cond_kernel hs MeasurableSet.univ hf]
+  simp_rw [measure.restrict_univ]
+#align probability_theory.set_integral_cond_kernel_univ_right ProbabilityTheory.set_integral_condKernel_univ_right
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem set_integral_condKernel_univ_left {ρ : Measure (α × Ω)} [FiniteMeasure ρ] {f : α × Ω → E}
+    {t : Set Ω} (ht : MeasurableSet t) (hf : IntegrableOn f (univ ×ˢ t) ρ) :
+    (∫ a, ∫ ω in t, f (a, ω) ∂ρ.condKernel a ∂ρ.fst) = ∫ x in univ ×ˢ t, f x ∂ρ :=
+  by
+  rw [← set_integral_cond_kernel MeasurableSet.univ ht hf]
+  simp_rw [measure.restrict_univ]
+#align probability_theory.set_integral_cond_kernel_univ_left ProbabilityTheory.set_integral_condKernel_univ_left
+
+end IntegralCondKernel
+
 end Polish
 
 end ProbabilityTheory
+
+namespace MeasureTheory
+
+/-! ### Integrability
+
+We place these lemmas in the `measure_theory` namespace to enable dot notation. -/
+
+
+open ProbabilityTheory
+
+variable {α Ω E F : Type _} {mα : MeasurableSpace α} [MeasurableSpace Ω] [TopologicalSpace Ω]
+  [BorelSpace Ω] [PolishSpace Ω] [Nonempty Ω] [NormedAddCommGroup E] [NormedSpace ℝ E]
+  [CompleteSpace E] [NormedAddCommGroup F] {ρ : Measure (α × Ω)} [FiniteMeasure ρ]
+
+include mα
+
+theorem AEStronglyMeasurable.ae_integrable_condKernel_iff {f : α × Ω → F}
+    (hf : AEStronglyMeasurable f ρ) :
+    (∀ᵐ a ∂ρ.fst, Integrable (fun ω => f (a, ω)) (ρ.condKernel a)) ∧
+        Integrable (fun a => ∫ ω, ‖f (a, ω)‖ ∂ρ.condKernel a) ρ.fst ↔
+      Integrable f ρ :=
+  by
+  rw [measure_eq_comp_prod ρ] at hf
+  conv_rhs => rw [measure_eq_comp_prod ρ]
+  rw [integrable_comp_prod_iff hf]
+  simp_rw [kernel.prod_mk_left_apply, kernel.const_apply]
+#align measure_theory.ae_strongly_measurable.ae_integrable_cond_kernel_iff MeasureTheory.AEStronglyMeasurable.ae_integrable_condKernel_iff
+
+theorem Integrable.condKernel_ae {f : α × Ω → F} (hf_int : Integrable f ρ) :
+    ∀ᵐ a ∂ρ.fst, Integrable (fun ω => f (a, ω)) (ρ.condKernel a) :=
+  by
+  have hf_ae : ae_strongly_measurable f ρ := hf_int.1
+  rw [← hf_ae.ae_integrable_cond_kernel_iff] at hf_int
+  exact hf_int.1
+#align measure_theory.integrable.cond_kernel_ae MeasureTheory.Integrable.condKernel_ae
+
+theorem Integrable.integral_norm_condKernel {f : α × Ω → F} (hf_int : Integrable f ρ) :
+    Integrable (fun x => ∫ y, ‖f (x, y)‖ ∂ρ.condKernel x) ρ.fst :=
+  by
+  have hf_ae : ae_strongly_measurable f ρ := hf_int.1
+  rw [← hf_ae.ae_integrable_cond_kernel_iff] at hf_int
+  exact hf_int.2
+#align measure_theory.integrable.integral_norm_cond_kernel MeasureTheory.Integrable.integral_norm_condKernel
+
+theorem Integrable.norm_integral_condKernel {f : α × Ω → E} (hf_int : Integrable f ρ) :
+    Integrable (fun x => ‖∫ y, f (x, y) ∂ρ.condKernel x‖) ρ.fst :=
+  by
+  refine' hf_int.integral_norm_cond_kernel.mono hf_int.1.integral_condKernel.norm _
+  refine' eventually_of_forall fun x => _
+  rw [norm_norm]
+  refine' (norm_integral_le_integral_norm _).trans_eq (Real.norm_of_nonneg _).symm
+  exact integral_nonneg_of_ae (eventually_of_forall fun y => norm_nonneg _)
+#align measure_theory.integrable.norm_integral_cond_kernel MeasureTheory.Integrable.norm_integral_condKernel
+
+theorem Integrable.integral_condKernel {f : α × Ω → E} (hf_int : Integrable f ρ) :
+    Integrable (fun x => ∫ y, f (x, y) ∂ρ.condKernel x) ρ.fst :=
+  (integrable_norm_iff hf_int.1.integral_condKernel).mp hf_int.norm_integral_condKernel
+#align measure_theory.integrable.integral_cond_kernel MeasureTheory.Integrable.integral_condKernel
+
+end MeasureTheory
 

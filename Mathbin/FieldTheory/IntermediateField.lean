@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module field_theory.intermediate_field
-! leanprover-community/mathlib commit c596622fccd6e0321979d94931c964054dea2d26
+! leanprover-community/mathlib commit 61db041ab8e4aaf8cb5c7dc10a7d4ff261997536
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.FieldTheory.Tower
 
 /-!
 # Intermediate fields
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Let `L / K` be a field extension, given as an instance `algebra K L`.
 This file defines the type of fields in between `K` and `L`, `intermediate_field K L`.

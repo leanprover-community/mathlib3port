@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module field_theory.ax_grothendieck
-! leanprover-community/mathlib commit 4e529b03dd62b7b7d13806c3fb974d9d4848910e
+! leanprover-community/mathlib commit 61db041ab8e4aaf8cb5c7dc10a7d4ff261997536
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Data.Fintype.Card
 
 /-!
 # Ax-Grothendieck for algebraic extensions of `zmod p`
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file proves that if `R` is an algebraic extension of a finite field,
 then any injective polynomial map `R^n -> R^n` is also surjective.

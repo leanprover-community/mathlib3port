@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.continuous_on
-! leanprover-community/mathlib commit 55d771df074d0dd020139ee1cd4b95521422df9f
+! leanprover-community/mathlib commit d4f691b9e5f94cfc64639973f3544c95f8d5d494
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -191,12 +191,7 @@ theorem nhds_of_nhdsWithin_of_nhds {s t : Set α} {a : α} (h1 : s ∈ 𝓝 a) (
 #print mem_nhdsWithin_iff_eventually /-
 theorem mem_nhdsWithin_iff_eventually {s t : Set α} {x : α} :
     t ∈ 𝓝[s] x ↔ ∀ᶠ y in 𝓝 x, y ∈ s → y ∈ t :=
-  by
-  rw [mem_nhdsWithin_iff_exists_mem_nhds_inter]
-  constructor
-  · rintro ⟨u, hu, hut⟩
-    exact eventually_of_mem hu fun x hxu hxs => hut ⟨hxu, hxs⟩
-  · refine' fun h => ⟨_, h, fun y hy => hy.1 hy.2⟩
+  set_eventuallyLE_iff_mem_inf_principal.symm
 #align mem_nhds_within_iff_eventually mem_nhdsWithin_iff_eventually
 -/
 
@@ -213,15 +208,7 @@ theorem mem_nhdsWithin_iff_eventuallyEq {s t : Set α} {x : α} :
 
 #print nhdsWithin_eq_iff_eventuallyEq /-
 theorem nhdsWithin_eq_iff_eventuallyEq {s t : Set α} {x : α} : 𝓝[s] x = 𝓝[t] x ↔ s =ᶠ[𝓝 x] t :=
-  by
-  simp_rw [Filter.ext_iff, mem_nhdsWithin_iff_eventually, eventually_eq_set]
-  constructor
-  · intro h
-    filter_upwards [(h t).mpr (eventually_of_forall fun x => id),
-      (h s).mp (eventually_of_forall fun x => id)]
-    exact fun x => Iff.intro
-  · refine' fun h u => eventually_congr (h.mono fun x h => _)
-    rw [h]
+  set_eventuallyEq_iff_inf_principal.symm
 #align nhds_within_eq_iff_eventually_eq nhdsWithin_eq_iff_eventuallyEq
 -/
 
@@ -232,11 +219,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α} {x : α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (nhdsWithin.{u1} α _inst_1 x s) (nhdsWithin.{u1} α _inst_1 x t)) (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t (nhdsWithin.{u1} α _inst_1 x s))
 Case conversion may be inaccurate. Consider using '#align nhds_within_le_iff nhdsWithin_le_iffₓ'. -/
 theorem nhdsWithin_le_iff {s t : Set α} {x : α} : 𝓝[s] x ≤ 𝓝[t] x ↔ t ∈ 𝓝[s] x :=
-  by
-  simp_rw [Filter.le_def, mem_nhdsWithin_iff_eventually]
-  constructor
-  · exact fun h => (h t <| eventually_of_forall fun x => id).mono fun x => id
-  · exact fun h u hu => (h.And hu).mono fun x hx h => hx.2 <| hx.1 h
+  set_eventuallyLE_iff_inf_principal_le.symm.trans set_eventuallyLE_iff_mem_inf_principal
 #align nhds_within_le_iff nhdsWithin_le_iff
 
 theorem preimage_nhdsWithin_coinduced' {π : α → β} {s : Set β} {t : Set α} {a : α} (h : a ∈ t)

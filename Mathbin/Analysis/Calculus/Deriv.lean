@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gabriel Ebner, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.deriv
-! leanprover-community/mathlib commit ad84a13c884fd19e286fb7abb36f4b9ba7e2f615
+! leanprover-community/mathlib commit 3a69562db5a458db8322b190ec8d9a8bbd8a5b14
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -339,9 +339,14 @@ theorem hasDerivAt_iff_tendsto_slope : HasDerivAt f f' x ↔ Tendsto (slope f x)
   hasDerivAtFilter_iff_tendsto_slope
 #align has_deriv_at_iff_tendsto_slope hasDerivAt_iff_tendsto_slope
 
-theorem hasDerivWithinAt_congr_set {s t u : Set 𝕜} (hu : u ∈ 𝓝 x) (h : s ∩ u = t ∩ u) :
-    HasDerivWithinAt f f' s x ↔ HasDerivWithinAt f f' t x := by
-  simp_rw [HasDerivWithinAt, nhdsWithin_eq_nhds_within' hu h]
+theorem hasDerivWithinAt_congr_set' {s t : Set 𝕜} (y : 𝕜) (h : s =ᶠ[𝓝[{y}ᶜ] x] t) :
+    HasDerivWithinAt f f' s x ↔ HasDerivWithinAt f f' t x :=
+  hasFDerivWithinAt_congr_set' y h
+#align has_deriv_within_at_congr_set' hasDerivWithinAt_congr_set'
+
+theorem hasDerivWithinAt_congr_set {s t : Set 𝕜} (h : s =ᶠ[𝓝 x] t) :
+    HasDerivWithinAt f f' s x ↔ HasDerivWithinAt f f' t x :=
+  hasFDerivWithinAt_congr_set h
 #align has_deriv_within_at_congr_set hasDerivWithinAt_congr_set
 
 alias hasDerivWithinAt_congr_set ↔ HasDerivWithinAt.congr_set _
@@ -349,8 +354,8 @@ alias hasDerivWithinAt_congr_set ↔ HasDerivWithinAt.congr_set _
 
 @[simp]
 theorem hasDerivWithinAt_diff_singleton :
-    HasDerivWithinAt f f' (s \ {x}) x ↔ HasDerivWithinAt f f' s x := by
-  simp only [hasDerivWithinAt_iff_tendsto_slope, sdiff_idem]
+    HasDerivWithinAt f f' (s \ {x}) x ↔ HasDerivWithinAt f f' s x :=
+  hasFDerivWithinAt_diff_singleton _
 #align has_deriv_within_at_diff_singleton hasDerivWithinAt_diff_singleton
 
 @[simp]
@@ -375,10 +380,7 @@ alias hasDerivWithinAt_Iio_iff_Iic ↔ HasDerivWithinAt.Iic_of_Iio HasDerivWithi
 
 theorem HasDerivWithinAt.Ioi_iff_Ioo [LinearOrder 𝕜] [OrderClosedTopology 𝕜] {x y : 𝕜} (h : x < y) :
     HasDerivWithinAt f f' (Ioo x y) x ↔ HasDerivWithinAt f f' (Ioi x) x :=
-  hasDerivWithinAt_congr_set (isOpen_Iio.mem_nhds h) <|
-    by
-    rw [Ioi_inter_Iio, inter_eq_left_iff_subset]
-    exact Ioo_subset_Iio_self
+  hasFDerivWithinAt_inter <| Iio_mem_nhds h
 #align has_deriv_within_at.Ioi_iff_Ioo HasDerivWithinAt.Ioi_iff_Ioo
 
 alias HasDerivWithinAt.Ioi_iff_Ioo ↔ HasDerivWithinAt.Ioi_of_Ioo HasDerivWithinAt.Ioo_of_Ioi
@@ -399,6 +401,11 @@ theorem HasDerivWithinAt.mono (h : HasDerivWithinAt f f' t x) (hst : s ⊆ t) :
     HasDerivWithinAt f f' s x :=
   HasFDerivWithinAt.mono h hst
 #align has_deriv_within_at.mono HasDerivWithinAt.mono
+
+theorem HasDerivWithinAt.mono_of_mem (h : HasDerivWithinAt f f' t x) (hst : t ∈ 𝓝[s] x) :
+    HasDerivWithinAt f f' s x :=
+  HasFDerivWithinAt.mono_of_mem h hst
+#align has_deriv_within_at.mono_of_mem HasDerivWithinAt.mono_of_mem
 
 theorem HasDerivAt.hasDerivAtFilter (h : HasDerivAt f f' x) (hL : L ≤ 𝓝 x) :
     HasDerivAtFilter f f' x L :=
@@ -517,10 +524,23 @@ theorem HasDerivWithinAt.deriv_eq_zero (hd : HasDerivWithinAt f 0 s x)
     H.eq_deriv _ h.HasDerivAt.HasDerivWithinAt hd
 #align has_deriv_within_at.deriv_eq_zero HasDerivWithinAt.deriv_eq_zero
 
+theorem derivWithin_of_mem (st : t ∈ 𝓝[s] x) (ht : UniqueDiffWithinAt 𝕜 s x)
+    (h : DifferentiableWithinAt 𝕜 f t x) : derivWithin f s x = derivWithin f t x :=
+  ((DifferentiableWithinAt.hasDerivWithinAt h).mono_of_mem st).derivWithin ht
+#align deriv_within_of_mem derivWithin_of_mem
+
 theorem derivWithin_subset (st : s ⊆ t) (ht : UniqueDiffWithinAt 𝕜 s x)
     (h : DifferentiableWithinAt 𝕜 f t x) : derivWithin f s x = derivWithin f t x :=
   ((DifferentiableWithinAt.hasDerivWithinAt h).mono st).derivWithin ht
 #align deriv_within_subset derivWithin_subset
+
+theorem derivWithin_congr_set' (y : 𝕜) (h : s =ᶠ[𝓝[{y}ᶜ] x] t) :
+    derivWithin f s x = derivWithin f t x := by simp only [derivWithin, fderivWithin_congr_set' y h]
+#align deriv_within_congr_set' derivWithin_congr_set'
+
+theorem derivWithin_congr_set (h : s =ᶠ[𝓝 x] t) : derivWithin f s x = derivWithin f t x := by
+  simp only [derivWithin, fderivWithin_congr_set h]
+#align deriv_within_congr_set derivWithin_congr_set
 
 @[simp]
 theorem derivWithin_univ : derivWithin f univ = deriv f :=
@@ -530,11 +550,10 @@ theorem derivWithin_univ : derivWithin f univ = deriv f :=
   rw [fderivWithin_univ]
 #align deriv_within_univ derivWithin_univ
 
-theorem derivWithin_inter (ht : t ∈ 𝓝 x) (hs : UniqueDiffWithinAt 𝕜 s x) :
-    derivWithin f (s ∩ t) x = derivWithin f s x :=
+theorem derivWithin_inter (ht : t ∈ 𝓝 x) : derivWithin f (s ∩ t) x = derivWithin f s x :=
   by
   unfold derivWithin
-  rw [fderivWithin_inter ht hs]
+  rw [fderivWithin_inter ht]
 #align deriv_within_inter derivWithin_inter
 
 theorem derivWithin_of_open (hs : IsOpen s) (hx : x ∈ s) : derivWithin f s x = deriv f x :=
@@ -621,18 +640,18 @@ theorem HasDerivAt.congr_of_eventuallyEq (h : HasDerivAt f f' x) (h₁ : f₁ =�
   HasDerivAtFilter.congr_of_eventuallyEq h h₁ (mem_of_mem_nhds h₁ : _)
 #align has_deriv_at.congr_of_eventually_eq HasDerivAt.congr_of_eventuallyEq
 
-theorem Filter.EventuallyEq.derivWithin_eq (hs : UniqueDiffWithinAt 𝕜 s x) (hL : f₁ =ᶠ[𝓝[s] x] f)
-    (hx : f₁ x = f x) : derivWithin f₁ s x = derivWithin f s x :=
+theorem Filter.EventuallyEq.derivWithin_eq (hL : f₁ =ᶠ[𝓝[s] x] f) (hx : f₁ x = f x) :
+    derivWithin f₁ s x = derivWithin f s x :=
   by
   unfold derivWithin
-  rw [hL.fderiv_within_eq hs hx]
+  rw [hL.fderiv_within_eq hx]
 #align filter.eventually_eq.deriv_within_eq Filter.EventuallyEq.derivWithin_eq
 
-theorem derivWithin_congr (hs : UniqueDiffWithinAt 𝕜 s x) (hL : ∀ y ∈ s, f₁ y = f y)
-    (hx : f₁ x = f x) : derivWithin f₁ s x = derivWithin f s x :=
+theorem derivWithin_congr (hs : EqOn f₁ f s) (hx : f₁ x = f x) :
+    derivWithin f₁ s x = derivWithin f s x :=
   by
   unfold derivWithin
-  rw [fderivWithin_congr hs hL hx]
+  rw [fderivWithin_congr hs hx]
 #align deriv_within_congr derivWithin_congr
 
 theorem Filter.EventuallyEq.deriv_eq (hL : f₁ =ᶠ[𝓝 x] f) : deriv f₁ x = deriv f x :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.function.strongly_measurable.basic
-! leanprover-community/mathlib commit bf6a01357ff5684b1ebcd0f1a13be314fc82c0bf
+! leanprover-community/mathlib commit ef95945cd48c932c9e034872bd25c3c220d9c946
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.MeasureTheory.Function.SimpleFuncDense
 
 /-!
 # Strongly measurable and finitely strongly measurable functions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A function `f` is said to be strongly measurable if `f` is the sequential limit of simple functions.
 It is said to be finitely strongly measurable with respect to a measure `μ` if the supports
@@ -678,33 +681,42 @@ end Arithmetic
 
 section MulAction
 
-variable [TopologicalSpace β] {G : Type _} [Group G] [MulAction G β] [ContinuousConstSMul G β]
+variable {M G G₀ : Type _}
+
+variable [TopologicalSpace β]
+
+variable [Monoid M] [MulAction M β] [ContinuousConstSMul M β]
+
+variable [Group G] [MulAction G β] [ContinuousConstSMul G β]
+
+variable [GroupWithZero G₀] [MulAction G₀ β] [ContinuousConstSMul G₀ β]
 
 /- warning: strongly_measurable_const_smul_iff -> stronglyMeasurable_const_smul_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} [_inst_2 : TopologicalSpace.{u2} β] {G : Type.{u3}} [_inst_3 : Group.{u3} G] [_inst_4 : MulAction.{u3, u2} G β (DivInvMonoid.toMonoid.{u3} G (Group.toDivInvMonoid.{u3} G _inst_3))] [_inst_5 : ContinuousConstSMul.{u3, u2} G β _inst_2 (MulAction.toHasSmul.{u3, u2} G β (DivInvMonoid.toMonoid.{u3} G (Group.toDivInvMonoid.{u3} G _inst_3)) _inst_4)] {m : MeasurableSpace.{u1} α} (c : G), Iff (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m (fun (x : α) => SMul.smul.{u3, u2} G β (MulAction.toHasSmul.{u3, u2} G β (DivInvMonoid.toMonoid.{u3} G (Group.toDivInvMonoid.{u3} G _inst_3)) _inst_4) c (f x))) (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m f)
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {G : Type.{u3}} [_inst_2 : TopologicalSpace.{u2} β] [_inst_6 : Group.{u3} G] [_inst_7 : MulAction.{u3, u2} G β (DivInvMonoid.toMonoid.{u3} G (Group.toDivInvMonoid.{u3} G _inst_6))] [_inst_8 : ContinuousConstSMul.{u3, u2} G β _inst_2 (MulAction.toHasSmul.{u3, u2} G β (DivInvMonoid.toMonoid.{u3} G (Group.toDivInvMonoid.{u3} G _inst_6)) _inst_7)] {m : MeasurableSpace.{u1} α} (c : G), Iff (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m (fun (x : α) => SMul.smul.{u3, u2} G β (MulAction.toHasSmul.{u3, u2} G β (DivInvMonoid.toMonoid.{u3} G (Group.toDivInvMonoid.{u3} G _inst_6)) _inst_7) c (f x))) (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m f)
 but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {f : α -> β} [_inst_2 : TopologicalSpace.{u2} β] {G : Type.{u1}} [_inst_3 : Group.{u1} G] [_inst_4 : MulAction.{u1, u2} G β (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_3))] [_inst_5 : ContinuousConstSMul.{u1, u2} G β _inst_2 (MulAction.toSMul.{u1, u2} G β (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_3)) _inst_4)] {m : MeasurableSpace.{u3} α} (c : G), Iff (MeasureTheory.StronglyMeasurable.{u3, u2} α β _inst_2 m (fun (x : α) => HSMul.hSMul.{u1, u2, u2} G β β (instHSMul.{u1, u2} G β (MulAction.toSMul.{u1, u2} G β (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_3)) _inst_4)) c (f x))) (MeasureTheory.StronglyMeasurable.{u3, u2} α β _inst_2 m f)
+  forall {α : Type.{u3}} {β : Type.{u2}} {f : α -> β} [G : TopologicalSpace.{u2} β] {_inst_2 : Type.{u1}} [_inst_6 : Group.{u1} _inst_2] [_inst_7 : MulAction.{u1, u2} _inst_2 β (DivInvMonoid.toMonoid.{u1} _inst_2 (Group.toDivInvMonoid.{u1} _inst_2 _inst_6))] [_inst_8 : ContinuousConstSMul.{u1, u2} _inst_2 β G (MulAction.toSMul.{u1, u2} _inst_2 β (DivInvMonoid.toMonoid.{u1} _inst_2 (Group.toDivInvMonoid.{u1} _inst_2 _inst_6)) _inst_7)] {m : MeasurableSpace.{u3} α} (c : _inst_2), Iff (MeasureTheory.StronglyMeasurable.{u3, u2} α β G m (fun (x : α) => HSMul.hSMul.{u1, u2, u2} _inst_2 β β (instHSMul.{u1, u2} _inst_2 β (MulAction.toSMul.{u1, u2} _inst_2 β (DivInvMonoid.toMonoid.{u1} _inst_2 (Group.toDivInvMonoid.{u1} _inst_2 _inst_6)) _inst_7)) c (f x))) (MeasureTheory.StronglyMeasurable.{u3, u2} α β G m f)
 Case conversion may be inaccurate. Consider using '#align strongly_measurable_const_smul_iff stronglyMeasurable_const_smul_iffₓ'. -/
 theorem stronglyMeasurable_const_smul_iff {m : MeasurableSpace α} (c : G) :
     (StronglyMeasurable fun x => c • f x) ↔ StronglyMeasurable f :=
   ⟨fun h => by simpa only [inv_smul_smul] using h.const_smul' c⁻¹, fun h => h.const_smul c⟩
 #align strongly_measurable_const_smul_iff stronglyMeasurable_const_smul_iff
 
-variable {G₀ : Type _} [GroupWithZero G₀] [MulAction G₀ β] [ContinuousConstSMul G₀ β]
+theorem IsUnit.stronglyMeasurable_const_smul_iff {m : MeasurableSpace α} {c : M} (hc : IsUnit c) :
+    (StronglyMeasurable fun x => c • f x) ↔ StronglyMeasurable f :=
+  let ⟨u, hu⟩ := hc
+  hu ▸ stronglyMeasurable_const_smul_iff u
+#align is_unit.strongly_measurable_const_smul_iff IsUnit.stronglyMeasurable_const_smul_iff
 
 /- warning: strongly_measurable_const_smul_iff₀ -> stronglyMeasurable_const_smul_iff₀ is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} [_inst_2 : TopologicalSpace.{u2} β] {G₀ : Type.{u3}} [_inst_6 : GroupWithZero.{u3} G₀] [_inst_7 : MulAction.{u3, u2} G₀ β (MonoidWithZero.toMonoid.{u3} G₀ (GroupWithZero.toMonoidWithZero.{u3} G₀ _inst_6))] [_inst_8 : ContinuousConstSMul.{u3, u2} G₀ β _inst_2 (MulAction.toHasSmul.{u3, u2} G₀ β (MonoidWithZero.toMonoid.{u3} G₀ (GroupWithZero.toMonoidWithZero.{u3} G₀ _inst_6)) _inst_7)] {m : MeasurableSpace.{u1} α} {c : G₀}, (Ne.{succ u3} G₀ c (OfNat.ofNat.{u3} G₀ 0 (OfNat.mk.{u3} G₀ 0 (Zero.zero.{u3} G₀ (MulZeroClass.toHasZero.{u3} G₀ (MulZeroOneClass.toMulZeroClass.{u3} G₀ (MonoidWithZero.toMulZeroOneClass.{u3} G₀ (GroupWithZero.toMonoidWithZero.{u3} G₀ _inst_6)))))))) -> (Iff (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m (fun (x : α) => SMul.smul.{u3, u2} G₀ β (MulAction.toHasSmul.{u3, u2} G₀ β (MonoidWithZero.toMonoid.{u3} G₀ (GroupWithZero.toMonoidWithZero.{u3} G₀ _inst_6)) _inst_7) c (f x))) (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m f))
+  forall {α : Type.{u1}} {β : Type.{u2}} {f : α -> β} {G₀ : Type.{u3}} [_inst_2 : TopologicalSpace.{u2} β] [_inst_9 : GroupWithZero.{u3} G₀] [_inst_10 : MulAction.{u3, u2} G₀ β (MonoidWithZero.toMonoid.{u3} G₀ (GroupWithZero.toMonoidWithZero.{u3} G₀ _inst_9))] [_inst_11 : ContinuousConstSMul.{u3, u2} G₀ β _inst_2 (MulAction.toHasSmul.{u3, u2} G₀ β (MonoidWithZero.toMonoid.{u3} G₀ (GroupWithZero.toMonoidWithZero.{u3} G₀ _inst_9)) _inst_10)] {m : MeasurableSpace.{u1} α} {c : G₀}, (Ne.{succ u3} G₀ c (OfNat.ofNat.{u3} G₀ 0 (OfNat.mk.{u3} G₀ 0 (Zero.zero.{u3} G₀ (MulZeroClass.toHasZero.{u3} G₀ (MulZeroOneClass.toMulZeroClass.{u3} G₀ (MonoidWithZero.toMulZeroOneClass.{u3} G₀ (GroupWithZero.toMonoidWithZero.{u3} G₀ _inst_9)))))))) -> (Iff (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m (fun (x : α) => SMul.smul.{u3, u2} G₀ β (MulAction.toHasSmul.{u3, u2} G₀ β (MonoidWithZero.toMonoid.{u3} G₀ (GroupWithZero.toMonoidWithZero.{u3} G₀ _inst_9)) _inst_10) c (f x))) (MeasureTheory.StronglyMeasurable.{u1, u2} α β _inst_2 m f))
 but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u1}} {f : α -> β} [_inst_2 : TopologicalSpace.{u1} β] {G₀ : Type.{u2}} [_inst_6 : GroupWithZero.{u2} G₀] [_inst_7 : MulAction.{u2, u1} G₀ β (MonoidWithZero.toMonoid.{u2} G₀ (GroupWithZero.toMonoidWithZero.{u2} G₀ _inst_6))] [_inst_8 : ContinuousConstSMul.{u2, u1} G₀ β _inst_2 (MulAction.toSMul.{u2, u1} G₀ β (MonoidWithZero.toMonoid.{u2} G₀ (GroupWithZero.toMonoidWithZero.{u2} G₀ _inst_6)) _inst_7)] {m : MeasurableSpace.{u3} α} {c : G₀}, (Ne.{succ u2} G₀ c (OfNat.ofNat.{u2} G₀ 0 (Zero.toOfNat0.{u2} G₀ (MonoidWithZero.toZero.{u2} G₀ (GroupWithZero.toMonoidWithZero.{u2} G₀ _inst_6))))) -> (Iff (MeasureTheory.StronglyMeasurable.{u3, u1} α β _inst_2 m (fun (x : α) => HSMul.hSMul.{u2, u1, u1} G₀ β β (instHSMul.{u2, u1} G₀ β (MulAction.toSMul.{u2, u1} G₀ β (MonoidWithZero.toMonoid.{u2} G₀ (GroupWithZero.toMonoidWithZero.{u2} G₀ _inst_6)) _inst_7)) c (f x))) (MeasureTheory.StronglyMeasurable.{u3, u1} α β _inst_2 m f))
+  forall {α : Type.{u3}} {β : Type.{u1}} {f : α -> β} [G₀ : TopologicalSpace.{u1} β] {_inst_2 : Type.{u2}} [_inst_9 : GroupWithZero.{u2} _inst_2] [_inst_10 : MulAction.{u2, u1} _inst_2 β (MonoidWithZero.toMonoid.{u2} _inst_2 (GroupWithZero.toMonoidWithZero.{u2} _inst_2 _inst_9))] [_inst_11 : ContinuousConstSMul.{u2, u1} _inst_2 β G₀ (MulAction.toSMul.{u2, u1} _inst_2 β (MonoidWithZero.toMonoid.{u2} _inst_2 (GroupWithZero.toMonoidWithZero.{u2} _inst_2 _inst_9)) _inst_10)] {m : MeasurableSpace.{u3} α} {c : _inst_2}, (Ne.{succ u2} _inst_2 c (OfNat.ofNat.{u2} _inst_2 0 (Zero.toOfNat0.{u2} _inst_2 (MonoidWithZero.toZero.{u2} _inst_2 (GroupWithZero.toMonoidWithZero.{u2} _inst_2 _inst_9))))) -> (Iff (MeasureTheory.StronglyMeasurable.{u3, u1} α β G₀ m (fun (x : α) => HSMul.hSMul.{u2, u1, u1} _inst_2 β β (instHSMul.{u2, u1} _inst_2 β (MulAction.toSMul.{u2, u1} _inst_2 β (MonoidWithZero.toMonoid.{u2} _inst_2 (GroupWithZero.toMonoidWithZero.{u2} _inst_2 _inst_9)) _inst_10)) c (f x))) (MeasureTheory.StronglyMeasurable.{u3, u1} α β G₀ m f))
 Case conversion may be inaccurate. Consider using '#align strongly_measurable_const_smul_iff₀ stronglyMeasurable_const_smul_iff₀ₓ'. -/
 theorem stronglyMeasurable_const_smul_iff₀ {m : MeasurableSpace α} {c : G₀} (hc : c ≠ 0) :
     (StronglyMeasurable fun x => c • f x) ↔ StronglyMeasurable f :=
-  by
-  refine' ⟨fun h => _, fun h => h.const_smul c⟩
-  convert h.const_smul' c⁻¹
-  simp [smul_smul, inv_mul_cancel hc]
+  (IsUnit.mk0 _ hc).stronglyMeasurable_const_smul_iff
 #align strongly_measurable_const_smul_iff₀ stronglyMeasurable_const_smul_iff₀
 
 end MulAction
@@ -2606,33 +2618,40 @@ end NormedSpace
 
 section MulAction
 
-variable {G : Type _} [Group G] [MulAction G β] [ContinuousConstSMul G β]
+variable {M G G₀ : Type _}
+
+variable [Monoid M] [MulAction M β] [ContinuousConstSMul M β]
+
+variable [Group G] [MulAction G β] [ContinuousConstSMul G β]
+
+variable [GroupWithZero G₀] [MulAction G₀ β] [ContinuousConstSMul G₀ β]
 
 /- warning: ae_strongly_measurable_const_smul_iff -> aestronglyMeasurable_const_smul_iff is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {G : Type.{u3}} [_inst_4 : Group.{u3} G] [_inst_5 : MulAction.{u3, u2} G β (DivInvMonoid.toMonoid.{u3} G (Group.toDivInvMonoid.{u3} G _inst_4))] [_inst_6 : ContinuousConstSMul.{u3, u2} G β _inst_2 (MulAction.toHasSmul.{u3, u2} G β (DivInvMonoid.toMonoid.{u3} G (Group.toDivInvMonoid.{u3} G _inst_4)) _inst_5)] (c : G), Iff (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m (fun (x : α) => SMul.smul.{u3, u2} G β (MulAction.toHasSmul.{u3, u2} G β (DivInvMonoid.toMonoid.{u3} G (Group.toDivInvMonoid.{u3} G _inst_4)) _inst_5) c (f x)) μ) (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f μ)
+  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {G : Type.{u3}} [_inst_7 : Group.{u3} G] [_inst_8 : MulAction.{u3, u2} G β (DivInvMonoid.toMonoid.{u3} G (Group.toDivInvMonoid.{u3} G _inst_7))] [_inst_9 : ContinuousConstSMul.{u3, u2} G β _inst_2 (MulAction.toHasSmul.{u3, u2} G β (DivInvMonoid.toMonoid.{u3} G (Group.toDivInvMonoid.{u3} G _inst_7)) _inst_8)] (c : G), Iff (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m (fun (x : α) => SMul.smul.{u3, u2} G β (MulAction.toHasSmul.{u3, u2} G β (DivInvMonoid.toMonoid.{u3} G (Group.toDivInvMonoid.{u3} G _inst_7)) _inst_8) c (f x)) μ) (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f μ)
 but is expected to have type
-  forall {α : Type.{u3}} {β : Type.{u2}} {m : MeasurableSpace.{u3} α} {μ : MeasureTheory.Measure.{u3} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {G : Type.{u1}} [_inst_4 : Group.{u1} G] [_inst_5 : MulAction.{u1, u2} G β (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_4))] [_inst_6 : ContinuousConstSMul.{u1, u2} G β _inst_2 (MulAction.toSMul.{u1, u2} G β (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_4)) _inst_5)] (c : G), Iff (MeasureTheory.AEStronglyMeasurable.{u3, u2} α β _inst_2 m (fun (x : α) => HSMul.hSMul.{u1, u2, u2} G β β (instHSMul.{u1, u2} G β (MulAction.toSMul.{u1, u2} G β (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_4)) _inst_5)) c (f x)) μ) (MeasureTheory.AEStronglyMeasurable.{u3, u2} α β _inst_2 m f μ)
+  forall {α : Type.{u3}} {β : Type.{u2}} {m : MeasurableSpace.{u3} α} {μ : MeasureTheory.Measure.{u3} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {G : Type.{u1}} [_inst_7 : Group.{u1} G] [_inst_8 : MulAction.{u1, u2} G β (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_7))] [_inst_9 : ContinuousConstSMul.{u1, u2} G β _inst_2 (MulAction.toSMul.{u1, u2} G β (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_7)) _inst_8)] (c : G), Iff (MeasureTheory.AEStronglyMeasurable.{u3, u2} α β _inst_2 m (fun (x : α) => HSMul.hSMul.{u1, u2, u2} G β β (instHSMul.{u1, u2} G β (MulAction.toSMul.{u1, u2} G β (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_7)) _inst_8)) c (f x)) μ) (MeasureTheory.AEStronglyMeasurable.{u3, u2} α β _inst_2 m f μ)
 Case conversion may be inaccurate. Consider using '#align ae_strongly_measurable_const_smul_iff aestronglyMeasurable_const_smul_iffₓ'. -/
 theorem aestronglyMeasurable_const_smul_iff (c : G) :
     AEStronglyMeasurable (fun x => c • f x) μ ↔ AEStronglyMeasurable f μ :=
   ⟨fun h => by simpa only [inv_smul_smul] using h.const_smul' c⁻¹, fun h => h.const_smul c⟩
 #align ae_strongly_measurable_const_smul_iff aestronglyMeasurable_const_smul_iff
 
-variable {G₀ : Type _} [GroupWithZero G₀] [MulAction G₀ β] [ContinuousConstSMul G₀ β]
+theorem IsUnit.aEStronglyMeasurable_const_smul_iff {c : M} (hc : IsUnit c) :
+    AEStronglyMeasurable (fun x => c • f x) μ ↔ AEStronglyMeasurable f μ :=
+  let ⟨u, hu⟩ := hc
+  hu ▸ aestronglyMeasurable_const_smul_iff u
+#align is_unit.ae_strongly_measurable_const_smul_iff IsUnit.aEStronglyMeasurable_const_smul_iff
 
 /- warning: ae_strongly_measurable_const_smul_iff₀ -> aestronglyMeasurable_const_smul_iff₀ is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {G₀ : Type.{u3}} [_inst_7 : GroupWithZero.{u3} G₀] [_inst_8 : MulAction.{u3, u2} G₀ β (MonoidWithZero.toMonoid.{u3} G₀ (GroupWithZero.toMonoidWithZero.{u3} G₀ _inst_7))] [_inst_9 : ContinuousConstSMul.{u3, u2} G₀ β _inst_2 (MulAction.toHasSmul.{u3, u2} G₀ β (MonoidWithZero.toMonoid.{u3} G₀ (GroupWithZero.toMonoidWithZero.{u3} G₀ _inst_7)) _inst_8)] {c : G₀}, (Ne.{succ u3} G₀ c (OfNat.ofNat.{u3} G₀ 0 (OfNat.mk.{u3} G₀ 0 (Zero.zero.{u3} G₀ (MulZeroClass.toHasZero.{u3} G₀ (MulZeroOneClass.toMulZeroClass.{u3} G₀ (MonoidWithZero.toMulZeroOneClass.{u3} G₀ (GroupWithZero.toMonoidWithZero.{u3} G₀ _inst_7)))))))) -> (Iff (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m (fun (x : α) => SMul.smul.{u3, u2} G₀ β (MulAction.toHasSmul.{u3, u2} G₀ β (MonoidWithZero.toMonoid.{u3} G₀ (GroupWithZero.toMonoidWithZero.{u3} G₀ _inst_7)) _inst_8) c (f x)) μ) (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f μ))
+  forall {α : Type.{u1}} {β : Type.{u2}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} [_inst_2 : TopologicalSpace.{u2} β] {f : α -> β} {G₀ : Type.{u3}} [_inst_10 : GroupWithZero.{u3} G₀] [_inst_11 : MulAction.{u3, u2} G₀ β (MonoidWithZero.toMonoid.{u3} G₀ (GroupWithZero.toMonoidWithZero.{u3} G₀ _inst_10))] [_inst_12 : ContinuousConstSMul.{u3, u2} G₀ β _inst_2 (MulAction.toHasSmul.{u3, u2} G₀ β (MonoidWithZero.toMonoid.{u3} G₀ (GroupWithZero.toMonoidWithZero.{u3} G₀ _inst_10)) _inst_11)] {c : G₀}, (Ne.{succ u3} G₀ c (OfNat.ofNat.{u3} G₀ 0 (OfNat.mk.{u3} G₀ 0 (Zero.zero.{u3} G₀ (MulZeroClass.toHasZero.{u3} G₀ (MulZeroOneClass.toMulZeroClass.{u3} G₀ (MonoidWithZero.toMulZeroOneClass.{u3} G₀ (GroupWithZero.toMonoidWithZero.{u3} G₀ _inst_10)))))))) -> (Iff (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m (fun (x : α) => SMul.smul.{u3, u2} G₀ β (MulAction.toHasSmul.{u3, u2} G₀ β (MonoidWithZero.toMonoid.{u3} G₀ (GroupWithZero.toMonoidWithZero.{u3} G₀ _inst_10)) _inst_11) c (f x)) μ) (MeasureTheory.AEStronglyMeasurable.{u1, u2} α β _inst_2 m f μ))
 but is expected to have type
-  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β} {G₀ : Type.{u3}} [_inst_7 : GroupWithZero.{u3} G₀] [_inst_8 : MulAction.{u3, u1} G₀ β (MonoidWithZero.toMonoid.{u3} G₀ (GroupWithZero.toMonoidWithZero.{u3} G₀ _inst_7))] [_inst_9 : ContinuousConstSMul.{u3, u1} G₀ β _inst_2 (MulAction.toSMul.{u3, u1} G₀ β (MonoidWithZero.toMonoid.{u3} G₀ (GroupWithZero.toMonoidWithZero.{u3} G₀ _inst_7)) _inst_8)] {c : G₀}, (Ne.{succ u3} G₀ c (OfNat.ofNat.{u3} G₀ 0 (Zero.toOfNat0.{u3} G₀ (MonoidWithZero.toZero.{u3} G₀ (GroupWithZero.toMonoidWithZero.{u3} G₀ _inst_7))))) -> (Iff (MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_2 m (fun (x : α) => HSMul.hSMul.{u3, u1, u1} G₀ β β (instHSMul.{u3, u1} G₀ β (MulAction.toSMul.{u3, u1} G₀ β (MonoidWithZero.toMonoid.{u3} G₀ (GroupWithZero.toMonoidWithZero.{u3} G₀ _inst_7)) _inst_8)) c (f x)) μ) (MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_2 m f μ))
+  forall {α : Type.{u2}} {β : Type.{u1}} {m : MeasurableSpace.{u2} α} {μ : MeasureTheory.Measure.{u2} α m} [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β} {G₀ : Type.{u3}} [_inst_10 : GroupWithZero.{u3} G₀] [_inst_11 : MulAction.{u3, u1} G₀ β (MonoidWithZero.toMonoid.{u3} G₀ (GroupWithZero.toMonoidWithZero.{u3} G₀ _inst_10))] [_inst_12 : ContinuousConstSMul.{u3, u1} G₀ β _inst_2 (MulAction.toSMul.{u3, u1} G₀ β (MonoidWithZero.toMonoid.{u3} G₀ (GroupWithZero.toMonoidWithZero.{u3} G₀ _inst_10)) _inst_11)] {c : G₀}, (Ne.{succ u3} G₀ c (OfNat.ofNat.{u3} G₀ 0 (Zero.toOfNat0.{u3} G₀ (MonoidWithZero.toZero.{u3} G₀ (GroupWithZero.toMonoidWithZero.{u3} G₀ _inst_10))))) -> (Iff (MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_2 m (fun (x : α) => HSMul.hSMul.{u3, u1, u1} G₀ β β (instHSMul.{u3, u1} G₀ β (MulAction.toSMul.{u3, u1} G₀ β (MonoidWithZero.toMonoid.{u3} G₀ (GroupWithZero.toMonoidWithZero.{u3} G₀ _inst_10)) _inst_11)) c (f x)) μ) (MeasureTheory.AEStronglyMeasurable.{u2, u1} α β _inst_2 m f μ))
 Case conversion may be inaccurate. Consider using '#align ae_strongly_measurable_const_smul_iff₀ aestronglyMeasurable_const_smul_iff₀ₓ'. -/
 theorem aestronglyMeasurable_const_smul_iff₀ {c : G₀} (hc : c ≠ 0) :
     AEStronglyMeasurable (fun x => c • f x) μ ↔ AEStronglyMeasurable f μ :=
-  by
-  refine' ⟨fun h => _, fun h => h.const_smul c⟩
-  convert h.const_smul' c⁻¹
-  simp [smul_smul, inv_mul_cancel hc]
+  (IsUnit.mk0 _ hc).aestronglyMeasurable_const_smul_iff
 #align ae_strongly_measurable_const_smul_iff₀ aestronglyMeasurable_const_smul_iff₀
 
 end MulAction

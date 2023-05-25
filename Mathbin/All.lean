@@ -2628,6 +2628,8 @@ import Mathbin.RingTheory.Polynomial.Chebyshev
 import Mathbin.RingTheory.Polynomial.Content
 import Mathbin.RingTheory.Polynomial.Cyclotomic.Basic
 import Mathbin.RingTheory.Polynomial.Cyclotomic.Eval
+import Mathbin.RingTheory.Polynomial.Cyclotomic.Expand
+import Mathbin.RingTheory.Polynomial.Cyclotomic.Roots
 import Mathbin.RingTheory.Polynomial.Dickson
 import Mathbin.RingTheory.Polynomial.Eisenstein.Basic
 import Mathbin.RingTheory.Polynomial.Eisenstein.IsIntegral

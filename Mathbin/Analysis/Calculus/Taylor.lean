@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.calculus.taylor
-! leanprover-community/mathlib commit 2c1d8ca2812b64f88992a5294ea3dba144755cd1
+! leanprover-community/mathlib commit 3a69562db5a458db8322b190ec8d9a8bbd8a5b14
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -158,26 +158,24 @@ theorem monomial_has_deriv_aux (t x : ℝ) (n : ℕ) :
   simp only [Nat.cast_add, Nat.cast_one]
 #align monomial_has_deriv_aux monomial_has_deriv_aux
 
-theorem hasDerivWithinAt_taylor_coeff_within {f : ℝ → E} {x y : ℝ} {k : ℕ} {s s' : Set ℝ}
-    (hs'_unique : UniqueDiffWithinAt ℝ s' y) (hs' : s' ∈ 𝓝[s] y) (hy : y ∈ s') (h : s' ⊆ s)
-    (hf' : DifferentiableOn ℝ (iteratedDerivWithin (k + 1) f s) s') :
+theorem hasDerivWithinAt_taylor_coeff_within {f : ℝ → E} {x y : ℝ} {k : ℕ} {s t : Set ℝ}
+    (ht : UniqueDiffWithinAt ℝ t y) (hs : s ∈ 𝓝[t] y)
+    (hf : DifferentiableWithinAt ℝ (iteratedDerivWithin (k + 1) f s) s y) :
     HasDerivWithinAt
-      (fun t => (((k + 1 : ℝ) * k !)⁻¹ * (x - t) ^ (k + 1)) • iteratedDerivWithin (k + 1) f s t)
+      (fun z => (((k + 1 : ℝ) * k !)⁻¹ * (x - z) ^ (k + 1)) • iteratedDerivWithin (k + 1) f s z)
       ((((k + 1 : ℝ) * k !)⁻¹ * (x - y) ^ (k + 1)) • iteratedDerivWithin (k + 2) f s y -
         ((k ! : ℝ)⁻¹ * (x - y) ^ k) • iteratedDerivWithin (k + 1) f s y)
-      s' y :=
+      t y :=
   by
-  have hf'' :
-    HasDerivWithinAt (fun t => iteratedDerivWithin (k + 1) f s t)
-      (iteratedDerivWithin (k + 2) f s y) s' y :=
+  replace hf :
+    HasDerivWithinAt (iteratedDerivWithin (k + 1) f s) (iteratedDerivWithin (k + 2) f s y) t y :=
     by
-    convert(hf' y hy).HasDerivWithinAt
-    rw [iteratedDerivWithin_succ (hs'_unique.mono h)]
-    refine' (derivWithin_subset h hs'_unique _).symm
-    exact (hf' y hy).antimono h hs'
+    convert(hf.mono_of_mem hs).HasDerivWithinAt
+    rw [iteratedDerivWithin_succ (ht.mono_nhds (nhds_within_le_iff.mpr hs))]
+    exact (derivWithin_of_mem hs ht hf).symm
   have :
     HasDerivWithinAt (fun t => ((k + 1 : ℝ) * k !)⁻¹ * (x - t) ^ (k + 1))
-      (-((k ! : ℝ)⁻¹ * (x - y) ^ k)) s' y :=
+      (-((k ! : ℝ)⁻¹ * (x - y) ^ k)) t y :=
     by
     -- Commuting the factors:
     have : -((k ! : ℝ)⁻¹ * (x - y) ^ k) = ((k + 1 : ℝ) * k !)⁻¹ * (-(k + 1) * (x - y) ^ k) :=
@@ -186,7 +184,7 @@ theorem hasDerivWithinAt_taylor_coeff_within {f : ℝ → E} {x y : ℝ} {k : �
       ring_nf
     rw [this]
     exact (monomial_has_deriv_aux y x _).HasDerivWithinAt.const_mul _
-  convert this.smul hf''
+  convert this.smul hf
   field_simp [Nat.cast_add_one_ne_zero k, Nat.factorial_ne_zero k]
   rw [neg_div, neg_smul, sub_eq_add_neg]
 #align has_deriv_within_at_taylor_coeff_within hasDerivWithinAt_taylor_coeff_within
@@ -197,7 +195,7 @@ Version for arbitrary sets -/
 theorem hasDerivWithinAt_taylorWithinEval {f : ℝ → E} {x y : ℝ} {n : ℕ} {s s' : Set ℝ}
     (hs'_unique : UniqueDiffWithinAt ℝ s' y) (hs_unique : UniqueDiffOn ℝ s) (hs' : s' ∈ 𝓝[s] y)
     (hy : y ∈ s') (h : s' ⊆ s) (hf : ContDiffOn ℝ n f s)
-    (hf' : DifferentiableOn ℝ (iteratedDerivWithin n f s) s') :
+    (hf' : DifferentiableWithinAt ℝ (iteratedDerivWithin n f s) s y) :
     HasDerivWithinAt (fun t => taylorWithinEval f n s t x)
       (((n ! : ℝ)⁻¹ * (x - y) ^ n) • iteratedDerivWithin (n + 1) f s y) s' y :=
   by
@@ -205,22 +203,19 @@ theorem hasDerivWithinAt_taylorWithinEval {f : ℝ → E} {x y : ℝ} {n : ℕ} 
   · simp only [taylor_within_zero_eval, Nat.factorial_zero, Nat.cast_one, inv_one, pow_zero,
       mul_one, zero_add, one_smul]
     simp only [iteratedDerivWithin_zero] at hf'
-    rw [iteratedDerivWithin_one hs_unique (h hy)]
-    refine' HasDerivWithinAt.mono _ h
-    refine' DifferentiableWithinAt.hasDerivWithinAt _
-    exact (hf' y hy).antimono h hs'
+    rw [iteratedDerivWithin_one (hs_unique _ (h hy))]
+    exact hf'.has_deriv_within_at.mono h
   simp_rw [Nat.add_succ, taylorWithinEval_succ]
   simp only [add_zero, Nat.factorial_succ, Nat.cast_mul, Nat.cast_add, Nat.cast_one]
   have hdiff : DifferentiableOn ℝ (iteratedDerivWithin k f s) s' :=
     by
-    have coe_lt_succ : (k : WithTop ℕ) < k.succ :=
-      by
-      rw [WithTop.coe_lt_coe]
-      exact lt_add_one k
+    have coe_lt_succ : (k : WithTop ℕ) < k.succ := Nat.cast_lt.2 k.lt_succ_self
     refine' DifferentiableOn.mono _ h
     exact hf.differentiable_on_iterated_deriv_within coe_lt_succ hs_unique
-  specialize hk (ContDiffOn.of_succ hf) hdiff
-  convert hk.add (hasDerivWithinAt_taylor_coeff_within hs'_unique hs' hy h hf')
+  specialize hk hf.of_succ ((hdiff y hy).mono_of_mem hs')
+  convert hk.add
+      (hasDerivWithinAt_taylor_coeff_within hs'_unique (nhdsWithin_mono _ h self_mem_nhdsWithin)
+        hf')
   exact (add_sub_cancel'_right _ _).symm
 #align has_deriv_within_at_taylor_within_eval hasDerivWithinAt_taylorWithinEval
 
@@ -232,9 +227,11 @@ theorem taylorWithinEval_hasDerivAt_Ioo {f : ℝ → E} {a b t : ℝ} (x : ℝ) 
     (hf' : DifferentiableOn ℝ (iteratedDerivWithin n f (Icc a b)) (Ioo a b)) :
     HasDerivAt (fun y => taylorWithinEval f n (Icc a b) y x)
       (((n ! : ℝ)⁻¹ * (x - t) ^ n) • iteratedDerivWithin (n + 1) f (Icc a b) t) t :=
-  haveI h_nhds := IsOpen.mem_nhds isOpen_Ioo ht
-  (hasDerivWithinAt_taylorWithinEval (uniqueDiffWithinAt_Ioo ht) (uniqueDiffOn_Icc hx)
-        (nhdsWithin_le_nhds h_nhds) ht Ioo_subset_Icc_self hf hf').HasDerivAt
+  have h_nhds : Ioo a b ∈ 𝓝 t := isOpen_Ioo.mem_nhds ht
+  have h_nhds' : Ioo a b ∈ 𝓝[Icc a b] t := nhdsWithin_le_nhds h_nhds
+  (hasDerivWithinAt_taylorWithinEval (uniqueDiffWithinAt_Ioo ht) (uniqueDiffOn_Icc hx) h_nhds' ht
+          Ioo_subset_Icc_self hf <|
+        (hf' t ht).mono_of_mem h_nhds').HasDerivAt
     h_nhds
 #align taylor_within_eval_has_deriv_at_Ioo taylorWithinEval_hasDerivAt_Ioo
 
@@ -247,7 +244,7 @@ theorem has_deriv_within_taylorWithinEval_at_Icc {f : ℝ → E} {a b t : ℝ} (
     HasDerivWithinAt (fun y => taylorWithinEval f n (Icc a b) y x)
       (((n ! : ℝ)⁻¹ * (x - t) ^ n) • iteratedDerivWithin (n + 1) f (Icc a b) t) (Icc a b) t :=
   hasDerivWithinAt_taylorWithinEval (uniqueDiffOn_Icc hx t ht) (uniqueDiffOn_Icc hx)
-    self_mem_nhdsWithin ht rfl.Subset hf hf'
+    self_mem_nhdsWithin ht rfl.Subset hf (hf' t ht)
 #align has_deriv_within_taylor_within_eval_at_Icc has_deriv_within_taylorWithinEval_at_Icc
 
 /-! ### Taylor's theorem with mean value type remainder estimate -/

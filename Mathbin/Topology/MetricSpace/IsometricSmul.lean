@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.isometric_smul
-! leanprover-community/mathlib commit 69c6a5a12d8a2b159f20933e60115a4f2de62b58
+! leanprover-community/mathlib commit bc91ed7093bf098d253401e69df601fc33dde156
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -96,6 +96,13 @@ theorem edist_smul_left [SMul M X] [IsometricSMul M X] (c : M) (x y : X) :
 #align edist_smul_left edist_smul_left
 #align edist_vadd_left edist_vadd_left
 -/
+
+@[simp, to_additive]
+theorem ediam_smul [SMul M X] [IsometricSMul M X] (c : M) (s : Set X) :
+    EMetric.diam (c • s) = EMetric.diam s :=
+  (isometry_smul _ _).ediam_image s
+#align ediam_smul ediam_smul
+#align ediam_vadd ediam_vadd
 
 #print isometry_mul_left /-
 @[to_additive]
@@ -475,6 +482,13 @@ theorem nndist_smul [PseudoMetricSpace X] [SMul M X] [IsometricSMul M X] (c : M)
 #align nndist_smul nndist_smul
 #align nndist_vadd nndist_vadd
 -/
+
+@[simp, to_additive]
+theorem diam_smul [PseudoMetricSpace X] [SMul M X] [IsometricSMul M X] (c : M) (s : Set X) :
+    Metric.diam (c • s) = Metric.diam s :=
+  (isometry_smul _ _).diam_image s
+#align diam_smul diam_smul
+#align diam_vadd diam_vadd
 
 #print dist_mul_left /-
 @[simp, to_additive]

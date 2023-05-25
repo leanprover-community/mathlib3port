@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.power_basis
-! leanprover-community/mathlib commit d1d69e99ed34c95266668af4e288fc1c598b9a7f
+! leanprover-community/mathlib commit 61db041ab8e4aaf8cb5c7dc10a7d4ff261997536
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.FieldTheory.Minpoly.Field
 
 /-!
 # Power basis
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines a structure `power_basis R S`, giving a basis of the
 `R`-algebra `S` as a finite list of powers `1, x, ..., x^n`.

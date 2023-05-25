@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.iterated_deriv
-! leanprover-community/mathlib commit 2c1d8ca2812b64f88992a5294ea3dba144755cd1
+! leanprover-community/mathlib commit 3a69562db5a458db8322b190ec8d9a8bbd8a5b14
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -129,10 +129,10 @@ theorem iteratedDerivWithin_zero : iteratedDerivWithin 0 f s = f :=
 #align iterated_deriv_within_zero iteratedDerivWithin_zero
 
 @[simp]
-theorem iteratedDerivWithin_one (hs : UniqueDiffOn 𝕜 s) {x : 𝕜} (hx : x ∈ s) :
+theorem iteratedDerivWithin_one {x : 𝕜} (h : UniqueDiffWithinAt 𝕜 s x) :
     iteratedDerivWithin 1 f s x = derivWithin f s x :=
   by
-  simp [iteratedDerivWithin, iteratedFderivWithin_one_apply hs hx]
+  simp only [iteratedDerivWithin, iteratedFderivWithin_one_apply h]
   rfl
 #align iterated_deriv_within_one iteratedDerivWithin_one
 
@@ -170,14 +170,20 @@ theorem ContDiffOn.continuousOn_iteratedDerivWithin {n : ℕ∞} {m : ℕ} (h : 
     h.continuous_on_iterated_fderiv_within hmn hs
 #align cont_diff_on.continuous_on_iterated_deriv_within ContDiffOn.continuousOn_iteratedDerivWithin
 
+theorem ContDiffWithinAt.differentiableWithinAt_iteratedDerivWithin {n : ℕ∞} {m : ℕ}
+    (h : ContDiffWithinAt 𝕜 n f s x) (hmn : (m : ℕ∞) < n) (hs : UniqueDiffOn 𝕜 (insert x s)) :
+    DifferentiableWithinAt 𝕜 (iteratedDerivWithin m f s) s x := by
+  simpa only [iteratedDerivWithin_eq_equiv_comp,
+    LinearIsometryEquiv.comp_differentiableWithinAt_iff] using
+    h.differentiable_within_at_iterated_fderiv_within hmn hs
+#align cont_diff_within_at.differentiable_within_at_iterated_deriv_within ContDiffWithinAt.differentiableWithinAt_iteratedDerivWithin
+
 /-- On a set with unique derivatives, a `C^n` function has derivatives less than `n` which are
 differentiable. -/
 theorem ContDiffOn.differentiableOn_iteratedDerivWithin {n : ℕ∞} {m : ℕ} (h : ContDiffOn 𝕜 n f s)
     (hmn : (m : ℕ∞) < n) (hs : UniqueDiffOn 𝕜 s) :
-    DifferentiableOn 𝕜 (iteratedDerivWithin m f s) s := by
-  simpa only [iteratedDerivWithin_eq_equiv_comp,
-    LinearIsometryEquiv.comp_differentiableOn_iff] using
-    h.differentiable_on_iterated_fderiv_within hmn hs
+    DifferentiableOn 𝕜 (iteratedDerivWithin m f s) s := fun x hx =>
+  (h x hx).differentiableWithinAt_iteratedDerivWithin hmn <| by rwa [insert_eq_of_mem hx]
 #align cont_diff_on.differentiable_on_iterated_deriv_within ContDiffOn.differentiableOn_iteratedDerivWithin
 
 /-- The property of being `C^n`, initially defined in terms of the Fréchet derivative, can be
@@ -215,7 +221,7 @@ theorem iteratedDerivWithin_eq_iterate {x : 𝕜} (hs : UniqueDiffOn 𝕜 s) (hx
   induction' n with n IH generalizing x
   · simp
   · rw [iteratedDerivWithin_succ (hs x hx), Function.iterate_succ']
-    exact derivWithin_congr (hs x hx) (fun y hy => IH hy) (IH hx)
+    exact derivWithin_congr (fun y hy => IH hy) (IH hx)
 #align iterated_deriv_within_eq_iterate iteratedDerivWithin_eq_iterate
 
 /-- The `n+1`-th iterated derivative within a set with unique derivatives can be obtained by

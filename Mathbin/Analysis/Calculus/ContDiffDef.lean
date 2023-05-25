@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.cont_diff_def
-! leanprover-community/mathlib commit e3fb84046afd187b710170887195d50bada934ee
+! leanprover-community/mathlib commit 3a69562db5a458db8322b190ec8d9a8bbd8a5b14
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -163,7 +163,7 @@ derivative, differentiability, higher derivative, `C^n`, multilinear, Taylor ser
 
 noncomputable section
 
-open Classical BigOperators NNReal Topology
+open Classical BigOperators NNReal Topology Filter
 
 -- mathport name: «expr∞»
 local notation "∞" => (⊤ : ℕ∞)
@@ -698,15 +698,19 @@ theorem ContDiffOn.contDiffWithinAt (h : ContDiffOn 𝕜 n f s) (hx : x ∈ s) :
   h x hx
 #align cont_diff_on.cont_diff_within_at ContDiffOn.contDiffWithinAt
 
+theorem ContDiffWithinAt.cont_diff_on' {m : ℕ} (hm : (m : ℕ∞) ≤ n)
+    (h : ContDiffWithinAt 𝕜 n f s x) : ∃ u, IsOpen u ∧ x ∈ u ∧ ContDiffOn 𝕜 m f (insert x s ∩ u) :=
+  by
+  rcases h m hm with ⟨t, ht, p, hp⟩
+  rcases mem_nhdsWithin.1 ht with ⟨u, huo, hxu, hut⟩
+  rw [inter_comm] at hut
+  exact ⟨u, huo, hxu, (hp.mono hut).ContDiffOn⟩
+#align cont_diff_within_at.cont_diff_on' ContDiffWithinAt.cont_diff_on'
+
 theorem ContDiffWithinAt.contDiffOn {m : ℕ} (hm : (m : ℕ∞) ≤ n) (h : ContDiffWithinAt 𝕜 n f s x) :
     ∃ u ∈ 𝓝[insert x s] x, u ⊆ insert x s ∧ ContDiffOn 𝕜 m f u :=
-  by
-  rcases h m hm with ⟨u, u_nhd, p, hp⟩
-  refine' ⟨u ∩ insert x s, Filter.inter_mem u_nhd self_mem_nhdsWithin, inter_subset_right _ _, _⟩
-  intro y hy m' hm'
-  refine' ⟨u ∩ insert x s, _, p, (hp.mono (inter_subset_left _ _)).of_le hm'⟩
-  convert self_mem_nhdsWithin
-  exact insert_eq_of_mem hy
+  let ⟨u, uo, xu, h⟩ := h.cont_diff_on' hm
+  ⟨_, inter_mem_nhdsWithin _ (uo.mem_nhds xu), inter_subset_left _ _, h⟩
 #align cont_diff_within_at.cont_diff_on ContDiffWithinAt.contDiffOn
 
 protected theorem ContDiffWithinAt.eventually {n : ℕ} (h : ContDiffWithinAt 𝕜 n f s x) :
@@ -893,7 +897,7 @@ theorem iteratedFderivWithin_succ_apply_right {n : ℕ} (hs : UniqueDiffOn 𝕜 
           (fderivWithin 𝕜 (I ∘ iteratedFderivWithin 𝕜 n (fderivWithin 𝕜 f s) s) s x :
               E → E[×n + 1]→L[𝕜] F)
             (m 0) (tail m) :=
-        by rw [fderivWithin_congr (hs x hx) A (A x hx)]
+        by rw [fderivWithin_congr A (A x hx)]
       _ =
           (I ∘ fderivWithin 𝕜 (iteratedFderivWithin 𝕜 n (fderivWithin 𝕜 f s) s) s x :
               E → E[×n + 1]→L[𝕜] F)
@@ -934,78 +938,94 @@ theorem norm_iteratedFderivWithin_fderivWithin {n : ℕ} (hs : UniqueDiffOn 𝕜
 #align norm_iterated_fderiv_within_fderiv_within norm_iteratedFderivWithin_fderivWithin
 
 @[simp]
-theorem iteratedFderivWithin_one_apply (hs : UniqueDiffOn 𝕜 s) (hx : x ∈ s) (m : Fin 1 → E) :
+theorem iteratedFderivWithin_one_apply (h : UniqueDiffWithinAt 𝕜 s x) (m : Fin 1 → E) :
     (iteratedFderivWithin 𝕜 1 f s x : (Fin 1 → E) → F) m = (fderivWithin 𝕜 f s x : E → F) (m 0) :=
   by
-  rw [iteratedFderivWithin_succ_apply_right hs hx, iteratedFderivWithin_zero_apply]
+  simp only [iteratedFderivWithin_succ_apply_left, iteratedFderivWithin_zero_eq_comp,
+    (continuousMultilinearCurryFin0 𝕜 E F).symm.comp_fderivWithin h]
   rfl
 #align iterated_fderiv_within_one_apply iteratedFderivWithin_one_apply
 
-/-- If two functions coincide on a set `s` of unique differentiability, then their iterated
-differentials within this set coincide. -/
-theorem iteratedFderivWithin_congr {n : ℕ} (hs : UniqueDiffOn 𝕜 s) (hL : ∀ y ∈ s, f₁ y = f y)
-    (hx : x ∈ s) : iteratedFderivWithin 𝕜 n f₁ s x = iteratedFderivWithin 𝕜 n f s x :=
+theorem Filter.EventuallyEq.iterated_fderiv_within' (h : f₁ =ᶠ[𝓝[s] x] f) (ht : t ⊆ s) (n : ℕ) :
+    iteratedFderivWithin 𝕜 n f₁ t =ᶠ[𝓝[s] x] iteratedFderivWithin 𝕜 n f t :=
   by
-  induction' n with n IH generalizing x
-  · ext m
-    simp [hL x hx]
-  · have :
-      fderivWithin 𝕜 (fun y => iteratedFderivWithin 𝕜 n f₁ s y) s x =
-        fderivWithin 𝕜 (fun y => iteratedFderivWithin 𝕜 n f s y) s x :=
-      fderivWithin_congr (hs x hx) (fun y hy => IH hy) (IH hx)
-    ext m
-    rw [iteratedFderivWithin_succ_apply_left, iteratedFderivWithin_succ_apply_left, this]
+  induction' n with n ihn
+  · exact h.mono fun y hy => FunLike.ext _ _ fun _ => hy
+  · have : fderivWithin 𝕜 _ t =ᶠ[𝓝[s] x] fderivWithin 𝕜 _ t := ihn.fderiv_within' ht
+    apply this.mono
+    intro y hy
+    simp only [iteratedFderivWithin_succ_eq_comp_left, hy, (· ∘ ·)]
+#align filter.eventually_eq.iterated_fderiv_within' Filter.EventuallyEq.iterated_fderiv_within'
+
+protected theorem Filter.EventuallyEq.iteratedFderivWithin (h : f₁ =ᶠ[𝓝[s] x] f) (n : ℕ) :
+    iteratedFderivWithin 𝕜 n f₁ s =ᶠ[𝓝[s] x] iteratedFderivWithin 𝕜 n f s :=
+  h.iterated_fderiv_within' Subset.rfl n
+#align filter.eventually_eq.iterated_fderiv_within Filter.EventuallyEq.iteratedFderivWithin
+
+/-- If two functions coincide in a neighborhood of `x` within a set `s` and at `x`, then their
+iterated differentials within this set at `x` coincide. -/
+theorem Filter.EventuallyEq.iteratedFderivWithin_eq (h : f₁ =ᶠ[𝓝[s] x] f) (hx : f₁ x = f x)
+    (n : ℕ) : iteratedFderivWithin 𝕜 n f₁ s x = iteratedFderivWithin 𝕜 n f s x :=
+  have : f₁ =ᶠ[𝓝[insert x s] x] f := by simpa [eventually_eq, hx]
+  (this.iterated_fderiv_within' (subset_insert _ _) n).self_of_nhdsWithin (mem_insert _ _)
+#align filter.eventually_eq.iterated_fderiv_within_eq Filter.EventuallyEq.iteratedFderivWithin_eq
+
+/-- If two functions coincide on a set `s`, then their iterated differentials within this set
+coincide. See also `filter.eventually_eq.iterated_fderiv_within_eq` and
+`filter.eventually_eq.iterated_fderiv_within`. -/
+theorem iteratedFderivWithin_congr (hs : EqOn f₁ f s) (hx : x ∈ s) (n : ℕ) :
+    iteratedFderivWithin 𝕜 n f₁ s x = iteratedFderivWithin 𝕜 n f s x :=
+  (hs.EventuallyEq.filter_mono inf_le_right).iteratedFderivWithin_eq (hs hx) _
 #align iterated_fderiv_within_congr iteratedFderivWithin_congr
 
-/-- The iterated differential within a set `s` at a point `x` is not modified if one intersects
-`s` with an open set containing `x`. -/
-theorem iteratedFderivWithin_inter_open {n : ℕ} (hu : IsOpen u) (hs : UniqueDiffOn 𝕜 (s ∩ u))
-    (hx : x ∈ s ∩ u) : iteratedFderivWithin 𝕜 n f (s ∩ u) x = iteratedFderivWithin 𝕜 n f s x :=
+/-- If two functions coincide on a set `s`, then their iterated differentials within this set
+coincide. See also `filter.eventually_eq.iterated_fderiv_within_eq` and
+`filter.eventually_eq.iterated_fderiv_within`. -/
+protected theorem Set.EqOn.iteratedFderivWithin (hs : EqOn f₁ f s) (n : ℕ) :
+    EqOn (iteratedFderivWithin 𝕜 n f₁ s) (iteratedFderivWithin 𝕜 n f s) s := fun x hx =>
+  iteratedFderivWithin_congr hs hx n
+#align set.eq_on.iterated_fderiv_within Set.EqOn.iteratedFderivWithin
+
+theorem iteratedFderivWithin_eventually_congr_set' (y : E) (h : s =ᶠ[𝓝[{y}ᶜ] x] t) (n : ℕ) :
+    iteratedFderivWithin 𝕜 n f s =ᶠ[𝓝 x] iteratedFderivWithin 𝕜 n f t :=
   by
-  induction' n with n IH generalizing x
-  · ext m
-    simp
-  · have A :
-      fderivWithin 𝕜 (fun y => iteratedFderivWithin 𝕜 n f (s ∩ u) y) (s ∩ u) x =
-        fderivWithin 𝕜 (fun y => iteratedFderivWithin 𝕜 n f s y) (s ∩ u) x :=
-      fderivWithin_congr (hs x hx) (fun y hy => IH hy) (IH hx)
-    have B :
-      fderivWithin 𝕜 (fun y => iteratedFderivWithin 𝕜 n f s y) (s ∩ u) x =
-        fderivWithin 𝕜 (fun y => iteratedFderivWithin 𝕜 n f s y) s x :=
-      fderivWithin_inter (IsOpen.mem_nhds hu hx.2)
-        ((uniqueDiffWithinAt_inter (IsOpen.mem_nhds hu hx.2)).1 (hs x hx))
-    ext m
-    rw [iteratedFderivWithin_succ_apply_left, iteratedFderivWithin_succ_apply_left, A, B]
-#align iterated_fderiv_within_inter_open iteratedFderivWithin_inter_open
+  induction' n with n ihn generalizing x
+  · rfl
+  · refine' (eventually_nhds_nhdsWithin.2 h).mono fun y hy => _
+    simp only [iteratedFderivWithin_succ_eq_comp_left, (· ∘ ·)]
+    rw [(ihn hy).fderivWithin_eq_nhds, fderivWithin_congr_set' _ hy]
+#align iterated_fderiv_within_eventually_congr_set' iteratedFderivWithin_eventually_congr_set'
+
+theorem iteratedFderivWithin_eventually_congr_set (h : s =ᶠ[𝓝 x] t) (n : ℕ) :
+    iteratedFderivWithin 𝕜 n f s =ᶠ[𝓝 x] iteratedFderivWithin 𝕜 n f t :=
+  iteratedFderivWithin_eventually_congr_set' x (h.filter_mono inf_le_left) n
+#align iterated_fderiv_within_eventually_congr_set iteratedFderivWithin_eventually_congr_set
+
+theorem iteratedFderivWithin_congr_set (h : s =ᶠ[𝓝 x] t) (n : ℕ) :
+    iteratedFderivWithin 𝕜 n f s x = iteratedFderivWithin 𝕜 n f t x :=
+  (iteratedFderivWithin_eventually_congr_set h n).self_of_nhds
+#align iterated_fderiv_within_congr_set iteratedFderivWithin_congr_set
 
 /-- The iterated differential within a set `s` at a point `x` is not modified if one intersects
 `s` with a neighborhood of `x` within `s`. -/
-theorem iteratedFderivWithin_inter' {n : ℕ} (hu : u ∈ 𝓝[s] x) (hs : UniqueDiffOn 𝕜 s) (xs : x ∈ s) :
+theorem iteratedFderivWithin_inter' {n : ℕ} (hu : u ∈ 𝓝[s] x) :
     iteratedFderivWithin 𝕜 n f (s ∩ u) x = iteratedFderivWithin 𝕜 n f s x :=
-  by
-  obtain ⟨v, v_open, xv, vu⟩ : ∃ v, IsOpen v ∧ x ∈ v ∧ v ∩ s ⊆ u := mem_nhdsWithin.1 hu
-  have A : s ∩ u ∩ v = s ∩ v :=
-    by
-    apply subset.antisymm (inter_subset_inter (inter_subset_left _ _) (subset.refl _))
-    exact fun y ⟨ys, yv⟩ => ⟨⟨ys, vu ⟨yv, ys⟩⟩, yv⟩
-  have : iteratedFderivWithin 𝕜 n f (s ∩ v) x = iteratedFderivWithin 𝕜 n f s x :=
-    iteratedFderivWithin_inter_open v_open (hs.inter v_open) ⟨xs, xv⟩
-  rw [← this]
-  have : iteratedFderivWithin 𝕜 n f (s ∩ u ∩ v) x = iteratedFderivWithin 𝕜 n f (s ∩ u) x :=
-    by
-    refine' iteratedFderivWithin_inter_open v_open _ ⟨⟨xs, vu ⟨xv, xs⟩⟩, xv⟩
-    rw [A]
-    exact hs.inter v_open
-  rw [A] at this
-  rw [← this]
+  iteratedFderivWithin_congr_set (nhdsWithin_eq_iff_eventuallyEq.1 <| nhdsWithin_inter_of_mem' hu) _
 #align iterated_fderiv_within_inter' iteratedFderivWithin_inter'
 
 /-- The iterated differential within a set `s` at a point `x` is not modified if one intersects
 `s` with a neighborhood of `x`. -/
-theorem iteratedFderivWithin_inter {n : ℕ} (hu : u ∈ 𝓝 x) (hs : UniqueDiffOn 𝕜 s) (xs : x ∈ s) :
+theorem iteratedFderivWithin_inter {n : ℕ} (hu : u ∈ 𝓝 x) :
     iteratedFderivWithin 𝕜 n f (s ∩ u) x = iteratedFderivWithin 𝕜 n f s x :=
-  iteratedFderivWithin_inter' (mem_nhdsWithin_of_mem_nhds hu) hs xs
+  iteratedFderivWithin_inter' (mem_nhdsWithin_of_mem_nhds hu)
 #align iterated_fderiv_within_inter iteratedFderivWithin_inter
+
+/-- The iterated differential within a set `s` at a point `x` is not modified if one intersects
+`s` with an open set containing `x`. -/
+theorem iteratedFderivWithin_inter_open {n : ℕ} (hu : IsOpen u) (hx : x ∈ u) :
+    iteratedFderivWithin 𝕜 n f (s ∩ u) x = iteratedFderivWithin 𝕜 n f s x :=
+  iteratedFderivWithin_inter (hu.mem_nhds hx)
+#align iterated_fderiv_within_inter_open iteratedFderivWithin_inter_open
 
 @[simp]
 theorem contDiffOn_zero : ContDiffOn 𝕜 0 f s ↔ ContinuousOn f s :=
@@ -1070,14 +1090,14 @@ theorem ContDiffOn.ftaylorSeriesWithin (h : ContDiffOn 𝕜 n f s) (hs : UniqueD
     have : p x m.succ = ftaylorSeriesWithin 𝕜 f s x m.succ :=
       by
       change p x m.succ = iteratedFderivWithin 𝕜 m.succ f s x
-      rw [← iteratedFderivWithin_inter (IsOpen.mem_nhds o_open xo) hs hx]
+      rw [← iteratedFderivWithin_inter_open o_open xo]
       exact (Hp.mono ho).eq_ftaylor_series_of_uniqueDiffOn le_rfl (hs.inter o_open) ⟨hx, xo⟩
     rw [← this, ← hasFDerivWithinAt_inter (IsOpen.mem_nhds o_open xo)]
     have A : ∀ y ∈ s ∩ o, p y m = ftaylorSeriesWithin 𝕜 f s y m :=
       by
       rintro y ⟨hy, yo⟩
       change p y m = iteratedFderivWithin 𝕜 m f s y
-      rw [← iteratedFderivWithin_inter (IsOpen.mem_nhds o_open yo) hs hy]
+      rw [← iteratedFderivWithin_inter_open o_open yo]
       exact
         (Hp.mono ho).eq_ftaylor_series_of_uniqueDiffOn (WithTop.coe_le_coe.2 (Nat.le_succ m))
           (hs.inter o_open) ⟨hy, yo⟩
@@ -1096,7 +1116,7 @@ theorem ContDiffOn.ftaylorSeriesWithin (h : ContDiffOn 𝕜 n f s) (hs : UniqueD
       by
       rintro y ⟨hy, yo⟩
       change p y m = iteratedFderivWithin 𝕜 m f s y
-      rw [← iteratedFderivWithin_inter (IsOpen.mem_nhds o_open yo) hs hy]
+      rw [← iteratedFderivWithin_inter_open o_open yo]
       exact (Hp.mono ho).eq_ftaylor_series_of_uniqueDiffOn le_rfl (hs.inter o_open) ⟨hy, yo⟩
     exact ((Hp.mono ho).cont m le_rfl).congr fun y hy => (A y hy).symm
 #align cont_diff_on.ftaylor_series_within ContDiffOn.ftaylorSeriesWithin
@@ -1140,20 +1160,35 @@ theorem ContDiffOn.differentiableOn_iteratedFderivWithin {m : ℕ} (h : ContDiff
   ((h.ftaylorSeriesWithin hs).fderivWithin m hmn x hx).DifferentiableWithinAt
 #align cont_diff_on.differentiable_on_iterated_fderiv_within ContDiffOn.differentiableOn_iteratedFderivWithin
 
+theorem ContDiffWithinAt.differentiableWithinAt_iteratedFderivWithin {m : ℕ}
+    (h : ContDiffWithinAt 𝕜 n f s x) (hmn : (m : ℕ∞) < n) (hs : UniqueDiffOn 𝕜 (insert x s)) :
+    DifferentiableWithinAt 𝕜 (iteratedFderivWithin 𝕜 m f s) s x :=
+  by
+  rcases h.cont_diff_on' (ENat.add_one_le_of_lt hmn) with ⟨u, uo, xu, hu⟩
+  set t := insert x s ∩ u
+  have A : t =ᶠ[𝓝[≠] x] s :=
+    by
+    simp only [set_eventually_eq_iff_inf_principal, ← nhdsWithin_inter']
+    rw [← inter_assoc, nhdsWithin_inter_of_mem', ← diff_eq_compl_inter, insert_diff_of_mem,
+      diff_eq_compl_inter]
+    exacts[rfl, mem_nhdsWithin_of_mem_nhds (uo.mem_nhds xu)]
+  have B : iteratedFderivWithin 𝕜 m f s =ᶠ[𝓝 x] iteratedFderivWithin 𝕜 m f t :=
+    iteratedFderivWithin_eventually_congr_set' _ A.symm _
+  have C : DifferentiableWithinAt 𝕜 (iteratedFderivWithin 𝕜 m f t) t x :=
+    hu.differentiable_on_iterated_fderiv_within (Nat.cast_lt.2 m.lt_succ_self) (hs.inter uo) x
+      ⟨mem_insert _ _, xu⟩
+  rw [differentiableWithinAt_congr_set' _ A] at C
+  exact C.congr_of_eventually_eq (B.filter_mono inf_le_left) B.self_of_nhds
+#align cont_diff_within_at.differentiable_within_at_iterated_fderiv_within ContDiffWithinAt.differentiableWithinAt_iteratedFderivWithin
+
 theorem contDiffOn_iff_continuousOn_differentiableOn (hs : UniqueDiffOn 𝕜 s) :
     ContDiffOn 𝕜 n f s ↔
       (∀ m : ℕ, (m : ℕ∞) ≤ n → ContinuousOn (fun x => iteratedFderivWithin 𝕜 m f s x) s) ∧
         ∀ m : ℕ, (m : ℕ∞) < n → DifferentiableOn 𝕜 (fun x => iteratedFderivWithin 𝕜 m f s x) s :=
-  by
-  constructor
-  · intro h
-    constructor
-    · intro m hm
-      exact h.continuous_on_iterated_fderiv_within hm hs
-    · intro m hm
-      exact h.differentiable_on_iterated_fderiv_within hm hs
-  · intro h
-    exact contDiffOn_of_continuousOn_differentiableOn h.1 h.2
+  ⟨fun h =>
+    ⟨fun m hm => h.continuousOn_iteratedFderivWithin hm hs, fun m hm =>
+      h.differentiableOn_iteratedFderivWithin hm hs⟩,
+    fun h => contDiffOn_of_continuousOn_differentiableOn h.1 h.2⟩
 #align cont_diff_on_iff_continuous_on_differentiable_on contDiffOn_iff_continuousOn_differentiableOn
 
 theorem contDiffOn_succ_of_fderivWithin {n : ℕ} (hf : DifferentiableOn 𝕜 f s)
@@ -1184,7 +1219,7 @@ theorem contDiffOn_succ_iff_fderivWithin {n : ℕ} (hs : UniqueDiffOn 𝕜 s) :
   apply Filter.eventuallyEq_of_mem this fun y hy => _
   have A : fderivWithin 𝕜 f (s ∩ o) y = f' y :=
     ((hff' y (ho hy)).mono ho).fderivWithin (hs.inter o_open y hy)
-  rwa [fderivWithin_inter (IsOpen.mem_nhds o_open hy.2) (hs y hy.1)] at A
+  rwa [fderivWithin_inter (o_open.mem_nhds hy.2)] at A
 #align cont_diff_on_succ_iff_fderiv_within contDiffOn_succ_iff_fderivWithin
 
 theorem contDiffOn_succ_iff_has_fderiv_within {n : ℕ} (hs : UniqueDiffOn 𝕜 s) :

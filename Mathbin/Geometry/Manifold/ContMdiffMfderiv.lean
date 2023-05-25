@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn
 
 ! This file was ported from Lean 3 source module geometry.manifold.cont_mdiff_mfderiv
-! leanprover-community/mathlib commit 17fe3632366bfefa54c240db521ce21beeb7a28a
+! leanprover-community/mathlib commit 3a69562db5a458db8322b190ec8d9a8bbd8a5b14
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -202,7 +202,7 @@ theorem ContMdiffAt.mfderiv {x₀ : N} (f : N → M → M') (g : N → M)
       rintro x ⟨hx, h2x⟩
       simp_rw [writtenInExtChartAt, Function.comp_apply]
       rw [(extChartAt I (g x₂)).left_inv hx, (extChartAt I' (f x₂ (g x₂))).left_inv h2x]
-    refine' Filter.EventuallyEq.fderivWithin_eq_nhds (I.unique_diff _ <| mem_range_self _) _
+    refine' Filter.EventuallyEq.fderivWithin_eq_nhds _
     refine' eventually_of_mem (inter_mem _ _) this
     · exact extChartAt_preimage_mem_nhds' _ _ hx₂ (extChartAt_source_mem_nhds I (g x₂))
     refine' extChartAt_preimage_mem_nhds' _ _ hx₂ _
@@ -704,15 +704,13 @@ theorem tangentMap_tangentBundle_pure (p : TangentBundle I M) :
   simp only [Bundle.zeroSection, tangentMap, mfderiv, total_space.proj_mk, A, if_pos, chart_at,
     FiberBundle.chartedSpace_chartAt, TangentBundle.trivializationAt_apply, tangentBundleCore,
     Function.comp, ContinuousLinearMap.map_zero, mfld_simps]
-  rw [← fderivWithin_inter N (I.unique_diff (I ((chart_at H x) x)) (Set.mem_range_self _))] at B
-  rw [← fderivWithin_inter N (I.unique_diff (I ((chart_at H x) x)) (Set.mem_range_self _)), ← B]
+  rw [← fderivWithin_inter N] at B
+  rw [← fderivWithin_inter N, ← B]
   congr 2
-  apply fderivWithin_congr _ fun y hy => _
-  · simp only [Prod.mk.inj_iff, mfld_simps]
-  · apply UniqueDiffWithinAt.inter (I.unique_diff _ _) N
-    simp only [mfld_simps]
+  refine' fderivWithin_congr (fun y hy => _) _
   · simp only [mfld_simps] at hy
     simp only [hy, Prod.mk.inj_iff, mfld_simps]
+  · simp only [Prod.mk.inj_iff, mfld_simps]
 #align tangent_bundle.tangent_map_tangent_bundle_pure TangentBundle.tangentMap_tangentBundle_pure
 
 end TangentBundle

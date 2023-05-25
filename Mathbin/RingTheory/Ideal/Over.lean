@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.over
-! leanprover-community/mathlib commit 198cb64d5c961e1a8d0d3e219feb7058d5353861
+! leanprover-community/mathlib commit 61db041ab8e4aaf8cb5c7dc10a7d4ff261997536
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.RingTheory.Localization.Integral
 
 /-!
 # Ideals over/under ideals
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file concerns ideals lying over other ideals.
 Let `f : R →+* S` be a ring homomorphism (typically a ring extension), `I` an ideal of `R` and

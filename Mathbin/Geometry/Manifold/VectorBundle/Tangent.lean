@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Heather Macbeth
 
 ! This file was ported from Lean 3 source module geometry.manifold.vector_bundle.tangent
-! leanprover-community/mathlib commit 17fe3632366bfefa54c240db521ce21beeb7a28a
+! leanprover-community/mathlib commit 3a69562db5a458db8322b190ec8d9a8bbd8a5b14
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -94,7 +94,6 @@ def tangentBundleCore : VectorBundleCore 𝕜 M E (atlas H M)
     by
     rw [Filter.EventuallyEq.fderivWithin_eq, fderivWithin_id', ContinuousLinearMap.id_apply]
     · exact I.unique_diff_at_image
-    · exact I.unique_diff_at_image
     · filter_upwards [i.1.extend_target_mem_nhdsWithin I hx]with y hy
       exact (i.1.extend I).right_inv hy
     · simp_rw [Function.comp_apply, i.1.extend_left_inv I hx]
@@ -109,7 +108,6 @@ def tangentBundleCore : VectorBundleCore 𝕜 M E (atlas H M)
   coordChange_comp := by
     rintro i j k x ⟨⟨hxi, hxj⟩, hxk⟩ v
     rw [fderivWithin_fderivWithin, Filter.EventuallyEq.fderivWithin_eq]
-    · exact I.unique_diff_at_image
     · have := i.1.extend_preimage_mem_nhds I hxi (j.1.extend_source_mem_nhds I hxj)
       filter_upwards [nhdsWithin_le_nhds this]with y hy
       simp_rw [Function.comp_apply, (j.1.extend I).left_inv hy]

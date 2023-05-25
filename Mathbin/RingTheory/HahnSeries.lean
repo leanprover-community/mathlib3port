@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module ring_theory.hahn_series
-! leanprover-community/mathlib commit a484a7d0eade4e1268f4fb402859b6686037f965
+! leanprover-community/mathlib commit 61db041ab8e4aaf8cb5c7dc10a7d4ff261997536
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -18,6 +18,9 @@ import Mathbin.Algebra.Order.Group.WithTop
 
 /-!
 # Hahn Series
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 If `Γ` is ordered and `R` has zero, then `hahn_series Γ R` consists of formal series over `Γ` with
 coefficients in `R`, whose supports are partially well-ordered. With further structure on `R` and
 `Γ`, we can add further structure on `hahn_series Γ R`, with the most studied case being when `Γ` is

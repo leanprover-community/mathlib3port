@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.sheaves.sheaf_condition.opens_le_cover
-! leanprover-community/mathlib commit 85d6221d32c37e68f05b2e42cde6cee658dae5e9
+! leanprover-community/mathlib commit 61db041ab8e4aaf8cb5c7dc10a7d4ff261997536
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Topology.Sheaves.SheafCondition.Sites
 
 /-!
 # Another version of the sheaf condition.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Given a family of open sets `U : ι → opens X` we can form the subcategory
 `{ V : opens X // ∃ i, V ≤ U i }`, which has `supr U` as a cocone.

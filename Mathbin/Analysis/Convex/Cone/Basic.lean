@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module analysis.convex.cone.basic
-! leanprover-community/mathlib commit 915591b2bb3ea303648db07284a161a7f2a9e3d4
+! leanprover-community/mathlib commit 61db041ab8e4aaf8cb5c7dc10a7d4ff261997536
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.LinearAlgebra.LinearPmap
 
 /-!
 # Convex cones
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In a `𝕜`-module `E`, we define a convex cone as a set `s` such that `a • x + b • y ∈ s` whenever
 `x, y ∈ s` and `a, b > 0`. We prove that convex cones form a `complete_lattice`, and define their

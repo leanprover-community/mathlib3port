@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Best, Riccardo Brasca, Eric Rodriguez
 
 ! This file was ported from Lean 3 source module number_theory.cyclotomic.primitive_roots
-! leanprover-community/mathlib commit b602702a58f74f5317862a24893693e80bee6d41
+! leanprover-community/mathlib commit 5bfbcca0a7ffdd21cf1682e59106d6c942434a32
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,7 @@ import Mathbin.NumberTheory.Cyclotomic.Basic
 import Mathbin.RingTheory.Adjoin.PowerBasis
 import Mathbin.RingTheory.Polynomial.Cyclotomic.Eval
 import Mathbin.RingTheory.Norm
+import Mathbin.RingTheory.Polynomial.Cyclotomic.Expand
 
 /-!
 # Primitive roots in cyclotomic fields

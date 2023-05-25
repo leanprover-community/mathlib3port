@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module analysis.normed.mul_action
-! leanprover-community/mathlib commit ba5ff5ad5d120fb0ef094ad2994967e9bfaf5112
+! leanprover-community/mathlib commit bc91ed7093bf098d253401e69df601fc33dde156
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,6 +69,10 @@ Case conversion may be inaccurate. Consider using '#align nndist_smul_le nndist_
 theorem nndist_smul_le (s : α) (x y : β) : nndist (s • x) (s • y) ≤ ‖s‖₊ * nndist x y :=
   dist_smul_le s x y
 #align nndist_smul_le nndist_smul_le
+
+theorem edist_smul_le (s : α) (x y : β) : edist (s • x) (s • y) ≤ ‖s‖₊ • edist x y := by
+  simpa only [edist_nndist, ENNReal.coe_mul] using ennreal.coe_le_coe.mpr (nndist_smul_le s x y)
+#align edist_smul_le edist_smul_le
 
 /- warning: lipschitz_with_smul -> lipschitzWith_smul is a dubious translation:
 lean 3 declaration is
@@ -190,6 +194,10 @@ Case conversion may be inaccurate. Consider using '#align nndist_smul₀ nndist_
 theorem nndist_smul₀ (s : α) (x y : β) : nndist (s • x) (s • y) = ‖s‖₊ * nndist x y :=
   NNReal.eq <| dist_smul₀ s x y
 #align nndist_smul₀ nndist_smul₀
+
+theorem edist_smul₀ (s : α) (x y : β) : edist (s • x) (s • y) = ‖s‖₊ • edist x y := by
+  simp only [edist_nndist, nndist_smul₀, ENNReal.coe_mul, ENNReal.smul_def, smul_eq_mul]
+#align edist_smul₀ edist_smul₀
 
 end NormedDivisionRingModule
 

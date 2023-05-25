@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module number_theory.cyclotomic.basic
-! leanprover-community/mathlib commit b602702a58f74f5317862a24893693e80bee6d41
+! leanprover-community/mathlib commit 5bfbcca0a7ffdd21cf1682e59106d6c942434a32
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.RingTheory.Polynomial.Cyclotomic.Basic
+import Mathbin.RingTheory.Polynomial.Cyclotomic.Roots
 import Mathbin.NumberTheory.NumberField.Basic
 import Mathbin.FieldTheory.Galois
 
@@ -398,6 +398,7 @@ theorem adjoin_roots_cyclotomic_eq_adjoin_nth_roots [DecidableEq B] [IsDomain B]
     simp only [mem_singleton_iff, exists_eq_left, mem_set_of_eq]
     rw [isRoot_of_unity_iff n.pos]
     exact ⟨n, Nat.mem_divisors_self n n.ne_zero, hx⟩
+    all_goals infer_instance
   · simp only [mem_singleton_iff, exists_eq_left, mem_set_of_eq] at hx
     obtain ⟨i, hin, rfl⟩ := hζ.eq_pow_of_pow_eq_one hx n.pos
     refine' SetLike.mem_coe.2 (Subalgebra.pow_mem _ (subset_adjoin _) _)
@@ -417,6 +418,7 @@ theorem adjoin_roots_cyclotomic_eq_adjoin_root_cyclotomic {n : ℕ+} [DecidableE
     refine' ⟨n, Nat.mem_divisors_self n n.ne_zero, _⟩
     rwa [Finset.mem_coe, Multiset.mem_toFinset, map_cyclotomic,
       mem_roots <| cyclotomic_ne_zero n B] at hx
+    all_goals infer_instance
   · simp only [mem_singleton_iff, exists_eq_left, mem_set_of_eq] at hx
     simpa only [hx, Multiset.mem_toFinset, Finset.mem_coe, map_cyclotomic,
       mem_roots (cyclotomic_ne_zero n B)] using hζ.is_root_cyclotomic n.pos

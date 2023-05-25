@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn
 
 ! This file was ported from Lean 3 source module geometry.manifold.mfderiv
-! leanprover-community/mathlib commit 0187644979f2d3e10a06e916a869c994facd9a87
+! leanprover-community/mathlib commit 3a69562db5a458db8322b190ec8d9a8bbd8a5b14
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -647,10 +647,10 @@ theorem mfderivWithin_univ : mfderivWithin I I' f univ = mfderiv I I' f :=
   rw [mdifferentiableWithinAt_univ]
 #align mfderiv_within_univ mfderivWithin_univ
 
-theorem mfderivWithin_inter (ht : t ∈ 𝓝 x) (hs : UniqueMdiffWithinAt I s x) :
+theorem mfderivWithin_inter (ht : t ∈ 𝓝 x) :
     mfderivWithin I I' f (s ∩ t) x = mfderivWithin I I' f s x := by
   rw [mfderivWithin, mfderivWithin, extChartAt_preimage_inter_eq, mdifferentiableWithinAt_inter ht,
-    fderivWithin_inter (extChartAt_preimage_mem_nhds I x ht) hs]
+    fderivWithin_inter (extChartAt_preimage_mem_nhds I x ht)]
 #align mfderiv_within_inter mfderivWithin_inter
 
 theorem mdifferentiableAt_iff_of_mem_source {x' : M} {y : M'}
