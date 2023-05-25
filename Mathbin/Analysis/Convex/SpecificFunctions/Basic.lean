@@ -42,6 +42,12 @@ open Real Set
 
 open BigOperators NNReal
 
+/- warning: strict_convex_on_exp -> strictConvexOn_exp is a dubious translation:
+lean 3 declaration is
+  StrictConvexOn.{0, 0, 0} Real Real Real Real.orderedSemiring Real.addCommMonoid Real.orderedAddCommMonoid (Mul.toSMul.{0} Real Real.hasMul) (Mul.toSMul.{0} Real Real.hasMul) (Set.univ.{0} Real) Real.exp
+but is expected to have type
+  StrictConvexOn.{0, 0, 0} Real Real Real Real.orderedSemiring Real.instAddCommMonoidReal Real.orderedAddCommMonoid (Algebra.toSMul.{0, 0} Real Real Real.instCommSemiringReal Real.semiring (NormedAlgebra.toAlgebra.{0, 0} Real Real Real.normedField (SeminormedCommRing.toSeminormedRing.{0} Real (NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing)) (IsROrC.toNormedAlgebra.{0} Real Real.isROrC))) (Algebra.toSMul.{0, 0} Real Real Real.instCommSemiringReal Real.semiring (NormedAlgebra.toAlgebra.{0, 0} Real Real Real.normedField (SeminormedCommRing.toSeminormedRing.{0} Real (NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing)) (IsROrC.toNormedAlgebra.{0} Real Real.isROrC))) (Set.univ.{0} Real) Real.exp
+Case conversion may be inaccurate. Consider using '#align strict_convex_on_exp strictConvexOn_expₓ'. -/
 /-- `exp` is strictly convex on the whole real line.
 
 We give an elementary proof rather than using the second derivative test, since this lemma is
@@ -71,11 +77,23 @@ theorem strictConvexOn_exp : StrictConvexOn ℝ univ exp :=
     linarith [add_one_lt_exp_of_nonzero h1.ne']
 #align strict_convex_on_exp strictConvexOn_exp
 
+/- warning: convex_on_exp -> convexOn_exp is a dubious translation:
+lean 3 declaration is
+  ConvexOn.{0, 0, 0} Real Real Real Real.orderedSemiring Real.addCommMonoid Real.orderedAddCommMonoid (Mul.toSMul.{0} Real Real.hasMul) (Mul.toSMul.{0} Real Real.hasMul) (Set.univ.{0} Real) Real.exp
+but is expected to have type
+  ConvexOn.{0, 0, 0} Real Real Real Real.orderedSemiring Real.instAddCommMonoidReal Real.orderedAddCommMonoid (Algebra.toSMul.{0, 0} Real Real Real.instCommSemiringReal Real.semiring (NormedAlgebra.toAlgebra.{0, 0} Real Real Real.normedField (SeminormedCommRing.toSeminormedRing.{0} Real (NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing)) (IsROrC.toNormedAlgebra.{0} Real Real.isROrC))) (Algebra.toSMul.{0, 0} Real Real Real.instCommSemiringReal Real.semiring (NormedAlgebra.toAlgebra.{0, 0} Real Real Real.normedField (SeminormedCommRing.toSeminormedRing.{0} Real (NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing)) (IsROrC.toNormedAlgebra.{0} Real Real.isROrC))) (Set.univ.{0} Real) Real.exp
+Case conversion may be inaccurate. Consider using '#align convex_on_exp convexOn_expₓ'. -/
 /-- `exp` is convex on the whole real line. -/
 theorem convexOn_exp : ConvexOn ℝ univ exp :=
   strictConvexOn_exp.ConvexOn
 #align convex_on_exp convexOn_exp
 
+/- warning: convex_on_pow -> convexOn_pow is a dubious translation:
+lean 3 declaration is
+  forall (n : Nat), ConvexOn.{0, 0, 0} Real Real Real Real.orderedSemiring Real.addCommMonoid Real.orderedAddCommMonoid (Mul.toSMul.{0} Real Real.hasMul) (Mul.toSMul.{0} Real Real.hasMul) (Set.Ici.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (x : Real) => HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.monoid)) x n)
+but is expected to have type
+  forall (n : Nat), ConvexOn.{0, 0, 0} Real Real Real Real.orderedSemiring Real.instAddCommMonoidReal Real.orderedAddCommMonoid (Algebra.toSMul.{0, 0} Real Real Real.instCommSemiringReal Real.semiring (NormedAlgebra.toAlgebra.{0, 0} Real Real Real.normedField (SeminormedCommRing.toSeminormedRing.{0} Real (NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing)) (IsROrC.toNormedAlgebra.{0} Real Real.isROrC))) (Algebra.toSMul.{0, 0} Real Real Real.instCommSemiringReal Real.semiring (NormedAlgebra.toAlgebra.{0, 0} Real Real Real.normedField (SeminormedCommRing.toSeminormedRing.{0} Real (NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing)) (IsROrC.toNormedAlgebra.{0} Real Real.isROrC))) (Set.Ici.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (fun (x : Real) => HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.instMonoidReal)) x n)
+Case conversion may be inaccurate. Consider using '#align convex_on_pow convexOn_powₓ'. -/
 /-- `x^n`, `n : ℕ` is convex on `[0, +∞)` for all `n`.
 
 We give an elementary proof rather than using the second derivative test, since this lemma is
@@ -105,6 +123,12 @@ theorem convexOn_pow (n : ℕ) : ConvexOn ℝ (Ici 0) fun x : ℝ => x ^ n :=
     
 #align convex_on_pow convexOn_pow
 
+/- warning: even.convex_on_pow -> Even.convexOn_pow is a dubious translation:
+lean 3 declaration is
+  forall {n : Nat}, (Even.{0} Nat Nat.hasAdd n) -> (ConvexOn.{0, 0, 0} Real Real Real Real.orderedSemiring Real.addCommMonoid Real.orderedAddCommMonoid (Mul.toSMul.{0} Real Real.hasMul) (Mul.toSMul.{0} Real Real.hasMul) (Set.univ.{0} Real) (fun (x : Real) => HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.monoid)) x n))
+but is expected to have type
+  forall {n : Nat}, (Even.{0} Nat instAddNat n) -> (ConvexOn.{0, 0, 0} Real Real Real Real.orderedSemiring Real.instAddCommMonoidReal Real.orderedAddCommMonoid (Algebra.toSMul.{0, 0} Real Real Real.instCommSemiringReal Real.semiring (NormedAlgebra.toAlgebra.{0, 0} Real Real Real.normedField (SeminormedCommRing.toSeminormedRing.{0} Real (NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing)) (IsROrC.toNormedAlgebra.{0} Real Real.isROrC))) (Algebra.toSMul.{0, 0} Real Real Real.instCommSemiringReal Real.semiring (NormedAlgebra.toAlgebra.{0, 0} Real Real Real.normedField (SeminormedCommRing.toSeminormedRing.{0} Real (NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing)) (IsROrC.toNormedAlgebra.{0} Real Real.isROrC))) (Set.univ.{0} Real) (fun (x : Real) => HPow.hPow.{0, 0, 0} Real Nat Real (instHPow.{0, 0} Real Nat (Monoid.Pow.{0} Real Real.instMonoidReal)) x n))
+Case conversion may be inaccurate. Consider using '#align even.convex_on_pow Even.convexOn_powₓ'. -/
 /-- `x^n`, `n : ℕ` is convex on the whole real line whenever `n` is even.
 
 We give an elementary proof rather than using the second derivative test, since this lemma is
@@ -126,6 +150,12 @@ theorem Even.convexOn_pow {n : ℕ} (hn : Even n) : ConvexOn ℝ Set.univ fun x 
   · refine' (convexOn_pow k).2 _ _ hμ hν h <;> dsimp <;> positivity
 #align even.convex_on_pow Even.convexOn_pow
 
+/- warning: convex_on_zpow -> convexOn_zpow is a dubious translation:
+lean 3 declaration is
+  forall (m : Int), ConvexOn.{0, 0, 0} Real Real Real Real.orderedSemiring Real.addCommMonoid Real.orderedAddCommMonoid (Mul.toSMul.{0} Real Real.hasMul) (Mul.toSMul.{0} Real Real.hasMul) (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (x : Real) => HPow.hPow.{0, 0, 0} Real Int Real (instHPow.{0, 0} Real Int (DivInvMonoid.Pow.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.divisionRing))) x m)
+but is expected to have type
+  forall (m : Int), ConvexOn.{0, 0, 0} Real Real Real Real.orderedSemiring Real.instAddCommMonoidReal Real.orderedAddCommMonoid (Algebra.toSMul.{0, 0} Real Real Real.instCommSemiringReal Real.semiring (NormedAlgebra.toAlgebra.{0, 0} Real Real Real.normedField (SeminormedCommRing.toSeminormedRing.{0} Real (NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing)) (IsROrC.toNormedAlgebra.{0} Real Real.isROrC))) (Algebra.toSMul.{0, 0} Real Real Real.instCommSemiringReal Real.semiring (NormedAlgebra.toAlgebra.{0, 0} Real Real Real.normedField (SeminormedCommRing.toSeminormedRing.{0} Real (NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing)) (IsROrC.toNormedAlgebra.{0} Real Real.isROrC))) (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (fun (x : Real) => HPow.hPow.{0, 0, 0} Real Int Real (instHPow.{0, 0} Real Int (DivInvMonoid.Pow.{0} Real (DivisionRing.toDivInvMonoid.{0} Real Real.instDivisionRingReal))) x m)
+Case conversion may be inaccurate. Consider using '#align convex_on_zpow convexOn_zpowₓ'. -/
 /-- `x^m`, `m : ℤ` is convex on `(0, +∞)` for all `m`.
 
 We give an elementary proof rather than using the second derivative test, since this lemma is
@@ -158,6 +188,12 @@ theorem convexOn_zpow : ∀ m : ℤ, ConvexOn ℝ (Ioi 0) fun x : ℝ => x ^ m
     · positivity
 #align convex_on_zpow convexOn_zpow
 
+/- warning: strict_concave_on_log_Ioi -> strictConcaveOn_log_Ioi is a dubious translation:
+lean 3 declaration is
+  StrictConcaveOn.{0, 0, 0} Real Real Real Real.orderedSemiring Real.addCommMonoid Real.orderedAddCommMonoid (Mul.toSMul.{0} Real Real.hasMul) (Mul.toSMul.{0} Real Real.hasMul) (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) Real.log
+but is expected to have type
+  StrictConcaveOn.{0, 0, 0} Real Real Real Real.orderedSemiring Real.instAddCommMonoidReal Real.orderedAddCommMonoid (Algebra.toSMul.{0, 0} Real Real Real.instCommSemiringReal Real.semiring (NormedAlgebra.toAlgebra.{0, 0} Real Real Real.normedField (SeminormedCommRing.toSeminormedRing.{0} Real (NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing)) (IsROrC.toNormedAlgebra.{0} Real Real.isROrC))) (Algebra.toSMul.{0, 0} Real Real Real.instCommSemiringReal Real.semiring (NormedAlgebra.toAlgebra.{0, 0} Real Real Real.normedField (SeminormedCommRing.toSeminormedRing.{0} Real (NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing)) (IsROrC.toNormedAlgebra.{0} Real Real.isROrC))) (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) Real.log
+Case conversion may be inaccurate. Consider using '#align strict_concave_on_log_Ioi strictConcaveOn_log_Ioiₓ'. -/
 /- `real.log` is strictly concave on $(0, +∞)$.
 
 We give an elementary proof rather than using the second derivative test, since this lemma is
@@ -195,6 +231,12 @@ theorem strictConcaveOn_log_Ioi : StrictConcaveOn ℝ (Ioi 0) log :=
       
 #align strict_concave_on_log_Ioi strictConcaveOn_log_Ioi
 
+/- warning: one_add_mul_self_lt_rpow_one_add -> one_add_mul_self_lt_rpow_one_add is a dubious translation:
+lean 3 declaration is
+  forall {s : Real}, (LE.le.{0} Real Real.hasLe (Neg.neg.{0} Real Real.hasNeg (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne)))) s) -> (Ne.{1} Real s (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) -> (forall {p : Real}, (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))) p) -> (LT.lt.{0} Real Real.hasLt (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.hasMul) p s)) (HPow.hPow.{0, 0, 0} Real Real Real (instHPow.{0, 0} Real Real Real.hasPow) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))) s) p)))
+but is expected to have type
+  forall {s : Real}, (LE.le.{0} Real Real.instLEReal (Neg.neg.{0} Real Real.instNegReal (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))) s) -> (Ne.{1} Real s (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (forall {p : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) p) -> (LT.lt.{0} Real Real.instLTReal (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) p s)) (HPow.hPow.{0, 0, 0} Real Real Real (instHPow.{0, 0} Real Real Real.instPowReal) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) s) p)))
+Case conversion may be inaccurate. Consider using '#align one_add_mul_self_lt_rpow_one_add one_add_mul_self_lt_rpow_one_addₓ'. -/
 /-- **Bernoulli's inequality** for real exponents, strict version: for `1 < p` and `-1 ≤ s`, with
 `s ≠ 0`, we have `1 + p * s < (1 + s) ^ p`. -/
 theorem one_add_mul_self_lt_rpow_one_add {s : ℝ} (hs : -1 ≤ s) (hs' : s ≠ 0) {p : ℝ} (hp : 1 < p) :
@@ -224,6 +266,12 @@ theorem one_add_mul_self_lt_rpow_one_add {s : ℝ} (hs : -1 ≤ s) (hs' : s ≠ 
     · nlinarith
 #align one_add_mul_self_lt_rpow_one_add one_add_mul_self_lt_rpow_one_add
 
+/- warning: one_add_mul_self_le_rpow_one_add -> one_add_mul_self_le_rpow_one_add is a dubious translation:
+lean 3 declaration is
+  forall {s : Real}, (LE.le.{0} Real Real.hasLe (Neg.neg.{0} Real Real.hasNeg (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne)))) s) -> (forall {p : Real}, (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))) p) -> (LE.le.{0} Real Real.hasLe (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.hasMul) p s)) (HPow.hPow.{0, 0, 0} Real Real Real (instHPow.{0, 0} Real Real Real.hasPow) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.hasAdd) (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))) s) p)))
+but is expected to have type
+  forall {s : Real}, (LE.le.{0} Real Real.instLEReal (Neg.neg.{0} Real Real.instNegReal (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))) s) -> (forall {p : Real}, (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) p) -> (LE.le.{0} Real Real.instLEReal (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) p s)) (HPow.hPow.{0, 0, 0} Real Real Real (instHPow.{0, 0} Real Real Real.instPowReal) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) s) p)))
+Case conversion may be inaccurate. Consider using '#align one_add_mul_self_le_rpow_one_add one_add_mul_self_le_rpow_one_addₓ'. -/
 /-- **Bernoulli's inequality** for real exponents, non-strict version: for `1 ≤ p` and `-1 ≤ s`
 we have `1 + p * s ≤ (1 + s) ^ p`. -/
 theorem one_add_mul_self_le_rpow_one_add {s : ℝ} (hs : -1 ≤ s) {p : ℝ} (hp : 1 ≤ p) :
@@ -236,6 +284,12 @@ theorem one_add_mul_self_le_rpow_one_add {s : ℝ} (hs : -1 ≤ s) {p : ℝ} (hp
   exact (one_add_mul_self_lt_rpow_one_add hs hs' hp).le
 #align one_add_mul_self_le_rpow_one_add one_add_mul_self_le_rpow_one_add
 
+/- warning: strict_convex_on_rpow -> strictConvexOn_rpow is a dubious translation:
+lean 3 declaration is
+  forall {p : Real}, (LT.lt.{0} Real Real.hasLt (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))) p) -> (StrictConvexOn.{0, 0, 0} Real Real Real Real.orderedSemiring Real.addCommMonoid Real.orderedAddCommMonoid (Mul.toSMul.{0} Real Real.hasMul) (Mul.toSMul.{0} Real Real.hasMul) (Set.Ici.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (x : Real) => HPow.hPow.{0, 0, 0} Real Real Real (instHPow.{0, 0} Real Real Real.hasPow) x p))
+but is expected to have type
+  forall {p : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) p) -> (StrictConvexOn.{0, 0, 0} Real Real Real Real.orderedSemiring Real.instAddCommMonoidReal Real.orderedAddCommMonoid (Algebra.toSMul.{0, 0} Real Real Real.instCommSemiringReal Real.semiring (NormedAlgebra.toAlgebra.{0, 0} Real Real Real.normedField (SeminormedCommRing.toSeminormedRing.{0} Real (NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing)) (IsROrC.toNormedAlgebra.{0} Real Real.isROrC))) (Algebra.toSMul.{0, 0} Real Real Real.instCommSemiringReal Real.semiring (NormedAlgebra.toAlgebra.{0, 0} Real Real Real.normedField (SeminormedCommRing.toSeminormedRing.{0} Real (NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing)) (IsROrC.toNormedAlgebra.{0} Real Real.isROrC))) (Set.Ici.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (fun (x : Real) => HPow.hPow.{0, 0, 0} Real Real Real (instHPow.{0, 0} Real Real Real.instPowReal) x p))
+Case conversion may be inaccurate. Consider using '#align strict_convex_on_rpow strictConvexOn_rpowₓ'. -/
 /- For `p : ℝ` with `1 < p`, `λ x, x ^ p` is strictly convex on $[0, +∞)$.
 
 We give an elementary proof rather than using the second derivative test, since this lemma is
@@ -281,6 +335,12 @@ theorem strictConvexOn_rpow {p : ℝ} (hp : 1 < p) : StrictConvexOn ℝ (Ici 0) 
       linear_combination -H
 #align strict_convex_on_rpow strictConvexOn_rpow
 
+/- warning: convex_on_rpow -> convexOn_rpow is a dubious translation:
+lean 3 declaration is
+  forall {p : Real}, (LE.le.{0} Real Real.hasLe (OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))) p) -> (ConvexOn.{0, 0, 0} Real Real Real Real.orderedSemiring Real.addCommMonoid Real.orderedAddCommMonoid (Mul.toSMul.{0} Real Real.hasMul) (Mul.toSMul.{0} Real Real.hasMul) (Set.Ici.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) (fun (x : Real) => HPow.hPow.{0, 0, 0} Real Real Real (instHPow.{0, 0} Real Real Real.hasPow) x p))
+but is expected to have type
+  forall {p : Real}, (LE.le.{0} Real Real.instLEReal (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)) p) -> (ConvexOn.{0, 0, 0} Real Real Real Real.orderedSemiring Real.instAddCommMonoidReal Real.orderedAddCommMonoid (Algebra.toSMul.{0, 0} Real Real Real.instCommSemiringReal Real.semiring (NormedAlgebra.toAlgebra.{0, 0} Real Real Real.normedField (SeminormedCommRing.toSeminormedRing.{0} Real (NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing)) (IsROrC.toNormedAlgebra.{0} Real Real.isROrC))) (Algebra.toSMul.{0, 0} Real Real Real.instCommSemiringReal Real.semiring (NormedAlgebra.toAlgebra.{0, 0} Real Real Real.normedField (SeminormedCommRing.toSeminormedRing.{0} Real (NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing)) (IsROrC.toNormedAlgebra.{0} Real Real.isROrC))) (Set.Ici.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (fun (x : Real) => HPow.hPow.{0, 0, 0} Real Real Real (instHPow.{0, 0} Real Real Real.instPowReal) x p))
+Case conversion may be inaccurate. Consider using '#align convex_on_rpow convexOn_rpowₓ'. -/
 theorem convexOn_rpow {p : ℝ} (hp : 1 ≤ p) : ConvexOn ℝ (Ici 0) fun x : ℝ => x ^ p :=
   by
   rcases eq_or_lt_of_le hp with (rfl | hp)
@@ -288,6 +348,12 @@ theorem convexOn_rpow {p : ℝ} (hp : 1 ≤ p) : ConvexOn ℝ (Ici 0) fun x : �
   exact (strictConvexOn_rpow hp).ConvexOn
 #align convex_on_rpow convexOn_rpow
 
+/- warning: strict_concave_on_log_Iio -> strictConcaveOn_log_Iio is a dubious translation:
+lean 3 declaration is
+  StrictConcaveOn.{0, 0, 0} Real Real Real Real.orderedSemiring Real.addCommMonoid Real.orderedAddCommMonoid (Mul.toSMul.{0} Real Real.hasMul) (Mul.toSMul.{0} Real Real.hasMul) (Set.Iio.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))) Real.log
+but is expected to have type
+  StrictConcaveOn.{0, 0, 0} Real Real Real Real.orderedSemiring Real.instAddCommMonoidReal Real.orderedAddCommMonoid (Algebra.toSMul.{0, 0} Real Real Real.instCommSemiringReal Real.semiring (NormedAlgebra.toAlgebra.{0, 0} Real Real Real.normedField (SeminormedCommRing.toSeminormedRing.{0} Real (NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing)) (IsROrC.toNormedAlgebra.{0} Real Real.isROrC))) (Algebra.toSMul.{0, 0} Real Real Real.instCommSemiringReal Real.semiring (NormedAlgebra.toAlgebra.{0, 0} Real Real Real.normedField (SeminormedCommRing.toSeminormedRing.{0} Real (NormedCommRing.toSeminormedCommRing.{0} Real Real.normedCommRing)) (IsROrC.toNormedAlgebra.{0} Real Real.isROrC))) (Set.Iio.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) Real.log
+Case conversion may be inaccurate. Consider using '#align strict_concave_on_log_Iio strictConcaveOn_log_Iioₓ'. -/
 theorem strictConcaveOn_log_Iio : StrictConcaveOn ℝ (Iio 0) log :=
   by
   refine' ⟨convex_Iio _, _⟩

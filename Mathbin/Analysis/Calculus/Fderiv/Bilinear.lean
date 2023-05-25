@@ -80,7 +80,7 @@ theorem IsBoundedBilinearMap.hasStrictFDerivAt (h : IsBoundedBilinearMap 𝕜 b)
   convert_to(fun q : T => h.deriv (p - q.2) (q.1 - q.2)) =o[𝓝 (p, p)] fun q : T => q.1 - q.2
   · ext ⟨⟨x₁, y₁⟩, ⟨x₂, y₂⟩⟩
     rcases p with ⟨x, y⟩
-    simp only [isBoundedBilinearMap_deriv_coe, Prod.mk_sub_mk, h.map_sub_left, h.map_sub_right]
+    simp only [IsBoundedBilinearMap.deriv_apply, Prod.mk_sub_mk, h.map_sub_left, h.map_sub_right]
     abel
   have : (fun q : T => p - q.2) =o[𝓝 (p, p)] fun q => (1 : ℝ) :=
     (is_o_one_iff _).2 (sub_self p ▸ tendsto_const_nhds.sub continuousAt_snd)
