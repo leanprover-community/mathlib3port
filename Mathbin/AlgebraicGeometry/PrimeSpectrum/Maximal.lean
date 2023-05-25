@@ -37,12 +37,14 @@ universe u v
 
 variable (R : Type u) [CommRing R]
 
+#print MaximalSpectrum /-
 /-- The maximal spectrum of a commutative ring `R` is the type of all maximal ideals of `R`. -/
 @[ext]
 structure MaximalSpectrum where
   asIdeal : Ideal R
   IsMaximal : as_ideal.IsMaximal
 #align maximal_spectrum MaximalSpectrum
+-/
 
 attribute [instance] MaximalSpectrum.isMaximal
 
@@ -54,17 +56,22 @@ instance [Nontrivial R] : Nonempty <| MaximalSpectrum R :=
   let ⟨I, hI⟩ := Ideal.exists_maximal R
   ⟨⟨I, hI⟩⟩
 
+#print MaximalSpectrum.toPrimeSpectrum /-
 /-- The natural inclusion from the maximal spectrum to the prime spectrum. -/
 def toPrimeSpectrum (x : MaximalSpectrum R) : PrimeSpectrum R :=
   ⟨x.asIdeal, x.IsMaximal.IsPrime⟩
 #align maximal_spectrum.to_prime_spectrum MaximalSpectrum.toPrimeSpectrum
+-/
 
+#print MaximalSpectrum.toPrimeSpectrum_injective /-
 theorem toPrimeSpectrum_injective : (@toPrimeSpectrum R _).Injective := fun ⟨_, _⟩ ⟨_, _⟩ h => by
   simpa only [mk.inj_eq] using (PrimeSpectrum.ext_iff _ _).mp h
 #align maximal_spectrum.to_prime_spectrum_injective MaximalSpectrum.toPrimeSpectrum_injective
+-/
 
 open PrimeSpectrum Set
 
+#print MaximalSpectrum.toPrimeSpectrum_range /-
 theorem toPrimeSpectrum_range :
     Set.range (@toPrimeSpectrum R _) = { x | IsClosed ({x} : Set <| PrimeSpectrum R) } :=
   by
@@ -72,12 +79,15 @@ theorem toPrimeSpectrum_range :
   ext ⟨x, _⟩
   exact ⟨fun ⟨y, hy⟩ => hy ▸ y.IsMaximal, fun hx => ⟨⟨x, hx⟩, rfl⟩⟩
 #align maximal_spectrum.to_prime_spectrum_range MaximalSpectrum.toPrimeSpectrum_range
+-/
 
+#print MaximalSpectrum.zariskiTopology /-
 /-- The Zariski topology on the maximal spectrum of a commutative ring is defined as the subspace
 topology induced by the natural inclusion into the prime spectrum. -/
 instance zariskiTopology : TopologicalSpace <| MaximalSpectrum R :=
   PrimeSpectrum.zariskiTopology.induced toPrimeSpectrum
 #align maximal_spectrum.zariski_topology MaximalSpectrum.zariskiTopology
+-/
 
 instance : T1Space <| MaximalSpectrum R :=
   ⟨fun x =>
@@ -85,12 +95,20 @@ instance : T1Space <| MaximalSpectrum R :=
       ⟨{toPrimeSpectrum x}, (isClosed_singleton_iff_isMaximal _).mpr x.IsMaximal, by
         simpa only [← image_singleton] using preimage_image_eq {x} to_prime_spectrum_injective⟩⟩
 
+#print MaximalSpectrum.toPrimeSpectrum_continuous /-
 theorem toPrimeSpectrum_continuous : Continuous <| @toPrimeSpectrum R _ :=
   continuous_induced_dom
 #align maximal_spectrum.to_prime_spectrum_continuous MaximalSpectrum.toPrimeSpectrum_continuous
+-/
 
 variable (R) [IsDomain R] (K : Type v) [Field K] [Algebra R K] [IsFractionRing R K]
 
+/- warning: maximal_spectrum.infi_localization_eq_bot -> MaximalSpectrum.iInf_localization_eq_bot is a dubious translation:
+lean 3 declaration is
+  forall (R : Type.{u1}) [_inst_1 : CommRing.{u1} R] [_inst_2 : IsDomain.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))] (K : Type.{u2}) [_inst_3 : Field.{u2} K] [_inst_4 : Algebra.{u1, u2} R K (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} K (DivisionRing.toRing.{u2} K (Field.toDivisionRing.{u2} K _inst_3)))] [_inst_5 : IsFractionRing.{u1, u2} R _inst_1 K (EuclideanDomain.toCommRing.{u2} K (Field.toEuclideanDomain.{u2} K _inst_3)) _inst_4], Eq.{succ u2} (Subalgebra.{u1, u2} R K (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} K (DivisionRing.toRing.{u2} K (Field.toDivisionRing.{u2} K _inst_3))) _inst_4) (iInf.{u2, succ u1} (Subalgebra.{u1, u2} R K (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} K (DivisionRing.toRing.{u2} K (Field.toDivisionRing.{u2} K _inst_3))) _inst_4) (ConditionallyCompleteLattice.toHasInf.{u2} (Subalgebra.{u1, u2} R K (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} K (DivisionRing.toRing.{u2} K (Field.toDivisionRing.{u2} K _inst_3))) _inst_4) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Subalgebra.{u1, u2} R K (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} K (DivisionRing.toRing.{u2} K (Field.toDivisionRing.{u2} K _inst_3))) _inst_4) (Algebra.Subalgebra.completeLattice.{u1, u2} R K (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} K (DivisionRing.toRing.{u2} K (Field.toDivisionRing.{u2} K _inst_3))) _inst_4))) (MaximalSpectrum.{u1} R _inst_1) (fun (v : MaximalSpectrum.{u1} R _inst_1) => Localization.subalgebra.ofField.{u1, u2} R K _inst_1 (Ideal.primeCompl.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) (MaximalSpectrum.asIdeal.{u1} R _inst_1 v) (Ideal.IsMaximal.isPrime'.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) (MaximalSpectrum.asIdeal.{u1} R _inst_1 v) (MaximalSpectrum.isMaximal.{u1} R _inst_1 v))) (Ideal.primeCompl_le_nonZeroDivisors.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) (MaximalSpectrum.asIdeal.{u1} R _inst_1 v) (Ideal.IsMaximal.isPrime'.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) (MaximalSpectrum.asIdeal.{u1} R _inst_1 v) (MaximalSpectrum.isMaximal.{u1} R _inst_1 v)) (IsDomain.to_noZeroDivisors.{u1} R (CommRing.toRing.{u1} R _inst_1) _inst_2)) _inst_3 _inst_4 _inst_5)) (Bot.bot.{u2} (Subalgebra.{u1, u2} R K (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} K (DivisionRing.toRing.{u2} K (Field.toDivisionRing.{u2} K _inst_3))) _inst_4) (CompleteLattice.toHasBot.{u2} (Subalgebra.{u1, u2} R K (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} K (DivisionRing.toRing.{u2} K (Field.toDivisionRing.{u2} K _inst_3))) _inst_4) (Algebra.Subalgebra.completeLattice.{u1, u2} R K (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} K (DivisionRing.toRing.{u2} K (Field.toDivisionRing.{u2} K _inst_3))) _inst_4)))
+but is expected to have type
+  forall (R : Type.{u1}) [_inst_1 : CommRing.{u1} R] [_inst_2 : IsDomain.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))] (K : Type.{u2}) [_inst_3 : Field.{u2} K] [_inst_4 : Algebra.{u1, u2} R K (CommRing.toCommSemiring.{u1} R _inst_1) (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K _inst_3)))] [_inst_5 : IsFractionRing.{u1, u2} R _inst_1 K (EuclideanDomain.toCommRing.{u2} K (Field.toEuclideanDomain.{u2} K _inst_3)) _inst_4], Eq.{succ u2} (Subalgebra.{u1, u2} R K (CommRing.toCommSemiring.{u1} R _inst_1) (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K _inst_3))) _inst_4) (iInf.{u2, succ u1} (Subalgebra.{u1, u2} R K (CommRing.toCommSemiring.{u1} R _inst_1) (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K _inst_3))) _inst_4) (ConditionallyCompleteLattice.toInfSet.{u2} (Subalgebra.{u1, u2} R K (CommRing.toCommSemiring.{u1} R _inst_1) (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K _inst_3))) _inst_4) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Subalgebra.{u1, u2} R K (CommRing.toCommSemiring.{u1} R _inst_1) (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K _inst_3))) _inst_4) (Algebra.instCompleteLatticeSubalgebra.{u1, u2} R K (CommRing.toCommSemiring.{u1} R _inst_1) (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K _inst_3))) _inst_4))) (MaximalSpectrum.{u1} R _inst_1) (fun (v : MaximalSpectrum.{u1} R _inst_1) => Localization.subalgebra.ofField.{u1, u2} R K _inst_1 (Ideal.primeCompl.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) (MaximalSpectrum.asIdeal.{u1} R _inst_1 v) (Ideal.IsMaximal.isPrime'.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) (MaximalSpectrum.asIdeal.{u1} R _inst_1 v) (MaximalSpectrum.IsMaximal.{u1} R _inst_1 v))) (Ideal.primeCompl_le_nonZeroDivisors.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) (MaximalSpectrum.asIdeal.{u1} R _inst_1 v) (Ideal.IsMaximal.isPrime'.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) (MaximalSpectrum.asIdeal.{u1} R _inst_1 v) (MaximalSpectrum.IsMaximal.{u1} R _inst_1 v)) (IsDomain.to_noZeroDivisors.{u1} R (CommRing.toRing.{u1} R _inst_1) _inst_2)) _inst_3 _inst_4 _inst_5)) (Bot.bot.{u2} (Subalgebra.{u1, u2} R K (CommRing.toCommSemiring.{u1} R _inst_1) (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K _inst_3))) _inst_4) (CompleteLattice.toBot.{u2} (Subalgebra.{u1, u2} R K (CommRing.toCommSemiring.{u1} R _inst_1) (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K _inst_3))) _inst_4) (Algebra.instCompleteLatticeSubalgebra.{u1, u2} R K (CommRing.toCommSemiring.{u1} R _inst_1) (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K _inst_3))) _inst_4)))
+Case conversion may be inaccurate. Consider using '#align maximal_spectrum.infi_localization_eq_bot MaximalSpectrum.iInf_localization_eq_botₓ'. -/
 /-- An integral domain is equal to the intersection of its localizations at all its maximal ideals
 viewed as subalgebras of its field of fractions. -/
 theorem iInf_localization_eq_bot :
@@ -132,6 +150,12 @@ namespace PrimeSpectrum
 
 variable (R) [IsDomain R] (K : Type v) [Field K] [Algebra R K] [IsFractionRing R K]
 
+/- warning: prime_spectrum.infi_localization_eq_bot -> PrimeSpectrum.iInf_localization_eq_bot is a dubious translation:
+lean 3 declaration is
+  forall (R : Type.{u1}) [_inst_1 : CommRing.{u1} R] [_inst_2 : IsDomain.{u1} R (Ring.toSemiring.{u1} R (CommRing.toRing.{u1} R _inst_1))] (K : Type.{u2}) [_inst_3 : Field.{u2} K] [_inst_4 : Algebra.{u1, u2} R K (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} K (DivisionRing.toRing.{u2} K (Field.toDivisionRing.{u2} K _inst_3)))] [_inst_5 : IsFractionRing.{u1, u2} R _inst_1 K (EuclideanDomain.toCommRing.{u2} K (Field.toEuclideanDomain.{u2} K _inst_3)) _inst_4], Eq.{succ u2} (Subalgebra.{u1, u2} R K (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} K (DivisionRing.toRing.{u2} K (Field.toDivisionRing.{u2} K _inst_3))) _inst_4) (iInf.{u2, succ u1} (Subalgebra.{u1, u2} R K (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} K (DivisionRing.toRing.{u2} K (Field.toDivisionRing.{u2} K _inst_3))) _inst_4) (ConditionallyCompleteLattice.toHasInf.{u2} (Subalgebra.{u1, u2} R K (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} K (DivisionRing.toRing.{u2} K (Field.toDivisionRing.{u2} K _inst_3))) _inst_4) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Subalgebra.{u1, u2} R K (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} K (DivisionRing.toRing.{u2} K (Field.toDivisionRing.{u2} K _inst_3))) _inst_4) (Algebra.Subalgebra.completeLattice.{u1, u2} R K (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} K (DivisionRing.toRing.{u2} K (Field.toDivisionRing.{u2} K _inst_3))) _inst_4))) (PrimeSpectrum.{u1} R _inst_1) (fun (v : PrimeSpectrum.{u1} R _inst_1) => Localization.subalgebra.ofField.{u1, u2} R K _inst_1 (Ideal.primeCompl.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) (PrimeSpectrum.asIdeal.{u1} R _inst_1 v) (PrimeSpectrum.isPrime.{u1} R _inst_1 v)) (Ideal.primeCompl_le_nonZeroDivisors.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) (PrimeSpectrum.asIdeal.{u1} R _inst_1 v) (PrimeSpectrum.isPrime.{u1} R _inst_1 v) (IsDomain.to_noZeroDivisors.{u1} R (CommRing.toRing.{u1} R _inst_1) _inst_2)) _inst_3 _inst_4 _inst_5)) (Bot.bot.{u2} (Subalgebra.{u1, u2} R K (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} K (DivisionRing.toRing.{u2} K (Field.toDivisionRing.{u2} K _inst_3))) _inst_4) (CompleteLattice.toHasBot.{u2} (Subalgebra.{u1, u2} R K (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} K (DivisionRing.toRing.{u2} K (Field.toDivisionRing.{u2} K _inst_3))) _inst_4) (Algebra.Subalgebra.completeLattice.{u1, u2} R K (CommRing.toCommSemiring.{u1} R _inst_1) (Ring.toSemiring.{u2} K (DivisionRing.toRing.{u2} K (Field.toDivisionRing.{u2} K _inst_3))) _inst_4)))
+but is expected to have type
+  forall (R : Type.{u1}) [_inst_1 : CommRing.{u1} R] [_inst_2 : IsDomain.{u1} R (CommSemiring.toSemiring.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1))] (K : Type.{u2}) [_inst_3 : Field.{u2} K] [_inst_4 : Algebra.{u1, u2} R K (CommRing.toCommSemiring.{u1} R _inst_1) (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K _inst_3)))] [_inst_5 : IsFractionRing.{u1, u2} R _inst_1 K (EuclideanDomain.toCommRing.{u2} K (Field.toEuclideanDomain.{u2} K _inst_3)) _inst_4], Eq.{succ u2} (Subalgebra.{u1, u2} R K (CommRing.toCommSemiring.{u1} R _inst_1) (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K _inst_3))) _inst_4) (iInf.{u2, succ u1} (Subalgebra.{u1, u2} R K (CommRing.toCommSemiring.{u1} R _inst_1) (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K _inst_3))) _inst_4) (ConditionallyCompleteLattice.toInfSet.{u2} (Subalgebra.{u1, u2} R K (CommRing.toCommSemiring.{u1} R _inst_1) (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K _inst_3))) _inst_4) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Subalgebra.{u1, u2} R K (CommRing.toCommSemiring.{u1} R _inst_1) (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K _inst_3))) _inst_4) (Algebra.instCompleteLatticeSubalgebra.{u1, u2} R K (CommRing.toCommSemiring.{u1} R _inst_1) (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K _inst_3))) _inst_4))) (PrimeSpectrum.{u1} R _inst_1) (fun (v : PrimeSpectrum.{u1} R _inst_1) => Localization.subalgebra.ofField.{u1, u2} R K _inst_1 (Ideal.primeCompl.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) (PrimeSpectrum.asIdeal.{u1} R _inst_1 v) (PrimeSpectrum.IsPrime.{u1} R _inst_1 v)) (Ideal.primeCompl_le_nonZeroDivisors.{u1} R (CommRing.toCommSemiring.{u1} R _inst_1) (PrimeSpectrum.asIdeal.{u1} R _inst_1 v) (PrimeSpectrum.IsPrime.{u1} R _inst_1 v) (IsDomain.to_noZeroDivisors.{u1} R (CommRing.toRing.{u1} R _inst_1) _inst_2)) _inst_3 _inst_4 _inst_5)) (Bot.bot.{u2} (Subalgebra.{u1, u2} R K (CommRing.toCommSemiring.{u1} R _inst_1) (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K _inst_3))) _inst_4) (CompleteLattice.toBot.{u2} (Subalgebra.{u1, u2} R K (CommRing.toCommSemiring.{u1} R _inst_1) (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K _inst_3))) _inst_4) (Algebra.instCompleteLatticeSubalgebra.{u1, u2} R K (CommRing.toCommSemiring.{u1} R _inst_1) (DivisionSemiring.toSemiring.{u2} K (Semifield.toDivisionSemiring.{u2} K (Field.toSemifield.{u2} K _inst_3))) _inst_4)))
+Case conversion may be inaccurate. Consider using '#align prime_spectrum.infi_localization_eq_bot PrimeSpectrum.iInf_localization_eq_botₓ'. -/
 /-- An integral domain is equal to the intersection of its localizations at all its prime ideals
 viewed as subalgebras of its field of fractions. -/
 theorem iInf_localization_eq_bot :

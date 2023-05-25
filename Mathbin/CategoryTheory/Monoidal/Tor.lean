@@ -98,5 +98,5 @@ def tor'SuccOfProjective (X Y : C) [Projective X] (n : ℕ) : ((Tor' C (n + 1)).
 
 end CategoryTheory
 
-assert_not_exists Module.abelian
+assert_not_exists ModuleCat.abelian
 
