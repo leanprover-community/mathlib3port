@@ -180,6 +180,7 @@ variable {ι : Type _} [Fintype ι] {I J : Box ι} {c c₁ c₂ : ℝ≥0} {r r�
 
 open TaggedPrepartition
 
+#print BoxIntegral.IntegrationParams /-
 /-- An `integration_params` is a structure holding 3 boolean values used to define a filter to be
 used in the definition of a box-integrable function.
 
@@ -199,11 +200,13 @@ used in the definition of a box-integrable function.
 structure IntegrationParams : Type where
   (bRiemann bHenstock bDistortion : Bool)
 #align box_integral.integration_params BoxIntegral.IntegrationParams
+-/
 
 variable {l l₁ l₂ : IntegrationParams}
 
 namespace IntegrationParams
 
+#print BoxIntegral.IntegrationParams.equivProd /-
 /-- Auxiliary equivalence with a product type used to lift an order. -/
 def equivProd : IntegrationParams ≃ Bool × Boolᵒᵈ × Boolᵒᵈ
     where
@@ -212,10 +215,17 @@ def equivProd : IntegrationParams ≃ Bool × Boolᵒᵈ × Boolᵒᵈ
   left_inv := fun ⟨a, b, c⟩ => rfl
   right_inv := fun ⟨a, b, c⟩ => rfl
 #align box_integral.integration_params.equiv_prod BoxIntegral.IntegrationParams.equivProd
+-/
 
 instance : PartialOrder IntegrationParams :=
   PartialOrder.lift equivProd equivProd.Injective
 
+/- warning: box_integral.integration_params.iso_prod -> BoxIntegral.IntegrationParams.isoProd is a dubious translation:
+lean 3 declaration is
+  OrderIso.{0, 0} BoxIntegral.IntegrationParams (Prod.{0, 0} Bool (Prod.{0, 0} (OrderDual.{0} Bool) (OrderDual.{0} Bool))) (Preorder.toHasLe.{0} BoxIntegral.IntegrationParams (PartialOrder.toPreorder.{0} BoxIntegral.IntegrationParams BoxIntegral.IntegrationParams.partialOrder)) (Prod.hasLe.{0, 0} Bool (Prod.{0, 0} (OrderDual.{0} Bool) (OrderDual.{0} Bool)) (Preorder.toHasLe.{0} Bool (PartialOrder.toPreorder.{0} Bool (SemilatticeInf.toPartialOrder.{0} Bool (Lattice.toSemilatticeInf.{0} Bool (GeneralizedCoheytingAlgebra.toLattice.{0} Bool (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{0} Bool (BooleanAlgebra.toGeneralizedBooleanAlgebra.{0} Bool Bool.booleanAlgebra))))))) (Prod.hasLe.{0, 0} (OrderDual.{0} Bool) (OrderDual.{0} Bool) (OrderDual.hasLe.{0} Bool (Preorder.toHasLe.{0} Bool (PartialOrder.toPreorder.{0} Bool (SemilatticeInf.toPartialOrder.{0} Bool (Lattice.toSemilatticeInf.{0} Bool (GeneralizedCoheytingAlgebra.toLattice.{0} Bool (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{0} Bool (BooleanAlgebra.toGeneralizedBooleanAlgebra.{0} Bool Bool.booleanAlgebra)))))))) (OrderDual.hasLe.{0} Bool (Preorder.toHasLe.{0} Bool (PartialOrder.toPreorder.{0} Bool (SemilatticeInf.toPartialOrder.{0} Bool (Lattice.toSemilatticeInf.{0} Bool (GeneralizedCoheytingAlgebra.toLattice.{0} Bool (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{0} Bool (BooleanAlgebra.toGeneralizedBooleanAlgebra.{0} Bool Bool.booleanAlgebra))))))))))
+but is expected to have type
+  OrderIso.{0, 0} BoxIntegral.IntegrationParams (Prod.{0, 0} Bool (Prod.{0, 0} (OrderDual.{0} Bool) (OrderDual.{0} Bool))) (Preorder.toLE.{0} BoxIntegral.IntegrationParams (PartialOrder.toPreorder.{0} BoxIntegral.IntegrationParams BoxIntegral.IntegrationParams.instPartialOrderIntegrationParams)) (Prod.instLEProd.{0, 0} Bool (Prod.{0, 0} (OrderDual.{0} Bool) (OrderDual.{0} Bool)) (Preorder.toLE.{0} Bool (PartialOrder.toPreorder.{0} Bool (SemilatticeInf.toPartialOrder.{0} Bool (Lattice.toSemilatticeInf.{0} Bool (GeneralizedCoheytingAlgebra.toLattice.{0} Bool (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{0} Bool (BiheytingAlgebra.toCoheytingAlgebra.{0} Bool (BooleanAlgebra.toBiheytingAlgebra.{0} Bool instBooleanAlgebraBool)))))))) (Prod.instLEProd.{0, 0} (OrderDual.{0} Bool) (OrderDual.{0} Bool) (OrderDual.instLEOrderDual.{0} Bool (Preorder.toLE.{0} Bool (PartialOrder.toPreorder.{0} Bool (SemilatticeInf.toPartialOrder.{0} Bool (Lattice.toSemilatticeInf.{0} Bool (GeneralizedCoheytingAlgebra.toLattice.{0} Bool (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{0} Bool (BiheytingAlgebra.toCoheytingAlgebra.{0} Bool (BooleanAlgebra.toBiheytingAlgebra.{0} Bool instBooleanAlgebraBool))))))))) (OrderDual.instLEOrderDual.{0} Bool (Preorder.toLE.{0} Bool (PartialOrder.toPreorder.{0} Bool (SemilatticeInf.toPartialOrder.{0} Bool (Lattice.toSemilatticeInf.{0} Bool (GeneralizedCoheytingAlgebra.toLattice.{0} Bool (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{0} Bool (BiheytingAlgebra.toCoheytingAlgebra.{0} Bool (BooleanAlgebra.toBiheytingAlgebra.{0} Bool instBooleanAlgebraBool)))))))))))
+Case conversion may be inaccurate. Consider using '#align box_integral.integration_params.iso_prod BoxIntegral.IntegrationParams.isoProdₓ'. -/
 /-- Auxiliary `order_iso` with a product type used to lift a `bounded_order` structure. -/
 def isoProd : IntegrationParams ≃o Bool × Boolᵒᵈ × Boolᵒᵈ :=
   ⟨equivProd, fun ⟨x, y, z⟩ => Iff.rfl⟩
@@ -236,49 +246,81 @@ instance : DecidableRel ((· ≤ ·) : IntegrationParams → IntegrationParams �
 
 instance : DecidableEq IntegrationParams := fun x y => decidable_of_iff _ (ext_iff x y).symm
 
+#print BoxIntegral.IntegrationParams.Riemann /-
 /-- The `box_integral.integration_params` corresponding to the Riemann integral. In the
 corresponding filter, we require that the diameters of all boxes `J` of a tagged partition are
 bounded from above by a constant upper estimate that may not depend on the geometry of `J`, and each
 tag belongs to the corresponding closed box. -/
-def riemann : IntegrationParams where
+def Riemann : IntegrationParams where
   bRiemann := true
   bHenstock := true
   bDistortion := false
-#align box_integral.integration_params.Riemann BoxIntegral.IntegrationParams.riemann
+#align box_integral.integration_params.Riemann BoxIntegral.IntegrationParams.Riemann
+-/
 
+#print BoxIntegral.IntegrationParams.Henstock /-
 /-- The `box_integral.integration_params` corresponding to the Henstock-Kurzweil integral. In the
 corresponding filter, we require that the tagged partition is subordinate to a (possibly,
 discontinuous) positive function `r` and each tag belongs to the corresponding closed box. -/
-def henstock : IntegrationParams :=
+def Henstock : IntegrationParams :=
   ⟨false, true, false⟩
-#align box_integral.integration_params.Henstock BoxIntegral.IntegrationParams.henstock
+#align box_integral.integration_params.Henstock BoxIntegral.IntegrationParams.Henstock
+-/
 
+#print BoxIntegral.IntegrationParams.McShane /-
 /-- The `box_integral.integration_params` corresponding to the McShane integral. In the
 corresponding filter, we require that the tagged partition is subordinate to a (possibly,
 discontinuous) positive function `r`; the tags may be outside of the corresponding closed box
 (but still inside the ambient closed box `I.Icc`). -/
-def mcShane : IntegrationParams :=
+def McShane : IntegrationParams :=
   ⟨false, false, false⟩
-#align box_integral.integration_params.McShane BoxIntegral.IntegrationParams.mcShane
+#align box_integral.integration_params.McShane BoxIntegral.IntegrationParams.McShane
+-/
 
+#print BoxIntegral.IntegrationParams.GP /-
 /-- The `box_integral.integration_params` corresponding to the generalized Perron integral. In the
 corresponding filter, we require that the tagged partition is subordinate to a (possibly,
 discontinuous) positive function `r` and each tag belongs to the corresponding closed box. We also
 require an upper estimate on the distortion of all boxes of the partition. -/
-def gP : IntegrationParams :=
+def GP : IntegrationParams :=
   ⊥
-#align box_integral.integration_params.GP BoxIntegral.IntegrationParams.gP
+#align box_integral.integration_params.GP BoxIntegral.IntegrationParams.GP
+-/
 
-theorem henstock_le_riemann : henstock ≤ riemann := by decide
+/- warning: box_integral.integration_params.Henstock_le_Riemann -> BoxIntegral.IntegrationParams.henstock_le_riemann is a dubious translation:
+lean 3 declaration is
+  LE.le.{0} BoxIntegral.IntegrationParams (Preorder.toHasLe.{0} BoxIntegral.IntegrationParams (PartialOrder.toPreorder.{0} BoxIntegral.IntegrationParams BoxIntegral.IntegrationParams.partialOrder)) BoxIntegral.IntegrationParams.Henstock BoxIntegral.IntegrationParams.Riemann
+but is expected to have type
+  LE.le.{0} BoxIntegral.IntegrationParams (Preorder.toLE.{0} BoxIntegral.IntegrationParams (PartialOrder.toPreorder.{0} BoxIntegral.IntegrationParams BoxIntegral.IntegrationParams.instPartialOrderIntegrationParams)) BoxIntegral.IntegrationParams.Henstock BoxIntegral.IntegrationParams.Riemann
+Case conversion may be inaccurate. Consider using '#align box_integral.integration_params.Henstock_le_Riemann BoxIntegral.IntegrationParams.henstock_le_riemannₓ'. -/
+theorem henstock_le_riemann : Henstock ≤ Riemann := by decide
 #align box_integral.integration_params.Henstock_le_Riemann BoxIntegral.IntegrationParams.henstock_le_riemann
 
-theorem henstock_le_mcShane : henstock ≤ mcShane := by decide
+/- warning: box_integral.integration_params.Henstock_le_McShane -> BoxIntegral.IntegrationParams.henstock_le_mcShane is a dubious translation:
+lean 3 declaration is
+  LE.le.{0} BoxIntegral.IntegrationParams (Preorder.toHasLe.{0} BoxIntegral.IntegrationParams (PartialOrder.toPreorder.{0} BoxIntegral.IntegrationParams BoxIntegral.IntegrationParams.partialOrder)) BoxIntegral.IntegrationParams.Henstock BoxIntegral.IntegrationParams.McShane
+but is expected to have type
+  LE.le.{0} BoxIntegral.IntegrationParams (Preorder.toLE.{0} BoxIntegral.IntegrationParams (PartialOrder.toPreorder.{0} BoxIntegral.IntegrationParams BoxIntegral.IntegrationParams.instPartialOrderIntegrationParams)) BoxIntegral.IntegrationParams.Henstock BoxIntegral.IntegrationParams.McShane
+Case conversion may be inaccurate. Consider using '#align box_integral.integration_params.Henstock_le_McShane BoxIntegral.IntegrationParams.henstock_le_mcShaneₓ'. -/
+theorem henstock_le_mcShane : Henstock ≤ McShane := by decide
 #align box_integral.integration_params.Henstock_le_McShane BoxIntegral.IntegrationParams.henstock_le_mcShane
 
-theorem gP_le : gP ≤ l :=
+/- warning: box_integral.integration_params.GP_le -> BoxIntegral.IntegrationParams.gp_le is a dubious translation:
+lean 3 declaration is
+  forall {l : BoxIntegral.IntegrationParams}, LE.le.{0} BoxIntegral.IntegrationParams (Preorder.toHasLe.{0} BoxIntegral.IntegrationParams (PartialOrder.toPreorder.{0} BoxIntegral.IntegrationParams BoxIntegral.IntegrationParams.partialOrder)) BoxIntegral.IntegrationParams.GP l
+but is expected to have type
+  forall {l : BoxIntegral.IntegrationParams}, LE.le.{0} BoxIntegral.IntegrationParams (Preorder.toLE.{0} BoxIntegral.IntegrationParams (PartialOrder.toPreorder.{0} BoxIntegral.IntegrationParams BoxIntegral.IntegrationParams.instPartialOrderIntegrationParams)) BoxIntegral.IntegrationParams.GP l
+Case conversion may be inaccurate. Consider using '#align box_integral.integration_params.GP_le BoxIntegral.IntegrationParams.gp_leₓ'. -/
+theorem gp_le : GP ≤ l :=
   bot_le
-#align box_integral.integration_params.GP_le BoxIntegral.IntegrationParams.gP_le
+#align box_integral.integration_params.GP_le BoxIntegral.IntegrationParams.gp_le
 
+/- warning: box_integral.integration_params.mem_base_set -> BoxIntegral.IntegrationParams.MemBaseSet is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι], BoxIntegral.IntegrationParams -> (forall (I : BoxIntegral.Box.{u1} ι), NNReal -> ((ι -> Real) -> (coeSort.{1, 2} (Set.{0} Real) Type (Set.hasCoeToSort.{0} Real) (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))) -> (BoxIntegral.TaggedPrepartition.{u1} ι I) -> Prop)
+but is expected to have type
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι], BoxIntegral.IntegrationParams -> (forall (I : BoxIntegral.Box.{u1} ι), NNReal -> ((ι -> Real) -> (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))) -> (BoxIntegral.TaggedPrepartition.{u1} ι I) -> Prop)
+Case conversion may be inaccurate. Consider using '#align box_integral.integration_params.mem_base_set BoxIntegral.IntegrationParams.MemBaseSetₓ'. -/
 /-- The predicate corresponding to a base set of the filter defined by an
 `integration_params`. It says that
 
@@ -303,11 +345,18 @@ structure MemBaseSet (l : IntegrationParams) (I : Box ι) (c : ℝ≥0) (r : (ι
   exists_compl : l.bDistortion → ∃ π' : Prepartition I, π'.iUnion = I \ π.iUnion ∧ π'.distortion ≤ c
 #align box_integral.integration_params.mem_base_set BoxIntegral.IntegrationParams.MemBaseSet
 
+/- warning: box_integral.integration_params.r_cond -> BoxIntegral.IntegrationParams.RCond is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}}, BoxIntegral.IntegrationParams -> ((ι -> Real) -> (coeSort.{1, 2} (Set.{0} Real) Type (Set.hasCoeToSort.{0} Real) (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))) -> Prop
+but is expected to have type
+  forall {ι : Type.{u1}}, BoxIntegral.IntegrationParams -> ((ι -> Real) -> (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))) -> Prop
+Case conversion may be inaccurate. Consider using '#align box_integral.integration_params.r_cond BoxIntegral.IntegrationParams.RCondₓ'. -/
 /-- A predicate saying that in case `l.bRiemann = tt`, the function `r` is a constant. -/
 def RCond {ι : Type _} (l : IntegrationParams) (r : (ι → ℝ) → Ioi (0 : ℝ)) : Prop :=
   l.bRiemann → ∀ x, r x = r 0
 #align box_integral.integration_params.r_cond BoxIntegral.IntegrationParams.RCond
 
+#print BoxIntegral.IntegrationParams.toFilterDistortion /-
 /-- A set `s : set (tagged_prepartition I)` belongs to `l.to_filter_distortion I c` if there exists
 a function `r : ℝⁿ → (0, ∞)` (or a constant `r` if `l.bRiemann = tt`) such that `s` contains each
 prepartition `π` such that `l.mem_base_set I c r π`. -/
@@ -315,37 +364,62 @@ def toFilterDistortion (l : IntegrationParams) (I : Box ι) (c : ℝ≥0) :
     Filter (TaggedPrepartition I) :=
   ⨅ (r : (ι → ℝ) → Ioi (0 : ℝ)) (hr : l.RCond r), 𝓟 { π | l.MemBaseSet I c r π }
 #align box_integral.integration_params.to_filter_distortion BoxIntegral.IntegrationParams.toFilterDistortion
+-/
 
+#print BoxIntegral.IntegrationParams.toFilter /-
 /-- A set `s : set (tagged_prepartition I)` belongs to `l.to_filter I` if for any `c : ℝ≥0` there
 exists a function `r : ℝⁿ → (0, ∞)` (or a constant `r` if `l.bRiemann = tt`) such that
 `s` contains each prepartition `π` such that `l.mem_base_set I c r π`. -/
 def toFilter (l : IntegrationParams) (I : Box ι) : Filter (TaggedPrepartition I) :=
   ⨆ c : ℝ≥0, l.toFilterDistortion I c
 #align box_integral.integration_params.to_filter BoxIntegral.IntegrationParams.toFilter
+-/
 
+#print BoxIntegral.IntegrationParams.toFilterDistortioniUnion /-
 /-- A set `s : set (tagged_prepartition I)` belongs to `l.to_filter_distortion_Union I c π₀` if
 there exists a function `r : ℝⁿ → (0, ∞)` (or a constant `r` if `l.bRiemann = tt`) such that `s`
 contains each prepartition `π` such that `l.mem_base_set I c r π` and `π.Union = π₀.Union`. -/
-def toFilterDistortionUnion (l : IntegrationParams) (I : Box ι) (c : ℝ≥0) (π₀ : Prepartition I) :=
+def toFilterDistortioniUnion (l : IntegrationParams) (I : Box ι) (c : ℝ≥0) (π₀ : Prepartition I) :=
   l.toFilterDistortion I c ⊓ 𝓟 { π | π.iUnion = π₀.iUnion }
-#align box_integral.integration_params.to_filter_distortion_Union BoxIntegral.IntegrationParams.toFilterDistortionUnion
+#align box_integral.integration_params.to_filter_distortion_Union BoxIntegral.IntegrationParams.toFilterDistortioniUnion
+-/
 
+#print BoxIntegral.IntegrationParams.toFilteriUnion /-
 /-- A set `s : set (tagged_prepartition I)` belongs to `l.to_filter_Union I π₀` if for any `c : ℝ≥0`
 there exists a function `r : ℝⁿ → (0, ∞)` (or a constant `r` if `l.bRiemann = tt`) such that `s`
 contains each prepartition `π` such that `l.mem_base_set I c r π` and `π.Union = π₀.Union`. -/
-def toFilterUnion (l : IntegrationParams) (I : Box ι) (π₀ : Prepartition I) :=
-  ⨆ c : ℝ≥0, l.toFilterDistortionUnion I c π₀
-#align box_integral.integration_params.to_filter_Union BoxIntegral.IntegrationParams.toFilterUnion
+def toFilteriUnion (l : IntegrationParams) (I : Box ι) (π₀ : Prepartition I) :=
+  ⨆ c : ℝ≥0, l.toFilterDistortioniUnion I c π₀
+#align box_integral.integration_params.to_filter_Union BoxIntegral.IntegrationParams.toFilteriUnion
+-/
 
+/- warning: box_integral.integration_params.r_cond_of_bRiemann_eq_ff -> BoxIntegral.IntegrationParams.rCond_of_bRiemann_eq_false is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} (l : BoxIntegral.IntegrationParams), (Eq.{1} Bool (BoxIntegral.IntegrationParams.bRiemann l) Bool.false) -> (forall {r : (ι -> Real) -> (coeSort.{1, 2} (Set.{0} Real) Type (Set.hasCoeToSort.{0} Real) (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))}, BoxIntegral.IntegrationParams.RCond.{u1} ι l r)
+but is expected to have type
+  forall {ι : Type.{u1}} (l : BoxIntegral.IntegrationParams), (Eq.{1} Bool (BoxIntegral.IntegrationParams.bRiemann l) Bool.false) -> (forall {r : (ι -> Real) -> (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))}, BoxIntegral.IntegrationParams.RCond.{u1} ι l r)
+Case conversion may be inaccurate. Consider using '#align box_integral.integration_params.r_cond_of_bRiemann_eq_ff BoxIntegral.IntegrationParams.rCond_of_bRiemann_eq_falseₓ'. -/
 theorem rCond_of_bRiemann_eq_false {ι} (l : IntegrationParams) (hl : l.bRiemann = false)
     {r : (ι → ℝ) → Ioi (0 : ℝ)} : l.RCond r := by simp [r_cond, hl]
 #align box_integral.integration_params.r_cond_of_bRiemann_eq_ff BoxIntegral.IntegrationParams.rCond_of_bRiemann_eq_false
 
+/- warning: box_integral.integration_params.to_filter_inf_Union_eq -> BoxIntegral.IntegrationParams.toFilter_inf_iUnion_eq is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] (l : BoxIntegral.IntegrationParams) (I : BoxIntegral.Box.{u1} ι) (π₀ : BoxIntegral.Prepartition.{u1} ι I), Eq.{succ u1} (Filter.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I)) (Inf.inf.{u1} (Filter.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I)) (Filter.hasInf.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I)) (BoxIntegral.IntegrationParams.toFilter.{u1} ι _inst_1 l I) (Filter.principal.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I) (setOf.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I) (fun (π : BoxIntegral.TaggedPrepartition.{u1} ι I) => Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.TaggedPrepartition.iUnion.{u1} ι I π) (BoxIntegral.Prepartition.iUnion.{u1} ι I π₀))))) (BoxIntegral.IntegrationParams.toFilteriUnion.{u1} ι _inst_1 l I π₀)
+but is expected to have type
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] (l : BoxIntegral.IntegrationParams) (I : BoxIntegral.Box.{u1} ι) (π₀ : BoxIntegral.Prepartition.{u1} ι I), Eq.{succ u1} (Filter.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I)) (Inf.inf.{u1} (Filter.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I)) (Filter.instInfFilter.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I)) (BoxIntegral.IntegrationParams.toFilter.{u1} ι _inst_1 l I) (Filter.principal.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I) (setOf.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I) (fun (π : BoxIntegral.TaggedPrepartition.{u1} ι I) => Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.TaggedPrepartition.iUnion.{u1} ι I π) (BoxIntegral.Prepartition.iUnion.{u1} ι I π₀))))) (BoxIntegral.IntegrationParams.toFilteriUnion.{u1} ι _inst_1 l I π₀)
+Case conversion may be inaccurate. Consider using '#align box_integral.integration_params.to_filter_inf_Union_eq BoxIntegral.IntegrationParams.toFilter_inf_iUnion_eqₓ'. -/
 theorem toFilter_inf_iUnion_eq (l : IntegrationParams) (I : Box ι) (π₀ : Prepartition I) :
-    l.toFilter I ⊓ 𝓟 { π | π.iUnion = π₀.iUnion } = l.toFilterUnion I π₀ :=
+    l.toFilter I ⊓ 𝓟 { π | π.iUnion = π₀.iUnion } = l.toFilteriUnion I π₀ :=
   (iSup_inf_principal _ _).symm
 #align box_integral.integration_params.to_filter_inf_Union_eq BoxIntegral.IntegrationParams.toFilter_inf_iUnion_eq
 
+/- warning: box_integral.integration_params.mem_base_set.mono' -> BoxIntegral.IntegrationParams.MemBaseSet.mono' is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] {c₁ : NNReal} {c₂ : NNReal} {r₁ : (ι -> Real) -> (coeSort.{1, 2} (Set.{0} Real) Type (Set.hasCoeToSort.{0} Real) (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))} {r₂ : (ι -> Real) -> (coeSort.{1, 2} (Set.{0} Real) Type (Set.hasCoeToSort.{0} Real) (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))} {l₁ : BoxIntegral.IntegrationParams} {l₂ : BoxIntegral.IntegrationParams} (I : BoxIntegral.Box.{u1} ι), (LE.le.{0} BoxIntegral.IntegrationParams (Preorder.toHasLe.{0} BoxIntegral.IntegrationParams (PartialOrder.toPreorder.{0} BoxIntegral.IntegrationParams BoxIntegral.IntegrationParams.partialOrder)) l₁ l₂) -> (LE.le.{0} NNReal (Preorder.toHasLe.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (OrderedCancelAddCommMonoid.toPartialOrder.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring)))) c₁ c₂) -> (forall {π : BoxIntegral.TaggedPrepartition.{u1} ι I}, (forall (J : BoxIntegral.Box.{u1} ι), (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.TaggedPrepartition.{u1} ι I) (BoxIntegral.TaggedPrepartition.hasMem.{u1} ι I) J π) -> (LE.le.{0} (coeSort.{1, 2} (Set.{0} Real) Type (Set.hasCoeToSort.{0} Real) (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))) (Subtype.hasLe.{0} Real Real.hasLe (fun (x : Real) => Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) x (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))) (r₁ (BoxIntegral.TaggedPrepartition.tag.{u1} ι I π J)) (r₂ (BoxIntegral.TaggedPrepartition.tag.{u1} ι I π J)))) -> (BoxIntegral.IntegrationParams.MemBaseSet.{u1} ι _inst_1 l₁ I c₁ r₁ π) -> (BoxIntegral.IntegrationParams.MemBaseSet.{u1} ι _inst_1 l₂ I c₂ r₂ π))
+but is expected to have type
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] {c₁ : NNReal} {c₂ : NNReal} {r₁ : (ι -> Real) -> (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))} {r₂ : (ι -> Real) -> (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))} {l₁ : BoxIntegral.IntegrationParams} {l₂ : BoxIntegral.IntegrationParams} (I : BoxIntegral.Box.{u1} ι), (LE.le.{0} BoxIntegral.IntegrationParams (Preorder.toLE.{0} BoxIntegral.IntegrationParams (PartialOrder.toPreorder.{0} BoxIntegral.IntegrationParams BoxIntegral.IntegrationParams.instPartialOrderIntegrationParams)) l₁ l₂) -> (LE.le.{0} NNReal (Preorder.toLE.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) c₁ c₂) -> (forall {π : BoxIntegral.TaggedPrepartition.{u1} ι I}, (forall (J : BoxIntegral.Box.{u1} ι), (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.TaggedPrepartition.{u1} ι I) (BoxIntegral.TaggedPrepartition.instMembershipBoxTaggedPrepartition.{u1} ι I) J π) -> (LE.le.{0} (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) (Subtype.le.{0} Real Real.instLEReal (fun (x : Real) => Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) x (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))) (r₁ (BoxIntegral.TaggedPrepartition.tag.{u1} ι I π J)) (r₂ (BoxIntegral.TaggedPrepartition.tag.{u1} ι I π J)))) -> (BoxIntegral.IntegrationParams.MemBaseSet.{u1} ι _inst_1 l₁ I c₁ r₁ π) -> (BoxIntegral.IntegrationParams.MemBaseSet.{u1} ι _inst_1 l₂ I c₂ r₂ π))
+Case conversion may be inaccurate. Consider using '#align box_integral.integration_params.mem_base_set.mono' BoxIntegral.IntegrationParams.MemBaseSet.mono'ₓ'. -/
 theorem MemBaseSet.mono' (I : Box ι) (h : l₁ ≤ l₂) (hc : c₁ ≤ c₂) {π : TaggedPrepartition I}
     (hr : ∀ J ∈ π, r₁ (π.Tag J) ≤ r₂ (π.Tag J)) (hπ : l₁.MemBaseSet I c₁ r₁ π) :
     l₂.MemBaseSet I c₂ r₂ π :=
@@ -354,12 +428,24 @@ theorem MemBaseSet.mono' (I : Box ι) (h : l₁ ≤ l₂) (hc : c₁ ≤ c₂) {
     (hπ.4 (le_iff_imp.1 h.2.2 hD)).imp fun π hπ => ⟨hπ.1, hπ.2.trans hc⟩⟩
 #align box_integral.integration_params.mem_base_set.mono' BoxIntegral.IntegrationParams.MemBaseSet.mono'
 
+/- warning: box_integral.integration_params.mem_base_set.mono -> BoxIntegral.IntegrationParams.MemBaseSet.mono is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] {c₁ : NNReal} {c₂ : NNReal} {r₁ : (ι -> Real) -> (coeSort.{1, 2} (Set.{0} Real) Type (Set.hasCoeToSort.{0} Real) (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))} {r₂ : (ι -> Real) -> (coeSort.{1, 2} (Set.{0} Real) Type (Set.hasCoeToSort.{0} Real) (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))} {l₁ : BoxIntegral.IntegrationParams} {l₂ : BoxIntegral.IntegrationParams} (I : BoxIntegral.Box.{u1} ι), (LE.le.{0} BoxIntegral.IntegrationParams (Preorder.toHasLe.{0} BoxIntegral.IntegrationParams (PartialOrder.toPreorder.{0} BoxIntegral.IntegrationParams BoxIntegral.IntegrationParams.partialOrder)) l₁ l₂) -> (LE.le.{0} NNReal (Preorder.toHasLe.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (OrderedCancelAddCommMonoid.toPartialOrder.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring)))) c₁ c₂) -> (forall {π : BoxIntegral.TaggedPrepartition.{u1} ι I}, (forall (x : ι -> Real), (Membership.Mem.{u1, u1} (ι -> Real) (Set.{u1} (ι -> Real)) (Set.hasMem.{u1} (ι -> Real)) x (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.hasLe.{u1} ι) (Set.hasLe.{u1} (ι -> Real))) (fun (_x : RelEmbedding.{u1, u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (LE.le.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.hasLe.{u1} ι)) (LE.le.{u1} (Set.{u1} (ι -> Real)) (Set.hasLe.{u1} (ι -> Real)))) => (BoxIntegral.Box.{u1} ι) -> (Set.{u1} (ι -> Real))) (RelEmbedding.hasCoeToFun.{u1, u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (LE.le.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.hasLe.{u1} ι)) (LE.le.{u1} (Set.{u1} (ι -> Real)) (Set.hasLe.{u1} (ι -> Real)))) (BoxIntegral.Box.Icc.{u1} ι) I)) -> (LE.le.{0} (coeSort.{1, 2} (Set.{0} Real) Type (Set.hasCoeToSort.{0} Real) (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))) (Subtype.hasLe.{0} Real Real.hasLe (fun (x : Real) => Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) x (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))) (r₁ x) (r₂ x))) -> (BoxIntegral.IntegrationParams.MemBaseSet.{u1} ι _inst_1 l₁ I c₁ r₁ π) -> (BoxIntegral.IntegrationParams.MemBaseSet.{u1} ι _inst_1 l₂ I c₂ r₂ π))
+but is expected to have type
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] {c₁ : NNReal} {c₂ : NNReal} {r₁ : (ι -> Real) -> (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))} {r₂ : (ι -> Real) -> (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))} {l₁ : BoxIntegral.IntegrationParams} {l₂ : BoxIntegral.IntegrationParams} (I : BoxIntegral.Box.{u1} ι), (LE.le.{0} BoxIntegral.IntegrationParams (Preorder.toLE.{0} BoxIntegral.IntegrationParams (PartialOrder.toPreorder.{0} BoxIntegral.IntegrationParams BoxIntegral.IntegrationParams.instPartialOrderIntegrationParams)) l₁ l₂) -> (LE.le.{0} NNReal (Preorder.toLE.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) c₁ c₂) -> (forall {π : BoxIntegral.TaggedPrepartition.{u1} ι I}, (forall (x : ι -> Real), (Membership.mem.{u1, u1} (ι -> Real) ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : BoxIntegral.Box.{u1} ι) => Set.{u1} (ι -> Real)) I) (Set.instMembershipSet.{u1} (ι -> Real)) x (FunLike.coe.{succ u1, succ u1, succ u1} (OrderEmbedding.{u1, u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.instLEBox.{u1} ι) (Set.instLESet.{u1} (ι -> Real))) (BoxIntegral.Box.{u1} ι) (fun (_x : BoxIntegral.Box.{u1} ι) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : BoxIntegral.Box.{u1} ι) => Set.{u1} (ι -> Real)) _x) (RelHomClass.toFunLike.{u1, u1, u1} (OrderEmbedding.{u1, u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.instLEBox.{u1} ι) (Set.instLESet.{u1} (ι -> Real))) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.682 : BoxIntegral.Box.{u1} ι) (x._@.Mathlib.Order.Hom.Basic._hyg.684 : BoxIntegral.Box.{u1} ι) => LE.le.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instLEBox.{u1} ι) x._@.Mathlib.Order.Hom.Basic._hyg.682 x._@.Mathlib.Order.Hom.Basic._hyg.684) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Set.{u1} (ι -> Real)) (x._@.Mathlib.Order.Hom.Basic._hyg.699 : Set.{u1} (ι -> Real)) => LE.le.{u1} (Set.{u1} (ι -> Real)) (Set.instLESet.{u1} (ι -> Real)) x._@.Mathlib.Order.Hom.Basic._hyg.697 x._@.Mathlib.Order.Hom.Basic._hyg.699) (RelEmbedding.instRelHomClassRelEmbedding.{u1, u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.682 : BoxIntegral.Box.{u1} ι) (x._@.Mathlib.Order.Hom.Basic._hyg.684 : BoxIntegral.Box.{u1} ι) => LE.le.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instLEBox.{u1} ι) x._@.Mathlib.Order.Hom.Basic._hyg.682 x._@.Mathlib.Order.Hom.Basic._hyg.684) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Set.{u1} (ι -> Real)) (x._@.Mathlib.Order.Hom.Basic._hyg.699 : Set.{u1} (ι -> Real)) => LE.le.{u1} (Set.{u1} (ι -> Real)) (Set.instLESet.{u1} (ι -> Real)) x._@.Mathlib.Order.Hom.Basic._hyg.697 x._@.Mathlib.Order.Hom.Basic._hyg.699))) (BoxIntegral.Box.Icc.{u1} ι) I)) -> (LE.le.{0} (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) (Subtype.le.{0} Real Real.instLEReal (fun (x : Real) => Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) x (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))) (r₁ x) (r₂ x))) -> (BoxIntegral.IntegrationParams.MemBaseSet.{u1} ι _inst_1 l₁ I c₁ r₁ π) -> (BoxIntegral.IntegrationParams.MemBaseSet.{u1} ι _inst_1 l₂ I c₂ r₂ π))
+Case conversion may be inaccurate. Consider using '#align box_integral.integration_params.mem_base_set.mono BoxIntegral.IntegrationParams.MemBaseSet.monoₓ'. -/
 @[mono]
 theorem MemBaseSet.mono (I : Box ι) (h : l₁ ≤ l₂) (hc : c₁ ≤ c₂) {π : TaggedPrepartition I}
     (hr : ∀ x ∈ I.Icc, r₁ x ≤ r₂ x) (hπ : l₁.MemBaseSet I c₁ r₁ π) : l₂.MemBaseSet I c₂ r₂ π :=
   hπ.mono' I h hc fun J hJ => hr _ <| π.tag_mem_Icc J
 #align box_integral.integration_params.mem_base_set.mono BoxIntegral.IntegrationParams.MemBaseSet.mono
 
+/- warning: box_integral.integration_params.mem_base_set.exists_common_compl -> BoxIntegral.IntegrationParams.MemBaseSet.exists_common_compl is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] {I : BoxIntegral.Box.{u1} ι} {c₁ : NNReal} {c₂ : NNReal} {r₁ : (ι -> Real) -> (coeSort.{1, 2} (Set.{0} Real) Type (Set.hasCoeToSort.{0} Real) (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))} {r₂ : (ι -> Real) -> (coeSort.{1, 2} (Set.{0} Real) Type (Set.hasCoeToSort.{0} Real) (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))} {π₁ : BoxIntegral.TaggedPrepartition.{u1} ι I} {π₂ : BoxIntegral.TaggedPrepartition.{u1} ι I} {l : BoxIntegral.IntegrationParams}, (BoxIntegral.IntegrationParams.MemBaseSet.{u1} ι _inst_1 l I c₁ r₁ π₁) -> (BoxIntegral.IntegrationParams.MemBaseSet.{u1} ι _inst_1 l I c₂ r₂ π₂) -> (Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.TaggedPrepartition.iUnion.{u1} ι I π₁) (BoxIntegral.TaggedPrepartition.iUnion.{u1} ι I π₂)) -> (Exists.{succ u1} (BoxIntegral.Prepartition.{u1} ι I) (fun (π : BoxIntegral.Prepartition.{u1} ι I) => And (Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Prepartition.iUnion.{u1} ι I π) (SDiff.sdiff.{u1} (Set.{u1} (ι -> Real)) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} (ι -> Real)) (Set.booleanAlgebra.{u1} (ι -> Real))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.Set.hasCoeT.{u1} ι))) I) (BoxIntegral.TaggedPrepartition.iUnion.{u1} ι I π₁))) (And ((coeSort.{1, 1} Bool Prop coeSortBool (BoxIntegral.IntegrationParams.bDistortion l)) -> (LE.le.{0} NNReal (Preorder.toHasLe.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (OrderedCancelAddCommMonoid.toPartialOrder.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring)))) (BoxIntegral.Prepartition.distortion.{u1} ι I π _inst_1) c₁)) ((coeSort.{1, 1} Bool Prop coeSortBool (BoxIntegral.IntegrationParams.bDistortion l)) -> (LE.le.{0} NNReal (Preorder.toHasLe.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (OrderedCancelAddCommMonoid.toPartialOrder.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring)))) (BoxIntegral.Prepartition.distortion.{u1} ι I π _inst_1) c₂)))))
+but is expected to have type
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] {I : BoxIntegral.Box.{u1} ι} {c₁ : NNReal} {c₂ : NNReal} {r₁ : (ι -> Real) -> (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))} {r₂ : (ι -> Real) -> (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))} {π₁ : BoxIntegral.TaggedPrepartition.{u1} ι I} {π₂ : BoxIntegral.TaggedPrepartition.{u1} ι I} {l : BoxIntegral.IntegrationParams}, (BoxIntegral.IntegrationParams.MemBaseSet.{u1} ι _inst_1 l I c₁ r₁ π₁) -> (BoxIntegral.IntegrationParams.MemBaseSet.{u1} ι _inst_1 l I c₂ r₂ π₂) -> (Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.TaggedPrepartition.iUnion.{u1} ι I π₁) (BoxIntegral.TaggedPrepartition.iUnion.{u1} ι I π₂)) -> (Exists.{succ u1} (BoxIntegral.Prepartition.{u1} ι I) (fun (π : BoxIntegral.Prepartition.{u1} ι I) => And (Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Prepartition.iUnion.{u1} ι I π) (SDiff.sdiff.{u1} (Set.{u1} (ι -> Real)) (Set.instSDiffSet.{u1} (ι -> Real)) (BoxIntegral.Box.toSet.{u1} ι I) (BoxIntegral.TaggedPrepartition.iUnion.{u1} ι I π₁))) (And ((Eq.{1} Bool (BoxIntegral.IntegrationParams.bDistortion l) Bool.true) -> (LE.le.{0} NNReal (Preorder.toLE.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) (BoxIntegral.Prepartition.distortion.{u1} ι I π _inst_1) c₁)) ((Eq.{1} Bool (BoxIntegral.IntegrationParams.bDistortion l) Bool.true) -> (LE.le.{0} NNReal (Preorder.toLE.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) (BoxIntegral.Prepartition.distortion.{u1} ι I π _inst_1) c₂)))))
+Case conversion may be inaccurate. Consider using '#align box_integral.integration_params.mem_base_set.exists_common_compl BoxIntegral.IntegrationParams.MemBaseSet.exists_common_complₓ'. -/
 theorem MemBaseSet.exists_common_compl (h₁ : l.MemBaseSet I c₁ r₁ π₁) (h₂ : l.MemBaseSet I c₂ r₂ π₂)
     (hU : π₁.iUnion = π₂.iUnion) :
     ∃ π : Prepartition I,
@@ -377,6 +463,12 @@ theorem MemBaseSet.exists_common_compl (h₁ : l.MemBaseSet I c₁ r₁ π₁) (
         (hD h).elim⟩
 #align box_integral.integration_params.mem_base_set.exists_common_compl BoxIntegral.IntegrationParams.MemBaseSet.exists_common_compl
 
+/- warning: box_integral.integration_params.mem_base_set.union_compl_to_subordinate -> BoxIntegral.IntegrationParams.MemBaseSet.unionComplToSubordinate is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] {I : BoxIntegral.Box.{u1} ι} {c : NNReal} {r₁ : (ι -> Real) -> (coeSort.{1, 2} (Set.{0} Real) Type (Set.hasCoeToSort.{0} Real) (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))} {r₂ : (ι -> Real) -> (coeSort.{1, 2} (Set.{0} Real) Type (Set.hasCoeToSort.{0} Real) (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))} {π₁ : BoxIntegral.TaggedPrepartition.{u1} ι I} {l : BoxIntegral.IntegrationParams}, (BoxIntegral.IntegrationParams.MemBaseSet.{u1} ι _inst_1 l I c r₁ π₁) -> (forall (x : ι -> Real), (Membership.Mem.{u1, u1} (ι -> Real) (Set.{u1} (ι -> Real)) (Set.hasMem.{u1} (ι -> Real)) x (coeFn.{succ u1, succ u1} (OrderEmbedding.{u1, u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.hasLe.{u1} ι) (Set.hasLe.{u1} (ι -> Real))) (fun (_x : RelEmbedding.{u1, u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (LE.le.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.hasLe.{u1} ι)) (LE.le.{u1} (Set.{u1} (ι -> Real)) (Set.hasLe.{u1} (ι -> Real)))) => (BoxIntegral.Box.{u1} ι) -> (Set.{u1} (ι -> Real))) (RelEmbedding.hasCoeToFun.{u1, u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (LE.le.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.hasLe.{u1} ι)) (LE.le.{u1} (Set.{u1} (ι -> Real)) (Set.hasLe.{u1} (ι -> Real)))) (BoxIntegral.Box.Icc.{u1} ι) I)) -> (LE.le.{0} (coeSort.{1, 2} (Set.{0} Real) Type (Set.hasCoeToSort.{0} Real) (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))) (Subtype.hasLe.{0} Real Real.hasLe (fun (x : Real) => Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) x (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))) (r₂ x) (r₁ x))) -> (forall {π₂ : BoxIntegral.Prepartition.{u1} ι I} (hU : Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Prepartition.iUnion.{u1} ι I π₂) (SDiff.sdiff.{u1} (Set.{u1} (ι -> Real)) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} (ι -> Real)) (Set.booleanAlgebra.{u1} (ι -> Real))) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (HasLiftT.mk.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (CoeTCₓ.coe.{succ u1, succ u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.Set.hasCoeT.{u1} ι))) I) (BoxIntegral.TaggedPrepartition.iUnion.{u1} ι I π₁))), ((coeSort.{1, 1} Bool Prop coeSortBool (BoxIntegral.IntegrationParams.bDistortion l)) -> (LE.le.{0} NNReal (Preorder.toHasLe.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (OrderedCancelAddCommMonoid.toPartialOrder.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring)))) (BoxIntegral.Prepartition.distortion.{u1} ι I π₂ _inst_1) c)) -> (BoxIntegral.IntegrationParams.MemBaseSet.{u1} ι _inst_1 l I c r₁ (BoxIntegral.TaggedPrepartition.unionComplToSubordinate.{u1} ι _inst_1 I π₁ π₂ hU r₂)))
+but is expected to have type
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] {I : BoxIntegral.Box.{u1} ι} {c : NNReal} {r₁ : (ι -> Real) -> (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))} {r₂ : (ι -> Real) -> (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))} {π₁ : BoxIntegral.TaggedPrepartition.{u1} ι I} {l : BoxIntegral.IntegrationParams}, (BoxIntegral.IntegrationParams.MemBaseSet.{u1} ι _inst_1 l I c r₁ π₁) -> (forall (x : ι -> Real), (Membership.mem.{u1, u1} (ι -> Real) ((fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : BoxIntegral.Box.{u1} ι) => Set.{u1} (ι -> Real)) I) (Set.instMembershipSet.{u1} (ι -> Real)) x (FunLike.coe.{succ u1, succ u1, succ u1} (OrderEmbedding.{u1, u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.instLEBox.{u1} ι) (Set.instLESet.{u1} (ι -> Real))) (BoxIntegral.Box.{u1} ι) (fun (_x : BoxIntegral.Box.{u1} ι) => (fun (x._@.Mathlib.Order.RelIso.Basic._hyg.869 : BoxIntegral.Box.{u1} ι) => Set.{u1} (ι -> Real)) _x) (RelHomClass.toFunLike.{u1, u1, u1} (OrderEmbedding.{u1, u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (BoxIntegral.Box.instLEBox.{u1} ι) (Set.instLESet.{u1} (ι -> Real))) (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.682 : BoxIntegral.Box.{u1} ι) (x._@.Mathlib.Order.Hom.Basic._hyg.684 : BoxIntegral.Box.{u1} ι) => LE.le.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instLEBox.{u1} ι) x._@.Mathlib.Order.Hom.Basic._hyg.682 x._@.Mathlib.Order.Hom.Basic._hyg.684) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Set.{u1} (ι -> Real)) (x._@.Mathlib.Order.Hom.Basic._hyg.699 : Set.{u1} (ι -> Real)) => LE.le.{u1} (Set.{u1} (ι -> Real)) (Set.instLESet.{u1} (ι -> Real)) x._@.Mathlib.Order.Hom.Basic._hyg.697 x._@.Mathlib.Order.Hom.Basic._hyg.699) (RelEmbedding.instRelHomClassRelEmbedding.{u1, u1} (BoxIntegral.Box.{u1} ι) (Set.{u1} (ι -> Real)) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.682 : BoxIntegral.Box.{u1} ι) (x._@.Mathlib.Order.Hom.Basic._hyg.684 : BoxIntegral.Box.{u1} ι) => LE.le.{u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Box.instLEBox.{u1} ι) x._@.Mathlib.Order.Hom.Basic._hyg.682 x._@.Mathlib.Order.Hom.Basic._hyg.684) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Set.{u1} (ι -> Real)) (x._@.Mathlib.Order.Hom.Basic._hyg.699 : Set.{u1} (ι -> Real)) => LE.le.{u1} (Set.{u1} (ι -> Real)) (Set.instLESet.{u1} (ι -> Real)) x._@.Mathlib.Order.Hom.Basic._hyg.697 x._@.Mathlib.Order.Hom.Basic._hyg.699))) (BoxIntegral.Box.Icc.{u1} ι) I)) -> (LE.le.{0} (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) (Subtype.le.{0} Real Real.instLEReal (fun (x : Real) => Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) x (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))) (r₂ x) (r₁ x))) -> (forall {π₂ : BoxIntegral.Prepartition.{u1} ι I} (hU : Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.Prepartition.iUnion.{u1} ι I π₂) (SDiff.sdiff.{u1} (Set.{u1} (ι -> Real)) (Set.instSDiffSet.{u1} (ι -> Real)) (BoxIntegral.Box.toSet.{u1} ι I) (BoxIntegral.TaggedPrepartition.iUnion.{u1} ι I π₁))), ((Eq.{1} Bool (BoxIntegral.IntegrationParams.bDistortion l) Bool.true) -> (LE.le.{0} NNReal (Preorder.toLE.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) (BoxIntegral.Prepartition.distortion.{u1} ι I π₂ _inst_1) c)) -> (BoxIntegral.IntegrationParams.MemBaseSet.{u1} ι _inst_1 l I c r₁ (BoxIntegral.TaggedPrepartition.unionComplToSubordinate.{u1} ι _inst_1 I π₁ π₂ hU r₂)))
+Case conversion may be inaccurate. Consider using '#align box_integral.integration_params.mem_base_set.union_compl_to_subordinate BoxIntegral.IntegrationParams.MemBaseSet.unionComplToSubordinateₓ'. -/
 protected theorem MemBaseSet.unionComplToSubordinate (hπ₁ : l.MemBaseSet I c r₁ π₁)
     (hle : ∀ x ∈ I.Icc, r₂ x ≤ r₁ x) {π₂ : Prepartition I} (hU : π₂.iUnion = I \ π₁.iUnion)
     (hc : l.bDistortion → π₂.distortion ≤ c) :
@@ -387,6 +479,12 @@ protected theorem MemBaseSet.unionComplToSubordinate (hπ₁ : l.MemBaseSet I c 
     ⟨⊥, by simp⟩⟩
 #align box_integral.integration_params.mem_base_set.union_compl_to_subordinate BoxIntegral.IntegrationParams.MemBaseSet.unionComplToSubordinate
 
+/- warning: box_integral.integration_params.mem_base_set.filter -> BoxIntegral.IntegrationParams.MemBaseSet.filter is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] {I : BoxIntegral.Box.{u1} ι} {c : NNReal} {r : (ι -> Real) -> (coeSort.{1, 2} (Set.{0} Real) Type (Set.hasCoeToSort.{0} Real) (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))} {π : BoxIntegral.TaggedPrepartition.{u1} ι I} {l : BoxIntegral.IntegrationParams}, (BoxIntegral.IntegrationParams.MemBaseSet.{u1} ι _inst_1 l I c r π) -> (forall (p : (BoxIntegral.Box.{u1} ι) -> Prop), BoxIntegral.IntegrationParams.MemBaseSet.{u1} ι _inst_1 l I c r (BoxIntegral.TaggedPrepartition.filter.{u1} ι I π p))
+but is expected to have type
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] {I : BoxIntegral.Box.{u1} ι} {c : NNReal} {r : (ι -> Real) -> (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))} {π : BoxIntegral.TaggedPrepartition.{u1} ι I} {l : BoxIntegral.IntegrationParams}, (BoxIntegral.IntegrationParams.MemBaseSet.{u1} ι _inst_1 l I c r π) -> (forall (p : (BoxIntegral.Box.{u1} ι) -> Prop), BoxIntegral.IntegrationParams.MemBaseSet.{u1} ι _inst_1 l I c r (BoxIntegral.TaggedPrepartition.filter.{u1} ι I π p))
+Case conversion may be inaccurate. Consider using '#align box_integral.integration_params.mem_base_set.filter BoxIntegral.IntegrationParams.MemBaseSet.filterₓ'. -/
 protected theorem MemBaseSet.filter (hπ : l.MemBaseSet I c r π) (p : Box ι → Prop) :
     l.MemBaseSet I c r (π.filterₓ p) :=
   by
@@ -411,7 +509,13 @@ protected theorem MemBaseSet.filter (hπ : l.MemBaseSet I c r π) (p : Box ι �
     simpa [hc]
 #align box_integral.integration_params.mem_base_set.filter BoxIntegral.IntegrationParams.MemBaseSet.filter
 
-theorem bUnionTaggedMemBaseSet {π : Prepartition I} {πi : ∀ J, TaggedPrepartition J}
+/- warning: box_integral.integration_params.bUnion_tagged_mem_base_set -> BoxIntegral.IntegrationParams.biUnionTagged_memBaseSet is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] {I : BoxIntegral.Box.{u1} ι} {c : NNReal} {r : (ι -> Real) -> (coeSort.{1, 2} (Set.{0} Real) Type (Set.hasCoeToSort.{0} Real) (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))} {l : BoxIntegral.IntegrationParams} {π : BoxIntegral.Prepartition.{u1} ι I} {πi : forall (J : BoxIntegral.Box.{u1} ι), BoxIntegral.TaggedPrepartition.{u1} ι J}, (forall (J : BoxIntegral.Box.{u1} ι), (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J π) -> (BoxIntegral.IntegrationParams.MemBaseSet.{u1} ι _inst_1 l J c r (πi J))) -> (forall (J : BoxIntegral.Box.{u1} ι), (Membership.Mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasMem.{u1} ι I) J π) -> (BoxIntegral.TaggedPrepartition.IsPartition.{u1} ι J (πi J))) -> ((coeSort.{1, 1} Bool Prop coeSortBool (BoxIntegral.IntegrationParams.bDistortion l)) -> (LE.le.{0} NNReal (Preorder.toHasLe.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (OrderedCancelAddCommMonoid.toPartialOrder.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring)))) (BoxIntegral.Prepartition.distortion.{u1} ι I (BoxIntegral.Prepartition.compl.{u1} ι I (Finite.of_fintype.{u1} ι _inst_1) π) _inst_1) c)) -> (BoxIntegral.IntegrationParams.MemBaseSet.{u1} ι _inst_1 l I c r (BoxIntegral.Prepartition.biUnionTagged.{u1} ι I π πi))
+but is expected to have type
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] {I : BoxIntegral.Box.{u1} ι} {c : NNReal} {r : (ι -> Real) -> (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))} {l : BoxIntegral.IntegrationParams} {π : BoxIntegral.Prepartition.{u1} ι I} {πi : forall (J : BoxIntegral.Box.{u1} ι), BoxIntegral.TaggedPrepartition.{u1} ι J}, (forall (J : BoxIntegral.Box.{u1} ι), (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι I) J π) -> (BoxIntegral.IntegrationParams.MemBaseSet.{u1} ι _inst_1 l J c r (πi J))) -> (forall (J : BoxIntegral.Box.{u1} ι), (Membership.mem.{u1, u1} (BoxIntegral.Box.{u1} ι) (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instMembershipBoxPrepartition.{u1} ι I) J π) -> (BoxIntegral.TaggedPrepartition.IsPartition.{u1} ι J (πi J))) -> ((Eq.{1} Bool (BoxIntegral.IntegrationParams.bDistortion l) Bool.true) -> (LE.le.{0} NNReal (Preorder.toLE.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) (BoxIntegral.Prepartition.distortion.{u1} ι I (BoxIntegral.Prepartition.compl.{u1} ι I (Finite.of_fintype.{u1} ι _inst_1) π) _inst_1) c)) -> (BoxIntegral.IntegrationParams.MemBaseSet.{u1} ι _inst_1 l I c r (BoxIntegral.Prepartition.biUnionTagged.{u1} ι I π πi))
+Case conversion may be inaccurate. Consider using '#align box_integral.integration_params.bUnion_tagged_mem_base_set BoxIntegral.IntegrationParams.biUnionTagged_memBaseSetₓ'. -/
+theorem biUnionTagged_memBaseSet {π : Prepartition I} {πi : ∀ J, TaggedPrepartition J}
     (h : ∀ J ∈ π, l.MemBaseSet J c r (πi J)) (hp : ∀ J ∈ π, (πi J).IsPartition)
     (hc : l.bDistortion → π.compl.distortion ≤ c) : l.MemBaseSet I c r (π.biUnionTagged πi) :=
   by
@@ -424,17 +528,35 @@ theorem bUnionTaggedMemBaseSet {π : Prepartition I} {πi : ∀ J, TaggedPrepart
   · refine' ⟨_, _, hc hD⟩
     rw [π.Union_compl, ← π.Union_bUnion_partition hp]
     rfl
-#align box_integral.integration_params.bUnion_tagged_mem_base_set BoxIntegral.IntegrationParams.bUnionTaggedMemBaseSet
+#align box_integral.integration_params.bUnion_tagged_mem_base_set BoxIntegral.IntegrationParams.biUnionTagged_memBaseSet
 
+/- warning: box_integral.integration_params.r_cond.mono -> BoxIntegral.IntegrationParams.RCond.mono is a dubious translation:
+lean 3 declaration is
+  forall {l₁ : BoxIntegral.IntegrationParams} {l₂ : BoxIntegral.IntegrationParams} {ι : Type.{u1}} {r : (ι -> Real) -> (coeSort.{1, 2} (Set.{0} Real) Type (Set.hasCoeToSort.{0} Real) (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))}, (LE.le.{0} BoxIntegral.IntegrationParams (Preorder.toHasLe.{0} BoxIntegral.IntegrationParams (PartialOrder.toPreorder.{0} BoxIntegral.IntegrationParams BoxIntegral.IntegrationParams.partialOrder)) l₁ l₂) -> (BoxIntegral.IntegrationParams.RCond.{u1} ι l₂ r) -> (BoxIntegral.IntegrationParams.RCond.{u1} ι l₁ r)
+but is expected to have type
+  forall {l₁ : BoxIntegral.IntegrationParams} {l₂ : BoxIntegral.IntegrationParams} {ι : Type.{u1}} {r : (ι -> Real) -> (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))}, (LE.le.{0} BoxIntegral.IntegrationParams (Preorder.toLE.{0} BoxIntegral.IntegrationParams (PartialOrder.toPreorder.{0} BoxIntegral.IntegrationParams BoxIntegral.IntegrationParams.instPartialOrderIntegrationParams)) l₁ l₂) -> (BoxIntegral.IntegrationParams.RCond.{u1} ι l₂ r) -> (BoxIntegral.IntegrationParams.RCond.{u1} ι l₁ r)
+Case conversion may be inaccurate. Consider using '#align box_integral.integration_params.r_cond.mono BoxIntegral.IntegrationParams.RCond.monoₓ'. -/
 @[mono]
 theorem RCond.mono {ι : Type _} {r : (ι → ℝ) → Ioi (0 : ℝ)} (h : l₁ ≤ l₂) (hr : l₂.RCond r) :
     l₁.RCond r := fun hR => hr (le_iff_imp.1 h.1 hR)
 #align box_integral.integration_params.r_cond.mono BoxIntegral.IntegrationParams.RCond.mono
 
+/- warning: box_integral.integration_params.r_cond.min -> BoxIntegral.IntegrationParams.RCond.min is a dubious translation:
+lean 3 declaration is
+  forall {l : BoxIntegral.IntegrationParams} {ι : Type.{u1}} {r₁ : (ι -> Real) -> (coeSort.{1, 2} (Set.{0} Real) Type (Set.hasCoeToSort.{0} Real) (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))} {r₂ : (ι -> Real) -> (coeSort.{1, 2} (Set.{0} Real) Type (Set.hasCoeToSort.{0} Real) (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))}, (BoxIntegral.IntegrationParams.RCond.{u1} ι l r₁) -> (BoxIntegral.IntegrationParams.RCond.{u1} ι l r₂) -> (BoxIntegral.IntegrationParams.RCond.{u1} ι l (fun (x : ι -> Real) => LinearOrder.min.{0} (coeSort.{1, 2} (Set.{0} Real) Type (Set.hasCoeToSort.{0} Real) (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero))))) (Subtype.linearOrder.{0} Real Real.linearOrder (fun (x : Real) => Membership.Mem.{0, 0} Real (Set.{0} Real) (Set.hasMem.{0} Real) x (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))) (r₁ x) (r₂ x)))
+but is expected to have type
+  forall {l : BoxIntegral.IntegrationParams} {ι : Type.{u1}} {r₁ : (ι -> Real) -> (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))} {r₂ : (ι -> Real) -> (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))}, (BoxIntegral.IntegrationParams.RCond.{u1} ι l r₁) -> (BoxIntegral.IntegrationParams.RCond.{u1} ι l r₂) -> (BoxIntegral.IntegrationParams.RCond.{u1} ι l (fun (x : ι -> Real) => Min.min.{0} (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) (LinearOrder.toMin.{0} (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))) (Subtype.linearOrder.{0} Real Real.linearOrder (fun (x : Real) => Membership.mem.{0, 0} Real (Set.{0} Real) (Set.instMembershipSet.{0} Real) x (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))))) (r₁ x) (r₂ x)))
+Case conversion may be inaccurate. Consider using '#align box_integral.integration_params.r_cond.min BoxIntegral.IntegrationParams.RCond.minₓ'. -/
 theorem RCond.min {ι : Type _} {r₁ r₂ : (ι → ℝ) → Ioi (0 : ℝ)} (h₁ : l.RCond r₁) (h₂ : l.RCond r₂) :
     l.RCond fun x => min (r₁ x) (r₂ x) := fun hR x => congr_arg₂ min (h₁ hR x) (h₂ hR x)
 #align box_integral.integration_params.r_cond.min BoxIntegral.IntegrationParams.RCond.min
 
+/- warning: box_integral.integration_params.to_filter_distortion_mono -> BoxIntegral.IntegrationParams.toFilterDistortion_mono is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] {c₁ : NNReal} {c₂ : NNReal} {l₁ : BoxIntegral.IntegrationParams} {l₂ : BoxIntegral.IntegrationParams} (I : BoxIntegral.Box.{u1} ι), (LE.le.{0} BoxIntegral.IntegrationParams (Preorder.toHasLe.{0} BoxIntegral.IntegrationParams (PartialOrder.toPreorder.{0} BoxIntegral.IntegrationParams BoxIntegral.IntegrationParams.partialOrder)) l₁ l₂) -> (LE.le.{0} NNReal (Preorder.toHasLe.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (OrderedCancelAddCommMonoid.toPartialOrder.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring)))) c₁ c₂) -> (LE.le.{u1} (Filter.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I)) (Preorder.toHasLe.{u1} (Filter.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I)) (PartialOrder.toPreorder.{u1} (Filter.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I)) (Filter.partialOrder.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I)))) (BoxIntegral.IntegrationParams.toFilterDistortion.{u1} ι _inst_1 l₁ I c₁) (BoxIntegral.IntegrationParams.toFilterDistortion.{u1} ι _inst_1 l₂ I c₂))
+but is expected to have type
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] {c₁ : NNReal} {c₂ : NNReal} {l₁ : BoxIntegral.IntegrationParams} {l₂ : BoxIntegral.IntegrationParams} (I : BoxIntegral.Box.{u1} ι), (LE.le.{0} BoxIntegral.IntegrationParams (Preorder.toLE.{0} BoxIntegral.IntegrationParams (PartialOrder.toPreorder.{0} BoxIntegral.IntegrationParams BoxIntegral.IntegrationParams.instPartialOrderIntegrationParams)) l₁ l₂) -> (LE.le.{0} NNReal (Preorder.toLE.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) c₁ c₂) -> (LE.le.{u1} (Filter.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I)) (Preorder.toLE.{u1} (Filter.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I)) (PartialOrder.toPreorder.{u1} (Filter.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I)) (Filter.instPartialOrderFilter.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I)))) (BoxIntegral.IntegrationParams.toFilterDistortion.{u1} ι _inst_1 l₁ I c₁) (BoxIntegral.IntegrationParams.toFilterDistortion.{u1} ι _inst_1 l₂ I c₂))
+Case conversion may be inaccurate. Consider using '#align box_integral.integration_params.to_filter_distortion_mono BoxIntegral.IntegrationParams.toFilterDistortion_monoₓ'. -/
 @[mono]
 theorem toFilterDistortion_mono (I : Box ι) (h : l₁ ≤ l₂) (hc : c₁ ≤ c₂) :
     l₁.toFilterDistortion I c₁ ≤ l₂.toFilterDistortion I c₂ :=
@@ -443,23 +565,43 @@ theorem toFilterDistortion_mono (I : Box ι) (h : l₁ ≤ l₂) (hc : c₁ ≤ 
       ⟨hr.mono h, principal_mono.2 fun _ => MemBaseSet.mono I h hc fun _ _ => le_rfl⟩
 #align box_integral.integration_params.to_filter_distortion_mono BoxIntegral.IntegrationParams.toFilterDistortion_mono
 
+/- warning: box_integral.integration_params.to_filter_mono -> BoxIntegral.IntegrationParams.toFilter_mono is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] (I : BoxIntegral.Box.{u1} ι) {l₁ : BoxIntegral.IntegrationParams} {l₂ : BoxIntegral.IntegrationParams}, (LE.le.{0} BoxIntegral.IntegrationParams (Preorder.toHasLe.{0} BoxIntegral.IntegrationParams (PartialOrder.toPreorder.{0} BoxIntegral.IntegrationParams BoxIntegral.IntegrationParams.partialOrder)) l₁ l₂) -> (LE.le.{u1} (Filter.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I)) (Preorder.toHasLe.{u1} (Filter.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I)) (PartialOrder.toPreorder.{u1} (Filter.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I)) (Filter.partialOrder.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I)))) (BoxIntegral.IntegrationParams.toFilter.{u1} ι _inst_1 l₁ I) (BoxIntegral.IntegrationParams.toFilter.{u1} ι _inst_1 l₂ I))
+but is expected to have type
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] (I : BoxIntegral.Box.{u1} ι) {l₁ : BoxIntegral.IntegrationParams} {l₂ : BoxIntegral.IntegrationParams}, (LE.le.{0} BoxIntegral.IntegrationParams (Preorder.toLE.{0} BoxIntegral.IntegrationParams (PartialOrder.toPreorder.{0} BoxIntegral.IntegrationParams BoxIntegral.IntegrationParams.instPartialOrderIntegrationParams)) l₁ l₂) -> (LE.le.{u1} (Filter.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I)) (Preorder.toLE.{u1} (Filter.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I)) (PartialOrder.toPreorder.{u1} (Filter.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I)) (Filter.instPartialOrderFilter.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I)))) (BoxIntegral.IntegrationParams.toFilter.{u1} ι _inst_1 l₁ I) (BoxIntegral.IntegrationParams.toFilter.{u1} ι _inst_1 l₂ I))
+Case conversion may be inaccurate. Consider using '#align box_integral.integration_params.to_filter_mono BoxIntegral.IntegrationParams.toFilter_monoₓ'. -/
 @[mono]
 theorem toFilter_mono (I : Box ι) {l₁ l₂ : IntegrationParams} (h : l₁ ≤ l₂) :
     l₁.toFilter I ≤ l₂.toFilter I :=
   iSup_mono fun c => toFilterDistortion_mono I h le_rfl
 #align box_integral.integration_params.to_filter_mono BoxIntegral.IntegrationParams.toFilter_mono
 
+/- warning: box_integral.integration_params.to_filter_Union_mono -> BoxIntegral.IntegrationParams.toFilteriUnion_mono is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] (I : BoxIntegral.Box.{u1} ι) {l₁ : BoxIntegral.IntegrationParams} {l₂ : BoxIntegral.IntegrationParams}, (LE.le.{0} BoxIntegral.IntegrationParams (Preorder.toHasLe.{0} BoxIntegral.IntegrationParams (PartialOrder.toPreorder.{0} BoxIntegral.IntegrationParams BoxIntegral.IntegrationParams.partialOrder)) l₁ l₂) -> (forall (π₀ : BoxIntegral.Prepartition.{u1} ι I), LE.le.{u1} (Filter.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I)) (Preorder.toHasLe.{u1} (Filter.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I)) (PartialOrder.toPreorder.{u1} (Filter.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I)) (Filter.partialOrder.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I)))) (BoxIntegral.IntegrationParams.toFilteriUnion.{u1} ι _inst_1 l₁ I π₀) (BoxIntegral.IntegrationParams.toFilteriUnion.{u1} ι _inst_1 l₂ I π₀))
+but is expected to have type
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] (I : BoxIntegral.Box.{u1} ι) {l₁ : BoxIntegral.IntegrationParams} {l₂ : BoxIntegral.IntegrationParams}, (LE.le.{0} BoxIntegral.IntegrationParams (Preorder.toLE.{0} BoxIntegral.IntegrationParams (PartialOrder.toPreorder.{0} BoxIntegral.IntegrationParams BoxIntegral.IntegrationParams.instPartialOrderIntegrationParams)) l₁ l₂) -> (forall (π₀ : BoxIntegral.Prepartition.{u1} ι I), LE.le.{u1} (Filter.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I)) (Preorder.toLE.{u1} (Filter.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I)) (PartialOrder.toPreorder.{u1} (Filter.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I)) (Filter.instPartialOrderFilter.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I)))) (BoxIntegral.IntegrationParams.toFilteriUnion.{u1} ι _inst_1 l₁ I π₀) (BoxIntegral.IntegrationParams.toFilteriUnion.{u1} ι _inst_1 l₂ I π₀))
+Case conversion may be inaccurate. Consider using '#align box_integral.integration_params.to_filter_Union_mono BoxIntegral.IntegrationParams.toFilteriUnion_monoₓ'. -/
 @[mono]
-theorem toFilterUnion_mono (I : Box ι) {l₁ l₂ : IntegrationParams} (h : l₁ ≤ l₂)
-    (π₀ : Prepartition I) : l₁.toFilterUnion I π₀ ≤ l₂.toFilterUnion I π₀ :=
+theorem toFilteriUnion_mono (I : Box ι) {l₁ l₂ : IntegrationParams} (h : l₁ ≤ l₂)
+    (π₀ : Prepartition I) : l₁.toFilteriUnion I π₀ ≤ l₂.toFilteriUnion I π₀ :=
   iSup_mono fun c => inf_le_inf_right _ <| toFilterDistortion_mono _ h le_rfl
-#align box_integral.integration_params.to_filter_Union_mono BoxIntegral.IntegrationParams.toFilterUnion_mono
+#align box_integral.integration_params.to_filter_Union_mono BoxIntegral.IntegrationParams.toFilteriUnion_mono
 
-theorem toFilterUnion_congr (I : Box ι) (l : IntegrationParams) {π₁ π₂ : Prepartition I}
-    (h : π₁.iUnion = π₂.iUnion) : l.toFilterUnion I π₁ = l.toFilterUnion I π₂ := by
+#print BoxIntegral.IntegrationParams.toFilteriUnion_congr /-
+theorem toFilteriUnion_congr (I : Box ι) (l : IntegrationParams) {π₁ π₂ : Prepartition I}
+    (h : π₁.iUnion = π₂.iUnion) : l.toFilteriUnion I π₁ = l.toFilteriUnion I π₂ := by
   simp only [to_filter_Union, to_filter_distortion_Union, h]
-#align box_integral.integration_params.to_filter_Union_congr BoxIntegral.IntegrationParams.toFilterUnion_congr
+#align box_integral.integration_params.to_filter_Union_congr BoxIntegral.IntegrationParams.toFilteriUnion_congr
+-/
 
+/- warning: box_integral.integration_params.has_basis_to_filter_distortion -> BoxIntegral.IntegrationParams.hasBasis_toFilterDistortion is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] (l : BoxIntegral.IntegrationParams) (I : BoxIntegral.Box.{u1} ι) (c : NNReal), Filter.HasBasis.{u1, succ u1} (BoxIntegral.TaggedPrepartition.{u1} ι I) ((ι -> Real) -> (coeSort.{1, 2} (Set.{0} Real) Type (Set.hasCoeToSort.{0} Real) (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))) (BoxIntegral.IntegrationParams.toFilterDistortion.{u1} ι _inst_1 l I c) (BoxIntegral.IntegrationParams.RCond.{u1} ι l) (fun (r : (ι -> Real) -> (coeSort.{1, 2} (Set.{0} Real) Type (Set.hasCoeToSort.{0} Real) (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))) => setOf.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I) (fun (π : BoxIntegral.TaggedPrepartition.{u1} ι I) => BoxIntegral.IntegrationParams.MemBaseSet.{u1} ι _inst_1 l I c r π))
+but is expected to have type
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] (l : BoxIntegral.IntegrationParams) (I : BoxIntegral.Box.{u1} ι) (c : NNReal), Filter.HasBasis.{u1, succ u1} (BoxIntegral.TaggedPrepartition.{u1} ι I) ((ι -> Real) -> (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))) (BoxIntegral.IntegrationParams.toFilterDistortion.{u1} ι _inst_1 l I c) (BoxIntegral.IntegrationParams.RCond.{u1} ι l) (fun (r : (ι -> Real) -> (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))) => setOf.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I) (fun (π : BoxIntegral.TaggedPrepartition.{u1} ι I) => BoxIntegral.IntegrationParams.MemBaseSet.{u1} ι _inst_1 l I c r π))
+Case conversion may be inaccurate. Consider using '#align box_integral.integration_params.has_basis_to_filter_distortion BoxIntegral.IntegrationParams.hasBasis_toFilterDistortionₓ'. -/
 theorem hasBasis_toFilterDistortion (l : IntegrationParams) (I : Box ι) (c : ℝ≥0) :
     (l.toFilterDistortion I c).HasBasis l.RCond fun r => { π | l.MemBaseSet I c r π } :=
   hasBasis_biInf_principal'
@@ -469,38 +611,63 @@ theorem hasBasis_toFilterDistortion (l : IntegrationParams) (I : Box ι) (c : �
     ⟨fun _ => ⟨1, zero_lt_one⟩, fun _ _ => rfl⟩
 #align box_integral.integration_params.has_basis_to_filter_distortion BoxIntegral.IntegrationParams.hasBasis_toFilterDistortion
 
-theorem hasBasis_toFilterDistortionUnion (l : IntegrationParams) (I : Box ι) (c : ℝ≥0)
+/- warning: box_integral.integration_params.has_basis_to_filter_distortion_Union -> BoxIntegral.IntegrationParams.hasBasis_toFilterDistortioniUnion is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] (l : BoxIntegral.IntegrationParams) (I : BoxIntegral.Box.{u1} ι) (c : NNReal) (π₀ : BoxIntegral.Prepartition.{u1} ι I), Filter.HasBasis.{u1, succ u1} (BoxIntegral.TaggedPrepartition.{u1} ι I) ((ι -> Real) -> (coeSort.{1, 2} (Set.{0} Real) Type (Set.hasCoeToSort.{0} Real) (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))) (BoxIntegral.IntegrationParams.toFilterDistortioniUnion.{u1} ι _inst_1 l I c π₀) (BoxIntegral.IntegrationParams.RCond.{u1} ι l) (fun (r : (ι -> Real) -> (coeSort.{1, 2} (Set.{0} Real) Type (Set.hasCoeToSort.{0} Real) (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))) => setOf.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I) (fun (π : BoxIntegral.TaggedPrepartition.{u1} ι I) => And (BoxIntegral.IntegrationParams.MemBaseSet.{u1} ι _inst_1 l I c r π) (Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.TaggedPrepartition.iUnion.{u1} ι I π) (BoxIntegral.Prepartition.iUnion.{u1} ι I π₀))))
+but is expected to have type
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] (l : BoxIntegral.IntegrationParams) (I : BoxIntegral.Box.{u1} ι) (c : NNReal) (π₀ : BoxIntegral.Prepartition.{u1} ι I), Filter.HasBasis.{u1, succ u1} (BoxIntegral.TaggedPrepartition.{u1} ι I) ((ι -> Real) -> (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))) (BoxIntegral.IntegrationParams.toFilterDistortioniUnion.{u1} ι _inst_1 l I c π₀) (BoxIntegral.IntegrationParams.RCond.{u1} ι l) (fun (r : (ι -> Real) -> (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))) => setOf.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I) (fun (π : BoxIntegral.TaggedPrepartition.{u1} ι I) => And (BoxIntegral.IntegrationParams.MemBaseSet.{u1} ι _inst_1 l I c r π) (Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.TaggedPrepartition.iUnion.{u1} ι I π) (BoxIntegral.Prepartition.iUnion.{u1} ι I π₀))))
+Case conversion may be inaccurate. Consider using '#align box_integral.integration_params.has_basis_to_filter_distortion_Union BoxIntegral.IntegrationParams.hasBasis_toFilterDistortioniUnionₓ'. -/
+theorem hasBasis_toFilterDistortioniUnion (l : IntegrationParams) (I : Box ι) (c : ℝ≥0)
     (π₀ : Prepartition I) :
-    (l.toFilterDistortionUnion I c π₀).HasBasis l.RCond fun r =>
+    (l.toFilterDistortioniUnion I c π₀).HasBasis l.RCond fun r =>
       { π | l.MemBaseSet I c r π ∧ π.iUnion = π₀.iUnion } :=
   (l.hasBasis_toFilterDistortion I c).inf_principal _
-#align box_integral.integration_params.has_basis_to_filter_distortion_Union BoxIntegral.IntegrationParams.hasBasis_toFilterDistortionUnion
+#align box_integral.integration_params.has_basis_to_filter_distortion_Union BoxIntegral.IntegrationParams.hasBasis_toFilterDistortioniUnion
 
-theorem hasBasis_toFilterUnion (l : IntegrationParams) (I : Box ι) (π₀ : Prepartition I) :
-    (l.toFilterUnion I π₀).HasBasis (fun r : ℝ≥0 → (ι → ℝ) → Ioi (0 : ℝ) => ∀ c, l.RCond (r c))
+/- warning: box_integral.integration_params.has_basis_to_filter_Union -> BoxIntegral.IntegrationParams.hasBasis_toFilteriUnion is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] (l : BoxIntegral.IntegrationParams) (I : BoxIntegral.Box.{u1} ι) (π₀ : BoxIntegral.Prepartition.{u1} ι I), Filter.HasBasis.{u1, succ u1} (BoxIntegral.TaggedPrepartition.{u1} ι I) (NNReal -> (ι -> Real) -> (coeSort.{1, 2} (Set.{0} Real) Type (Set.hasCoeToSort.{0} Real) (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))) (BoxIntegral.IntegrationParams.toFilteriUnion.{u1} ι _inst_1 l I π₀) (fun (r : NNReal -> (ι -> Real) -> (coeSort.{1, 2} (Set.{0} Real) Type (Set.hasCoeToSort.{0} Real) (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))) => forall (c : NNReal), BoxIntegral.IntegrationParams.RCond.{u1} ι l (r c)) (fun (r : NNReal -> (ι -> Real) -> (coeSort.{1, 2} (Set.{0} Real) Type (Set.hasCoeToSort.{0} Real) (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))) => setOf.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I) (fun (π : BoxIntegral.TaggedPrepartition.{u1} ι I) => Exists.{1} NNReal (fun (c : NNReal) => And (BoxIntegral.IntegrationParams.MemBaseSet.{u1} ι _inst_1 l I c (r c) π) (Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.TaggedPrepartition.iUnion.{u1} ι I π) (BoxIntegral.Prepartition.iUnion.{u1} ι I π₀)))))
+but is expected to have type
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] (l : BoxIntegral.IntegrationParams) (I : BoxIntegral.Box.{u1} ι) (π₀ : BoxIntegral.Prepartition.{u1} ι I), Filter.HasBasis.{u1, succ u1} (BoxIntegral.TaggedPrepartition.{u1} ι I) (NNReal -> (ι -> Real) -> (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))) (BoxIntegral.IntegrationParams.toFilteriUnion.{u1} ι _inst_1 l I π₀) (fun (r : NNReal -> (ι -> Real) -> (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))) => forall (c : NNReal), BoxIntegral.IntegrationParams.RCond.{u1} ι l (r c)) (fun (r : NNReal -> (ι -> Real) -> (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))) => setOf.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I) (fun (π : BoxIntegral.TaggedPrepartition.{u1} ι I) => Exists.{1} NNReal (fun (c : NNReal) => And (BoxIntegral.IntegrationParams.MemBaseSet.{u1} ι _inst_1 l I c (r c) π) (Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.TaggedPrepartition.iUnion.{u1} ι I π) (BoxIntegral.Prepartition.iUnion.{u1} ι I π₀)))))
+Case conversion may be inaccurate. Consider using '#align box_integral.integration_params.has_basis_to_filter_Union BoxIntegral.IntegrationParams.hasBasis_toFilteriUnionₓ'. -/
+theorem hasBasis_toFilteriUnion (l : IntegrationParams) (I : Box ι) (π₀ : Prepartition I) :
+    (l.toFilteriUnion I π₀).HasBasis (fun r : ℝ≥0 → (ι → ℝ) → Ioi (0 : ℝ) => ∀ c, l.RCond (r c))
       fun r => { π | ∃ c, l.MemBaseSet I c (r c) π ∧ π.iUnion = π₀.iUnion } :=
   by
-  have := fun c => l.hasBasis_toFilterDistortionUnion I c π₀
+  have := fun c => l.hasBasis_toFilterDistortioniUnion I c π₀
   simpa only [set_of_and, set_of_exists] using has_basis_supr this
-#align box_integral.integration_params.has_basis_to_filter_Union BoxIntegral.IntegrationParams.hasBasis_toFilterUnion
+#align box_integral.integration_params.has_basis_to_filter_Union BoxIntegral.IntegrationParams.hasBasis_toFilteriUnion
 
-theorem hasBasis_toFilterUnion_top (l : IntegrationParams) (I : Box ι) :
-    (l.toFilterUnion I ⊤).HasBasis (fun r : ℝ≥0 → (ι → ℝ) → Ioi (0 : ℝ) => ∀ c, l.RCond (r c))
+/- warning: box_integral.integration_params.has_basis_to_filter_Union_top -> BoxIntegral.IntegrationParams.hasBasis_toFilteriUnion_top is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] (l : BoxIntegral.IntegrationParams) (I : BoxIntegral.Box.{u1} ι), Filter.HasBasis.{u1, succ u1} (BoxIntegral.TaggedPrepartition.{u1} ι I) (NNReal -> (ι -> Real) -> (coeSort.{1, 2} (Set.{0} Real) Type (Set.hasCoeToSort.{0} Real) (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))) (BoxIntegral.IntegrationParams.toFilteriUnion.{u1} ι _inst_1 l I (Top.top.{u1} (BoxIntegral.Prepartition.{u1} ι I) (OrderTop.toHasTop.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasLe.{u1} ι I) (BoxIntegral.Prepartition.orderTop.{u1} ι I)))) (fun (r : NNReal -> (ι -> Real) -> (coeSort.{1, 2} (Set.{0} Real) Type (Set.hasCoeToSort.{0} Real) (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))) => forall (c : NNReal), BoxIntegral.IntegrationParams.RCond.{u1} ι l (r c)) (fun (r : NNReal -> (ι -> Real) -> (coeSort.{1, 2} (Set.{0} Real) Type (Set.hasCoeToSort.{0} Real) (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))) => setOf.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I) (fun (π : BoxIntegral.TaggedPrepartition.{u1} ι I) => Exists.{1} NNReal (fun (c : NNReal) => And (BoxIntegral.IntegrationParams.MemBaseSet.{u1} ι _inst_1 l I c (r c) π) (BoxIntegral.TaggedPrepartition.IsPartition.{u1} ι I π))))
+but is expected to have type
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] (l : BoxIntegral.IntegrationParams) (I : BoxIntegral.Box.{u1} ι), Filter.HasBasis.{u1, succ u1} (BoxIntegral.TaggedPrepartition.{u1} ι I) (NNReal -> (ι -> Real) -> (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))) (BoxIntegral.IntegrationParams.toFilteriUnion.{u1} ι _inst_1 l I (Top.top.{u1} (BoxIntegral.Prepartition.{u1} ι I) (OrderTop.toTop.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instLEPrepartition.{u1} ι I) (BoxIntegral.Prepartition.instOrderTopPrepartitionInstLEPrepartition.{u1} ι I)))) (fun (r : NNReal -> (ι -> Real) -> (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))) => forall (c : NNReal), BoxIntegral.IntegrationParams.RCond.{u1} ι l (r c)) (fun (r : NNReal -> (ι -> Real) -> (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))) => setOf.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I) (fun (π : BoxIntegral.TaggedPrepartition.{u1} ι I) => Exists.{1} NNReal (fun (c : NNReal) => And (BoxIntegral.IntegrationParams.MemBaseSet.{u1} ι _inst_1 l I c (r c) π) (BoxIntegral.TaggedPrepartition.IsPartition.{u1} ι I π))))
+Case conversion may be inaccurate. Consider using '#align box_integral.integration_params.has_basis_to_filter_Union_top BoxIntegral.IntegrationParams.hasBasis_toFilteriUnion_topₓ'. -/
+theorem hasBasis_toFilteriUnion_top (l : IntegrationParams) (I : Box ι) :
+    (l.toFilteriUnion I ⊤).HasBasis (fun r : ℝ≥0 → (ι → ℝ) → Ioi (0 : ℝ) => ∀ c, l.RCond (r c))
       fun r => { π | ∃ c, l.MemBaseSet I c (r c) π ∧ π.IsPartition } :=
   by
   simpa only [tagged_prepartition.is_partition_iff_Union_eq, prepartition.Union_top] using
     l.has_basis_to_filter_Union I ⊤
-#align box_integral.integration_params.has_basis_to_filter_Union_top BoxIntegral.IntegrationParams.hasBasis_toFilterUnion_top
+#align box_integral.integration_params.has_basis_to_filter_Union_top BoxIntegral.IntegrationParams.hasBasis_toFilteriUnion_top
 
+/- warning: box_integral.integration_params.has_basis_to_filter -> BoxIntegral.IntegrationParams.hasBasis_toFilter is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] (l : BoxIntegral.IntegrationParams) (I : BoxIntegral.Box.{u1} ι), Filter.HasBasis.{u1, succ u1} (BoxIntegral.TaggedPrepartition.{u1} ι I) (NNReal -> (ι -> Real) -> (coeSort.{1, 2} (Set.{0} Real) Type (Set.hasCoeToSort.{0} Real) (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))) (BoxIntegral.IntegrationParams.toFilter.{u1} ι _inst_1 l I) (fun (r : NNReal -> (ι -> Real) -> (coeSort.{1, 2} (Set.{0} Real) Type (Set.hasCoeToSort.{0} Real) (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))) => forall (c : NNReal), BoxIntegral.IntegrationParams.RCond.{u1} ι l (r c)) (fun (r : NNReal -> (ι -> Real) -> (coeSort.{1, 2} (Set.{0} Real) Type (Set.hasCoeToSort.{0} Real) (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))) => setOf.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I) (fun (π : BoxIntegral.TaggedPrepartition.{u1} ι I) => Exists.{1} NNReal (fun (c : NNReal) => BoxIntegral.IntegrationParams.MemBaseSet.{u1} ι _inst_1 l I c (r c) π)))
+but is expected to have type
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] (l : BoxIntegral.IntegrationParams) (I : BoxIntegral.Box.{u1} ι), Filter.HasBasis.{u1, succ u1} (BoxIntegral.TaggedPrepartition.{u1} ι I) (NNReal -> (ι -> Real) -> (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))) (BoxIntegral.IntegrationParams.toFilter.{u1} ι _inst_1 l I) (fun (r : NNReal -> (ι -> Real) -> (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))) => forall (c : NNReal), BoxIntegral.IntegrationParams.RCond.{u1} ι l (r c)) (fun (r : NNReal -> (ι -> Real) -> (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))) => setOf.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I) (fun (π : BoxIntegral.TaggedPrepartition.{u1} ι I) => Exists.{1} NNReal (fun (c : NNReal) => BoxIntegral.IntegrationParams.MemBaseSet.{u1} ι _inst_1 l I c (r c) π)))
+Case conversion may be inaccurate. Consider using '#align box_integral.integration_params.has_basis_to_filter BoxIntegral.IntegrationParams.hasBasis_toFilterₓ'. -/
 theorem hasBasis_toFilter (l : IntegrationParams) (I : Box ι) :
     (l.toFilter I).HasBasis (fun r : ℝ≥0 → (ι → ℝ) → Ioi (0 : ℝ) => ∀ c, l.RCond (r c)) fun r =>
       { π | ∃ c, l.MemBaseSet I c (r c) π } :=
   by simpa only [set_of_exists] using has_basis_supr (l.has_basis_to_filter_distortion I)
 #align box_integral.integration_params.has_basis_to_filter BoxIntegral.IntegrationParams.hasBasis_toFilter
 
-theorem tendsto_embedBox_toFilterUnion_top (l : IntegrationParams) (h : I ≤ J) :
-    Tendsto (TaggedPrepartition.embedBox I J h) (l.toFilterUnion I ⊤)
-      (l.toFilterUnion J (Prepartition.single J I h)) :=
+#print BoxIntegral.IntegrationParams.tendsto_embedBox_toFilteriUnion_top /-
+theorem tendsto_embedBox_toFilteriUnion_top (l : IntegrationParams) (h : I ≤ J) :
+    Tendsto (TaggedPrepartition.embedBox I J h) (l.toFilteriUnion I ⊤)
+      (l.toFilteriUnion J (Prepartition.single J I h)) :=
   by
   simp only [to_filter_Union, tendsto_supr]; intro c
   set π₀ := prepartition.single J I h
@@ -516,8 +683,15 @@ theorem tendsto_embedBox_toFilterUnion_top (l : IntegrationParams) (h : I ≤ J)
     congr 1
     exact (prepartition.Union_single h).trans hπ.2.symm
   · exact hπ.2.trans (prepartition.Union_single _).symm
-#align box_integral.integration_params.tendsto_embed_box_to_filter_Union_top BoxIntegral.IntegrationParams.tendsto_embedBox_toFilterUnion_top
+#align box_integral.integration_params.tendsto_embed_box_to_filter_Union_top BoxIntegral.IntegrationParams.tendsto_embedBox_toFilteriUnion_top
+-/
 
+/- warning: box_integral.integration_params.exists_mem_base_set_le_Union_eq -> BoxIntegral.IntegrationParams.exists_memBaseSet_le_iUnion_eq is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] {I : BoxIntegral.Box.{u1} ι} {c : NNReal} (l : BoxIntegral.IntegrationParams) (π₀ : BoxIntegral.Prepartition.{u1} ι I), (LE.le.{0} NNReal (Preorder.toHasLe.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (OrderedCancelAddCommMonoid.toPartialOrder.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring)))) (BoxIntegral.Prepartition.distortion.{u1} ι I π₀ _inst_1) c) -> (LE.le.{0} NNReal (Preorder.toHasLe.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (OrderedCancelAddCommMonoid.toPartialOrder.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring)))) (BoxIntegral.Prepartition.distortion.{u1} ι I (BoxIntegral.Prepartition.compl.{u1} ι I (Finite.of_fintype.{u1} ι _inst_1) π₀) _inst_1) c) -> (forall (r : (ι -> Real) -> (coeSort.{1, 2} (Set.{0} Real) Type (Set.hasCoeToSort.{0} Real) (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))), Exists.{succ u1} (BoxIntegral.TaggedPrepartition.{u1} ι I) (fun (π : BoxIntegral.TaggedPrepartition.{u1} ι I) => And (BoxIntegral.IntegrationParams.MemBaseSet.{u1} ι _inst_1 l I c r π) (And (LE.le.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.hasLe.{u1} ι I) (BoxIntegral.TaggedPrepartition.toPrepartition.{u1} ι I π) π₀) (Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.TaggedPrepartition.iUnion.{u1} ι I π) (BoxIntegral.Prepartition.iUnion.{u1} ι I π₀)))))
+but is expected to have type
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] {I : BoxIntegral.Box.{u1} ι} {c : NNReal} (l : BoxIntegral.IntegrationParams) (π₀ : BoxIntegral.Prepartition.{u1} ι I), (LE.le.{0} NNReal (Preorder.toLE.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) (BoxIntegral.Prepartition.distortion.{u1} ι I π₀ _inst_1) c) -> (LE.le.{0} NNReal (Preorder.toLE.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) (BoxIntegral.Prepartition.distortion.{u1} ι I (BoxIntegral.Prepartition.compl.{u1} ι I (Finite.of_fintype.{u1} ι _inst_1) π₀) _inst_1) c) -> (forall (r : (ι -> Real) -> (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))), Exists.{succ u1} (BoxIntegral.TaggedPrepartition.{u1} ι I) (fun (π : BoxIntegral.TaggedPrepartition.{u1} ι I) => And (BoxIntegral.IntegrationParams.MemBaseSet.{u1} ι _inst_1 l I c r π) (And (LE.le.{u1} (BoxIntegral.Prepartition.{u1} ι I) (BoxIntegral.Prepartition.instLEPrepartition.{u1} ι I) (BoxIntegral.TaggedPrepartition.toPrepartition.{u1} ι I π) π₀) (Eq.{succ u1} (Set.{u1} (ι -> Real)) (BoxIntegral.TaggedPrepartition.iUnion.{u1} ι I π) (BoxIntegral.Prepartition.iUnion.{u1} ι I π₀)))))
+Case conversion may be inaccurate. Consider using '#align box_integral.integration_params.exists_mem_base_set_le_Union_eq BoxIntegral.IntegrationParams.exists_memBaseSet_le_iUnion_eqₓ'. -/
 theorem exists_memBaseSet_le_iUnion_eq (l : IntegrationParams) (π₀ : Prepartition I)
     (hc₁ : π₀.distortion ≤ c) (hc₂ : π₀.compl.distortion ≤ c) (r : (ι → ℝ) → Ioi (0 : ℝ)) :
     ∃ π, l.MemBaseSet I c r π ∧ π.toPrepartition ≤ π₀ ∧ π.iUnion = π₀.iUnion :=
@@ -527,6 +701,12 @@ theorem exists_memBaseSet_le_iUnion_eq (l : IntegrationParams) (π₀ : Preparti
   exact prepartition.compl_congr hU ▸ π.to_prepartition.Union_compl
 #align box_integral.integration_params.exists_mem_base_set_le_Union_eq BoxIntegral.IntegrationParams.exists_memBaseSet_le_iUnion_eq
 
+/- warning: box_integral.integration_params.exists_mem_base_set_is_partition -> BoxIntegral.IntegrationParams.exists_memBaseSet_isPartition is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] {c : NNReal} (l : BoxIntegral.IntegrationParams) (I : BoxIntegral.Box.{u1} ι), (LE.le.{0} NNReal (Preorder.toHasLe.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (OrderedCancelAddCommMonoid.toPartialOrder.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring)))) (BoxIntegral.Box.distortion.{u1} ι _inst_1 I) c) -> (forall (r : (ι -> Real) -> (coeSort.{1, 2} (Set.{0} Real) Type (Set.hasCoeToSort.{0} Real) (Set.Ioi.{0} Real Real.preorder (OfNat.ofNat.{0} Real 0 (OfNat.mk.{0} Real 0 (Zero.zero.{0} Real Real.hasZero)))))), Exists.{succ u1} (BoxIntegral.TaggedPrepartition.{u1} ι I) (fun (π : BoxIntegral.TaggedPrepartition.{u1} ι I) => And (BoxIntegral.IntegrationParams.MemBaseSet.{u1} ι _inst_1 l I c r π) (BoxIntegral.TaggedPrepartition.IsPartition.{u1} ι I π)))
+but is expected to have type
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] {c : NNReal} (l : BoxIntegral.IntegrationParams) (I : BoxIntegral.Box.{u1} ι), (LE.le.{0} NNReal (Preorder.toLE.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) (BoxIntegral.Box.distortion.{u1} ι _inst_1 I) c) -> (forall (r : (ι -> Real) -> (Set.Elem.{0} Real (Set.Ioi.{0} Real Real.instPreorderReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))))), Exists.{succ u1} (BoxIntegral.TaggedPrepartition.{u1} ι I) (fun (π : BoxIntegral.TaggedPrepartition.{u1} ι I) => And (BoxIntegral.IntegrationParams.MemBaseSet.{u1} ι _inst_1 l I c r π) (BoxIntegral.TaggedPrepartition.IsPartition.{u1} ι I π)))
+Case conversion may be inaccurate. Consider using '#align box_integral.integration_params.exists_mem_base_set_is_partition BoxIntegral.IntegrationParams.exists_memBaseSet_isPartitionₓ'. -/
 theorem exists_memBaseSet_isPartition (l : IntegrationParams) (I : Box ι) (hc : I.distortion ≤ c)
     (r : (ι → ℝ) → Ioi (0 : ℝ)) : ∃ π, l.MemBaseSet I c r π ∧ π.IsPartition :=
   by
@@ -535,40 +715,56 @@ theorem exists_memBaseSet_isPartition (l : IntegrationParams) (I : Box ι) (hc :
   simpa [is_partition_iff_Union_eq] using l.exists_mem_base_set_le_Union_eq ⊤ hc hc' r
 #align box_integral.integration_params.exists_mem_base_set_is_partition BoxIntegral.IntegrationParams.exists_memBaseSet_isPartition
 
-theorem toFilterDistortionUnion_neBot (l : IntegrationParams) (I : Box ι) (π₀ : Prepartition I)
+/- warning: box_integral.integration_params.to_filter_distortion_Union_ne_bot -> BoxIntegral.IntegrationParams.toFilterDistortioniUnion_neBot is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] {c : NNReal} (l : BoxIntegral.IntegrationParams) (I : BoxIntegral.Box.{u1} ι) (π₀ : BoxIntegral.Prepartition.{u1} ι I), (LE.le.{0} NNReal (Preorder.toHasLe.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (OrderedCancelAddCommMonoid.toPartialOrder.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring)))) (BoxIntegral.Prepartition.distortion.{u1} ι I π₀ _inst_1) c) -> (LE.le.{0} NNReal (Preorder.toHasLe.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (OrderedCancelAddCommMonoid.toPartialOrder.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring)))) (BoxIntegral.Prepartition.distortion.{u1} ι I (BoxIntegral.Prepartition.compl.{u1} ι I (Finite.of_fintype.{u1} ι _inst_1) π₀) _inst_1) c) -> (Filter.NeBot.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I) (BoxIntegral.IntegrationParams.toFilterDistortioniUnion.{u1} ι _inst_1 l I c π₀))
+but is expected to have type
+  forall {ι : Type.{u1}} [_inst_1 : Fintype.{u1} ι] {c : NNReal} (l : BoxIntegral.IntegrationParams) (I : BoxIntegral.Box.{u1} ι) (π₀ : BoxIntegral.Prepartition.{u1} ι I), (LE.le.{0} NNReal (Preorder.toLE.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) (BoxIntegral.Prepartition.distortion.{u1} ι I π₀ _inst_1) c) -> (LE.le.{0} NNReal (Preorder.toLE.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) (BoxIntegral.Prepartition.distortion.{u1} ι I (BoxIntegral.Prepartition.compl.{u1} ι I (Finite.of_fintype.{u1} ι _inst_1) π₀) _inst_1) c) -> (Filter.NeBot.{u1} (BoxIntegral.TaggedPrepartition.{u1} ι I) (BoxIntegral.IntegrationParams.toFilterDistortioniUnion.{u1} ι _inst_1 l I c π₀))
+Case conversion may be inaccurate. Consider using '#align box_integral.integration_params.to_filter_distortion_Union_ne_bot BoxIntegral.IntegrationParams.toFilterDistortioniUnion_neBotₓ'. -/
+theorem toFilterDistortioniUnion_neBot (l : IntegrationParams) (I : Box ι) (π₀ : Prepartition I)
     (hc₁ : π₀.distortion ≤ c) (hc₂ : π₀.compl.distortion ≤ c) :
-    (l.toFilterDistortionUnion I c π₀).ne_bot :=
+    (l.toFilterDistortioniUnion I c π₀).ne_bot :=
   ((l.hasBasis_toFilterDistortion I _).inf_principal _).neBot_iff.2 fun r hr =>
     (l.exists_memBaseSet_le_iUnion_eq π₀ hc₁ hc₂ r).imp fun π hπ => ⟨hπ.1, hπ.2.2⟩
-#align box_integral.integration_params.to_filter_distortion_Union_ne_bot BoxIntegral.IntegrationParams.toFilterDistortionUnion_neBot
+#align box_integral.integration_params.to_filter_distortion_Union_ne_bot BoxIntegral.IntegrationParams.toFilterDistortioniUnion_neBot
 
-instance toFilterDistortionUnion_ne_bot' (l : IntegrationParams) (I : Box ι) (π₀ : Prepartition I) :
-    (l.toFilterDistortionUnion I (max π₀.distortion π₀.compl.distortion) π₀).ne_bot :=
-  l.toFilterDistortionUnion_neBot I π₀ (le_max_left _ _) (le_max_right _ _)
-#align box_integral.integration_params.to_filter_distortion_Union_ne_bot' BoxIntegral.IntegrationParams.toFilterDistortionUnion_ne_bot'
+#print BoxIntegral.IntegrationParams.toFilterDistortioniUnion_neBot' /-
+instance toFilterDistortioniUnion_neBot' (l : IntegrationParams) (I : Box ι) (π₀ : Prepartition I) :
+    (l.toFilterDistortioniUnion I (max π₀.distortion π₀.compl.distortion) π₀).ne_bot :=
+  l.toFilterDistortioniUnion_neBot I π₀ (le_max_left _ _) (le_max_right _ _)
+#align box_integral.integration_params.to_filter_distortion_Union_ne_bot' BoxIntegral.IntegrationParams.toFilterDistortioniUnion_neBot'
+-/
 
+#print BoxIntegral.IntegrationParams.toFilterDistortion_neBot /-
 instance toFilterDistortion_neBot (l : IntegrationParams) (I : Box ι) :
     (l.toFilterDistortion I I.distortion).ne_bot := by
   simpa using (l.to_filter_distortion_Union_ne_bot' I ⊤).mono inf_le_left
 #align box_integral.integration_params.to_filter_distortion_ne_bot BoxIntegral.IntegrationParams.toFilterDistortion_neBot
+-/
 
+#print BoxIntegral.IntegrationParams.toFilter_neBot /-
 instance toFilter_neBot (l : IntegrationParams) (I : Box ι) : (l.toFilter I).ne_bot :=
   (l.toFilterDistortion_neBot I).mono <| le_iSup _ _
 #align box_integral.integration_params.to_filter_ne_bot BoxIntegral.IntegrationParams.toFilter_neBot
+-/
 
-instance toFilterUnion_neBot (l : IntegrationParams) (I : Box ι) (π₀ : Prepartition I) :
-    (l.toFilterUnion I π₀).ne_bot :=
-  (l.toFilterDistortionUnion_ne_bot' I π₀).mono <|
-    le_iSup (fun c => l.toFilterDistortionUnion I c π₀) _
-#align box_integral.integration_params.to_filter_Union_ne_bot BoxIntegral.IntegrationParams.toFilterUnion_neBot
+#print BoxIntegral.IntegrationParams.toFilteriUnion_neBot /-
+instance toFilteriUnion_neBot (l : IntegrationParams) (I : Box ι) (π₀ : Prepartition I) :
+    (l.toFilteriUnion I π₀).ne_bot :=
+  (l.toFilterDistortioniUnion_neBot' I π₀).mono <|
+    le_iSup (fun c => l.toFilterDistortioniUnion I c π₀) _
+#align box_integral.integration_params.to_filter_Union_ne_bot BoxIntegral.IntegrationParams.toFilteriUnion_neBot
+-/
 
+#print BoxIntegral.IntegrationParams.eventually_isPartition /-
 theorem eventually_isPartition (l : IntegrationParams) (I : Box ι) :
-    ∀ᶠ π in l.toFilterUnion I ⊤, TaggedPrepartition.IsPartition π :=
+    ∀ᶠ π in l.toFilteriUnion I ⊤, TaggedPrepartition.IsPartition π :=
   eventually_iSup.2 fun c =>
     eventually_inf_principal.2 <|
       eventually_of_forall fun π h =>
         π.isPartition_iff_iUnion_eq.2 (h.trans Prepartition.iUnion_top)
 #align box_integral.integration_params.eventually_is_partition BoxIntegral.IntegrationParams.eventually_isPartition
+-/
 
 end IntegrationParams
 

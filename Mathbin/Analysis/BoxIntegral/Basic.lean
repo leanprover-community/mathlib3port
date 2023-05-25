@@ -173,7 +173,7 @@ w.r.t. volume `vol`. This means that integral sums of `f` tend to `𝓝 y` along
 `box_integral.integration_params.to_filter_Union I ⊤`. -/
 def HasIntegral (I : Box ι) (l : IntegrationParams) (f : ℝⁿ → E) (vol : ι →ᵇᵃ E →L[ℝ] F) (y : F) :
     Prop :=
-  Tendsto (integralSum f vol) (l.toFilterUnion I ⊤) (𝓝 y)
+  Tendsto (integralSum f vol) (l.toFilteriUnion I ⊤) (𝓝 y)
 #align box_integral.has_integral BoxIntegral.HasIntegral
 
 /-- A function is integrable if there exists a vector that satisfies the `has_integral`
@@ -193,7 +193,7 @@ variable {l : IntegrationParams} {f g : ℝⁿ → E} {vol : ι →ᵇᵃ E →L
 /-- Reinterpret `box_integral.has_integral` as `filter.tendsto`, e.g., dot-notation theorems
 that are shadowed in the `box_integral.has_integral` namespace. -/
 theorem HasIntegral.tendsto (h : HasIntegral I l f vol y) :
-    Tendsto (integralSum f vol) (l.toFilterUnion I ⊤) (𝓝 y) :=
+    Tendsto (integralSum f vol) (l.toFilteriUnion I ⊤) (𝓝 y) :=
   h
 #align box_integral.has_integral.tendsto BoxIntegral.HasIntegral.tendsto
 
@@ -204,7 +204,7 @@ theorem hasIntegral_iff :
         ∃ r : ℝ≥0 → ℝⁿ → Ioi (0 : ℝ),
           (∀ c, l.RCond (r c)) ∧
             ∀ c π, l.MemBaseSet I c (r c) π → IsPartition π → dist (integralSum f vol π) y ≤ ε :=
-  ((l.hasBasis_toFilterUnion_top I).tendsto_iffₓ nhds_basis_closedBall).trans <| by
+  ((l.hasBasis_toFilteriUnion_top I).tendsto_iffₓ nhds_basis_closedBall).trans <| by
     simp [@forall_swap ℝ≥0 (tagged_prepartition I)]
 #align box_integral.has_integral_iff BoxIntegral.hasIntegral_iff
 
@@ -227,7 +227,7 @@ theorem hasIntegralOfMul (a : ℝ)
 #align box_integral.has_integral_of_mul BoxIntegral.hasIntegralOfMul
 
 theorem integrable_iff_cauchy [CompleteSpace F] :
-    Integrable I l f vol ↔ Cauchy ((l.toFilterUnion I ⊤).map (integralSum f vol)) :=
+    Integrable I l f vol ↔ Cauchy ((l.toFilteriUnion I ⊤).map (integralSum f vol)) :=
   cauchy_map_iff_exists_tendsto.symm
 #align box_integral.integrable_iff_cauchy BoxIntegral.integrable_iff_cauchy
 
@@ -257,7 +257,7 @@ theorem integrable_iff_cauchy_basis [CompleteSpace F] :
 
 theorem HasIntegral.mono {l₁ l₂ : IntegrationParams} (h : HasIntegral I l₁ f vol y) (hl : l₂ ≤ l₁) :
     HasIntegral I l₂ f vol y :=
-  h.mono_left <| IntegrationParams.toFilterUnion_mono _ hl _
+  h.mono_left <| IntegrationParams.toFilteriUnion_mono _ hl _
 #align box_integral.has_integral.mono BoxIntegral.HasIntegral.mono
 
 protected theorem Integrable.hasIntegral (h : Integrable I l f vol) :
@@ -551,22 +551,22 @@ theorem tendsto_integralSum_toFilter_prod_self_inf_iUnion_eq_uniformity (h : Int
 /-- If `f` is integrable on a box `I` along `l`, then for any fixed subset `s` of `I` that can be
 represented as a finite union of boxes, the integral sums of `f` over tagged prepartitions that
 cover exactly `s` form a Cauchy “sequence” along `l`. -/
-theorem cauchy_map_integralSum_toFilterUnion (h : Integrable I l f vol) (π₀ : Prepartition I) :
-    Cauchy ((l.toFilterUnion I π₀).map (integralSum f vol)) :=
+theorem cauchy_map_integralSum_toFilteriUnion (h : Integrable I l f vol) (π₀ : Prepartition I) :
+    Cauchy ((l.toFilteriUnion I π₀).map (integralSum f vol)) :=
   by
   refine' ⟨inferInstance, _⟩
   rw [prod_map_map_eq, ← to_filter_inf_Union_eq, ← prod_inf_prod, prod_principal_principal]
   exact
     h.tendsto_integral_sum_to_filter_prod_self_inf_Union_eq_uniformity.mono_left
       (inf_le_inf_left _ <| principal_mono.2 fun π h => h.1.trans h.2.symm)
-#align box_integral.integrable.cauchy_map_integral_sum_to_filter_Union BoxIntegral.Integrable.cauchy_map_integralSum_toFilterUnion
+#align box_integral.integrable.cauchy_map_integral_sum_to_filter_Union BoxIntegral.Integrable.cauchy_map_integralSum_toFilteriUnion
 
 variable [CompleteSpace F]
 
 theorem to_subbox_aux (h : Integrable I l f vol) (hJ : J ≤ I) :
     ∃ y : F,
       HasIntegral J l f vol y ∧
-        Tendsto (integralSum f vol) (l.toFilterUnion I (Prepartition.single I J hJ)) (𝓝 y) :=
+        Tendsto (integralSum f vol) (l.toFilteriUnion I (Prepartition.single I J hJ)) (𝓝 y) :=
   by
   refine'
     (cauchy_map_iff_exists_tendsto.1
@@ -583,12 +583,12 @@ theorem toSubbox (h : Integrable I l f vol) (hJ : J ≤ I) : Integrable J l f vo
 
 /-- If `f` is integrable on a box `I`, then integral sums of `f` over tagged prepartitions
 that cover exactly a subbox `J ≤ I` tend to the integral of `f` over `J` along `l`. -/
-theorem tendsto_integralSum_toFilterUnion_single (h : Integrable I l f vol) (hJ : J ≤ I) :
-    Tendsto (integralSum f vol) (l.toFilterUnion I (Prepartition.single I J hJ))
+theorem tendsto_integralSum_toFilteriUnion_single (h : Integrable I l f vol) (hJ : J ≤ I) :
+    Tendsto (integralSum f vol) (l.toFilteriUnion I (Prepartition.single I J hJ))
       (𝓝 <| integral J l f vol) :=
   let ⟨y, h₁, h₂⟩ := h.to_subbox_aux hJ
   h₁.integral_eq.symm ▸ h₂
-#align box_integral.integrable.tendsto_integral_sum_to_filter_Union_single BoxIntegral.Integrable.tendsto_integralSum_toFilterUnion_single
+#align box_integral.integrable.tendsto_integral_sum_to_filter_Union_single BoxIntegral.Integrable.tendsto_integralSum_toFilteriUnion_single
 
 /-- **Henstock-Sacks inequality**. Let `r : ℝⁿ → (0, ∞)` be a function such that for any tagged
 *partition* of `I` subordinate to `r`, the integral sum of `f` over this partition differs from the
@@ -686,7 +686,8 @@ theorem dist_integralSum_sum_integral_le_of_memBaseSet (h : Integrable I l f vol
 /-- Integral sum of `f` over a tagged prepartition `π` such that `π.Union = π₀.Union` tends to the
 sum of integrals of `f` over the boxes of `π₀`. -/
 theorem tendsto_integralSum_sum_integral (h : Integrable I l f vol) (π₀ : Prepartition I) :
-    Tendsto (integralSum f vol) (l.toFilterUnion I π₀) (𝓝 <| ∑ J in π₀.boxes, integral J l f vol) :=
+    Tendsto (integralSum f vol) (l.toFilteriUnion I π₀)
+      (𝓝 <| ∑ J in π₀.boxes, integral J l f vol) :=
   by
   refine' ((l.has_basis_to_filter_Union I π₀).tendsto_iffₓ nhds_basis_closed_ball).2 fun ε ε0 => _
   refine' ⟨h.convergence_r ε, h.convergence_r_cond ε, _⟩
@@ -895,7 +896,7 @@ the distance between the term `vol J (f x)` of an integral sum corresponding to 
 less than or equal to `ε` if `x ∈ s` and is less than or equal to `ε * B J` otherwise.
 
 Then `f` is integrable on `I along `l` with integral `g I`. -/
-theorem hasIntegralOfLeHenstockOfForallIsO (hl : l ≤ henstock) (B : ι →ᵇᵃ[I] ℝ) (hB0 : ∀ J, 0 ≤ B J)
+theorem hasIntegralOfLeHenstockOfForallIsO (hl : l ≤ Henstock) (B : ι →ᵇᵃ[I] ℝ) (hB0 : ∀ J, 0 ≤ B J)
     (g : ι →ᵇᵃ[I] F) (s : Set ℝⁿ) (hs : s.Countable)
     (H₁ :
       ∀ (c : ℝ≥0),
@@ -939,7 +940,7 @@ theorem hasIntegralMcShaneOfForallIsO (B : ι →ᵇᵃ[I] ℝ) (hB0 : ∀ J, 0 
         ∀ x ∈ I.Icc,
           ∀ ε > (0 : ℝ),
             ∃ δ > 0, ∀ J ≤ I, J.Icc ⊆ Metric.closedBall x δ → dist (vol J (f x)) (g J) ≤ ε * B J) :
-    HasIntegral I mcShane f vol (g I) :=
+    HasIntegral I McShane f vol (g I) :=
   (hasIntegralOfBRiemannEqFfOfForallIsO rfl B hB0 g ∅ countable_empty (fun ⟨x, hx⟩ => hx.elim)
       fun c x hx => hx.2.elim) <|
     by simpa only [McShane, Bool.coe_sort_false, false_imp_iff, true_imp_iff, diff_empty] using H

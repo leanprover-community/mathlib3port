@@ -52,13 +52,15 @@ namespace Theory
 
 variable {L : Language.{u, v}} (T : L.Theory) (α : Type w)
 
+#print FirstOrder.Language.Theory.CompleteType /-
 /-- A complete type over a given theory in a certain type of variables is a maximally
   consistent (with the theory) set of formulas in that type. -/
 structure CompleteType where
   toTheory : L[[α]].Theory
   subset' : (L.lhomWithConstants α).onTheory T ⊆ to_Theory
-  is_maximal' : to_Theory.IsMaximal
+  isMaximal' : to_Theory.IsMaximal
 #align first_order.language.Theory.complete_type FirstOrder.Language.Theory.CompleteType
+-/
 
 variable {T α}
 
@@ -70,26 +72,35 @@ instance : SetLike (T.CompleteType α) L[[α]].Sentence :=
     cases q
     congr ⟩
 
+#print FirstOrder.Language.Theory.CompleteType.isMaximal /-
 theorem isMaximal (p : T.CompleteType α) : IsMaximal (p : L[[α]].Theory) :=
-  p.is_maximal'
+  p.isMaximal'
 #align first_order.language.Theory.complete_type.is_maximal FirstOrder.Language.Theory.CompleteType.isMaximal
+-/
 
+#print FirstOrder.Language.Theory.CompleteType.subset /-
 theorem subset (p : T.CompleteType α) : (L.lhomWithConstants α).onTheory T ⊆ (p : L[[α]].Theory) :=
   p.subset'
 #align first_order.language.Theory.complete_type.subset FirstOrder.Language.Theory.CompleteType.subset
+-/
 
+#print FirstOrder.Language.Theory.CompleteType.mem_or_not_mem /-
 theorem mem_or_not_mem (p : T.CompleteType α) (φ : L[[α]].Sentence) : φ ∈ p ∨ φ.Not ∈ p :=
   p.IsMaximal.mem_or_not_mem φ
 #align first_order.language.Theory.complete_type.mem_or_not_mem FirstOrder.Language.Theory.CompleteType.mem_or_not_mem
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print FirstOrder.Language.Theory.CompleteType.mem_of_models /-
 theorem mem_of_models (p : T.CompleteType α) {φ : L[[α]].Sentence}
     (h : (L.lhomWithConstants α).onTheory T ⊨ φ) : φ ∈ p :=
   (p.mem_or_not_mem φ).resolve_right fun con =>
     ((models_iff_not_satisfiable _).1 h)
       (p.IsMaximal.1.mono (union_subset p.Subset (singleton_subset_iff.2 Con)))
 #align first_order.language.Theory.complete_type.mem_of_models FirstOrder.Language.Theory.CompleteType.mem_of_models
+-/
 
+#print FirstOrder.Language.Theory.CompleteType.not_mem_iff /-
 theorem not_mem_iff (p : T.CompleteType α) (φ : L[[α]].Sentence) : φ.Not ∈ p ↔ ¬φ ∈ p :=
   ⟨fun hf ht =>
     by
@@ -102,13 +113,26 @@ theorem not_mem_iff (p : T.CompleteType α) (φ : L[[α]].Sentence) : φ.Not ∈
     rw [insert_subset, singleton_subset_iff]
     exact ⟨ht, hf⟩, (p.mem_or_not_mem φ).resolve_left⟩
 #align first_order.language.Theory.complete_type.not_mem_iff FirstOrder.Language.Theory.CompleteType.not_mem_iff
+-/
 
+/- warning: first_order.language.Theory.complete_type.compl_set_of_mem -> FirstOrder.Language.Theory.CompleteType.compl_setOf_mem is a dubious translation:
+lean 3 declaration is
+  forall {L : FirstOrder.Language.{u1, u2}} {T : FirstOrder.Language.Theory.{u1, u2} L} {α : Type.{u3}} {φ : FirstOrder.Language.Sentence.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α)}, Eq.{succ (max u1 u2 u3)} (Set.{max u1 u2 u3} (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α)) (HasCompl.compl.{max u1 u2 u3} (Set.{max u1 u2 u3} (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α)) (BooleanAlgebra.toHasCompl.{max u1 u2 u3} (Set.{max u1 u2 u3} (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α)) (Set.booleanAlgebra.{max u1 u2 u3} (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α))) (setOf.{max u1 u2 u3} (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α) (fun (p : FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α) => Membership.Mem.{max (max u1 u3) u2, max u1 u2 u3} (FirstOrder.Language.Sentence.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α)) (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α) (SetLike.hasMem.{max u1 u2 u3, max (max u1 u3) u2} (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α) (FirstOrder.Language.Sentence.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α)) (FirstOrder.Language.Theory.CompleteType.Sentence.instSetLike.{u1, u2, u3} L T α)) φ p))) (setOf.{max u1 u2 u3} (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α) (fun (p : FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α) => Membership.Mem.{max (max u1 u3) u2, max u1 u2 u3} (FirstOrder.Language.Formula.{max u1 u3, u2, 0} (FirstOrder.Language.withConstants.{u1, u2, u3} L α) Empty) (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α) (SetLike.hasMem.{max u1 u2 u3, max (max u1 u3) u2} (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α) (FirstOrder.Language.Sentence.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α)) (FirstOrder.Language.Theory.CompleteType.Sentence.instSetLike.{u1, u2, u3} L T α)) (FirstOrder.Language.Formula.not.{max u1 u3, u2, 0} (FirstOrder.Language.withConstants.{u1, u2, u3} L α) Empty φ) p))
+but is expected to have type
+  forall {L : FirstOrder.Language.{u1, u2}} {T : FirstOrder.Language.Theory.{u1, u2} L} {α : Type.{u3}} {φ : FirstOrder.Language.Sentence.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α)}, Eq.{max (max (succ u1) (succ u2)) (succ u3)} (Set.{max (max u1 u2) u3} (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α)) (HasCompl.compl.{max (max u1 u2) u3} (Set.{max (max u1 u2) u3} (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α)) (BooleanAlgebra.toHasCompl.{max (max u1 u2) u3} (Set.{max (max u1 u2) u3} (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α)) (Set.instBooleanAlgebraSet.{max (max u1 u2) u3} (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α))) (setOf.{max (max u1 u2) u3} (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α) (fun (p : FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α) => Membership.mem.{max (max u1 u2) u3, max (max u1 u2) u3} (FirstOrder.Language.Sentence.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α)) (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α) (SetLike.instMembership.{max (max u1 u2) u3, max (max u1 u2) u3} (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α) (FirstOrder.Language.Sentence.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α)) (FirstOrder.Language.Theory.CompleteType.Sentence.instSetLike.{u1, u2, u3} L T α)) φ p))) (setOf.{max (max u1 u2) u3} (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α) (fun (p : FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α) => Membership.mem.{max (max u1 u2) u3, max (max u1 u2) u3} (FirstOrder.Language.Formula.{max u1 u3, u2, 0} (FirstOrder.Language.withConstants.{u1, u2, u3} L α) Empty) (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α) (SetLike.instMembership.{max (max u1 u2) u3, max (max u1 u2) u3} (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α) (FirstOrder.Language.Sentence.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α)) (FirstOrder.Language.Theory.CompleteType.Sentence.instSetLike.{u1, u2, u3} L T α)) (FirstOrder.Language.Formula.not.{max u1 u3, u2, 0} (FirstOrder.Language.withConstants.{u1, u2, u3} L α) Empty φ) p))
+Case conversion may be inaccurate. Consider using '#align first_order.language.Theory.complete_type.compl_set_of_mem FirstOrder.Language.Theory.CompleteType.compl_setOf_memₓ'. -/
 @[simp]
 theorem compl_setOf_mem {φ : L[[α]].Sentence} :
     { p : T.CompleteType α | φ ∈ p }ᶜ = { p : T.CompleteType α | φ.Not ∈ p } :=
   ext fun _ => (not_mem_iff _ _).symm
 #align first_order.language.Theory.complete_type.compl_set_of_mem FirstOrder.Language.Theory.CompleteType.compl_setOf_mem
 
+/- warning: first_order.language.Theory.complete_type.set_of_subset_eq_empty_iff -> FirstOrder.Language.Theory.CompleteType.setOf_subset_eq_empty_iff is a dubious translation:
+lean 3 declaration is
+  forall {L : FirstOrder.Language.{u1, u2}} {T : FirstOrder.Language.Theory.{u1, u2} L} {α : Type.{u3}} (S : FirstOrder.Language.Theory.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α)), Iff (Eq.{succ (max u1 u2 u3)} (Set.{max u1 u2 u3} (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α)) (setOf.{max u1 u2 u3} (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α) (fun (p : FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α) => HasSubset.Subset.{max (max u1 u3) u2} (FirstOrder.Language.Theory.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α)) (Set.hasSubset.{max (max u1 u3) u2} (FirstOrder.Language.Sentence.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α))) S ((fun (a : Sort.{max (succ u1) (succ u2) (succ u3)}) (b : Type.{max (max u1 u3) u2}) [self : HasLiftT.{max (succ u1) (succ u2) (succ u3), succ (max (max u1 u3) u2)} a b] => self.0) (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α) (FirstOrder.Language.Theory.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α)) (HasLiftT.mk.{max (succ u1) (succ u2) (succ u3), succ (max (max u1 u3) u2)} (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α) (FirstOrder.Language.Theory.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α)) (CoeTCₓ.coe.{max (succ u1) (succ u2) (succ u3), succ (max (max u1 u3) u2)} (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α) (FirstOrder.Language.Theory.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α)) (SetLike.Set.hasCoeT.{max u1 u2 u3, max (max u1 u3) u2} (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α) (FirstOrder.Language.Sentence.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α)) (FirstOrder.Language.Theory.CompleteType.Sentence.instSetLike.{u1, u2, u3} L T α)))) p))) (EmptyCollection.emptyCollection.{max u1 u2 u3} (Set.{max u1 u2 u3} (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α)) (Set.hasEmptyc.{max u1 u2 u3} (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α)))) (Not (FirstOrder.Language.Theory.IsSatisfiable.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α) (Union.union.{max (max u1 u3) u2} (FirstOrder.Language.Theory.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α)) (Set.hasUnion.{max (max u1 u3) u2} (FirstOrder.Language.Sentence.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α))) (FirstOrder.Language.LHom.onTheory.{u1, u2, max u1 u3, u2} L (FirstOrder.Language.withConstants.{u1, u2, u3} L α) (FirstOrder.Language.lhomWithConstants.{u1, u2, u3} L α) T) S)))
+but is expected to have type
+  forall {L : FirstOrder.Language.{u1, u2}} {T : FirstOrder.Language.Theory.{u1, u2} L} {α : Type.{u3}} (S : FirstOrder.Language.Theory.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α)), Iff (Eq.{max (max (succ u1) (succ u2)) (succ u3)} (Set.{max (max u1 u2) u3} (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α)) (setOf.{max (max u1 u2) u3} (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α) (fun (p : FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α) => HasSubset.Subset.{max (max u1 u2) u3} (FirstOrder.Language.Theory.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α)) (Set.instHasSubsetSet.{max (max u1 u2) u3} (FirstOrder.Language.Sentence.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α))) S (SetLike.coe.{max (max u1 u2) u3, max (max u1 u2) u3} (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α) (FirstOrder.Language.Sentence.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α)) (FirstOrder.Language.Theory.CompleteType.Sentence.instSetLike.{u1, u2, u3} L T α) p))) (EmptyCollection.emptyCollection.{max (max u1 u2) u3} (Set.{max (max u1 u2) u3} (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α)) (Set.instEmptyCollectionSet.{max (max u1 u2) u3} (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α)))) (Not (FirstOrder.Language.Theory.IsSatisfiable.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α) (Union.union.{max (max u1 u2) u3} (FirstOrder.Language.Theory.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α)) (Set.instUnionSet.{max (max u1 u2) u3} (FirstOrder.Language.Sentence.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α))) (FirstOrder.Language.LHom.onTheory.{u1, u2, max u1 u3, u2} L (FirstOrder.Language.withConstants.{u1, u2, u3} L α) (FirstOrder.Language.lhomWithConstants.{u1, u2, u3} L α) T) S)))
+Case conversion may be inaccurate. Consider using '#align first_order.language.Theory.complete_type.set_of_subset_eq_empty_iff FirstOrder.Language.Theory.CompleteType.setOf_subset_eq_empty_iffₓ'. -/
 theorem setOf_subset_eq_empty_iff (S : L[[α]].Theory) :
     { p : T.CompleteType α | S ⊆ ↑p } = ∅ ↔
       ¬((L.lhomWithConstants α).onTheory T ∪ S).IsSatisfiable :=
@@ -125,14 +149,17 @@ theorem setOf_subset_eq_empty_iff (S : L[[α]].Theory) :
 #align first_order.language.Theory.complete_type.set_of_subset_eq_empty_iff FirstOrder.Language.Theory.CompleteType.setOf_subset_eq_empty_iff
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print FirstOrder.Language.Theory.CompleteType.setOf_mem_eq_univ_iff /-
 theorem setOf_mem_eq_univ_iff (φ : L[[α]].Sentence) :
     { p : T.CompleteType α | φ ∈ p } = univ ↔ (L.lhomWithConstants α).onTheory T ⊨ φ :=
   by
   rw [models_iff_not_satisfiable, ← compl_empty_iff, compl_set_of_mem, ← set_of_subset_eq_empty_iff]
   simp
 #align first_order.language.Theory.complete_type.set_of_mem_eq_univ_iff FirstOrder.Language.Theory.CompleteType.setOf_mem_eq_univ_iff
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print FirstOrder.Language.Theory.CompleteType.setOf_subset_eq_univ_iff /-
 theorem setOf_subset_eq_univ_iff (S : L[[α]].Theory) :
     { p : T.CompleteType α | S ⊆ ↑p } = univ ↔
       ∀ φ, φ ∈ S → (L.lhomWithConstants α).onTheory T ⊨ φ :=
@@ -146,7 +173,9 @@ theorem setOf_subset_eq_univ_iff (S : L[[α]].Theory) :
   rintro h _ ⟨φ, h1, rfl⟩
   exact h _ h1
 #align first_order.language.Theory.complete_type.set_of_subset_eq_univ_iff FirstOrder.Language.Theory.CompleteType.setOf_subset_eq_univ_iff
+-/
 
+#print FirstOrder.Language.Theory.CompleteType.nonempty_iff /-
 theorem nonempty_iff : Nonempty (T.CompleteType α) ↔ T.IsSatisfiable :=
   by
   rw [← is_satisfiable_on_Theory_iff (Lhom_with_constants_injective L α)]
@@ -154,10 +183,17 @@ theorem nonempty_iff : Nonempty (T.CompleteType α) ↔ T.IsSatisfiable :=
     union_empty ((L.Lhom_with_constants α).onTheory T), ← set_of_subset_eq_empty_iff]
   simp
 #align first_order.language.Theory.complete_type.nonempty_iff FirstOrder.Language.Theory.CompleteType.nonempty_iff
+-/
 
 instance : Nonempty (CompleteType ∅ α) :=
   nonempty_iff.2 (isSatisfiable_empty L)
 
+/- warning: first_order.language.Theory.complete_type.Inter_set_of_subset -> FirstOrder.Language.Theory.CompleteType.iInter_setOf_subset is a dubious translation:
+lean 3 declaration is
+  forall {L : FirstOrder.Language.{u1, u2}} {T : FirstOrder.Language.Theory.{u1, u2} L} {α : Type.{u3}} {ι : Type.{u4}} (S : ι -> (FirstOrder.Language.Theory.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α))), Eq.{succ (max u1 u2 u3)} (Set.{max u1 u2 u3} (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α)) (Set.iInter.{max u1 u2 u3, succ u4} (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α) ι (fun (i : ι) => setOf.{max u1 u2 u3} (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α) (fun (p : FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α) => HasSubset.Subset.{max (max u1 u3) u2} (FirstOrder.Language.Theory.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α)) (Set.hasSubset.{max (max u1 u3) u2} (FirstOrder.Language.Sentence.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α))) (S i) ((fun (a : Sort.{max (succ u1) (succ u2) (succ u3)}) (b : Type.{max (max u1 u3) u2}) [self : HasLiftT.{max (succ u1) (succ u2) (succ u3), succ (max (max u1 u3) u2)} a b] => self.0) (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α) (FirstOrder.Language.Theory.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α)) (HasLiftT.mk.{max (succ u1) (succ u2) (succ u3), succ (max (max u1 u3) u2)} (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α) (FirstOrder.Language.Theory.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α)) (CoeTCₓ.coe.{max (succ u1) (succ u2) (succ u3), succ (max (max u1 u3) u2)} (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α) (FirstOrder.Language.Theory.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α)) (SetLike.Set.hasCoeT.{max u1 u2 u3, max (max u1 u3) u2} (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α) (FirstOrder.Language.Sentence.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α)) (FirstOrder.Language.Theory.CompleteType.Sentence.instSetLike.{u1, u2, u3} L T α)))) p)))) (setOf.{max u1 u2 u3} (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α) (fun (p : FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α) => HasSubset.Subset.{max (max u1 u3) u2} (Set.{max (max u1 u3) u2} (FirstOrder.Language.Sentence.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α))) (Set.hasSubset.{max (max u1 u3) u2} (FirstOrder.Language.Sentence.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α))) (Set.iUnion.{max (max u1 u3) u2, succ u4} (FirstOrder.Language.Sentence.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α)) ι (fun (i : ι) => S i)) ((fun (a : Sort.{max (succ u1) (succ u2) (succ u3)}) (b : Type.{max (max u1 u3) u2}) [self : HasLiftT.{max (succ u1) (succ u2) (succ u3), succ (max (max u1 u3) u2)} a b] => self.0) (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α) (Set.{max (max u1 u3) u2} (FirstOrder.Language.Sentence.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α))) (HasLiftT.mk.{max (succ u1) (succ u2) (succ u3), succ (max (max u1 u3) u2)} (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α) (Set.{max (max u1 u3) u2} (FirstOrder.Language.Sentence.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α))) (CoeTCₓ.coe.{max (succ u1) (succ u2) (succ u3), succ (max (max u1 u3) u2)} (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α) (Set.{max (max u1 u3) u2} (FirstOrder.Language.Sentence.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α))) (SetLike.Set.hasCoeT.{max u1 u2 u3, max (max u1 u3) u2} (FirstOrder.Language.Theory.CompleteType.{u1, u2, u3} L T α) (FirstOrder.Language.Sentence.{max u1 u3, u2} (FirstOrder.Language.withConstants.{u1, u2, u3} L α)) (FirstOrder.Language.Theory.CompleteType.Sentence.instSetLike.{u1, u2, u3} L T α)))) p)))
+but is expected to have type
+  forall {L : FirstOrder.Language.{u2, u3}} {T : FirstOrder.Language.Theory.{u2, u3} L} {α : Type.{u4}} {ι : Type.{u1}} (S : ι -> (FirstOrder.Language.Theory.{max u2 u4, u3} (FirstOrder.Language.withConstants.{u2, u3, u4} L α))), Eq.{max (max (succ u2) (succ u3)) (succ u4)} (Set.{max (max u2 u3) u4} (FirstOrder.Language.Theory.CompleteType.{u2, u3, u4} L T α)) (Set.iInter.{max (max u2 u3) u4, succ u1} (FirstOrder.Language.Theory.CompleteType.{u2, u3, u4} L T α) ι (fun (i : ι) => setOf.{max (max u2 u3) u4} (FirstOrder.Language.Theory.CompleteType.{u2, u3, u4} L T α) (fun (p : FirstOrder.Language.Theory.CompleteType.{u2, u3, u4} L T α) => HasSubset.Subset.{max (max u2 u3) u4} (FirstOrder.Language.Theory.{max u2 u4, u3} (FirstOrder.Language.withConstants.{u2, u3, u4} L α)) (Set.instHasSubsetSet.{max (max u2 u3) u4} (FirstOrder.Language.Sentence.{max u2 u4, u3} (FirstOrder.Language.withConstants.{u2, u3, u4} L α))) (S i) (SetLike.coe.{max (max u2 u3) u4, max (max u2 u3) u4} (FirstOrder.Language.Theory.CompleteType.{u2, u3, u4} L T α) (FirstOrder.Language.Sentence.{max u2 u4, u3} (FirstOrder.Language.withConstants.{u2, u3, u4} L α)) (FirstOrder.Language.Theory.CompleteType.Sentence.instSetLike.{u2, u3, u4} L T α) p)))) (setOf.{max (max u2 u3) u4} (FirstOrder.Language.Theory.CompleteType.{u2, u3, u4} L T α) (fun (p : FirstOrder.Language.Theory.CompleteType.{u2, u3, u4} L T α) => HasSubset.Subset.{max (max u2 u3) u4} (Set.{max (max u2 u3) u4} (FirstOrder.Language.Sentence.{max u2 u4, u3} (FirstOrder.Language.withConstants.{u2, u3, u4} L α))) (Set.instHasSubsetSet.{max (max u2 u3) u4} (FirstOrder.Language.Sentence.{max u2 u4, u3} (FirstOrder.Language.withConstants.{u2, u3, u4} L α))) (Set.iUnion.{max (max u2 u3) u4, succ u1} (FirstOrder.Language.Sentence.{max u2 u4, u3} (FirstOrder.Language.withConstants.{u2, u3, u4} L α)) ι (fun (i : ι) => S i)) (SetLike.coe.{max (max u2 u3) u4, max (max u2 u3) u4} (FirstOrder.Language.Theory.CompleteType.{u2, u3, u4} L T α) (FirstOrder.Language.Sentence.{max u2 u4, u3} (FirstOrder.Language.withConstants.{u2, u3, u4} L α)) (FirstOrder.Language.Theory.CompleteType.Sentence.instSetLike.{u2, u3, u4} L T α) p)))
+Case conversion may be inaccurate. Consider using '#align first_order.language.Theory.complete_type.Inter_set_of_subset FirstOrder.Language.Theory.CompleteType.iInter_setOf_subsetₓ'. -/
 theorem iInter_setOf_subset {ι : Type _} (S : ι → L[[α]].Theory) :
     (⋂ i : ι, { p : T.CompleteType α | S i ⊆ p }) = { p | (⋃ i : ι, S i) ⊆ p } :=
   by
@@ -165,6 +201,7 @@ theorem iInter_setOf_subset {ι : Type _} (S : ι → L[[α]].Theory) :
   simp only [mem_Inter, mem_set_of_eq, Union_subset_iff]
 #align first_order.language.Theory.complete_type.Inter_set_of_subset FirstOrder.Language.Theory.CompleteType.iInter_setOf_subset
 
+#print FirstOrder.Language.Theory.CompleteType.toList_foldr_inf_mem /-
 theorem toList_foldr_inf_mem {p : T.CompleteType α} {t : Finset L[[α]].Sentence} :
     t.toList.foldr (· ⊓ ·) ⊤ ∈ p ↔ (t : L[[α]].Theory) ⊆ ↑p :=
   by
@@ -172,46 +209,56 @@ theorem toList_foldr_inf_mem {p : T.CompleteType α} {t : Finset L[[α]].Sentenc
     sentence.realize, formula.realize, bounded_formula.realize_foldr_inf, Finset.mem_toList]
   exact ⟨fun h φ hφ M => h _ _ hφ, fun h M φ hφ => h _ hφ _⟩
 #align first_order.language.Theory.complete_type.to_list_foldr_inf_mem FirstOrder.Language.Theory.CompleteType.toList_foldr_inf_mem
+-/
 
 end CompleteType
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 variable {M : Type w'} [L.Structure M] [Nonempty M] [M ⊨ T] (T)
 
+#print FirstOrder.Language.Theory.typeOf /-
 /-- The set of all formulas true at a tuple in a structure forms a complete type. -/
 def typeOf (v : α → M) : T.CompleteType α :=
   haveI : (constants_on α).Structure M := constants_on.Structure v
   { toTheory := L[[α]].completeTheory M
     subset' := model_iff_subset_complete_theory.1 ((Lhom.on_Theory_model _ T).2 inferInstance)
-    is_maximal' := complete_theory.is_maximal _ _ }
+    isMaximal' := complete_theory.is_maximal _ _ }
 #align first_order.language.Theory.type_of FirstOrder.Language.Theory.typeOf
+-/
 
 namespace CompleteType
 
 variable {T} {v : α → M}
 
+#print FirstOrder.Language.Theory.CompleteType.mem_typeOf /-
 @[simp]
 theorem mem_typeOf {φ : L[[α]].Sentence} :
     φ ∈ T.typeOf v ↔ (Formula.equivSentence.symm φ).realize v :=
   letI : (constants_on α).Structure M := constants_on.Structure v
   mem_complete_theory.trans (formula.realize_equiv_sentence_symm _ _ _).symm
 #align first_order.language.Theory.complete_type.mem_type_of FirstOrder.Language.Theory.CompleteType.mem_typeOf
+-/
 
+#print FirstOrder.Language.Theory.CompleteType.formula_mem_typeOf /-
 theorem formula_mem_typeOf {φ : L.Formula α} : Formula.equivSentence φ ∈ T.typeOf v ↔ φ.realize v :=
   by simp
 #align first_order.language.Theory.complete_type.formula_mem_type_of FirstOrder.Language.Theory.CompleteType.formula_mem_typeOf
+-/
 
 end CompleteType
 
 variable (M)
 
+#print FirstOrder.Language.Theory.realizedTypes /-
 /-- A complete type `p` is realized in a particular structure when there is some
   tuple `v` whose type is `p`. -/
 @[simp]
 def realizedTypes (α : Type w) : Set (T.CompleteType α) :=
   Set.range (T.typeOf : (α → M) → T.CompleteType α)
 #align first_order.language.Theory.realized_types FirstOrder.Language.Theory.realizedTypes
+-/
 
+#print FirstOrder.Language.Theory.exists_modelType_is_realized_in /-
 theorem exists_modelType_is_realized_in (p : T.CompleteType α) :
     ∃ M : Theory.ModelType.{u, v, max u v w} T, p ∈ T.realizedTypes M α :=
   by
@@ -225,6 +272,7 @@ theorem exists_modelType_is_realized_in (p : T.CompleteType α) :
         (p.is_maximal.mem_iff_models φ).symm)
   rfl
 #align first_order.language.Theory.exists_Model_is_realized_in FirstOrder.Language.Theory.exists_modelType_is_realized_in
+-/
 
 end Theory
 

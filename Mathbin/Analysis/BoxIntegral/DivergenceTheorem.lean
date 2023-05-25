@@ -53,7 +53,7 @@ open ContinuousLinearMap (lsmul)
 
 open Filter Set Finset Metric
 
-open BoxIntegral.IntegrationParams (gP gP_le)
+open BoxIntegral.IntegrationParams (GP gp_le)
 
 noncomputable section
 
@@ -171,10 +171,10 @@ requires either better integrability theorems, or usage of a filter depending on
 theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ⁺¹ →L[ℝ] E) (s : Set ℝⁿ⁺¹)
     (hs : s.Countable) (Hs : ∀ x ∈ s, ContinuousWithinAt f I.Icc x)
     (Hd : ∀ x ∈ I.Icc \ s, HasFDerivWithinAt f (f' x) I.Icc x) (i : Fin (n + 1)) :
-    HasIntegral.{0, u, u} I gP (fun x => f' x (Pi.single i 1)) BoxAdditiveMap.volume
-      (integral.{0, u, u} (I.face i) gP (fun x => f (i.insertNth (I.upper i) x))
+    HasIntegral.{0, u, u} I GP (fun x => f' x (Pi.single i 1)) BoxAdditiveMap.volume
+      (integral.{0, u, u} (I.face i) GP (fun x => f (i.insertNth (I.upper i) x))
           BoxAdditiveMap.volume -
-        integral.{0, u, u} (I.face i) gP (fun x => f (i.insertNth (I.lower i) x))
+        integral.{0, u, u} (I.face i) GP (fun x => f (i.insertNth (I.lower i) x))
           BoxAdditiveMap.volume) :=
   by
   /- Note that `f` is continuous on `I.Icc`, hence it is integrable on the faces of all boxes
@@ -308,11 +308,11 @@ theorem hasIntegralGPDivergenceOfForallHasDerivWithinAt (f : ℝⁿ⁺¹ → E�
     (f' : ℝⁿ⁺¹ → ℝⁿ⁺¹ →L[ℝ] Eⁿ⁺¹) (s : Set ℝⁿ⁺¹) (hs : s.Countable)
     (Hs : ∀ x ∈ s, ContinuousWithinAt f I.Icc x)
     (Hd : ∀ x ∈ I.Icc \ s, HasFDerivWithinAt f (f' x) I.Icc x) :
-    HasIntegral.{0, u, u} I gP (fun x => ∑ i, f' x (Pi.single i 1) i) BoxAdditiveMap.volume
+    HasIntegral.{0, u, u} I GP (fun x => ∑ i, f' x (Pi.single i 1) i) BoxAdditiveMap.volume
       (∑ i,
-        integral.{0, u, u} (I.face i) gP (fun x => f (i.insertNth (I.upper i) x) i)
+        integral.{0, u, u} (I.face i) GP (fun x => f (i.insertNth (I.upper i) x) i)
             BoxAdditiveMap.volume -
-          integral.{0, u, u} (I.face i) gP (fun x => f (i.insertNth (I.lower i) x) i)
+          integral.{0, u, u} (I.face i) GP (fun x => f (i.insertNth (I.lower i) x) i)
             BoxAdditiveMap.volume) :=
   by
   refine' has_integral_sum fun i hi => _; clear hi

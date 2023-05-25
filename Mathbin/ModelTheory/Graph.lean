@@ -41,20 +41,26 @@ variable {L : Language.{u, v}} {α : Type w} {V : Type w'} {n : ℕ}
 /-! ### Simple Graphs -/
 
 
+#print FirstOrder.Language.graph /-
 /-- The language consisting of a single relation representing adjacency. -/
 protected def graph : Language :=
   Language.mk₂ Empty Empty Empty Empty Unit
 #align first_order.language.graph FirstOrder.Language.graph
+-/
 
+#print FirstOrder.Language.adj /-
 /-- The symbol representing the adjacency relation. -/
 def adj : Language.graph.Relations 2 :=
   Unit.unit
 #align first_order.language.adj FirstOrder.Language.adj
+-/
 
+#print SimpleGraph.structure /-
 /-- Any simple graph can be thought of as a structure in the language of graphs. -/
 def SimpleGraph.structure (G : SimpleGraph V) : Language.graph.Structure V :=
   Structure.mk₂ Empty.elim Empty.elim Empty.elim Empty.elim fun _ => G.Adj
 #align simple_graph.Structure SimpleGraph.structure
+-/
 
 namespace Graph
 
@@ -66,12 +72,15 @@ instance : Subsingleton (Language.graph.Relations n) :=
 
 end Graph
 
+#print FirstOrder.Language.Theory.simpleGraph /-
 /-- The theory of simple graphs. -/
 protected def Theory.simpleGraph : Language.graph.Theory :=
   {adj.Irreflexive, adj.Symmetric}
 #align first_order.language.Theory.simple_graph FirstOrder.Language.Theory.simpleGraph
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print FirstOrder.Language.Theory.simpleGraph_model_iff /-
 @[simp]
 theorem Theory.simpleGraph_model_iff [Language.graph.Structure V] :
     V ⊨ Theory.simpleGraph ↔
@@ -79,16 +88,20 @@ theorem Theory.simpleGraph_model_iff [Language.graph.Structure V] :
         Symmetric fun x y : V => RelMap adj ![x, y] :=
   by simp [Theory.simple_graph]
 #align first_order.language.Theory.simple_graph_model_iff FirstOrder.Language.Theory.simpleGraph_model_iff
+-/
 
+#print FirstOrder.Language.simpleGraph_model /-
 instance simpleGraph_model (G : SimpleGraph V) : @Theory.Model _ V G.Structure Theory.simpleGraph :=
   by
   simp only [Theory.simple_graph_model_iff, rel_map_apply₂]
   exact ⟨G.loopless, G.symm⟩
 #align first_order.language.simple_graph_model FirstOrder.Language.simpleGraph_model
+-/
 
 variable (V)
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print FirstOrder.Language.simpleGraphOfStructure /-
 /-- Any model of the theory of simple graphs represents a simple graph. -/
 @[simps]
 def simpleGraphOfStructure [Language.graph.Structure V] [V ⊨ Theory.simpleGraph] : SimpleGraph V
@@ -102,9 +115,11 @@ def simpleGraphOfStructure [Language.graph.Structure V] [V ⊨ Theory.simpleGrap
     Relations.realize_irreflexive.1
       (Theory.realize_sentence_of_mem Theory.simpleGraph (Set.mem_insert _ _))
 #align first_order.language.simple_graph_of_structure FirstOrder.Language.simpleGraphOfStructure
+-/
 
 variable {V}
 
+#print SimpleGraph.simpleGraphOfStructure /-
 @[simp]
 theorem SimpleGraph.simpleGraphOfStructure (G : SimpleGraph V) :
     @simpleGraphOfStructure V G.Structure _ = G :=
@@ -112,8 +127,10 @@ theorem SimpleGraph.simpleGraphOfStructure (G : SimpleGraph V) :
   ext
   rfl
 #align simple_graph.simple_graph_of_structure SimpleGraph.simpleGraphOfStructure
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print FirstOrder.Language.structure_simpleGraphOfStructure /-
 @[simp]
 theorem structure_simpleGraphOfStructure [S : Language.graph.Structure V] [V ⊨ Theory.simpleGraph] :
     (simpleGraphOfStructure V).Structure = S :=
@@ -133,10 +150,13 @@ theorem structure_simpleGraphOfStructure [S : Language.graph.Structure V] [V ⊨
           simp [Fin.forall_fin_two]
         · exact r.elim
 #align first_order.language.Structure_simple_graph_of_structure FirstOrder.Language.structure_simpleGraphOfStructure
+-/
 
+#print FirstOrder.Language.Theory.simpleGraph_isSatisfiable /-
 theorem Theory.simpleGraph_isSatisfiable : Theory.IsSatisfiable Theory.simpleGraph :=
   ⟨@Theory.ModelType.of _ _ Unit (SimpleGraph.structure ⊥) _ _⟩
 #align first_order.language.Theory.simple_graph_is_satisfiable FirstOrder.Language.Theory.simpleGraph_isSatisfiable
+-/
 
 end Language
 
