@@ -43,7 +43,7 @@ open RealInnerProductSpace
 
 namespace Quaternion
 
-instance : HasInner ℝ ℍ :=
+instance : Inner ℝ ℍ :=
   ⟨fun a b => (a * star b).re⟩
 
 theorem inner_self (a : ℍ) : ⟪a, a⟫ = normSq a :=

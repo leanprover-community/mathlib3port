@@ -108,17 +108,17 @@ include ne
 
 /-- `orthonormal_basis.adjust_to_orientation`, applied to an orthonormal basis, preserves the
 property of orthonormality. -/
-theorem orthonormalAdjustToOrientation : Orthonormal ℝ (e.toBasis.adjustToOrientation x) :=
+theorem orthonormal_adjustToOrientation : Orthonormal ℝ (e.toBasis.adjustToOrientation x) :=
   by
   apply e.orthonormal.orthonormal_of_forall_eq_or_eq_neg
   simpa using e.to_basis.adjust_to_orientation_apply_eq_or_eq_neg x
-#align orthonormal_basis.orthonormal_adjust_to_orientation OrthonormalBasis.orthonormalAdjustToOrientation
+#align orthonormal_basis.orthonormal_adjust_to_orientation OrthonormalBasis.orthonormal_adjustToOrientation
 
 /-- Given an orthonormal basis and an orientation, return an orthonormal basis giving that
 orientation: either the original basis, or one constructed by negating a single (arbitrary) basis
 vector. -/
 def adjustToOrientation : OrthonormalBasis ι ℝ E :=
-  (e.toBasis.adjustToOrientation x).toOrthonormalBasis (e.orthonormalAdjustToOrientation x)
+  (e.toBasis.adjustToOrientation x).toOrthonormalBasis (e.orthonormal_adjustToOrientation x)
 #align orthonormal_basis.adjust_to_orientation OrthonormalBasis.adjustToOrientation
 
 theorem toBasis_adjustToOrientation :

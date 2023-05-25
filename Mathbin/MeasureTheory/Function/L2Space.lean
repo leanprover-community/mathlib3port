@@ -161,7 +161,7 @@ open ComplexConjugate
 
 include 𝕜
 
-instance : HasInner 𝕜 (α →₂[μ] E) :=
+instance : Inner 𝕜 (α →₂[μ] E) :=
   ⟨fun f g => ∫ a, ⟪f a, g a⟫ ∂μ⟩
 
 theorem inner_def (f g : α →₂[μ] E) : ⟪f, g⟫ = ∫ a : α, ⟪f a, g a⟫ ∂μ :=

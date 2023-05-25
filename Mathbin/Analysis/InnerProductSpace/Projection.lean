@@ -1155,10 +1155,10 @@ theorem inner_orthogonalProjection_left_eq_right [CompleteSpace K] (u v : E) :
 #align inner_orthogonal_projection_left_eq_right inner_orthogonalProjection_left_eq_right
 
 /-- The orthogonal projection is symmetric. -/
-theorem orthogonalProjectionIsSymmetric [CompleteSpace K] :
+theorem orthogonalProjection_isSymmetric [CompleteSpace K] :
     (K.subtypeL ∘L orthogonalProjection K : E →ₗ[𝕜] E).IsSymmetric :=
   inner_orthogonalProjection_left_eq_right K
-#align orthogonal_projection_is_symmetric orthogonalProjectionIsSymmetric
+#align orthogonal_projection_is_symmetric orthogonalProjection_isSymmetric
 
 open FiniteDimensional
 

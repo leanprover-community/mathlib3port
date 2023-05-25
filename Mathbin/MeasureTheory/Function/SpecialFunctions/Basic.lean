@@ -331,7 +331,7 @@ instance ENNReal.hasMeasurablePow : MeasurablePow ℝ≥0∞ ℝ :=
 end PowInstances
 
 -- Guard against import creep:
-assert_not_exists inner_product_space
+assert_not_exists InnerProductSpace
 
 assert_not_exists real.arctan
 

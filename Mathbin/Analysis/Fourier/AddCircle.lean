@@ -313,7 +313,7 @@ theorem span_fourierLp_closure_eq_top {p : ℝ≥0∞} [Fact (1 ≤ p)] (hp : p 
 #align span_fourier_Lp_closure_eq_top span_fourierLp_closure_eq_top
 
 /-- The monomials `fourier n` are an orthonormal set with respect to normalised Haar measure. -/
-theorem orthonormalFourier : Orthonormal ℂ (@fourierLp T _ 2 _) :=
+theorem orthonormal_fourier : Orthonormal ℂ (@fourierLp T _ 2 _) :=
   by
   rw [orthonormal_iff_ite]
   intro i j
@@ -332,7 +332,7 @@ theorem orthonormalFourier : Orthonormal ℂ (@fourierLp T _ 2 _) :=
     exact sub_ne_zero.mpr (Ne.symm h)
   convert integral_eq_zero_of_add_right_eq_neg (fourier_add_half_inv_index hij hT.elim)
   exact IsAddLeftInvariant.is_add_right_invariant
-#align orthonormal_fourier orthonormalFourier
+#align orthonormal_fourier orthonormal_fourier
 
 end Monomials
 
@@ -442,7 +442,7 @@ section FourierL2
 /-- We define `fourier_basis` to be a `ℤ`-indexed Hilbert basis for `Lp ℂ 2 haar_add_circle`,
 which by definition is an isometric isomorphism from `Lp ℂ 2 haar_add_circle` to `ℓ²(ℤ, ℂ)`. -/
 def fourierBasis : HilbertBasis ℤ ℂ (lp ℂ 2 <| @haarAddCircle T hT) :=
-  HilbertBasis.mk orthonormalFourier (span_fourierLp_closure_eq_top (by norm_num)).ge
+  HilbertBasis.mk orthonormal_fourier (span_fourierLp_closure_eq_top (by norm_num)).ge
 #align fourier_basis fourierBasis
 
 /-- The elements of the Hilbert basis `fourier_basis` are the functions `fourier_Lp 2`, i.e. the

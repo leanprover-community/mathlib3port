@@ -25,7 +25,7 @@ This file defines unoriented angles in real inner product spaces.
 
 assert_not_exists HasFDerivAt
 
-assert_not_exists conformal_at
+assert_not_exists ConformalAt
 
 noncomputable section
 

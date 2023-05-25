@@ -54,7 +54,7 @@ but we reference them here because all theorems about set integrals are in this 
 -/
 
 
-assert_not_exists inner_product_space
+assert_not_exists InnerProductSpace
 
 noncomputable section
 

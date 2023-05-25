@@ -156,7 +156,7 @@ noncomputable def NormedAddCommGroup.ofMatrix {M : Matrix n n 𝕜} (hM : M.PosD
   @InnerProductSpace.Core.toNormedAddCommGroup _ _ _ _ _
     { inner := fun x y => dotProduct (star x) (M.mulVec y)
       conj_symm := fun x y => by
-        dsimp only [HasInner.inner] <;>
+        dsimp only [Inner.inner] <;>
           rw [star_dot_product, starRingEnd_apply, star_star, star_mul_vec, dot_product_mul_vec,
             hM.is_hermitian.eq]
       nonneg_re := fun x => by

@@ -85,7 +85,7 @@ theorem conj_eigenvalue_eq_self {μ : 𝕜} (hμ : HasEigenvalue T μ) : conj μ
 #align linear_map.is_symmetric.conj_eigenvalue_eq_self LinearMap.IsSymmetric.conj_eigenvalue_eq_self
 
 /-- The eigenspaces of a self-adjoint operator are mutually orthogonal. -/
-theorem orthogonalFamilyEigenspaces :
+theorem orthogonalFamily_eigenspaces :
     OrthogonalFamily 𝕜 (fun μ => eigenspace T μ) fun μ => (eigenspace T μ).subtypeₗᵢ :=
   by
   rintro μ ν hμν ⟨v, hv⟩ ⟨w, hw⟩
@@ -95,13 +95,13 @@ theorem orthogonalFamilyEigenspaces :
   rw [mem_eigenspace_iff] at hv hw
   refine' Or.resolve_left _ hμν.symm
   simpa [inner_smul_left, inner_smul_right, hv, hw, H] using (hT v w).symm
-#align linear_map.is_symmetric.orthogonal_family_eigenspaces LinearMap.IsSymmetric.orthogonalFamilyEigenspaces
+#align linear_map.is_symmetric.orthogonal_family_eigenspaces LinearMap.IsSymmetric.orthogonalFamily_eigenspaces
 
-theorem orthogonalFamilyEigenspaces' :
+theorem orthogonalFamily_eigenspaces' :
     OrthogonalFamily 𝕜 (fun μ : Eigenvalues T => eigenspace T μ) fun μ =>
       (eigenspace T μ).subtypeₗᵢ :=
-  hT.orthogonalFamilyEigenspaces.comp Subtype.coe_injective
-#align linear_map.is_symmetric.orthogonal_family_eigenspaces' LinearMap.IsSymmetric.orthogonalFamilyEigenspaces'
+  hT.orthogonalFamily_eigenspaces.comp Subtype.coe_injective
+#align linear_map.is_symmetric.orthogonal_family_eigenspaces' LinearMap.IsSymmetric.orthogonalFamily_eigenspaces'
 
 /-- The mutual orthogonal complement of the eigenspaces of a self-adjoint operator on an inner
 product space is an invariant subspace of the operator. -/
@@ -119,7 +119,7 @@ theorem orthogonal_iSup_eigenspaces (μ : 𝕜) :
   by
   set p : Submodule 𝕜 E := (⨆ μ, eigenspace T μ)ᗮ
   refine' eigenspace_restrict_eq_bot hT.orthogonal_supr_eigenspaces_invariant _
-  have H₂ : eigenspace T μ ⟂ p := (Submodule.isOrthoOrthogonalRight _).mono_left (le_iSup _ _)
+  have H₂ : eigenspace T μ ⟂ p := (Submodule.isOrtho_orthogonal_right _).mono_left (le_iSup _ _)
   exact H₂.disjoint
 #align linear_map.is_symmetric.orthogonal_supr_eigenspaces LinearMap.IsSymmetric.orthogonal_iSup_eigenspaces
 
@@ -148,7 +148,7 @@ include dec_𝕜
 /-- The eigenspaces of a self-adjoint operator on a finite-dimensional inner product space `E` give
 an internal direct sum decomposition of `E`. -/
 theorem direct_sum_isInternal : DirectSum.IsInternal fun μ : Eigenvalues T => eigenspace T μ :=
-  hT.orthogonalFamilyEigenspaces'.isInternal_iff.mpr hT.orthogonal_iSup_eigenspaces_eq_bot'
+  hT.orthogonalFamily_eigenspaces'.isInternal_iff.mpr hT.orthogonal_iSup_eigenspaces_eq_bot'
 #align linear_map.is_symmetric.direct_sum_is_internal LinearMap.IsSymmetric.direct_sum_isInternal
 
 section Version1
@@ -156,13 +156,14 @@ section Version1
 /-- Isometry from an inner product space `E` to the direct sum of the eigenspaces of some
 self-adjoint operator `T` on `E`. -/
 noncomputable def diagonalization : E ≃ₗᵢ[𝕜] PiLp 2 fun μ : Eigenvalues T => eigenspace T μ :=
-  hT.direct_sum_isInternal.isometryL2OfOrthogonalFamily hT.orthogonalFamilyEigenspaces'
+  hT.direct_sum_isInternal.isometryL2OfOrthogonalFamily hT.orthogonalFamily_eigenspaces'
 #align linear_map.is_symmetric.diagonalization LinearMap.IsSymmetric.diagonalization
 
 @[simp]
 theorem diagonalization_symm_apply (w : PiLp 2 fun μ : Eigenvalues T => eigenspace T μ) :
     hT.diagonalization.symm w = ∑ μ, w μ :=
-  hT.direct_sum_isInternal.isometryL2OfOrthogonalFamily_symm_apply hT.orthogonalFamilyEigenspaces' w
+  hT.direct_sum_isInternal.isometryL2OfOrthogonalFamily_symm_apply hT.orthogonalFamily_eigenspaces'
+    w
 #align linear_map.is_symmetric.diagonalization_symm_apply LinearMap.IsSymmetric.diagonalization_symm_apply
 
 /-- *Diagonalization theorem*, *spectral theorem*; version 1: A self-adjoint operator `T` on a
@@ -194,7 +195,7 @@ finite-dimensional inner product space `E`.
 TODO Postcompose with a permutation so that these eigenvectors are listed in increasing order of
 eigenvalue. -/
 noncomputable irreducible_def eigenvectorBasis : OrthonormalBasis (Fin n) 𝕜 E :=
-  hT.direct_sum_isInternal.subordinateOrthonormalBasis hn hT.orthogonalFamilyEigenspaces'
+  hT.direct_sum_isInternal.subordinateOrthonormalBasis hn hT.orthogonalFamily_eigenspaces'
 #align linear_map.is_symmetric.eigenvector_basis LinearMap.IsSymmetric.eigenvectorBasis
 
 /-- The sequence of real eigenvalues associated to the standard orthonormal basis of eigenvectors
@@ -203,7 +204,7 @@ for a self-adjoint operator `T` on `E`.
 TODO Postcompose with a permutation so that these eigenvalues are listed in increasing order. -/
 noncomputable irreducible_def eigenvalues (i : Fin n) : ℝ :=
   @IsROrC.re 𝕜 _ <|
-    hT.direct_sum_isInternal.subordinateOrthonormalBasisIndex hn i hT.orthogonalFamilyEigenspaces'
+    hT.direct_sum_isInternal.subordinateOrthonormalBasisIndex hn i hT.orthogonalFamily_eigenspaces'
 #align linear_map.is_symmetric.eigenvalues LinearMap.IsSymmetric.eigenvalues
 
 theorem hasEigenvector_eigenvectorBasis (i : Fin n) :

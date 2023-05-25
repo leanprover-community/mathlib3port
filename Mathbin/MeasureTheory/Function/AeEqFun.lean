@@ -1464,5 +1464,5 @@ def toAEEqFunLinearMap : C(α, γ) →ₗ[𝕜] α →ₘ[μ] γ :=
 end ContinuousMap
 
 -- Guard against import creep
-assert_not_exists inner_product_space
+assert_not_exists InnerProductSpace
 

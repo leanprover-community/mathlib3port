@@ -62,6 +62,7 @@ open Classical
 variable {E : Type _} [AddCommGroup E] [Module ℝ E] [TopologicalSpace E] [T2Space E]
   [TopologicalAddGroup E] [ContinuousSMul ℝ E] [LocallyConvexSpace ℝ E] {s : Set E}
 
+#print IsCompact.has_extreme_point /-
 /-- **Krein-Milman lemma**: In a LCTVS, any nonempty compact set has an extreme point. -/
 theorem IsCompact.has_extreme_point (hscomp : IsCompact s) (hsnemp : s.Nonempty) :
     (s.extremePoints ℝ).Nonempty :=
@@ -99,7 +100,9 @@ theorem IsCompact.has_extreme_point (hscomp : IsCompact s) (hsnemp : s.Nonempty)
   obtain htu | hut := hF.total t.mem u.mem
   exacts[⟨t, subset.rfl, htu⟩, ⟨u, hut, subset.rfl⟩]
 #align is_compact.has_extreme_point IsCompact.has_extreme_point
+-/
 
+#print closure_convexHull_extremePoints /-
 /-- **Krein-Milman theorem**: In a LCTVS, any compact convex set is the closure of the convex hull
     of its extreme points. -/
 theorem closure_convexHull_extremePoints (hscomp : IsCompact s) (hAconv : Convex ℝ s) :
@@ -118,4 +121,5 @@ theorem closure_convexHull_extremePoints (hscomp : IsCompact s) (hAconv : Convex
         subset_convexHull _ _ <| h.is_extreme.extreme_points_subset_extreme_points hy),
     hy.1.2 x hxA]
 #align closure_convex_hull_extreme_points closure_convexHull_extremePoints
+-/
 

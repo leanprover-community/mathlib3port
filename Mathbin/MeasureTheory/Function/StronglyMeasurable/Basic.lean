@@ -3066,5 +3066,5 @@ theorem stronglyMeasurable_uncurry_of_continuous_of_stronglyMeasurable {α β ι
 end MeasureTheory
 
 -- Guard against import creep
-assert_not_exists inner_product_space
+assert_not_exists InnerProductSpace
 

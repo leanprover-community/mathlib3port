@@ -299,14 +299,14 @@ theorem EuclideanSpace.edist_single_same [DecidableEq ι] (i : ι) (a b : 𝕜) 
 #align euclidean_space.edist_single_same EuclideanSpace.edist_single_same
 
 /-- `euclidean_space.single` forms an orthonormal family. -/
-theorem EuclideanSpace.orthonormalSingle [DecidableEq ι] :
+theorem EuclideanSpace.orthonormal_single [DecidableEq ι] :
     Orthonormal 𝕜 fun i : ι => EuclideanSpace.single i (1 : 𝕜) :=
   by
   simp_rw [orthonormal_iff_ite, EuclideanSpace.inner_single_left, map_one, one_mul,
     EuclideanSpace.single_apply]
   intro i j
   rfl
-#align euclidean_space.orthonormal_single EuclideanSpace.orthonormalSingle
+#align euclidean_space.orthonormal_single EuclideanSpace.orthonormal_single
 
 theorem EuclideanSpace.piLpCongrLeft_single [DecidableEq ι] {ι' : Type _} [Fintype ι']
     [DecidableEq ι'] (e : ι' ≃ ι) (i' : ι') (v : 𝕜) :
@@ -515,7 +515,7 @@ protected def span [DecidableEq E] {v' : ι' → E} (h : Orthonormal 𝕜 v') (s
   let e₀ : OrthonormalBasis s 𝕜 _ :=
     OrthonormalBasis.mk
       (by
-        convert orthonormalSpan (h.comp (coe : s → ι') Subtype.coe_injective)
+        convert orthonormal_span (h.comp (coe : s → ι') Subtype.coe_injective)
         ext
         simp [e₀', Basis.span_apply])
       e₀'.span_eq.ge
@@ -778,7 +778,7 @@ variable (𝕜 E)
 /-- A finite-dimensional inner product space admits an orthonormal basis. -/
 theorem exists_orthonormalBasis :
     ∃ (w : Finset E)(b : OrthonormalBasis w 𝕜 E), ⇑b = (coe : w → E) :=
-  let ⟨w, hw, hw', hw''⟩ := (orthonormalEmpty 𝕜 E).exists_orthonormalBasis_extension
+  let ⟨w, hw, hw', hw''⟩ := (orthonormal_empty 𝕜 E).exists_orthonormalBasis_extension
   ⟨w, hw, hw''⟩
 #align exists_orthonormal_basis exists_orthonormalBasis
 
