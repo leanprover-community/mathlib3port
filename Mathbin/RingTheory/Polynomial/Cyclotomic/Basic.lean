@@ -491,7 +491,7 @@ open ArithmeticFunction
   using Möbius inversion. -/
 theorem cyclotomic_eq_prod_x_pow_sub_one_pow_moebius {n : ℕ} (R : Type _) [CommRing R]
     [IsDomain R] :
-    algebraMap _ (Ratfunc R) (cyclotomic n R) =
+    algebraMap _ (RatFunc R) (cyclotomic n R) =
       ∏ i in n.divisorsAntidiagonal, algebraMap R[X] _ (X ^ i.snd - 1) ^ μ i.fst :=
   by
   rcases n.eq_zero_or_pos with (rfl | hpos)
@@ -499,7 +499,7 @@ theorem cyclotomic_eq_prod_x_pow_sub_one_pow_moebius {n : ℕ} (R : Type _) [Com
   have h :
     ∀ n : ℕ,
       0 < n →
-        (∏ i in Nat.divisors n, algebraMap _ (Ratfunc R) (cyclotomic i R)) =
+        (∏ i in Nat.divisors n, algebraMap _ (RatFunc R) (cyclotomic i R)) =
           algebraMap _ _ (X ^ n - 1) :=
     by
     intro n hn

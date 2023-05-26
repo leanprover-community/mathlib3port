@@ -31,11 +31,11 @@ open Polynomial
 
 variable (Fq F : Type) [Field Fq] [Fintype Fq] [Field F]
 
-variable [Algebra Fq[X] F] [Algebra (Ratfunc Fq) F]
+variable [Algebra Fq[X] F] [Algebra (RatFunc Fq) F]
 
-variable [IsScalarTower Fq[X] (Ratfunc Fq) F]
+variable [IsScalarTower Fq[X] (RatFunc Fq) F]
 
-variable [FunctionField Fq F] [IsSeparable (Ratfunc Fq) F]
+variable [FunctionField Fq F] [IsSeparable (RatFunc Fq) F]
 
 open Classical
 
@@ -44,7 +44,7 @@ namespace RingOfIntegers
 open FunctionField
 
 noncomputable instance : Fintype (ClassGroup (ringOfIntegers Fq F)) :=
-  ClassGroup.fintypeOfAdmissibleOfFinite (Ratfunc Fq) F
+  ClassGroup.fintypeOfAdmissibleOfFinite (RatFunc Fq) F
     (Polynomial.cardPowDegreeIsAdmissible :
       AbsoluteValue.IsAdmissible (Polynomial.cardPowDegree : AbsoluteValue Fq[X] ℤ))
 
