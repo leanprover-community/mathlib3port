@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module ring_theory.laurent_series
-! leanprover-community/mathlib commit 831c494092374cfe9f50591ed0ac81a25efc5b86
+! leanprover-community/mathlib commit a87d22575d946e1e156fc1edd1e1269600a8a282
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.RingTheory.Localization.FractionRing
 
 /-!
 # Laurent Series
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 ## Main Definitions
 * Defines `laurent_series` as an abbreviation for `hahn_series ℤ`.

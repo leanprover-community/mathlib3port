@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob Scholbach
 
 ! This file was ported from Lean 3 source module field_theory.separable_degree
-! leanprover-community/mathlib commit d11893b411025250c8e61ff2f12ccbd7ee35ab15
+! leanprover-community/mathlib commit a87d22575d946e1e156fc1edd1e1269600a8a282
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.FieldTheory.Separable
 /-!
 
 # Separable degree
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file contains basics about the separable degree of a polynomial.
 

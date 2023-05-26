@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module linear_algebra.charpoly.to_matrix
-! leanprover-community/mathlib commit baab5d3091555838751562e6caad33c844bea15e
+! leanprover-community/mathlib commit a87d22575d946e1e156fc1edd1e1269600a8a282
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.LinearAlgebra.Matrix.Basis
 /-!
 
 # Characteristic polynomial
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 ## Main result
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Justus Springer
 
 ! This file was ported from Lean 3 source module algebra.category.Group.filtered_colimits
-! leanprover-community/mathlib commit c43486ecf2a5a17479a32ce09e4818924145e90e
+! leanprover-community/mathlib commit a87d22575d946e1e156fc1edd1e1269600a8a282
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Algebra.Category.Mon.FilteredColimits
 
 /-!
 # The forgetful functor from (commutative) (additive) groups preserves filtered colimits.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Forgetful functors from algebraic categories usually don't preserve colimits. However, they tend
 to preserve _filtered_ colimits.

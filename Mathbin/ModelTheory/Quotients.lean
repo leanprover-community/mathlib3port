@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module model_theory.quotients
-! leanprover-community/mathlib commit d78597269638367c3863d40d45108f52207e03cf
+! leanprover-community/mathlib commit a87d22575d946e1e156fc1edd1e1269600a8a282
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.ModelTheory.Semantics
 
 /-!
 # Quotients of First-Order Structures
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 This file defines prestructures and quotients of first-order structures.
 
 ## Main Definitions

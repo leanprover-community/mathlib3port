@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module algebraic_geometry.prime_spectrum.is_open_comap_C
-! leanprover-community/mathlib commit 052f6013363326d50cb99c6939814a4b8eb7b301
+! leanprover-community/mathlib commit a87d22575d946e1e156fc1edd1e1269600a8a282
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.AlgebraicGeometry.PrimeSpectrum.Basic
 import Mathbin.RingTheory.Polynomial.Basic
 
 /-!
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
+
 The morphism `Spec R[x] --> Spec R` induced by the natural inclusion `R --> R[x]` is an open map.
 
 The main result is the first part of the statement of Lemma 00FB in the Stacks Project.

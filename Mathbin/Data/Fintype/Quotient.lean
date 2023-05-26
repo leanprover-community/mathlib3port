@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.fintype.quotient
-! leanprover-community/mathlib commit d78597269638367c3863d40d45108f52207e03cf
+! leanprover-community/mathlib commit a87d22575d946e1e156fc1edd1e1269600a8a282
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Data.Fintype.Basic
 
 /-!
 # Quotients of families indexed by a finite type
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file provides `quotient.fin_choice`, a mechanism to go from a finite family of quotients
 to a quotient of finite families.

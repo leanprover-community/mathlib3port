@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.normed_space.lp_space
-! leanprover-community/mathlib commit 8f9fea08977f7e450770933ee6abb20733b47c92
+! leanprover-community/mathlib commit de83b43717abe353f425855fcf0cedf9ea0fe8a4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -270,9 +270,9 @@ theorem finset_sum {ι} (s : Finset ι) {f : ι → ∀ i, E i} (hf : ∀ i ∈ 
     exact (hf i (s.mem_insert_self i)).add (ih fun j hj => hf j (Finset.mem_insert_of_mem hj))
 #align mem_ℓp.finset_sum Memℓp.finset_sum
 
-section NormedSpace
+section BoundedSMul
 
-variable {𝕜 : Type _} [NormedField 𝕜] [∀ i, NormedSpace 𝕜 (E i)]
+variable {𝕜 : Type _} [NormedRing 𝕜] [∀ i, Module 𝕜 (E i)] [∀ i, BoundedSMul 𝕜 (E i)]
 
 theorem const_smul {f : ∀ i, E i} (hf : Memℓp f p) (c : 𝕜) : Memℓp (c • f) p :=
   by
@@ -283,18 +283,22 @@ theorem const_smul {f : ∀ i, E i} (hf : Memℓp f p) (c : 𝕜) : Memℓp (c �
   · obtain ⟨A, hA⟩ := hf.bdd_above
     refine' memℓp_infty ⟨‖c‖ * A, _⟩
     rintro a ⟨i, rfl⟩
-    simpa [norm_smul] using mul_le_mul_of_nonneg_left (hA ⟨i, rfl⟩) (norm_nonneg c)
+    refine' (norm_smul_le _ _).trans _
+    exact mul_le_mul_of_nonneg_left (hA ⟨i, rfl⟩) (norm_nonneg c)
   · apply memℓp_gen
-    convert(hf.summable hp).mul_left (‖c‖ ^ p.to_real)
-    ext i
-    simp [norm_smul, Real.mul_rpow (norm_nonneg c) (norm_nonneg (f i))]
+    have := (hf.summable hp).mul_left (↑(‖c‖₊ ^ p.to_real) : ℝ)
+    simp_rw [← coe_nnnorm, ← NNReal.coe_rpow, ← NNReal.coe_mul, NNReal.summable_coe, ←
+      NNReal.mul_rpow] at this⊢
+    refine' NNReal.summable_of_le _ this
+    intro i
+    exact NNReal.rpow_le_rpow (nnnorm_smul_le _ _) ENNReal.toReal_nonneg
 #align mem_ℓp.const_smul Memℓp.const_smul
 
 theorem const_mul {f : α → 𝕜} (hf : Memℓp f p) (c : 𝕜) : Memℓp (fun x => c * f x) p :=
-  @Memℓp.const_smul α (fun i => 𝕜) _ _ 𝕜 _ _ _ hf c
+  @Memℓp.const_smul α (fun i => 𝕜) _ _ 𝕜 _ _ (fun i => by infer_instance) _ hf c
 #align mem_ℓp.const_mul Memℓp.const_mul
 
-end NormedSpace
+end BoundedSMul
 
 end Memℓp
 
@@ -622,12 +626,27 @@ theorem norm_le_of_forall_sum_le (hp : 0 < p.toReal) {C : ℝ} (hC : 0 ≤ C) {f
 
 end ComparePointwise
 
-section NormedSpace
+section BoundedSMul
 
-variable {𝕜 : Type _} [NormedField 𝕜] [∀ i, NormedSpace 𝕜 (E i)]
+variable {𝕜 : Type _} {𝕜' : Type _}
+
+variable [NormedRing 𝕜] [NormedRing 𝕜']
+
+variable [∀ i, Module 𝕜 (E i)] [∀ i, Module 𝕜' (E i)]
 
 instance : Module 𝕜 (PreLp E) :=
   Pi.module α E 𝕜
+
+instance [∀ i, SMulCommClass 𝕜' 𝕜 (E i)] : SMulCommClass 𝕜' 𝕜 (PreLp E) :=
+  Pi.smulCommClass
+
+instance [SMul 𝕜' 𝕜] [∀ i, IsScalarTower 𝕜' 𝕜 (E i)] : IsScalarTower 𝕜' 𝕜 (PreLp E) :=
+  Pi.isScalarTower
+
+instance [∀ i, Module 𝕜ᵐᵒᵖ (E i)] [∀ i, IsCentralScalar 𝕜 (E i)] : IsCentralScalar 𝕜 (PreLp E) :=
+  Pi.isCentralScalar
+
+variable [∀ i, BoundedSMul 𝕜 (E i)] [∀ i, BoundedSMul 𝕜' (E i)]
 
 theorem mem_lp_const_smul (c : 𝕜) (f : lp E p) : c • (f : PreLp E) ∈ lp E p :=
   (lp.memℓp f).const_smul c
@@ -655,41 +674,73 @@ theorem coeFn_smul (c : 𝕜) (f : lp E p) : ⇑(c • f) = c • f :=
   rfl
 #align lp.coe_fn_smul lp.coeFn_smul
 
-theorem norm_const_smul (hp : p ≠ 0) {c : 𝕜} (f : lp E p) : ‖c • f‖ = ‖c‖ * ‖f‖ :=
+instance [∀ i, SMulCommClass 𝕜' 𝕜 (E i)] : SMulCommClass 𝕜' 𝕜 (lp E p) :=
+  ⟨fun r c f => Subtype.ext <| smul_comm _ _ _⟩
+
+instance [SMul 𝕜' 𝕜] [∀ i, IsScalarTower 𝕜' 𝕜 (E i)] : IsScalarTower 𝕜' 𝕜 (lp E p) :=
+  ⟨fun r c f => Subtype.ext <| smul_assoc _ _ _⟩
+
+instance [∀ i, Module 𝕜ᵐᵒᵖ (E i)] [∀ i, IsCentralScalar 𝕜 (E i)] : IsCentralScalar 𝕜 (lp E p) :=
+  ⟨fun r f => Subtype.ext <| op_smul_eq_smul _ _⟩
+
+theorem norm_const_smul_le (hp : p ≠ 0) (c : 𝕜) (f : lp E p) : ‖c • f‖ ≤ ‖c‖ * ‖f‖ :=
   by
   rcases p.trichotomy with (rfl | rfl | hp)
   · exact absurd rfl hp
   · cases isEmpty_or_nonempty α <;> skip
     · simp [lp.eq_zero' f]
-    apply (lp.isLUB_norm (c • f)).unique
-    convert(lp.isLUB_norm f).mul_left (norm_nonneg c)
-    ext a
-    simp [coe_fn_smul, norm_smul]
-  · suffices ‖c • f‖ ^ p.to_real = (‖c‖ * ‖f‖) ^ p.to_real
-      by
-      refine' Real.rpow_left_injOn hp.ne' _ _ this
-      · exact norm_nonneg' _
-      · exact mul_nonneg (norm_nonneg _) (norm_nonneg' _)
-    apply (lp.hasSum_norm hp (c • f)).unique
-    convert(lp.hasSum_norm hp f).mul_left (‖c‖ ^ p.to_real)
-    · simp [coe_fn_smul, norm_smul, Real.mul_rpow (norm_nonneg c) (norm_nonneg _)]
-    have hf : 0 ≤ ‖f‖ := lp.norm_nonneg' f
-    simp [coe_fn_smul, norm_smul, Real.mul_rpow (norm_nonneg c) hf]
+    have hcf := lp.isLUB_norm (c • f)
+    have hfc := (lp.isLUB_norm f).mul_left (norm_nonneg c)
+    simp_rw [← Set.range_comp, Function.comp] at hfc
+    -- TODO: some `is_lub` API should make it a one-liner from here.
+    refine' hcf.right _
+    have := hfc.left
+    simp_rw [mem_upperBounds, Set.mem_range, forall_exists_index, forall_apply_eq_imp_iff'] at this⊢
+    intro a
+    exact (norm_smul_le _ _).trans (this a)
+  · letI inst : NNNorm (lp E p) := ⟨fun f => ⟨‖f‖, norm_nonneg' _⟩⟩
+    have coe_nnnorm : ∀ f : lp E p, ↑‖f‖₊ = ‖f‖ := fun _ => rfl
+    suffices ‖c • f‖₊ ^ p.to_real ≤ (‖c‖₊ * ‖f‖₊) ^ p.to_real by
+      rwa [NNReal.rpow_le_rpow_iff hp] at this
+    clear_value inst
+    rw [NNReal.mul_rpow]
+    have hLHS := lp.hasSum_norm hp (c • f)
+    have hRHS := (lp.hasSum_norm hp f).mul_left (‖c‖ ^ p.to_real)
+    simp_rw [← coe_nnnorm, ← _root_.coe_nnnorm, ← NNReal.coe_rpow, ← NNReal.coe_mul,
+      NNReal.hasSum_coe] at hRHS hLHS
+    refine' hasSum_mono hLHS hRHS fun i => _
+    dsimp only
+    rw [← NNReal.mul_rpow]
+    exact NNReal.rpow_le_rpow (nnnorm_smul_le _ _) ENNReal.toReal_nonneg
+#align lp.norm_const_smul_le lp.norm_const_smul_le
+
+instance [Fact (1 ≤ p)] : BoundedSMul 𝕜 (lp E p) :=
+  BoundedSMul.of_norm_smul_le <| norm_const_smul_le (zero_lt_one.trans_le <| Fact.out (1 ≤ p)).ne'
+
+end BoundedSMul
+
+section DivisionRing
+
+variable {𝕜 : Type _}
+
+variable [NormedDivisionRing 𝕜] [∀ i, Module 𝕜 (E i)] [∀ i, BoundedSMul 𝕜 (E i)]
+
+theorem norm_const_smul (hp : p ≠ 0) {c : 𝕜} (f : lp E p) : ‖c • f‖ = ‖c‖ * ‖f‖ :=
+  by
+  obtain rfl | hc := eq_or_ne c 0
+  · simp
+  refine' le_antisymm (norm_const_smul_le hp c f) _
+  have := mul_le_mul_of_nonneg_left (norm_const_smul_le hp c⁻¹ (c • f)) (norm_nonneg c)
+  rwa [inv_smul_smul₀ hc, norm_inv, mul_inv_cancel_left₀ (norm_ne_zero_iff.mpr hc)] at this
 #align lp.norm_const_smul lp.norm_const_smul
 
-instance [Fact (1 ≤ p)] : NormedSpace 𝕜 (lp E p)
-    where norm_smul_le c f :=
-    by
-    have hp : 0 < p := zero_lt_one.trans_le (Fact.out _)
-    simp [norm_const_smul hp.ne']
+end DivisionRing
 
-variable {𝕜' : Type _} [NormedField 𝕜']
+section NormedSpace
 
-instance [∀ i, NormedSpace 𝕜' (E i)] [SMul 𝕜' 𝕜] [∀ i, IsScalarTower 𝕜' 𝕜 (E i)] :
-    IsScalarTower 𝕜' 𝕜 (lp E p) := by
-  refine' ⟨fun r c f => _⟩
-  ext1
-  exact (lp.coeFn_smul _ _).trans (smul_assoc _ _ _)
+variable {𝕜 : Type _} [NormedField 𝕜] [∀ i, NormedSpace 𝕜 (E i)]
+
+instance [Fact (1 ≤ p)] : NormedSpace 𝕜 (lp E p) where norm_smul_le c f := norm_smul_le _ _
 
 end NormedSpace
 
@@ -741,9 +792,9 @@ instance [hp : Fact (1 ≤ p)] : NormedStarGroup (lp E p)
     · simp only [lp.norm_eq_csupr, lp.star_apply, norm_star]
     · simp only [lp.norm_eq_tsum_rpow h, lp.star_apply, norm_star]
 
-variable {𝕜 : Type _} [Star 𝕜] [NormedField 𝕜]
+variable {𝕜 : Type _} [Star 𝕜] [NormedRing 𝕜]
 
-variable [∀ i, NormedSpace 𝕜 (E i)] [∀ i, StarModule 𝕜 (E i)]
+variable [∀ i, Module 𝕜 (E i)] [∀ i, BoundedSMul 𝕜 (E i)] [∀ i, StarModule 𝕜 (E i)]
 
 instance : StarModule 𝕜 (lp E p) where star_smul r f := ext <| star_smul _ _
 
@@ -790,12 +841,12 @@ instance : NonUnitalNormedRing (lp B ∞) :=
            }
 
 -- we also want a `non_unital_normed_comm_ring` instance, but this has to wait for #13719
-instance infty_isScalarTower {𝕜} [NormedField 𝕜] [∀ i, NormedSpace 𝕜 (B i)]
+instance infty_isScalarTower {𝕜} [NormedRing 𝕜] [∀ i, Module 𝕜 (B i)] [∀ i, BoundedSMul 𝕜 (B i)]
     [∀ i, IsScalarTower 𝕜 (B i) (B i)] : IsScalarTower 𝕜 (lp B ∞) (lp B ∞) :=
   ⟨fun r f g => lp.ext <| smul_assoc r (⇑f) ⇑g⟩
 #align lp.infty_is_scalar_tower lp.infty_isScalarTower
 
-instance infty_sMulCommClass {𝕜} [NormedField 𝕜] [∀ i, NormedSpace 𝕜 (B i)]
+instance infty_sMulCommClass {𝕜} [NormedRing 𝕜] [∀ i, Module 𝕜 (B i)] [∀ i, BoundedSMul 𝕜 (B i)]
     [∀ i, SMulCommClass 𝕜 (B i) (B i)] : SMulCommClass 𝕜 (lp B ∞) (lp B ∞) :=
   ⟨fun r f g => lp.ext <| smul_comm r (⇑f) ⇑g⟩
 #align lp.infty_smul_comm_class lp.infty_sMulCommClass
@@ -966,7 +1017,7 @@ end Algebra
 
 section Single
 
-variable {𝕜 : Type _} [NormedField 𝕜] [∀ i, NormedSpace 𝕜 (E i)]
+variable {𝕜 : Type _} [NormedRing 𝕜] [∀ i, Module 𝕜 (E i)] [∀ i, BoundedSMul 𝕜 (E i)]
 
 variable [DecidableEq α]
 

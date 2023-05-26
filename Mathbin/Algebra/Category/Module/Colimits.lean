@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.category.Module.colimits
-! leanprover-community/mathlib commit 70fd9563a21e7b963887c9360bd29b2393e6225a
+! leanprover-community/mathlib commit 5a684ce82399d820475609907c6ef8dba5b1b97c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -398,6 +398,14 @@ instance hasColimits_moduleCat : HasColimits (ModuleCat.{max v u} R)
           { Cocone := colimit_cocone F
             IsColimit := colimit_cocone_is_colimit F } }
 #align Module.colimits.has_colimits_Module ModuleCat.Colimits.hasColimits_moduleCat
+
+instance hasColimitsOfSize_moduleCat : HasColimitsOfSize.{v} (ModuleCat.{max v u} R) :=
+  hasColimitsOfSize_shrink _
+#align Module.colimits.has_colimits_of_size_Module ModuleCat.Colimits.hasColimitsOfSize_moduleCat
+
+instance hasColimitsOfSize_zero_moduleCat : HasColimitsOfSize.{0} (ModuleCat.{max v u} R) :=
+  @hasColimitsOfSize_shrink.{0} (ModuleCat.{max v u} R) _ ModuleCat.Colimits.hasColimits_moduleCat
+#align Module.colimits.has_colimits_of_size_zero_Module ModuleCat.Colimits.hasColimitsOfSize_zero_moduleCat
 
 -- We manually add a `has_colimits` instance with universe parameters swapped, for otherwise
 -- the instance is not found by typeclass search.
