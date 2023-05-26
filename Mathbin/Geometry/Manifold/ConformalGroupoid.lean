@@ -28,6 +28,7 @@ conformal, groupoid
 
 variable {X : Type _} [NormedAddCommGroup X] [NormedSpace ℝ X]
 
+#print conformalPregroupoid /-
 /-- The pregroupoid of conformal maps. -/
 def conformalPregroupoid : Pregroupoid X
     where
@@ -39,9 +40,12 @@ def conformalPregroupoid : Pregroupoid X
     h₃ x ⟨hx, h₂⟩
   congr f g u hu h hf x hx := (hf x hx).congr hx hu h
 #align conformal_pregroupoid conformalPregroupoid
+-/
 
+#print conformalGroupoid /-
 /-- The groupoid of conformal maps. -/
 def conformalGroupoid : StructureGroupoid X :=
   conformalPregroupoid.groupoid
 #align conformal_groupoid conformalGroupoid
+-/
 
