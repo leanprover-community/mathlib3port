@@ -2708,13 +2708,13 @@ theorem ae_withDensity_iff_ae_restrict {p : α → Prop} {f : α → ℝ≥0∞}
 #align measure_theory.ae_with_density_iff_ae_restrict MeasureTheory.ae_withDensity_iff_ae_restrict
 -/
 
-/- warning: measure_theory.ae_measurable_with_density_ennreal_iff -> MeasureTheory.aEMeasurable_withDensity_eNNReal_iff is a dubious translation:
+/- warning: measure_theory.ae_measurable_with_density_ennreal_iff -> MeasureTheory.aemeasurable_withDensity_ennreal_iff is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {f : α -> NNReal}, (Measurable.{u1, 0} α NNReal m NNReal.measurableSpace f) -> (forall {g : α -> ENNReal}, Iff (AEMeasurable.{u1, 0} α ENNReal ENNReal.measurableSpace m g (MeasureTheory.Measure.withDensity.{u1} α m μ (fun (x : α) => (fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal ENNReal (HasLiftT.mk.{1, 1} NNReal ENNReal (CoeTCₓ.coe.{1, 1} NNReal ENNReal (coeBase.{1, 1} NNReal ENNReal ENNReal.hasCoe))) (f x)))) (AEMeasurable.{u1, 0} α ENNReal ENNReal.measurableSpace m (fun (x : α) => HMul.hMul.{0, 0, 0} ENNReal ENNReal ENNReal (instHMul.{0} ENNReal (Distrib.toHasMul.{0} ENNReal (NonUnitalNonAssocSemiring.toDistrib.{0} ENNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} ENNReal (Semiring.toNonAssocSemiring.{0} ENNReal (OrderedSemiring.toSemiring.{0} ENNReal (OrderedCommSemiring.toOrderedSemiring.{0} ENNReal (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{0} ENNReal ENNReal.canonicallyOrderedCommSemiring)))))))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNReal ENNReal (HasLiftT.mk.{1, 1} NNReal ENNReal (CoeTCₓ.coe.{1, 1} NNReal ENNReal (coeBase.{1, 1} NNReal ENNReal ENNReal.hasCoe))) (f x)) (g x)) μ))
 but is expected to have type
   forall {α : Type.{u1}} {m : MeasurableSpace.{u1} α} {μ : MeasureTheory.Measure.{u1} α m} {f : α -> NNReal}, (Measurable.{u1, 0} α NNReal m NNReal.measurableSpace f) -> (forall {g : α -> ENNReal}, Iff (AEMeasurable.{u1, 0} α ENNReal ENNReal.measurableSpace m g (MeasureTheory.Measure.withDensity.{u1} α m μ (fun (x : α) => ENNReal.some (f x)))) (AEMeasurable.{u1, 0} α ENNReal ENNReal.measurableSpace m (fun (x : α) => HMul.hMul.{0, 0, 0} ENNReal ENNReal ENNReal (instHMul.{0} ENNReal (CanonicallyOrderedCommSemiring.toMul.{0} ENNReal ENNReal.instCanonicallyOrderedCommSemiringENNReal)) (ENNReal.some (f x)) (g x)) μ))
-Case conversion may be inaccurate. Consider using '#align measure_theory.ae_measurable_with_density_ennreal_iff MeasureTheory.aEMeasurable_withDensity_eNNReal_iffₓ'. -/
-theorem aEMeasurable_withDensity_eNNReal_iff {f : α → ℝ≥0} (hf : Measurable f) {g : α → ℝ≥0∞} :
+Case conversion may be inaccurate. Consider using '#align measure_theory.ae_measurable_with_density_ennreal_iff MeasureTheory.aemeasurable_withDensity_ennreal_iffₓ'. -/
+theorem aemeasurable_withDensity_ennreal_iff {f : α → ℝ≥0} (hf : Measurable f) {g : α → ℝ≥0∞} :
     AEMeasurable g (μ.withDensity fun x => (f x : ℝ≥0∞)) ↔
       AEMeasurable (fun x => (f x : ℝ≥0∞) * g x) μ :=
   by
@@ -2739,7 +2739,7 @@ theorem aEMeasurable_withDensity_eNNReal_iff {f : α → ℝ≥0} (hf : Measurab
     filter_upwards [hg']
     intro x hx h'x
     rw [← hx, ← mul_assoc, ENNReal.inv_mul_cancel h'x ENNReal.coe_ne_top, one_mul]
-#align measure_theory.ae_measurable_with_density_ennreal_iff MeasureTheory.aEMeasurable_withDensity_eNNReal_iff
+#align measure_theory.ae_measurable_with_density_ennreal_iff MeasureTheory.aemeasurable_withDensity_ennreal_iff
 
 end Lintegral
 
