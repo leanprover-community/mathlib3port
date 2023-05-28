@@ -39,7 +39,7 @@ section
 
 open Finset Polynomial Function
 
-open BigOperators Nat
+open scoped BigOperators Nat
 
 section CancelMonoidWithZero
 
@@ -182,7 +182,7 @@ section EuclideanDivision
 
 namespace Polynomial
 
-open Polynomial
+open scoped Polynomial
 
 variable (K : Type) [Field K] [Algebra R[X] K] [IsFractionRing R[X] K]
 

@@ -40,7 +40,7 @@ import Mathbin.RingTheory.IsTensorProduct
 
 section KaehlerDifferential
 
-open TensorProduct
+open scoped TensorProduct
 
 open Algebra
 

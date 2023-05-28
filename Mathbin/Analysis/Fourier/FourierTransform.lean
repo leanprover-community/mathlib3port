@@ -57,7 +57,7 @@ local notation "𝕊" => circle
 
 open MeasureTheory Filter
 
-open Topology
+open scoped Topology
 
 -- mathport name: «expr [ ]»
 -- To avoid messing around with multiplicative vs. additive characters, we make a notation.
@@ -234,7 +234,7 @@ end Defs
 
 end Fourier
 
-open Real
+open scoped Real
 
 namespace Real
 

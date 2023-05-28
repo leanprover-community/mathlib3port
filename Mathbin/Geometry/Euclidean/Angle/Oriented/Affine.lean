@@ -29,7 +29,7 @@ noncomputable section
 
 open FiniteDimensional Complex
 
-open Affine EuclideanGeometry Real RealInnerProductSpace ComplexConjugate
+open scoped Affine EuclideanGeometry Real RealInnerProductSpace ComplexConjugate
 
 namespace EuclideanGeometry
 

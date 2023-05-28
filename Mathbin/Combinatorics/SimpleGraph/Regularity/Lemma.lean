@@ -69,7 +69,7 @@ We currently only prove the equipartition version of SRL.
 
 open Finpartition Finset Fintype Function szemeredi_regularity
 
-open Classical
+open scoped Classical
 
 variable {α : Type _} [Fintype α] (G : SimpleGraph α) {ε : ℝ} {l : ℕ}
 

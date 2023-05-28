@@ -24,7 +24,7 @@ is linear in both factors.
 
 noncomputable section
 
-open Classical
+open scoped Classical
 
 namespace CategoryTheory
 
@@ -107,7 +107,7 @@ theorem monoidalPreadditive_of_faithful {D} [Category D] [Preadditive D] [Monoid
         monoidal_preadditive.add_tensor] }
 #align category_theory.monoidal_preadditive_of_faithful CategoryTheory.monoidalPreadditive_of_faithful
 
-open BigOperators
+open scoped BigOperators
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

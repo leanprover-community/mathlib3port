@@ -39,7 +39,7 @@ namespace Ideal
 
 open Polynomial
 
-open Polynomial
+open scoped Polynomial
 
 open Submodule
 

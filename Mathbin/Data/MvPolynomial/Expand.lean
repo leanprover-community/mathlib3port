@@ -26,7 +26,7 @@ This operation is called `mv_polynomial.expand` and it is an algebra homomorphis
 -/
 
 
-open BigOperators
+open scoped BigOperators
 
 namespace MvPolynomial
 

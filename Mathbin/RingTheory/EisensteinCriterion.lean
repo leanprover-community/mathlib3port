@@ -30,7 +30,7 @@ variable {R : Type _} [CommRing R]
 
 namespace Polynomial
 
-open Polynomial
+open scoped Polynomial
 
 namespace EisensteinCriterionAux
 

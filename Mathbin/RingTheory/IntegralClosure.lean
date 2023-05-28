@@ -39,9 +39,9 @@ Let `R` be a `comm_ring` and let `A` be an R-algebra.
 -/
 
 
-open Classical
+open scoped Classical
 
-open BigOperators Polynomial
+open scoped BigOperators Polynomial
 
 open Polynomial Submodule
 
@@ -681,7 +681,7 @@ theorem IsIntegral.pow_iff {x : A} {n : ℕ} (hn : 0 < n) : IsIntegral R (x ^ n)
   ⟨isIntegral_of_pow hn, fun hx => IsIntegral.pow hx n⟩
 #align is_integral.pow_iff IsIntegral.pow_iff
 
-open TensorProduct
+open scoped TensorProduct
 
 theorem IsIntegral.tmul (x : A) {y : B} (h : IsIntegral R y) : IsIntegral A (x ⊗ₜ[R] y) :=
   by
@@ -745,6 +745,7 @@ theorem leadingCoeff_smul_normalizeScaleRoots (p : R[X]) :
 #align leading_coeff_smul_normalize_scale_roots leadingCoeff_smul_normalizeScaleRoots
 -/
 
+#print normalizeScaleRoots_support /-
 theorem normalizeScaleRoots_support : (normalizeScaleRoots p).support ≤ p.support :=
   by
   intro x
@@ -754,6 +755,7 @@ theorem normalizeScaleRoots_support : (normalizeScaleRoots p).support ≤ p.supp
   intro h₁ h₂
   exact (h₂ h₁).rec _
 #align normalize_scale_roots_support normalizeScaleRoots_support
+-/
 
 #print normalizeScaleRoots_degree /-
 theorem normalizeScaleRoots_degree : (normalizeScaleRoots p).degree = p.degree :=

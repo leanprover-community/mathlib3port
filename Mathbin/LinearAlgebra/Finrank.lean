@@ -40,7 +40,7 @@ You should not assume that there has been any effort to state lemmas as generall
 
 universe u v v' w
 
-open Classical Cardinal
+open scoped Classical Cardinal
 
 open Cardinal Submodule Module Function
 
@@ -97,11 +97,13 @@ theorem rank_lt_of_finrank_lt {n : ℕ} (h : n < finrank K V) : ↑n < Module.ra
     exact n.zero_le
 #align finite_dimensional.rank_lt_of_finrank_lt FiniteDimensional.rank_lt_of_finrank_lt
 
+#print FiniteDimensional.finrank_le_finrank_of_rank_le_rank /-
 theorem finrank_le_finrank_of_rank_le_rank
     (h : lift.{v'} (Module.rank K V) ≤ Cardinal.lift.{v} (Module.rank K V₂))
     (h' : Module.rank K V₂ < ℵ₀) : finrank K V ≤ finrank K V₂ := by
   simpa only [to_nat_lift] using to_nat_le_of_le_of_lt_aleph_0 (lift_lt_aleph_0.mpr h') h
 #align finite_dimensional.finrank_le_finrank_of_rank_le_rank FiniteDimensional.finrank_le_finrank_of_rank_le_rank
+-/
 
 section
 

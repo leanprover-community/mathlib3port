@@ -28,7 +28,7 @@ variable {M : Submonoid A}
 
 namespace Polynomial
 
-open BigOperators Polynomial
+open scoped BigOperators Polynomial
 
 #print Polynomial.scaleRoots /-
 /-- `scale_roots p s` is a polynomial with root `r * s` for each root `r` of `p`. -/
@@ -68,9 +68,11 @@ theorem scaleRoots_ne_zero {p : R[X]} (hp : p ≠ 0) (s : R) : scaleRoots p s �
 #align polynomial.scale_roots_ne_zero Polynomial.scaleRoots_ne_zero
 -/
 
+#print Polynomial.support_scaleRoots_le /-
 theorem support_scaleRoots_le (p : R[X]) (s : R) : (scaleRoots p s).support ≤ p.support := by
   intro ; simpa using left_ne_zero_of_mul
 #align polynomial.support_scale_roots_le Polynomial.support_scaleRoots_le
+-/
 
 theorem support_scaleRoots_eq (p : R[X]) {s : R} (hs : s ∈ nonZeroDivisors R) :
     (scaleRoots p s).support = p.support :=

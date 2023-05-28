@@ -51,7 +51,7 @@ universe u
 
 open Nat
 
-open Rat
+open scoped Rat
 
 open multiplicity
 
@@ -428,7 +428,7 @@ theorem min_le_padicValRat_add {q r : ℚ} (hqr : q + r ≠ 0) :
     rw [min_eq_right h, add_comm] <;> exact le_padic_val_rat_add_of_le (by rwa [add_comm]) h
 #align padic_val_rat.min_le_padic_val_rat_add padicValRat.min_le_padicValRat_add
 
-open BigOperators
+open scoped BigOperators
 
 #print padicValRat.sum_pos_of_pos /-
 /-- A finite sum of rationals with positive `p`-adic valuation has positive `p`-adic valuation
@@ -575,7 +575,7 @@ theorem padicValNat_primes {q : ℕ} [hp : Fact p.Prime] [hq : Fact q.Prime] (ne
 #align padic_val_nat_primes padicValNat_primes
 -/
 
-open BigOperators
+open scoped BigOperators
 
 theorem range_pow_padicValNat_subset_divisors {n : ℕ} (hn : n ≠ 0) :
     (Finset.range (padicValNat p n + 1)).image (pow p) ⊆ n.divisors :=

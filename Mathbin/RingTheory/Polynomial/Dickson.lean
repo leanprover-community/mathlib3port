@@ -58,7 +58,7 @@ noncomputable section
 
 namespace Polynomial
 
-open Polynomial
+open scoped Polynomial
 
 variable {R S : Type _} [CommRing R] [CommRing S] (k : ℕ) (a : R)
 

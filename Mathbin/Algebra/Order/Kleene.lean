@@ -111,10 +111,12 @@ class KleeneAlgebra (α : Type _) extends IdemSemiring α, KStar α where
 #align kleene_algebra KleeneAlgebra
 -/
 
+#print IdemSemiring.toOrderBot /-
 -- See note [lower instance priority]
 instance (priority := 100) IdemSemiring.toOrderBot [IdemSemiring α] : OrderBot α :=
   { ‹IdemSemiring α› with }
 #align idem_semiring.to_order_bot IdemSemiring.toOrderBot
+-/
 
 -- See note [reducible non-instances]
 /-- Construct an idempotent semiring from an idempotent addition. -/

@@ -246,22 +246,31 @@ theorem IsAntichain.max_minimals (ht : IsAntichain r t) (h : minimals r s ⊆ t)
 
 variable [PartialOrder α]
 
+#print IsLeast.mem_minimals /-
 theorem IsLeast.mem_minimals (h : IsLeast s a) : a ∈ minimals (· ≤ ·) s :=
   ⟨h.1, fun b hb _ => h.2 hb⟩
 #align is_least.mem_minimals IsLeast.mem_minimals
+-/
 
+#print IsGreatest.mem_maximals /-
 theorem IsGreatest.mem_maximals (h : IsGreatest s a) : a ∈ maximals (· ≤ ·) s :=
   ⟨h.1, fun b hb _ => h.2 hb⟩
 #align is_greatest.mem_maximals IsGreatest.mem_maximals
+-/
 
+#print IsLeast.minimals_eq /-
 theorem IsLeast.minimals_eq (h : IsLeast s a) : minimals (· ≤ ·) s = {a} :=
   eq_singleton_iff_unique_mem.2 ⟨h.mem_minimals, fun b hb => eq_of_mem_minimals hb h.1 <| h.2 hb.1⟩
 #align is_least.minimals_eq IsLeast.minimals_eq
+-/
 
+#print IsGreatest.maximals_eq /-
 theorem IsGreatest.maximals_eq (h : IsGreatest s a) : maximals (· ≤ ·) s = {a} :=
   eq_singleton_iff_unique_mem.2 ⟨h.mem_maximals, fun b hb => eq_of_mem_maximals hb h.1 <| h.2 hb.1⟩
 #align is_greatest.maximals_eq IsGreatest.maximals_eq
+-/
 
+#print IsAntichain.minimals_upperClosure /-
 theorem IsAntichain.minimals_upperClosure (hs : IsAntichain (· ≤ ·) s) :
     minimals (· ≤ ·) (upperClosure s : Set α) = s :=
   hs.max_minimals
@@ -270,9 +279,12 @@ theorem IsAntichain.minimals_upperClosure (hs : IsAntichain (· ≤ ·) s) :
     ⟨a, ⟨subset_upperClosure ha, fun b ⟨c, hc, hcb⟩ hba => by rwa [hs.eq' ha hc (hcb.trans hba)]⟩,
       le_rfl⟩
 #align is_antichain.minimals_upper_closure IsAntichain.minimals_upperClosure
+-/
 
+#print IsAntichain.maximals_lowerClosure /-
 theorem IsAntichain.maximals_lowerClosure (hs : IsAntichain (· ≤ ·) s) :
     maximals (· ≤ ·) (lowerClosure s : Set α) = s :=
   hs.toDual.minimals_upperClosure
 #align is_antichain.maximals_lower_closure IsAntichain.maximals_lowerClosure
+-/
 

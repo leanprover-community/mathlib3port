@@ -31,7 +31,7 @@ Springer, 2016.
 
 open MeasureTheory Filter TopologicalSpace Function
 
-open ENNReal Topology MeasureTheory
+open scoped ENNReal Topology MeasureTheory
 
 namespace MeasureTheory
 

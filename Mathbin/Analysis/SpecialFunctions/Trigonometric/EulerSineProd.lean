@@ -24,7 +24,7 @@ generalising the arguments used to prove Wallis' limit formula for `π`.
 -/
 
 
-open Real Topology BigOperators
+open scoped Real Topology BigOperators
 
 open Real Set Filter intervalIntegral MeasureTheory.MeasureSpace
 

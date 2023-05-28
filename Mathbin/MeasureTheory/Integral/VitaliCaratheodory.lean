@@ -75,7 +75,7 @@ See result `measure_theory.Lp.continuous_map_dense`, in the file
 -/
 
 
-open ENNReal NNReal
+open scoped ENNReal NNReal
 
 open MeasureTheory MeasureTheory.Measure
 

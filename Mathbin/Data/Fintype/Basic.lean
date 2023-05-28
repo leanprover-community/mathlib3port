@@ -47,7 +47,7 @@ See `fintype.of_injective` and `fintype.of_surjective`.
 
 open Function
 
-open Nat
+open scoped Nat
 
 universe u v
 

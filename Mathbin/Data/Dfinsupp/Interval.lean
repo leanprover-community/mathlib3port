@@ -26,7 +26,7 @@ finite and calculates the cardinality of its finite intervals.
 
 open Dfinsupp Finset
 
-open BigOperators Pointwise
+open scoped BigOperators Pointwise
 
 variable {ι : Type _} {α : ι → Type _}
 
@@ -145,9 +145,11 @@ theorem rangeIcc_apply (f g : Π₀ i, α i) (i : ι) : f.rangeIcc g i = Icc (f 
   rfl
 #align dfinsupp.range_Icc_apply Dfinsupp.rangeIcc_apply
 
+#print Dfinsupp.mem_rangeIcc_apply_iff /-
 theorem mem_rangeIcc_apply_iff : a ∈ f.rangeIcc g i ↔ f i ≤ a ∧ a ≤ g i :=
   mem_Icc
 #align dfinsupp.mem_range_Icc_apply_iff Dfinsupp.mem_rangeIcc_apply_iff
+-/
 
 theorem support_rangeIcc_subset [DecidableEq ι] [∀ i, DecidableEq (α i)] :
     (f.rangeIcc g).support ⊆ f.support ∪ g.support :=

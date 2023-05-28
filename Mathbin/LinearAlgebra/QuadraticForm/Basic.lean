@@ -75,7 +75,7 @@ variable {S : Type _}
 
 variable {R R₁ : Type _} {M : Type _}
 
-open BigOperators
+open scoped BigOperators
 
 section Polar
 
@@ -1023,7 +1023,7 @@ variable [CommRing R₁] [DecidableEq n] [Invertible (2 : R₁)]
 
 variable {m : Type w} [DecidableEq m] [Fintype m]
 
-open Matrix
+open scoped Matrix
 
 @[simp]
 theorem toMatrix'_comp (Q : QuadraticForm R₁ (m → R₁)) (f : (n → R₁) →ₗ[R₁] m → R₁) :

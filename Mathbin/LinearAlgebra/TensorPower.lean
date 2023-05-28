@@ -33,7 +33,7 @@ tensor powers. Elsewhere, using `1` and `*` on `graded_monoid` should be preferr
 -/
 
 
-open TensorProduct
+open scoped TensorProduct
 
 /-- Homogenous tensor powers $M^{\otimes n}$. `⨂[R]^n M` is a shorthand for
 `⨂[R] (i : fin n), M`. -/
@@ -66,7 +66,7 @@ end PiTensorProduct
 
 namespace TensorPower
 
-open TensorProduct DirectSum
+open scoped TensorProduct DirectSum
 
 open PiTensorProduct
 

@@ -30,7 +30,7 @@ We prove that `Fintype.skeleton` is a skeleton of `Fintype` in `Fintype.is_skele
 -/
 
 
-open Classical
+open scoped Classical
 
 open CategoryTheory
 

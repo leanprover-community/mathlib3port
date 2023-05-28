@@ -49,18 +49,22 @@ section
 
 variable [Zero α] [One α] [PartialOrder α] [ZeroLEOneClass α] [NeZero (1 : α)]
 
+#print zero_lt_one /-
 /-- See `zero_lt_one'` for a version with the type explicit. -/
 @[simp]
 theorem zero_lt_one : (0 : α) < 1 :=
   zero_le_one.lt_of_ne (NeZero.ne' 1)
 #align zero_lt_one zero_lt_one
+-/
 
 variable (α)
 
+#print zero_lt_one' /-
 /-- See `zero_lt_one` for a version with the type implicit. -/
 theorem zero_lt_one' : (0 : α) < 1 :=
   zero_lt_one
 #align zero_lt_one' zero_lt_one'
+-/
 
 end
 

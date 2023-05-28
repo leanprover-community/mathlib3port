@@ -44,7 +44,7 @@ group naturally induces a uniform structure.
 
 noncomputable section
 
-open Classical uniformity Topology Filter Pointwise
+open scoped Classical uniformity Topology Filter Pointwise
 
 section UniformGroup
 

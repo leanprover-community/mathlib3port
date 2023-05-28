@@ -142,6 +142,7 @@ class OrderMonoidHomClass (F : Type _) (α β : outParam <| Type _) [Preorder α
 
 end
 
+#print OrderMonoidHomClass.toOrderHomClass /-
 -- See note [lower instance priority]
 @[to_additive]
 instance (priority := 100) OrderMonoidHomClass.toOrderHomClass [OrderMonoidHomClass F α β] :
@@ -149,6 +150,7 @@ instance (priority := 100) OrderMonoidHomClass.toOrderHomClass [OrderMonoidHomCl
   { ‹OrderMonoidHomClass F α β› with map_rel := OrderMonoidHomClass.monotone }
 #align order_monoid_hom_class.to_order_hom_class OrderMonoidHomClass.toOrderHomClass
 #align order_add_monoid_hom_class.to_order_hom_class OrderAddMonoidHomClass.toOrderHomClass
+-/
 
 @[to_additive]
 instance [OrderMonoidHomClass F α β] : CoeTC F (α →*o β) :=

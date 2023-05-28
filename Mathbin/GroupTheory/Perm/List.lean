@@ -234,12 +234,14 @@ theorem support_formPerm_le' : { x | formPerm l x ≠ x } ≤ l.toFinset :=
 #align list.support_form_perm_le' List.support_formPerm_le'
 -/
 
+#print List.support_formPerm_le /-
 theorem support_formPerm_le [Fintype α] : support (formPerm l) ≤ l.toFinset :=
   by
   intro x hx
   have hx' : x ∈ { x | form_perm l x ≠ x } := by simpa using hx
   simpa using support_form_perm_le' _ hx'
 #align list.support_form_perm_le List.support_formPerm_le
+-/
 
 #print List.formPerm_apply_lt /-
 theorem formPerm_apply_lt (xs : List α) (h : Nodup xs) (n : ℕ) (hn : n + 1 < xs.length) :

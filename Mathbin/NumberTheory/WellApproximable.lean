@@ -59,7 +59,7 @@ An elementary (non-measure-theoretic) argument shows that if `¬ hδ` holds then
 
 open Set Filter Function Metric MeasureTheory
 
-open MeasureTheory Topology Pointwise
+open scoped MeasureTheory Topology Pointwise
 
 /-- In a seminormed group `A`, given `n : ℕ` and `δ : ℝ`, `approx_order_of A n δ` is the set of
 elements within a distance `δ` of a point of order `n`. -/

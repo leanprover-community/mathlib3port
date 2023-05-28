@@ -99,7 +99,7 @@ def Functor.leftDerivedObjProjectiveZero (F : C ⥤ D) [F.Additive] (X : C) [Pro
       (ChainComplex.homologyFunctor0Single₀ D).app (F.obj X)
 #align category_theory.functor.left_derived_obj_projective_zero CategoryTheory.Functor.leftDerivedObjProjectiveZero
 
-open ZeroObject
+open scoped ZeroObject
 
 /-- The higher derived functors vanish on projective objects. -/
 @[simps inv]

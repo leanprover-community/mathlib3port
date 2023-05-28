@@ -122,7 +122,7 @@ But it makes a more systematic use of the filter library.
 
 open Set Filter Classical
 
-open Classical Topology Filter
+open scoped Classical Topology Filter
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option eqn_compiler.zeta -/
 set_option eqn_compiler.zeta true
@@ -1369,7 +1369,7 @@ theorem Filter.HasBasis.uniformContinuousOn_iff {ι'} [UniformSpace β] {p : ι 
 
 end UniformSpace
 
-open uniformity
+open scoped uniformity
 
 section Constructions
 

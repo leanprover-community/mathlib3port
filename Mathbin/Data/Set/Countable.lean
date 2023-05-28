@@ -26,7 +26,7 @@ open Function Set Encodable
 
 open Classical hiding some
 
-open Classical
+open scoped Classical
 
 universe u v w x
 
@@ -307,13 +307,17 @@ theorem Subsingleton.countable {s : Set α} (hs : s.Subsingleton) : s.Countable 
 #align set.subsingleton.countable Set.Subsingleton.countable
 -/
 
+#print Set.countable_isTop /-
 theorem countable_isTop (α : Type _) [PartialOrder α] : { x : α | IsTop x }.Countable :=
   (finite_isTop α).Countable
 #align set.countable_is_top Set.countable_isTop
+-/
 
+#print Set.countable_isBot /-
 theorem countable_isBot (α : Type _) [PartialOrder α] : { x : α | IsBot x }.Countable :=
   (finite_isBot α).Countable
 #align set.countable_is_bot Set.countable_isBot
+-/
 
 #print Set.countable_setOf_finite_subset /-
 /-- The set of finite subsets of a countable set is countable. -/

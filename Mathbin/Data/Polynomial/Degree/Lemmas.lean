@@ -24,7 +24,7 @@ Some of the main results include
 
 noncomputable section
 
-open Classical Polynomial
+open scoped Classical Polynomial
 
 open Finsupp Finset
 
@@ -70,6 +70,7 @@ theorem natDegree_comp_le : natDegree (p.comp q) ≤ natDegree p * natDegree q :
 #align polynomial.nat_degree_comp_le Polynomial.natDegree_comp_le
 -/
 
+#print Polynomial.degree_pos_of_root /-
 theorem degree_pos_of_root {p : R[X]} (hp : p ≠ 0) (h : IsRoot p a) : 0 < degree p :=
   lt_of_not_ge fun hlt => by
     have := eq_C_of_degree_le_zero hlt
@@ -77,6 +78,7 @@ theorem degree_pos_of_root {p : R[X]} (hp : p ≠ 0) (h : IsRoot p a) : 0 < degr
     simp only [h, RingHom.map_zero] at this
     exact hp this
 #align polynomial.degree_pos_of_root Polynomial.degree_pos_of_root
+-/
 
 theorem natDegree_le_iff_coeff_eq_zero : p.natDegree ≤ n ↔ ∀ N : ℕ, n < N → p.coeff N = 0 := by
   simp_rw [nat_degree_le_iff_degree_le, degree_le_iff_coeff_zero, WithBot.coe_lt_coe]
@@ -306,6 +308,7 @@ theorem degree_pos_of_eval₂_root {p : R[X]} (hp : p ≠ 0) (f : R →+* S) {z 
   natDegree_pos_iff_degree_pos.mp (natDegree_pos_of_eval₂_root hp f hz inj)
 #align polynomial.degree_pos_of_eval₂_root Polynomial.degree_pos_of_eval₂_root
 
+#print Polynomial.coe_lt_degree /-
 @[simp]
 theorem coe_lt_degree {p : R[X]} {n : ℕ} : (n : WithBot ℕ) < degree p ↔ n < natDegree p :=
   by
@@ -313,6 +316,7 @@ theorem coe_lt_degree {p : R[X]} {n : ℕ} : (n : WithBot ℕ) < degree p ↔ n 
   · simp [h]
   rw [degree_eq_nat_degree h, WithBot.coe_lt_coe]
 #align polynomial.coe_lt_degree Polynomial.coe_lt_degree
+-/
 
 end Degree
 

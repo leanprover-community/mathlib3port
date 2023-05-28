@@ -220,7 +220,7 @@ section Group
 
 variable [Group M] (S : Submonoid M)
 
-open Pointwise
+open scoped Pointwise
 
 #print Submonoid.leftInv_eq_inv /-
 @[to_additive]

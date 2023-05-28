@@ -28,7 +28,7 @@ This file contains lemmas about the effect of pointwise operations on sets with 
 
 open Function Set
 
-open Pointwise
+open scoped Pointwise
 
 variable {α : Type _}
 

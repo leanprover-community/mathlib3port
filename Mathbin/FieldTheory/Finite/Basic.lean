@@ -54,7 +54,7 @@ local notation "q" => Fintype.card K
 
 open Finset Function
 
-open BigOperators Polynomial
+open scoped BigOperators Polynomial
 
 namespace FiniteField
 
@@ -374,7 +374,7 @@ theorem sq_add_sq (R : Type _) [CommRing R] [IsDomain R] (p : ℕ) [NeZero p] [C
 
 end CharP
 
-open Nat
+open scoped Nat
 
 open ZMod
 

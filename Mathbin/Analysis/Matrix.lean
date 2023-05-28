@@ -49,7 +49,7 @@ of a matrix.
 
 noncomputable section
 
-open BigOperators NNReal Matrix
+open scoped BigOperators NNReal Matrix
 
 namespace Matrix
 
@@ -390,7 +390,7 @@ When the matrix is over the real or complex numbers, this norm is submultiplicat
 
 section frobenius
 
-open Matrix BigOperators
+open scoped Matrix BigOperators
 
 /-- Seminormed group instance (using frobenius norm) for matrices over a seminormed group. Not
 declared as an instance because there are several natural choices for defining the norm of a

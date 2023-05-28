@@ -50,7 +50,7 @@ https://ncatlab.org/nlab/show/too+simple+to+be+simple#relationship_to_biased_def
 
 open Set Function TopologicalSpace Relation
 
-open Classical Topology
+open scoped Classical Topology
 
 universe u v
 

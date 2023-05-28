@@ -44,7 +44,7 @@ noncomputable section
 
 open Complex Metric
 
-open ComplexConjugate
+open scoped ComplexConjugate
 
 #print circle /-
 /-- The unit circle in `ℂ`, here given the structure of a submonoid of `ℂ`. -/

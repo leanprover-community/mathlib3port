@@ -61,17 +61,21 @@ def NatOrdinal : Type _ :=
 #align nat_ordinal NatOrdinal
 -/
 
+#print Ordinal.toNatOrdinal /-
 /-- The identity function between `ordinal` and `nat_ordinal`. -/
 @[match_pattern]
 def Ordinal.toNatOrdinal : Ordinal ≃o NatOrdinal :=
   OrderIso.refl _
 #align ordinal.to_nat_ordinal Ordinal.toNatOrdinal
+-/
 
+#print NatOrdinal.toOrdinal /-
 /-- The identity function between `nat_ordinal` and `ordinal`. -/
 @[match_pattern]
 def NatOrdinal.toOrdinal : NatOrdinal ≃o Ordinal :=
   OrderIso.refl _
 #align nat_ordinal.to_ordinal NatOrdinal.toOrdinal
+-/
 
 open Ordinal
 
@@ -79,19 +83,23 @@ namespace NatOrdinal
 
 variable {a b c : NatOrdinal.{u}}
 
+#print NatOrdinal.toOrdinal_symm_eq /-
 @[simp]
 theorem toOrdinal_symm_eq : NatOrdinal.toOrdinal.symm = Ordinal.toNatOrdinal :=
   rfl
 #align nat_ordinal.to_ordinal_symm_eq NatOrdinal.toOrdinal_symm_eq
+-/
 
 @[simp]
 theorem toOrdinal_toNatOrdinal (a : NatOrdinal) : a.toOrdinal.toNatOrdinal = a :=
   rfl
 #align nat_ordinal.to_ordinal_to_nat_ordinal NatOrdinal.toOrdinal_toNatOrdinal
 
+#print NatOrdinal.lt_wf /-
 theorem lt_wf : @WellFounded NatOrdinal (· < ·) :=
   Ordinal.lt_wf
 #align nat_ordinal.lt_wf NatOrdinal.lt_wf
+-/
 
 instance : WellFoundedLT NatOrdinal :=
   Ordinal.wellFoundedLT
@@ -138,10 +146,12 @@ protected def rec {β : NatOrdinal → Sort _} (h : ∀ a, β (toNatOrdinal a)) 
   h a.toOrdinal
 #align nat_ordinal.rec NatOrdinal.rec
 
+#print NatOrdinal.induction /-
 /-- `ordinal.induction` but for `nat_ordinal`. -/
 theorem induction {p : NatOrdinal → Prop} : ∀ (i) (h : ∀ j, (∀ k, k < j → p k) → p j), p i :=
   Ordinal.induction
 #align nat_ordinal.induction NatOrdinal.induction
+-/
 
 end NatOrdinal
 
@@ -149,10 +159,12 @@ namespace Ordinal
 
 variable {a b c : Ordinal.{u}}
 
+#print Ordinal.toNatOrdinal_symm_eq /-
 @[simp]
 theorem toNatOrdinal_symm_eq : toNatOrdinal.symm = NatOrdinal.toOrdinal :=
   rfl
 #align ordinal.to_nat_ordinal_symm_eq Ordinal.toNatOrdinal_symm_eq
+-/
 
 @[simp]
 theorem toNatOrdinal_toOrdinal (a : Ordinal) : a.toNatOrdinal.toOrdinal = a :=
@@ -216,31 +228,41 @@ theorem lt_nadd_iff : a < b ♯ c ↔ (∃ b' < b, a ≤ b' ♯ c) ∨ ∃ c' < 
   simp [lt_blsub_iff]
 #align ordinal.lt_nadd_iff Ordinal.lt_nadd_iff
 
+#print Ordinal.nadd_le_iff /-
 theorem nadd_le_iff : b ♯ c ≤ a ↔ (∀ b' < b, b' ♯ c < a) ∧ ∀ c' < c, b ♯ c' < a := by rw [nadd_def];
   simp [blsub_le_iff]
 #align ordinal.nadd_le_iff Ordinal.nadd_le_iff
+-/
 
+#print Ordinal.nadd_lt_nadd_left /-
 theorem nadd_lt_nadd_left (h : b < c) (a) : a ♯ b < a ♯ c :=
   lt_nadd_iff.2 (Or.inr ⟨b, h, le_rfl⟩)
 #align ordinal.nadd_lt_nadd_left Ordinal.nadd_lt_nadd_left
+-/
 
+#print Ordinal.nadd_lt_nadd_right /-
 theorem nadd_lt_nadd_right (h : b < c) (a) : b ♯ a < c ♯ a :=
   lt_nadd_iff.2 (Or.inl ⟨b, h, le_rfl⟩)
 #align ordinal.nadd_lt_nadd_right Ordinal.nadd_lt_nadd_right
+-/
 
+#print Ordinal.nadd_le_nadd_left /-
 theorem nadd_le_nadd_left (h : b ≤ c) (a) : a ♯ b ≤ a ♯ c :=
   by
   rcases lt_or_eq_of_le h with (h | rfl)
   · exact (nadd_lt_nadd_left h a).le
   · exact le_rfl
 #align ordinal.nadd_le_nadd_left Ordinal.nadd_le_nadd_left
+-/
 
+#print Ordinal.nadd_le_nadd_right /-
 theorem nadd_le_nadd_right (h : b ≤ c) (a) : b ♯ a ≤ c ♯ a :=
   by
   rcases lt_or_eq_of_le h with (h | rfl)
   · exact (nadd_lt_nadd_right h a).le
   · exact le_rfl
 #align ordinal.nadd_le_nadd_right Ordinal.nadd_le_nadd_right
+-/
 
 variable (a b)
 
@@ -338,6 +360,7 @@ theorem nat_nadd (n : ℕ) : ↑n ♯ a = a + n := by rw [nadd_comm, nadd_nat]
 #align ordinal.nat_nadd Ordinal.nat_nadd
 -/
 
+#print Ordinal.add_le_nadd /-
 theorem add_le_nadd : a + b ≤ a ♯ b := by
   apply b.limit_rec_on
   · simp
@@ -347,6 +370,7 @@ theorem add_le_nadd : a + b ≤ a ♯ b := by
     rw [← IsNormal.blsub_eq.{u, u} (add_is_normal a) hc, blsub_le_iff]
     exact fun i hi => (H i hi).trans_lt (nadd_lt_nadd_left hi a)
 #align ordinal.add_le_nadd Ordinal.add_le_nadd
+-/
 
 end Ordinal
 
@@ -357,18 +381,24 @@ namespace NatOrdinal
 instance : Add NatOrdinal :=
   ⟨nadd⟩
 
+#print NatOrdinal.add_covariantClass_lt /-
 instance add_covariantClass_lt : CovariantClass NatOrdinal.{u} NatOrdinal.{u} (· + ·) (· < ·) :=
   ⟨fun a b c h => nadd_lt_nadd_left h a⟩
 #align nat_ordinal.add_covariant_class_lt NatOrdinal.add_covariantClass_lt
+-/
 
+#print NatOrdinal.add_covariantClass_le /-
 instance add_covariantClass_le : CovariantClass NatOrdinal.{u} NatOrdinal.{u} (· + ·) (· ≤ ·) :=
   ⟨fun a b c h => nadd_le_nadd_left h a⟩
 #align nat_ordinal.add_covariant_class_le NatOrdinal.add_covariantClass_le
+-/
 
+#print NatOrdinal.add_contravariantClass_le /-
 instance add_contravariantClass_le :
     ContravariantClass NatOrdinal.{u} NatOrdinal.{u} (· + ·) (· ≤ ·) :=
   ⟨fun a b c h => by by_contra' h'; exact h.not_lt (add_lt_add_left h' a)⟩
 #align nat_ordinal.add_contravariant_class_le NatOrdinal.add_contravariantClass_le
+-/
 
 instance : OrderedCancelAddCommMonoid NatOrdinal :=
   { NatOrdinal.linearOrder with
@@ -403,7 +433,7 @@ end NatOrdinal
 
 open NatOrdinal
 
-open NaturalOps
+open scoped NaturalOps
 
 namespace Ordinal
 
@@ -411,37 +441,53 @@ namespace Ordinal
 theorem toNatOrdinal_cast_nat (n : ℕ) : toNatOrdinal n = n := by rw [← to_ordinal_cast_nat n]; rfl
 #align ordinal.to_nat_ordinal_cast_nat Ordinal.toNatOrdinal_cast_nat
 
+#print Ordinal.lt_of_nadd_lt_nadd_left /-
 theorem lt_of_nadd_lt_nadd_left : ∀ {a b c}, a ♯ b < a ♯ c → b < c :=
   @lt_of_add_lt_add_left NatOrdinal _ _ _
 #align ordinal.lt_of_nadd_lt_nadd_left Ordinal.lt_of_nadd_lt_nadd_left
+-/
 
+#print Ordinal.lt_of_nadd_lt_nadd_right /-
 theorem lt_of_nadd_lt_nadd_right : ∀ {a b c}, b ♯ a < c ♯ a → b < c :=
   @lt_of_add_lt_add_right NatOrdinal _ _ _
 #align ordinal.lt_of_nadd_lt_nadd_right Ordinal.lt_of_nadd_lt_nadd_right
+-/
 
+#print Ordinal.le_of_nadd_le_nadd_left /-
 theorem le_of_nadd_le_nadd_left : ∀ {a b c}, a ♯ b ≤ a ♯ c → b ≤ c :=
   @le_of_add_le_add_left NatOrdinal _ _ _
 #align ordinal.le_of_nadd_le_nadd_left Ordinal.le_of_nadd_le_nadd_left
+-/
 
+#print Ordinal.le_of_nadd_le_nadd_right /-
 theorem le_of_nadd_le_nadd_right : ∀ {a b c}, b ♯ a ≤ c ♯ a → b ≤ c :=
   @le_of_add_le_add_right NatOrdinal _ _ _
 #align ordinal.le_of_nadd_le_nadd_right Ordinal.le_of_nadd_le_nadd_right
+-/
 
+#print Ordinal.nadd_lt_nadd_iff_left /-
 theorem nadd_lt_nadd_iff_left : ∀ (a) {b c}, a ♯ b < a ♯ c ↔ b < c :=
   @add_lt_add_iff_left NatOrdinal _ _ _ _
 #align ordinal.nadd_lt_nadd_iff_left Ordinal.nadd_lt_nadd_iff_left
+-/
 
+#print Ordinal.nadd_lt_nadd_iff_right /-
 theorem nadd_lt_nadd_iff_right : ∀ (a) {b c}, b ♯ a < c ♯ a ↔ b < c :=
   @add_lt_add_iff_right NatOrdinal _ _ _ _
 #align ordinal.nadd_lt_nadd_iff_right Ordinal.nadd_lt_nadd_iff_right
+-/
 
+#print Ordinal.nadd_le_nadd_iff_left /-
 theorem nadd_le_nadd_iff_left : ∀ (a) {b c}, a ♯ b ≤ a ♯ c ↔ b ≤ c :=
   @add_le_add_iff_left NatOrdinal _ _ _ _
 #align ordinal.nadd_le_nadd_iff_left Ordinal.nadd_le_nadd_iff_left
+-/
 
+#print Ordinal.nadd_le_nadd_iff_right /-
 theorem nadd_le_nadd_iff_right : ∀ (a) {b c}, b ♯ a ≤ c ♯ a ↔ b ≤ c :=
   @add_le_add_iff_right NatOrdinal _ _ _ _
 #align ordinal.nadd_le_nadd_iff_right Ordinal.nadd_le_nadd_iff_right
+-/
 
 #print Ordinal.nadd_left_cancel /-
 theorem nadd_left_cancel : ∀ {a b c}, a ♯ b = a ♯ c → b = c :=

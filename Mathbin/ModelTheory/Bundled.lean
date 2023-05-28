@@ -40,7 +40,7 @@ instance CategoryTheory.Bundled.structure {L : FirstOrder.Language.{u, v}}
 #align category_theory.bundled.Structure CategoryTheory.Bundled.structure
 -/
 
-open FirstOrder Cardinal
+open scoped FirstOrder Cardinal
 
 namespace Equiv
 

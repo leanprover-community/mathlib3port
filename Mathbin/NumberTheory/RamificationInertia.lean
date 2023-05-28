@@ -60,7 +60,7 @@ open UniqueFactorizationMonoid
 
 section DecEq
 
-open Classical
+open scoped Classical
 
 /-- The ramification index of `P` over `p` is the largest exponent `n` such that
 `p` is contained in `P^n`.
@@ -233,9 +233,9 @@ end DecEq
 
 section FinrankQuotientMap
 
-open BigOperators
+open scoped BigOperators
 
-open nonZeroDivisors
+open scoped nonZeroDivisors
 
 variable [Algebra R S]
 
@@ -297,7 +297,7 @@ theorem FinrankQuotientMap.linearIndependent_of_nontrivial [IsDomain R] [IsDedek
     (f.map_eq_zero_iff hf).mp Eq, LinearMap.map_zero]
 #align ideal.finrank_quotient_map.linear_independent_of_nontrivial Ideal.FinrankQuotientMap.linearIndependent_of_nontrivial
 
-open Matrix
+open scoped Matrix
 
 variable {K}
 
@@ -733,7 +733,7 @@ end FactLeComap
 
 section FactorsMap
 
-open Classical
+open scoped Classical
 
 /-! ## Properties of the factors of `p.map (algebra_map R S)` -/
 
@@ -853,7 +853,7 @@ noncomputable def Factors.piQuotientLinearEquiv (p : Ideal R) (hp : map (algebra
 
 variable {S}
 
-open BigOperators
+open scoped BigOperators
 
 /-- The **fundamental identity** of ramification index `e` and inertia degree `f`:
 for `P` ranging over the primes lying over `p`, `∑ P, e P * f P = [Frac(S) : Frac(R)]`;

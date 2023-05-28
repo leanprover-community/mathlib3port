@@ -79,20 +79,24 @@ theorem Lex.wellFoundedLT_of_finite [LinearOrder α] [Finite α] [Zero N] [LT N]
   ⟨Finsupp.Lex.wellFounded_of_finite (· < ·) hwf.1⟩
 #align finsupp.lex.well_founded_lt_of_finite Finsupp.Lex.wellFoundedLT_of_finite
 
+#print Finsupp.wellFoundedLT /-
 protected theorem wellFoundedLT [Zero N] [Preorder N] [WellFoundedLT N] (hbot : ∀ n : N, ¬n < 0) :
     WellFoundedLT (α →₀ N) :=
   ⟨InvImage.wf toDfinsupp (Dfinsupp.wellFoundedLT fun i a => hbot a).wf⟩
 #align finsupp.well_founded_lt Finsupp.wellFoundedLT
+-/
 
 instance wellFoundedLT' [CanonicallyOrderedAddMonoid N] [WellFoundedLT N] :
     WellFoundedLT (α →₀ N) :=
   Finsupp.wellFoundedLT fun a => (zero_le a).not_lt
 #align finsupp.well_founded_lt' Finsupp.wellFoundedLT'
 
+#print Finsupp.wellFoundedLT_of_finite /-
 instance wellFoundedLT_of_finite [Finite α] [Zero N] [Preorder N] [WellFoundedLT N] :
     WellFoundedLT (α →₀ N) :=
   ⟨InvImage.wf equivFunOnFinite Function.wellFoundedLT.wf⟩
 #align finsupp.well_founded_lt_of_finite Finsupp.wellFoundedLT_of_finite
+-/
 
 end Finsupp
 

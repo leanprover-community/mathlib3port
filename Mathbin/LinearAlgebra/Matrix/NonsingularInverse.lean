@@ -61,7 +61,7 @@ universe u u' v
 
 variable {l : Type _} {m : Type u} {n : Type u'} {α : Type v}
 
-open Matrix BigOperators
+open scoped Matrix BigOperators
 
 open Equiv Equiv.Perm Finset
 

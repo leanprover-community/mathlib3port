@@ -77,9 +77,9 @@ fractional ideal, fractional ideals, invertible ideal
 
 open IsLocalization
 
-open Pointwise
+open scoped Pointwise
 
-open nonZeroDivisors
+open scoped nonZeroDivisors
 
 section Defs
 
@@ -697,7 +697,7 @@ theorem coeIdeal_pow (I : Ideal R) (n : ℕ) : (↑(I ^ n) : FractionalIdeal S P
   (coeIdealHom S P).map_pow _ n
 #align fractional_ideal.coe_ideal_pow FractionalIdeal.coeIdeal_pow
 
-open BigOperators
+open scoped BigOperators
 
 theorem coeIdeal_finprod [IsLocalization S P] {α : Sort _} {f : α → Ideal R}
     (hS : S ≤ nonZeroDivisors R) :
@@ -1053,7 +1053,7 @@ is a field because `R` is a domain.
 -/
 
 
-open Classical
+open scoped Classical
 
 variable {R₁ : Type _} [CommRing R₁] {K : Type _} [Field K]
 
@@ -1254,7 +1254,7 @@ variable {R₁ : Type _} [CommRing R₁] {K : Type _} [Field K]
 
 variable [Algebra R₁ K] [IsFractionRing R₁ K]
 
-open Classical
+open scoped Classical
 
 variable (R₁)
 

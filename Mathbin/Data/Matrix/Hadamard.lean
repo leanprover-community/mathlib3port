@@ -44,7 +44,7 @@ variable {R : Type _}
 
 namespace Matrix
 
-open Matrix BigOperators
+open scoped Matrix BigOperators
 
 #print Matrix.hadamard /-
 /-- `matrix.hadamard` defines the Hadamard product,

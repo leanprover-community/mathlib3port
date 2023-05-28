@@ -28,7 +28,7 @@ open CategoryTheory
 
 open LinearMap
 
-open TensorProduct
+open scoped TensorProduct
 
 attribute [local ext] TensorProduct.ext
 

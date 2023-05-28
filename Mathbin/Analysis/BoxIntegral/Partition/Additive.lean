@@ -37,7 +37,7 @@ rectangular box, additive function
 
 noncomputable section
 
-open Classical BigOperators
+open scoped Classical BigOperators
 
 open Function Set
 

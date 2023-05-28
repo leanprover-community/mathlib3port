@@ -42,10 +42,12 @@ class NonemptyFinLinOrd (α : Type _) extends Fintype α, LinearOrder α where
 
 attribute [instance] NonemptyFinLinOrd.nonempty
 
+#print NonemptyFinLinOrd.toBoundedOrder /-
 instance (priority := 100) NonemptyFinLinOrd.toBoundedOrder (α : Type _) [NonemptyFinLinOrd α] :
     BoundedOrder α :=
   Fintype.toBoundedOrder α
 #align nonempty_fin_lin_ord.to_bounded_order NonemptyFinLinOrd.toBoundedOrder
+-/
 
 #print PUnit.nonemptyFinLinOrd /-
 instance PUnit.nonemptyFinLinOrd : NonemptyFinLinOrd PUnit where
@@ -116,6 +118,7 @@ instance hasForgetToFinPartOrd : HasForget₂ NonemptyFinLinOrdCat FinPartOrd
       map := fun X Y => id }
 #align NonemptyFinLinOrd.has_forget_to_FinPartOrd NonemptyFinLinOrdCat.hasForgetToFinPartOrd
 
+#print NonemptyFinLinOrdCat.Iso.mk /-
 /-- Constructs an equivalence between nonempty finite linear orders from an order isomorphism
 between them. -/
 @[simps]
@@ -126,6 +129,7 @@ def Iso.mk {α β : NonemptyFinLinOrdCat.{u}} (e : α ≃o β) : α ≅ β
   hom_inv_id' := by ext; exact e.symm_apply_apply x
   inv_hom_id' := by ext; exact e.apply_symm_apply x
 #align NonemptyFinLinOrd.iso.mk NonemptyFinLinOrdCat.Iso.mk
+-/
 
 #print NonemptyFinLinOrdCat.dual /-
 /-- `order_dual` as a functor. -/

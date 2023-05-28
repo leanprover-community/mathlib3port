@@ -98,7 +98,7 @@ open Set Function Filter MeasureTheory MeasureTheory.Measure TopologicalSpace
 
 open ContinuousLinearMap Metric
 
-open Pointwise Topology NNReal Filter
+open scoped Pointwise Topology NNReal Filter
 
 universe u𝕜 uG uE uE' uE'' uF uF' uF'' uP
 
@@ -1107,7 +1107,7 @@ end Measurability
 
 end NontriviallyNormedField
 
-open convolution
+open scoped convolution
 
 section IsROrC
 

@@ -36,7 +36,7 @@ This file defines derivation. A derivation `D` from the `R`-algebra `A` to the `
 
 open Algebra
 
-open BigOperators
+open scoped BigOperators
 
 /-- `D : derivation R A M` is an `R`-linear map from `A` to `M` that satisfies the `leibniz`
 equality. We also require that `D 1 = 0`. See `derivation.mk'` for a constructor that deduces this

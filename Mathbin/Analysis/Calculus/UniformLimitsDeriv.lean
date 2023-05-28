@@ -100,7 +100,7 @@ uniform convergence, limits of derivatives
 
 open Filter
 
-open uniformity Filter Topology
+open scoped uniformity Filter Topology
 
 section LimitsOfDerivatives
 

@@ -54,7 +54,7 @@ open IsROrC Real Filter
 
 open LinearMap (ker range)
 
-open BigOperators Topology
+open scoped BigOperators Topology
 
 variable {𝕜 E F : Type _} [IsROrC 𝕜]
 
@@ -1329,7 +1329,7 @@ theorem OrthogonalFamily.isInternal_iff [DecidableEq ι] [FiniteDimensional 𝕜
   hV.is_internal_iff_of_is_complete (complete_space_coe_iff_is_complete.mp inferInstance)
 #align orthogonal_family.is_internal_iff OrthogonalFamily.isInternal_iff
 
-open DirectSum
+open scoped DirectSum
 
 /-- If `x` lies within an orthogonal family `v`, it can be expressed as a sum of projections. -/
 theorem OrthogonalFamily.sum_projection_of_mem_iSup [Fintype ι] {V : ι → Submodule 𝕜 E}

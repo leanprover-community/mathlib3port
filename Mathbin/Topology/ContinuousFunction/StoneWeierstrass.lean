@@ -52,7 +52,7 @@ namespace ContinuousMap
 
 variable {X : Type _} [TopologicalSpace X] [CompactSpace X]
 
-open Polynomial
+open scoped Polynomial
 
 /-- Turn a function `f : C(X, ℝ)` into a continuous map into `set.Icc (-‖f‖) (‖f‖)`,
 thereby explicitly attaching bounds.
@@ -172,7 +172,7 @@ theorem sup_mem_closed_subalgebra (A : Subalgebra ℝ C(X, ℝ)) (h : IsClosed (
   exact h
 #align continuous_map.sup_mem_closed_subalgebra ContinuousMap.sup_mem_closed_subalgebra
 
-open Topology
+open scoped Topology
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (f g «expr ∈ » L) -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (f g «expr ∈ » L) -/

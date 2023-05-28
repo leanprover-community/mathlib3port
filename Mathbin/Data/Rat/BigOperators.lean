@@ -18,7 +18,7 @@ import Mathbin.Algebra.BigOperators.Basic
 -/
 
 
-open BigOperators
+open scoped BigOperators
 
 variable {ι α : Type _}
 

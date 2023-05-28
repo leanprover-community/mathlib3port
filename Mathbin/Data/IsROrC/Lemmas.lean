@@ -22,7 +22,7 @@ variable {K E : Type _} [IsROrC K]
 
 namespace Polynomial
 
-open Polynomial
+open scoped Polynomial
 
 #print Polynomial.ofReal_eval /-
 theorem ofReal_eval (p : ℝ[X]) (x : ℝ) : (p.eval x : K) = aeval (↑x) p :=
@@ -34,7 +34,7 @@ end Polynomial
 
 namespace FiniteDimensional
 
-open Classical
+open scoped Classical
 
 open IsROrC
 

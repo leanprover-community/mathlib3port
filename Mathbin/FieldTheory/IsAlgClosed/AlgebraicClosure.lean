@@ -35,7 +35,7 @@ universe u v w
 
 noncomputable section
 
-open Classical BigOperators Polynomial
+open scoped Classical BigOperators Polynomial
 
 open Polynomial
 

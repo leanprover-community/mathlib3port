@@ -35,7 +35,7 @@ derivative, chain rule
 
 universe u v w
 
-open Classical Topology BigOperators Filter ENNReal
+open scoped Classical Topology BigOperators Filter ENNReal
 
 open Filter Asymptotics Set
 

@@ -29,7 +29,7 @@ We introduce a typeclass `nontrivial` formalizing this property.
 
 variable {α : Type _} {β : Type _}
 
-open Classical
+open scoped Classical
 
 #print Nontrivial /-
 /-- Predicate typeclass for expressing that a type is not reduced to a single element. In rings,
@@ -75,20 +75,26 @@ theorem nontrivial_of_ne (x y : α) (h : x ≠ y) : Nontrivial α :=
 #align nontrivial_of_ne nontrivial_of_ne
 -/
 
+#print nontrivial_of_lt /-
 -- `x` and `y` are explicit here, as they are often needed to guide typechecking of `h`.
 theorem nontrivial_of_lt [Preorder α] (x y : α) (h : x < y) : Nontrivial α :=
   ⟨⟨x, y, ne_of_lt h⟩⟩
 #align nontrivial_of_lt nontrivial_of_lt
+-/
 
+#print exists_pair_lt /-
 theorem exists_pair_lt (α : Type _) [Nontrivial α] [LinearOrder α] : ∃ x y : α, x < y :=
   by
   rcases exists_pair_ne α with ⟨x, y, hxy⟩
   cases lt_or_gt_of_ne hxy <;> exact ⟨_, _, h⟩
 #align exists_pair_lt exists_pair_lt
+-/
 
+#print nontrivial_iff_lt /-
 theorem nontrivial_iff_lt [LinearOrder α] : Nontrivial α ↔ ∃ x y : α, x < y :=
   ⟨fun h => @exists_pair_lt α h _, fun ⟨x, y, h⟩ => nontrivial_of_lt x y h⟩
 #align nontrivial_iff_lt nontrivial_iff_lt
+-/
 
 #print nontrivial_iff_exists_ne /-
 theorem nontrivial_iff_exists_ne (x : α) : Nontrivial α ↔ ∃ y, y ≠ x :=
@@ -261,9 +267,11 @@ instance Function.nontrivial [h : Nonempty α] [Nontrivial β] : Nontrivial (α 
      `nontriviality)-/-- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
 /-- Simp lemmas for `nontriviality` tactic -/ register_simp_attr nontriviality
 
+#print Subsingleton.le /-
 protected theorem Subsingleton.le [Preorder α] [Subsingleton α] (x y : α) : x ≤ y :=
   le_of_eq (Subsingleton.elim x y)
 #align subsingleton.le Subsingleton.le
+-/
 
 attribute [nontriviality] eq_iff_true_of_subsingleton Subsingleton.le
 

@@ -28,7 +28,7 @@ derivative
 
 universe u v w
 
-open Classical Topology BigOperators Filter
+open scoped Classical Topology BigOperators Filter
 
 open Filter Asymptotics Set
 

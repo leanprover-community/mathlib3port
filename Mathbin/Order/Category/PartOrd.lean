@@ -68,6 +68,7 @@ instance hasForgetToPreordCat : HasForget₂ PartOrdCat PreordCat :=
 #align PartOrd.has_forget_to_Preord PartOrdCat.hasForgetToPreordCat
 -/
 
+#print PartOrdCat.Iso.mk /-
 /-- Constructs an equivalence between partial orders from an order isomorphism between them. -/
 @[simps]
 def Iso.mk {α β : PartOrdCat.{u}} (e : α ≃o β) : α ≅ β
@@ -77,6 +78,7 @@ def Iso.mk {α β : PartOrdCat.{u}} (e : α ≃o β) : α ≅ β
   hom_inv_id' := by ext; exact e.symm_apply_apply x
   inv_hom_id' := by ext; exact e.apply_symm_apply x
 #align PartOrd.iso.mk PartOrdCat.Iso.mk
+-/
 
 #print PartOrdCat.dual /-
 /-- `order_dual` as a functor. -/

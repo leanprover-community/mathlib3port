@@ -34,7 +34,7 @@ then `finrank (fixed_points G F) F = fintype.card G`.
 
 noncomputable section
 
-open Classical BigOperators
+open scoped Classical BigOperators
 
 open MulAction Finset FiniteDimensional
 

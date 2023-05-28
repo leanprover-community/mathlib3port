@@ -27,7 +27,7 @@ In this file we prove a few facts like “`-s` is bounded above iff `s` is bound
 
 open Function Set
 
-open Pointwise
+open scoped Pointwise
 
 section inv_neg
 
@@ -101,45 +101,57 @@ section mul_add
 variable {M : Type _} [Mul M] [Preorder M] [CovariantClass M M (· * ·) (· ≤ ·)]
   [CovariantClass M M (swap (· * ·)) (· ≤ ·)]
 
+#print mul_mem_upperBounds_mul /-
 @[to_additive]
 theorem mul_mem_upperBounds_mul {s t : Set M} {a b : M} (ha : a ∈ upperBounds s)
     (hb : b ∈ upperBounds t) : a * b ∈ upperBounds (s * t) :=
   forall_image2_iff.2 fun x hx y hy => mul_le_mul' (ha hx) (hb hy)
 #align mul_mem_upper_bounds_mul mul_mem_upperBounds_mul
 #align add_mem_upper_bounds_add add_mem_upperBounds_add
+-/
 
+#print subset_upperBounds_mul /-
 @[to_additive]
 theorem subset_upperBounds_mul (s t : Set M) :
     upperBounds s * upperBounds t ⊆ upperBounds (s * t) :=
   image2_subset_iff.2 fun x hx y hy => mul_mem_upperBounds_mul hx hy
 #align subset_upper_bounds_mul subset_upperBounds_mul
 #align subset_upper_bounds_add subset_upperBounds_add
+-/
 
+#print mul_mem_lowerBounds_mul /-
 @[to_additive]
 theorem mul_mem_lowerBounds_mul {s t : Set M} {a b : M} (ha : a ∈ lowerBounds s)
     (hb : b ∈ lowerBounds t) : a * b ∈ lowerBounds (s * t) :=
   @mul_mem_upperBounds_mul Mᵒᵈ _ _ _ _ _ _ _ _ ha hb
 #align mul_mem_lower_bounds_mul mul_mem_lowerBounds_mul
 #align add_mem_lower_bounds_add add_mem_lowerBounds_add
+-/
 
+#print subset_lowerBounds_mul /-
 @[to_additive]
 theorem subset_lowerBounds_mul (s t : Set M) :
     lowerBounds s * lowerBounds t ⊆ lowerBounds (s * t) :=
   @subset_upperBounds_mul Mᵒᵈ _ _ _ _ _ _
 #align subset_lower_bounds_mul subset_lowerBounds_mul
 #align subset_lower_bounds_add subset_lowerBounds_add
+-/
 
+#print BddAbove.mul /-
 @[to_additive]
 theorem BddAbove.mul {s t : Set M} (hs : BddAbove s) (ht : BddAbove t) : BddAbove (s * t) :=
   (hs.mul ht).mono (subset_upperBounds_mul s t)
 #align bdd_above.mul BddAbove.mul
 #align bdd_above.add BddAbove.add
+-/
 
+#print BddBelow.mul /-
 @[to_additive]
 theorem BddBelow.mul {s t : Set M} (hs : BddBelow s) (ht : BddBelow t) : BddBelow (s * t) :=
   (hs.mul ht).mono (subset_lowerBounds_mul s t)
 #align bdd_below.mul BddBelow.mul
 #align bdd_below.add BddBelow.add
+-/
 
 end mul_add
 

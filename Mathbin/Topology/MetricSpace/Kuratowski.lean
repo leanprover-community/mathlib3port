@@ -22,7 +22,7 @@ noncomputable section
 
 open Set Metric TopologicalSpace
 
-open ENNReal
+open scoped ENNReal
 
 -- mathport name: exprℓ_infty_ℝ
 local notation "ℓ_infty_ℝ" => lp (fun n : ℕ => ℝ) ∞

@@ -85,7 +85,7 @@ variable {ι : Type _} [DecidableEq ι]
 
 namespace DirectSum
 
-open DirectSum
+open scoped DirectSum
 
 /-! ### Typeclasses -/
 
@@ -302,7 +302,7 @@ theorem list_prod_ofFn_of_eq_dProd (n : ℕ) (fι : Fin n → ι) (fA : ∀ a, A
   rw [List.ofFn_eq_map, of_list_dprod]
 #align direct_sum.list_prod_of_fn_of_eq_dprod DirectSum.list_prod_ofFn_of_eq_dProd
 
-open BigOperators
+open scoped BigOperators
 
 #print DirectSum.mul_eq_dfinsupp_sum /-
 theorem mul_eq_dfinsupp_sum [∀ (i : ι) (x : A i), Decidable (x ≠ 0)] (a a' : ⨁ i, A i) :
@@ -726,7 +726,7 @@ instance Semiring.directSumGSemiring {R : Type _} [AddMonoid ι] [Semiring R] :
     natCast_succ := Nat.cast_succ }
 #align semiring.direct_sum_gsemiring Semiring.directSumGSemiring
 
-open DirectSum
+open scoped DirectSum
 
 -- To check `has_mul.ghas_mul_mul` matches
 example {R : Type _} [AddMonoid ι] [Semiring R] (i j : ι) (a b : R) :

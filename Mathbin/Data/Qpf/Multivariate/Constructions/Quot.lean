@@ -24,7 +24,7 @@ functions found in the definition of `mvqpf`
 
 universe u
 
-open MvFunctor
+open scoped MvFunctor
 
 namespace MvQPF
 

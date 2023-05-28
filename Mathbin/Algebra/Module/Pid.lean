@@ -54,7 +54,7 @@ Finitely generated module, principal ideal domain, classification, structure the
 
 universe u v
 
-open BigOperators Classical
+open scoped BigOperators Classical
 
 variable {R : Type u} [CommRing R] [IsDomain R] [IsPrincipalIdealRing R]
 
@@ -62,7 +62,7 @@ variable {M : Type v} [AddCommGroup M] [Module R M]
 
 variable {N : Type max u v} [AddCommGroup N] [Module R N]
 
-open DirectSum
+open scoped DirectSum
 
 open Submodule
 

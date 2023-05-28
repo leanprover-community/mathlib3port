@@ -125,7 +125,7 @@ variable {E : Type u} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
 
 open ContinuousLinearEquiv Submodule
 
-open Classical
+open scoped Classical
 
 theorem coord_norm' {x : E} (h : x ≠ 0) : ‖(‖x‖ : 𝕜) • coord 𝕜 x h‖ = 1 := by
   rw [norm_smul, IsROrC.norm_coe_norm, coord_norm, mul_inv_cancel (mt norm_eq_zero.mp h)]

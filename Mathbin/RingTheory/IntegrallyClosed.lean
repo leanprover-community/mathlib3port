@@ -31,7 +31,7 @@ integral over `R`. A special case of integrally closed domains are the Dedekind 
 -/
 
 
-open nonZeroDivisors Polynomial
+open scoped nonZeroDivisors Polynomial
 
 open Polynomial
 

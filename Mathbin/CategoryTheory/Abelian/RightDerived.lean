@@ -96,7 +96,7 @@ def Functor.rightDerivedObjInjectiveZero (F : C ⥤ D) [F.Additive] (X : C) [Inj
       (CochainComplex.homologyFunctor0Single₀ D).app (F.obj X)
 #align category_theory.functor.right_derived_obj_injective_zero CategoryTheory.Functor.rightDerivedObjInjectiveZero
 
-open ZeroObject
+open scoped ZeroObject
 
 /-- The higher derived functors vanish on injective objects. -/
 @[simps inv]

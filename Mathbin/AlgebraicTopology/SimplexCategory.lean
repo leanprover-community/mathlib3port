@@ -214,7 +214,7 @@ theorem hom_zero_zero (f : [0] ⟶ [0]) : f = 𝟙 _ := by ext : 2; dsimp; apply
 
 end
 
-open Simplicial
+open scoped Simplicial
 
 section Generators
 

@@ -47,7 +47,7 @@ noncomputable section
 
 namespace Complex
 
-open ComplexConjugate Topology
+open scoped ComplexConjugate Topology
 
 instance : Norm ℂ :=
   ⟨abs⟩
@@ -462,7 +462,7 @@ theorem IsROrC.im_eq_complex_im : ⇑(IsROrC.im : ℂ →+ ℝ) = Complex.im :=
 
 section ComplexOrder
 
-open ComplexOrder
+open scoped ComplexOrder
 
 theorem eq_coe_norm_of_nonneg {z : ℂ} (hz : 0 ≤ z) : z = ↑‖z‖ := by
   rw [eq_re_of_real_le hz, IsROrC.norm_ofReal, _root_.abs_of_nonneg (Complex.le_def.2 hz).1]
@@ -474,7 +474,7 @@ end Complex
 
 namespace IsROrC
 
-open ComplexConjugate
+open scoped ComplexConjugate
 
 -- mathport name: exprreC
 local notation "reC" => @IsROrC.re ℂ _
@@ -609,7 +609,7 @@ section tsum
 
 variable {α : Type _}
 
-open ComplexConjugate
+open scoped ComplexConjugate
 
 @[simp]
 theorem hasSum_conj {f : α → ℂ} {x : ℂ} : HasSum (fun x => conj (f x)) x ↔ HasSum f (conj x) :=

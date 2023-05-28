@@ -43,7 +43,7 @@ namespace MeasureTheory
 
 open ENNReal FiniteDimensional MeasureTheory MeasureTheory.Measure Set
 
-open Pointwise
+open scoped Pointwise
 
 variable {E L : Type _} [MeasurableSpace E] {μ : Measure E} {F s : Set E}
 

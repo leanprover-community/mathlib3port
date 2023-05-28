@@ -25,7 +25,7 @@ This file defines pullbacks of smooth vector bundles over a smooth manifold.
 
 open Bundle Set
 
-open Manifold
+open scoped Manifold
 
 variable {𝕜 B B' M : Type _} (F : Type _) (E : B → Type _)
 

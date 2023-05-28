@@ -78,7 +78,7 @@ namespace WittVector
 
 open MvPolynomial
 
-open Classical
+open scoped Classical
 
 noncomputable section
 

@@ -31,9 +31,9 @@ section Ring
 
 namespace TensorProduct
 
-open TensorProduct
+open scoped TensorProduct
 
-open DirectSum
+open scoped DirectSum
 
 open LinearMap
 

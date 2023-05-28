@@ -49,7 +49,7 @@ power basis, powerbasis
 
 open Polynomial
 
-open Polynomial
+open scoped Polynomial
 
 variable {R S T : Type _} [CommRing R] [Ring S] [Algebra R S]
 
@@ -166,7 +166,7 @@ theorem algHom_ext {S' : Type _} [Semiring S'] [Algebra R S'] (pb : PowerBasis R
 
 section minpoly
 
-open BigOperators
+open scoped BigOperators
 
 variable [Algebra A S]
 

@@ -271,7 +271,7 @@ theorem zero_f (C D : HomologicalComplex V c) (i : ι) : (0 : C ⟶ D).f i = 0 :
   rfl
 #align homological_complex.zero_apply HomologicalComplex.zero_f
 
-open ZeroObject
+open scoped ZeroObject
 
 #print HomologicalComplex.zero /-
 /-- The zero complex -/
@@ -332,7 +332,7 @@ def forgetEval (i : ι) : forget V c ⋙ GradedObject.eval i ≅ eval V c i :=
 
 end
 
-open Classical
+open scoped Classical
 
 noncomputable section
 

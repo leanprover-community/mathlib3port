@@ -22,7 +22,7 @@ TODO: Define higher ramification groups in lower numbering
 
 namespace ValuationSubring
 
-open Pointwise
+open scoped Pointwise
 
 variable (K : Type _) {L : Type _} [Field K] [Field L] [Algebra K L]
 

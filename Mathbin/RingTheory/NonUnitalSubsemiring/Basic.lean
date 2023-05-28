@@ -27,7 +27,7 @@ We define bundled non-unital subsemirings and some standard constructions:
 -/
 
 
-open BigOperators
+open scoped BigOperators
 
 universe u v w
 

@@ -21,7 +21,7 @@ import Mathbin.Topology.UniformSpace.Separation
 
 noncomputable section
 
-open uniformity Topology
+open scoped uniformity Topology
 
 section
 

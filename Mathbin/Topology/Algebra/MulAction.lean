@@ -42,7 +42,7 @@ or `filter.tendsto.smul` that provide dot-syntax access to `continuous_smul`.
 -/
 
 
-open Topology Pointwise
+open scoped Topology Pointwise
 
 open Filter
 

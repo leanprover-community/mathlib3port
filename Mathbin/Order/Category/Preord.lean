@@ -67,6 +67,7 @@ instance : Inhabited PreordCat :=
 instance (α : PreordCat) : Preorder α :=
   α.str
 
+#print PreordCat.Iso.mk /-
 /-- Constructs an equivalence between preorders from an order isomorphism between them. -/
 @[simps]
 def Iso.mk {α β : PreordCat.{u}} (e : α ≃o β) : α ≅ β
@@ -76,6 +77,7 @@ def Iso.mk {α β : PreordCat.{u}} (e : α ≃o β) : α ≅ β
   hom_inv_id' := by ext; exact e.symm_apply_apply x
   inv_hom_id' := by ext; exact e.apply_symm_apply x
 #align Preord.iso.mk PreordCat.Iso.mk
+-/
 
 #print PreordCat.dual /-
 /-- `order_dual` as a functor. -/

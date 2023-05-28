@@ -45,7 +45,7 @@ variable {X Y Z : Type _}
 
 open Filter Set
 
-open NNReal ENNReal Topology
+open scoped NNReal ENNReal Topology
 
 section Emetric
 

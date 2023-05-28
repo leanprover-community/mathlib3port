@@ -50,7 +50,7 @@ universe u v w x
 
 open Filter Function Set
 
-open Topology NNReal ENNReal
+open scoped Topology NNReal ENNReal
 
 variable {α : Type u} {β : Type v} {γ : Type w} {ι : Type x}
 
@@ -186,9 +186,11 @@ protected theorem of_edist_le (h : ∀ x y, edist (f x) (f y) ≤ edist x y) : L
   fun x y => by simp only [ENNReal.coe_one, one_mul, h]
 #align lipschitz_with.of_edist_le LipschitzWith.of_edist_le
 
+#print LipschitzWith.weaken /-
 protected theorem weaken (hf : LipschitzWith K f) {K' : ℝ≥0} (h : K ≤ K') : LipschitzWith K' f :=
   fun x y => le_trans (hf x y) <| ENNReal.mul_right_mono (ENNReal.coe_le_coe.2 h)
 #align lipschitz_with.weaken LipschitzWith.weaken
+-/
 
 theorem ediam_image_le (hf : LipschitzWith K f) (s : Set α) :
     EMetric.diam (f '' s) ≤ K * EMetric.diam s :=

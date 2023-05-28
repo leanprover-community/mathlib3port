@@ -44,7 +44,7 @@ ring_seminorm, ring_norm
 -/
 
 
-open NNReal
+open scoped NNReal
 
 variable {F R S : Type _} (x y : R) (r : ℝ)
 

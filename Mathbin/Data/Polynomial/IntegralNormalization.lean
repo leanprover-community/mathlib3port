@@ -22,7 +22,7 @@ We define `integral_normalization`, which relate arbitrary polynomials to monic 
 -/
 
 
-open BigOperators Polynomial
+open scoped BigOperators Polynomial
 
 namespace Polynomial
 

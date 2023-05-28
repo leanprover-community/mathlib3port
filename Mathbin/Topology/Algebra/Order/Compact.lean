@@ -35,7 +35,7 @@ compact, extreme value theorem
 
 open Filter OrderDual TopologicalSpace Function Set
 
-open Filter Topology
+open scoped Filter Topology
 
 /-!
 ### Compactness of a closed interval
@@ -290,6 +290,7 @@ theorem ContinuousOn.exists_forall_ge' {s : Set β} {f : β → α} (hf : Contin
   @ContinuousOn.exists_forall_le' αᵒᵈ _ _ _ _ _ _ _ hf hsc _ h₀ hc
 #align continuous_on.exists_forall_ge' ContinuousOn.exists_forall_ge'
 
+#print Continuous.exists_forall_le' /-
 /-- The **extreme value theorem**: if a continuous function `f` is larger than a value in its range
 away from compact sets, then it has a global minimum. -/
 theorem Continuous.exists_forall_le' {f : β → α} (hf : Continuous f) (x₀ : β)
@@ -299,27 +300,34 @@ theorem Continuous.exists_forall_le' {f : β → α} (hf : Continuous f) (x₀ :
       (by rwa [principal_univ, inf_top_eq])
   ⟨x, fun y => hx y (mem_univ y)⟩
 #align continuous.exists_forall_le' Continuous.exists_forall_le'
+-/
 
+#print Continuous.exists_forall_ge' /-
 /-- The **extreme value theorem**: if a continuous function `f` is smaller than a value in its range
 away from compact sets, then it has a global maximum. -/
 theorem Continuous.exists_forall_ge' {f : β → α} (hf : Continuous f) (x₀ : β)
     (h : ∀ᶠ x in cocompact β, f x ≤ f x₀) : ∃ x : β, ∀ y : β, f y ≤ f x :=
   @Continuous.exists_forall_le' αᵒᵈ _ _ _ _ _ _ hf x₀ h
 #align continuous.exists_forall_ge' Continuous.exists_forall_ge'
+-/
 
+#print Continuous.exists_forall_le /-
 /-- The **extreme value theorem**: if a continuous function `f` tends to infinity away from compact
 sets, then it has a global minimum. -/
 theorem Continuous.exists_forall_le [Nonempty β] {f : β → α} (hf : Continuous f)
     (hlim : Tendsto f (cocompact β) atTop) : ∃ x, ∀ y, f x ≤ f y := by inhabit β;
   exact hf.exists_forall_le' default (hlim.eventually <| eventually_ge_at_top _)
 #align continuous.exists_forall_le Continuous.exists_forall_le
+-/
 
+#print Continuous.exists_forall_ge /-
 /-- The **extreme value theorem**: if a continuous function `f` tends to negative infinity away from
 compact sets, then it has a global maximum. -/
 theorem Continuous.exists_forall_ge [Nonempty β] {f : β → α} (hf : Continuous f)
     (hlim : Tendsto f (cocompact β) atBot) : ∃ x, ∀ y, f y ≤ f x :=
   @Continuous.exists_forall_le αᵒᵈ _ _ _ _ _ _ _ hf hlim
 #align continuous.exists_forall_ge Continuous.exists_forall_ge
+-/
 
 theorem IsCompact.sSup_lt_iff_of_continuous {f : β → α} {K : Set β} (hK : IsCompact K)
     (h0K : K.Nonempty) (hf : ContinuousOn f K) (y : α) : sSup (f '' K) < y ↔ ∀ x ∈ K, f x < y :=
@@ -339,6 +347,7 @@ theorem IsCompact.lt_sInf_iff_of_continuous {α β : Type _} [ConditionallyCompl
   @IsCompact.sSup_lt_iff_of_continuous αᵒᵈ β _ _ _ _ _ _ hK h0K hf y
 #align is_compact.lt_Inf_iff_of_continuous IsCompact.lt_sInf_iff_of_continuous
 
+#print Continuous.exists_forall_le_of_hasCompactMulSupport /-
 /-- A continuous function with compact support has a global minimum. -/
 @[to_additive "A continuous function with compact support has a global minimum."]
 theorem Continuous.exists_forall_le_of_hasCompactMulSupport [Nonempty β] [One α] {f : β → α}
@@ -349,7 +358,9 @@ theorem Continuous.exists_forall_le_of_hasCompactMulSupport [Nonempty β] [One �
   exact ⟨x, hx⟩
 #align continuous.exists_forall_le_of_has_compact_mul_support Continuous.exists_forall_le_of_hasCompactMulSupport
 #align continuous.exists_forall_le_of_has_compact_support Continuous.exists_forall_le_of_hasCompactSupport
+-/
 
+#print Continuous.exists_forall_ge_of_hasCompactMulSupport /-
 /-- A continuous function with compact support has a global maximum. -/
 @[to_additive "A continuous function with compact support has a global maximum."]
 theorem Continuous.exists_forall_ge_of_hasCompactMulSupport [Nonempty β] [One α] {f : β → α}
@@ -357,6 +368,7 @@ theorem Continuous.exists_forall_ge_of_hasCompactMulSupport [Nonempty β] [One �
   @Continuous.exists_forall_le_of_hasCompactMulSupport αᵒᵈ _ _ _ _ _ _ _ _ hf h
 #align continuous.exists_forall_ge_of_has_compact_mul_support Continuous.exists_forall_ge_of_hasCompactMulSupport
 #align continuous.exists_forall_ge_of_has_compact_support Continuous.exists_forall_ge_of_hasCompactSupport
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem IsCompact.continuous_sSup {f : γ → β → α} {K : Set β} (hK : IsCompact K)
@@ -404,7 +416,7 @@ namespace ContinuousOn
 variable [DenselyOrdered α] [ConditionallyCompleteLinearOrder β] [OrderTopology β] {f : α → β}
   {a b c : α}
 
-open Interval
+open scoped Interval
 
 theorem image_Icc (hab : a ≤ b) (h : ContinuousOn f <| Icc a b) :
     f '' Icc a b = Icc (sInf <| f '' Icc a b) (sSup <| f '' Icc a b) :=

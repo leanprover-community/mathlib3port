@@ -37,7 +37,7 @@ namespace CategoryTheory
 
 open Category Limits
 
-open Cardinal
+open scoped Cardinal
 
 universe u
 

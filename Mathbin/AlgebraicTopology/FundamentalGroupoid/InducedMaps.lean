@@ -43,9 +43,9 @@ open CategoryTheory
 
 open FundamentalGroupoidFunctor
 
-open FundamentalGroupoid
+open scoped FundamentalGroupoid
 
-open unitInterval
+open scoped unitInterval
 
 namespace unitInterval
 
@@ -222,7 +222,7 @@ namespace FundamentalGroupoidFunctor
 
 open CategoryTheory
 
-open FundamentalGroupoid
+open scoped FundamentalGroupoid
 
 attribute [local instance] Path.Homotopic.setoid
 
@@ -238,7 +238,7 @@ def homotopicMapsNatIso : πₘ f ⟶ πₘ g
 
 instance : IsIso (homotopicMapsNatIso H) := by apply nat_iso.is_iso_of_is_iso_app
 
-open ContinuousMap
+open scoped ContinuousMap
 
 /-- Homotopy equivalent topological spaces have equivalent fundamental groupoids. -/
 def equivOfHomotopyEquiv (hequiv : X ≃ₕ Y) : πₓ X ≌ πₓ Y :=

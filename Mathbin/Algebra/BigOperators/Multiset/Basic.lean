@@ -412,6 +412,7 @@ theorem all_one_of_le_one_le_of_prod_eq_one :
 #align multiset.all_one_of_le_one_le_of_prod_eq_one Multiset.all_one_of_le_one_le_of_prod_eq_one
 #align multiset.all_zero_of_le_zero_le_of_sum_eq_zero Multiset.all_zero_of_le_zero_le_of_sum_eq_zero
 
+#print Multiset.prod_le_prod_of_rel_le /-
 @[to_additive]
 theorem prod_le_prod_of_rel_le (h : s.Rel (· ≤ ·) t) : s.Prod ≤ t.Prod :=
   by
@@ -421,6 +422,7 @@ theorem prod_le_prod_of_rel_le (h : s.Rel (· ≤ ·) t) : s.Prod ≤ t.Prod :=
     exact mul_le_mul' rh rt
 #align multiset.prod_le_prod_of_rel_le Multiset.prod_le_prod_of_rel_le
 #align multiset.sum_le_sum_of_rel_le Multiset.sum_le_sum_of_rel_le
+-/
 
 @[to_additive]
 theorem prod_map_le_prod_map {s : Multiset ι} (f : ι → α) (g : ι → α) (h : ∀ i, i ∈ s → f i ≤ g i) :
@@ -429,17 +431,21 @@ theorem prod_map_le_prod_map {s : Multiset ι} (f : ι → α) (g : ι → α) (
 #align multiset.prod_map_le_prod_map Multiset.prod_map_le_prod_map
 #align multiset.sum_map_le_sum_map Multiset.sum_map_le_sum_map
 
+#print Multiset.prod_map_le_prod /-
 @[to_additive]
 theorem prod_map_le_prod (f : α → α) (h : ∀ x, x ∈ s → f x ≤ x) : (s.map f).Prod ≤ s.Prod :=
   prod_le_prod_of_rel_le <| rel_map_left.2 <| rel_refl_of_refl_on h
 #align multiset.prod_map_le_prod Multiset.prod_map_le_prod
 #align multiset.sum_map_le_sum Multiset.sum_map_le_sum
+-/
 
+#print Multiset.prod_le_prod_map /-
 @[to_additive]
 theorem prod_le_prod_map (f : α → α) (h : ∀ x, x ∈ s → x ≤ f x) : s.Prod ≤ (s.map f).Prod :=
   @prod_map_le_prod αᵒᵈ _ _ f h
 #align multiset.prod_le_prod_map Multiset.prod_le_prod_map
 #align multiset.sum_le_sum_map Multiset.sum_le_sum_map
+-/
 
 @[to_additive card_nsmul_le_sum]
 theorem pow_card_le_prod (h : ∀ x ∈ s, a ≤ x) : a ^ s.card ≤ s.Prod := by
@@ -469,6 +475,7 @@ theorem prod_eq_one [CommMonoid α] {m : Multiset α} (h : ∀ x ∈ m, x = (1 :
 #align multiset.prod_eq_one Multiset.prod_eq_one
 #align multiset.sum_eq_zero Multiset.sum_eq_zero
 
+#print Multiset.le_prod_of_mem /-
 @[to_additive]
 theorem le_prod_of_mem [CanonicallyOrderedMonoid α] {m : Multiset α} {a : α} (h : a ∈ m) :
     a ≤ m.Prod := by
@@ -477,6 +484,7 @@ theorem le_prod_of_mem [CanonicallyOrderedMonoid α] {m : Multiset α} {a : α} 
   exact _root_.le_mul_right (le_refl a)
 #align multiset.le_prod_of_mem Multiset.le_prod_of_mem
 #align multiset.le_sum_of_mem Multiset.le_sum_of_mem
+-/
 
 @[to_additive le_sum_of_subadditive_on_pred]
 theorem le_prod_of_submultiplicative_on_pred [CommMonoid α] [OrderedCommMonoid β] (f : α → β)

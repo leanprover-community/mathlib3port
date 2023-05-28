@@ -59,7 +59,7 @@ in the file `ring_theory/laurent_series`.
 
 open Finset Function
 
-open BigOperators Classical Pointwise Polynomial
+open scoped BigOperators Classical Pointwise Polynomial
 
 noncomputable section
 
@@ -292,6 +292,7 @@ section Domain
 
 variable {Γ' : Type _} [PartialOrder Γ']
 
+#print HahnSeries.embDomain /-
 /-- Extends the domain of a `hahn_series` by an `order_embedding`. -/
 def embDomain (f : Γ ↪o Γ') : HahnSeries Γ R → HahnSeries Γ' R := fun x =>
   { coeff := fun b : Γ' => if h : b ∈ f '' x.support then x.coeff (Classical.choose h) else 0
@@ -301,6 +302,7 @@ def embDomain (f : Γ ↪o Γ') : HahnSeries Γ R → HahnSeries Γ' R := fun x 
         contrapose! hb
         rw [Function.mem_support, dif_neg hb, Classical.not_not] }
 #align hahn_series.emb_domain HahnSeries.embDomain
+-/
 
 @[simp]
 theorem embDomain_coeff {f : Γ ↪o Γ'} {x : HahnSeries Γ R} {a : Γ} :

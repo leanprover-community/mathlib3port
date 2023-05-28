@@ -19,7 +19,7 @@ namespace Omega
 
 namespace Nat
 
-open Omega.Nat
+open scoped Omega.Nat
 
 namespace Preterm
 

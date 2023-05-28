@@ -40,7 +40,7 @@ variable {E : Type uE} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensi
 
 open Function Filter FiniteDimensional Set Metric
 
-open Topology Manifold Classical Filter BigOperators
+open scoped Topology Manifold Classical Filter BigOperators
 
 noncomputable section
 

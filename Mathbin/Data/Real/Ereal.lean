@@ -58,7 +58,7 @@ real, ereal, complete lattice
 
 open Function
 
-open ENNReal NNReal
+open scoped ENNReal NNReal
 
 noncomputable section
 

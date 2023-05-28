@@ -114,21 +114,27 @@ theorem Directed.mono_comp {ι} {rb : β → β → Prop} {g : α → β} {f : �
   directed_comp.2 <| hf.mono hg
 #align directed.mono_comp Directed.mono_comp
 
+#print directed_of_sup /-
 /-- A monotone function on a sup-semilattice is directed. -/
 theorem directed_of_sup [SemilatticeSup α] {f : α → β} {r : β → β → Prop}
     (H : ∀ ⦃i j⦄, i ≤ j → r (f i) (f j)) : Directed r f := fun a b =>
   ⟨a ⊔ b, H le_sup_left, H le_sup_right⟩
 #align directed_of_sup directed_of_sup
+-/
 
+#print Monotone.directed_le /-
 theorem Monotone.directed_le [SemilatticeSup α] [Preorder β] {f : α → β} :
     Monotone f → Directed (· ≤ ·) f :=
   directed_of_sup
 #align monotone.directed_le Monotone.directed_le
+-/
 
+#print Antitone.directed_ge /-
 theorem Antitone.directed_ge [SemilatticeSup α] [Preorder β] {f : α → β} (hf : Antitone f) :
     Directed (· ≥ ·) f :=
   directed_of_sup hf
 #align antitone.directed_ge Antitone.directed_ge
+-/
 
 /-- A set stable by supremum is `≤`-directed. -/
 theorem directedOn_of_sup_mem [SemilatticeSup α] {S : Set α}
@@ -150,21 +156,27 @@ theorem Directed.extend_bot [Preorder α] [OrderBot α] {e : ι → β} {f : ι 
   simp only [he.extend_apply, *, true_and_iff]
 #align directed.extend_bot Directed.extend_bot
 
+#print directed_of_inf /-
 /-- An antitone function on an inf-semilattice is directed. -/
 theorem directed_of_inf [SemilatticeInf α] {r : β → β → Prop} {f : α → β}
     (hf : ∀ a₁ a₂, a₁ ≤ a₂ → r (f a₂) (f a₁)) : Directed r f := fun x y =>
   ⟨x ⊓ y, hf _ _ inf_le_left, hf _ _ inf_le_right⟩
 #align directed_of_inf directed_of_inf
+-/
 
+#print Monotone.directed_ge /-
 theorem Monotone.directed_ge [SemilatticeInf α] [Preorder β] {f : α → β} (hf : Monotone f) :
     Directed (· ≥ ·) f :=
   directed_of_inf hf
 #align monotone.directed_ge Monotone.directed_ge
+-/
 
+#print Antitone.directed_le /-
 theorem Antitone.directed_le [SemilatticeInf α] [Preorder β] {f : α → β} (hf : Antitone f) :
     Directed (· ≤ ·) f :=
   directed_of_inf hf
 #align antitone.directed_le Antitone.directed_le
+-/
 
 /-- A set stable by infimum is `≥`-directed. -/
 theorem directedOn_of_inf_mem [SemilatticeInf α] {S : Set α}
@@ -294,69 +306,93 @@ section Preorder
 
 variable [Preorder α] {a : α}
 
+#print IsMin.isBot /-
 protected theorem IsMin.isBot [IsDirected α (· ≥ ·)] (h : IsMin a) : IsBot a := fun b =>
   let ⟨c, hca, hcb⟩ := exists_le_le a b
   (h hca).trans hcb
 #align is_min.is_bot IsMin.isBot
+-/
 
+#print IsMax.isTop /-
 protected theorem IsMax.isTop [IsDirected α (· ≤ ·)] (h : IsMax a) : IsTop a :=
   h.toDual.IsBot
 #align is_max.is_top IsMax.isTop
+-/
 
+#print DirectedOn.is_bot_of_is_min /-
 theorem DirectedOn.is_bot_of_is_min {s : Set α} (hd : DirectedOn (· ≥ ·) s) {m} (hm : m ∈ s)
     (hmin : ∀ a ∈ s, a ≤ m → m ≤ a) : ∀ a ∈ s, m ≤ a := fun a as =>
   let ⟨x, xs, xm, xa⟩ := hd m hm a as
   (hmin x xs xm).trans xa
 #align directed_on.is_bot_of_is_min DirectedOn.is_bot_of_is_min
+-/
 
+#print DirectedOn.is_top_of_is_max /-
 theorem DirectedOn.is_top_of_is_max {s : Set α} (hd : DirectedOn (· ≤ ·) s) {m} (hm : m ∈ s)
     (hmax : ∀ a ∈ s, m ≤ a → a ≤ m) : ∀ a ∈ s, a ≤ m :=
   @DirectedOn.is_bot_of_is_min αᵒᵈ _ s hd m hm hmax
 #align directed_on.is_top_of_is_max DirectedOn.is_top_of_is_max
+-/
 
+#print isTop_or_exists_gt /-
 theorem isTop_or_exists_gt [IsDirected α (· ≤ ·)] (a : α) : IsTop a ∨ ∃ b, a < b :=
   (em (IsMax a)).imp IsMax.isTop not_isMax_iff.mp
 #align is_top_or_exists_gt isTop_or_exists_gt
+-/
 
+#print isBot_or_exists_lt /-
 theorem isBot_or_exists_lt [IsDirected α (· ≥ ·)] (a : α) : IsBot a ∨ ∃ b, b < a :=
   @isTop_or_exists_gt αᵒᵈ _ _ a
 #align is_bot_or_exists_lt isBot_or_exists_lt
+-/
 
+#print isBot_iff_isMin /-
 theorem isBot_iff_isMin [IsDirected α (· ≥ ·)] : IsBot a ↔ IsMin a :=
   ⟨IsBot.isMin, IsMin.isBot⟩
 #align is_bot_iff_is_min isBot_iff_isMin
+-/
 
+#print isTop_iff_isMax /-
 theorem isTop_iff_isMax [IsDirected α (· ≤ ·)] : IsTop a ↔ IsMax a :=
   ⟨IsTop.isMax, IsMax.isTop⟩
 #align is_top_iff_is_max isTop_iff_isMax
+-/
 
 variable (β) [PartialOrder β]
 
+#print exists_lt_of_directed_ge /-
 theorem exists_lt_of_directed_ge [IsDirected β (· ≥ ·)] [Nontrivial β] : ∃ a b : β, a < b :=
   by
   rcases exists_pair_ne β with ⟨a, b, hne⟩
   rcases isBot_or_exists_lt a with (ha | ⟨c, hc⟩)
   exacts[⟨a, b, (ha b).lt_of_ne hne⟩, ⟨_, _, hc⟩]
 #align exists_lt_of_directed_ge exists_lt_of_directed_ge
+-/
 
+#print exists_lt_of_directed_le /-
 theorem exists_lt_of_directed_le [IsDirected β (· ≤ ·)] [Nontrivial β] : ∃ a b : β, a < b :=
   let ⟨a, b, h⟩ := exists_lt_of_directed_ge βᵒᵈ
   ⟨b, a, h⟩
 #align exists_lt_of_directed_le exists_lt_of_directed_le
+-/
 
 end Preorder
 
+#print SemilatticeSup.to_isDirected_le /-
 -- see Note [lower instance priority]
 instance (priority := 100) SemilatticeSup.to_isDirected_le [SemilatticeSup α] :
     IsDirected α (· ≤ ·) :=
   ⟨fun a b => ⟨a ⊔ b, le_sup_left, le_sup_right⟩⟩
 #align semilattice_sup.to_is_directed_le SemilatticeSup.to_isDirected_le
+-/
 
+#print SemilatticeInf.to_isDirected_ge /-
 -- see Note [lower instance priority]
 instance (priority := 100) SemilatticeInf.to_isDirected_ge [SemilatticeInf α] :
     IsDirected α (· ≥ ·) :=
   ⟨fun a b => ⟨a ⊓ b, inf_le_left, inf_le_right⟩⟩
 #align semilattice_inf.to_is_directed_ge SemilatticeInf.to_isDirected_ge
+-/
 
 #print OrderTop.to_isDirected_le /-
 -- see Note [lower instance priority]

@@ -42,7 +42,7 @@ namespace FirstOrder
 
 namespace Language
 
-open FirstOrder
+open scoped FirstOrder
 
 open Structure
 
@@ -217,6 +217,7 @@ instance orderedStructure_LE [LE M] : OrderedStructure Language.order M :=
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print FirstOrder.Language.model_preorder /-
 instance model_preorder [Preorder M] : M ⊨ Language.order.preorderTheory :=
   by
   simp only [preorder_theory, Theory.model_iff, Set.mem_insert_iff, Set.mem_singleton_iff,
@@ -224,8 +225,10 @@ instance model_preorder [Preorder M] : M ⊨ Language.order.preorderTheory :=
     relations.realize_transitive]
   exact ⟨le_refl, fun _ _ _ => le_trans⟩
 #align first_order.language.model_preorder FirstOrder.Language.model_preorder
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print FirstOrder.Language.model_partialOrder /-
 instance model_partialOrder [PartialOrder M] : M ⊨ Language.order.partialOrderTheory :=
   by
   simp only [partial_order_theory, Theory.model_iff, Set.mem_insert_iff, Set.mem_singleton_iff,
@@ -233,8 +236,10 @@ instance model_partialOrder [PartialOrder M] : M ⊨ Language.order.partialOrder
     forall_eq, relations.realize_transitive]
   exact ⟨le_refl, fun _ _ => le_antisymm, fun _ _ _ => le_trans⟩
 #align first_order.language.model_partial_order FirstOrder.Language.model_partialOrder
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print FirstOrder.Language.model_linearOrder /-
 instance model_linearOrder [LinearOrder M] : M ⊨ Language.order.linearOrderTheory :=
   by
   simp only [linear_order_theory, Theory.model_iff, Set.mem_insert_iff, Set.mem_singleton_iff,
@@ -242,6 +247,7 @@ instance model_linearOrder [LinearOrder M] : M ⊨ Language.order.linearOrderThe
     relations.realize_transitive, forall_eq, relations.realize_total]
   exact ⟨le_refl, fun _ _ => le_antisymm, fun _ _ _ => le_trans, le_total⟩
 #align first_order.language.model_linear_order FirstOrder.Language.model_linearOrder
+-/
 
 section OrderedStructure
 
@@ -266,12 +272,14 @@ theorem Term.realize_le [LE M] [L.OrderedStructure M] {t₁ t₂ : L.term (Sum �
 #align first_order.language.term.realize_le FirstOrder.Language.Term.realize_le
 -/
 
+#print FirstOrder.Language.Term.realize_lt /-
 @[simp]
 theorem Term.realize_lt [Preorder M] [L.OrderedStructure M] {t₁ t₂ : L.term (Sum α (Fin n))}
     {v : α → M} {xs : Fin n → M} :
     (t₁.lt t₂).realize v xs ↔ t₁.realize (Sum.elim v xs) < t₂.realize (Sum.elim v xs) := by
   simp [term.lt, lt_iff_le_not_le]
 #align first_order.language.term.realize_lt FirstOrder.Language.Term.realize_lt
+-/
 
 end OrderedStructure
 
@@ -322,6 +330,7 @@ theorem realize_noBotOrder [h : NoBotOrder M] : M ⊨ Language.order.noBotOrderS
 end LE
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print FirstOrder.Language.realize_denselyOrdered_iff /-
 theorem realize_denselyOrdered_iff [Preorder M] :
     M ⊨ Language.order.denselyOrderedSentence ↔ DenselyOrdered M :=
   by
@@ -332,15 +341,19 @@ theorem realize_denselyOrdered_iff [Preorder M] :
   intro h a b ab
   exact exists_between ab
 #align first_order.language.realize_densely_ordered_iff FirstOrder.Language.realize_denselyOrdered_iff
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print FirstOrder.Language.realize_denselyOrdered /-
 @[simp]
 theorem realize_denselyOrdered [Preorder M] [h : DenselyOrdered M] :
     M ⊨ Language.order.denselyOrderedSentence :=
   realize_denselyOrdered_iff.2 h
 #align first_order.language.realize_densely_ordered FirstOrder.Language.realize_denselyOrdered
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print FirstOrder.Language.model_dlo /-
 instance model_dlo [LinearOrder M] [DenselyOrdered M] [NoTopOrder M] [NoBotOrder M] :
     M ⊨ Language.order.dlo :=
   by
@@ -350,6 +363,7 @@ instance model_dlo [LinearOrder M] [DenselyOrdered M] [NoTopOrder M] [NoBotOrder
   rw [← Theory.model_iff]
   infer_instance
 #align first_order.language.model_DLO FirstOrder.Language.model_dlo
+-/
 
 end Language
 

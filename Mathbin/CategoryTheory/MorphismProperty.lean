@@ -683,11 +683,13 @@ theorem StableUnderComposition.universally [HasPullbacks C] {P : MorphismPropert
 #align category_theory.morphism_property.stable_under_composition.universally CategoryTheory.MorphismProperty.StableUnderComposition.universally
 -/
 
+#print CategoryTheory.MorphismProperty.universally_le /-
 theorem universally_le (P : MorphismProperty C) : P.universally ≤ P :=
   by
   intro X Y f hf
   exact hf (𝟙 _) (𝟙 _) _ (is_pullback.of_vert_is_iso ⟨by rw [category.comp_id, category.id_comp]⟩)
 #align category_theory.morphism_property.universally_le CategoryTheory.MorphismProperty.universally_le
+-/
 
 #print CategoryTheory.MorphismProperty.StableUnderBaseChange.universally_eq /-
 theorem StableUnderBaseChange.universally_eq {P : MorphismProperty C}

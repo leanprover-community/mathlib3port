@@ -32,7 +32,7 @@ noncomputable section
 
 open Classical Filter Int Metric Set TopologicalSpace
 
-open Classical Topology Filter uniformity Interval
+open scoped Classical Topology Filter uniformity Interval
 
 universe u v w
 

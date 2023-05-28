@@ -54,7 +54,7 @@ open Nat hiding log
 
 open Real
 
-open BigOperators Pointwise
+open scoped BigOperators Pointwise
 
 namespace Behrend
 
@@ -299,7 +299,7 @@ theorem bound_aux (hd : d ≠ 0) (hn : 2 ≤ n) :
   rwa [cast_ne_zero]
 #align behrend.bound_aux Behrend.bound_aux
 
-open Filter Topology
+open scoped Filter Topology
 
 open Real
 

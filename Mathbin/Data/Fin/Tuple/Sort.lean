@@ -86,11 +86,13 @@ theorem proj_equiv₁' (f : Fin n → α) : graph.proj ∘ graphEquiv₁ f = f :
 #align tuple.proj_equiv₁' Tuple.proj_equiv₁'
 -/
 
+#print Tuple.graphEquiv₂ /-
 /-- `graph_equiv₂ f` is an equivalence between `fin n` and `graph f` that respects the order.
 -/
 def graphEquiv₂ (f : Fin n → α) : Fin n ≃o graph f :=
   Finset.orderIsoOfFin _ (by simp)
 #align tuple.graph_equiv₂ Tuple.graphEquiv₂
+-/
 
 #print Tuple.sort /-
 /-- `sort f` is the permutation that orders `fin n` according to the order of the outputs of `f`. -/

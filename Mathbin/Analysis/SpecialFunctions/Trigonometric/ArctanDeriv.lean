@@ -24,7 +24,7 @@ namespace Real
 
 open Set Filter
 
-open Topology Real
+open scoped Topology Real
 
 theorem hasStrictDerivAt_tan {x : ℝ} (h : cos x ≠ 0) : HasStrictDerivAt tan (1 / cos x ^ 2) x := by
   exact_mod_cast (Complex.hasStrictDerivAt_tan (by exact_mod_cast h)).real_of_complex

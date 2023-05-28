@@ -26,7 +26,7 @@ open CategoryTheory
 
 open CategoryTheory.Limits
 
-open Classical
+open scoped Classical
 
 noncomputable section
 

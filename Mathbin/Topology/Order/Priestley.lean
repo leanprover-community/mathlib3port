@@ -55,16 +55,20 @@ section Preorder
 
 variable [Preorder α] [PriestleySpace α] {x y : α}
 
+#print exists_clopen_upper_of_not_le /-
 theorem exists_clopen_upper_of_not_le :
     ¬x ≤ y → ∃ U : Set α, IsClopen U ∧ IsUpperSet U ∧ x ∈ U ∧ y ∉ U :=
   PriestleySpace.priestley
 #align exists_clopen_upper_of_not_le exists_clopen_upper_of_not_le
+-/
 
+#print exists_clopen_lower_of_not_le /-
 theorem exists_clopen_lower_of_not_le (h : ¬x ≤ y) :
     ∃ U : Set α, IsClopen U ∧ IsLowerSet U ∧ x ∉ U ∧ y ∈ U :=
   let ⟨U, hU, hU', hx, hy⟩ := exists_clopen_upper_of_not_le h
   ⟨Uᶜ, hU.compl, hU'.compl, Classical.not_not.2 hx, hy⟩
 #align exists_clopen_lower_of_not_le exists_clopen_lower_of_not_le
+-/
 
 end Preorder
 
@@ -72,6 +76,7 @@ section PartialOrder
 
 variable [PartialOrder α] [PriestleySpace α] {x y : α}
 
+#print exists_clopen_upper_or_lower_of_ne /-
 theorem exists_clopen_upper_or_lower_of_ne (h : x ≠ y) :
     ∃ U : Set α, IsClopen U ∧ (IsUpperSet U ∨ IsLowerSet U) ∧ x ∈ U ∧ y ∉ U :=
   by
@@ -80,6 +85,7 @@ theorem exists_clopen_upper_or_lower_of_ne (h : x ≠ y) :
   · obtain ⟨U, hU, hU', hy, hx⟩ := exists_clopen_lower_of_not_le h
     exact ⟨U, hU, Or.inr hU', hx, hy⟩
 #align exists_clopen_upper_or_lower_of_ne exists_clopen_upper_or_lower_of_ne
+-/
 
 #print PriestleySpace.toT2Space /-
 -- See note [lower instance priority]

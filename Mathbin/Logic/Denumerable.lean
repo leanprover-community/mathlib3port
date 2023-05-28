@@ -255,7 +255,7 @@ variable {s : Set ℕ} [Infinite s]
 
 section Classical
 
-open Classical
+open scoped Classical
 
 #print Nat.Subtype.exists_succ /-
 theorem exists_succ (x : s) : ∃ n, ↑x + n + 1 ∈ s :=

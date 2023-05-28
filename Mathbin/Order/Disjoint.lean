@@ -37,6 +37,7 @@ section PartialOrderBot
 
 variable [PartialOrder α] [OrderBot α] {a b c d : α}
 
+#print Disjoint /-
 /-- Two elements of a lattice are disjoint if their inf is the bottom element.
   (This generalizes disjoint sets, viewed as members of the subset lattice.)
 
@@ -46,19 +47,26 @@ arguments. -/
 def Disjoint (a b : α) : Prop :=
   ∀ ⦃x⦄, x ≤ a → x ≤ b → x ≤ ⊥
 #align disjoint Disjoint
+-/
 
+#print disjoint_comm /-
 theorem disjoint_comm : Disjoint a b ↔ Disjoint b a :=
   forall_congr' fun _ => forall_swap
 #align disjoint.comm disjoint_comm
+-/
 
+#print Disjoint.symm /-
 @[symm]
 theorem Disjoint.symm ⦃a b : α⦄ : Disjoint a b → Disjoint b a :=
   disjoint_comm.1
 #align disjoint.symm Disjoint.symm
+-/
 
+#print symmetric_disjoint /-
 theorem symmetric_disjoint : Symmetric (Disjoint : α → α → Prop) :=
   Disjoint.symm
 #align symmetric_disjoint symmetric_disjoint
+-/
 
 @[simp]
 theorem disjoint_bot_left : Disjoint ⊥ a := fun x hbot ha => hbot
@@ -68,17 +76,23 @@ theorem disjoint_bot_left : Disjoint ⊥ a := fun x hbot ha => hbot
 theorem disjoint_bot_right : Disjoint a ⊥ := fun x ha hbot => hbot
 #align disjoint_bot_right disjoint_bot_right
 
+#print Disjoint.mono /-
 theorem Disjoint.mono (h₁ : a ≤ b) (h₂ : c ≤ d) : Disjoint b d → Disjoint a c := fun h x ha hc =>
   h (ha.trans h₁) (hc.trans h₂)
 #align disjoint.mono Disjoint.mono
+-/
 
+#print Disjoint.mono_left /-
 theorem Disjoint.mono_left (h : a ≤ b) : Disjoint b c → Disjoint a c :=
   Disjoint.mono h le_rfl
 #align disjoint.mono_left Disjoint.mono_left
+-/
 
+#print Disjoint.mono_right /-
 theorem Disjoint.mono_right : b ≤ c → Disjoint a c → Disjoint a b :=
   Disjoint.mono le_rfl
 #align disjoint.mono_right Disjoint.mono_right
+-/
 
 @[simp]
 theorem disjoint_self : Disjoint a a ↔ a = ⊥ :=
@@ -222,6 +236,7 @@ section PartialOrderTop
 
 variable [PartialOrder α] [OrderTop α] {a b c d : α}
 
+#print Codisjoint /-
 /-- Two elements of a lattice are codisjoint if their sup is the top element.
 
 Note that we define this without reference to `⊔`, as this allows us to talk about orders where
@@ -230,19 +245,26 @@ arguments. -/
 def Codisjoint (a b : α) : Prop :=
   ∀ ⦃x⦄, a ≤ x → b ≤ x → ⊤ ≤ x
 #align codisjoint Codisjoint
+-/
 
+#print Codisjoint_comm /-
 theorem Codisjoint_comm : Codisjoint a b ↔ Codisjoint b a :=
   forall_congr' fun _ => forall_swap
 #align codisjoint.comm Codisjoint_comm
+-/
 
+#print Codisjoint.symm /-
 @[symm]
 theorem Codisjoint.symm ⦃a b : α⦄ : Codisjoint a b → Codisjoint b a :=
   Codisjoint_comm.1
 #align codisjoint.symm Codisjoint.symm
+-/
 
+#print symmetric_codisjoint /-
 theorem symmetric_codisjoint : Symmetric (Codisjoint : α → α → Prop) :=
   Codisjoint.symm
 #align symmetric_codisjoint symmetric_codisjoint
+-/
 
 @[simp]
 theorem codisjoint_top_left : Codisjoint ⊤ a := fun x htop ha => htop
@@ -252,17 +274,23 @@ theorem codisjoint_top_left : Codisjoint ⊤ a := fun x htop ha => htop
 theorem codisjoint_top_right : Codisjoint a ⊤ := fun x ha htop => htop
 #align codisjoint_top_right codisjoint_top_right
 
+#print Codisjoint.mono /-
 theorem Codisjoint.mono (h₁ : a ≤ b) (h₂ : c ≤ d) : Codisjoint a c → Codisjoint b d :=
   fun h x ha hc => h (h₁.trans ha) (h₂.trans hc)
 #align codisjoint.mono Codisjoint.mono
+-/
 
+#print Codisjoint.mono_left /-
 theorem Codisjoint.mono_left (h : a ≤ b) : Codisjoint a c → Codisjoint b c :=
   Codisjoint.mono h le_rfl
 #align codisjoint.mono_left Codisjoint.mono_left
+-/
 
+#print Codisjoint.mono_right /-
 theorem Codisjoint.mono_right : b ≤ c → Codisjoint a b → Codisjoint a c :=
   Codisjoint.mono le_rfl
 #align codisjoint.mono_right Codisjoint.mono_right
+-/
 
 @[simp]
 theorem codisjoint_self : Codisjoint a a ↔ a = ⊤ :=
@@ -404,65 +432,83 @@ end Codisjoint
 
 open OrderDual
 
+#print Disjoint.dual /-
 theorem Disjoint.dual [SemilatticeInf α] [OrderBot α] {a b : α} :
     Disjoint a b → Codisjoint (toDual a) (toDual b) :=
   id
 #align disjoint.dual Disjoint.dual
+-/
 
+#print Codisjoint.dual /-
 theorem Codisjoint.dual [SemilatticeSup α] [OrderTop α] {a b : α} :
     Codisjoint a b → Disjoint (toDual a) (toDual b) :=
   id
 #align codisjoint.dual Codisjoint.dual
+-/
 
+#print disjoint_toDual_iff /-
 @[simp]
 theorem disjoint_toDual_iff [SemilatticeSup α] [OrderTop α] {a b : α} :
     Disjoint (toDual a) (toDual b) ↔ Codisjoint a b :=
   Iff.rfl
 #align disjoint_to_dual_iff disjoint_toDual_iff
+-/
 
+#print disjoint_ofDual_iff /-
 @[simp]
 theorem disjoint_ofDual_iff [SemilatticeInf α] [OrderBot α] {a b : αᵒᵈ} :
     Disjoint (ofDual a) (ofDual b) ↔ Codisjoint a b :=
   Iff.rfl
 #align disjoint_of_dual_iff disjoint_ofDual_iff
+-/
 
+#print codisjoint_toDual_iff /-
 @[simp]
 theorem codisjoint_toDual_iff [SemilatticeInf α] [OrderBot α] {a b : α} :
     Codisjoint (toDual a) (toDual b) ↔ Disjoint a b :=
   Iff.rfl
 #align codisjoint_to_dual_iff codisjoint_toDual_iff
+-/
 
+#print codisjoint_ofDual_iff /-
 @[simp]
 theorem codisjoint_ofDual_iff [SemilatticeSup α] [OrderTop α] {a b : αᵒᵈ} :
     Codisjoint (ofDual a) (ofDual b) ↔ Disjoint a b :=
   Iff.rfl
 #align codisjoint_of_dual_iff codisjoint_ofDual_iff
+-/
 
 section DistribLattice
 
 variable [DistribLattice α] [BoundedOrder α] {a b c : α}
 
+#print Disjoint.le_of_codisjoint /-
 theorem Disjoint.le_of_codisjoint (hab : Disjoint a b) (hbc : Codisjoint b c) : a ≤ c :=
   by
   rw [← @inf_top_eq _ _ _ a, ← @bot_sup_eq _ _ _ c, ← hab.eq_bot, ← hbc.eq_top, sup_inf_right]
   exact inf_le_inf_right _ le_sup_left
 #align disjoint.le_of_codisjoint Disjoint.le_of_codisjoint
+-/
 
 end DistribLattice
 
 section IsCompl
 
+#print IsCompl /-
 /-- Two elements `x` and `y` are complements of each other if `x ⊔ y = ⊤` and `x ⊓ y = ⊥`. -/
 @[protect_proj]
 structure IsCompl [PartialOrder α] [BoundedOrder α] (x y : α) : Prop where
   Disjoint : Disjoint x y
   Codisjoint : Codisjoint x y
 #align is_compl IsCompl
+-/
 
+#print isCompl_iff /-
 theorem isCompl_iff [PartialOrder α] [BoundedOrder α] {a b : α} :
     IsCompl a b ↔ Disjoint a b ∧ Codisjoint a b :=
   ⟨fun h => ⟨h.1, h.2⟩, fun h => ⟨h.1, h.2⟩⟩
 #align is_compl_iff isCompl_iff
+-/
 
 namespace IsCompl
 
@@ -470,18 +516,24 @@ section BoundedPartialOrder
 
 variable [PartialOrder α] [BoundedOrder α] {x y z : α}
 
+#print IsCompl.symm /-
 @[symm]
 protected theorem symm (h : IsCompl x y) : IsCompl y x :=
   ⟨h.1.symm, h.2.symm⟩
 #align is_compl.symm IsCompl.symm
+-/
 
+#print IsCompl.dual /-
 theorem dual (h : IsCompl x y) : IsCompl (toDual x) (toDual y) :=
   ⟨h.2, h.1⟩
 #align is_compl.dual IsCompl.dual
+-/
 
+#print IsCompl.ofDual /-
 theorem ofDual {a b : αᵒᵈ} (h : IsCompl a b) : IsCompl (ofDual a) (ofDual b) :=
   ⟨h.2, h.1⟩
 #align is_compl.of_dual IsCompl.ofDual
+-/
 
 end BoundedPartialOrder
 
@@ -530,41 +582,59 @@ theorem inf_right_eq_bot_iff (h : IsCompl y z) : x ⊓ z = ⊥ ↔ x ≤ y :=
   h.symm.inf_left_eq_bot_iff
 #align is_compl.inf_right_eq_bot_iff IsCompl.inf_right_eq_bot_iff
 
+#print IsCompl.disjoint_left_iff /-
 theorem disjoint_left_iff (h : IsCompl y z) : Disjoint x y ↔ x ≤ z := by rw [disjoint_iff];
   exact h.inf_left_eq_bot_iff
 #align is_compl.disjoint_left_iff IsCompl.disjoint_left_iff
+-/
 
+#print IsCompl.disjoint_right_iff /-
 theorem disjoint_right_iff (h : IsCompl y z) : Disjoint x z ↔ x ≤ y :=
   h.symm.disjoint_left_iff
 #align is_compl.disjoint_right_iff IsCompl.disjoint_right_iff
+-/
 
+#print IsCompl.le_left_iff /-
 theorem le_left_iff (h : IsCompl x y) : z ≤ x ↔ Disjoint z y :=
   h.disjoint_right_iff.symm
 #align is_compl.le_left_iff IsCompl.le_left_iff
+-/
 
+#print IsCompl.le_right_iff /-
 theorem le_right_iff (h : IsCompl x y) : z ≤ y ↔ Disjoint z x :=
   h.symm.le_left_iff
 #align is_compl.le_right_iff IsCompl.le_right_iff
+-/
 
+#print IsCompl.left_le_iff /-
 theorem left_le_iff (h : IsCompl x y) : x ≤ z ↔ Codisjoint z y :=
   h.dual.le_left_iff
 #align is_compl.left_le_iff IsCompl.left_le_iff
+-/
 
+#print IsCompl.right_le_iff /-
 theorem right_le_iff (h : IsCompl x y) : y ≤ z ↔ Codisjoint z x :=
   h.symm.left_le_iff
 #align is_compl.right_le_iff IsCompl.right_le_iff
+-/
 
+#print IsCompl.Antitone /-
 protected theorem Antitone {x' y'} (h : IsCompl x y) (h' : IsCompl x' y') (hx : x ≤ x') : y' ≤ y :=
   h'.right_le_iff.2 <| h.symm.Codisjoint.mono_right hx
 #align is_compl.antitone IsCompl.Antitone
+-/
 
+#print IsCompl.right_unique /-
 theorem right_unique (hxy : IsCompl x y) (hxz : IsCompl x z) : y = z :=
   le_antisymm (hxz.Antitone hxy <| le_refl x) (hxy.Antitone hxz <| le_refl x)
 #align is_compl.right_unique IsCompl.right_unique
+-/
 
+#print IsCompl.left_unique /-
 theorem left_unique (hxz : IsCompl x z) (hyz : IsCompl y z) : x = y :=
   hxz.symm.RightUnique hyz.symm
 #align is_compl.left_unique IsCompl.left_unique
+-/
 
 theorem sup_inf {x' y'} (h : IsCompl x y) (h' : IsCompl x' y') : IsCompl (x ⊔ x') (y ⊓ y') :=
   of_eq
@@ -614,15 +684,19 @@ section
 
 variable [Lattice α] [BoundedOrder α] {a b x : α}
 
+#print isCompl_toDual_iff /-
 @[simp]
 theorem isCompl_toDual_iff : IsCompl (toDual a) (toDual b) ↔ IsCompl a b :=
   ⟨IsCompl.ofDual, IsCompl.dual⟩
 #align is_compl_to_dual_iff isCompl_toDual_iff
+-/
 
+#print isCompl_ofDual_iff /-
 @[simp]
 theorem isCompl_ofDual_iff {a b : αᵒᵈ} : IsCompl (ofDual a) (ofDual b) ↔ IsCompl a b :=
   ⟨IsCompl.dual, IsCompl.ofDual⟩
 #align is_compl_of_dual_iff isCompl_ofDual_iff
+-/
 
 theorem isCompl_bot_top : IsCompl (⊥ : α) ⊤ :=
   IsCompl.of_eq bot_inf_eq sup_top_eq
@@ -650,11 +724,13 @@ theorem eq_bot_of_top_isCompl (h : IsCompl ⊤ x) : x = ⊥ :=
 
 end
 
+#print ComplementedLattice /-
 /-- A complemented bounded lattice is one where every element has a (not necessarily unique)
 complement. -/
 class ComplementedLattice (α) [Lattice α] [BoundedOrder α] : Prop where
   exists_isCompl : ∀ a : α, ∃ b : α, IsCompl a b
 #align complemented_lattice ComplementedLattice
+-/
 
 export ComplementedLattice (exists_isCompl)
 

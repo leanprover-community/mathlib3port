@@ -36,7 +36,7 @@ monotone convergence
 
 open Filter Set Function
 
-open Filter Topology Classical
+open scoped Filter Topology Classical
 
 variable {α β : Type _}
 

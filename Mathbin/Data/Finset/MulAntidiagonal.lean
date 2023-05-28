@@ -23,7 +23,7 @@ given that `s` and `t` are well-ordered.-/
 
 namespace Set
 
-open Pointwise
+open scoped Pointwise
 
 variable {α : Type _} {s t : Set α}
 
@@ -56,7 +56,7 @@ end Set
 
 namespace Finset
 
-open Pointwise
+open scoped Pointwise
 
 variable {α : Type _}
 

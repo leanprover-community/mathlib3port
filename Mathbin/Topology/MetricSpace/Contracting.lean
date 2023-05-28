@@ -36,7 +36,7 @@ contracting map, fixed point, Banach fixed point theorem
 -/
 
 
-open NNReal Topology Classical ENNReal
+open scoped NNReal Topology Classical ENNReal
 
 open Filter Function
 

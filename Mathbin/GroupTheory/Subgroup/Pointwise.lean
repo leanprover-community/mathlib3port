@@ -35,7 +35,7 @@ Where possible, try to keep them in sync.
 
 open Set
 
-open Pointwise
+open scoped Pointwise
 
 variable {α G A S : Type _}
 
@@ -276,7 +276,7 @@ protected def pointwiseMulAction : MulAction α (Subgroup G)
 
 scoped[Pointwise] attribute [instance] Subgroup.pointwiseMulAction
 
-open Pointwise
+open scoped Pointwise
 
 theorem pointwise_smul_def {a : α} (S : Subgroup G) :
     a • S = S.map (MulDistribMulAction.toMonoidEnd _ _ a) :=
@@ -349,7 +349,7 @@ section Group
 
 variable [Group α] [MulDistribMulAction α G]
 
-open Pointwise
+open scoped Pointwise
 
 @[simp]
 theorem smul_mem_pointwise_smul_iff {a : α} {S : Subgroup G} {x : G} : a • x ∈ a • S ↔ x ∈ S :=
@@ -438,7 +438,7 @@ section GroupWithZero
 
 variable [GroupWithZero α] [MulDistribMulAction α G]
 
-open Pointwise
+open scoped Pointwise
 
 @[simp]
 theorem smul_mem_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) (S : Subgroup G) (x : G) :
@@ -495,7 +495,7 @@ protected def pointwiseMulAction : MulAction α (AddSubgroup A)
 
 scoped[Pointwise] attribute [instance] AddSubgroup.pointwiseMulAction
 
-open Pointwise
+open scoped Pointwise
 
 @[simp]
 theorem coe_pointwise_smul (a : α) (S : AddSubgroup A) : ↑(a • S) = a • (S : Set A) :=
@@ -530,7 +530,7 @@ section Group
 
 variable [Group α] [DistribMulAction α A]
 
-open Pointwise
+open scoped Pointwise
 
 @[simp]
 theorem smul_mem_pointwise_smul_iff {a : α} {S : AddSubgroup A} {x : A} : a • x ∈ a • S ↔ x ∈ S :=
@@ -566,7 +566,7 @@ section GroupWithZero
 
 variable [GroupWithZero α] [DistribMulAction α A]
 
-open Pointwise
+open scoped Pointwise
 
 @[simp]
 theorem smul_mem_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) (S : AddSubgroup A) (x : A) :

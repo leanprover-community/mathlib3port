@@ -26,7 +26,7 @@ noncomputable section
 
 namespace Polynomial
 
-open Polynomial
+open scoped Polynomial
 
 universe u v w x y z
 

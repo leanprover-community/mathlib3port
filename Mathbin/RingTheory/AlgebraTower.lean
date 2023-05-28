@@ -34,7 +34,7 @@ base rings to be a field, so we also generalize the lemma to rings in this file.
 -/
 
 
-open Pointwise
+open scoped Pointwise
 
 universe u v w u₁
 
@@ -109,7 +109,7 @@ section Semiring
 
 open Finsupp
 
-open BigOperators Classical
+open scoped BigOperators Classical
 
 universe v₁ w₁
 

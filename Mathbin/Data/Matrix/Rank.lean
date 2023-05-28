@@ -36,7 +36,7 @@ This definition does not depend on the choice of basis, see `matrix.rank_eq_finr
 -/
 
 
-open Matrix
+open scoped Matrix
 
 namespace Matrix
 

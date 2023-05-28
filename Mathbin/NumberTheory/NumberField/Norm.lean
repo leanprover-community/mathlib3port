@@ -25,7 +25,7 @@ rings of integers.
 -/
 
 
-open NumberField BigOperators
+open scoped NumberField BigOperators
 
 open Finset NumberField Algebra FiniteDimensional
 

@@ -59,7 +59,7 @@ The branch `surreal_mul` contains some progress on this proof.
 
 universe u
 
-open PGame
+open scoped PGame
 
 namespace PGame
 

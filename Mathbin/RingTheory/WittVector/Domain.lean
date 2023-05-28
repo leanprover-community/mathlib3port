@@ -39,7 +39,7 @@ the 0th component of which must be nonzero.
 
 noncomputable section
 
-open Classical
+open scoped Classical
 
 namespace WittVector
 

@@ -32,7 +32,7 @@ if all monomials occuring in `φ` have degree `n`.
 -/
 
 
-open BigOperators
+open scoped BigOperators
 
 namespace MvPolynomial
 
@@ -100,6 +100,7 @@ theorem homogeneousSubmodule_eq_finsupp_supported [CommSemiring R] (n : ℕ) :
 
 variable {σ R}
 
+#print MvPolynomial.homogeneousSubmodule_mul /-
 theorem homogeneousSubmodule_mul [CommSemiring R] (m n : ℕ) :
     homogeneousSubmodule σ R m * homogeneousSubmodule σ R n ≤ homogeneousSubmodule σ R (m + n) :=
   by
@@ -122,6 +123,7 @@ theorem homogeneousSubmodule_mul [CommSemiring R] (m n : ℕ) :
     · congr
     all_goals intro i hi; apply finsupp.not_mem_support_iff.mp
 #align mv_polynomial.homogeneous_submodule_mul MvPolynomial.homogeneousSubmodule_mul
+-/
 
 section
 
@@ -243,7 +245,7 @@ instance HomogeneousSubmodule.gcommSemiring : SetLike.GradedMonoid (homogeneousS
 #align mv_polynomial.is_homogeneous.homogeneous_submodule.gcomm_semiring MvPolynomial.IsHomogeneous.HomogeneousSubmodule.gcommSemiring
 -/
 
-open DirectSum
+open scoped DirectSum
 
 noncomputable example : CommSemiring (⨁ i, homogeneousSubmodule σ R i) :=
   inferInstance

@@ -155,7 +155,7 @@ scoped[Isocrystal] notation:50 M " ≃ᶠⁱ[" p ", " k "] " M₂ => WittVector.
 
 end PerfectRing
 
-open Isocrystal
+open scoped Isocrystal
 
 /-! ### Classification of isocrystals in dimension 1 -/
 

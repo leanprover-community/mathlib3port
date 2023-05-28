@@ -27,7 +27,7 @@ TODO: Show that the Selmer polynomials have full Galois group.
 
 namespace Polynomial
 
-open Polynomial
+open scoped Polynomial
 
 variable {n : ℕ}
 

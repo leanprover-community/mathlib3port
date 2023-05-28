@@ -41,7 +41,7 @@ variable {R : Type u}
 
 open Ideal Algebra Finset
 
-open BigOperators Polynomial
+open scoped BigOperators Polynomial
 
 namespace Polynomial
 

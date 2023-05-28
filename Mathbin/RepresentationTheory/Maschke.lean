@@ -48,7 +48,7 @@ open Module
 
 open MonoidAlgebra
 
-open BigOperators
+open scoped BigOperators
 
 section
 

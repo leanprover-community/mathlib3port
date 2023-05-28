@@ -86,7 +86,7 @@ variable {α : Type u} {β : Type v} {γ : Type w} {δ : Type x}
 
 open Set Filter
 
-open Filter
+open scoped Filter
 
 section Preorder
 
@@ -147,21 +147,29 @@ theorem IsExtrOn.elim {p : Prop} : IsExtrOn f s a → (IsMinOn f s a → p) → 
 #align is_extr_on.elim IsExtrOn.elim
 -/
 
+#print isMinOn_iff /-
 theorem isMinOn_iff : IsMinOn f s a ↔ ∀ x ∈ s, f a ≤ f x :=
   Iff.rfl
 #align is_min_on_iff isMinOn_iff
+-/
 
+#print isMaxOn_iff /-
 theorem isMaxOn_iff : IsMaxOn f s a ↔ ∀ x ∈ s, f x ≤ f a :=
   Iff.rfl
 #align is_max_on_iff isMaxOn_iff
+-/
 
+#print isMinOn_univ_iff /-
 theorem isMinOn_univ_iff : IsMinOn f univ a ↔ ∀ x, f a ≤ f x :=
   univ_subset_iff.trans eq_univ_iff_forall
 #align is_min_on_univ_iff isMinOn_univ_iff
+-/
 
+#print isMaxOn_univ_iff /-
 theorem isMaxOn_univ_iff : IsMaxOn f univ a ↔ ∀ x, f x ≤ f a :=
   univ_subset_iff.trans eq_univ_iff_forall
 #align is_max_on_univ_iff isMaxOn_univ_iff
+-/
 
 #print IsMinFilter.tendsto_principal_Ici /-
 theorem IsMinFilter.tendsto_principal_Ici (h : IsMinFilter f l a) : Tendsto f l (𝓟 <| Ici (f a)) :=
@@ -450,30 +458,38 @@ theorem IsExtrOn.comp_antitone (hf : IsExtrOn f s a) {g : β → γ} (hg : Antit
 #align is_extr_on.comp_antitone IsExtrOn.comp_antitone
 -/
 
+#print IsMinFilter.bicomp_mono /-
 theorem IsMinFilter.bicomp_mono [Preorder δ] {op : β → γ → δ}
     (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op) (hf : IsMinFilter f l a) {g : α → γ}
     (hg : IsMinFilter g l a) : IsMinFilter (fun x => op (f x) (g x)) l a :=
   mem_of_superset (inter_mem hf hg) fun x ⟨hfx, hgx⟩ => hop hfx hgx
 #align is_min_filter.bicomp_mono IsMinFilter.bicomp_mono
+-/
 
+#print IsMaxFilter.bicomp_mono /-
 theorem IsMaxFilter.bicomp_mono [Preorder δ] {op : β → γ → δ}
     (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op) (hf : IsMaxFilter f l a) {g : α → γ}
     (hg : IsMaxFilter g l a) : IsMaxFilter (fun x => op (f x) (g x)) l a :=
   mem_of_superset (inter_mem hf hg) fun x ⟨hfx, hgx⟩ => hop hfx hgx
 #align is_max_filter.bicomp_mono IsMaxFilter.bicomp_mono
+-/
 
+#print IsMinOn.bicomp_mono /-
 -- No `extr` version because we need `hf` and `hg` to be of the same kind
 theorem IsMinOn.bicomp_mono [Preorder δ] {op : β → γ → δ}
     (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op) (hf : IsMinOn f s a) {g : α → γ}
     (hg : IsMinOn g s a) : IsMinOn (fun x => op (f x) (g x)) s a :=
   hf.bicomp_mono hop hg
 #align is_min_on.bicomp_mono IsMinOn.bicomp_mono
+-/
 
+#print IsMaxOn.bicomp_mono /-
 theorem IsMaxOn.bicomp_mono [Preorder δ] {op : β → γ → δ}
     (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op) (hf : IsMaxOn f s a) {g : α → γ}
     (hg : IsMaxOn g s a) : IsMaxOn (fun x => op (f x) (g x)) s a :=
   hf.bicomp_mono hop hg
 #align is_max_on.bicomp_mono IsMaxOn.bicomp_mono
+-/
 
 /-! ### Composition with `tendsto` -/
 

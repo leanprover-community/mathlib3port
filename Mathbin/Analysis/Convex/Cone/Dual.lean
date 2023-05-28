@@ -28,7 +28,7 @@ We prove the following theorems:
 
 open Set LinearMap
 
-open Classical Pointwise
+open scoped Classical Pointwise
 
 variable {𝕜 E F G : Type _}
 
@@ -39,7 +39,7 @@ section Dual
 
 variable {H : Type _} [NormedAddCommGroup H] [InnerProductSpace ℝ H] (s t : Set H)
 
-open RealInnerProductSpace
+open scoped RealInnerProductSpace
 
 #print Set.innerDualCone /-
 /-- The dual cone is the cone consisting of all points `y` such that for

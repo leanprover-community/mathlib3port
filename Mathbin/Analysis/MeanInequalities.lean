@@ -100,7 +100,7 @@ universe u v
 
 open Finset
 
-open Classical BigOperators NNReal ENNReal
+open scoped Classical BigOperators NNReal ENNReal
 
 noncomputable section
 
@@ -181,6 +181,7 @@ end Real
 
 namespace NNReal
 
+#print NNReal.geom_mean_le_arith_mean_weighted /-
 /-- The geometric mean is less than or equal to the arithmetic mean, weighted version
 for `nnreal`-valued functions. -/
 theorem geom_mean_le_arith_mean_weighted (w z : ι → ℝ≥0) (hw' : (∑ i in s, w i) = 1) :
@@ -189,6 +190,7 @@ theorem geom_mean_le_arith_mean_weighted (w z : ι → ℝ≥0) (hw' : (∑ i in
     Real.geom_mean_le_arith_mean_weighted _ _ _ (fun i _ => (w i).coe_nonneg)
       (by assumption_mod_cast) fun i _ => (z i).coe_nonneg
 #align nnreal.geom_mean_le_arith_mean_weighted NNReal.geom_mean_le_arith_mean_weighted
+-/
 
 /-- The geometric mean is less than or equal to the arithmetic mean, weighted version
 for two `nnreal` numbers. -/

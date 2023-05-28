@@ -38,7 +38,7 @@ variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] {F : Type _} [N
 
 open Metric Set Asymptotics Filter Real
 
-open Classical Topology NNReal
+open scoped Classical Topology NNReal
 
 /-! ### Technical lemmas about `gronwall_bound` -/
 

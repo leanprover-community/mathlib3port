@@ -38,7 +38,7 @@ Note furthermore that no infinite cardinal is irreducible
 
 namespace Cardinal
 
-open Cardinal
+open scoped Cardinal
 
 universe u
 

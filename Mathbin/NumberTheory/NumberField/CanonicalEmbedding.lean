@@ -34,7 +34,7 @@ noncomputable section
 
 open Function FiniteDimensional Finset Fintype NumberField NumberField.InfinitePlace Metric Module
 
-open Classical NumberField
+open scoped Classical NumberField
 
 variable (K : Type _) [Field K]
 

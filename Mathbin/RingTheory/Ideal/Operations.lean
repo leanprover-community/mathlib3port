@@ -26,7 +26,7 @@ import Mathbin.RingTheory.NonZeroDivisors
 
 universe u v w x
 
-open BigOperators Pointwise
+open scoped BigOperators Pointwise
 
 namespace Submodule
 
@@ -36,7 +36,7 @@ section CommSemiring
 
 variable [CommSemiring R] [AddCommMonoid M] [Module R M]
 
-open Pointwise
+open scoped Pointwise
 
 #print Submodule.hasSMul' /-
 instance hasSMul' : SMul (Ideal R) (Submodule R M) :=
@@ -99,9 +99,11 @@ theorem annihilator_eq_top_iff : N.annihilator = ⊤ ↔ N = ⊥ :=
     fun H => H.symm ▸ annihilator_bot⟩
 #align submodule.annihilator_eq_top_iff Submodule.annihilator_eq_top_iff
 
+#print Submodule.annihilator_mono /-
 theorem annihilator_mono (h : N ≤ P) : P.annihilator ≤ N.annihilator := fun r hrp =>
   mem_annihilator.2 fun n hn => mem_annihilator.1 hrp n <| h hn
 #align submodule.annihilator_mono Submodule.annihilator_mono
+-/
 
 theorem annihilator_iSup (ι : Sort w) (f : ι → Submodule R M) :
     annihilator (⨆ i, f i) = ⨅ i, annihilator (f i) :=
@@ -118,9 +120,11 @@ theorem smul_mem_smul {r} {n} (hr : r ∈ I) (hn : n ∈ N) : r • n ∈ I • 
 #align submodule.smul_mem_smul Submodule.smul_mem_smul
 -/
 
+#print Submodule.smul_le /-
 theorem smul_le {P : Submodule R M} : I • N ≤ P ↔ ∀ r ∈ I, ∀ n ∈ N, r • n ∈ P :=
   map₂_le
 #align submodule.smul_le Submodule.smul_le
+-/
 
 @[elab_as_elim]
 theorem smul_induction_on {p : M → Prop} {x} (H : x ∈ I • N) (Hb : ∀ r ∈ I, ∀ n ∈ N, p (r • n))
@@ -156,22 +160,31 @@ theorem mem_smul_span_singleton {I : Ideal R} {m : M} {x : M} :
     fun ⟨y, hyi, hy⟩ => hy ▸ smul_mem_smul hyi (subset_span <| Set.mem_singleton m)⟩
 #align submodule.mem_smul_span_singleton Submodule.mem_smul_span_singleton
 
+#print Submodule.smul_le_right /-
 theorem smul_le_right : I • N ≤ N :=
   smul_le.2 fun r hr n => N.smul_mem r
 #align submodule.smul_le_right Submodule.smul_le_right
+-/
 
+#print Submodule.smul_mono /-
 theorem smul_mono (hij : I ≤ J) (hnp : N ≤ P) : I • N ≤ J • P :=
   map₂_le_map₂ hij hnp
 #align submodule.smul_mono Submodule.smul_mono
+-/
 
+#print Submodule.smul_mono_left /-
 theorem smul_mono_left (h : I ≤ J) : I • N ≤ J • N :=
   map₂_le_map₂_left h
 #align submodule.smul_mono_left Submodule.smul_mono_left
+-/
 
+#print Submodule.smul_mono_right /-
 theorem smul_mono_right (h : N ≤ P) : I • N ≤ I • P :=
   map₂_le_map₂_right h
 #align submodule.smul_mono_right Submodule.smul_mono_right
+-/
 
+#print Submodule.map_le_smul_top /-
 theorem map_le_smul_top (I : Ideal R) (f : R →ₗ[R] M) :
     Submodule.map f I ≤ I • (⊤ : Submodule R M) :=
   by
@@ -179,6 +192,7 @@ theorem map_le_smul_top (I : Ideal R) (f : R →ₗ[R] M) :
   rw [← mul_one y, ← smul_eq_mul, f.map_smul]
   exact smul_mem_smul hy mem_top
 #align submodule.map_le_smul_top Submodule.map_le_smul_top
+-/
 
 @[simp]
 theorem annihilator_smul (N : Submodule R M) : annihilator N • N = ⊥ :=
@@ -238,9 +252,11 @@ protected theorem smul_assoc : (I • J) • N = I • J • N :=
 #align submodule.smul_assoc Submodule.smul_assoc
 -/
 
+#print Submodule.smul_inf_le /-
 theorem smul_inf_le (M₁ M₂ : Submodule R M) : I • (M₁ ⊓ M₂) ≤ I • M₁ ⊓ I • M₂ :=
   le_inf (Submodule.smul_mono_right inf_le_left) (Submodule.smul_mono_right inf_le_right)
 #align submodule.smul_inf_le Submodule.smul_inf_le
+-/
 
 theorem smul_iSup {ι : Sort _} {I : Ideal R} {t : ι → Submodule R M} : I • iSup t = ⨆ i, I • t i :=
   map₂_iSup_right _ _ _
@@ -364,6 +380,7 @@ theorem mem_smul_top_iff (N : Submodule R M) (x : N) :
   rfl
 #align submodule.mem_smul_top_iff Submodule.mem_smul_top_iff
 
+#print Submodule.smul_comap_le_comap_smul /-
 @[simp]
 theorem smul_comap_le_comap_smul (f : M →ₗ[R] M') (S : Submodule R M') (I : Ideal R) :
     I • S.comap f ≤ (I • S).comap f :=
@@ -373,6 +390,7 @@ theorem smul_comap_le_comap_smul (f : M →ₗ[R] M') (S : Submodule R M') (I : 
   rw [f.map_smul]
   exact Submodule.smul_mem_smul hr hx
 #align submodule.smul_comap_le_comap_smul Submodule.smul_comap_le_comap_smul
+-/
 
 end CommSemiring
 
@@ -397,13 +415,17 @@ theorem mem_colon {r} : r ∈ N.colon P ↔ ∀ p ∈ P, r • p ∈ N :=
 #align submodule.mem_colon Submodule.mem_colon
 -/
 
+#print Submodule.mem_colon' /-
 theorem mem_colon' {r} : r ∈ N.colon P ↔ P ≤ comap (r • (LinearMap.id : M →ₗ[R] M)) N :=
   mem_colon
 #align submodule.mem_colon' Submodule.mem_colon'
+-/
 
+#print Submodule.colon_mono /-
 theorem colon_mono (hn : N₁ ≤ N₂) (hp : P₁ ≤ P₂) : N₁.colon P₂ ≤ N₂.colon P₁ := fun r hrnp =>
   mem_colon.2 fun p₁ hp₁ => hn <| mem_colon.1 hrnp p₁ <| hp hp₁
 #align submodule.colon_mono Submodule.colon_mono
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem iInf_colon_iSup (ι₁ : Sort w) (f : ι₁ → Submodule R M) (ι₂ : Sort x)
@@ -508,13 +530,17 @@ theorem mul_le : I * J ≤ K ↔ ∀ r ∈ I, ∀ s ∈ J, r * s ∈ K :=
   Submodule.smul_le
 #align ideal.mul_le Ideal.mul_le
 
+#print Ideal.mul_le_left /-
 theorem mul_le_left : I * J ≤ J :=
   Ideal.mul_le.2 fun r hr s => J.mul_mem_left _
 #align ideal.mul_le_left Ideal.mul_le_left
+-/
 
+#print Ideal.mul_le_right /-
 theorem mul_le_right : I * J ≤ I :=
   Ideal.mul_le.2 fun r hr s hs => I.mul_mem_right _ hr
 #align ideal.mul_le_right Ideal.mul_le_right
+-/
 
 @[simp]
 theorem sup_mul_right_self : I ⊔ I * J = I :=
@@ -696,9 +722,11 @@ theorem sup_eq_top_iff_isCoprime {R : Type _} [CommSemiring R] (x y : R) :
       ⟨_, mem_span_singleton'.mpr ⟨_, rfl⟩, _, mem_span_singleton'.mpr ⟨_, rfl⟩, h1⟩
 #align ideal.sup_eq_top_iff_is_coprime Ideal.sup_eq_top_iff_isCoprime
 
+#print Ideal.mul_le_inf /-
 theorem mul_le_inf : I * J ≤ I ⊓ J :=
   mul_le.2 fun r hri s hsj => ⟨I.mul_mem_right s hri, J.mul_mem_left r hsj⟩
 #align ideal.mul_le_inf Ideal.mul_le_inf
+-/
 
 theorem multiset_prod_le_inf {s : Multiset (Ideal R)} : s.Prod ≤ s.inf := by
   classical
@@ -805,17 +833,23 @@ theorem top_mul : ⊤ * I = I :=
 
 variable {I}
 
+#print Ideal.mul_mono /-
 theorem mul_mono (hik : I ≤ K) (hjl : J ≤ L) : I * J ≤ K * L :=
   Submodule.smul_mono hik hjl
 #align ideal.mul_mono Ideal.mul_mono
+-/
 
+#print Ideal.mul_mono_left /-
 theorem mul_mono_left (h : I ≤ J) : I * K ≤ J * K :=
   Submodule.smul_mono_left h
 #align ideal.mul_mono_left Ideal.mul_mono_left
+-/
 
+#print Ideal.mul_mono_right /-
 theorem mul_mono_right (h : J ≤ K) : I * J ≤ I * K :=
   Submodule.smul_mono_right h
 #align ideal.mul_mono_right Ideal.mul_mono_right
+-/
 
 variable (I J K)
 
@@ -831,26 +865,32 @@ theorem sup_mul : (I ⊔ J) * K = I * K ⊔ J * K :=
 
 variable {I J K}
 
+#print Ideal.pow_le_pow /-
 theorem pow_le_pow {m n : ℕ} (h : m ≤ n) : I ^ n ≤ I ^ m :=
   by
   cases' Nat.exists_eq_add_of_le h with k hk
   rw [hk, pow_add]
   exact le_trans mul_le_inf inf_le_left
 #align ideal.pow_le_pow Ideal.pow_le_pow
+-/
 
+#print Ideal.pow_le_self /-
 theorem pow_le_self {n : ℕ} (hn : n ≠ 0) : I ^ n ≤ I :=
   calc
     I ^ n ≤ I ^ 1 := pow_le_pow (Nat.pos_of_ne_zero hn)
     _ = I := pow_one _
     
 #align ideal.pow_le_self Ideal.pow_le_self
+-/
 
+#print Ideal.pow_mono /-
 theorem pow_mono {I J : Ideal R} (e : I ≤ J) (n : ℕ) : I ^ n ≤ J ^ n :=
   by
   induction n
   · rw [pow_zero, pow_zero]; exact rfl.le
   · rw [pow_succ, pow_succ]; exact Ideal.mul_mono e n_ih
 #align ideal.pow_mono Ideal.pow_mono
+-/
 
 theorem mul_eq_bot {R : Type _} [CommSemiring R] [NoZeroDivisors R] {I J : Ideal R} :
     I * J = ⊥ ↔ I = ⊥ ∨ J = ⊥ :=
@@ -910,8 +950,10 @@ def IsRadical (I : Ideal R) : Prop :=
 #align ideal.is_radical Ideal.IsRadical
 -/
 
+#print Ideal.le_radical /-
 theorem le_radical : I ≤ radical I := fun r hri => ⟨1, (pow_one r).symm ▸ hri⟩
 #align ideal.le_radical Ideal.le_radical
+-/
 
 #print Ideal.radical_eq_iff /-
 /-- An ideal is radical iff it is equal to its radical. -/
@@ -931,8 +973,10 @@ theorem radical_top : (radical ⊤ : Ideal R) = ⊤ :=
 
 variable {R}
 
+#print Ideal.radical_mono /-
 theorem radical_mono (H : I ≤ J) : radical I ≤ radical J := fun r ⟨n, hrni⟩ => ⟨n, H hrni⟩
 #align ideal.radical_mono Ideal.radical_mono
+-/
 
 variable (I)
 
@@ -951,13 +995,17 @@ theorem radical_idem : radical (radical I) = radical I :=
 
 variable {I}
 
+#print Ideal.IsRadical.radical_le_iff /-
 theorem IsRadical.radical_le_iff (hJ : J.IsRadical) : radical I ≤ J ↔ I ≤ J :=
   ⟨le_trans le_radical, fun h => hJ.radical ▸ radical_mono h⟩
 #align ideal.is_radical.radical_le_iff Ideal.IsRadical.radical_le_iff
+-/
 
+#print Ideal.radical_le_radical_iff /-
 theorem radical_le_radical_iff : radical I ≤ radical J ↔ I ≤ radical J :=
   (radical_isRadical J).radical_le_iff
 #align ideal.radical_le_radical_iff Ideal.radical_le_radical_iff
+-/
 
 theorem radical_eq_top : radical I = ⊤ ↔ I = ⊤ :=
   ⟨fun h =>
@@ -1004,9 +1052,11 @@ theorem radical_mul : radical (I * J) = radical I ⊓ radical J :=
 
 variable {I J}
 
+#print Ideal.IsPrime.radical_le_iff /-
 theorem IsPrime.radical_le_iff (hJ : IsPrime J) : radical I ≤ J ↔ I ≤ J :=
   hJ.IsRadical.radical_le_iff
 #align ideal.is_prime.radical_le_iff Ideal.IsPrime.radical_le_iff
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ∉ » m) -/
 theorem radical_eq_sInf (I : Ideal R) : radical I = sInf { J : Ideal R | I ≤ J ∧ IsPrime J } :=
@@ -1086,6 +1136,7 @@ theorem radical_pow (n : ℕ) (H : n > 0) : radical (I ^ n) = radical I :=
 #align ideal.radical_pow Ideal.radical_pow
 -/
 
+#print Ideal.IsPrime.mul_le /-
 theorem IsPrime.mul_le {I J P : Ideal R} (hp : IsPrime P) : I * J ≤ P ↔ I ≤ P ∨ J ≤ P :=
   ⟨fun h =>
     or_iff_not_imp_left.2 fun hip j hj =>
@@ -1095,11 +1146,14 @@ theorem IsPrime.mul_le {I J P : Ideal R} (hp : IsPrime P) : I * J ≤ P ↔ I �
     Or.cases_on h (le_trans <| le_trans mul_le_inf inf_le_left)
       (le_trans <| le_trans mul_le_inf inf_le_right)⟩
 #align ideal.is_prime.mul_le Ideal.IsPrime.mul_le
+-/
 
+#print Ideal.IsPrime.inf_le /-
 theorem IsPrime.inf_le {I J P : Ideal R} (hp : IsPrime P) : I ⊓ J ≤ P ↔ I ≤ P ∨ J ≤ P :=
   ⟨fun h => hp.mul_le.1 <| le_trans mul_le_inf h, fun h =>
     Or.cases_on h (le_trans inf_le_left) (le_trans inf_le_right)⟩
 #align ideal.is_prime.inf_le Ideal.IsPrime.inf_le
+-/
 
 theorem IsPrime.multiset_prod_le {s : Multiset (Ideal R)} {P : Ideal R} (hp : IsPrime P)
     (hne : s ≠ 0) : s.Prod ≤ P ↔ ∃ I ∈ s, I ≤ P :=
@@ -1752,10 +1806,12 @@ def relIsoOfSurjective : Ideal S ≃o { p : Ideal R // comap f ⊥ ≤ p }
       comap_mono⟩
 #align ideal.rel_iso_of_surjective Ideal.relIsoOfSurjective
 
+#print Ideal.orderEmbeddingOfSurjective /-
 /-- The map on ideals induced by a surjective map preserves inclusion. -/
 def orderEmbeddingOfSurjective : Ideal S ↪o Ideal R :=
   (relIsoOfSurjective f hf).toRelEmbedding.trans (Subtype.relEmbedding _ _)
 #align ideal.order_embedding_of_surjective Ideal.orderEmbeddingOfSurjective
+-/
 
 theorem map_eq_top_or_isMaximal_of_surjective {I : Ideal R} (H : IsMaximal I) :
     map f I = ⊤ ∨ IsMaximal (map f I) :=
@@ -1817,6 +1873,7 @@ variable (hf : Function.Bijective f)
 
 include hf
 
+#print Ideal.relIsoOfBijective /-
 /-- Special case of the correspondence theorem for isomorphic rings -/
 def relIsoOfBijective : Ideal S ≃o Ideal R
     where
@@ -1828,6 +1885,7 @@ def relIsoOfBijective : Ideal S ≃o Ideal R
       ((relIsoOfSurjective f hf.right).right_inv ⟨J, comap_bot_le_of_injective f hf.left⟩)
   map_rel_iff' _ _ := (relIsoOfSurjective f hf.right).map_rel_iff'
 #align ideal.rel_iso_of_bijective Ideal.relIsoOfBijective
+-/
 
 theorem comap_le_iff_le_map {I : Ideal R} {K : Ideal S} : comap f K ≤ I ↔ K ≤ map f I :=
   ⟨fun h => le_map_of_comap_le_of_surjective f hf.right h, fun h =>
@@ -1990,7 +2048,7 @@ variable (M : Type _) [AddCommGroup M] {R : Type _} [CommRing R] [Module R M] (I
 
 variable (v : ι → M) (hv : Submodule.span R (Set.range v) = ⊤)
 
-open BigOperators
+open scoped BigOperators
 
 #print Ideal.finsuppTotal /-
 /-- A variant of `finsupp.total` that takes in vectors valued in `I`. -/

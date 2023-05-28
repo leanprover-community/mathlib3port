@@ -41,7 +41,7 @@ Alternate forms which operate on `[is_scalar_tower ℝ 𝕜 F]` instead are prov
 
 open IsROrC
 
-open ComplexConjugate
+open scoped ComplexConjugate
 
 variable {𝕜 : Type _} [IsROrC 𝕜] {F : Type _} [SeminormedAddCommGroup F] [NormedSpace 𝕜 F]
 

@@ -46,7 +46,7 @@ crossproduct
 
 open Matrix
 
-open Matrix
+open scoped Matrix
 
 variable {R : Type _} [CommRing R]
 

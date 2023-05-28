@@ -31,7 +31,7 @@ constant function. These results have variants for sums instead of products.
 -/
 
 
-open BigOperators
+open scoped BigOperators
 
 open Finset
 

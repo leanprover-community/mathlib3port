@@ -53,7 +53,7 @@ namespace Ideal
 
 variable {R : Type u} {S : Type v}
 
-open Polynomial
+open scoped Polynomial
 
 section Jacobson
 

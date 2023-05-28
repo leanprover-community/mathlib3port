@@ -24,7 +24,7 @@ This file defines the `has_continuous_star` typeclass, along with instances on `
 -/
 
 
-open Filter Topology
+open scoped Filter Topology
 
 open Filter
 

@@ -40,7 +40,7 @@ variable {F ι α β : Type _}
 
 namespace Rat
 
-open Rat
+open scoped Rat
 
 section WithDivRing
 

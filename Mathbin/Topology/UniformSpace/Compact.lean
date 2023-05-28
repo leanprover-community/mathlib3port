@@ -42,7 +42,7 @@ uniform space, uniform continuity, compact space
 -/
 
 
-open Classical uniformity Topology Filter
+open scoped Classical uniformity Topology Filter
 
 open Filter UniformSpace Set
 

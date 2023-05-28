@@ -44,7 +44,7 @@ class NumberField (K : Type _) [Field K] : Prop where
 
 open Function Module
 
-open Classical BigOperators nonZeroDivisors
+open scoped Classical BigOperators nonZeroDivisors
 
 /-- `ℤ` with its usual ring structure is not a field. -/
 theorem Int.not_isField : ¬IsField ℤ := fun h =>
@@ -212,7 +212,7 @@ namespace AdjoinRoot
 
 section
 
-open Polynomial
+open scoped Polynomial
 
 attribute [-instance] algebraRat
 

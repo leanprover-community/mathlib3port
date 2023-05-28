@@ -47,7 +47,7 @@ namespace MonoidalCategory
 -- The definitions inside this namespace are essentially private.
 -- After we build the `monoidal_category (Module R)` instance,
 -- you should use that API.
-open TensorProduct
+open scoped TensorProduct
 
 attribute [local ext] TensorProduct.ext
 

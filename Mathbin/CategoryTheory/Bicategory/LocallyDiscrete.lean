@@ -30,7 +30,7 @@ namespace CategoryTheory
 
 open Bicategory Discrete
 
-open Bicategory
+open scoped Bicategory
 
 universe w₂ v v₁ v₂ u u₁ u₂
 

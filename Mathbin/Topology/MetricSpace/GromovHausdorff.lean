@@ -47,7 +47,7 @@ i.e., it is complete and second countable. We also prove the Gromov compactness 
 
 noncomputable section
 
-open Classical Topology ENNReal
+open scoped Classical Topology ENNReal
 
 -- mathport name: exprℓ_infty_ℝ
 local notation "ℓ_infty_ℝ" => lp (fun n : ℕ => ℝ) ∞

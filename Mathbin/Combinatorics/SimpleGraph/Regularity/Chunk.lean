@@ -42,7 +42,7 @@ Once ported to mathlib4, this file will be a great golfing ground for Heather's 
 
 open Finpartition Finset Fintype Rel Nat
 
-open BigOperators Classical
+open scoped BigOperators Classical
 
 attribute [local positivity] tactic.positivity_szemeredi_regularity
 

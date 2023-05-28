@@ -303,6 +303,7 @@ section
 
 variable {I J : Ideal P} {x y : P}
 
+#print Order.Ideal.principal /-
 /-- The smallest ideal containing a given element. -/
 @[simps]
 def principal (p : P) : Ideal P where
@@ -310,6 +311,7 @@ def principal (p : P) : Ideal P where
   nonempty' := nonempty_Iic
   directed' x hx y hy := ⟨p, le_rfl, hx, hy⟩
 #align order.ideal.principal Order.Ideal.principal
+-/
 
 instance [Inhabited P] : Inhabited (Ideal P) :=
   ⟨Ideal.principal default⟩
@@ -319,10 +321,12 @@ theorem principal_le_iff : principal x ≤ I ↔ x ∈ I :=
   ⟨fun h => h le_rfl, fun hx y hy => I.lower hy hx⟩
 #align order.ideal.principal_le_iff Order.Ideal.principal_le_iff
 
+#print Order.Ideal.mem_principal /-
 @[simp]
 theorem mem_principal : x ∈ principal y ↔ x ≤ y :=
   Iff.rfl
 #align order.ideal.mem_principal Order.Ideal.mem_principal
+-/
 
 end
 
@@ -512,6 +516,7 @@ section BooleanAlgebra
 
 variable [BooleanAlgebra P] {x : P} {I : Ideal P}
 
+#print Order.Ideal.IsProper.not_mem_of_compl_mem /-
 theorem IsProper.not_mem_of_compl_mem (hI : IsProper I) (hxc : xᶜ ∈ I) : x ∉ I :=
   by
   intro hx
@@ -519,12 +524,15 @@ theorem IsProper.not_mem_of_compl_mem (hI : IsProper I) (hxc : xᶜ ∈ I) : x �
   have ht : x ⊔ xᶜ ∈ I := sup_mem ‹_› ‹_›
   rwa [sup_compl_eq_top] at ht
 #align order.ideal.is_proper.not_mem_of_compl_mem Order.Ideal.IsProper.not_mem_of_compl_mem
+-/
 
+#print Order.Ideal.IsProper.not_mem_or_compl_not_mem /-
 theorem IsProper.not_mem_or_compl_not_mem (hI : IsProper I) : x ∉ I ∨ xᶜ ∉ I :=
   by
   have h : xᶜ ∈ I → x ∉ I := hI.not_mem_of_compl_mem
   tauto
 #align order.ideal.is_proper.not_mem_or_compl_not_mem Order.Ideal.IsProper.not_mem_or_compl_not_mem
+-/
 
 end BooleanAlgebra
 
@@ -566,9 +574,11 @@ theorem above_mem : D.above x ∈ D :=
 #align order.cofinal.above_mem Order.Cofinal.above_mem
 -/
 
+#print Order.Cofinal.le_above /-
 theorem le_above : x ≤ D.above x :=
   Exists.elim (Classical.choose_spec <| D.mem_gt x) fun _ b => b
 #align order.cofinal.le_above Order.Cofinal.le_above
+-/
 
 end Cofinal
 
@@ -599,6 +609,7 @@ theorem sequenceOfCofinals.encode_mem (i : ι) :
   rw [Encodable.encodek]; apply cofinal.above_mem
 #align order.sequence_of_cofinals.encode_mem Order.sequenceOfCofinals.encode_mem
 
+#print Order.idealOfCofinals /-
 /-- Given an element `p : P` and a family `𝒟` of cofinal subsets of a preorder `P`,
   indexed by a countable type, `ideal_of_cofinals p 𝒟` is an ideal in `P` which
   - contains `p`, according to `mem_ideal_of_cofinals p 𝒟`, and
@@ -614,6 +625,7 @@ def idealOfCofinals : Ideal P
     ⟨_, ⟨max n m, le_rfl⟩, le_trans hn <| sequenceOfCofinals.monotone p 𝒟 (le_max_left _ _),
       le_trans hm <| sequenceOfCofinals.monotone p 𝒟 (le_max_right _ _)⟩
 #align order.ideal_of_cofinals Order.idealOfCofinals
+-/
 
 theorem mem_idealOfCofinals : p ∈ idealOfCofinals p 𝒟 :=
   ⟨0, le_rfl⟩

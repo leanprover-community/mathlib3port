@@ -102,19 +102,23 @@ section Preorder
 
 variable [Preorder β] [@DecidableRel β (· < ·)] {f : α → β} {l : List α} {o : Option α} {a m : α}
 
+#print List.argmax /-
 /-- `argmax f l` returns `some a`, where `f a` is maximal among the elements of `l`, in the sense
 that there is no `b ∈ l` with `f a < f b`. If `a`, `b` are such that `f a = f b`, it returns
 whichever of `a` or `b` comes first in the list. `argmax f []` = none`. -/
 def argmax (f : α → β) (l : List α) : Option α :=
   l.foldl (argAux fun b c => f c < f b) none
 #align list.argmax List.argmax
+-/
 
+#print List.argmin /-
 /-- `argmin f l` returns `some a`, where `f a` is minimal among the elements of `l`, in the sense
 that there is no `b ∈ l` with `f b < f a`. If `a`, `b` are such that `f a = f b`, it returns
 whichever of `a` or `b` comes first in the list. `argmin f []` = none`. -/
 def argmin (f : α → β) (l : List α) :=
   l.foldl (argAux fun b c => f b < f c) none
 #align list.argmin List.argmin
+-/
 
 @[simp]
 theorem argmax_nil (f : α → β) : argmax f [] = none :=
@@ -279,74 +283,102 @@ section Preorder
 
 variable [Preorder α] [@DecidableRel α (· < ·)] {l : List α} {a m : α}
 
+#print List.maximum /-
 /-- `maximum l` returns an `with_bot α`, the largest element of `l` for nonempty lists, and `⊥` for
 `[]`  -/
 def maximum (l : List α) : WithBot α :=
   argmax id l
 #align list.maximum List.maximum
+-/
 
+#print List.minimum /-
 /-- `minimum l` returns an `with_top α`, the smallest element of `l` for nonempty lists, and `⊤` for
 `[]`  -/
 def minimum (l : List α) : WithTop α :=
   argmin id l
 #align list.minimum List.minimum
+-/
 
+#print List.maximum_nil /-
 @[simp]
 theorem maximum_nil : maximum ([] : List α) = ⊥ :=
   rfl
 #align list.maximum_nil List.maximum_nil
+-/
 
+#print List.minimum_nil /-
 @[simp]
 theorem minimum_nil : minimum ([] : List α) = ⊤ :=
   rfl
 #align list.minimum_nil List.minimum_nil
+-/
 
+#print List.maximum_singleton /-
 @[simp]
 theorem maximum_singleton (a : α) : maximum [a] = a :=
   rfl
 #align list.maximum_singleton List.maximum_singleton
+-/
 
+#print List.minimum_singleton /-
 @[simp]
 theorem minimum_singleton (a : α) : minimum [a] = a :=
   rfl
 #align list.minimum_singleton List.minimum_singleton
+-/
 
+#print List.maximum_mem /-
 theorem maximum_mem {l : List α} {m : α} : (maximum l : WithTop α) = m → m ∈ l :=
   argmax_mem
 #align list.maximum_mem List.maximum_mem
+-/
 
+#print List.minimum_mem /-
 theorem minimum_mem {l : List α} {m : α} : (minimum l : WithBot α) = m → m ∈ l :=
   argmin_mem
 #align list.minimum_mem List.minimum_mem
+-/
 
+#print List.maximum_eq_none /-
 @[simp]
 theorem maximum_eq_none {l : List α} : l.maximum = none ↔ l = [] :=
   argmax_eq_none
 #align list.maximum_eq_none List.maximum_eq_none
+-/
 
+#print List.minimum_eq_none /-
 @[simp]
 theorem minimum_eq_none {l : List α} : l.minimum = none ↔ l = [] :=
   argmin_eq_none
 #align list.minimum_eq_none List.minimum_eq_none
+-/
 
+#print List.not_lt_maximum_of_mem /-
 theorem not_lt_maximum_of_mem : a ∈ l → (maximum l : WithBot α) = m → ¬m < a :=
   not_lt_of_mem_argmax
 #align list.not_lt_maximum_of_mem List.not_lt_maximum_of_mem
+-/
 
+#print List.minimum_not_lt_of_mem /-
 theorem minimum_not_lt_of_mem : a ∈ l → (minimum l : WithTop α) = m → ¬a < m :=
   not_lt_of_mem_argmin
 #align list.minimum_not_lt_of_mem List.minimum_not_lt_of_mem
+-/
 
+#print List.not_lt_maximum_of_mem' /-
 theorem not_lt_maximum_of_mem' (ha : a ∈ l) : ¬maximum l < (a : WithBot α) :=
   by
   cases h : l.maximum
   · simp_all
   · simp_rw [WithBot.some_eq_coe, WithBot.coe_lt_coe, not_lt_maximum_of_mem ha h, not_false_iff]
 #align list.not_lt_maximum_of_mem' List.not_lt_maximum_of_mem'
+-/
 
+#print List.not_lt_minimum_of_mem' /-
 theorem not_lt_minimum_of_mem' (ha : a ∈ l) : ¬(a : WithTop α) < minimum l :=
   @not_lt_maximum_of_mem' αᵒᵈ _ _ _ _ ha
 #align list.not_lt_minimum_of_mem' List.not_lt_minimum_of_mem'
+-/
 
 end Preorder
 
@@ -376,13 +408,17 @@ theorem minimum_le_of_mem : a ∈ l → (minimum l : WithTop α) = m → m ≤ a
 #align list.minimum_le_of_mem List.minimum_le_of_mem
 -/
 
+#print List.le_maximum_of_mem' /-
 theorem le_maximum_of_mem' (ha : a ∈ l) : (a : WithBot α) ≤ maximum l :=
   le_of_not_lt <| not_lt_maximum_of_mem' ha
 #align list.le_maximum_of_mem' List.le_maximum_of_mem'
+-/
 
+#print List.le_minimum_of_mem' /-
 theorem le_minimum_of_mem' (ha : a ∈ l) : minimum l ≤ (a : WithTop α) :=
   @le_maximum_of_mem' αᵒᵈ _ _ _ ha
 #align list.le_minimum_of_mem' List.le_minimum_of_mem'
+-/
 
 #print List.minimum_concat /-
 theorem minimum_concat (a : α) (l : List α) : minimum (l ++ [a]) = min (minimum l) a :=

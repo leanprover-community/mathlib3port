@@ -105,7 +105,7 @@ theorem factorThru_comp {P X E : C} [Projective P] (f : P ⟶ X) (e : E ⟶ X) [
 
 section
 
-open ZeroObject
+open scoped ZeroObject
 
 #print CategoryTheory.Projective.zero_projective /-
 instance zero_projective [HasZeroObject C] [HasZeroMorphisms C] : Projective (0 : C)

@@ -66,7 +66,7 @@ Lebesgue decomposition theorem
 
 noncomputable section
 
-open Classical MeasureTheory NNReal ENNReal
+open scoped Classical MeasureTheory NNReal ENNReal
 
 open Set
 

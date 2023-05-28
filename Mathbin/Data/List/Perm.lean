@@ -28,7 +28,7 @@ The notation `~` is used for permutation equivalence.
 -/
 
 
-open Nat
+open scoped Nat
 
 universe uu vv
 

@@ -43,7 +43,7 @@ affine space, affine equivalence
 
 open Function Set
 
-open Affine
+open scoped Affine
 
 #print AffineEquiv /-
 /-- An affine equivalence is an equivalence between affine spaces such that both forward

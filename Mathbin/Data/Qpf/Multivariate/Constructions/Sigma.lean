@@ -23,7 +23,7 @@ universe u
 
 namespace MvQPF
 
-open MvFunctor
+open scoped MvFunctor
 
 variable {n : ℕ} {A : Type u}
 

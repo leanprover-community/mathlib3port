@@ -27,7 +27,7 @@ noncomputable section
 
 namespace Complex
 
-open ComplexConjugate Real Topology
+open scoped ComplexConjugate Real Topology
 
 open Filter Set
 

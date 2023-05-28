@@ -42,7 +42,7 @@ The following properties are covered:
 -/
 
 
-open Pointwise Classical BigOperators
+open scoped Pointwise Classical BigOperators
 
 universe u
 
@@ -231,7 +231,7 @@ end Properties
 
 section Ideal
 
-open nonZeroDivisors
+open scoped nonZeroDivisors
 
 /-- Let `I J : ideal R`. If the localization of `I` at each maximal ideal `P` is included in
 the localization of `J` at `P`, then `I ≤ J`. -/

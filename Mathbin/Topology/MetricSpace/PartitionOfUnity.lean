@@ -33,7 +33,7 @@ metric space, partition of unity, locally finite
 -/
 
 
-open Topology ENNReal BigOperators NNReal Filter
+open scoped Topology ENNReal BigOperators NNReal Filter
 
 open Set Function Filter TopologicalSpace
 

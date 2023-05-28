@@ -149,7 +149,7 @@ assert_not_exists Differentiable
 
 noncomputable section
 
-open Topology BigOperators NNReal ENNReal MeasureTheory
+open scoped Topology BigOperators NNReal ENNReal MeasureTheory
 
 open Set Filter TopologicalSpace ENNReal Emetric
 
@@ -813,7 +813,7 @@ variable [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E] [Nontrivia
 
 section
 
-open Classical
+open scoped Classical
 
 /-- The Bochner integral -/
 irreducible_def integral {m : MeasurableSpace α} (μ : Measure α) (f : α → E) : E :=

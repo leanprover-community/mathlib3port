@@ -21,9 +21,9 @@ We show `matrix n n A ≃ₐ[R] (A ⊗[R] matrix n n R)`.
 
 universe u v w
 
-open TensorProduct
+open scoped TensorProduct
 
-open BigOperators
+open scoped BigOperators
 
 open TensorProduct
 

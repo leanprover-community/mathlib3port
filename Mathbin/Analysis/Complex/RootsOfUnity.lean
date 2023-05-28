@@ -30,7 +30,7 @@ namespace Complex
 
 open Polynomial Real
 
-open Nat Real
+open scoped Nat Real
 
 theorem isPrimitiveRoot_exp_of_coprime (i n : ℕ) (h0 : n ≠ 0) (hi : i.coprime n) :
     IsPrimitiveRoot (exp (2 * π * I * (i / n))) n :=

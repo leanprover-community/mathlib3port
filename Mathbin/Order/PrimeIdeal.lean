@@ -70,11 +70,13 @@ theorem compl_F_eq_I : (IF.f : Set P)ᶜ = IF.i :=
   IF.isCompl_i_f.eq_compl.symm
 #align order.ideal.prime_pair.compl_F_eq_I Order.Ideal.PrimePair.compl_F_eq_I
 
+#print Order.Ideal.PrimePair.I_isProper /-
 theorem I_isProper : IsProper IF.i := by
   cases IF.F.nonempty
   apply is_proper_of_not_mem (_ : w ∉ IF.I)
   rwa [← IF.compl_I_eq_F] at h
 #align order.ideal.prime_pair.I_is_proper Order.Ideal.PrimePair.I_isProper
+-/
 
 theorem disjoint : Disjoint (IF.i : Set P) IF.f :=
   IF.isCompl_i_f.Disjoint
@@ -90,17 +92,20 @@ theorem F_union_I : (IF.f : Set P) ∪ IF.i = Set.univ :=
 
 end PrimePair
 
+#print Order.Ideal.IsPrime /-
 /-- An ideal `I` is prime if its complement is a filter.
 -/
 @[mk_iff]
 class IsPrime [Preorder P] (I : Ideal P) extends IsProper I : Prop where
   compl_filter : IsPFilter ((I : Set P)ᶜ)
 #align order.ideal.is_prime Order.Ideal.IsPrime
+-/
 
 section Preorder
 
 variable [Preorder P]
 
+#print Order.Ideal.IsPrime.toPrimePair /-
 /-- Create an element of type `order.ideal.prime_pair` from an ideal satisfying the predicate
 `order.ideal.is_prime`. -/
 def IsPrime.toPrimePair {I : Ideal P} (h : IsPrime I) : PrimePair P :=
@@ -108,10 +113,13 @@ def IsPrime.toPrimePair {I : Ideal P} (h : IsPrime I) : PrimePair P :=
     f := h.compl_filter.toPFilter
     isCompl_i_f := isCompl_compl }
 #align order.ideal.is_prime.to_prime_pair Order.Ideal.IsPrime.toPrimePair
+-/
 
+#print Order.Ideal.PrimePair.I_isPrime /-
 theorem PrimePair.I_isPrime (IF : PrimePair P) : IsPrime IF.i :=
   { IF.I_isProper with compl_filter := by rw [IF.compl_I_eq_F]; exact IF.F.is_pfilter }
 #align order.ideal.prime_pair.I_is_prime Order.Ideal.PrimePair.I_isPrime
+-/
 
 end Preorder
 
@@ -150,6 +158,7 @@ section DistribLattice
 
 variable [DistribLattice P] {I : Ideal P}
 
+#print Order.Ideal.IsMaximal.isPrime /-
 instance (priority := 100) IsMaximal.isPrime [IsMaximal I] : IsPrime I :=
   by
   rw [is_prime_iff_mem_or_mem]
@@ -168,6 +177,7 @@ instance (priority := 100) IsMaximal.isPrime [IsMaximal I] : IsPrime I :=
   rw [hy]
   exact le_sup_right
 #align order.ideal.is_maximal.is_prime Order.Ideal.IsMaximal.isPrime
+-/
 
 end DistribLattice
 
@@ -175,17 +185,22 @@ section BooleanAlgebra
 
 variable [BooleanAlgebra P] {x : P} {I : Ideal P}
 
+#print Order.Ideal.IsPrime.mem_or_compl_mem /-
 theorem IsPrime.mem_or_compl_mem (hI : IsPrime I) : x ∈ I ∨ xᶜ ∈ I :=
   by
   apply hI.mem_or_mem
   rw [inf_compl_eq_bot]
   exact I.bot_mem
 #align order.ideal.is_prime.mem_or_compl_mem Order.Ideal.IsPrime.mem_or_compl_mem
+-/
 
+#print Order.Ideal.IsPrime.mem_compl_of_not_mem /-
 theorem IsPrime.mem_compl_of_not_mem (hI : IsPrime I) (hxnI : x ∉ I) : xᶜ ∈ I :=
   hI.mem_or_compl_mem.resolve_left hxnI
 #align order.ideal.is_prime.mem_compl_of_not_mem Order.Ideal.IsPrime.mem_compl_of_not_mem
+-/
 
+#print Order.Ideal.isPrime_of_mem_or_compl_mem /-
 theorem isPrime_of_mem_or_compl_mem [IsProper I] (h : ∀ {x : P}, x ∈ I ∨ xᶜ ∈ I) : IsPrime I :=
   by
   simp only [is_prime_iff_mem_or_mem, or_iff_not_imp_left]
@@ -194,11 +209,15 @@ theorem isPrime_of_mem_or_compl_mem [IsProper I] (h : ∀ {x : P}, x ∈ I ∨ x
   have ass : x ⊓ y ⊔ y ⊓ xᶜ ∈ I := sup_mem hxy (I.lower inf_le_right hxcI)
   rwa [inf_comm, sup_inf_inf_compl] at ass
 #align order.ideal.is_prime_of_mem_or_compl_mem Order.Ideal.isPrime_of_mem_or_compl_mem
+-/
 
+#print Order.Ideal.isPrime_iff_mem_or_compl_mem /-
 theorem isPrime_iff_mem_or_compl_mem [IsProper I] : IsPrime I ↔ ∀ {x : P}, x ∈ I ∨ xᶜ ∈ I :=
   ⟨fun h _ => h.mem_or_compl_mem, isPrime_of_mem_or_compl_mem⟩
 #align order.ideal.is_prime_iff_mem_or_compl_mem Order.Ideal.isPrime_iff_mem_or_compl_mem
+-/
 
+#print Order.Ideal.IsPrime.isMaximal /-
 instance (priority := 100) IsPrime.isMaximal [IsPrime I] : IsMaximal I :=
   by
   simp only [is_maximal_iff, Set.eq_univ_iff_forall, is_prime.to_is_proper, true_and_iff]
@@ -210,6 +229,7 @@ instance (priority := 100) IsPrime.isMaximal [IsPrime I] : IsMaximal I :=
     sup_mem (J.lower inf_le_right hyJ)
       (hIJ.le <| I.lower inf_le_right <| is_prime.mem_compl_of_not_mem ‹_› hyI)
 #align order.ideal.is_prime.is_maximal Order.Ideal.IsPrime.isMaximal
+-/
 
 end BooleanAlgebra
 

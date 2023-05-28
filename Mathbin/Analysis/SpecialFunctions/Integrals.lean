@@ -38,7 +38,7 @@ integrate, integration, integrable, integrability
 
 open Real Nat Set Finset
 
-open Real BigOperators Interval
+open scoped Real BigOperators Interval
 
 variable {a b : ℝ} (n : ℕ)
 

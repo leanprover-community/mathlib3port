@@ -32,7 +32,7 @@ matrix determinant, polynomial
 -/
 
 
-open Matrix BigOperators Polynomial
+open scoped Matrix BigOperators Polynomial
 
 variable {n α : Type _} [DecidableEq n] [Fintype n] [CommRing α]
 

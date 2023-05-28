@@ -33,7 +33,7 @@ zeta functions, in terms of Bernoulli polynomials.
 
 noncomputable section
 
-open Nat Real Interval
+open scoped Nat Real Interval
 
 open Complex MeasureTheory Set intervalIntegral
 

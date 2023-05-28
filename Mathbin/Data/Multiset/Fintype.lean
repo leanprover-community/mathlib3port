@@ -40,7 +40,7 @@ multiset enumeration
 -/
 
 
-open BigOperators
+open scoped BigOperators
 
 variable {α : Type _} [DecidableEq α] {m : Multiset α}
 

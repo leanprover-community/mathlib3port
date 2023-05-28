@@ -21,7 +21,7 @@ import Mathbin.Analysis.SpecificLimits.Basic
 
 open Filter Filter.Germ
 
-open Topology Classical
+open scoped Topology Classical
 
 #print Hyperreal /-
 /-- Hyperreal numbers on the ultrafilter extending the cofinite filter -/

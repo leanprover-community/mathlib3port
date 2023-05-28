@@ -25,7 +25,7 @@ promoted to an order isomorphism.
 
 open Finset
 
-open BigOperators Classical
+open scoped BigOperators Classical
 
 noncomputable section
 
@@ -218,19 +218,23 @@ theorem toMultiset_strictMono : StrictMono (@toMultiset ι) :=
   (@orderIsoMultiset ι).StrictMono
 #align finsupp.to_multiset_strict_mono Finsupp.toMultiset_strictMono
 
+#print Finsupp.sum_id_lt_of_lt /-
 theorem sum_id_lt_of_lt (m n : ι →₀ ℕ) (h : m < n) : (m.Sum fun _ => id) < n.Sum fun _ => id :=
   by
   rw [← card_to_multiset, ← card_to_multiset]
   apply Multiset.card_lt_of_lt
   exact to_multiset_strict_mono h
 #align finsupp.sum_id_lt_of_lt Finsupp.sum_id_lt_of_lt
+-/
 
 variable (ι)
 
+#print Finsupp.lt_wf /-
 /-- The order on `ι →₀ ℕ` is well-founded. -/
 theorem lt_wf : WellFounded (@LT.lt (ι →₀ ℕ) _) :=
   Subrelation.wf sum_id_lt_of_lt <| InvImage.wf _ Nat.lt_wfRel
 #align finsupp.lt_wf Finsupp.lt_wf
+-/
 
 end Finsupp
 

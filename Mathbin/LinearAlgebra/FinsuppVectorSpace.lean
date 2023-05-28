@@ -28,7 +28,7 @@ attribute [local instance 100] Classical.propDecidable
 
 open Set LinearMap Submodule
 
-open Cardinal
+open scoped Cardinal
 
 universe u v w
 

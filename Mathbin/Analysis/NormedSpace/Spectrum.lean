@@ -48,7 +48,7 @@ This file contains the basic theory for the resolvent and spectrum of a Banach a
 -/
 
 
-open ENNReal NNReal
+open scoped ENNReal NNReal
 
 /-- The *spectral radius* is the supremum of the `nnnorm` (`‖⬝‖₊`) of elements in the spectrum,
     coerced into an element of `ℝ≥0∞`. Note that it is possible for `spectrum 𝕜 a = ∅`. In this
@@ -283,7 +283,7 @@ section OneSubSmul
 
 open ContinuousMultilinearMap ENNReal FormalMultilinearSeries
 
-open NNReal ENNReal
+open scoped NNReal ENNReal
 
 variable [NontriviallyNormedField 𝕜] [NormedRing A] [NormedAlgebra 𝕜 A]
 
@@ -361,7 +361,7 @@ section GelfandFormula
 
 open Filter ENNReal ContinuousMultilinearMap
 
-open Topology
+open scoped Topology
 
 variable [NormedRing A] [NormedAlgebra ℂ A] [CompleteSpace A]
 
@@ -463,7 +463,7 @@ theorem spectralRadius_lt_of_forall_lt {r : ℝ≥0} (hr : ∀ z ∈ spectrum �
   spectralRadius_lt_of_forall_lt_of_nonempty (spectrum.nonempty a) hr
 #align spectrum.spectral_radius_lt_of_forall_lt spectrum.spectralRadius_lt_of_forall_lt
 
-open Polynomial
+open scoped Polynomial
 
 open Polynomial
 

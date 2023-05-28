@@ -24,7 +24,7 @@ To match `submodule.idem_semiring`, we do not put these in the `pointwise` local
 -/
 
 
-open Pointwise
+open scoped Pointwise
 
 variable {R M : Type _}
 

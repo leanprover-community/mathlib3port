@@ -82,12 +82,14 @@ structure IsRegular (c : R) : Prop where
 
 attribute [to_additive] IsRegular
 
+#print MulLECancellable.isLeftRegular /-
 @[to_additive]
 protected theorem MulLECancellable.isLeftRegular [PartialOrder R] {a : R}
     (ha : MulLECancellable a) : IsLeftRegular a :=
   ha.Injective
 #align mul_le_cancellable.is_left_regular MulLECancellable.isLeftRegular
 #align add_le_cancellable.is_add_left_regular AddLECancellable.isAddLeftRegular
+-/
 
 #print IsLeftRegular.right_of_commute /-
 theorem IsLeftRegular.right_of_commute {a : R} (ca : ∀ b, Commute a b) (h : IsLeftRegular a) :

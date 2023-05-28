@@ -62,10 +62,11 @@ the literature and turn the order around?
 
 open Finset Function
 
-open BigOperators
+open scoped BigOperators
 
 variable {α : Type _}
 
+#print Finpartition /-
 /-- A finite partition of `a : α` is a pairwise disjoint finite set of elements whose supremum is
 `a`. We forbid `⊥` as a part. -/
 @[ext]
@@ -76,6 +77,7 @@ structure Finpartition [Lattice α] [OrderBot α] (a : α) where
   not_bot_mem : ⊥ ∉ parts
   deriving DecidableEq
 #align finpartition Finpartition
+-/
 
 attribute [protected] Finpartition.supIndep
 
@@ -85,6 +87,7 @@ section Lattice
 
 variable [Lattice α] [OrderBot α]
 
+#print Finpartition.ofErase /-
 /-- A `finpartition` constructor which does not insist on `⊥` not being a part. -/
 @[simps]
 def ofErase [DecidableEq α] {a : α} (parts : Finset α) (sup_indep : parts.SupIndep id)
@@ -95,7 +98,9 @@ def ofErase [DecidableEq α] {a : α} (parts : Finset α) (sup_indep : parts.Sup
   supParts := (sup_erase_bot _).trans sup_parts
   not_bot_mem := not_mem_erase _ _
 #align finpartition.of_erase Finpartition.ofErase
+-/
 
+#print Finpartition.ofSubset /-
 /-- A `finpartition` constructor from a bigger existing finpartition. -/
 @[simps]
 def ofSubset {a b : α} (P : Finpartition a) {parts : Finset α} (subset : parts ⊆ P.parts)
@@ -105,7 +110,9 @@ def ofSubset {a b : α} (P : Finpartition a) {parts : Finset α} (subset : parts
     supParts
     not_bot_mem := fun h => P.not_bot_mem (subset h) }
 #align finpartition.of_subset Finpartition.ofSubset
+-/
 
+#print Finpartition.copy /-
 /-- Changes the type of a finpartition to an equal one. -/
 @[simps]
 def copy {a b : α} (P : Finpartition a) (h : a = b) : Finpartition b
@@ -115,6 +122,7 @@ def copy {a b : α} (P : Finpartition a) (h : a = b) : Finpartition b
   supParts := h ▸ P.supParts
   not_bot_mem := P.not_bot_mem
 #align finpartition.copy Finpartition.copy
+-/
 
 variable (α)
 
@@ -150,16 +158,20 @@ def indiscrete (ha : a ≠ ⊥) : Finpartition a
 
 variable (P : Finpartition a)
 
+#print Finpartition.le /-
 protected theorem le {b : α} (hb : b ∈ P.parts) : b ≤ a :=
   (le_sup hb).trans P.supParts.le
 #align finpartition.le Finpartition.le
+-/
 
 theorem ne_bot {b : α} (hb : b ∈ P.parts) : b ≠ ⊥ := fun h => P.not_bot_mem <| h.subst hb
 #align finpartition.ne_bot Finpartition.ne_bot
 
+#print Finpartition.disjoint /-
 protected theorem disjoint : (P.parts : Set α).PairwiseDisjoint id :=
   P.SupIndep.PairwiseDisjoint
 #align finpartition.disjoint Finpartition.disjoint
+-/
 
 variable {P}
 
@@ -357,6 +369,7 @@ section Bind
 
 variable {P : Finpartition a} {Q : ∀ i ∈ P.parts, Finpartition i}
 
+#print Finpartition.bind /-
 /-- Given a finpartition `P` of `a` and finpartitions of each part of `P`, this yields the
 finpartition of `a` obtained by juxtaposing all the subpartitions. -/
 @[simps]
@@ -381,7 +394,9 @@ def bind (P : Finpartition a) (Q : ∀ i ∈ P.parts, Finpartition i) : Finparti
     obtain ⟨⟨A, hA⟩, -, h⟩ := h
     exact (Q A hA).not_bot_mem h
 #align finpartition.bind Finpartition.bind
+-/
 
+#print Finpartition.mem_bind /-
 theorem mem_bind : b ∈ (P.bind Q).parts ↔ ∃ A hA, b ∈ (Q A hA).parts :=
   by
   rw [bind, mem_bUnion]
@@ -391,7 +406,9 @@ theorem mem_bind : b ∈ (P.bind Q).parts ↔ ∃ A hA, b ∈ (Q A hA).parts :=
   · rintro ⟨A, hA, h⟩
     exact ⟨⟨A, hA⟩, mem_attach _ ⟨A, hA⟩, h⟩
 #align finpartition.mem_bind Finpartition.mem_bind
+-/
 
+#print Finpartition.card_bind /-
 theorem card_bind (Q : ∀ i ∈ P.parts, Finpartition i) :
     (P.bind Q).parts.card = ∑ A in P.parts.attach, (Q _ A.2).parts.card :=
   by
@@ -405,6 +422,7 @@ theorem card_bind (Q : ∀ i ∈ P.parts, Finpartition i) :
       (eq_bot_iff.2 <|
         (le_inf ((Q b hb).le hdb) <| (Q c hc).le hdc).trans <| (P.disjoint hb hc hbc).le_bot)
 #align finpartition.card_bind Finpartition.card_bind
+-/
 
 end Bind
 

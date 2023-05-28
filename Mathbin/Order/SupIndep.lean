@@ -57,11 +57,13 @@ section Lattice
 
 variable [Lattice α] [OrderBot α]
 
+#print Finset.SupIndep /-
 /-- Supremum independence of finite sets. We avoid the "obvious" definition using `s.erase i`
 because `erase` would require decidable equality on `ι`. -/
 def SupIndep (s : Finset ι) (f : ι → α) : Prop :=
   ∀ ⦃t⦄, t ⊆ s → ∀ ⦃i⦄, i ∈ s → i ∉ t → Disjoint (f i) (t.sup f)
 #align finset.sup_indep Finset.SupIndep
+-/
 
 variable {s t : Finset ι} {f : ι → α} {i : ι}
 
@@ -90,13 +92,16 @@ theorem SupIndep.pairwiseDisjoint (hs : s.SupIndep f) : (s : Set ι).PairwiseDis
   sup_singleton.subst <| hs (singleton_subset_iff.2 hb) ha <| not_mem_singleton.2 hab
 #align finset.sup_indep.pairwise_disjoint Finset.SupIndep.pairwiseDisjoint
 
+#print Finset.supIndep_iff_disjoint_erase /-
 /-- The RHS looks like the definition of `complete_lattice.independent`. -/
 theorem supIndep_iff_disjoint_erase [DecidableEq ι] :
     s.SupIndep f ↔ ∀ i ∈ s, Disjoint (f i) ((s.eraseₓ i).sup f) :=
   ⟨fun hs i hi => hs (erase_subset _ _) hi (not_mem_erase _ _), fun hs t ht i hi hit =>
     (hs i hi).mono_right (sup_mono fun j hj => mem_erase.2 ⟨ne_of_mem_of_not_mem hj hit, ht hj⟩)⟩
 #align finset.sup_indep_iff_disjoint_erase Finset.supIndep_iff_disjoint_erase
+-/
 
+#print Finset.supIndep_pair /-
 @[simp]
 theorem supIndep_pair [DecidableEq ι] {i j : ι} (hij : i ≠ j) :
     ({i, j} : Finset ι).SupIndep f ↔ Disjoint (f i) (f j) :=
@@ -118,12 +123,15 @@ theorem supIndep_pair [DecidableEq ι] {i j : ι} (hij : i ≠ j) :
         exact hij
       rw [this, Finset.sup_singleton]⟩
 #align finset.sup_indep_pair Finset.supIndep_pair
+-/
 
+#print Finset.supIndep_univ_bool /-
 theorem supIndep_univ_bool (f : Bool → α) :
     (Finset.univ : Finset Bool).SupIndep f ↔ Disjoint (f false) (f true) :=
   haveI : tt ≠ ff := by simp only [Ne.def, not_false_iff]
   (sup_indep_pair this).trans disjoint_comm
 #align finset.sup_indep_univ_bool Finset.supIndep_univ_bool
+-/
 
 @[simp]
 theorem supIndep_univ_fin_two (f : Fin 2 → α) :
@@ -313,9 +321,11 @@ theorem Independent.pairwiseDisjoint : Pairwise (Disjoint on t) := fun x y h =>
 #align complete_lattice.independent.pairwise_disjoint CompleteLattice.Independent.pairwiseDisjoint
 -/
 
+#print CompleteLattice.Independent.mono /-
 theorem Independent.mono {s t : ι → α} (hs : Independent s) (hst : t ≤ s) : Independent t :=
   fun i => (hs i).mono (hst i) <| iSup₂_mono fun j _ => hst j
 #align complete_lattice.independent.mono CompleteLattice.Independent.mono
+-/
 
 /-- Composing an independent indexed family with an injective function on the index results in
 another indepedendent indexed family. -/

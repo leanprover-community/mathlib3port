@@ -31,7 +31,7 @@ open Polynomial
 
 open PowerBasis
 
-open BigOperators
+open scoped BigOperators
 
 /-- The elements `1, x, ..., x ^ (d - 1)` for a basis for the `K`-module `K[x]`,
 where `d` is the degree of the minimal polynomial of `x`. -/
@@ -95,7 +95,7 @@ namespace PowerBasis
 
 open Polynomial
 
-open Polynomial
+open scoped Polynomial
 
 variable {R : Type _} [CommRing R] [Algebra R S] [Algebra R K] [IsScalarTower R K S]
 

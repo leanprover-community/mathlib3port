@@ -75,7 +75,7 @@ with finite measure. Its value on other sets is ignored.
 
 noncomputable section
 
-open Classical Topology BigOperators NNReal ENNReal MeasureTheory Pointwise
+open scoped Classical Topology BigOperators NNReal ENNReal MeasureTheory Pointwise
 
 open Set Filter TopologicalSpace ENNReal Emetric
 

@@ -95,7 +95,7 @@ Change of variables in integrals
 open
   MeasureTheory MeasureTheory.Measure Metric Filter Set FiniteDimensional Asymptotics TopologicalSpace
 
-open NNReal ENNReal Topology Pointwise
+open scoped NNReal ENNReal Topology Pointwise
 
 variable {E F : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
   [NormedAddCommGroup F] [NormedSpace ℝ F] {s : Set E} {f : E → E} {f' : E → E →L[ℝ] E}

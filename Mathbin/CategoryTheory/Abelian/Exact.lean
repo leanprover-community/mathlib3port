@@ -429,7 +429,7 @@ variable (h : ∀ ⦃X Y Z : A⦄ {f : X ⟶ Y} {g : Y ⟶ Z}, Exact f g → Exa
 
 include h
 
-open ZeroObject
+open scoped ZeroObject
 
 /-- A functor which preserves exactness preserves zero morphisms. -/
 theorem preservesZeroMorphisms_of_map_exact : L.PreservesZeroMorphisms :=

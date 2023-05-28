@@ -41,7 +41,7 @@ dedekind domain, dedekind ring
 
 variable (R A K : Type _) [CommRing R] [CommRing A] [Field K]
 
-open nonZeroDivisors Polynomial
+open scoped nonZeroDivisors Polynomial
 
 variable [IsDomain A]
 
@@ -56,7 +56,7 @@ of a number field is a Dedekind domain. -/
 
 open Algebra
 
-open BigOperators
+open scoped BigOperators
 
 variable (A K) [Algebra A K] [IsFractionRing A K]
 

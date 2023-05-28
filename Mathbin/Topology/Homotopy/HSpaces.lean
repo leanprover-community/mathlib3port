@@ -30,7 +30,7 @@ universe u v
 
 noncomputable section
 
-open unitInterval
+open scoped unitInterval
 
 open Path ContinuousMap Set.Icc TopologicalSpace
 

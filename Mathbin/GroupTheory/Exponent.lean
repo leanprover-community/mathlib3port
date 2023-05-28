@@ -50,7 +50,7 @@ universe u
 
 variable {G : Type u}
 
-open Classical
+open scoped Classical
 
 namespace Monoid
 
@@ -401,7 +401,7 @@ section CommGroup
 
 open Subgroup
 
-open BigOperators
+open scoped BigOperators
 
 variable (G) [CommGroup G] [Group.FG G]
 

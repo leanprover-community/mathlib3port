@@ -26,7 +26,7 @@ secants) in spheres in real inner product spaces and Euclidean affine spaces.
 
 open Real
 
-open EuclideanGeometry RealInnerProductSpace Real
+open scoped EuclideanGeometry RealInnerProductSpace Real
 
 variable {V : Type _} [NormedAddCommGroup V] [InnerProductSpace ℝ V]
 

@@ -48,7 +48,7 @@ diffeomorphism, manifold
 -/
 
 
-open Manifold Topology
+open scoped Manifold Topology
 
 open Function Set
 

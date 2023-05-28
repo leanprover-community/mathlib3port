@@ -40,7 +40,7 @@ there are some common specializations which may be more familiar.
 -/
 
 
-open Polynomial
+open scoped Polynomial
 
 namespace Polynomial
 

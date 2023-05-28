@@ -35,7 +35,7 @@ Furthermore, we have the following results:
 
 open Set Filter
 
-open Topology Filter
+open scoped Topology Filter
 
 variable {α β : Type _} [TopologicalSpace α] [TopologicalSpace β] {s t s₁ s₂ t₁ t₂ : Set α} {x : α}
 

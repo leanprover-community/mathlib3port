@@ -74,7 +74,7 @@ namespace IsDedekindDomain
 
 noncomputable section
 
-open Classical DiscreteValuation nonZeroDivisors
+open scoped Classical DiscreteValuation nonZeroDivisors
 
 universe u v
 

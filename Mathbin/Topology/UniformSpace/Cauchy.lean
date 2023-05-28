@@ -24,7 +24,7 @@ universe u v
 
 open Filter TopologicalSpace Set Classical UniformSpace Function
 
-open Classical uniformity Topology Filter
+open scoped Classical uniformity Topology Filter
 
 variable {α : Type u} {β : Type v} [UniformSpace α]
 
@@ -246,10 +246,12 @@ theorem CauchySeq.comp_tendsto {γ} [SemilatticeSup β] [SemilatticeSup γ] [Non
   cauchySeq_iff_tendsto.2 <| hf.tendsto_uniformity.comp (hg.prod_atTop hg)
 #align cauchy_seq.comp_tendsto CauchySeq.comp_tendsto
 
+#print CauchySeq.comp_injective /-
 theorem CauchySeq.comp_injective [SemilatticeSup β] [NoMaxOrder β] [Nonempty β] {u : ℕ → α}
     (hu : CauchySeq u) {f : β → ℕ} (hf : Injective f) : CauchySeq (u ∘ f) :=
   hu.comp_tendsto <| Nat.cofinite_eq_atTop ▸ hf.tendsto_cofinite.mono_left atTop_le_cofinite
 #align cauchy_seq.comp_injective CauchySeq.comp_injective
+-/
 
 #print Function.Bijective.cauchySeq_comp_iff /-
 theorem Function.Bijective.cauchySeq_comp_iff {f : ℕ → ℕ} (hf : Bijective f) (u : ℕ → α) :
@@ -367,6 +369,7 @@ theorem Filter.HasBasis.cauchySeq_iff' {γ} [Nonempty β] [SemilatticeSup β] {u
     · exact hN n hn
 #align filter.has_basis.cauchy_seq_iff' Filter.HasBasis.cauchySeq_iff'
 
+#print cauchySeq_of_controlled /-
 theorem cauchySeq_of_controlled [SemilatticeSup β] [Nonempty β] (U : β → Set (α × α))
     (hU : ∀ s ∈ 𝓤 α, ∃ n, U n ⊆ s) {f : β → α}
     (hf : ∀ {N m n : β}, N ≤ m → N ≤ n → (f m, f n) ∈ U N) : CauchySeq f :=
@@ -379,6 +382,7 @@ theorem cauchySeq_of_controlled [SemilatticeSup β] [Nonempty β] (U : β → Se
       cases' mn with m n
       exact hN (hf hmn.1 hmn.2))
 #align cauchy_seq_of_controlled cauchySeq_of_controlled
+-/
 
 theorem isComplete_iff_clusterPt {s : Set α} :
     IsComplete s ↔ ∀ l, Cauchy l → l ≤ 𝓟 s → ∃ x ∈ s, ClusterPt x l :=

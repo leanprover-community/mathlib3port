@@ -34,7 +34,7 @@ TODO: show that `π n x` is a group when `n > 0` and abelian when `n > 1`. Show 
 -/
 
 
-open unitInterval Topology
+open scoped unitInterval Topology
 
 noncomputable section
 

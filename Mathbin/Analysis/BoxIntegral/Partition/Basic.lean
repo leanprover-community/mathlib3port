@@ -46,7 +46,7 @@ rectangular box, partition
 
 open Set Finset Function
 
-open Classical NNReal BigOperators
+open scoped Classical NNReal BigOperators
 
 noncomputable section
 
@@ -769,13 +769,17 @@ def distortion : ℝ≥0 :=
 #align box_integral.prepartition.distortion BoxIntegral.Prepartition.distortion
 -/
 
+#print BoxIntegral.Prepartition.distortion_le_of_mem /-
 theorem distortion_le_of_mem (h : J ∈ π) : J.distortion ≤ π.distortion :=
   le_sup h
 #align box_integral.prepartition.distortion_le_of_mem BoxIntegral.Prepartition.distortion_le_of_mem
+-/
 
+#print BoxIntegral.Prepartition.distortion_le_iff /-
 theorem distortion_le_iff {c : ℝ≥0} : π.distortion ≤ c ↔ ∀ J ∈ π, Box.distortion J ≤ c :=
   Finset.sup_le_iff
 #align box_integral.prepartition.distortion_le_iff BoxIntegral.Prepartition.distortion_le_iff
+-/
 
 theorem distortion_biUnion (π : Prepartition I) (πi : ∀ J, Prepartition J) :
     (π.biUnion πi).distortion = π.boxes.sup fun J => (πi J).distortion :=

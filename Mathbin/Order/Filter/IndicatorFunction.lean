@@ -28,7 +28,7 @@ variable {α β M E : Type _}
 
 open Set Filter Classical
 
-open Filter Classical
+open scoped Filter Classical
 
 section Zero
 

@@ -51,7 +51,7 @@ None of this should be particularly difficult.
 
 noncomputable section
 
-open Manifold
+open scoped Manifold
 
 namespace Units
 

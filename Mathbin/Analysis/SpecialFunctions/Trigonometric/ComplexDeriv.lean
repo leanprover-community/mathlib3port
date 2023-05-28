@@ -23,7 +23,7 @@ namespace Complex
 
 open Set Filter
 
-open Real
+open scoped Real
 
 theorem hasStrictDerivAt_tan {x : ℂ} (h : cos x ≠ 0) : HasStrictDerivAt tan (1 / cos x ^ 2) x :=
   by
@@ -36,7 +36,7 @@ theorem hasDerivAt_tan {x : ℂ} (h : cos x ≠ 0) : HasDerivAt tan (1 / cos x ^
   (hasStrictDerivAt_tan h).HasDerivAt
 #align complex.has_deriv_at_tan Complex.hasDerivAt_tan
 
-open Topology
+open scoped Topology
 
 theorem tendsto_abs_tan_of_cos_eq_zero {x : ℂ} (hx : cos x = 0) :
     Tendsto (fun x => abs (tan x)) (𝓝[≠] x) atTop :=

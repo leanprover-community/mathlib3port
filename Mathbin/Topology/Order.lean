@@ -52,7 +52,7 @@ finer, coarser, induced topology, coinduced topology
 
 open Function Set Filter
 
-open Topology Filter
+open scoped Topology Filter
 
 universe u v w
 

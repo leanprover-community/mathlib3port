@@ -19,7 +19,7 @@ import Mathbin.MeasureTheory.Integral.Bochner
 
 noncomputable section
 
-open NNReal ENNReal Pointwise BigOperators Topology
+open scoped NNReal ENNReal Pointwise BigOperators Topology
 
 open Inv Set Function MeasureTheory.Measure Filter
 

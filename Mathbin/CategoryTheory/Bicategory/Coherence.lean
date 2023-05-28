@@ -48,7 +48,7 @@ namespace CategoryTheory
 
 open Bicategory Category
 
-open Bicategory
+open scoped Bicategory
 
 universe v u
 

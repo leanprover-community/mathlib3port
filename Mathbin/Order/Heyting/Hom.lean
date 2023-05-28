@@ -148,6 +148,7 @@ instance (priority := 100) BiheytingHomClass.toCoheytingHomClass [BiheytingAlgeb
 #align biheyting_hom_class.to_coheyting_hom_class BiheytingHomClass.toCoheytingHomClass
 -/
 
+#print OrderIsoClass.toHeytingHomClass /-
 -- See note [lower instance priority]
 instance (priority := 100) OrderIsoClass.toHeytingHomClass [HeytingAlgebra α] [HeytingAlgebra β]
     [OrderIsoClass F α β] : HeytingHomClass F α β :=
@@ -156,7 +157,9 @@ instance (priority := 100) OrderIsoClass.toHeytingHomClass [HeytingAlgebra α] [
       eq_of_forall_le_iff fun c => by simp only [← map_inv_le_iff, le_himp_iff];
         rw [← OrderIsoClass.map_le_map_iff f]; simp }
 #align order_iso_class.to_heyting_hom_class OrderIsoClass.toHeytingHomClass
+-/
 
+#print OrderIsoClass.toCoheytingHomClass /-
 -- See note [lower instance priority]
 instance (priority := 100) OrderIsoClass.toCoheytingHomClass [CoheytingAlgebra α]
     [CoheytingAlgebra β] [OrderIsoClass F α β] : CoheytingHomClass F α β :=
@@ -165,7 +168,9 @@ instance (priority := 100) OrderIsoClass.toCoheytingHomClass [CoheytingAlgebra �
       eq_of_forall_ge_iff fun c => by simp only [← le_map_inv_iff, sdiff_le_iff];
         rw [← OrderIsoClass.map_le_map_iff f]; simp }
 #align order_iso_class.to_coheyting_hom_class OrderIsoClass.toCoheytingHomClass
+-/
 
+#print OrderIsoClass.toBiheytingHomClass /-
 -- See note [lower instance priority]
 instance (priority := 100) OrderIsoClass.toBiheytingHomClass [BiheytingAlgebra α]
     [BiheytingAlgebra β] [OrderIsoClass F α β] : BiheytingHomClass F α β :=
@@ -178,6 +183,7 @@ instance (priority := 100) OrderIsoClass.toBiheytingHomClass [BiheytingAlgebra �
       eq_of_forall_ge_iff fun c => by simp only [← le_map_inv_iff, sdiff_le_iff];
         rw [← OrderIsoClass.map_le_map_iff f]; simp }
 #align order_iso_class.to_biheyting_hom_class OrderIsoClass.toBiheytingHomClass
+-/
 
 #print BoundedLatticeHomClass.toBiheytingHomClass /-
 -- See note [reducible non instances]

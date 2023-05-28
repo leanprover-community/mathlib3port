@@ -29,7 +29,7 @@ groups.
 
 open CategoryTheory
 
-open Pointwise
+open scoped Pointwise
 
 universe u
 

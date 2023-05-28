@@ -71,7 +71,7 @@ circumvent this, we quotient `num_denom_same_deg 𝒜 x` by the kernel of `c ↦
 
 noncomputable section
 
-open DirectSum BigOperators Pointwise
+open scoped DirectSum BigOperators Pointwise
 
 open DirectSum SetLike
 

@@ -22,7 +22,7 @@ import Mathbin.Data.Finset.Prod
 
 open Function
 
-open Nat
+open scoped Nat
 
 universe u v
 
@@ -69,7 +69,7 @@ theorem Fintype.card_prod (α β : Type _) [Fintype α] [Fintype β] :
 
 section
 
-open Classical
+open scoped Classical
 
 #print infinite_prod /-
 @[simp]

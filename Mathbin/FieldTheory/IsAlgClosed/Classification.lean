@@ -30,7 +30,7 @@ This file contains results related to classifying algebraically closed fields.
 
 universe u
 
-open Cardinal Polynomial
+open scoped Cardinal Polynomial
 
 open Cardinal
 

@@ -88,7 +88,7 @@ section
 
 variable [HasZeroObject V] [Preadditive V] [HasKernels V] [HasCokernels V]
 
-open ZeroObject
+open scoped ZeroObject
 
 #print CategoryTheory.Preadditive.exact_iff_homology_zero /-
 /-- In any preadditive category,
@@ -343,7 +343,7 @@ section
 
 variable [HasZeroObject V]
 
-open ZeroObject
+open scoped ZeroObject
 
 section
 

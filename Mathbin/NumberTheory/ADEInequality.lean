@@ -189,6 +189,7 @@ theorem admissible_E8 : Admissible E8 :=
 #align ADE_inequality.admissible_E8 ADEInequality.admissible_E8
 -/
 
+#print ADEInequality.Admissible.one_lt_sumInv /-
 theorem Admissible.one_lt_sumInv {pqr : Multiset ℕ+} : Admissible pqr → 1 < sumInv pqr :=
   by
   rw [admissible]
@@ -202,6 +203,7 @@ theorem Admissible.one_lt_sumInv {pqr : Multiset ℕ+} : Admissible pqr → 1 < 
     norm_num
   all_goals rw [← H, E', sum_inv_pqr]; norm_num
 #align ADE_inequality.admissible.one_lt_sum_inv ADEInequality.Admissible.one_lt_sumInv
+-/
 
 theorem lt_three {p q r : ℕ+} (hpq : p ≤ q) (hqr : q ≤ r) (H : 1 < sumInv {p, q, r}) : p < 3 :=
   by
@@ -242,6 +244,7 @@ theorem lt_six {r : ℕ+} (H : 1 < sumInv {2, 3, r}) : r < 6 :=
   rw [inv_le_inv _ h6] <;> [assumption_mod_cast;norm_num]
 #align ADE_inequality.lt_six ADEInequality.lt_six
 
+#print ADEInequality.admissible_of_one_lt_sumInv_aux' /-
 theorem admissible_of_one_lt_sumInv_aux' {p q r : ℕ+} (hpq : p ≤ q) (hqr : q ≤ r)
     (H : 1 < sumInv {p, q, r}) : Admissible {p, q, r} :=
   by
@@ -257,7 +260,9 @@ theorem admissible_of_one_lt_sumInv_aux' {p q r : ℕ+} (hpq : p ≤ q) (hqr : q
   · exact admissible_E7
   · exact admissible_E8
 #align ADE_inequality.admissible_of_one_lt_sum_inv_aux' ADEInequality.admissible_of_one_lt_sumInv_aux'
+-/
 
+#print ADEInequality.admissible_of_one_lt_sumInv_aux /-
 theorem admissible_of_one_lt_sumInv_aux :
     ∀ {pqr : List ℕ+} (hs : pqr.Sorted (· ≤ ·)) (hl : pqr.length = 3) (H : 1 < sumInv pqr),
       Admissible pqr
@@ -267,7 +272,9 @@ theorem admissible_of_one_lt_sumInv_aux :
     simpa using hs
     exact admissible_of_one_lt_sum_inv_aux' hpq hqr H
 #align ADE_inequality.admissible_of_one_lt_sum_inv_aux ADEInequality.admissible_of_one_lt_sumInv_aux
+-/
 
+#print ADEInequality.admissible_of_one_lt_sumInv /-
 theorem admissible_of_one_lt_sumInv {p q r : ℕ+} (H : 1 < sumInv {p, q, r}) :
     Admissible {p, q, r} := by
   simp only [admissible]
@@ -279,7 +286,9 @@ theorem admissible_of_one_lt_sumInv {p q r : ℕ+} (H : 1 < sumInv {p, q, r}) :
   simp only [S, length_sort]
   decide
 #align ADE_inequality.admissible_of_one_lt_sum_inv ADEInequality.admissible_of_one_lt_sumInv
+-/
 
+#print ADEInequality.classification /-
 /-- A multiset `{p,q,r}` of positive natural numbers
 is a solution to `(p⁻¹ + q⁻¹ + r⁻¹ : ℚ) > 1` if and only if
 it is `admissible` which means it is one of:
@@ -291,6 +300,7 @@ it is `admissible` which means it is one of:
 theorem classification (p q r : ℕ+) : 1 < sumInv {p, q, r} ↔ Admissible {p, q, r} :=
   ⟨admissible_of_one_lt_sumInv, Admissible.one_lt_sumInv⟩
 #align ADE_inequality.classification ADEInequality.classification
+-/
 
 end ADEInequality
 

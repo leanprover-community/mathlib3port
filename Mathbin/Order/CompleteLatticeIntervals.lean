@@ -28,7 +28,7 @@ default values for `Sup` and `Inf`.
 -/
 
 
-open Classical
+open scoped Classical
 
 open Set
 

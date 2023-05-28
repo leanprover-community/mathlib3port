@@ -31,9 +31,9 @@ This file proves some bounds on matrices involving absolute values.
 -/
 
 
-open BigOperators
+open scoped BigOperators
 
-open Matrix
+open scoped Matrix
 
 namespace Matrix
 

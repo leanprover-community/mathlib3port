@@ -152,7 +152,7 @@ scoped[Quandles] infixr:65 " ◃⁻¹ " => Rack.invAct
 -- mathport name: shelf_hom
 scoped[Quandles] infixr:25 " →◃ " => ShelfHom
 
-open Quandles
+open scoped Quandles
 
 namespace UnitalShelf
 

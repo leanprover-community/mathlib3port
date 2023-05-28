@@ -35,7 +35,7 @@ namespace Submodule
 
 open Function Set
 
-open Pointwise
+open scoped Pointwise
 
 section AddCommMonoid
 
@@ -762,7 +762,7 @@ theorem mem_iSup {ι : Sort _} (p : ι → Submodule R M) {m : M} :
 
 section
 
-open Classical
+open scoped Classical
 
 #print Submodule.mem_span_finite_of_mem_span /-
 /-- For every element in the span of a set, there exists a finite subset of the set
@@ -1034,7 +1034,7 @@ variable {K V} [Field K] [AddCommGroup V] [Module K V]
 
 noncomputable section
 
-open Classical
+open scoped Classical
 
 theorem span_singleton_sup_ker_eq_top (f : V →ₗ[K] K) {x : V} (hx : f x ≠ 0) :
     (K ∙ x) ⊔ f.ker = ⊤ :=

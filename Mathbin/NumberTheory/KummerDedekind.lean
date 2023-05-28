@@ -230,7 +230,7 @@ theorem quotAdjoinEquivQuotMap_apply_mk (hx : (conductor R x).comap (algebraMap 
 
 namespace KummerDedekind
 
-open BigOperators Polynomial Classical
+open scoped BigOperators Polynomial Classical
 
 variable [IsDomain R] [IsIntegrallyClosed R]
 

@@ -20,7 +20,7 @@ similar statement about irrational numbers.
 -/
 
 
-open Filter
+open scoped Filter
 
 open Filter Set Metric
 

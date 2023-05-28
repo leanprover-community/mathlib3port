@@ -50,9 +50,9 @@ the norms of elements in `I`.
 -/
 
 
-open BigOperators
+open scoped BigOperators
 
-open nonZeroDivisors
+open scoped nonZeroDivisors
 
 section abs_norm
 

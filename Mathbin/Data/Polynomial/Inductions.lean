@@ -25,7 +25,7 @@ This file contains lemmas dealing with different flavours of induction on polyno
 
 noncomputable section
 
-open Classical BigOperators Polynomial
+open scoped Classical BigOperators Polynomial
 
 open Finset
 
@@ -72,6 +72,7 @@ theorem divX_add : divX (p + q) = divX p + divX q :=
 #align polynomial.div_X_add Polynomial.divX_add
 -/
 
+#print Polynomial.degree_divX_lt /-
 theorem degree_divX_lt (hp0 : p ≠ 0) : (divX p).degree < p.degree := by
   haveI := nontrivial.of_polynomial_ne hp0 <;>
     calc
@@ -104,6 +105,7 @@ theorem degree_divX_lt (hp0 : p ≠ 0) : (divX p).degree < p.degree := by
       _ = p.degree := congr_arg _ (div_X_mul_X_add _)
       
 #align polynomial.degree_div_X_lt Polynomial.degree_divX_lt
+-/
 
 /-- An induction principle for polynomials, valued in Sort* instead of Prop. -/
 @[elab_as_elim]

@@ -31,7 +31,7 @@ polynomials.
 
 open Filter Finset Asymptotics
 
-open Asymptotics Polynomial Topology
+open scoped Asymptotics Polynomial Topology
 
 namespace Polynomial
 
@@ -117,6 +117,7 @@ theorem abs_tendsto_atTop_iff : Tendsto (fun x => abs <| eval x P) atTop atTop �
     abs_tendsto_atTop P⟩
 #align polynomial.abs_tendsto_at_top_iff Polynomial.abs_tendsto_atTop_iff
 
+#print Polynomial.tendsto_nhds_iff /-
 theorem tendsto_nhds_iff {c : 𝕜} :
     Tendsto (fun x => eval x P) atTop (𝓝 c) ↔ P.leadingCoeff = c ∧ P.degree ≤ 0 :=
   by
@@ -132,6 +133,7 @@ theorem tendsto_nhds_iff {c : 𝕜} :
     simp only [h.1, this, pow_zero, mul_one]
     exact tendsto_const_nhds
 #align polynomial.tendsto_nhds_iff Polynomial.tendsto_nhds_iff
+-/
 
 end PolynomialAtTop
 
@@ -244,6 +246,7 @@ theorem abs_div_tendsto_atTop_of_degree_gt (hdeg : Q.degree < P.degree) (hQ : Q 
 
 end PolynomialDivAtTop
 
+#print Polynomial.isBigO_of_degree_le /-
 theorem isBigO_of_degree_le (h : P.degree ≤ Q.degree) :
     (fun x => eval x P) =O[atTop] fun x => eval x Q :=
   by
@@ -256,6 +259,7 @@ theorem isBigO_of_degree_le (h : P.degree ≤ Q.degree) :
     · exact is_O_of_div_tendsto_nhds hPQ 0 (div_tendsto_zero_of_degree_lt P Q h)
     · exact is_O_of_div_tendsto_nhds hPQ _ (div_tendsto_leading_coeff_div_of_degree_eq P Q h)
 #align polynomial.is_O_of_degree_le Polynomial.isBigO_of_degree_le
+-/
 
 end Polynomial
 

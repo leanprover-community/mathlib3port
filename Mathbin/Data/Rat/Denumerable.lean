@@ -45,7 +45,7 @@ instance : Denumerable ℚ :=
 
 end Rat
 
-open Cardinal
+open scoped Cardinal
 
 #print Cardinal.mkRat /-
 theorem Cardinal.mkRat : (#ℚ) = ℵ₀ := by simp

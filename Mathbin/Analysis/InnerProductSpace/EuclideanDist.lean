@@ -24,7 +24,7 @@ distance. This way we hide the usage of `to_euclidean` behind an API.
 -/
 
 
-open Topology
+open scoped Topology
 
 open Set
 

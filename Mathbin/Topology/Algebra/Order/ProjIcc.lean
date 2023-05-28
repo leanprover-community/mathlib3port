@@ -24,7 +24,7 @@ to show that `Icc_extend h f` is continuous if and only if `f` is continuous.
 
 open Set Filter
 
-open Filter Topology
+open scoped Filter Topology
 
 variable {α β γ : Type _} [LinearOrder α] [TopologicalSpace γ] {a b c : α} {h : a ≤ b}
 
@@ -37,16 +37,20 @@ theorem Filter.Tendsto.IccExtend' (f : γ → Icc a b → β) {z : γ} {l : Filt
 
 variable [TopologicalSpace α] [OrderTopology α] [TopologicalSpace β]
 
+#print continuous_projIcc /-
 @[continuity]
 theorem continuous_projIcc : Continuous (projIcc a b h) :=
   (continuous_const.max <| continuous_const.min continuous_id).subtype_mk _
 #align continuous_proj_Icc continuous_projIcc
+-/
 
+#print quotientMap_projIcc /-
 theorem quotientMap_projIcc : QuotientMap (projIcc a b h) :=
   quotientMap_iff.2
     ⟨projIcc_surjective h, fun s =>
       ⟨fun hs => hs.Preimage continuous_projIcc, fun hs => ⟨_, hs, by ext; simp⟩⟩⟩
 #align quotient_map_proj_Icc quotientMap_projIcc
+-/
 
 @[simp]
 theorem continuous_IccExtend_iff {f : Icc a b → β} : Continuous (IccExtend h f) ↔ Continuous f :=

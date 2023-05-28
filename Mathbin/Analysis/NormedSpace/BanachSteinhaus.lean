@@ -81,7 +81,7 @@ theorem banach_steinhaus {ι : Type _} [CompleteSpace E] {g : ι → E →SL[σ�
     
 #align banach_steinhaus banach_steinhaus
 
-open ENNReal
+open scoped ENNReal
 
 open ENNReal
 
@@ -106,7 +106,7 @@ theorem banach_steinhaus_iSup_nnnorm {ι : Type _} [CompleteSpace E] {g : ι →
   exact coe_mono (Real.toNNReal_le_toNNReal <| hC' i)
 #align banach_steinhaus_supr_nnnorm banach_steinhaus_iSup_nnnorm
 
-open Topology
+open scoped Topology
 
 open Filter
 

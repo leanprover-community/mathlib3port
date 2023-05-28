@@ -172,7 +172,7 @@ integral, rectangular box, partition, filter
 
 open Set Function Filter Metric Finset Bool
 
-open Classical Topology Filter NNReal
+open scoped Classical Topology Filter NNReal
 
 noncomputable section
 
@@ -558,12 +558,14 @@ theorem exists_memBaseSet_isPartition (l : IntegrationParams) (I : Box ι) (hc :
   simpa [is_partition_iff_Union_eq] using l.exists_mem_base_set_le_Union_eq ⊤ hc hc' r
 #align box_integral.integration_params.exists_mem_base_set_is_partition BoxIntegral.IntegrationParams.exists_memBaseSet_isPartition
 
+#print BoxIntegral.IntegrationParams.toFilterDistortioniUnion_neBot /-
 theorem toFilterDistortioniUnion_neBot (l : IntegrationParams) (I : Box ι) (π₀ : Prepartition I)
     (hc₁ : π₀.distortion ≤ c) (hc₂ : π₀.compl.distortion ≤ c) :
     (l.toFilterDistortioniUnion I c π₀).ne_bot :=
   ((l.hasBasis_toFilterDistortion I _).inf_principal _).neBot_iff.2 fun r hr =>
     (l.exists_memBaseSet_le_iUnion_eq π₀ hc₁ hc₂ r).imp fun π hπ => ⟨hπ.1, hπ.2.2⟩
 #align box_integral.integration_params.to_filter_distortion_Union_ne_bot BoxIntegral.IntegrationParams.toFilterDistortioniUnion_neBot
+-/
 
 #print BoxIntegral.IntegrationParams.toFilterDistortioniUnion_neBot' /-
 instance toFilterDistortioniUnion_neBot' (l : IntegrationParams) (I : Box ι) (π₀ : Prepartition I) :

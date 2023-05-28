@@ -400,17 +400,21 @@ theorem zpow_mono_left (hn : 0 ≤ n) : Monotone ((· ^ n) : α → α) := fun a
 
 variable {α}
 
+#print zpow_le_zpow' /-
 @[to_additive]
 theorem zpow_le_zpow' (hn : 0 ≤ n) (h : a ≤ b) : a ^ n ≤ b ^ n :=
   zpow_mono_left α hn h
 #align zpow_le_zpow' zpow_le_zpow'
 #align zsmul_le_zsmul' zsmul_le_zsmul'
+-/
 
+#print zpow_lt_zpow' /-
 @[to_additive]
 theorem zpow_lt_zpow' (hn : 0 < n) (h : a < b) : a ^ n < b ^ n :=
   zpow_strictMono_left α hn h
 #align zpow_lt_zpow' zpow_lt_zpow'
 #align zsmul_lt_zsmul' zsmul_lt_zsmul'
+-/
 
 end OrderedAddCommGroup
 
@@ -418,17 +422,21 @@ section LinearOrderedCommGroup
 
 variable [LinearOrderedCommGroup α] {n : ℤ} {a b : α}
 
+#print zpow_le_zpow_iff' /-
 @[to_additive]
 theorem zpow_le_zpow_iff' (hn : 0 < n) {a b : α} : a ^ n ≤ b ^ n ↔ a ≤ b :=
   (zpow_strictMono_left α hn).le_iff_le
 #align zpow_le_zpow_iff' zpow_le_zpow_iff'
 #align zsmul_le_zsmul_iff' zsmul_le_zsmul_iff'
+-/
 
+#print zpow_lt_zpow_iff' /-
 @[to_additive]
 theorem zpow_lt_zpow_iff' (hn : 0 < n) {a b : α} : a ^ n < b ^ n ↔ a < b :=
   (zpow_strictMono_left α hn).lt_iff_lt
 #align zpow_lt_zpow_iff' zpow_lt_zpow_iff'
 #align zsmul_lt_zsmul_iff' zsmul_lt_zsmul_iff'
+-/
 
 #print zpow_left_injective /-
 @[nolint to_additive_doc,

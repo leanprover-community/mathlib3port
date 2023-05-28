@@ -1157,21 +1157,29 @@ instance [LinearOrder α] : IsIncompTrans α (· < ·) := by infer_instance
 
 instance [LinearOrder α] : IsStrictWeakOrder α (· < ·) := by infer_instance
 
+#print transitive_le /-
 theorem transitive_le [Preorder α] : Transitive (@LE.le α _) :=
   transitive_of_trans _
 #align transitive_le transitive_le
+-/
 
+#print transitive_lt /-
 theorem transitive_lt [Preorder α] : Transitive (@LT.lt α _) :=
   transitive_of_trans _
 #align transitive_lt transitive_lt
+-/
 
+#print transitive_ge /-
 theorem transitive_ge [Preorder α] : Transitive (@GE.ge α _) :=
   transitive_of_trans _
 #align transitive_ge transitive_ge
+-/
 
+#print transitive_gt /-
 theorem transitive_gt [Preorder α] : Transitive (@GT.gt α _) :=
   transitive_of_trans _
 #align transitive_gt transitive_gt
+-/
 
 #print OrderDual.isTotal_le /-
 instance OrderDual.isTotal_le [LE α] [IsTotal α (· ≤ ·)] : IsTotal αᵒᵈ (· ≤ ·) :=

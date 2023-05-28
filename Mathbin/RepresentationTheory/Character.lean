@@ -30,7 +30,7 @@ universe u
 
 open CategoryTheory LinearMap CategoryTheory.MonoidalCategory Representation FiniteDimensional
 
-open BigOperators
+open scoped BigOperators
 
 variable {k : Type u} [Field k]
 
@@ -103,7 +103,7 @@ section Orthogonality
 
 variable {G : GroupCat.{u}} [IsAlgClosed k]
 
-open Classical
+open scoped Classical
 
 variable [Fintype G] [Invertible (Fintype.card G : k)]
 

@@ -22,7 +22,7 @@ These results are kept separate from `algebra.star.basic` to avoid it needing to
 
 variable {R : Type _}
 
-open BigOperators
+open scoped BigOperators
 
 @[simp]
 theorem star_prod [CommMonoid R] [StarSemigroup R] {α : Type _} (s : Finset α) (f : α → R) :

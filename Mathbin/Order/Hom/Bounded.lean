@@ -56,12 +56,14 @@ structure BotHom (α β : Type _) [Bot α] [Bot β] where
 #align bot_hom BotHom
 -/
 
+#print BoundedOrderHom /-
 /-- The type of bounded order homomorphisms from `α` to `β`. -/
 structure BoundedOrderHom (α β : Type _) [Preorder α] [Preorder β] [BoundedOrder α]
   [BoundedOrder β] extends OrderHom α β where
   map_top' : to_fun ⊤ = ⊤
   map_bot' : to_fun ⊥ = ⊥
 #align bounded_order_hom BoundedOrderHom
+-/
 
 section
 
@@ -131,12 +133,14 @@ instance (priority := 100) OrderIsoClass.toBotHomClass [LE α] [OrderBot α] [Pa
     map_bot := fun f => le_bot_iff.1 <| (le_map_inv_iff f).1 bot_le }
 #align order_iso_class.to_bot_hom_class OrderIsoClass.toBotHomClass
 
+#print OrderIsoClass.toBoundedOrderHomClass /-
 -- See note [lower instance priority]
 instance (priority := 100) OrderIsoClass.toBoundedOrderHomClass [LE α] [BoundedOrder α]
     [PartialOrder β] [BoundedOrder β] [OrderIsoClass F α β] : BoundedOrderHomClass F α β :=
   { show OrderHomClass F α β from inferInstance, OrderIsoClass.toTopHomClass,
     OrderIsoClass.toBotHomClass with }
 #align order_iso_class.to_bounded_order_hom_class OrderIsoClass.toBoundedOrderHomClass
+-/
 
 @[simp]
 theorem map_eq_top_iff [LE α] [OrderTop α] [PartialOrder β] [OrderTop β] [OrderIsoClass F α β]
@@ -628,10 +632,12 @@ theorem copy_eq (f : BoundedOrderHom α β) (f' : α → β) (h : f' = f) : f.co
 
 variable (α)
 
+#print BoundedOrderHom.id /-
 /-- `id` as a `bounded_order_hom`. -/
 protected def id : BoundedOrderHom α α :=
   { OrderHom.id, TopHom.id α, BotHom.id α with }
 #align bounded_order_hom.id BoundedOrderHom.id
+-/
 
 instance : Inhabited (BoundedOrderHom α α) :=
   ⟨BoundedOrderHom.id α⟩
@@ -648,10 +654,12 @@ theorem id_apply (a : α) : BoundedOrderHom.id α a = a :=
   rfl
 #align bounded_order_hom.id_apply BoundedOrderHom.id_apply
 
+#print BoundedOrderHom.comp /-
 /-- Composition of `bounded_order_hom`s as a `bounded_order_hom`. -/
 def comp (f : BoundedOrderHom β γ) (g : BoundedOrderHom α β) : BoundedOrderHom α γ :=
   { f.toOrderHom.comp g.toOrderHom, f.toTopHom.comp g.toTopHom, f.toBotHom.comp g.toBotHom with }
 #align bounded_order_hom.comp BoundedOrderHom.comp
+-/
 
 @[simp]
 theorem coe_comp (f : BoundedOrderHom β γ) (g : BoundedOrderHom α β) : (f.comp g : α → γ) = f ∘ g :=
@@ -794,6 +802,7 @@ namespace BoundedOrderHom
 
 variable [Preorder α] [BoundedOrder α] [Preorder β] [BoundedOrder β] [Preorder γ] [BoundedOrder γ]
 
+#print BoundedOrderHom.dual /-
 /-- Reinterpret a bounded order homomorphism as a bounded order homomorphism between the dual
 orders. -/
 @[simps]
@@ -804,11 +813,14 @@ protected def dual : BoundedOrderHom α β ≃ BoundedOrderHom αᵒᵈ βᵒᵈ
   left_inv f := ext fun a => rfl
   right_inv f := ext fun a => rfl
 #align bounded_order_hom.dual BoundedOrderHom.dual
+-/
 
+#print BoundedOrderHom.dual_id /-
 @[simp]
 theorem dual_id : (BoundedOrderHom.id α).dual = BoundedOrderHom.id _ :=
   rfl
 #align bounded_order_hom.dual_id BoundedOrderHom.dual_id
+-/
 
 @[simp]
 theorem dual_comp (g : BoundedOrderHom β γ) (f : BoundedOrderHom α β) :
@@ -816,10 +828,12 @@ theorem dual_comp (g : BoundedOrderHom β γ) (f : BoundedOrderHom α β) :
   rfl
 #align bounded_order_hom.dual_comp BoundedOrderHom.dual_comp
 
+#print BoundedOrderHom.symm_dual_id /-
 @[simp]
 theorem symm_dual_id : BoundedOrderHom.dual.symm (BoundedOrderHom.id _) = BoundedOrderHom.id α :=
   rfl
 #align bounded_order_hom.symm_dual_id BoundedOrderHom.symm_dual_id
+-/
 
 @[simp]
 theorem symm_dual_comp (g : BoundedOrderHom βᵒᵈ γᵒᵈ) (f : BoundedOrderHom αᵒᵈ βᵒᵈ) :

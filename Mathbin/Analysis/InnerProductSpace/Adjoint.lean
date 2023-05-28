@@ -48,7 +48,7 @@ noncomputable section
 
 open IsROrC
 
-open ComplexConjugate
+open scoped ComplexConjugate
 
 variable {𝕜 E F G : Type _} [IsROrC 𝕜]
 
@@ -527,7 +527,7 @@ namespace Matrix
 
 variable {m n : Type _} [Fintype m] [DecidableEq m] [Fintype n] [DecidableEq n]
 
-open ComplexConjugate
+open scoped ComplexConjugate
 
 /-- The adjoint of the linear map associated to a matrix is the linear map associated to the
 conjugate transpose of that matrix. -/

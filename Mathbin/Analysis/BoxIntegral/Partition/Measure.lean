@@ -33,7 +33,7 @@ open Set
 
 noncomputable section
 
-open ENNReal BigOperators Classical BoxIntegral
+open scoped ENNReal BigOperators Classical BoxIntegral
 
 variable {ι : Type _}
 

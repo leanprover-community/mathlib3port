@@ -33,7 +33,7 @@ namespace Polynomial
 
 noncomputable section
 
-open Polynomial
+open scoped Polynomial
 
 variable {R : Type _}
 

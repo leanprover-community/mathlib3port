@@ -48,7 +48,7 @@ The construction of the conditional cdf in this file follows the proof of Theore
 
 open MeasureTheory Set Filter TopologicalSpace
 
-open NNReal ENNReal MeasureTheory Topology ProbabilityTheory
+open scoped NNReal ENNReal MeasureTheory Topology ProbabilityTheory
 
 section AuxLemmasToBeMoved
 
@@ -633,7 +633,7 @@ theorem mem_condCdfSet_ae (ρ : Measure (α × ℝ)) [FiniteMeasure ρ] : ∀ᵐ
 
 end HasCondCdf
 
-open Classical
+open scoped Classical
 
 /-- Conditional cdf of the measure given the value on `α`, restricted to the rationals.
 It is defined to be `pre_cdf` if `a ∈ cond_cdf_set`, and a default cdf-like function

@@ -70,7 +70,7 @@ open CliffordAlgebra
 
 namespace CliffordAlgebraRing
 
-open ComplexConjugate
+open scoped ComplexConjugate
 
 variable {R : Type _} [CommRing R]
 
@@ -125,7 +125,7 @@ end CliffordAlgebraRing
 
 namespace CliffordAlgebraComplex
 
-open ComplexConjugate
+open scoped ComplexConjugate
 
 /-- The quadratic form sending elements to the negation of their square. -/
 def q : QuadraticForm ℝ ℝ :=
@@ -253,7 +253,7 @@ end CliffordAlgebraComplex
 
 namespace CliffordAlgebraQuaternion
 
-open Quaternion
+open scoped Quaternion
 
 open QuaternionAlgebra
 
@@ -398,7 +398,7 @@ end CliffordAlgebraQuaternion
 
 namespace CliffordAlgebraDualNumber
 
-open DualNumber
+open scoped DualNumber
 
 open DualNumber TrivSqZeroExt
 

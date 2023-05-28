@@ -40,7 +40,7 @@ To get a C⋆-algebra `E` over field `𝕜`, use
 -/
 
 
-open Topology
+open scoped Topology
 
 -- mathport name: «expr ⋆»
 local postfix:max "⋆" => star

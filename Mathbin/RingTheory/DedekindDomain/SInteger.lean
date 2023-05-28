@@ -52,7 +52,7 @@ noncomputable section
 
 open IsDedekindDomain
 
-open nonZeroDivisors
+open scoped nonZeroDivisors
 
 universe u v
 

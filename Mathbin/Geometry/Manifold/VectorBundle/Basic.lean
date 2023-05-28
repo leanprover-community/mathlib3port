@@ -70,7 +70,7 @@ open Function (id_def)
 
 open Filter
 
-open Manifold Bundle Topology
+open scoped Manifold Bundle Topology
 
 variable {𝕜 B B' F M : Type _} {E : B → Type _}
 

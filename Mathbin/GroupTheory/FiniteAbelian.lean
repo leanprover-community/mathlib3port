@@ -23,7 +23,7 @@ import Mathbin.Data.Zmod.Quotient
 -/
 
 
-open DirectSum
+open scoped DirectSum
 
 universe u
 

@@ -58,7 +58,7 @@ open MeasureTheory Filter Finset
 
 noncomputable section
 
-open Topology BigOperators MeasureTheory ENNReal NNReal
+open scoped Topology BigOperators MeasureTheory ENNReal NNReal
 
 variable {α β γ δ : Type _} [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ]
   [MeasurableSpace δ]

@@ -39,7 +39,7 @@ variable [Mul α] [AddCommMonoid α]
 
 variable (A : Matrix m n α)
 
-open Matrix
+open scoped Matrix
 
 #print Matrix.HasOrthogonalRows /-
 /-- `A.has_orthogonal_rows` means matrix `A` has orthogonal rows (with respect to

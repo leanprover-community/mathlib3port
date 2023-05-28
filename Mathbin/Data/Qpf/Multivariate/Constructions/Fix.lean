@@ -65,7 +65,7 @@ open TypeVec
 
 open MvFunctor (Liftp Liftr)
 
-open MvFunctor
+open scoped MvFunctor
 
 variable {n : ℕ} {F : TypeVec.{u} (n + 1) → Type u} [MvFunctor F] [q : MvQPF F]
 

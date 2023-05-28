@@ -73,7 +73,7 @@ ideal, continuous function, compact, Hausdorff
 -/
 
 
-open NNReal
+open scoped NNReal
 
 namespace ContinuousMap
 

@@ -59,7 +59,7 @@ artifact, really.
 
 noncomputable section
 
-open BigOperators Topology
+open scoped BigOperators Topology
 
 open Filter (Tendsto)
 

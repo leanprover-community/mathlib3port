@@ -50,7 +50,7 @@ namespace Matrix
 
 open LinearMap
 
-open Matrix
+open scoped Matrix
 
 section
 

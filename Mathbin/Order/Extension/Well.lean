@@ -93,13 +93,17 @@ def toWellOrderExtension : α ≃ WellOrderExtension α :=
 noncomputable instance [LT α] [WellFoundedLT α] : LinearOrder (WellOrderExtension α) :=
   (IsWellFounded.wf : @WellFounded α (· < ·)).wellOrderExtension
 
+#print WellOrderExtension.wellFoundedLT /-
 instance WellOrderExtension.wellFoundedLT [LT α] [WellFoundedLT α] :
     WellFoundedLT (WellOrderExtension α) :=
   WellFounded.wellOrderExtension.isWellFounded_lt _
 #align well_order_extension.well_founded_lt WellOrderExtension.wellFoundedLT
+-/
 
+#print toWellOrderExtension_strictMono /-
 theorem toWellOrderExtension_strictMono [Preorder α] [WellFoundedLT α] :
     StrictMono (toWellOrderExtension : α → WellOrderExtension α) := fun a b h =>
   Prod.Lex.left _ _ <| WellFounded.rank_lt_of_rel _ h
 #align to_well_order_extension_strict_mono toWellOrderExtension_strictMono
+-/
 

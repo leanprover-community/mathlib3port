@@ -27,7 +27,7 @@ See also `measure_theory.function.special_functions.arctan` and
 
 noncomputable section
 
-open NNReal ENNReal
+open scoped NNReal ENNReal
 
 namespace Real
 

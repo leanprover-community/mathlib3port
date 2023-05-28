@@ -38,7 +38,7 @@ We will use this algebra isomorphism to prove the Cayley-Hamilton theorem.
 
 universe u v w
 
-open Polynomial TensorProduct
+open scoped Polynomial TensorProduct
 
 open Polynomial
 
@@ -231,7 +231,7 @@ theorem polyEquivTensor_symm_apply_tmul (a : A) (p : R[X]) :
 
 open DMatrix Matrix
 
-open BigOperators
+open scoped BigOperators
 
 variable {R}
 

@@ -38,7 +38,7 @@ open CategoryTheory CategoryTheory.Limits Opposite TopologicalSpace
 
 universe u
 
-open AlgebraicGeometry
+open scoped AlgebraicGeometry
 
 namespace AlgebraicGeometry
 

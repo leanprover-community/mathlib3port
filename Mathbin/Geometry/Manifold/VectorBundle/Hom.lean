@@ -25,7 +25,7 @@ noncomputable section
 
 open Bundle Set LocalHomeomorph ContinuousLinearMap Pretrivialization
 
-open Manifold Bundle
+open scoped Manifold Bundle
 
 variable {𝕜 B F F₁ F₂ M M₁ M₂ : Type _} {E : B → Type _} {E₁ : B → Type _} {E₂ : B → Type _}
   [NontriviallyNormedField 𝕜] [∀ x, AddCommMonoid (E x)] [∀ x, Module 𝕜 (E x)]

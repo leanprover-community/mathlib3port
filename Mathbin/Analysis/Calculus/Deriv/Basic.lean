@@ -90,7 +90,7 @@ universe u v w
 
 noncomputable section
 
-open Classical Topology BigOperators Filter ENNReal
+open scoped Classical Topology BigOperators Filter ENNReal
 
 open Filter Asymptotics Set
 
@@ -370,10 +370,12 @@ alias hasDerivWithinAt_Iio_iff_Iic ↔ HasDerivWithinAt.Iic_of_Iio HasDerivWithi
 #align has_deriv_within_at.Iic_of_Iio HasDerivWithinAt.Iic_of_Iio
 #align has_deriv_within_at.Iio_of_Iic HasDerivWithinAt.Iio_of_Iic
 
+#print HasDerivWithinAt.Ioi_iff_Ioo /-
 theorem HasDerivWithinAt.Ioi_iff_Ioo [LinearOrder 𝕜] [OrderClosedTopology 𝕜] {x y : 𝕜} (h : x < y) :
     HasDerivWithinAt f f' (Ioo x y) x ↔ HasDerivWithinAt f f' (Ioi x) x :=
   hasFDerivWithinAt_inter <| Iio_mem_nhds h
 #align has_deriv_within_at.Ioi_iff_Ioo HasDerivWithinAt.Ioi_iff_Ioo
+-/
 
 alias HasDerivWithinAt.Ioi_iff_Ioo ↔ HasDerivWithinAt.Ioi_of_Ioo HasDerivWithinAt.Ioo_of_Ioi
 #align has_deriv_within_at.Ioi_of_Ioo HasDerivWithinAt.Ioi_of_Ioo

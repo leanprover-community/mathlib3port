@@ -50,6 +50,7 @@ variable [dec_ι : DecidableEq ι] [Preorder ι]
 
 variable (G : ι → Type w)
 
+#print DirectedSystem /-
 /- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`map_self] [] -/
 /- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`map_map] [] -/
 /-- A directed system is a functor from a category (directed poset) to another category. -/
@@ -57,6 +58,7 @@ class DirectedSystem (f : ∀ i j, i ≤ j → G i → G j) : Prop where
   map_self : ∀ i x h, f i i h x = x
   map_map : ∀ {i j k} (hij hjk x), f j k hjk (f i j hij x) = f i k (le_trans hij hjk) x
 #align directed_system DirectedSystem
+-/
 
 namespace Module
 
@@ -81,6 +83,7 @@ variable (G)
 
 include dec_ι
 
+#print Module.DirectLimit /-
 /-- The direct limit of a directed system is the modules glued together along the maps. -/
 def DirectLimit : Type max v w :=
   DirectSum ι G ⧸
@@ -89,6 +92,7 @@ def DirectLimit : Type max v w :=
         ∃ (i j : _)(H : i ≤ j)(x : _),
           DirectSum.lof R ι G i x - DirectSum.lof R ι G j (f i j H x) = a })
 #align module.direct_limit Module.DirectLimit
+-/
 
 namespace DirectLimit
 
@@ -103,10 +107,12 @@ instance : Inhabited (DirectLimit G f) :=
 
 variable (R ι)
 
+#print Module.DirectLimit.of /-
 /-- The canonical map from a component to the direct limit. -/
 def of (i) : G i →ₗ[R] DirectLimit G f :=
   (mkQ _).comp <| DirectSum.lof R ι G i
 #align module.direct_limit.of Module.DirectLimit.of
+-/
 
 variable {R ι G f}
 
@@ -169,24 +175,28 @@ theorem lift_unique [Nonempty ι] [IsDirected ι (· ≤ ·)] (F : DirectLimit G
 
 section Totalize
 
-open Classical
+open scoped Classical
 
 variable (G f)
 
 omit dec_ι
 
+#print Module.DirectLimit.totalize /-
 /-- `totalize G f i j` is a linear map from `G i` to `G j`, for *every* `i` and `j`.
 If `i ≤ j`, then it is the map `f i j` that comes with the directed system `G`,
 and otherwise it is the zero map. -/
 noncomputable def totalize (i j) : G i →ₗ[R] G j :=
   if h : i ≤ j then f i j h else 0
 #align module.direct_limit.totalize Module.DirectLimit.totalize
+-/
 
 variable {G f}
 
+#print Module.DirectLimit.totalize_of_le /-
 theorem totalize_of_le {i j} (h : i ≤ j) : totalize G f i j = f i j h :=
   dif_pos h
 #align module.direct_limit.totalize_of_le Module.DirectLimit.totalize_of_le
+-/
 
 theorem totalize_of_not_le {i j} (h : ¬i ≤ j) : totalize G f i j = 0 :=
   dif_neg h
@@ -196,7 +206,7 @@ end Totalize
 
 variable [DirectedSystem G fun i j h => f i j h]
 
-open Classical
+open scoped Classical
 
 theorem toModule_totalize_of_le {x : DirectSum ι G} {i j : ι} (hij : i ≤ j)
     (hx : ∀ k ∈ x.support, k ≤ i) :
@@ -266,10 +276,12 @@ variable [∀ i, AddCommGroup (G i)]
 
 include dec_ι
 
+#print AddCommGroup.DirectLimit /-
 /-- The direct limit of a directed system is the abelian groups glued together along the maps. -/
 def DirectLimit (f : ∀ i j, i ≤ j → G i →+ G j) : Type _ :=
   @Module.DirectLimit ℤ _ ι _ _ G _ _ fun i j hij => (f i j hij).toIntLinearMap
 #align add_comm_group.direct_limit AddCommGroup.DirectLimit
+-/
 
 namespace DirectLimit
 
@@ -359,6 +371,7 @@ variable (f : ∀ i j, i ≤ j → G i → G j)
 
 open FreeCommRing
 
+#print Ring.DirectLimit /-
 /-- The direct limit of a directed system is the rings glued together along the maps. -/
 def DirectLimit : Type max v w :=
   FreeCommRing (Σi, G i) ⧸
@@ -369,6 +382,7 @@ def DirectLimit : Type max v w :=
             (∃ i x y, of (⟨i, x + y⟩ : Σi, G i) - (of ⟨i, x⟩ + of ⟨i, y⟩) = a) ∨
               ∃ i x y, of (⟨i, x * y⟩ : Σi, G i) - of ⟨i, x⟩ * of ⟨i, y⟩ = a }
 #align ring.direct_limit Ring.DirectLimit
+-/
 
 namespace DirectLimit
 
@@ -381,6 +395,7 @@ instance : Ring (DirectLimit G f) :=
 instance : Inhabited (DirectLimit G f) :=
   ⟨0⟩
 
+#print Ring.DirectLimit.of /-
 /-- The canonical map from a component to the direct limit. -/
 def of (i) : G i →+* DirectLimit G f :=
   RingHom.mk'
@@ -390,6 +405,7 @@ def of (i) : G i →+* DirectLimit G f :=
         Ideal.Quotient.eq.2 <| subset_span <| Or.inr <| Or.inr <| Or.inr ⟨i, x, y, rfl⟩ }
     fun x y => Ideal.Quotient.eq.2 <| subset_span <| Or.inr <| Or.inr <| Or.inl ⟨i, x, y, rfl⟩
 #align ring.direct_limit.of Ring.DirectLimit.of
+-/
 
 variable {G f}
 
@@ -419,12 +435,13 @@ theorem exists_of [Nonempty ι] [IsDirected ι (· ≤ ·)] (z : DirectLimit G f
 
 section
 
-open Classical
+open scoped Classical
 
 open Polynomial
 
 variable {f' : ∀ i j, i ≤ j → G i →+* G j}
 
+#print Ring.DirectLimit.Polynomial.exists_of /-
 theorem Polynomial.exists_of [Nonempty ι] [IsDirected ι (· ≤ ·)]
     (q : Polynomial (DirectLimit G fun i j h => f' i j h)) :
     ∃ i p, Polynomial.map (of G (fun i j h => f' i j h) i) p = q :=
@@ -442,6 +459,7 @@ theorem Polynomial.exists_of [Nonempty ι] [IsDirected ι (· ≤ ·)]
     let ⟨i, x, h⟩ := exists_of z
     ⟨i, C x * X ^ (n + 1), by rw [Polynomial.map_mul, map_C, h, Polynomial.map_pow, map_X]⟩
 #align ring.direct_limit.polynomial.exists_of Ring.DirectLimit.Polynomial.exists_of
+-/
 
 end
 
@@ -454,7 +472,7 @@ theorem induction_on [Nonempty ι] [IsDirected ι (· ≤ ·)] {C : DirectLimit 
 
 section OfZeroExact
 
-open Classical
+open scoped Classical
 
 variable (f' : ∀ i j, i ≤ j → G i →+* G j)
 
@@ -685,12 +703,14 @@ theorem exists_inv {p : Ring.DirectLimit G f} : p ≠ 0 → ∃ y, p * y = 1 :=
 
 section
 
-open Classical
+open scoped Classical
 
+#print Field.DirectLimit.inv /-
 /-- Noncomputable multiplicative inverse in a direct limit of fields. -/
 noncomputable def inv (p : Ring.DirectLimit G f) : Ring.DirectLimit G f :=
   if H : p = 0 then 0 else Classical.choose (DirectLimit.exists_inv G f H)
 #align field.direct_limit.inv Field.DirectLimit.inv
+-/
 
 protected theorem mul_inv_cancel {p : Ring.DirectLimit G f} (hp : p ≠ 0) : p * inv G f p = 1 := by
   rw [inv, dif_neg hp, Classical.choose_spec (direct_limit.exists_inv G f hp)]

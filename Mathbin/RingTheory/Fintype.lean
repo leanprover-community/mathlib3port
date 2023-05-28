@@ -18,7 +18,7 @@ import Mathbin.Data.Fintype.Units
 -/
 
 
-open Classical
+open scoped Classical
 
 theorem card_units_lt (M₀ : Type _) [MonoidWithZero M₀] [Nontrivial M₀] [Fintype M₀] :
     Fintype.card M₀ˣ < Fintype.card M₀ :=

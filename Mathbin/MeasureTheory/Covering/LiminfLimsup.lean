@@ -31,7 +31,7 @@ carrying a uniformly locally doubling measure.
 
 open Set Filter Metric MeasureTheory TopologicalSpace
 
-open NNReal ENNReal Topology
+open scoped NNReal ENNReal Topology
 
 variable {α : Type _} [MetricSpace α] [SecondCountableTopology α] [MeasurableSpace α] [BorelSpace α]
 

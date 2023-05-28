@@ -157,22 +157,28 @@ instance linearOrder (α β : Type _) [LinearOrder α] [LinearOrder β] : Linear
 #align prod.lex.linear_order Prod.Lex.linearOrder
 -/
 
+#print Prod.Lex.orderBot /-
 instance orderBot [PartialOrder α] [Preorder β] [OrderBot α] [OrderBot β] : OrderBot (α ×ₗ β)
     where
   bot := toLex ⊥
   bot_le a := toLex_mono bot_le
 #align prod.lex.order_bot Prod.Lex.orderBot
+-/
 
+#print Prod.Lex.orderTop /-
 instance orderTop [PartialOrder α] [Preorder β] [OrderTop α] [OrderTop β] : OrderTop (α ×ₗ β)
     where
   top := toLex ⊤
   le_top a := toLex_mono le_top
 #align prod.lex.order_top Prod.Lex.orderTop
+-/
 
+#print Prod.Lex.boundedOrder /-
 instance boundedOrder [PartialOrder α] [Preorder β] [BoundedOrder α] [BoundedOrder β] :
     BoundedOrder (α ×ₗ β) :=
   { Lex.orderBot, Lex.orderTop with }
 #align prod.lex.bounded_order Prod.Lex.boundedOrder
+-/
 
 instance [Preorder α] [Preorder β] [DenselyOrdered α] [DenselyOrdered β] :
     DenselyOrdered (α ×ₗ β) :=
@@ -183,21 +189,29 @@ instance [Preorder α] [Preorder β] [DenselyOrdered α] [DenselyOrdered β] :
     · obtain ⟨c, h₁, h₂⟩ := exists_between h
       exact ⟨(a, c), right _ h₁, right _ h₂⟩⟩
 
+#print Prod.Lex.noMaxOrder_of_left /-
 instance noMaxOrder_of_left [Preorder α] [Preorder β] [NoMaxOrder α] : NoMaxOrder (α ×ₗ β) :=
   ⟨by rintro ⟨a, b⟩; obtain ⟨c, h⟩ := exists_gt a; exact ⟨⟨c, b⟩, left _ _ h⟩⟩
 #align prod.lex.no_max_order_of_left Prod.Lex.noMaxOrder_of_left
+-/
 
+#print Prod.Lex.noMinOrder_of_left /-
 instance noMinOrder_of_left [Preorder α] [Preorder β] [NoMinOrder α] : NoMinOrder (α ×ₗ β) :=
   ⟨by rintro ⟨a, b⟩; obtain ⟨c, h⟩ := exists_lt a; exact ⟨⟨c, b⟩, left _ _ h⟩⟩
 #align prod.lex.no_min_order_of_left Prod.Lex.noMinOrder_of_left
+-/
 
+#print Prod.Lex.noMaxOrder_of_right /-
 instance noMaxOrder_of_right [Preorder α] [Preorder β] [NoMaxOrder β] : NoMaxOrder (α ×ₗ β) :=
   ⟨by rintro ⟨a, b⟩; obtain ⟨c, h⟩ := exists_gt b; exact ⟨⟨a, c⟩, right _ h⟩⟩
 #align prod.lex.no_max_order_of_right Prod.Lex.noMaxOrder_of_right
+-/
 
+#print Prod.Lex.noMinOrder_of_right /-
 instance noMinOrder_of_right [Preorder α] [Preorder β] [NoMinOrder β] : NoMinOrder (α ×ₗ β) :=
   ⟨by rintro ⟨a, b⟩; obtain ⟨c, h⟩ := exists_lt b; exact ⟨⟨a, c⟩, right _ h⟩⟩
 #align prod.lex.no_min_order_of_right Prod.Lex.noMinOrder_of_right
+-/
 
 end Prod.Lex
 

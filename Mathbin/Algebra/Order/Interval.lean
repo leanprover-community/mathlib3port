@@ -26,7 +26,7 @@ in `data.fp.basic`. We have not yet integrated these with the rest of the librar
 
 open Function Set
 
-open BigOperators Pointwise
+open scoped BigOperators Pointwise
 
 universe u
 

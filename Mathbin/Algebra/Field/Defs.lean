@@ -243,7 +243,7 @@ theorem not_isField_of_subsingleton (R : Type u) [Semiring R] [Subsingleton R] :
 #align not_is_field_of_subsingleton not_isField_of_subsingleton
 -/
 
-open Classical
+open scoped Classical
 
 #print IsField.toSemifield /-
 /-- Transferring from `is_field` to `semifield`. -/

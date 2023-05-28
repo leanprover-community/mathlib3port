@@ -28,7 +28,7 @@ then saying that `λ i, support (f i)` tendsto `(𝓝 0).small_sets` is a way of
 -/
 
 
-open Filter
+open scoped Filter
 
 open Filter Set
 

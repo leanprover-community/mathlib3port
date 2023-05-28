@@ -20,7 +20,7 @@ import Mathbin.Order.Filter.Bases
 
 open Set
 
-open Classical Filter
+open scoped Classical Filter
 
 namespace Filter
 

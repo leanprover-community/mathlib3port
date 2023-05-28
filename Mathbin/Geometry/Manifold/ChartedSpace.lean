@@ -118,7 +118,7 @@ composition of local equivs with `≫`.
 
 noncomputable section
 
-open Classical Topology
+open scoped Classical Topology
 
 open Filter
 
@@ -228,9 +228,11 @@ instance StructureGroupoid.partialOrder : PartialOrder (StructureGroupoid H) :=
 #align structure_groupoid.partial_order StructureGroupoid.partialOrder
 -/
 
+#print StructureGroupoid.le_iff /-
 theorem StructureGroupoid.le_iff {G₁ G₂ : StructureGroupoid H} : G₁ ≤ G₂ ↔ ∀ e, e ∈ G₁ → e ∈ G₂ :=
   Iff.rfl
 #align structure_groupoid.le_iff StructureGroupoid.le_iff
+-/
 
 #print idGroupoid /-
 /-- The trivial groupoid, containing only the identity (and maps with empty source, as this is
@@ -370,6 +372,7 @@ theorem mem_groupoid_of_pregroupoid {PG : Pregroupoid H} {e : LocalHomeomorph H 
 #align mem_groupoid_of_pregroupoid mem_groupoid_of_pregroupoid
 -/
 
+#print groupoid_of_pregroupoid_le /-
 theorem groupoid_of_pregroupoid_le (PG₁ PG₂ : Pregroupoid H)
     (h : ∀ f s, PG₁.property f s → PG₂.property f s) : PG₁.groupoid ≤ PG₂.groupoid :=
   by
@@ -377,6 +380,7 @@ theorem groupoid_of_pregroupoid_le (PG₁ PG₂ : Pregroupoid H)
   rw [mem_groupoid_of_pregroupoid] at he⊢
   exact ⟨h _ _ he.1, h _ _ he.2⟩
 #align groupoid_of_pregroupoid_le groupoid_of_pregroupoid_le
+-/
 
 theorem mem_pregroupoid_of_eq_on_source (PG : Pregroupoid H) {e e' : LocalHomeomorph H H}
     (he' : e ≈ e') (he : PG.property e e.source) : PG.property e' e'.source :=
@@ -479,6 +483,7 @@ instance closedUnderRestriction_idRestrGroupoid : ClosedUnderRestriction (@idRes
 #align closed_under_restriction_id_restr_groupoid closedUnderRestriction_idRestrGroupoid
 -/
 
+#print closedUnderRestriction_iff_id_le /-
 /-- A groupoid is closed under restriction if and only if it contains the trivial restriction-closed
 groupoid. -/
 theorem closedUnderRestriction_iff_id_le (G : StructureGroupoid H) :
@@ -501,6 +506,7 @@ theorem closedUnderRestriction_iff_id_le (G : StructureGroupoid H) :
     apply structure_groupoid.le_iff.mp h
     exact idRestrGroupoid_mem hs
 #align closed_under_restriction_iff_id_le closedUnderRestriction_iff_id_le
+-/
 
 /-- The groupoid of all local homeomorphisms on a topological space `H` is closed under restriction.
 -/

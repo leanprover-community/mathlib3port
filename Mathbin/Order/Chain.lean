@@ -191,7 +191,7 @@ theorem IsMaxChain.top_mem [LE α] [OrderTop α] (h : IsMaxChain (· ≤ ·) s) 
   (h.2 (h.1.insert fun a _ _ => Or.inr le_top) <| subset_insert _ _).symm ▸ mem_insert _ _
 #align is_max_chain.top_mem IsMaxChain.top_mem
 
-open Classical
+open scoped Classical
 
 #print SuccChain /-
 /-- Given a set `s`, if there exists a chain `t` strictly including `s`, then `succ_chain s`
@@ -428,9 +428,11 @@ section Preorder
 
 variable [Preorder α] {a b : α}
 
+#print Flag.le_or_le /-
 protected theorem le_or_le (s : Flag α) (ha : a ∈ s) (hb : b ∈ s) : a ≤ b ∨ b ≤ a :=
   s.chain_le.Total ha hb
 #align flag.le_or_le Flag.le_or_le
+-/
 
 instance [OrderTop α] (s : Flag α) : OrderTop s :=
   Subtype.orderTop s.top_mem
@@ -447,9 +449,11 @@ section PartialOrder
 
 variable [PartialOrder α]
 
+#print Flag.chain_lt /-
 theorem chain_lt (s : Flag α) : IsChain (· < ·) (s : Set α) := fun a ha b hb h =>
   (s.le_or_le ha hb).imp h.lt_of_le h.lt_of_le'
 #align flag.chain_lt Flag.chain_lt
+-/
 
 instance [DecidableEq α] [@DecidableRel α (· ≤ ·)] [@DecidableRel α (· < ·)] (s : Flag α) :
     LinearOrder s :=

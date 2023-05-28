@@ -44,7 +44,7 @@ open CategoryTheory
 
 namespace AddCommGroupCat
 
-open Classical
+open scoped Classical
 
 /-- The free functor `Type u ⥤ AddCommGroup` sending a type `X` to the
 free abelian group with generators `x : X`.

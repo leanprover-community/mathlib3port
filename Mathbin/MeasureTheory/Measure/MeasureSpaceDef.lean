@@ -68,7 +68,7 @@ open Filter hiding map
 
 open Function MeasurableSpace
 
-open Classical Topology BigOperators Filter ENNReal NNReal
+open scoped Classical Topology BigOperators Filter ENNReal NNReal
 
 variable {α β γ δ ι : Type _}
 

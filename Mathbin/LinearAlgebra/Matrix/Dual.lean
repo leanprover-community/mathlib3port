@@ -26,7 +26,7 @@ matrix, linear_map, transpose, dual
 -/
 
 
-open Matrix
+open scoped Matrix
 
 section Transpose
 

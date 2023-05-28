@@ -24,7 +24,7 @@ of monoids and groups
 -/
 
 
-open BigOperators
+open scoped BigOperators
 
 namespace Pi
 

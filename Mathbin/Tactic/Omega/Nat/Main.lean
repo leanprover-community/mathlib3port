@@ -22,7 +22,7 @@ namespace Omega
 
 namespace Nat
 
-open Omega.Nat
+open scoped Omega.Nat
 
 run_cmd
   mk_simp_attr `sugar_nat

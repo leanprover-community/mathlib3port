@@ -21,7 +21,7 @@ semigroups.
 -/
 
 
-open Manifold
+open scoped Manifold
 
 library_note "Design choices about smooth algebraic structures"/--
 1. All smooth algebraic structures on `G` are `Prop`-valued classes that extend
@@ -186,7 +186,7 @@ scoped[LieGroup] notation "𝑳" => smoothLeftMul
 -- Right multiplication. The abbreviation is `MIR`.
 scoped[LieGroup] notation "𝑹" => smoothRightMul
 
-open LieGroup
+open scoped LieGroup
 
 @[simp]
 theorem L_apply : (𝑳 I g) h = g * h :=
@@ -289,7 +289,7 @@ end Monoid
 
 section CommMonoid
 
-open BigOperators
+open scoped BigOperators
 
 variable {ι 𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _}
   [NormedAddCommGroup E] [NormedSpace 𝕜 E] {I : ModelWithCorners 𝕜 E H} {G : Type _} [CommMonoid G]

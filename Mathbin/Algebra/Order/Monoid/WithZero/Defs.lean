@@ -55,27 +55,35 @@ instance [PartialOrder α] : PartialOrder (WithZero α) :=
 instance [Preorder α] : OrderBot (WithZero α) :=
   WithBot.orderBot
 
+#print WithZero.zero_le /-
 theorem zero_le [Preorder α] (a : WithZero α) : 0 ≤ a :=
   bot_le
 #align with_zero.zero_le WithZero.zero_le
+-/
 
+#print WithZero.zero_lt_coe /-
 theorem zero_lt_coe [Preorder α] (a : α) : (0 : WithZero α) < a :=
   WithBot.bot_lt_coe a
 #align with_zero.zero_lt_coe WithZero.zero_lt_coe
+-/
 
 theorem zero_eq_bot [Preorder α] : (0 : WithZero α) = ⊥ :=
   rfl
 #align with_zero.zero_eq_bot WithZero.zero_eq_bot
 
+#print WithZero.coe_lt_coe /-
 @[simp, norm_cast]
 theorem coe_lt_coe [Preorder α] {a b : α} : (a : WithZero α) < b ↔ a < b :=
   WithBot.coe_lt_coe
 #align with_zero.coe_lt_coe WithZero.coe_lt_coe
+-/
 
+#print WithZero.coe_le_coe /-
 @[simp, norm_cast]
 theorem coe_le_coe [Preorder α] {a b : α} : (a : WithZero α) ≤ b ↔ a ≤ b :=
   WithBot.coe_le_coe
 #align with_zero.coe_le_coe WithZero.coe_le_coe
+-/
 
 instance [Lattice α] : Lattice (WithZero α) :=
   WithBot.lattice
@@ -152,6 +160,7 @@ end WithZero
 
 section CanonicallyOrderedMonoid
 
+#print WithZero.existsAddOfLE /-
 instance WithZero.existsAddOfLE {α} [Add α] [Preorder α] [ExistsAddOfLE α] :
     ExistsAddOfLE (WithZero α) :=
   ⟨fun a b => by
@@ -163,6 +172,7 @@ instance WithZero.existsAddOfLE {α} [Add α] [Preorder α] [ExistsAddOfLE α] :
     obtain ⟨c, rfl⟩ := exists_add_of_le (WithZero.coe_le_coe.1 h)
     exact ⟨c, rfl⟩⟩
 #align with_zero.has_exists_add_of_le WithZero.existsAddOfLE
+-/
 
 #print WithZero.canonicallyOrderedAddMonoid /-
 -- This instance looks absurd: a monoid already has a zero

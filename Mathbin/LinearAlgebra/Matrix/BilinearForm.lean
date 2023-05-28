@@ -62,11 +62,11 @@ section Matrix
 
 variable {n o : Type _}
 
-open BigOperators
+open scoped BigOperators
 
 open BilinForm Finset LinearMap Matrix
 
-open Matrix
+open scoped Matrix
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 #print Matrix.toBilin'Aux /-
@@ -425,7 +425,7 @@ end Matrix
 
 section MatrixAdjoints
 
-open Matrix
+open scoped Matrix
 
 variable {n : Type _} [Fintype n]
 

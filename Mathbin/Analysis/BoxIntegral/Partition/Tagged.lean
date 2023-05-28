@@ -33,7 +33,7 @@ rectangular box, box partition
 
 noncomputable section
 
-open Classical ENNReal NNReal
+open scoped Classical ENNReal NNReal
 
 open Set Function
 
@@ -477,13 +477,17 @@ def distortion : ℝ≥0 :=
 #align box_integral.tagged_prepartition.distortion BoxIntegral.TaggedPrepartition.distortion
 -/
 
+#print BoxIntegral.TaggedPrepartition.distortion_le_of_mem /-
 theorem distortion_le_of_mem (h : J ∈ π) : J.distortion ≤ π.distortion :=
   le_sup h
 #align box_integral.tagged_prepartition.distortion_le_of_mem BoxIntegral.TaggedPrepartition.distortion_le_of_mem
+-/
 
+#print BoxIntegral.TaggedPrepartition.distortion_le_iff /-
 theorem distortion_le_iff {c : ℝ≥0} : π.distortion ≤ c ↔ ∀ J ∈ π, Box.distortion J ≤ c :=
   Finset.sup_le_iff
 #align box_integral.tagged_prepartition.distortion_le_iff BoxIntegral.TaggedPrepartition.distortion_le_iff
+-/
 
 @[simp]
 theorem BoxIntegral.Prepartition.distortion_biUnionTagged (π : Prepartition I)
@@ -517,9 +521,11 @@ theorem distortion_single (hJ : J ≤ I) (h : x ∈ I.Icc) :
   sup_singleton
 #align box_integral.tagged_prepartition.distortion_single BoxIntegral.TaggedPrepartition.distortion_single
 
+#print BoxIntegral.TaggedPrepartition.distortion_filter_le /-
 theorem distortion_filter_le (p : Box ι → Prop) : (π.filterₓ p).distortion ≤ π.distortion :=
   sup_mono (filter_subset _ _)
 #align box_integral.tagged_prepartition.distortion_filter_le BoxIntegral.TaggedPrepartition.distortion_filter_le
+-/
 
 end Distortion
 

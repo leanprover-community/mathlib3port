@@ -29,7 +29,7 @@ the uniform distance.
 
 noncomputable section
 
-open Topology Classical NNReal uniformity UniformConvergence
+open scoped Topology Classical NNReal uniformity UniformConvergence
 
 open Set Filter Metric Function
 
@@ -837,7 +837,7 @@ variable [TopologicalSpace α] [PseudoMetricSpace β] [AddCommMonoid β] [Lipsch
 instance : AddCommMonoid (α →ᵇ β) :=
   { BoundedContinuousFunction.addMonoid with add_comm := fun f g => by ext <;> simp [add_comm] }
 
-open BigOperators
+open scoped BigOperators
 
 @[simp]
 theorem coe_sum {ι : Type _} (s : Finset ι) (f : ι → α →ᵇ β) :
@@ -1110,9 +1110,11 @@ theorem nnnorm_le (C : ℝ≥0) : ‖f‖₊ ≤ C ↔ ∀ x : α, ‖f x‖₊ 
   norm_le C.Prop
 #align bounded_continuous_function.nnnorm_le BoundedContinuousFunction.nnnorm_le
 
+#print BoundedContinuousFunction.nnnorm_const_le /-
 theorem nnnorm_const_le (b : β) : ‖const α b‖₊ ≤ ‖b‖₊ :=
   norm_const_le _
 #align bounded_continuous_function.nnnorm_const_le BoundedContinuousFunction.nnnorm_const_le
+-/
 
 #print BoundedContinuousFunction.nnnorm_const_eq /-
 @[simp]

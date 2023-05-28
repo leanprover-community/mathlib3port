@@ -34,11 +34,11 @@ noncomputable section
 
 open Real Set
 
-open BigOperators
+open scoped BigOperators
 
-open Real
+open scoped Real
 
-open RealInnerProductSpace
+open scoped RealInnerProductSpace
 
 namespace InnerProductGeometry
 

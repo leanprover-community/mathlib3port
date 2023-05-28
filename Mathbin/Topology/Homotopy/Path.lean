@@ -46,7 +46,7 @@ variable {x₀ x₁ x₂ x₃ : X}
 
 noncomputable section
 
-open unitInterval
+open scoped unitInterval
 
 namespace Path
 

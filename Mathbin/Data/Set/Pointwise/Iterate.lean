@@ -20,7 +20,7 @@ import Mathbin.Dynamics.FixedPoints.Basic
 -/
 
 
-open Pointwise
+open scoped Pointwise
 
 open Set Function
 

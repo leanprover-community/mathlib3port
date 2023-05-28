@@ -20,7 +20,7 @@ import Mathbin.RingTheory.Ideal.QuotientOperations
 -/
 
 
-open Polynomial
+open scoped Polynomial
 
 namespace Polynomial
 

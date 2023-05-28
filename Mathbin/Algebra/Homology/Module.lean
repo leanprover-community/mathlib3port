@@ -22,7 +22,7 @@ We provide some additional API to work with homological complexes in `Module R`.
 
 universe v u
 
-open Classical
+open scoped Classical
 
 noncomputable section
 

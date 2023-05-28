@@ -24,7 +24,7 @@ This file defines the space of continuous homomorphisms between two topological 
 -/
 
 
-open Pointwise
+open scoped Pointwise
 
 open Function
 

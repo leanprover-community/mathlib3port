@@ -47,7 +47,7 @@ Minkowski functional, gauge
 
 open NormedField Set
 
-open Pointwise Topology NNReal
+open scoped Pointwise Topology NNReal
 
 noncomputable section
 

@@ -40,7 +40,7 @@ open Set
 
 namespace Real
 
-open Real
+open scoped Real
 
 /-- For 0 < x, we have sin x < x. -/
 theorem sin_lt {x : ℝ} (h : 0 < x) : sin x < x :=

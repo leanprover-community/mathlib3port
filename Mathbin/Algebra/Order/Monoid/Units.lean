@@ -28,17 +28,21 @@ namespace Units
 instance [Monoid α] [Preorder α] : Preorder αˣ :=
   Preorder.lift (coe : αˣ → α)
 
+#print Units.val_le_val /-
 @[simp, norm_cast, to_additive]
 theorem val_le_val [Monoid α] [Preorder α] {a b : αˣ} : (a : α) ≤ b ↔ a ≤ b :=
   Iff.rfl
 #align units.coe_le_coe Units.val_le_val
 #align add_units.coe_le_coe AddUnits.val_le_val
+-/
 
+#print Units.val_lt_val /-
 @[simp, norm_cast, to_additive]
 theorem val_lt_val [Monoid α] [Preorder α] {a b : αˣ} : (a : α) < b ↔ a < b :=
   Iff.rfl
 #align units.coe_lt_coe Units.val_lt_val
 #align add_units.coe_lt_coe AddUnits.val_lt_val
+-/
 
 @[to_additive]
 instance [Monoid α] [PartialOrder α] : PartialOrder αˣ :=
@@ -48,6 +52,7 @@ instance [Monoid α] [PartialOrder α] : PartialOrder αˣ :=
 instance [Monoid α] [LinearOrder α] : LinearOrder αˣ :=
   LinearOrder.lift' coe Units.ext
 
+#print Units.orderEmbeddingVal /-
 /-- `coe : αˣ → α` as an order embedding. -/
 @[to_additive "`coe : add_units α → α` as an order embedding.",
   simps (config := { fullyApplied := false })]
@@ -55,6 +60,7 @@ def orderEmbeddingVal [Monoid α] [LinearOrder α] : αˣ ↪o α :=
   ⟨⟨coe, ext⟩, fun _ _ => Iff.rfl⟩
 #align units.order_embedding_coe Units.orderEmbeddingVal
 #align add_units.order_embedding_coe AddUnits.orderEmbeddingVal
+-/
 
 @[simp, norm_cast, to_additive]
 theorem max_val [Monoid α] [LinearOrder α] {a b : αˣ} : (↑(max a b) : α) = max a b :=

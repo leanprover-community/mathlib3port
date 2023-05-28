@@ -127,10 +127,12 @@ theorem factors_zero [HasZeroMorphisms C] {X Y : C} {P : Subobject Y} : P.Factor
 #align category_theory.subobject.factors_zero CategoryTheory.Subobject.factors_zero
 -/
 
+#print CategoryTheory.Subobject.factors_of_le /-
 theorem factors_of_le {Y Z : C} {P Q : Subobject Y} (f : Z ⟶ Y) (h : P ≤ Q) :
     P.Factors f → Q.Factors f := by simp only [factors_iff];
   exact fun ⟨u, hu⟩ => ⟨u ≫ of_le _ _ h, by simp [← hu]⟩
 #align category_theory.subobject.factors_of_le CategoryTheory.Subobject.factors_of_le
+-/
 
 /-- `P.factor_thru f h` provides a factorisation of `f : X ⟶ Y` through some `P : subobject Y`,
 given the evidence `h : P.factors f` that such a factorisation exists. -/

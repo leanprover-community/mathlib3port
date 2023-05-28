@@ -42,7 +42,7 @@ noncomputable section
 
 open Filter intervalIntegral Set Real MeasureTheory
 
-open Nat Topology BigOperators Real
+open scoped Nat Topology BigOperators Real
 
 section BetaIntegral
 
@@ -548,7 +548,7 @@ end GammaReflection
 
 section InvGamma
 
-open Real
+open scoped Real
 
 namespace Complex
 

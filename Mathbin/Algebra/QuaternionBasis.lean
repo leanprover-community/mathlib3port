@@ -30,7 +30,7 @@ import Mathbin.Tactic.Ring
 -/
 
 
-open Quaternion
+open scoped Quaternion
 
 namespace QuaternionAlgebra
 

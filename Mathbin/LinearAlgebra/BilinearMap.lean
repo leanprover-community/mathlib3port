@@ -154,7 +154,7 @@ theorem flip_flip [SMulCommClass R₂ S₂ P] (f : M →ₛₗ[ρ₁₂] N →�
   LinearMap.ext₂ fun x y => (f.flip.flip_apply _ _).trans (f.flip_apply _ _)
 #align linear_map.flip_flip LinearMap.flip_flip
 
-open BigOperators
+open scoped BigOperators
 
 variable {R}
 

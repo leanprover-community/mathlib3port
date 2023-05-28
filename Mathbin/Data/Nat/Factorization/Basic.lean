@@ -48,7 +48,7 @@ with a normalization function, and then deduplicated.  The basics of this have b
 
 open Nat Finset List Finsupp
 
-open BigOperators
+open scoped BigOperators
 
 namespace Nat
 

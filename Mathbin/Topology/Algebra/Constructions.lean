@@ -30,7 +30,7 @@ variable {M X : Type _}
 
 open Filter
 
-open Topology
+open scoped Topology
 
 namespace MulOpposite
 

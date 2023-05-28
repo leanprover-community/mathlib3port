@@ -48,7 +48,7 @@ noncomputable section
 
 open Classical Set Filter MeasureTheory Finset Function TopologicalSpace
 
-open Classical Topology
+open scoped Classical Topology
 
 variable {ι : Type _} {α : Type _} [MeasurableSpace α] {f : α → α} {s : Set α} {μ : Measure α}
 

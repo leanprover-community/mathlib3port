@@ -30,7 +30,7 @@ universe u v w
 
 noncomputable section
 
-open Classical Topology BigOperators Filter ENNReal
+open scoped Classical Topology BigOperators Filter ENNReal
 
 open Filter Asymptotics Set
 

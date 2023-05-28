@@ -25,7 +25,7 @@ noncomputable section
 
 open Function Cardinal Set Equiv Order
 
-open Classical Cardinal Ordinal
+open scoped Classical Cardinal Ordinal
 
 universe u v w
 
@@ -350,6 +350,7 @@ theorem log_pos {b o : Ordinal} (hb : 1 < b) (ho : o ≠ 0) (hbo : b ≤ o) : 0 
   rwa [← succ_le_iff, succ_zero, ← opow_le_iff_le_log hb ho, opow_one]
 #align ordinal.log_pos Ordinal.log_pos
 
+#print Ordinal.log_eq_zero /-
 theorem log_eq_zero {b o : Ordinal} (hbo : o < b) : log b o = 0 :=
   by
   rcases eq_or_ne o 0 with (rfl | ho)
@@ -360,7 +361,9 @@ theorem log_eq_zero {b o : Ordinal} (hbo : o < b) : log b o = 0 :=
     · exact log_one_left o
   · rwa [← Ordinal.le_zero, ← lt_succ_iff, succ_zero, ← lt_opow_iff_log_lt hb ho, opow_one]
 #align ordinal.log_eq_zero Ordinal.log_eq_zero
+-/
 
+#print Ordinal.log_mono_right /-
 @[mono]
 theorem log_mono_right (b) {x y : Ordinal} (xy : x ≤ y) : log b x ≤ log b y :=
   if hx : x = 0 then by simp only [hx, log_zero_right, Ordinal.zero_le]
@@ -370,13 +373,16 @@ theorem log_mono_right (b) {x y : Ordinal} (xy : x ≤ y) : log b x ≤ log b y 
         (opow_log_le_self _ hx).trans xy
     else by simp only [log_of_not_one_lt_left hb, Ordinal.zero_le]
 #align ordinal.log_mono_right Ordinal.log_mono_right
+-/
 
+#print Ordinal.log_le_self /-
 theorem log_le_self (b x : Ordinal) : log b x ≤ x :=
   if hx : x = 0 then by simp only [hx, log_zero_right, Ordinal.zero_le]
   else
     if hb : 1 < b then (right_le_opow _ hb).trans (opow_log_le_self b hx)
     else by simp only [log_of_not_one_lt_left hb, Ordinal.zero_le]
 #align ordinal.log_le_self Ordinal.log_le_self
+-/
 
 @[simp]
 theorem log_one_right (b : Ordinal) : log b 1 = 0 :=

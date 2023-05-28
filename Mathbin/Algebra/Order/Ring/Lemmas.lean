@@ -147,57 +147,81 @@ section Preorder
 
 variable [Preorder α]
 
+#print PosMulMono.to_covariantClass_pos_mul_le /-
 instance PosMulMono.to_covariantClass_pos_mul_le [PosMulMono α] :
     CovariantClass α>0 α (fun x y => x * y) (· ≤ ·) :=
   ⟨fun a b c bc => @CovariantClass.elim α≥0 α (fun x y => x * y) (· ≤ ·) _ ⟨_, a.2.le⟩ _ _ bc⟩
 #align pos_mul_mono.to_covariant_class_pos_mul_le PosMulMono.to_covariantClass_pos_mul_le
+-/
 
+#print MulPosMono.to_covariantClass_pos_mul_le /-
 instance MulPosMono.to_covariantClass_pos_mul_le [MulPosMono α] :
     CovariantClass α>0 α (fun x y => y * x) (· ≤ ·) :=
   ⟨fun a b c bc => @CovariantClass.elim α≥0 α (fun x y => y * x) (· ≤ ·) _ ⟨_, a.2.le⟩ _ _ bc⟩
 #align mul_pos_mono.to_covariant_class_pos_mul_le MulPosMono.to_covariantClass_pos_mul_le
+-/
 
+#print PosMulReflectLT.to_contravariantClass_pos_mul_lt /-
 instance PosMulReflectLT.to_contravariantClass_pos_mul_lt [PosMulReflectLT α] :
     ContravariantClass α>0 α (fun x y => x * y) (· < ·) :=
   ⟨fun a b c bc => @ContravariantClass.elim α≥0 α (fun x y => x * y) (· < ·) _ ⟨_, a.2.le⟩ _ _ bc⟩
 #align pos_mul_reflect_lt.to_contravariant_class_pos_mul_lt PosMulReflectLT.to_contravariantClass_pos_mul_lt
+-/
 
+#print MulPosReflectLT.to_contravariantClass_pos_mul_lt /-
 instance MulPosReflectLT.to_contravariantClass_pos_mul_lt [MulPosReflectLT α] :
     ContravariantClass α>0 α (fun x y => y * x) (· < ·) :=
   ⟨fun a b c bc => @ContravariantClass.elim α≥0 α (fun x y => y * x) (· < ·) _ ⟨_, a.2.le⟩ _ _ bc⟩
 #align mul_pos_reflect_lt.to_contravariant_class_pos_mul_lt MulPosReflectLT.to_contravariantClass_pos_mul_lt
+-/
 
+#print mul_le_mul_of_nonneg_left /-
 theorem mul_le_mul_of_nonneg_left [PosMulMono α] (h : b ≤ c) (a0 : 0 ≤ a) : a * b ≤ a * c :=
   @CovariantClass.elim α≥0 α (fun x y => x * y) (· ≤ ·) _ ⟨a, a0⟩ _ _ h
 #align mul_le_mul_of_nonneg_left mul_le_mul_of_nonneg_left
+-/
 
+#print mul_le_mul_of_nonneg_right /-
 theorem mul_le_mul_of_nonneg_right [MulPosMono α] (h : b ≤ c) (a0 : 0 ≤ a) : b * a ≤ c * a :=
   @CovariantClass.elim α≥0 α (fun x y => y * x) (· ≤ ·) _ ⟨a, a0⟩ _ _ h
 #align mul_le_mul_of_nonneg_right mul_le_mul_of_nonneg_right
+-/
 
+#print mul_lt_mul_of_pos_left /-
 theorem mul_lt_mul_of_pos_left [PosMulStrictMono α] (bc : b < c) (a0 : 0 < a) : a * b < a * c :=
   @CovariantClass.elim α>0 α (fun x y => x * y) (· < ·) _ ⟨a, a0⟩ _ _ bc
 #align mul_lt_mul_of_pos_left mul_lt_mul_of_pos_left
+-/
 
+#print mul_lt_mul_of_pos_right /-
 theorem mul_lt_mul_of_pos_right [MulPosStrictMono α] (bc : b < c) (a0 : 0 < a) : b * a < c * a :=
   @CovariantClass.elim α>0 α (fun x y => y * x) (· < ·) _ ⟨a, a0⟩ _ _ bc
 #align mul_lt_mul_of_pos_right mul_lt_mul_of_pos_right
+-/
 
+#print lt_of_mul_lt_mul_left /-
 theorem lt_of_mul_lt_mul_left [PosMulReflectLT α] (h : a * b < a * c) (a0 : 0 ≤ a) : b < c :=
   @ContravariantClass.elim α≥0 α (fun x y => x * y) (· < ·) _ ⟨a, a0⟩ _ _ h
 #align lt_of_mul_lt_mul_left lt_of_mul_lt_mul_left
+-/
 
+#print lt_of_mul_lt_mul_right /-
 theorem lt_of_mul_lt_mul_right [MulPosReflectLT α] (h : b * a < c * a) (a0 : 0 ≤ a) : b < c :=
   @ContravariantClass.elim α≥0 α (fun x y => y * x) (· < ·) _ ⟨a, a0⟩ _ _ h
 #align lt_of_mul_lt_mul_right lt_of_mul_lt_mul_right
+-/
 
+#print le_of_mul_le_mul_left /-
 theorem le_of_mul_le_mul_left [PosMulMonoRev α] (bc : a * b ≤ a * c) (a0 : 0 < a) : b ≤ c :=
   @ContravariantClass.elim α>0 α (fun x y => x * y) (· ≤ ·) _ ⟨a, a0⟩ _ _ bc
 #align le_of_mul_le_mul_left le_of_mul_le_mul_left
+-/
 
+#print le_of_mul_le_mul_right /-
 theorem le_of_mul_le_mul_right [MulPosMonoRev α] (bc : b * a ≤ c * a) (a0 : 0 < a) : b ≤ c :=
   @ContravariantClass.elim α>0 α (fun x y => y * x) (· ≤ ·) _ ⟨a, a0⟩ _ _ bc
 #align le_of_mul_le_mul_right le_of_mul_le_mul_right
+-/
 
 alias lt_of_mul_lt_mul_left ← lt_of_mul_lt_mul_of_nonneg_left
 #align lt_of_mul_lt_mul_of_nonneg_left lt_of_mul_lt_mul_of_nonneg_left
@@ -211,77 +235,105 @@ alias le_of_mul_le_mul_left ← le_of_mul_le_mul_of_pos_left
 alias le_of_mul_le_mul_right ← le_of_mul_le_mul_of_pos_right
 #align le_of_mul_le_mul_of_pos_right le_of_mul_le_mul_of_pos_right
 
+#print mul_lt_mul_left /-
 @[simp]
 theorem mul_lt_mul_left [PosMulStrictMono α] [PosMulReflectLT α] (a0 : 0 < a) :
     a * b < a * c ↔ b < c :=
   @rel_iff_cov α>0 α (fun x y => x * y) (· < ·) _ _ ⟨a, a0⟩ _ _
 #align mul_lt_mul_left mul_lt_mul_left
+-/
 
+#print mul_lt_mul_right /-
 @[simp]
 theorem mul_lt_mul_right [MulPosStrictMono α] [MulPosReflectLT α] (a0 : 0 < a) :
     b * a < c * a ↔ b < c :=
   @rel_iff_cov α>0 α (fun x y => y * x) (· < ·) _ _ ⟨a, a0⟩ _ _
 #align mul_lt_mul_right mul_lt_mul_right
+-/
 
+#print mul_le_mul_left /-
 @[simp]
 theorem mul_le_mul_left [PosMulMono α] [PosMulMonoRev α] (a0 : 0 < a) : a * b ≤ a * c ↔ b ≤ c :=
   @rel_iff_cov α>0 α (fun x y => x * y) (· ≤ ·) _ _ ⟨a, a0⟩ _ _
 #align mul_le_mul_left mul_le_mul_left
+-/
 
+#print mul_le_mul_right /-
 @[simp]
 theorem mul_le_mul_right [MulPosMono α] [MulPosMonoRev α] (a0 : 0 < a) : b * a ≤ c * a ↔ b ≤ c :=
   @rel_iff_cov α>0 α (fun x y => y * x) (· ≤ ·) _ _ ⟨a, a0⟩ _ _
 #align mul_le_mul_right mul_le_mul_right
+-/
 
+#print mul_lt_mul_of_pos_of_nonneg /-
 theorem mul_lt_mul_of_pos_of_nonneg [PosMulStrictMono α] [MulPosMono α] (h₁ : a ≤ b) (h₂ : c < d)
     (a0 : 0 < a) (d0 : 0 ≤ d) : a * c < b * d :=
   (mul_lt_mul_of_pos_left h₂ a0).trans_le (mul_le_mul_of_nonneg_right h₁ d0)
 #align mul_lt_mul_of_pos_of_nonneg mul_lt_mul_of_pos_of_nonneg
+-/
 
+#print mul_lt_mul_of_le_of_le' /-
 theorem mul_lt_mul_of_le_of_le' [PosMulStrictMono α] [MulPosMono α] (h₁ : a ≤ b) (h₂ : c < d)
     (b0 : 0 < b) (c0 : 0 ≤ c) : a * c < b * d :=
   (mul_le_mul_of_nonneg_right h₁ c0).trans_lt (mul_lt_mul_of_pos_left h₂ b0)
 #align mul_lt_mul_of_le_of_le' mul_lt_mul_of_le_of_le'
+-/
 
+#print mul_lt_mul_of_nonneg_of_pos /-
 theorem mul_lt_mul_of_nonneg_of_pos [PosMulMono α] [MulPosStrictMono α] (h₁ : a < b) (h₂ : c ≤ d)
     (a0 : 0 ≤ a) (d0 : 0 < d) : a * c < b * d :=
   (mul_le_mul_of_nonneg_left h₂ a0).trans_lt (mul_lt_mul_of_pos_right h₁ d0)
 #align mul_lt_mul_of_nonneg_of_pos mul_lt_mul_of_nonneg_of_pos
+-/
 
+#print mul_lt_mul_of_le_of_lt' /-
 theorem mul_lt_mul_of_le_of_lt' [PosMulMono α] [MulPosStrictMono α] (h₁ : a < b) (h₂ : c ≤ d)
     (b0 : 0 ≤ b) (c0 : 0 < c) : a * c < b * d :=
   (mul_lt_mul_of_pos_right h₁ c0).trans_le (mul_le_mul_of_nonneg_left h₂ b0)
 #align mul_lt_mul_of_le_of_lt' mul_lt_mul_of_le_of_lt'
+-/
 
+#print mul_lt_mul_of_pos_of_pos /-
 theorem mul_lt_mul_of_pos_of_pos [PosMulStrictMono α] [MulPosStrictMono α] (h₁ : a < b) (h₂ : c < d)
     (a0 : 0 < a) (d0 : 0 < d) : a * c < b * d :=
   (mul_lt_mul_of_pos_left h₂ a0).trans (mul_lt_mul_of_pos_right h₁ d0)
 #align mul_lt_mul_of_pos_of_pos mul_lt_mul_of_pos_of_pos
+-/
 
+#print mul_lt_mul_of_lt_of_lt' /-
 theorem mul_lt_mul_of_lt_of_lt' [PosMulStrictMono α] [MulPosStrictMono α] (h₁ : a < b) (h₂ : c < d)
     (b0 : 0 < b) (c0 : 0 < c) : a * c < b * d :=
   (mul_lt_mul_of_pos_right h₁ c0).trans (mul_lt_mul_of_pos_left h₂ b0)
 #align mul_lt_mul_of_lt_of_lt' mul_lt_mul_of_lt_of_lt'
+-/
 
+#print mul_lt_of_mul_lt_of_nonneg_left /-
 theorem mul_lt_of_mul_lt_of_nonneg_left [PosMulMono α] (h : a * b < c) (hdb : d ≤ b) (ha : 0 ≤ a) :
     a * d < c :=
   (mul_le_mul_of_nonneg_left hdb ha).trans_lt h
 #align mul_lt_of_mul_lt_of_nonneg_left mul_lt_of_mul_lt_of_nonneg_left
+-/
 
+#print lt_mul_of_lt_mul_of_nonneg_left /-
 theorem lt_mul_of_lt_mul_of_nonneg_left [PosMulMono α] (h : a < b * c) (hcd : c ≤ d) (hb : 0 ≤ b) :
     a < b * d :=
   h.trans_le <| mul_le_mul_of_nonneg_left hcd hb
 #align lt_mul_of_lt_mul_of_nonneg_left lt_mul_of_lt_mul_of_nonneg_left
+-/
 
+#print mul_lt_of_mul_lt_of_nonneg_right /-
 theorem mul_lt_of_mul_lt_of_nonneg_right [MulPosMono α] (h : a * b < c) (hda : d ≤ a) (hb : 0 ≤ b) :
     d * b < c :=
   (mul_le_mul_of_nonneg_right hda hb).trans_lt h
 #align mul_lt_of_mul_lt_of_nonneg_right mul_lt_of_mul_lt_of_nonneg_right
+-/
 
+#print lt_mul_of_lt_mul_of_nonneg_right /-
 theorem lt_mul_of_lt_mul_of_nonneg_right [MulPosMono α] (h : a < b * c) (hbd : b ≤ d) (hc : 0 ≤ c) :
     a < d * c :=
   h.trans_le <| mul_le_mul_of_nonneg_right hbd hc
 #align lt_mul_of_lt_mul_of_nonneg_right lt_mul_of_lt_mul_of_nonneg_right
+-/
 
 end Preorder
 

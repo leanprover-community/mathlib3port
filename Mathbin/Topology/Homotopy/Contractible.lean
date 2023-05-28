@@ -52,7 +52,7 @@ end ContinuousMap
 
 open ContinuousMap
 
-open ContinuousMap
+open scoped ContinuousMap
 
 #print ContractibleSpace /-
 /- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`hequiv_unit] [] -/

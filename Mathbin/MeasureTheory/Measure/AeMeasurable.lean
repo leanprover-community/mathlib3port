@@ -24,7 +24,7 @@ We discuss several of its properties that are analogous to properties of measura
 
 open MeasureTheory MeasureTheory.Measure Filter Set Function
 
-open MeasureTheory Filter Classical ENNReal Interval
+open scoped MeasureTheory Filter Classical ENNReal Interval
 
 variable {ι α β γ δ R : Type _} {m0 : MeasurableSpace α} [MeasurableSpace β] [MeasurableSpace γ]
   [MeasurableSpace δ] {f g : α → β} {μ ν : Measure α}
@@ -224,12 +224,14 @@ theorem exists_ae_eq_range_subset (H : AEMeasurable f μ) {t : Set β} (ht : ∀
     simp only [hx, mem_compl_iff, mem_set_of_eq, false_and_iff, not_false_iff]
 #align ae_measurable.exists_ae_eq_range_subset AEMeasurable.exists_ae_eq_range_subset
 
+#print AEMeasurable.exists_measurable_nonneg /-
 theorem exists_measurable_nonneg {β} [Preorder β] [Zero β] {mβ : MeasurableSpace β} {f : α → β}
     (hf : AEMeasurable f μ) (f_nn : ∀ᵐ t ∂μ, 0 ≤ f t) : ∃ g, Measurable g ∧ 0 ≤ g ∧ f =ᵐ[μ] g :=
   by
   obtain ⟨G, hG_meas, hG_mem, hG_ae_eq⟩ := hf.exists_ae_eq_range_subset f_nn ⟨0, le_rfl⟩
   exact ⟨G, hG_meas, fun x => hG_mem (mem_range_self x), hG_ae_eq⟩
 #align ae_measurable.exists_measurable_nonneg AEMeasurable.exists_measurable_nonneg
+-/
 
 theorem subtype_mk (h : AEMeasurable f μ) {s : Set β} {hfs : ∀ x, f x ∈ s} :
     AEMeasurable (codRestrict f s hfs) μ :=
@@ -330,6 +332,7 @@ theorem AEMeasurable.restrict (hfm : AEMeasurable f μ) {s} : AEMeasurable f (μ
   ⟨AEMeasurable.mk f hfm, hfm.measurable_mk, ae_restrict_of_ae hfm.ae_eq_mk⟩
 #align ae_measurable.restrict AEMeasurable.restrict
 
+#print aemeasurable_Ioi_of_forall_Ioc /-
 theorem aemeasurable_Ioi_of_forall_Ioc {β} {mβ : MeasurableSpace β} [LinearOrder α]
     [(atTop : Filter α).IsCountablyGenerated] {x : α} {g : α → β}
     (g_meas : ∀ t > x, AEMeasurable g (μ.restrict (Ioc x t))) :
@@ -348,6 +351,7 @@ theorem aemeasurable_Ioi_of_forall_Ioc {β} {mβ : MeasurableSpace β} [LinearOr
   · rw [Ioc_eq_empty (not_lt.mpr h), measure.restrict_empty]
     exact aemeasurable_zero_measure
 #align ae_measurable_Ioi_of_forall_Ioc aemeasurable_Ioi_of_forall_Ioc
+-/
 
 variable [Zero β]
 

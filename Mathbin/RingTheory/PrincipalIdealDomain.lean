@@ -46,7 +46,7 @@ open Set Function
 
 open Submodule
 
-open Classical
+open scoped Classical
 
 section
 
@@ -299,7 +299,7 @@ theorem associates_irreducible_iff_prime : ∀ {p : Associates R}, Irreducible p
 
 section
 
-open Classical
+open scoped Classical
 
 #print PrincipalIdealRing.factors /-
 /-- `factors a` is a multiset of irreducible elements whose product is `a`, up to units -/

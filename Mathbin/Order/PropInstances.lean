@@ -84,6 +84,7 @@ namespace Pi
 
 variable {ι : Type _} {α' : ι → Type _} [∀ i, PartialOrder (α' i)]
 
+#print Pi.disjoint_iff /-
 theorem disjoint_iff [∀ i, OrderBot (α' i)] {f g : ∀ i, α' i} :
     Disjoint f g ↔ ∀ i, Disjoint (f i) (g i) :=
   by
@@ -100,16 +101,21 @@ theorem disjoint_iff [∀ i, OrderBot (α' i)] {f g : ∀ i, α' i} :
   · intro h x hf hg i
     apply h i (hf i) (hg i)
 #align pi.disjoint_iff Pi.disjoint_iff
+-/
 
+#print Pi.codisjoint_iff /-
 theorem codisjoint_iff [∀ i, OrderTop (α' i)] {f g : ∀ i, α' i} :
     Codisjoint f g ↔ ∀ i, Codisjoint (f i) (g i) :=
   @disjoint_iff _ (fun i => (α' i)ᵒᵈ) _ _ _ _
 #align pi.codisjoint_iff Pi.codisjoint_iff
+-/
 
+#print Pi.isCompl_iff /-
 theorem isCompl_iff [∀ i, BoundedOrder (α' i)] {f g : ∀ i, α' i} :
     IsCompl f g ↔ ∀ i, IsCompl (f i) (g i) := by
   simp_rw [isCompl_iff, disjoint_iff, codisjoint_iff, forall_and]
 #align pi.is_compl_iff Pi.isCompl_iff
+-/
 
 end Pi
 

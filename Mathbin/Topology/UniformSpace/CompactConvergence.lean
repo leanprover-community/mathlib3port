@@ -85,7 +85,7 @@ of the uniform space structure on `C(α, β)` definitionally equal to the compac
 
 universe u₁ u₂ u₃
 
-open Filter uniformity Topology
+open scoped Filter uniformity Topology
 
 open UniformSpace Set Filter
 

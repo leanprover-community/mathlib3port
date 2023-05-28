@@ -28,7 +28,7 @@ namespace CategoryTheory
 
 open Limits Category Preadditive Pretriangulated
 
-open ZeroObject
+open scoped ZeroObject
 
 variable {C : Type _} [Category C] [Preadditive C] [HasZeroObject C] [HasShift C ℤ]
   [∀ n : ℤ, Functor.Additive (shiftFunctor C n)] [Pretriangulated C]

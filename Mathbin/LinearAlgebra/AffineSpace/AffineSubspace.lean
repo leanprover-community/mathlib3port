@@ -63,7 +63,7 @@ Those depending on analysis or topology are defined elsewhere; see
 
 noncomputable section
 
-open BigOperators Affine
+open scoped BigOperators Affine
 
 open Set
 

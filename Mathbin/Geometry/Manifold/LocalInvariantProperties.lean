@@ -53,7 +53,7 @@ in the one for `lift_prop_within_at`.
 
 noncomputable section
 
-open Classical Manifold Topology
+open scoped Classical Manifold Topology
 
 open Set Filter
 

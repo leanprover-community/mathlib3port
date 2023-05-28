@@ -31,7 +31,7 @@ that is solvable by radicals has a solvable Galois group.
 
 noncomputable section
 
-open Classical Polynomial
+open scoped Classical Polynomial
 
 open Polynomial IntermediateField
 

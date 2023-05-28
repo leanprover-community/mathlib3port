@@ -44,7 +44,7 @@ convergence in measure and other notions of convergence.
 
 open TopologicalSpace Filter
 
-open NNReal ENNReal MeasureTheory Topology
+open scoped NNReal ENNReal MeasureTheory Topology
 
 namespace MeasureTheory
 

@@ -23,7 +23,7 @@ This is crucial in Fourier-Motzkin constructions.
 -/
 
 
-open Pointwise
+open scoped Pointwise
 
 variable {G H α β : Type _}
 

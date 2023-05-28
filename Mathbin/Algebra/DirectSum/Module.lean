@@ -35,7 +35,7 @@ universe u v w u₁
 
 namespace DirectSum
 
-open DirectSum
+open scoped DirectSum
 
 section General
 

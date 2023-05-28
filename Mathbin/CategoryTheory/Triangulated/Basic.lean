@@ -74,7 +74,7 @@ section
 
 variable [HasZeroObject C] [HasZeroMorphisms C]
 
-open ZeroObject
+open scoped ZeroObject
 
 instance : Inhabited (Triangle C) :=
   ⟨⟨0, 0, 0, 0, 0, 0⟩⟩

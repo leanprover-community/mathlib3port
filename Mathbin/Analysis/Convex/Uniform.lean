@@ -40,7 +40,7 @@ convex, uniformly convex
 
 open Set Metric
 
-open Convex Pointwise
+open scoped Convex Pointwise
 
 #print UniformConvexSpace /-
 /-- A *uniformly convex space* is a real normed space where the triangle inequality is strict with a

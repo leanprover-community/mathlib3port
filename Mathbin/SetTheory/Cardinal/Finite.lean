@@ -30,7 +30,7 @@ open Cardinal
 
 noncomputable section
 
-open BigOperators
+open scoped BigOperators
 
 variable {α β : Type _}
 

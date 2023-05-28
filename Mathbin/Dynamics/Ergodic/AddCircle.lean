@@ -34,7 +34,7 @@ This file contains proofs of ergodicity for maps of the additive circle.
 
 open Set Function MeasureTheory MeasureTheory.Measure Filter Metric
 
-open MeasureTheory NNReal ENNReal Topology Pointwise
+open scoped MeasureTheory NNReal ENNReal Topology Pointwise
 
 namespace AddCircle
 

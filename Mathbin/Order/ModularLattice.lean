@@ -381,6 +381,7 @@ namespace IsCompl
 
 variable [Lattice α] [BoundedOrder α] [IsModularLattice α]
 
+#print IsCompl.IicOrderIsoIci /-
 /-- The diamond isomorphism between the intervals `set.Iic a` and `set.Ici b`. -/
 def IicOrderIsoIci {a b : α} (h : IsCompl a b) : Set.Iic a ≃o Set.Ici b :=
   (OrderIso.setCongr (Set.Iic a) (Set.Icc (a ⊓ b) a)
@@ -388,6 +389,7 @@ def IicOrderIsoIci {a b : α} (h : IsCompl a b) : Set.Iic a ≃o Set.Ici b :=
     (infIccOrderIsoIccSup a b).trans
       (OrderIso.setCongr (Set.Icc b (a ⊔ b)) (Set.Ici b) (h.sup_eq_top.symm ▸ Set.Icc_top))
 #align is_compl.Iic_order_iso_Ici IsCompl.IicOrderIsoIci
+-/
 
 end IsCompl
 
@@ -455,6 +457,7 @@ instance complementedLattice_Iic : ComplementedLattice (Set.Iic a) :=
         rw [← sup_inf_assoc_of_le _ (Set.mem_Iic.1 hx), hy.2.eq_top, top_inf_eq]⟩⟩
 #align is_modular_lattice.complemented_lattice_Iic IsModularLattice.complementedLattice_Iic
 
+#print IsModularLattice.complementedLattice_Ici /-
 instance complementedLattice_Ici : ComplementedLattice (Set.Ici a) :=
   ⟨fun ⟨x, hx⟩ =>
     let ⟨y, hy⟩ := exists_isCompl x
@@ -470,6 +473,7 @@ instance complementedLattice_Ici : ComplementedLattice (Set.Ici a) :=
         rw [← sup_assoc]
         exact le_trans hy.2.top_le le_sup_left⟩⟩
 #align is_modular_lattice.complemented_lattice_Ici IsModularLattice.complementedLattice_Ici
+-/
 
 end ComplementedLattice
 

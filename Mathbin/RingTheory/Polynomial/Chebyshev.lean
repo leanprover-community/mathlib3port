@@ -64,7 +64,7 @@ namespace Polynomial.Chebyshev
 
 open Polynomial
 
-open Polynomial
+open scoped Polynomial
 
 variable (R S : Type _) [CommRing R] [CommRing S]
 

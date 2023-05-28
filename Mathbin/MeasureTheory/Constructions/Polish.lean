@@ -64,7 +64,7 @@ We use this to prove several versions of the Borel isomorphism theorem.
 
 open Set Function PolishSpace PiNat TopologicalSpace Metric Filter
 
-open Topology MeasureTheory Filter
+open scoped Topology MeasureTheory Filter
 
 variable {α : Type _} [TopologicalSpace α] {ι : Type _}
 

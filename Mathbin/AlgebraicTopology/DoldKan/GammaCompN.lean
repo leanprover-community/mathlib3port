@@ -28,7 +28,7 @@ noncomputable section
 open
   CategoryTheory CategoryTheory.Category CategoryTheory.Limits CategoryTheory.Idempotents Opposite SimplicialObject
 
-open Simplicial
+open scoped Simplicial
 
 namespace AlgebraicTopology
 

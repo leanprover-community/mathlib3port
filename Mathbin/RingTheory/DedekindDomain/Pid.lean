@@ -32,9 +32,9 @@ open Ideal
 
 open UniqueFactorizationMonoid
 
-open BigOperators
+open scoped BigOperators
 
-open nonZeroDivisors
+open scoped nonZeroDivisors
 
 open UniqueFactorizationMonoid
 

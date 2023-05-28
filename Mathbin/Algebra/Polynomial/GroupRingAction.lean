@@ -26,7 +26,7 @@ This file contains instances and definitions relating `mul_semiring_action` to `
 
 variable (M : Type _) [Monoid M]
 
-open Polynomial
+open scoped Polynomial
 
 namespace Polynomial
 
@@ -94,7 +94,7 @@ variable (R : Type _) [CommRing R] [MulSemiringAction G R]
 
 open MulAction
 
-open Classical
+open scoped Classical
 
 #print prodXSubSmul /-
 /-- the product of `(X - g • x)` over distinct `g • x`. -/

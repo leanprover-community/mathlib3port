@@ -18,7 +18,7 @@ instead of Lie mainly because Lie ring has currently another use in mathematics.
 -/
 
 
-open Manifold
+open scoped Manifold
 
 section SmoothRing
 

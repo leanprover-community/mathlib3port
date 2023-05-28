@@ -81,7 +81,7 @@ since `_inst` is a free variable and so the equality can just be substituted.
 
 open Function Fin Set
 
-open BigOperators
+open scoped BigOperators
 
 universe u v v' v₁ v₂ v₃ w u'
 

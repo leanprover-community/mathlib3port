@@ -36,7 +36,7 @@ a field structure, and so can all types with prime power cardinalities, and this
 -- mathport name: «expr‖ ‖»
 local notation "‖" x "‖" => Fintype.card x
 
-open Cardinal nonZeroDivisors
+open scoped Cardinal nonZeroDivisors
 
 universe u
 

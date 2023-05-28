@@ -60,7 +60,7 @@ open Function (Injective)
 
 open LinearMap (lsmul)
 
-open TensorProduct
+open scoped TensorProduct
 
 #print Module.Flat /-
 /-- An `R`-module `M` is flat if for all finitely generated ideals `I` of `R`,

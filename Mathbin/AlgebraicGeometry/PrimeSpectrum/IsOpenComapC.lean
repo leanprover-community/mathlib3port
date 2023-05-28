@@ -25,7 +25,7 @@ https://stacks.math.columbia.edu/tag/00FB
 
 open Ideal Polynomial PrimeSpectrum Set
 
-open Polynomial
+open scoped Polynomial
 
 namespace AlgebraicGeometry
 

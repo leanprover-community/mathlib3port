@@ -30,7 +30,7 @@ universe u v
 
 open Classical Set Filter TopologicalSpace
 
-open Classical Topology BigOperators Pointwise
+open scoped Classical Topology BigOperators Pointwise
 
 variable {ι α X M N : Type _} [TopologicalSpace X]
 
@@ -184,33 +184,41 @@ section tendsto_nhds
 variable {𝕜 : Type _} [Preorder 𝕜] [Zero 𝕜] [Mul 𝕜] [TopologicalSpace 𝕜] [ContinuousMul 𝕜]
   {l : Filter α} {f : α → 𝕜} {b c : 𝕜} (hb : 0 < b)
 
+#print Filter.TendstoNhdsWithinIoi.const_mul /-
 theorem Filter.TendstoNhdsWithinIoi.const_mul [PosMulStrictMono 𝕜] [PosMulReflectLT 𝕜]
     (h : Tendsto f l (𝓝[>] c)) : Tendsto (fun a => b * f a) l (𝓝[>] (b * c)) :=
   tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within _
       ((tendsto_nhds_of_tendsto_nhdsWithin h).const_mul b) <|
     (tendsto_nhdsWithin_iff.mp h).2.mono fun j => (mul_lt_mul_left hb).mpr
 #align filter.tendsto_nhds_within_Ioi.const_mul Filter.TendstoNhdsWithinIoi.const_mul
+-/
 
+#print Filter.TendstoNhdsWithinIio.const_mul /-
 theorem Filter.TendstoNhdsWithinIio.const_mul [PosMulStrictMono 𝕜] [PosMulReflectLT 𝕜]
     (h : Tendsto f l (𝓝[<] c)) : Tendsto (fun a => b * f a) l (𝓝[<] (b * c)) :=
   tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within _
       ((tendsto_nhds_of_tendsto_nhdsWithin h).const_mul b) <|
     (tendsto_nhdsWithin_iff.mp h).2.mono fun j => (mul_lt_mul_left hb).mpr
 #align filter.tendsto_nhds_within_Iio.const_mul Filter.TendstoNhdsWithinIio.const_mul
+-/
 
+#print Filter.TendstoNhdsWithinIoi.mul_const /-
 theorem Filter.TendstoNhdsWithinIoi.mul_const [MulPosStrictMono 𝕜] [MulPosReflectLT 𝕜]
     (h : Tendsto f l (𝓝[>] c)) : Tendsto (fun a => f a * b) l (𝓝[>] (c * b)) :=
   tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within _
       ((tendsto_nhds_of_tendsto_nhdsWithin h).mul_const b) <|
     (tendsto_nhdsWithin_iff.mp h).2.mono fun j => (mul_lt_mul_right hb).mpr
 #align filter.tendsto_nhds_within_Ioi.mul_const Filter.TendstoNhdsWithinIoi.mul_const
+-/
 
+#print Filter.TendstoNhdsWithinIio.mul_const /-
 theorem Filter.TendstoNhdsWithinIio.mul_const [MulPosStrictMono 𝕜] [MulPosReflectLT 𝕜]
     (h : Tendsto f l (𝓝[<] c)) : Tendsto (fun a => f a * b) l (𝓝[<] (c * b)) :=
   tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within _
       ((tendsto_nhds_of_tendsto_nhdsWithin h).mul_const b) <|
     (tendsto_nhdsWithin_iff.mp h).2.mono fun j => (mul_lt_mul_right hb).mpr
 #align filter.tendsto_nhds_within_Iio.mul_const Filter.TendstoNhdsWithinIio.mul_const
+-/
 
 end tendsto_nhds
 
@@ -278,7 +286,7 @@ instance (priority := 100) continuousMul_of_discreteTopology [TopologicalSpace N
 #align has_continuous_add_of_discrete_topology continuousAdd_of_discreteTopology
 -/
 
-open Filter
+open scoped Filter
 
 open Function
 

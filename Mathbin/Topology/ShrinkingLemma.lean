@@ -37,7 +37,7 @@ normal space, shrinking lemma
 
 open Set Function
 
-open Classical
+open scoped Classical
 
 noncomputable section
 

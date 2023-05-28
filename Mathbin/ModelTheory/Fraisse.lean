@@ -62,7 +62,7 @@ structures. In the case of a language with countably many function symbols, thes
 
 universe u v w w'
 
-open FirstOrder
+open scoped FirstOrder
 
 open Set CategoryTheory
 

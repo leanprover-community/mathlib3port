@@ -66,11 +66,13 @@ open Opposite
 
 variable {X : Type u} [Preorder X]
 
+#print CategoryTheory.homOfLE /-
 /-- Express an inequality as a morphism in the corresponding preorder category.
 -/
 def homOfLE {x y : X} (h : x ≤ y) : x ⟶ y :=
   ULift.up (PLift.up h)
 #align category_theory.hom_of_le CategoryTheory.homOfLE
+-/
 
 alias hom_of_le ← _root_.has_le.le.hom
 #align has_le.le.hom LE.le.hom
@@ -82,24 +84,30 @@ theorem homOfLE_refl {x : X} : (le_refl x).Hom = 𝟙 x :=
 #align category_theory.hom_of_le_refl CategoryTheory.homOfLE_refl
 -/
 
+#print CategoryTheory.homOfLE_comp /-
 @[simp]
 theorem homOfLE_comp {x y z : X} (h : x ≤ y) (k : y ≤ z) : h.Hom ≫ k.Hom = (h.trans k).Hom :=
   rfl
 #align category_theory.hom_of_le_comp CategoryTheory.homOfLE_comp
+-/
 
+#print CategoryTheory.leOfHom /-
 /-- Extract the underlying inequality from a morphism in a preorder category.
 -/
 theorem leOfHom {x y : X} (h : x ⟶ y) : x ≤ y :=
   h.down.down
 #align category_theory.le_of_hom CategoryTheory.leOfHom
+-/
 
 alias le_of_hom ← _root_.quiver.hom.le
 #align quiver.hom.le Quiver.Hom.le
 
+#print CategoryTheory.leOfHom_homOfLE /-
 @[simp]
 theorem leOfHom_homOfLE {x y : X} (h : x ≤ y) : h.Hom.le = h :=
   rfl
 #align category_theory.le_of_hom_hom_of_le CategoryTheory.leOfHom_homOfLE
+-/
 
 #print CategoryTheory.homOfLE_leOfHom /-
 @[simp]
@@ -107,14 +115,18 @@ theorem homOfLE_leOfHom {x y : X} (h : x ⟶ y) : h.le.Hom = h := by cases h; ca
 #align category_theory.hom_of_le_le_of_hom CategoryTheory.homOfLE_leOfHom
 -/
 
+#print CategoryTheory.opHomOfLE /-
 /-- Construct a morphism in the opposite of a preorder category from an inequality. -/
 def opHomOfLE {x y : Xᵒᵖ} (h : unop x ≤ unop y) : y ⟶ x :=
   h.Hom.op
 #align category_theory.op_hom_of_le CategoryTheory.opHomOfLE
+-/
 
+#print CategoryTheory.le_of_op_hom /-
 theorem le_of_op_hom {x y : Xᵒᵖ} (h : x ⟶ y) : unop y ≤ unop x :=
   h.unop.le
 #align category_theory.le_of_op_hom CategoryTheory.le_of_op_hom
+-/
 
 instance uniqueToTop [OrderTop X] {x : X} : Unique (x ⟶ ⊤) := by tidy
 #align category_theory.unique_to_top CategoryTheory.uniqueToTop

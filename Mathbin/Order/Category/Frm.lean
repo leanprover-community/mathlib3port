@@ -87,6 +87,7 @@ instance hasForgetToLat : HasForget₂ FrmCat LatCat
       map := fun X Y => FrameHom.toLatticeHom }
 #align Frm.has_forget_to_Lat FrmCat.hasForgetToLat
 
+#print FrmCat.Iso.mk /-
 /-- Constructs an isomorphism of frames from an order isomorphism between them. -/
 @[simps]
 def Iso.mk {α β : FrmCat.{u}} (e : α ≃o β) : α ≅ β
@@ -96,6 +97,7 @@ def Iso.mk {α β : FrmCat.{u}} (e : α ≃o β) : α ≅ β
   hom_inv_id' := by ext; exact e.symm_apply_apply _
   inv_hom_id' := by ext; exact e.apply_symm_apply _
 #align Frm.iso.mk FrmCat.Iso.mk
+-/
 
 end FrmCat
 

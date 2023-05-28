@@ -48,7 +48,7 @@ variable {Q : QuadraticForm R M}
 -- that order is more natural
 variable {A B : Type _} [Ring A] [Ring B] [Algebra R A] [Algebra R B]
 
-open DirectSum
+open scoped DirectSum
 
 variable (Q)
 

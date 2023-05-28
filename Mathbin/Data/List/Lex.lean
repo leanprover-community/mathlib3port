@@ -212,7 +212,7 @@ instance [LinearOrder α] : LinearOrder (List α) :=
 #print List.LE' /-
 --Note: this overrides an instance in core lean
 instance LE' [LinearOrder α] : LE (List α) :=
-  Preorder.toHasLe _
+  Preorder.toLE _
 #align list.has_le' List.LE'
 -/
 

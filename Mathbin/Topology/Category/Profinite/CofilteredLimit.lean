@@ -30,7 +30,7 @@ This file contains some theorems about cofiltered limits of profinite sets.
 
 namespace Profinite
 
-open Classical
+open scoped Classical
 
 open CategoryTheory
 

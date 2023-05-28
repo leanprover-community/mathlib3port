@@ -60,7 +60,7 @@ noncomputable section
 
 open Set Filter TopologicalSpace MeasureTheory Function
 
-open Classical Topology Interval BigOperators Filter ENNReal NNReal MeasureTheory
+open scoped Classical Topology Interval BigOperators Filter ENNReal NNReal MeasureTheory
 
 variable {α β E F : Type _} [MeasurableSpace α]
 
@@ -1101,7 +1101,7 @@ as `continuous_linear_map.comp_Lp`. We take advantage of this construction here.
 -/
 
 
-open ComplexConjugate
+open scoped ComplexConjugate
 
 variable {μ : Measure α} {𝕜 : Type _} [IsROrC 𝕜] [NormedSpace 𝕜 E] [NormedAddCommGroup F]
   [NormedSpace 𝕜 F] {p : ENNReal}

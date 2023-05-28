@@ -30,7 +30,7 @@ namespace Filter
 
 variable {α β : Type _}
 
-open Topology
+open scoped Topology
 
 #print Filter.ZeroAtFilter /-
 /-- If `l` is a filter on `α`, then a function `f : α → β` is `zero_at_filter l`

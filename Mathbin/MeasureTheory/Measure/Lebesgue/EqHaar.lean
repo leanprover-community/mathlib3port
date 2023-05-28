@@ -51,7 +51,7 @@ assert_not_exists measure_theory.integral
 
 open TopologicalSpace Set Filter Metric
 
-open ENNReal Pointwise Topology NNReal
+open scoped ENNReal Pointwise Topology NNReal
 
 /-- The interval `[0,1]` as a compact set with non-empty interior. -/
 def TopologicalSpace.PositiveCompacts.icc01 : PositiveCompacts ℝ

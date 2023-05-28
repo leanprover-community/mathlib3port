@@ -64,7 +64,7 @@ noncomputable section
 
 open Set LinearMap Submodule
 
-open Classical BigOperators
+open scoped Classical BigOperators
 
 namespace Finsupp
 

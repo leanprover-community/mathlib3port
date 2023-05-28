@@ -70,7 +70,7 @@ universe u v
 
 open Filter Set
 
-open Topology Classical Polynomial
+open scoped Topology Classical Polynomial
 
 section Module
 
@@ -371,7 +371,7 @@ end Rolle
 
 namespace Polynomial
 
-open BigOperators
+open scoped BigOperators
 
 /-- The number of roots of a real polynomial `p` is at most the number of roots of its derivative
 that are not roots of `p` plus one. -/

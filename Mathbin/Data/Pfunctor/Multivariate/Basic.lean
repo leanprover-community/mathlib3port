@@ -26,7 +26,7 @@ they guarantee that occurrences of `α` are positive.
 
 universe u v
 
-open MvFunctor
+open scoped MvFunctor
 
 #print MvPFunctor /-
 /-- multivariate polynomial functors

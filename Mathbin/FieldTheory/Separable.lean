@@ -33,7 +33,7 @@ properties about separable polynomials here.
 
 universe u v w
 
-open Classical BigOperators Polynomial
+open scoped Classical BigOperators Polynomial
 
 open Finset
 

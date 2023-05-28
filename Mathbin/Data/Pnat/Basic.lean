@@ -67,15 +67,19 @@ theorem natPred_injective : Function.Injective natPred :=
 #align pnat.nat_pred_injective PNat.natPred_injective
 -/
 
+#print PNat.natPred_lt_natPred /-
 @[simp]
 theorem natPred_lt_natPred {m n : ℕ+} : m.natPred < n.natPred ↔ m < n :=
   natPred_strictMono.lt_iff_lt
 #align pnat.nat_pred_lt_nat_pred PNat.natPred_lt_natPred
+-/
 
+#print PNat.natPred_le_natPred /-
 @[simp]
 theorem natPred_le_natPred {m n : ℕ+} : m.natPred ≤ n.natPred ↔ m ≤ n :=
   natPred_strictMono.le_iff_le
 #align pnat.nat_pred_le_nat_pred PNat.natPred_le_natPred
+-/
 
 #print PNat.natPred_inj /-
 @[simp]
@@ -101,15 +105,19 @@ theorem succPNat_mono : Monotone succPNat :=
 #align nat.succ_pnat_mono Nat.succPNat_mono
 -/
 
+#print Nat.succPNat_lt_succPNat /-
 @[simp]
 theorem succPNat_lt_succPNat {m n : ℕ} : m.succPNat < n.succPNat ↔ m < n :=
   succPNat_strictMono.lt_iff_lt
 #align nat.succ_pnat_lt_succ_pnat Nat.succPNat_lt_succPNat
+-/
 
+#print Nat.succPNat_le_succPNat /-
 @[simp]
 theorem succPNat_le_succPNat {m n : ℕ} : m.succPNat ≤ n.succPNat ↔ m ≤ n :=
   succPNat_strictMono.le_iff_le
 #align nat.succ_pnat_le_succ_pnat Nat.succPNat_le_succPNat
+-/
 
 #print Nat.succPNat_injective /-
 theorem succPNat_injective : Function.Injective succPNat :=
@@ -176,6 +184,7 @@ def Equiv.pnatEquivNat : ℕ+ ≃ ℕ where
 #align equiv.pnat_equiv_nat Equiv.pnatEquivNat
 -/
 
+#print OrderIso.pnatIsoNat /-
 /-- The order isomorphism between ℕ and ℕ+ given by `succ`. -/
 @[simps (config := { fullyApplied := false }) apply]
 def OrderIso.pnatIsoNat : ℕ+ ≃o ℕ
@@ -183,6 +192,7 @@ def OrderIso.pnatIsoNat : ℕ+ ≃o ℕ
   toEquiv := Equiv.pnatEquivNat
   map_rel_iff' _ _ := natPred_le_natPred
 #align order_iso.pnat_iso_nat OrderIso.pnatIsoNat
+-/
 
 @[simp]
 theorem OrderIso.pnatIsoNat_symm_apply : ⇑OrderIso.pnatIsoNat.symm = Nat.succPNat :=
@@ -261,10 +271,12 @@ theorem coe_coeMonoidHom : (coeMonoidHom : ℕ+ → ℕ) = coe :=
   rfl
 #align pnat.coe_coe_monoid_hom PNat.coe_coeMonoidHom
 
+#print PNat.le_one_iff /-
 @[simp]
 theorem le_one_iff {n : ℕ+} : n ≤ 1 ↔ n = 1 :=
   le_bot_iff
 #align pnat.le_one_iff PNat.le_one_iff
+-/
 
 theorem lt_add_left (n m : ℕ+) : n < m + n :=
   lt_add_of_pos_left _ m.2
@@ -398,6 +410,7 @@ theorem div_add_mod' (m k : ℕ+) : (div m k * k + mod m k : ℕ) = m := by rw [
 #align pnat.div_add_mod' PNat.div_add_mod'
 -/
 
+#print PNat.mod_le /-
 theorem mod_le (m k : ℕ+) : mod m k ≤ m ∧ mod m k ≤ k :=
   by
   change (mod m k : ℕ) ≤ (m : ℕ) ∧ (mod m k : ℕ) ≤ (k : ℕ)
@@ -410,6 +423,7 @@ theorem mod_le (m k : ℕ+) : mod m k ≤ m ∧ mod m k ≤ k :=
       rw [mul_one] at h'; exact ⟨h', le_refl (k : ℕ)⟩
   · exact ⟨Nat.mod_le (m : ℕ) (k : ℕ), (Nat.mod_lt (m : ℕ) k.pos).le⟩
 #align pnat.mod_le PNat.mod_le
+-/
 
 #print PNat.dvd_iff /-
 theorem dvd_iff {k m : ℕ+} : k ∣ m ↔ (k : ℕ) ∣ (m : ℕ) :=
@@ -434,9 +448,11 @@ theorem dvd_iff' {k m : ℕ+} : k ∣ m ↔ mod m k = k :=
 #align pnat.dvd_iff' PNat.dvd_iff'
 -/
 
+#print PNat.le_of_dvd /-
 theorem le_of_dvd {m n : ℕ+} : m ∣ n → m ≤ n := by rw [dvd_iff']; intro h; rw [← h];
   apply (mod_le n m).left
 #align pnat.le_of_dvd PNat.le_of_dvd
+-/
 
 theorem mul_div_exact {m k : ℕ+} (h : k ∣ m) : k * divExact m k = m :=
   by

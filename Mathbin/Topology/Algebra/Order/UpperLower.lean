@@ -30,7 +30,7 @@ provide `has_upper_lower_closure`, an ad hoc axiomatisation of the properties we
 
 open Function Set
 
-open Pointwise
+open scoped Pointwise
 
 #print HasUpperLowerClosure /-
 /-- Ad hoc class stating that the closure of an upper set is an upper set. This is used to state
@@ -64,13 +64,17 @@ instance (priority := 100) OrderedCommGroup.to_hasUpperLowerClosure [OrderedComm
 
 variable [Preorder α] [HasUpperLowerClosure α] {s : Set α}
 
+#print IsUpperSet.closure /-
 protected theorem IsUpperSet.closure : IsUpperSet s → IsUpperSet (closure s) :=
   HasUpperLowerClosure.isUpperSet_closure _
 #align is_upper_set.closure IsUpperSet.closure
+-/
 
+#print IsLowerSet.closure /-
 protected theorem IsLowerSet.closure : IsLowerSet s → IsLowerSet (closure s) :=
   HasUpperLowerClosure.isLowerSet_closure _
 #align is_lower_set.closure IsLowerSet.closure
+-/
 
 #print IsOpen.upperClosure /-
 protected theorem IsOpen.upperClosure : IsOpen s → IsOpen (upperClosure s : Set α) :=
@@ -91,6 +95,7 @@ instance : HasUpperLowerClosure αᵒᵈ
   isOpen_upperClosure := @IsOpen.lowerClosure α _ _ _
   isOpen_lowerClosure := @IsOpen.upperClosure α _ _ _
 
+#print IsUpperSet.interior /-
 /-
 Note: `s.ord_connected` does not imply `(closure s).ord_connected`, as we can see by taking
 `s := Ioo 0 1 × Ioo 1 2 ∪ Ioo 2 3 × Ioo 0 1` because then
@@ -108,10 +113,13 @@ oooooxx
 protected theorem IsUpperSet.interior (h : IsUpperSet s) : IsUpperSet (interior s) := by
   rw [← isLowerSet_compl, ← closure_compl]; exact h.compl.closure
 #align is_upper_set.interior IsUpperSet.interior
+-/
 
+#print IsLowerSet.interior /-
 protected theorem IsLowerSet.interior (h : IsLowerSet s) : IsLowerSet (interior s) :=
   h.ofDual.interior
 #align is_lower_set.interior IsLowerSet.interior
+-/
 
 #print Set.OrdConnected.interior /-
 protected theorem Set.OrdConnected.interior (h : s.OrdConnected) : (interior s).OrdConnected :=

@@ -28,7 +28,7 @@ universe u v
 
 open Cardinal
 
-open Cardinal
+open scoped Cardinal
 
 namespace MvPolynomial
 

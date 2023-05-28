@@ -55,7 +55,7 @@ Ideally this would conveniently interact with both `Mat_` and `matrix`.
 
 open CategoryTheory CategoryTheory.Preadditive
 
-open BigOperators Classical
+open scoped BigOperators Classical
 
 noncomputable section
 
@@ -495,7 +495,7 @@ def Mat (R : Type u) :=
 instance (R : Type u) : CoeSort (Mat R) (Type u) :=
   Bundled.hasCoeToSort
 
-open Classical Matrix
+open scoped Classical Matrix
 
 instance (R : Type u) [Semiring R] : Category (Mat R)
     where

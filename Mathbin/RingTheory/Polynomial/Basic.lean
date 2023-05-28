@@ -36,7 +36,7 @@ import Mathbin.RingTheory.UniqueFactorizationDomain
 
 noncomputable section
 
-open Classical BigOperators Polynomial
+open scoped Classical BigOperators Polynomial
 
 open Finset
 
@@ -72,9 +72,11 @@ def degreeLT (n : ℕ) : Submodule R R[X] :=
 
 variable {R}
 
+#print Polynomial.mem_degreeLE /-
 theorem mem_degreeLE {n : WithBot ℕ} {f : R[X]} : f ∈ degreeLE R n ↔ degree f ≤ n := by
   simp only [degree_le, Submodule.mem_iInf, degree_le_iff_coeff_zero, LinearMap.mem_ker] <;> rfl
 #align polynomial.mem_degree_le Polynomial.mem_degreeLE
+-/
 
 @[mono]
 theorem degreeLE_mono {m n : WithBot ℕ} (H : m ≤ n) : degreeLE R m ≤ degreeLE R n := fun f hf =>
@@ -104,6 +106,7 @@ theorem degreeLE_eq_span_X_pow {n : ℕ} :
 #align polynomial.degree_le_eq_span_X_pow Polynomial.degreeLE_eq_span_X_pow
 -/
 
+#print Polynomial.mem_degreeLT /-
 theorem mem_degreeLT {n : ℕ} {f : R[X]} : f ∈ degreeLT R n ↔ degree f < n :=
   by
   simp_rw [degree_lt, Submodule.mem_iInf, LinearMap.mem_ker, degree, Finset.max_eq_sup_coe,
@@ -111,6 +114,7 @@ theorem mem_degreeLT {n : ℕ} {f : R[X]} : f ∈ degreeLT R n ↔ degree f < n 
     Ne, not_imp_not]
   rfl
 #align polynomial.mem_degree_lt Polynomial.mem_degreeLT
+-/
 
 @[mono]
 theorem degreeLT_mono {m n : ℕ} (H : m ≤ n) : degreeLT R m ≤ degreeLT R n := fun f hf =>
@@ -252,10 +256,12 @@ theorem Monic.geom_sum {P : R[X]} (hP : P.Monic) (hdeg : 0 < P.natDegree) {n : �
 #align polynomial.monic.geom_sum Polynomial.Monic.geom_sum
 -/
 
+#print Polynomial.Monic.geom_sum' /-
 theorem Monic.geom_sum' {P : R[X]} (hP : P.Monic) (hdeg : 0 < P.degree) {n : ℕ} (hn : n ≠ 0) :
     (∑ i in range n, P ^ i).Monic :=
   hP.geom_sum (natDegree_pos_iff_degree_pos.2 hdeg) hn
 #align polynomial.monic.geom_sum' Polynomial.Monic.geom_sum'
+-/
 
 #print Polynomial.monic_geom_sum_X /-
 theorem monic_geom_sum_X {n : ℕ} (hn : n ≠ 0) : (∑ i in range n, (X : R[X]) ^ i).Monic :=

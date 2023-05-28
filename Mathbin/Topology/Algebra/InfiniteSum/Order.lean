@@ -25,7 +25,7 @@ This file provides lemmas about the interaction of infinite sums and order opera
 
 open Finset Filter Function
 
-open BigOperators Classical
+open scoped BigOperators Classical
 
 variable {ι κ α : Type _}
 
@@ -34,11 +34,13 @@ section Preorder
 variable [Preorder α] [AddCommMonoid α] [TopologicalSpace α] [OrderClosedTopology α] [T2Space α]
   {f : ℕ → α} {c : α}
 
+#print tsum_le_of_sum_range_le /-
 theorem tsum_le_of_sum_range_le (hf : Summable f) (h : ∀ n, (∑ i in range n, f i) ≤ c) :
     (∑' n, f n) ≤ c :=
   let ⟨l, hl⟩ := hf
   hl.tsum_eq.symm ▸ le_of_tendsto' hl.tendsto_sum_nat h
 #align tsum_le_of_sum_range_le tsum_le_of_sum_range_le
+-/
 
 end Preorder
 
@@ -47,22 +49,30 @@ section OrderedAddCommMonoid
 variable [OrderedAddCommMonoid α] [TopologicalSpace α] [OrderClosedTopology α] {f g : ι → α}
   {a a₁ a₂ : α}
 
+#print hasSum_le /-
 theorem hasSum_le (h : ∀ i, f i ≤ g i) (hf : HasSum f a₁) (hg : HasSum g a₂) : a₁ ≤ a₂ :=
   le_of_tendsto_of_tendsto' hf hg fun s => sum_le_sum fun i _ => h i
 #align has_sum_le hasSum_le
+-/
 
+#print hasSum_mono /-
 @[mono]
 theorem hasSum_mono (hf : HasSum f a₁) (hg : HasSum g a₂) (h : f ≤ g) : a₁ ≤ a₂ :=
   hasSum_le h hf hg
 #align has_sum_mono hasSum_mono
+-/
 
+#print hasSum_le_of_sum_le /-
 theorem hasSum_le_of_sum_le (hf : HasSum f a) (h : ∀ s, (∑ i in s, f i) ≤ a₂) : a ≤ a₂ :=
   le_of_tendsto' hf h
 #align has_sum_le_of_sum_le hasSum_le_of_sum_le
+-/
 
+#print le_hasSum_of_le_sum /-
 theorem le_hasSum_of_le_sum (hf : HasSum f a) (h : ∀ s, a₂ ≤ ∑ i in s, f i) : a₂ ≤ a :=
   ge_of_tendsto' hf h
 #align le_has_sum_of_le_sum le_hasSum_of_le_sum
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (c «expr ∉ » set.range[set.range] e) -/
 theorem hasSum_le_inj {g : κ → α} (e : ι → κ) (he : Injective e)
@@ -128,19 +138,25 @@ theorem le_tsum (hf : Summable f) (i : ι) (hb : ∀ (b') (_ : b' ≠ i), 0 ≤ 
   le_hasSum (Summable.hasSum hf) i hb
 #align le_tsum le_tsum
 
+#print tsum_le_tsum /-
 theorem tsum_le_tsum (h : ∀ i, f i ≤ g i) (hf : Summable f) (hg : Summable g) :
     (∑' i, f i) ≤ ∑' i, g i :=
   hasSum_le h hf.HasSum hg.HasSum
 #align tsum_le_tsum tsum_le_tsum
+-/
 
+#print tsum_mono /-
 @[mono]
 theorem tsum_mono (hf : Summable f) (hg : Summable g) (h : f ≤ g) : (∑' n, f n) ≤ ∑' n, g n :=
   tsum_le_tsum h hf hg
 #align tsum_mono tsum_mono
+-/
 
+#print tsum_le_of_sum_le /-
 theorem tsum_le_of_sum_le (hf : Summable f) (h : ∀ s, (∑ i in s, f i) ≤ a₂) : (∑' i, f i) ≤ a₂ :=
   hasSum_le_of_sum_le hf.HasSum h
 #align tsum_le_of_sum_le tsum_le_of_sum_le
+-/
 
 theorem tsum_le_of_sum_le' (ha₂ : 0 ≤ a₂) (h : ∀ s, (∑ i in s, f i) ≤ a₂) : (∑' i, f i) ≤ a₂ :=
   by
@@ -186,23 +202,27 @@ theorem hasSum_lt (h : f ≤ g) (hi : f i < g i) (hf : HasSum f a₁) (hg : HasS
   simpa only [zero_sub, add_neg_cancel_left] using add_lt_add_of_lt_of_le hi this
 #align has_sum_lt hasSum_lt
 
+#print hasSum_strict_mono /-
 @[mono]
 theorem hasSum_strict_mono (hf : HasSum f a₁) (hg : HasSum g a₂) (h : f < g) : a₁ < a₂ :=
   let ⟨hle, i, hi⟩ := Pi.lt_def.mp h
   hasSum_lt hle hi hf hg
 #align has_sum_strict_mono hasSum_strict_mono
+-/
 
 theorem tsum_lt_tsum (h : f ≤ g) (hi : f i < g i) (hf : Summable f) (hg : Summable g) :
     (∑' n, f n) < ∑' n, g n :=
   hasSum_lt h hi hf.HasSum hg.HasSum
 #align tsum_lt_tsum tsum_lt_tsum
 
+#print tsum_strict_mono /-
 @[mono]
 theorem tsum_strict_mono (hf : Summable f) (hg : Summable g) (h : f < g) :
     (∑' n, f n) < ∑' n, g n :=
   let ⟨hle, i, hi⟩ := Pi.lt_def.mp h
   tsum_lt_tsum hle hi hf hg
 #align tsum_strict_mono tsum_strict_mono
+-/
 
 theorem tsum_pos (hsum : Summable g) (hg : ∀ i, 0 ≤ g i) (i : ι) (hi : 0 < g i) : 0 < ∑' i, g i :=
   by rw [← tsum_zero]; exact tsum_lt_tsum hg hi summable_zero hsum
@@ -225,13 +245,17 @@ section CanonicallyOrderedAddMonoid
 variable [CanonicallyOrderedAddMonoid α] [TopologicalSpace α] [OrderClosedTopology α] {f : ι → α}
   {a : α}
 
+#print le_hasSum' /-
 theorem le_hasSum' (hf : HasSum f a) (i : ι) : f i ≤ a :=
   le_hasSum hf i fun _ _ => zero_le _
 #align le_has_sum' le_hasSum'
+-/
 
+#print le_tsum' /-
 theorem le_tsum' (hf : Summable f) (i : ι) : f i ≤ ∑' i, f i :=
   le_tsum hf i fun _ _ => zero_le _
 #align le_tsum' le_tsum'
+-/
 
 theorem hasSum_zero_iff : HasSum f 0 ↔ ∀ x, f x = 0 :=
   by

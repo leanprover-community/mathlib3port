@@ -28,7 +28,7 @@ bounds `n^r/r^r ≤ n.choose r ≤ e^r n^r/r^r` in the future.
 -/
 
 
-open Nat
+open scoped Nat
 
 variable {α : Type _} [LinearOrderedSemifield α]
 

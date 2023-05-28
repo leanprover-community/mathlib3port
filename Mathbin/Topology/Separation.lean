@@ -95,7 +95,7 @@ https://en.wikipedia.org/wiki/Separation_axiom
 
 open Function Set Filter TopologicalSpace
 
-open Topology Filter Classical
+open scoped Topology Filter Classical
 
 universe u v
 

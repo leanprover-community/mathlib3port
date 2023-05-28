@@ -51,13 +51,13 @@ although we defer an abstract statement of this until later.
 
 noncomputable section
 
-open Classical
+open scoped Classical
 
-open BigOperators
+open scoped BigOperators
 
-open BoundedContinuousFunction
+open scoped BoundedContinuousFunction
 
-open unitInterval
+open scoped unitInterval
 
 /-- The Bernstein polynomials, as continuous functions on `[0,1]`.
 -/
@@ -215,7 +215,7 @@ open BoundedContinuousFunction
 
 open Filter
 
-open Topology
+open scoped Topology
 
 /-- The Bernstein approximations
 ```

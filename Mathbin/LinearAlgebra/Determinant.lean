@@ -48,9 +48,9 @@ basis, det, determinant
 
 noncomputable section
 
-open BigOperators
+open scoped BigOperators
 
-open Matrix
+open scoped Matrix
 
 open LinearMap
 
@@ -181,7 +181,7 @@ theorem detAux_comp (b : Trunc <| Basis ι A M) (f g : M →ₗ[A] M) :
 
 section
 
-open Classical
+open scoped Classical
 
 #print LinearMap.det /-
 -- Discourage the elaborator from unfolding `det` and producing a huge term by marking it

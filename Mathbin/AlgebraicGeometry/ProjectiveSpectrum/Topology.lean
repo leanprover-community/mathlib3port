@@ -45,7 +45,7 @@ It is naturally endowed with a topology: the Zariski topology.
 
 noncomputable section
 
-open DirectSum BigOperators Pointwise
+open scoped DirectSum BigOperators Pointwise
 
 open DirectSum SetLike TopCat TopologicalSpace CategoryTheory Opposite
 

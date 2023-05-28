@@ -28,9 +28,9 @@ variable {R α : Type _}
 
 namespace Matrix
 
-open Matrix
+open scoped Matrix
 
-open BigOperators
+open scoped BigOperators
 
 variable [DecidableEq l] [DecidableEq m] [DecidableEq n]
 

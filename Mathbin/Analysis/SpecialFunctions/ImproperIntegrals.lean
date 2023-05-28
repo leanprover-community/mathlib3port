@@ -30,7 +30,7 @@ half-infinite intervals in `ℝ`.
 
 open Real Set Filter MeasureTheory intervalIntegral
 
-open Topology
+open scoped Topology
 
 theorem integrableOn_exp_Iic (c : ℝ) : IntegrableOn exp (Iic c) :=
   by

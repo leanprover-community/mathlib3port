@@ -31,7 +31,7 @@ we do not have a `posreal` type.
 
 variable {α : Type _} {β : Type _} {γ : Type _}
 
-open NNReal ENNReal uniformity
+open scoped NNReal ENNReal uniformity
 
 open Set Filter Bornology
 

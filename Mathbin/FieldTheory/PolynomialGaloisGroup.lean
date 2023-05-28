@@ -46,7 +46,7 @@ equals the number of real roots plus the number of roots not fixed by complex co
 
 noncomputable section
 
-open Classical Polynomial
+open scoped Classical Polynomial
 
 open FiniteDimensional
 

@@ -34,7 +34,7 @@ multisets are typically used computationally.
 
 open Finset Dfinsupp Function
 
-open BigOperators Pointwise
+open scoped BigOperators Pointwise
 
 variable {α : Type _} {β : α → Type _}
 

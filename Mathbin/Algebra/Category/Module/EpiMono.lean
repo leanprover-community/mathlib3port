@@ -28,7 +28,7 @@ open CategoryTheory
 
 open ModuleCat
 
-open ModuleCat
+open scoped ModuleCat
 
 namespace ModuleCat
 

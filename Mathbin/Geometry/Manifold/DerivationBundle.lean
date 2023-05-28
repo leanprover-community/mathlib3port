@@ -29,7 +29,7 @@ variable (𝕜 : Type _) [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddC
   [NormedSpace 𝕜 E] {H : Type _} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) (M : Type _)
   [TopologicalSpace M] [ChartedSpace H M] (n : ℕ∞)
 
-open Manifold
+open scoped Manifold
 
 -- the following two instances prevent poorly understood type class inference timeout problems
 instance smoothFunctionsAlgebra : Algebra 𝕜 C^∞⟮I, M; 𝕜⟯ := by infer_instance
@@ -92,7 +92,7 @@ instance (x : M) : IsScalarTower 𝕜 C^∞⟮I, M; 𝕜⟯⟨x⟩ 𝕜
 
 end PointedSmoothMap
 
-open Derivation
+open scoped Derivation
 
 /-- The derivations at a point of a manifold. Some regard this as a possible definition of the
 tangent space -/

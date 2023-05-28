@@ -28,7 +28,7 @@ namespace Polynomial
 
 open Finset Nat
 
-open BigOperators
+open scoped BigOperators
 
 @[simp]
 theorem eval_one_cyclotomic_prime {R : Type _} [CommRing R] {p : ℕ} [hn : Fact p.Prime] :

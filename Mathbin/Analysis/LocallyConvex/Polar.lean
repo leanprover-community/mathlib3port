@@ -45,7 +45,7 @@ polar
 
 variable {𝕜 E F : Type _}
 
-open Topology
+open scoped Topology
 
 namespace LinearMap
 

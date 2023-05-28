@@ -29,7 +29,7 @@ universe u v w
 
 variable (R : Type u) (M : Type v) (N : Type w)
 
-open TensorProduct DirectSum BigOperators Cardinal
+open scoped TensorProduct DirectSum BigOperators Cardinal
 
 open Cardinal FiniteDimensional Fintype
 
@@ -63,6 +63,7 @@ variable [AddCommGroup M] [Module R M] [Module.Finite R M]
 
 variable [AddCommGroup N] [Module R N] [Module.Finite R N]
 
+#print FiniteDimensional.rank_lt_aleph0 /-
 /-- The rank of a finite module is finite. -/
 theorem rank_lt_aleph0 : Module.rank R M < ℵ₀ :=
   by
@@ -72,6 +73,7 @@ theorem rank_lt_aleph0 : Module.rank R M < ℵ₀ :=
   refine' (ciSup_le' fun i => _).trans_lt (nat_lt_aleph_0 S.card)
   exact linearIndependent_le_span_finset _ i.prop S hS
 #align finite_dimensional.rank_lt_aleph_0 FiniteDimensional.rank_lt_aleph0
+-/
 
 /-- If `M` is finite, `finrank M = rank M`. -/
 @[simp]

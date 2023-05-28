@@ -625,11 +625,13 @@ theorem ofBoolRing_mul (a b : AsBoolRing α) : ofBoolRing (a * b) = ofBoolRing a
 #align of_boolring_mul ofBoolRing_mul
 -/
 
+#print ofBoolRing_le_ofBoolRing_iff /-
 @[simp]
 theorem ofBoolRing_le_ofBoolRing_iff {a b : AsBoolRing α} :
     ofBoolRing a ≤ ofBoolRing b ↔ a * b = a :=
   inf_eq_left.symm
 #align of_boolring_le_of_boolring_iff ofBoolRing_le_ofBoolRing_iff
+-/
 
 #print toBoolRing_bot /-
 @[simp]
@@ -692,6 +694,7 @@ end AlgebraToRing
 /-! ### Equivalence between Boolean rings and Boolean algebras -/
 
 
+#print OrderIso.asBoolAlgAsBoolRing /-
 /-- Order isomorphism between `α` considered as a Boolean ring considered as a Boolean algebra and
 `α`. -/
 @[simps]
@@ -699,6 +702,7 @@ def OrderIso.asBoolAlgAsBoolRing (α : Type _) [BooleanAlgebra α] : AsBoolAlg (
   ⟨ofBoolAlg.trans ofBoolRing, fun a b =>
     ofBoolRing_le_ofBoolRing_iff.trans ofBoolAlg_mul_ofBoolAlg_eq_left_iff⟩
 #align order_iso.as_boolalg_as_boolring OrderIso.asBoolAlgAsBoolRing
+-/
 
 /-- Ring isomorphism between `α` considered as a Boolean algebra considered as a Boolean ring and
 `α`. -/

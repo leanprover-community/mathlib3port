@@ -51,7 +51,7 @@ topology are defined elsewhere; see `analysis.normed_space.add_torsor` and
 -/
 
 
-open Affine
+open scoped Affine
 
 #print AffineMap /-
 /-- An `affine_map k P1 P2` (notation: `P1 →ᵃ[k] P2`) is a map from `P1` to `P2` that

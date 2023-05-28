@@ -21,7 +21,7 @@ import Mathbin.Data.Nat.Prime
 
 namespace Nat
 
-open Nat
+open scoped Nat
 
 namespace Prime
 

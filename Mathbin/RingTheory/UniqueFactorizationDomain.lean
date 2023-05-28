@@ -854,7 +854,7 @@ end UniqueFactorizationMonoid
 
 namespace UniqueFactorizationMonoid
 
-open Classical
+open scoped Classical
 
 open Multiset Associates
 
@@ -1099,7 +1099,7 @@ variable [CancelCommMonoidWithZero α] [UniqueFactorizationMonoid α]
 
 variable {β : Type _} [CancelCommMonoidWithZero β]
 
-open BigOperators
+open scoped BigOperators
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (q q' «expr ∈ » insert[has_insert.insert] p s) -/
 #print UniqueFactorizationMonoid.prime_pow_coprime_prod_of_coprime_insert /-

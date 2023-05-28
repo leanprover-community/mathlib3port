@@ -653,7 +653,7 @@ open Function
 
 section
 
-open BigOperators
+open scoped BigOperators
 
 #print AlternatingMap.map_update_sum /-
 theorem map_update_sum {α : Type _} [DecidableEq ι] (t : Finset α) (i : ι) (g : α → M) (m : ι → M) :
@@ -835,7 +835,7 @@ end Fin
 
 end AlternatingMap
 
-open BigOperators
+open scoped BigOperators
 
 namespace MultilinearMap
 
@@ -924,9 +924,9 @@ end LinearMap
 
 section Coprod
 
-open BigOperators
+open scoped BigOperators
 
-open TensorProduct
+open scoped TensorProduct
 
 variable {ιa ιb : Type _} [Fintype ιa] [Fintype ιb]
 

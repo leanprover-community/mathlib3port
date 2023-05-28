@@ -42,7 +42,7 @@ open Filter Function Set Metric TopologicalSpace intervalIntegral MeasureTheory
 
 open MeasureTheory.MeasureSpace (volume)
 
-open Filter Topology NNReal ENNReal Nat Interval
+open scoped Filter Topology NNReal ENNReal Nat Interval
 
 noncomputable section
 

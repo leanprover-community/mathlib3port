@@ -35,7 +35,7 @@ Cardinals are defined and further developed in the file `set_theory.cardinal`.
 
 open Set Function
 
-open Classical
+open scoped Classical
 
 universe u v
 

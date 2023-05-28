@@ -55,7 +55,7 @@ of unity `μ : K`, where `K` is a field of characteristic `0`.
 -/
 
 
-open Classical BigOperators Polynomial
+open scoped Classical BigOperators Polynomial
 
 noncomputable section
 
@@ -482,7 +482,7 @@ section ArithmeticFunction
 
 open Nat.ArithmeticFunction
 
-open ArithmeticFunction
+open scoped ArithmeticFunction
 
 /-- `cyclotomic n R` can be expressed as a product in a fraction field of `R[X]`
   using Möbius inversion. -/

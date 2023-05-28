@@ -54,7 +54,7 @@ https://math.stackexchange.com/questions/3304415/catalan-numbers-algebraic-proof
 -/
 
 
-open BigOperators
+open scoped BigOperators
 
 open Finset
 
@@ -184,7 +184,7 @@ theorem catalan_three : catalan 3 = 5 := by
 
 namespace Tree
 
-open Tree
+open scoped Tree
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Tree.pairwiseNode /-

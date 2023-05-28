@@ -58,7 +58,7 @@ Compact operator
 
 open Function Set Filter Bornology Metric
 
-open Pointwise BigOperators Topology
+open scoped Pointwise BigOperators Topology
 
 #print IsCompactOperator /-
 /-- A compact operator between two topological vector spaces. This definition is usually

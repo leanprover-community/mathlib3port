@@ -22,7 +22,7 @@ As a consequence, the complex numbers are algebraically closed.
 
 open Polynomial
 
-open Polynomial
+open scoped Polynomial
 
 namespace Complex
 

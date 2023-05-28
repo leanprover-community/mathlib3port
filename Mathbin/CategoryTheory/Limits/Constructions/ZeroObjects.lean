@@ -33,7 +33,7 @@ namespace CategoryTheory.Limits
 
 variable [HasZeroObject C] [HasZeroMorphisms C]
 
-open ZeroObject
+open scoped ZeroObject
 
 #print CategoryTheory.Limits.binaryFanZeroLeft /-
 /-- The limit cone for the product with a zero object. -/

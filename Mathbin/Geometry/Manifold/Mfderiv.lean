@@ -99,7 +99,7 @@ Derivative, manifold
 
 noncomputable section
 
-open Classical Topology Manifold Bundle
+open scoped Classical Topology Manifold Bundle
 
 open Set
 

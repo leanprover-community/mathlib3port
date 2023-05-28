@@ -36,7 +36,7 @@ This defines a smooth vector bundle `tangent_bundle` with fibers `tangent_space`
 
 open Bundle Set SmoothManifoldWithCorners LocalHomeomorph ContinuousLinearMap
 
-open Manifold Topology Bundle
+open scoped Manifold Topology Bundle
 
 noncomputable section
 

@@ -24,7 +24,7 @@ sqrt, differentiable
 
 open Set
 
-open Topology
+open scoped Topology
 
 namespace Real
 

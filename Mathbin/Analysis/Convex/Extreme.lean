@@ -51,7 +51,7 @@ More not-yet-PRed stuff is available on the branch `sperner_again`.
 
 open Function Set
 
-open Affine Classical
+open scoped Affine Classical
 
 variable {𝕜 E F ι : Type _} {π : ι → Type _}
 

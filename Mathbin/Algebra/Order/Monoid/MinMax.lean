@@ -83,13 +83,16 @@ theorem max_mul_mul_right (a b c : α) : max (a * c) (b * c) = max a b * c :=
 
 end Right
 
+#print lt_or_lt_of_mul_lt_mul /-
 @[to_additive]
 theorem lt_or_lt_of_mul_lt_mul [CovariantClass α α (· * ·) (· ≤ ·)]
     [CovariantClass α α (swap (· * ·)) (· ≤ ·)] {a₁ a₂ b₁ b₂ : α} :
     a₁ * b₁ < a₂ * b₂ → a₁ < a₂ ∨ b₁ < b₂ := by contrapose!; exact fun h => mul_le_mul' h.1 h.2
 #align lt_or_lt_of_mul_lt_mul lt_or_lt_of_mul_lt_mul
 #align lt_or_lt_of_add_lt_add lt_or_lt_of_add_lt_add
+-/
 
+#print le_or_lt_of_mul_le_mul /-
 @[to_additive]
 theorem le_or_lt_of_mul_le_mul [CovariantClass α α (· * ·) (· ≤ ·)]
     [CovariantClass α α (swap (· * ·)) (· < ·)] {a₁ a₂ b₁ b₂ : α} :
@@ -97,7 +100,9 @@ theorem le_or_lt_of_mul_le_mul [CovariantClass α α (· * ·) (· ≤ ·)]
   exact fun h => mul_lt_mul_of_lt_of_le h.1 h.2
 #align le_or_lt_of_mul_le_mul le_or_lt_of_mul_le_mul
 #align le_or_lt_of_add_le_add le_or_lt_of_add_le_add
+-/
 
+#print lt_or_le_of_mul_le_mul /-
 @[to_additive]
 theorem lt_or_le_of_mul_le_mul [CovariantClass α α (· * ·) (· < ·)]
     [CovariantClass α α (swap (· * ·)) (· ≤ ·)] {a₁ a₂ b₁ b₂ : α} :
@@ -105,7 +110,9 @@ theorem lt_or_le_of_mul_le_mul [CovariantClass α α (· * ·) (· < ·)]
   exact fun h => mul_lt_mul_of_le_of_lt h.1 h.2
 #align lt_or_le_of_mul_le_mul lt_or_le_of_mul_le_mul
 #align lt_or_le_of_add_le_add lt_or_le_of_add_le_add
+-/
 
+#print le_or_le_of_mul_le_mul /-
 @[to_additive]
 theorem le_or_le_of_mul_le_mul [CovariantClass α α (· * ·) (· < ·)]
     [CovariantClass α α (swap (· * ·)) (· < ·)] {a₁ a₂ b₁ b₂ : α} :
@@ -113,7 +120,9 @@ theorem le_or_le_of_mul_le_mul [CovariantClass α α (· * ·) (· < ·)]
   exact fun h => mul_lt_mul_of_lt_of_lt h.1 h.2
 #align le_or_le_of_mul_le_mul le_or_le_of_mul_le_mul
 #align le_or_le_of_add_le_add le_or_le_of_add_le_add
+-/
 
+#print mul_lt_mul_iff_of_le_of_le /-
 @[to_additive]
 theorem mul_lt_mul_iff_of_le_of_le [CovariantClass α α (· * ·) (· ≤ ·)]
     [CovariantClass α α (swap (· * ·)) (· ≤ ·)] [CovariantClass α α (· * ·) (· < ·)]
@@ -126,6 +135,7 @@ theorem mul_lt_mul_iff_of_le_of_le [CovariantClass α α (· * ·) (· ≤ ·)]
   · exact mul_lt_mul_of_le_of_lt ha hb
 #align mul_lt_mul_iff_of_le_of_le mul_lt_mul_iff_of_le_of_le
 #align add_lt_add_iff_of_le_of_le add_lt_add_iff_of_le_of_le
+-/
 
 end Mul
 

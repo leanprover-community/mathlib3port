@@ -23,7 +23,7 @@ such as ireducibility under the assumption `B` is a domain.
 -/
 
 
-open Classical Polynomial
+open scoped Classical Polynomial
 
 open Polynomial Set Function
 
@@ -205,10 +205,12 @@ theorem natDegree_pos [Nontrivial B] (hx : IsIntegral A x) : 0 < natDegree (minp
 #align minpoly.nat_degree_pos minpoly.natDegree_pos
 -/
 
+#print minpoly.degree_pos /-
 /-- The degree of a minimal polynomial is positive. -/
 theorem degree_pos [Nontrivial B] (hx : IsIntegral A x) : 0 < degree (minpoly A x) :=
   natDegree_pos_iff_degree_pos.mp (natDegree_pos hx)
 #align minpoly.degree_pos minpoly.degree_pos
+-/
 
 /-- If `B/A` is an injective ring extension, and `a` is an element of `A`,
 then the minimal polynomial of `algebra_map A B a` is `X - C a`. -/

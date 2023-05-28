@@ -57,7 +57,7 @@ open TopologicalSpace (SecondCountableTopology)
 
 open MeasureTheory Set Classical Filter Function
 
-open Classical Topology Filter ENNReal BigOperators Interval NNReal
+open scoped Classical Topology Filter ENNReal BigOperators Interval NNReal
 
 variable {ι 𝕜 E F A : Type _} [NormedAddCommGroup E]
 

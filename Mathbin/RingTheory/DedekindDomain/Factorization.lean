@@ -27,7 +27,7 @@ dedekind domain, ideal, factorization
 
 noncomputable section
 
-open BigOperators Classical nonZeroDivisors
+open scoped BigOperators Classical nonZeroDivisors
 
 open Set Function UniqueFactorizationMonoid IsDedekindDomain IsDedekindDomain.HeightOneSpectrum
 

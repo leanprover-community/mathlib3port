@@ -47,7 +47,7 @@ This theory will serve as the foundation for spectral theory in Banach algebras.
 
 open Set
 
-open Pointwise
+open scoped Pointwise
 
 universe u v
 
@@ -100,7 +100,7 @@ end Defs
 
 namespace spectrum
 
-open Polynomial
+open scoped Polynomial
 
 section ScalarSemiring
 
@@ -224,7 +224,7 @@ theorem smul_mem_smul_iff {a : A} {s : R} {r : Rˣ} : r • s ∈ σ (r • a) �
     isUnit_smul_iff]
 #align spectrum.smul_mem_smul_iff spectrum.smul_mem_smul_iff
 
-open Polynomial
+open scoped Polynomial
 
 theorem unit_smul_eq_smul (a : A) (r : Rˣ) : σ (r • a) = r • σ a :=
   by

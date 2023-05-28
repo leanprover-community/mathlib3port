@@ -35,7 +35,7 @@ namespace CategoryTheory
 
 open Category Bicategory
 
-open Bicategory
+open scoped Bicategory
 
 #print CategoryTheory.FreeBicategory /-
 /-- Free bicategory over a quiver. Its objects are the same as those in the underlying quiver. -/

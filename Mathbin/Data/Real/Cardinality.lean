@@ -51,7 +51,7 @@ continuum, cardinality, reals, cardinality of the reals
 
 open Nat Set
 
-open Cardinal
+open scoped Cardinal
 
 noncomputable section
 

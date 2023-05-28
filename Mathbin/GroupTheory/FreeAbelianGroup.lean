@@ -149,7 +149,7 @@ end lift
 
 section
 
-open Classical
+open scoped Classical
 
 #print FreeAbelianGroup.of_injective /-
 theorem of_injective : Function.Injective (of : α → FreeAbelianGroup α) := fun x y hoxy =>

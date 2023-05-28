@@ -335,7 +335,7 @@ end InvolutiveInv
 
 end Inv
 
-open Pointwise
+open scoped Pointwise
 
 /-! ### Set addition/multiplication -/
 
@@ -934,7 +934,7 @@ theorem div_iInter₂_subset (s : Set α) (t : ∀ i, κ i → Set α) :
 
 end Div
 
-open Pointwise
+open scoped Pointwise
 
 #print Set.NSMul /-
 /-- Repeated pointwise addition (not the same as pointwise repeated addition!) of a `finset`. See
@@ -1164,7 +1164,7 @@ protected def commMonoid [CommMonoid α] : CommMonoid (Set α) :=
 
 scoped[Pointwise] attribute [instance] Set.commMonoid Set.addCommMonoid
 
-open Pointwise
+open scoped Pointwise
 
 section DivisionMonoid
 
@@ -1490,7 +1490,7 @@ end Set
 
 open Set
 
-open Pointwise
+open scoped Pointwise
 
 namespace Group
 

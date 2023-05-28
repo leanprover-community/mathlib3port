@@ -27,7 +27,7 @@ noncomputable section
 
 open Real Set MeasureTheory
 
-open Real Topology
+open scoped Real Topology
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The polar coordinates local homeomorphism in `ℝ^2`, mapping `(r cos θ, r sin θ)` to `(r, θ)`.

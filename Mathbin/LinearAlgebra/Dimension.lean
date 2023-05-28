@@ -87,7 +87,7 @@ variable {K : Type u} {V V₁ V₂ V₃ : Type v} {V' V'₁ : Type v'} {V'' : Ty
 
 variable {ι : Type w} {ι' : Type w'} {η : Type u₁'} {φ : η → Type _}
 
-open Classical BigOperators Cardinal
+open scoped Classical BigOperators Cardinal
 
 open Basis Submodule Function Set
 
@@ -932,11 +932,13 @@ theorem Basis.nonempty_fintype_index_of_rank_lt_aleph0 {ι : Type _} (b : Basis 
     Cardinal.lt_aleph0_iff_fintype] at h
 #align basis.nonempty_fintype_index_of_rank_lt_aleph_0 Basis.nonempty_fintype_index_of_rank_lt_aleph0
 
+#print Basis.fintypeIndexOfRankLtAleph0 /-
 /-- If a module has a finite dimension, all bases are indexed by a finite type. -/
 noncomputable def Basis.fintypeIndexOfRankLtAleph0 {ι : Type _} (b : Basis ι R M)
     (h : Module.rank R M < ℵ₀) : Fintype ι :=
   Classical.choice (b.nonempty_fintype_index_of_rank_lt_aleph0 h)
 #align basis.fintype_index_of_rank_lt_aleph_0 Basis.fintypeIndexOfRankLtAleph0
+-/
 
 /-- If a module has a finite dimension, all bases are indexed by a finite set. -/
 theorem Basis.finite_index_of_rank_lt_aleph0 {ι : Type _} {s : Set ι} (b : Basis s R M)
@@ -1178,11 +1180,13 @@ variable [AddCommGroup V₁] [Module K V₁]
 
 variable {K V}
 
+#print Basis.finite_ofVectorSpaceIndex_of_rank_lt_aleph0 /-
 /-- If a vector space has a finite dimension, the index set of `basis.of_vector_space` is finite. -/
 theorem Basis.finite_ofVectorSpaceIndex_of_rank_lt_aleph0 (h : Module.rank K V < ℵ₀) :
     (Basis.ofVectorSpaceIndex K V).Finite :=
   finite_def.2 <| (Basis.ofVectorSpace K V).nonempty_fintype_index_of_rank_lt_aleph0 h
 #align basis.finite_of_vector_space_index_of_rank_lt_aleph_0 Basis.finite_ofVectorSpaceIndex_of_rank_lt_aleph0
+-/
 
 #print rank_span_le /-
 -- TODO how far can we generalise this?
@@ -1196,6 +1200,7 @@ theorem rank_span_le (s : Set V) : Module.rank K (span K s) ≤ (#s) :=
 #align rank_span_le rank_span_le
 -/
 
+#print rank_span_of_finset /-
 theorem rank_span_of_finset (s : Finset V) : Module.rank K (span K (↑s : Set V)) < ℵ₀ :=
   calc
     Module.rank K (span K (↑s : Set V)) ≤ (#(↑s : Set V)) := rank_span_le ↑s
@@ -1203,6 +1208,7 @@ theorem rank_span_of_finset (s : Finset V) : Module.rank K (span K (↑s : Set V
     _ < ℵ₀ := Cardinal.nat_lt_aleph0 _
     
 #align rank_span_of_finset rank_span_of_finset
+-/
 
 theorem rank_quotient_add_rank (p : Submodule K V) :
     Module.rank K (V ⧸ p) + Module.rank K p = Module.rank K V := by

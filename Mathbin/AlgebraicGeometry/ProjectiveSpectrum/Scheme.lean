@@ -78,7 +78,7 @@ noncomputable section
 
 namespace AlgebraicGeometry
 
-open DirectSum BigOperators Pointwise BigOperators
+open scoped DirectSum BigOperators Pointwise BigOperators
 
 open DirectSum SetLike.GradedMonoid Localization
 

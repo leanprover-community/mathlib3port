@@ -54,11 +54,11 @@ theorems that need it.
 
 noncomputable section
 
-open BigOperators
+open scoped BigOperators
 
-open Classical
+open scoped Classical
 
-open RealInnerProductSpace
+open scoped RealInnerProductSpace
 
 namespace EuclideanGeometry
 

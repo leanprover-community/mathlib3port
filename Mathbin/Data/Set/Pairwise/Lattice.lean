@@ -66,10 +66,12 @@ theorem pairwiseDisjoint_iUnion {g : ι' → Set ι} (h : Directed (· ⊆ ·) g
   pairwise_iUnion h
 #align set.pairwise_disjoint_Union Set.pairwiseDisjoint_iUnion
 
+#print Set.pairwiseDisjoint_sUnion /-
 theorem pairwiseDisjoint_sUnion {s : Set (Set ι)} (h : DirectedOn (· ⊆ ·) s) :
     (⋃₀ s).PairwiseDisjoint f ↔ ∀ ⦃a⦄, a ∈ s → Set.PairwiseDisjoint a f :=
   pairwise_sUnion h
 #align set.pairwise_disjoint_sUnion Set.pairwiseDisjoint_sUnion
+-/
 
 end PartialOrderBot
 

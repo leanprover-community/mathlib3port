@@ -33,7 +33,7 @@ def EndMonoidal (X : C) :=
 instance (X : C) : Inhabited (EndMonoidal X) :=
   ⟨𝟙 X⟩
 
-open Bicategory
+open scoped Bicategory
 
 open MonoidalCategory
 

@@ -64,11 +64,13 @@ def IsPFilter [Preorder P] (F : Set P) : Prop :=
 #align order.is_pfilter Order.IsPFilter
 -/
 
+#print Order.IsPFilter.of_def /-
 theorem IsPFilter.of_def [Preorder P] {F : Set P} (nonempty : F.Nonempty)
     (directed : DirectedOn (· ≥ ·) F) (mem_of_le : ∀ {x y : P}, x ≤ y → x ∈ F → y ∈ F) :
     IsPFilter F :=
   ⟨fun _ _ _ _ => mem_of_le ‹_› ‹_›, Nonempty, Directed⟩
 #align order.is_pfilter.of_def Order.IsPFilter.of_def
+-/
 
 #print Order.IsPFilter.toPFilter /-
 /-- Create an element of type `order.pfilter` from a set satisfying the predicate
@@ -100,25 +102,35 @@ theorem SetLike.mem_coe : x ∈ (F : Set P) ↔ x ∈ F :=
   iff_of_eq rfl
 #align order.pfilter.mem_coe SetLike.mem_coeₓ
 
+#print Order.PFilter.isPFilter /-
 theorem isPFilter : IsPFilter (F : Set P) :=
   F.dual.IsIdeal
 #align order.pfilter.is_pfilter Order.PFilter.isPFilter
+-/
 
+#print Order.PFilter.nonempty /-
 theorem nonempty : (F : Set P).Nonempty :=
   F.dual.Nonempty
 #align order.pfilter.nonempty Order.PFilter.nonempty
+-/
 
+#print Order.PFilter.directed /-
 theorem directed : DirectedOn (· ≥ ·) (F : Set P) :=
   F.dual.Directed
 #align order.pfilter.directed Order.PFilter.directed
+-/
 
+#print Order.PFilter.mem_of_le /-
 theorem mem_of_le {F : PFilter P} : x ≤ y → x ∈ F → y ∈ F := fun h => F.dual.lower h
 #align order.pfilter.mem_of_le Order.PFilter.mem_of_le
+-/
 
+#print Order.PFilter.ext /-
 /-- Two filters are equal when their underlying sets are equal. -/
 @[ext]
 theorem ext (h : (s : Set P) = t) : s = t := by cases s; cases t; exact congr_arg _ (Ideal.ext h)
 #align order.pfilter.ext Order.PFilter.ext
+-/
 
 /-- The partial ordering by subset inclusion, inherited from `set P`. -/
 instance : PartialOrder (PFilter P) :=
@@ -136,20 +148,24 @@ def principal (p : P) : PFilter P :=
 #align order.pfilter.principal Order.PFilter.principal
 -/
 
+#print Order.PFilter.mem_mk /-
 @[simp]
 theorem mem_mk (x : P) (I : Ideal Pᵒᵈ) : x ∈ (⟨I⟩ : PFilter P) ↔ OrderDual.toDual x ∈ I :=
   Iff.rfl
 #align order.pfilter.mem_def Order.PFilter.mem_mk
+-/
 
 @[simp]
 theorem principal_le_iff {F : PFilter P} : principal x ≤ F ↔ x ∈ F :=
   Ideal.principal_le_iff
 #align order.pfilter.principal_le_iff Order.PFilter.principal_le_iff
 
+#print Order.PFilter.mem_principal /-
 @[simp]
 theorem mem_principal : x ∈ principal y ↔ y ≤ x :=
   Ideal.mem_principal
 #align order.pfilter.mem_principal Order.PFilter.mem_principal
+-/
 
 -- defeq abuse
 theorem antitone_principal : Antitone (principal : P → PFilter P) := by delta Antitone <;> simp

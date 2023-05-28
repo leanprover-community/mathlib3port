@@ -32,7 +32,7 @@ In this file we define the complement of a subgroup.
 -/
 
 
-open BigOperators Pointwise
+open scoped BigOperators Pointwise
 
 namespace Subgroup
 
@@ -448,7 +448,7 @@ end MemRightTransversals
 
 section Action
 
-open Pointwise
+open scoped Pointwise
 
 open MulAction MemLeftTransversals
 

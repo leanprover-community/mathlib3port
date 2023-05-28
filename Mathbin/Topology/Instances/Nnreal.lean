@@ -58,11 +58,11 @@ noncomputable section
 
 open Set TopologicalSpace Metric Filter
 
-open Topology
+open scoped Topology
 
 namespace NNReal
 
-open NNReal BigOperators Filter
+open scoped NNReal BigOperators Filter
 
 instance : TopologicalSpace ℝ≥0 :=
   inferInstance
@@ -193,7 +193,7 @@ theorem summable_mk {f : α → ℝ} (hf₁ : ∀ n, 0 ≤ f n) :
   simp only [summable_coe, Subtype.coe_eta]
 #align nnreal.summable_coe_of_nonneg NNReal.summable_mk
 
-open Classical
+open scoped Classical
 
 @[norm_cast]
 theorem coe_tsum {f : α → ℝ≥0} : ↑(∑' a, f a) = ∑' a, (f a : ℝ) :=
@@ -271,6 +271,7 @@ theorem tendsto_tsum_compl_atTop_zero {α : Type _} (f : α → ℝ≥0) :
   exact tendsto_tsum_compl_atTop_zero fun a : α => (f a : ℝ)
 #align nnreal.tendsto_tsum_compl_at_top_zero NNReal.tendsto_tsum_compl_atTop_zero
 
+#print NNReal.powOrderIso /-
 /-- `x ↦ x ^ n` as an order isomorphism of `ℝ≥0`. -/
 def powOrderIso (n : ℕ) (hn : n ≠ 0) : ℝ≥0 ≃o ℝ≥0 :=
   (StrictMono.orderIsoOfSurjective (fun x => x ^ n) fun x y h =>
@@ -278,6 +279,7 @@ def powOrderIso (n : ℕ) (hn : n ≠ 0) : ℝ≥0 ≃o ℝ≥0 :=
     (continuous_id.pow _).Surjective (tendsto_pow_atTop hn) <| by
       simpa [order_bot.at_bot_eq, pos_iff_ne_zero]
 #align nnreal.pow_order_iso NNReal.powOrderIso
+-/
 
 end NNReal
 

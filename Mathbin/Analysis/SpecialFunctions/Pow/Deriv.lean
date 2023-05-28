@@ -25,7 +25,7 @@ We also prove differentiability and provide derivatives for the power functions 
 
 noncomputable section
 
-open Classical Real Topology NNReal ENNReal Filter
+open scoped Classical Real Topology NNReal ENNReal Filter
 
 open Filter
 

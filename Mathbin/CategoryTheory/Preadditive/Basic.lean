@@ -55,7 +55,7 @@ universe v u
 
 open CategoryTheory.Limits
 
-open BigOperators
+open scoped BigOperators
 
 namespace CategoryTheory
 
@@ -302,7 +302,7 @@ theorem comp_right_eq_zero [IsIso g] : f ≫ g = 0 ↔ f = 0 := by
 
 end IsIso
 
-open ZeroObject
+open scoped ZeroObject
 
 variable [HasZeroObject C]
 

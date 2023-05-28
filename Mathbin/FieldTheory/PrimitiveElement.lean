@@ -40,7 +40,7 @@ exists_adjoin_simple_eq_top
 
 noncomputable section
 
-open Classical Polynomial
+open scoped Classical Polynomial
 
 open FiniteDimensional Polynomial IntermediateField
 

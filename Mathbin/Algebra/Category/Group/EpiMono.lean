@@ -111,7 +111,7 @@ inductive XWithInfinity
 
 open XWithInfinity Equiv.Perm
 
-open Coset
+open scoped Coset
 
 -- mathport name: exprX'
 local notation "X'" => XWithInfinity f

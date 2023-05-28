@@ -31,7 +31,7 @@ noncomputable section
 open
   Set Metric TopologicalSpace Function Asymptotics MeasureTheory FiniteDimensional ContinuousLinearMap Filter MeasureTheory.Measure
 
-open Pointwise Topology NNReal BigOperators convolution
+open scoped Pointwise Topology NNReal BigOperators convolution
 
 variable {E : Type _} [NormedAddCommGroup E]
 

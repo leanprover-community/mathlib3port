@@ -23,7 +23,7 @@ This file shows that the complex numbers have cardinality continuum, i.e. `#ℂ 
 
 open Cardinal Set
 
-open Cardinal
+open scoped Cardinal
 
 #print mk_complex /-
 /-- The cardinality of the complex numbers, as a type. -/

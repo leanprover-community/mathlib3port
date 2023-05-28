@@ -22,9 +22,9 @@ The specific lemma is `num_derangements_tendsto_inv_e`.
 
 open Filter
 
-open BigOperators
+open scoped BigOperators
 
-open Topology
+open scoped Topology
 
 theorem numDerangements_tendsto_inv_e :
     Tendsto (fun n => (numDerangements n : ℝ) / n.factorial) atTop (𝓝 (Real.exp (-1))) :=

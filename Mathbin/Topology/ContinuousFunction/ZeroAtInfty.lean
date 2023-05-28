@@ -31,7 +31,7 @@ universe u v w
 
 variable {F : Type _} {α : Type u} {β : Type v} {γ : Type w} [TopologicalSpace α]
 
-open BoundedContinuousFunction Topology
+open scoped BoundedContinuousFunction Topology
 
 open Filter Metric
 

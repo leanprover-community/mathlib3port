@@ -48,15 +48,19 @@ instance : PredOrder ℕ where
     · exact b.zero_le
     · exact h
 
+#print Nat.succ_eq_succ /-
 @[simp]
 theorem succ_eq_succ : Order.succ = succ :=
   rfl
 #align nat.succ_eq_succ Nat.succ_eq_succ
+-/
 
+#print Nat.pred_eq_pred /-
 @[simp]
 theorem pred_eq_pred : Order.pred = pred :=
   rfl
 #align nat.pred_eq_pred Nat.pred_eq_pred
+-/
 
 #print Nat.succ_iterate /-
 theorem succ_iterate (a : ℕ) : ∀ n, (succ^[n]) a = a + n

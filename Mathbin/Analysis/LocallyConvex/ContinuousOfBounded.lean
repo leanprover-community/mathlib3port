@@ -35,7 +35,7 @@ continuous linear maps will require importing `analysis/locally_convex/bounded` 
 
 open TopologicalSpace Bornology Filter
 
-open Topology Pointwise
+open scoped Topology Pointwise
 
 variable {𝕜 𝕜' E F : Type _}
 

@@ -32,7 +32,7 @@ import Mathbin.Topology.UnitInterval
 
 variable {R : Type _}
 
-open Polynomial
+open scoped Polynomial
 
 namespace Polynomial
 
@@ -150,7 +150,7 @@ theorem polynomialFunctions_separatesPoints (X : Set R) : (polynomialFunctions X
 #align polynomial_functions_separates_points polynomialFunctions_separatesPoints
 -/
 
-open unitInterval
+open scoped unitInterval
 
 open ContinuousMap
 

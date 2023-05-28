@@ -22,7 +22,7 @@ This file compiles filter-related results about `ℝ≥0∞` (see data/real/ennr
 
 open Filter
 
-open Filter ENNReal
+open scoped Filter ENNReal
 
 namespace ENNReal
 

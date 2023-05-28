@@ -59,7 +59,7 @@ the continuous functional calculus (including one for real-valued functions with
 applies to self-adjoint elements of the algebra). -/
 
 
-open Pointwise ENNReal NNReal ComplexOrder
+open scoped Pointwise ENNReal NNReal ComplexOrder
 
 open WeakDual WeakDual.characterSpace elementalStarAlgebra
 

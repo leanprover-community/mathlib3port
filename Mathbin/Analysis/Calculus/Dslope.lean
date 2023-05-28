@@ -23,7 +23,7 @@ differentiability.
 -/
 
 
-open Classical Topology Filter
+open scoped Classical Topology Filter
 
 open Function Set Filter
 

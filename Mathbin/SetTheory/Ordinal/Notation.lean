@@ -28,7 +28,7 @@ are defined on `onote` and `nonote`.
 
 open Ordinal Order
 
-open Ordinal
+open scoped Ordinal
 
 -- get notation for `ω`
 /-- Recursive definition of an ordinal notation. `zero` denotes the

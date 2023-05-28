@@ -41,7 +41,7 @@ variable {ι : Type uι}
 
 namespace DirectSum
 
-open DirectSum
+open scoped DirectSum
 
 variable (R : Type uR) (A : ι → Type uA) {B : Type uB} [DecidableEq ι]
 

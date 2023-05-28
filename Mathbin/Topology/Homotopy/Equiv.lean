@@ -77,7 +77,7 @@ end HomotopyEquiv
 
 end ContinuousMap
 
-open ContinuousMap
+open scoped ContinuousMap
 
 namespace Homeomorph
 

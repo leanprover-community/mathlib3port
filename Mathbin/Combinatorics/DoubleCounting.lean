@@ -37,7 +37,7 @@ and `t`.
 
 open Finset Function Relator
 
-open BigOperators
+open scoped BigOperators
 
 variable {α β : Type _}
 

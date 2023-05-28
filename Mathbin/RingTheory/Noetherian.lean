@@ -65,7 +65,7 @@ Noetherian, noetherian, Noetherian ring, Noetherian module, noetherian ring, noe
 
 open Set
 
-open BigOperators Pointwise
+open scoped BigOperators Pointwise
 
 #print IsNoetherian /-
 /-- `is_noetherian R M` is the proposition that `M` is a Noetherian `R`-module,

@@ -218,7 +218,7 @@ section Vector3
 
 open Vector3
 
-open Vector3
+open scoped Vector3
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- "Curried" exists, i.e. `∃ x₁ ... xₙ, f [x₁, ..., xₙ]`. -/

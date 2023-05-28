@@ -51,7 +51,7 @@ variable {α : Type _}
 
 open Multiset
 
-open BigOperators
+open scoped BigOperators
 
 namespace Nat
 

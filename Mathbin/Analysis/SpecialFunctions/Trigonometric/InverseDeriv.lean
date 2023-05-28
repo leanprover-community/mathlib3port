@@ -20,11 +20,11 @@ Derivatives of `arcsin` and `arccos`.
 
 noncomputable section
 
-open Classical Topology Filter
+open scoped Classical Topology Filter
 
 open Set Filter
 
-open Real
+open scoped Real
 
 namespace Real
 

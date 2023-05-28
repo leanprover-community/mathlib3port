@@ -30,7 +30,7 @@ variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] {F : Type _} [N
 
 open Filter Set Metric ContinuousLinearMap
 
-open Topology
+open scoped Topology
 
 attribute [local mono] prod_mono
 

@@ -34,7 +34,7 @@ It also contains several examples:
 
 universe u v
 
-open Cardinal
+open scoped Cardinal
 
 namespace Computability
 

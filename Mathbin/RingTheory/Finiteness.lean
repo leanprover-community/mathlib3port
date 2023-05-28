@@ -40,7 +40,7 @@ In this file we define a notion of finiteness that is common in commutative alge
 
 open Function (Surjective)
 
-open BigOperators
+open scoped BigOperators
 
 namespace Submodule
 
@@ -455,6 +455,7 @@ theorem fg_ker_comp {R S A : Type _} [CommRing R] [CommRing S] [CommRing A] (f :
   exact Submodule.fg_ker_comp f₁ g₁ hf (Submodule.fg_restrictScalars g.ker hg hsur) hsur
 #align ideal.fg_ker_comp Ideal.fg_ker_comp
 
+#print Ideal.exists_radical_pow_le_of_fg /-
 theorem exists_radical_pow_le_of_fg {R : Type _} [CommSemiring R] (I : Ideal R) (h : I.radical.FG) :
     ∃ n : ℕ, I.radical ^ n ≤ I := by
   have := le_refl I.radical; revert this
@@ -472,6 +473,7 @@ theorem exists_radical_pow_le_of_fg {R : Type _} [CommSemiring R] (I : Ideal R) 
     · refine' ideal.mul_le_left.trans ((Ideal.pow_le_pow _).trans hm)
       rw [add_comm, Nat.add_sub_assoc h.le]; apply Nat.le_add_right
 #align ideal.exists_radical_pow_le_of_fg Ideal.exists_radical_pow_le_of_fg
+-/
 
 end Ideal
 

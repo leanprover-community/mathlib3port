@@ -38,7 +38,7 @@ noncomputable section
 
 open Classical Set Filter Metric TopologicalSpace
 
-open Classical Topology ENNReal NNReal BigOperators Filter
+open scoped Classical Topology ENNReal NNReal BigOperators Filter
 
 variable {α : Type _} [TopologicalSpace α]
 

@@ -388,9 +388,11 @@ theorem exists_mem_support_of_mem_support_prod {l : List (Perm α)} {x : α}
   · rw [List.prod_cons, mul_apply, ih fun g hg => hx g (Or.inr hg), hx f (Or.inl rfl)]
 #align equiv.perm.exists_mem_support_of_mem_support_prod Equiv.Perm.exists_mem_support_of_mem_support_prod
 
+#print Equiv.Perm.support_pow_le /-
 theorem support_pow_le (σ : Perm α) (n : ℕ) : (σ ^ n).support ≤ σ.support := fun x h1 =>
   mem_support.mpr fun h2 => mem_support.mp h1 (pow_apply_eq_self_of_apply_eq_self h2 n)
 #align equiv.perm.support_pow_le Equiv.Perm.support_pow_le
+-/
 
 @[simp]
 theorem support_inv (σ : Perm α) : support σ⁻¹ = σ.support := by
@@ -473,9 +475,11 @@ theorem support_prod_le (l : List (Perm α)) : l.Prod.support ≤ (l.map support
     exact sup_le_sup le_rfl hl
 #align equiv.perm.support_prod_le Equiv.Perm.support_prod_le
 
+#print Equiv.Perm.support_zpow_le /-
 theorem support_zpow_le (σ : Perm α) (n : ℤ) : (σ ^ n).support ≤ σ.support := fun x h1 =>
   mem_support.mpr fun h2 => mem_support.mp h1 (zpow_apply_eq_self_of_apply_eq_self h2 n)
 #align equiv.perm.support_zpow_le Equiv.Perm.support_zpow_le
+-/
 
 #print Equiv.Perm.support_swap /-
 @[simp]
@@ -582,12 +586,14 @@ theorem eq_on_support_mem_disjoint {l : List (Perm α)} (h : f ∈ l) (hl : l.Pa
 #align equiv.perm.eq_on_support_mem_disjoint Equiv.Perm.eq_on_support_mem_disjoint
 -/
 
+#print Equiv.Perm.Disjoint.mono /-
 theorem Disjoint.mono {x y : Perm α} (h : Disjoint f g) (hf : x.support ≤ f.support)
     (hg : y.support ≤ g.support) : Disjoint x y :=
   by
   rw [disjoint_iff_disjoint_support] at h⊢
   exact h.mono hf hg
 #align equiv.perm.disjoint.mono Equiv.Perm.Disjoint.mono
+-/
 
 theorem support_le_prod_of_mem {l : List (Perm α)} (h : f ∈ l) (hl : l.Pairwise Disjoint) :
     f.support ≤ l.Prod.support := by

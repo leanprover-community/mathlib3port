@@ -49,17 +49,23 @@ theorem sub_def : μ - ν = sInf { d | μ ≤ d + ν } :=
   rfl
 #align measure_theory.measure.sub_def MeasureTheory.Measure.sub_def
 
+#print MeasureTheory.Measure.sub_le_of_le_add /-
 theorem sub_le_of_le_add {d} (h : μ ≤ d + ν) : μ - ν ≤ d :=
   sInf_le h
 #align measure_theory.measure.sub_le_of_le_add MeasureTheory.Measure.sub_le_of_le_add
+-/
 
+#print MeasureTheory.Measure.sub_eq_zero_of_le /-
 theorem sub_eq_zero_of_le (h : μ ≤ ν) : μ - ν = 0 :=
   nonpos_iff_eq_zero'.1 <| sub_le_of_le_add <| by rwa [zero_add]
 #align measure_theory.measure.sub_eq_zero_of_le MeasureTheory.Measure.sub_eq_zero_of_le
+-/
 
+#print MeasureTheory.Measure.sub_le /-
 theorem sub_le : μ - ν ≤ μ :=
   sub_le_of_le_add <| Measure.le_add_right le_rfl
 #align measure_theory.measure.sub_le MeasureTheory.Measure.sub_le
+-/
 
 #print MeasureTheory.Measure.sub_top /-
 @[simp]
@@ -113,11 +119,13 @@ theorem sub_apply [FiniteMeasure ν] (h₁ : MeasurableSet s) (h₂ : ν ≤ μ)
     apply measure.of_measurable_apply _ h₁
 #align measure_theory.measure.sub_apply MeasureTheory.Measure.sub_apply
 
+#print MeasureTheory.Measure.sub_add_cancel_of_le /-
 theorem sub_add_cancel_of_le [FiniteMeasure ν] (h₁ : ν ≤ μ) : μ - ν + ν = μ :=
   by
   ext (s h_s_meas)
   rw [add_apply, sub_apply h_s_meas h₁, tsub_add_cancel_of_le (h₁ s h_s_meas)]
 #align measure_theory.measure.sub_add_cancel_of_le MeasureTheory.Measure.sub_add_cancel_of_le
+-/
 
 #print MeasureTheory.Measure.restrict_sub_eq_restrict_sub_restrict /-
 theorem restrict_sub_eq_restrict_sub_restrict (h_meas_s : MeasurableSet s) :

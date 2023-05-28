@@ -68,7 +68,7 @@ noncomputable section
 
 open TopologicalSpace MeasureTheory Filter
 
-open NNReal ENNReal BigOperators Topology MeasureTheory
+open scoped NNReal ENNReal BigOperators Topology MeasureTheory
 
 variable {α E F G : Type _} {m m0 : MeasurableSpace α} {p : ℝ≥0∞} {q : ℝ} {μ ν : Measure α}
   [NormedAddCommGroup E] [NormedAddCommGroup F] [NormedAddCommGroup G]
@@ -1612,7 +1612,7 @@ end CompleteSpace
 /-! ### Continuous functions in `Lp` -/
 
 
-open BoundedContinuousFunction
+open scoped BoundedContinuousFunction
 
 open BoundedContinuousFunction
 

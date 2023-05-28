@@ -33,7 +33,7 @@ open Set
 
 open Filter hiding Realizer
 
-open Topology
+open scoped Topology
 
 #print Ctop /-
 /-- A `ctop α σ` is a realization of a topology (basis) on `α`,

@@ -20,7 +20,7 @@ This file contains the basic API for "pushing through" the isomorphism
 over a semiring and the polynomial ring over the opposite semiring. -/
 
 
-open Polynomial
+open scoped Polynomial
 
 open Polynomial MulOpposite
 

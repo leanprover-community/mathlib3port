@@ -51,7 +51,7 @@ variable {k l m n : Type _}
 
 variable {α : Type v}
 
-open Matrix
+open scoped Matrix
 
 #print PEquiv.toMatrix /-
 /-- `to_matrix` returns a matrix containing ones and zeros. `f.to_matrix i j` is `1` if

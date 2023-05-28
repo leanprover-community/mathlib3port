@@ -21,7 +21,7 @@ import Mathbin.Algebra.BigOperators.Basic
 
 open Set Function
 
-open BigOperators
+open scoped BigOperators
 
 universe u v w x
 

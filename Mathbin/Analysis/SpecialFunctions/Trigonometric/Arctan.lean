@@ -24,7 +24,7 @@ namespace Real
 
 open Set Filter
 
-open Topology Real
+open scoped Topology Real
 
 theorem tan_add {x y : ℝ}
     (h :

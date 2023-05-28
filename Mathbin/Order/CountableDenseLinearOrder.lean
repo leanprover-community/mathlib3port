@@ -39,10 +39,11 @@ back and forth, dense, countable, order
 
 noncomputable section
 
-open Classical
+open scoped Classical
 
 namespace Order
 
+#print Order.exists_between_finsets /-
 /-- Suppose `α` is a nonempty dense linear order without endpoints, and
     suppose `lo`, `hi`, are finite subssets with all of `lo` strictly
     before `hi`. Then there is an element of `α` strictly between `lo`
@@ -71,6 +72,7 @@ theorem exists_between_finsets {α : Type _} [LinearOrder α] [DenselyOrdered α
           nonem.elim
         fun m => ⟨m, fun x hx => (nlo ⟨x, hx⟩).elim, fun y hy => (nhi ⟨y, hy⟩).elim⟩
 #align order.exists_between_finsets Order.exists_between_finsets
+-/
 
 variable (α β : Type _) [LinearOrder α] [LinearOrder β]
 
@@ -96,6 +98,7 @@ instance : Preorder (PartialIso α β) :=
 
 variable {α β}
 
+#print Order.PartialIso.exists_across /-
 /-- For each `a`, we can find a `b` in the codomain, such that `a`'s relation to
 the domain of `f` is `b`'s relation to the image of `f`.
 
@@ -129,6 +132,7 @@ theorem exists_across [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonem
       ⟨hr, hb.2 _ (finset.mem_image.mpr ⟨(p1, p2), finset.mem_filter.mpr ⟨hp, hr⟩, rfl⟩)⟩
     rw [← cmp_eq_gt_iff, ← cmp_eq_gt_iff] at this; cc
 #align order.partial_iso.exists_across Order.PartialIso.exists_across
+-/
 
 #print Order.PartialIso.comm /-
 /-- A partial isomorphism between `α` and `β` is also a partial isomorphism between `β` and `α`. -/

@@ -62,7 +62,7 @@ pointwise subtraction
 
 open Function MulOpposite
 
-open BigOperators Pointwise
+open scoped BigOperators Pointwise
 
 variable {F α β γ : Type _}
 
@@ -317,7 +317,7 @@ theorem inv_insert (a : α) (s : Finset α) : (insert a s)⁻¹ = insert a⁻¹ 
 
 end Inv
 
-open Pointwise
+open scoped Pointwise
 
 section InvolutiveInv
 
@@ -893,7 +893,7 @@ end Div
 /-! ### Instances -/
 
 
-open Pointwise
+open scoped Pointwise
 
 section Instances
 
@@ -1192,7 +1192,7 @@ theorem coe_prod {ι : Type _} (s : Finset ι) (f : ι → Finset α) :
 
 end CommMonoid
 
-open Pointwise
+open scoped Pointwise
 
 section DivisionMonoid
 
@@ -1807,7 +1807,7 @@ theorem subset_vsub {s t : Set β} :
 
 end VSub
 
-open Pointwise
+open scoped Pointwise
 
 /-! ### Translation/scaling of finsets -/
 
@@ -1963,7 +1963,7 @@ theorem biUnion_smul_finset (s : Finset α) (t : Finset β) : s.biUnion (· • 
 
 end SMul
 
-open Pointwise
+open scoped Pointwise
 
 section Instances
 
@@ -2237,7 +2237,7 @@ theorem card_le_card_mul_right {t : Finset α} (ht : t.Nonempty) : s.card ≤ (s
 
 end
 
-open Pointwise
+open scoped Pointwise
 
 @[to_additive]
 theorem image_smul_comm [DecidableEq β] [DecidableEq γ] [SMul α β] [SMul α γ] (f : β → γ) (a : α)
@@ -2494,7 +2494,7 @@ end Ring
 
 end Finset
 
-open Pointwise
+open scoped Pointwise
 
 namespace Set
 

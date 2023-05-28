@@ -28,7 +28,7 @@ This file contains results about `exp` on `quaternion ℝ`.
 -/
 
 
-open Quaternion Nat
+open scoped Quaternion Nat
 
 namespace Quaternion
 

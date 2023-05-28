@@ -54,7 +54,7 @@ noncomputable section
 
 open MvPolynomial Function
 
-open BigOperators
+open scoped BigOperators
 
 variable {p : ℕ} {R S T : Type _} [hp : Fact p.Prime] [CommRing R] [CommRing S] [CommRing T]
 
@@ -64,7 +64,7 @@ variable {α : Type _} {β : Type _}
 local notation "𝕎" => WittVector p
 
 -- type as `\bbW`
-open Witt
+open scoped Witt
 
 namespace WittVector
 

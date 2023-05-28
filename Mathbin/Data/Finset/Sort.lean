@@ -183,6 +183,7 @@ theorem max'_eq_sorted_last {s : Finset α} {h : s.Nonempty} :
 #align finset.max'_eq_sorted_last Finset.max'_eq_sorted_last
 -/
 
+#print Finset.orderIsoOfFin /-
 /-- Given a finset `s` of cardinality `k` in a linear order `α`, the map `order_iso_of_fin s h`
 is the increasing bijection between `fin k` and `s` as an `order_iso`. Here, `h` is a proof that
 the cardinality of `s` is `k`. We use this instead of an iso `fin s.card ≃o s` to avoid
@@ -191,7 +192,9 @@ def orderIsoOfFin (s : Finset α) {k : ℕ} (h : s.card = k) : Fin k ≃o s :=
   OrderIso.trans (Fin.cast ((length_sort (· ≤ ·)).trans h).symm) <|
     (s.sort_sorted_lt.getIso _).trans <| OrderIso.setCongr _ _ <| Set.ext fun x => mem_sort _
 #align finset.order_iso_of_fin Finset.orderIsoOfFin
+-/
 
+#print Finset.orderEmbOfFin /-
 /-- Given a finset `s` of cardinality `k` in a linear order `α`, the map `order_emb_of_fin s h` is
 the increasing bijection between `fin k` and `s` as an order embedding into `α`. Here, `h` is a
 proof that the cardinality of `s` is `k`. We use this instead of an embedding `fin s.card ↪o α` to
@@ -199,6 +202,7 @@ avoid casting issues in further uses of this function. -/
 def orderEmbOfFin (s : Finset α) {k : ℕ} (h : s.card = k) : Fin k ↪o α :=
   (orderIsoOfFin s h).toOrderEmbedding.trans (OrderEmbedding.subtype _)
 #align finset.order_emb_of_fin Finset.orderEmbOfFin
+-/
 
 @[simp]
 theorem coe_orderIsoOfFin_apply (s : Finset α) {k : ℕ} (h : s.card = k) (i : Fin k) :
@@ -280,12 +284,14 @@ theorem orderEmbOfFin_eq_orderEmbOfFin_iff {k l : ℕ} {s : Finset α} {i : Fin 
   exact (s.order_emb_of_fin rfl).eq_iff_eq.trans Fin.ext_iff
 #align finset.order_emb_of_fin_eq_order_emb_of_fin_iff Finset.orderEmbOfFin_eq_orderEmbOfFin_iff
 
+#print Finset.orderEmbOfCardLe /-
 /-- Given a finset `s` of size at least `k` in a linear order `α`, the map `order_emb_of_card_le`
 is an order embedding from `fin k` to `α` whose image is contained in `s`. Specifically, it maps
 `fin k` to an initial segment of `s`. -/
 def orderEmbOfCardLe (s : Finset α) {k : ℕ} (h : k ≤ s.card) : Fin k ↪o α :=
   (Fin.castLE h).trans (s.orderEmbOfFin rfl)
 #align finset.order_emb_of_card_le Finset.orderEmbOfCardLe
+-/
 
 theorem orderEmbOfCardLe_mem (s : Finset α) {k : ℕ} (h : k ≤ s.card) (a) :
     orderEmbOfCardLe s h a ∈ s := by

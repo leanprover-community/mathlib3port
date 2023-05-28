@@ -75,7 +75,7 @@ uniformly continuous).
 
 open Filter TopologicalSpace Set Classical Function UniformSpace
 
-open Classical Topology uniformity Filter
+open scoped Classical Topology uniformity Filter
 
 noncomputable section
 

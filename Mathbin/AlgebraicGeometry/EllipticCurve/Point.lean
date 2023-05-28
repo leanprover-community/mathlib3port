@@ -92,7 +92,7 @@ namespace WeierstrassCurve
 
 open Polynomial
 
-open Polynomial PolynomialPolynomial
+open scoped Polynomial PolynomialPolynomial
 
 section Basic
 
@@ -388,7 +388,7 @@ section Addition
 /-! ### Slopes of lines through nonsingular rational points on a Weierstrass curve -/
 
 
-open Classical
+open scoped Classical
 
 variable {F : Type u} [Field F] (W : WeierstrassCurve F) (K : Type v) [Field K] [Algebra F K]
   (x₁ x₂ y₁ y₂ : F)
@@ -704,7 +704,7 @@ variable {R : Type u} [CommRing R] (W : WeierstrassCurve R) (F : Type v) [Field 
 
 namespace Point
 
-open WeierstrassCurve
+open scoped WeierstrassCurve
 
 /-- The function from `W⟮F⟯` to `W⟮K⟯` induced by a base change from `F` to `K`. -/
 def ofBaseChangeFun : W⟮F⟯ → W⟮K⟯

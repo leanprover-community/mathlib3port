@@ -113,20 +113,26 @@ theorem map_sup (hf : LeftOrdContinuous f) (x y : α) : f (x ⊔ y) = f x ⊔ f 
   (hf isLUB_pair).unique <| by simp only [image_pair, isLUB_pair]
 #align left_ord_continuous.map_sup LeftOrdContinuous.map_sup
 
+#print LeftOrdContinuous.le_iff /-
 theorem le_iff (hf : LeftOrdContinuous f) (h : Injective f) {x y} : f x ≤ f y ↔ x ≤ y := by
   simp only [← sup_eq_right, ← hf.map_sup, h.eq_iff]
 #align left_ord_continuous.le_iff LeftOrdContinuous.le_iff
+-/
 
+#print LeftOrdContinuous.lt_iff /-
 theorem lt_iff (hf : LeftOrdContinuous f) (h : Injective f) {x y} : f x < f y ↔ x < y := by
   simp only [lt_iff_le_not_le, hf.le_iff h]
 #align left_ord_continuous.lt_iff LeftOrdContinuous.lt_iff
+-/
 
 variable (f)
 
+#print LeftOrdContinuous.toOrderEmbedding /-
 /-- Convert an injective left order continuous function to an order embedding. -/
 def toOrderEmbedding (hf : LeftOrdContinuous f) (h : Injective f) : α ↪o β :=
   ⟨⟨f, h⟩, fun x y => hf.le_iff h⟩
 #align left_ord_continuous.to_order_embedding LeftOrdContinuous.toOrderEmbedding
+-/
 
 variable {f}
 
@@ -230,20 +236,26 @@ theorem map_inf (hf : RightOrdContinuous f) (x y : α) : f (x ⊓ y) = f x ⊓ f
   hf.OrderDual.map_sup x y
 #align right_ord_continuous.map_inf RightOrdContinuous.map_inf
 
+#print RightOrdContinuous.le_iff /-
 theorem le_iff (hf : RightOrdContinuous f) (h : Injective f) {x y} : f x ≤ f y ↔ x ≤ y :=
   hf.OrderDual.le_iff h
 #align right_ord_continuous.le_iff RightOrdContinuous.le_iff
+-/
 
+#print RightOrdContinuous.lt_iff /-
 theorem lt_iff (hf : RightOrdContinuous f) (h : Injective f) {x y} : f x < f y ↔ x < y :=
   hf.OrderDual.lt_iff h
 #align right_ord_continuous.lt_iff RightOrdContinuous.lt_iff
+-/
 
 variable (f)
 
+#print RightOrdContinuous.toOrderEmbedding /-
 /-- Convert an injective left order continuous function to a `order_embedding`. -/
 def toOrderEmbedding (hf : RightOrdContinuous f) (h : Injective f) : α ↪o β :=
   ⟨⟨f, h⟩, fun x y => hf.le_iff h⟩
 #align right_ord_continuous.to_order_embedding RightOrdContinuous.toOrderEmbedding
+-/
 
 variable {f}
 

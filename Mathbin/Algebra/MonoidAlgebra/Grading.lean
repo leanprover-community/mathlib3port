@@ -100,7 +100,7 @@ theorem single_mem_grade {R} [CommSemiring R] (i : M) (r : R) : Finsupp.single i
 
 end
 
-open DirectSum
+open scoped DirectSum
 
 instance gradeBy.gradedMonoid [AddMonoid M] [AddMonoid ι] [CommSemiring R] (f : M →+ ι) :
     SetLike.GradedMonoid (gradeBy R f : ι → Submodule R (AddMonoidAlgebra R M))

@@ -44,10 +44,12 @@ theorem succ_eq_succ : Order.succ = succ :=
   rfl
 #align int.succ_eq_succ Int.succ_eq_succ
 
+#print Int.pred_eq_pred /-
 @[simp]
 theorem pred_eq_pred : Order.pred = pred :=
   rfl
 #align int.pred_eq_pred Int.pred_eq_pred
+-/
 
 #print Int.pos_iff_one_le /-
 theorem pos_iff_one_le {a : ℤ} : 0 < a ↔ 1 ≤ a :=

@@ -25,7 +25,7 @@ Main declarations:
 
 open Function
 
-open Nat
+open scoped Nat
 
 universe u v
 

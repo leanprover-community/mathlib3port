@@ -83,7 +83,7 @@ noncomputable section
 
 open TopologicalSpace MeasureTheory.lp Filter ContinuousLinearMap
 
-open NNReal ENNReal Topology BigOperators MeasureTheory
+open scoped NNReal ENNReal Topology BigOperators MeasureTheory
 
 namespace MeasureTheory
 
@@ -1595,7 +1595,7 @@ theorem condexpIndL1Fin_disjoint_union (hs : MeasurableSet s) (ht : MeasurableSe
 
 end CondexpIndL1Fin
 
-open Classical
+open scoped Classical
 
 section CondexpIndL1
 
@@ -2047,7 +2047,7 @@ section Condexp
 /-! ### Conditional expectation of a function -/
 
 
-open Classical
+open scoped Classical
 
 variable {𝕜} {m m0 : MeasurableSpace α} {μ : Measure α} {f g : α → F'} {s : Set α}
 

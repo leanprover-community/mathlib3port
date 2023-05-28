@@ -51,7 +51,7 @@ The main results are:
 
 open AffineSubspace Set
 
-open Pointwise
+open scoped Pointwise
 
 variable {𝕜 V W Q P : Type _}
 

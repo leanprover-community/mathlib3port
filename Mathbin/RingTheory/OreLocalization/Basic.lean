@@ -816,7 +816,7 @@ instance : Ring R[S⁻¹] :=
   { OreLocalization.semiring, OreLocalization.hasNeg with
     add_left_neg := OreLocalization.add_left_neg }
 
-open nonZeroDivisors
+open scoped nonZeroDivisors
 
 theorem numeratorHom_inj (hS : S ≤ R⁰) : Function.Injective (numeratorHom : R → R[S⁻¹]) :=
   fun r₁ r₂ h =>
@@ -837,9 +837,9 @@ end Ring
 
 section DivisionRing
 
-open nonZeroDivisors
+open scoped nonZeroDivisors
 
-open Classical
+open scoped Classical
 
 variable {R : Type _} [Ring R] [Nontrivial R] [OreSet R⁰]
 

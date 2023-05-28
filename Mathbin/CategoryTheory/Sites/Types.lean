@@ -25,7 +25,7 @@ universe u
 
 namespace CategoryTheory
 
-open CategoryTheory.Type
+open scoped CategoryTheory.Type
 
 /-- A Grothendieck topology associated to the category of all types.
 A sieve is a covering iff it is jointly surjective. -/

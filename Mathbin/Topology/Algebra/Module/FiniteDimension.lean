@@ -56,7 +56,7 @@ noncomputable section
 
 open Set FiniteDimensional TopologicalSpace Filter
 
-open BigOperators
+open scoped BigOperators
 
 section Field
 

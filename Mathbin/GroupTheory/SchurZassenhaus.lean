@@ -27,7 +27,7 @@ In this file we prove the Schur-Zassenhaus theorem.
 -/
 
 
-open BigOperators
+open scoped BigOperators
 
 namespace Subgroup
 
@@ -137,7 +137,7 @@ private theorem exists_right_complement'_of_coprime_aux (hH : Nat.coprime (Nat.c
 
 end SchurZassenhausAbelian
 
-open Classical
+open scoped Classical
 
 universe u
 

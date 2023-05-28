@@ -33,7 +33,7 @@ topological, lattice
 
 open Filter
 
-open Topology
+open scoped Topology
 
 #print ContinuousInf /-
 /-- Let `L` be a topological space and let `L×L` be equipped with the product topology and let

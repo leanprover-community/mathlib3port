@@ -54,7 +54,7 @@ noncomputable section
 
 open Function Rat Real Set
 
-open Classical Pointwise
+open scoped Classical Pointwise
 
 /- ./././Mathport/Syntax/Translate/Command.lean:422:11: unsupported: advanced extends in structure -/
 /-- A field which is both linearly ordered and conditionally complete with respect to the order.

@@ -250,10 +250,12 @@ instance [Preorder R] : Preorder (Tropical R) :=
     le_trans := fun _ _ _ h h' => le_trans h h'
     lt_iff_le_not_le := fun _ _ => lt_iff_le_not_le }
 
+#print Tropical.tropOrderIso /-
 /-- Reinterpret `x : R` as an element of `tropical R`, preserving the order. -/
 def tropOrderIso [Preorder R] : R ≃o Tropical R :=
   { tropEquiv with map_rel_iff' := fun _ _ => untrop_le_iff }
 #align tropical.trop_order_iso Tropical.tropOrderIso
+-/
 
 @[simp]
 theorem tropOrderIso_coe_fn [Preorder R] : (tropOrderIso : R → Tropical R) = trop :=
@@ -624,11 +626,13 @@ instance covariant_mul_lt [LT R] [Add R] [CovariantClass R R (· + ·) (· < ·)
 #align tropical.covariant_mul_lt Tropical.covariant_mul_lt
 -/
 
+#print Tropical.covariant_swap_mul_lt /-
 instance covariant_swap_mul_lt [Preorder R] [Add R]
     [CovariantClass R R (Function.swap (· + ·)) (· < ·)] :
     CovariantClass (Tropical R) (Tropical R) (Function.swap (· * ·)) (· < ·) :=
   ⟨fun x y z h => add_lt_add_right h _⟩
 #align tropical.covariant_swap_mul_lt Tropical.covariant_swap_mul_lt
+-/
 
 instance [LinearOrder R] [Add R] [CovariantClass R R (· + ·) (· ≤ ·)]
     [CovariantClass R R (Function.swap (· + ·)) (· ≤ ·)] : Distrib (Tropical R)

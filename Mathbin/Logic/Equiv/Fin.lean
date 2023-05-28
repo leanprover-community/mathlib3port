@@ -109,11 +109,13 @@ def OrderIso.piFinTwoIso (α : Fin 2 → Type u) [∀ i, Preorder (α i)] : (∀
   map_rel_iff' f g := Iff.symm Fin.forall_fin_two
 #align order_iso.pi_fin_two_iso OrderIso.piFinTwoIso
 
+#print OrderIso.finTwoArrowIso /-
 /-- The space of functions `fin 2 → α` is order equivalent to `α × α`. See also
 `order_iso.pi_fin_two_iso`. -/
 def OrderIso.finTwoArrowIso (α : Type _) [Preorder α] : (Fin 2 → α) ≃o α × α :=
   { OrderIso.piFinTwoIso fun _ => α with toEquiv := finTwoArrowEquiv α }
 #align order_iso.fin_two_arrow_iso OrderIso.finTwoArrowIso
+-/
 
 #print finCongr /-
 /-- The 'identity' equivalence between `fin n` and `fin m` when `n = m`. -/

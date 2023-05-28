@@ -37,7 +37,7 @@ sense). We do not define that quantity here, which is simply the supremum of a m
 
 open MeasureTheory Filter Set TopologicalSpace
 
-open ENNReal MeasureTheory NNReal
+open scoped ENNReal MeasureTheory NNReal
 
 variable {α β : Type _} {m : MeasurableSpace α} {μ ν : Measure α}
 
@@ -104,6 +104,7 @@ theorem essInf_eq_sSup {m : MeasurableSpace α} (μ : Measure α) (f : α → β
 #align ess_inf_eq_Sup essInf_eq_sSup
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
+#print ae_lt_of_essSup_lt /-
 theorem ae_lt_of_essSup_lt (hx : essSup f μ < x)
     (hf : IsBoundedUnder (· ≤ ·) μ.ae f := by
       run_tac
@@ -111,8 +112,10 @@ theorem ae_lt_of_essSup_lt (hx : essSup f μ < x)
     ∀ᵐ y ∂μ, f y < x :=
   eventually_lt_of_limsup_lt hx hf
 #align ae_lt_of_ess_sup_lt ae_lt_of_essSup_lt
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
+#print ae_lt_of_lt_essInf /-
 theorem ae_lt_of_lt_essInf (hx : x < essInf f μ)
     (hf : IsBoundedUnder (· ≥ ·) μ.ae f := by
       run_tac
@@ -120,10 +123,12 @@ theorem ae_lt_of_lt_essInf (hx : x < essInf f μ)
     ∀ᵐ y ∂μ, x < f y :=
   eventually_lt_of_lt_liminf hx hf
 #align ae_lt_of_lt_ess_inf ae_lt_of_lt_essInf
+-/
 
 variable [TopologicalSpace β] [FirstCountableTopology β] [OrderTopology β]
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
+#print ae_le_essSup /-
 theorem ae_le_essSup
     (hf : IsBoundedUnder (· ≤ ·) μ.ae f := by
       run_tac
@@ -131,8 +136,10 @@ theorem ae_le_essSup
     ∀ᵐ y ∂μ, f y ≤ essSup f μ :=
   eventually_le_limsup hf
 #align ae_le_ess_sup ae_le_essSup
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
+#print ae_essInf_le /-
 theorem ae_essInf_le
     (hf : IsBoundedUnder (· ≥ ·) μ.ae f := by
       run_tac
@@ -140,6 +147,7 @@ theorem ae_essInf_le
     ∀ᵐ y ∂μ, essInf f μ ≤ f y :=
   eventually_liminf_le hf
 #align ae_ess_inf_le ae_essInf_le
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 theorem meas_essSup_lt
@@ -344,7 +352,6 @@ variable [CompleteLinearOrder β]
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
-#print essSup_indicator_eq_essSup_restrict /-
 theorem essSup_indicator_eq_essSup_restrict [Zero β] {s : Set α} {f : α → β}
     (hf : 0 ≤ᵐ[μ.restrict s] f) (hs : MeasurableSet s) (hs_not_null : μ s ≠ 0) :
     essSup (s.indicator f) μ = essSup f (μ.restrict s) :=
@@ -387,7 +394,6 @@ theorem essSup_indicator_eq_essSup_restrict [Zero β] {s : Set α} {f : α → �
   · simpa [hxs] using hxc hxs
   · simpa [hxs] using hc
 #align ess_sup_indicator_eq_ess_sup_restrict essSup_indicator_eq_essSup_restrict
--/
 
 end CompleteLinearOrder
 

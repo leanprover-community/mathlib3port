@@ -60,7 +60,7 @@ then defined as `bernoulli := (-1)^n * bernoulli'`.
 -/
 
 
-open Nat BigOperators
+open scoped Nat BigOperators
 
 open Finset Nat Finset.Nat PowerSeries
 

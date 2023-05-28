@@ -47,7 +47,7 @@ intermediate value theorem, connected space, connected set
 
 open Filter OrderDual TopologicalSpace Function Set
 
-open Topology Filter
+open scoped Topology Filter
 
 universe u v w
 
@@ -66,6 +66,7 @@ section
 variable {X : Type u} {α : Type v} [TopologicalSpace X] [LinearOrder α] [TopologicalSpace α]
   [OrderClosedTopology α]
 
+#print intermediate_value_univ₂ /-
 /-- Intermediate value theorem for two functions: if `f` and `g` are two continuous functions
 on a preconnected space and `f a ≤ g a` and `g b ≤ f b`, then for some `x` we have `f x = g x`. -/
 theorem intermediate_value_univ₂ [PreconnectedSpace X] {a b : X} {f g : X → α} (hf : Continuous f)
@@ -77,14 +78,18 @@ theorem intermediate_value_univ₂ [PreconnectedSpace X] {a b : X} {f g : X → 
       (isClosed_le hg hf) (fun x hx => le_total _ _) ⟨a, trivial, ha⟩ ⟨b, trivial, hb⟩
   exact ⟨x, le_antisymm hfg hgf⟩
 #align intermediate_value_univ₂ intermediate_value_univ₂
+-/
 
+#print intermediate_value_univ₂_eventually₁ /-
 theorem intermediate_value_univ₂_eventually₁ [PreconnectedSpace X] {a : X} {l : Filter X} [NeBot l]
     {f g : X → α} (hf : Continuous f) (hg : Continuous g) (ha : f a ≤ g a) (he : g ≤ᶠ[l] f) :
     ∃ x, f x = g x :=
   let ⟨c, hc⟩ := he.Frequently.exists
   intermediate_value_univ₂ hf hg ha hc
 #align intermediate_value_univ₂_eventually₁ intermediate_value_univ₂_eventually₁
+-/
 
+#print intermediate_value_univ₂_eventually₂ /-
 theorem intermediate_value_univ₂_eventually₂ [PreconnectedSpace X] {l₁ l₂ : Filter X} [NeBot l₁]
     [NeBot l₂] {f g : X → α} (hf : Continuous f) (hg : Continuous g) (he₁ : f ≤ᶠ[l₁] g)
     (he₂ : g ≤ᶠ[l₂] f) : ∃ x, f x = g x :=
@@ -92,6 +97,7 @@ theorem intermediate_value_univ₂_eventually₂ [PreconnectedSpace X] {l₁ l�
   let ⟨c₂, hc₂⟩ := he₂.Frequently.exists
   intermediate_value_univ₂ hf hg hc₁ hc₂
 #align intermediate_value_univ₂_eventually₂ intermediate_value_univ₂_eventually₂
+-/
 
 /-- Intermediate value theorem for two functions: if `f` and `g` are two functions continuous
 on a preconnected set `s` and for some `a b ∈ s` we have `f a ≤ g a` and `g b ≤ f b`,
@@ -210,6 +216,7 @@ theorem intermediate_value_univ [PreconnectedSpace X] (a b : X) {f : X → α} (
 #align intermediate_value_univ intermediate_value_univ
 -/
 
+#print mem_range_of_exists_le_of_exists_ge /-
 /-- **Intermediate Value Theorem** for continuous functions on connected spaces. -/
 theorem mem_range_of_exists_le_of_exists_ge [PreconnectedSpace X] {c : α} {f : X → α}
     (hf : Continuous f) (h₁ : ∃ a, f a ≤ c) (h₂ : ∃ b, c ≤ f b) : c ∈ range f :=
@@ -217,6 +224,7 @@ theorem mem_range_of_exists_le_of_exists_ge [PreconnectedSpace X] {c : α} {f : 
   let ⟨b, hb⟩ := h₂
   intermediate_value_univ a b hf ⟨ha, hb⟩
 #align mem_range_of_exists_le_of_exists_ge mem_range_of_exists_le_of_exists_ge
+-/
 
 /-!
 ### (Pre)connected sets in a linear order
@@ -452,6 +460,7 @@ theorem isPreconnected_Icc_aux (x y : α) (s t : Set α) (hxy : x ≤ y) (hs : I
   exact fun w ⟨wt, wzy⟩ => (this wzy).elim id fun h => (wt h).elim
 #align is_preconnected_Icc_aux isPreconnected_Icc_aux
 
+#print isPreconnected_Icc /-
 /-- A closed interval in a densely ordered conditionally complete linear order is preconnected. -/
 theorem isPreconnected_Icc : IsPreconnected (Icc a b) :=
   isPreconnected_closed_iff.2
@@ -464,83 +473,122 @@ theorem isPreconnected_Icc : IsPreconnected (Icc a b) :=
         rw [union_comm s t] at hab
         exact isPreconnected_Icc_aux y x t s h ht hs hab hy hx)
 #align is_preconnected_Icc isPreconnected_Icc
+-/
 
+#print isPreconnected_uIcc /-
 theorem isPreconnected_uIcc : IsPreconnected (uIcc a b) :=
   isPreconnected_Icc
 #align is_preconnected_uIcc isPreconnected_uIcc
+-/
 
+#print Set.OrdConnected.isPreconnected /-
 theorem Set.OrdConnected.isPreconnected {s : Set α} (h : s.OrdConnected) : IsPreconnected s :=
   isPreconnected_of_forall_pair fun x hx y hy =>
     ⟨uIcc x y, h.uIcc_subset hx hy, left_mem_uIcc, right_mem_uIcc, isPreconnected_uIcc⟩
 #align set.ord_connected.is_preconnected Set.OrdConnected.isPreconnected
+-/
 
+#print isPreconnected_iff_ordConnected /-
 theorem isPreconnected_iff_ordConnected {s : Set α} : IsPreconnected s ↔ OrdConnected s :=
   ⟨IsPreconnected.ordConnected, Set.OrdConnected.isPreconnected⟩
 #align is_preconnected_iff_ord_connected isPreconnected_iff_ordConnected
+-/
 
+#print isPreconnected_Ici /-
 theorem isPreconnected_Ici : IsPreconnected (Ici a) :=
   ordConnected_Ici.IsPreconnected
 #align is_preconnected_Ici isPreconnected_Ici
+-/
 
+#print isPreconnected_Iic /-
 theorem isPreconnected_Iic : IsPreconnected (Iic a) :=
   ordConnected_Iic.IsPreconnected
 #align is_preconnected_Iic isPreconnected_Iic
+-/
 
+#print isPreconnected_Iio /-
 theorem isPreconnected_Iio : IsPreconnected (Iio a) :=
   ordConnected_Iio.IsPreconnected
 #align is_preconnected_Iio isPreconnected_Iio
+-/
 
+#print isPreconnected_Ioi /-
 theorem isPreconnected_Ioi : IsPreconnected (Ioi a) :=
   ordConnected_Ioi.IsPreconnected
 #align is_preconnected_Ioi isPreconnected_Ioi
+-/
 
+#print isPreconnected_Ioo /-
 theorem isPreconnected_Ioo : IsPreconnected (Ioo a b) :=
   ordConnected_Ioo.IsPreconnected
 #align is_preconnected_Ioo isPreconnected_Ioo
+-/
 
+#print isPreconnected_Ioc /-
 theorem isPreconnected_Ioc : IsPreconnected (Ioc a b) :=
   ordConnected_Ioc.IsPreconnected
 #align is_preconnected_Ioc isPreconnected_Ioc
+-/
 
+#print isPreconnected_Ico /-
 theorem isPreconnected_Ico : IsPreconnected (Ico a b) :=
   ordConnected_Ico.IsPreconnected
 #align is_preconnected_Ico isPreconnected_Ico
+-/
 
+#print isConnected_Ici /-
 theorem isConnected_Ici : IsConnected (Ici a) :=
   ⟨nonempty_Ici, isPreconnected_Ici⟩
 #align is_connected_Ici isConnected_Ici
+-/
 
+#print isConnected_Iic /-
 theorem isConnected_Iic : IsConnected (Iic a) :=
   ⟨nonempty_Iic, isPreconnected_Iic⟩
 #align is_connected_Iic isConnected_Iic
+-/
 
+#print isConnected_Ioi /-
 theorem isConnected_Ioi [NoMaxOrder α] : IsConnected (Ioi a) :=
   ⟨nonempty_Ioi, isPreconnected_Ioi⟩
 #align is_connected_Ioi isConnected_Ioi
+-/
 
+#print isConnected_Iio /-
 theorem isConnected_Iio [NoMinOrder α] : IsConnected (Iio a) :=
   ⟨nonempty_Iio, isPreconnected_Iio⟩
 #align is_connected_Iio isConnected_Iio
+-/
 
+#print isConnected_Icc /-
 theorem isConnected_Icc (h : a ≤ b) : IsConnected (Icc a b) :=
   ⟨nonempty_Icc.2 h, isPreconnected_Icc⟩
 #align is_connected_Icc isConnected_Icc
+-/
 
+#print isConnected_Ioo /-
 theorem isConnected_Ioo (h : a < b) : IsConnected (Ioo a b) :=
   ⟨nonempty_Ioo.2 h, isPreconnected_Ioo⟩
 #align is_connected_Ioo isConnected_Ioo
+-/
 
+#print isConnected_Ioc /-
 theorem isConnected_Ioc (h : a < b) : IsConnected (Ioc a b) :=
   ⟨nonempty_Ioc.2 h, isPreconnected_Ioc⟩
 #align is_connected_Ioc isConnected_Ioc
+-/
 
+#print isConnected_Ico /-
 theorem isConnected_Ico (h : a < b) : IsConnected (Ico a b) :=
   ⟨nonempty_Ico.2 h, isPreconnected_Ico⟩
 #align is_connected_Ico isConnected_Ico
+-/
 
+#print ordered_connected_space /-
 instance (priority := 100) ordered_connected_space : PreconnectedSpace α :=
   ⟨ordConnected_univ.IsPreconnected⟩
 #align ordered_connected_space ordered_connected_space
+-/
 
 /-- In a dense conditionally complete linear order, the set of preconnected sets is exactly
 the set of the intervals `Icc`, `Ico`, `Ioc`, `Ioo`, `Ici`, `Ioi`, `Iic`, `Iio`, `(-∞, +∞)`,

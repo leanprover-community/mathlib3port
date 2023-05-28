@@ -50,7 +50,7 @@ variable {F α β γ : Type _}
 
 namespace Set
 
-open Pointwise
+open scoped Pointwise
 
 /-! ### Translation/scaling of sets -/
 
@@ -883,7 +883,7 @@ theorem vsub_iInter₂_subset (s : Set β) (t : ∀ i, κ i → Set β) :
 
 end Vsub
 
-open Pointwise
+open scoped Pointwise
 
 @[to_additive]
 theorem image_smul_comm [SMul α β] [SMul α γ] (f : β → γ) (a : α) (s : Set β) :

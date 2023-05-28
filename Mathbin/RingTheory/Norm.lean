@@ -62,9 +62,9 @@ open LinearMap
 
 open Matrix Polynomial
 
-open BigOperators
+open scoped BigOperators
 
-open Matrix
+open scoped Matrix
 
 namespace Algebra
 

@@ -47,7 +47,7 @@ function field, ring of integers
 
 noncomputable section
 
-open nonZeroDivisors Polynomial DiscreteValuation
+open scoped nonZeroDivisors Polynomial DiscreteValuation
 
 variable (Fq F : Type) [Field Fq] [Field F]
 

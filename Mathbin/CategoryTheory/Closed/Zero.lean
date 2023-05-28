@@ -50,7 +50,7 @@ def uniqueHomsetOfInitialIsoTerminal [HasInitial C] (i : ⊥_ C ≅ ⊤_ C) (X Y
       
 #align category_theory.unique_homset_of_initial_iso_terminal CategoryTheory.uniqueHomsetOfInitialIsoTerminal
 
-open ZeroObject
+open scoped ZeroObject
 
 /-- If a cartesian closed category has a zero object, each homset has exactly one element. -/
 def uniqueHomsetOfZero [HasZeroObject C] (X Y : C) : Unique (X ⟶ Y) :=

@@ -55,7 +55,7 @@ namespace MvPolynomial
 
 noncomputable section
 
-open BigOperators Classical
+open scoped BigOperators Classical
 
 open Set LinearMap Submodule
 
@@ -164,7 +164,7 @@ end MvPolynomial
 
 namespace MvPolynomial
 
-open Classical Cardinal
+open scoped Classical Cardinal
 
 open LinearMap Submodule
 

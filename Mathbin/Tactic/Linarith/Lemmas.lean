@@ -61,9 +61,11 @@ theorem mul_eq {α} [OrderedSemiring α] {a b : α} (ha : a = 0) (hb : 0 < b) : 
   simp [*]
 #align linarith.mul_eq Linarith.mul_eq
 
+#print Linarith.eq_of_not_lt_of_not_gt /-
 theorem eq_of_not_lt_of_not_gt {α} [LinearOrder α] (a b : α) (h1 : ¬a < b) (h2 : ¬b < a) : a = b :=
   le_antisymm (le_of_not_gt h2) (le_of_not_gt h1)
 #align linarith.eq_of_not_lt_of_not_gt Linarith.eq_of_not_lt_of_not_gt
+-/
 
 -- used in the `nlinarith` normalization steps. The `_` argument is for uniformity.
 @[nolint unused_arguments]

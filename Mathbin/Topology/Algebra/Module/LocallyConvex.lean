@@ -39,7 +39,7 @@ In a module, this is equivalent to `0` satisfying such properties.
 
 open TopologicalSpace Filter Set
 
-open Topology Pointwise
+open scoped Topology Pointwise
 
 section Semimodule
 

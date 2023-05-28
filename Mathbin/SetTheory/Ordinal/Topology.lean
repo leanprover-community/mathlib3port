@@ -171,6 +171,7 @@ theorem mem_closed_iff_sup (hs : IsClosed s) :
 #align ordinal.mem_closed_iff_sup Ordinal.mem_closed_iff_sup
 -/
 
+#print Ordinal.mem_closure_iff_bsup /-
 theorem mem_closure_iff_bsup :
     a ∈ closure s ↔
       ∃ (o : Ordinal)(ho : o ≠ 0)(f : ∀ a < o, Ordinal),
@@ -183,13 +184,16 @@ theorem mem_closure_iff_bsup :
       ⟨_, out_nonempty_iff_ne_zero.2 ho, familyOfBFamily o f, fun i => hf _ _, by
         rwa [sup_eq_bsup]⟩⟩
 #align ordinal.mem_closure_iff_bsup Ordinal.mem_closure_iff_bsup
+-/
 
+#print Ordinal.mem_closed_iff_bsup /-
 theorem mem_closed_iff_bsup (hs : IsClosed s) :
     a ∈ s ↔
       ∃ (o : Ordinal)(ho : o ≠ 0)(f : ∀ a < o, Ordinal),
         (∀ i hi, f i hi ∈ s) ∧ bsup.{u, u} o f = a :=
   by rw [← mem_closure_iff_bsup, hs.closure_eq]
 #align ordinal.mem_closed_iff_bsup Ordinal.mem_closed_iff_bsup
+-/
 
 #print Ordinal.isClosed_iff_sup /-
 theorem isClosed_iff_sup :
@@ -204,6 +208,7 @@ theorem isClosed_iff_sup :
 #align ordinal.is_closed_iff_sup Ordinal.isClosed_iff_sup
 -/
 
+#print Ordinal.isClosed_iff_bsup /-
 theorem isClosed_iff_bsup :
     IsClosed s ↔
       ∀ {o : Ordinal} (ho : o ≠ 0) (f : ∀ a < o, Ordinal),
@@ -216,6 +221,7 @@ theorem isClosed_iff_bsup :
     apply H (type_ne_zero_iff_nonempty.2 hι)
     exact fun i hi => hf _
 #align ordinal.is_closed_iff_bsup Ordinal.isClosed_iff_bsup
+-/
 
 #print Ordinal.isLimit_of_mem_frontier /-
 theorem isLimit_of_mem_frontier (ha : a ∈ frontier s) : IsLimit a :=
@@ -258,6 +264,7 @@ theorem isNormal_iff_strictMono_and_continuous (f : Ordinal.{u} → Ordinal.{u})
 -/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (b «expr < » a) -/
+#print Ordinal.enumOrd_isNormal_iff_isClosed /-
 theorem enumOrd_isNormal_iff_isClosed (hs : s.Unbounded (· < ·)) :
     IsNormal (enumOrd s) ↔ IsClosed s :=
   by
@@ -285,6 +292,7 @@ theorem enumOrd_isNormal_iff_isClosed (hs : s.Unbounded (· < ·)) :
     rw [hb]
     exact le_bsup.{u, u} _ _ (ha.2 _ hba)
 #align ordinal.enum_ord_is_normal_iff_is_closed Ordinal.enumOrd_isNormal_iff_isClosed
+-/
 
 end Ordinal
 

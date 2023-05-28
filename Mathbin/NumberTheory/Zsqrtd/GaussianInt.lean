@@ -44,7 +44,7 @@ and definitions about `zsqrtd` can easily be used.
 
 open Zsqrtd Complex
 
-open ComplexConjugate
+open scoped ComplexConjugate
 
 /-- The Gaussian integers, defined as `ℤ√(-1)`. -/
 @[reducible]

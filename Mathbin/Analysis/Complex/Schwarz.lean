@@ -54,7 +54,7 @@ Schwarz lemma
 
 open Metric Set Function Filter TopologicalSpace
 
-open Topology
+open scoped Topology
 
 namespace Complex
 

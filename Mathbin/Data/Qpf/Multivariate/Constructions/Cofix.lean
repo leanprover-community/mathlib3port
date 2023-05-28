@@ -46,7 +46,7 @@ We define the relation `Mcongr` and take its quotient as the definition of `cofi
 
 universe u
 
-open MvFunctor
+open scoped MvFunctor
 
 namespace MvQPF
 

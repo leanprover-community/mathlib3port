@@ -72,7 +72,7 @@ variable {M : Type w} {N P : Type _} [L.Structure M] [L.Structure N] [L.Structur
 
 variable {α : Type u'} {β : Type v'} {γ : Type _}
 
-open FirstOrder
+open scoped FirstOrder
 
 open Structure Fin
 

@@ -151,6 +151,7 @@ class LocallyFiniteOrderBot (α : Type _) [Preorder α] where
 #align locally_finite_order_bot LocallyFiniteOrderBot
 -/
 
+#print LocallyFiniteOrder.ofIcc' /-
 /-- A constructor from a definition of `finset.Icc` alone, the other ones being derived by removing
 the ends. As opposed to `locally_finite_order.of_Icc`, this one requires `decidable_rel (≤)` but
 only `preorder`. -/
@@ -168,7 +169,9 @@ def LocallyFiniteOrder.ofIcc' (α : Type _) [Preorder α] [DecidableRel ((· ≤
     finset_mem_Ioo := fun a b x => by
       rw [Finset.mem_filter, mem_Icc, and_and_and_comm, lt_iff_le_not_le, lt_iff_le_not_le] }
 #align locally_finite_order.of_Icc' LocallyFiniteOrder.ofIcc'
+-/
 
+#print LocallyFiniteOrder.ofIcc /-
 /-- A constructor from a definition of `finset.Icc` alone, the other ones being derived by removing
 the ends. As opposed to `locally_finite_order.of_Icc`, this one requires `partial_order` but only
 `decidable_eq`. -/
@@ -186,7 +189,9 @@ def LocallyFiniteOrder.ofIcc (α : Type _) [PartialOrder α] [DecidableEq α]
     finset_mem_Ioo := fun a b x => by
       rw [Finset.mem_filter, mem_Icc, and_and_and_comm, lt_iff_le_and_ne, lt_iff_le_and_ne] }
 #align locally_finite_order.of_Icc LocallyFiniteOrder.ofIcc
+-/
 
+#print LocallyFiniteOrderTop.ofIci' /-
 /-- A constructor from a definition of `finset.Iic` alone, the other ones being derived by removing
 the ends. As opposed to `locally_finite_order_top.of_Ici`, this one requires `decidable_rel (≤)` but
 only `preorder`. -/
@@ -198,7 +203,9 @@ def LocallyFiniteOrderTop.ofIci' (α : Type _) [Preorder α] [DecidableRel ((· 
     finset_mem_Ici := mem_Ici
     finset_mem_Ioi := fun a x => by rw [mem_filter, mem_Ici, lt_iff_le_not_le] }
 #align locally_finite_order_top.of_Ici' LocallyFiniteOrderTop.ofIci'
+-/
 
+#print LocallyFiniteOrderTop.ofIci /-
 /-- A constructor from a definition of `finset.Iic` alone, the other ones being derived by removing
 the ends. As opposed to `locally_finite_order_top.of_Ici'`, this one requires `partial_order` but
 only `decidable_eq`. -/
@@ -210,7 +217,9 @@ def LocallyFiniteOrderTop.ofIci (α : Type _) [PartialOrder α] [DecidableEq α]
     finset_mem_Ici := mem_Ici
     finset_mem_Ioi := fun a x => by rw [mem_filter, mem_Ici, lt_iff_le_and_ne] }
 #align locally_finite_order_top.of_Ici LocallyFiniteOrderTop.ofIci
+-/
 
+#print LocallyFiniteOrderBot.ofIic' /-
 /-- A constructor from a definition of `finset.Iic` alone, the other ones being derived by removing
 the ends. As opposed to `locally_finite_order.of_Icc`, this one requires `decidable_rel (≤)` but
 only `preorder`. -/
@@ -222,7 +231,9 @@ def LocallyFiniteOrderBot.ofIic' (α : Type _) [Preorder α] [DecidableRel ((· 
     finset_mem_Iic := mem_Iic
     finset_mem_Iio := fun a x => by rw [mem_filter, mem_Iic, lt_iff_le_not_le] }
 #align locally_finite_order_bot.of_Iic' LocallyFiniteOrderBot.ofIic'
+-/
 
+#print LocallyFiniteOrderTop.ofIic /-
 /-- A constructor from a definition of `finset.Iic` alone, the other ones being derived by removing
 the ends. As opposed to `locally_finite_order_top.of_Ici'`, this one requires `partial_order` but
 only `decidable_eq`. -/
@@ -234,6 +245,7 @@ def LocallyFiniteOrderTop.ofIic (α : Type _) [PartialOrder α] [DecidableEq α]
     finset_mem_Iic := mem_Iic
     finset_mem_Iio := fun a x => by rw [mem_filter, mem_Iic, lt_iff_le_and_ne] }
 #align locally_finite_order_top.of_Iic LocallyFiniteOrderTop.ofIic
+-/
 
 variable {α β : Type _}
 
@@ -331,25 +343,33 @@ def Ioo (a b : α) : Finset α :=
 #align finset.Ioo Finset.Ioo
 -/
 
+#print Finset.mem_Icc /-
 @[simp]
 theorem mem_Icc : x ∈ Icc a b ↔ a ≤ x ∧ x ≤ b :=
   LocallyFiniteOrder.finset_mem_Icc a b x
 #align finset.mem_Icc Finset.mem_Icc
+-/
 
+#print Finset.mem_Ico /-
 @[simp]
 theorem mem_Ico : x ∈ Ico a b ↔ a ≤ x ∧ x < b :=
   LocallyFiniteOrder.finset_mem_Ico a b x
 #align finset.mem_Ico Finset.mem_Ico
+-/
 
+#print Finset.mem_Ioc /-
 @[simp]
 theorem mem_Ioc : x ∈ Ioc a b ↔ a < x ∧ x ≤ b :=
   LocallyFiniteOrder.finset_mem_Ioc a b x
 #align finset.mem_Ioc Finset.mem_Ioc
+-/
 
+#print Finset.mem_Ioo /-
 @[simp]
 theorem mem_Ioo : x ∈ Ioo a b ↔ a < x ∧ x < b :=
   LocallyFiniteOrder.finset_mem_Ioo a b x
 #align finset.mem_Ioo Finset.mem_Ioo
+-/
 
 #print Finset.coe_Icc /-
 @[simp, norm_cast]
@@ -399,15 +419,19 @@ def Ioi (a : α) : Finset α :=
 #align finset.Ioi Finset.Ioi
 -/
 
+#print Finset.mem_Ici /-
 @[simp]
 theorem mem_Ici : x ∈ Ici a ↔ a ≤ x :=
   LocallyFiniteOrderTop.finset_mem_Ici _ _
 #align finset.mem_Ici Finset.mem_Ici
+-/
 
+#print Finset.mem_Ioi /-
 @[simp]
 theorem mem_Ioi : x ∈ Ioi a ↔ a < x :=
   LocallyFiniteOrderTop.finset_mem_Ioi _ _
 #align finset.mem_Ioi Finset.mem_Ioi
+-/
 
 #print Finset.coe_Ici /-
 @[simp, norm_cast]
@@ -443,15 +467,19 @@ def Iio (a : α) : Finset α :=
 #align finset.Iio Finset.Iio
 -/
 
+#print Finset.mem_Iic /-
 @[simp]
 theorem mem_Iic : x ∈ Iic a ↔ x ≤ a :=
   LocallyFiniteOrderBot.finset_mem_Iic _ _
 #align finset.mem_Iic Finset.mem_Iic
+-/
 
+#print Finset.mem_Iio /-
 @[simp]
 theorem mem_Iio : x ∈ Iio a ↔ x < a :=
   LocallyFiniteOrderBot.finset_mem_Iio _ _
 #align finset.mem_Iio Finset.mem_Iio
+-/
 
 #print Finset.coe_Iic /-
 @[simp, norm_cast]
@@ -473,6 +501,7 @@ section OrderTop
 
 variable [LocallyFiniteOrder α] [OrderTop α] {a x : α}
 
+#print LocallyFiniteOrder.toLocallyFiniteOrderTop /-
 -- See note [lower priority instance]
 instance (priority := 100) LocallyFiniteOrder.toLocallyFiniteOrderTop : LocallyFiniteOrderTop α
     where
@@ -481,6 +510,7 @@ instance (priority := 100) LocallyFiniteOrder.toLocallyFiniteOrderTop : LocallyF
   finset_mem_Ici a x := by rw [mem_Icc, and_iff_left le_top]
   finset_mem_Ioi a x := by rw [mem_Ioc, and_iff_left le_top]
 #align locally_finite_order.to_locally_finite_order_top LocallyFiniteOrder.toLocallyFiniteOrderTop
+-/
 
 theorem Ici_eq_Icc (a : α) : Ici a = Icc a ⊤ :=
   rfl
@@ -496,6 +526,7 @@ section OrderBot
 
 variable [OrderBot α] [LocallyFiniteOrder α] {b x : α}
 
+#print Finset.LocallyFiniteOrder.toLocallyFiniteOrderBot /-
 -- See note [lower priority instance]
 instance (priority := 100) LocallyFiniteOrder.toLocallyFiniteOrderBot : LocallyFiniteOrderBot α
     where
@@ -504,6 +535,7 @@ instance (priority := 100) LocallyFiniteOrder.toLocallyFiniteOrderBot : LocallyF
   finset_mem_Iic a x := by rw [mem_Icc, and_iff_right bot_le]
   finset_mem_Iio a x := by rw [mem_Ico, and_iff_right bot_le]
 #align finset.locally_finite_order.to_locally_finite_order_bot Finset.LocallyFiniteOrder.toLocallyFiniteOrderBot
+-/
 
 theorem Iic_eq_Icc : Iic = Icc (⊥ : α) :=
   rfl
@@ -592,25 +624,33 @@ def Ioo (a b : α) : Multiset α :=
 #align multiset.Ioo Multiset.Ioo
 -/
 
+#print Multiset.mem_Icc /-
 @[simp]
 theorem mem_Icc {a b x : α} : x ∈ Icc a b ↔ a ≤ x ∧ x ≤ b := by
   rw [Icc, ← Finset.mem_def, Finset.mem_Icc]
 #align multiset.mem_Icc Multiset.mem_Icc
+-/
 
+#print Multiset.mem_Ico /-
 @[simp]
 theorem mem_Ico {a b x : α} : x ∈ Ico a b ↔ a ≤ x ∧ x < b := by
   rw [Ico, ← Finset.mem_def, Finset.mem_Ico]
 #align multiset.mem_Ico Multiset.mem_Ico
+-/
 
+#print Multiset.mem_Ioc /-
 @[simp]
 theorem mem_Ioc {a b x : α} : x ∈ Ioc a b ↔ a < x ∧ x ≤ b := by
   rw [Ioc, ← Finset.mem_def, Finset.mem_Ioc]
 #align multiset.mem_Ioc Multiset.mem_Ioc
+-/
 
+#print Multiset.mem_Ioo /-
 @[simp]
 theorem mem_Ioo {a b x : α} : x ∈ Ioo a b ↔ a < x ∧ x < b := by
   rw [Ioo, ← Finset.mem_def, Finset.mem_Ioo]
 #align multiset.mem_Ioo Multiset.mem_Ioo
+-/
 
 end LocallyFiniteOrder
 
@@ -632,13 +672,17 @@ def Ioi (a : α) : Multiset α :=
 #align multiset.Ioi Multiset.Ioi
 -/
 
+#print Multiset.mem_Ici /-
 @[simp]
 theorem mem_Ici {a x : α} : x ∈ Ici a ↔ a ≤ x := by rw [Ici, ← Finset.mem_def, Finset.mem_Ici]
 #align multiset.mem_Ici Multiset.mem_Ici
+-/
 
+#print Multiset.mem_Ioi /-
 @[simp]
 theorem mem_Ioi {a x : α} : x ∈ Ioi a ↔ a < x := by rw [Ioi, ← Finset.mem_def, Finset.mem_Ioi]
 #align multiset.mem_Ioi Multiset.mem_Ioi
+-/
 
 end LocallyFiniteOrderTop
 
@@ -660,13 +704,17 @@ def Iio (b : α) : Multiset α :=
 #align multiset.Iio Multiset.Iio
 -/
 
+#print Multiset.mem_Iic /-
 @[simp]
 theorem mem_Iic {b x : α} : x ∈ Iic b ↔ x ≤ b := by rw [Iic, ← Finset.mem_def, Finset.mem_Iic]
 #align multiset.mem_Iic Multiset.mem_Iic
+-/
 
+#print Multiset.mem_Iio /-
 @[simp]
 theorem mem_Iio {b x : α} : x ∈ Iio b ↔ x < b := by rw [Iio, ← Finset.mem_def, Finset.mem_Iio]
 #align multiset.mem_Iio Multiset.mem_Iio
+-/
 
 end LocallyFiniteOrderBot
 
@@ -811,6 +859,7 @@ noncomputable def LocallyFiniteOrder.ofFiniteIcc (h : ∀ a b : α, (Set.Icc a b
 #align locally_finite_order.of_finite_Icc LocallyFiniteOrder.ofFiniteIcc
 -/
 
+#print Fintype.toLocallyFiniteOrder /-
 /-- A fintype is a locally finite order.
 
 This is not an instance as it would not be defeq to better instances such as
@@ -828,6 +877,7 @@ def Fintype.toLocallyFiniteOrder [Fintype α] [@DecidableRel α (· < ·)] [@Dec
   finset_mem_Ioc a b x := by simp only [Set.mem_toFinset, Set.mem_Ioc]
   finset_mem_Ioo a b x := by simp only [Set.mem_toFinset, Set.mem_Ioo]
 #align fintype.to_locally_finite_order Fintype.toLocallyFiniteOrder
+-/
 
 instance : Subsingleton (LocallyFiniteOrder α) :=
   Subsingleton.intro fun h₀ h₁ => by
@@ -863,6 +913,7 @@ instance : Subsingleton (LocallyFiniteOrderBot α) :=
       rw [h₀_finset_mem_Iio, h₁_finset_mem_Iio]
     simp_rw [hIic, hIio]
 
+#print OrderEmbedding.locallyFiniteOrder /-
 -- Should this be called `locally_finite_order.lift`?
 /-- Given an order embedding `α ↪o β`, pulls back the `locally_finite_order` on `β` to `α`. -/
 protected noncomputable def OrderEmbedding.locallyFiniteOrder [LocallyFiniteOrder β] (f : α ↪o β) :
@@ -877,6 +928,7 @@ protected noncomputable def OrderEmbedding.locallyFiniteOrder [LocallyFiniteOrde
   finset_mem_Ioc a b x := by rw [mem_preimage, mem_Ioc, f.lt_iff_lt, f.le_iff_le]
   finset_mem_Ioo a b x := by rw [mem_preimage, mem_Ioo, f.lt_iff_lt, f.lt_iff_lt]
 #align order_embedding.locally_finite_order OrderEmbedding.locallyFiniteOrder
+-/
 
 open OrderDual
 
@@ -1190,33 +1242,45 @@ theorem Icc_coe_top : Icc (a : WithTop α) ⊤ = insertNone (Ici a) :=
   rfl
 #align with_top.Icc_coe_top WithTop.Icc_coe_top
 
+#print WithTop.Icc_coe_coe /-
 theorem Icc_coe_coe : Icc (a : WithTop α) b = (Icc a b).map Embedding.some :=
   rfl
 #align with_top.Icc_coe_coe WithTop.Icc_coe_coe
+-/
 
+#print WithTop.Ico_coe_top /-
 theorem Ico_coe_top : Ico (a : WithTop α) ⊤ = (Ici a).map Embedding.some :=
   rfl
 #align with_top.Ico_coe_top WithTop.Ico_coe_top
+-/
 
+#print WithTop.Ico_coe_coe /-
 theorem Ico_coe_coe : Ico (a : WithTop α) b = (Ico a b).map Embedding.some :=
   rfl
 #align with_top.Ico_coe_coe WithTop.Ico_coe_coe
+-/
 
 theorem Ioc_coe_top : Ioc (a : WithTop α) ⊤ = insertNone (Ioi a) :=
   rfl
 #align with_top.Ioc_coe_top WithTop.Ioc_coe_top
 
+#print WithTop.Ioc_coe_coe /-
 theorem Ioc_coe_coe : Ioc (a : WithTop α) b = (Ioc a b).map Embedding.some :=
   rfl
 #align with_top.Ioc_coe_coe WithTop.Ioc_coe_coe
+-/
 
+#print WithTop.Ioo_coe_top /-
 theorem Ioo_coe_top : Ioo (a : WithTop α) ⊤ = (Ioi a).map Embedding.some :=
   rfl
 #align with_top.Ioo_coe_top WithTop.Ioo_coe_top
+-/
 
+#print WithTop.Ioo_coe_coe /-
 theorem Ioo_coe_coe : Ioo (a : WithTop α) b = (Ioo a b).map Embedding.some :=
   rfl
 #align with_top.Ioo_coe_coe WithTop.Ioo_coe_coe
+-/
 
 end WithTop
 
@@ -1233,33 +1297,45 @@ theorem Icc_bot_coe : Icc (⊥ : WithBot α) b = insertNone (Iic b) :=
   rfl
 #align with_bot.Icc_bot_coe WithBot.Icc_bot_coe
 
+#print WithBot.Icc_coe_coe /-
 theorem Icc_coe_coe : Icc (a : WithBot α) b = (Icc a b).map Embedding.some :=
   rfl
 #align with_bot.Icc_coe_coe WithBot.Icc_coe_coe
+-/
 
 theorem Ico_bot_coe : Ico (⊥ : WithBot α) b = insertNone (Iio b) :=
   rfl
 #align with_bot.Ico_bot_coe WithBot.Ico_bot_coe
 
+#print WithBot.Ico_coe_coe /-
 theorem Ico_coe_coe : Ico (a : WithBot α) b = (Ico a b).map Embedding.some :=
   rfl
 #align with_bot.Ico_coe_coe WithBot.Ico_coe_coe
+-/
 
+#print WithBot.Ioc_bot_coe /-
 theorem Ioc_bot_coe : Ioc (⊥ : WithBot α) b = (Iic b).map Embedding.some :=
   rfl
 #align with_bot.Ioc_bot_coe WithBot.Ioc_bot_coe
+-/
 
+#print WithBot.Ioc_coe_coe /-
 theorem Ioc_coe_coe : Ioc (a : WithBot α) b = (Ioc a b).map Embedding.some :=
   rfl
 #align with_bot.Ioc_coe_coe WithBot.Ioc_coe_coe
+-/
 
+#print WithBot.Ioo_bot_coe /-
 theorem Ioo_bot_coe : Ioo (⊥ : WithBot α) b = (Iio b).map Embedding.some :=
   rfl
 #align with_bot.Ioo_bot_coe WithBot.Ioo_bot_coe
+-/
 
+#print WithBot.Ioo_coe_coe /-
 theorem Ioo_coe_coe : Ioo (a : WithBot α) b = (Ioo a b).map Embedding.some :=
   rfl
 #align with_bot.Ioo_coe_coe WithBot.Ioo_coe_coe
+-/
 
 end WithBot
 
@@ -1270,6 +1346,7 @@ variable [Preorder α] [Preorder β]
 /-! #### Transfer locally finite orders across order isomorphisms -/
 
 
+#print OrderIso.locallyFiniteOrder /-
 -- See note [reducible non-instances]
 /-- Transfer `locally_finite_order` across an `order_iso`. -/
 @[reducible]
@@ -1284,7 +1361,9 @@ def locallyFiniteOrder [LocallyFiniteOrder β] (f : α ≃o β) : LocallyFiniteO
   finset_mem_Ioc := by simp
   finset_mem_Ioo := by simp
 #align order_iso.locally_finite_order OrderIso.locallyFiniteOrder
+-/
 
+#print OrderIso.locallyFiniteOrderTop /-
 -- See note [reducible non-instances]
 /-- Transfer `locally_finite_order_top` across an `order_iso`. -/
 @[reducible]
@@ -1295,7 +1374,9 @@ def locallyFiniteOrderTop [LocallyFiniteOrderTop β] (f : α ≃o β) : LocallyF
   finset_mem_Ici := by simp
   finset_mem_Ioi := by simp
 #align order_iso.locally_finite_order_top OrderIso.locallyFiniteOrderTop
+-/
 
+#print OrderIso.locallyFiniteOrderBot /-
 -- See note [reducible non-instances]
 /-- Transfer `locally_finite_order_bot` across an `order_iso`. -/
 @[reducible]
@@ -1306,6 +1387,7 @@ def locallyFiniteOrderBot [LocallyFiniteOrderBot β] (f : α ≃o β) : LocallyF
   finset_mem_Iic := by simp
   finset_mem_Iio := by simp
 #align order_iso.locally_finite_order_bot OrderIso.locallyFiniteOrderBot
+-/
 
 end OrderIso
 
@@ -1347,26 +1429,35 @@ section LocallyFiniteOrder
 
 variable [LocallyFiniteOrder α] (a b : Subtype p)
 
+#print Finset.subtype_Icc_eq /-
 theorem subtype_Icc_eq : Icc a b = (Icc (a : α) b).Subtype p :=
   rfl
 #align finset.subtype_Icc_eq Finset.subtype_Icc_eq
+-/
 
+#print Finset.subtype_Ico_eq /-
 theorem subtype_Ico_eq : Ico a b = (Ico (a : α) b).Subtype p :=
   rfl
 #align finset.subtype_Ico_eq Finset.subtype_Ico_eq
+-/
 
+#print Finset.subtype_Ioc_eq /-
 theorem subtype_Ioc_eq : Ioc a b = (Ioc (a : α) b).Subtype p :=
   rfl
 #align finset.subtype_Ioc_eq Finset.subtype_Ioc_eq
+-/
 
+#print Finset.subtype_Ioo_eq /-
 theorem subtype_Ioo_eq : Ioo a b = (Ioo (a : α) b).Subtype p :=
   rfl
 #align finset.subtype_Ioo_eq Finset.subtype_Ioo_eq
+-/
 
 variable (hp : ∀ ⦃a b x⦄, a ≤ x → x ≤ b → p a → p b → p x)
 
 include hp
 
+#print Finset.map_subtype_embedding_Icc /-
 theorem map_subtype_embedding_Icc : (Icc a b).map (Embedding.subtype p) = Icc a b :=
   by
   rw [subtype_Icc_eq]
@@ -1374,7 +1465,9 @@ theorem map_subtype_embedding_Icc : (Icc a b).map (Embedding.subtype p) = Icc a 
   rw [mem_Icc] at hx
   exact hp hx.1 hx.2 a.prop b.prop
 #align finset.map_subtype_embedding_Icc Finset.map_subtype_embedding_Icc
+-/
 
+#print Finset.map_subtype_embedding_Ico /-
 theorem map_subtype_embedding_Ico : (Ico a b).map (Embedding.subtype p) = Ico a b :=
   by
   rw [subtype_Ico_eq]
@@ -1382,7 +1475,9 @@ theorem map_subtype_embedding_Ico : (Ico a b).map (Embedding.subtype p) = Ico a 
   rw [mem_Ico] at hx
   exact hp hx.1 hx.2.le a.prop b.prop
 #align finset.map_subtype_embedding_Ico Finset.map_subtype_embedding_Ico
+-/
 
+#print Finset.map_subtype_embedding_Ioc /-
 theorem map_subtype_embedding_Ioc : (Ioc a b).map (Embedding.subtype p) = Ioc a b :=
   by
   rw [subtype_Ioc_eq]
@@ -1390,7 +1485,9 @@ theorem map_subtype_embedding_Ioc : (Ioc a b).map (Embedding.subtype p) = Ioc a 
   rw [mem_Ioc] at hx
   exact hp hx.1.le hx.2 a.prop b.prop
 #align finset.map_subtype_embedding_Ioc Finset.map_subtype_embedding_Ioc
+-/
 
+#print Finset.map_subtype_embedding_Ioo /-
 theorem map_subtype_embedding_Ioo : (Ioo a b).map (Embedding.subtype p) = Ioo a b :=
   by
   rw [subtype_Ioo_eq]
@@ -1398,6 +1495,7 @@ theorem map_subtype_embedding_Ioo : (Ioo a b).map (Embedding.subtype p) = Ioo a 
   rw [mem_Ioo] at hx
   exact hp hx.1.le hx.2.le a.prop b.prop
 #align finset.map_subtype_embedding_Ioo Finset.map_subtype_embedding_Ioo
+-/
 
 end LocallyFiniteOrder
 
@@ -1405,25 +1503,33 @@ section LocallyFiniteOrderTop
 
 variable [LocallyFiniteOrderTop α] (a : Subtype p)
 
+#print Finset.subtype_Ici_eq /-
 theorem subtype_Ici_eq : Ici a = (Ici (a : α)).Subtype p :=
   rfl
 #align finset.subtype_Ici_eq Finset.subtype_Ici_eq
+-/
 
+#print Finset.subtype_Ioi_eq /-
 theorem subtype_Ioi_eq : Ioi a = (Ioi (a : α)).Subtype p :=
   rfl
 #align finset.subtype_Ioi_eq Finset.subtype_Ioi_eq
+-/
 
 variable (hp : ∀ ⦃a x⦄, a ≤ x → p a → p x)
 
 include hp
 
+#print Finset.map_subtype_embedding_Ici /-
 theorem map_subtype_embedding_Ici : (Ici a).map (Embedding.subtype p) = Ici a := by
   rw [subtype_Ici_eq]; exact Finset.subtype_map_of_mem fun x hx => hp (mem_Ici.1 hx) a.prop
 #align finset.map_subtype_embedding_Ici Finset.map_subtype_embedding_Ici
+-/
 
+#print Finset.map_subtype_embedding_Ioi /-
 theorem map_subtype_embedding_Ioi : (Ioi a).map (Embedding.subtype p) = Ioi a := by
   rw [subtype_Ioi_eq]; exact Finset.subtype_map_of_mem fun x hx => hp (mem_Ioi.1 hx).le a.prop
 #align finset.map_subtype_embedding_Ioi Finset.map_subtype_embedding_Ioi
+-/
 
 end LocallyFiniteOrderTop
 
@@ -1431,25 +1537,33 @@ section LocallyFiniteOrderBot
 
 variable [LocallyFiniteOrderBot α] (a : Subtype p)
 
+#print Finset.subtype_Iic_eq /-
 theorem subtype_Iic_eq : Iic a = (Iic (a : α)).Subtype p :=
   rfl
 #align finset.subtype_Iic_eq Finset.subtype_Iic_eq
+-/
 
+#print Finset.subtype_Iio_eq /-
 theorem subtype_Iio_eq : Iio a = (Iio (a : α)).Subtype p :=
   rfl
 #align finset.subtype_Iio_eq Finset.subtype_Iio_eq
+-/
 
 variable (hp : ∀ ⦃a x⦄, x ≤ a → p a → p x)
 
 include hp
 
+#print Finset.map_subtype_embedding_Iic /-
 theorem map_subtype_embedding_Iic : (Iic a).map (Embedding.subtype p) = Iic a := by
   rw [subtype_Iic_eq]; exact Finset.subtype_map_of_mem fun x hx => hp (mem_Iic.1 hx) a.prop
 #align finset.map_subtype_embedding_Iic Finset.map_subtype_embedding_Iic
+-/
 
+#print Finset.map_subtype_embedding_Iio /-
 theorem map_subtype_embedding_Iio : (Iio a).map (Embedding.subtype p) = Iio a := by
   rw [subtype_Iio_eq]; exact Finset.subtype_map_of_mem fun x hx => hp (mem_Iio.1 hx).le a.prop
 #align finset.map_subtype_embedding_Iio Finset.map_subtype_embedding_Iio
+-/
 
 end LocallyFiniteOrderBot
 

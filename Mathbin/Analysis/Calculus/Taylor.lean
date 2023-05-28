@@ -45,7 +45,7 @@ Taylor polynomial, Taylor's theorem
 -/
 
 
-open BigOperators Interval Topology Nat
+open scoped BigOperators Interval Topology Nat
 
 open Set
 

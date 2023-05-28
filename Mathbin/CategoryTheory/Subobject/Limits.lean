@@ -240,11 +240,13 @@ theorem kernelSubobjectIsoComp_inv_arrow {X' : C} (f : X' ⟶ X) [IsIso f] (g : 
   by simp [kernel_subobject_iso_comp]
 #align category_theory.limits.kernel_subobject_iso_comp_inv_arrow CategoryTheory.Limits.kernelSubobjectIsoComp_inv_arrow
 
+#print CategoryTheory.Limits.kernelSubobject_comp_le /-
 /-- The kernel of `f` is always a smaller subobject than the kernel of `f ≫ h`. -/
 theorem kernelSubobject_comp_le (f : X ⟶ Y) [HasKernel f] {Z : C} (h : Y ⟶ Z) [HasKernel (f ≫ h)] :
     kernelSubobject f ≤ kernelSubobject (f ≫ h) :=
   le_kernelSubobject _ _ (by simp)
 #align category_theory.limits.kernel_subobject_comp_le CategoryTheory.Limits.kernelSubobject_comp_le
+-/
 
 #print CategoryTheory.Limits.kernelSubobject_comp_mono /-
 /-- Postcomposing by an monomorphism does not change the kernel subobject. -/
@@ -385,15 +387,17 @@ theorem factorThruImageSubobject_comp_self_assoc {W W' : C} (k : W ⟶ W') (k' :
   simp
 #align category_theory.limits.factor_thru_image_subobject_comp_self_assoc CategoryTheory.Limits.factorThruImageSubobject_comp_self_assoc
 
+#print CategoryTheory.Limits.imageSubobject_comp_le /-
 /-- The image of `h ≫ f` is always a smaller subobject than the image of `f`. -/
 theorem imageSubobject_comp_le {X' : C} (h : X' ⟶ X) (f : X ⟶ Y) [HasImage f] [HasImage (h ≫ f)] :
     imageSubobject (h ≫ f) ≤ imageSubobject f :=
   Subobject.mk_le_mk_of_comm (image.preComp h f) (by simp)
 #align category_theory.limits.image_subobject_comp_le CategoryTheory.Limits.imageSubobject_comp_le
+-/
 
 section
 
-open ZeroObject
+open scoped ZeroObject
 
 variable [HasZeroMorphisms C] [HasZeroObject C]
 
@@ -482,10 +486,12 @@ theorem imageSubobject_le {A B : C} {X : Subobject B} (f : A ⟶ B) [HasImage f]
     (by simp)
 #align category_theory.limits.image_subobject_le CategoryTheory.Limits.imageSubobject_le
 
+#print CategoryTheory.Limits.imageSubobject_le_mk /-
 theorem imageSubobject_le_mk {A B : C} {X : C} (g : X ⟶ B) [Mono g] (f : A ⟶ B) [HasImage f]
     (h : A ⟶ X) (w : h ≫ g = f) : imageSubobject f ≤ Subobject.mk g :=
   imageSubobject_le f (h ≫ (Subobject.underlyingIso g).inv) (by simp [w])
 #align category_theory.limits.image_subobject_le_mk CategoryTheory.Limits.imageSubobject_le_mk
+-/
 
 #print CategoryTheory.Limits.imageSubobjectMap /-
 /-- Given a commutative square between morphisms `f` and `g`,

@@ -25,7 +25,7 @@ This file constructs the direct limit of a directed system of first-order embedd
 
 universe v w u₁ u₂
 
-open FirstOrder
+open scoped FirstOrder
 
 namespace FirstOrder
 
@@ -306,11 +306,11 @@ theorem exists_of (z : DirectLimit G f) : ∃ i x, of L ι G f i x = z :=
 #align first_order.language.direct_limit.exists_of FirstOrder.Language.DirectLimit.exists_of
 
 @[elab_as_elim]
-protected theorem inductionOn {C : DirectLimit G f → Prop} (z : DirectLimit G f)
+protected theorem induction_on {C : DirectLimit G f → Prop} (z : DirectLimit G f)
     (ih : ∀ i x, C (of L ι G f i x)) : C z :=
   let ⟨i, x, h⟩ := exists_of z
   h ▸ ih i x
-#align first_order.language.direct_limit.induction_on FirstOrder.Language.DirectLimit.inductionOn
+#align first_order.language.direct_limit.induction_on FirstOrder.Language.DirectLimit.induction_on
 
 variable {P : Type u₁} [L.Structure P] (g : ∀ i, G i ↪[L] P)
 
@@ -367,7 +367,7 @@ theorem lift_unique (F : DirectLimit G f ↪[L] P) (x) :
     F x =
       lift L ι G f (fun i => F.comp <| of L ι G f i)
         (fun i j hij x => by rw [F.comp_apply, F.comp_apply, of_f]) x :=
-  DirectLimit.inductionOn x fun i x => by rw [lift_of] <;> rfl
+  DirectLimit.induction_on x fun i x => by rw [lift_of] <;> rfl
 #align first_order.language.direct_limit.lift_unique FirstOrder.Language.DirectLimit.lift_unique
 
 /-- The direct limit of countably many countably generated structures is countably generated. -/

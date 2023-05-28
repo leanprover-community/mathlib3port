@@ -46,7 +46,7 @@ analysis, comparison, asymptotics
 
 open Set MeasureTheory.MeasureSpace
 
-open BigOperators
+open scoped BigOperators
 
 variable {x₀ : ℝ} {a b : ℕ} {f : ℝ → ℝ}
 

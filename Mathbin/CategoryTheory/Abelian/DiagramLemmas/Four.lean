@@ -68,7 +68,7 @@ variable {V : Type u} [Category.{v} V] [Abelian V]
 
 attribute [local instance] preadditive.has_equalizers_of_has_kernels
 
-open Pseudoelement
+open scoped Pseudoelement
 
 namespace CategoryTheory.Abelian
 

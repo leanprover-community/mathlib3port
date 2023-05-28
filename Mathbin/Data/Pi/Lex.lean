@@ -68,17 +68,21 @@ theorem ofLex_apply (x : Lex (∀ i, β i)) (i : ι) : ofLex x i = x i :=
   rfl
 #align pi.of_lex_apply Pi.ofLex_apply
 
+#print Pi.lex_lt_of_lt_of_preorder /-
 theorem lex_lt_of_lt_of_preorder [∀ i, Preorder (β i)] {r} (hwf : WellFounded r) {x y : ∀ i, β i}
     (hlt : x < y) : ∃ i, (∀ j, r j i → x j ≤ y j ∧ y j ≤ x j) ∧ x i < y i :=
   let h' := Pi.lt_def.1 hlt
   let ⟨i, hi, hl⟩ := hwf.has_min _ h'.2
   ⟨i, fun j hj => ⟨h'.1 j, Classical.not_not.1 fun h => hl j (lt_of_le_not_le (h'.1 j) h) hj⟩, hi⟩
 #align pi.lex_lt_of_lt_of_preorder Pi.lex_lt_of_lt_of_preorder
+-/
 
+#print Pi.lex_lt_of_lt /-
 theorem lex_lt_of_lt [∀ i, PartialOrder (β i)] {r} (hwf : WellFounded r) {x y : ∀ i, β i}
     (hlt : x < y) : Pi.Lex r (fun i => (· < ·)) x y := by simp_rw [Pi.Lex, le_antisymm_iff];
   exact lex_lt_of_lt_of_preorder hwf hlt
 #align pi.lex_lt_of_lt Pi.lex_lt_of_lt
+-/
 
 #print Pi.isTrichotomous_lex /-
 theorem isTrichotomous_lex [∀ i, IsTrichotomous (β i) s] (wf : WellFounded r) :
@@ -102,6 +106,7 @@ theorem isTrichotomous_lex [∀ i, IsTrichotomous (β i) s] (wf : WellFounded r)
 instance [LT ι] [∀ a, LT (β a)] : LT (Lex (∀ i, β i)) :=
   ⟨Pi.Lex (· < ·) fun _ => (· < ·)⟩
 
+#print Pi.Lex.isStrictOrder /-
 instance Lex.isStrictOrder [LinearOrder ι] [∀ a, PartialOrder (β a)] :
     IsStrictOrder (Lex (∀ i, β i)) (· < ·)
     where
@@ -113,6 +118,7 @@ instance Lex.isStrictOrder [LinearOrder ι] [∀ a, PartialOrder (β a)] :
       ⟨N₁, fun j hj => (lt_N₁ _ hj).trans (lt_N₂ _ hj), a_lt_b.trans b_lt_c⟩,
       ⟨N₂, fun j hj => (lt_N₁ _ (hj.trans H)).trans (lt_N₂ _ hj), (lt_N₁ _ H).symm ▸ b_lt_c⟩]
 #align pi.lex.is_strict_order Pi.Lex.isStrictOrder
+-/
 
 instance [LinearOrder ι] [∀ a, PartialOrder (β a)] : PartialOrder (Lex (∀ i, β i)) :=
   partialOrderOfSO (· < ·)
@@ -238,6 +244,7 @@ instance Lex.orderedCommGroup [LinearOrder ι] [∀ a, OrderedCommGroup (β a)] 
 #align pi.lex.ordered_add_comm_group Pi.Lex.orderedAddCommGroup
 -/
 
+#print Pi.lex_desc /-
 /-- If we swap two strictly decreasing values in a function, then the result is lexicographically
 smaller than the original function. -/
 theorem lex_desc {α} [Preorder ι] [DecidableEq ι] [Preorder α] {f : ι → α} {i j : ι} (h₁ : i < j)
@@ -245,6 +252,7 @@ theorem lex_desc {α} [Preorder ι] [DecidableEq ι] [Preorder α] {f : ι → �
   ⟨i, fun k hik => congr_arg f (Equiv.swap_apply_of_ne_of_ne hik.Ne (hik.trans h₁).Ne), by
     simpa only [Pi.toLex_apply, Function.comp_apply, Equiv.swap_apply_left] using h₂⟩
 #align pi.lex_desc Pi.lex_desc
+-/
 
 end Pi
 

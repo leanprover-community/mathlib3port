@@ -21,7 +21,7 @@ import Mathbin.Topology.ExtendFrom
 
 open Filter Set TopologicalSpace
 
-open Topology Classical
+open scoped Topology Classical
 
 universe u v
 

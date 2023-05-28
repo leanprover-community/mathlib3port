@@ -38,9 +38,9 @@ convex, convex body
 -/
 
 
-open Pointwise
+open scoped Pointwise
 
-open NNReal
+open scoped NNReal
 
 variable {V : Type _}
 

@@ -25,7 +25,7 @@ While in terms of semantics they could be in the `basic.lean` file, importing
 -/
 
 
-open Nat BigOperators
+open scoped Nat BigOperators
 
 namespace Nat
 

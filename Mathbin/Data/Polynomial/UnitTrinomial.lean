@@ -29,7 +29,7 @@ This file defines irreducible trinomials and proves an irreducibility criterion.
 
 namespace Polynomial
 
-open Polynomial
+open scoped Polynomial
 
 open Finset
 

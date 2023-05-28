@@ -44,7 +44,7 @@ seminorm, locally convex, LCTVS
 
 open NormedField Set
 
-open BigOperators NNReal Pointwise Topology
+open scoped BigOperators NNReal Pointwise Topology
 
 variable {R R' 𝕜 𝕜₂ 𝕜₃ 𝕝 E E₂ E₃ F G ι : Type _}
 
@@ -511,7 +511,7 @@ theorem smul_inf [SMul R ℝ] [SMul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ] (r 
 
 section Classical
 
-open Classical
+open scoped Classical
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr⨆ , »((i), _)]] -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr⨆ , »((i), _)]] -/

@@ -35,7 +35,7 @@ We use this to transport the notion of `support` from `finsupp` to `free_abelian
 
 noncomputable section
 
-open BigOperators
+open scoped BigOperators
 
 variable {X : Type _}
 
@@ -207,7 +207,7 @@ theorem support_nsmul (k : ℕ) (h : k ≠ 0) (a : FreeAbelianGroup X) : support
 #align free_abelian_group.support_nsmul FreeAbelianGroup.support_nsmul
 -/
 
-open Classical
+open scoped Classical
 
 theorem support_add (a b : FreeAbelianGroup X) : support (a + b) ⊆ a.support ∪ b.support :=
   by

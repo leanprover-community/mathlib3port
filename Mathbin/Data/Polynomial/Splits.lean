@@ -38,7 +38,7 @@ irreducible factors over `L` have degree `1`.
 
 noncomputable section
 
-open Classical BigOperators Polynomial
+open scoped Classical BigOperators Polynomial
 
 universe u v w
 
@@ -99,6 +99,7 @@ theorem splits_of_map_degree_eq_one {f : K[X]} (hf : degree (f.map i) = 1) : Spl
 #align polynomial.splits_of_map_degree_eq_one Polynomial.splits_of_map_degree_eq_one
 -/
 
+#print Polynomial.splits_of_degree_le_one /-
 theorem splits_of_degree_le_one {f : K[X]} (hf : degree f ≤ 1) : Splits i f :=
   if hif : degree (f.map i) ≤ 0 then splits_of_map_eq_C i (degree_le_zero_iff.mp hif)
   else by
@@ -106,6 +107,7 @@ theorem splits_of_degree_le_one {f : K[X]} (hf : degree f ≤ 1) : Splits i f :=
     rw [← Order.succ_le_iff, ← WithBot.coe_zero, WithBot.succ_coe, Nat.succ_eq_succ] at hif
     exact splits_of_map_degree_eq_one i (le_antisymm ((degree_map_le i _).trans hf) hif)
 #align polynomial.splits_of_degree_le_one Polynomial.splits_of_degree_le_one
+-/
 
 #print Polynomial.splits_of_degree_eq_one /-
 theorem splits_of_degree_eq_one {f : K[X]} (hf : degree f = 1) : Splits i f :=

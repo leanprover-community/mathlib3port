@@ -27,7 +27,7 @@ noncomputable section
 
 open Filter Set
 
-open Topology
+open scoped Topology
 
 universe u v
 

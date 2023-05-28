@@ -23,11 +23,11 @@ direct sum of its `p i ^ e i`-torsion submodules for some prime ideals `p i` and
 
 universe u v
 
-open BigOperators
+open scoped BigOperators
 
 variable {R : Type u} [CommRing R] [IsDomain R] {M : Type v} [AddCommGroup M] [Module R M]
 
-open DirectSum
+open scoped DirectSum
 
 namespace Submodule
 
@@ -35,7 +35,7 @@ variable [IsDedekindDomain R]
 
 open UniqueFactorizationMonoid
 
-open Classical
+open scoped Classical
 
 /-- Over a Dedekind domain, a `I`-torsion module is the internal direct sum of its `p i ^ e i`-
 torsion submodules, where `I = ∏ i, p i ^ e i` is its unique decomposition in prime ideals.-/

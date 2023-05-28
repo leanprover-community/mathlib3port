@@ -27,7 +27,7 @@ In this file we give the definition and prove basic properties of locally finite
 -- locally finite family [General Topology (Bourbaki, 1995)]
 open Set Function Filter
 
-open Topology Filter
+open scoped Topology Filter
 
 universe u
 

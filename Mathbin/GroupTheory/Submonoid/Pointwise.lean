@@ -61,7 +61,7 @@ variable [Monoid M] [AddMonoid A]
 
 namespace Submonoid
 
-open Pointwise
+open scoped Pointwise
 
 variable {s t u : Set M}
 
@@ -122,7 +122,7 @@ theorem pow_smul_mem_closure_smul {N : Type _} [CommMonoid N] [MulAction M N] [I
 
 variable [Group G]
 
-open Pointwise
+open scoped Pointwise
 
 #print Submonoid.inv /-
 /-- The submonoid with every element inverted. -/
@@ -139,7 +139,7 @@ protected def inv : Inv (Submonoid G)
 
 scoped[Pointwise] attribute [instance] Submonoid.inv
 
-open Pointwise
+open scoped Pointwise
 
 @[simp, to_additive]
 theorem coe_inv (S : Submonoid G) : ↑S⁻¹ = (S : Set G)⁻¹ :=
@@ -251,7 +251,7 @@ protected def pointwiseMulAction : MulAction α (Submonoid M)
 
 scoped[Pointwise] attribute [instance] Submonoid.pointwiseMulAction
 
-open Pointwise
+open scoped Pointwise
 
 @[simp]
 theorem coe_pointwise_smul (a : α) (S : Submonoid M) : ↑(a • S) = a • (S : Set M) :=
@@ -293,7 +293,7 @@ section Group
 
 variable [Group α] [MulDistribMulAction α M]
 
-open Pointwise
+open scoped Pointwise
 
 @[simp]
 theorem smul_mem_pointwise_smul_iff {a : α} {S : Submonoid M} {x : M} : a • x ∈ a • S ↔ x ∈ S :=
@@ -328,7 +328,7 @@ section GroupWithZero
 
 variable [GroupWithZero α] [MulDistribMulAction α M]
 
-open Pointwise
+open scoped Pointwise
 
 @[simp]
 theorem smul_mem_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) (S : Submonoid M) (x : M) :
@@ -362,7 +362,7 @@ theorem le_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) {S T : Submonoid M} : S
 
 end GroupWithZero
 
-open Pointwise
+open scoped Pointwise
 
 @[to_additive]
 theorem mem_closure_inv {G : Type _} [Group G] (S : Set G) (x : G) :
@@ -395,7 +395,7 @@ protected def pointwiseMulAction : MulAction α (AddSubmonoid A)
 
 scoped[Pointwise] attribute [instance] AddSubmonoid.pointwiseMulAction
 
-open Pointwise
+open scoped Pointwise
 
 @[simp]
 theorem coe_pointwise_smul (a : α) (S : AddSubmonoid A) : ↑(a • S) = a • (S : Set A) :=
@@ -437,7 +437,7 @@ section Group
 
 variable [Group α] [DistribMulAction α A]
 
-open Pointwise
+open scoped Pointwise
 
 @[simp]
 theorem smul_mem_pointwise_smul_iff {a : α} {S : AddSubmonoid A} {x : A} : a • x ∈ a • S ↔ x ∈ S :=
@@ -473,7 +473,7 @@ section GroupWithZero
 
 variable [GroupWithZero α] [DistribMulAction α A]
 
-open Pointwise
+open scoped Pointwise
 
 @[simp]
 theorem smul_mem_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) (S : AddSubmonoid A) (x : A) :
@@ -519,7 +519,7 @@ usually more useful. -/
 
 namespace AddSubmonoid
 
-open Pointwise
+open scoped Pointwise
 
 section AddMonoidWithOne
 
@@ -586,7 +586,7 @@ protected theorem mul_induction_on {M N : AddSubmonoid R} {C : R → Prop} {r : 
     hm hr
 #align add_submonoid.mul_induction_on AddSubmonoid.mul_induction_on
 
-open Pointwise
+open scoped Pointwise
 
 -- this proof is copied directly from `submodule.span_mul_span`
 theorem closure_mul_closure (S T : Set R) : closure S * closure T = closure (S * T) :=

@@ -45,7 +45,7 @@ open IsROrC LinearMap ContinuousLinearMap InnerProductSpace
 
 open LinearMap (ker range)
 
-open RealInnerProductSpace NNReal
+open scoped RealInnerProductSpace NNReal
 
 universe u
 

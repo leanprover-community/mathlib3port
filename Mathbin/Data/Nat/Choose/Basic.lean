@@ -43,7 +43,7 @@ binomial coefficient, combination, multicombination, stars and bars
 -/
 
 
-open Nat
+open scoped Nat
 
 namespace Nat
 

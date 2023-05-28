@@ -384,7 +384,7 @@ noncomputable def primitiveCharFiniteField (F F' : Type _) [Field F] [Fintype F]
 -/
 
 
-open BigOperators
+open scoped BigOperators
 
 variable [Fintype R]
 

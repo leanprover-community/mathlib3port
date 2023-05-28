@@ -87,12 +87,14 @@ structure LatticeHom (α β : Type _) [Lattice α] [Lattice β] extends SupHom �
 #align lattice_hom LatticeHom
 -/
 
+#print BoundedLatticeHom /-
 /-- The type of bounded lattice homomorphisms from `α` to `β`. -/
 structure BoundedLatticeHom (α β : Type _) [Lattice α] [Lattice β] [BoundedOrder α]
   [BoundedOrder β] extends LatticeHom α β where
   map_top' : to_fun ⊤ = ⊤
   map_bot' : to_fun ⊥ = ⊥
 #align bounded_lattice_hom BoundedLatticeHom
+-/
 
 section
 
@@ -146,6 +148,7 @@ class LatticeHomClass (F : Type _) (α β : outParam <| Type _) [Lattice α] [La
 #align lattice_hom_class LatticeHomClass
 -/
 
+#print BoundedLatticeHomClass /-
 /-- `bounded_lattice_hom_class F α β` states that `F` is a type of bounded lattice morphisms.
 
 You should extend this class when you extend `bounded_lattice_hom`. -/
@@ -154,6 +157,7 @@ class BoundedLatticeHomClass (F : Type _) (α β : outParam <| Type _) [Lattice 
   map_top (f : F) : f ⊤ = ⊤
   map_bot (f : F) : f ⊥ = ⊥
 #align bounded_lattice_hom_class BoundedLatticeHomClass
+-/
 
 end
 
@@ -211,11 +215,13 @@ instance (priority := 100) BoundedLatticeHomClass.toInfTopHomClass [Lattice α] 
   { ‹BoundedLatticeHomClass F α β› with }
 #align bounded_lattice_hom_class.to_inf_top_hom_class BoundedLatticeHomClass.toInfTopHomClass
 
+#print BoundedLatticeHomClass.toBoundedOrderHomClass /-
 -- See note [lower instance priority]
 instance (priority := 100) BoundedLatticeHomClass.toBoundedOrderHomClass [Lattice α] [Lattice β]
     [BoundedOrder α] [BoundedOrder β] [BoundedLatticeHomClass F α β] : BoundedOrderHomClass F α β :=
   { show OrderHomClass F α β from inferInstance, ‹BoundedLatticeHomClass F α β› with }
 #align bounded_lattice_hom_class.to_bounded_order_hom_class BoundedLatticeHomClass.toBoundedOrderHomClass
+-/
 
 -- See note [lower instance priority]
 instance (priority := 100) OrderIsoClass.toSupHomClass [SemilatticeSup α] [SemilatticeSup β]
@@ -245,17 +251,21 @@ instance (priority := 100) OrderIsoClass.toInfTopHomClass [SemilatticeInf α] [O
   { OrderIsoClass.toInfHomClass, OrderIsoClass.toTopHomClass with }
 #align order_iso_class.to_inf_top_hom_class OrderIsoClass.toInfTopHomClass
 
+#print OrderIsoClass.toLatticeHomClass /-
 -- See note [lower instance priority]
 instance (priority := 100) OrderIsoClass.toLatticeHomClass [Lattice α] [Lattice β]
     [OrderIsoClass F α β] : LatticeHomClass F α β :=
   { OrderIsoClass.toSupHomClass, OrderIsoClass.toInfHomClass with }
 #align order_iso_class.to_lattice_hom_class OrderIsoClass.toLatticeHomClass
+-/
 
+#print OrderIsoClass.toBoundedLatticeHomClass /-
 -- See note [lower instance priority]
 instance (priority := 100) OrderIsoClass.toBoundedLatticeHomClass [Lattice α] [Lattice β]
     [BoundedOrder α] [BoundedOrder β] [OrderIsoClass F α β] : BoundedLatticeHomClass F α β :=
   { OrderIsoClass.toLatticeHomClass, OrderIsoClass.toBoundedOrderHomClass with }
 #align order_iso_class.to_bounded_lattice_hom_class OrderIsoClass.toBoundedLatticeHomClass
+-/
 
 section BoundedLattice
 
@@ -1188,6 +1198,7 @@ namespace OrderHomClass
 
 variable (α β) [LinearOrder α] [Lattice β] [OrderHomClass F α β]
 
+#print OrderHomClass.toLatticeHomClass /-
 /-- An order homomorphism from a linear order is a lattice homomorphism. -/
 @[reducible]
 def toLatticeHomClass : LatticeHomClass F α β :=
@@ -1203,12 +1214,15 @@ def toLatticeHomClass : LatticeHomClass F α β :=
       · rw [inf_eq_left.2 h, inf_eq_left.2 (OrderHomClass.mono f h : f a ≤ f b)]
       · rw [inf_eq_right.2 h, inf_eq_right.2 (OrderHomClass.mono f h : f b ≤ f a)] }
 #align order_hom_class.to_lattice_hom_class OrderHomClass.toLatticeHomClass
+-/
 
+#print OrderHomClass.toLatticeHom /-
 /-- Reinterpret an order homomorphism to a linear order as a `lattice_hom`. -/
 def toLatticeHom (f : F) : LatticeHom α β :=
   haveI : LatticeHomClass F α β := OrderHomClass.toLatticeHomClass α β
   f
 #align order_hom_class.to_lattice_hom OrderHomClass.toLatticeHom
+-/
 
 @[simp]
 theorem coe_to_lattice_hom (f : F) : ⇑(toLatticeHom α β f) = f :=
@@ -1240,10 +1254,12 @@ def toInfTopHom (f : BoundedLatticeHom α β) : InfTopHom α β :=
   { f with }
 #align bounded_lattice_hom.to_inf_top_hom BoundedLatticeHom.toInfTopHom
 
+#print BoundedLatticeHom.toBoundedOrderHom /-
 /-- Reinterpret a `bounded_lattice_hom` as a `bounded_order_hom`. -/
 def toBoundedOrderHom (f : BoundedLatticeHom α β) : BoundedOrderHom α β :=
   { f, (f.toLatticeHom : α →o β) with }
 #align bounded_lattice_hom.to_bounded_order_hom BoundedLatticeHom.toBoundedOrderHom
+-/
 
 instance : BoundedLatticeHomClass (BoundedLatticeHom α β) α β
     where
@@ -1286,10 +1302,12 @@ theorem copy_eq (f : BoundedLatticeHom α β) (f' : α → β) (h : f' = f) : f.
 
 variable (α)
 
+#print BoundedLatticeHom.id /-
 /-- `id` as a `bounded_lattice_hom`. -/
 protected def id : BoundedLatticeHom α α :=
   { LatticeHom.id α, BoundedOrderHom.id α with }
 #align bounded_lattice_hom.id BoundedLatticeHom.id
+-/
 
 instance : Inhabited (BoundedLatticeHom α α) :=
   ⟨BoundedLatticeHom.id α⟩
@@ -1306,10 +1324,12 @@ theorem id_apply (a : α) : BoundedLatticeHom.id α a = a :=
   rfl
 #align bounded_lattice_hom.id_apply BoundedLatticeHom.id_apply
 
+#print BoundedLatticeHom.comp /-
 /-- Composition of `bounded_lattice_hom`s as a `bounded_lattice_hom`. -/
 def comp (f : BoundedLatticeHom β γ) (g : BoundedLatticeHom α β) : BoundedLatticeHom α γ :=
   { f.toLatticeHom.comp g.toLatticeHom, f.toBoundedOrderHom.comp g.toBoundedOrderHom with }
 #align bounded_lattice_hom.comp BoundedLatticeHom.comp
+-/
 
 @[simp]
 theorem coe_comp (f : BoundedLatticeHom β γ) (g : BoundedLatticeHom α β) :
@@ -1593,6 +1613,7 @@ namespace BoundedLatticeHom
 
 variable [Lattice α] [BoundedOrder α] [Lattice β] [BoundedOrder β] [Lattice γ] [BoundedOrder γ]
 
+#print BoundedLatticeHom.dual /-
 /-- Reinterpret a bounded lattice homomorphism as a bounded lattice homomorphism between the dual
 bounded lattices. -/
 @[simps]
@@ -1603,11 +1624,14 @@ protected def dual : BoundedLatticeHom α β ≃ BoundedLatticeHom αᵒᵈ β�
   left_inv f := ext fun a => rfl
   right_inv f := ext fun a => rfl
 #align bounded_lattice_hom.dual BoundedLatticeHom.dual
+-/
 
+#print BoundedLatticeHom.dual_id /-
 @[simp]
 theorem dual_id : (BoundedLatticeHom.id α).dual = BoundedLatticeHom.id _ :=
   rfl
 #align bounded_lattice_hom.dual_id BoundedLatticeHom.dual_id
+-/
 
 @[simp]
 theorem dual_comp (g : BoundedLatticeHom β γ) (f : BoundedLatticeHom α β) :
@@ -1615,11 +1639,13 @@ theorem dual_comp (g : BoundedLatticeHom β γ) (f : BoundedLatticeHom α β) :
   rfl
 #align bounded_lattice_hom.dual_comp BoundedLatticeHom.dual_comp
 
+#print BoundedLatticeHom.symm_dual_id /-
 @[simp]
 theorem symm_dual_id :
     BoundedLatticeHom.dual.symm (BoundedLatticeHom.id _) = BoundedLatticeHom.id α :=
   rfl
 #align bounded_lattice_hom.symm_dual_id BoundedLatticeHom.symm_dual_id
+-/
 
 @[simp]
 theorem symm_dual_comp (g : BoundedLatticeHom βᵒᵈ γᵒᵈ) (f : BoundedLatticeHom αᵒᵈ βᵒᵈ) :

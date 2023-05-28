@@ -312,7 +312,7 @@ theorem pseudoZero_iff {P : C} (a : Over P) : (a : P) = 0 ↔ a.Hom = 0 := by
 
 end Zero
 
-open Pseudoelement
+open scoped Pseudoelement
 
 #print CategoryTheory.Abelian.Pseudoelement.apply_zero /-
 /-- Morphisms map the zero pseudoelement to the zero pseudoelement -/

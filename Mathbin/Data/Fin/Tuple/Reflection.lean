@@ -165,7 +165,7 @@ def sum [Add α] [Zero α] : ∀ {m} (v : Fin m → α), α
 #align fin_vec.sum FinVec.sum
 -/
 
-open BigOperators
+open scoped BigOperators
 
 /-- This can be used to prove
 ```lean

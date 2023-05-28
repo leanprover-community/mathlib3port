@@ -370,9 +370,11 @@ section Preorder
 
 variable [Preorder α]
 
+#print Monotone.comp_le_comp_left /-
 theorem Monotone.comp_le_comp_left [Preorder β] {f : β → α} {g h : γ → β} (hf : Monotone f)
     (le_gh : g ≤ h) : LE.le.{max w u} (f ∘ g) (f ∘ h) := fun x => hf (le_gh x)
 #align monotone.comp_le_comp_left Monotone.comp_le_comp_left
+-/
 
 variable [Preorder γ]
 
@@ -426,21 +428,29 @@ However if you find yourself writing `hf.imp h`, then you should have written `h
 -/
 
 
+#print Monotone.imp /-
 theorem Monotone.imp (hf : Monotone f) (h : a ≤ b) : f a ≤ f b :=
   hf h
 #align monotone.imp Monotone.imp
+-/
 
+#print Antitone.imp /-
 theorem Antitone.imp (hf : Antitone f) (h : a ≤ b) : f b ≤ f a :=
   hf h
 #align antitone.imp Antitone.imp
+-/
 
+#print StrictMono.imp /-
 theorem StrictMono.imp (hf : StrictMono f) (h : a < b) : f a < f b :=
   hf h
 #align strict_mono.imp StrictMono.imp
+-/
 
+#print StrictAnti.imp /-
 theorem StrictAnti.imp (hf : StrictAnti f) (h : a < b) : f b < f a :=
   hf h
 #align strict_anti.imp StrictAnti.imp
+-/
 
 #print Monotone.monotoneOn /-
 protected theorem Monotone.monotoneOn (hf : Monotone f) (s : Set α) : MonotoneOn f s :=
@@ -520,27 +530,35 @@ section PartialOrder
 
 variable [PartialOrder α] [Preorder β] {f : α → β} {s : Set α}
 
+#print monotone_iff_forall_lt /-
 theorem monotone_iff_forall_lt : Monotone f ↔ ∀ ⦃a b⦄, a < b → f a ≤ f b :=
   forall₂_congr fun a b =>
     ⟨fun hf h => hf h.le, fun hf h => h.eq_or_lt.elim (fun H => (congr_arg _ H).le) hf⟩
 #align monotone_iff_forall_lt monotone_iff_forall_lt
+-/
 
+#print antitone_iff_forall_lt /-
 theorem antitone_iff_forall_lt : Antitone f ↔ ∀ ⦃a b⦄, a < b → f b ≤ f a :=
   forall₂_congr fun a b =>
     ⟨fun hf h => hf h.le, fun hf h => h.eq_or_lt.elim (fun H => (congr_arg _ H).ge) hf⟩
 #align antitone_iff_forall_lt antitone_iff_forall_lt
+-/
 
+#print monotoneOn_iff_forall_lt /-
 theorem monotoneOn_iff_forall_lt :
     MonotoneOn f s ↔ ∀ ⦃a⦄ (ha : a ∈ s) ⦃b⦄ (hb : b ∈ s), a < b → f a ≤ f b :=
   ⟨fun hf a ha b hb h => hf ha hb h.le, fun hf a ha b hb h =>
     h.eq_or_lt.elim (fun H => (congr_arg _ H).le) (hf ha hb)⟩
 #align monotone_on_iff_forall_lt monotoneOn_iff_forall_lt
+-/
 
+#print antitoneOn_iff_forall_lt /-
 theorem antitoneOn_iff_forall_lt :
     AntitoneOn f s ↔ ∀ ⦃a⦄ (ha : a ∈ s) ⦃b⦄ (hb : b ∈ s), a < b → f b ≤ f a :=
   ⟨fun hf a ha b hb h => hf ha hb h.le, fun hf a ha b hb h =>
     h.eq_or_lt.elim (fun H => (congr_arg _ H).ge) (hf ha hb)⟩
 #align antitone_on_iff_forall_lt antitoneOn_iff_forall_lt
+-/
 
 #print StrictMonoOn.monotoneOn /-
 -- `preorder α` isn't strong enough: if the preorder on `α` is an equivalence relation,
@@ -662,16 +680,21 @@ theorem antitoneOn_const [Preorder α] [Preorder β] {c : β} {s : Set α} :
 #align antitone_on_const antitoneOn_const
 -/
 
+#print strictMono_of_le_iff_le /-
 theorem strictMono_of_le_iff_le [Preorder α] [Preorder β] {f : α → β}
     (h : ∀ x y, x ≤ y ↔ f x ≤ f y) : StrictMono f := fun a b =>
   (lt_iff_lt_of_le_iff_le' (h _ _) (h _ _)).1
 #align strict_mono_of_le_iff_le strictMono_of_le_iff_le
+-/
 
+#print strictAnti_of_le_iff_le /-
 theorem strictAnti_of_le_iff_le [Preorder α] [Preorder β] {f : α → β}
     (h : ∀ x y, x ≤ y ↔ f y ≤ f x) : StrictAnti f := fun a b =>
   (lt_iff_lt_of_le_iff_le' (h _ _) (h _ _)).1
 #align strict_anti_of_le_iff_le strictAnti_of_le_iff_le
+-/
 
+#print injective_of_lt_imp_ne /-
 theorem injective_of_lt_imp_ne [LinearOrder α] {f : α → β} (h : ∀ x y, x < y → f x ≠ f y) :
     Injective f := by
   intro x y hxy
@@ -679,39 +702,51 @@ theorem injective_of_lt_imp_ne [LinearOrder α] {f : α → β} (h : ∀ x y, x 
   cases' Ne.lt_or_lt hxy with hxy hxy
   exacts[h _ _ hxy, (h _ _ hxy).symm]
 #align injective_of_lt_imp_ne injective_of_lt_imp_ne
+-/
 
+#print injective_of_le_imp_le /-
 theorem injective_of_le_imp_le [PartialOrder α] [Preorder β] (f : α → β)
     (h : ∀ {x y}, f x ≤ f y → x ≤ y) : Injective f := fun x y hxy => (h hxy.le).antisymm (h hxy.ge)
 #align injective_of_le_imp_le injective_of_le_imp_le
+-/
 
 section Preorder
 
 variable [Preorder α] [Preorder β] {f g : α → β} {a : α}
 
+#print StrictMono.isMax_of_apply /-
 theorem StrictMono.isMax_of_apply (hf : StrictMono f) (ha : IsMax (f a)) : IsMax a :=
   of_not_not fun h =>
     let ⟨b, hb⟩ := not_isMax_iff.1 h
     (hf hb).not_isMax ha
 #align strict_mono.is_max_of_apply StrictMono.isMax_of_apply
+-/
 
+#print StrictMono.isMin_of_apply /-
 theorem StrictMono.isMin_of_apply (hf : StrictMono f) (ha : IsMin (f a)) : IsMin a :=
   of_not_not fun h =>
     let ⟨b, hb⟩ := not_isMin_iff.1 h
     (hf hb).not_isMin ha
 #align strict_mono.is_min_of_apply StrictMono.isMin_of_apply
+-/
 
+#print StrictAnti.isMax_of_apply /-
 theorem StrictAnti.isMax_of_apply (hf : StrictAnti f) (ha : IsMin (f a)) : IsMax a :=
   of_not_not fun h =>
     let ⟨b, hb⟩ := not_isMax_iff.1 h
     (hf hb).not_isMin ha
 #align strict_anti.is_max_of_apply StrictAnti.isMax_of_apply
+-/
 
+#print StrictAnti.isMin_of_apply /-
 theorem StrictAnti.isMin_of_apply (hf : StrictAnti f) (ha : IsMax (f a)) : IsMin a :=
   of_not_not fun h =>
     let ⟨b, hb⟩ := not_isMin_iff.1 h
     (hf hb).not_isMax ha
 #align strict_anti.is_min_of_apply StrictAnti.isMin_of_apply
+-/
 
+#print StrictMono.ite' /-
 protected theorem StrictMono.ite' (hf : StrictMono f) (hg : StrictMono g) {p : α → Prop}
     [DecidablePred p] (hp : ∀ ⦃x y⦄, x < y → p y → p x)
     (hfg : ∀ ⦃x y⦄, p x → ¬p y → x < y → f x < g y) :
@@ -725,25 +760,32 @@ protected theorem StrictMono.ite' (hf : StrictMono f) (hg : StrictMono g) {p : �
   · simpa [hx, hy] using hfg hx hy h
   · simpa [hx, hy] using hg h
 #align strict_mono.ite' StrictMono.ite'
+-/
 
+#print StrictMono.ite /-
 protected theorem StrictMono.ite (hf : StrictMono f) (hg : StrictMono g) {p : α → Prop}
     [DecidablePred p] (hp : ∀ ⦃x y⦄, x < y → p y → p x) (hfg : ∀ x, f x ≤ g x) :
     StrictMono fun x => if p x then f x else g x :=
   hf.ite' hg hp fun x y hx hy h => (hf h).trans_le (hfg y)
 #align strict_mono.ite StrictMono.ite
+-/
 
+#print StrictAnti.ite' /-
 protected theorem StrictAnti.ite' (hf : StrictAnti f) (hg : StrictAnti g) {p : α → Prop}
     [DecidablePred p] (hp : ∀ ⦃x y⦄, x < y → p y → p x)
     (hfg : ∀ ⦃x y⦄, p x → ¬p y → x < y → g y < f x) :
     StrictAnti fun x => if p x then f x else g x :=
   (StrictMono.ite' hf.dual_right hg.dual_right hp hfg).dual_right
 #align strict_anti.ite' StrictAnti.ite'
+-/
 
+#print StrictAnti.ite /-
 protected theorem StrictAnti.ite (hf : StrictAnti f) (hg : StrictAnti g) {p : α → Prop}
     [DecidablePred p] (hp : ∀ ⦃x y⦄, x < y → p y → p x) (hfg : ∀ x, g x ≤ f x) :
     StrictAnti fun x => if p x then f x else g x :=
   hf.ite' hg hp fun x y hx hy h => (hfg y).trans_lt (hf h)
 #align strict_anti.ite StrictAnti.ite
+-/
 
 end Preorder
 
@@ -911,34 +953,46 @@ variable [Preorder β] {f : α → β} {s : Set α}
 
 open Ordering
 
+#print Monotone.reflect_lt /-
 theorem Monotone.reflect_lt (hf : Monotone f) {a b : α} (h : f a < f b) : a < b :=
   lt_of_not_ge fun h' => h.not_le (hf h')
 #align monotone.reflect_lt Monotone.reflect_lt
+-/
 
+#print Antitone.reflect_lt /-
 theorem Antitone.reflect_lt (hf : Antitone f) {a b : α} (h : f a < f b) : b < a :=
   lt_of_not_ge fun h' => h.not_le (hf h')
 #align antitone.reflect_lt Antitone.reflect_lt
+-/
 
+#print MonotoneOn.reflect_lt /-
 theorem MonotoneOn.reflect_lt (hf : MonotoneOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s)
     (h : f a < f b) : a < b :=
   lt_of_not_ge fun h' => h.not_le <| hf hb ha h'
 #align monotone_on.reflect_lt MonotoneOn.reflect_lt
+-/
 
+#print AntitoneOn.reflect_lt /-
 theorem AntitoneOn.reflect_lt (hf : AntitoneOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s)
     (h : f a < f b) : b < a :=
   lt_of_not_ge fun h' => h.not_le <| hf ha hb h'
 #align antitone_on.reflect_lt AntitoneOn.reflect_lt
+-/
 
+#print StrictMonoOn.le_iff_le /-
 theorem StrictMonoOn.le_iff_le (hf : StrictMonoOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) :
     f a ≤ f b ↔ a ≤ b :=
   ⟨fun h => le_of_not_gt fun h' => (hf hb ha h').not_le h, fun h =>
     h.lt_or_eq_dec.elim (fun h' => (hf ha hb h').le) fun h' => h' ▸ le_rfl⟩
 #align strict_mono_on.le_iff_le StrictMonoOn.le_iff_le
+-/
 
+#print StrictAntiOn.le_iff_le /-
 theorem StrictAntiOn.le_iff_le (hf : StrictAntiOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) :
     f a ≤ f b ↔ b ≤ a :=
   hf.dual_right.le_iff_le hb ha
 #align strict_anti_on.le_iff_le StrictAntiOn.le_iff_le
+-/
 
 #print StrictMonoOn.eq_iff_eq /-
 theorem StrictMonoOn.eq_iff_eq (hf : StrictMonoOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) :
@@ -955,32 +1009,45 @@ theorem StrictAntiOn.eq_iff_eq (hf : StrictAntiOn f s) {a b : α} (ha : a ∈ s)
 #align strict_anti_on.eq_iff_eq StrictAntiOn.eq_iff_eq
 -/
 
+#print StrictMonoOn.lt_iff_lt /-
 theorem StrictMonoOn.lt_iff_lt (hf : StrictMonoOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) :
     f a < f b ↔ a < b := by
   rw [lt_iff_le_not_le, lt_iff_le_not_le, hf.le_iff_le ha hb, hf.le_iff_le hb ha]
 #align strict_mono_on.lt_iff_lt StrictMonoOn.lt_iff_lt
+-/
 
+#print StrictAntiOn.lt_iff_lt /-
 theorem StrictAntiOn.lt_iff_lt (hf : StrictAntiOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) :
     f a < f b ↔ b < a :=
   hf.dual_right.lt_iff_lt hb ha
 #align strict_anti_on.lt_iff_lt StrictAntiOn.lt_iff_lt
+-/
 
+#print StrictMono.le_iff_le /-
 theorem StrictMono.le_iff_le (hf : StrictMono f) {a b : α} : f a ≤ f b ↔ a ≤ b :=
   (hf.StrictMonoOn Set.univ).le_iff_le trivial trivial
 #align strict_mono.le_iff_le StrictMono.le_iff_le
+-/
 
+#print StrictAnti.le_iff_le /-
 theorem StrictAnti.le_iff_le (hf : StrictAnti f) {a b : α} : f a ≤ f b ↔ b ≤ a :=
   (hf.StrictAntiOn Set.univ).le_iff_le trivial trivial
 #align strict_anti.le_iff_le StrictAnti.le_iff_le
+-/
 
+#print StrictMono.lt_iff_lt /-
 theorem StrictMono.lt_iff_lt (hf : StrictMono f) {a b : α} : f a < f b ↔ a < b :=
   (hf.StrictMonoOn Set.univ).lt_iff_lt trivial trivial
 #align strict_mono.lt_iff_lt StrictMono.lt_iff_lt
+-/
 
+#print StrictAnti.lt_iff_lt /-
 theorem StrictAnti.lt_iff_lt (hf : StrictAnti f) {a b : α} : f a < f b ↔ b < a :=
   (hf.StrictAntiOn Set.univ).lt_iff_lt trivial trivial
 #align strict_anti.lt_iff_lt StrictAnti.lt_iff_lt
+-/
 
+#print StrictMonoOn.compares /-
 protected theorem StrictMonoOn.compares (hf : StrictMonoOn f s) {a b : α} (ha : a ∈ s)
     (hb : b ∈ s) : ∀ {o : Ordering}, o.Compares (f a) (f b) ↔ o.Compares a b
   | Ordering.lt => hf.lt_iff_lt ha hb
@@ -989,21 +1056,28 @@ protected theorem StrictMonoOn.compares (hf : StrictMonoOn f s) {a b : α} (ha :
       congr_arg _⟩
   | Ordering.gt => hf.lt_iff_lt hb ha
 #align strict_mono_on.compares StrictMonoOn.compares
+-/
 
+#print StrictAntiOn.compares /-
 protected theorem StrictAntiOn.compares (hf : StrictAntiOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s)
     {o : Ordering} : o.Compares (f a) (f b) ↔ o.Compares b a :=
   toDual_compares_toDual.trans <| hf.dual_right.Compares hb ha
 #align strict_anti_on.compares StrictAntiOn.compares
+-/
 
+#print StrictMono.compares /-
 protected theorem StrictMono.compares (hf : StrictMono f) {a b : α} {o : Ordering} :
     o.Compares (f a) (f b) ↔ o.Compares a b :=
   (hf.StrictMonoOn Set.univ).Compares trivial trivial
 #align strict_mono.compares StrictMono.compares
+-/
 
+#print StrictAnti.compares /-
 protected theorem StrictAnti.compares (hf : StrictAnti f) {a b : α} {o : Ordering} :
     o.Compares (f a) (f b) ↔ o.Compares b a :=
   (hf.StrictAntiOn Set.univ).Compares trivial trivial
 #align strict_anti.compares StrictAnti.compares
+-/
 
 #print StrictMono.injective /-
 theorem StrictMono.injective (hf : StrictMono f) : Injective f := fun x y h =>
@@ -1017,25 +1091,33 @@ theorem StrictAnti.injective (hf : StrictAnti f) : Injective f := fun x y h =>
 #align strict_anti.injective StrictAnti.injective
 -/
 
+#print StrictMono.maximal_of_maximal_image /-
 theorem StrictMono.maximal_of_maximal_image (hf : StrictMono f) {a} (hmax : ∀ p, p ≤ f a) (x : α) :
     x ≤ a :=
   hf.le_iff_le.mp (hmax (f x))
 #align strict_mono.maximal_of_maximal_image StrictMono.maximal_of_maximal_image
+-/
 
+#print StrictMono.minimal_of_minimal_image /-
 theorem StrictMono.minimal_of_minimal_image (hf : StrictMono f) {a} (hmin : ∀ p, f a ≤ p) (x : α) :
     a ≤ x :=
   hf.le_iff_le.mp (hmin (f x))
 #align strict_mono.minimal_of_minimal_image StrictMono.minimal_of_minimal_image
+-/
 
+#print StrictAnti.minimal_of_maximal_image /-
 theorem StrictAnti.minimal_of_maximal_image (hf : StrictAnti f) {a} (hmax : ∀ p, p ≤ f a) (x : α) :
     a ≤ x :=
   hf.le_iff_le.mp (hmax (f x))
 #align strict_anti.minimal_of_maximal_image StrictAnti.minimal_of_maximal_image
+-/
 
+#print StrictAnti.maximal_of_minimal_image /-
 theorem StrictAnti.maximal_of_minimal_image (hf : StrictAnti f) {a} (hmin : ∀ p, f a ≤ p) (x : α) :
     x ≤ a :=
   hf.le_iff_le.mp (hmin (f x))
 #align strict_anti.maximal_of_minimal_image StrictAnti.maximal_of_minimal_image
+-/
 
 end Preorder
 
@@ -1059,6 +1141,7 @@ end PartialOrder
 
 variable [LinearOrder β] {f : α → β} {s : Set α} {x y : α}
 
+#print not_monotone_not_antitone_iff_exists_le_le /-
 /-- A function between linear orders which is neither monotone nor antitone makes a dent upright or
 downright. -/
 theorem not_monotone_not_antitone_iff_exists_le_le :
@@ -1090,7 +1173,9 @@ theorem not_monotone_not_antitone_iff_exists_le_le :
     · exact ⟨a, b, d, hab, hbd, Or.inr ⟨hfba, hfbd⟩⟩
     · exact ⟨a, d, b, had, hdb, Or.inl ⟨hfac.trans_lt hfcd, hfbd⟩⟩
 #align not_monotone_not_antitone_iff_exists_le_le not_monotone_not_antitone_iff_exists_le_le
+-/
 
+#print not_monotone_not_antitone_iff_exists_lt_lt /-
 /-- A function between linear orders which is neither monotone nor antitone makes a dent upright or
 downright. -/
 theorem not_monotone_not_antitone_iff_exists_lt_lt :
@@ -1104,6 +1189,7 @@ theorem not_monotone_not_antitone_iff_exists_lt_lt :
       rintro rfl <;>
     simpa using h
 #align not_monotone_not_antitone_iff_exists_lt_lt not_monotone_not_antitone_iff_exists_lt_lt
+-/
 
 /-!
 ### Strictly monotone functions and `cmp`
@@ -1176,24 +1262,33 @@ theorem Nat.rel_of_forall_rel_succ_of_le (r : β → β → Prop) [IsRefl β r] 
 #align nat.rel_of_forall_rel_succ_of_le Nat.rel_of_forall_rel_succ_of_le
 -/
 
+#print monotone_nat_of_le_succ /-
 theorem monotone_nat_of_le_succ {f : ℕ → α} (hf : ∀ n, f n ≤ f (n + 1)) : Monotone f :=
   Nat.rel_of_forall_rel_succ_of_le (· ≤ ·) hf
 #align monotone_nat_of_le_succ monotone_nat_of_le_succ
+-/
 
+#print antitone_nat_of_succ_le /-
 theorem antitone_nat_of_succ_le {f : ℕ → α} (hf : ∀ n, f (n + 1) ≤ f n) : Antitone f :=
   @monotone_nat_of_le_succ αᵒᵈ _ _ hf
 #align antitone_nat_of_succ_le antitone_nat_of_succ_le
+-/
 
+#print strictMono_nat_of_lt_succ /-
 theorem strictMono_nat_of_lt_succ {f : ℕ → α} (hf : ∀ n, f n < f (n + 1)) : StrictMono f :=
   Nat.rel_of_forall_rel_succ_of_lt (· < ·) hf
 #align strict_mono_nat_of_lt_succ strictMono_nat_of_lt_succ
+-/
 
+#print strictAnti_nat_of_succ_lt /-
 theorem strictAnti_nat_of_succ_lt {f : ℕ → α} (hf : ∀ n, f (n + 1) < f n) : StrictAnti f :=
   @strictMono_nat_of_lt_succ αᵒᵈ _ f hf
 #align strict_anti_nat_of_succ_lt strictAnti_nat_of_succ_lt
+-/
 
 namespace Nat
 
+#print Nat.exists_strictMono' /-
 /-- If `α` is a preorder with no maximal elements, then there exists a strictly monotone function
 `ℕ → α` with any prescribed value of `f 0`. -/
 theorem exists_strictMono' [NoMaxOrder α] (a : α) : ∃ f : ℕ → α, StrictMono f ∧ f 0 = a :=
@@ -1202,15 +1297,19 @@ theorem exists_strictMono' [NoMaxOrder α] (a : α) : ∃ f : ℕ → α, Strict
   choose g hg
   exact ⟨fun n => Nat.recOn n a fun _ => g, strictMono_nat_of_lt_succ fun n => hg _, rfl⟩
 #align nat.exists_strict_mono' Nat.exists_strictMono'
+-/
 
+#print Nat.exists_strictAnti' /-
 /-- If `α` is a preorder with no maximal elements, then there exists a strictly antitone function
 `ℕ → α` with any prescribed value of `f 0`. -/
 theorem exists_strictAnti' [NoMinOrder α] (a : α) : ∃ f : ℕ → α, StrictAnti f ∧ f 0 = a :=
   exists_strictMono' (OrderDual.toDual a)
 #align nat.exists_strict_anti' Nat.exists_strictAnti'
+-/
 
 variable (α)
 
+#print Nat.exists_strictMono /-
 /-- If `α` is a nonempty preorder with no maximal elements, then there exists a strictly monotone
 function `ℕ → α`. -/
 theorem exists_strictMono [Nonempty α] [NoMaxOrder α] : ∃ f : ℕ → α, StrictMono f :=
@@ -1218,12 +1317,15 @@ theorem exists_strictMono [Nonempty α] [NoMaxOrder α] : ∃ f : ℕ → α, St
   let ⟨f, hf, hfa⟩ := exists_strictMono' a
   ⟨f, hf⟩
 #align nat.exists_strict_mono Nat.exists_strictMono
+-/
 
+#print Nat.exists_strictAnti /-
 /-- If `α` is a nonempty preorder with no minimal elements, then there exists a strictly antitone
 function `ℕ → α`. -/
 theorem exists_strictAnti [Nonempty α] [NoMinOrder α] : ∃ f : ℕ → α, StrictAnti f :=
   exists_strictMono αᵒᵈ
 #align nat.exists_strict_anti Nat.exists_strictAnti
+-/
 
 end Nat
 
@@ -1290,6 +1392,7 @@ theorem exists_strictAnti : ∃ f : ℤ → α, StrictAnti f :=
 
 end Int
 
+#print Monotone.ne_of_lt_of_lt_nat /-
 -- TODO@Yael: Generalize the following four to succ orders
 /-- If `f` is a monotone function from `ℕ` to a preorder such that `x` lies between `f n` and
   `f (n + 1)`, then `x` doesn't lie in the range of `f`. -/
@@ -1297,13 +1400,16 @@ theorem Monotone.ne_of_lt_of_lt_nat {f : ℕ → α} (hf : Monotone f) (n : ℕ)
     (h2 : x < f (n + 1)) (a : ℕ) : f a ≠ x := by rintro rfl;
   exact (hf.reflect_lt h1).not_le (Nat.le_of_lt_succ <| hf.reflect_lt h2)
 #align monotone.ne_of_lt_of_lt_nat Monotone.ne_of_lt_of_lt_nat
+-/
 
+#print Antitone.ne_of_lt_of_lt_nat /-
 /-- If `f` is an antitone function from `ℕ` to a preorder such that `x` lies between `f (n + 1)` and
 `f n`, then `x` doesn't lie in the range of `f`. -/
 theorem Antitone.ne_of_lt_of_lt_nat {f : ℕ → α} (hf : Antitone f) (n : ℕ) {x : α}
     (h1 : f (n + 1) < x) (h2 : x < f n) (a : ℕ) : f a ≠ x := by rintro rfl;
   exact (hf.reflect_lt h2).not_le (Nat.le_of_lt_succ <| hf.reflect_lt h1)
 #align antitone.ne_of_lt_of_lt_nat Antitone.ne_of_lt_of_lt_nat
+-/
 
 /-- If `f` is a monotone function from `ℤ` to a preorder and `x` lies between `f n` and
   `f (n + 1)`, then `x` doesn't lie in the range of `f`. -/

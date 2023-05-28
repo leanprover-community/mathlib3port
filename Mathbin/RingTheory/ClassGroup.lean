@@ -43,7 +43,7 @@ variable [Algebra K L] [FiniteDimensional K L]
 
 variable [Algebra R L] [IsScalarTower R K L]
 
-open nonZeroDivisors
+open scoped nonZeroDivisors
 
 open IsLocalization IsFractionRing FractionalIdeal Units
 

@@ -28,7 +28,7 @@ universe u v
 
 open Polynomial
 
-open Polynomial BigOperators
+open scoped Polynomial BigOperators
 
 variable (R M : Type _) [CommRing R] [AddCommGroup M] [Module R M] (I : Ideal R)
 

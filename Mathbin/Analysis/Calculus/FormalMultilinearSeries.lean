@@ -35,7 +35,7 @@ noncomputable section
 
 open Set Fin
 
-open Topology
+open scoped Topology
 
 variable {𝕜 𝕜' E F G : Type _}
 
@@ -284,7 +284,7 @@ section Coef
 variable [NontriviallyNormedField 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E] {s : E}
   {p : FormalMultilinearSeries 𝕜 𝕜 E} {f : 𝕜 → E} {n : ℕ} {z z₀ : 𝕜} {y : Fin n → 𝕜}
 
-open BigOperators
+open scoped BigOperators
 
 #print FormalMultilinearSeries.coeff /-
 /-- The `n`th coefficient of `p` when seen as a power series. -/

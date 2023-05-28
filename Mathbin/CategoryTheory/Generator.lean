@@ -396,6 +396,7 @@ section WellPowered
 
 namespace Subobject
 
+#print CategoryTheory.Subobject.eq_of_le_of_isDetecting /-
 theorem eq_of_le_of_isDetecting {𝒢 : Set C} (h𝒢 : IsDetecting 𝒢) {X : C} (P Q : Subobject X)
     (h₁ : P ≤ Q) (h₂ : ∀ G ∈ 𝒢, ∀ {f : G ⟶ X}, Q.Factors f → P.Factors f) : P = Q :=
   by
@@ -408,6 +409,7 @@ theorem eq_of_le_of_isDetecting {𝒢 : Set C} (h𝒢 : IsDetecting 𝒢) {X : C
     simp only [← cancel_mono (subobject.of_le _ _ h₁), ← cancel_mono Q.arrow, hg, category.assoc,
       of_le_arrow, factor_thru_arrow]
 #align category_theory.subobject.eq_of_le_of_is_detecting CategoryTheory.Subobject.eq_of_le_of_isDetecting
+-/
 
 theorem inf_eq_of_isDetecting [HasPullbacks C] {𝒢 : Set C} (h𝒢 : IsDetecting 𝒢) {X : C}
     (P Q : Subobject X) (h : ∀ G ∈ 𝒢, ∀ {f : G ⟶ X}, P.Factors f → Q.Factors f) : P ⊓ Q = P :=

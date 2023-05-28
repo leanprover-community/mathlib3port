@@ -44,7 +44,7 @@ namespace Matrix
 
 open Function
 
-open Matrix BigOperators
+open scoped Matrix BigOperators
 
 #print Matrix.circulant /-
 /-- Given the condition `[has_sub n]` and a vector `v : n → α`,

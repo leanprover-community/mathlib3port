@@ -31,11 +31,11 @@ universe u v
 
 variable {R : Type u} {I : Type v} [CommSemiring R] {x y z : R} {s : I → R} {t : Finset I}
 
-open BigOperators
+open scoped BigOperators
 
 section
 
-open Classical
+open scoped Classical
 
 theorem Nat.isCoprime_iff_coprime {m n : ℕ} : IsCoprime (m : ℤ) n ↔ Nat.coprime m n :=
   ⟨fun ⟨a, b, H⟩ =>

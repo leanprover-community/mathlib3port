@@ -51,7 +51,7 @@ that need topology are defined in `topology/algebra/ordered`.
 
 variable {α β : Type _}
 
-open Classical Filter Interval
+open scoped Classical Filter Interval
 
 open Set Function
 

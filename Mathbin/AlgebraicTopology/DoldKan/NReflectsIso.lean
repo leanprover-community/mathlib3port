@@ -36,7 +36,7 @@ open CategoryTheory.Idempotents
 
 open Opposite
 
-open Simplicial
+open scoped Simplicial
 
 namespace AlgebraicTopology
 

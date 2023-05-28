@@ -35,9 +35,9 @@ universe uι u v
 
 open Set
 
-open BigOperators
+open scoped BigOperators
 
-open Pointwise
+open scoped Pointwise
 
 namespace Submodule
 

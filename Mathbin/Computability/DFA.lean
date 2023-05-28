@@ -26,7 +26,7 @@ supplied for true DFA's.
 -/
 
 
-open Computability
+open scoped Computability
 
 universe u v
 

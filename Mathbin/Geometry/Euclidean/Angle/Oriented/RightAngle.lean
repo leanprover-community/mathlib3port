@@ -22,11 +22,11 @@ degenerate) right-angled triangles in real inner product spaces and Euclidean af
 
 noncomputable section
 
-open EuclideanGeometry
+open scoped EuclideanGeometry
 
-open Real
+open scoped Real
 
-open RealInnerProductSpace
+open scoped RealInnerProductSpace
 
 namespace Orientation
 

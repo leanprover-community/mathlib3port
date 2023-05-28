@@ -485,44 +485,66 @@ instance : LinearOrder Bool where
   min := and
   min_def := by funext x y; revert x y; exact by decide
 
+#print Bool.false_le /-
 @[simp]
 theorem false_le {x : Bool} : false ≤ x :=
   Or.intro_left _ rfl
 #align bool.ff_le Bool.false_le
+-/
 
+#print Bool.le_true /-
 @[simp]
 theorem le_true {x : Bool} : x ≤ true :=
   Or.intro_right _ rfl
 #align bool.le_tt Bool.le_true
+-/
 
+#print Bool.lt_iff /-
 theorem lt_iff : ∀ {x y : Bool}, x < y ↔ x = false ∧ y = true := by decide
 #align bool.lt_iff Bool.lt_iff
+-/
 
+#print Bool.false_lt_true /-
 @[simp]
 theorem false_lt_true : false < true :=
   lt_iff.2 ⟨rfl, rfl⟩
 #align bool.ff_lt_tt Bool.false_lt_true
+-/
 
+#print Bool.le_iff_imp /-
 theorem le_iff_imp : ∀ {x y : Bool}, x ≤ y ↔ x → y := by decide
 #align bool.le_iff_imp Bool.le_iff_imp
+-/
 
+#print Bool.and_le_left /-
 theorem and_le_left : ∀ x y : Bool, (x && y) ≤ x := by decide
 #align bool.band_le_left Bool.and_le_left
+-/
 
+#print Bool.and_le_right /-
 theorem and_le_right : ∀ x y : Bool, (x && y) ≤ y := by decide
 #align bool.band_le_right Bool.and_le_right
+-/
 
+#print Bool.le_and /-
 theorem le_and : ∀ {x y z : Bool}, x ≤ y → x ≤ z → x ≤ (y && z) := by decide
 #align bool.le_band Bool.le_and
+-/
 
+#print Bool.left_le_or /-
 theorem left_le_or : ∀ x y : Bool, x ≤ (x || y) := by decide
 #align bool.left_le_bor Bool.left_le_or
+-/
 
+#print Bool.right_le_or /-
 theorem right_le_or : ∀ x y : Bool, y ≤ (x || y) := by decide
 #align bool.right_le_bor Bool.right_le_or
+-/
 
+#print Bool.or_le /-
 theorem or_le : ∀ {x y z}, x ≤ z → y ≤ z → (x || y) ≤ z := by decide
 #align bool.bor_le Bool.or_le
+-/
 
 #print Bool.toNat /-
 /-- convert a `bool` to a `ℕ`, `false -> 0`, `true -> 1` -/
@@ -538,6 +560,7 @@ def ofNat (n : ℕ) : Bool :=
 #align bool.of_nat Bool.ofNat
 -/
 
+#print Bool.ofNat_le_ofNat /-
 theorem ofNat_le_ofNat {n m : ℕ} (h : n ≤ m) : ofNat n ≤ ofNat m :=
   by
   simp [of_nat] <;> cases Nat.decidableEq n 0 <;> cases Nat.decidableEq m 0 <;> simp only [to_bool]
@@ -545,10 +568,13 @@ theorem ofNat_le_ofNat {n m : ℕ} (h : n ≤ m) : ofNat n ≤ ofNat m :=
     contradiction
   · left; rfl
 #align bool.of_nat_le_of_nat Bool.ofNat_le_ofNat
+-/
 
+#print Bool.toNat_le_toNat /-
 theorem toNat_le_toNat {b₀ b₁ : Bool} (h : b₀ ≤ b₁) : toNat b₀ ≤ toNat b₁ := by
   cases h <;> subst h <;> [cases b₁;cases b₀] <;> simp [toNat, Nat.zero_le]
 #align bool.to_nat_le_to_nat Bool.toNat_le_toNat
+-/
 
 #print Bool.ofNat_toNat /-
 theorem ofNat_toNat (b : Bool) : ofNat (toNat b) = b := by

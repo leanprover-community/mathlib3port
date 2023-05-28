@@ -80,6 +80,7 @@ theorem principal_one_iff {op : Ordinal → Ordinal → Ordinal} : Principal op 
   · rwa [lt_one_iff_zero, ha, hb] at *
 #align ordinal.principal_one_iff Ordinal.principal_one_iff
 
+#print Ordinal.Principal.iterate_lt /-
 theorem Principal.iterate_lt {op : Ordinal → Ordinal → Ordinal} {a o : Ordinal} (hao : a < o)
     (ho : Principal op o) (n : ℕ) : (op a^[n]) a < o :=
   by
@@ -87,7 +88,9 @@ theorem Principal.iterate_lt {op : Ordinal → Ordinal → Ordinal} {a o : Ordin
   · rwa [Function.iterate_zero]
   · rw [Function.iterate_succ']; exact ho hao hn
 #align ordinal.principal.iterate_lt Ordinal.Principal.iterate_lt
+-/
 
+#print Ordinal.op_eq_self_of_principal /-
 theorem op_eq_self_of_principal {op : Ordinal → Ordinal → Ordinal} {a o : Ordinal.{u}} (hao : a < o)
     (H : IsNormal (op a)) (ho : Principal op o) (ho' : IsLimit o) : op a o = o :=
   by
@@ -95,11 +98,14 @@ theorem op_eq_self_of_principal {op : Ordinal → Ordinal → Ordinal} {a o : Or
   rw [← IsNormal.bsup_eq.{u, u} H ho', bsup_le_iff]
   exact fun b hbo => (ho hao hbo).le
 #align ordinal.op_eq_self_of_principal Ordinal.op_eq_self_of_principal
+-/
 
+#print Ordinal.nfp_le_of_principal /-
 theorem nfp_le_of_principal {op : Ordinal → Ordinal → Ordinal} {a o : Ordinal} (hao : a < o)
     (ho : Principal op o) : nfp (op a) a ≤ o :=
   nfp_le fun n => (ho.iterate_lt hao n).le
 #align ordinal.nfp_le_of_principal Ordinal.nfp_le_of_principal
+-/
 
 /-! ### Principal ordinals are unbounded -/
 
@@ -112,6 +118,7 @@ def blsub₂ (op : Ordinal → Ordinal → Ordinal) (o : Ordinal) : Ordinal :=
 #align ordinal.blsub₂ Ordinal.blsub₂
 -/
 
+#print Ordinal.lt_blsub₂ /-
 theorem lt_blsub₂ (op : Ordinal → Ordinal → Ordinal) {o : Ordinal} {a b : Ordinal} (ha : a < o)
     (hb : b < o) : op a b < blsub₂ op o :=
   by
@@ -119,6 +126,7 @@ theorem lt_blsub₂ (op : Ordinal → Ordinal → Ordinal) {o : Ordinal} {a b : 
       (Prod.mk (enum (· < ·) a (by rwa [type_lt])) (enum (· < ·) b (by rwa [type_lt])))
   simp only [typein_enum]
 #align ordinal.lt_blsub₂ Ordinal.lt_blsub₂
+-/
 
 #print Ordinal.principal_nfp_blsub₂ /-
 theorem principal_nfp_blsub₂ (op : Ordinal → Ordinal → Ordinal) (o : Ordinal) :
@@ -137,10 +145,12 @@ theorem principal_nfp_blsub₂ (op : Ordinal → Ordinal → Ordinal) (o : Ordin
 #align ordinal.principal_nfp_blsub₂ Ordinal.principal_nfp_blsub₂
 -/
 
+#print Ordinal.unbounded_principal /-
 theorem unbounded_principal (op : Ordinal → Ordinal → Ordinal) :
     Set.Unbounded (· < ·) { o | Principal op o } := fun o =>
   ⟨_, principal_nfp_blsub₂ op o, (le_nfp _ o).not_lt⟩
 #align ordinal.unbounded_principal Ordinal.unbounded_principal
+-/
 
 /-! #### Additive principal ordinals -/
 
@@ -168,6 +178,7 @@ theorem principal_add_isLimit {o : Ordinal} (ho₁ : 1 < o) (ho : Principal (· 
       rwa [← add_one_eq_succ, add_le_add_iff_left, one_le_iff_ne_zero]
 #align ordinal.principal_add_is_limit Ordinal.principal_add_isLimit
 
+#print Ordinal.principal_add_iff_add_left_eq_self /-
 theorem principal_add_iff_add_left_eq_self {o : Ordinal} :
     Principal (· + ·) o ↔ ∀ a < o, a + o = o :=
   by
@@ -181,7 +192,9 @@ theorem principal_add_iff_add_left_eq_self {o : Ordinal} :
   · rw [← h a hao]
     exact (add_is_normal a).StrictMono hbo
 #align ordinal.principal_add_iff_add_left_eq_self Ordinal.principal_add_iff_add_left_eq_self
+-/
 
+#print Ordinal.exists_lt_add_of_not_principal_add /-
 theorem exists_lt_add_of_not_principal_add {a} (ha : ¬Principal (· + ·) a) :
     ∃ (b c : _)(hb : b < a)(hc : c < a), b + c = a :=
   by
@@ -193,7 +206,9 @@ theorem exists_lt_add_of_not_principal_add {a} (ha : ¬Principal (· + ·) a) :
   rw [← sub_le, hab] at H
   exact H.not_lt hc
 #align ordinal.exists_lt_add_of_not_principal_add Ordinal.exists_lt_add_of_not_principal_add
+-/
 
+#print Ordinal.principal_add_iff_add_lt_ne_self /-
 theorem principal_add_iff_add_lt_ne_self {a} :
     Principal (· + ·) a ↔ ∀ ⦃b c⦄, b < a → c < a → b + c ≠ a :=
   ⟨fun ha b c hb hc => (ha hb hc).Ne, fun H =>
@@ -202,7 +217,9 @@ theorem principal_add_iff_add_lt_ne_self {a} :
     rcases exists_lt_add_of_not_principal_add ha with ⟨b, c, hb, hc, rfl⟩
     exact (H hb hc).irrefl⟩
 #align ordinal.principal_add_iff_add_lt_ne_self Ordinal.principal_add_iff_add_lt_ne_self
+-/
 
+#print Ordinal.add_omega /-
 theorem add_omega {a : Ordinal} (h : a < omega) : a + omega = omega :=
   by
   rcases lt_omega.1 h with ⟨n, rfl⟩
@@ -210,6 +227,7 @@ theorem add_omega {a : Ordinal} (h : a < omega) : a + omega = omega :=
   · rw [Nat.cast_zero, zero_add]
   · rwa [Nat.cast_succ, add_assoc, one_add_of_omega_le (le_refl _)]
 #align ordinal.add_omega Ordinal.add_omega
+-/
 
 #print Ordinal.principal_add_omega /-
 theorem principal_add_omega : Principal (· + ·) omega :=

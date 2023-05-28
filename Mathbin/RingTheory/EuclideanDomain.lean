@@ -31,7 +31,7 @@ euclidean domain
 
 noncomputable section
 
-open Classical
+open scoped Classical
 
 open EuclideanDomain Set Ideal
 

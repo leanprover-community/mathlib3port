@@ -57,7 +57,7 @@ open CategoryTheory.SimplicialObject.Augmented
 
 open Opposite
 
-open Simplicial
+open scoped Simplicial
 
 namespace SimplicialObject
 

@@ -54,7 +54,7 @@ only to prove the more general results:
 
 noncomputable section
 
-open Classical BigOperators NNReal ENNReal
+open scoped Classical BigOperators NNReal ENNReal
 
 open MeasureTheory
 

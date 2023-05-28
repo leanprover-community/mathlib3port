@@ -23,7 +23,7 @@ builds a derivation from its values on `X i`s and a linear equivalence
 
 namespace MvPolynomial
 
-open BigOperators
+open scoped BigOperators
 
 noncomputable section
 

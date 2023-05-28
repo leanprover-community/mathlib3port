@@ -44,7 +44,7 @@ open CategoryTheory
 
 open CategoryTheory.Category
 
-open Classical
+open scoped Classical
 
 namespace CategoryTheory.Limits
 
@@ -295,7 +295,7 @@ namespace HasZeroObject
 
 variable [HasZeroObject C]
 
-open ZeroObject
+open scoped ZeroObject
 
 #print CategoryTheory.Limits.HasZeroObject.zeroMorphismsOfZeroObject /-
 /-- A category with a zero object has zero morphisms.
@@ -368,14 +368,14 @@ theorem zeroIsoTerminal_inv [HasTerminal C] : zeroIsoTerminal.inv = (0 : ⊤_ C 
 
 end HasZeroMorphisms
 
-open ZeroObject
+open scoped ZeroObject
 
 instance {B : Type _} [Category B] : HasZeroObject (B ⥤ C) :=
   (((CategoryTheory.Functor.const B).obj (0 : C)).IsZero fun X => isZero_zero _).HasZeroObject
 
 end HasZeroObject
 
-open ZeroObject
+open scoped ZeroObject
 
 variable {D}
 
@@ -400,7 +400,7 @@ section
 
 variable [HasZeroObject C] [HasZeroMorphisms C]
 
-open ZeroObject
+open scoped ZeroObject
 
 #print CategoryTheory.Limits.id_zero /-
 @[simp]
@@ -575,7 +575,7 @@ def isIsoZeroSelfEquiv (X : C) : IsIso (0 : X ⟶ X) ≃ 𝟙 X = 0 := by simpa 
 
 variable [HasZeroObject C]
 
-open ZeroObject
+open scoped ZeroObject
 
 #print CategoryTheory.Limits.isIsoZeroEquivIsoZero /-
 /-- A zero morphism `0 : X ⟶ Y` is an isomorphism if and only if
@@ -664,7 +664,7 @@ theorem comp_factorThruImage_eq_zero {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} [Ha
 
 variable [HasZeroObject C]
 
-open ZeroObject
+open scoped ZeroObject
 
 #print CategoryTheory.Limits.monoFactorisationZero /-
 /-- The zero morphism has a `mono_factorisation` through the zero object.

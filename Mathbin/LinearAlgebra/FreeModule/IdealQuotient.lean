@@ -26,7 +26,7 @@ import Mathbin.LinearAlgebra.QuotientPi
 -/
 
 
-open BigOperators
+open scoped BigOperators
 
 variable {ι R S : Type _} [CommRing R] [CommRing S] [Algebra R S]
 

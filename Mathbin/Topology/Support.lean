@@ -37,7 +37,7 @@ Furthermore, we say that `f` has compact support if the topological support of `
 
 open Function Set Filter
 
-open Topology
+open scoped Topology
 
 variable {X α α' β γ δ M E R : Type _}
 

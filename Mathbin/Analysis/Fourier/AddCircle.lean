@@ -66,7 +66,7 @@ converges to `f` in the uniform-convergence topology of `C(add_circle T, ℂ)`.
 
 noncomputable section
 
-open ENNReal ComplexConjugate Real
+open scoped ENNReal ComplexConjugate Real
 
 open TopologicalSpace ContinuousMap MeasureTheory MeasureTheory.Measure Algebra Submodule Set
 
@@ -519,7 +519,7 @@ section deriv
 
 open Complex intervalIntegral
 
-open Interval
+open scoped Interval
 
 variable (T)
 

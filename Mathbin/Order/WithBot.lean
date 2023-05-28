@@ -428,10 +428,12 @@ theorem map_le_iff [Preorder α] [Preorder β] (f : α → β) (mono_iff : ∀ {
   | (a : α), (b : α) => by simpa only [map_coe, coe_le_coe] using mono_iff
 #align with_bot.map_le_iff WithBot.map_le_iff
 
+#print WithBot.le_coe_unbot' /-
 theorem le_coe_unbot' [Preorder α] : ∀ (a : WithBot α) (b : α), a ≤ a.unbot' b
   | (a : α), b => le_rfl
   | ⊥, b => bot_le
 #align with_bot.le_coe_unbot' WithBot.le_coe_unbot'
+-/
 
 theorem unbot'_bot_le_iff [LE α] [OrderBot α] {a : WithBot α} {b : α} : a.unbot' ⊥ ≤ b ↔ a ≤ b := by
   cases a <;> simp [none_eq_bot, some_eq_coe]
@@ -535,6 +537,7 @@ theorem coe_max [LinearOrder α] (x y : α) : ((max x y : α) : WithBot α) = ma
   rfl
 #align with_bot.coe_max WithBot.coe_max
 
+#print WithBot.wellFounded_lt /-
 theorem wellFounded_lt [Preorder α] (h : @WellFounded α (· < ·)) :
     @WellFounded (WithBot α) (· < ·) :=
   have acc_bot : Acc ((· < ·) : WithBot α → WithBot α → Prop) ⊥ :=
@@ -554,6 +557,7 @@ theorem wellFounded_lt [Preorder α] (h : @WellFounded α (· < ·)) :
                 Option.recOn c (fun _ => acc_bot) fun c hc =>
                   ih _ (some_lt_some.1 hc) (lt_trans hc hba))⟩
 #align with_bot.well_founded_lt WithBot.wellFounded_lt
+-/
 
 instance [LT α] [DenselyOrdered α] [NoMinOrder α] : DenselyOrdered (WithBot α) :=
   ⟨fun a b =>
@@ -566,6 +570,7 @@ instance [LT α] [DenselyOrdered α] [NoMinOrder α] : DenselyOrdered (WithBot �
       let ⟨a, ha₁, ha₂⟩ := exists_between (coe_lt_coe.1 h)
       ⟨a, coe_lt_coe.2 ha₁, coe_lt_coe.2 ha₂⟩⟩
 
+#print WithBot.lt_iff_exists_coe_btwn /-
 theorem lt_iff_exists_coe_btwn [Preorder α] [DenselyOrdered α] [NoMinOrder α] {a b : WithBot α} :
     a < b ↔ ∃ x : α, a < ↑x ∧ ↑x < b :=
   ⟨fun h =>
@@ -574,6 +579,7 @@ theorem lt_iff_exists_coe_btwn [Preorder α] [DenselyOrdered α] [NoMinOrder α]
     ⟨x, hx.1 ▸ hy⟩,
     fun ⟨x, hx⟩ => lt_trans hx.1 hx.2⟩
 #align with_bot.lt_iff_exists_coe_btwn WithBot.lt_iff_exists_coe_btwn
+-/
 
 instance [LE α] [NoTopOrder α] [Nonempty α] : NoTopOrder (WithBot α) :=
   ⟨by
@@ -1385,6 +1391,7 @@ theorem coe_max [LinearOrder α] (x y : α) : (↑(max x y) : WithTop α) = max 
   rfl
 #align with_top.coe_max WithTop.coe_max
 
+#print WithTop.wellFounded_lt /-
 theorem wellFounded_lt [Preorder α] (h : @WellFounded α (· < ·)) :
     @WellFounded (WithTop α) (· < ·) :=
   have acc_some : ∀ a : α, Acc ((· < ·) : WithTop α → WithTop α → Prop) (some a) := fun a =>
@@ -1402,9 +1409,11 @@ theorem wellFounded_lt [Preorder α] (h : @WellFounded α (· < ·)) :
       (Acc.intro _ fun y => Option.recOn y (fun h => (lt_irrefl _ h).elim) fun _ _ => acc_some _)
       acc_some⟩
 #align with_top.well_founded_lt WithTop.wellFounded_lt
+-/
 
 open OrderDual
 
+#print WithTop.wellFounded_gt /-
 theorem wellFounded_gt [Preorder α] (h : @WellFounded α (· > ·)) :
     @WellFounded (WithTop α) (· > ·) :=
   ⟨fun a =>
@@ -1416,7 +1425,9 @@ theorem wellFounded_gt [Preorder α] (h : @WellFounded α (· > ·)) :
     induction' ac with _ H IH generalizing a; subst ha
     exact ⟨_, fun a' h => IH a'.toDual (to_dual_lt_to_dual.mpr h) _ rfl⟩⟩
 #align with_top.well_founded_gt WithTop.wellFounded_gt
+-/
 
+#print WithBot.wellFounded_gt /-
 theorem WithBot.wellFounded_gt [Preorder α] (h : @WellFounded α (· > ·)) :
     @WellFounded (WithBot α) (· > ·) :=
   ⟨fun a =>
@@ -1428,7 +1439,9 @@ theorem WithBot.wellFounded_gt [Preorder α] (h : @WellFounded α (· > ·)) :
     induction' ac with _ H IH generalizing a; subst ha
     exact ⟨_, fun a' h => IH a'.toDual (to_dual_lt_to_dual.mpr h) _ rfl⟩⟩
 #align with_bot.well_founded_gt WithBot.wellFounded_gt
+-/
 
+#print WithTop.trichotomous.lt /-
 instance trichotomous.lt [Preorder α] [IsTrichotomous α (· < ·)] :
     IsTrichotomous (WithTop α) (· < ·) :=
   ⟨by
@@ -1436,11 +1449,15 @@ instance trichotomous.lt [Preorder α] [IsTrichotomous α (· < ·)] :
     iterate 3 simp
     simpa [Option.some_inj] using @trichotomous _ (· < ·) _ a b⟩
 #align with_top.trichotomous.lt WithTop.trichotomous.lt
+-/
 
+#print WithTop.IsWellOrder.lt /-
 instance IsWellOrder.lt [Preorder α] [h : IsWellOrder α (· < ·)] : IsWellOrder (WithTop α) (· < ·)
     where wf := wellFounded_lt h.wf
 #align with_top.is_well_order.lt WithTop.IsWellOrder.lt
+-/
 
+#print WithTop.trichotomous.gt /-
 instance trichotomous.gt [Preorder α] [IsTrichotomous α (· > ·)] :
     IsTrichotomous (WithTop α) (· > ·) :=
   ⟨by
@@ -1448,34 +1465,46 @@ instance trichotomous.gt [Preorder α] [IsTrichotomous α (· > ·)] :
     iterate 3 simp
     simpa [Option.some_inj] using @trichotomous _ (· > ·) _ a b⟩
 #align with_top.trichotomous.gt WithTop.trichotomous.gt
+-/
 
+#print WithTop.IsWellOrder.gt /-
 instance IsWellOrder.gt [Preorder α] [h : IsWellOrder α (· > ·)] : IsWellOrder (WithTop α) (· > ·)
     where wf := wellFounded_gt h.wf
 #align with_top.is_well_order.gt WithTop.IsWellOrder.gt
+-/
 
+#print WithBot.trichotomous.lt /-
 instance WithBot.trichotomous.lt [Preorder α] [h : IsTrichotomous α (· < ·)] :
     IsTrichotomous (WithBot α) (· < ·) :=
   @WithTop.trichotomous.gt αᵒᵈ _ h
 #align with_bot.trichotomous.lt WithBot.trichotomous.lt
+-/
 
+#print WithBot.isWellOrder.lt /-
 instance WithBot.isWellOrder.lt [Preorder α] [h : IsWellOrder α (· < ·)] :
     IsWellOrder (WithBot α) (· < ·) :=
   @WithTop.IsWellOrder.gt αᵒᵈ _ h
 #align with_bot.is_well_order.lt WithBot.isWellOrder.lt
+-/
 
+#print WithBot.trichotomous.gt /-
 instance WithBot.trichotomous.gt [Preorder α] [h : IsTrichotomous α (· > ·)] :
     IsTrichotomous (WithBot α) (· > ·) :=
   @WithTop.trichotomous.lt αᵒᵈ _ h
 #align with_bot.trichotomous.gt WithBot.trichotomous.gt
+-/
 
+#print WithBot.isWellOrder.gt /-
 instance WithBot.isWellOrder.gt [Preorder α] [h : IsWellOrder α (· > ·)] :
     IsWellOrder (WithBot α) (· > ·) :=
   @WithTop.IsWellOrder.lt αᵒᵈ _ h
 #align with_bot.is_well_order.gt WithBot.isWellOrder.gt
+-/
 
 instance [LT α] [DenselyOrdered α] [NoMaxOrder α] : DenselyOrdered (WithTop α) :=
   OrderDual.denselyOrdered (WithBot αᵒᵈ)
 
+#print WithTop.lt_iff_exists_coe_btwn /-
 theorem lt_iff_exists_coe_btwn [Preorder α] [DenselyOrdered α] [NoMaxOrder α] {a b : WithTop α} :
     a < b ↔ ∃ x : α, a < ↑x ∧ ↑x < b :=
   ⟨fun h =>
@@ -1484,6 +1513,7 @@ theorem lt_iff_exists_coe_btwn [Preorder α] [DenselyOrdered α] [NoMaxOrder α]
     ⟨x, hx.1 ▸ hy⟩,
     fun ⟨x, hx⟩ => lt_trans hx.1 hx.2⟩
 #align with_top.lt_iff_exists_coe_btwn WithTop.lt_iff_exists_coe_btwn
+-/
 
 instance [LE α] [NoBotOrder α] [Nonempty α] : NoBotOrder (WithTop α) :=
   OrderDual.noBotOrder (WithBot αᵒᵈ)

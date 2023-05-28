@@ -31,7 +31,7 @@ universe u v
 
 variable {α : Type u} {β : Type v} {φ : Ultrafilter α}
 
-open Classical
+open scoped Classical
 
 namespace Filter
 
@@ -64,26 +64,36 @@ instance [Semifield β] : Semifield β* :=
 instance [Field β] : Field β* :=
   { Germ.commRing, Germ.divisionRing with }
 
+#print Filter.Germ.coe_lt /-
 theorem coe_lt [Preorder β] {f g : α → β} : (f : β*) < g ↔ ∀* x, f x < g x := by
   simp only [lt_iff_le_not_le, eventually_and, coe_le, eventually_not, eventually_le]
 #align filter.germ.coe_lt Filter.Germ.coe_lt
+-/
 
+#print Filter.Germ.coe_pos /-
 theorem coe_pos [Preorder β] [Zero β] {f : α → β} : 0 < (f : β*) ↔ ∀* x, 0 < f x :=
   coe_lt
 #align filter.germ.coe_pos Filter.Germ.coe_pos
+-/
 
+#print Filter.Germ.const_lt /-
 theorem const_lt [Preorder β] {x y : β} : x < y → (↑x : β*) < ↑y :=
   coe_lt.mpr ∘ liftRel_const
 #align filter.germ.const_lt Filter.Germ.const_lt
+-/
 
+#print Filter.Germ.const_lt_iff /-
 @[simp, norm_cast]
 theorem const_lt_iff [Preorder β] {x y : β} : (↑x : β*) < ↑y ↔ x < y :=
   coe_lt.trans liftRel_const_iff
 #align filter.germ.const_lt_iff Filter.Germ.const_lt_iff
+-/
 
+#print Filter.Germ.lt_def /-
 theorem lt_def [Preorder β] : ((· < ·) : β* → β* → Prop) = LiftRel (· < ·) := by ext (⟨f⟩⟨g⟩);
   exact coe_lt
 #align filter.germ.lt_def Filter.Germ.lt_def
+-/
 
 instance [Sup β] : Sup β* :=
   ⟨map₂ (· ⊔ ·)⟩

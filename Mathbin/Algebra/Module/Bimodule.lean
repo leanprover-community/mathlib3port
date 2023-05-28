@@ -62,7 +62,7 @@ Develop the theory of two-sided ideals, which have type `submodule (R ⊗[ℕ] R
 -/
 
 
-open TensorProduct
+open scoped TensorProduct
 
 attribute [local instance] TensorProduct.Algebra.module
 

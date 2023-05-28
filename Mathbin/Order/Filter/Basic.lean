@@ -90,7 +90,7 @@ open Function Set Order
 
 universe u v w x y
 
-open Classical
+open scoped Classical
 
 #print Filter /-
 /-- A filter `F` on a type `α` is a collection of sets of `α` which contains the whole `α`,
@@ -341,7 +341,7 @@ theorem mem_principal_self (s : Set α) : s ∈ 𝓟 s :=
 
 end Principal
 
-open Filter
+open scoped Filter
 
 section Join
 
@@ -1930,55 +1930,75 @@ section Preorder
 
 variable [Preorder β] {l : Filter α} {f g h : α → β}
 
+#print Filter.EventuallyEq.le /-
 theorem EventuallyEq.le (h : f =ᶠ[l] g) : f ≤ᶠ[l] g :=
   h.mono fun x => le_of_eq
 #align filter.eventually_eq.le Filter.EventuallyEq.le
+-/
 
+#print Filter.EventuallyLE.refl /-
 @[refl]
 theorem EventuallyLE.refl (l : Filter α) (f : α → β) : f ≤ᶠ[l] f :=
   EventuallyEq.rfl.le
 #align filter.eventually_le.refl Filter.EventuallyLE.refl
+-/
 
+#print Filter.EventuallyLE.rfl /-
 theorem EventuallyLE.rfl : f ≤ᶠ[l] f :=
   EventuallyLE.refl l f
 #align filter.eventually_le.rfl Filter.EventuallyLE.rfl
+-/
 
+#print Filter.EventuallyLE.trans /-
 @[trans]
 theorem EventuallyLE.trans (H₁ : f ≤ᶠ[l] g) (H₂ : g ≤ᶠ[l] h) : f ≤ᶠ[l] h :=
   H₂.mp <| H₁.mono fun x => le_trans
 #align filter.eventually_le.trans Filter.EventuallyLE.trans
+-/
 
+#print Filter.EventuallyEq.trans_le /-
 @[trans]
 theorem EventuallyEq.trans_le (H₁ : f =ᶠ[l] g) (H₂ : g ≤ᶠ[l] h) : f ≤ᶠ[l] h :=
   H₁.le.trans H₂
 #align filter.eventually_eq.trans_le Filter.EventuallyEq.trans_le
+-/
 
+#print Filter.EventuallyLE.trans_eq /-
 @[trans]
 theorem EventuallyLE.trans_eq (H₁ : f ≤ᶠ[l] g) (H₂ : g =ᶠ[l] h) : f ≤ᶠ[l] h :=
   H₁.trans H₂.le
 #align filter.eventually_le.trans_eq Filter.EventuallyLE.trans_eq
+-/
 
 end Preorder
 
+#print Filter.EventuallyLE.antisymm /-
 theorem EventuallyLE.antisymm [PartialOrder β] {l : Filter α} {f g : α → β} (h₁ : f ≤ᶠ[l] g)
     (h₂ : g ≤ᶠ[l] f) : f =ᶠ[l] g :=
   h₂.mp <| h₁.mono fun x => le_antisymm
 #align filter.eventually_le.antisymm Filter.EventuallyLE.antisymm
+-/
 
+#print Filter.eventuallyLE_antisymm_iff /-
 theorem eventuallyLE_antisymm_iff [PartialOrder β] {l : Filter α} {f g : α → β} :
     f =ᶠ[l] g ↔ f ≤ᶠ[l] g ∧ g ≤ᶠ[l] f := by
   simp only [eventually_eq, eventually_le, le_antisymm_iff, eventually_and]
 #align filter.eventually_le_antisymm_iff Filter.eventuallyLE_antisymm_iff
+-/
 
+#print Filter.EventuallyLE.le_iff_eq /-
 theorem EventuallyLE.le_iff_eq [PartialOrder β] {l : Filter α} {f g : α → β} (h : f ≤ᶠ[l] g) :
     g ≤ᶠ[l] f ↔ g =ᶠ[l] f :=
   ⟨fun h' => h'.antisymm h, EventuallyEq.le⟩
 #align filter.eventually_le.le_iff_eq Filter.EventuallyLE.le_iff_eq
+-/
 
+#print Filter.Eventually.ne_of_lt /-
 theorem Eventually.ne_of_lt [Preorder β] {l : Filter α} {f g : α → β} (h : ∀ᶠ x in l, f x < g x) :
     ∀ᶠ x in l, f x ≠ g x :=
   h.mono fun x hx => hx.Ne
 #align filter.eventually.ne_of_lt Filter.Eventually.ne_of_lt
+-/
 
 theorem Eventually.ne_top_of_lt [PartialOrder β] [OrderTop β] {l : Filter α} {f g : α → β}
     (h : ∀ᶠ x in l, f x < g x) : ∀ᶠ x in l, f x ≠ ⊤ :=
@@ -2041,6 +2061,7 @@ theorem EventuallyLE.mul_le_mul [MulZeroClass β] [PartialOrder β] [PosMulMono 
   filter_upwards [hf, hg, hg₀, hf₀]with x using mul_le_mul
 #align filter.eventually_le.mul_le_mul Filter.EventuallyLE.mul_le_mul
 
+#print Filter.EventuallyLE.mul_le_mul' /-
 @[to_additive EventuallyLe.add_le_add]
 theorem EventuallyLE.mul_le_mul' [Mul β] [Preorder β] [CovariantClass β β (· * ·) (· ≤ ·)]
     [CovariantClass β β (swap (· * ·)) (· ≤ ·)] {l : Filter α} {f₁ f₂ g₁ g₂ : α → β}
@@ -2048,6 +2069,7 @@ theorem EventuallyLE.mul_le_mul' [Mul β] [Preorder β] [CovariantClass β β (�
   filter_upwards [hf, hg]with x hfx hgx using mul_le_mul' hfx hgx
 #align filter.eventually_le.mul_le_mul' Filter.EventuallyLE.mul_le_mul'
 #align filter.eventually_le.add_le_add Filter.EventuallyLE.add_le_add
+-/
 
 theorem EventuallyLE.mul_nonneg [OrderedSemiring β] {l : Filter α} {f g : α → β} (hf : 0 ≤ᶠ[l] f)
     (hg : 0 ≤ᶠ[l] g) : 0 ≤ᶠ[l] f * g := by filter_upwards [hf, hg]with x using mul_nonneg
@@ -3664,7 +3686,7 @@ protected theorem Tendsto.piecewise {l₁ : Filter α} {l₂ : Filter β} {f g :
 
 end Filter
 
-open Filter
+open scoped Filter
 
 theorem Set.EqOn.eventuallyEq {α β} {s : Set α} {f g : α → β} (h : EqOn f g s) : f =ᶠ[𝓟 s] g :=
   h

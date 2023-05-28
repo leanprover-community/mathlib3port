@@ -410,25 +410,33 @@ theorem pow_lt_one (h₀ : 0 ≤ a) (h₁ : a < 1) : ∀ {n : ℕ} (hn : n ≠ 0
     exact mul_lt_one_of_nonneg_of_lt_one_left h₀ h₁ (pow_le_one _ h₀ h₁.le)
 #align pow_lt_one pow_lt_one
 
+#print one_le_pow_of_one_le /-
 theorem one_le_pow_of_one_le (H : 1 ≤ a) : ∀ n : ℕ, 1 ≤ a ^ n
   | 0 => by rw [pow_zero]
   | n + 1 => by rw [pow_succ];
     simpa only [mul_one] using
       mul_le_mul H (one_le_pow_of_one_le n) zero_le_one (le_trans zero_le_one H)
 #align one_le_pow_of_one_le one_le_pow_of_one_le
+-/
 
+#print pow_mono /-
 theorem pow_mono (h : 1 ≤ a) : Monotone fun n : ℕ => a ^ n :=
   monotone_nat_of_le_succ fun n => by rw [pow_succ];
     exact le_mul_of_one_le_left (pow_nonneg (zero_le_one.trans h) _) h
 #align pow_mono pow_mono
+-/
 
+#print pow_le_pow /-
 theorem pow_le_pow (ha : 1 ≤ a) (h : n ≤ m) : a ^ n ≤ a ^ m :=
   pow_mono ha h
 #align pow_le_pow pow_le_pow
+-/
 
+#print le_self_pow /-
 theorem le_self_pow (ha : 1 ≤ a) (h : m ≠ 0) : a ≤ a ^ m :=
   (pow_one a).symm.trans_le (pow_le_pow ha <| pos_iff_ne_zero.mpr h)
 #align le_self_pow le_self_pow
+-/
 
 @[mono]
 theorem pow_le_pow_of_le_left {a b : R} (ha : 0 ≤ a) (hab : a ≤ b) : ∀ i : ℕ, a ^ i ≤ b ^ i
@@ -438,10 +446,12 @@ theorem pow_le_pow_of_le_left {a b : R} (ha : 0 ≤ a) (hab : a ≤ b) : ∀ i :
     exact mul_le_mul hab (pow_le_pow_of_le_left _) (pow_nonneg ha _) (le_trans ha hab)
 #align pow_le_pow_of_le_left pow_le_pow_of_le_left
 
+#print one_lt_pow /-
 theorem one_lt_pow (ha : 1 < a) : ∀ {n : ℕ} (hn : n ≠ 0), 1 < a ^ n
   | 0, h => (h rfl).elim
   | n + 1, h => by rw [pow_succ]; exact one_lt_mul_of_lt_of_le ha (one_le_pow_of_one_le ha.le _)
 #align one_lt_pow one_lt_pow
+-/
 
 end OrderedSemiring
 
@@ -460,23 +470,31 @@ theorem strictMonoOn_pow (hn : 0 < n) : StrictMonoOn (fun x : R => x ^ n) (Set.I
   fun x hx y hy h => pow_lt_pow_of_lt_left h hx hn
 #align strict_mono_on_pow strictMonoOn_pow
 
+#print pow_strictMono_right /-
 theorem pow_strictMono_right (h : 1 < a) : StrictMono fun n : ℕ => a ^ n :=
   have : 0 < a := zero_le_one.trans_lt h
   strictMono_nat_of_lt_succ fun n => by
     simpa only [one_mul, pow_succ] using mul_lt_mul h (le_refl (a ^ n)) (pow_pos this _) this.le
 #align pow_strict_mono_right pow_strictMono_right
+-/
 
+#print pow_lt_pow /-
 theorem pow_lt_pow (h : 1 < a) (h2 : n < m) : a ^ n < a ^ m :=
   pow_strictMono_right h h2
 #align pow_lt_pow pow_lt_pow
+-/
 
+#print pow_lt_pow_iff /-
 theorem pow_lt_pow_iff (h : 1 < a) : a ^ n < a ^ m ↔ n < m :=
   (pow_strictMono_right h).lt_iff_lt
 #align pow_lt_pow_iff pow_lt_pow_iff
+-/
 
+#print pow_le_pow_iff /-
 theorem pow_le_pow_iff (h : 1 < a) : a ^ n ≤ a ^ m ↔ n ≤ m :=
   (pow_strictMono_right h).le_iff_le
 #align pow_le_pow_iff pow_le_pow_iff
+-/
 
 theorem strictAnti_pow (h₀ : 0 < a) (h₁ : a < 1) : StrictAnti fun n : ℕ => a ^ n :=
   strictAnti_nat_of_succ_lt fun n => by

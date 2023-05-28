@@ -17,7 +17,7 @@ namespace Real
 
 open Filter Set
 
-open Classical BigOperators Topology Real
+open scoped Classical BigOperators Topology Real
 
 -- mathport name: abs
 local notation "|" x "|" => abs x

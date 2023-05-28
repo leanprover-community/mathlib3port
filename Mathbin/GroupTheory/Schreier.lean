@@ -29,7 +29,7 @@ In this file we prove Schreier's lemma.
 -/
 
 
-open Pointwise
+open scoped Pointwise
 
 namespace Subgroup
 

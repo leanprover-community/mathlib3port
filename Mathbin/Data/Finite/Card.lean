@@ -36,7 +36,7 @@ it. We generally put such theorems into the `set_theory.cardinal.finite` module.
 
 noncomputable section
 
-open Classical
+open scoped Classical
 
 variable {α β γ : Type _}
 

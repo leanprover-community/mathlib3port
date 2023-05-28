@@ -1267,7 +1267,7 @@ def DeleteFar (p : SimpleGraph V → Prop) (r : 𝕜) : Prop :=
   ∀ ⦃s⦄, s ⊆ G.edgeFinset → p (G.deleteEdges s) → r ≤ s.card
 #align simple_graph.delete_far SimpleGraph.DeleteFar
 
-open Classical
+open scoped Classical
 
 variable {G}
 

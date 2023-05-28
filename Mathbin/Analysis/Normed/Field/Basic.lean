@@ -27,7 +27,7 @@ variable {α : Type _} {β : Type _} {γ : Type _} {ι : Type _}
 
 open Filter Metric
 
-open Topology BigOperators NNReal ENNReal uniformity Pointwise
+open scoped Topology BigOperators NNReal ENNReal uniformity Pointwise
 
 #print NonUnitalSeminormedRing /-
 /-- A non-unital seminormed ring is a not-necessarily-unital ring
@@ -837,9 +837,11 @@ theorem exists_lt_norm_lt {r₁ r₂ : ℝ} (h₀ : 0 ≤ r₁) (h : r₁ < r₂
   DenselyNormedField.lt_norm_lt r₁ r₂ h₀ h
 #align normed_field.exists_lt_norm_lt NormedField.exists_lt_norm_lt
 
+#print NormedField.exists_lt_nnnorm_lt /-
 theorem exists_lt_nnnorm_lt {r₁ r₂ : ℝ≥0} (h : r₁ < r₂) : ∃ x : α, r₁ < ‖x‖₊ ∧ ‖x‖₊ < r₂ := by
   exact_mod_cast exists_lt_norm_lt α r₁.prop h
 #align normed_field.exists_lt_nnnorm_lt NormedField.exists_lt_nnnorm_lt
+-/
 
 instance denselyOrdered_range_norm : DenselyOrdered (Set.range (norm : α → ℝ))
     where dense := by
@@ -849,6 +851,7 @@ instance denselyOrdered_range_norm : DenselyOrdered (Set.range (norm : α → �
       ⟨⟨‖z‖, z, rfl⟩, h⟩
 #align normed_field.densely_ordered_range_norm NormedField.denselyOrdered_range_norm
 
+#print NormedField.denselyOrdered_range_nnnorm /-
 instance denselyOrdered_range_nnnorm : DenselyOrdered (Set.range (nnnorm : α → ℝ≥0))
     where dense := by
     rintro ⟨-, x, rfl⟩ ⟨-, y, rfl⟩ hxy
@@ -856,6 +859,7 @@ instance denselyOrdered_range_nnnorm : DenselyOrdered (Set.range (nnnorm : α �
       let ⟨z, h⟩ := exists_lt_nnnorm_lt α hxy
       ⟨⟨‖z‖₊, z, rfl⟩, h⟩
 #align normed_field.densely_ordered_range_nnnorm NormedField.denselyOrdered_range_nnnorm
+-/
 
 theorem denseRange_nnnorm : DenseRange (nnnorm : α → ℝ≥0) :=
   dense_of_exists_between fun _ _ hr =>
@@ -892,7 +896,7 @@ end Real
 
 namespace NNReal
 
-open NNReal
+open scoped NNReal
 
 @[simp]
 theorem norm_eq (x : ℝ≥0) : ‖(x : ℝ)‖ = x := by rw [Real.norm_eq_abs, x.abs_eq]

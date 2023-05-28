@@ -62,7 +62,7 @@ The following two definitions require that `β` is a `fintype`:
 
 open Equiv Function Finset
 
-open BigOperators
+open scoped BigOperators
 
 variable {ι α β : Type _}
 
@@ -1336,6 +1336,7 @@ theorem support_cycleOf_eq_nil_iff : (f.cycleOf x).support = ∅ ↔ x ∉ f.sup
 #align equiv.perm.support_cycle_of_eq_nil_iff Equiv.Perm.support_cycleOf_eq_nil_iff
 -/
 
+#print Equiv.Perm.support_cycleOf_le /-
 theorem support_cycleOf_le (f : Perm α) (x : α) : support (f.cycleOf x) ≤ support f :=
   by
   intro y hy
@@ -1344,6 +1345,7 @@ theorem support_cycleOf_le (f : Perm α) (x : α) : support (f.cycleOf x) ≤ su
   · exact mem_support.mpr hy
   · exact absurd rfl hy
 #align equiv.perm.support_cycle_of_le Equiv.Perm.support_cycleOf_le
+-/
 
 #print Equiv.Perm.mem_support_cycleOf_iff /-
 theorem mem_support_cycleOf_iff : y ∈ support (f.cycleOf x) ↔ SameCycle f x y ∧ x ∈ support f :=
@@ -1666,12 +1668,14 @@ theorem cycleOf_mem_cycleFactorsFinset_iff {f : Perm α} {x : α} :
 #align equiv.perm.cycle_of_mem_cycle_factors_finset_iff Equiv.Perm.cycleOf_mem_cycleFactorsFinset_iff
 -/
 
+#print Equiv.Perm.mem_cycleFactorsFinset_support_le /-
 theorem mem_cycleFactorsFinset_support_le {p f : Perm α} (h : p ∈ cycleFactorsFinset f) :
     p.support ≤ f.support := by
   rw [mem_cycle_factors_finset_iff] at h
   intro x hx
   rwa [mem_support, ← h.right x hx, ← mem_support]
 #align equiv.perm.mem_cycle_factors_finset_support_le Equiv.Perm.mem_cycleFactorsFinset_support_le
+-/
 
 theorem cycleFactorsFinset_eq_empty_iff {f : Perm α} : cycleFactorsFinset f = ∅ ↔ f = 1 := by
   simpa [cycle_factors_finset_eq_finset] using eq_comm

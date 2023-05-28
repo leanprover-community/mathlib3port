@@ -29,7 +29,7 @@ open CategoryTheory.Limits
 
 open LinearMap
 
-open ModuleCat
+open scoped ModuleCat
 
 #print IsProjective.iff_projective /-
 /-- The categorical notion of projective object agrees with the explicit module-theoretic notion. -/

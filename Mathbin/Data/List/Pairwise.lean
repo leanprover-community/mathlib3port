@@ -401,6 +401,7 @@ theorem pairwise_of_reflexive_of_forall_ne {l : List α} {r : α → α → Prop
 #align list.pairwise_of_reflexive_of_forall_ne List.pairwise_of_reflexive_of_forall_ne
 -/
 
+#print List.pairwise_iff_nthLe /-
 theorem pairwise_iff_nthLe {R} :
     ∀ {l : List α},
       Pairwise R l ↔
@@ -419,6 +420,7 @@ theorem pairwise_iff_nthLe {R} :
     · rcases nth_le_of_mem m with ⟨n, h, rfl⟩
       exact H _ _ (succ_lt_succ h) (succ_pos _)
 #align list.pairwise_iff_nth_le List.pairwise_iff_nthLe
+-/
 
 #print List.pairwise_replicate /-
 theorem pairwise_replicate {α : Type _} {r : α → α → Prop} {x : α} (hx : r x x) :

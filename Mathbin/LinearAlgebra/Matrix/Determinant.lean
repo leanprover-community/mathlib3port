@@ -53,7 +53,7 @@ open Equiv Equiv.Perm Finset Function
 
 namespace Matrix
 
-open Matrix BigOperators
+open scoped Matrix BigOperators
 
 variable {m n : Type _} [DecidableEq n] [Fintype n] [DecidableEq m] [Fintype m]
 

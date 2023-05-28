@@ -27,15 +27,15 @@ and define `class_number` as the order of this group.
 -/
 
 
-open BigOperators
+open scoped BigOperators
 
-open nonZeroDivisors
+open scoped nonZeroDivisors
 
 namespace ClassGroup
 
 open Ring
 
-open BigOperators
+open scoped BigOperators
 
 section EuclideanDomain
 
@@ -376,7 +376,7 @@ theorem mkMMem_surjective [IsDedekindDomain S] (h : Algebra.IsAlgebraic R L) :
   exact ⟨⟨J, J_dvd⟩, mk0_eq_mk0.symm⟩
 #align class_group.mk_M_mem_surjective ClassGroup.mkMMem_surjective
 
-open Classical
+open scoped Classical
 
 /-- The main theorem: the class group of an integral closure `S` of `R` in an
 algebraic extension `L` is finite if there is an admissible absolute value.

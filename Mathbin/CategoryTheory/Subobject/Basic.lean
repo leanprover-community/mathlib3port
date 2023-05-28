@@ -263,10 +263,12 @@ theorem eq_of_comp_arrow_eq {X Y : C} {P : Subobject Y} {f g : X ⟶ P}
   (cancel_mono P.arrow).mp h
 #align category_theory.subobject.eq_of_comp_arrow_eq CategoryTheory.Subobject.eq_of_comp_arrow_eq
 
+#print CategoryTheory.Subobject.mk_le_mk_of_comm /-
 theorem mk_le_mk_of_comm {B A₁ A₂ : C} {f₁ : A₁ ⟶ B} {f₂ : A₂ ⟶ B} [Mono f₁] [Mono f₂] (g : A₁ ⟶ A₂)
     (w : g ≫ f₂ = f₁) : mk f₁ ≤ mk f₂ :=
   ⟨MonoOver.homMk _ w⟩
 #align category_theory.subobject.mk_le_mk_of_comm CategoryTheory.Subobject.mk_le_mk_of_comm
+-/
 
 @[simp]
 theorem mk_arrow (P : Subobject X) : mk P.arrow = P :=
@@ -371,16 +373,20 @@ theorem ofMkLE_arrow {B A : C} {f : A ⟶ B} [Mono f] {X : Subobject B} (h : mk 
     ofMkLE f X h ≫ X.arrow = f := by simp [of_mk_le]
 #align category_theory.subobject.of_mk_le_arrow CategoryTheory.Subobject.ofMkLE_arrow
 
+#print CategoryTheory.Subobject.ofMkLEMk /-
 /-- An inequality of subobjects is witnessed by some morphism between the corresponding objects. -/
 def ofMkLEMk {B A₁ A₂ : C} (f : A₁ ⟶ B) (g : A₂ ⟶ B) [Mono f] [Mono g] (h : mk f ≤ mk g) :
     A₁ ⟶ A₂ :=
   (underlyingIso f).inv ≫ ofLE (mk f) (mk g) h ≫ (underlyingIso g).Hom deriving Mono
 #align category_theory.subobject.of_mk_le_mk CategoryTheory.Subobject.ofMkLEMk
+-/
 
+#print CategoryTheory.Subobject.ofMkLEMk_comp /-
 @[simp]
 theorem ofMkLEMk_comp {B A₁ A₂ : C} {f : A₁ ⟶ B} {g : A₂ ⟶ B} [Mono f] [Mono g] (h : mk f ≤ mk g) :
     ofMkLEMk f g h ≫ g = f := by simp [of_mk_le_mk]
 #align category_theory.subobject.of_mk_le_mk_comp CategoryTheory.Subobject.ofMkLEMk_comp
+-/
 
 @[simp, reassoc]
 theorem ofLE_comp_ofLE {B : C} (X Y Z : Subobject B) (h₁ : X ≤ Y) (h₂ : Y ≤ Z) :
@@ -427,12 +433,14 @@ theorem ofMkLEMk_comp_ofMkLE {B A₁ A₂ : C} (f : A₁ ⟶ B) [Mono f] (g : A�
   simp [of_mk_le, of_le_mk, of_le, of_mk_le_mk, ← functor.map_comp underlying]
 #align category_theory.subobject.of_mk_le_mk_comp_of_mk_le CategoryTheory.Subobject.ofMkLEMk_comp_ofMkLE
 
+#print CategoryTheory.Subobject.ofMkLEMk_comp_ofMkLEMk /-
 @[simp, reassoc]
 theorem ofMkLEMk_comp_ofMkLEMk {B A₁ A₂ A₃ : C} (f : A₁ ⟶ B) [Mono f] (g : A₂ ⟶ B) [Mono g]
     (h : A₃ ⟶ B) [Mono h] (h₁ : mk f ≤ mk g) (h₂ : mk g ≤ mk h) :
     ofMkLEMk f g h₁ ≫ ofMkLEMk g h h₂ = ofMkLEMk f h (h₁.trans h₂) := by
   simp [of_mk_le, of_le_mk, of_le, of_mk_le_mk, ← functor.map_comp_assoc underlying]
 #align category_theory.subobject.of_mk_le_mk_comp_of_mk_le_mk CategoryTheory.Subobject.ofMkLEMk_comp_ofMkLEMk
+-/
 
 @[simp]
 theorem ofLE_refl {B : C} (X : Subobject B) : ofLE X X le_rfl = 𝟙 _ := by
@@ -614,6 +622,7 @@ def mapIso {A B : C} (e : A ≅ B) : Subobject A ≌ Subobject B :=
   lowerEquivalence (MonoOver.mapIso e)
 #align category_theory.subobject.map_iso CategoryTheory.Subobject.mapIso
 
+#print CategoryTheory.Subobject.mapIsoToOrderIso /-
 -- @[simps] here generates a lemma `map_iso_to_order_iso_to_equiv_symm_apply`
 -- whose left hand side is not in simp normal form.
 /-- In fact, there's a type level bijection between the subobjects of isomorphic objects,
@@ -634,6 +643,7 @@ def mapIsoToOrderIso (e : X ≅ Y) : Subobject X ≃o Subobject Y
       apply_fun (map e.hom).obj  at h
       exact h
 #align category_theory.subobject.map_iso_to_order_iso CategoryTheory.Subobject.mapIsoToOrderIso
+-/
 
 @[simp]
 theorem mapIsoToOrderIso_apply (e : X ≅ Y) (P : Subobject X) :

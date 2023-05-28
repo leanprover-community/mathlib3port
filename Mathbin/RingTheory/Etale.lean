@@ -251,7 +251,7 @@ end OfEquiv
 
 section Polynomial
 
-open Polynomial
+open scoped Polynomial
 
 variable (R : Type u) [CommSemiring R]
 
@@ -404,7 +404,7 @@ end OfSurjective
 
 section UnramifiedDerivation
 
-open TensorProduct
+open scoped TensorProduct
 
 variable {R S : Type u} [CommRing R] [CommRing S] [Algebra R S]
 
@@ -440,7 +440,7 @@ end UnramifiedDerivation
 
 section BaseChange
 
-open TensorProduct
+open scoped TensorProduct
 
 variable {R : Type u} [CommSemiring R]
 

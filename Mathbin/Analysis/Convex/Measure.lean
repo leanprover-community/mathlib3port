@@ -25,7 +25,7 @@ open MeasureTheory MeasureTheory.Measure Set Metric Filter
 
 open FiniteDimensional (finrank)
 
-open Topology NNReal ENNReal
+open scoped Topology NNReal ENNReal
 
 variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [MeasurableSpace E] [BorelSpace E]
   [FiniteDimensional ℝ E] (μ : Measure E) [IsAddHaarMeasure μ] {s : Set E}

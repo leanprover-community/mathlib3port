@@ -28,7 +28,7 @@ The proof used is close to Lagrange's original proof.
 
 open Finset Polynomial FiniteField Equiv
 
-open BigOperators
+open scoped BigOperators
 
 namespace Int
 
@@ -90,7 +90,7 @@ namespace Nat
 
 open Int
 
-open Classical
+open scoped Classical
 
 private theorem sum_four_squares_of_two_mul_sum_four_squares {m a b c d : ℤ}
     (h : a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = 2 * m) :

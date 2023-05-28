@@ -31,7 +31,7 @@ namespace Matrix
 
 variable {α β : Type _} {m n : Type _} {A : Matrix n n α}
 
-open Matrix
+open scoped Matrix
 
 -- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner α _ _ x y

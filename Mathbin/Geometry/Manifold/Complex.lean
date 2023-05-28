@@ -42,7 +42,7 @@ stalks, such as the Weierstrass preparation theorem.
 -/
 
 
-open Manifold Topology
+open scoped Manifold Topology
 
 open Complex
 

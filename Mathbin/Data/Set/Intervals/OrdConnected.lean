@@ -28,7 +28,7 @@ that all standard intervals are `ord_connected`.
 -/
 
 
-open Interval
+open scoped Interval
 
 open OrderDual (toDual ofDual)
 
@@ -61,12 +61,15 @@ theorem ordConnected_def : OrdConnected s ↔ ∀ ⦃x⦄ (hx : x ∈ s) ⦃y⦄
 #align set.ord_connected_def Set.ordConnected_def
 -/
 
+#print Set.ordConnected_iff /-
 /-- It suffices to prove `[x, y] ⊆ s` for `x y ∈ s`, `x ≤ y`. -/
 theorem ordConnected_iff : OrdConnected s ↔ ∀ x ∈ s, ∀ y ∈ s, x ≤ y → Icc x y ⊆ s :=
   ordConnected_def.trans
     ⟨fun hs x hx y hy hxy => hs hx hy, fun H x hx y hy z hz => H x hx y hy (le_trans hz.1 hz.2) hz⟩
 #align set.ord_connected_iff Set.ordConnected_iff
+-/
 
+#print Set.ordConnected_of_Ioo /-
 theorem ordConnected_of_Ioo {α : Type _} [PartialOrder α] {s : Set α}
     (hs : ∀ x ∈ s, ∀ y ∈ s, x < y → Ioo x y ⊆ s) : OrdConnected s :=
   by
@@ -76,6 +79,7 @@ theorem ordConnected_of_Ioo {α : Type _} [PartialOrder α] {s : Set α}
   rw [← Ioc_insert_left hxy, ← Ioo_insert_right hxy']
   exact insert_subset.2 ⟨hx, insert_subset.2 ⟨hy, hs x hx y hy hxy'⟩⟩
 #align set.ord_connected_of_Ioo Set.ordConnected_of_Ioo
+-/
 
 theorem OrdConnected.preimage_mono {f : β → α} (hs : OrdConnected s) (hf : Monotone f) :
     OrdConnected (f ⁻¹' s) :=
@@ -280,11 +284,13 @@ section PartialOrder
 
 variable {α : Type _} [PartialOrder α] {s : Set α}
 
+#print IsAntichain.ordConnected /-
 protected theorem IsAntichain.ordConnected (hs : IsAntichain (· ≤ ·) s) : s.OrdConnected :=
   ⟨fun x hx y hy z hz => by
     obtain rfl := hs.eq hx hy (hz.1.trans hz.2)
     rw [Icc_self, mem_singleton_iff] at hz; rwa [hz]⟩
 #align is_antichain.ord_connected IsAntichain.ordConnected
+-/
 
 end PartialOrder
 

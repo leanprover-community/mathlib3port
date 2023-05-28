@@ -181,7 +181,7 @@ theorem zero_apply [HasZeroMorphisms C] (β : Type w) (X Y : GradedObject β C) 
 
 section
 
-open ZeroObject
+open scoped ZeroObject
 
 #print CategoryTheory.GradedObject.hasZeroObject /-
 instance hasZeroObject [HasZeroObject C] [HasZeroMorphisms C] (β : Type w) :

@@ -37,7 +37,7 @@ noncomputable section
 
 open Filter Set MeasureTheory
 
-open Nat ENNReal Topology BigOperators
+open scoped Nat ENNReal Topology BigOperators
 
 namespace Real
 

@@ -226,7 +226,7 @@ theorem id_traverse [DecidableEq α] (s : Finset α) : traverse id.mk s = s := b
   rw [traverse, Multiset.id_traverse]; exact s.val_to_finset
 #align finset.id_traverse Finset.id_traverse
 
-open Classical
+open scoped Classical
 
 #print Finset.map_comp_coe /-
 @[simp]

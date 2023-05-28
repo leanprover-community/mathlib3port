@@ -45,7 +45,7 @@ namespace Language
 
 open Structure Cardinal
 
-open Cardinal
+open scoped Cardinal
 
 variable (L : Language.{u, v}) (L' : Language.{u', v'}) {M : Type w} [L.Structure M]
 
@@ -617,7 +617,7 @@ theorem LHom.map_constants_comp_sumInl {f : α → β} :
 
 end
 
-open FirstOrder
+open scoped FirstOrder
 
 #print FirstOrder.Language.constantsOnSelfStructure /-
 instance constantsOnSelfStructure : (constantsOn M).Structure M :=

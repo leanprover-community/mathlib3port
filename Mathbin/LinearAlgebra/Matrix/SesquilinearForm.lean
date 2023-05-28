@@ -44,11 +44,11 @@ sesquilinear_form, matrix, basis
 
 variable {R R₁ R₂ M M₁ M₂ M₁' M₂' n m n' m' ι : Type _}
 
-open BigOperators
+open scoped BigOperators
 
 open Finset LinearMap Matrix
 
-open Matrix
+open scoped Matrix
 
 section AuxToLinearMap
 
@@ -536,7 +536,7 @@ end ToMatrix
 
 section MatrixAdjoints
 
-open Matrix
+open scoped Matrix
 
 variable [CommRing R]
 

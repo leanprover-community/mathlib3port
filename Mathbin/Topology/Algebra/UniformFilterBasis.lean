@@ -25,7 +25,7 @@ The only result so far is a characterization of Cauchy filters in topological gr
 -/
 
 
-open uniformity Filter
+open scoped uniformity Filter
 
 open Filter
 

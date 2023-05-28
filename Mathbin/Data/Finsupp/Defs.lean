@@ -90,7 +90,7 @@ noncomputable section
 
 open Finset Function
 
-open BigOperators
+open scoped BigOperators
 
 variable {α β γ ι M M' N P G H R S : Type _}
 

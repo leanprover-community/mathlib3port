@@ -53,7 +53,7 @@ rectangle are contained in `s` by convexity. The general case follows by lineari
 
 open Asymptotics Set
 
-open Topology
+open scoped Topology
 
 variable {E F : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [NormedAddCommGroup F]
   [NormedSpace ℝ F] {s : Set E} (s_conv : Convex ℝ s) {f : E → F} {f' : E → E →L[ℝ] F}

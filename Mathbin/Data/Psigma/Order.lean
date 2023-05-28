@@ -149,6 +149,7 @@ instance boundedOrder [PartialOrder ι] [BoundedOrder ι] [∀ i, Preorder (α i
   { Lex.orderBot, Lex.orderTop with }
 #align psigma.lex.bounded_order PSigma.Lex.boundedOrder
 
+#print PSigma.Lex.denselyOrdered /-
 instance denselyOrdered [Preorder ι] [DenselyOrdered ι] [∀ i, Nonempty (α i)] [∀ i, Preorder (α i)]
     [∀ i, DenselyOrdered (α i)] : DenselyOrdered (Σₗ' i, α i) :=
   ⟨by
@@ -159,7 +160,9 @@ instance denselyOrdered [Preorder ι] [DenselyOrdered ι] [∀ i, Nonempty (α i
     · obtain ⟨c, ha, hb⟩ := exists_between h
       exact ⟨⟨i, c⟩, right _ ha, right _ hb⟩⟩
 #align psigma.lex.densely_ordered PSigma.Lex.denselyOrdered
+-/
 
+#print PSigma.Lex.denselyOrdered_of_noMaxOrder /-
 instance denselyOrdered_of_noMaxOrder [Preorder ι] [∀ i, Preorder (α i)] [∀ i, DenselyOrdered (α i)]
     [∀ i, NoMaxOrder (α i)] : DenselyOrdered (Σₗ' i, α i) :=
   ⟨by
@@ -169,7 +172,9 @@ instance denselyOrdered_of_noMaxOrder [Preorder ι] [∀ i, Preorder (α i)] [�
     · obtain ⟨c, ha, hb⟩ := exists_between h
       exact ⟨⟨i, c⟩, right _ ha, right _ hb⟩⟩
 #align psigma.lex.densely_ordered_of_no_max_order PSigma.Lex.denselyOrdered_of_noMaxOrder
+-/
 
+#print PSigma.Lex.densely_ordered_of_noMinOrder /-
 instance densely_ordered_of_noMinOrder [Preorder ι] [∀ i, Preorder (α i)]
     [∀ i, DenselyOrdered (α i)] [∀ i, NoMinOrder (α i)] : DenselyOrdered (Σₗ' i, α i) :=
   ⟨by
@@ -179,7 +184,9 @@ instance densely_ordered_of_noMinOrder [Preorder ι] [∀ i, Preorder (α i)]
     · obtain ⟨c, ha, hb⟩ := exists_between h
       exact ⟨⟨i, c⟩, right _ ha, right _ hb⟩⟩
 #align psigma.lex.densely_ordered_of_no_min_order PSigma.Lex.densely_ordered_of_noMinOrder
+-/
 
+#print PSigma.Lex.noMaxOrder_of_nonempty /-
 instance noMaxOrder_of_nonempty [Preorder ι] [∀ i, Preorder (α i)] [NoMaxOrder ι]
     [∀ i, Nonempty (α i)] : NoMaxOrder (Σₗ' i, α i) :=
   ⟨by
@@ -188,6 +195,7 @@ instance noMaxOrder_of_nonempty [Preorder ι] [∀ i, Preorder (α i)] [NoMaxOrd
     obtain ⟨b⟩ : Nonempty (α j) := inferInstance
     exact ⟨⟨j, b⟩, left _ _ h⟩⟩
 #align psigma.lex.no_max_order_of_nonempty PSigma.Lex.noMaxOrder_of_nonempty
+-/
 
 /- warning: psigma.lex.no_min_order_of_nonempty clashes with [anonymous] -> [anonymous]
 Case conversion may be inaccurate. Consider using '#align psigma.lex.no_min_order_of_nonempty [anonymous]ₓ'. -/
@@ -200,15 +208,19 @@ instance [anonymous] [Preorder ι] [∀ i, Preorder (α i)] [NoMaxOrder ι] [∀
     exact ⟨⟨j, b⟩, left _ _ h⟩⟩
 #align psigma.lex.no_min_order_of_nonempty [anonymous]
 
+#print PSigma.Lex.noMaxOrder /-
 instance noMaxOrder [Preorder ι] [∀ i, Preorder (α i)] [∀ i, NoMaxOrder (α i)] :
     NoMaxOrder (Σₗ' i, α i) :=
   ⟨by rintro ⟨i, a⟩; obtain ⟨b, h⟩ := exists_gt a; exact ⟨⟨i, b⟩, right _ h⟩⟩
 #align psigma.lex.no_max_order PSigma.Lex.noMaxOrder
+-/
 
+#print PSigma.Lex.noMinOrder /-
 instance noMinOrder [Preorder ι] [∀ i, Preorder (α i)] [∀ i, NoMinOrder (α i)] :
     NoMinOrder (Σₗ' i, α i) :=
   ⟨by rintro ⟨i, a⟩; obtain ⟨b, h⟩ := exists_lt a; exact ⟨⟨i, b⟩, right _ h⟩⟩
 #align psigma.lex.no_min_order PSigma.Lex.noMinOrder
+-/
 
 end Lex
 

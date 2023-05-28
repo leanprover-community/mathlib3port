@@ -24,7 +24,7 @@ about trigonometric functions and angles.
 -/
 
 
-open Real
+open scoped Real
 
 noncomputable section
 

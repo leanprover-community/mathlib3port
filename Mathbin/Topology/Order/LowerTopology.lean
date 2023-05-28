@@ -221,6 +221,7 @@ theorem isClosed_upperClosure (h : s.Finite) : IsClosed (upperClosure s : Set α
 #align lower_topology.is_closed_upper_closure LowerTopology.isClosed_upperClosure
 -/
 
+#print LowerTopology.isLowerSet_of_isOpen /-
 /-- Every set open in the lower topology is a lower set. -/
 theorem isLowerSet_of_isOpen (h : IsOpen s) : IsLowerSet s :=
   by
@@ -231,10 +232,13 @@ theorem isLowerSet_of_isOpen (h : IsOpen s) : IsLowerSet s :=
   case inter u v hu1 hv1 hu2 hv2 => exact hu2.inter hv2
   case sUnion _ _ ih => exact isLowerSet_sUnion ih
 #align lower_topology.is_lower_set_of_is_open LowerTopology.isLowerSet_of_isOpen
+-/
 
+#print LowerTopology.isUpperSet_of_isClosed /-
 theorem isUpperSet_of_isClosed (h : IsClosed s) : IsUpperSet s :=
   isLowerSet_compl.1 <| isLowerSet_of_isOpen h.isOpen_compl
 #align lower_topology.is_upper_set_of_is_closed LowerTopology.isUpperSet_of_isClosed
+-/
 
 #print LowerTopology.closure_singleton /-
 /--

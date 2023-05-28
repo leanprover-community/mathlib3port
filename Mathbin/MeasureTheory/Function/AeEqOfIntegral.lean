@@ -49,7 +49,7 @@ Generally useful lemmas which are not related to integrals:
 
 open MeasureTheory TopologicalSpace NormedSpace Filter
 
-open ENNReal NNReal MeasureTheory
+open scoped ENNReal NNReal MeasureTheory
 
 namespace MeasureTheory
 
@@ -170,7 +170,7 @@ theorem ae_const_le_iff_forall_lt_measure_zero {β} [LinearOrder β] [Topologica
 
 section ENNReal
 
-open Topology
+open scoped Topology
 
 theorem ae_le_of_forall_set_lintegral_le_of_sigmaFinite [SigmaFinite μ] {f g : α → ℝ≥0∞}
     (hf : Measurable f) (hg : Measurable g)

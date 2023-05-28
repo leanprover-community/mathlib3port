@@ -247,11 +247,13 @@ theorem neg_eq_one_iff [CovariantClass α α Mul.mul LE.le] {a : α} : a⁻ = 1 
 #align lattice_ordered_comm_group.neg_eq_one_iff LatticeOrderedCommGroup.neg_eq_one_iff
 #align lattice_ordered_comm_group.neg_eq_zero_iff LatticeOrderedCommGroup.neg_eq_zero_iff
 
+#print LatticeOrderedCommGroup.m_le_pos /-
 @[to_additive le_pos]
 theorem m_le_pos (a : α) : a ≤ a⁺ :=
   le_sup_left
 #align lattice_ordered_comm_group.m_le_pos LatticeOrderedCommGroup.m_le_pos
 #align lattice_ordered_comm_group.le_pos LatticeOrderedCommGroup.le_pos
+-/
 
 -- -a ≤ a⁻
 @[to_additive]

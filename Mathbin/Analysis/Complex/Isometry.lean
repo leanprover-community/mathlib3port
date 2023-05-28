@@ -38,7 +38,7 @@ noncomputable section
 
 open Complex
 
-open ComplexConjugate
+open scoped ComplexConjugate
 
 -- mathport name: complex.abs
 local notation "|" x "|" => Complex.abs x

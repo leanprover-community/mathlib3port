@@ -56,7 +56,7 @@ These have not yet been implemented.
 
 universe u u' v w
 
-open BigOperators
+open scoped BigOperators
 
 #print Matrix /-
 /-- `matrix m n R` is the type of matrices with entries in `R`, whose rows are indexed by `m`
@@ -362,7 +362,7 @@ instance subsingleton_of_empty_right [IsEmpty n] : Subsingleton (Matrix m n α) 
 
 end Matrix
 
-open Matrix
+open scoped Matrix
 
 namespace Matrix
 
@@ -870,7 +870,7 @@ end StarRing
 
 end DotProduct
 
-open Matrix
+open scoped Matrix
 
 #print Matrix.mul /-
 /-- `M ⬝ N` is the usual product of matrices `M` and `N`, i.e. we have that
@@ -1596,7 +1596,7 @@ theorem mapMatrix_trans (f : α ≃ₐ[R] β) (g : β ≃ₐ[R] γ) :
 
 end AlgEquiv
 
-open Matrix
+open scoped Matrix
 
 namespace Matrix
 
@@ -1882,7 +1882,7 @@ end CommSemiring
 
 section Transpose
 
-open Matrix
+open scoped Matrix
 
 @[simp]
 theorem transpose_transpose (M : Matrix m n α) : Mᵀᵀ = M := by ext <;> rfl
@@ -2037,7 +2037,7 @@ end Transpose
 
 section ConjTranspose
 
-open Matrix
+open scoped Matrix
 
 /-- Tell `simp` what the entries are in a conjugate transposed matrix.
 
@@ -2596,7 +2596,7 @@ Simplification lemmas for `matrix.row` and `matrix.col`.
 -/
 
 
-open Matrix
+open scoped Matrix
 
 @[simp]
 theorem col_add [Add α] (v w : m → α) : col (v + w) = col v + col w := by ext; rfl

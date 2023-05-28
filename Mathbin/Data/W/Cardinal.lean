@@ -39,7 +39,7 @@ noncomputable section
 
 namespace WType
 
-open Cardinal
+open scoped Cardinal
 
 open Cardinal
 

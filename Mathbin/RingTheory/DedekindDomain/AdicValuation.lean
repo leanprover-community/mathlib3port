@@ -63,7 +63,7 @@ dedekind domain, dedekind ring, adic valuation
 
 noncomputable section
 
-open Classical DiscreteValuation
+open scoped Classical DiscreteValuation
 
 open Multiplicative IsDedekindDomain
 

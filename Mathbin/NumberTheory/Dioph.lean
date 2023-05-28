@@ -537,7 +537,7 @@ variable {α β : Type} {n : ℕ}
 
 open Vector3
 
-open Vector3
+open scoped Vector3
 
 attribute [local reducible] Vector3
 

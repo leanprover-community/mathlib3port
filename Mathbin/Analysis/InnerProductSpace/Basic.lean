@@ -75,7 +75,7 @@ noncomputable section
 
 open IsROrC Real Filter
 
-open BigOperators Topology ComplexConjugate
+open scoped BigOperators Topology ComplexConjugate
 
 variable {𝕜 E F : Type _} [IsROrC 𝕜]
 
@@ -2038,7 +2038,7 @@ section OrthogonalFamily
 
 variable {ι : Type _} [dec_ι : DecidableEq ι] (𝕜)
 
-open DirectSum
+open scoped DirectSum
 
 #print OrthogonalFamily /-
 /-- An indexed family of mutually-orthogonal subspaces of an inner product space `E`.

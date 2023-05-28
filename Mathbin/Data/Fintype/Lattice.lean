@@ -21,7 +21,7 @@ import Mathbin.Data.Finset.Lattice
 
 open Function
 
-open Nat
+open scoped Nat
 
 universe u v
 

@@ -41,7 +41,7 @@ Gδ set, residual set
 
 noncomputable section
 
-open Classical Topology Filter uniformity
+open scoped Classical Topology Filter uniformity
 
 open Filter Encodable Set
 
@@ -210,7 +210,7 @@ section ContinuousAt
 
 open TopologicalSpace
 
-open uniformity
+open scoped uniformity
 
 variable [TopologicalSpace α]
 

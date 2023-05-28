@@ -32,11 +32,11 @@ noetherian local domain `(R, m, k)`:
 
 variable (R : Type _) [CommRing R] (K : Type _) [Field K] [Algebra R K] [IsFractionRing R K]
 
-open DiscreteValuation
+open scoped DiscreteValuation
 
 open LocalRing
 
-open BigOperators
+open scoped BigOperators
 
 theorem exists_maximalIdeal_pow_eq_of_principal [IsNoetherianRing R] [LocalRing R] [IsDomain R]
     (h : ¬IsField R) (h' : (maximalIdeal R).IsPrincipal) (I : Ideal R) (hI : I ≠ ⊥) :

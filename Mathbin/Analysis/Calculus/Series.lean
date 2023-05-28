@@ -29,7 +29,7 @@ We also give versions of these statements which are localized to a set.
 
 open Set Metric TopologicalSpace Function Asymptotics Filter
 
-open Topology NNReal BigOperators
+open scoped Topology NNReal BigOperators
 
 variable {α β 𝕜 E F : Type _} [IsROrC 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E]
   [NormedAddCommGroup F] [CompleteSpace F] {u : α → ℝ}

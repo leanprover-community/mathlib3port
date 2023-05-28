@@ -22,7 +22,7 @@ In this file we prove formulas for products and sums over `finset.insert_none s`
 -/
 
 
-open BigOperators
+open scoped BigOperators
 
 open Function
 

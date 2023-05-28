@@ -235,6 +235,7 @@ instance boundedOrder [PartialOrder ι] [BoundedOrder ι] [∀ i, Preorder (α i
   { Lex.orderBot, Lex.orderTop with }
 #align sigma.lex.bounded_order Sigma.Lex.boundedOrder
 
+#print Sigma.Lex.denselyOrdered /-
 instance denselyOrdered [Preorder ι] [DenselyOrdered ι] [∀ i, Nonempty (α i)] [∀ i, Preorder (α i)]
     [∀ i, DenselyOrdered (α i)] : DenselyOrdered (Σₗ i, α i) :=
   ⟨by
@@ -245,7 +246,9 @@ instance denselyOrdered [Preorder ι] [DenselyOrdered ι] [∀ i, Nonempty (α i
     · obtain ⟨c, ha, hb⟩ := exists_between h
       exact ⟨⟨i, c⟩, right _ _ ha, right _ _ hb⟩⟩
 #align sigma.lex.densely_ordered Sigma.Lex.denselyOrdered
+-/
 
+#print Sigma.Lex.denselyOrdered_of_noMaxOrder /-
 instance denselyOrdered_of_noMaxOrder [Preorder ι] [∀ i, Preorder (α i)] [∀ i, DenselyOrdered (α i)]
     [∀ i, NoMaxOrder (α i)] : DenselyOrdered (Σₗ i, α i) :=
   ⟨by
@@ -255,7 +258,9 @@ instance denselyOrdered_of_noMaxOrder [Preorder ι] [∀ i, Preorder (α i)] [�
     · obtain ⟨c, ha, hb⟩ := exists_between h
       exact ⟨⟨i, c⟩, right _ _ ha, right _ _ hb⟩⟩
 #align sigma.lex.densely_ordered_of_no_max_order Sigma.Lex.denselyOrdered_of_noMaxOrder
+-/
 
+#print Sigma.Lex.denselyOrdered_of_noMinOrder /-
 instance denselyOrdered_of_noMinOrder [Preorder ι] [∀ i, Preorder (α i)] [∀ i, DenselyOrdered (α i)]
     [∀ i, NoMinOrder (α i)] : DenselyOrdered (Σₗ i, α i) :=
   ⟨by
@@ -265,7 +270,9 @@ instance denselyOrdered_of_noMinOrder [Preorder ι] [∀ i, Preorder (α i)] [�
     · obtain ⟨c, ha, hb⟩ := exists_between h
       exact ⟨⟨i, c⟩, right _ _ ha, right _ _ hb⟩⟩
 #align sigma.lex.densely_ordered_of_no_min_order Sigma.Lex.denselyOrdered_of_noMinOrder
+-/
 
+#print Sigma.Lex.noMaxOrder_of_nonempty /-
 instance noMaxOrder_of_nonempty [Preorder ι] [∀ i, Preorder (α i)] [NoMaxOrder ι]
     [∀ i, Nonempty (α i)] : NoMaxOrder (Σₗ i, α i) :=
   ⟨by
@@ -274,6 +281,7 @@ instance noMaxOrder_of_nonempty [Preorder ι] [∀ i, Preorder (α i)] [NoMaxOrd
     obtain ⟨b⟩ : Nonempty (α j) := inferInstance
     exact ⟨⟨j, b⟩, left _ _ h⟩⟩
 #align sigma.lex.no_max_order_of_nonempty Sigma.Lex.noMaxOrder_of_nonempty
+-/
 
 /- warning: sigma.lex.no_min_order_of_nonempty clashes with [anonymous] -> [anonymous]
 Case conversion may be inaccurate. Consider using '#align sigma.lex.no_min_order_of_nonempty [anonymous]ₓ'. -/
@@ -286,15 +294,19 @@ instance [anonymous] [Preorder ι] [∀ i, Preorder (α i)] [NoMaxOrder ι] [∀
     exact ⟨⟨j, b⟩, left _ _ h⟩⟩
 #align sigma.lex.no_min_order_of_nonempty [anonymous]
 
+#print Sigma.Lex.noMaxOrder /-
 instance noMaxOrder [Preorder ι] [∀ i, Preorder (α i)] [∀ i, NoMaxOrder (α i)] :
     NoMaxOrder (Σₗ i, α i) :=
   ⟨by rintro ⟨i, a⟩; obtain ⟨b, h⟩ := exists_gt a; exact ⟨⟨i, b⟩, right _ _ h⟩⟩
 #align sigma.lex.no_max_order Sigma.Lex.noMaxOrder
+-/
 
+#print Sigma.Lex.noMinOrder /-
 instance noMinOrder [Preorder ι] [∀ i, Preorder (α i)] [∀ i, NoMinOrder (α i)] :
     NoMinOrder (Σₗ i, α i) :=
   ⟨by rintro ⟨i, a⟩; obtain ⟨b, h⟩ := exists_lt a; exact ⟨⟨i, b⟩, right _ _ h⟩⟩
 #align sigma.lex.no_min_order Sigma.Lex.noMinOrder
+-/
 
 end Lex
 

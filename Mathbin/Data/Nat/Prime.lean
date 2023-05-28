@@ -42,7 +42,7 @@ This file deals with prime numbers: natural numbers `p ≥ 2` whose only divisor
 
 open Bool Subtype
 
-open Nat
+open scoped Nat
 
 namespace Nat
 

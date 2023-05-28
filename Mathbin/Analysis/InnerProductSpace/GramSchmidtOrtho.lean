@@ -40,7 +40,7 @@ and outputs a set of orthogonal vectors which have the same span.
 -/
 
 
-open BigOperators
+open scoped BigOperators
 
 open Finset Submodule FiniteDimensional
 

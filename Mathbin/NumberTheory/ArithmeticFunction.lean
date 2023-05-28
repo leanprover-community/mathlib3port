@@ -56,7 +56,7 @@ arithmetic functions, dirichlet convolution, divisors
 
 open Finset
 
-open BigOperators
+open scoped BigOperators
 
 namespace Nat
 
@@ -428,7 +428,7 @@ theorem mul_zeta_apply {f : ArithmeticFunction ℕ} {x : ℕ} : (f * ζ) x = ∑
 
 end Zeta
 
-open ArithmeticFunction
+open scoped ArithmeticFunction
 
 section Pmul
 

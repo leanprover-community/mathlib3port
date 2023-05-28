@@ -24,7 +24,7 @@ Extension of uniform continuous functions.
 
 open Filter TopologicalSpace Set Function Classical
 
-open Classical uniformity Topology Filter
+open scoped Classical uniformity Topology Filter
 
 section
 

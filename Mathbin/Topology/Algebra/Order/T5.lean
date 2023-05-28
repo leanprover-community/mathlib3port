@@ -24,7 +24,7 @@ topological space.
 
 open Filter Set Function OrderDual
 
-open Topology Filter Interval
+open scoped Topology Filter Interval
 
 variable {X : Type _} [LinearOrder X] [TopologicalSpace X] [OrderTopology X] {a b c : X}
   {s t : Set X}

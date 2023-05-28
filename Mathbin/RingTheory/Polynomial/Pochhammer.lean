@@ -38,7 +38,7 @@ universe u v
 
 open Polynomial
 
-open Polynomial
+open scoped Polynomial
 
 section Semiring
 
@@ -216,7 +216,7 @@ end StrictOrderedSemiring
 
 section Factorial
 
-open Nat
+open scoped Nat
 
 variable (S : Type _) [Semiring S] (r n : ℕ)
 

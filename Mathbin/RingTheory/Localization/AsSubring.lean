@@ -26,7 +26,7 @@ as a subalgebra of the field `K` over `A`.
 
 namespace Localization
 
-open nonZeroDivisors
+open scoped nonZeroDivisors
 
 variable {A : Type _} (K : Type _) [CommRing A] (S : Submonoid A) (hS : S ≤ A⁰)
 

@@ -264,11 +264,13 @@ class CompleteLattice (α : Type _) extends Lattice α, CompleteSemilatticeSup �
 #align complete_lattice CompleteLattice
 -/
 
+#print CompleteLattice.toBoundedOrder /-
 -- see Note [lower instance priority]
 instance (priority := 100) CompleteLattice.toBoundedOrder [h : CompleteLattice α] :
     BoundedOrder α :=
   { h with }
 #align complete_lattice.to_bounded_order CompleteLattice.toBoundedOrder
+-/
 
 #print completeLatticeOfInf /-
 /-- Create a `complete_lattice` from a `partial_order` and `Inf` function

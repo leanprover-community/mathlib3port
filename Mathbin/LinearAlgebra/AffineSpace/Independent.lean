@@ -43,7 +43,7 @@ This file defines affinely independent families of points.
 
 noncomputable section
 
-open BigOperators Affine
+open scoped BigOperators Affine
 
 open Function
 

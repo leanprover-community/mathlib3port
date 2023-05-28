@@ -29,7 +29,7 @@ namespace Complex
 
 open Set Filter
 
-open Real
+open scoped Real
 
 theorem cos_eq_zero_iff {θ : ℂ} : cos θ = 0 ↔ ∃ k : ℤ, θ = (2 * k + 1) * π / 2 :=
   by
@@ -159,7 +159,7 @@ theorem tan_eq {z : ℂ}
   convert tan_add_mul_I h <;> exact (re_add_im z).symm
 #align complex.tan_eq Complex.tan_eq
 
-open Topology
+open scoped Topology
 
 theorem continuousOn_tan : ContinuousOn tan { x | cos x ≠ 0 } :=
   continuousOn_sin.div continuousOn_cos fun x => id
@@ -218,7 +218,7 @@ end Complex
 
 namespace Real
 
-open Real
+open scoped Real
 
 theorem cos_eq_zero_iff {θ : ℝ} : cos θ = 0 ↔ ∃ k : ℤ, θ = (2 * k + 1) * π / 2 := by
   exact_mod_cast @Complex.cos_eq_zero_iff θ

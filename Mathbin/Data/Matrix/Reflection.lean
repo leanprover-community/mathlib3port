@@ -40,7 +40,7 @@ corresponding `*_eq` lemmas to be used in a place where they are definitionally 
 -/
 
 
-open Matrix
+open scoped Matrix
 
 namespace Matrix
 

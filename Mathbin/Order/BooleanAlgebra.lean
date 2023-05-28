@@ -117,11 +117,13 @@ theorem sup_sdiff_inf (x y : α) : x \ y ⊔ x ⊓ y = x := by rw [sup_comm, sup
 theorem inf_sdiff_inf (x y : α) : x \ y ⊓ (x ⊓ y) = ⊥ := by rw [inf_comm, inf_inf_sdiff]
 #align inf_sdiff_inf inf_sdiff_inf
 
+#print GeneralizedBooleanAlgebra.toOrderBot /-
 -- see Note [lower instance priority]
 instance (priority := 100) GeneralizedBooleanAlgebra.toOrderBot : OrderBot α :=
   { GeneralizedBooleanAlgebra.toHasBot α with
     bot_le := fun a => by rw [← inf_inf_sdiff a a, inf_assoc]; exact inf_le_left }
 #align generalized_boolean_algebra.to_order_bot GeneralizedBooleanAlgebra.toOrderBot
+-/
 
 theorem disjoint_inf_sdiff : Disjoint (x ⊓ y) (x \ y) :=
   disjoint_iff_inf_le.mpr (inf_inf_sdiff x y).le
@@ -557,11 +559,14 @@ class BooleanAlgebra (α : Type u) extends DistribLattice α, HasCompl α, SDiff
 #align boolean_algebra BooleanAlgebra
 -/
 
+#print BooleanAlgebra.toBoundedOrder /-
 -- see Note [lower instance priority]
 instance (priority := 100) BooleanAlgebra.toBoundedOrder [h : BooleanAlgebra α] : BoundedOrder α :=
   { h with }
 #align boolean_algebra.to_bounded_order BooleanAlgebra.toBoundedOrder
+-/
 
+#print GeneralizedBooleanAlgebra.toBooleanAlgebra /-
 -- See note [reducible non instances]
 /-- A bounded generalized boolean algebra is a boolean algebra. -/
 @[reducible]
@@ -574,6 +579,7 @@ def GeneralizedBooleanAlgebra.toBooleanAlgebra [GeneralizedBooleanAlgebra α] [O
     top_le_sup_compl := fun _ => le_sup_sdiff
     sdiff_eq := fun _ _ => by rw [← inf_sdiff_assoc, inf_top_eq]; rfl }
 #align generalized_boolean_algebra.to_boolean_algebra GeneralizedBooleanAlgebra.toBooleanAlgebra
+-/
 
 section BooleanAlgebra
 
@@ -741,18 +747,24 @@ theorem compl_inf : (x ⊓ y)ᶜ = xᶜ ⊔ yᶜ :=
   hnot_inf_distrib _ _
 #align compl_inf compl_inf
 
+#print compl_le_compl_iff_le /-
 @[simp]
 theorem compl_le_compl_iff_le : yᶜ ≤ xᶜ ↔ x ≤ y :=
   ⟨fun h => by have h := compl_le_compl h <;> simp at h <;> assumption, compl_le_compl⟩
 #align compl_le_compl_iff_le compl_le_compl_iff_le
+-/
 
+#print compl_le_of_compl_le /-
 theorem compl_le_of_compl_le (h : yᶜ ≤ x) : xᶜ ≤ y := by
   simpa only [compl_compl] using compl_le_compl h
 #align compl_le_of_compl_le compl_le_of_compl_le
+-/
 
+#print compl_le_iff_compl_le /-
 theorem compl_le_iff_compl_le : xᶜ ≤ y ↔ yᶜ ≤ x :=
   ⟨compl_le_of_compl_le, compl_le_of_compl_le⟩
 #align compl_le_iff_compl_le compl_le_iff_compl_le
+-/
 
 @[simp]
 theorem sdiff_compl : x \ yᶜ = x ⊓ y := by rw [sdiff_eq, compl_compl]
@@ -792,13 +804,17 @@ theorem compl_himp_compl : xᶜ ⇨ yᶜ = y ⇨ x :=
   @compl_sdiff_compl αᵒᵈ _ _ _
 #align compl_himp_compl compl_himp_compl
 
+#print disjoint_compl_left_iff /-
 theorem disjoint_compl_left_iff : Disjoint (xᶜ) y ↔ y ≤ x := by
   rw [← le_compl_iff_disjoint_left, compl_compl]
 #align disjoint_compl_left_iff disjoint_compl_left_iff
+-/
 
+#print disjoint_compl_right_iff /-
 theorem disjoint_compl_right_iff : Disjoint x (yᶜ) ↔ x ≤ y := by
   rw [← le_compl_iff_disjoint_right, compl_compl]
 #align disjoint_compl_right_iff disjoint_compl_right_iff
+-/
 
 theorem codisjoint_himp_self_left : Codisjoint (x ⇨ y) x :=
   @disjoint_sdiff_self_left αᵒᵈ _ _ _

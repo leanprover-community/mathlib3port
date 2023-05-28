@@ -69,7 +69,7 @@ p-adic, p adic, padic, norm, valuation, cauchy, completion, p-adic completion
 
 noncomputable section
 
-open Classical
+open scoped Classical
 
 open Nat multiplicity padicNorm CauSeq CauSeq.Completion Metric
 

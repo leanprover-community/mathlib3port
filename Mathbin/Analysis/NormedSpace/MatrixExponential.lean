@@ -69,7 +69,7 @@ Hopefully we will be able to remove these in Lean 4.
 -/
 
 
-open Matrix BigOperators
+open scoped Matrix BigOperators
 
 section HacksForPiInstanceSearch
 

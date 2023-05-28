@@ -23,7 +23,7 @@ This file contains lemmas about continuity of the power functions on `ℂ`, `ℝ
 
 noncomputable section
 
-open Classical Real Topology NNReal ENNReal Filter BigOperators ComplexConjugate
+open scoped Classical Real Topology NNReal ENNReal Filter BigOperators ComplexConjugate
 
 open Filter Finset Set
 
@@ -443,6 +443,7 @@ theorem continuousAt_rpow {x : ℝ≥0} {y : ℝ} (h : x ≠ 0 ∨ 0 < y) :
   · exact ((continuous_subtype_val.comp continuous_fst).prod_mk continuous_snd).ContinuousAt
 #align nnreal.continuous_at_rpow NNReal.continuousAt_rpow
 
+#print NNReal.eventually_pow_one_div_le /-
 theorem eventually_pow_one_div_le (x : ℝ≥0) {y : ℝ≥0} (hy : 1 < y) :
     ∀ᶠ n : ℕ in atTop, x ^ (1 / n : ℝ) ≤ y :=
   by
@@ -452,6 +453,7 @@ theorem eventually_pow_one_div_le (x : ℝ≥0) {y : ℝ≥0} (hy : 1 < y) :
   simpa only [NNReal.rpow_one_div_le_iff (Nat.cast_pos.2 <| m.succ_pos.trans_le hn),
     NNReal.rpow_nat_cast] using hm.le.trans (pow_le_pow hy.le (m.le_succ.trans hn))
 #align nnreal.eventually_pow_one_div_le NNReal.eventually_pow_one_div_le
+-/
 
 end NNReal
 

@@ -58,7 +58,7 @@ This file defines `ℝ≥0` as a localized notation for `nnreal`.
 -/
 
 
-open Classical BigOperators
+open scoped Classical BigOperators
 
 #print NNReal /-
 -- to ensure these instances are computable
@@ -739,9 +739,11 @@ end Mul
 
 section Pow
 
+#print NNReal.pow_antitone_exp /-
 theorem pow_antitone_exp {a : ℝ≥0} (m n : ℕ) (mn : m ≤ n) (a1 : a ≤ 1) : a ^ n ≤ a ^ m :=
   pow_le_pow_of_le_one (zero_le a) a1 mn
 #align nnreal.pow_antitone_exp NNReal.pow_antitone_exp
+-/
 
 theorem exists_pow_lt_of_lt_one {a b : ℝ≥0} (ha : 0 < a) (hb : b < 1) : ∃ n : ℕ, b ^ n < a := by
   simpa only [← coe_pow, NNReal.coe_lt_coe] using

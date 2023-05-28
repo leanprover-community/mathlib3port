@@ -42,7 +42,7 @@ namespace Set
 
 variable {M : Type w} (A : Set M) (L : FirstOrder.Language.{u, v}) [L.Structure M]
 
-open FirstOrder
+open scoped FirstOrder
 
 open FirstOrder.Language FirstOrder.Language.Structure
 

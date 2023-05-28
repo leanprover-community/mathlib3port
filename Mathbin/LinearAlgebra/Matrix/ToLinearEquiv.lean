@@ -114,7 +114,7 @@ end ToLinearEquiv
 
 section Nondegenerate
 
-open Matrix
+open scoped Matrix
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (v «expr ≠ » 0) -/
 /-- This holds for all integral domains (see `matrix.exists_mul_vec_eq_zero_iff`),

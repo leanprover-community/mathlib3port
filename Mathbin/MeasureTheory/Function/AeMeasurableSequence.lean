@@ -30,7 +30,7 @@ and a measurable set `ae_seq_set hf p`, such that
 
 open MeasureTheory
 
-open Classical
+open scoped Classical
 
 variable {ι : Sort _} {α β γ : Type _} [MeasurableSpace α] [MeasurableSpace β] {f : ι → α → β}
   {μ : Measure α} {p : α → (ι → β) → Prop}

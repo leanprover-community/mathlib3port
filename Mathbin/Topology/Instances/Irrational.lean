@@ -39,7 +39,7 @@ irrational, residual
 
 open Set Filter Metric
 
-open Filter Topology
+open scoped Filter Topology
 
 #print isGδ_irrational /-
 theorem isGδ_irrational : IsGδ { x | Irrational x } :=

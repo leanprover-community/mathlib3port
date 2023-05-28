@@ -28,9 +28,9 @@ is the same as being a splitting field (`normal.of_is_splitting_field` and
 
 noncomputable section
 
-open BigOperators
+open scoped BigOperators
 
-open Classical Polynomial
+open scoped Classical Polynomial
 
 open Polynomial IsScalarTower
 

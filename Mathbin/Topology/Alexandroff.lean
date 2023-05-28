@@ -44,7 +44,7 @@ one-point compactification, compactness
 
 open Set Filter
 
-open Classical Topology Filter
+open scoped Classical Topology Filter
 
 /-!
 ### Definition and basic properties

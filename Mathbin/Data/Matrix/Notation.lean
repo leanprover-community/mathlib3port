@@ -55,7 +55,7 @@ universe u
 
 variable {α : Type u} {o n m : ℕ} {m' n' o' : Type _}
 
-open Matrix
+open scoped Matrix
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[] -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[] -/

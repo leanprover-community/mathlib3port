@@ -31,7 +31,7 @@ variable {l m n α : Type _}
 
 namespace Matrix
 
-open Matrix
+open scoped Matrix
 
 section CommRing
 
@@ -149,7 +149,7 @@ end CommRing
 
 section IsROrC
 
-open Matrix
+open scoped Matrix
 
 variable {𝕜 : Type _} [IsROrC 𝕜]
 

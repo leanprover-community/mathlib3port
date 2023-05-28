@@ -22,7 +22,7 @@ of characteristic `0`.
 -/
 
 
-open Nat
+open scoped Nat
 
 variable (K : Type _) [DivisionRing K] [CharZero K]
 

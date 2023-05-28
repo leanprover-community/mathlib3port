@@ -25,7 +25,7 @@ import Mathbin.Tactic.NthRewrite.Default
 
 namespace Rat
 
-open Rat
+open scoped Rat
 
 theorem num_dvd (a) {b : ℤ} (b0 : b ≠ 0) : (a /. b).num ∣ a :=
   by

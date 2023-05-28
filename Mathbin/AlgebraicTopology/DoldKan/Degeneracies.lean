@@ -35,7 +35,7 @@ statement vanishing statement `σ_comp_P_eq_zero` for the `P q`.
 open
   CategoryTheory CategoryTheory.Category CategoryTheory.Limits CategoryTheory.Preadditive Opposite
 
-open Simplicial DoldKan
+open scoped Simplicial DoldKan
 
 namespace AlgebraicTopology
 

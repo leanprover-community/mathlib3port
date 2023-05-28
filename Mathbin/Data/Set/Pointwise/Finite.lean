@@ -19,7 +19,7 @@ import Mathbin.Data.Set.Pointwise.Smul
 -/
 
 
-open Pointwise
+open scoped Pointwise
 
 variable {F α β γ : Type _}
 

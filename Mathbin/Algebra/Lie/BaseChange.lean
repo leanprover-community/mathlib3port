@@ -29,7 +29,7 @@ lie ring, lie algebra, extension of scalars, restriction of scalars, base change
 
 universe u v w w₁ w₂ w₃
 
-open TensorProduct
+open scoped TensorProduct
 
 variable (R : Type u) (A : Type w) (L : Type v)
 

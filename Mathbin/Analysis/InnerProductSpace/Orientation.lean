@@ -45,7 +45,7 @@ variable {E : Type _} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 
 open FiniteDimensional
 
-open BigOperators RealInnerProductSpace
+open scoped BigOperators RealInnerProductSpace
 
 namespace OrthonormalBasis
 

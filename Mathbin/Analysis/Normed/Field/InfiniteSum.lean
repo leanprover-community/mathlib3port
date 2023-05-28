@@ -28,7 +28,7 @@ We first establish results about arbitrary index types, `β` and `γ`, and then 
 
 variable {α : Type _} {ι : Type _} {ι' : Type _} [NormedRing α]
 
-open BigOperators Classical
+open scoped BigOperators Classical
 
 open Finset
 

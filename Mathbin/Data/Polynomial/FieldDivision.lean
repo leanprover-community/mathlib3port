@@ -25,7 +25,7 @@ This file starts looking like the ring theory of $ R[X] $
 
 noncomputable section
 
-open Classical BigOperators Polynomial
+open scoped Classical BigOperators Polynomial
 
 namespace Polynomial
 
@@ -247,6 +247,7 @@ instance : EuclideanDomain R[X] :=
     remainder_lt := fun p q hq => remainder_lt_aux _ hq
     mul_left_not_lt := fun p q hq => not_lt_of_ge (degree_le_mul_left _ hq) }
 
+#print Polynomial.mod_eq_self_iff /-
 theorem mod_eq_self_iff (hq0 : q ≠ 0) : p % q = p ↔ degree p < degree q :=
   ⟨fun h => h ▸ EuclideanDomain.mod_lt _ hq0, fun h =>
     by
@@ -256,7 +257,9 @@ theorem mod_eq_self_iff (hq0 : q ≠ 0) : p % q = p ↔ degree p < degree q :=
     unfold div_mod_by_monic_aux
     simp only [this, false_and_iff, if_false]⟩
 #align polynomial.mod_eq_self_iff Polynomial.mod_eq_self_iff
+-/
 
+#print Polynomial.div_eq_zero_iff /-
 theorem div_eq_zero_iff (hq0 : q ≠ 0) : p / q = 0 ↔ degree p < degree q :=
   ⟨fun h => by
     have := EuclideanDomain.div_add_mod p q <;>
@@ -268,7 +271,9 @@ theorem div_eq_zero_iff (hq0 : q ≠ 0) : p / q = 0 ↔ degree p < degree q :=
     have hm : Monic (q * C (leadingCoeff q)⁻¹) := monic_mul_leadingCoeff_inv hq0
     rw [div_def, (div_by_monic_eq_zero_iff hm).2 hlt, MulZeroClass.mul_zero]⟩
 #align polynomial.div_eq_zero_iff Polynomial.div_eq_zero_iff
+-/
 
+#print Polynomial.degree_add_div /-
 theorem degree_add_div (hq0 : q ≠ 0) (hpq : degree q ≤ degree p) :
     degree q + degree (p / q) = degree p :=
   by
@@ -280,13 +285,17 @@ theorem degree_add_div (hq0 : q ≠ 0) (hpq : degree q ≤ degree p) :
   conv_rhs =>
     rw [← EuclideanDomain.div_add_mod p q, degree_add_eq_left_of_degree_lt this, degree_mul]
 #align polynomial.degree_add_div Polynomial.degree_add_div
+-/
 
+#print Polynomial.degree_div_le /-
 theorem degree_div_le (p q : R[X]) : degree (p / q) ≤ degree p :=
   if hq : q = 0 then by simp [hq]
   else by
     rw [div_def, mul_comm, degree_mul_leading_coeff_inv _ hq] <;> exact degree_div_by_monic_le _ _
 #align polynomial.degree_div_le Polynomial.degree_div_le
+-/
 
+#print Polynomial.degree_div_lt /-
 theorem degree_div_lt (hp : p ≠ 0) (hq : 0 < degree q) : degree (p / q) < degree p :=
   by
   have hq0 : q ≠ 0 := fun hq0 => by simpa [hq0] using hq
@@ -295,6 +304,7 @@ theorem degree_div_lt (hp : p ≠ 0) (hq : 0 < degree q) : degree (p / q) < degr
       degree_div_by_monic_lt _ (monic_mul_leading_coeff_inv hq0) hp
         (by rw [degree_mul_leading_coeff_inv _ hq0] <;> exact hq)
 #align polynomial.degree_div_lt Polynomial.degree_div_lt
+-/
 
 #print Polynomial.degree_map /-
 @[simp]

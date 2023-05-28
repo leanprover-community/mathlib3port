@@ -53,7 +53,7 @@ fewer type arguments.
 
 universe u v₁ v₂ v₃ v₄
 
-open TensorProduct
+open scoped TensorProduct
 
 open TensorProduct
 

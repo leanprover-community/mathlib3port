@@ -52,7 +52,7 @@ element of a `star_module` over `ℂ`.
 
 namespace Complex
 
-open ComplexConjugate
+open scoped ComplexConjugate
 
 variable {R : Type _} {S : Type _}
 
@@ -141,7 +141,7 @@ end
 
 section
 
-open ComplexOrder
+open scoped ComplexOrder
 
 protected theorem orderedSMul : OrderedSMul ℝ ℂ :=
   OrderedSMul.mk' fun a b r hab hr => ⟨by simp [hr, hab.1.le], by simp [hab.2]⟩
@@ -259,7 +259,7 @@ instance (priority := 900) StarModule.complexToReal {E : Type _} [AddCommGroup E
 
 namespace Complex
 
-open ComplexConjugate
+open scoped ComplexConjugate
 
 /-- Linear map version of the real part function, from `ℂ` to `ℝ`. -/
 def reLm : ℂ →ₗ[ℝ] ℝ where

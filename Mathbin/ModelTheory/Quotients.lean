@@ -33,7 +33,7 @@ namespace Language
 
 variable (L : Language) {M : Type _}
 
-open FirstOrder
+open scoped FirstOrder
 
 open Structure
 

@@ -327,7 +327,7 @@ theorem minpoly_sub_one_eq_cyclotomic_comp [Algebra K A] [IsDomain A] {ζ : A}
   simp
 #align is_primitive_root.minpoly_sub_one_eq_cyclotomic_comp IsPrimitiveRoot.minpoly_sub_one_eq_cyclotomic_comp
 
-open Cyclotomic
+open scoped Cyclotomic
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/

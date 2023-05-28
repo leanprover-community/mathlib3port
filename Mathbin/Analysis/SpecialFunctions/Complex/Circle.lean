@@ -25,7 +25,7 @@ to the unit circle. These two maps define a local equivalence between `circle` a
 
 open Complex Function Set
 
-open Real
+open scoped Real
 
 namespace circle
 

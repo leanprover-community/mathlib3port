@@ -60,6 +60,7 @@ section Nonempty
 
 variable (α) [Nonempty α]
 
+#print Fintype.toOrderBot /-
 -- See note [reducible non-instances]
 /-- Constructs the `⊥` of a finite nonempty `semilattice_inf`. -/
 @[reducible]
@@ -68,7 +69,9 @@ def toOrderBot [SemilatticeInf α] : OrderBot α
   bot := univ.inf' univ_nonempty id
   bot_le a := inf'_le _ <| mem_univ a
 #align fintype.to_order_bot Fintype.toOrderBot
+-/
 
+#print Fintype.toOrderTop /-
 -- See note [reducible non-instances]
 /-- Constructs the `⊤` of a finite nonempty `semilattice_sup` -/
 @[reducible]
@@ -77,13 +80,16 @@ def toOrderTop [SemilatticeSup α] : OrderTop α
   top := univ.sup' univ_nonempty id
   le_top a := le_sup' _ <| mem_univ a
 #align fintype.to_order_top Fintype.toOrderTop
+-/
 
+#print Fintype.toBoundedOrder /-
 -- See note [reducible non-instances]
 /-- Constructs the `⊤` and `⊥` of a finite nonempty `lattice`. -/
 @[reducible]
 def toBoundedOrder [Lattice α] : BoundedOrder α :=
   { toOrderBot α, toOrderTop α with }
 #align fintype.to_bounded_order Fintype.toBoundedOrder
+-/
 
 end Nonempty
 
@@ -91,8 +97,9 @@ section BoundedOrder
 
 variable (α)
 
-open Classical
+open scoped Classical
 
+#print Fintype.toCompleteLattice /-
 -- See note [reducible non-instances]
 /-- A finite bounded lattice is complete. -/
 @[reducible]
@@ -106,7 +113,9 @@ noncomputable def toCompleteLattice [Lattice α] [BoundedOrder α] : CompleteLat
     inf_le := fun _ _ ha => Finset.inf_le (Set.mem_toFinset.mpr ha)
     le_inf := fun s _ ha => Finset.le_inf fun b hb => ha _ <| Set.mem_toFinset.mp hb }
 #align fintype.to_complete_lattice Fintype.toCompleteLattice
+-/
 
+#print Fintype.toCompleteDistribLattice /-
 -- See note [reducible non-instances]
 /-- A finite bounded distributive lattice is completely distributive. -/
 @[reducible]
@@ -128,13 +137,16 @@ noncomputable def toCompleteDistribLattice [DistribLattice α] [BoundedOrder α]
       simp_rw [Set.mem_toFinset]
       rfl }
 #align fintype.to_complete_distrib_lattice Fintype.toCompleteDistribLattice
+-/
 
+#print Fintype.toCompleteLinearOrder /-
 -- See note [reducible non-instances]
 /-- A finite bounded linear order is complete. -/
 @[reducible]
 noncomputable def toCompleteLinearOrder [LinearOrder α] [BoundedOrder α] : CompleteLinearOrder α :=
   { toCompleteLattice α, ‹LinearOrder α› with }
 #align fintype.to_complete_linear_order Fintype.toCompleteLinearOrder
+-/
 
 #print Fintype.toCompleteBooleanAlgebra /-
 -- See note [reducible non-instances]

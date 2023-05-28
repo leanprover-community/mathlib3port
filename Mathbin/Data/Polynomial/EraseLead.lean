@@ -29,7 +29,7 @@ and thus works for polynomials over semirings as well as rings.
 
 noncomputable section
 
-open Classical Polynomial
+open scoped Classical Polynomial
 
 open Polynomial Finset
 
@@ -207,9 +207,11 @@ theorem eraseLead_add_of_natDegree_lt_right {p q : R[X]} (pq : p.natDegree < q.n
 #align polynomial.erase_lead_add_of_nat_degree_lt_right Polynomial.eraseLead_add_of_natDegree_lt_right
 -/
 
+#print Polynomial.eraseLead_degree_le /-
 theorem eraseLead_degree_le : (eraseLead f).degree ≤ f.degree :=
   f.degree_erase_le _
 #align polynomial.erase_lead_degree_le Polynomial.eraseLead_degree_le
+-/
 
 #print Polynomial.eraseLead_natDegree_le_aux /-
 theorem eraseLead_natDegree_le_aux : (eraseLead f).natDegree ≤ f.natDegree :=
@@ -325,7 +327,7 @@ theorem map_natDegree_eq_natDegree {S F : Type _} [Semiring S] [AddMonoidHomClas
     p.natDegree.sub_zero
 #align polynomial.map_nat_degree_eq_nat_degree Polynomial.map_natDegree_eq_natDegree
 
-open BigOperators
+open scoped BigOperators
 
 theorem card_support_eq' {n : ℕ} (k : Fin n → ℕ) (x : Fin n → R) (hk : Function.Injective k)
     (hx : ∀ i, x i ≠ 0) : (∑ i, C (x i) * X ^ k i).support.card = n :=

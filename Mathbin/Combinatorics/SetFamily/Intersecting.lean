@@ -43,15 +43,19 @@ section SemilatticeInf
 
 variable [SemilatticeInf α] [OrderBot α] {s t : Set α} {a b c : α}
 
+#print Set.Intersecting /-
 /-- A set family is intersecting if every pair of elements is non-disjoint. -/
 def Intersecting (s : Set α) : Prop :=
   ∀ ⦃a⦄, a ∈ s → ∀ ⦃b⦄, b ∈ s → ¬Disjoint a b
 #align set.intersecting Set.Intersecting
+-/
 
+#print Set.Intersecting.mono /-
 @[mono]
 theorem Intersecting.mono (h : t ⊆ s) (hs : s.Intersecting) : t.Intersecting := fun a ha b hb =>
   hs (h ha) (h hb)
 #align set.intersecting.mono Set.Intersecting.mono
+-/
 
 theorem Intersecting.not_bot_mem (hs : s.Intersecting) : ⊥ ∉ s := fun h => hs h h disjoint_bot_left
 #align set.intersecting.not_bot_mem Set.Intersecting.not_bot_mem
@@ -60,8 +64,10 @@ theorem Intersecting.ne_bot (hs : s.Intersecting) (ha : a ∈ s) : a ≠ ⊥ :=
   ne_of_mem_of_not_mem ha hs.not_bot_mem
 #align set.intersecting.ne_bot Set.Intersecting.ne_bot
 
+#print Set.intersecting_empty /-
 theorem intersecting_empty : (∅ : Set α).Intersecting := fun _ => False.elim
 #align set.intersecting_empty Set.intersecting_empty
+-/
 
 @[simp]
 theorem intersecting_singleton : ({a} : Set α).Intersecting ↔ a ≠ ⊥ := by simp [intersecting]
@@ -103,6 +109,7 @@ protected theorem Subsingleton.intersecting (hs : s.Subsingleton) : s.Intersecti
   intersecting_iff_pairwise_not_disjoint.trans <| and_iff_right <| hs.Pairwise _
 #align set.subsingleton.intersecting Set.Subsingleton.intersecting
 
+#print Set.intersecting_iff_eq_empty_of_subsingleton /-
 theorem intersecting_iff_eq_empty_of_subsingleton [Subsingleton α] (s : Set α) :
     s.Intersecting ↔ s = ∅ :=
   by
@@ -114,7 +121,9 @@ theorem intersecting_iff_eq_empty_of_subsingleton [Subsingleton α] (s : Set α)
   · rintro rfl
     exact (Set.singleton_nonempty _).ne_empty.symm
 #align set.intersecting_iff_eq_empty_of_subsingleton Set.intersecting_iff_eq_empty_of_subsingleton
+-/
 
+#print Set.Intersecting.isUpperSet /-
 /-- Maximal intersecting families are upper sets. -/
 protected theorem Intersecting.isUpperSet (hs : s.Intersecting)
     (h : ∀ t : Set α, t.Intersecting → s ⊆ t → s = t) : IsUpperSet s := by
@@ -125,7 +134,9 @@ protected theorem Intersecting.isUpperSet (hs : s.Intersecting)
     exact
       hs.insert (mt (eq_bot_mono hab) <| hs.ne_bot ha) fun c hc hbc => hs ha hc <| hbc.mono_left hab
 #align set.intersecting.is_upper_set Set.Intersecting.isUpperSet
+-/
 
+#print Set.Intersecting.isUpperSet' /-
 /-- Maximal intersecting families are upper sets. Finset version. -/
 theorem Intersecting.isUpperSet' {s : Finset α} (hs : (s : Set α).Intersecting)
     (h : ∀ t : Finset α, (t : Set α).Intersecting → s ⊆ t → s = t) : IsUpperSet (s : Set α) := by
@@ -137,6 +148,7 @@ theorem Intersecting.isUpperSet' {s : Finset α} (hs : (s : Set α).Intersecting
     exact
       hs.insert (mt (eq_bot_mono hab) <| hs.ne_bot ha) fun c hc hbc => hs ha hc <| hbc.mono_left hab
 #align set.intersecting.is_upper_set' Set.Intersecting.isUpperSet'
+-/
 
 end SemilatticeInf
 

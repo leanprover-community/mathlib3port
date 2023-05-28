@@ -42,7 +42,7 @@ self-adjoint, symmetric
 
 open IsROrC
 
-open ComplexConjugate
+open scoped ComplexConjugate
 
 variable {𝕜 E E' F G : Type _} [IsROrC 𝕜]
 

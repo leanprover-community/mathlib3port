@@ -41,7 +41,7 @@ This file is a place to collect topological results about matrices.
 
 open Matrix
 
-open Matrix
+open scoped Matrix
 
 variable {X α l m n p S R : Type _} {m' n' : l → Type _}
 

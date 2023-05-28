@@ -43,7 +43,7 @@ universe v u
 
 open CategoryTheory CategoryTheory.Limits
 
-open Simplicial
+open scoped Simplicial
 
 #print SSet /-
 /-- The category of simplicial sets.
@@ -127,7 +127,7 @@ def hornInclusion (n : ℕ) (i : Fin (n + 1)) : Λ[n, i] ⟶ Δ[n]
 
 section Examples
 
-open Simplicial
+open scoped Simplicial
 
 #print SSet.S1 /-
 /-- The simplicial circle. -/

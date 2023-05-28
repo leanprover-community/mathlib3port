@@ -28,7 +28,7 @@ Features:
 
 universe u v w
 
-open MvFunctor
+open scoped MvFunctor
 
 #print MvFunctor /-
 /-- multivariate functors, i.e. functor between the category of type vectors

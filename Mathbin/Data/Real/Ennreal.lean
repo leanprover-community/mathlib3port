@@ -80,7 +80,7 @@ context, or if we have `(f : α → ℝ≥0∞) (hf : ∀ x, f x ≠ ∞)`.
 
 open Classical Set
 
-open Classical BigOperators NNReal
+open scoped Classical BigOperators NNReal
 
 variable {α : Type _} {β : Type _}
 

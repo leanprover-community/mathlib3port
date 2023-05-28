@@ -40,7 +40,7 @@ absolute value, uniform spaces
 
 open Set Function Filter UniformSpace
 
-open Filter Topology
+open scoped Filter Topology
 
 namespace AbsoluteValue
 

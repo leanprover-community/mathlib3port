@@ -52,7 +52,7 @@ noncomputable section
 
 open MeasureTheory Filter Complex Set FiniteDimensional
 
-open Filter Topology Real ENNReal FourierTransform RealInnerProductSpace NNReal
+open scoped Filter Topology Real ENNReal FourierTransform RealInnerProductSpace NNReal
 
 variable {E V : Type _} [NormedAddCommGroup E] [NormedSpace ℂ E] {f : V → E}
 

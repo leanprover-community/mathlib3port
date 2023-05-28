@@ -23,7 +23,7 @@ local postfix:max "⋆" => star
 
 section
 
-open Topology ENNReal
+open scoped Topology ENNReal
 
 open Filter ENNReal spectrum CstarRing
 
@@ -176,7 +176,7 @@ namespace WeakDual
 
 open ContinuousMap Complex
 
-open ComplexStarModule
+open scoped ComplexStarModule
 
 variable {F A : Type _} [NormedRing A] [NormedAlgebra ℂ A] [CompleteSpace A] [StarRing A]
   [CstarRing A] [StarModule ℂ A] [hF : AlgHomClass F ℂ A ℂ]

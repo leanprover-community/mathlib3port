@@ -206,7 +206,7 @@ instance : CommRing (Cauchy abv) :=
 
 end
 
-open Classical
+open scoped Classical
 
 section
 

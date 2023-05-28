@@ -35,7 +35,7 @@ gives a simple criterion for a substructure to be elementary.
  -/
 
 
-open FirstOrder
+open scoped FirstOrder
 
 namespace FirstOrder
 

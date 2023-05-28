@@ -44,7 +44,7 @@ derivative, differentiability, higher derivative, `C^n`, multilinear, Taylor ser
 
 noncomputable section
 
-open Classical BigOperators NNReal Nat
+open scoped Classical BigOperators NNReal Nat
 
 -- mathport name: «expr∞»
 local notation "∞" => (⊤ : ℕ∞)
@@ -116,7 +116,7 @@ end Finset
 
 open Set Fin Filter Function
 
-open Topology
+open scoped Topology
 
 variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {D : Type uD} [NormedAddCommGroup D]
   [NormedSpace 𝕜 D] {E : Type uE} [NormedAddCommGroup E] [NormedSpace 𝕜 E] {F : Type uF}

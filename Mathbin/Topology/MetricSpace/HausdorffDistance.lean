@@ -39,7 +39,7 @@ This files introduces:
 
 noncomputable section
 
-open Classical NNReal ENNReal Topology Pointwise
+open scoped Classical NNReal ENNReal Topology Pointwise
 
 universe u v w
 

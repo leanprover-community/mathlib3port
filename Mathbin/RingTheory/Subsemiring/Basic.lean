@@ -29,7 +29,7 @@ a `ring_hom` etc.
 -/
 
 
-open BigOperators
+open scoped BigOperators
 
 universe u v w
 

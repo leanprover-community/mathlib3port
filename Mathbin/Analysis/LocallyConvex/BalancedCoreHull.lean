@@ -47,7 +47,7 @@ balanced
 
 open Set
 
-open Pointwise Topology Filter
+open scoped Pointwise Topology Filter
 
 variable {𝕜 E ι : Type _}
 

@@ -32,7 +32,7 @@ variable {α β n m R : Type _}
 
 namespace Matrix
 
-open Matrix
+open scoped Matrix
 
 #print Matrix.IsSymm /-
 /-- A matrix `A : matrix n n α` is "symmetric" if `Aᵀ = A`. -/

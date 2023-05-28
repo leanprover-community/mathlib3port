@@ -34,7 +34,7 @@ variable {ι : Type _}
 
 variable {V : Type u} [Category.{v} V] [HasZeroMorphisms V]
 
-open Classical
+open scoped Classical
 
 noncomputable section
 
@@ -42,9 +42,11 @@ section
 
 variable {A B C : V} (f : A ⟶ B) [HasImage f] (g : B ⟶ C) [HasKernel g]
 
+#print image_le_kernel /-
 theorem image_le_kernel (w : f ≫ g = 0) : imageSubobject f ≤ kernelSubobject g :=
   imageSubobject_le_mk _ _ (kernel.lift _ _ w) (by simp)
 #align image_le_kernel image_le_kernel
+-/
 
 /-- The canonical morphism `image_subobject f ⟶ kernel_subobject g` when `f ≫ g = 0`.
 -/
@@ -131,7 +133,7 @@ theorem imageToKernel_comp_hom_inv_comp [HasEqualizers V] [HasImages V] {Z : V} 
   by ext; simp
 #align image_to_kernel_comp_hom_inv_comp imageToKernel_comp_hom_inv_comp
 
-open ZeroObject
+open scoped ZeroObject
 
 /-- `image_to_kernel` for `A --0--> B --g--> C`, where `g` is a mono is itself an epi
 (i.e. the sequence is exact at `B`).

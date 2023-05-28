@@ -48,7 +48,7 @@ vector measure, signed measure, complex measure
 
 noncomputable section
 
-open Classical BigOperators NNReal ENNReal MeasureTheory
+open scoped Classical BigOperators NNReal ENNReal MeasureTheory
 
 namespace MeasureTheory
 
@@ -1118,7 +1118,7 @@ def AbsolutelyContinuous (v : VectorMeasure α M) (w : VectorMeasure α N) :=
 -- mathport name: vector_measure.absolutely_continuous
 scoped[MeasureTheory] infixl:50 " ≪ᵥ " => MeasureTheory.VectorMeasure.AbsolutelyContinuous
 
-open MeasureTheory
+open scoped MeasureTheory
 
 namespace AbsolutelyContinuous
 
@@ -1367,7 +1367,7 @@ namespace SignedMeasure
 
 open VectorMeasure
 
-open MeasureTheory
+open scoped MeasureTheory
 
 include m
 

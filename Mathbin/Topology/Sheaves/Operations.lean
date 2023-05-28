@@ -26,7 +26,7 @@ import Mathbin.Topology.Sheaves.Stalks
 -/
 
 
-open nonZeroDivisors
+open scoped nonZeroDivisors
 
 open TopologicalSpace Opposite CategoryTheory
 

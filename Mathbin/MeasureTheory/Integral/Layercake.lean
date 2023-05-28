@@ -60,7 +60,7 @@ layer cake representation, Cavalieri's principle, tail probability formula
 
 noncomputable section
 
-open ENNReal MeasureTheory
+open scoped ENNReal MeasureTheory
 
 open Set MeasureTheory Filter
 

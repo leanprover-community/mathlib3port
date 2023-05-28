@@ -69,6 +69,7 @@ theorem partialSups_succ (f : ℕ → α) (n : ℕ) :
   rfl
 #align partial_sups_succ partialSups_succ
 
+#print le_partialSups_of_le /-
 theorem le_partialSups_of_le (f : ℕ → α) {m n : ℕ} (h : m ≤ n) : f m ≤ partialSups f n :=
   by
   induction' n with n ih
@@ -77,16 +78,21 @@ theorem le_partialSups_of_le (f : ℕ → α) {m n : ℕ} (h : m ≤ n) : f m �
     · exact le_sup_right
     · exact (ih h).trans le_sup_left
 #align le_partial_sups_of_le le_partialSups_of_le
+-/
 
+#print le_partialSups /-
 theorem le_partialSups (f : ℕ → α) : f ≤ partialSups f := fun n => le_partialSups_of_le f le_rfl
 #align le_partial_sups le_partialSups
+-/
 
+#print partialSups_le /-
 theorem partialSups_le (f : ℕ → α) (n : ℕ) (a : α) (w : ∀ m, m ≤ n → f m ≤ a) :
     partialSups f n ≤ a := by
   induction' n with n ih
   · apply w 0 le_rfl
   · exact sup_le (ih fun m p => w m (Nat.le_succ_of_le p)) (w (n + 1) le_rfl)
 #align partial_sups_le partialSups_le
+-/
 
 #print bddAbove_range_partialSups /-
 @[simp]
@@ -154,6 +160,7 @@ theorem partialSups_eq_sup'_range (f : ℕ → α) (n : ℕ) :
 
 end SemilatticeSup
 
+#print partialSups_eq_sup_range /-
 theorem partialSups_eq_sup_range [SemilatticeSup α] [OrderBot α] (f : ℕ → α) (n : ℕ) :
     partialSups f n = (Finset.range (n + 1)).sup f :=
   by
@@ -162,7 +169,9 @@ theorem partialSups_eq_sup_range [SemilatticeSup α] [OrderBot α] (f : ℕ → 
   · dsimp [partialSups] at ih⊢
     rw [Finset.range_succ, Finset.sup_insert, sup_comm, ih]
 #align partial_sups_eq_sup_range partialSups_eq_sup_range
+-/
 
+#print partialSups_disjoint_of_disjoint /-
 /- Note this lemma requires a distributive lattice, so is not useful (or true) in situations such as
 submodules. -/
 theorem partialSups_disjoint_of_disjoint [DistribLattice α] [OrderBot α] (f : ℕ → α)
@@ -173,6 +182,7 @@ theorem partialSups_disjoint_of_disjoint [DistribLattice α] [OrderBot α] (f : 
   · rw [partialSups_succ, disjoint_sup_left]
     exact ⟨ih (Nat.lt_of_succ_lt hmn), h hmn.ne⟩
 #align partial_sups_disjoint_of_disjoint partialSups_disjoint_of_disjoint
+-/
 
 section ConditionallyCompleteLattice
 

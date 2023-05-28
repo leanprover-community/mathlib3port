@@ -27,7 +27,7 @@ TODO: similarly for `R`-linear.
 
 universe v u
 
-open Classical
+open scoped Classical
 
 noncomputable section
 

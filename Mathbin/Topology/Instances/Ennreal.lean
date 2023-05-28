@@ -26,7 +26,7 @@ noncomputable section
 
 open Classical Set Filter Metric
 
-open Classical Topology ENNReal NNReal BigOperators Filter
+open scoped Classical Topology ENNReal NNReal BigOperators Filter
 
 variable {α : Type _} {β : Type _} {γ : Type _}
 
@@ -1269,7 +1269,7 @@ end ENNReal
 
 namespace NNReal
 
-open NNReal
+open scoped NNReal
 
 theorem tsum_eq_toNNReal_tsum {f : β → ℝ≥0} : (∑' b, f b) = (∑' b, (f b : ℝ≥0∞)).toNNReal :=
   by

@@ -51,7 +51,7 @@ theorem Int.sq_ne_two_mod_four (z : ℤ) : z * z % 4 ≠ 2 :=
 
 noncomputable section
 
-open Classical
+open scoped Classical
 
 #print PythagoreanTriple /-
 /-- Three integers `x`, `y`, and `z` form a Pythagorean triple if `x * x + y * y = z * z`. -/

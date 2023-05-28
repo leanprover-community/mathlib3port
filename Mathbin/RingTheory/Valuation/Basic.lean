@@ -65,7 +65,7 @@ boilerplate lemmas to `valuation_class`.
 -/
 
 
-open Classical BigOperators
+open scoped Classical BigOperators
 
 noncomputable section
 

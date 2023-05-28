@@ -82,7 +82,7 @@ make no sense. However, the measure is not globally zero if the space is big eno
 
 open MeasureTheory Metric Set Filter TopologicalSpace MeasureTheory.Measure
 
-open Filter ENNReal MeasureTheory NNReal Topology
+open scoped Filter ENNReal MeasureTheory NNReal Topology
 
 variable {α : Type _} [MetricSpace α] {m0 : MeasurableSpace α} {μ : Measure α} (v : VitaliFamily μ)
   {E : Type _} [NormedAddCommGroup E]

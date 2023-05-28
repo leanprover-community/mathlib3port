@@ -51,7 +51,7 @@ fib, fibonacci
 -/
 
 
-open BigOperators
+open scoped BigOperators
 
 namespace Nat
 

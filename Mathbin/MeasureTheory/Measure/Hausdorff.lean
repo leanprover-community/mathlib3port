@@ -111,7 +111,7 @@ Hausdorff measure, measure, metric measure
 -/
 
 
-open NNReal ENNReal Topology BigOperators
+open scoped NNReal ENNReal Topology BigOperators
 
 open Emetric Set Function Filter Encodable FiniteDimensional TopologicalSpace
 
@@ -741,7 +741,7 @@ end MeasureTheory
 -/
 
 
-open MeasureTheory
+open scoped MeasureTheory
 
 open MeasureTheory MeasureTheory.Measure
 

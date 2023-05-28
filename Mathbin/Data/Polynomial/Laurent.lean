@@ -77,7 +77,7 @@ Lots is missing!
 -/
 
 
-open Polynomial BigOperators
+open scoped Polynomial BigOperators
 
 open Polynomial AddMonoidAlgebra Finsupp
 
@@ -504,7 +504,7 @@ theorem degree_eq_bot_iff {f : R[T;T⁻¹]} : f.degree = ⊥ ↔ f = 0 :=
 
 section ExactDegrees
 
-open Classical
+open scoped Classical
 
 @[simp]
 theorem degree_C_mul_T (n : ℤ) (a : R) (a0 : a ≠ 0) : (C a * T n).degree = n :=
@@ -552,9 +552,11 @@ theorem degree_C_mul_T_le (n : ℤ) (a : R) : (C a * T n).degree ≤ n :=
   · exact (degree_C_mul_T n a a0).le
 #align laurent_polynomial.degree_C_mul_T_le LaurentPolynomial.degree_C_mul_T_le
 
+#print LaurentPolynomial.degree_T_le /-
 theorem degree_T_le (n : ℤ) : (T n : R[T;T⁻¹]).degree ≤ n :=
   (le_of_eq (by rw [map_one, one_mul])).trans (degree_C_mul_T_le n (1 : R))
 #align laurent_polynomial.degree_T_le LaurentPolynomial.degree_T_le
+-/
 
 theorem degree_C_le (a : R) : (C a).degree ≤ 0 :=
   (le_of_eq (by rw [T_zero, mul_one])).trans (degree_C_mul_T_le 0 a)

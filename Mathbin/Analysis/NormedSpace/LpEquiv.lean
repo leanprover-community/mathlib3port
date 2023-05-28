@@ -41,7 +41,7 @@ the subtype of `pre_lp` satisfying `mem_ℓp`.
 -/
 
 
-open ENNReal
+open scoped ENNReal
 
 section LpPiLp
 
@@ -125,7 +125,7 @@ end LpPiLp
 
 section LpBcf
 
-open BoundedContinuousFunction
+open scoped BoundedContinuousFunction
 
 open BoundedContinuousFunction
 

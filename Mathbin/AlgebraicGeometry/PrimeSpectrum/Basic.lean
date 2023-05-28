@@ -53,7 +53,7 @@ and Chris Hughes (on an earlier repository).
 
 noncomputable section
 
-open Classical
+open scoped Classical
 
 universe u v
 

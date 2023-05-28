@@ -22,7 +22,7 @@ These lemmas are kept separate from `data.nat.gcd.basic` in order to minimize im
 
 namespace Nat
 
-open BigOperators
+open scoped BigOperators
 
 #print Nat.coprime_prod_left /-
 /-- See `is_coprime.prod_left` for the corresponding lemma about `is_coprime` -/

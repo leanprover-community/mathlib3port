@@ -573,7 +573,7 @@ theorem IsQuadratic.pow_odd {χ : MulChar R R'} (hχ : χ.IsQuadratic) {n : ℕ}
 #align mul_char.is_quadratic.pow_odd MulChar.IsQuadratic.pow_odd
 -/
 
-open BigOperators
+open scoped BigOperators
 
 /-- The sum over all values of a nontrivial multiplicative character on a finite ring is zero
 (when the target is a domain). -/

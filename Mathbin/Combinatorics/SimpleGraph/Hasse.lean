@@ -49,10 +49,12 @@ def hasse : SimpleGraph α where
 
 variable {α β} {a b : α}
 
+#print SimpleGraph.hasse_adj /-
 @[simp]
 theorem hasse_adj : (hasse α).Adj a b ↔ a ⋖ b ∨ b ⋖ a :=
   Iff.rfl
 #align simple_graph.hasse_adj SimpleGraph.hasse_adj
+-/
 
 #print SimpleGraph.hasseDualIso /-
 /-- `αᵒᵈ` and `α` have the same Hasse diagram. -/

@@ -87,7 +87,7 @@ Hausdorff measure, Hausdorff dimension, dimension
 -/
 
 
-open MeasureTheory ENNReal NNReal Topology
+open scoped MeasureTheory ENNReal NNReal Topology
 
 open MeasureTheory MeasureTheory.Measure Set TopologicalSpace FiniteDimensional Filter
 

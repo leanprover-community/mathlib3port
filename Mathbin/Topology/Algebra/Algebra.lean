@@ -33,7 +33,7 @@ which as an algebra is a topological algebra.
 
 open Classical Set TopologicalSpace Algebra
 
-open Classical
+open scoped Classical
 
 universe u v w
 

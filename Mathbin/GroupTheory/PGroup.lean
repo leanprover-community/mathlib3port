@@ -28,7 +28,7 @@ It also contains proofs of some corollaries of this lemma about existence of fix
 -/
 
 
-open BigOperators
+open scoped BigOperators
 
 open Fintype MulAction
 

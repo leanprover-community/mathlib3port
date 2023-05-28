@@ -33,7 +33,7 @@ noncomputable section
 open
   CategoryTheory CategoryTheory.Category CategoryTheory.Limits CategoryTheory.Idempotents SimplexCategory Opposite SimplicialObject
 
-open Simplicial DoldKan
+open scoped Simplicial DoldKan
 
 namespace AlgebraicTopology
 

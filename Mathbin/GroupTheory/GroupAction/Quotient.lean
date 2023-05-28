@@ -34,7 +34,7 @@ variable {α : Type u} {β : Type v} {γ : Type w}
 
 open Function
 
-open BigOperators
+open scoped BigOperators
 
 namespace MulAction
 

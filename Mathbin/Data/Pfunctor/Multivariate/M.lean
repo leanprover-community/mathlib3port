@@ -55,7 +55,7 @@ that `A` is a possibly infinite tree.
 
 universe u
 
-open MvFunctor
+open scoped MvFunctor
 
 namespace MvPFunctor
 

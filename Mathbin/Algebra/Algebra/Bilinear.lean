@@ -25,7 +25,7 @@ in order to avoid importing `linear_algebra.bilinear_map` and
 -/
 
 
-open TensorProduct
+open scoped TensorProduct
 
 open Module
 

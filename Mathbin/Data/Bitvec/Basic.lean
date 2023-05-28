@@ -112,14 +112,18 @@ theorem toFin_val {n : ℕ} (v : Bitvec n) : (toFin v : ℕ) = v.toNat := by
 #align bitvec.to_fin_val Bitvec.toFin_val
 -/
 
+#print Bitvec.toFin_le_toFin_of_le /-
 theorem toFin_le_toFin_of_le {n} {v₀ v₁ : Bitvec n} (h : v₀ ≤ v₁) : v₀.toFin ≤ v₁.toFin :=
   show (v₀.toFin : ℕ) ≤ v₁.toFin by rw [to_fin_val, to_fin_val] <;> exact h
 #align bitvec.to_fin_le_to_fin_of_le Bitvec.toFin_le_toFin_of_le
+-/
 
+#print Bitvec.ofFin_le_ofFin_of_le /-
 theorem ofFin_le_ofFin_of_le {n : ℕ} {i j : Fin (2 ^ n)} (h : i ≤ j) : ofFin i ≤ ofFin j :=
   show (Bitvec.ofNat n i).toNat ≤ (Bitvec.ofNat n j).toNat by
     simp only [to_nat_of_nat, Nat.mod_eq_of_lt, Fin.is_lt]; exact h
 #align bitvec.of_fin_le_of_fin_of_le Bitvec.ofFin_le_ofFin_of_le
+-/
 
 #print Bitvec.toFin_ofFin /-
 theorem toFin_ofFin {n} (i : Fin <| 2 ^ n) : (ofFin i).toFin = i :=

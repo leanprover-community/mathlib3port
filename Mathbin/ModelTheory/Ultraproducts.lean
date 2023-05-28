@@ -35,7 +35,7 @@ universe u v
 
 variable {α : Type _} (M : α → Type _) (u : Ultrafilter α)
 
-open FirstOrder Filter
+open scoped FirstOrder Filter
 
 open Filter
 

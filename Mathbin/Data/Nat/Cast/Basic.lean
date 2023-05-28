@@ -123,38 +123,52 @@ theorem strictMono_cast : StrictMono (coe : ℕ → α) :=
 #align nat.strict_mono_cast Nat.strictMono_cast
 -/
 
+#print Nat.castOrderEmbedding /-
 /-- `coe : ℕ → α` as an `order_embedding` -/
 @[simps (config := { fullyApplied := false })]
 def castOrderEmbedding : ℕ ↪o α :=
   OrderEmbedding.ofStrictMono coe Nat.strictMono_cast
 #align nat.cast_order_embedding Nat.castOrderEmbedding
+-/
 
+#print Nat.cast_le /-
 @[simp, norm_cast]
 theorem cast_le : (m : α) ≤ n ↔ m ≤ n :=
   strictMono_cast.le_iff_le
 #align nat.cast_le Nat.cast_le
+-/
 
+#print Nat.cast_lt /-
 @[simp, norm_cast, mono]
 theorem cast_lt : (m : α) < n ↔ m < n :=
   strictMono_cast.lt_iff_lt
 #align nat.cast_lt Nat.cast_lt
+-/
 
+#print Nat.one_lt_cast /-
 @[simp, norm_cast]
 theorem one_lt_cast : 1 < (n : α) ↔ 1 < n := by rw [← cast_one, cast_lt]
 #align nat.one_lt_cast Nat.one_lt_cast
+-/
 
+#print Nat.one_le_cast /-
 @[simp, norm_cast]
 theorem one_le_cast : 1 ≤ (n : α) ↔ 1 ≤ n := by rw [← cast_one, cast_le]
 #align nat.one_le_cast Nat.one_le_cast
+-/
 
+#print Nat.cast_lt_one /-
 @[simp, norm_cast]
 theorem cast_lt_one : (n : α) < 1 ↔ n = 0 := by
   rw [← cast_one, cast_lt, lt_succ_iff, ← bot_eq_zero, le_bot_iff]
 #align nat.cast_lt_one Nat.cast_lt_one
+-/
 
+#print Nat.cast_le_one /-
 @[simp, norm_cast]
 theorem cast_le_one : (n : α) ≤ 1 ↔ n ≤ 1 := by rw [← cast_one, cast_le]
 #align nat.cast_le_one Nat.cast_le_one
+-/
 
 end OrderedSemiring
 

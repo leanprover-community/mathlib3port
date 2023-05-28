@@ -25,7 +25,7 @@ located here.
 
 noncomputable section
 
-open Classical Real Topology NNReal ENNReal Filter BigOperators ComplexConjugate
+open scoped Classical Real Topology NNReal ENNReal Filter BigOperators ComplexConjugate
 
 open Filter Finset Set
 

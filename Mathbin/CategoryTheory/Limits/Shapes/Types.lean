@@ -271,7 +271,7 @@ noncomputable def binaryCoproductIso (X Y : Type u) : Limits.coprod X Y ≅ Sum 
 #align category_theory.limits.types.binary_coproduct_iso CategoryTheory.Limits.Types.binaryCoproductIso
 -/
 
-open CategoryTheory.Type
+open scoped CategoryTheory.Type
 
 #print CategoryTheory.Limits.Types.binaryCoproductIso_inl_comp_hom /-
 @[simp, elementwise]

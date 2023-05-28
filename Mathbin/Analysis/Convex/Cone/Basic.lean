@@ -69,7 +69,7 @@ assert_not_exists NormedSpace
 
 open Set LinearMap
 
-open Classical Pointwise
+open scoped Classical Pointwise
 
 variable {𝕜 E F G : Type _}
 

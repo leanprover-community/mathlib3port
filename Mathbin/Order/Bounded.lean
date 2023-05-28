@@ -104,9 +104,11 @@ theorem Bounded.rel_mono {r' : α → α → Prop} (h : Bounded r s) (hrr' : r �
 #align set.bounded.rel_mono Set.Bounded.rel_mono
 -/
 
+#print Set.bounded_le_of_bounded_lt /-
 theorem bounded_le_of_bounded_lt [Preorder α] (h : Bounded (· < ·) s) : Bounded (· ≤ ·) s :=
   h.rel_mono fun _ _ => le_of_lt
 #align set.bounded_le_of_bounded_lt Set.bounded_le_of_bounded_lt
+-/
 
 #print Set.Unbounded.rel_mono /-
 theorem Unbounded.rel_mono {r' : α → α → Prop} (hr : r' ≤ r) (h : Unbounded r s) : Unbounded r' s :=
@@ -116,10 +118,13 @@ theorem Unbounded.rel_mono {r' : α → α → Prop} (hr : r' ≤ r) (h : Unboun
 #align set.unbounded.rel_mono Set.Unbounded.rel_mono
 -/
 
+#print Set.unbounded_lt_of_unbounded_le /-
 theorem unbounded_lt_of_unbounded_le [Preorder α] (h : Unbounded (· ≤ ·) s) : Unbounded (· < ·) s :=
   h.rel_mono fun _ _ => le_of_lt
 #align set.unbounded_lt_of_unbounded_le Set.unbounded_lt_of_unbounded_le
+-/
 
+#print Set.bounded_le_iff_bounded_lt /-
 theorem bounded_le_iff_bounded_lt [Preorder α] [NoMaxOrder α] :
     Bounded (· ≤ ·) s ↔ Bounded (· < ·) s :=
   by
@@ -128,35 +133,46 @@ theorem bounded_le_iff_bounded_lt [Preorder α] [NoMaxOrder α] :
   cases' exists_gt a with b hb
   exact ⟨b, fun c hc => lt_of_le_of_lt (ha c hc) hb⟩
 #align set.bounded_le_iff_bounded_lt Set.bounded_le_iff_bounded_lt
+-/
 
+#print Set.unbounded_lt_iff_unbounded_le /-
 theorem unbounded_lt_iff_unbounded_le [Preorder α] [NoMaxOrder α] :
     Unbounded (· < ·) s ↔ Unbounded (· ≤ ·) s := by
   simp_rw [← not_bounded_iff, bounded_le_iff_bounded_lt]
 #align set.unbounded_lt_iff_unbounded_le Set.unbounded_lt_iff_unbounded_le
+-/
 
 /-! #### Greater and greater or equal -/
 
 
+#print Set.bounded_ge_of_bounded_gt /-
 theorem bounded_ge_of_bounded_gt [Preorder α] (h : Bounded (· > ·) s) : Bounded (· ≥ ·) s :=
   let ⟨a, ha⟩ := h
   ⟨a, fun b hb => le_of_lt (ha b hb)⟩
 #align set.bounded_ge_of_bounded_gt Set.bounded_ge_of_bounded_gt
+-/
 
+#print Set.unbounded_gt_of_unbounded_ge /-
 theorem unbounded_gt_of_unbounded_ge [Preorder α] (h : Unbounded (· ≥ ·) s) : Unbounded (· > ·) s :=
   fun a =>
   let ⟨b, hb, hba⟩ := h a
   ⟨b, hb, fun hba' => hba (le_of_lt hba')⟩
 #align set.unbounded_gt_of_unbounded_ge Set.unbounded_gt_of_unbounded_ge
+-/
 
+#print Set.bounded_ge_iff_bounded_gt /-
 theorem bounded_ge_iff_bounded_gt [Preorder α] [NoMinOrder α] :
     Bounded (· ≥ ·) s ↔ Bounded (· > ·) s :=
   @bounded_le_iff_bounded_lt αᵒᵈ _ _ _
 #align set.bounded_ge_iff_bounded_gt Set.bounded_ge_iff_bounded_gt
+-/
 
+#print Set.unbounded_gt_iff_unbounded_ge /-
 theorem unbounded_gt_iff_unbounded_ge [Preorder α] [NoMinOrder α] :
     Unbounded (· > ·) s ↔ Unbounded (· ≥ ·) s :=
   @unbounded_lt_iff_unbounded_le αᵒᵈ _ _ _
 #align set.unbounded_gt_iff_unbounded_ge Set.unbounded_gt_iff_unbounded_ge
+-/
 
 /-! ### The universal set -/
 
@@ -168,9 +184,11 @@ theorem unbounded_le_univ [LE α] [NoTopOrder α] : Unbounded (· ≤ ·) (@Set.
 #align set.unbounded_le_univ Set.unbounded_le_univ
 -/
 
+#print Set.unbounded_lt_univ /-
 theorem unbounded_lt_univ [Preorder α] [NoTopOrder α] : Unbounded (· < ·) (@Set.univ α) :=
   unbounded_lt_of_unbounded_le unbounded_le_univ
 #align set.unbounded_lt_univ Set.unbounded_lt_univ
+-/
 
 #print Set.unbounded_ge_univ /-
 theorem unbounded_ge_univ [LE α] [NoBotOrder α] : Unbounded (· ≥ ·) (@Set.univ α) := fun a =>
@@ -179,9 +197,11 @@ theorem unbounded_ge_univ [LE α] [NoBotOrder α] : Unbounded (· ≥ ·) (@Set.
 #align set.unbounded_ge_univ Set.unbounded_ge_univ
 -/
 
+#print Set.unbounded_gt_univ /-
 theorem unbounded_gt_univ [Preorder α] [NoBotOrder α] : Unbounded (· > ·) (@Set.univ α) :=
   unbounded_gt_of_unbounded_ge unbounded_ge_univ
 #align set.unbounded_gt_univ Set.unbounded_gt_univ
+-/
 
 /-! ### Bounded and unbounded intervals -/
 
@@ -195,127 +215,183 @@ theorem bounded_self (a : α) : Bounded r { b | r b a } :=
 /-! #### Half-open bounded intervals -/
 
 
+#print Set.bounded_lt_Iio /-
 theorem bounded_lt_Iio [Preorder α] (a : α) : Bounded (· < ·) (Set.Iio a) :=
   bounded_self a
 #align set.bounded_lt_Iio Set.bounded_lt_Iio
+-/
 
+#print Set.bounded_le_Iio /-
 theorem bounded_le_Iio [Preorder α] (a : α) : Bounded (· ≤ ·) (Set.Iio a) :=
   bounded_le_of_bounded_lt (bounded_lt_Iio a)
 #align set.bounded_le_Iio Set.bounded_le_Iio
+-/
 
+#print Set.bounded_le_Iic /-
 theorem bounded_le_Iic [Preorder α] (a : α) : Bounded (· ≤ ·) (Set.Iic a) :=
   bounded_self a
 #align set.bounded_le_Iic Set.bounded_le_Iic
+-/
 
+#print Set.bounded_lt_Iic /-
 theorem bounded_lt_Iic [Preorder α] [NoMaxOrder α] (a : α) : Bounded (· < ·) (Set.Iic a) := by
   simp only [← bounded_le_iff_bounded_lt, bounded_le_Iic]
 #align set.bounded_lt_Iic Set.bounded_lt_Iic
+-/
 
+#print Set.bounded_gt_Ioi /-
 theorem bounded_gt_Ioi [Preorder α] (a : α) : Bounded (· > ·) (Set.Ioi a) :=
   bounded_self a
 #align set.bounded_gt_Ioi Set.bounded_gt_Ioi
+-/
 
+#print Set.bounded_ge_Ioi /-
 theorem bounded_ge_Ioi [Preorder α] (a : α) : Bounded (· ≥ ·) (Set.Ioi a) :=
   bounded_ge_of_bounded_gt (bounded_gt_Ioi a)
 #align set.bounded_ge_Ioi Set.bounded_ge_Ioi
+-/
 
+#print Set.bounded_ge_Ici /-
 theorem bounded_ge_Ici [Preorder α] (a : α) : Bounded (· ≥ ·) (Set.Ici a) :=
   bounded_self a
 #align set.bounded_ge_Ici Set.bounded_ge_Ici
+-/
 
+#print Set.bounded_gt_Ici /-
 theorem bounded_gt_Ici [Preorder α] [NoMinOrder α] (a : α) : Bounded (· > ·) (Set.Ici a) := by
   simp only [← bounded_ge_iff_bounded_gt, bounded_ge_Ici]
 #align set.bounded_gt_Ici Set.bounded_gt_Ici
+-/
 
 /-! #### Other bounded intervals -/
 
 
+#print Set.bounded_lt_Ioo /-
 theorem bounded_lt_Ioo [Preorder α] (a b : α) : Bounded (· < ·) (Set.Ioo a b) :=
   (bounded_lt_Iio b).mono Set.Ioo_subset_Iio_self
 #align set.bounded_lt_Ioo Set.bounded_lt_Ioo
+-/
 
+#print Set.bounded_lt_Ico /-
 theorem bounded_lt_Ico [Preorder α] (a b : α) : Bounded (· < ·) (Set.Ico a b) :=
   (bounded_lt_Iio b).mono Set.Ico_subset_Iio_self
 #align set.bounded_lt_Ico Set.bounded_lt_Ico
+-/
 
+#print Set.bounded_lt_Ioc /-
 theorem bounded_lt_Ioc [Preorder α] [NoMaxOrder α] (a b : α) : Bounded (· < ·) (Set.Ioc a b) :=
   (bounded_lt_Iic b).mono Set.Ioc_subset_Iic_self
 #align set.bounded_lt_Ioc Set.bounded_lt_Ioc
+-/
 
+#print Set.bounded_lt_Icc /-
 theorem bounded_lt_Icc [Preorder α] [NoMaxOrder α] (a b : α) : Bounded (· < ·) (Set.Icc a b) :=
   (bounded_lt_Iic b).mono Set.Icc_subset_Iic_self
 #align set.bounded_lt_Icc Set.bounded_lt_Icc
+-/
 
+#print Set.bounded_le_Ioo /-
 theorem bounded_le_Ioo [Preorder α] (a b : α) : Bounded (· ≤ ·) (Set.Ioo a b) :=
   (bounded_le_Iio b).mono Set.Ioo_subset_Iio_self
 #align set.bounded_le_Ioo Set.bounded_le_Ioo
+-/
 
+#print Set.bounded_le_Ico /-
 theorem bounded_le_Ico [Preorder α] (a b : α) : Bounded (· ≤ ·) (Set.Ico a b) :=
   (bounded_le_Iio b).mono Set.Ico_subset_Iio_self
 #align set.bounded_le_Ico Set.bounded_le_Ico
+-/
 
+#print Set.bounded_le_Ioc /-
 theorem bounded_le_Ioc [Preorder α] (a b : α) : Bounded (· ≤ ·) (Set.Ioc a b) :=
   (bounded_le_Iic b).mono Set.Ioc_subset_Iic_self
 #align set.bounded_le_Ioc Set.bounded_le_Ioc
+-/
 
+#print Set.bounded_le_Icc /-
 theorem bounded_le_Icc [Preorder α] (a b : α) : Bounded (· ≤ ·) (Set.Icc a b) :=
   (bounded_le_Iic b).mono Set.Icc_subset_Iic_self
 #align set.bounded_le_Icc Set.bounded_le_Icc
+-/
 
+#print Set.bounded_gt_Ioo /-
 theorem bounded_gt_Ioo [Preorder α] (a b : α) : Bounded (· > ·) (Set.Ioo a b) :=
   (bounded_gt_Ioi a).mono Set.Ioo_subset_Ioi_self
 #align set.bounded_gt_Ioo Set.bounded_gt_Ioo
+-/
 
+#print Set.bounded_gt_Ioc /-
 theorem bounded_gt_Ioc [Preorder α] (a b : α) : Bounded (· > ·) (Set.Ioc a b) :=
   (bounded_gt_Ioi a).mono Set.Ioc_subset_Ioi_self
 #align set.bounded_gt_Ioc Set.bounded_gt_Ioc
+-/
 
+#print Set.bounded_gt_Ico /-
 theorem bounded_gt_Ico [Preorder α] [NoMinOrder α] (a b : α) : Bounded (· > ·) (Set.Ico a b) :=
   (bounded_gt_Ici a).mono Set.Ico_subset_Ici_self
 #align set.bounded_gt_Ico Set.bounded_gt_Ico
+-/
 
+#print Set.bounded_gt_Icc /-
 theorem bounded_gt_Icc [Preorder α] [NoMinOrder α] (a b : α) : Bounded (· > ·) (Set.Icc a b) :=
   (bounded_gt_Ici a).mono Set.Icc_subset_Ici_self
 #align set.bounded_gt_Icc Set.bounded_gt_Icc
+-/
 
+#print Set.bounded_ge_Ioo /-
 theorem bounded_ge_Ioo [Preorder α] (a b : α) : Bounded (· ≥ ·) (Set.Ioo a b) :=
   (bounded_ge_Ioi a).mono Set.Ioo_subset_Ioi_self
 #align set.bounded_ge_Ioo Set.bounded_ge_Ioo
+-/
 
+#print Set.bounded_ge_Ioc /-
 theorem bounded_ge_Ioc [Preorder α] (a b : α) : Bounded (· ≥ ·) (Set.Ioc a b) :=
   (bounded_ge_Ioi a).mono Set.Ioc_subset_Ioi_self
 #align set.bounded_ge_Ioc Set.bounded_ge_Ioc
+-/
 
+#print Set.bounded_ge_Ico /-
 theorem bounded_ge_Ico [Preorder α] (a b : α) : Bounded (· ≥ ·) (Set.Ico a b) :=
   (bounded_ge_Ici a).mono Set.Ico_subset_Ici_self
 #align set.bounded_ge_Ico Set.bounded_ge_Ico
+-/
 
+#print Set.bounded_ge_Icc /-
 theorem bounded_ge_Icc [Preorder α] (a b : α) : Bounded (· ≥ ·) (Set.Icc a b) :=
   (bounded_ge_Ici a).mono Set.Icc_subset_Ici_self
 #align set.bounded_ge_Icc Set.bounded_ge_Icc
+-/
 
 /-! #### Unbounded intervals -/
 
 
+#print Set.unbounded_le_Ioi /-
 theorem unbounded_le_Ioi [SemilatticeSup α] [NoMaxOrder α] (a : α) :
     Unbounded (· ≤ ·) (Set.Ioi a) := fun b =>
   let ⟨c, hc⟩ := exists_gt (a ⊔ b)
   ⟨c, le_sup_left.trans_lt hc, (le_sup_right.trans_lt hc).not_le⟩
 #align set.unbounded_le_Ioi Set.unbounded_le_Ioi
+-/
 
+#print Set.unbounded_le_Ici /-
 theorem unbounded_le_Ici [SemilatticeSup α] [NoMaxOrder α] (a : α) :
     Unbounded (· ≤ ·) (Set.Ici a) :=
   (unbounded_le_Ioi a).mono Set.Ioi_subset_Ici_self
 #align set.unbounded_le_Ici Set.unbounded_le_Ici
+-/
 
+#print Set.unbounded_lt_Ioi /-
 theorem unbounded_lt_Ioi [SemilatticeSup α] [NoMaxOrder α] (a : α) :
     Unbounded (· < ·) (Set.Ioi a) :=
   unbounded_lt_of_unbounded_le (unbounded_le_Ioi a)
 #align set.unbounded_lt_Ioi Set.unbounded_lt_Ioi
+-/
 
+#print Set.unbounded_lt_Ici /-
 theorem unbounded_lt_Ici [SemilatticeSup α] (a : α) : Unbounded (· < ·) (Set.Ici a) := fun b =>
   ⟨a ⊔ b, le_sup_left, le_sup_right.not_lt⟩
 #align set.unbounded_lt_Ici Set.unbounded_lt_Ici
+-/
 
 /-! ### Bounded initial segments -/
 

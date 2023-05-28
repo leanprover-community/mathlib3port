@@ -42,7 +42,7 @@ using a norm on the fiber model if this helps.
 
 noncomputable section
 
-open Bundle
+open scoped Bundle
 
 open Bundle Set ContinuousLinearMap
 

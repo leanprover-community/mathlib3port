@@ -27,7 +27,7 @@ and then, by precomposing with suitable affine functions,
 
 open ContinuousMap Filter
 
-open unitInterval
+open scoped unitInterval
 
 /-- The special case of the Weierstrass approximation theorem for the interval `[0,1]`.
 This is just a matter of unravelling definitions and using the Bernstein approximations.
@@ -99,7 +99,7 @@ theorem continuousMap_mem_polynomialFunctions_closure (a b : ℝ) (f : C(Set.Icc
   simp
 #align continuous_map_mem_polynomial_functions_closure continuousMap_mem_polynomialFunctions_closure
 
-open Polynomial
+open scoped Polynomial
 
 /-- An alternative statement of Weierstrass' theorem,
 for those who like their epsilons.

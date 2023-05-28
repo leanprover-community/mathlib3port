@@ -31,7 +31,7 @@ common positive multiple.
 
 noncomputable section
 
-open BigOperators
+open scoped BigOperators
 
 section StrictOrderedCommSemiring
 

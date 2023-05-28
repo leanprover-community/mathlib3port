@@ -37,7 +37,7 @@ namespace Matrix
 
 universe u v
 
-open Matrix
+open scoped Matrix
 
 open LinearMap
 

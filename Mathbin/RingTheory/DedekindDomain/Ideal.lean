@@ -57,7 +57,7 @@ dedekind domain, dedekind ring
 
 variable (R A K : Type _) [CommRing R] [CommRing A] [Field K]
 
-open nonZeroDivisors Polynomial
+open scoped nonZeroDivisors Polynomial
 
 variable [IsDomain A]
 
@@ -930,7 +930,7 @@ section IsDedekindDomain
 
 variable {T : Type _} [CommRing T] [IsDomain T] [IsDedekindDomain T] {I J : Ideal T}
 
-open Classical
+open scoped Classical
 
 open Multiset UniqueFactorizationMonoid Ideal
 
@@ -1244,7 +1244,7 @@ section ChineseRemainder
 
 open Ideal UniqueFactorizationMonoid
 
-open BigOperators
+open scoped BigOperators
 
 variable {R}
 
@@ -1279,7 +1279,7 @@ theorem Ideal.IsPrime.mul_mem_pow (I : Ideal R) [hI : I.IsPrime] {a b : R} {n : 
 
 section
 
-open Classical
+open scoped Classical
 
 theorem Ideal.count_normalizedFactors_eq {p x : Ideal R} [hp : p.IsPrime] {n : ℕ} (hle : x ≤ p ^ n)
     (hlt : ¬x ≤ p ^ (n + 1)) : (normalizedFactors x).count p = n :=
@@ -1388,7 +1388,7 @@ noncomputable def IsDedekindDomain.quotientEquivPiOfProdEq {ι : Type _} [Fintyp
                     (Ideal.le_of_pow_le_prime hPj)).symm))
 #align is_dedekind_domain.quotient_equiv_pi_of_prod_eq IsDedekindDomain.quotientEquivPiOfProdEq
 
-open Classical
+open scoped Classical
 
 /-- **Chinese remainder theorem** for a Dedekind domain: `R ⧸ I` factors as `Π i, R ⧸ (P i ^ e i)`,
 where `P i` ranges over the prime factors of `I` and `e i` over the multiplicities. -/

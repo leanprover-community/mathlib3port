@@ -26,7 +26,7 @@ to `↑a - 1`, the other factor is `0` anyway.
 -/
 
 
-open Nat
+open scoped Nat
 
 variable (S : Type _)
 

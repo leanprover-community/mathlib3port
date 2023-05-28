@@ -289,7 +289,6 @@ section Preorder
 
 variable (s t : Set α) [Preorder α]
 
-#print Set.chainHeight_eq_iSup_Ici /-
 theorem chainHeight_eq_iSup_Ici : s.chainHeight = ⨆ i ∈ s, (s ∩ Set.Ici i).chainHeight :=
   by
   apply le_antisymm
@@ -304,13 +303,10 @@ theorem chainHeight_eq_iSup_Ici : s.chainHeight = ⨆ i ∈ s, (s ∩ Set.Ici i)
       exact (h' _ hi).le
   · exact iSup₂_le fun i hi => chain_height_mono <| Set.inter_subset_left _ _
 #align set.chain_height_eq_supr_Ici Set.chainHeight_eq_iSup_Ici
--/
 
-#print Set.chainHeight_eq_iSup_Iic /-
 theorem chainHeight_eq_iSup_Iic : s.chainHeight = ⨆ i ∈ s, (s ∩ Set.Iic i).chainHeight := by
   simp_rw [← chain_height_dual (_ ∩ _)]; rw [← chain_height_dual, chain_height_eq_supr_Ici]; rfl
 #align set.chain_height_eq_supr_Iic Set.chainHeight_eq_iSup_Iic
--/
 
 variable {s t}
 

@@ -26,7 +26,7 @@ the image of the homomorphism `i`.
 
 open Polynomial Finset
 
-open Polynomial
+open scoped Polynomial
 
 section DenomsClearable
 

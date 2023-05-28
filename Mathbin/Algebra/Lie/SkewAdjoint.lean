@@ -90,7 +90,7 @@ end SkewAdjointEndomorphisms
 
 section SkewAdjointMatrices
 
-open Matrix
+open scoped Matrix
 
 variable {R : Type u} {n : Type w} [CommRing R] [DecidableEq n] [Fintype n]
 

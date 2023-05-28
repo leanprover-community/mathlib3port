@@ -17,7 +17,7 @@ namespace Omega
 
 namespace Nat
 
-open Omega.Nat
+open scoped Omega.Nat
 
 /-- push_neg p returns the result of normalizing ¬ p by
     pushing the outermost negation all the way down,

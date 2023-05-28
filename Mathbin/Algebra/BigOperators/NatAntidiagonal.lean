@@ -21,7 +21,7 @@ This file contains theorems relevant to big operators over `finset.nat.antidiago
 -/
 
 
-open BigOperators
+open scoped BigOperators
 
 variable {M N : Type _} [CommMonoid M] [AddCommMonoid N]
 

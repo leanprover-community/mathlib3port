@@ -26,7 +26,7 @@ set multiplication, set addition, pointwise addition, pointwise multiplication, 
 -/
 
 
-open Pointwise
+open scoped Pointwise
 
 open Set
 

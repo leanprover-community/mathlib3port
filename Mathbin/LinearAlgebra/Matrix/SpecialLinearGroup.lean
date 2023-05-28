@@ -60,7 +60,7 @@ namespace Matrix
 
 universe u v
 
-open Matrix
+open scoped Matrix
 
 open LinearMap
 
@@ -354,7 +354,7 @@ end Matrix
 
 namespace ModularGroup
 
-open MatrixGroups
+open scoped MatrixGroups
 
 open Matrix Matrix.SpecialLinearGroup
 

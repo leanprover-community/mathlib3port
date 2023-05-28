@@ -26,7 +26,7 @@ implementing one of the possible definitions of the Lie algebra attached to a Li
 
 noncomputable section
 
-open LieGroup Manifold Derivation
+open scoped LieGroup Manifold Derivation
 
 variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E]
   [NormedSpace 𝕜 E] {H : Type _} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) (G : Type _)

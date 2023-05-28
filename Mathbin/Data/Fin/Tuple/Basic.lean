@@ -52,10 +52,12 @@ section Tuple
 /-- There is exactly one tuple of size zero. -/
 example (α : Fin 0 → Sort u) : Unique (∀ i : Fin 0, α i) := by infer_instance
 
+#print Fin.tuple0_le /-
 @[simp]
 theorem tuple0_le {α : ∀ i : Fin 0, Type _} [∀ i, Preorder (α i)] (f g : ∀ i, α i) : f ≤ g :=
   finZeroElim
 #align fin.tuple0_le Fin.tuple0_le
+-/
 
 variable {α : Fin (n + 1) → Type u} (x : α 0) (q : ∀ i, α i) (p : ∀ i : Fin n, α i.succ) (i : Fin n)
   (y : α i.succ) (z : α 0)

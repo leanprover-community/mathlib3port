@@ -866,11 +866,13 @@ theorem strongDownwardInductionOn_eq {p : Finset α → Sort _} (s : Finset α)
   dsimp only [strong_downward_induction_on]; rw [strong_downward_induction]
 #align finset.strong_downward_induction_on_eq Finset.strongDownwardInductionOn_eq
 
+#print Finset.lt_wf /-
 theorem lt_wf {α} : WellFounded (@LT.lt (Finset α) _) :=
   have H : Subrelation (@LT.lt (Finset α) _) (InvImage (· < ·) card) := fun x y hxy =>
     card_lt_card hxy
   Subrelation.wf H <| InvImage.wf _ <| Nat.lt_wfRel
 #align finset.lt_wf Finset.lt_wf
+-/
 
 end Finset
 

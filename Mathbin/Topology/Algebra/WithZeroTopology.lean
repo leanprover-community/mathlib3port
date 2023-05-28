@@ -39,7 +39,7 @@ linearly ordered commutative group with zero. You can locally activate this topo
 -/
 
 
-open Topology Filter
+open scoped Topology Filter
 
 open TopologicalSpace Filter Set Function
 
@@ -150,9 +150,11 @@ theorem tendsto_units {γ₀ : Γ₀ˣ} : Tendsto f l (𝓝 (γ₀ : Γ₀)) ↔
 #align with_zero_topology.tendsto_units WithZeroTopology.tendsto_units
 -/
 
+#print WithZeroTopology.Iio_mem_nhds /-
 theorem Iio_mem_nhds (h : γ₁ < γ₂) : Iio γ₂ ∈ 𝓝 γ₁ := by
   rcases eq_or_ne γ₁ 0 with (rfl | h₀) <;> simp [*, h.ne', Iio_mem_nhds_zero]
 #align with_zero_topology.Iio_mem_nhds WithZeroTopology.Iio_mem_nhds
+-/
 
 /-!
 ### Open/closed sets

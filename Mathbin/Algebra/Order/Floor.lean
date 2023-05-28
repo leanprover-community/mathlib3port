@@ -131,9 +131,11 @@ theorem le_floor_iff (ha : 0 ≤ a) : n ≤ ⌊a⌋₊ ↔ (n : α) ≤ a :=
   FloorSemiring.gc_floor ha
 #align nat.le_floor_iff Nat.le_floor_iff
 
+#print Nat.le_floor /-
 theorem le_floor (h : (n : α) ≤ a) : n ≤ ⌊a⌋₊ :=
   (le_floor_iff <| n.cast_nonneg.trans h).2 h
 #align nat.le_floor Nat.le_floor
+-/
 
 theorem floor_lt (ha : 0 ≤ a) : ⌊a⌋₊ < n ↔ a < n :=
   lt_iff_lt_of_le_iff_le <| le_floor_iff ha
@@ -143,20 +145,26 @@ theorem floor_lt_one (ha : 0 ≤ a) : ⌊a⌋₊ < 1 ↔ a < 1 :=
   (floor_lt ha).trans <| by rw [Nat.cast_one]
 #align nat.floor_lt_one Nat.floor_lt_one
 
+#print Nat.lt_of_floor_lt /-
 theorem lt_of_floor_lt (h : ⌊a⌋₊ < n) : a < n :=
   lt_of_not_le fun h' => (le_floor h').not_lt h
 #align nat.lt_of_floor_lt Nat.lt_of_floor_lt
+-/
 
+#print Nat.lt_one_of_floor_lt_one /-
 theorem lt_one_of_floor_lt_one (h : ⌊a⌋₊ < 1) : a < 1 := by exact_mod_cast lt_of_floor_lt h
 #align nat.lt_one_of_floor_lt_one Nat.lt_one_of_floor_lt_one
+-/
 
 theorem floor_le (ha : 0 ≤ a) : (⌊a⌋₊ : α) ≤ a :=
   (le_floor_iff ha).1 le_rfl
 #align nat.floor_le Nat.floor_le
 
+#print Nat.lt_succ_floor /-
 theorem lt_succ_floor (a : α) : a < ⌊a⌋₊.succ :=
   lt_of_floor_lt <| Nat.lt_succ_self _
 #align nat.lt_succ_floor Nat.lt_succ_floor
+-/
 
 theorem lt_floor_add_one (a : α) : a < ⌊a⌋₊ + 1 := by simpa using lt_succ_floor a
 #align nat.lt_floor_add_one Nat.lt_floor_add_one
@@ -192,6 +200,7 @@ theorem floor_mono : Monotone (floor : α → ℕ) := fun a b h =>
 #align nat.floor_mono Nat.floor_mono
 -/
 
+#print Nat.le_floor_iff' /-
 theorem le_floor_iff' (hn : n ≠ 0) : n ≤ ⌊a⌋₊ ↔ (n : α) ≤ a :=
   by
   obtain ha | ha := le_total a 0
@@ -201,40 +210,55 @@ theorem le_floor_iff' (hn : n ≠ 0) : n ≤ ⌊a⌋₊ ↔ (n : α) ≤ a :=
         (not_le_of_lt <| ha.trans_lt <| cast_pos.2 <| Nat.pos_of_ne_zero hn)
   · exact le_floor_iff ha
 #align nat.le_floor_iff' Nat.le_floor_iff'
+-/
 
+#print Nat.one_le_floor_iff /-
 @[simp]
 theorem one_le_floor_iff (x : α) : 1 ≤ ⌊x⌋₊ ↔ 1 ≤ x := by
   exact_mod_cast @le_floor_iff' α _ _ x 1 one_ne_zero
 #align nat.one_le_floor_iff Nat.one_le_floor_iff
+-/
 
+#print Nat.floor_lt' /-
 theorem floor_lt' (hn : n ≠ 0) : ⌊a⌋₊ < n ↔ a < n :=
   lt_iff_lt_of_le_iff_le <| le_floor_iff' hn
 #align nat.floor_lt' Nat.floor_lt'
+-/
 
+#print Nat.floor_pos /-
 theorem floor_pos : 0 < ⌊a⌋₊ ↔ 1 ≤ a := by convert le_floor_iff' Nat.one_ne_zero;
   exact cast_one.symm
 #align nat.floor_pos Nat.floor_pos
+-/
 
 theorem pos_of_floor_pos (h : 0 < ⌊a⌋₊) : 0 < a :=
   (le_or_lt a 0).resolve_left fun ha => lt_irrefl 0 <| by rwa [floor_of_nonpos ha] at h
 #align nat.pos_of_floor_pos Nat.pos_of_floor_pos
 
+#print Nat.lt_of_lt_floor /-
 theorem lt_of_lt_floor (h : n < ⌊a⌋₊) : ↑n < a :=
   (Nat.cast_lt.2 h).trans_le <| floor_le (pos_of_floor_pos <| (Nat.zero_le n).trans_lt h).le
 #align nat.lt_of_lt_floor Nat.lt_of_lt_floor
+-/
 
+#print Nat.floor_le_of_le /-
 theorem floor_le_of_le (h : a ≤ n) : ⌊a⌋₊ ≤ n :=
   le_imp_le_iff_lt_imp_lt.2 lt_of_lt_floor h
 #align nat.floor_le_of_le Nat.floor_le_of_le
+-/
 
+#print Nat.floor_le_one_of_le_one /-
 theorem floor_le_one_of_le_one (h : a ≤ 1) : ⌊a⌋₊ ≤ 1 :=
   floor_le_of_le <| h.trans_eq <| Nat.cast_one.symm
 #align nat.floor_le_one_of_le_one Nat.floor_le_one_of_le_one
+-/
 
+#print Nat.floor_eq_zero /-
 @[simp]
 theorem floor_eq_zero : ⌊a⌋₊ = 0 ↔ a < 1 := by rw [← lt_one_iff, ← @cast_one α];
   exact floor_lt' Nat.one_ne_zero
 #align nat.floor_eq_zero Nat.floor_eq_zero
+-/
 
 theorem floor_eq_iff (ha : 0 ≤ a) : ⌊a⌋₊ = n ↔ ↑n ≤ a ∧ a < ↑n + 1 := by
   rw [← le_floor_iff ha, ← Nat.cast_one, ← Nat.cast_add, ← floor_lt ha, Nat.lt_add_one_iff,
@@ -274,19 +298,25 @@ theorem gc_ceil_coe : GaloisConnection (ceil : α → ℕ) coe :=
 #align nat.gc_ceil_coe Nat.gc_ceil_coe
 -/
 
+#print Nat.ceil_le /-
 @[simp]
 theorem ceil_le : ⌈a⌉₊ ≤ n ↔ a ≤ n :=
   gc_ceil_coe _ _
 #align nat.ceil_le Nat.ceil_le
+-/
 
+#print Nat.lt_ceil /-
 theorem lt_ceil : n < ⌈a⌉₊ ↔ (n : α) < a :=
   lt_iff_lt_of_le_iff_le ceil_le
 #align nat.lt_ceil Nat.lt_ceil
+-/
 
+#print Nat.add_one_le_ceil_iff /-
 @[simp]
 theorem add_one_le_ceil_iff : n + 1 ≤ ⌈a⌉₊ ↔ (n : α) < a := by
   rw [← Nat.lt_ceil, Nat.add_one_le_iff]
 #align nat.add_one_le_ceil_iff Nat.add_one_le_ceil_iff
+-/
 
 @[simp]
 theorem one_le_ceil_iff : 1 ≤ ⌈a⌉₊ ↔ 0 < a := by
@@ -299,9 +329,11 @@ theorem ceil_le_floor_add_one (a : α) : ⌈a⌉₊ ≤ ⌊a⌋₊ + 1 := by
 #align nat.ceil_le_floor_add_one Nat.ceil_le_floor_add_one
 -/
 
+#print Nat.le_ceil /-
 theorem le_ceil (a : α) : a ≤ ⌈a⌉₊ :=
   ceil_le.1 le_rfl
 #align nat.le_ceil Nat.le_ceil
+-/
 
 @[simp]
 theorem ceil_intCast {α : Type _} [LinearOrderedRing α] [FloorSemiring α] (z : ℤ) :
@@ -340,13 +372,17 @@ theorem ceil_eq_zero : ⌈a⌉₊ = 0 ↔ a ≤ 0 := by rw [← le_zero_iff, cei
 theorem ceil_pos : 0 < ⌈a⌉₊ ↔ 0 < a := by rw [lt_ceil, cast_zero]
 #align nat.ceil_pos Nat.ceil_pos
 
+#print Nat.lt_of_ceil_lt /-
 theorem lt_of_ceil_lt (h : ⌈a⌉₊ < n) : a < n :=
   (le_ceil a).trans_lt (Nat.cast_lt.2 h)
 #align nat.lt_of_ceil_lt Nat.lt_of_ceil_lt
+-/
 
+#print Nat.le_of_ceil_le /-
 theorem le_of_ceil_le (h : ⌈a⌉₊ ≤ n) : a ≤ n :=
   (le_ceil a).trans (Nat.cast_le.2 h)
 #align nat.le_of_ceil_le Nat.le_of_ceil_le
+-/
 
 #print Nat.floor_le_ceil /-
 theorem floor_le_ceil (a : α) : ⌊a⌋₊ ≤ ⌈a⌉₊ :=
@@ -365,11 +401,13 @@ theorem floor_lt_ceil_of_lt_of_pos {a b : α} (h : a < b) (h' : 0 < b) : ⌊a⌋
   · rwa [floor_of_nonpos ha.le, lt_ceil, Nat.cast_zero]
 #align nat.floor_lt_ceil_of_lt_of_pos Nat.floor_lt_ceil_of_lt_of_pos
 
+#print Nat.ceil_eq_iff /-
 theorem ceil_eq_iff (hn : n ≠ 0) : ⌈a⌉₊ = n ↔ ↑(n - 1) < a ∧ a ≤ n := by
   rw [← ceil_le, ← not_le, ← ceil_le, not_le,
     tsub_lt_iff_right (Nat.add_one_le_iff.2 (pos_iff_ne_zero.2 hn)), Nat.lt_add_one_iff,
     le_antisymm_iff, and_comm]
 #align nat.ceil_eq_iff Nat.ceil_eq_iff
+-/
 
 @[simp]
 theorem preimage_ceil_zero : (Nat.ceil : α → ℕ) ⁻¹' {0} = Iic 0 :=
@@ -1213,9 +1251,11 @@ theorem floor_le_ceil (a : α) : ⌊a⌋ ≤ ⌈a⌉ :=
 #align int.floor_le_ceil Int.floor_le_ceil
 -/
 
+#print Int.floor_lt_ceil_of_lt /-
 theorem floor_lt_ceil_of_lt {a b : α} (h : a < b) : ⌊a⌋ < ⌈b⌉ :=
   cast_lt.1 <| (floor_le a).trans_lt <| h.trans_le <| le_ceil b
 #align int.floor_lt_ceil_of_lt Int.floor_lt_ceil_of_lt
+-/
 
 @[simp]
 theorem preimage_ceil_singleton (m : ℤ) : (ceil : α → ℤ) ⁻¹' {m} = Ioc (m - 1) m :=

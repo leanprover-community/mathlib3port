@@ -148,15 +148,19 @@ theorem mk_lt_mk (n k : ℕ) (hn : 0 < n) (hk : 0 < k) : (⟨n, hn⟩ : ℕ+) < 
 #align pnat.mk_lt_mk PNat.mk_lt_mk
 -/
 
+#print PNat.coe_le_coe /-
 @[simp, norm_cast]
 theorem coe_le_coe (n k : ℕ+) : (n : ℕ) ≤ k ↔ n ≤ k :=
   Iff.rfl
 #align pnat.coe_le_coe PNat.coe_le_coe
+-/
 
+#print PNat.coe_lt_coe /-
 @[simp, norm_cast]
 theorem coe_lt_coe (n k : ℕ+) : (n : ℕ) < k ↔ n < k :=
   Iff.rfl
 #align pnat.coe_lt_coe PNat.coe_lt_coe
+-/
 
 #print PNat.pos /-
 @[simp]
@@ -203,15 +207,19 @@ theorem coe_toPNat' (n : ℕ+) : (n : ℕ).toPNat' = n :=
 #align pnat.coe_to_pnat' PNat.coe_toPNat'
 -/
 
+#print PNat.one_le /-
 @[simp]
 theorem one_le (n : ℕ+) : (1 : ℕ+) ≤ n :=
   n.2
 #align pnat.one_le PNat.one_le
+-/
 
+#print PNat.not_lt_one /-
 @[simp]
 theorem not_lt_one (n : ℕ+) : ¬n < 1 :=
   not_lt_of_le n.one_le
 #align pnat.not_lt_one PNat.not_lt_one
+-/
 
 instance : Inhabited ℕ+ :=
   ⟨1⟩
@@ -241,10 +249,12 @@ theorem coe_eq_one_iff {m : ℕ+} : (m : ℕ) = 1 ↔ m = 1 :=
 instance : WellFoundedRelation ℕ+ :=
   ⟨(· < ·), measure_wf coe⟩
 
+#print PNat.strongInductionOn /-
 /-- Strong induction on `ℕ+`. -/
 def strongInductionOn {p : ℕ+ → Sort _} : ∀ (n : ℕ+) (h : ∀ k, (∀ m, m < k → p m) → p k), p n
   | n => fun IH => IH _ fun a h => strong_induction_on a IH
 #align pnat.strong_induction_on PNat.strongInductionOn
+-/
 
 #print PNat.modDivAux /-
 /-- We define `m % k` and `m / k` in the same way as for `ℕ`

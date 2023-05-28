@@ -19,7 +19,7 @@ import Mathbin.RingTheory.RingHomProperties
 
 namespace RingHom
 
-open TensorProduct
+open scoped TensorProduct
 
 open TensorProduct Algebra.TensorProduct
 

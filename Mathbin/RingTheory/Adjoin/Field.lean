@@ -30,7 +30,7 @@ the minimal polynomial of each `x ∈ s` splits in `L` then `algebra.adjoin F s`
 
 noncomputable section
 
-open BigOperators Polynomial
+open scoped BigOperators Polynomial
 
 section Embeddings
 

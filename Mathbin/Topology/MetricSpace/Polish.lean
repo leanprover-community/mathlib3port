@@ -54,7 +54,7 @@ with additional properties:
 
 noncomputable section
 
-open Classical Topology Filter
+open scoped Classical Topology Filter
 
 open TopologicalSpace Set Metric Filter Function
 

@@ -800,9 +800,9 @@ theorem normalize_finite_fraction_representation (U : Opens (PrimeSpectrum.top R
   ring
 #align algebraic_geometry.structure_sheaf.normalize_finite_fraction_representation AlgebraicGeometry.StructureSheaf.normalize_finite_fraction_representation
 
-open Classical
+open scoped Classical
 
-open BigOperators
+open scoped BigOperators
 
 -- The proof here follows the argument in Hartshorne's Algebraic Geometry, Proposition II.2.2.
 theorem toBasicOpen_surjective (f : R) : Function.Surjective (toBasicOpen R f) :=

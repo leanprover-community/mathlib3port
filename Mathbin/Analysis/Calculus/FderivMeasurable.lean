@@ -85,7 +85,7 @@ open TopologicalSpace (SecondCountableTopology)
 
 open MeasureTheory
 
-open Topology
+open scoped Topology
 
 namespace ContinuousLinearMap
 

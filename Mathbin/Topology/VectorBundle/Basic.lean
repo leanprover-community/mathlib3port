@@ -65,7 +65,7 @@ noncomputable section
 
 open Bundle Set
 
-open Classical Bundle
+open scoped Classical Bundle
 
 variable (R : Type _) {B : Type _} (F : Type _) (E : B → Type _)
 

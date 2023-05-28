@@ -51,7 +51,7 @@ namespace End
 
 open Module PrincipalIdealRing Polynomial FiniteDimensional
 
-open Polynomial
+open scoped Polynomial
 
 variable {K R : Type v} {V M : Type w} [CommRing R] [AddCommGroup M] [Module R M] [Field K]
   [AddCommGroup V] [Module K V]

@@ -52,7 +52,7 @@ variable {α : Type u} {a : α}
 
 section Cyclic
 
-open BigOperators
+open scoped BigOperators
 
 attribute [local instance] setFintype
 
@@ -248,7 +248,7 @@ open Finset Nat
 
 section Classical
 
-open Classical
+open scoped Classical
 
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:132:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2, 3]) } -/
 @[to_additive IsAddCyclic.card_pow_eq_one_le]
@@ -345,7 +345,7 @@ private theorem card_pow_eq_one_eq_order_of_aux (a : α) :
       _ = (univ.filterₓ fun b : α => b ^ orderOf a = 1).card := Fintype.card_ofFinset _ _
       )
 
-open Nat
+open scoped Nat
 
 -- use φ for nat.totient
 private theorem card_order_of_eq_totient_aux₁ :

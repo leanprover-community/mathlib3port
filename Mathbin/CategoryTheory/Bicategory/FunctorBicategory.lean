@@ -24,7 +24,7 @@ namespace CategoryTheory
 
 open Category Bicategory
 
-open Bicategory
+open scoped Bicategory
 
 universe w₁ w₂ v₁ v₂ u₁ u₂
 

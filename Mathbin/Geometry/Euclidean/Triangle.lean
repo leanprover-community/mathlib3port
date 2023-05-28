@@ -41,13 +41,13 @@ unnecessarily.
 
 noncomputable section
 
-open BigOperators
+open scoped BigOperators
 
-open Classical
+open scoped Classical
 
-open Real
+open scoped Real
 
-open RealInnerProductSpace
+open scoped RealInnerProductSpace
 
 namespace InnerProductGeometry
 
@@ -281,7 +281,7 @@ This section develops some geometrical definitions and results on
 
 open InnerProductGeometry
 
-open EuclideanGeometry
+open scoped EuclideanGeometry
 
 variable {V : Type _} {P : Type _} [NormedAddCommGroup V] [InnerProductSpace ℝ V] [MetricSpace P]
   [NormedAddTorsor V P]

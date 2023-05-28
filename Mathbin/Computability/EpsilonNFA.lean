@@ -27,7 +27,7 @@ supplied for true `ε_NFA`'s.
 
 open Set
 
-open Computability
+open scoped Computability
 
 universe u v
 

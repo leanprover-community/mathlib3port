@@ -27,7 +27,7 @@ This file defines the double factorial,
 -/
 
 
-open Nat
+open scoped Nat
 
 namespace Nat
 
@@ -76,7 +76,7 @@ theorem doubleFactorial_two_mul : ∀ n : ℕ, (2 * n)‼ = 2 ^ n * n !
 #align nat.double_factorial_two_mul Nat.doubleFactorial_two_mul
 -/
 
-open BigOperators
+open scoped BigOperators
 
 #print Nat.doubleFactorial_eq_prod_even /-
 theorem doubleFactorial_eq_prod_even : ∀ n : ℕ, (2 * n)‼ = ∏ i in Finset.range n, 2 * (i + 1)

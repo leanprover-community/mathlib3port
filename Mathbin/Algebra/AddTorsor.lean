@@ -206,7 +206,7 @@ theorem vadd_eq_vadd_iff_neg_add_eq_vsub {v₁ v₂ : G} {p₁ p₂ : P} :
 
 namespace Set
 
-open Pointwise
+open scoped Pointwise
 
 @[simp]
 theorem singleton_vsub_self (p : P) : ({p} : Set P) -ᵥ {p} = {(0 : G)} := by

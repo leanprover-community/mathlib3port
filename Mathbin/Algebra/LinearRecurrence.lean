@@ -48,7 +48,7 @@ noncomputable section
 
 open Finset
 
-open BigOperators Polynomial
+open scoped BigOperators Polynomial
 
 #print LinearRecurrence /-
 /-- A "linear recurrence relation" over a commutative semiring is given by its

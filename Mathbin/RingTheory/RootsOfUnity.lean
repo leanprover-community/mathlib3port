@@ -68,7 +68,7 @@ This creates a little bit of friction, but lemmas like `is_primitive_root.is_uni
 -/
 
 
-open Classical BigOperators Polynomial
+open scoped Classical BigOperators Polynomial
 
 noncomputable section
 
@@ -883,7 +883,7 @@ theorem card_nthRootsFinset {ζ : R} {n : ℕ} (h : IsPrimitiveRoot ζ n) :
   rw [nth_roots_finset, ← Multiset.toFinset_eq (nth_roots_nodup h), card_mk, h.card_nth_roots]
 #align is_primitive_root.card_nth_roots_finset IsPrimitiveRoot.card_nthRootsFinset
 
-open Nat
+open scoped Nat
 
 /-- If an integral domain has a primitive `k`-th root of unity, then it has `φ k` of them. -/
 theorem card_primitiveRoots {ζ : R} {k : ℕ} (h : IsPrimitiveRoot ζ k) :

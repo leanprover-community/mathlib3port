@@ -37,7 +37,7 @@ Together, these two results prove the Galois correspondence.
 -/
 
 
-open Polynomial
+open scoped Polynomial
 
 open FiniteDimensional AlgEquiv
 

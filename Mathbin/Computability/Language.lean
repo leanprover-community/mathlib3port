@@ -28,7 +28,7 @@ over the languages.
 
 open List Set
 
-open Computability
+open scoped Computability
 
 universe v
 

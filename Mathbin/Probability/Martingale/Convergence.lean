@@ -49,7 +49,7 @@ theorems.
 
 open TopologicalSpace Filter MeasureTheory.Filtration
 
-open NNReal ENNReal MeasureTheory ProbabilityTheory BigOperators Topology
+open scoped NNReal ENNReal MeasureTheory ProbabilityTheory BigOperators Topology
 
 namespace MeasureTheory
 

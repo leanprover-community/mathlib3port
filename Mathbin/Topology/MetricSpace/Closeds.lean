@@ -33,7 +33,7 @@ always finite in this context.
 
 noncomputable section
 
-open Classical Topology ENNReal
+open scoped Classical Topology ENNReal
 
 universe u
 

@@ -40,7 +40,7 @@ noncomputable section
 
 attribute [local instance 1001] Classical.propDecidable
 
-open ENNReal
+open scoped ENNReal
 
 /-- Extended norm on a vector space. As in the case of normed spaces, we require only
 `‖c • x‖ ≤ ‖c‖ * ‖x‖` in the definition, then prove an equality in `map_smul`. -/

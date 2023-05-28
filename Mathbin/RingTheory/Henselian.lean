@@ -66,7 +66,7 @@ noncomputable section
 
 universe u v
 
-open BigOperators Polynomial
+open scoped BigOperators Polynomial
 
 open LocalRing Polynomial Function
 

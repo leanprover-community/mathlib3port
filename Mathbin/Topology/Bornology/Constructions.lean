@@ -24,7 +24,7 @@ on these types.
 
 open Set Filter Bornology Function
 
-open Filter
+open scoped Filter
 
 variable {α β ι : Type _} {π : ι → Type _} [Fintype ι] [Bornology α] [Bornology β]
   [∀ i, Bornology (π i)]

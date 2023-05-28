@@ -24,7 +24,7 @@ Both of which are relevant for defining modular forms.
 
 open Complex Filter
 
-open Topology UpperHalfPlane
+open scoped Topology UpperHalfPlane
 
 noncomputable section
 

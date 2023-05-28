@@ -52,7 +52,7 @@ universe u v w w'
 
 open Cardinal CategoryTheory
 
-open Cardinal FirstOrder
+open scoped Cardinal FirstOrder
 
 namespace FirstOrder
 

@@ -45,7 +45,7 @@ noncomputable section
 
 open Function Filter Set
 
-open Topology
+open scoped Topology
 
 namespace Real
 

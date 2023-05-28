@@ -359,7 +359,7 @@ section Polynomial
 
 open Polynomial
 
-open Polynomial
+open scoped Polynomial
 
 /-- The polynomial $W(X, Y) := Y^2 + a_1XY + a_3Y - (X^3 + a_2X^2 + a_4X + a_6)$ associated to a
 Weierstrass curve `W` over `R`. For ease of polynomial manipulation, this is represented as a term

@@ -28,7 +28,7 @@ filtration.
 -/
 
 
-open MeasureTheory ProbabilityTheory ENNReal BigOperators Topology
+open scoped MeasureTheory ProbabilityTheory ENNReal BigOperators Topology
 
 open MeasureTheory ProbabilityTheory MeasurableSpace TopologicalSpace
 

@@ -41,7 +41,7 @@ Positive operator
 
 open InnerProductSpace IsROrC ContinuousLinearMap
 
-open InnerProduct ComplexConjugate
+open scoped InnerProduct ComplexConjugate
 
 namespace ContinuousLinearMap
 

@@ -47,7 +47,7 @@ convex hull, caratheodory
 
 open Set Finset
 
-open BigOperators
+open scoped BigOperators
 
 universe u
 

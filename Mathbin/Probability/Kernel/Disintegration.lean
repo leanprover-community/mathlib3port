@@ -51,7 +51,7 @@ function `cond_cdf ρ a` (the conditional cumulative distribution function).
 
 open MeasureTheory Set Filter
 
-open ENNReal MeasureTheory Topology ProbabilityTheory
+open scoped ENNReal MeasureTheory Topology ProbabilityTheory
 
 namespace ProbabilityTheory
 

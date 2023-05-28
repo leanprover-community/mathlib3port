@@ -37,7 +37,7 @@ open Finset
 
 open Multiset
 
-open BigOperators Polynomial
+open scoped BigOperators Polynomial
 
 universe u w
 
@@ -90,12 +90,14 @@ theorem natDegree_list_prod_le (l : List S[X]) : natDegree l.Prod ≤ (l.map nat
 #align polynomial.nat_degree_list_prod_le Polynomial.natDegree_list_prod_le
 -/
 
+#print Polynomial.degree_list_prod_le /-
 theorem degree_list_prod_le (l : List S[X]) : degree l.Prod ≤ (l.map degree).Sum :=
   by
   induction' l with hd tl IH
   · simp
   · simpa using (degree_mul_le _ _).trans (add_le_add_left IH _)
 #align polynomial.degree_list_prod_le Polynomial.degree_list_prod_le
+-/
 
 theorem coeff_list_prod_of_natDegree_le (l : List S[X]) (n : ℕ) (hl : ∀ p ∈ l, natDegree p ≤ n) :
     coeff (List.prod l) (l.length * n) = (l.map fun p => coeff p n).Prod :=
@@ -141,16 +143,20 @@ theorem natDegree_prod_le : (∏ i in s, f i).natDegree ≤ ∑ i in s, (f i).na
 #align polynomial.nat_degree_prod_le Polynomial.natDegree_prod_le
 -/
 
+#print Polynomial.degree_multiset_prod_le /-
 /-- The degree of a product of polynomials is at most the sum of the degrees,
 where the degree of the zero polynomial is ⊥.
 -/
 theorem degree_multiset_prod_le : t.Prod.degree ≤ (t.map Polynomial.degree).Sum :=
   Quotient.inductionOn t (by simpa using degree_list_prod_le)
 #align polynomial.degree_multiset_prod_le Polynomial.degree_multiset_prod_le
+-/
 
+#print Polynomial.degree_prod_le /-
 theorem degree_prod_le : (∏ i in s, f i).degree ≤ ∑ i in s, (f i).degree := by
   simpa only [Multiset.map_map] using degree_multiset_prod_le (s.1.map f)
 #align polynomial.degree_prod_le Polynomial.degree_prod_le
+-/
 
 /-- The leading coefficient of a product of polynomials is equal to
 the product of the leading coefficients, provided that this product is nonzero.

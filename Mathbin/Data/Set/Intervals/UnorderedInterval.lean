@@ -72,26 +72,34 @@ theorem dual_uIcc (a b : α) : [toDual a, toDual b] = ofDual ⁻¹' [a, b] :=
 #align set.dual_uIcc Set.dual_uIcc
 -/
 
+#print Set.uIcc_of_le /-
 @[simp]
 theorem uIcc_of_le (h : a ≤ b) : [a, b] = Icc a b := by rw [uIcc, inf_eq_left.2 h, sup_eq_right.2 h]
 #align set.uIcc_of_le Set.uIcc_of_le
+-/
 
+#print Set.uIcc_of_ge /-
 @[simp]
 theorem uIcc_of_ge (h : b ≤ a) : [a, b] = Icc b a := by rw [uIcc, inf_eq_right.2 h, sup_eq_left.2 h]
 #align set.uIcc_of_ge Set.uIcc_of_ge
+-/
 
 #print Set.uIcc_comm /-
 theorem uIcc_comm (a b : α) : [a, b] = [b, a] := by simp_rw [uIcc, inf_comm, sup_comm]
 #align set.uIcc_comm Set.uIcc_comm
 -/
 
+#print Set.uIcc_of_lt /-
 theorem uIcc_of_lt (h : a < b) : [a, b] = Icc a b :=
   uIcc_of_le h.le
 #align set.uIcc_of_lt Set.uIcc_of_lt
+-/
 
+#print Set.uIcc_of_gt /-
 theorem uIcc_of_gt (h : b < a) : [a, b] = Icc b a :=
   uIcc_of_ge h.le
 #align set.uIcc_of_gt Set.uIcc_of_gt
+-/
 
 #print Set.uIcc_self /-
 @[simp]
@@ -132,13 +140,17 @@ theorem right_mem_uIcc : b ∈ [a, b] :=
 #align set.right_mem_uIcc Set.right_mem_uIcc
 -/
 
+#print Set.mem_uIcc_of_le /-
 theorem mem_uIcc_of_le (ha : a ≤ x) (hb : x ≤ b) : x ∈ [a, b] :=
   Icc_subset_uIcc ⟨ha, hb⟩
 #align set.mem_uIcc_of_le Set.mem_uIcc_of_le
+-/
 
+#print Set.mem_uIcc_of_ge /-
 theorem mem_uIcc_of_ge (hb : b ≤ x) (ha : x ≤ a) : x ∈ [a, b] :=
   Icc_subset_uIcc' ⟨hb, ha⟩
 #align set.mem_uIcc_of_ge Set.mem_uIcc_of_ge
+-/
 
 #print Set.uIcc_subset_uIcc /-
 theorem uIcc_subset_uIcc (h₁ : a₁ ∈ [a₂, b₂]) (h₂ : b₁ ∈ [a₂, b₂]) : [a₁, b₁] ⊆ [a₂, b₂] :=
@@ -198,7 +210,7 @@ end Prod
 
 end Lattice
 
-open Interval
+open scoped Interval
 
 section DistribLattice
 
@@ -240,27 +252,37 @@ theorem Icc_min_max : Icc (min a b) (max a b) = [a, b] :=
   rfl
 #align set.Icc_min_max Set.Icc_min_max
 
+#print Set.uIcc_of_not_le /-
 theorem uIcc_of_not_le (h : ¬a ≤ b) : [a, b] = Icc b a :=
   uIcc_of_gt <| lt_of_not_ge h
 #align set.uIcc_of_not_le Set.uIcc_of_not_le
+-/
 
+#print Set.uIcc_of_not_ge /-
 theorem uIcc_of_not_ge (h : ¬b ≤ a) : [a, b] = Icc a b :=
   uIcc_of_lt <| lt_of_not_ge h
 #align set.uIcc_of_not_ge Set.uIcc_of_not_ge
+-/
 
 theorem uIcc_eq_union : [a, b] = Icc a b ∪ Icc b a := by rw [Icc_union_Icc', max_comm] <;> rfl
 #align set.uIcc_eq_union Set.uIcc_eq_union
 
+#print Set.mem_uIcc /-
 theorem mem_uIcc : a ∈ [b, c] ↔ b ≤ a ∧ a ≤ c ∨ c ≤ a ∧ a ≤ b := by simp [uIcc_eq_union]
 #align set.mem_uIcc Set.mem_uIcc
+-/
 
+#print Set.not_mem_uIcc_of_lt /-
 theorem not_mem_uIcc_of_lt (ha : c < a) (hb : c < b) : c ∉ [a, b] :=
   not_mem_Icc_of_lt <| lt_min_iff.mpr ⟨ha, hb⟩
 #align set.not_mem_uIcc_of_lt Set.not_mem_uIcc_of_lt
+-/
 
+#print Set.not_mem_uIcc_of_gt /-
 theorem not_mem_uIcc_of_gt (ha : a < c) (hb : b < c) : c ∉ [a, b] :=
   not_mem_Icc_of_gt <| max_lt_iff.mpr ⟨ha, hb⟩
 #align set.not_mem_uIcc_of_gt Set.not_mem_uIcc_of_gt
+-/
 
 theorem uIcc_subset_uIcc_iff_le :
     [a₁, b₁] ⊆ [a₂, b₂] ↔ min a₂ b₂ ≤ min a₁ b₁ ∧ max a₁ b₁ ≤ max a₂ b₂ :=
@@ -303,32 +325,44 @@ def uIoc : α → α → Set α := fun a b => Ioc (min a b) (max a b)
 -- Below is a capital iota
 scoped[Interval] notation "Ι" => Set.uIoc
 
+#print Set.uIoc_of_le /-
 @[simp]
 theorem uIoc_of_le (h : a ≤ b) : Ι a b = Ioc a b := by simp [uIoc, h]
 #align set.uIoc_of_le Set.uIoc_of_le
+-/
 
+#print Set.uIoc_of_lt /-
 @[simp]
 theorem uIoc_of_lt (h : b < a) : Ι a b = Ioc b a := by simp [uIoc, h.le]
 #align set.uIoc_of_lt Set.uIoc_of_lt
+-/
 
 theorem uIoc_eq_union : Ι a b = Ioc a b ∪ Ioc b a := by cases le_total a b <;> simp [uIoc, *]
 #align set.uIoc_eq_union Set.uIoc_eq_union
 
+#print Set.mem_uIoc /-
 theorem mem_uIoc : a ∈ Ι b c ↔ b < a ∧ a ≤ c ∨ c < a ∧ a ≤ b := by
   simp only [uIoc_eq_union, mem_union, mem_Ioc]
 #align set.mem_uIoc Set.mem_uIoc
+-/
 
+#print Set.not_mem_uIoc /-
 theorem not_mem_uIoc : a ∉ Ι b c ↔ a ≤ b ∧ a ≤ c ∨ c < a ∧ b < a := by
   simp only [uIoc_eq_union, mem_union, mem_Ioc, not_lt, ← not_le]; tauto
 #align set.not_mem_uIoc Set.not_mem_uIoc
+-/
 
+#print Set.left_mem_uIoc /-
 @[simp]
 theorem left_mem_uIoc : a ∈ Ι a b ↔ b < a := by simp [mem_uIoc]
 #align set.left_mem_uIoc Set.left_mem_uIoc
+-/
 
+#print Set.right_mem_uIoc /-
 @[simp]
 theorem right_mem_uIoc : b ∈ Ι a b ↔ a < b := by simp [mem_uIoc]
 #align set.right_mem_uIoc Set.right_mem_uIoc
+-/
 
 #print Set.forall_uIoc_iff /-
 theorem forall_uIoc_iff {P : α → Prop} :
@@ -371,11 +405,13 @@ theorem eq_of_mem_uIoc_of_mem_uIoc' : b ∈ Ι a c → c ∈ Ι a b → b = c :=
 #align set.eq_of_mem_uIoc_of_mem_uIoc' Set.eq_of_mem_uIoc_of_mem_uIoc'
 -/
 
+#print Set.eq_of_not_mem_uIoc_of_not_mem_uIoc /-
 theorem eq_of_not_mem_uIoc_of_not_mem_uIoc (ha : a ≤ c) (hb : b ≤ c) :
     a ∉ Ι b c → b ∉ Ι a c → a = b := by
   simp_rw [not_mem_uIoc] <;> rintro (⟨_, _⟩ | ⟨_, _⟩) (⟨_, _⟩ | ⟨_, _⟩) <;> apply le_antisymm <;>
     first |assumption|exact le_of_lt ‹_›|cases not_le_of_lt ‹_› ‹_›
 #align set.eq_of_not_mem_uIoc_of_not_mem_uIoc Set.eq_of_not_mem_uIoc_of_not_mem_uIoc
+-/
 
 #print Set.uIoc_injective_right /-
 theorem uIoc_injective_right (a : α) : Injective fun b => Ι b a :=

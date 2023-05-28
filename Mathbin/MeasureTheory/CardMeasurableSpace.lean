@@ -37,7 +37,7 @@ universe u
 
 variable {α : Type u}
 
-open Cardinal
+open scoped Cardinal
 
 open Cardinal Set
 

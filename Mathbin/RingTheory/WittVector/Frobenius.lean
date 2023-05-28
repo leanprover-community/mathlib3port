@@ -63,7 +63,7 @@ noncomputable section
 
 open MvPolynomial Finset
 
-open BigOperators
+open scoped BigOperators
 
 variable (p)
 

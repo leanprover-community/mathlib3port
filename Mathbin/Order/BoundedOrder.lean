@@ -246,6 +246,7 @@ theorem OrderTop.ext_top {α} {hA : PartialOrder α} (A : OrderTop α) {hB : Par
   top_unique <| by rw [← H] <;> apply le_top
 #align order_top.ext_top OrderTop.ext_top
 
+#print OrderTop.ext /-
 theorem OrderTop.ext {α} [PartialOrder α] {A B : OrderTop α} : A = B :=
   by
   have tt := OrderTop.ext_top A B fun _ _ => Iff.rfl
@@ -253,6 +254,7 @@ theorem OrderTop.ext {α} [PartialOrder α] {A B : OrderTop α} : A = B :=
   congr
   exact le_antisymm (hb _) (ha _)
 #align order_top.ext OrderTop.ext
+-/
 
 #print OrderBot /-
 /-- An order is an `order_bot` if it has a least element.
@@ -467,6 +469,7 @@ theorem OrderBot.ext_bot {α} {hA : PartialOrder α} (A : OrderBot α) {hB : Par
   bot_unique <| by rw [← H] <;> apply bot_le
 #align order_bot.ext_bot OrderBot.ext_bot
 
+#print OrderBot.ext /-
 theorem OrderBot.ext {α} [PartialOrder α] {A B : OrderBot α} : A = B :=
   by
   have tt := OrderBot.ext_bot A B fun _ _ => Iff.rfl
@@ -474,6 +477,7 @@ theorem OrderBot.ext {α} [PartialOrder α] {A B : OrderBot α} : A = B :=
   congr
   exact le_antisymm (ha _) (hb _)
 #align order_bot.ext OrderBot.ext
+-/
 
 section SemilatticeSupTop
 
@@ -561,6 +565,7 @@ class BoundedOrder (α : Type u) [LE α] extends OrderTop α, OrderBot α
 instance (α : Type u) [LE α] [BoundedOrder α] : BoundedOrder αᵒᵈ :=
   { OrderDual.orderTop α, OrderDual.orderBot α with }
 
+#print BoundedOrder.ext /-
 theorem BoundedOrder.ext {α} [PartialOrder α] {A B : BoundedOrder α} : A = B :=
   by
   have ht : @BoundedOrder.toOrderTop α _ A = @BoundedOrder.toOrderTop α _ B := OrderTop.ext
@@ -573,6 +578,7 @@ theorem BoundedOrder.ext {α} [PartialOrder α] {A B : BoundedOrder α} : A = B 
   · exact h.symm
   · exact h'.symm
 #align bounded_order.ext BoundedOrder.ext
+-/
 
 section Logic
 
@@ -598,17 +604,25 @@ theorem monotone_or {p q : α → Prop} (m_p : Monotone p) (m_q : Monotone q) :
 #align monotone_or monotone_or
 -/
 
+#print monotone_le /-
 theorem monotone_le {x : α} : Monotone ((· ≤ ·) x) := fun y z h' h => h.trans h'
 #align monotone_le monotone_le
+-/
 
+#print monotone_lt /-
 theorem monotone_lt {x : α} : Monotone ((· < ·) x) := fun y z h' h => h.trans_le h'
 #align monotone_lt monotone_lt
+-/
 
+#print antitone_le /-
 theorem antitone_le {x : α} : Antitone (· ≤ x) := fun y z h' h => h'.trans h
 #align antitone_le antitone_le
+-/
 
+#print antitone_lt /-
 theorem antitone_lt {x : α} : Antitone (· < x) := fun y z h' h => h'.trans_lt h
 #align antitone_lt antitone_lt
+-/
 
 #print Monotone.forall /-
 theorem Monotone.forall {P : β → α → Prop} (hP : ∀ x, Monotone (P x)) :
@@ -640,10 +654,12 @@ section SemilatticeSup
 
 variable [SemilatticeSup α]
 
+#print exists_ge_and_iff_exists /-
 theorem exists_ge_and_iff_exists {P : α → Prop} {x₀ : α} (hP : Monotone P) :
     (∃ x, x₀ ≤ x ∧ P x) ↔ ∃ x, P x :=
   ⟨fun h => h.imp fun x h => h.2, fun ⟨x, hx⟩ => ⟨x ⊔ x₀, le_sup_right, hP le_sup_left hx⟩⟩
 #align exists_ge_and_iff_exists exists_ge_and_iff_exists
+-/
 
 end SemilatticeSup
 
@@ -651,10 +667,12 @@ section SemilatticeInf
 
 variable [SemilatticeInf α]
 
+#print exists_le_and_iff_exists /-
 theorem exists_le_and_iff_exists {P : α → Prop} {x₀ : α} (hP : Antitone P) :
     (∃ x, x ≤ x₀ ∧ P x) ↔ ∃ x, P x :=
   exists_ge_and_iff_exists hP.dual_left
 #align exists_le_and_iff_exists exists_le_and_iff_exists
+-/
 
 end SemilatticeInf
 

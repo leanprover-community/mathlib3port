@@ -23,7 +23,7 @@ impartial.
 
 universe u
 
-open PGame
+open scoped PGame
 
 namespace PGame
 

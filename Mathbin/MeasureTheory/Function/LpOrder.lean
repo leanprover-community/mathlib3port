@@ -28,7 +28,7 @@ import Mathbin.MeasureTheory.Function.LpSpace
 
 open TopologicalSpace MeasureTheory LatticeOrderedCommGroup
 
-open ENNReal
+open scoped ENNReal
 
 variable {α E : Type _} {m : MeasurableSpace α} {μ : Measure α} {p : ℝ≥0∞}
 

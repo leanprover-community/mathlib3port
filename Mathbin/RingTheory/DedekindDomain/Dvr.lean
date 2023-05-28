@@ -52,7 +52,7 @@ dedekind domain, dedekind ring
 
 variable (R A K : Type _) [CommRing R] [CommRing A] [IsDomain A] [Field K]
 
-open nonZeroDivisors Polynomial
+open scoped nonZeroDivisors Polynomial
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (P «expr ≠ » («expr⊥»() : ideal[ideal] A)) -/
 /-- A Dedekind domain is an integral domain that is Noetherian, and the

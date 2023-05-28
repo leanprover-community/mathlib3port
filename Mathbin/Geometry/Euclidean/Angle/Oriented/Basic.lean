@@ -38,7 +38,7 @@ noncomputable section
 
 open FiniteDimensional Complex
 
-open Real RealInnerProductSpace ComplexConjugate
+open scoped Real RealInnerProductSpace ComplexConjugate
 
 namespace Orientation
 

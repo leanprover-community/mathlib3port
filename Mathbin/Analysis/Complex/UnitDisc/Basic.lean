@@ -24,7 +24,7 @@ introduce some basic operations on this disc.
 
 open Set Function Metric
 
-open BigOperators
+open scoped BigOperators
 
 noncomputable section
 

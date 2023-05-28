@@ -119,7 +119,7 @@ section ZeroObject
 
 variable [HasZeroObject C] [HasZeroObject D]
 
-open ZeroObject
+open scoped ZeroObject
 
 variable [HasZeroMorphisms C] [HasZeroMorphisms D] (F : C ⥤ D)
 

@@ -44,7 +44,7 @@ noncomputable section
 
 open Set
 
-open Classical
+open scoped Classical
 
 universe u v w
 

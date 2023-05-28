@@ -51,9 +51,11 @@ theorem inf_hnot_self (a : α) : a ⊓ ￢a = ∂ a :=
   rfl
 #align coheyting.inf_hnot_self Coheyting.inf_hnot_self
 
+#print Coheyting.boundary_le /-
 theorem boundary_le : ∂ a ≤ a :=
   inf_le_left
 #align coheyting.boundary_le Coheyting.boundary_le
+-/
 
 theorem boundary_le_hnot : ∂ a ≤ ￢a :=
   inf_le_right
@@ -147,7 +149,7 @@ theorem hnot_eq_top_iff_exists_boundary : ￢a = ⊤ ↔ ∃ b, ∂ b = a :=
 
 end Coheyting
 
-open Heyting
+open scoped Heyting
 
 section BooleanAlgebra
 

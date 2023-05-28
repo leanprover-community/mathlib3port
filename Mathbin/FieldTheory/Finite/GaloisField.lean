@@ -37,7 +37,7 @@ noncomputable section
 
 open Polynomial
 
-open Polynomial
+open scoped Polynomial
 
 theorem galois_poly_separable {K : Type _} [Field K] (p q : ℕ) [CharP K p] (h : p ∣ q) :
     Separable (X ^ q - X : K[X]) := by

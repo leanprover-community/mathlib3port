@@ -64,7 +64,7 @@ approach, it turns out that direct proofs are easier and more efficient.
 
 noncomputable section
 
-open BigOperators NNReal
+open scoped BigOperators NNReal
 
 open Finset Metric
 
@@ -715,7 +715,7 @@ theorem tsum_eval {α : Type _} {p : α → ContinuousMultilinearMap 𝕜 E G} (
   (hasSum_eval hp.HasSum m).tsum_eq.symm
 #align continuous_multilinear_map.tsum_eval ContinuousMultilinearMap.tsum_eval
 
-open Topology
+open scoped Topology
 
 open Filter
 

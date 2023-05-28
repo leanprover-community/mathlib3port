@@ -46,14 +46,14 @@ A few lemmas requiring heavier imports are in `data.is_R_or_C.lemmas`.
 -/
 
 
-open BigOperators
+open scoped BigOperators
 
 section
 
 -- mathport name: expr𝓚
 local notation "𝓚" => algebraMap ℝ _
 
-open ComplexConjugate
+open scoped ComplexConjugate
 
 #print IsROrC /-
 /--
@@ -93,7 +93,7 @@ variable {K E : Type _} [IsROrC K]
 
 namespace IsROrC
 
-open ComplexConjugate
+open scoped ComplexConjugate
 
 /- The priority must be set at 900 to ensure that coercions are tried in the right order.
 See Note [coercion into rings], or `data/nat/cast.lean` for more details. -/
@@ -823,7 +823,7 @@ end Instances
 
 namespace IsROrC
 
-open ComplexConjugate
+open scoped ComplexConjugate
 
 section CleanupLemmas
 

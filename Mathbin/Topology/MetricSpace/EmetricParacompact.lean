@@ -32,7 +32,7 @@ metric space, paracompact space, normal space
 
 variable {α : Type _}
 
-open ENNReal Topology
+open scoped ENNReal Topology
 
 open Set
 

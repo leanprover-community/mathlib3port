@@ -83,7 +83,7 @@ local notation "SL(" n ", " R ")" => SpecialLinearGroup (Fin n) R
 -- mathport name: «expr↑ₘ »
 local prefix:1024 "↑ₘ" => @coe _ (Matrix (Fin 2) (Fin 2) ℤ) _
 
-open UpperHalfPlane ComplexConjugate
+open scoped UpperHalfPlane ComplexConjugate
 
 attribute [local instance] Fintype.card_fin_even
 

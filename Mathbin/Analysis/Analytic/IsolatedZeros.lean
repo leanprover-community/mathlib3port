@@ -32,11 +32,11 @@ useful in this setup.
 -/
 
 
-open Classical
+open scoped Classical
 
 open Filter Function Nat FormalMultilinearSeries Emetric Set
 
-open Topology BigOperators
+open scoped Topology BigOperators
 
 variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E]
   [NormedSpace 𝕜 E] {s : E} {p q : FormalMultilinearSeries 𝕜 𝕜 E} {f g : 𝕜 → E} {n : ℕ} {z z₀ : 𝕜}

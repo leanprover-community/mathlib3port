@@ -68,7 +68,7 @@ sequentially closed, sequentially compact, sequential space
 
 open Set Function Filter TopologicalSpace
 
-open Topology Filter
+open scoped Topology Filter
 
 variable {X Y : Type _}
 
@@ -376,7 +376,7 @@ end SeqCompact
 
 section UniformSpaceSeqCompact
 
-open uniformity
+open scoped uniformity
 
 open UniformSpace Prod
 

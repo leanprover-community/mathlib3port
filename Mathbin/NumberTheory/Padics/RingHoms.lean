@@ -44,7 +44,7 @@ which removes some boilerplate code.
 
 noncomputable section
 
-open Classical
+open scoped Classical
 
 open Nat LocalRing Padic
 

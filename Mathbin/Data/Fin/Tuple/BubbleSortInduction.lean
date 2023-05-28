@@ -35,6 +35,7 @@ with respect to the lexicographic ordering on the finite set of all permutations
 
 namespace Tuple
 
+#print Tuple.bubble_sort_induction' /-
 /-- *Bubble sort induction*: Prove that the sorted version of `f` has some property `P`
 if `f` satsifies `P` and `P` is preserved on permutations of `f` when swapping two
 antitone values. -/
@@ -52,7 +53,9 @@ theorem bubble_sort_induction' {n : ℕ} {α : Type _} [LinearOrder α] {f : Fin
   obtain ⟨i, j, hij₁, hij₂⟩ := antitone_pair_of_not_sorted' hσ
   exact ⟨σ * Equiv.swap i j, Pi.lex_desc hij₁ hij₂, h σ i j hij₁ hij₂ hfσ⟩
 #align tuple.bubble_sort_induction' Tuple.bubble_sort_induction'
+-/
 
+#print Tuple.bubble_sort_induction /-
 /-- *Bubble sort induction*: Prove that the sorted version of `f` has some property `P`
 if `f` satsifies `P` and `P` is preserved when swapping two antitone values. -/
 theorem bubble_sort_induction {n : ℕ} {α : Type _} [LinearOrder α] {f : Fin n → α}
@@ -61,6 +64,7 @@ theorem bubble_sort_induction {n : ℕ} {α : Type _} [LinearOrder α] {f : Fin 
     P (f ∘ sort f) :=
   bubble_sort_induction' hf fun σ => h _
 #align tuple.bubble_sort_induction Tuple.bubble_sort_induction
+-/
 
 end Tuple
 

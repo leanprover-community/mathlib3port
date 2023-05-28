@@ -65,7 +65,7 @@ still involve this definition.
 
 variable {ι : Type _} {R : Type _} {M : Type _} {A : Type _}
 
-open DirectSum
+open scoped DirectSum
 
 /-! ### Basic definitions and lemmas -/
 

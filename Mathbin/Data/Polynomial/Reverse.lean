@@ -30,7 +30,7 @@ namespace Polynomial
 
 open Polynomial Finsupp Finset
 
-open Classical Polynomial
+open scoped Classical Polynomial
 
 section Semiring
 

@@ -34,8 +34,10 @@ theorem Directed.finset_le {r : α → α → Prop} [IsTrans α r] {ι} [hι : N
         Or.cases_on (Multiset.mem_cons.1 h) (fun h => h.symm ▸ h₁) fun h => trans (H _ h) h₂⟩
 #align directed.finset_le Directed.finset_le
 
+#print Finset.exists_le /-
 theorem Finset.exists_le [Nonempty α] [Preorder α] [IsDirected α (· ≤ ·)] (s : Finset α) :
     ∃ M, ∀ i ∈ s, i ≤ M :=
   directed_id.finset_le _
 #align finset.exists_le Finset.exists_le
+-/
 

@@ -240,7 +240,7 @@ instance hasZeroObject_op : HasZeroObject Cᵒᵖ :=
 
 end
 
-open ZeroObject
+open scoped ZeroObject
 
 #print CategoryTheory.Limits.hasZeroObject_unop /-
 theorem hasZeroObject_unop [HasZeroObject Cᵒᵖ] : HasZeroObject C :=
@@ -387,7 +387,7 @@ end Limits
 
 open CategoryTheory.Limits
 
-open ZeroObject
+open scoped ZeroObject
 
 theorem Functor.isZero_iff [HasZeroObject D] (F : C ⥤ D) : IsZero F ↔ ∀ X, IsZero (F.obj X) :=
   ⟨fun hF X => hF.obj X, Functor.isZero _⟩

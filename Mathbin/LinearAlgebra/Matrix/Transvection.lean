@@ -71,7 +71,7 @@ universe u₁ u₂
 
 namespace Matrix
 
-open Matrix
+open scoped Matrix
 
 variable (n p : Type _) (R : Type u₂) {𝕜 : Type _} [Field 𝕜]
 

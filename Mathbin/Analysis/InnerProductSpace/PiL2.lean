@@ -59,7 +59,7 @@ For consequences in infinite dimension (Hilbert bases, etc.), see the file
 
 open Real Set Filter IsROrC Submodule Function
 
-open BigOperators uniformity Topology NNReal ENNReal ComplexConjugate DirectSum
+open scoped BigOperators uniformity Topology NNReal ENNReal ComplexConjugate DirectSum
 
 noncomputable section
 
@@ -941,7 +941,7 @@ end LinearIsometry
 
 section Matrix
 
-open Matrix
+open scoped Matrix
 
 variable {m n : Type _}
 

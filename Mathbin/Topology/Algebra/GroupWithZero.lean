@@ -38,7 +38,7 @@ as homeomorphisms.
 -/
 
 
-open Topology Filter
+open scoped Topology Filter
 
 open Filter Function
 

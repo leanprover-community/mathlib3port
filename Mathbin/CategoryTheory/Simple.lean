@@ -148,7 +148,7 @@ theorem Simple.not_isZero (X : C) [Simple X] : ¬IsZero X := by
 
 variable [HasZeroObject C]
 
-open ZeroObject
+open scoped ZeroObject
 
 variable (C)
 
@@ -259,7 +259,7 @@ section Subobject
 
 variable [HasZeroMorphisms C] [HasZeroObject C]
 
-open ZeroObject
+open scoped ZeroObject
 
 open Subobject
 
@@ -275,6 +275,7 @@ instance {X : C} [Simple X] : IsSimpleOrder (Subobject X)
     · exact Or.inl (mk_eq_bot_iff_zero.mpr h)
     · refine' Or.inr ((is_iso_iff_mk_eq_top _).mp ((simple.mono_is_iso_iff_nonzero f).mpr h))
 
+#print CategoryTheory.simple_of_isSimpleOrder_subobject /-
 /-- If `X` has subobject lattice `{⊥, ⊤}`, then `X` is simple. -/
 theorem simple_of_isSimpleOrder_subobject (X : C) [IsSimpleOrder (Subobject X)] : Simple X :=
   by
@@ -290,11 +291,14 @@ theorem simple_of_isSimpleOrder_subobject (X : C) [IsSimpleOrder (Subobject X)] 
       exact False.elim (i h)
     · exact (subobject.is_iso_iff_mk_eq_top _).mpr h
 #align category_theory.simple_of_is_simple_order_subobject CategoryTheory.simple_of_isSimpleOrder_subobject
+-/
 
+#print CategoryTheory.simple_iff_subobject_isSimpleOrder /-
 /-- `X` is simple iff it has subobject lattice `{⊥, ⊤}`. -/
 theorem simple_iff_subobject_isSimpleOrder (X : C) : Simple X ↔ IsSimpleOrder (Subobject X) :=
   ⟨by intro h; infer_instance, by intro h; exact simple_of_is_simple_order_subobject X⟩
 #align category_theory.simple_iff_subobject_is_simple_order CategoryTheory.simple_iff_subobject_isSimpleOrder
+-/
 
 /-- A subobject is simple iff it is an atom in the subobject lattice. -/
 theorem subobject_simple_iff_isAtom {X : C} (Y : Subobject X) : Simple (Y : C) ↔ IsAtom Y :=

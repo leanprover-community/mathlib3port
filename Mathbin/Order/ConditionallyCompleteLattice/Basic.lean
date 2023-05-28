@@ -48,7 +48,7 @@ Extension of Sup and Inf from a preorder `α` to `with_top α` and `with_bot α`
 -/
 
 
-open Classical
+open scoped Classical
 
 noncomputable instance {α : Type _} [Preorder α] [SupSet α] : SupSet (WithTop α) :=
   ⟨fun S =>
@@ -226,11 +226,13 @@ class ConditionallyCompleteLinearOrderBot (α : Type _) extends ConditionallyCom
 #align conditionally_complete_linear_order_bot ConditionallyCompleteLinearOrderBot
 -/
 
+#print ConditionallyCompleteLinearOrderBot.toOrderBot /-
 -- see Note [lower instance priority]
 instance (priority := 100) ConditionallyCompleteLinearOrderBot.toOrderBot
     [h : ConditionallyCompleteLinearOrderBot α] : OrderBot α :=
   { h with }
 #align conditionally_complete_linear_order_bot.to_order_bot ConditionallyCompleteLinearOrderBot.toOrderBot
+-/
 
 #print CompleteLattice.toConditionallyCompleteLattice /-
 -- see Note [lower instance priority]
@@ -259,8 +261,9 @@ instance (priority := 100) CompleteLinearOrder.toConditionallyCompleteLinearOrde
 
 section
 
-open Classical
+open scoped Classical
 
+#print IsWellOrder.conditionallyCompleteLinearOrderBot /-
 /-- A well founded linear order is conditionally complete, with a bottom element. -/
 @[reducible]
 noncomputable def IsWellOrder.conditionallyCompleteLinearOrderBot (α : Type _) [i₁ : LinearOrder α]
@@ -287,6 +290,7 @@ noncomputable def IsWellOrder.conditionallyCompleteLinearOrderBot (α : Type _) 
       simpa using h.wf.not_lt_min _ h's has
     csSup_empty := by simpa using eq_bot_iff.2 (not_lt.1 <| h.wf.not_lt_min _ _ <| mem_univ ⊥) }
 #align is_well_order.conditionally_complete_linear_order_bot IsWellOrder.conditionallyCompleteLinearOrderBot
+-/
 
 end
 
@@ -1101,7 +1105,7 @@ end ConditionallyCompleteLinearOrderBot
 
 namespace WithTop
 
-open Classical
+open scoped Classical
 
 variable [ConditionallyCompleteLinearOrderBot α]
 
@@ -1424,7 +1428,7 @@ This result can be used to show that the extended reals `[-∞, ∞]` are a comp
 -/
 
 
-open Classical
+open scoped Classical
 
 #print WithTop.conditionallyCompleteLattice /-
 /-- Adding a top element to a conditionally complete lattice

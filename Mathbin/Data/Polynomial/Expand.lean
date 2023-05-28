@@ -29,7 +29,7 @@ import Mathbin.Tactic.RingExp
 
 universe u v w
 
-open Classical BigOperators Polynomial
+open scoped Classical BigOperators Polynomial
 
 open Finset
 

@@ -44,17 +44,19 @@ square root
 
 open Set Filter
 
-open Filter NNReal Topology
+open scoped Filter NNReal Topology
 
 namespace NNReal
 
 variable {x y : ℝ≥0}
 
+#print NNReal.sqrt /-
 /-- Square root of a nonnegative real number. -/
 @[pp_nodot]
 noncomputable def sqrt : ℝ≥0 ≃o ℝ≥0 :=
   OrderIso.symm <| powOrderIso 2 two_ne_zero
 #align nnreal.sqrt NNReal.sqrt
+-/
 
 theorem sqrt_le_sqrt_iff : sqrt x ≤ sqrt y ↔ x ≤ y :=
   sqrt.le_iff_le

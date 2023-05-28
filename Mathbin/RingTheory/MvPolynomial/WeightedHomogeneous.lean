@@ -49,7 +49,7 @@ components.
 
 noncomputable section
 
-open BigOperators
+open scoped BigOperators
 
 open Set Function Finset Finsupp AddMonoidAlgebra
 
@@ -103,11 +103,13 @@ section OrderBot
 
 variable [OrderBot M]
 
+#print MvPolynomial.weightedTotalDegree /-
 /-- When `M` has a `⊥` element, we can define the weighted total degree of a multivariate
   polynomial as a function taking values in `M`. -/
 def weightedTotalDegree (w : σ → M) (p : MvPolynomial σ R) : M :=
   p.support.sup fun s => weightedDegree' w s
 #align mv_polynomial.weighted_total_degree MvPolynomial.weightedTotalDegree
+-/
 
 /-- This lemma relates `weighted_total_degree` and `weighted_total_degree'`. -/
 theorem weightedTotalDegree_coe (w : σ → M) (p : MvPolynomial σ R) (hp : p ≠ 0) :

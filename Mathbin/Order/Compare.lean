@@ -47,12 +47,14 @@ theorem cmpLE_swap {α} [LE α] [IsTotal α (· ≤ ·)] [@DecidableRel α (· �
 #align cmp_le_swap cmpLE_swap
 -/
 
+#print cmpLE_eq_cmp /-
 theorem cmpLE_eq_cmp {α} [Preorder α] [IsTotal α (· ≤ ·)] [@DecidableRel α (· ≤ ·)]
     [@DecidableRel α (· < ·)] (x y : α) : cmpLE x y = cmp x y :=
   by
   by_cases xy : x ≤ y <;> by_cases yx : y ≤ x <;> simp [cmpLE, lt_iff_le_not_le, *, cmp, cmpUsing]
   cases not_or_of_not xy yx (total_of _ _ _)
 #align cmp_le_eq_cmp cmpLE_eq_cmp
+-/
 
 namespace Ordering
 
@@ -90,50 +92,66 @@ theorem swap_eq_iff_eq_swap {o o' : Ordering} : o.symm = o' ↔ o = o'.symm := b
 #align ordering.swap_eq_iff_eq_swap Ordering.swap_eq_iff_eq_swap
 -/
 
+#print Ordering.Compares.eq_lt /-
 theorem Compares.eq_lt [Preorder α] : ∀ {o} {a b : α}, Compares o a b → (o = lt ↔ a < b)
   | lt, a, b, h => ⟨fun _ => h, fun _ => rfl⟩
   | Eq, a, b, h => ⟨fun h => by injection h, fun h' => (ne_of_lt h' h).elim⟩
   | GT.gt, a, b, h => ⟨fun h => by injection h, fun h' => (lt_asymm h h').elim⟩
 #align ordering.compares.eq_lt Ordering.Compares.eq_lt
+-/
 
+#print Ordering.Compares.ne_lt /-
 theorem Compares.ne_lt [Preorder α] : ∀ {o} {a b : α}, Compares o a b → (o ≠ lt ↔ b ≤ a)
   | lt, a, b, h => ⟨absurd rfl, fun h' => (not_le_of_lt h h').elim⟩
   | Eq, a, b, h => ⟨fun _ => ge_of_eq h, fun _ h => by injection h⟩
   | GT.gt, a, b, h => ⟨fun _ => le_of_lt h, fun _ h => by injection h⟩
 #align ordering.compares.ne_lt Ordering.Compares.ne_lt
+-/
 
+#print Ordering.Compares.eq_eq /-
 theorem Compares.eq_eq [Preorder α] : ∀ {o} {a b : α}, Compares o a b → (o = eq ↔ a = b)
   | lt, a, b, h => ⟨fun h => by injection h, fun h' => (ne_of_lt h h').elim⟩
   | Eq, a, b, h => ⟨fun _ => h, fun _ => rfl⟩
   | GT.gt, a, b, h => ⟨fun h => by injection h, fun h' => (ne_of_gt h h').elim⟩
 #align ordering.compares.eq_eq Ordering.Compares.eq_eq
+-/
 
+#print Ordering.Compares.eq_gt /-
 theorem Compares.eq_gt [Preorder α] {o} {a b : α} (h : Compares o a b) : o = gt ↔ b < a :=
   swap_eq_iff_eq_swap.symm.trans h.symm.eq_lt
 #align ordering.compares.eq_gt Ordering.Compares.eq_gt
+-/
 
+#print Ordering.Compares.ne_gt /-
 theorem Compares.ne_gt [Preorder α] {o} {a b : α} (h : Compares o a b) : o ≠ gt ↔ a ≤ b :=
   (not_congr swap_eq_iff_eq_swap.symm).trans h.symm.ne_lt
 #align ordering.compares.ne_gt Ordering.Compares.ne_gt
+-/
 
+#print Ordering.Compares.le_total /-
 theorem Compares.le_total [Preorder α] {a b : α} : ∀ {o}, Compares o a b → a ≤ b ∨ b ≤ a
   | lt, h => Or.inl (le_of_lt h)
   | Eq, h => Or.inl (le_of_eq h)
   | GT.gt, h => Or.inr (le_of_lt h)
 #align ordering.compares.le_total Ordering.Compares.le_total
+-/
 
+#print Ordering.Compares.le_antisymm /-
 theorem Compares.le_antisymm [Preorder α] {a b : α} : ∀ {o}, Compares o a b → a ≤ b → b ≤ a → a = b
   | lt, h, _, hba => (not_le_of_lt h hba).elim
   | Eq, h, _, _ => h
   | GT.gt, h, hab, _ => (not_le_of_lt h hab).elim
 #align ordering.compares.le_antisymm Ordering.Compares.le_antisymm
+-/
 
+#print Ordering.Compares.inj /-
 theorem Compares.inj [Preorder α] {o₁} :
     ∀ {o₂} {a b : α}, Compares o₁ a b → Compares o₂ a b → o₁ = o₂
   | lt, a, b, h₁, h₂ => h₁.eq_lt.2 h₂
   | Eq, a, b, h₁, h₂ => h₁.eq_eq.2 h₂
   | GT.gt, a, b, h₁, h₂ => h₁.eq_gt.2 h₂
 #align ordering.compares.inj Ordering.Compares.inj
+-/
 
 theorem compares_iff_of_compares_impl {β : Type _} [LinearOrder α] [Preorder β] {a b : α}
     {a' b' : β} (h : ∀ {o}, Compares o a b → Compares o a' b') (o) :
@@ -188,11 +206,14 @@ theorem cmp_compares [LinearOrder α] (a b : α) : (cmp a b).Compares a b := by
 #align cmp_compares cmp_compares
 -/
 
+#print Ordering.Compares.cmp_eq /-
 theorem Ordering.Compares.cmp_eq [LinearOrder α] {a b : α} {o : Ordering} (h : o.Compares a b) :
     cmp a b = o :=
   (cmp_compares a b).inj h
 #align ordering.compares.cmp_eq Ordering.Compares.cmp_eq
+-/
 
+#print cmp_swap /-
 @[simp]
 theorem cmp_swap [Preorder α] [@DecidableRel α (· < ·)] (a b : α) : (cmp a b).symm = cmp b a :=
   by
@@ -200,6 +221,7 @@ theorem cmp_swap [Preorder α] [@DecidableRel α (· < ·)] (a b : α) : (cmp a 
   by_cases a < b <;> by_cases h₂ : b < a <;> simp [h, h₂, Ordering.swap]
   exact lt_asymm h h₂
 #align cmp_swap cmp_swap
+-/
 
 #print cmpLE_toDual /-
 @[simp]
@@ -233,6 +255,7 @@ theorem cmpLE_ofDual [LT α] [@DecidableRel α (· < ·)] (x y : αᵒᵈ) :
   rfl
 #align cmp_of_dual cmpLE_ofDual
 
+#print linearOrderOfCompares /-
 /-- Generate a linear order structure from a preorder and `cmp` function. -/
 def linearOrderOfCompares [Preorder α] (cmp : α → α → Ordering)
     (h : ∀ a b, (cmp a b).Compares a b) : LinearOrder α :=
@@ -243,6 +266,7 @@ def linearOrderOfCompares [Preorder α] (cmp : α → α → Ordering)
     decidableLt := fun a b => decidable_of_iff _ (h a b).eq_lt
     DecidableEq := fun a b => decidable_of_iff _ (h a b).eq_eq }
 #align linear_order_of_compares linearOrderOfCompares
+-/
 
 variable [LinearOrder α] (x y : α)
 
@@ -294,13 +318,17 @@ theorem eq_iff_eq_of_cmp_eq_cmp (h : cmp x y = cmp x' y') : x = y ↔ x' = y' :=
     le_iff_le_of_cmp_eq_cmp (cmp_eq_cmp_symm.1 h)]
 #align eq_iff_eq_of_cmp_eq_cmp eq_iff_eq_of_cmp_eq_cmp
 
+#print LT.lt.cmp_eq_lt /-
 theorem LT.lt.cmp_eq_lt (h : x < y) : cmp x y = Ordering.lt :=
   (cmp_eq_lt_iff _ _).2 h
 #align has_lt.lt.cmp_eq_lt LT.lt.cmp_eq_lt
+-/
 
+#print LT.lt.cmp_eq_gt /-
 theorem LT.lt.cmp_eq_gt (h : x < y) : cmp y x = Ordering.gt :=
   (cmp_eq_gt_iff _ _).2 h
 #align has_lt.lt.cmp_eq_gt LT.lt.cmp_eq_gt
+-/
 
 #print Eq.cmp_eq_eq /-
 theorem Eq.cmp_eq_eq (h : x = y) : cmp x y = Ordering.eq :=

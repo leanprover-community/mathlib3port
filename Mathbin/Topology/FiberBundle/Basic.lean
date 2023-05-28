@@ -177,7 +177,7 @@ variable {ι B F X : Type _} [TopologicalSpace X]
 
 open TopologicalSpace Filter Set Bundle
 
-open Topology Classical Bundle
+open scoped Topology Classical Bundle
 
 attribute [mfld_simps]
   total_space_mk coe_fst coe_snd coe_snd_map_apply coe_snd_map_smul total_space.mk_cast

@@ -76,7 +76,7 @@ namespace LieAlgebra
 
 open Matrix
 
-open Matrix
+open scoped Matrix
 
 variable (n p q l : Type _) (R : Type u₂)
 

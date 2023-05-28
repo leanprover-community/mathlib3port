@@ -30,7 +30,7 @@ This could be generalized to similar results about finite abelian groups.
 -/
 
 
-open Nat
+open scoped Nat
 
 namespace Nat
 

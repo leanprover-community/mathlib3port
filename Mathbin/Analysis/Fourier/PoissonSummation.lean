@@ -50,7 +50,7 @@ open Set hiding restrict_apply
 
 open TopologicalSpace Filter MeasureTheory Asymptotics
 
-open Real BigOperators Filter FourierTransform
+open scoped Real BigOperators Filter FourierTransform
 
 attribute [local instance] Real.fact_zero_lt_one
 

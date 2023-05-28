@@ -52,7 +52,7 @@ namespace MvPolynomial
 
 open Set Function Finsupp AddMonoidAlgebra
 
-open BigOperators
+open scoped BigOperators
 
 variable {R : Type u} {σ : Type v} {a a' a₁ a₂ : R} {s : σ →₀ ℕ}
 

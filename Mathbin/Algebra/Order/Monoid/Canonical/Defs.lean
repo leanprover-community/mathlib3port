@@ -111,11 +111,13 @@ class CanonicallyOrderedAddMonoid (α : Type _) extends OrderedAddCommMonoid α,
 #align canonically_ordered_add_monoid CanonicallyOrderedAddMonoid
 -/
 
+#print CanonicallyOrderedAddMonoid.toOrderBot /-
 -- see Note [lower instance priority]
 instance (priority := 100) CanonicallyOrderedAddMonoid.toOrderBot (α : Type u)
     [h : CanonicallyOrderedAddMonoid α] : OrderBot α :=
   { h with }
 #align canonically_ordered_add_monoid.to_order_bot CanonicallyOrderedAddMonoid.toOrderBot
+-/
 
 #print CanonicallyOrderedMonoid /-
 /-- A canonically ordered monoid is an ordered commutative monoid
@@ -136,6 +138,7 @@ class CanonicallyOrderedMonoid (α : Type _) extends OrderedCommMonoid α, Bot �
 #align canonically_ordered_add_monoid CanonicallyOrderedAddMonoid
 -/
 
+#print CanonicallyOrderedMonoid.toOrderBot /-
 -- see Note [lower instance priority]
 @[to_additive]
 instance (priority := 100) CanonicallyOrderedMonoid.toOrderBot (α : Type u)
@@ -143,6 +146,7 @@ instance (priority := 100) CanonicallyOrderedMonoid.toOrderBot (α : Type u)
   { h with }
 #align canonically_ordered_monoid.to_order_bot CanonicallyOrderedMonoid.toOrderBot
 #align canonically_ordered_add_monoid.to_order_bot CanonicallyOrderedAddMonoid.toOrderBot
+-/
 
 -- see Note [lower instance priority]
 @[to_additive]

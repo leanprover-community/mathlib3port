@@ -35,7 +35,7 @@ integral, center mass, average value
 
 open MeasureTheory MeasureTheory.Measure Metric Set Filter TopologicalSpace Function
 
-open Topology BigOperators ENNReal Convex
+open scoped Topology BigOperators ENNReal Convex
 
 variable {α E F : Type _} {m0 : MeasurableSpace α} [NormedAddCommGroup E] [NormedSpace ℝ E]
   [CompleteSpace E] [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F] {μ : Measure α}

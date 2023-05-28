@@ -27,7 +27,7 @@ open CategoryTheory
 
 namespace CommRingCat
 
-open Classical
+open scoped Classical
 
 #print CommRingCat.free /-
 /-- The free functor `Type u ⥤ CommRing` sending a type `X` to the multivariable (commutative)

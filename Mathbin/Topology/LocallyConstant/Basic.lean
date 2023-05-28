@@ -38,7 +38,7 @@ variable {X Y Z α : Type _} [TopologicalSpace X]
 
 open Set Filter
 
-open Topology
+open scoped Topology
 
 #print IsLocallyConstant /-
 /-- A function between topological spaces is locally constant if the preimage of any set is open. -/
@@ -499,7 +499,7 @@ theorem flip_unflip {X α β : Type _} [Fintype α] [TopologicalSpace X]
 
 section Comap
 
-open Classical
+open scoped Classical
 
 variable [TopologicalSpace Y]
 
@@ -572,7 +572,7 @@ section Indicator
 
 variable {R : Type _} [One R] {U : Set X} (f : LocallyConstant X R)
 
-open Classical
+open scoped Classical
 
 #print LocallyConstant.mulIndicator /-
 /-- Given a clopen set `U` and a locally constant function `f`, `locally_constant.mul_indicator`

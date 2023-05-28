@@ -44,7 +44,7 @@ variable (bM : Basis ι R M) (bN : Basis κ R N) (bP : Basis τ R P)
 
 variable (bM' : Basis ι' R M') (bN' : Basis κ' R N')
 
-open Kronecker
+open scoped Kronecker
 
 open Matrix LinearMap
 

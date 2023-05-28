@@ -34,7 +34,7 @@ lagrange multiplier, local extremum
 
 open Filter Set
 
-open Topology Filter BigOperators
+open scoped Topology Filter BigOperators
 
 variable {E F : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
   [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F] {f : E → F} {φ : E → ℝ} {x₀ : E}

@@ -73,7 +73,7 @@ local notation `J` := o.right_angle_rotation
 
 noncomputable section
 
-open RealInnerProductSpace ComplexConjugate
+open scoped RealInnerProductSpace ComplexConjugate
 
 open FiniteDimensional
 

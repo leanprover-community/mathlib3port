@@ -52,9 +52,9 @@ universe uι u v
 
 open Algebra Set MulOpposite
 
-open BigOperators
+open scoped BigOperators
 
-open Pointwise
+open scoped Pointwise
 
 namespace SubMulAction
 
@@ -129,9 +129,11 @@ theorem one_eq_span_one_set : (1 : Submodule R A) = span R 1 :=
 #align submodule.one_eq_span_one_set Submodule.one_eq_span_one_set
 -/
 
+#print Submodule.one_le /-
 theorem one_le : (1 : Submodule R A) ≤ P ↔ (1 : A) ∈ P := by
   simpa only [one_eq_span, span_le, Set.singleton_subset_iff]
 #align submodule.one_le Submodule.one_le
+-/
 
 protected theorem map_one {A'} [Semiring A'] [Algebra R A'] (f : A →ₐ[R] A') :
     map f.toLinearMap (1 : Submodule R A) = 1 := by ext; simp
@@ -242,18 +244,24 @@ protected theorem mul_one : M * 1 = M := by conv_lhs => rw [one_eq_span, ← spa
 
 variable {M N P Q}
 
+#print Submodule.mul_le_mul /-
 @[mono]
 theorem mul_le_mul (hmp : M ≤ P) (hnq : N ≤ Q) : M * N ≤ P * Q :=
   map₂_le_map₂ hmp hnq
 #align submodule.mul_le_mul Submodule.mul_le_mul
+-/
 
+#print Submodule.mul_le_mul_left /-
 theorem mul_le_mul_left (h : M ≤ N) : M * P ≤ N * P :=
   map₂_le_map₂_left h
 #align submodule.mul_le_mul_left Submodule.mul_le_mul_left
+-/
 
+#print Submodule.mul_le_mul_right /-
 theorem mul_le_mul_right (h : N ≤ P) : M * N ≤ M * P :=
   map₂_le_map₂_right h
 #align submodule.mul_le_mul_right Submodule.mul_le_mul_right
+-/
 
 variable (M N P)
 
@@ -337,7 +345,7 @@ theorem comap_op_mul (M N : Submodule R Aᵐᵒᵖ) :
 
 section
 
-open Pointwise
+open scoped Pointwise
 
 #print Submodule.hasDistribPointwiseNeg /-
 /-- `submodule.has_pointwise_neg` distributes over multiplication.
@@ -354,7 +362,7 @@ end
 
 section DecidableEq
 
-open Classical
+open scoped Classical
 
 theorem mem_span_mul_finite_of_mem_span_mul {R A} [Semiring R] [AddCommMonoid A] [Mul A]
     [Module R A] {S : Set A} {S' : Set A} {x : A} (hx : x ∈ span R (S * S')) :
@@ -731,12 +739,15 @@ theorem one_le_one_div {I : Submodule R A} : 1 ≤ 1 / I ↔ I ≤ 1 :=
 #align submodule.one_le_one_div Submodule.one_le_one_div
 
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:132:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1]) } -/
+#print Submodule.le_self_mul_one_div /-
 theorem le_self_mul_one_div {I : Submodule R A} (hI : I ≤ 1) : I ≤ I * (1 / I) :=
   by
   rw [← mul_one I]
   apply mul_le_mul_right (one_le_one_div.mpr hI)
 #align submodule.le_self_mul_one_div Submodule.le_self_mul_one_div
+-/
 
+#print Submodule.mul_one_div_le_one /-
 theorem mul_one_div_le_one {I : Submodule R A} : I * (1 / I) ≤ 1 :=
   by
   rw [Submodule.mul_le]
@@ -745,6 +756,7 @@ theorem mul_one_div_le_one {I : Submodule R A} : I * (1 / I) ≤ 1 :=
   rw [mul_comm]
   exact hn m hm
 #align submodule.mul_one_div_le_one Submodule.mul_one_div_le_one
+-/
 
 @[simp]
 protected theorem map_div {B : Type _} [CommSemiring B] [Algebra R B] (I J : Submodule R A)

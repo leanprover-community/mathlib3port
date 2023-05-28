@@ -19,7 +19,7 @@ import Mathbin.GroupTheory.GroupAction.BigOperators
 -/
 
 
-open BigOperators
+open scoped BigOperators
 
 variable {α β R M ι : Type _}
 

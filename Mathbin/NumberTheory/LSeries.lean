@@ -35,7 +35,7 @@ Given an arithmetic function, we define the corresponding L-series.
 
 noncomputable section
 
-open BigOperators
+open scoped BigOperators
 
 namespace Nat
 
@@ -109,7 +109,7 @@ theorem lSeriesSummable_of_bounded_of_one_lt_re {f : ArithmeticFunction ℂ} {m 
   exact hz
 #align nat.arithmetic_function.l_series_summable_of_bounded_of_one_lt_re Nat.ArithmeticFunction.lSeriesSummable_of_bounded_of_one_lt_re
 
-open ArithmeticFunction
+open scoped ArithmeticFunction
 
 theorem zeta_lSeriesSummable_iff_one_lt_re {z : ℂ} : LSeriesSummable ζ z ↔ 1 < z.re :=
   by

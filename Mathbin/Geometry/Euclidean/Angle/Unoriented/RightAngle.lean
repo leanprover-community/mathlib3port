@@ -32,13 +32,13 @@ triangle unnecessarily.
 
 noncomputable section
 
-open BigOperators
+open scoped BigOperators
 
-open EuclideanGeometry
+open scoped EuclideanGeometry
 
-open Real
+open scoped Real
 
-open RealInnerProductSpace
+open scoped RealInnerProductSpace
 
 namespace InnerProductGeometry
 

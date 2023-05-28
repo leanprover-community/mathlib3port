@@ -67,6 +67,7 @@ instance hasForgetToLatCat : HasForget₂ LinOrdCat LatCat
       map := fun X Y f => (OrderHomClass.toLatticeHom X Y f : LatticeHom X Y) }
 #align LinOrd.has_forget_to_Lat LinOrdCat.hasForgetToLatCat
 
+#print LinOrdCat.Iso.mk /-
 /-- Constructs an equivalence between linear orders from an order isomorphism between them. -/
 @[simps]
 def Iso.mk {α β : LinOrdCat.{u}} (e : α ≃o β) : α ≅ β
@@ -76,6 +77,7 @@ def Iso.mk {α β : LinOrdCat.{u}} (e : α ≃o β) : α ≅ β
   hom_inv_id' := by ext; exact e.symm_apply_apply x
   inv_hom_id' := by ext; exact e.apply_symm_apply x
 #align LinOrd.iso.mk LinOrdCat.Iso.mk
+-/
 
 #print LinOrdCat.dual /-
 /-- `order_dual` as a functor. -/

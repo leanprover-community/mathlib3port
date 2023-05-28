@@ -36,7 +36,7 @@ these two notions are equivalent. A group with a right-invariant metric can be a
 
 open Set
 
-open ENNReal Pointwise
+open scoped ENNReal Pointwise
 
 universe u v w
 

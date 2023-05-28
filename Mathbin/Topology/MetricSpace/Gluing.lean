@@ -61,7 +61,7 @@ universe u v w
 
 open Function Set
 
-open uniformity
+open scoped uniformity
 
 namespace Metric
 
@@ -415,7 +415,7 @@ namespace Sigma
 of two spaces. I.e., work with sigma types instead of sum types. -/
 variable {ι : Type _} {E : ι → Type _} [∀ i, MetricSpace (E i)]
 
-open Classical
+open scoped Classical
 
 #print Metric.Sigma.dist /-
 /-- Distance on a disjoint union. There are many (noncanonical) ways to put a distance compatible
@@ -568,7 +568,7 @@ protected def metricSpace : MetricSpace (Σi, E i) :=
 
 attribute [local instance] sigma.metric_space
 
-open Topology
+open scoped Topology
 
 open Filter
 

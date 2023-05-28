@@ -22,7 +22,7 @@ namespace Nat
 
 open Polynomial Nat Filter
 
-open Nat
+open scoped Nat
 
 /-- For any positive `k : ℕ` there exists an arbitrarily large prime `p` such that
 `p ≡ 1 [MOD k]`. -/

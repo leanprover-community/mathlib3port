@@ -21,7 +21,7 @@ noncomputable section
 
 open Set TopologicalSpace
 
-open Manifold Topology
+open scoped Manifold Topology
 
 /-! ### The groupoid of smooth, fiberwise-linear maps -/
 

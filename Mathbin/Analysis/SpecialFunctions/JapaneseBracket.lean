@@ -29,7 +29,7 @@ than the dimension.
 
 noncomputable section
 
-open BigOperators NNReal Filter Topology ENNReal
+open scoped BigOperators NNReal Filter Topology ENNReal
 
 open Asymptotics Filter Set Real MeasureTheory FiniteDimensional
 

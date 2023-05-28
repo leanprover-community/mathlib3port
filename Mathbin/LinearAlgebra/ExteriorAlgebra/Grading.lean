@@ -27,7 +27,7 @@ variable {R M : Type _} [CommRing R] [AddCommGroup M] [Module R M]
 
 variable (R M)
 
-open DirectSum
+open scoped DirectSum
 
 /-- A version of `exterior_algebra.ι` that maps directly into the graded structure. This is
 primarily an auxiliary construction used to provide `exterior_algebra.graded_algebra`. -/

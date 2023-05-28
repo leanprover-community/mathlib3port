@@ -19,7 +19,7 @@ import Mathbin.RingTheory.Polynomial.Eisenstein.Basic
 -/
 
 
-open BigOperators Polynomial
+open scoped BigOperators Polynomial
 
 variable {R A : Type _} [CommRing R] [IsDomain R] [GCDMonoid R] [CommRing A] [Algebra R A]
 

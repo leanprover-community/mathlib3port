@@ -38,7 +38,7 @@ variable {R : Type _} [CommRing R] (M : Submonoid R) {S : Type _} [CommRing S]
 
 variable [Algebra R S] {P : Type _} [CommRing P]
 
-open BigOperators Polynomial
+open scoped BigOperators Polynomial
 
 namespace IsLocalization
 
@@ -48,7 +48,7 @@ open Polynomial
 
 variable (M) {S} [IsLocalization M S]
 
-open Classical
+open scoped Classical
 
 #print IsLocalization.coeffIntegerNormalization /-
 /-- `coeff_integer_normalization p` gives the coefficients of the polynomial
@@ -432,7 +432,7 @@ theorem isAlgebraic_iff' [Field K] [IsDomain R] [IsDomain S] [Algebra R K] [Alge
         hf₂
 #align is_fraction_ring.is_algebraic_iff' IsFractionRing.isAlgebraic_iff'
 
-open nonZeroDivisors
+open scoped nonZeroDivisors
 
 variable (R) {S K}
 

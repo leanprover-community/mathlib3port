@@ -27,7 +27,7 @@ namespace Perm
 
 variable (e : Perm α) (ι : α ↪ β)
 
-open Classical
+open scoped Classical
 
 #print Equiv.Perm.viaEmbedding /-
 /-- Noncomputable version of `equiv.perm.via_fintype_embedding` that does not assume `fintype` -/

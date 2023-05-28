@@ -37,9 +37,9 @@ divisors, perfect numbers
 -/
 
 
-open Classical
+open scoped Classical
 
-open BigOperators
+open scoped BigOperators
 
 open Finset
 

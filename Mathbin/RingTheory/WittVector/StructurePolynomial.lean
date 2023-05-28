@@ -104,9 +104,9 @@ attribute [-simp] coe_eval₂_hom
 
 variable {p : ℕ} {R : Type _} {idx : Type _} [CommRing R]
 
-open Witt
+open scoped Witt
 
-open BigOperators
+open scoped BigOperators
 
 section PPrime
 

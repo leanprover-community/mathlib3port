@@ -91,7 +91,7 @@ section
 
 open UniformSpace Filter Set
 
-open uniformity Topology UniformConvergence
+open scoped uniformity Topology UniformConvergence
 
 variable {ι κ X Y Z α β γ 𝓕 : Type _} [TopologicalSpace X] [TopologicalSpace Y] [TopologicalSpace Z]
   [UniformSpace α] [UniformSpace β] [UniformSpace γ]

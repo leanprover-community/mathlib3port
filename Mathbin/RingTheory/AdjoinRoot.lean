@@ -56,9 +56,9 @@ The main definitions are in the `adjoin_root` namespace.
 
 noncomputable section
 
-open Classical
+open scoped Classical
 
-open BigOperators Polynomial
+open scoped BigOperators Polynomial
 
 universe u v w
 

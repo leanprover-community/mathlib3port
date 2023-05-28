@@ -26,7 +26,7 @@ is measurable with respect to the tail σ-algebra `limsup s at_top` has probabil
 
 open MeasureTheory MeasurableSpace
 
-open MeasureTheory ENNReal
+open scoped MeasureTheory ENNReal
 
 namespace ProbabilityTheory
 

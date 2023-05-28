@@ -20,7 +20,7 @@ import Mathbin.RingTheory.IntegralClosure
 
 namespace RingHom
 
-open TensorProduct
+open scoped TensorProduct
 
 open TensorProduct Algebra.TensorProduct
 

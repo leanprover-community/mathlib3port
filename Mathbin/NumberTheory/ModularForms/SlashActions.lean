@@ -30,7 +30,7 @@ In the `modular_form` locale, this provides
 
 open Complex UpperHalfPlane
 
-open UpperHalfPlane
+open scoped UpperHalfPlane
 
 -- mathport name: «expr↑ₘ »
 local prefix:1024 "↑ₘ" => @coe _ (Matrix (Fin 2) (Fin 2) _) _

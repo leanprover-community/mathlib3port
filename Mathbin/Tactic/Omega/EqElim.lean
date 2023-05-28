@@ -63,7 +63,7 @@ def sgm (v : Nat → Int) (b : Int) (as : List Int) (n : Nat) :=
   (symmod b m + Coeffs.val v (as.map fun x => symmod x m)) / m
 #align omega.sgm Omega.sgm
 
-open List.Func
+open scoped List.Func
 
 def rhs : Nat → Int → List Int → Term
   | n, b, as =>
@@ -94,7 +94,7 @@ theorem rhs_correct_aux {v : Nat → Int} {m : Int} {as : List Int} :
       simp only [hk, List.length_map]
 #align omega.rhs_correct_aux Omega.rhs_correct_aux
 
-open Omega
+open scoped Omega
 
 theorem rhs_correct {v : Nat → Int} {b : Int} {as : List Int} (n : Nat) :
     0 < get n as → 0 = Term.val v (b, as) → v n = Term.val (v ⟨n ↦ sgm v b as n⟩) (rhs n b as) :=

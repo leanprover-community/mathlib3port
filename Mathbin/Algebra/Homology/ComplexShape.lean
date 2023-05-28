@@ -48,7 +48,7 @@ so `d : X i ⟶ X j` is nonzero only when `i = j + 1`.
 -/
 
 
-open Classical
+open scoped Classical
 
 noncomputable section
 

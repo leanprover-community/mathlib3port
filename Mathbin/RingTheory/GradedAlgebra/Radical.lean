@@ -44,7 +44,7 @@ homogeneous, radical
 
 open GradedRing DirectSum SetLike Finset
 
-open BigOperators
+open scoped BigOperators
 
 variable {ι σ A : Type _}
 

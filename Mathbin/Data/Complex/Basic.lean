@@ -22,7 +22,7 @@ of characteristic zero. The result that the complex numbers are algebraically cl
 -/
 
 
-open BigOperators
+open scoped BigOperators
 
 open Set Function
 
@@ -42,7 +42,7 @@ notation "ℂ" => Complex
 
 namespace Complex
 
-open ComplexConjugate
+open scoped ComplexConjugate
 
 noncomputable instance : DecidableEq ℂ :=
   Classical.decEq _

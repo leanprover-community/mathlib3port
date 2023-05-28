@@ -53,7 +53,7 @@ namespace Cubic
 
 open Cubic Polynomial
 
-open Polynomial
+open scoped Polynomial
 
 variable {R S F K : Type _}
 
@@ -311,6 +311,7 @@ end Coeff
 
 section Degree
 
+#print Cubic.equiv /-
 /-- The equivalence between cubic polynomials and polynomials of degree at most three. -/
 @[simps]
 def equiv : Cubic R ≃ { p : R[X] // p.degree ≤ 3 }
@@ -324,6 +325,7 @@ def equiv : Cubic R ≃ { p : R[X] // p.degree ≤ 3 }
     rw [coeff_eq_zero h3,
       (degree_le_iff_coeff_zero (f : R[X]) 3).mp f.2 _ <| with_bot.coe_lt_coe.mpr h3]
 #align cubic.equiv Cubic.equiv
+-/
 
 @[simp]
 theorem degree_of_a_ne_zero (ha : P.a ≠ 0) : P.toPoly.degree = 3 :=

@@ -34,7 +34,7 @@ variable [Algebra R S] {P : Type _} [CommRing P]
 
 open Function
 
-open BigOperators
+open scoped BigOperators
 
 namespace IsLocalization
 

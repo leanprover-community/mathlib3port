@@ -147,9 +147,11 @@ def Prime (p : ℕ+) : Prop :=
 #align pnat.prime PNat.Prime
 -/
 
+#print PNat.Prime.one_lt /-
 theorem Prime.one_lt {p : ℕ+} : p.Prime → 1 < p :=
   Nat.Prime.one_lt
 #align pnat.prime.one_lt PNat.Prime.one_lt
+-/
 
 theorem prime_two : (2 : ℕ+).Prime :=
   Nat.prime_two

@@ -21,7 +21,7 @@ namespace Omega
 
 namespace Nat
 
-open Omega.Nat
+open scoped Omega.Nat
 
 @[simp]
 def dnfCore : Preform → List Clause
@@ -94,7 +94,7 @@ def Terms.vars : List Term → List Bool
   | t :: ts => Bools.or (Term.vars t) (terms.vars ts)
 #align omega.nat.terms.vars Omega.Nat.Terms.vars
 
-open List.Func
+open scoped List.Func
 
 -- get notation for list.func.set
 def nonnegConstsCore : Nat → List Bool → List Term

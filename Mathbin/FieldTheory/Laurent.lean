@@ -35,7 +35,7 @@ noncomputable section
 
 open Polynomial
 
-open Classical nonZeroDivisors Polynomial
+open scoped Classical nonZeroDivisors Polynomial
 
 variable {R : Type u} [CommRing R] [hdomain : IsDomain R] (r s : R) (p q : R[X]) (f : RatFunc R)
 

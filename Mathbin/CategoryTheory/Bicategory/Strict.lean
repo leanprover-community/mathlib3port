@@ -32,7 +32,7 @@ identities.
 
 namespace CategoryTheory
 
-open Bicategory
+open scoped Bicategory
 
 universe w v u
 

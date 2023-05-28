@@ -36,31 +36,39 @@ section MetricSpace
 
 variable [NormedOrderedGroup α] {s : Set α}
 
+#print IsUpperSet.thickening' /-
 @[to_additive IsUpperSet.thickening]
 protected theorem IsUpperSet.thickening' (hs : IsUpperSet s) (ε : ℝ) :
     IsUpperSet (thickening ε s) := by rw [← ball_mul_one]; exact hs.mul_left
 #align is_upper_set.thickening' IsUpperSet.thickening'
 #align is_upper_set.thickening IsUpperSet.thickening
+-/
 
+#print IsLowerSet.thickening' /-
 @[to_additive IsLowerSet.thickening]
 protected theorem IsLowerSet.thickening' (hs : IsLowerSet s) (ε : ℝ) :
     IsLowerSet (thickening ε s) := by rw [← ball_mul_one]; exact hs.mul_left
 #align is_lower_set.thickening' IsLowerSet.thickening'
 #align is_lower_set.thickening IsLowerSet.thickening
+-/
 
+#print IsUpperSet.cthickening' /-
 @[to_additive IsUpperSet.cthickening]
 protected theorem IsUpperSet.cthickening' (hs : IsUpperSet s) (ε : ℝ) :
     IsUpperSet (cthickening ε s) := by rw [cthickening_eq_Inter_thickening''];
   exact isUpperSet_iInter₂ fun δ hδ => hs.thickening' _
 #align is_upper_set.cthickening' IsUpperSet.cthickening'
 #align is_upper_set.cthickening IsUpperSet.cthickening
+-/
 
+#print IsLowerSet.cthickening' /-
 @[to_additive IsLowerSet.cthickening]
 protected theorem IsLowerSet.cthickening' (hs : IsLowerSet s) (ε : ℝ) :
     IsLowerSet (cthickening ε s) := by rw [cthickening_eq_Inter_thickening''];
   exact isLowerSet_iInter₂ fun δ hδ => hs.thickening' _
 #align is_lower_set.cthickening' IsLowerSet.cthickening'
 #align is_lower_set.cthickening IsLowerSet.cthickening
+-/
 
 end MetricSpace
 

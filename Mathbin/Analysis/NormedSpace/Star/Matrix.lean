@@ -20,7 +20,7 @@ This file collects facts about the unitary matrices over `𝕜` (either `ℝ` or
 -/
 
 
-open BigOperators Matrix
+open scoped BigOperators Matrix
 
 variable {𝕜 m n E : Type _}
 

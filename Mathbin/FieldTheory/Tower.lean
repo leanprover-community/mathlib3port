@@ -41,7 +41,7 @@ tower law
 
 universe u v w u₁ v₁ w₁
 
-open Classical BigOperators
+open scoped Classical BigOperators
 
 open FiniteDimensional
 

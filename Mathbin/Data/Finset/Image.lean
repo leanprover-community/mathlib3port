@@ -164,11 +164,13 @@ theorem map_subset_map {s₁ s₂ : Finset α} : s₁.map f ⊆ s₂.map f ↔ s
     simp [subset_def, map_subset_map h]⟩
 #align finset.map_subset_map Finset.map_subset_map
 
+#print Finset.mapEmbedding /-
 /-- Associate to an embedding `f` from `α` to `β` the order embedding that maps a finset to its
 image under `f`. -/
 def mapEmbedding (f : α ↪ β) : Finset α ↪o Finset β :=
   OrderEmbedding.ofMapLEIff (map f) fun _ _ => map_subset_map
 #align finset.map_embedding Finset.mapEmbedding
+-/
 
 @[simp]
 theorem map_inj {s₁ s₂ : Finset α} : s₁.map f = s₂.map f ↔ s₁ = s₂ :=

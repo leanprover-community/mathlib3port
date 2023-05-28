@@ -712,9 +712,11 @@ theorem subset_lieSpan : s ⊆ lieSpan R L s := by intro m hm; erw [mem_lie_span
 #align lie_subalgebra.subset_lie_span LieSubalgebra.subset_lieSpan
 -/
 
+#print LieSubalgebra.submodule_span_le_lieSpan /-
 theorem submodule_span_le_lieSpan : Submodule.span R s ≤ lieSpan R L s := by rw [Submodule.span_le];
   apply subset_lie_span
 #align lie_subalgebra.submodule_span_le_lie_span LieSubalgebra.submodule_span_le_lieSpan
+-/
 
 theorem lieSpan_le {K} : lieSpan R L s ≤ K ↔ s ⊆ K :=
   by

@@ -27,7 +27,7 @@ as in `equivalent_one_zero_neg_one_weighted_sum_squared`.
 
 namespace QuadraticForm
 
-open BigOperators
+open scoped BigOperators
 
 open Real Finset
 

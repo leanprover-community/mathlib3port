@@ -24,7 +24,7 @@ with chain maps identified when they are homotopic.
 
 universe v u
 
-open Classical
+open scoped Classical
 
 noncomputable section
 
@@ -73,7 +73,7 @@ def quotient : HomologicalComplex V c ⥤ HomotopyCategory V c :=
 #align homotopy_category.quotient HomotopyCategory.quotient
 -/
 
-open ZeroObject
+open scoped ZeroObject
 
 -- TODO upgrade this to `has_zero_object`, presumably for any `quotient`.
 instance [HasZeroObject V] : Inhabited (HomotopyCategory V c) :=

@@ -24,7 +24,7 @@ In this file we express trigonometric functions in terms of their series expansi
 -/
 
 
-open Nat
+open scoped Nat
 
 /-! ### `cos` and `sin` for `ℝ` and `ℂ` -/
 

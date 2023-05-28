@@ -28,7 +28,7 @@ sin, cos, tan, angle
 
 noncomputable section
 
-open Classical Topology Filter
+open scoped Classical Topology Filter
 
 open Set Filter
 

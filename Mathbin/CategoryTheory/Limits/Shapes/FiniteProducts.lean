@@ -25,7 +25,7 @@ universe w v u
 
 open CategoryTheory
 
-open Classical
+open scoped Classical
 
 namespace CategoryTheory.Limits
 

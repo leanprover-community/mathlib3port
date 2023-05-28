@@ -28,7 +28,7 @@ noncomputable section
 
 open Set Filter Function TopologicalSpace Complex
 
-open Filter Topology UpperHalfPlane Manifold
+open scoped Filter Topology UpperHalfPlane Manifold
 
 namespace UpperHalfPlane
 

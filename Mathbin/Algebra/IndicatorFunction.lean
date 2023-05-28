@@ -37,7 +37,7 @@ indicator, characteristic
 -/
 
 
-open BigOperators
+open scoped BigOperators
 
 open Function
 
@@ -794,11 +794,13 @@ theorem mulIndicator_le_one (h : ∀ a ∈ s, f a ≤ 1) (a : α) : mulIndicator
 #align set.mul_indicator_le_one Set.mulIndicator_le_one
 #align set.indicator_nonpos Set.indicator_nonpos
 
+#print Set.mulIndicator_le_mulIndicator /-
 @[to_additive]
 theorem mulIndicator_le_mulIndicator (h : f a ≤ g a) : mulIndicator s f a ≤ mulIndicator s g a :=
   mulIndicator_rel_mulIndicator le_rfl fun _ => h
 #align set.mul_indicator_le_mul_indicator Set.mulIndicator_le_mulIndicator
 #align set.indicator_le_indicator Set.indicator_le_indicator
+-/
 
 attribute [mono] mul_indicator_le_mul_indicator indicator_le_indicator
 
@@ -863,6 +865,7 @@ theorem mulIndicator_le {s : Set α} {f g : α → M} (hfg : ∀ a ∈ s, f a �
 
 end CanonicallyOrderedMonoid
 
+#print Set.indicator_le_indicator_nonneg /-
 theorem indicator_le_indicator_nonneg {β} [LinearOrder β] [Zero β] (s : Set α) (f : α → β) :
     s.indicator f ≤ { x | 0 ≤ f x }.indicator f :=
   by
@@ -875,11 +878,14 @@ theorem indicator_le_indicator_nonneg {β} [LinearOrder β] [Zero β] (s : Set �
     · exact h_1
     · exact le_rfl
 #align set.indicator_le_indicator_nonneg Set.indicator_le_indicator_nonneg
+-/
 
+#print Set.indicator_nonpos_le_indicator /-
 theorem indicator_nonpos_le_indicator {β} [LinearOrder β] [Zero β] (s : Set α) (f : α → β) :
     { x | f x ≤ 0 }.indicator f ≤ s.indicator f :=
   @indicator_le_indicator_nonneg α βᵒᵈ _ _ s f
 #align set.indicator_nonpos_le_indicator Set.indicator_nonpos_le_indicator
+-/
 
 end Set
 

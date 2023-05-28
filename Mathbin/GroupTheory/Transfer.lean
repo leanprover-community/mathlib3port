@@ -30,7 +30,7 @@ In this file we construct the transfer homomorphism.
 -/
 
 
-open BigOperators
+open scoped BigOperators
 
 variable {G : Type _} [Group G] {H : Subgroup G} {A : Type _} [CommGroup A] (ϕ : H →* A)
 
@@ -40,7 +40,7 @@ namespace LeftTransversals
 
 open Finset MulAction
 
-open Pointwise
+open scoped Pointwise
 
 variable (R S T : leftTransversals (H : Set G)) [FiniteIndex H]
 

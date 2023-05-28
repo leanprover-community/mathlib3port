@@ -30,7 +30,7 @@ noncomputable section
 open
   CategoryTheory CategoryTheory.Limits CategoryTheory.Category CategoryTheory.Preadditive CategoryTheory.Idempotents Opposite AlgebraicTopology AlgebraicTopology.DoldKan
 
-open BigOperators Simplicial DoldKan
+open scoped BigOperators Simplicial DoldKan
 
 namespace SimplicialObject
 

@@ -125,7 +125,7 @@ section ZeroOrderBot
 
 variable [HasZeroObject C]
 
-open ZeroObject
+open scoped ZeroObject
 
 /-- The object underlying `⊥ : subobject B` is (up to isomorphism) the zero object. -/
 def botCoeIsoZero {B : C} : ((⊥ : MonoOver B) : C) ≅ 0 :=
@@ -234,6 +234,7 @@ namespace Subobject
 
 section OrderTop
 
+#print CategoryTheory.Subobject.orderTop /-
 instance orderTop {X : C} : OrderTop (Subobject X)
     where
   top := Quotient.mk'' ⊤
@@ -241,6 +242,7 @@ instance orderTop {X : C} : OrderTop (Subobject X)
     refine' Quotient.ind' fun f => _
     exact ⟨mono_over.le_top f⟩
 #align category_theory.subobject.order_top CategoryTheory.Subobject.orderTop
+-/
 
 instance {X : C} : Inhabited (Subobject X) :=
   ⟨⊤⟩
@@ -312,6 +314,7 @@ section OrderBot
 
 variable [HasInitial C] [InitialMonoClass C]
 
+#print CategoryTheory.Subobject.orderBot /-
 instance orderBot {X : C} : OrderBot (Subobject X)
     where
   bot := Quotient.mk'' ⊥
@@ -319,6 +322,7 @@ instance orderBot {X : C} : OrderBot (Subobject X)
     refine' Quotient.ind' fun f => _
     exact ⟨mono_over.bot_le f⟩
 #align category_theory.subobject.order_bot CategoryTheory.Subobject.orderBot
+-/
 
 theorem bot_eq_initial_to {B : C} : (⊥ : Subobject B) = Subobject.mk (initial.to B) :=
   rfl
@@ -339,7 +343,7 @@ section ZeroOrderBot
 
 variable [HasZeroObject C]
 
-open ZeroObject
+open scoped ZeroObject
 
 /-- The object underlying `⊥ : subobject B` is (up to isomorphism) the zero object. -/
 def botCoeIsoZero {B : C} : ((⊥ : Subobject B) : C) ≅ 0 :=
@@ -608,6 +612,7 @@ theorem wideCospan_map_term {A : C} (s : Set (Subobject A)) (j) :
 #align category_theory.subobject.wide_cospan_map_term CategoryTheory.Subobject.wideCospan_map_term
 -/
 
+#print CategoryTheory.Subobject.leInfCone /-
 /-- Auxiliary construction of a cone for `le_Inf`. -/
 def leInfCone {A : C} (s : Set (Subobject A)) (f : Subobject A) (k : ∀ g ∈ s, f ≤ g) :
     Cone (wideCospan s) :=
@@ -615,6 +620,7 @@ def leInfCone {A : C} (s : Set (Subobject A)) (f : Subobject A) (k : ∀ g ∈ s
     (fun j => underlying.map (homOfLE (k _ (by rcases j with ⟨-, ⟨g, ⟨m, rfl⟩⟩⟩; simpa using m))))
     (by tidy)
 #align category_theory.subobject.le_Inf_cone CategoryTheory.Subobject.leInfCone
+-/
 
 @[simp]
 theorem leInfCone_π_app_none {A : C} (s : Set (Subobject A)) (f : Subobject A)
@@ -662,6 +668,7 @@ def sInf {A : C} (s : Set (Subobject A)) : Subobject A :=
 -/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (f «expr ∈ » s) -/
+#print CategoryTheory.Subobject.sInf_le /-
 theorem sInf_le {A : C} (s : Set (Subobject A)) (f) (_ : f ∈ s) : sInf s ≤ f :=
   by
   fapply le_of_comm
@@ -678,6 +685,7 @@ theorem sInf_le {A : C} (s : Set (Subobject A)) (f) (_ : f ∈ s) : sInf s ≤ f
       subobject.arrow_congr, congr_arg_mpr_hom_left, iso.cancel_iso_hom_left]
     convert limit.w (wide_cospan s) (wide_pullback_shape.hom.term _)
 #align category_theory.subobject.Inf_le CategoryTheory.Subobject.sInf_le
+-/
 
 /- warning: category_theory.subobject.le_Inf clashes with category_theory.subobject.le_inf -> CategoryTheory.Subobject.le_inf
 Case conversion may be inaccurate. Consider using '#align category_theory.subobject.le_Inf CategoryTheory.Subobject.le_infₓ'. -/
@@ -776,7 +784,7 @@ section ZeroObject
 
 variable [HasZeroMorphisms C] [HasZeroObject C]
 
-open ZeroObject
+open scoped ZeroObject
 
 #print CategoryTheory.Subobject.nontrivial_of_not_isZero /-
 /-- A nonzero object has nontrivial subobject lattice. -/

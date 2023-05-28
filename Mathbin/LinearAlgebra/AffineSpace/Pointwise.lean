@@ -21,7 +21,7 @@ This file provides the additive action `affine_subspace.pointwise_add_action` in
 -/
 
 
-open Affine Pointwise
+open scoped Affine Pointwise
 
 open Set
 
@@ -54,7 +54,7 @@ protected def pointwiseAddAction : AddAction V (AffineSubspace k P)
 
 scoped[Pointwise] attribute [instance] AffineSubspace.pointwiseAddAction
 
-open Pointwise
+open scoped Pointwise
 
 @[simp]
 theorem coe_pointwise_vadd (v : V) (s : AffineSubspace k P) :

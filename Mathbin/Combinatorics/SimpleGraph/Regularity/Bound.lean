@@ -35,7 +35,7 @@ This entire file is internal to the proof of Szemerédi Regularity Lemma.
 
 open Finset Fintype Function Real
 
-open BigOperators
+open scoped BigOperators
 
 namespace SzemerediRegularity
 

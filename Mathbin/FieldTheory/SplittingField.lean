@@ -39,7 +39,7 @@ if it is the smallest field extension of `K` such that `f` splits.
 
 noncomputable section
 
-open Classical BigOperators Polynomial
+open scoped Classical BigOperators Polynomial
 
 universe u v w
 

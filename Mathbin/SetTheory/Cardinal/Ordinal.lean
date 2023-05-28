@@ -53,7 +53,7 @@ noncomputable section
 
 open Function Cardinal Set Equiv Order
 
-open Classical Cardinal Ordinal
+open scoped Classical Cardinal Ordinal
 
 universe u v w
 
@@ -80,6 +80,7 @@ theorem ord_isLimit {c} (co : ℵ₀ ≤ c) : (ord c).IsLimit :=
 /-! ### Aleph cardinals -/
 
 
+#print Cardinal.alephIdx.initialSeg /-
 /-- The `aleph'` index function, which gives the ordinal index of a cardinal.
   (The `aleph'` part is because unlike `aleph` this counts also the
   finite stages. So `aleph_idx n = n`, `aleph_idx ω = ω`,
@@ -91,6 +92,7 @@ theorem ord_isLimit {c} (co : ℵ₀ ≤ c) : (ord c).IsLimit :=
 def alephIdx.initialSeg : @InitialSeg Cardinal Ordinal (· < ·) (· < ·) :=
   @RelEmbedding.collapse Cardinal Ordinal (· < ·) (· < ·) _ Cardinal.ord.orderEmbedding.ltEmbedding
 #align cardinal.aleph_idx.initial_seg Cardinal.alephIdx.initialSeg
+-/
 
 #print Cardinal.alephIdx /-
 /-- The `aleph'` index function, which gives the ordinal index of a cardinal.
@@ -108,20 +110,27 @@ theorem alephIdx.initialSeg_coe : (alephIdx.initialSeg : Cardinal → Ordinal) =
   rfl
 #align cardinal.aleph_idx.initial_seg_coe Cardinal.alephIdx.initialSeg_coe
 
+#print Cardinal.alephIdx_lt /-
 @[simp]
 theorem alephIdx_lt {a b} : alephIdx a < alephIdx b ↔ a < b :=
   alephIdx.initialSeg.toRelEmbedding.map_rel_iff
 #align cardinal.aleph_idx_lt Cardinal.alephIdx_lt
+-/
 
+#print Cardinal.alephIdx_le /-
 @[simp]
 theorem alephIdx_le {a b} : alephIdx a ≤ alephIdx b ↔ a ≤ b := by
   rw [← not_lt, ← not_lt, aleph_idx_lt]
 #align cardinal.aleph_idx_le Cardinal.alephIdx_le
+-/
 
+#print Cardinal.alephIdx.init /-
 theorem alephIdx.init {a b} : b < alephIdx a → ∃ c, alephIdx c = b :=
   alephIdx.initialSeg.dropLast
 #align cardinal.aleph_idx.init Cardinal.alephIdx.init
+-/
 
+#print Cardinal.alephIdx.relIso /-
 /-- The `aleph'` index function, which gives the ordinal index of a cardinal.
   (The `aleph'` part is because unlike `aleph` this counts also the
   finite stages. So `aleph_idx n = n`, `aleph_idx ℵ₀ = ω`,
@@ -143,16 +152,19 @@ def alephIdx.relIso : @RelIso Cardinal.{u} Ordinal.{u} (· < ·) (· < ·) :=
           (Cardinal.bddAbove_range.{u, u} fun a : α => inv_fun aleph_idx (Ordinal.typein r a))
           (Ordinal.enum r _ (h (succ s)))
 #align cardinal.aleph_idx.rel_iso Cardinal.alephIdx.relIso
+-/
 
 @[simp]
 theorem alephIdx.relIso_coe : (alephIdx.relIso : Cardinal → Ordinal) = alephIdx :=
   rfl
 #align cardinal.aleph_idx.rel_iso_coe Cardinal.alephIdx.relIso_coe
 
+#print Cardinal.type_cardinal /-
 @[simp]
 theorem type_cardinal : @type Cardinal (· < ·) _ = Ordinal.univ.{u, u + 1} := by
   rw [Ordinal.univ_id] <;> exact Quotient.sound ⟨aleph_idx.rel_iso⟩
 #align cardinal.type_cardinal Cardinal.type_cardinal
+-/
 
 #print Cardinal.mk_cardinal /-
 @[simp]
@@ -161,6 +173,7 @@ theorem mk_cardinal : (#Cardinal) = univ.{u, u + 1} := by
 #align cardinal.mk_cardinal Cardinal.mk_cardinal
 -/
 
+#print Cardinal.Aleph'.relIso /-
 /-- The `aleph'` function gives the cardinals listed by their ordinal
   index, and is the inverse of `aleph_idx`.
   `aleph' n = n`, `aleph' ω = ω`, `aleph' (ω + 1) = succ ℵ₀`, etc.
@@ -170,6 +183,7 @@ theorem mk_cardinal : (#Cardinal) = univ.{u, u + 1} := by
 def Aleph'.relIso :=
   Cardinal.alephIdx.relIso.symm
 #align cardinal.aleph'.rel_iso Cardinal.Aleph'.relIso
+-/
 
 #print Cardinal.aleph' /-
 /-- The `aleph'` function gives the cardinals listed by their ordinal
@@ -185,15 +199,19 @@ theorem aleph'.relIso_coe : (Aleph'.relIso : Ordinal → Cardinal) = aleph' :=
   rfl
 #align cardinal.aleph'.rel_iso_coe Cardinal.aleph'.relIso_coe
 
+#print Cardinal.aleph'_lt /-
 @[simp]
 theorem aleph'_lt {o₁ o₂ : Ordinal} : aleph' o₁ < aleph' o₂ ↔ o₁ < o₂ :=
   Aleph'.relIso.map_rel_iff
 #align cardinal.aleph'_lt Cardinal.aleph'_lt
+-/
 
+#print Cardinal.aleph'_le /-
 @[simp]
 theorem aleph'_le {o₁ o₂ : Ordinal} : aleph' o₁ ≤ aleph' o₂ ↔ o₁ ≤ o₂ :=
   le_iff_le_iff_lt_iff_lt.2 aleph'_lt
 #align cardinal.aleph'_le Cardinal.aleph'_le
+-/
 
 #print Cardinal.aleph'_alephIdx /-
 @[simp]
@@ -230,6 +248,7 @@ theorem aleph'_nat : ∀ n : ℕ, aleph' n = n
   | n + 1 => show aleph' (succ n) = n.succ by rw [aleph'_succ, aleph'_nat, nat_succ]
 #align cardinal.aleph'_nat Cardinal.aleph'_nat
 
+#print Cardinal.aleph'_le_of_limit /-
 theorem aleph'_le_of_limit {o : Ordinal} (l : o.IsLimit) {c} :
     aleph' o ≤ c ↔ ∀ o' < o, aleph' o' ≤ c :=
   ⟨fun h o' h' => (aleph'_le.2 <| h'.le).trans h, fun h =>
@@ -239,6 +258,7 @@ theorem aleph'_le_of_limit {o : Ordinal} (l : o.IsLimit) {c} :
     rw [← aleph'_le, aleph'_aleph_idx]
     exact h _ h'⟩
 #align cardinal.aleph'_le_of_limit Cardinal.aleph'_le_of_limit
+-/
 
 theorem aleph'_limit {o : Ordinal} (ho : o.IsLimit) : aleph' o = ⨆ a : Iio o, aleph' a :=
   by
@@ -274,15 +294,19 @@ def aleph (o : Ordinal) : Cardinal :=
 #align cardinal.aleph Cardinal.aleph
 -/
 
+#print Cardinal.aleph_lt /-
 @[simp]
 theorem aleph_lt {o₁ o₂ : Ordinal} : aleph o₁ < aleph o₂ ↔ o₁ < o₂ :=
   aleph'_lt.trans (add_lt_add_iff_left _)
 #align cardinal.aleph_lt Cardinal.aleph_lt
+-/
 
+#print Cardinal.aleph_le /-
 @[simp]
 theorem aleph_le {o₁ o₂ : Ordinal} : aleph o₁ ≤ aleph o₂ ↔ o₁ ≤ o₂ :=
   le_iff_le_iff_lt_iff_lt.2 aleph_lt
 #align cardinal.aleph_le Cardinal.aleph_le
+-/
 
 @[simp]
 theorem max_aleph_eq (o₁ o₂ : Ordinal) : max (aleph o₁) (aleph o₂) = aleph (max o₁ o₂) :=
@@ -317,8 +341,10 @@ theorem aleph_limit {o : Ordinal} (ho : o.IsLimit) : aleph o = ⨆ a : Iio o, al
   · exact fun i => aleph_le.2 (le_of_lt i.2)
 #align cardinal.aleph_limit Cardinal.aleph_limit
 
+#print Cardinal.aleph0_le_aleph' /-
 theorem aleph0_le_aleph' {o : Ordinal} : ℵ₀ ≤ aleph' o ↔ ω ≤ o := by rw [← aleph'_omega, aleph'_le]
 #align cardinal.aleph_0_le_aleph' Cardinal.aleph0_le_aleph'
+-/
 
 #print Cardinal.aleph0_le_aleph /-
 theorem aleph0_le_aleph (o : Ordinal) : ℵ₀ ≤ aleph o := by rw [aleph, aleph_0_le_aleph'];
@@ -326,12 +352,16 @@ theorem aleph0_le_aleph (o : Ordinal) : ℵ₀ ≤ aleph o := by rw [aleph, alep
 #align cardinal.aleph_0_le_aleph Cardinal.aleph0_le_aleph
 -/
 
+#print Cardinal.aleph'_pos /-
 theorem aleph'_pos {o : Ordinal} (ho : 0 < o) : 0 < aleph' o := by rwa [← aleph'_zero, aleph'_lt]
 #align cardinal.aleph'_pos Cardinal.aleph'_pos
+-/
 
+#print Cardinal.aleph_pos /-
 theorem aleph_pos (o : Ordinal) : 0 < aleph o :=
   aleph0_pos.trans_le (aleph0_le_aleph o)
 #align cardinal.aleph_pos Cardinal.aleph_pos
+-/
 
 #print Cardinal.aleph_toNat /-
 @[simp]
@@ -395,10 +425,12 @@ theorem countable_iff_lt_aleph_one {α : Type _} (s : Set α) : s.Countable ↔ 
   rw [← succ_aleph_0, lt_succ_iff, le_aleph_0_iff_set_countable]
 #align cardinal.countable_iff_lt_aleph_one Cardinal.countable_iff_lt_aleph_one
 
+#print Cardinal.ord_card_unbounded /-
 /-- Ordinals that are cardinals are unbounded. -/
 theorem ord_card_unbounded : Unbounded (· < ·) { b : Ordinal | b.card.ord = b } :=
   unbounded_lt_iff.2 fun a => ⟨_, ⟨by dsimp; rw [card_ord], (lt_ord_succ_card a).le⟩⟩
 #align cardinal.ord_card_unbounded Cardinal.ord_card_unbounded
+-/
 
 #print Cardinal.eq_aleph'_of_eq_card_ord /-
 theorem eq_aleph'_of_eq_card_ord {o : Ordinal} (ho : o.card.ord = o) : ∃ a, (aleph' a).ord = o :=
@@ -417,11 +449,14 @@ theorem ord_aleph'_eq_enum_card : ord ∘ aleph' = enumOrd { b : Ordinal | b.car
 #align cardinal.ord_aleph'_eq_enum_card Cardinal.ord_aleph'_eq_enum_card
 -/
 
+#print Cardinal.ord_card_unbounded' /-
 /-- Infinite ordinals that are cardinals are unbounded. -/
 theorem ord_card_unbounded' : Unbounded (· < ·) { b : Ordinal | b.card.ord = b ∧ ω ≤ b } :=
   (unbounded_lt_inter_le ω).2 ord_card_unbounded
 #align cardinal.ord_card_unbounded' Cardinal.ord_card_unbounded'
+-/
 
+#print Cardinal.eq_aleph_of_eq_card_ord /-
 theorem eq_aleph_of_eq_card_ord {o : Ordinal} (ho : o.card.ord = o) (ho' : ω ≤ o) :
     ∃ a, (aleph a).ord = o :=
   by
@@ -431,7 +466,9 @@ theorem eq_aleph_of_eq_card_ord {o : Ordinal} (ho : o.card.ord = o) (ho' : ω �
   rwa [Ordinal.add_sub_cancel_of_le]
   rwa [← aleph_0_le_aleph', ← ord_le_ord, ha, ord_aleph_0]
 #align cardinal.eq_aleph_of_eq_card_ord Cardinal.eq_aleph_of_eq_card_ord
+-/
 
+#print Cardinal.ord_aleph_eq_enum_card /-
 /-- `ord ∘ aleph` enumerates the infinite ordinals that are cardinals. -/
 theorem ord_aleph_eq_enum_card : ord ∘ aleph = enumOrd { b : Ordinal | b.card.ord = b ∧ ω ≤ b } :=
   by
@@ -443,6 +480,7 @@ theorem ord_aleph_eq_enum_card : ord ∘ aleph = enumOrd { b : Ordinal | b.card.
   · rw [← ord_aleph_0, ord_le_ord]
     exact aleph_0_le_aleph _
 #align cardinal.ord_aleph_eq_enum_card Cardinal.ord_aleph_eq_enum_card
+-/
 
 /-! ### Beth cardinals -/
 
@@ -498,15 +536,19 @@ theorem beth_mono : Monotone beth :=
 #align cardinal.beth_mono Cardinal.beth_mono
 -/
 
+#print Cardinal.beth_lt /-
 @[simp]
 theorem beth_lt {o₁ o₂ : Ordinal} : beth o₁ < beth o₂ ↔ o₁ < o₂ :=
   beth_strictMono.lt_iff_lt
 #align cardinal.beth_lt Cardinal.beth_lt
+-/
 
+#print Cardinal.beth_le /-
 @[simp]
 theorem beth_le {o₁ o₂ : Ordinal} : beth o₁ ≤ beth o₂ ↔ o₁ ≤ o₂ :=
   beth_strictMono.le_iff_le
 #align cardinal.beth_le Cardinal.beth_le
+-/
 
 #print Cardinal.aleph_le_beth /-
 theorem aleph_le_beth (o : Ordinal) : aleph o ≤ beth o :=
@@ -528,9 +570,11 @@ theorem aleph0_le_beth (o : Ordinal) : ℵ₀ ≤ beth o :=
 #align cardinal.aleph_0_le_beth Cardinal.aleph0_le_beth
 -/
 
+#print Cardinal.beth_pos /-
 theorem beth_pos (o : Ordinal) : 0 < beth o :=
   aleph0_pos.trans_le <| aleph0_le_beth o
 #align cardinal.beth_pos Cardinal.beth_pos
+-/
 
 #print Cardinal.beth_ne_zero /-
 theorem beth_ne_zero (o : Ordinal) : beth o ≠ 0 :=
@@ -922,6 +966,7 @@ theorem add_one_le_add_one_iff_of_lt_aleph_0 {α β : Cardinal} : α + 1 ≤ β 
 /-! ### Properties about power -/
 
 
+#print Cardinal.pow_le /-
 theorem pow_le {κ μ : Cardinal.{u}} (H1 : ℵ₀ ≤ κ) (H2 : μ < ℵ₀) : κ ^ μ ≤ κ :=
   let ⟨n, H3⟩ := lt_aleph0.1 H2
   H3.symm ▸
@@ -934,10 +979,13 @@ theorem pow_le {κ μ : Cardinal.{u}} (H1 : ℵ₀ ≤ κ) (H2 : μ < ℵ₀) : 
             (mul_eq_self H1))
       H1
 #align cardinal.pow_le Cardinal.pow_le
+-/
 
+#print Cardinal.pow_eq /-
 theorem pow_eq {κ μ : Cardinal.{u}} (H1 : ℵ₀ ≤ κ) (H2 : 1 ≤ μ) (H3 : μ < ℵ₀) : κ ^ μ = κ :=
   (pow_le H1 H3).antisymm <| self_le_power κ H2
 #align cardinal.pow_eq Cardinal.pow_eq
+-/
 
 theorem power_self_eq {c : Cardinal} (h : ℵ₀ ≤ c) : c ^ c = 2 ^ c :=
   by

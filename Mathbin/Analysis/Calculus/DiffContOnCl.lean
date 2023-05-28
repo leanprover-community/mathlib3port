@@ -21,7 +21,7 @@ this property and prove basic facts about this predicate.
 
 open Set Filter Metric
 
-open Topology
+open scoped Topology
 
 variable (𝕜 : Type _) {E F G : Type _} [NontriviallyNormedField 𝕜] [NormedAddCommGroup E]
   [NormedAddCommGroup F] [NormedSpace 𝕜 E] [NormedSpace 𝕜 F] [NormedAddCommGroup G]

@@ -32,7 +32,7 @@ variable {α : Type _} [TopologicalSpace α] [T2Space α] {f : α → α}
 
 open Function Filter
 
-open Topology
+open scoped Topology
 
 #print isFixedPt_of_tendsto_iterate /-
 /-- If the iterates `f^[n] x` converge to `y` and `f` is continuous at `y`,

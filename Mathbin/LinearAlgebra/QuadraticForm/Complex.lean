@@ -22,7 +22,7 @@ a sum of squares.
 
 namespace QuadraticForm
 
-open BigOperators
+open scoped BigOperators
 
 open Finset
 

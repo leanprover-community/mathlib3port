@@ -687,7 +687,7 @@ Some set instances do not appear here since they are consequences of others, for
 
 namespace Finite.Set
 
-open Classical
+open scoped Classical
 
 example {s : Set α} [Finite α] : Finite s :=
   inferInstance
@@ -1717,13 +1717,17 @@ theorem infinite_of_forall_exists_lt (h : ∀ a, ∃ b ∈ s, b < a) : s.Infinit
 
 end Preorder
 
+#print Set.finite_isTop /-
 theorem finite_isTop (α : Type _) [PartialOrder α] : { x : α | IsTop x }.Finite :=
   (subsingleton_isTop α).Finite
 #align set.finite_is_top Set.finite_isTop
+-/
 
+#print Set.finite_isBot /-
 theorem finite_isBot (α : Type _) [PartialOrder α] : { x : α | IsBot x }.Finite :=
   (subsingleton_isBot α).Finite
 #align set.finite_is_bot Set.finite_isBot
+-/
 
 theorem Infinite.exists_lt_map_eq_of_mapsTo [LinearOrder α] {s : Set α} {t : Set β} {f : α → β}
     (hs : s.Infinite) (hf : MapsTo f s t) (ht : t.Finite) : ∃ x ∈ s, ∃ y ∈ s, x < y ∧ f x = f y :=
@@ -1731,6 +1735,7 @@ theorem Infinite.exists_lt_map_eq_of_mapsTo [LinearOrder α] {s : Set α} {t : S
   hxy.lt_or_lt.elim (fun hxy => ⟨x, hx, y, hy, hxy, hf⟩) fun hyx => ⟨y, hy, x, hx, hyx, hf.symm⟩
 #align set.infinite.exists_lt_map_eq_of_maps_to Set.Infinite.exists_lt_map_eq_of_mapsTo
 
+#print Set.Finite.exists_lt_map_eq_of_forall_mem /-
 theorem Finite.exists_lt_map_eq_of_forall_mem [LinearOrder α] [Infinite α] {t : Set β} {f : α → β}
     (hf : ∀ a, f a ∈ t) (ht : t.Finite) : ∃ a b, a < b ∧ f a = f b :=
   by
@@ -1738,6 +1743,7 @@ theorem Finite.exists_lt_map_eq_of_forall_mem [LinearOrder α] [Infinite α] {t 
   obtain ⟨a, -, b, -, h⟩ := (@infinite_univ α _).exists_lt_map_eq_of_mapsTo hf ht
   exact ⟨a, b, h⟩
 #align set.finite.exists_lt_map_eq_of_forall_mem Set.Finite.exists_lt_map_eq_of_forall_mem
+-/
 
 theorem exists_min_image [LinearOrder β] (s : Set α) (f : α → β) (h1 : s.Finite) :
     s.Nonempty → ∃ a ∈ s, ∀ b ∈ s, f a ≤ f b
@@ -1753,6 +1759,7 @@ theorem exists_max_image [LinearOrder β] (s : Set α) (f : α → β) (h1 : s.F
       h1.to_finset.exists_max_image f ⟨x, h1.mem_to_finset.2 hx⟩
 #align set.exists_max_image Set.exists_max_image
 
+#print Set.exists_lower_bound_image /-
 theorem exists_lower_bound_image [hα : Nonempty α] [LinearOrder β] (s : Set α) (f : α → β)
     (h : s.Finite) : ∃ a : α, ∀ b ∈ s, f a ≤ f b :=
   by
@@ -1763,7 +1770,9 @@ theorem exists_lower_bound_image [hα : Nonempty α] [LinearOrder β] (s : Set �
       ⟨x₀, fun x hx => hx₀ x hx⟩
   · exact Nonempty.elim hα fun a => ⟨a, fun x hx => absurd (Set.nonempty_of_mem hx) hs⟩
 #align set.exists_lower_bound_image Set.exists_lower_bound_image
+-/
 
+#print Set.exists_upper_bound_image /-
 theorem exists_upper_bound_image [hα : Nonempty α] [LinearOrder β] (s : Set α) (f : α → β)
     (h : s.Finite) : ∃ a : α, ∀ b ∈ s, f b ≤ f a :=
   by
@@ -1774,6 +1783,7 @@ theorem exists_upper_bound_image [hα : Nonempty α] [LinearOrder β] (s : Set �
       ⟨x₀, fun x hx => hx₀ x hx⟩
   · exact Nonempty.elim hα fun a => ⟨a, fun x hx => absurd (Set.nonempty_of_mem hx) hs⟩
 #align set.exists_upper_bound_image Set.exists_upper_bound_image
+-/
 
 theorem Finite.iSup_biInf_of_monotone {ι ι' α : Type _} [Preorder ι'] [Nonempty ι']
     [IsDirected ι' (· ≤ ·)] [Order.Frame α] {s : Set ι} (hs : s.Finite) {f : ι → ι' → α}
@@ -1980,6 +1990,7 @@ end Finset
 
 variable [LinearOrder α]
 
+#print Finite.of_forall_not_lt_lt /-
 /-- If a linear order does not contain any triple of elements `x < y < z`, then this type
 is finite. -/
 theorem Finite.of_forall_not_lt_lt (h : ∀ ⦃x y z : α⦄, x < y → y < z → False) : Finite α :=
@@ -1989,13 +2000,16 @@ theorem Finite.of_forall_not_lt_lt (h : ∀ ⦃x y z : α⦄, x < y → y < z �
   refine' @Finite.of_fintype α ⟨{x, y}, fun z => _⟩
   simpa [hne] using eq_or_eq_or_eq_of_forall_not_lt_lt h z x y
 #align finite.of_forall_not_lt_lt Finite.of_forall_not_lt_lt
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y z «expr ∈ » s) -/
+#print Set.finite_of_forall_not_lt_lt /-
 /-- If a set `s` does not contain any triple of elements `x < y < z`, then `s` is finite. -/
 theorem Set.finite_of_forall_not_lt_lt {s : Set α}
     (h : ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s) (z) (_ : z ∈ s), x < y → y < z → False) : Set.Finite s :=
   @Set.toFinite _ s <| Finite.of_forall_not_lt_lt <| by simpa only [SetCoe.forall'] using h
 #align set.finite_of_forall_not_lt_lt Set.finite_of_forall_not_lt_lt
+-/
 
 theorem Set.finite_diff_iUnion_Ioo (s : Set α) : (s \ ⋃ (x ∈ s) (y ∈ s), Ioo x y).Finite :=
   Set.finite_of_forall_not_lt_lt fun x hx y hy z hz hxy hyz =>

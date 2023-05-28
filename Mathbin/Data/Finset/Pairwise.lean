@@ -44,6 +44,7 @@ theorem PairwiseDisjoint.elim_finset {s : Set ι} {f : ι → Finset α} (hs : s
   hs.elim hi hj (Finset.not_disjoint_iff.2 ⟨a, hai, haj⟩)
 #align set.pairwise_disjoint.elim_finset Set.PairwiseDisjoint.elim_finset
 
+#print Set.PairwiseDisjoint.image_finset_of_le /-
 theorem PairwiseDisjoint.image_finset_of_le [DecidableEq ι] [SemilatticeInf α] [OrderBot α]
     {s : Finset ι} {f : ι → α} (hs : (s : Set ι).PairwiseDisjoint f) {g : ι → ι}
     (hf : ∀ a, f (g a) ≤ f a) : (s.image g : Set ι).PairwiseDisjoint f :=
@@ -51,9 +52,11 @@ theorem PairwiseDisjoint.image_finset_of_le [DecidableEq ι] [SemilatticeInf α]
   rw [coe_image]
   exact hs.image_of_le hf
 #align set.pairwise_disjoint.image_finset_of_le Set.PairwiseDisjoint.image_finset_of_le
+-/
 
 variable [Lattice α] [OrderBot α]
 
+#print Set.PairwiseDisjoint.biUnion_finset /-
 /-- Bind operation for `set.pairwise_disjoint`. In a complete lattice, you can use
 `set.pairwise_disjoint.bUnion`. -/
 theorem PairwiseDisjoint.biUnion_finset {s : Set ι'} {g : ι' → Finset ι} {f : ι → α}
@@ -68,6 +71,7 @@ theorem PairwiseDisjoint.biUnion_finset {s : Set ι'} {g : ι' → Finset ι} {f
   · exact hg d hd (by rwa [hcd] at ha) hb hab
   · exact (hs hc hd (ne_of_apply_ne _ hcd)).mono (Finset.le_sup ha) (Finset.le_sup hb)
 #align set.pairwise_disjoint.bUnion_finset Set.PairwiseDisjoint.biUnion_finset
+-/
 
 end Set
 

@@ -83,7 +83,7 @@ theorem irrational {x : ℝ} (h : Liouville x) : Irrational x :=
 
 open Polynomial Metric Set Real RingHom
 
-open Polynomial
+open scoped Polynomial
 
 /-- Let `Z, N` be types, let `R` be a metric space, let `α : R` be a point and let
 `j : Z → N → R` be a function.  We aim to estimate how close we can get to `α`, while staying

@@ -333,7 +333,7 @@ end Positivity
 
 open Positivity
 
-open Positivity
+open scoped Positivity
 
 namespace Interactive
 

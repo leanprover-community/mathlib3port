@@ -37,15 +37,19 @@ def iciSupHom : SupHom α (UpperSet α) :=
   ⟨Ici, Ici_sup⟩
 #align upper_set.Ici_sup_hom UpperSet.iciSupHom
 
+#print UpperSet.coe_iciSupHom /-
 @[simp]
 theorem coe_iciSupHom : (iciSupHom : α → UpperSet α) = Ici :=
   rfl
 #align upper_set.coe_Ici_sup_hom UpperSet.coe_iciSupHom
+-/
 
+#print UpperSet.iciSupHom_apply /-
 @[simp]
 theorem iciSupHom_apply (a : α) : iciSupHom a = Ici a :=
   rfl
 #align upper_set.Ici_sup_hom_apply UpperSet.iciSupHom_apply
+-/
 
 end SemilatticeSup
 
@@ -79,15 +83,19 @@ def iicInfHom : InfHom α (LowerSet α) :=
   ⟨Iic, Iic_inf⟩
 #align lower_set.Iic_inf_hom LowerSet.iicInfHom
 
+#print LowerSet.coe_iicInfHom /-
 @[simp]
 theorem coe_iicInfHom : (iicInfHom : α → LowerSet α) = Iic :=
   rfl
 #align lower_set.coe_Iic_inf_hom LowerSet.coe_iicInfHom
+-/
 
+#print LowerSet.iicInfHom_apply /-
 @[simp]
 theorem iicInfHom_apply (a : α) : iicInfHom a = Iic a :=
   rfl
 #align lower_set.Iic_inf_hom_apply LowerSet.iicInfHom_apply
+-/
 
 end SemilatticeInf
 

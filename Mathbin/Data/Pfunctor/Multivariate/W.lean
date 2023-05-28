@@ -58,7 +58,7 @@ namespace MvPFunctor
 
 open TypeVec
 
-open MvFunctor
+open scoped MvFunctor
 
 variable {n : ℕ} (P : MvPFunctor.{u} (n + 1))
 

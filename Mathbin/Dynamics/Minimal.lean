@@ -31,7 +31,7 @@ group action, minimal
 -/
 
 
-open Pointwise
+open scoped Pointwise
 
 #print AddAction.IsMinimal /-
 /-- An action of an additive monoid `M` on a topological space is called *minimal* if the `M`-orbit

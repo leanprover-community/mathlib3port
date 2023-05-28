@@ -43,12 +43,14 @@ open IsAbsoluteValue
 
 variable {G α β : Type _}
 
+#print exists_forall_ge_and /-
 theorem exists_forall_ge_and {α} [LinearOrder α] {P Q : α → Prop} :
     (∃ i, ∀ j ≥ i, P j) → (∃ i, ∀ j ≥ i, Q j) → ∃ i, ∀ j ≥ i, P j ∧ Q j
   | ⟨a, h₁⟩, ⟨b, h₂⟩ =>
     let ⟨c, ac, bc⟩ := exists_ge_of_linear a b
     ⟨c, fun j hj => ⟨h₁ _ (le_trans ac hj), h₂ _ (le_trans bc hj)⟩⟩
 #align exists_forall_ge_and exists_forall_ge_and
+-/
 
 section
 

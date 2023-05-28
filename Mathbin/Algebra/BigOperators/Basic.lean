@@ -121,7 +121,7 @@ scoped[BigOperators] notation3"∑ "(...)" in "s", "r:(scoped f => Finset.sum s 
 -- mathport name: finset.prod
 scoped[BigOperators] notation3"∏ "(...)" in "s", "r:(scoped f => Finset.prod s f) => r
 
-open BigOperators
+open scoped BigOperators
 
 namespace Finset
 

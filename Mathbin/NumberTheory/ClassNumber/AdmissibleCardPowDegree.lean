@@ -31,12 +31,13 @@ use to show the class number of the ring of integers of a function field is fini
 
 namespace Polynomial
 
-open Polynomial
+open scoped Polynomial
 
 open AbsoluteValue Real
 
 variable {Fq : Type _} [Fintype Fq]
 
+#print Polynomial.exists_eq_polynomial /-
 /-- If `A` is a family of enough low-degree polynomials over a finite semiring, there is a
 pair of equal elements in `A`. -/
 theorem exists_eq_polynomial [Semiring Fq] {d : ℕ} {m : ℕ} (hm : Fintype.card Fq ^ d ≤ m)
@@ -64,7 +65,9 @@ theorem exists_eq_polynomial [Semiring Fq] {d : ℕ} {m : ℕ} (hm : Fintype.car
   apply congr_fun i_eq.symm ⟨j, _⟩
   exact lt_of_lt_of_le (coe_lt_degree.mp hbj) hb
 #align polynomial.exists_eq_polynomial Polynomial.exists_eq_polynomial
+-/
 
+#print Polynomial.exists_approx_polynomial_aux /-
 /-- If `A` is a family of enough low-degree polynomials over a finite ring,
 there is a pair of elements in `A` (with different indices but not necessarily
 distinct), such that their difference has small degree. -/
@@ -106,6 +109,7 @@ theorem exists_approx_polynomial_aux [Ring Fq] {d : ℕ} {m : ℕ} (hm : Fintype
     rw [← Nat.succ_sub hbj, Nat.succ_sub_succ, tsub_tsub_cancel_of_le hbj.le]
   convert congr_fun i_eq.symm ⟨nat_degree b - j.succ, hj⟩
 #align polynomial.exists_approx_polynomial_aux Polynomial.exists_approx_polynomial_aux
+-/
 
 variable [Field Fq]
 

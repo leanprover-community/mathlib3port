@@ -30,7 +30,7 @@ on compact sets.
 
 open MeasureTheory MeasureTheory.Measure Set Function TopologicalSpace
 
-open Topology Interval
+open scoped Topology Interval
 
 variable {X Y E R : Type _} [MeasurableSpace X] [TopologicalSpace X]
 
@@ -320,7 +320,7 @@ theorem Continuous.integrable_of_hasCompactSupport (hf : Continuous f) (hcf : Ha
 
 end borel
 
-open ENNReal
+open scoped ENNReal
 
 section Monotone
 

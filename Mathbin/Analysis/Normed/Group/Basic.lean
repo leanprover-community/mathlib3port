@@ -54,7 +54,7 @@ variable {𝓕 𝕜 α ι κ E F G : Type _}
 
 open Filter Function Metric
 
-open BigOperators ENNReal Filter NNReal uniformity Pointwise Topology
+open scoped BigOperators ENNReal Filter NNReal uniformity Pointwise Topology
 
 #print Norm /-
 /-- Auxiliary class, endowing a type `E` with a function `norm : E → ℝ` with notation `‖x‖`. This
@@ -1685,11 +1685,13 @@ theorem edist_mul_mul_le (a₁ a₂ b₁ b₂ : E) :
 #align edist_mul_mul_le edist_mul_mul_le
 #align edist_add_add_le edist_add_add_le
 
+#print nnnorm_multiset_prod_le /-
 @[to_additive]
 theorem nnnorm_multiset_prod_le (m : Multiset E) : ‖m.Prod‖₊ ≤ (m.map fun x => ‖x‖₊).Sum :=
   NNReal.coe_le_coe.1 <| by push_cast ; rw [Multiset.map_map]; exact norm_multiset_prod_le _
 #align nnnorm_multiset_prod_le nnnorm_multiset_prod_le
 #align nnnorm_multiset_sum_le nnnorm_multiset_sum_le
+-/
 
 @[to_additive]
 theorem nnnorm_prod_le (s : Finset ι) (f : ι → E) : ‖∏ a in s, f a‖₊ ≤ ∑ a in s, ‖f a‖₊ :=
@@ -2534,11 +2536,13 @@ theorem norm_le_pi_norm' (i : ι) : ‖f i‖ ≤ ‖f‖ :=
 #align norm_le_pi_norm' norm_le_pi_norm'
 #align norm_le_pi_norm norm_le_pi_norm
 
+#print nnnorm_le_pi_nnnorm' /-
 @[to_additive nnnorm_le_pi_nnnorm]
 theorem nnnorm_le_pi_nnnorm' (i : ι) : ‖f i‖₊ ≤ ‖f‖₊ :=
   norm_le_pi_norm' _ i
 #align nnnorm_le_pi_nnnorm' nnnorm_le_pi_nnnorm'
 #align nnnorm_le_pi_nnnorm nnnorm_le_pi_nnnorm
+-/
 
 @[to_additive pi_norm_const_le]
 theorem pi_norm_const_le' (a : E) : ‖fun _ : ι => a‖ ≤ ‖a‖ :=

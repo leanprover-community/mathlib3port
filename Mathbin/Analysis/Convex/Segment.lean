@@ -42,7 +42,7 @@ variable {𝕜 E F G ι : Type _} {π : ι → Type _}
 
 open Function Set
 
-open Pointwise
+open scoped Pointwise
 
 section OrderedSemiring
 
@@ -120,7 +120,7 @@ theorem openSegment_subset_iff :
 
 end SMul
 
-open Convex
+open scoped Convex
 
 section MulActionWithZero
 
@@ -187,7 +187,7 @@ end Module
 
 end OrderedSemiring
 
-open Convex
+open scoped Convex
 
 section OrderedRing
 
@@ -198,6 +198,7 @@ section DenselyOrdered
 
 variable [Nontrivial 𝕜] [DenselyOrdered 𝕜]
 
+#print openSegment_same /-
 @[simp]
 theorem openSegment_same (x : E) : openSegment 𝕜 x x = {x} :=
   Set.ext fun z =>
@@ -208,6 +209,7 @@ theorem openSegment_same (x : E) : openSegment 𝕜 x x = {x} :=
       refine' ⟨a, 1 - a, ha₀, sub_pos_of_lt ha₁, add_sub_cancel'_right _ _, _⟩
       rw [← add_smul, add_sub_cancel'_right, one_smul, h]⟩
 #align open_segment_same openSegment_same
+-/
 
 end DenselyOrdered
 

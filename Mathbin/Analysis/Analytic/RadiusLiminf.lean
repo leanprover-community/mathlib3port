@@ -23,7 +23,7 @@ would create a circular dependency once we redefine `exp` using `formal_multilin
 variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E]
   [NormedSpace 𝕜 E] {F : Type _} [NormedAddCommGroup F] [NormedSpace 𝕜 F]
 
-open Topology Classical BigOperators NNReal ENNReal
+open scoped Topology Classical BigOperators NNReal ENNReal
 
 open Filter Asymptotics
 

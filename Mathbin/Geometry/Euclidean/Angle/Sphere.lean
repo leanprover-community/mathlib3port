@@ -23,7 +23,7 @@ noncomputable section
 
 open FiniteDimensional Complex
 
-open EuclideanGeometry Real RealInnerProductSpace ComplexConjugate
+open scoped EuclideanGeometry Real RealInnerProductSpace ComplexConjugate
 
 namespace Orientation
 

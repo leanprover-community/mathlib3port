@@ -70,7 +70,7 @@ on `(-∞, 0]` and to `y` on `[1, +∞)`.
 
 noncomputable section
 
-open Classical Topology Filter unitInterval
+open scoped Classical Topology Filter unitInterval
 
 open Filter Set Function unitInterval
 

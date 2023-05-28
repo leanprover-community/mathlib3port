@@ -23,7 +23,7 @@ There are no non-zero integers `a`, `b` and `c` such that `a ^ 4 + b ^ 4 = c ^ 4
 
 noncomputable section
 
-open Classical
+open scoped Classical
 
 #print Fermat42 /-
 /-- Shorthand for three non-zero integers `a`, `b`, and `c` satisfying `a ^ 4 + b ^ 4 = c ^ 2`.

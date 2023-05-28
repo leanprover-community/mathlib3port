@@ -49,7 +49,7 @@ attribute [local instance] concrete_category.has_coe_to_fun
 
 attribute [local instance] concrete_category.has_coe_to_sort
 
-open AlgebraicGeometry
+open scoped AlgebraicGeometry
 
 variable {C : Type u} [Category.{v} C] [ConcreteCategory.{v} C] {X : TopCat.{v}}
 

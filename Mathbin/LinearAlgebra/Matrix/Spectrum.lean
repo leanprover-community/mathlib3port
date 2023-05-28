@@ -29,9 +29,9 @@ variable {𝕜 : Type _} [IsROrC 𝕜] [DecidableEq 𝕜] {n : Type _} [Fintype 
 
 variable {A : Matrix n n 𝕜}
 
-open Matrix
+open scoped Matrix
 
-open BigOperators
+open scoped BigOperators
 
 namespace IsHermitian
 

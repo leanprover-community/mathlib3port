@@ -25,7 +25,7 @@ subgroup, subgroups
 -/
 
 
-open BigOperators
+open scoped BigOperators
 
 variable {G : Type _} [Group G]
 

@@ -53,7 +53,7 @@ Bilinear form,
 -/
 
 
-open BigOperators
+open scoped BigOperators
 
 universe u v w
 
@@ -1238,8 +1238,10 @@ theorem mem_orthogonal_iff {N : Submodule R M} {m : M} :
   Iff.rfl
 #align bilin_form.mem_orthogonal_iff BilinForm.mem_orthogonal_iff
 
+#print BilinForm.orthogonal_le /-
 theorem orthogonal_le (h : N ≤ L) : B.orthogonal L ≤ B.orthogonal N := fun _ hn l hl => hn l (h hl)
 #align bilin_form.orthogonal_le BilinForm.orthogonal_le
+-/
 
 theorem le_orthogonal_orthogonal (b : B.IsRefl) : N ≤ B.orthogonal (B.orthogonal N) :=
   fun n hn m hm => b _ _ (hm n hn)

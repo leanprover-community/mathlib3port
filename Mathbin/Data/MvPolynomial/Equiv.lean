@@ -50,7 +50,7 @@ equivalence, isomorphism, morphism, ring hom, hom
 
 noncomputable section
 
-open BigOperators Polynomial
+open scoped BigOperators Polynomial
 
 open Set Function Finsupp AddMonoidAlgebra
 

@@ -34,7 +34,7 @@ group is nonarchimedean.
 -/
 
 
-open Pointwise
+open scoped Pointwise
 
 #print NonarchimedeanAddGroup /-
 /-- An topological additive group is nonarchimedean if every neighborhood of 0

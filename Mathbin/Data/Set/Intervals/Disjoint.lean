@@ -108,35 +108,47 @@ theorem iUnion_Ico_left (b : α) : (⋃ a, Ico a b) = Iio b := by
 #align set.Union_Ico_left Set.iUnion_Ico_left
 -/
 
+#print Set.iUnion_Iio /-
 @[simp]
 theorem iUnion_Iio [NoMaxOrder α] : (⋃ a : α, Iio a) = univ :=
   iUnion_eq_univ_iff.2 exists_gt
 #align set.Union_Iio Set.iUnion_Iio
+-/
 
+#print Set.iUnion_Ioi /-
 @[simp]
 theorem iUnion_Ioi [NoMinOrder α] : (⋃ a : α, Ioi a) = univ :=
   iUnion_eq_univ_iff.2 exists_lt
 #align set.Union_Ioi Set.iUnion_Ioi
+-/
 
+#print Set.iUnion_Ico_right /-
 @[simp]
 theorem iUnion_Ico_right [NoMaxOrder α] (a : α) : (⋃ b, Ico a b) = Ici a := by
   simp only [← Ici_inter_Iio, ← inter_Union, Union_Iio, inter_univ]
 #align set.Union_Ico_right Set.iUnion_Ico_right
+-/
 
+#print Set.iUnion_Ioo_right /-
 @[simp]
 theorem iUnion_Ioo_right [NoMaxOrder α] (a : α) : (⋃ b, Ioo a b) = Ioi a := by
   simp only [← Ioi_inter_Iio, ← inter_Union, Union_Iio, inter_univ]
 #align set.Union_Ioo_right Set.iUnion_Ioo_right
+-/
 
+#print Set.iUnion_Ioc_left /-
 @[simp]
 theorem iUnion_Ioc_left [NoMinOrder α] (b : α) : (⋃ a, Ioc a b) = Iic b := by
   simp only [← Ioi_inter_Iic, ← Union_inter, Union_Ioi, univ_inter]
 #align set.Union_Ioc_left Set.iUnion_Ioc_left
+-/
 
+#print Set.iUnion_Ioo_left /-
 @[simp]
 theorem iUnion_Ioo_left [NoMinOrder α] (b : α) : (⋃ a, Ioo a b) = Iio b := by
   simp only [← Ioi_inter_Iio, ← Union_inter, Union_Ioi, univ_inter]
 #align set.Union_Ioo_left Set.iUnion_Ioo_left
+-/
 
 end Preorder
 
@@ -167,29 +179,37 @@ theorem eq_of_Ico_disjoint {x₁ x₂ y₁ y₂ : α} (h : Disjoint (Ico x₁ x�
   exact h.elim (fun h => absurd hx (not_lt_of_le h)) id
 #align set.eq_of_Ico_disjoint Set.eq_of_Ico_disjoint
 
+#print Set.iUnion_Ico_eq_Iio_self_iff /-
 @[simp]
 theorem iUnion_Ico_eq_Iio_self_iff {f : ι → α} {a : α} :
     (⋃ i, Ico (f i) a) = Iio a ↔ ∀ x < a, ∃ i, f i ≤ x := by
   simp [← Ici_inter_Iio, ← Union_inter, subset_def]
 #align set.Union_Ico_eq_Iio_self_iff Set.iUnion_Ico_eq_Iio_self_iff
+-/
 
+#print Set.iUnion_Ioc_eq_Ioi_self_iff /-
 @[simp]
 theorem iUnion_Ioc_eq_Ioi_self_iff {f : ι → α} {a : α} :
     (⋃ i, Ioc a (f i)) = Ioi a ↔ ∀ x, a < x → ∃ i, x ≤ f i := by
   simp [← Ioi_inter_Iic, ← inter_Union, subset_def]
 #align set.Union_Ioc_eq_Ioi_self_iff Set.iUnion_Ioc_eq_Ioi_self_iff
+-/
 
+#print Set.biUnion_Ico_eq_Iio_self_iff /-
 @[simp]
 theorem biUnion_Ico_eq_Iio_self_iff {p : ι → Prop} {f : ∀ i, p i → α} {a : α} :
     (⋃ (i) (hi : p i), Ico (f i hi) a) = Iio a ↔ ∀ x < a, ∃ i hi, f i hi ≤ x := by
   simp [← Ici_inter_Iio, ← Union_inter, subset_def]
 #align set.bUnion_Ico_eq_Iio_self_iff Set.biUnion_Ico_eq_Iio_self_iff
+-/
 
+#print Set.biUnion_Ioc_eq_Ioi_self_iff /-
 @[simp]
 theorem biUnion_Ioc_eq_Ioi_self_iff {p : ι → Prop} {f : ∀ i, p i → α} {a : α} :
     (⋃ (i) (hi : p i), Ioc a (f i hi)) = Ioi a ↔ ∀ x, a < x → ∃ i hi, x ≤ f i hi := by
   simp [← Ioi_inter_Iic, ← inter_Union, subset_def]
 #align set.bUnion_Ioc_eq_Ioi_self_iff Set.biUnion_Ioc_eq_Ioi_self_iff
+-/
 
 end LinearOrder
 

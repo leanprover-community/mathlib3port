@@ -33,7 +33,7 @@ noncomputable section
 
 open IsROrC Real Filter
 
-open BigOperators Classical Topology
+open scoped BigOperators Classical Topology
 
 section DerivInner
 

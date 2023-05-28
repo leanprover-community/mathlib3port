@@ -72,11 +72,13 @@ def IsUniform (s t : Finset α) : Prop :=
 
 variable {G ε}
 
+#print SimpleGraph.IsUniform.mono /-
 theorem IsUniform.mono {ε' : 𝕜} (h : ε ≤ ε') (hε : IsUniform G ε s t) : IsUniform G ε' s t :=
   fun s' hs' t' ht' hs ht => by
   refine' (hε hs' ht' (le_trans _ hs) (le_trans _ ht)).trans_le h <;>
     exact mul_le_mul_of_nonneg_left h (Nat.cast_nonneg _)
 #align simple_graph.is_uniform.mono SimpleGraph.IsUniform.mono
+-/
 
 theorem IsUniform.symm : Symmetric (IsUniform G ε) := fun s t h t' ht' s' hs' ht hs => by
   rw [edge_density_comm _ t', edge_density_comm _ t]; exact h hs' ht' hs ht
@@ -127,7 +129,7 @@ theorem not_isUniform_iff :
   by unfold is_uniform; simp only [not_forall, not_lt, exists_prop]
 #align simple_graph.not_is_uniform_iff SimpleGraph.not_isUniform_iff
 
-open Classical
+open scoped Classical
 
 variable (G)
 
@@ -224,7 +226,7 @@ variable [DecidableEq α] {A : Finset α} (P : Finpartition A) (G : SimpleGraph 
 
 namespace Finpartition
 
-open Classical
+open scoped Classical
 
 /-- The pairs of parts of a partition `P` which are not `ε`-uniform in a graph `G`. Note that we
 dismiss the diagonal. We do not care whether `s` is `ε`-uniform with itself. -/

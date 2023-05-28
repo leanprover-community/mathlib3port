@@ -28,7 +28,7 @@ variable {R A T B ι : Type _}
 
 namespace AddMonoidAlgebra
 
-open Classical BigOperators
+open scoped Classical BigOperators
 
 /-! ### Results about the `finset.sup` and `finset.inf` of `finsupp.support` -/
 
@@ -68,6 +68,7 @@ variable [Add A] [Add B] [Add T] [CovariantClass B B (· + ·) (· ≤ ·)]
   [CovariantClass B B (Function.swap (· + ·)) (· ≤ ·)] [CovariantClass T T (· + ·) (· ≤ ·)]
   [CovariantClass T T (Function.swap (· + ·)) (· ≤ ·)]
 
+#print AddMonoidAlgebra.sup_support_mul_le /-
 theorem sup_support_mul_le {degb : A → B} (degbm : ∀ {a b}, degb (a + b) ≤ degb a + degb b)
     (f g : AddMonoidAlgebra R A) :
     (f * g).support.sup degb ≤ f.support.sup degb + g.support.sup degb :=
@@ -77,13 +78,16 @@ theorem sup_support_mul_le {degb : A → B} (degbm : ∀ {a b}, degb (a + b) ≤
   refine' Finset.sup_le fun fd fds => Finset.sup_le fun gd gds => degbm.trans <| add_le_add _ _ <;>
     exact Finset.le_sup ‹_›
 #align add_monoid_algebra.sup_support_mul_le AddMonoidAlgebra.sup_support_mul_le
+-/
 
+#print AddMonoidAlgebra.le_inf_support_mul /-
 theorem le_inf_support_mul {degt : A → T} (degtm : ∀ {a b}, degt a + degt b ≤ degt (a + b))
     (f g : AddMonoidAlgebra R A) :
     f.support.inf degt + g.support.inf degt ≤ (f * g).support.inf degt :=
   OrderDual.ofDual_le_ofDual.mpr <|
     sup_support_mul_le (fun a b => OrderDual.ofDual_le_ofDual.mp degtm) f g
 #align add_monoid_algebra.le_inf_support_mul AddMonoidAlgebra.le_inf_support_mul
+-/
 
 end AddOnly
 

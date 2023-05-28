@@ -36,7 +36,7 @@ open CategoryTheory
 
 open CategoryTheory.FreeBicategory
 
-open Bicategory
+open scoped Bicategory
 
 variable {B : Type u} [Bicategory.{w, v} B] {a b c d e : B}
 

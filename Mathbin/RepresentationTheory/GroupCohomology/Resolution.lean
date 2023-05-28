@@ -217,7 +217,7 @@ end Rep
 
 variable (k G n)
 
-open TensorProduct
+open scoped TensorProduct
 
 open Representation
 

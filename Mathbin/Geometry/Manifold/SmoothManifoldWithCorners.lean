@@ -121,7 +121,7 @@ universe u v w u' v' w'
 
 open Set Filter Function
 
-open Manifold Filter Topology
+open scoped Manifold Filter Topology
 
 -- mathport name: with_top.nat.top
 scoped[Manifold] notation "∞" => (⊤ : ℕ∞)
@@ -780,7 +780,7 @@ end TopologicalSpace.Opens
 
 section ExtendedCharts
 
-open Topology
+open scoped Topology
 
 variable {𝕜 E M H E' M' H' : Type _} [NontriviallyNormedField 𝕜] [NormedAddCommGroup E]
   [NormedSpace 𝕜 E] [TopologicalSpace H] [TopologicalSpace M] (f f' : LocalHomeomorph M H)

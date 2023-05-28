@@ -30,7 +30,7 @@ computer science such as the POSIX standard.
 
 open List Set
 
-open Computability
+open scoped Computability
 
 universe u
 

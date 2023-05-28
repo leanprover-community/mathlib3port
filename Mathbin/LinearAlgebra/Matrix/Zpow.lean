@@ -31,7 +31,7 @@ matrix inverse, matrix powers
 -/
 
 
-open Matrix
+open scoped Matrix
 
 namespace Matrix
 

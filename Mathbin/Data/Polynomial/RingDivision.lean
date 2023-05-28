@@ -40,7 +40,7 @@ This file starts looking like the ring theory of $ R[X] $
 
 noncomputable section
 
-open Classical Polynomial
+open scoped Classical Polynomial
 
 open Finset
 
@@ -634,13 +634,17 @@ theorem eq_zero_of_infinite_isRoot (p : R[X]) (h : Set.Infinite { x | IsRoot p x
 #align polynomial.eq_zero_of_infinite_is_root Polynomial.eq_zero_of_infinite_isRoot
 -/
 
+#print Polynomial.exists_max_root /-
 theorem exists_max_root [LinearOrder R] (p : R[X]) (hp : p ≠ 0) : ∃ x₀, ∀ x, p.IsRoot x → x ≤ x₀ :=
   Set.exists_upper_bound_image _ _ <| finite_setOf_isRoot hp
 #align polynomial.exists_max_root Polynomial.exists_max_root
+-/
 
+#print Polynomial.exists_min_root /-
 theorem exists_min_root [LinearOrder R] (p : R[X]) (hp : p ≠ 0) : ∃ x₀, ∀ x, p.IsRoot x → x₀ ≤ x :=
   Set.exists_lower_bound_image _ _ <| finite_setOf_isRoot hp
 #align polynomial.exists_min_root Polynomial.exists_min_root
+-/
 
 #print Polynomial.eq_of_infinite_eval_eq /-
 theorem eq_of_infinite_eval_eq (p q : R[X]) (h : Set.Infinite { x | eval x p = eval x q }) :
@@ -1049,6 +1053,7 @@ theorem degree_eq_one_of_irreducible_of_root (hi : Irreducible p) {x : R} (hx : 
     fun hgu => by rw [hg, degree_mul, degree_X_sub_C, degree_eq_zero_of_is_unit hgu, add_zero]
 #align polynomial.degree_eq_one_of_irreducible_of_root Polynomial.degree_eq_one_of_irreducible_of_root
 
+#print Polynomial.leadingCoeff_divByMonic_of_monic /-
 /-- Division by a monic polynomial doesn't change the leading coefficient. -/
 theorem leadingCoeff_divByMonic_of_monic {R : Type u} [CommRing R] {p q : R[X]} (hmonic : q.Monic)
     (hdegree : q.degree ≤ p.degree) : (p /ₘ q).leadingCoeff = p.leadingCoeff :=
@@ -1062,6 +1067,7 @@ theorem leadingCoeff_divByMonic_of_monic {R : Type u} [CommRing R] {p q : R[X]} 
   rw [degree_mul' h, degree_add_div_by_monic hmonic hdegree]
   exact (degree_mod_by_monic_lt p hmonic).trans_le hdegree
 #align polynomial.leading_coeff_div_by_monic_of_monic Polynomial.leadingCoeff_divByMonic_of_monic
+-/
 
 theorem leadingCoeff_divByMonic_X_sub_C (p : R[X]) (hp : degree p ≠ 0) (a : R) :
     leadingCoeff (p /ₘ (X - C a)) = leadingCoeff p :=

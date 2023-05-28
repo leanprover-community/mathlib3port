@@ -64,7 +64,7 @@ Kernels built from other kernels:
 
 open MeasureTheory
 
-open ENNReal
+open scoped ENNReal
 
 namespace ProbabilityTheory
 
@@ -656,7 +656,7 @@ instance IsSFiniteKernel.comap (κ : kernel α β) [IsSFiniteKernel κ] (hg : Me
 
 end MapComap
 
-open ProbabilityTheory
+open scoped ProbabilityTheory
 
 section FstSnd
 

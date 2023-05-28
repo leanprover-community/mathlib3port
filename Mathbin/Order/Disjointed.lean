@@ -70,6 +70,7 @@ theorem disjointed_succ (f : ℕ → α) (n : ℕ) : disjointed f (n + 1) = f (n
   rfl
 #align disjointed_succ disjointed_succ
 
+#print disjointed_le_id /-
 theorem disjointed_le_id : disjointed ≤ (id : (ℕ → α) → ℕ → α) :=
   by
   rintro f n
@@ -77,10 +78,13 @@ theorem disjointed_le_id : disjointed ≤ (id : (ℕ → α) → ℕ → α) :=
   · rfl
   · exact sdiff_le
 #align disjointed_le_id disjointed_le_id
+-/
 
+#print disjointed_le /-
 theorem disjointed_le (f : ℕ → α) : disjointed f ≤ f :=
   disjointed_le_id f
 #align disjointed_le disjointed_le
+-/
 
 #print disjoint_disjointed /-
 theorem disjoint_disjointed (f : ℕ → α) : Pairwise (Disjoint on disjointed f) :=

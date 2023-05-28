@@ -2681,6 +2681,7 @@ theorem length_insertNth_le_succ (l : List α) (x : α) (n : ℕ) :
 #align list.length_insert_nth_le_succ List.length_insertNth_le_succ
 -/
 
+#print List.nthLe_insertNth_of_lt /-
 theorem nthLe_insertNth_of_lt (l : List α) (x : α) (n k : ℕ) (hn : k < n) (hk : k < l.length)
     (hk' : k < (insertNth n x l).length := hk.trans_le (length_le_length_insertNth _ _ _)) :
     (insertNth n x l).nthLe k hk' = l.nthLe k hk :=
@@ -2694,6 +2695,7 @@ theorem nthLe_insertNth_of_lt (l : List α) (x : α) (n k : ℕ) (hn : k < n) (h
       · rw [Nat.succ_lt_succ_iff] at hn
         simpa using IH _ _ hn _
 #align list.nth_le_insert_nth_of_lt List.nthLe_insertNth_of_lt
+-/
 
 #print List.nthLe_insertNth_self /-
 @[simp]
@@ -6241,11 +6243,13 @@ theorem getD_default_eq_getI : l.getD n default = l.getI n :=
   rfl
 #align list.nthd_default_eq_inth List.getD_default_eq_getIₓ
 
+#print List.getI_append /-
 theorem getI_append (l l' : List α) (n : ℕ) (h : n < l.length)
     (h' : n < (l ++ l').length := h.trans_le ((length_append l l').symm ▸ le_self_add)) :
     (l ++ l').getI n = l.getI n :=
   getD_append _ _ _ _ h h'
 #align list.inth_append List.getI_append
+-/
 
 #print List.getI_append_right /-
 theorem getI_append_right (l l' : List α) (n : ℕ) (h : l.length ≤ n) :

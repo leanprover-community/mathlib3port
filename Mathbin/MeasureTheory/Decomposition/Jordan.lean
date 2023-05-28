@@ -47,7 +47,7 @@ Jordan decomposition theorem
 
 noncomputable section
 
-open Classical MeasureTheory ENNReal NNReal
+open scoped Classical MeasureTheory ENNReal NNReal
 
 variable {α β : Type _} [MeasurableSpace α]
 

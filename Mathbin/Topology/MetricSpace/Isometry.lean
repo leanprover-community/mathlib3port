@@ -34,7 +34,7 @@ variable {ι : Type _} {α : Type u} {β : Type v} {γ : Type w}
 
 open Function Set
 
-open Topology ENNReal
+open scoped Topology ENNReal
 
 #print Isometry /-
 /-- An isometry (also known as isometric embedding) is a map preserving the edistance

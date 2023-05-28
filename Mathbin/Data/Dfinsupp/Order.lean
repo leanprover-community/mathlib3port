@@ -26,7 +26,7 @@ This file lifts order structures on the `α i` to `Π₀ i, α i`.
 -/
 
 
-open BigOperators
+open scoped BigOperators
 
 open Finset
 

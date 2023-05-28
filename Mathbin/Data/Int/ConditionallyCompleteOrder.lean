@@ -23,7 +23,7 @@ The integers form a conditionally complete linear order.
 
 open Int
 
-open Classical
+open scoped Classical
 
 noncomputable section
 

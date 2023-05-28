@@ -36,6 +36,7 @@ instance decidablePredExistsNat : DecidablePred fun n' : ℕ => ∃ (n : ℕ+)(h
 
 include h
 
+#print PNat.findX /-
 /-- The `pnat` version of `nat.find_x` -/
 protected def findX : { n // p n ∧ ∀ m : ℕ+, m < n → ¬p m } :=
   by
@@ -49,6 +50,7 @@ protected def findX : { n // p n ∧ ∀ m : ℕ+, m < n → ¬p m } :=
     simpa [hn', Subtype.coe_eta] using pn'
   · exact n.prop.2 m hm ⟨m, rfl, pm⟩
 #align pnat.find_x PNat.findX
+-/
 
 #print PNat.find /-
 /-- If `p` is a (decidable) predicate on `ℕ+` and `hp : ∃ (n : ℕ+), p n` is a proof that
@@ -73,16 +75,21 @@ protected theorem find_spec : p (PNat.find h) :=
 #align pnat.find_spec PNat.find_spec
 -/
 
+#print PNat.find_min /-
 protected theorem find_min : ∀ {m : ℕ+}, m < PNat.find h → ¬p m :=
   (PNat.findX h).Prop.right
 #align pnat.find_min PNat.find_min
+-/
 
+#print PNat.find_min' /-
 protected theorem find_min' {m : ℕ+} (hm : p m) : PNat.find h ≤ m :=
   le_of_not_lt fun l => PNat.find_min h l hm
 #align pnat.find_min' PNat.find_min'
+-/
 
 variable {n m : ℕ+}
 
+#print PNat.find_eq_iff /-
 theorem find_eq_iff : PNat.find h = m ↔ p m ∧ ∀ n < m, ¬p n :=
   by
   constructor
@@ -90,6 +97,7 @@ theorem find_eq_iff : PNat.find h = m ↔ p m ∧ ∀ n < m, ¬p n :=
   · rintro ⟨hm, hlt⟩
     exact le_antisymm (PNat.find_min' h hm) (not_lt.1 <| imp_not_comm.1 (hlt _) <| PNat.find_spec h)
 #align pnat.find_eq_iff PNat.find_eq_iff
+-/
 
 @[simp]
 theorem find_lt_iff (n : ℕ+) : PNat.find h < n ↔ ∃ m < n, p m :=
@@ -102,15 +110,19 @@ theorem find_le_iff (n : ℕ+) : PNat.find h ≤ n ↔ ∃ m ≤ n, p m := by
   simp only [exists_prop, ← lt_add_one_iff, find_lt_iff]
 #align pnat.find_le_iff PNat.find_le_iff
 
+#print PNat.le_find_iff /-
 @[simp]
 theorem le_find_iff (n : ℕ+) : n ≤ PNat.find h ↔ ∀ m < n, ¬p m := by
   simp_rw [← not_lt, find_lt_iff, not_exists]
 #align pnat.le_find_iff PNat.le_find_iff
+-/
 
+#print PNat.lt_find_iff /-
 @[simp]
 theorem lt_find_iff (n : ℕ+) : n < PNat.find h ↔ ∀ m ≤ n, ¬p m := by
   simp only [← add_one_le_iff, le_find_iff, add_le_add_iff_right]
 #align pnat.lt_find_iff PNat.lt_find_iff
+-/
 
 #print PNat.find_eq_one /-
 @[simp]
@@ -118,19 +130,25 @@ theorem find_eq_one : PNat.find h = 1 ↔ p 1 := by simp [find_eq_iff]
 #align pnat.find_eq_one PNat.find_eq_one
 -/
 
+#print PNat.one_le_find /-
 @[simp]
 theorem one_le_find : 1 < PNat.find h ↔ ¬p 1 :=
   not_iff_not.mp <| by simp
 #align pnat.one_le_find PNat.one_le_find
+-/
 
+#print PNat.find_mono /-
 theorem find_mono (h : ∀ n, q n → p n) {hp : ∃ n, p n} {hq : ∃ n, q n} :
     PNat.find hp ≤ PNat.find hq :=
   PNat.find_min' _ (h _ (PNat.find_spec hq))
 #align pnat.find_mono PNat.find_mono
+-/
 
+#print PNat.find_le /-
 theorem find_le {h : ∃ n, p n} (hn : p n) : PNat.find h ≤ n :=
   (PNat.find_le_iff _ _).2 ⟨n, le_rfl, hn⟩
 #align pnat.find_le PNat.find_le
+-/
 
 theorem find_comp_succ (h : ∃ n, p n) (h₂ : ∃ n, p (n + 1)) (h1 : ¬p 1) :
     PNat.find h = PNat.find h₂ + 1 :=

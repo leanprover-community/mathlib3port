@@ -20,7 +20,7 @@ namespace Omega
 
 namespace Int
 
-open Omega.Int
+open scoped Omega.Int
 
 run_cmd
   mk_simp_attr `sugar

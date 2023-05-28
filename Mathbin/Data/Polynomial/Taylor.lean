@@ -33,7 +33,7 @@ noncomputable section
 
 namespace Polynomial
 
-open Polynomial
+open scoped Polynomial
 
 variable {R : Type _} [Semiring R] (r : R) (f : R[X])
 

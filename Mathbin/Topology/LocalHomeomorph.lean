@@ -55,7 +55,7 @@ open Function Set Filter
 
 open TopologicalSpace (SecondCountableTopology)
 
-open Topology
+open scoped Topology
 
 variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _} [TopologicalSpace α]
   [TopologicalSpace β] [TopologicalSpace γ] [TopologicalSpace δ]

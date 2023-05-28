@@ -29,7 +29,7 @@ This file defines the symplectic group and proves elementary properties.
 -/
 
 
-open Matrix
+open scoped Matrix
 
 variable {l R : Type _}
 

@@ -31,7 +31,7 @@ An instance is defined for `part`.
 
 universe u v
 
-open Classical
+open scoped Classical
 
 variable {α : Type _} {β : α → Type _}
 

@@ -35,7 +35,7 @@ variable (R : Type _) {V V' P P' : Type _}
 
 open AffineEquiv AffineMap
 
-open BigOperators
+open scoped BigOperators
 
 section OrderedRing
 

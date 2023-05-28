@@ -26,7 +26,7 @@ noncomputable section
 
 open Finset AddMonoidAlgebra
 
-open BigOperators Polynomial
+open scoped BigOperators Polynomial
 
 namespace Polynomial
 
@@ -919,12 +919,14 @@ theorem map_surjective (hf : Function.Surjective f) : Function.Surjective (map f
     ⟨monomial n r, by rw [map_monomial f, hr]⟩
 #align polynomial.map_surjective Polynomial.map_surjective
 
+#print Polynomial.degree_map_le /-
 theorem degree_map_le (p : R[X]) : degree (p.map f) ≤ degree p :=
   by
   apply (degree_le_iff_coeff_zero _ _).2 fun m hm => _
   rw [degree_lt_iff_coeff_zero] at hm
   simp [hm m le_rfl]
 #align polynomial.degree_map_le Polynomial.degree_map_le
+-/
 
 #print Polynomial.natDegree_map_le /-
 theorem natDegree_map_le (p : R[X]) : natDegree (p.map f) ≤ natDegree p :=

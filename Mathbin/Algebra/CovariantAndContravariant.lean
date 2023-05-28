@@ -307,6 +307,7 @@ theorem Antitone.covariant_of_const' {μ : N → N → N} [CovariantClass N N (s
 
 end Monotone
 
+#print covariant_le_of_covariant_lt /-
 theorem covariant_le_of_covariant_lt [PartialOrder N] :
     Covariant M N μ (· < ·) → Covariant M N μ (· ≤ ·) :=
   by
@@ -315,7 +316,9 @@ theorem covariant_le_of_covariant_lt [PartialOrder N] :
   · exact rfl.le
   · exact (h _ bc).le
 #align covariant_le_of_covariant_lt covariant_le_of_covariant_lt
+-/
 
+#print contravariant_lt_of_contravariant_le /-
 theorem contravariant_lt_of_contravariant_le [PartialOrder N] :
     Contravariant M N μ (· ≤ ·) → Contravariant M N μ (· < ·) :=
   by
@@ -323,18 +326,23 @@ theorem contravariant_lt_of_contravariant_le [PartialOrder N] :
   rintro rfl
   exact lt_irrefl _ bc
 #align contravariant_lt_of_contravariant_le contravariant_lt_of_contravariant_le
+-/
 
+#print covariant_le_iff_contravariant_lt /-
 theorem covariant_le_iff_contravariant_lt [LinearOrder N] :
     Covariant M N μ (· ≤ ·) ↔ Contravariant M N μ (· < ·) :=
   ⟨fun h a b c bc => not_le.mp fun k => not_le.mpr bc (h _ k), fun h a b c bc =>
     not_lt.mp fun k => not_lt.mpr bc (h _ k)⟩
 #align covariant_le_iff_contravariant_lt covariant_le_iff_contravariant_lt
+-/
 
+#print covariant_lt_iff_contravariant_le /-
 theorem covariant_lt_iff_contravariant_le [LinearOrder N] :
     Covariant M N μ (· < ·) ↔ Contravariant M N μ (· ≤ ·) :=
   ⟨fun h a b c bc => not_lt.mp fun k => not_lt.mpr bc (h _ k), fun h a b c bc =>
     not_le.mp fun k => not_le.mpr bc (h _ k)⟩
 #align covariant_lt_iff_contravariant_le covariant_lt_iff_contravariant_le
+-/
 
 @[to_additive]
 theorem covariant_flip_mul_iff [CommSemigroup N] :
@@ -348,19 +356,23 @@ theorem contravariant_flip_mul_iff [CommSemigroup N] :
 #align contravariant_flip_mul_iff contravariant_flip_mul_iff
 #align contravariant_flip_add_iff contravariant_flip_add_iff
 
+#print contravariant_mul_lt_of_covariant_mul_le /-
 @[to_additive]
 instance contravariant_mul_lt_of_covariant_mul_le [Mul N] [LinearOrder N]
     [CovariantClass N N (· * ·) (· ≤ ·)] : ContravariantClass N N (· * ·) (· < ·)
     where elim := (covariant_le_iff_contravariant_lt N N (· * ·)).mp CovariantClass.elim
 #align contravariant_mul_lt_of_covariant_mul_le contravariant_mul_lt_of_covariant_mul_le
 #align contravariant_add_lt_of_covariant_add_le contravariant_add_lt_of_covariant_add_le
+-/
 
+#print covariant_mul_lt_of_contravariant_mul_le /-
 @[to_additive]
 instance covariant_mul_lt_of_contravariant_mul_le [Mul N] [LinearOrder N]
     [ContravariantClass N N (· * ·) (· ≤ ·)] : CovariantClass N N (· * ·) (· < ·)
     where elim := (covariant_lt_iff_contravariant_le N N (· * ·)).mpr ContravariantClass.elim
 #align covariant_mul_lt_of_contravariant_mul_le covariant_mul_lt_of_contravariant_mul_le
 #align covariant_add_lt_of_contravariant_add_le covariant_add_lt_of_contravariant_add_le
+-/
 
 @[to_additive]
 instance covariant_swap_mul_le_of_covariant_mul_le [CommSemigroup N] [LE N]

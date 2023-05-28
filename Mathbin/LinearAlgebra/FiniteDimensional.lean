@@ -83,7 +83,7 @@ equivalence is proved in `submodule.fg_iff_finite_dimensional`.
 
 universe u v v' w
 
-open Classical Cardinal
+open scoped Classical Cardinal
 
 open Cardinal Submodule Module Function
 
@@ -332,6 +332,7 @@ theorem finset_card_le_finrank_of_linearIndependent [FiniteDimensional K V] {b :
 #align finite_dimensional.finset_card_le_finrank_of_linear_independent FiniteDimensional.finset_card_le_finrank_of_linearIndependent
 -/
 
+#print FiniteDimensional.lt_aleph0_of_linearIndependent /-
 theorem lt_aleph0_of_linearIndependent {ι : Type w} [FiniteDimensional K V] {v : ι → V}
     (h : LinearIndependent K v) : (#ι) < ℵ₀ :=
   by
@@ -341,6 +342,7 @@ theorem lt_aleph0_of_linearIndependent {ι : Type w} [FiniteDimensional K V] {v 
   rw [← finrank_eq_rank, Cardinal.lift_aleph0, Cardinal.lift_natCast]
   apply Cardinal.nat_lt_aleph0
 #align finite_dimensional.lt_aleph_0_of_linear_independent FiniteDimensional.lt_aleph0_of_linearIndependent
+-/
 
 #print LinearIndependent.finite /-
 theorem LinearIndependent.finite [FiniteDimensional K V] {b : Set V}
@@ -491,7 +493,7 @@ theorem CompleteLattice.Independent.subtype_ne_bot_le_finrank [FiniteDimensional
 
 section
 
-open BigOperators
+open scoped BigOperators
 
 open Finset
 
@@ -753,6 +755,7 @@ theorem fg_iff_finiteDimensional (s : Submodule K V) : s.FG ↔ FiniteDimensiona
 #align submodule.fg_iff_finite_dimensional Submodule.fg_iff_finiteDimensional
 -/
 
+#print Submodule.finiteDimensional_of_le /-
 /-- A submodule contained in a finite-dimensional submodule is
 finite-dimensional. -/
 theorem finiteDimensional_of_le {S₁ S₂ : Submodule K V} [FiniteDimensional K S₂] (h : S₁ ≤ S₂) :
@@ -762,6 +765,7 @@ theorem finiteDimensional_of_le {S₁ S₂ : Submodule K V} [FiniteDimensional K
     (IsNoetherian.iff_rank_lt_aleph0.2
       (lt_of_le_of_lt (rank_le_of_submodule _ _ h) (FiniteDimensional.rank_lt_aleph0 K S₂)))
 #align submodule.finite_dimensional_of_le Submodule.finiteDimensional_of_le
+-/
 
 #print Submodule.finiteDimensional_inf_left /-
 /-- The inf of two submodules, the first finite-dimensional, is
@@ -913,6 +917,7 @@ section DivisionRing
 variable [DivisionRing K] [AddCommGroup V] [Module K V] {V₂ : Type v'} [AddCommGroup V₂]
   [Module K V₂]
 
+#print FiniteDimensional.eq_of_le_of_finrank_le /-
 theorem eq_of_le_of_finrank_le {S₁ S₂ : Submodule K V} [FiniteDimensional K S₂] (hle : S₁ ≤ S₂)
     (hd : finrank K S₂ ≤ finrank K S₁) : S₁ = S₂ :=
   by
@@ -922,13 +927,16 @@ theorem eq_of_le_of_finrank_le {S₁ S₂ : Submodule K V} [FiniteDimensional K 
       (Submodule.comap_subtype_eq_top.1
         (eq_top_of_finrank_eq (le_antisymm (comap (Submodule.subtype S₂) S₁).finrank_le hd)))
 #align finite_dimensional.eq_of_le_of_finrank_le FiniteDimensional.eq_of_le_of_finrank_le
+-/
 
+#print FiniteDimensional.eq_of_le_of_finrank_eq /-
 /-- If a submodule is less than or equal to a finite-dimensional
 submodule with the same dimension, they are equal. -/
 theorem eq_of_le_of_finrank_eq {S₁ S₂ : Submodule K V} [FiniteDimensional K S₂] (hle : S₁ ≤ S₂)
     (hd : finrank K S₁ = finrank K S₂) : S₁ = S₂ :=
   eq_of_le_of_finrank_le hle hd.ge
 #align finite_dimensional.eq_of_le_of_finrank_eq FiniteDimensional.eq_of_le_of_finrank_eq
+-/
 
 variable [FiniteDimensional K V] [FiniteDimensional K V₂]
 
@@ -1222,11 +1230,13 @@ theorem finrank_mono [FiniteDimensional K V] : Monotone fun s : Submodule K V =>
 #align submodule.finrank_mono Submodule.finrank_mono
 -/
 
+#print Submodule.finrank_lt_finrank_of_lt /-
 theorem finrank_lt_finrank_of_lt {s t : Submodule K V} [FiniteDimensional K t] (hst : s < t) :
     finrank K s < finrank K t :=
   (comapSubtypeEquivOfLe hst.le).finrank_eq.symm.trans_lt <|
     finrank_lt (le_top.lt_of_ne <| hst.not_le ∘ comap_subtype_eq_top.1)
 #align submodule.finrank_lt_finrank_of_lt Submodule.finrank_lt_finrank_of_lt
+-/
 
 #print Submodule.finrank_strictMono /-
 theorem finrank_strictMono [FiniteDimensional K V] :
@@ -1634,6 +1644,7 @@ theorem ker_pow_eq_ker_pow_finrank_of_le [FiniteDimensional K V] {f : End K V} {
 #align module.End.ker_pow_eq_ker_pow_finrank_of_le Module.End.ker_pow_eq_ker_pow_finrank_of_le
 -/
 
+#print Module.End.ker_pow_le_ker_pow_finrank /-
 theorem ker_pow_le_ker_pow_finrank [FiniteDimensional K V] (f : End K V) (m : ℕ) :
     (f ^ m).ker ≤ (f ^ finrank K V).ker :=
   by
@@ -1643,6 +1654,7 @@ theorem ker_pow_le_ker_pow_finrank [FiniteDimensional K V] (f : End K V) (m : �
   · rw [ker_pow_eq_ker_pow_finrank_of_le (le_of_not_lt h_cases)]
     exact le_rfl
 #align module.End.ker_pow_le_ker_pow_finrank Module.End.ker_pow_le_ker_pow_finrank
+-/
 
 end End
 
@@ -1652,7 +1664,7 @@ section Module
 
 open Module
 
-open Cardinal
+open scoped Cardinal
 
 #print cardinal_mk_eq_cardinal_mk_field_pow_rank /-
 theorem cardinal_mk_eq_cardinal_mk_field_pow_rank (K V : Type u) [DivisionRing K] [AddCommGroup V]
@@ -1668,6 +1680,7 @@ theorem cardinal_mk_eq_cardinal_mk_field_pow_rank (K V : Type u) [DivisionRing K
 #align cardinal_mk_eq_cardinal_mk_field_pow_rank cardinal_mk_eq_cardinal_mk_field_pow_rank
 -/
 
+#print cardinal_lt_aleph0_of_finiteDimensional /-
 theorem cardinal_lt_aleph0_of_finiteDimensional (K V : Type u) [DivisionRing K] [AddCommGroup V]
     [Module K V] [Finite K] [FiniteDimensional K V] : (#V) < ℵ₀ :=
   by
@@ -1675,6 +1688,7 @@ theorem cardinal_lt_aleph0_of_finiteDimensional (K V : Type u) [DivisionRing K] 
   rw [cardinal_mk_eq_cardinal_mk_field_pow_rank K V]
   exact Cardinal.power_lt_aleph0 (Cardinal.lt_aleph0_of_finite K) (IsNoetherian.rank_lt_aleph0 K V)
 #align cardinal_lt_aleph_0_of_finite_dimensional cardinal_lt_aleph0_of_finiteDimensional
+-/
 
 end Module
 

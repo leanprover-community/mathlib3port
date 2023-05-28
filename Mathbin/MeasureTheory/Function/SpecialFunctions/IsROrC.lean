@@ -22,7 +22,7 @@ import Mathbin.Data.IsROrC.Lemmas
 
 noncomputable section
 
-open NNReal ENNReal
+open scoped NNReal ENNReal
 
 namespace IsROrC
 

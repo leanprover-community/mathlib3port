@@ -27,7 +27,7 @@ show that `θ` is differentiable on `ℍ`, and `θ(τ) - 1` has exponential deca
 
 open Complex Real Asymptotics
 
-open Real BigOperators UpperHalfPlane Manifold
+open scoped Real BigOperators UpperHalfPlane Manifold
 
 /-- Jacobi's theta function `∑' (n : ℤ), exp (π * I * n ^ 2 * τ)`. -/
 noncomputable def jacobiTheta (z : ℂ) : ℂ :=

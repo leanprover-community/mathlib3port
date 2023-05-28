@@ -84,7 +84,7 @@ theorem valBetween_eq_valBetween {v w : Nat → Int} {as bs : List Int} {l : Nat
     rw [h1 _ _ h3, h2 _ _ h3] <;> apply Nat.le_add_right
 #align omega.coeffs.val_between_eq_val_between Omega.Coeffs.valBetween_eq_valBetween
 
-open List.Func
+open scoped List.Func
 
 theorem valBetween_set {a : Int} {l n : Nat} :
     ∀ {m}, l ≤ n → n < l + m → valBetween v ([] {n ↦ a}) l m = a * v n
@@ -198,7 +198,7 @@ theorem valExcept_eq_valExcept {k : Nat} {is js : List Int} {v w : Nat → Int} 
     · refine' le_trans (le_max_left _ _) le_add_tsub
 #align omega.coeffs.val_except_eq_val_except Omega.Coeffs.valExcept_eq_valExcept
 
-open Omega
+open scoped Omega
 
 theorem valExcept_update_set {n : Nat} {as : List Int} {i j : Int} :
     valExcept n (v ⟨n ↦ i⟩) (as {n ↦ j}) = valExcept n v as := by

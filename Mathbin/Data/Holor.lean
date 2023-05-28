@@ -43,7 +43,7 @@ universe u
 
 open List
 
-open BigOperators
+open scoped BigOperators
 
 #print HolorIndex /-
 /-- `holor_index ds` is the type of valid index tuples used to identify an entry of a holor

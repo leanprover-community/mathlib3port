@@ -672,16 +672,20 @@ theorem coe_orderIso_apply (e : Fin n ≃o Fin m) (i : Fin n) : (e i : ℕ) = i 
   · rwa [← h j hj (hj.trans hi), ← lt_iff_coe_lt_coe, e.lt_iff_lt]
 #align fin.coe_order_iso_apply Fin.coe_orderIso_apply
 
+#print Fin.orderIso_subsingleton /-
 instance orderIso_subsingleton : Subsingleton (Fin n ≃o α) :=
   ⟨fun e e' => by
     ext i
     rw [← e.symm.apply_eq_iff_eq, e.symm_apply_apply, ← e'.trans_apply, ext_iff,
       coe_order_iso_apply]⟩
 #align fin.order_iso_subsingleton Fin.orderIso_subsingleton
+-/
 
+#print Fin.orderIso_subsingleton' /-
 instance orderIso_subsingleton' : Subsingleton (α ≃o Fin n) :=
   OrderIso.symm_injective.Subsingleton
 #align fin.order_iso_subsingleton' Fin.orderIso_subsingleton'
+-/
 
 #print Fin.orderIsoUnique /-
 instance orderIsoUnique : Unique (Fin n ≃o Fin n) :=
@@ -1727,11 +1731,13 @@ theorem coe_subNat (i : Fin (n + m)) (h : m ≤ i) : (i.subNat m h : ℕ) = i - 
 #align fin.coe_sub_nat Fin.coe_subNat
 -/
 
+#print Fin.subNat_mk /-
 @[simp]
 theorem subNat_mk {i : ℕ} (h₁ : i < n + m) (h₂ : m ≤ i) :
     subNat m ⟨i, h₁⟩ h₂ = ⟨i - m, (tsub_lt_iff_right h₂).2 h₁⟩ :=
   rfl
 #align fin.sub_nat_mk Fin.subNat_mk
+-/
 
 @[simp]
 theorem pred_castSucc_succ (i : Fin n) :

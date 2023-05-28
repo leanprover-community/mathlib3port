@@ -27,6 +27,7 @@ section PartialSucc
 
 variable {α : Type _} [PartialOrder α] [SuccOrder α] [IsSuccArchimedean α]
 
+#print reflTransGen_of_succ_of_le /-
 /-- For `n ≤ m`, `(n, m)` is in the reflexive-transitive closure of `~` if `i ~ succ i`
   for all `i` between `n` and `m`. -/
 theorem reflTransGen_of_succ_of_le (r : α → α → Prop) {n m : α} (h : ∀ i ∈ Ico n m, r i (succ i))
@@ -38,27 +39,34 @@ theorem reflTransGen_of_succ_of_le (r : α → α → Prop) {n m : α} (h : ∀ 
     cases' (le_succ m).eq_or_lt with hm hm; · rwa [← hm]
     exact this.tail (h m ⟨hnm, hm⟩)
 #align refl_trans_gen_of_succ_of_le reflTransGen_of_succ_of_le
+-/
 
+#print reflTransGen_of_succ_of_ge /-
 /-- For `m ≤ n`, `(n, m)` is in the reflexive-transitive closure of `~` if `succ i ~ i`
   for all `i` between `n` and `m`. -/
 theorem reflTransGen_of_succ_of_ge (r : α → α → Prop) {n m : α} (h : ∀ i ∈ Ico m n, r (succ i) i)
     (hmn : m ≤ n) : ReflTransGen r n m := by rw [← refl_trans_gen_swap];
   exact reflTransGen_of_succ_of_le (swap r) h hmn
 #align refl_trans_gen_of_succ_of_ge reflTransGen_of_succ_of_ge
+-/
 
+#print transGen_of_succ_of_lt /-
 /-- For `n < m`, `(n, m)` is in the transitive closure of a relation `~` if `i ~ succ i`
   for all `i` between `n` and `m`. -/
 theorem transGen_of_succ_of_lt (r : α → α → Prop) {n m : α} (h : ∀ i ∈ Ico n m, r i (succ i))
     (hnm : n < m) : TransGen r n m :=
   (reflTransGen_iff_eq_or_transGen.mp <| reflTransGen_of_succ_of_le r h hnm.le).resolve_left hnm.ne'
 #align trans_gen_of_succ_of_lt transGen_of_succ_of_lt
+-/
 
+#print transGen_of_succ_of_gt /-
 /-- For `m < n`, `(n, m)` is in the transitive closure of a relation `~` if `succ i ~ i`
   for all `i` between `n` and `m`. -/
 theorem transGen_of_succ_of_gt (r : α → α → Prop) {n m : α} (h : ∀ i ∈ Ico m n, r (succ i) i)
     (hmn : m < n) : TransGen r n m :=
   (reflTransGen_iff_eq_or_transGen.mp <| reflTransGen_of_succ_of_ge r h hmn.le).resolve_left hmn.Ne
 #align trans_gen_of_succ_of_gt transGen_of_succ_of_gt
+-/
 
 end PartialSucc
 
@@ -101,33 +109,41 @@ section PartialPred
 
 variable {α : Type _} [PartialOrder α] [PredOrder α] [IsPredArchimedean α]
 
+#print reflTransGen_of_pred_of_ge /-
 /-- For `m ≤ n`, `(n, m)` is in the reflexive-transitive closure of `~` if `i ~ pred i`
   for all `i` between `n` and `m`. -/
 theorem reflTransGen_of_pred_of_ge (r : α → α → Prop) {n m : α} (h : ∀ i ∈ Ioc m n, r i (pred i))
     (hnm : m ≤ n) : ReflTransGen r n m :=
   @reflTransGen_of_succ_of_le αᵒᵈ _ _ _ r n m (fun x hx => h x ⟨hx.2, hx.1⟩) hnm
 #align refl_trans_gen_of_pred_of_ge reflTransGen_of_pred_of_ge
+-/
 
+#print reflTransGen_of_pred_of_le /-
 /-- For `n ≤ m`, `(n, m)` is in the reflexive-transitive closure of `~` if `pred i ~ i`
   for all `i` between `n` and `m`. -/
 theorem reflTransGen_of_pred_of_le (r : α → α → Prop) {n m : α} (h : ∀ i ∈ Ioc n m, r (pred i) i)
     (hmn : n ≤ m) : ReflTransGen r n m :=
   @reflTransGen_of_succ_of_ge αᵒᵈ _ _ _ r n m (fun x hx => h x ⟨hx.2, hx.1⟩) hmn
 #align refl_trans_gen_of_pred_of_le reflTransGen_of_pred_of_le
+-/
 
+#print transGen_of_pred_of_gt /-
 /-- For `m < n`, `(n, m)` is in the transitive closure of a relation `~` for `n ≠ m` if `i ~ pred i`
   for all `i` between `n` and `m`. -/
 theorem transGen_of_pred_of_gt (r : α → α → Prop) {n m : α} (h : ∀ i ∈ Ioc m n, r i (pred i))
     (hnm : m < n) : TransGen r n m :=
   @transGen_of_succ_of_lt αᵒᵈ _ _ _ r _ _ (fun x hx => h x ⟨hx.2, hx.1⟩) hnm
 #align trans_gen_of_pred_of_gt transGen_of_pred_of_gt
+-/
 
+#print transGen_of_pred_of_lt /-
 /-- For `n < m`, `(n, m)` is in the transitive closure of a relation `~` for `n ≠ m` if `pred i ~ i`
   for all `i` between `n` and `m`. -/
 theorem transGen_of_pred_of_lt (r : α → α → Prop) {n m : α} (h : ∀ i ∈ Ioc n m, r (pred i) i)
     (hmn : n < m) : TransGen r n m :=
   @transGen_of_succ_of_gt αᵒᵈ _ _ _ r _ _ (fun x hx => h x ⟨hx.2, hx.1⟩) hmn
 #align trans_gen_of_pred_of_lt transGen_of_pred_of_lt
+-/
 
 end PartialPred
 

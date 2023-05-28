@@ -34,7 +34,7 @@ of `x` with `↑x`. This tactic also works for a function `f : α → ℚ` with 
 
 open Function
 
-open BigOperators
+open scoped BigOperators
 
 #print NNRat /-
 /-- Nonnegative rational numbers. -/

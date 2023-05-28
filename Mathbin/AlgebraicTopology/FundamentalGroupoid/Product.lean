@@ -34,7 +34,7 @@ noncomputable section
 
 namespace FundamentalGroupoidFunctor
 
-open FundamentalGroupoid
+open scoped FundamentalGroupoid
 
 universe u
 

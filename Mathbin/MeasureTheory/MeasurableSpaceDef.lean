@@ -49,7 +49,7 @@ measurable space, σ-algebra, measurable function
 
 open Set Encodable Function Equiv
 
-open Classical
+open scoped Classical
 
 variable {α β γ δ δ' : Type _} {ι : Sort _} {s t u : Set α}
 
@@ -274,7 +274,7 @@ theorem nonempty_measurable_superset (s : Set α) : Nonempty { t // s ⊆ t ∧ 
 
 end
 
-open MeasureTheory
+open scoped MeasureTheory
 
 #print MeasurableSpace.ext /-
 @[ext]

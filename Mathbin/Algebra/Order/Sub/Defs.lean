@@ -68,19 +68,25 @@ section Add
 
 variable [Preorder α] [Add α] [Sub α] [OrderedSub α] {a b c d : α}
 
+#print tsub_le_iff_right /-
 @[simp]
 theorem tsub_le_iff_right : a - b ≤ c ↔ a ≤ c + b :=
   OrderedSub.tsub_le_iff_right a b c
 #align tsub_le_iff_right tsub_le_iff_right
+-/
 
+#print add_tsub_le_right /-
 /-- See `add_tsub_cancel_right` for the equality if `contravariant_class α α (+) (≤)`. -/
 theorem add_tsub_le_right : a + b - b ≤ a :=
   tsub_le_iff_right.mpr le_rfl
 #align add_tsub_le_right add_tsub_le_right
+-/
 
+#print le_tsub_add /-
 theorem le_tsub_add : b ≤ b - a + a :=
   tsub_le_iff_right.mp le_rfl
 #align le_tsub_add le_tsub_add
+-/
 
 end Add
 

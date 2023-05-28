@@ -43,7 +43,7 @@ For `p : ℝ`, prove that `λ x, x ^ p` is concave when `0 ≤ p ≤ 1` and stri
 
 open Real Set
 
-open BigOperators NNReal
+open scoped BigOperators NNReal
 
 /-- `exp` is strictly convex on the whole real line.
 

@@ -39,7 +39,7 @@ group.
 /-! ### Monoids and submonoids -/
 
 
-open Pointwise
+open scoped Pointwise
 
 variable {M N : Type _} [Monoid M] [AddMonoid N]
 

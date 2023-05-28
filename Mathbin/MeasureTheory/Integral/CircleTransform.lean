@@ -26,7 +26,7 @@ is holomorphic.
 
 open Set MeasureTheory Metric Filter Function
 
-open Interval Real
+open scoped Interval Real
 
 noncomputable section
 

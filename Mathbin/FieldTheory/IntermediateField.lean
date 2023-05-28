@@ -46,7 +46,7 @@ intermediate field, field extension
 
 open FiniteDimensional Polynomial
 
-open BigOperators Polynomial
+open scoped BigOperators Polynomial
 
 variable (K L L' : Type _) [Field K] [Field L] [Field L'] [Algebra K L] [Algebra K L']
 

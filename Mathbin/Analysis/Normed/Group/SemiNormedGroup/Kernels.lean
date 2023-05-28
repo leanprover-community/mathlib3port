@@ -274,7 +274,7 @@ theorem normNoninc_explicitCokernelπ {X Y : SemiNormedGroup.{u}} (f : X ⟶ Y) 
   (isQuotient_explicitCokernelπ f).norm_le
 #align SemiNormedGroup.norm_noninc_explicit_cokernel_π SemiNormedGroup.normNoninc_explicitCokernelπ
 
-open NNReal
+open scoped NNReal
 
 theorem explicitCokernelDesc_norm_le_of_norm_le {X Y Z : SemiNormedGroup.{u}} {f : X ⟶ Y}
     {g : Y ⟶ Z} (w : f ≫ g = 0) (c : ℝ≥0) (h : ‖g‖ ≤ c) : ‖explicitCokernelDesc w‖ ≤ c :=

@@ -37,7 +37,7 @@ interpolation, where the values are given by a known function `f`.
 -/
 
 
-open Polynomial BigOperators
+open scoped Polynomial BigOperators
 
 section PolynomialDetermination
 
@@ -63,6 +63,7 @@ theorem eq_zero_of_degree_lt_of_eval_finset_eq_zero (degree_f_lt : f.degree < s.
       fun _ => eval_f _ (Finset.coe_mem _)
 #align polynomial.eq_zero_of_degree_lt_of_eval_finset_eq_zero Polynomial.eq_zero_of_degree_lt_of_eval_finset_eq_zero
 
+#print Polynomial.eq_of_degree_sub_lt_of_eval_finset_eq /-
 theorem eq_of_degree_sub_lt_of_eval_finset_eq (degree_fg_lt : (f - g).degree < s.card)
     (eval_fg : ∀ x ∈ s, f.eval x = g.eval x) : f = g :=
   by
@@ -71,7 +72,9 @@ theorem eq_of_degree_sub_lt_of_eval_finset_eq (degree_fg_lt : (f - g).degree < s
   simp_rw [eval_sub, sub_eq_zero]
   exact eval_fg
 #align polynomial.eq_of_degree_sub_lt_of_eval_finset_eq Polynomial.eq_of_degree_sub_lt_of_eval_finset_eq
+-/
 
+#print Polynomial.eq_of_degrees_lt_of_eval_finset_eq /-
 theorem eq_of_degrees_lt_of_eval_finset_eq (degree_f_lt : f.degree < s.card)
     (degree_g_lt : g.degree < s.card) (eval_fg : ∀ x ∈ s, f.eval x = g.eval x) : f = g :=
   by
@@ -79,6 +82,7 @@ theorem eq_of_degrees_lt_of_eval_finset_eq (degree_f_lt : f.degree < s.card)
   refine' eq_of_degree_sub_lt_of_eval_finset_eq _ _ eval_fg
   rw [← mem_degree_lt]; exact Submodule.sub_mem _ degree_f_lt degree_g_lt
 #align polynomial.eq_of_degrees_lt_of_eval_finset_eq Polynomial.eq_of_degrees_lt_of_eval_finset_eq
+-/
 
 end Finset
 
@@ -98,6 +102,7 @@ theorem eq_zero_of_degree_lt_of_eval_index_eq_zero (hvs : Set.InjOn v s)
     exact eval_f _ hj
 #align polynomial.eq_zero_of_degree_lt_of_eval_index_eq_zero Polynomial.eq_zero_of_degree_lt_of_eval_index_eq_zero
 
+#print Polynomial.eq_of_degree_sub_lt_of_eval_index_eq /-
 theorem eq_of_degree_sub_lt_of_eval_index_eq (hvs : Set.InjOn v s)
     (degree_fg_lt : (f - g).degree < s.card) (eval_fg : ∀ i ∈ s, f.eval (v i) = g.eval (v i)) :
     f = g := by
@@ -106,7 +111,9 @@ theorem eq_of_degree_sub_lt_of_eval_index_eq (hvs : Set.InjOn v s)
   simp_rw [eval_sub, sub_eq_zero]
   exact eval_fg
 #align polynomial.eq_of_degree_sub_lt_of_eval_index_eq Polynomial.eq_of_degree_sub_lt_of_eval_index_eq
+-/
 
+#print Polynomial.eq_of_degrees_lt_of_eval_index_eq /-
 theorem eq_of_degrees_lt_of_eval_index_eq (hvs : Set.InjOn v s) (degree_f_lt : f.degree < s.card)
     (degree_g_lt : g.degree < s.card) (eval_fg : ∀ i ∈ s, f.eval (v i) = g.eval (v i)) : f = g :=
   by
@@ -114,6 +121,7 @@ theorem eq_of_degrees_lt_of_eval_index_eq (hvs : Set.InjOn v s) (degree_f_lt : f
   rw [← mem_degree_lt] at degree_f_lt degree_g_lt⊢
   exact Submodule.sub_mem _ degree_f_lt degree_g_lt
 #align polynomial.eq_of_degrees_lt_of_eval_index_eq Polynomial.eq_of_degrees_lt_of_eval_index_eq
+-/
 
 end Indexed
 

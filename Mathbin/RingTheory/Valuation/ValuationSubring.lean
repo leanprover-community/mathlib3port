@@ -24,7 +24,7 @@ The order structure on `valuation_subring K`.
 -/
 
 
-open Classical
+open scoped Classical
 
 noncomputable section
 
@@ -774,7 +774,7 @@ in sync.
 
 section PointwiseActions
 
-open Pointwise
+open scoped Pointwise
 
 variable {G : Type _} [Group G] [MulSemiringAction G K]
 
@@ -792,7 +792,7 @@ def pointwiseHasSmul : SMul G (ValuationSubring K)
 
 scoped[Pointwise] attribute [instance] ValuationSubring.pointwiseHasSmul
 
-open Pointwise
+open scoped Pointwise
 
 @[simp]
 theorem coe_pointwise_smul (g : G) (S : ValuationSubring K) : ↑(g • S) = g • (S : Set K) :=
@@ -816,7 +816,7 @@ def pointwiseMulAction : MulAction G (ValuationSubring K) :=
 
 scoped[Pointwise] attribute [instance] ValuationSubring.pointwiseMulAction
 
-open Pointwise
+open scoped Pointwise
 
 theorem smul_mem_pointwise_smul (g : G) (x : K) (S : ValuationSubring K) : x ∈ S → g • x ∈ g • S :=
   (Set.smul_mem_smul_set : _ → _ ∈ g • (S : Set K))

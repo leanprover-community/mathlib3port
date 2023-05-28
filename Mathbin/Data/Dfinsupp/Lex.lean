@@ -114,10 +114,12 @@ private def lt_trichotomy_rec {P : Lex (Π₀ i, α i) → Lex (Π₀ i, α i) �
               not_mem_neLocus.mp (Finset.not_mem_of_lt_min hj <| by rwa [ne_locus_comm]), hwit⟩
 
 /- ./././Mathport/Syntax/Translate/Command.lean:322:38: unsupported irreducible non-definition -/
+#print Dfinsupp.Lex.decidableLE /-
 irreducible_def Lex.decidableLE : @DecidableRel (Lex (Π₀ i, α i)) (· ≤ ·) :=
   ltTrichotomyRec (fun f g h => isTrue <| Or.inr h) (fun f g h => isTrue <| Or.inl <| congr_arg _ h)
     fun f g h => isFalse fun h' => (lt_irrefl _ (h.trans_le h')).elim
 #align dfinsupp.lex.decidable_le Dfinsupp.Lex.decidableLE
+-/
 
 /- ./././Mathport/Syntax/Translate/Command.lean:322:38: unsupported irreducible non-definition -/
 irreducible_def Lex.decidableLT : @DecidableRel (Lex (Π₀ i, α i)) (· < ·) :=
@@ -151,9 +153,11 @@ theorem toLex_monotone : Monotone (@toLex (Π₀ i, α i)) := fun a b h =>
             (h _).lt_of_ne (mem_ne_locus.1 <| Finset.min'_mem _ _)⟩
 #align dfinsupp.to_lex_monotone Dfinsupp.toLex_monotone
 
+#print Dfinsupp.lt_of_forall_lt_of_lt /-
 theorem lt_of_forall_lt_of_lt (a b : Lex (Π₀ i, α i)) (i : ι) :
     (∀ j < i, ofLex a j = ofLex b j) → ofLex a i < ofLex b i → a < b := fun h1 h2 => ⟨i, h1, h2⟩
 #align dfinsupp.lt_of_forall_lt_of_lt Dfinsupp.lt_of_forall_lt_of_lt
+-/
 
 end Zero
 

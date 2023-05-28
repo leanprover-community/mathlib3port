@@ -150,7 +150,7 @@ section Conformality
 
 open Complex ContinuousLinearMap
 
-open ComplexConjugate
+open scoped ComplexConjugate
 
 variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℂ E] {z : ℂ} {f : ℂ → E}
 

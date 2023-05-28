@@ -51,7 +51,7 @@ incidence matrix for each `simple_graph α` has the same type.
 
 open Finset Matrix SimpleGraph Sym2
 
-open BigOperators Matrix
+open scoped BigOperators Matrix
 
 namespace SimpleGraph
 

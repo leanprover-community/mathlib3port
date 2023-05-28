@@ -59,7 +59,7 @@ def ext (n : ℕ) : Cᵒᵖ ⥤ C ⥤ ModuleCat R :=
         rfl }
 #align Ext ext
 
-open ZeroObject
+open scoped ZeroObject
 
 /-- If `X : C` is projective and `n : ℕ`, then `Ext^(n + 1) X Y ≅ 0` for any `Y`. -/
 def extSuccOfProjective (X Y : C) [Projective X] (n : ℕ) :

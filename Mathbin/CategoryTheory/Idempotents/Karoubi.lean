@@ -38,7 +38,7 @@ open CategoryTheory.Preadditive
 
 open CategoryTheory.Limits
 
-open BigOperators
+open scoped BigOperators
 
 namespace CategoryTheory
 

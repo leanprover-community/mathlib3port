@@ -24,7 +24,7 @@ number field, units
  -/
 
 
-open NumberField
+open scoped NumberField
 
 noncomputable section
 

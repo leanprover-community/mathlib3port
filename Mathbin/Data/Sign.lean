@@ -327,23 +327,32 @@ def SignType.sign : α →o SignType :=
     · cases h₄ (h.trans_lt h₃)⟩
 #align sign SignType.sign
 
+#print sign_apply /-
 theorem sign_apply : SignType.sign a = ite (0 < a) 1 (ite (a < 0) (-1) 0) :=
   rfl
 #align sign_apply sign_apply
+-/
 
+#print sign_zero /-
 @[simp]
 theorem sign_zero : SignType.sign (0 : α) = 0 := by simp [sign_apply]
 #align sign_zero sign_zero
+-/
 
+#print sign_pos /-
 @[simp]
 theorem sign_pos (ha : 0 < a) : SignType.sign a = 1 := by rwa [sign_apply, if_pos]
 #align sign_pos sign_pos
+-/
 
+#print sign_neg /-
 @[simp]
 theorem sign_neg (ha : a < 0) : SignType.sign a = -1 := by
   rwa [sign_apply, if_neg <| asymm ha, if_pos]
 #align sign_neg sign_neg
+-/
 
+#print sign_eq_one_iff /-
 theorem sign_eq_one_iff : SignType.sign a = 1 ↔ 0 < a :=
   by
   refine' ⟨fun h => _, fun h => sign_pos h⟩
@@ -351,7 +360,9 @@ theorem sign_eq_one_iff : SignType.sign a = 1 ↔ 0 < a :=
   rw [sign_apply, if_neg hn] at h
   split_ifs  at h <;> simpa using h
 #align sign_eq_one_iff sign_eq_one_iff
+-/
 
+#print sign_eq_neg_one_iff /-
 theorem sign_eq_neg_one_iff : SignType.sign a = -1 ↔ a < 0 :=
   by
   refine' ⟨fun h => _, fun h => sign_neg h⟩
@@ -361,6 +372,7 @@ theorem sign_eq_neg_one_iff : SignType.sign a = -1 ↔ a < 0 :=
   · exact h_2
   · simpa using h
 #align sign_eq_neg_one_iff sign_eq_neg_one_iff
+-/
 
 end Preorder
 
@@ -484,7 +496,7 @@ end AddGroup
 
 section LinearOrderedAddCommGroup
 
-open BigOperators
+open scoped BigOperators
 
 variable [LinearOrderedAddCommGroup α]
 
@@ -522,7 +534,7 @@ end Int
 
 open Finset Nat
 
-open BigOperators
+open scoped BigOperators
 
 private theorem exists_signed_sum_aux [DecidableEq α] (s : Finset α) (f : α → ℤ) :
     ∃ (β : Type u_1)(t : Finset β)(sgn : β → SignType)(g : β → α),

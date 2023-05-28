@@ -43,7 +43,7 @@ this is a basis over `fin 3 → R`.
 
 open Function Submodule
 
-open BigOperators
+open scoped BigOperators
 
 namespace LinearMap
 

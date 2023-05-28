@@ -27,7 +27,7 @@ derivative, linear map
 
 universe u v w
 
-open Topology Filter
+open scoped Topology Filter
 
 open Filter Asymptotics Set
 

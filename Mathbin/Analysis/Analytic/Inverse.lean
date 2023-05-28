@@ -33,7 +33,7 @@ we prove that they coincide and study their properties (notably convergence).
 -/
 
 
-open BigOperators Classical Topology
+open scoped BigOperators Classical Topology
 
 open Finset Filter
 

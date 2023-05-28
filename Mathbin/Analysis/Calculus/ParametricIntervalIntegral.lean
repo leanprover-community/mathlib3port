@@ -20,7 +20,7 @@ integrals.  -/
 
 open TopologicalSpace MeasureTheory Filter Metric
 
-open Topology Filter Interval
+open scoped Topology Filter Interval
 
 variable {𝕜 : Type _} [IsROrC 𝕜] {μ : Measure ℝ} {E : Type _} [NormedAddCommGroup E]
   [NormedSpace ℝ E] [NormedSpace 𝕜 E] [CompleteSpace E] {H : Type _} [NormedAddCommGroup H]

@@ -206,6 +206,7 @@ theorem mem_def {x : X} {s : CompositionSeries X} : x ∈ s ↔ x ∈ Set.range 
 #align composition_series.mem_def CompositionSeries.mem_def
 -/
 
+#print CompositionSeries.total /-
 theorem total {s : CompositionSeries X} {x y : X} (hx : x ∈ s) (hy : y ∈ s) : x ≤ y ∨ y ≤ x :=
   by
   rcases Set.mem_range.1 hx with ⟨i, rfl⟩
@@ -213,6 +214,7 @@ theorem total {s : CompositionSeries X} {x y : X} (hx : x ∈ s) (hy : y ∈ s) 
   rw [s.strict_mono.le_iff_le, s.strict_mono.le_iff_le]
   exact le_total i j
 #align composition_series.total CompositionSeries.total
+-/
 
 #print CompositionSeries.toList /-
 /-- The ordered `list X` of elements of a `composition_series X`. -/
@@ -278,6 +280,7 @@ theorem chain'_toList (s : CompositionSeries X) : List.Chain' IsMaximal s.toList
 #align composition_series.chain'_to_list CompositionSeries.chain'_toList
 -/
 
+#print CompositionSeries.toList_sorted /-
 theorem toList_sorted (s : CompositionSeries X) : s.toList.Sorted (· < ·) :=
   List.pairwise_iff_nthLe.2 fun i j hi hij =>
     by
@@ -285,6 +288,7 @@ theorem toList_sorted (s : CompositionSeries X) : s.toList.Sorted (· < ·) :=
     rw [List.nthLe_ofFn', List.nthLe_ofFn']
     exact s.strict_mono hij
 #align composition_series.to_list_sorted CompositionSeries.toList_sorted
+-/
 
 #print CompositionSeries.toList_nodup /-
 theorem toList_nodup (s : CompositionSeries X) : s.toList.Nodup :=
@@ -382,15 +386,19 @@ theorem top_mem (s : CompositionSeries X) : s.top ∈ s :=
 #align composition_series.top_mem CompositionSeries.top_mem
 -/
 
+#print CompositionSeries.le_top /-
 @[simp]
 theorem le_top {s : CompositionSeries X} (i : Fin (s.length + 1)) : s i ≤ s.top :=
   s.StrictMono.Monotone (Fin.le_last _)
 #align composition_series.le_top CompositionSeries.le_top
+-/
 
+#print CompositionSeries.le_top_of_mem /-
 theorem le_top_of_mem {s : CompositionSeries X} {x : X} (hx : x ∈ s) : x ≤ s.top :=
   let ⟨i, hi⟩ := Set.mem_range.2 hx
   hi ▸ le_top _
 #align composition_series.le_top_of_mem CompositionSeries.le_top_of_mem
+-/
 
 #print CompositionSeries.bot /-
 /-- The smallest element of a `composition_series` -/
@@ -405,15 +413,19 @@ theorem bot_mem (s : CompositionSeries X) : s.bot ∈ s :=
 #align composition_series.bot_mem CompositionSeries.bot_mem
 -/
 
+#print CompositionSeries.bot_le /-
 @[simp]
 theorem bot_le {s : CompositionSeries X} (i : Fin (s.length + 1)) : s.bot ≤ s i :=
   s.StrictMono.Monotone (Fin.zero_le _)
 #align composition_series.bot_le CompositionSeries.bot_le
+-/
 
+#print CompositionSeries.bot_le_of_mem /-
 theorem bot_le_of_mem {s : CompositionSeries X} {x : X} (hx : x ∈ s) : s.bot ≤ x :=
   let ⟨i, hi⟩ := Set.mem_range.2 hx
   hi ▸ bot_le _
 #align composition_series.bot_le_of_mem CompositionSeries.bot_le_of_mem
+-/
 
 #print CompositionSeries.length_pos_of_mem_ne /-
 theorem length_pos_of_mem_ne {s : CompositionSeries X} {x y : X} (hx : x ∈ s) (hy : y ∈ s)
@@ -461,9 +473,11 @@ theorem top_eraseTop (s : CompositionSeries X) :
 #align composition_series.top_erase_top CompositionSeries.top_eraseTop
 -/
 
+#print CompositionSeries.eraseTop_top_le /-
 theorem eraseTop_top_le (s : CompositionSeries X) : s.eraseTop.top ≤ s.top := by
   simp [erase_top, top, s.strict_mono.le_iff_le, Fin.le_iff_val_le_val, tsub_le_self]
 #align composition_series.erase_top_top_le CompositionSeries.eraseTop_top_le
+-/
 
 #print CompositionSeries.bot_eraseTop /-
 @[simp]
@@ -503,10 +517,12 @@ theorem mem_eraseTop {s : CompositionSeries X} {x : X} (h : 0 < s.length) :
 #align composition_series.mem_erase_top CompositionSeries.mem_eraseTop
 -/
 
+#print CompositionSeries.lt_top_of_mem_eraseTop /-
 theorem lt_top_of_mem_eraseTop {s : CompositionSeries X} {x : X} (h : 0 < s.length)
     (hx : x ∈ s.eraseTop) : x < s.top :=
   lt_of_le_of_ne (le_top_of_mem ((mem_eraseTop h).1 hx).2) ((mem_eraseTop h).1 hx).1
 #align composition_series.lt_top_of_mem_erase_top CompositionSeries.lt_top_of_mem_eraseTop
+-/
 
 #print CompositionSeries.isMaximal_eraseTop_top /-
 theorem isMaximal_eraseTop_top {s : CompositionSeries X} (h : 0 < s.length) :
@@ -849,6 +865,7 @@ theorem eq_of_bot_eq_bot_of_top_eq_top_of_length_eq_zero {s₁ s₂ : Compositio
 #align composition_series.eq_of_bot_eq_bot_of_top_eq_top_of_length_eq_zero CompositionSeries.eq_of_bot_eq_bot_of_top_eq_top_of_length_eq_zero
 -/
 
+#print CompositionSeries.exists_top_eq_snoc_equivalant /-
 /-- Given a `composition_series`, `s`, and an element `x`
 such that `x` is maximal inside `s.top` there is a series, `t`,
 such that `t.top = x`, `t.bot = s.bot`
@@ -896,6 +913,7 @@ theorem exists_top_eq_snoc_equivalant (s : CompositionSeries X) (x : X) (hm : Is
           second_iso_of_eq (is_maximal_erase_top_top h0s)
             (sup_eq_of_is_maximal (is_maximal_erase_top_top h0s) hm hetx) (by rw [inf_comm, htt])
 #align composition_series.exists_top_eq_snoc_equivalant CompositionSeries.exists_top_eq_snoc_equivalant
+-/
 
 #print CompositionSeries.jordan_holder /-
 /-- The **Jordan-Hölder** theorem, stated for any `jordan_holder_lattice`.

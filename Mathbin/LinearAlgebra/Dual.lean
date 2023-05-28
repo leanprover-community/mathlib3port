@@ -292,7 +292,7 @@ universe u v w
 
 open Module Module.Dual Submodule LinearMap Cardinal Function
 
-open BigOperators
+open scoped BigOperators
 
 variable {R M K V ι : Type _}
 
@@ -519,7 +519,7 @@ theorem evalEquiv_toLinearMap {ι : Type _} [Finite ι] (b : Basis ι R M) :
 
 section
 
-open Classical
+open scoped Classical
 
 variable [Finite R M] [Free R M] [Nontrivial R]
 
@@ -933,11 +933,13 @@ theorem dualCoannihilator_bot : (⊥ : Submodule R (Module.Dual R M)).dualCoanni
 #align submodule.dual_coannihilator_bot Submodule.dualCoannihilator_bot
 -/
 
+#print Submodule.dualAnnihilator_anti /-
 @[mono]
 theorem dualAnnihilator_anti {U V : Submodule R M} (hUV : U ≤ V) :
     V.dualAnnihilator ≤ U.dualAnnihilator :=
   (dualAnnihilator_gc R M).monotone_l hUV
 #align submodule.dual_annihilator_anti Submodule.dualAnnihilator_anti
+-/
 
 #print Submodule.dualCoannihilator_anti /-
 @[mono]
@@ -947,10 +949,12 @@ theorem dualCoannihilator_anti {U V : Submodule R (Module.Dual R M)} (hUV : U �
 #align submodule.dual_coannihilator_anti Submodule.dualCoannihilator_anti
 -/
 
+#print Submodule.le_dualAnnihilator_dualCoannihilator /-
 theorem le_dualAnnihilator_dualCoannihilator (U : Submodule R M) :
     U ≤ U.dualAnnihilator.dualCoannihilator :=
   (dualAnnihilator_gc R M).le_u_l U
 #align submodule.le_dual_annihilator_dual_coannihilator Submodule.le_dualAnnihilator_dualCoannihilator
+-/
 
 #print Submodule.le_dualCoannihilator_dualAnnihilator /-
 theorem le_dualCoannihilator_dualAnnihilator (U : Submodule R (Module.Dual R M)) :
@@ -997,6 +1001,7 @@ theorem dualCoannihilator_iSup_eq {ι : Type _} (U : ι → Submodule R (Module.
   (dualAnnihilator_gc R M).u_iInf
 #align submodule.dual_coannihilator_supr_eq Submodule.dualCoannihilator_iSup_eq
 
+#print Submodule.sup_dualAnnihilator_le_inf /-
 /-- See also `subspace.dual_annihilator_inf_eq` for vector subspaces. -/
 theorem sup_dualAnnihilator_le_inf (U V : Submodule R M) :
     U.dualAnnihilator ⊔ V.dualAnnihilator ≤ (U ⊓ V).dualAnnihilator :=
@@ -1004,6 +1009,7 @@ theorem sup_dualAnnihilator_le_inf (U V : Submodule R M) :
   rw [le_dual_annihilator_iff_le_dual_coannihilator, dual_coannihilator_sup_eq]
   apply inf_le_inf <;> exact le_dual_annihilator_dual_coannihilator _
 #align submodule.sup_dual_annihilator_le_inf Submodule.sup_dualAnnihilator_le_inf
+-/
 
 /-- See also `subspace.dual_annihilator_infi_eq` for vector subspaces when `ι` is finite. -/
 theorem iSup_dualAnnihilator_le_iInf {ι : Type _} (U : ι → Submodule R M) :
@@ -1078,10 +1084,12 @@ def dualAnnihilatorGci (K V : Type _) [Field K] [AddCommGroup V] [Module K V] :
 #align subspace.dual_annihilator_gci Subspace.dualAnnihilatorGci
 -/
 
+#print Subspace.dualAnnihilator_le_dualAnnihilator_iff /-
 theorem dualAnnihilator_le_dualAnnihilator_iff {W W' : Subspace K V} :
     W.dualAnnihilator ≤ W'.dualAnnihilator ↔ W' ≤ W :=
   (dualAnnihilatorGci K V).l_le_l_iff
 #align subspace.dual_annihilator_le_dual_annihilator_iff Subspace.dualAnnihilator_le_dualAnnihilator_iff
+-/
 
 #print Subspace.dualAnnihilator_inj /-
 theorem dualAnnihilator_inj {W W' : Subspace K V} :
@@ -1176,7 +1184,7 @@ theorem dualEquivDual_apply (φ : Module.Dual K W) :
 
 section
 
-open Classical
+open scoped Classical
 
 open FiniteDimensional
 
@@ -1271,6 +1279,7 @@ theorem ker_dualMap_eq_dualAnnihilator_range : f.dualMap.ker = f.range.dualAnnih
 #align linear_map.ker_dual_map_eq_dual_annihilator_range LinearMap.ker_dualMap_eq_dualAnnihilator_range
 -/
 
+#print LinearMap.range_dualMap_le_dualAnnihilator_ker /-
 theorem range_dualMap_le_dualAnnihilator_ker : f.dualMap.range ≤ f.ker.dualAnnihilator :=
   by
   rintro _ ⟨ψ, rfl⟩
@@ -1278,6 +1287,7 @@ theorem range_dualMap_le_dualAnnihilator_ker : f.dualMap.range ≤ f.ker.dualAnn
   rintro x hx
   rw [dual_map_apply, hx, map_zero]
 #align linear_map.range_dual_map_le_dual_annihilator_ker LinearMap.range_dualMap_le_dualAnnihilator_ker
+-/
 
 end LinearMap
 
@@ -1623,9 +1633,9 @@ variable [DecidableEq ι] [DecidableEq κ]
 
 variable [Fintype ι] [Fintype κ]
 
-open BigOperators
+open scoped BigOperators
 
-open TensorProduct
+open scoped TensorProduct
 
 attribute [local ext] TensorProduct.ext
 
@@ -1711,7 +1721,7 @@ variable [Module.Finite R M] [Module.Finite R N] [Module.Free R M] [Module.Free 
 
 variable [Nontrivial R]
 
-open Classical
+open scoped Classical
 
 #print TensorProduct.dualDistribEquiv /-
 /--

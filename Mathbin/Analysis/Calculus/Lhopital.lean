@@ -37,7 +37,7 @@ L'Hôpital's rule, L'Hopital's rule
 
 open Filter Set
 
-open Filter Topology Pointwise
+open scoped Filter Topology Pointwise
 
 variable {a b : ℝ} (hab : a < b) {l : Filter ℝ} {f f' g g' : ℝ → ℝ}
 

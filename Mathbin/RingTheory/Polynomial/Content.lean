@@ -38,7 +38,7 @@ Let `p : R[X]`.
 
 namespace Polynomial
 
-open Polynomial
+open scoped Polynomial
 
 section Primitive
 
@@ -265,7 +265,7 @@ theorem IsPrimitive.content_eq_one {p : R[X]} (hp : p.IsPrimitive) : p.content =
   isPrimitive_iff_content_eq_one.mp hp
 #align polynomial.is_primitive.content_eq_one Polynomial.IsPrimitive.content_eq_one
 
-open Classical
+open scoped Classical
 
 noncomputable section
 
@@ -556,15 +556,19 @@ instance (priority := 100) normalizedGcdMonoid : NormalizedGCDMonoid R[X] :=
 #align polynomial.normalized_gcd_monoid Polynomial.normalizedGcdMonoid
 -/
 
+#print Polynomial.degree_gcd_le_left /-
 theorem degree_gcd_le_left {p : R[X]} (hp : p ≠ 0) (q) : (gcd p q).degree ≤ p.degree :=
   by
   have := nat_degree_le_iff_degree_le.mp (nat_degree_le_of_dvd (gcd_dvd_left p q) hp)
   rwa [degree_eq_nat_degree hp]
 #align polynomial.degree_gcd_le_left Polynomial.degree_gcd_le_left
+-/
 
+#print Polynomial.degree_gcd_le_right /-
 theorem degree_gcd_le_right (p) {q : R[X]} (hq : q ≠ 0) : (gcd p q).degree ≤ q.degree := by
   rw [gcd_comm]; exact degree_gcd_le_left hq p
 #align polynomial.degree_gcd_le_right Polynomial.degree_gcd_le_right
+-/
 
 end NormalizedGCDMonoid
 

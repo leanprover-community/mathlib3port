@@ -54,11 +54,11 @@ generalization, the Monge point of a simplex.
 
 noncomputable section
 
-open BigOperators
+open scoped BigOperators
 
-open Classical
+open scoped Classical
 
-open RealInnerProductSpace
+open scoped RealInnerProductSpace
 
 namespace Affine
 

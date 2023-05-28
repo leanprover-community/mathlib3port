@@ -81,7 +81,7 @@ variable {X : Type _} [TopologicalSpace X]
 
 open Set Filter TopologicalSpace
 
-open Topology Filter
+open scoped Topology Filter
 
 namespace Urysohns
 

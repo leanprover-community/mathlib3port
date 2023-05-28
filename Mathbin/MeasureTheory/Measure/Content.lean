@@ -62,7 +62,7 @@ noncomputable section
 
 open Set TopologicalSpace
 
-open NNReal ENNReal MeasureTheory
+open scoped NNReal ENNReal MeasureTheory
 
 namespace MeasureTheory
 

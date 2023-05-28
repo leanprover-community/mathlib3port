@@ -51,7 +51,7 @@ variable {𝕜 𝕜' E E' F ι : Type _}
 
 open Set Filter
 
-open Topology Pointwise
+open scoped Topology Pointwise
 
 namespace Bornology
 

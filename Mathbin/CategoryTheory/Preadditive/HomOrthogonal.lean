@@ -43,7 +43,7 @@ This is preliminary to defining semisimple categories.
 -/
 
 
-open Classical Matrix
+open scoped Classical Matrix
 
 open CategoryTheory.Limits
 

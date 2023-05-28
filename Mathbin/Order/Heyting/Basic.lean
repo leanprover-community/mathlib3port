@@ -236,27 +236,35 @@ class BiheytingAlgebra (α : Type _) extends HeytingAlgebra α, SDiff α, HNot �
 #align biheyting_algebra BiheytingAlgebra
 -/
 
+#print GeneralizedHeytingAlgebra.toOrderTop /-
 -- See note [lower instance priority]
 instance (priority := 100) GeneralizedHeytingAlgebra.toOrderTop [GeneralizedHeytingAlgebra α] :
     OrderTop α :=
   { ‹GeneralizedHeytingAlgebra α› with }
 #align generalized_heyting_algebra.to_order_top GeneralizedHeytingAlgebra.toOrderTop
+-/
 
+#print GeneralizedCoheytingAlgebra.toOrderBot /-
 -- See note [lower instance priority]
 instance (priority := 100) GeneralizedCoheytingAlgebra.toOrderBot [GeneralizedCoheytingAlgebra α] :
     OrderBot α :=
   { ‹GeneralizedCoheytingAlgebra α› with }
 #align generalized_coheyting_algebra.to_order_bot GeneralizedCoheytingAlgebra.toOrderBot
+-/
 
+#print HeytingAlgebra.toBoundedOrder /-
 -- See note [lower instance priority]
 instance (priority := 100) HeytingAlgebra.toBoundedOrder [HeytingAlgebra α] : BoundedOrder α :=
   { ‹HeytingAlgebra α› with }
 #align heyting_algebra.to_bounded_order HeytingAlgebra.toBoundedOrder
+-/
 
+#print CoheytingAlgebra.toBoundedOrder /-
 -- See note [lower instance priority]
 instance (priority := 100) CoheytingAlgebra.toBoundedOrder [CoheytingAlgebra α] : BoundedOrder α :=
   { ‹CoheytingAlgebra α› with }
 #align coheyting_algebra.to_bounded_order CoheytingAlgebra.toBoundedOrder
+-/
 
 #print BiheytingAlgebra.toCoheytingAlgebra /-
 -- See note [lower instance priority]
@@ -830,17 +838,23 @@ theorem himp_compl (a : α) : a ⇨ aᶜ = aᶜ := by rw [← himp_bot, himp_him
 theorem himp_compl_comm (a b : α) : a ⇨ bᶜ = b ⇨ aᶜ := by simp_rw [← himp_bot, himp_left_comm]
 #align himp_compl_comm himp_compl_comm
 
+#print le_compl_iff_disjoint_right /-
 theorem le_compl_iff_disjoint_right : a ≤ bᶜ ↔ Disjoint a b := by
   rw [← himp_bot, le_himp_iff, disjoint_iff_inf_le]
 #align le_compl_iff_disjoint_right le_compl_iff_disjoint_right
+-/
 
+#print le_compl_iff_disjoint_left /-
 theorem le_compl_iff_disjoint_left : a ≤ bᶜ ↔ Disjoint b a :=
   le_compl_iff_disjoint_right.trans disjoint_comm
 #align le_compl_iff_disjoint_left le_compl_iff_disjoint_left
+-/
 
+#print le_compl_comm /-
 theorem le_compl_comm : a ≤ bᶜ ↔ b ≤ aᶜ := by
   rw [le_compl_iff_disjoint_right, le_compl_iff_disjoint_left]
 #align le_compl_comm le_compl_comm
+-/
 
 alias le_compl_iff_disjoint_right ↔ _ Disjoint.le_compl_right
 #align disjoint.le_compl_right Disjoint.le_compl_right
@@ -866,13 +880,17 @@ theorem disjoint_compl_right : Disjoint a (aᶜ) :=
 #align disjoint_compl_right disjoint_compl_right
 -/
 
+#print LE.le.disjoint_compl_left /-
 theorem LE.le.disjoint_compl_left (h : b ≤ a) : Disjoint (aᶜ) b :=
   disjoint_compl_left.mono_right h
 #align has_le.le.disjoint_compl_left LE.le.disjoint_compl_left
+-/
 
+#print LE.le.disjoint_compl_right /-
 theorem LE.le.disjoint_compl_right (h : a ≤ b) : Disjoint a (bᶜ) :=
   disjoint_compl_right.mono_left h
 #align has_le.le.disjoint_compl_right LE.le.disjoint_compl_right
+-/
 
 #print IsCompl.compl_eq /-
 theorem IsCompl.compl_eq (h : IsCompl a b) : aᶜ = b :=
@@ -917,9 +935,11 @@ theorem compl_top : (⊤ : α)ᶜ = ⊥ :=
 theorem compl_bot : (⊥ : α)ᶜ = ⊤ := by rw [← himp_bot, himp_self]
 #align compl_bot compl_bot
 
+#print le_compl_compl /-
 theorem le_compl_compl : a ≤ aᶜᶜ :=
   disjoint_compl_right.le_compl_right
 #align le_compl_compl le_compl_compl
+-/
 
 #print compl_anti /-
 theorem compl_anti : Antitone (compl : α → α) := fun a b h =>
@@ -927,9 +947,11 @@ theorem compl_anti : Antitone (compl : α → α) := fun a b h =>
 #align compl_anti compl_anti
 -/
 
+#print compl_le_compl /-
 theorem compl_le_compl (h : a ≤ b) : bᶜ ≤ aᶜ :=
   compl_anti h
 #align compl_le_compl compl_le_compl
+-/
 
 #print compl_compl_compl /-
 @[simp]
@@ -1253,6 +1275,7 @@ theorem compl_iff_not (p : Prop) : pᶜ ↔ ¬p :=
 #align compl_iff_not compl_iff_not
 -/
 
+#print LinearOrder.toBiheytingAlgebra /-
 -- See note [reducible non-instances]
 /-- A bounded linear order is a bi-Heyting algebra by setting
 * `a ⇨ b = ⊤` if `a ≤ b` and `a ⇨ b = b` otherwise.
@@ -1278,6 +1301,7 @@ def LinearOrder.toBiheytingAlgebra [LinearOrder α] [BoundedOrder α] : Biheytin
       · rw [le_sup_iff, or_iff_right h]
     top_sdiff := fun a => if_congr top_le_iff rfl rfl }
 #align linear_order.to_biheyting_algebra LinearOrder.toBiheytingAlgebra
+-/
 
 section lift
 

@@ -57,6 +57,7 @@ def Function.Injective.linearOrderedCommMonoid [LinearOrderedCommMonoid α] {β 
 #align function.injective.linear_ordered_comm_monoid Function.Injective.linearOrderedCommMonoid
 #align function.injective.linear_ordered_add_comm_monoid Function.Injective.linearOrderedAddCommMonoid
 
+#print OrderEmbedding.mulLeft /-
 -- TODO find a better home for the next two constructions.
 /-- The order embedding sending `b` to `a * b`, for some fixed `a`.
 See also `order_iso.mul_left` when working in an ordered group. -/
@@ -68,7 +69,9 @@ def OrderEmbedding.mulLeft {α : Type _} [Mul α] [LinearOrder α] [CovariantCla
   OrderEmbedding.ofStrictMono (fun n => m * n) fun a b w => mul_lt_mul_left' w m
 #align order_embedding.mul_left OrderEmbedding.mulLeft
 #align order_embedding.add_left OrderEmbedding.addLeft
+-/
 
+#print OrderEmbedding.mulRight /-
 /-- The order embedding sending `b` to `b * a`, for some fixed `a`.
 See also `order_iso.mul_right` when working in an ordered group. -/
 @[to_additive
@@ -79,4 +82,5 @@ def OrderEmbedding.mulRight {α : Type _} [Mul α] [LinearOrder α]
   OrderEmbedding.ofStrictMono (fun n => n * m) fun a b w => mul_lt_mul_right' w m
 #align order_embedding.mul_right OrderEmbedding.mulRight
 #align order_embedding.add_right OrderEmbedding.addRight
+-/
 

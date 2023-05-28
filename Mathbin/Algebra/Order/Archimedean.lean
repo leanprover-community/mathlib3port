@@ -115,16 +115,20 @@ theorem existsUnique_sub_zsmul_mem_Ioc {a : α} (ha : 0 < a) (b c : α) :
 
 end LinearOrderedAddCommGroup
 
+#print exists_nat_gt /-
 theorem exists_nat_gt [StrictOrderedSemiring α] [Archimedean α] (x : α) : ∃ n : ℕ, x < n :=
   let ⟨n, h⟩ := Archimedean.arch x zero_lt_one
   ⟨n + 1, lt_of_le_of_lt (by rwa [← nsmul_one]) (Nat.cast_lt.2 (Nat.lt_succ_self _))⟩
 #align exists_nat_gt exists_nat_gt
+-/
 
+#print exists_nat_ge /-
 theorem exists_nat_ge [StrictOrderedSemiring α] [Archimedean α] (x : α) : ∃ n : ℕ, x ≤ n :=
   by
   nontriviality α
   exact (exists_nat_gt x).imp fun n => le_of_lt
 #align exists_nat_ge exists_nat_ge
+-/
 
 theorem add_one_pow_unbounded_of_pos [StrictOrderedSemiring α] [Archimedean α] (x : α) {y : α}
     (hy : 0 < y) : ∃ n : ℕ, x < (y + 1) ^ n :=

@@ -79,7 +79,7 @@ universe u
 
 open CategoryTheory Filter Ultrafilter TopologicalSpace CategoryTheory.Limits FiniteInter
 
-open Classical Topology
+open scoped Classical Topology
 
 -- mathport name: exprβ
 local notation "β" => ofTypeMonad Ultrafilter

@@ -64,7 +64,7 @@ import Mathbin.MeasureTheory.MeasurableSpaceDef
 
 open MeasurableSpace Set
 
-open Classical MeasureTheory
+open scoped Classical MeasureTheory
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (s t «expr ∈ » C) -/
 #print IsPiSystem /-

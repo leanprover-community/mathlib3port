@@ -19,7 +19,7 @@ In this file we show that `tensor_algebra R M` is isomorphic to a direct sum of 
 -/
 
 
-open DirectSum TensorProduct
+open scoped DirectSum TensorProduct
 
 variable {R M : Type _} [CommSemiring R] [AddCommMonoid M] [Module R M]
 

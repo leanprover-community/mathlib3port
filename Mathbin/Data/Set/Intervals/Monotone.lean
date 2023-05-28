@@ -207,6 +207,7 @@ open Order
 
 variable {α β : Type _} [PartialOrder α]
 
+#print StrictMonoOn.Iic_id_le /-
 theorem StrictMonoOn.Iic_id_le [SuccOrder α] [IsSuccArchimedean α] [OrderBot α] {n : α} {φ : α → α}
     (hφ : StrictMonoOn φ (Set.Iic n)) : ∀ m ≤ n, m ≤ φ m :=
   by
@@ -225,11 +226,14 @@ theorem StrictMonoOn.Iic_id_le [SuccOrder α] [IsSuccArchimedean α] [OrderBot �
     exact Or.inl rfl
   · exact ih (StrictMonoOn.mono hφ fun x hx => le_trans hx (le_succ _)) _ h
 #align strict_mono_on.Iic_id_le StrictMonoOn.Iic_id_le
+-/
 
+#print StrictMonoOn.Ici_le_id /-
 theorem StrictMonoOn.Ici_le_id [PredOrder α] [IsPredArchimedean α] [OrderTop α] {n : α} {φ : α → α}
     (hφ : StrictMonoOn φ (Set.Ici n)) : ∀ m, n ≤ m → φ m ≤ m :=
   @StrictMonoOn.Iic_id_le αᵒᵈ _ _ _ _ _ _ fun i hi j hj hij => hφ hj hi hij
 #align strict_mono_on.Ici_le_id StrictMonoOn.Ici_le_id
+-/
 
 variable [Preorder β] {ψ : α → β}
 

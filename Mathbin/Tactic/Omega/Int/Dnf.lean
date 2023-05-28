@@ -21,7 +21,7 @@ namespace Omega
 
 namespace Int
 
-open Omega.Int
+open scoped Omega.Int
 
 /-- push_neg p returns the result of normalizing ¬ p by
     pushing the outermost negation all the way down,

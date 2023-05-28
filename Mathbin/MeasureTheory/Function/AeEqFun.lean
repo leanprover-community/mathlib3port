@@ -78,7 +78,7 @@ function space, almost everywhere equal, `L⁰`, ae_eq_fun
 
 noncomputable section
 
-open Classical ENNReal Topology
+open scoped Classical ENNReal Topology
 
 open Set Filter TopologicalSpace ENNReal Emetric MeasureTheory Function
 
@@ -453,15 +453,19 @@ section Order
 instance [Preorder β] : Preorder (α →ₘ[μ] β) :=
   Preorder.lift toGerm
 
+#print MeasureTheory.AEEqFun.mk_le_mk /-
 @[simp]
 theorem mk_le_mk [Preorder β] {f g : α → β} (hf hg) : (mk f hf : α →ₘ[μ] β) ≤ mk g hg ↔ f ≤ᵐ[μ] g :=
   Iff.rfl
 #align measure_theory.ae_eq_fun.mk_le_mk MeasureTheory.AEEqFun.mk_le_mk
+-/
 
+#print MeasureTheory.AEEqFun.coeFn_le /-
 @[simp, norm_cast]
 theorem coeFn_le [Preorder β] {f g : α →ₘ[μ] β} : (f : α → β) ≤ᵐ[μ] g ↔ f ≤ g :=
   liftRel_iff_coeFn.symm
 #align measure_theory.ae_eq_fun.coe_fn_le MeasureTheory.AEEqFun.coeFn_le
+-/
 
 instance [PartialOrder β] : PartialOrder (α →ₘ[μ] β) :=
   PartialOrder.lift toGerm toGerm_injective

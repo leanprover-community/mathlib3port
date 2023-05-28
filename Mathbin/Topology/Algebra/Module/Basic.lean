@@ -39,7 +39,7 @@ open Filter
 
 open LinearMap (ker range)
 
-open Topology BigOperators Filter
+open scoped Topology BigOperators Filter
 
 universe u v w u'
 
@@ -2574,7 +2574,7 @@ end ContinuousLinearEquiv
 
 namespace ContinuousLinearMap
 
-open Classical
+open scoped Classical
 
 variable {R : Type _} {M : Type _} {M₂ : Type _} [TopologicalSpace M] [TopologicalSpace M₂]
 

@@ -22,7 +22,7 @@ no `measurable_set.mul` etc.
 -/
 
 
-open Pointwise
+open scoped Pointwise
 
 open Set
 

@@ -139,9 +139,11 @@ instance succ : NeZero (n + 1) :=
 #align ne_zero.succ NeZero.succ
 -/
 
+#print NeZero.of_pos /-
 theorem of_pos [Preorder M] [Zero M] (h : 0 < x) : NeZero x :=
   ⟨ne_of_gt h⟩
 #align ne_zero.of_pos NeZero.of_pos
+-/
 
 instance coeTrans [Zero M] [Coe R S] [CoeTC S M] [h : NeZero (r : M)] : NeZero ((r : S) : M) :=
   ⟨h.out⟩

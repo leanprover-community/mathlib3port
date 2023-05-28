@@ -24,7 +24,7 @@ about these measures.
 -/
 
 
-open Topology ENNReal MeasureTheory
+open scoped Topology ENNReal MeasureTheory
 
 open Set Function Filter
 
@@ -83,9 +83,11 @@ protected theorem AbsolutelyContinuous.openPosMeasure (h : μ ≪ ν) : OpenPosM
 #align measure_theory.measure.absolutely_continuous.is_open_pos_measure MeasureTheory.Measure.AbsolutelyContinuous.openPosMeasure
 -/
 
+#print LE.le.isOpenPosMeasure /-
 theorem LE.le.isOpenPosMeasure (h : μ ≤ ν) : OpenPosMeasure ν :=
   h.AbsolutelyContinuous.OpenPosMeasure
 #align has_le.le.is_open_pos_measure LE.le.isOpenPosMeasure
+-/
 
 theorem IsOpen.eq_empty_of_measure_zero (hU : IsOpen U) (h₀ : μ U = 0) : U = ∅ :=
   (hU.measure_eq_zero_iff μ).mp h₀

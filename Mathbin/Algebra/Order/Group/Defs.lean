@@ -1109,6 +1109,7 @@ theorem exists_one_lt' [Nontrivial α] : ∃ a : α, 1 < a :=
 #align exists_one_lt' exists_one_lt'
 #align exists_zero_lt exists_zero_lt
 
+#print LinearOrderedCommGroup.to_noMaxOrder /-
 -- see Note [lower instance priority]
 @[to_additive]
 instance (priority := 100) LinearOrderedCommGroup.to_noMaxOrder [Nontrivial α] : NoMaxOrder α :=
@@ -1117,7 +1118,9 @@ instance (priority := 100) LinearOrderedCommGroup.to_noMaxOrder [Nontrivial α] 
     exact fun a => ⟨a * y, lt_mul_of_one_lt_right' a hy⟩⟩
 #align linear_ordered_comm_group.to_no_max_order LinearOrderedCommGroup.to_noMaxOrder
 #align linear_ordered_add_comm_group.to_no_max_order LinearOrderedAddCommGroup.to_noMaxOrder
+-/
 
+#print LinearOrderedCommGroup.to_noMinOrder /-
 -- see Note [lower instance priority]
 @[to_additive]
 instance (priority := 100) LinearOrderedCommGroup.to_noMinOrder [Nontrivial α] : NoMinOrder α :=
@@ -1126,6 +1129,7 @@ instance (priority := 100) LinearOrderedCommGroup.to_noMinOrder [Nontrivial α] 
     exact fun a => ⟨a / y, (div_lt_self_iff a).mpr hy⟩⟩
 #align linear_ordered_comm_group.to_no_min_order LinearOrderedCommGroup.to_noMinOrder
 #align linear_ordered_add_comm_group.to_no_min_order LinearOrderedAddCommGroup.to_noMinOrder
+-/
 
 #print LinearOrderedCommGroup.toLinearOrderedCancelCommMonoid /-
 -- See note [lower instance priority]

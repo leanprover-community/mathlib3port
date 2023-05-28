@@ -36,7 +36,7 @@ noncomputable section
 
 open Finset Finsupp Function
 
-open BigOperators Classical Pointwise
+open scoped BigOperators Classical Pointwise
 
 variable {ι α : Type _}
 
@@ -92,9 +92,11 @@ theorem rangeIcc_support [DecidableEq ι] (f g : ι →₀ α) :
     (rangeIcc f g).support = f.support ∪ g.support := by convert rfl
 #align finsupp.range_Icc_support Finsupp.rangeIcc_support
 
+#print Finsupp.mem_rangeIcc_apply_iff /-
 theorem mem_rangeIcc_apply_iff : a ∈ f.rangeIcc g i ↔ f i ≤ a ∧ a ≤ g i :=
   mem_Icc
 #align finsupp.mem_range_Icc_apply_iff Finsupp.mem_rangeIcc_apply_iff
+-/
 
 end RangeIcc
 

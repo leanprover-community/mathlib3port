@@ -40,7 +40,7 @@ endowed with an order.
 
 open Set Function Filter
 
-open Topology
+open scoped Topology
 
 /-!
 ### Definition and notation
@@ -365,7 +365,7 @@ namespace Flow
 variable {τ : Type _} [TopologicalSpace τ] [AddMonoid τ] [ContinuousAdd τ] {α : Type _}
   [TopologicalSpace α] (f : Filter τ) (ϕ : Flow τ α) (s : Set α)
 
-open omegaLimit
+open scoped omegaLimit
 
 theorem isInvariant_omegaLimit (hf : ∀ t, Tendsto ((· + ·) t) f f) : IsInvariant ϕ (ω f ϕ s) :=
   by
@@ -393,7 +393,7 @@ namespace Flow
 variable {τ : Type _} [TopologicalSpace τ] [AddCommGroup τ] [TopologicalAddGroup τ] {α : Type _}
   [TopologicalSpace α] (f : Filter τ) (ϕ : Flow τ α) (s : Set α)
 
-open omegaLimit
+open scoped omegaLimit
 
 /-- the ω-limit of a forward image of `s` is the same as the ω-limit of `s`. -/
 @[simp]

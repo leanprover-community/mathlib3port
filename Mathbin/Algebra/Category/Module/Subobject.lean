@@ -28,7 +28,7 @@ open CategoryTheory.Subobject
 
 open CategoryTheory.Limits
 
-open ModuleCat
+open scoped ModuleCat
 
 universe v u
 

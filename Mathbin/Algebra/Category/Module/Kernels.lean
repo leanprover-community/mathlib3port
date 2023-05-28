@@ -82,7 +82,7 @@ theorem hasCokernels_moduleCat : HasCokernels (ModuleCat R) :=
   ⟨fun X Y f => HasColimit.mk ⟨_, cokernelIsColimit f⟩⟩
 #align Module.has_cokernels_Module ModuleCat.hasCokernels_moduleCat
 
-open ModuleCat
+open scoped ModuleCat
 
 attribute [local instance] has_kernels_Module
 

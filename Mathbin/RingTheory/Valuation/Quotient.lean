@@ -30,6 +30,7 @@ variable {R Γ₀ : Type _} [CommRing R] [LinearOrderedCommMonoidWithZero Γ₀]
 
 variable (v : Valuation R Γ₀)
 
+#print Valuation.onQuotVal /-
 /-- If `hJ : J ⊆ supp v` then `on_quot_val hJ` is the induced function on R/J as a function.
 Note: it's just the function; the valuation is `on_quot hJ`. -/
 def onQuotVal {J : Ideal R} (hJ : J ≤ supp v) : R ⧸ J → Γ₀ := fun q =>
@@ -40,7 +41,9 @@ def onQuotVal {J : Ideal R} (hJ : J ≤ supp v) : R ⧸ J → Γ₀ := fun q =>
         v.map_add_supp b <| (Ideal.neg_mem_iff _).2 <| hJ <| QuotientAddGroup.leftRel_apply.mp h
       
 #align valuation.on_quot_val Valuation.onQuotVal
+-/
 
+#print Valuation.onQuot /-
 /-- The extension of valuation v on R to valuation on R/J if J ⊆ supp v -/
 def onQuot {J : Ideal R} (hJ : J ≤ supp v) : Valuation (R ⧸ J) Γ₀
     where
@@ -50,6 +53,7 @@ def onQuot {J : Ideal R} (hJ : J ≤ supp v) : Valuation (R ⧸ J) Γ₀
   map_mul' xbar ybar := Quotient.ind₂' v.map_mul xbar ybar
   map_add_le_max' xbar ybar := Quotient.ind₂' v.map_add xbar ybar
 #align valuation.on_quot Valuation.onQuot
+-/
 
 @[simp]
 theorem onQuot_comap_eq {J : Ideal R} (hJ : J ≤ supp v) :
@@ -96,16 +100,20 @@ variable (v : AddValuation R Γ₀)
 
 attribute [local reducible] AddValuation
 
+#print AddValuation.onQuotVal /-
 /-- If `hJ : J ⊆ supp v` then `on_quot_val hJ` is the induced function on R/J as a function.
 Note: it's just the function; the valuation is `on_quot hJ`. -/
 def onQuotVal {J : Ideal R} (hJ : J ≤ supp v) : R ⧸ J → Γ₀ :=
   v.onQuotVal hJ
 #align add_valuation.on_quot_val AddValuation.onQuotVal
+-/
 
+#print AddValuation.onQuot /-
 /-- The extension of valuation v on R to valuation on R/J if J ⊆ supp v -/
 def onQuot {J : Ideal R} (hJ : J ≤ supp v) : AddValuation (R ⧸ J) Γ₀ :=
   v.onQuot hJ
 #align add_valuation.on_quot AddValuation.onQuot
+-/
 
 @[simp]
 theorem onQuot_comap_eq {J : Ideal R} (hJ : J ≤ supp v) :

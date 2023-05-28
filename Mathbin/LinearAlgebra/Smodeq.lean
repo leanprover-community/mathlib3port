@@ -21,7 +21,7 @@ import Mathbin.RingTheory.Ideal.Quotient
 
 open Submodule
 
-open Polynomial
+open scoped Polynomial
 
 variable {R : Type _} [Ring R]
 

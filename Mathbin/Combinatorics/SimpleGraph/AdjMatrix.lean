@@ -44,7 +44,7 @@ properties to computational properties of the matrix.
 -/
 
 
-open BigOperators Matrix
+open scoped BigOperators Matrix
 
 open Finset Matrix SimpleGraph
 

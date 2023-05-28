@@ -31,7 +31,7 @@ This file deals with the factors of natural numbers.
 
 open Bool Subtype
 
-open Nat
+open scoped Nat
 
 namespace Nat
 

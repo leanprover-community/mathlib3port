@@ -35,7 +35,7 @@ open CategoryTheory
 
 open CategoryTheory.Subobject
 
-open CategoryTheory.Type
+open scoped CategoryTheory.Type
 
 #print subtype_val_mono /-
 theorem subtype_val_mono {α : Type u} (s : Set α) : Mono (↾(Subtype.val : s → α)) :=
@@ -73,9 +73,11 @@ instance : WellPowered (Type u) :=
   wellPowered_of_essentiallySmall_monoOver fun α =>
     EssentiallySmall.mk' (Types.monoOverEquivalenceSet α)
 
+#print Types.subobjectEquivSet /-
 /-- For `α : Type u`, `subobject α` is order isomorphic to `set α`.
 -/
 noncomputable def Types.subobjectEquivSet (α : Type u) : Subobject α ≃o Set α :=
   (Types.monoOverEquivalenceSet α).thinSkeletonOrderIso
 #align types.subobject_equiv_set Types.subobjectEquivSet
+-/
 

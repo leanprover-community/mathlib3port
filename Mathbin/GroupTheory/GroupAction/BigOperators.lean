@@ -25,7 +25,7 @@ Note that analogous lemmas for `module`s like `finset.sum_smul` appear in other 
 
 variable {α β γ : Type _}
 
-open BigOperators
+open scoped BigOperators
 
 section
 

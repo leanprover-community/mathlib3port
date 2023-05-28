@@ -68,7 +68,7 @@ measurable functions, as a basis for the Bochner integral.
 
 open MeasureTheory Filter TopologicalSpace Function Set MeasureTheory.Measure
 
-open ENNReal Topology MeasureTheory NNReal BigOperators
+open scoped ENNReal Topology MeasureTheory NNReal BigOperators
 
 #print SecondCountableTopologyEither /-
 /-- The typeclass `second_countable_topology_either α β` registers the fact that at least one of
@@ -141,7 +141,7 @@ def AEFinStronglyMeasurable [Zero β] {m0 : MeasurableSpace α} (f : α → β) 
 
 end Definitions
 
-open MeasureTheory
+open scoped MeasureTheory
 
 /-! ## Strongly measurable functions -/
 
@@ -562,7 +562,7 @@ variable [MeasurableSpace α] [TopologicalSpace β]
 
 open Filter
 
-open Filter
+open scoped Filter
 
 #print MeasureTheory.StronglyMeasurable.sup /-
 protected theorem sup [Sup β] [ContinuousSup β] (hf : StronglyMeasurable f)
@@ -1653,6 +1653,7 @@ theorem nullMeasurableSet_eq_fun {E} [TopologicalSpace E] [MetrizableSpace E] {f
 #align measure_theory.ae_strongly_measurable.null_measurable_set_eq_fun MeasureTheory.AEStronglyMeasurable.nullMeasurableSet_eq_fun
 -/
 
+#print MeasureTheory.AEStronglyMeasurable.nullMeasurableSet_lt /-
 theorem nullMeasurableSet_lt [LinearOrder β] [OrderClosedTopology β] [PseudoMetrizableSpace β]
     {f g : α → β} (hf : AEStronglyMeasurable f μ) (hg : AEStronglyMeasurable g μ) :
     NullMeasurableSet { a | f a < g a } μ :=
@@ -1663,7 +1664,9 @@ theorem nullMeasurableSet_lt [LinearOrder β] [OrderClosedTopology β] [PseudoMe
   change (hf.mk f x < hg.mk g x) = (f x < g x)
   simp only [hfx, hgx]
 #align measure_theory.ae_strongly_measurable.null_measurable_set_lt MeasureTheory.AEStronglyMeasurable.nullMeasurableSet_lt
+-/
 
+#print MeasureTheory.AEStronglyMeasurable.nullMeasurableSet_le /-
 theorem nullMeasurableSet_le [Preorder β] [OrderClosedTopology β] [PseudoMetrizableSpace β]
     {f g : α → β} (hf : AEStronglyMeasurable f μ) (hg : AEStronglyMeasurable g μ) :
     NullMeasurableSet { a | f a ≤ g a } μ :=
@@ -1674,6 +1677,7 @@ theorem nullMeasurableSet_le [Preorder β] [OrderClosedTopology β] [PseudoMetri
   change (hf.mk f x ≤ hg.mk g x) = (f x ≤ g x)
   simp only [hfx, hgx]
 #align measure_theory.ae_strongly_measurable.null_measurable_set_le MeasureTheory.AEStronglyMeasurable.nullMeasurableSet_le
+-/
 
 #print aestronglyMeasurable_of_aestronglyMeasurable_trim /-
 theorem aestronglyMeasurable_of_aestronglyMeasurable_trim {α} {m m0 : MeasurableSpace α}

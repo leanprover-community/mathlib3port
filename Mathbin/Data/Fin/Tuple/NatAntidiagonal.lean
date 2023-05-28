@@ -48,7 +48,7 @@ support finitely-supported functions, as is done with `cut` in
 -/
 
 
-open BigOperators
+open scoped BigOperators
 
 /-! ### Lists -/
 

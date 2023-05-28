@@ -31,7 +31,7 @@ be an intermediate typeclass for uniform spaces, but the algebraic hierarchy the
 -/
 
 
-open NNReal
+open scoped NNReal
 
 noncomputable section
 

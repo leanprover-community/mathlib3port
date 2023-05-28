@@ -53,7 +53,7 @@ open map, closed map, embedding, quotient map, identification map
 
 open Set Filter Function
 
-open Topology Filter
+open scoped Topology Filter
 
 variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 

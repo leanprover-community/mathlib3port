@@ -54,7 +54,7 @@ noncomputable section
 
 open Classical Set Filter MeasureTheory
 
-open Classical BigOperators Topology NNReal ENNReal MeasureTheory
+open scoped Classical BigOperators Topology NNReal ENNReal MeasureTheory
 
 universe u v w x y
 
@@ -572,16 +572,20 @@ section PartialOrder
 
 variable [PartialOrder α] [OrderClosedTopology α] [SecondCountableTopology α] {a b : α}
 
+#print measurableSet_le' /-
 @[measurability]
 theorem measurableSet_le' : MeasurableSet { p : α × α | p.1 ≤ p.2 } :=
   OrderClosedTopology.isClosed_le'.MeasurableSet
 #align measurable_set_le' measurableSet_le'
+-/
 
+#print measurableSet_le /-
 @[measurability]
 theorem measurableSet_le {f g : δ → α} (hf : Measurable f) (hg : Measurable g) :
     MeasurableSet { a | f a ≤ g a } :=
   hf.prod_mk hg measurableSet_le'
 #align measurable_set_le measurableSet_le
+-/
 
 end PartialOrder
 
@@ -590,7 +594,7 @@ section LinearOrder
 variable [LinearOrder α] [OrderClosedTopology α] {a b x : α}
 
 -- we open this locale only here to avoid issues with list being treated as intervals above
-open Interval
+open scoped Interval
 
 #print measurableSet_Iio /-
 @[simp, measurability]
@@ -645,10 +649,12 @@ instance nhdsWithin_uIcc_isMeasurablyGenerated : IsMeasurablyGenerated (𝓝[[a,
 #align nhds_within_uIcc_is_measurably_generated nhdsWithin_uIcc_isMeasurablyGenerated
 -/
 
+#print measurableSet_lt' /-
 @[measurability]
 theorem measurableSet_lt' [SecondCountableTopology α] : MeasurableSet { p : α × α | p.1 < p.2 } :=
   (isOpen_lt continuous_fst continuous_snd).MeasurableSet
 #align measurable_set_lt' measurableSet_lt'
+-/
 
 @[measurability]
 theorem measurableSet_lt [SecondCountableTopology α] {f g : δ → α} (hf : Measurable f)
@@ -773,6 +779,7 @@ theorem borel_eq_generateFrom_Ioc (α : Type _) [TopologicalSpace α] [SecondCou
 
 namespace MeasureTheory.Measure
 
+#print MeasureTheory.Measure.ext_of_Ico_finite /-
 /-- Two finite measures on a Borel space are equal if they agree on all closed-open intervals.  If
 `α` is a conditionally complete linear order with no top element,
 `measure_theory.measure..ext_of_Ico` is an extensionality lemma with weaker assumptions on `μ` and
@@ -788,7 +795,9 @@ theorem ext_of_Ico_finite {α : Type _} [TopologicalSpace α] {m : MeasurableSpa
   · rintro - ⟨a, b, hlt, rfl⟩
     exact h hlt
 #align measure_theory.measure.ext_of_Ico_finite MeasureTheory.Measure.ext_of_Ico_finite
+-/
 
+#print MeasureTheory.Measure.ext_of_Ioc_finite /-
 /-- Two finite measures on a Borel space are equal if they agree on all open-closed intervals.  If
 `α` is a conditionally complete linear order with no top element,
 `measure_theory.measure..ext_of_Ioc` is an extensionality lemma with weaker assumptions on `μ` and
@@ -801,6 +810,7 @@ theorem ext_of_Ioc_finite {α : Type _} [TopologicalSpace α] {m : MeasurableSpa
   erw [dual_Ico]
   exact h hab
 #align measure_theory.measure.ext_of_Ioc_finite MeasureTheory.Measure.ext_of_Ioc_finite
+-/
 
 /-- Two measures which are finite on closed-open intervals are equal if the agree on all
 closed-open intervals. -/
@@ -837,6 +847,7 @@ theorem ext_of_Ioc' {α : Type _} [TopologicalSpace α] {m : MeasurableSpace α}
   exacts[hμ hab, h hab]
 #align measure_theory.measure.ext_of_Ioc' MeasureTheory.Measure.ext_of_Ioc'
 
+#print MeasureTheory.Measure.ext_of_Ico /-
 /-- Two measures which are finite on closed-open intervals are equal if the agree on all
 closed-open intervals. -/
 theorem ext_of_Ico {α : Type _} [TopologicalSpace α] {m : MeasurableSpace α}
@@ -845,7 +856,9 @@ theorem ext_of_Ico {α : Type _} [TopologicalSpace α] {m : MeasurableSpace α}
     (h : ∀ ⦃a b⦄, a < b → μ (Ico a b) = ν (Ico a b)) : μ = ν :=
   μ.ext_of_Ico' ν (fun a b hab => measure_Ico_lt_top.Ne) h
 #align measure_theory.measure.ext_of_Ico MeasureTheory.Measure.ext_of_Ico
+-/
 
+#print MeasureTheory.Measure.ext_of_Ioc /-
 /-- Two measures which are finite on closed-open intervals are equal if the agree on all
 open-closed intervals. -/
 theorem ext_of_Ioc {α : Type _} [TopologicalSpace α] {m : MeasurableSpace α}
@@ -854,6 +867,7 @@ theorem ext_of_Ioc {α : Type _} [TopologicalSpace α] {m : MeasurableSpace α}
     (h : ∀ ⦃a b⦄, a < b → μ (Ioc a b) = ν (Ioc a b)) : μ = ν :=
   μ.ext_of_Ioc' ν (fun a b hab => measure_Ioc_lt_top.Ne) h
 #align measure_theory.measure.ext_of_Ioc MeasureTheory.Measure.ext_of_Ioc
+-/
 
 #print MeasureTheory.Measure.ext_of_Iic /-
 /-- Two finite measures on a Borel space are equal if they agree on all left-infinite right-closed
@@ -1373,6 +1387,7 @@ theorem aemeasurable_restrict_of_antitoneOn [LinearOrder β] [OrderClosedTopolog
 #align ae_measurable_restrict_of_antitone_on aemeasurable_restrict_of_antitoneOn
 -/
 
+#print measurableSet_of_mem_nhdsWithin_Ioi_aux /-
 theorem measurableSet_of_mem_nhdsWithin_Ioi_aux {s : Set α} (h : ∀ x ∈ s, s ∈ 𝓝[>] x)
     (h' : ∀ x ∈ s, ∃ y, x < y) : MeasurableSet s :=
   by
@@ -1398,6 +1413,7 @@ theorem measurableSet_of_mem_nhdsWithin_Ioi_aux {s : Set α} (h : ∀ x ∈ s, s
       exact False.elim (hx.2 this)
   exact B.countable_of_Ioo fun x hx => hy x hx.1
 #align measurable_set_of_mem_nhds_within_Ioi_aux measurableSet_of_mem_nhdsWithin_Ioi_aux
+-/
 
 #print measurableSet_of_mem_nhdsWithin_Ioi /-
 /-- If a set is a right-neighborhood of all of its points, then it is measurable. -/

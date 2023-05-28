@@ -21,7 +21,7 @@ that they form a module.
 
 open Complex UpperHalfPlane
 
-open UpperHalfPlane ModularForm
+open scoped UpperHalfPlane ModularForm
 
 noncomputable section
 

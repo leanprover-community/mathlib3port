@@ -43,7 +43,7 @@ noncomputable section
 
 open TopologicalSpace Set Filter Function
 
-open Classical Topology Filter
+open scoped Classical Topology Filter
 
 universe u v
 

@@ -174,7 +174,7 @@ section
 
 variable [HasZeroObject C]
 
-open ZeroObject
+open scoped ZeroObject
 
 #print CategoryTheory.NormalMonoCategory.epi_of_zero_cancel /-
 /-- If `f ≫ g = 0` implies `g = 0` for all `g`, then `g` is a monomorphism. -/
@@ -339,7 +339,7 @@ section
 
 variable [HasZeroObject C]
 
-open ZeroObject
+open scoped ZeroObject
 
 #print CategoryTheory.NormalEpiCategory.mono_of_cancel_zero /-
 /-- If `g ≫ f = 0` implies `g = 0` for all `g`, then `f` is a monomorphism. -/

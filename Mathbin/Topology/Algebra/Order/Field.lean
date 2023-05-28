@@ -28,7 +28,7 @@ open Function
 
 open OrderDual (toDual ofDual)
 
-open Topology Classical Filter
+open scoped Topology Classical Filter
 
 variable {α β : Type _}
 

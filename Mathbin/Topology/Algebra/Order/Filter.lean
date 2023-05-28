@@ -22,7 +22,7 @@ In this file we prove that `𝓝 (f x)` tends to `𝓝 filter.at_top` provided t
 -/
 
 
-open Topology
+open scoped Topology
 
 namespace Filter
 

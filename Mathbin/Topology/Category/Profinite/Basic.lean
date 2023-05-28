@@ -52,7 +52,7 @@ universe u
 
 open CategoryTheory
 
-open Topology
+open scoped Topology
 
 #print Profinite /-
 /-- The type of profinite topological spaces. -/

@@ -47,7 +47,7 @@ scoped[Manifold] notation "C^" n "⟮" I ", " M "; " I' ", " M' "⟯" => ContMdi
 scoped[Manifold]
   notation "C^" n "⟮" I ", " M "; " k "⟯" => ContMdiffMap I (modelWithCornersSelf k k) M k n
 
-open Manifold
+open scoped Manifold
 
 namespace ContMdiffMap
 

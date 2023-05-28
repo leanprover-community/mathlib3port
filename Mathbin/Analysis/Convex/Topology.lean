@@ -33,7 +33,7 @@ assert_not_exists Norm
 
 open Metric Set
 
-open Pointwise Convex
+open scoped Pointwise Convex
 
 variable {ι 𝕜 E : Type _}
 

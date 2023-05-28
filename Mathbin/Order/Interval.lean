@@ -142,25 +142,33 @@ instance : CoeTC (NonemptyInterval α) (Set α) :=
 instance (priority := 100) : Membership α (NonemptyInterval α) :=
   ⟨fun a s => a ∈ (s : Set α)⟩
 
+#print NonemptyInterval.mem_mk /-
 @[simp]
 theorem mem_mk {hx : x.1 ≤ x.2} : a ∈ mk x hx ↔ x.1 ≤ a ∧ a ≤ x.2 :=
   Iff.rfl
 #align nonempty_interval.mem_mk NonemptyInterval.mem_mk
+-/
 
+#print NonemptyInterval.mem_def /-
 theorem mem_def : a ∈ s ↔ s.fst ≤ a ∧ a ≤ s.snd :=
   Iff.rfl
 #align nonempty_interval.mem_def NonemptyInterval.mem_def
+-/
 
+#print NonemptyInterval.coe_nonempty /-
 @[simp]
 theorem coe_nonempty (s : NonemptyInterval α) : (s : Set α).Nonempty :=
   nonempty_Icc.2 s.fst_le_snd
 #align nonempty_interval.coe_nonempty NonemptyInterval.coe_nonempty
+-/
 
+#print NonemptyInterval.pure /-
 /-- `{a}` as an interval. -/
 @[simps]
 def pure (a : α) : NonemptyInterval α :=
   ⟨⟨a, a⟩, le_rfl⟩
 #align nonempty_interval.pure NonemptyInterval.pure
+-/
 
 #print NonemptyInterval.mem_pure_self /-
 theorem mem_pure_self (a : α) : a ∈ pure a :=
@@ -168,14 +176,18 @@ theorem mem_pure_self (a : α) : a ∈ pure a :=
 #align nonempty_interval.mem_pure_self NonemptyInterval.mem_pure_self
 -/
 
+#print NonemptyInterval.pure_injective /-
 theorem pure_injective : Injective (pure : α → NonemptyInterval α) := fun s t =>
   congr_arg <| Prod.fst ∘ toProd
 #align nonempty_interval.pure_injective NonemptyInterval.pure_injective
+-/
 
+#print NonemptyInterval.dual_pure /-
 @[simp]
 theorem dual_pure (a : α) : (pure a).dual = pure (toDual a) :=
   rfl
 #align nonempty_interval.dual_pure NonemptyInterval.dual_pure
+-/
 
 instance [Inhabited α] : Inhabited (NonemptyInterval α) :=
   ⟨pure default⟩
@@ -186,11 +198,13 @@ instance : ∀ [Nonempty α], Nonempty (NonemptyInterval α) :=
 instance [Nontrivial α] : Nontrivial (NonemptyInterval α) :=
   pure_injective.Nontrivial
 
+#print NonemptyInterval.map /-
 /-- Pushforward of nonempty intervals. -/
 @[simps]
 def map (f : α →o β) (a : NonemptyInterval α) : NonemptyInterval β :=
   ⟨a.toProd.map f f, f.mono a.fst_le_snd⟩
 #align nonempty_interval.map NonemptyInterval.map
+-/
 
 @[simp]
 theorem map_pure (f : α →o β) (a : α) : (pure a).map f = pure (f a) :=
@@ -208,12 +222,14 @@ theorem dual_map (f : α →o β) (a : NonemptyInterval α) : (a.map f).dual = a
   rfl
 #align nonempty_interval.dual_map NonemptyInterval.dual_map
 
+#print NonemptyInterval.map₂ /-
 /-- Binary pushforward of nonempty intervals. -/
 @[simps]
 def map₂ (f : α → β → γ) (h₀ : ∀ b, Monotone fun a => f a b) (h₁ : ∀ a, Monotone (f a)) :
     NonemptyInterval α → NonemptyInterval β → NonemptyInterval γ := fun s t =>
   ⟨(f s.fst t.fst, f s.snd t.snd), (h₀ _ s.fst_le_snd).trans <| h₁ _ t.fst_le_snd⟩
 #align nonempty_interval.map₂ NonemptyInterval.map₂
+-/
 
 @[simp]
 theorem map₂_pure (f : α → β → γ) (h₀ h₁) (a : α) (b : β) :
@@ -236,10 +252,12 @@ instance : OrderTop (NonemptyInterval α)
   top := ⟨⟨⊥, ⊤⟩, bot_le⟩
   le_top a := ⟨bot_le, le_top⟩
 
+#print NonemptyInterval.dual_top /-
 @[simp]
 theorem dual_top : (⊤ : NonemptyInterval α).dual = ⊤ :=
   rfl
 #align nonempty_interval.dual_top NonemptyInterval.dual_top
+-/
 
 end Preorder
 
@@ -250,20 +268,24 @@ variable [PartialOrder α] [PartialOrder β] {s t : NonemptyInterval α} {x : α
 instance : PartialOrder (NonemptyInterval α) :=
   PartialOrder.lift _ toDualProd_injective
 
+#print NonemptyInterval.coeHom /-
 /-- Consider a nonempty interval `[a, b]` as the set `[a, b]`. -/
 def coeHom : NonemptyInterval α ↪o Set α :=
   OrderEmbedding.ofMapLEIff (fun s => Icc s.fst s.snd) fun s t => Icc_subset_Icc_iff s.fst_le_snd
 #align nonempty_interval.coe_hom NonemptyInterval.coeHom
+-/
 
 instance : SetLike (NonemptyInterval α) α
     where
   coe s := Icc s.fst s.snd
   coe_injective' := coeHom.Injective
 
+#print NonemptyInterval.coe_subset_coe /-
 @[simp, norm_cast]
 theorem coe_subset_coe : (s : Set α) ⊆ t ↔ s ≤ t :=
   (@coeHom α _).le_iff_le
 #align nonempty_interval.coe_subset_coe NonemptyInterval.coe_subset_coe
+-/
 
 @[simp, norm_cast]
 theorem coe_ssubset_coe : (s : Set α) ⊂ t ↔ s < t :=
@@ -293,10 +315,12 @@ theorem coe_top [BoundedOrder α] : ((⊤ : NonemptyInterval α) : Set α) = uni
   Icc_bot_top
 #align nonempty_interval.coe_top NonemptyInterval.coe_top
 
+#print NonemptyInterval.coe_dual /-
 @[simp, norm_cast]
 theorem coe_dual (s : NonemptyInterval α) : (s.dual : Set αᵒᵈ) = ofDual ⁻¹' s :=
   dual_Icc
 #align nonempty_interval.coe_dual NonemptyInterval.coe_dual
+-/
 
 theorem subset_coe_map (f : α →o β) (s : NonemptyInterval α) : f '' s ⊆ s.map f :=
   image_subset_iff.2 fun a ha => ⟨f.mono ha.1, f.mono ha.2⟩
@@ -394,24 +418,32 @@ variable [Preorder α] [Preorder β] [Preorder γ]
 instance : Preorder (Interval α) :=
   WithBot.preorder
 
+#print Interval.pure /-
 /-- `{a}` as an interval. -/
 def pure (a : α) : Interval α :=
   NonemptyInterval.pure a
 #align interval.pure Interval.pure
+-/
 
+#print Interval.pure_injective /-
 theorem pure_injective : Injective (pure : α → Interval α) :=
   coe_injective.comp NonemptyInterval.pure_injective
 #align interval.pure_injective Interval.pure_injective
+-/
 
+#print Interval.dual_pure /-
 @[simp]
 theorem dual_pure (a : α) : (pure a).dual = pure (toDual a) :=
   rfl
 #align interval.dual_pure Interval.dual_pure
+-/
 
+#print Interval.dual_bot /-
 @[simp]
 theorem dual_bot : (⊥ : Interval α).dual = ⊥ :=
   rfl
 #align interval.dual_bot Interval.dual_bot
+-/
 
 @[simp]
 theorem pure_ne_bot {a : α} : pure a ≠ ⊥ :=
@@ -426,10 +458,12 @@ theorem bot_ne_pure {a : α} : ⊥ ≠ pure a :=
 instance [Nonempty α] : Nontrivial (Interval α) :=
   Option.nontrivial
 
+#print Interval.map /-
 /-- Pushforward of intervals. -/
 def map (f : α →o β) : Interval α → Interval β :=
   WithBot.map (NonemptyInterval.map f)
 #align interval.map Interval.map
+-/
 
 @[simp]
 theorem map_pure (f : α →o β) (a : α) : (pure a).map f = pure (f a) :=
@@ -451,10 +485,12 @@ variable [BoundedOrder α]
 instance : BoundedOrder (Interval α) :=
   WithBot.boundedOrder
 
+#print Interval.dual_top /-
 @[simp]
 theorem dual_top : (⊤ : Interval α).dual = ⊤ :=
   rfl
 #align interval.dual_top Interval.dual_top
+-/
 
 end Preorder
 
@@ -501,10 +537,12 @@ theorem coe_pure (a : α) : (pure a : Set α) = {a} :=
 #align interval.coe_pure Interval.coe_pure
 -/
 
+#print Interval.coe_coe /-
 @[simp, norm_cast]
 theorem coe_coe (s : NonemptyInterval α) : ((s : Interval α) : Set α) = s :=
   rfl
 #align interval.coe_coe Interval.coe_coe
+-/
 
 @[simp, norm_cast]
 theorem coe_bot : ((⊥ : Interval α) : Set α) = ∅ :=
@@ -516,10 +554,12 @@ theorem coe_top [BoundedOrder α] : ((⊤ : Interval α) : Set α) = univ :=
   Icc_bot_top
 #align interval.coe_top Interval.coe_top
 
+#print Interval.coe_dual /-
 @[simp, norm_cast]
 theorem coe_dual (s : Interval α) : (s.dual : Set αᵒᵈ) = ofDual ⁻¹' s := by cases s; · rfl;
   exact s.coe_dual
 #align interval.coe_dual Interval.coe_dual
+-/
 
 theorem subset_coe_map (f : α →o β) : ∀ s : Interval α, f '' s ⊆ s.map f
   | ⊥ => by simp
@@ -636,15 +676,19 @@ section Preorder
 
 variable [Preorder α] {s : NonemptyInterval α} {a : α}
 
+#print NonemptyInterval.coe_pure_interval /-
 @[simp, norm_cast]
 theorem coe_pure_interval (a : α) : (pure a : Interval α) = Interval.pure a :=
   rfl
 #align nonempty_interval.coe_pure_interval NonemptyInterval.coe_pure_interval
+-/
 
+#print NonemptyInterval.coe_eq_pure /-
 @[simp, norm_cast]
 theorem coe_eq_pure : (s : Interval α) = Interval.pure a ↔ s = pure a := by
   rw [← Interval.coe_inj, coe_pure_interval]
 #align nonempty_interval.coe_eq_pure NonemptyInterval.coe_eq_pure
+-/
 
 @[simp, norm_cast]
 theorem coe_top_interval [BoundedOrder α] : ((⊤ : NonemptyInterval α) : Interval α) = ⊤ :=
@@ -653,11 +697,13 @@ theorem coe_top_interval [BoundedOrder α] : ((⊤ : NonemptyInterval α) : Inte
 
 end Preorder
 
+#print NonemptyInterval.mem_coe_interval /-
 @[simp, norm_cast]
 theorem mem_coe_interval [PartialOrder α] {s : NonemptyInterval α} {x : α} :
     x ∈ (s : Interval α) ↔ x ∈ s :=
   Iff.rfl
 #align nonempty_interval.mem_coe_interval NonemptyInterval.mem_coe_interval
+-/
 
 @[simp, norm_cast]
 theorem coe_sup_interval [Lattice α] (s t : NonemptyInterval α) : (↑(s ⊔ t) : Interval α) = s ⊔ t :=

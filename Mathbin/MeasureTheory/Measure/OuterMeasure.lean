@@ -65,7 +65,7 @@ open Set Function Filter
 
 open TopologicalSpace (SecondCountableTopology)
 
-open Classical BigOperators NNReal Topology ENNReal MeasureTheory
+open scoped Classical BigOperators NNReal Topology ENNReal MeasureTheory
 
 namespace MeasureTheory
 
@@ -373,10 +373,12 @@ instance MeasureTheory.OuterMeasure.instPartialOrder : PartialOrder (OuterMeasur
 #align measure_theory.outer_measure.outer_measure.partial_order MeasureTheory.OuterMeasure.instPartialOrder
 -/
 
+#print MeasureTheory.OuterMeasure.OuterMeasure.orderBot /-
 instance OuterMeasure.orderBot : OrderBot (OuterMeasure α) :=
   { OuterMeasure.instBot with
     bot_le := fun a s => by simp only [coe_zero, Pi.zero_apply, coe_bot, zero_le] }
 #align measure_theory.outer_measure.outer_measure.order_bot MeasureTheory.OuterMeasure.OuterMeasure.orderBot
+-/
 
 theorem univ_eq_zero_iff (m : OuterMeasure α) : m univ = 0 ↔ m = 0 :=
   ⟨fun h => bot_unique fun s => (m.mono' <| subset_univ s).trans_eq h, fun h => h.symm ▸ rfl⟩
@@ -1622,9 +1624,11 @@ def trim : OuterMeasure α :=
 #align measure_theory.outer_measure.trim MeasureTheory.OuterMeasure.trim
 -/
 
+#print MeasureTheory.OuterMeasure.le_trim /-
 theorem le_trim : m ≤ m.trim :=
   le_ofFunction.mpr fun s => le_iInf fun _ => le_rfl
 #align measure_theory.outer_measure.le_trim MeasureTheory.OuterMeasure.le_trim
+-/
 
 #print MeasureTheory.OuterMeasure.trim_eq /-
 theorem trim_eq {s : Set α} (hs : MeasurableSet s) : m.trim s = m s :=
@@ -1696,12 +1700,14 @@ theorem trim_zero : (0 : OuterMeasure α).trim = 0 :=
 #align measure_theory.outer_measure.trim_zero MeasureTheory.OuterMeasure.trim_zero
 -/
 
+#print MeasureTheory.OuterMeasure.trim_sum_ge /-
 theorem trim_sum_ge {ι} (m : ι → OuterMeasure α) : (sum fun i => (m i).trim) ≤ (sum m).trim :=
   fun s => by
   simp [trim_eq_infi] <;>
     exact fun t st ht =>
       ENNReal.tsum_le_tsum fun i => iInf_le_of_le t <| iInf_le_of_le st <| iInf_le _ ht
 #align measure_theory.outer_measure.trim_sum_ge MeasureTheory.OuterMeasure.trim_sum_ge
+-/
 
 #print MeasureTheory.OuterMeasure.exists_measurable_superset_eq_trim /-
 theorem exists_measurable_superset_eq_trim (m : OuterMeasure α) (s : Set α) :

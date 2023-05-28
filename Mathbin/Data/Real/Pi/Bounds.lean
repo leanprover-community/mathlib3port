@@ -22,7 +22,7 @@ See also `data.real.pi.leibniz` and `data.real.pi.wallis` for infinite formulas 
 -/
 
 
-open Real
+open scoped Real
 
 namespace Real
 

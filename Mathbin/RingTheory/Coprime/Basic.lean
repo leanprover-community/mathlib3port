@@ -27,7 +27,7 @@ See also `ring_theory.coprime.lemmas` for further development of coprime element
 -/
 
 
-open Classical
+open scoped Classical
 
 universe u v
 

@@ -32,7 +32,7 @@ this definition of finite generation to define the others.
 -/
 
 
-open FirstOrder
+open scoped FirstOrder
 
 open Set
 

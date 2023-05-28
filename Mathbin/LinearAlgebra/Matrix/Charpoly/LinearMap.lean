@@ -35,9 +35,9 @@ variable {M : Type _} [AddCommGroup M] (R : Type _) [CommRing R] [Module R M] (I
 
 variable (b : ι → M) (hb : Submodule.span R (Set.range b) = ⊤)
 
-open BigOperators
+open scoped BigOperators
 
-open Polynomial
+open scoped Polynomial
 
 #print PiToModule.fromMatrix /-
 /-- The composition of a matrix (as an endomporphism of `ι → R`) with the projection

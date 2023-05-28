@@ -42,7 +42,7 @@ matrix, diagonal, det, block triangular
 
 open Finset Function OrderDual
 
-open BigOperators Matrix
+open scoped BigOperators Matrix
 
 universe v
 

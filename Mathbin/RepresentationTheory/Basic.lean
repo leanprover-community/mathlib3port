@@ -346,7 +346,7 @@ variable [AddCommMonoid V] [Module k V] [AddCommMonoid W] [Module k W]
 
 variable (ρV : Representation k G V) (ρW : Representation k G W)
 
-open TensorProduct
+open scoped TensorProduct
 
 /-- Given representations of `G` on `V` and `W`, there is a natural representation of `G` on their
 tensor product `V ⊗[k] W`.

@@ -53,7 +53,7 @@ additive character, multiplicative character, Gauss sum
 
 universe u v
 
-open BigOperators
+open scoped BigOperators
 
 open AddChar MulChar
 

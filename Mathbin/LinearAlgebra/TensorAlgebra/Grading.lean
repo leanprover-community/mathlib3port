@@ -23,7 +23,7 @@ namespace TensorAlgebra
 
 variable {R M : Type _} [CommSemiring R] [AddCommMonoid M] [Module R M]
 
-open DirectSum
+open scoped DirectSum
 
 variable (R M)
 

@@ -33,7 +33,7 @@ left continuous, right continuous
 
 open Set Filter
 
-open Topology
+open scoped Topology
 
 section PartialOrder
 

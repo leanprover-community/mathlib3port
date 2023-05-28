@@ -54,7 +54,7 @@ variable {R : Type _} [CommRing R]
 
 open Set TopologicalAddGroup Submodule Filter
 
-open Topology Pointwise
+open scoped Topology Pointwise
 
 namespace Ideal
 

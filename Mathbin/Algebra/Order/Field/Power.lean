@@ -32,6 +32,7 @@ variable [LinearOrderedSemifield α] {a b c d e : α} {m n : ℤ}
 /-! ### Integer powers -/
 
 
+#print zpow_le_of_le /-
 theorem zpow_le_of_le (ha : 1 ≤ a) (h : m ≤ n) : a ^ m ≤ a ^ n :=
   by
   have ha₀ : 0 < a := one_pos.trans_le ha
@@ -43,14 +44,19 @@ theorem zpow_le_of_le (ha : 1 ≤ a) (h : m ≤ n) : a ^ m ≤ a ^ n :=
     _ = a ^ n := by rw [← zpow_ofNat, ← zpow_add₀ ha₀.ne', hk, add_sub_cancel'_right]
     
 #align zpow_le_of_le zpow_le_of_le
+-/
 
+#print zpow_le_one_of_nonpos /-
 theorem zpow_le_one_of_nonpos (ha : 1 ≤ a) (hn : n ≤ 0) : a ^ n ≤ 1 :=
   (zpow_le_of_le ha hn).trans_eq <| zpow_zero _
 #align zpow_le_one_of_nonpos zpow_le_one_of_nonpos
+-/
 
+#print one_le_zpow_of_nonneg /-
 theorem one_le_zpow_of_nonneg (ha : 1 ≤ a) (hn : 0 ≤ n) : 1 ≤ a ^ n :=
   (zpow_zero _).symm.trans_le <| zpow_le_of_le ha hn
 #align one_le_zpow_of_nonneg one_le_zpow_of_nonneg
+-/
 
 protected theorem Nat.zpow_pos_of_pos {a : ℕ} (h : 0 < a) (n : ℤ) : 0 < (a : α) ^ n := by
   apply zpow_pos_of_pos; exact_mod_cast h
@@ -60,11 +66,14 @@ theorem Nat.zpow_ne_zero_of_pos {a : ℕ} (h : 0 < a) (n : ℤ) : (a : α) ^ n �
   (Nat.zpow_pos_of_pos h n).ne'
 #align nat.zpow_ne_zero_of_pos Nat.zpow_ne_zero_of_pos
 
+#print one_lt_zpow /-
 theorem one_lt_zpow (ha : 1 < a) : ∀ n : ℤ, 0 < n → 1 < a ^ n
   | (n : ℕ), h => (zpow_ofNat _ _).symm.subst (one_lt_pow ha <| Int.coe_nat_ne_zero.mp h.ne')
   | -[n+1], h => ((Int.negSucc_not_pos _).mp h).elim
 #align one_lt_zpow one_lt_zpow
+-/
 
+#print zpow_strictMono /-
 theorem zpow_strictMono (hx : 1 < a) : StrictMono ((· ^ ·) a : ℤ → α) :=
   strictMono_int_of_lt_succ fun n =>
     have xpos : 0 < a := zero_lt_one.trans hx
@@ -73,6 +82,7 @@ theorem zpow_strictMono (hx : 1 < a) : StrictMono ((· ^ ·) a : ℤ → α) :=
       _ = a ^ (n + 1) := (zpow_add_one₀ xpos.ne' _).symm
       
 #align zpow_strict_mono zpow_strictMono
+-/
 
 theorem zpow_strictAnti (h₀ : 0 < a) (h₁ : a < 1) : StrictAnti ((· ^ ·) a : ℤ → α) :=
   strictAnti_int_of_succ_lt fun n =>
@@ -83,15 +93,19 @@ theorem zpow_strictAnti (h₀ : 0 < a) (h₁ : a < 1) : StrictAnti ((· ^ ·) a 
       
 #align zpow_strict_anti zpow_strictAnti
 
+#print zpow_lt_iff_lt /-
 @[simp]
 theorem zpow_lt_iff_lt (hx : 1 < a) : a ^ m < a ^ n ↔ m < n :=
   (zpow_strictMono hx).lt_iff_lt
 #align zpow_lt_iff_lt zpow_lt_iff_lt
+-/
 
+#print zpow_le_iff_le /-
 @[simp]
 theorem zpow_le_iff_le (hx : 1 < a) : a ^ m ≤ a ^ n ↔ m ≤ n :=
   (zpow_strictMono hx).le_iff_le
 #align zpow_le_iff_le zpow_le_iff_le
+-/
 
 @[simp]
 theorem div_pow_le (ha : 0 ≤ a) (hb : 1 ≤ b) (k : ℕ) : a / b ^ k ≤ a :=

@@ -31,9 +31,9 @@ This file introduces the commuting probability of finite groups.
 
 noncomputable section
 
-open Classical
+open scoped Classical
 
-open BigOperators
+open scoped BigOperators
 
 open Fintype
 
@@ -53,11 +53,13 @@ theorem commProb_def :
 
 variable [Finite M]
 
+#print commProb_pos /-
 theorem commProb_pos [h : Nonempty M] : 0 < commProb M :=
   h.elim fun x =>
     div_pos (Nat.cast_pos.mpr (Finite.card_pos_iff.mpr ⟨⟨(x, x), rfl⟩⟩))
       (pow_pos (Nat.cast_pos.mpr Finite.card_pos) 2)
 #align comm_prob_pos commProb_pos
+-/
 
 theorem commProb_le_one : commProb M ≤ 1 :=
   by

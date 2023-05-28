@@ -32,7 +32,7 @@ measure, mutually singular
 
 open Set
 
-open MeasureTheory NNReal ENNReal
+open scoped MeasureTheory NNReal ENNReal
 
 namespace MeasureTheory
 
@@ -96,9 +96,11 @@ theorem mono_ac (h : μ₁ ⟂ₘ ν₁) (hμ : μ₂ ≪ μ₁) (hν : ν₂ �
 #align measure_theory.measure.mutually_singular.mono_ac MeasureTheory.Measure.MutuallySingular.mono_ac
 -/
 
+#print MeasureTheory.Measure.MutuallySingular.mono /-
 theorem mono (h : μ₁ ⟂ₘ ν₁) (hμ : μ₂ ≤ μ₁) (hν : ν₂ ≤ ν₁) : μ₂ ⟂ₘ ν₂ :=
   h.mono_ac hμ.AbsolutelyContinuous hν.AbsolutelyContinuous
 #align measure_theory.measure.mutually_singular.mono MeasureTheory.Measure.MutuallySingular.mono
+-/
 
 #print MeasureTheory.Measure.MutuallySingular.sum_left /-
 @[simp]

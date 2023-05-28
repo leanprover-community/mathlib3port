@@ -25,7 +25,7 @@ modular form.
 
 open Complex UpperHalfPlane
 
-open Topology Manifold UpperHalfPlane
+open scoped Topology Manifold UpperHalfPlane
 
 noncomputable section
 
@@ -44,7 +44,7 @@ open ModularForm
 
 variable (F : Type _) (Γ : Subgroup SL(2, ℤ)) (k : ℤ)
 
-open ModularForm
+open scoped ModularForm
 
 /-- These are `slash_invariant_form`'s that are holomophic and bounded at infinity. -/
 structure ModularForm extends SlashInvariantForm Γ k where

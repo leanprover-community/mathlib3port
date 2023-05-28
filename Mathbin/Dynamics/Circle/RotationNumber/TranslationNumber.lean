@@ -130,7 +130,7 @@ open Function hiding Commute
 
 open Int
 
-open Topology Classical
+open scoped Topology Classical
 
 /-!
 ### Definition and monoid structure

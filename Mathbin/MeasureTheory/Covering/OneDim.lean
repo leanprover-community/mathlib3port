@@ -22,7 +22,7 @@ by showing that intervals belong to the relevant Vitali family.
 
 open Set MeasureTheory IsUnifLocDoublingMeasure Filter
 
-open Topology
+open scoped Topology
 
 namespace Real
 

@@ -29,7 +29,7 @@ Binet's formula.
 
 noncomputable section
 
-open Polynomial
+open scoped Polynomial
 
 /-- The golden ratio `φ := (1 + √5)/2`. -/
 @[reducible]

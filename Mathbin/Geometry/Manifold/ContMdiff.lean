@@ -50,7 +50,7 @@ in terms of extended charts in `cont_mdiff_on_iff` and `cont_mdiff_iff`.
 
 open Set Function Filter ChartedSpace SmoothManifoldWithCorners
 
-open Topology Manifold
+open scoped Topology Manifold
 
 /-! ### Definition of smooth functions between manifolds -/
 

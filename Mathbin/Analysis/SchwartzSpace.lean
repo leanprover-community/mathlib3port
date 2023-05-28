@@ -717,7 +717,7 @@ section BoundedContinuousFunction
 /-! ### Inclusion into the space of bounded continuous functions -/
 
 
-open BoundedContinuousFunction
+open scoped BoundedContinuousFunction
 
 /-- Schwartz functions as bounded continuous functions -/
 def toBoundedContinuousFunction (f : 𝓢(E, F)) : E →ᵇ F :=

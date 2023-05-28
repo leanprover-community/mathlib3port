@@ -44,7 +44,7 @@ members of the approximating sequence are nonnegative bounded continuous functio
 
 noncomputable section
 
-open Classical NNReal ENNReal Topology BoundedContinuousFunction
+open scoped Classical NNReal ENNReal Topology BoundedContinuousFunction
 
 open NNReal ENNReal Set Metric Emetric Filter
 

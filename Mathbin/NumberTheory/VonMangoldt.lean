@@ -42,7 +42,7 @@ namespace ArithmeticFunction
 
 open Finset
 
-open ArithmeticFunction
+open scoped ArithmeticFunction
 
 /-- `log` as an arithmetic function `ℕ → ℝ`. Note this is in the `nat.arithmetic_function`
 namespace to indicate that it is bundled as an `arithmetic_function` rather than being the usual
@@ -110,7 +110,7 @@ theorem vonMangoldt_eq_zero_iff {n : ℕ} : Λ n = 0 ↔ ¬IsPrimePow n :=
   vonMangoldt_ne_zero_iff.not_right
 #align nat.arithmetic_function.von_mangoldt_eq_zero_iff Nat.ArithmeticFunction.vonMangoldt_eq_zero_iff
 
-open BigOperators
+open scoped BigOperators
 
 theorem vonMangoldt_sum {n : ℕ} : (∑ i in n.divisors, Λ i) = Real.log n :=
   by

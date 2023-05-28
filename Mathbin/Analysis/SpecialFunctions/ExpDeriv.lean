@@ -26,7 +26,7 @@ noncomputable section
 
 open Filter Asymptotics Set Function
 
-open Classical Topology
+open scoped Classical Topology
 
 namespace Complex
 

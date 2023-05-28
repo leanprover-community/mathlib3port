@@ -126,7 +126,7 @@ variable {R}
 -- This enables the notation `⨂[R] i : ι, s i` for the pi tensor product, given `s : ι → Type*`.
 scoped[TensorProduct] notation3:100"⨂["R"] "(...)", "r:(scoped f => PiTensorProduct R f) => r
 
-open TensorProduct
+open scoped TensorProduct
 
 namespace PiTensorProduct
 
@@ -654,7 +654,7 @@ namespace PiTensorProduct
 
 open PiTensorProduct
 
-open TensorProduct
+open scoped TensorProduct
 
 variable {ι : Type _} {R : Type _} [CommRing R]
 

@@ -41,7 +41,7 @@ Note that this notion is especially relevant in a non-archimedean context, for i
 
 open TopologicalSpace
 
-open Topology
+open scoped Topology
 
 #print OpenAddSubgroup /-
 /-- The type of open subgroups of a topological additive group. -/

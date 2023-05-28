@@ -24,7 +24,7 @@ This file provides lemmas about Cauchy sequences in terms of infinite sums.
 
 open Filter Finset
 
-open BigOperators NNReal Topology
+open scoped BigOperators NNReal Topology
 
 variable {α : Type _}
 

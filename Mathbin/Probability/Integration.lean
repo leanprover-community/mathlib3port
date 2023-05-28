@@ -36,7 +36,7 @@ noncomputable section
 
 open Set MeasureTheory
 
-open ENNReal MeasureTheory
+open scoped ENNReal MeasureTheory
 
 variable {Ω : Type _} {mΩ : MeasurableSpace Ω} {μ : Measure Ω} {f g : Ω → ℝ≥0∞} {X Y : Ω → ℝ}
 

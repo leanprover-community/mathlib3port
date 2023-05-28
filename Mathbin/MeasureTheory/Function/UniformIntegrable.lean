@@ -50,7 +50,7 @@ uniform integrable, uniformly absolutely continuous integral, Vitali convergence
 
 noncomputable section
 
-open Classical MeasureTheory NNReal ENNReal Topology BigOperators
+open scoped Classical MeasureTheory NNReal ENNReal Topology BigOperators
 
 namespace MeasureTheory
 

@@ -55,7 +55,7 @@ accumulation point, perfect set, cantor-bendixson.
 -/
 
 
-open Topology Filter
+open scoped Topology Filter
 
 open TopologicalSpace Filter Set
 
@@ -246,7 +246,7 @@ section CantorInjMetric
 
 open Function
 
-open ENNReal
+open scoped ENNReal
 
 variable {α : Type _} [MetricSpace α] {C : Set α} (hC : Perfect C) {ε : ℝ≥0∞}
 

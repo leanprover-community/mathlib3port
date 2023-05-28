@@ -70,7 +70,7 @@ We also set up the theory for `pseudo_emetric_space` and `pseudo_metric_space`.
 
 open Real Set Filter IsROrC Bornology
 
-open BigOperators uniformity Topology NNReal ENNReal
+open scoped BigOperators uniformity Topology NNReal ENNReal
 
 noncomputable section
 
@@ -974,7 +974,7 @@ theorem basisFun_map :
   rfl
 #align pi_Lp.basis_fun_map PiLp.basisFun_map
 
-open Matrix
+open scoped Matrix
 
 theorem basis_toMatrix_basisFun_mul (b : Basis ι 𝕜 (PiLp p fun i : ι => 𝕜)) (A : Matrix ι ι 𝕜) :
     b.toMatrix (PiLp.basisFun _ _ _) ⬝ A =

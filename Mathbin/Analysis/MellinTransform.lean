@@ -48,7 +48,7 @@ open Real
 
 open Complex hiding exp log abs_of_nonneg
 
-open Topology
+open scoped Topology
 
 noncomputable section
 

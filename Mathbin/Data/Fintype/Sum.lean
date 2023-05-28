@@ -148,7 +148,7 @@ theorem Fintype.card_subtype_or_disjoint (p q : α → Prop) (h : Disjoint p q) 
 
 section
 
-open Classical
+open scoped Classical
 
 #print infinite_sum /-
 @[simp]

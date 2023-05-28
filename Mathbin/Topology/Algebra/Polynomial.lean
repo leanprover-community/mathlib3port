@@ -45,7 +45,7 @@ open IsAbsoluteValue Filter
 
 namespace Polynomial
 
-open Polynomial
+open scoped Polynomial
 
 section TopologicalSemiring
 
@@ -155,10 +155,12 @@ theorem tendsto_abv_aeval_atTop {R A k α : Type _} [CommSemiring R] [Ring A] [A
 
 variable {α R : Type _} [NormedRing R] [IsAbsoluteValue (norm : R → ℝ)]
 
+#print Polynomial.tendsto_norm_atTop /-
 theorem tendsto_norm_atTop (p : R[X]) (h : 0 < degree p) {l : Filter α} {z : α → R}
     (hz : Tendsto (fun x => ‖z x‖) l atTop) : Tendsto (fun x => ‖p.eval (z x)‖) l atTop :=
   p.tendsto_abv_atTop norm h hz
 #align polynomial.tendsto_norm_at_top Polynomial.tendsto_norm_atTop
+-/
 
 theorem exists_forall_norm_le [ProperSpace R] (p : R[X]) : ∃ x, ∀ y, ‖p.eval x‖ ≤ ‖p.eval y‖ :=
   if hp0 : 0 < degree p then
@@ -168,7 +170,7 @@ theorem exists_forall_norm_le [ProperSpace R] (p : R[X]) : ∃ x, ∀ y, ‖p.ev
 
 section Roots
 
-open Polynomial NNReal
+open scoped Polynomial NNReal
 
 variable {F K : Type _} [CommRing F] [NormedField K]
 

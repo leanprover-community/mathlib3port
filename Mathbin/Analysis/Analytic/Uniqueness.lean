@@ -25,7 +25,7 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddC
 
 open Set
 
-open Topology ENNReal
+open scoped Topology ENNReal
 
 namespace AnalyticOn
 

@@ -30,7 +30,7 @@ is strongly measurable.
 
 open MeasureTheory ProbabilityTheory Function Set Filter
 
-open MeasureTheory ENNReal Topology
+open scoped MeasureTheory ENNReal Topology
 
 variable {α β γ : Type _} {mα : MeasurableSpace α} {mβ : MeasurableSpace β} {mγ : MeasurableSpace γ}
   {κ : kernel α β} {η : kernel (α × β) γ} {a : α}

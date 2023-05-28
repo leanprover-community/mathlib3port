@@ -163,7 +163,7 @@ derivative, differentiability, higher derivative, `C^n`, multilinear, Taylor ser
 
 noncomputable section
 
-open Classical BigOperators NNReal Topology Filter
+open scoped Classical BigOperators NNReal Topology Filter
 
 -- mathport name: «expr∞»
 local notation "∞" => (⊤ : ℕ∞)

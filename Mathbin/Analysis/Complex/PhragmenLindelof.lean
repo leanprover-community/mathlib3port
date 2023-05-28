@@ -50,7 +50,7 @@ real plane has only finitely many limit cycles).
 
 open Set Function Filter Asymptotics Metric Complex
 
-open Topology Filter Real
+open scoped Topology Filter Real
 
 -- mathport name: exprexpR
 local notation "expR" => Real.exp

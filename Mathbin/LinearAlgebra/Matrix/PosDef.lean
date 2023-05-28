@@ -26,7 +26,7 @@ namespace Matrix
 
 variable {𝕜 : Type _} [IsROrC 𝕜] {m n : Type _} [Fintype m] [Fintype n]
 
-open Matrix
+open scoped Matrix
 
 /-- A matrix `M : matrix n n 𝕜` is positive definite if it is hermitian
    and `xᴴMx` is greater than zero for all nonzero `x`. -/

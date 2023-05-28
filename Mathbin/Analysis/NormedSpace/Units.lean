@@ -39,7 +39,7 @@ a unit and 0 if not.  The other major results of this file (notably `inverse_add
 
 noncomputable section
 
-open Topology
+open scoped Topology
 
 variable {R : Type _} [NormedRing R] [CompleteSpace R]
 
@@ -119,7 +119,7 @@ end nonunits
 
 namespace NormedRing
 
-open Classical BigOperators
+open scoped Classical BigOperators
 
 open Asymptotics Filter Metric Finset Ring
 

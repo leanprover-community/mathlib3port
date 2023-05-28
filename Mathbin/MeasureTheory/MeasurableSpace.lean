@@ -69,7 +69,7 @@ measurable space, σ-algebra, measurable function, measurable equivalence, dynki
 
 open Set Encodable Function Equiv
 
-open Filter MeasureTheory
+open scoped Filter MeasureTheory
 
 variable {α β γ δ δ' : Type _} {ι : Sort _} {s t u : Set α}
 
@@ -1726,7 +1726,7 @@ theorem of_measurable_inverse (hf₁ : Measurable f) (hf₂ : MeasurableSet (ran
   of_measurable_inverse_on_range hf₁ hf₂ (hg.comp measurable_subtype_coe) H
 #align measurable_embedding.of_measurable_inverse MeasurableEmbedding.of_measurable_inverse
 
-open Classical
+open scoped Classical
 
 #print MeasurableEmbedding.schroederBernstein /-
 /-- The **`measurable Schröder-Bernstein Theorem**: Given measurable embeddings
@@ -1802,7 +1802,7 @@ class CountablyGenerated [m : MeasurableSpace α] : Prop where
 #align measurable_space.countably_generated MeasurableSpace.CountablyGenerated
 -/
 
-open Classical
+open scoped Classical
 
 #print MeasurableSpace.measurable_injection_nat_bool_of_countablyGenerated /-
 /-- If a measurable space is countably generated, it admits a measurable injection

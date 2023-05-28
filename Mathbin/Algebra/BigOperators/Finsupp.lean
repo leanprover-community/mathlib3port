@@ -28,7 +28,7 @@ noncomputable section
 
 open Finset Function
 
-open BigOperators
+open scoped BigOperators
 
 variable {α ι γ A B C : Type _} [AddCommMonoid A] [AddCommMonoid B] [AddCommMonoid C]
 
@@ -595,7 +595,7 @@ section
 
 include h0 h1
 
-open Classical
+open scoped Classical
 
 theorem Finsupp.sum_sum_index' : (∑ x in s, f x).Sum t = ∑ x in s, (f x).Sum t :=
   Finset.induction_on s rfl fun a s has ih => by

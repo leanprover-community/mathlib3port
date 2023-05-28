@@ -54,7 +54,7 @@ the continuum hypothesis*][flypitch_itp]
 
 universe u v u' v' w w'
 
-open Cardinal
+open scoped Cardinal
 
 open Cardinal
 
@@ -1149,7 +1149,7 @@ namespace Equiv
 
 open FirstOrder FirstOrder.Language FirstOrder.Language.Structure
 
-open FirstOrder
+open scoped FirstOrder
 
 variable {L : Language} {M : Type _} {N : Type _} [L.Structure M]
 

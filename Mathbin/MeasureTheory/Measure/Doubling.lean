@@ -36,7 +36,7 @@ noncomputable section
 
 open Set Filter Metric MeasureTheory TopologicalSpace
 
-open ENNReal NNReal Topology
+open scoped ENNReal NNReal Topology
 
 #print IsUnifLocDoublingMeasure /-
 /- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`exists_measure_closedBall_le_mul] [] -/
@@ -118,10 +118,12 @@ def scalingConstantOf (K : ℝ) : ℝ≥0 :=
 #align is_unif_loc_doubling_measure.scaling_constant_of IsUnifLocDoublingMeasure.scalingConstantOf
 -/
 
+#print IsUnifLocDoublingMeasure.one_le_scalingConstantOf /-
 @[simp]
 theorem one_le_scalingConstantOf (K : ℝ) : 1 ≤ scalingConstantOf μ K :=
   le_max_of_le_right <| le_refl 1
 #align is_unif_loc_doubling_measure.one_le_scaling_constant_of IsUnifLocDoublingMeasure.one_le_scalingConstantOf
+-/
 
 theorem eventually_measure_mul_le_scalingConstantOf_mul (K : ℝ) :
     ∃ R : ℝ,

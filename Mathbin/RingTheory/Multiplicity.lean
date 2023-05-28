@@ -34,7 +34,7 @@ variable {α : Type _}
 
 open Nat Part
 
-open BigOperators
+open scoped BigOperators
 
 #print multiplicity /-
 /-- `multiplicity a b` returns the largest natural number `n` such that
@@ -243,9 +243,11 @@ theorem ne_top_iff_finite {a b : α} : multiplicity a b ≠ ⊤ ↔ Finite a b :
 #align multiplicity.ne_top_iff_finite multiplicity.ne_top_iff_finite
 -/
 
+#print multiplicity.lt_top_iff_finite /-
 theorem lt_top_iff_finite {a b : α} : multiplicity a b < ⊤ ↔ Finite a b := by
   rw [lt_top_iff_ne_top, ne_top_iff_finite]
 #align multiplicity.lt_top_iff_finite multiplicity.lt_top_iff_finite
+-/
 
 theorem exists_eq_pow_mul_and_not_dvd {a b : α} (hfin : Finite a b) :
     ∃ c : α, b = a ^ (multiplicity a b).get hfin * c ∧ ¬a ∣ c :=
@@ -258,7 +260,7 @@ theorem exists_eq_pow_mul_and_not_dvd {a b : α} (hfin : Finite a b) :
   exact (multiplicity.eq_coe_iff.1 (by simp)).2 h₁
 #align multiplicity.exists_eq_pow_mul_and_not_dvd multiplicity.exists_eq_pow_mul_and_not_dvd
 
-open Classical
+open scoped Classical
 
 #print multiplicity.multiplicity_le_multiplicity_iff /-
 theorem multiplicity_le_multiplicity_iff {a b c d : α} :
@@ -299,13 +301,16 @@ theorem eq_of_associated_right {a b c : α} (h : Associated b c) :
 #align multiplicity.eq_of_associated_right multiplicity.eq_of_associated_right
 -/
 
+#print multiplicity.dvd_of_multiplicity_pos /-
 theorem dvd_of_multiplicity_pos {a b : α} (h : (0 : PartENat) < multiplicity a b) : a ∣ b :=
   by
   rw [← pow_one a]
   apply pow_dvd_of_le_multiplicity
   simpa only [Nat.cast_one, PartENat.pos_iff_one_le] using h
 #align multiplicity.dvd_of_multiplicity_pos multiplicity.dvd_of_multiplicity_pos
+-/
 
+#print multiplicity.dvd_iff_multiplicity_pos /-
 theorem dvd_iff_multiplicity_pos {a b : α} : (0 : PartENat) < multiplicity a b ↔ a ∣ b :=
   ⟨dvd_of_multiplicity_pos, fun hdvd =>
     lt_of_le_of_ne (zero_le _) fun heq =>
@@ -314,6 +319,7 @@ theorem dvd_iff_multiplicity_pos {a b : α} : (0 : PartENat) < multiplicity a b 
           simpa only [HEq, Nat.cast_zero] using part_enat.coe_lt_coe.mpr zero_lt_one)
         (by rwa [pow_one a])⟩
 #align multiplicity.dvd_iff_multiplicity_pos multiplicity.dvd_iff_multiplicity_pos
+-/
 
 #print multiplicity.finite_nat_iff /-
 theorem finite_nat_iff {a b : ℕ} : Finite a b ↔ a ≠ 1 ∧ 0 < b :=
@@ -364,7 +370,7 @@ theorem unit_right {a : α} (ha : ¬IsUnit a) (u : αˣ) : multiplicity a u = 0 
 #align multiplicity.unit_right multiplicity.unit_right
 -/
 
-open Classical
+open scoped Classical
 
 #print multiplicity.multiplicity_le_multiplicity_of_dvd_left /-
 theorem multiplicity_le_multiplicity_of_dvd_left {a b c : α} (hdvd : a ∣ b) :
@@ -638,7 +644,7 @@ protected theorem mul' {p a b : α} (hp : Prime p) (h : (multiplicity p (a * b))
   rw [← PartENat.natCast_inj, PartENat.natCast_get, eq_coe_iff] <;> exact ⟨hdiv, hsucc⟩
 #align multiplicity.mul' multiplicity.mul'
 
-open Classical
+open scoped Classical
 
 protected theorem mul {p a b : α} (hp : Prime p) :
     multiplicity p (a * b) = multiplicity p a + multiplicity p b :=

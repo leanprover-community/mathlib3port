@@ -35,7 +35,7 @@ divisible by `X`.
 
 namespace Polynomial
 
-open Polynomial
+open scoped Polynomial
 
 section Semiring
 

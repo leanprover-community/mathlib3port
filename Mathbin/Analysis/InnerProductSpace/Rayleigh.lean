@@ -47,7 +47,7 @@ variable {E : Type _} [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
 -- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 
-open NNReal
+open scoped NNReal
 
 open Module.End Metric
 

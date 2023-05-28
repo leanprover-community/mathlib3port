@@ -27,7 +27,7 @@ logarithm, tonality
 
 open Set Filter Function
 
-open Topology
+open scoped Topology
 
 noncomputable section
 

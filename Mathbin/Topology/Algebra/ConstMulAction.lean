@@ -46,7 +46,7 @@ Hausdorff, discrete group, properly discontinuous, quotient space
 -/
 
 
-open Topology Pointwise
+open scoped Topology Pointwise
 
 open Filter Set TopologicalSpace
 

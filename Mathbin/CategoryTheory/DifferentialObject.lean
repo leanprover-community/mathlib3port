@@ -215,7 +215,7 @@ variable (C : Type u) [Category.{v} C]
 
 variable [HasZeroObject C] [HasZeroMorphisms C] [HasShift C ℤ]
 
-open ZeroObject
+open scoped ZeroObject
 
 instance hasZeroObject : HasZeroObject (DifferentialObject C) := by
   refine' ⟨⟨⟨0, 0⟩, fun X => ⟨⟨⟨⟨0⟩⟩, fun f => _⟩⟩, fun X => ⟨⟨⟨⟨0⟩⟩, fun f => _⟩⟩⟩⟩ <;> ext

@@ -49,7 +49,7 @@ sin, cos, tan, angle
 
 noncomputable section
 
-open Classical Topology Filter
+open scoped Classical Topology Filter
 
 open Set Filter
 
@@ -201,7 +201,7 @@ namespace NNReal
 
 open Real
 
-open Real NNReal
+open scoped Real NNReal
 
 #print NNReal.pi /-
 /-- `π` considered as a nonnegative real. -/
@@ -226,7 +226,7 @@ end NNReal
 
 namespace Real
 
-open Real
+open scoped Real
 
 @[simp]
 theorem sin_pi : sin π = 0 := by
@@ -1257,7 +1257,7 @@ end Real
 
 namespace Complex
 
-open Real
+open scoped Real
 
 theorem sin_eq_zero_iff_cos_eq {z : ℂ} : sin z = 0 ↔ cos z = 1 ∨ cos z = -1 := by
   rw [← mul_self_eq_one_iff, ← sin_sq_add_cos_sq, sq, sq, ← sub_eq_iff_eq_add, sub_self] <;>

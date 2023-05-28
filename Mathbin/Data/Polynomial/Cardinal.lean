@@ -24,7 +24,7 @@ of `#R` and `ℵ₀`.
 
 universe u
 
-open Cardinal Polynomial
+open scoped Cardinal Polynomial
 
 open Cardinal
 

@@ -233,15 +233,19 @@ theorem to_dual_iff [LE α] : IsAntichain (· ≤ ·) s ↔ @IsAntichain αᵒ�
 #align is_antichain.to_dual_iff IsAntichain.to_dual_iff
 -/
 
+#print IsAntichain.image_compl /-
 theorem image_compl [BooleanAlgebra α] (hs : IsAntichain (· ≤ ·) s) :
     IsAntichain (· ≤ ·) (compl '' s) :=
   (hs.image_embedding (OrderIso.compl α).toOrderEmbedding).flip
 #align is_antichain.image_compl IsAntichain.image_compl
+-/
 
+#print IsAntichain.preimage_compl /-
 theorem preimage_compl [BooleanAlgebra α] (hs : IsAntichain (· ≤ ·) s) :
     IsAntichain (· ≤ ·) (compl ⁻¹' s) := fun a ha a' ha' hne hle =>
   hs ha' ha (fun h => hne (compl_inj_iff.mp h.symm)) (compl_le_compl hle)
 #align is_antichain.preimage_compl IsAntichain.preimage_compl
+-/
 
 end IsAntichain
 
@@ -261,35 +265,49 @@ section Preorder
 
 variable [Preorder α]
 
+#print IsAntichain.not_lt /-
 theorem IsAntichain.not_lt (hs : IsAntichain (· ≤ ·) s) (ha : a ∈ s) (hb : b ∈ s) : ¬a < b :=
   fun h => hs ha hb h.Ne h.le
 #align is_antichain.not_lt IsAntichain.not_lt
+-/
 
+#print isAntichain_and_least_iff /-
 theorem isAntichain_and_least_iff : IsAntichain (· ≤ ·) s ∧ IsLeast s a ↔ s = {a} :=
   ⟨fun h => eq_singleton_iff_unique_mem.2 ⟨h.2.1, fun b hb => h.1.eq'' hb h.2.1 (h.2.2 hb)⟩, by
     rintro rfl; exact ⟨isAntichain_singleton _ _, isLeast_singleton⟩⟩
 #align is_antichain_and_least_iff isAntichain_and_least_iff
+-/
 
+#print isAntichain_and_greatest_iff /-
 theorem isAntichain_and_greatest_iff : IsAntichain (· ≤ ·) s ∧ IsGreatest s a ↔ s = {a} :=
   ⟨fun h => eq_singleton_iff_unique_mem.2 ⟨h.2.1, fun b hb => h.1.Eq hb h.2.1 (h.2.2 hb)⟩, by
     rintro rfl; exact ⟨isAntichain_singleton _ _, isGreatest_singleton⟩⟩
 #align is_antichain_and_greatest_iff isAntichain_and_greatest_iff
+-/
 
+#print IsAntichain.least_iff /-
 theorem IsAntichain.least_iff (hs : IsAntichain (· ≤ ·) s) : IsLeast s a ↔ s = {a} :=
   (and_iff_right hs).symm.trans isAntichain_and_least_iff
 #align is_antichain.least_iff IsAntichain.least_iff
+-/
 
+#print IsAntichain.greatest_iff /-
 theorem IsAntichain.greatest_iff (hs : IsAntichain (· ≤ ·) s) : IsGreatest s a ↔ s = {a} :=
   (and_iff_right hs).symm.trans isAntichain_and_greatest_iff
 #align is_antichain.greatest_iff IsAntichain.greatest_iff
+-/
 
+#print IsLeast.antichain_iff /-
 theorem IsLeast.antichain_iff (hs : IsLeast s a) : IsAntichain (· ≤ ·) s ↔ s = {a} :=
   (and_iff_left hs).symm.trans isAntichain_and_least_iff
 #align is_least.antichain_iff IsLeast.antichain_iff
+-/
 
+#print IsGreatest.antichain_iff /-
 theorem IsGreatest.antichain_iff (hs : IsGreatest s a) : IsAntichain (· ≤ ·) s ↔ s = {a} :=
   (and_iff_left hs).symm.trans isAntichain_and_greatest_iff
 #align is_greatest.antichain_iff IsGreatest.antichain_iff
+-/
 
 theorem IsAntichain.bot_mem_iff [OrderBot α] (hs : IsAntichain (· ≤ ·) s) : ⊥ ∈ s ↔ s = {⊥} :=
   isLeast_bot_iff.symm.trans hs.least_iff
@@ -305,10 +323,12 @@ section PartialOrder
 
 variable [PartialOrder α]
 
+#print isAntichain_iff_forall_not_lt /-
 theorem isAntichain_iff_forall_not_lt :
     IsAntichain (· ≤ ·) s ↔ ∀ ⦃a⦄, a ∈ s → ∀ ⦃b⦄, b ∈ s → ¬a < b :=
   ⟨fun hs a ha b => hs.not_lt ha, fun hs a ha b hb h h' => hs ha hb <| h'.lt_of_ne h⟩
 #align is_antichain_iff_forall_not_lt isAntichain_iff_forall_not_lt
+-/
 
 end PartialOrder
 

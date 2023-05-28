@@ -69,7 +69,7 @@ Part A, Chapter 4.
 
 open MeasureTheory MeasurableSpace
 
-open BigOperators MeasureTheory ENNReal
+open scoped BigOperators MeasureTheory ENNReal
 
 namespace ProbabilityTheory
 

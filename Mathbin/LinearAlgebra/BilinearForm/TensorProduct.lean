@@ -31,7 +31,7 @@ universe u v w
 
 variable {ι : Type _} {R : Type _} {M₁ M₂ : Type _}
 
-open TensorProduct
+open scoped TensorProduct
 
 namespace BilinForm
 

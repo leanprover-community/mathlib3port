@@ -70,7 +70,7 @@ noncomputable section
 
 open Set Inv Function TopologicalSpace MeasurableSpace
 
-open NNReal Classical ENNReal Pointwise Topology
+open scoped NNReal Classical ENNReal Pointwise Topology
 
 namespace MeasureTheory
 

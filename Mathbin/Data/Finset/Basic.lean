@@ -469,23 +469,31 @@ theorem Subset.antisymm_iff {s₁ s₂ : Finset α} : s₁ = s₂ ↔ s₁ ⊆ s
 theorem not_subset : ¬s ⊆ t ↔ ∃ x ∈ s, x ∉ t := by simp only [← coe_subset, Set.not_subset, mem_coe]
 #align finset.not_subset Finset.not_subset
 
+#print Finset.le_eq_subset /-
 @[simp]
 theorem le_eq_subset : ((· ≤ ·) : Finset α → Finset α → Prop) = (· ⊆ ·) :=
   rfl
 #align finset.le_eq_subset Finset.le_eq_subset
+-/
 
+#print Finset.lt_eq_subset /-
 @[simp]
 theorem lt_eq_subset : ((· < ·) : Finset α → Finset α → Prop) = (· ⊂ ·) :=
   rfl
 #align finset.lt_eq_subset Finset.lt_eq_subset
+-/
 
+#print Finset.le_iff_subset /-
 theorem le_iff_subset {s₁ s₂ : Finset α} : s₁ ≤ s₂ ↔ s₁ ⊆ s₂ :=
   Iff.rfl
 #align finset.le_iff_subset Finset.le_iff_subset
+-/
 
+#print Finset.lt_iff_ssubset /-
 theorem lt_iff_ssubset {s₁ s₂ : Finset α} : s₁ < s₂ ↔ s₁ ⊂ s₂ :=
   Iff.rfl
 #align finset.lt_iff_ssubset Finset.lt_iff_ssubset
+-/
 
 @[simp, norm_cast]
 theorem coe_ssubset {s₁ s₂ : Finset α} : (s₁ : Set α) ⊂ s₂ ↔ s₁ ⊂ s₂ :=
@@ -531,9 +539,11 @@ instance isWellFounded_ssubset : IsWellFounded (Finset α) (· ⊂ ·) :=
 #align finset.is_well_founded_ssubset Finset.isWellFounded_ssubset
 -/
 
+#print Finset.wellFoundedLT /-
 instance wellFoundedLT : WellFoundedLT (Finset α) :=
   Finset.isWellFounded_ssubset
 #align finset.is_well_founded_lt Finset.wellFoundedLT
+-/
 
 end Subset
 
@@ -543,10 +553,12 @@ attribute [local trans] subset.trans superset.trans
 /-! ### Order embedding from `finset α` to `set α` -/
 
 
+#print Finset.coeEmb /-
 /-- Coercion to `set α` as an `order_embedding`. -/
 def coeEmb : Finset α ↪o Set α :=
   ⟨⟨coe, coe_injective⟩, fun s t => coe_subset⟩
 #align finset.coe_emb Finset.coeEmb
+-/
 
 @[simp]
 theorem coe_coeEmb : ⇑(coeEmb : Finset α ↪o Set α) = coe :=
@@ -3249,26 +3261,34 @@ theorem update_piecewise_of_not_mem [DecidableEq α] {i : α} (hi : i ∉ s) (v 
   exact fun h => hi (h ▸ hj)
 #align finset.update_piecewise_of_not_mem Finset.update_piecewise_of_not_mem
 
+#print Finset.piecewise_le_of_le_of_le /-
 theorem piecewise_le_of_le_of_le {δ : α → Type _} [∀ i, Preorder (δ i)] {f g h : ∀ i, δ i}
     (Hf : f ≤ h) (Hg : g ≤ h) : s.piecewise f g ≤ h := fun x =>
   piecewise_cases s f g (· ≤ h x) (Hf x) (Hg x)
 #align finset.piecewise_le_of_le_of_le Finset.piecewise_le_of_le_of_le
+-/
 
+#print Finset.le_piecewise_of_le_of_le /-
 theorem le_piecewise_of_le_of_le {δ : α → Type _} [∀ i, Preorder (δ i)] {f g h : ∀ i, δ i}
     (Hf : h ≤ f) (Hg : h ≤ g) : h ≤ s.piecewise f g := fun x =>
   piecewise_cases s f g (fun y => h x ≤ y) (Hf x) (Hg x)
 #align finset.le_piecewise_of_le_of_le Finset.le_piecewise_of_le_of_le
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ∉ » s) -/
+#print Finset.piecewise_le_piecewise' /-
 theorem piecewise_le_piecewise' {δ : α → Type _} [∀ i, Preorder (δ i)] {f g f' g' : ∀ i, δ i}
     (Hf : ∀ x ∈ s, f x ≤ f' x) (Hg : ∀ (x) (_ : x ∉ s), g x ≤ g' x) :
     s.piecewise f g ≤ s.piecewise f' g' := fun x => by by_cases hx : x ∈ s <;> simp [hx, *]
 #align finset.piecewise_le_piecewise' Finset.piecewise_le_piecewise'
+-/
 
+#print Finset.piecewise_le_piecewise /-
 theorem piecewise_le_piecewise {δ : α → Type _} [∀ i, Preorder (δ i)] {f g f' g' : ∀ i, δ i}
     (Hf : f ≤ f') (Hg : g ≤ g') : s.piecewise f g ≤ s.piecewise f' g' :=
   s.piecewise_le_piecewise' (fun x _ => Hf x) fun x _ => Hg x
 #align finset.piecewise_le_piecewise Finset.piecewise_le_piecewise
+-/
 
 #print Finset.piecewise_mem_Icc_of_mem_of_mem /-
 theorem piecewise_mem_Icc_of_mem_of_mem {δ : α → Type _} [∀ i, Preorder (δ i)]
@@ -3278,15 +3298,19 @@ theorem piecewise_mem_Icc_of_mem_of_mem {δ : α → Type _} [∀ i, Preorder (�
 #align finset.piecewise_mem_Icc_of_mem_of_mem Finset.piecewise_mem_Icc_of_mem_of_mem
 -/
 
+#print Finset.piecewise_mem_Icc /-
 theorem piecewise_mem_Icc {δ : α → Type _} [∀ i, Preorder (δ i)] {f g : ∀ i, δ i} (h : f ≤ g) :
     s.piecewise f g ∈ Set.Icc f g :=
   piecewise_mem_Icc_of_mem_of_mem _ (Set.left_mem_Icc.2 h) (Set.right_mem_Icc.2 h)
 #align finset.piecewise_mem_Icc Finset.piecewise_mem_Icc
+-/
 
+#print Finset.piecewise_mem_Icc' /-
 theorem piecewise_mem_Icc' {δ : α → Type _} [∀ i, Preorder (δ i)] {f g : ∀ i, δ i} (h : g ≤ f) :
     s.piecewise f g ∈ Set.Icc g f :=
   piecewise_mem_Icc_of_mem_of_mem _ (Set.right_mem_Icc.2 h) (Set.left_mem_Icc.2 h)
 #align finset.piecewise_mem_Icc' Finset.piecewise_mem_Icc'
+-/
 
 end Piecewise
 
@@ -3446,10 +3470,12 @@ theorem monotone_filter_left : Monotone (filter p) := fun _ _ => filter_subset_f
 #align finset.monotone_filter_left Finset.monotone_filter_left
 -/
 
+#print Finset.monotone_filter_right /-
 theorem monotone_filter_right (s : Finset α) ⦃p q : α → Prop⦄ [DecidablePred p] [DecidablePred q]
     (h : p ≤ q) : s.filterₓ p ≤ s.filterₓ q :=
   Multiset.subset_of_le (Multiset.monotone_filter_right s.val h)
 #align finset.monotone_filter_right Finset.monotone_filter_right
+-/
 
 #print Finset.coe_filter /-
 @[simp, norm_cast]
@@ -3641,7 +3667,7 @@ theorem [anonymous] {α} (s : Finset α) (p : α → Prop) (h : DecidablePred p)
 
 section Classical
 
-open Classical
+open scoped Classical
 
 /-- The following instance allows us to write `{x ∈ s | p x}` for `finset.filter p s`.
   Since the former notation requires us to define this for all propositions `p`, and `finset.filter`

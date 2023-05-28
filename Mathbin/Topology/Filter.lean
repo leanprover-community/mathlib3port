@@ -42,7 +42,7 @@ filter, topological space
 
 open Set Filter TopologicalSpace
 
-open Filter Topology
+open scoped Filter Topology
 
 variable {ι : Sort _} {α β X Y : Type _}
 

@@ -19,7 +19,7 @@ import Mathbin.RingTheory.LocalProperties
 
 namespace RingHom
 
-open TensorProduct
+open scoped TensorProduct
 
 open TensorProduct Algebra.TensorProduct
 
@@ -51,7 +51,7 @@ theorem surjective_stableUnderBaseChange : StableUnderBaseChange surjective :=
     · obtain ⟨⟨x, rfl⟩, ⟨y, rfl⟩⟩ := ex, ey; exact ⟨x + y, map_add _ x y⟩
 #align ring_hom.surjective_stable_under_base_change RingHom.surjective_stableUnderBaseChange
 
-open BigOperators
+open scoped BigOperators
 
 theorem surjective_ofLocalizationSpan : OfLocalizationSpan surjective :=
   by

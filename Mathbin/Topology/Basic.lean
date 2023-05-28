@@ -61,7 +61,7 @@ noncomputable section
 
 open Set Filter Classical
 
-open Classical Filter
+open scoped Classical Filter
 
 universe u v w
 
@@ -1256,11 +1256,13 @@ theorem tendsto_nhds {f : β → α} {l : Filter β} {a : α} :
 #align tendsto_nhds tendsto_nhds
 -/
 
+#print tendsto_atTop_nhds /-
 theorem tendsto_atTop_nhds [Nonempty β] [SemilatticeSup β] {f : β → α} {a : α} :
     Tendsto f atTop (𝓝 a) ↔ ∀ U : Set α, a ∈ U → IsOpen U → ∃ N, ∀ n, N ≤ n → f n ∈ U :=
   (atTop_basis.tendsto_iffₓ (nhds_basis_opens a)).trans <| by
     simp only [and_imp, exists_prop, true_and_iff, mem_Ici, ge_iff_le]
 #align tendsto_at_top_nhds tendsto_atTop_nhds
+-/
 
 #print tendsto_const_nhds /-
 theorem tendsto_const_nhds {a : α} {f : Filter β} : Tendsto (fun b : β => a) f (𝓝 a) :=
@@ -1852,7 +1854,7 @@ variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 
 variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
 
-open Topology
+open scoped Topology
 
 #print Continuous /-
 /-- A function between topological spaces is continuous if the preimage

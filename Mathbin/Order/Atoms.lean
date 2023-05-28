@@ -64,20 +64,26 @@ section Preorder
 
 variable [Preorder α] [OrderBot α] {a b x : α}
 
+#print IsAtom /-
 /-- An atom of an `order_bot` is an element with no other element between it and `⊥`,
   which is not `⊥`. -/
 def IsAtom (a : α) : Prop :=
   a ≠ ⊥ ∧ ∀ b, b < a → b = ⊥
 #align is_atom IsAtom
+-/
 
+#print IsAtom.Iic /-
 theorem IsAtom.Iic (ha : IsAtom a) (hax : a ≤ x) : IsAtom (⟨a, hax⟩ : Set.Iic x) :=
   ⟨fun con => ha.1 (Subtype.mk_eq_mk.1 Con), fun ⟨b, hb⟩ hba => Subtype.mk_eq_mk.2 (ha.2 b hba)⟩
 #align is_atom.Iic IsAtom.Iic
+-/
 
+#print IsAtom.of_isAtom_coe_Iic /-
 theorem IsAtom.of_isAtom_coe_Iic {a : Set.Iic x} (ha : IsAtom a) : IsAtom (a : α) :=
   ⟨fun con => ha.1 (Subtype.ext Con), fun b hba =>
     Subtype.mk_eq_mk.1 (ha.2 ⟨b, hba.le.trans a.Prop⟩ hba)⟩
 #align is_atom.of_is_atom_coe_Iic IsAtom.of_isAtom_coe_Iic
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (b «expr ≠ » «expr⊥»()) -/
 theorem isAtom_iff {a : α} : IsAtom a ↔ a ≠ ⊥ ∧ ∀ (b) (_ : b ≠ ⊥), b ≤ a → a ≤ b :=
@@ -117,21 +123,27 @@ section Preorder
 
 variable [Preorder α]
 
+#print IsCoatom /-
 /-- A coatom of an `order_top` is an element with no other element between it and `⊤`,
   which is not `⊤`. -/
 def IsCoatom [OrderTop α] (a : α) : Prop :=
   a ≠ ⊤ ∧ ∀ b, a < b → b = ⊤
 #align is_coatom IsCoatom
+-/
 
+#print isCoatom_dual_iff_isAtom /-
 @[simp]
 theorem isCoatom_dual_iff_isAtom [OrderBot α] {a : α} : IsCoatom (OrderDual.toDual a) ↔ IsAtom a :=
   Iff.rfl
 #align is_coatom_dual_iff_is_atom isCoatom_dual_iff_isAtom
+-/
 
+#print isAtom_dual_iff_isCoatom /-
 @[simp]
 theorem isAtom_dual_iff_isCoatom [OrderTop α] {a : α} : IsAtom (OrderDual.toDual a) ↔ IsCoatom a :=
   Iff.rfl
 #align is_atom_dual_iff_is_coatom isAtom_dual_iff_isCoatom
+-/
 
 alias isCoatom_dual_iff_isAtom ↔ _ IsAtom.dual
 #align is_atom.dual IsAtom.dual
@@ -141,13 +153,17 @@ alias isAtom_dual_iff_isCoatom ↔ _ IsCoatom.dual
 
 variable [OrderTop α] {a x : α}
 
+#print IsCoatom.Ici /-
 theorem IsCoatom.Ici (ha : IsCoatom a) (hax : x ≤ a) : IsCoatom (⟨a, hax⟩ : Set.Ici x) :=
   ha.dual.Iic hax
 #align is_coatom.Ici IsCoatom.Ici
+-/
 
+#print IsCoatom.of_isCoatom_coe_Ici /-
 theorem IsCoatom.of_isCoatom_coe_Ici {a : Set.Ici x} (ha : IsCoatom a) : IsCoatom (a : α) :=
   @IsAtom.of_isAtom_coe_Iic αᵒᵈ _ _ x a ha
 #align is_coatom.of_is_coatom_coe_Ici IsCoatom.of_isCoatom_coe_Ici
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (b «expr ≠ » «expr⊤»()) -/
 theorem isCoatom_iff {a : α} : IsCoatom a ↔ a ≠ ⊤ ∧ ∀ (b) (_ : b ≠ ⊤), a ≤ b → b ≤ a :=
@@ -185,6 +201,7 @@ section PartialOrder
 
 variable [PartialOrder α] {a b : α}
 
+#print Set.Ici.isAtom_iff /-
 @[simp]
 theorem Set.Ici.isAtom_iff {b : Set.Ici a} : IsAtom b ↔ a ⋖ b :=
   by
@@ -192,7 +209,9 @@ theorem Set.Ici.isAtom_iff {b : Set.Ici a} : IsAtom b ↔ a ⋖ b :=
   refine' (Set.OrdConnected.apply_covby_apply_iff (OrderEmbedding.subtype fun c => a ≤ c) _).symm
   simpa only [OrderEmbedding.subtype_apply, Subtype.range_coe_subtype] using Set.ordConnected_Ici
 #align set.Ici.is_atom_iff Set.Ici.isAtom_iff
+-/
 
+#print Set.Iic.isCoatom_iff /-
 @[simp]
 theorem Set.Iic.isCoatom_iff {a : Set.Iic b} : IsCoatom a ↔ ↑a ⋖ b :=
   by
@@ -200,12 +219,17 @@ theorem Set.Iic.isCoatom_iff {a : Set.Iic b} : IsCoatom a ↔ ↑a ⋖ b :=
   refine' (Set.OrdConnected.apply_covby_apply_iff (OrderEmbedding.subtype fun c => c ≤ b) _).symm
   simpa only [OrderEmbedding.subtype_apply, Subtype.range_coe_subtype] using Set.ordConnected_Iic
 #align set.Iic.is_coatom_iff Set.Iic.isCoatom_iff
+-/
 
+#print covby_iff_atom_Ici /-
 theorem covby_iff_atom_Ici (h : a ≤ b) : a ⋖ b ↔ IsAtom (⟨b, h⟩ : Set.Ici a) := by simp
 #align covby_iff_atom_Ici covby_iff_atom_Ici
+-/
 
+#print covby_iff_coatom_Iic /-
 theorem covby_iff_coatom_Iic (h : a ≤ b) : a ⋖ b ↔ IsCoatom (⟨a, h⟩ : Set.Iic b) := by simp
 #align covby_iff_coatom_Iic covby_iff_coatom_Iic
+-/
 
 end PartialOrder
 
@@ -216,10 +240,12 @@ theorem IsAtom.inf_eq_bot_of_ne [SemilatticeInf α] [OrderBot α] {a b : α} (ha
   hab.not_le_or_not_le.elim (ha.lt_iff.1 ∘ inf_lt_left.2) (hb.lt_iff.1 ∘ inf_lt_right.2)
 #align is_atom.inf_eq_bot_of_ne IsAtom.inf_eq_bot_of_ne
 
+#print IsAtom.disjoint_of_ne /-
 theorem IsAtom.disjoint_of_ne [SemilatticeInf α] [OrderBot α] {a b : α} (ha : IsAtom a)
     (hb : IsAtom b) (hab : a ≠ b) : Disjoint a b :=
   disjoint_iff.mpr (IsAtom.inf_eq_bot_of_ne ha hb hab)
 #align is_atom.disjoint_of_ne IsAtom.disjoint_of_ne
+-/
 
 theorem IsCoatom.sup_eq_top_of_ne [SemilatticeSup α] [OrderTop α] {a b : α} (ha : IsCoatom a)
     (hb : IsCoatom b) (hab : a ≠ b) : a ⊔ b = ⊤ :=
@@ -234,17 +260,21 @@ section Atomic
 
 variable [PartialOrder α] (α)
 
+#print IsAtomic /-
 /-- A lattice is atomic iff every element other than `⊥` has an atom below it. -/
 @[mk_iff]
 class IsAtomic [OrderBot α] : Prop where
   eq_bot_or_exists_atom_le : ∀ b : α, b = ⊥ ∨ ∃ a : α, IsAtom a ∧ a ≤ b
 #align is_atomic IsAtomic
+-/
 
+#print IsCoatomic /-
 /-- A lattice is coatomic iff every element other than `⊤` has a coatom above it. -/
 @[mk_iff]
 class IsCoatomic [OrderTop α] : Prop where
   eq_top_or_exists_le_coatom : ∀ b : α, b = ⊤ ∨ ∃ a : α, IsCoatom a ∧ b ≤ a
 #align is_coatomic IsCoatomic
+-/
 
 export IsAtomic (eq_bot_or_exists_atom_le)
 
@@ -252,25 +282,31 @@ export IsCoatomic (eq_top_or_exists_le_coatom)
 
 variable {α}
 
+#print isCoatomic_dual_iff_isAtomic /-
 @[simp]
 theorem isCoatomic_dual_iff_isAtomic [OrderBot α] : IsCoatomic αᵒᵈ ↔ IsAtomic α :=
   ⟨fun h => ⟨fun b => by apply h.eq_top_or_exists_le_coatom⟩, fun h =>
     ⟨fun b => by apply h.eq_bot_or_exists_atom_le⟩⟩
 #align is_coatomic_dual_iff_is_atomic isCoatomic_dual_iff_isAtomic
+-/
 
+#print isAtomic_dual_iff_isCoatomic /-
 @[simp]
 theorem isAtomic_dual_iff_isCoatomic [OrderTop α] : IsAtomic αᵒᵈ ↔ IsCoatomic α :=
   ⟨fun h => ⟨fun b => by apply h.eq_bot_or_exists_atom_le⟩, fun h =>
     ⟨fun b => by apply h.eq_top_or_exists_le_coatom⟩⟩
 #align is_atomic_dual_iff_is_coatomic isAtomic_dual_iff_isCoatomic
+-/
 
 namespace IsAtomic
 
 variable [OrderBot α] [IsAtomic α]
 
+#print IsAtomic.isCoatomic_dual /-
 instance isCoatomic_dual : IsCoatomic αᵒᵈ :=
   isCoatomic_dual_iff_isAtomic.2 ‹IsAtomic α›
 #align is_atomic.is_coatomic_dual IsAtomic.isCoatomic_dual
+-/
 
 instance {x : α} : IsAtomic (Set.Iic x) :=
   ⟨fun ⟨y, hy⟩ =>
@@ -283,9 +319,11 @@ namespace IsCoatomic
 
 variable [OrderTop α] [IsCoatomic α]
 
+#print IsCoatomic.isCoatomic /-
 instance isCoatomic : IsAtomic αᵒᵈ :=
   isAtomic_dual_iff_isCoatomic.2 ‹IsCoatomic α›
 #align is_coatomic.is_coatomic IsCoatomic.isCoatomic
+-/
 
 instance {x : α} : IsCoatomic (Set.Ici x) :=
   ⟨fun ⟨y, hy⟩ =>
@@ -294,6 +332,7 @@ instance {x : α} : IsCoatomic (Set.Ici x) :=
 
 end IsCoatomic
 
+#print isAtomic_iff_forall_isAtomic_Iic /-
 theorem isAtomic_iff_forall_isAtomic_Iic [OrderBot α] :
     IsAtomic α ↔ ∀ x : α, IsAtomic (Set.Iic x) :=
   ⟨@IsAtomic.Set.Iic.isAtomic _ _ _, fun h =>
@@ -301,16 +340,20 @@ theorem isAtomic_iff_forall_isAtomic_Iic [OrderBot α] :
       ((@eq_bot_or_exists_atom_le _ _ _ (h x)) (⊤ : Set.Iic x)).imp Subtype.mk_eq_mk.1
         (Exists.imp' coe fun ⟨a, ha⟩ => And.imp_left IsAtom.of_isAtom_coe_Iic)⟩⟩
 #align is_atomic_iff_forall_is_atomic_Iic isAtomic_iff_forall_isAtomic_Iic
+-/
 
+#print isCoatomic_iff_forall_isCoatomic_Ici /-
 theorem isCoatomic_iff_forall_isCoatomic_Ici [OrderTop α] :
     IsCoatomic α ↔ ∀ x : α, IsCoatomic (Set.Ici x) :=
   isAtomic_dual_iff_isCoatomic.symm.trans <|
     isAtomic_iff_forall_isAtomic_Iic.trans <|
       forall_congr' fun x => isCoatomic_dual_iff_isAtomic.symm.trans Iff.rfl
 #align is_coatomic_iff_forall_is_coatomic_Ici isCoatomic_iff_forall_isCoatomic_Ici
+-/
 
 section WellFounded
 
+#print isAtomic_of_orderBot_wellFounded_lt /-
 theorem isAtomic_of_orderBot_wellFounded_lt [OrderBot α]
     (h : WellFounded ((· < ·) : α → α → Prop)) : IsAtomic α :=
   ⟨fun a =>
@@ -318,11 +361,14 @@ theorem isAtomic_of_orderBot_wellFounded_lt [OrderBot α]
       let ⟨b, hb, hm⟩ := h.has_min { b | b ≠ ⊥ ∧ b ≤ a } ⟨a, ha, le_rfl⟩
       ⟨b, ⟨hb.1, fun c => not_imp_not.1 fun hc hl => hm c ⟨hc, hl.le.trans hb.2⟩ hl⟩, hb.2⟩⟩
 #align is_atomic_of_order_bot_well_founded_lt isAtomic_of_orderBot_wellFounded_lt
+-/
 
+#print isCoatomic_of_orderTop_gt_wellFounded /-
 theorem isCoatomic_of_orderTop_gt_wellFounded [OrderTop α]
     (h : WellFounded ((· > ·) : α → α → Prop)) : IsCoatomic α :=
   isAtomic_dual_iff_isCoatomic.1 (@isAtomic_of_orderBot_wellFounded_lt αᵒᵈ _ _ h)
 #align is_coatomic_of_order_top_gt_well_founded isCoatomic_of_orderTop_gt_wellFounded
+-/
 
 end WellFounded
 
@@ -403,12 +449,14 @@ theorem sSup_atoms_eq_top : sSup { a : α | IsAtom a } = ⊤ :=
   exact (and_iff_left le_top).symm
 #align Sup_atoms_eq_top sSup_atoms_eq_top
 
+#print le_iff_atom_le_imp /-
 theorem le_iff_atom_le_imp {a b : α} : a ≤ b ↔ ∀ c : α, IsAtom c → c ≤ a → c ≤ b :=
   ⟨fun ab c hc ca => le_trans ca ab, fun h =>
     by
     rw [← sSup_atoms_le_eq a, ← sSup_atoms_le_eq b]
     exact sSup_le_sSup fun c hc => ⟨hc.1, h c hc.1 hc.2⟩⟩
 #align le_iff_atom_le_imp le_iff_atom_le_imp
+-/
 
 end IsAtomistic
 
@@ -487,6 +535,7 @@ protected def IsSimpleOrder.preorder {α} [LE α] [BoundedOrder α] [IsSimpleOrd
 #align is_simple_order.preorder IsSimpleOrder.preorder
 -/
 
+#print IsSimpleOrder.linearOrder /-
 /-- A simple partial ordered `bounded_order` induces a linear order.
 This is not an instance to prevent loops. -/
 protected def IsSimpleOrder.linearOrder [DecidableEq α] : LinearOrder α :=
@@ -504,6 +553,7 @@ protected def IsSimpleOrder.linearOrder [DecidableEq α] : LinearOrder α :=
             hb (top_unique (le_trans (top_le_iff.mpr (Or.resolve_left (eq_bot_or_eq_top a) ha)) H))
     DecidableEq := by assumption }
 #align is_simple_order.linear_order IsSimpleOrder.linearOrder
+-/
 
 @[simp]
 theorem isAtom_top : IsAtom (⊤ : α) :=
@@ -547,19 +597,23 @@ section BoundedOrder
 
 variable [Lattice α] [BoundedOrder α] [IsSimpleOrder α]
 
+#print IsSimpleOrder.lattice /-
 /-- A simple partial ordered `bounded_order` induces a lattice.
 This is not an instance to prevent loops -/
 protected def lattice {α} [DecidableEq α] [PartialOrder α] [BoundedOrder α] [IsSimpleOrder α] :
     Lattice α :=
   @LinearOrder.toLattice α IsSimpleOrder.linearOrder
 #align is_simple_order.lattice IsSimpleOrder.lattice
+-/
 
+#print IsSimpleOrder.distribLattice /-
 /-- A lattice that is a `bounded_order` is a distributive lattice.
 This is not an instance to prevent loops -/
 protected def distribLattice : DistribLattice α :=
   { (inferInstance : Lattice α) with
     le_sup_inf := fun x y z => by rcases eq_bot_or_eq_top x with (rfl | rfl) <;> simp }
 #align is_simple_order.distrib_lattice IsSimpleOrder.distribLattice
+-/
 
 -- see Note [lower instance priority]
 instance (priority := 100) : IsAtomic α :=
@@ -600,6 +654,7 @@ def orderIsoBool : α ≃o Bool :=
         · simp [bot_ne_top] }
 #align is_simple_order.order_iso_bool IsSimpleOrder.orderIsoBool
 
+#print IsSimpleOrder.booleanAlgebra /-
 /-- A simple `bounded_order` is also a `boolean_algebra`. -/
 protected def booleanAlgebra {α} [DecidableEq α] [Lattice α] [BoundedOrder α] [IsSimpleOrder α] :
     BooleanAlgebra α :=
@@ -617,13 +672,15 @@ protected def booleanAlgebra {α} [DecidableEq α] [Lattice α] [BoundedOrder α
         split_ifs with h h <;> simp [h]
     top_le_sup_compl := fun x => by rcases eq_bot_or_eq_top x with (rfl | rfl) <;> simp }
 #align is_simple_order.boolean_algebra IsSimpleOrder.booleanAlgebra
+-/
 
 end DecidableEq
 
 variable [Lattice α] [BoundedOrder α] [IsSimpleOrder α]
 
-open Classical
+open scoped Classical
 
+#print IsSimpleOrder.completeLattice /-
 /-- A simple `bounded_order` is also complete. -/
 protected noncomputable def completeLattice : CompleteLattice α :=
   { (inferInstance : Lattice α),
@@ -652,7 +709,9 @@ protected noncomputable def completeLattice : CompleteLattice α :=
         intro con
         exact top_ne_bot (eq_bot_iff.2 (h ⊥ Con)) }
 #align is_simple_order.complete_lattice IsSimpleOrder.completeLattice
+-/
 
+#print IsSimpleOrder.completeBooleanAlgebra /-
 /-- A simple `bounded_order` is also a `complete_boolean_algebra`. -/
 protected noncomputable def completeBooleanAlgebra : CompleteBooleanAlgebra α :=
   { IsSimpleOrder.completeLattice,
@@ -668,6 +727,7 @@ protected noncomputable def completeBooleanAlgebra : CompleteBooleanAlgebra α :
       · simp only [bot_inf_eq, bot_le]
       · simp only [top_inf_eq, ← sSup_eq_iSup]; exact le_rfl }
 #align is_simple_order.complete_boolean_algebra IsSimpleOrder.completeBooleanAlgebra
+-/
 
 end IsSimpleOrder
 
@@ -713,6 +773,7 @@ theorem isSimpleOrder_Iic_iff_isAtom [PartialOrder α] [OrderBot α] {a : α} :
         Subtype.mk_eq_mk.2 (h b (Subtype.mk_lt_mk.1 hbotb))⟩
 #align set.is_simple_order_Iic_iff_is_atom Set.isSimpleOrder_Iic_iff_isAtom
 
+#print Set.isSimpleOrder_Ici_iff_isCoatom /-
 theorem isSimpleOrder_Ici_iff_isCoatom [PartialOrder α] [OrderTop α] {a : α} :
     IsSimpleOrder (Ici a) ↔ IsCoatom a :=
   isSimpleOrder_iff_isCoatom_bot.trans <|
@@ -720,6 +781,7 @@ theorem isSimpleOrder_Ici_iff_isCoatom [PartialOrder α] [OrderTop α] {a : α} 
       ⟨fun h b ab => Subtype.mk_eq_mk.1 (h ⟨b, le_of_lt ab⟩ ab), fun h ⟨b, hab⟩ hbotb =>
         Subtype.mk_eq_mk.2 (h b (Subtype.mk_lt_mk.1 hbotb))⟩
 #align set.is_simple_order_Ici_iff_is_coatom Set.isSimpleOrder_Ici_iff_isCoatom
+-/
 
 end Set
 
@@ -875,19 +937,24 @@ variable {a b : α} (hc : IsCompl a b)
 
 include hc
 
+#print IsCompl.isAtom_iff_isCoatom /-
 theorem isAtom_iff_isCoatom : IsAtom a ↔ IsCoatom b :=
   Set.isSimpleOrder_Iic_iff_isAtom.symm.trans <|
     hc.IicOrderIsoIci.isSimpleOrder_iff.trans Set.isSimpleOrder_Ici_iff_isCoatom
 #align is_compl.is_atom_iff_is_coatom IsCompl.isAtom_iff_isCoatom
+-/
 
+#print IsCompl.isCoatom_iff_isAtom /-
 theorem isCoatom_iff_isAtom : IsCoatom a ↔ IsAtom b :=
   hc.symm.isAtom_iff_isCoatom.symm
 #align is_compl.is_coatom_iff_is_atom IsCompl.isCoatom_iff_isAtom
+-/
 
 end IsCompl
 
 variable [ComplementedLattice α]
 
+#print isCoatomic_of_isAtomic_of_complementedLattice_of_isModular /-
 theorem isCoatomic_of_isAtomic_of_complementedLattice_of_isModular [IsAtomic α] : IsCoatomic α :=
   ⟨fun x => by
     rcases exists_is_compl x with ⟨y, xy⟩
@@ -900,15 +967,20 @@ theorem isCoatomic_of_isAtomic_of_complementedLattice_of_isModular [IsAtomic α]
       rw [← hb.is_atom_iff_is_coatom, OrderIso.isAtom_iff]
       apply ha.Iic⟩
 #align is_coatomic_of_is_atomic_of_complemented_lattice_of_is_modular isCoatomic_of_isAtomic_of_complementedLattice_of_isModular
+-/
 
+#print isAtomic_of_isCoatomic_of_complementedLattice_of_isModular /-
 theorem isAtomic_of_isCoatomic_of_complementedLattice_of_isModular [IsCoatomic α] : IsAtomic α :=
   isCoatomic_dual_iff_isAtomic.1 isCoatomic_of_isAtomic_of_complementedLattice_of_isModular
 #align is_atomic_of_is_coatomic_of_complemented_lattice_of_is_modular isAtomic_of_isCoatomic_of_complementedLattice_of_isModular
+-/
 
+#print isAtomic_iff_isCoatomic /-
 theorem isAtomic_iff_isCoatomic : IsAtomic α ↔ IsCoatomic α :=
   ⟨fun h => @isCoatomic_of_isAtomic_of_complementedLattice_of_isModular _ _ _ _ _ h, fun h =>
     @isAtomic_of_isCoatomic_of_complementedLattice_of_isModular _ _ _ _ _ h⟩
 #align is_atomic_iff_is_coatomic isAtomic_iff_isCoatomic
+-/
 
 end IsModularLattice
 

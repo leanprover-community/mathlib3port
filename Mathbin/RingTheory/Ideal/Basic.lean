@@ -42,7 +42,7 @@ variable {α : Type u} {β : Type v}
 
 open Set Function
 
-open Classical BigOperators Pointwise
+open scoped Classical BigOperators Pointwise
 
 #print Ideal /-
 /-- A (left) ideal in a semiring `R` is an additive submonoid `s` such that

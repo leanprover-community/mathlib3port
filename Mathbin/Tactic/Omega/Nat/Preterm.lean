@@ -144,7 +144,7 @@ def SubFree : Preterm → Prop
 
 end Preterm
 
-open List.Func
+open scoped List.Func
 
 -- get notation for list.func.set
 /-- Return a term (which is in canonical form by definition)

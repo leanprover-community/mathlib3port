@@ -65,9 +65,11 @@ def log (b : ℕ) (r : R) : ℤ :=
 #align int.log Int.log
 -/
 
+#print Int.log_of_one_le_right /-
 theorem log_of_one_le_right (b : ℕ) {r : R} (hr : 1 ≤ r) : log b r = Nat.log b ⌊r⌋₊ :=
   if_pos hr
 #align int.log_of_one_le_right Int.log_of_one_le_right
+-/
 
 theorem log_of_right_le_one (b : ℕ) {r : R} (hr : r ≤ 1) : log b r = -Nat.clog b ⌈r⁻¹⌉₊ :=
   by
@@ -114,6 +116,7 @@ theorem zpow_log_le_self {b : ℕ} {r : R} (hb : 1 < b) (hr : 0 < r) : (b : R) ^
     exact inv_le_of_inv_le hr (Nat.ceil_le.1 <| Nat.le_pow_clog hb _)
 #align int.zpow_log_le_self Int.zpow_log_le_self
 
+#print Int.lt_zpow_succ_log_self /-
 theorem lt_zpow_succ_log_self {b : ℕ} (hb : 1 < b) (r : R) : r < (b : R) ^ (log b r + 1) :=
   by
   cases' le_or_lt r 0 with hr hr
@@ -133,6 +136,7 @@ theorem lt_zpow_succ_log_self {b : ℕ} (hb : 1 < b) (r : R) : r < (b : R) ^ (lo
     refine' Nat.lt_ceil.1 _
     exact Nat.pow_pred_clog_lt_self hb <| Nat.one_lt_cast.1 <| hcri.trans_le <| Nat.le_ceil _
 #align int.lt_zpow_succ_log_self Int.lt_zpow_succ_log_self
+-/
 
 @[simp]
 theorem log_zero_right (b : ℕ) : log b (0 : R) = 0 :=
@@ -208,9 +212,11 @@ def clog (b : ℕ) (r : R) : ℤ :=
 #align int.clog Int.clog
 -/
 
+#print Int.clog_of_one_le_right /-
 theorem clog_of_one_le_right (b : ℕ) {r : R} (hr : 1 ≤ r) : clog b r = Nat.clog b ⌈r⌉₊ :=
   if_pos hr
 #align int.clog_of_one_le_right Int.clog_of_one_le_right
+-/
 
 theorem clog_of_right_le_one (b : ℕ) {r : R} (hr : r ≤ 1) : clog b r = -Nat.log b ⌊r⁻¹⌋₊ :=
   by
@@ -270,6 +276,7 @@ theorem clog_of_left_le_one {b : ℕ} (hb : b ≤ 1) (r : R) : clog b r = 0 := b
 #align int.clog_of_left_le_one Int.clog_of_left_le_one
 -/
 
+#print Int.self_le_zpow_clog /-
 theorem self_le_zpow_clog {b : ℕ} (hb : 1 < b) (r : R) : r ≤ (b : R) ^ clog b r :=
   by
   cases' le_or_lt r 0 with hr hr
@@ -279,6 +286,7 @@ theorem self_le_zpow_clog {b : ℕ} (hb : 1 < b) (r : R) : r ≤ (b : R) ^ clog 
   · exact zpow_log_le_self hb (inv_pos.mpr hr)
   · exact nat.cast_pos.mpr (zero_le_one.trans_lt hb)
 #align int.self_le_zpow_clog Int.self_le_zpow_clog
+-/
 
 theorem zpow_pred_clog_lt_self {b : ℕ} {r : R} (hb : 1 < b) (hr : 0 < r) :
     (b : R) ^ (clog b r - 1) < r :=

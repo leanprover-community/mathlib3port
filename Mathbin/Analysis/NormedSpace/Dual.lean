@@ -44,7 +44,7 @@ dual
 
 noncomputable section
 
-open Classical Topology
+open scoped Classical Topology
 
 universe u v
 

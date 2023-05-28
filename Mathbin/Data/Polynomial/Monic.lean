@@ -26,7 +26,7 @@ noncomputable section
 
 open Finset
 
-open BigOperators Classical Polynomial
+open scoped BigOperators Classical Polynomial
 
 namespace Polynomial
 
@@ -97,19 +97,23 @@ theorem monic_mul_C_of_leadingCoeff_mul_eq_one {b : R} (hp : p.leadingCoeff * b 
   rw [monic, leading_coeff_mul' _] <;> simp [leading_coeff_C b, hp]
 #align polynomial.monic_mul_C_of_leading_coeff_mul_eq_one Polynomial.monic_mul_C_of_leadingCoeff_mul_eq_one
 
+#print Polynomial.monic_of_degree_le /-
 theorem monic_of_degree_le (n : ℕ) (H1 : degree p ≤ n) (H2 : coeff p n = 1) : Monic p :=
   Decidable.byCases
     (fun H : degree p < n => eq_of_zero_eq_one (H2 ▸ (coeff_eq_zero_of_degree_lt H).symm) _ _)
     fun H : ¬degree p < n => by
     rwa [monic, leading_coeff, nat_degree, (lt_or_eq_of_le H1).resolve_left H]
 #align polynomial.monic_of_degree_le Polynomial.monic_of_degree_le
+-/
 
+#print Polynomial.monic_X_pow_add /-
 theorem monic_X_pow_add {n : ℕ} (H : degree p ≤ n) : Monic (X ^ (n + 1) + p) :=
   have H1 : degree p < n + 1 := lt_of_le_of_lt H (WithBot.coe_lt_coe.2 (Nat.lt_succ_self n))
   monic_of_degree_le (n + 1)
     (le_trans (degree_add_le _ _) (max_le (degree_X_pow_le _) (le_of_lt H1)))
     (by rw [coeff_add, coeff_X_pow, if_pos rfl, coeff_eq_zero_of_degree_lt H1, add_zero])
 #align polynomial.monic_X_pow_add Polynomial.monic_X_pow_add
+-/
 
 theorem monic_X_add_C (x : R) : Monic (X + C x) :=
   pow_one (X : R[X]) ▸ monic_X_pow_add degree_C_le
@@ -135,13 +139,17 @@ theorem Monic.pow (hp : Monic p) : ∀ n : ℕ, Monic (p ^ n)
 #align polynomial.monic.pow Polynomial.Monic.pow
 -/
 
+#print Polynomial.Monic.add_of_left /-
 theorem Monic.add_of_left (hp : Monic p) (hpq : degree q < degree p) : Monic (p + q) := by
   rwa [monic, add_comm, leading_coeff_add_of_degree_lt hpq]
 #align polynomial.monic.add_of_left Polynomial.Monic.add_of_left
+-/
 
+#print Polynomial.Monic.add_of_right /-
 theorem Monic.add_of_right (hq : Monic q) (hpq : degree p < degree q) : Monic (p + q) := by
   rwa [monic, leading_coeff_add_of_degree_lt hpq]
 #align polynomial.monic.add_of_right Polynomial.Monic.add_of_right
+-/
 
 #print Polynomial.Monic.of_mul_monic_left /-
 theorem Monic.of_mul_monic_left (hp : p.Monic) (hpq : (p * q).Monic) : q.Monic :=
@@ -176,10 +184,12 @@ theorem natDegree_eq_zero_iff_eq_one (hp : p.Monic) : p.natDegree = 0 ↔ p = 1 
 #align polynomial.monic.nat_degree_eq_zero_iff_eq_one Polynomial.Monic.natDegree_eq_zero_iff_eq_one
 -/
 
+#print Polynomial.Monic.degree_le_zero_iff_eq_one /-
 @[simp]
 theorem degree_le_zero_iff_eq_one (hp : p.Monic) : p.degree ≤ 0 ↔ p = 1 := by
   rw [← hp.nat_degree_eq_zero_iff_eq_one, nat_degree_eq_zero_iff_degree_le_zero]
 #align polynomial.monic.degree_le_zero_iff_eq_one Polynomial.Monic.degree_le_zero_iff_eq_one
+-/
 
 #print Polynomial.Monic.natDegree_mul /-
 theorem natDegree_mul (hp : p.Monic) (hq : q.Monic) :
@@ -230,9 +240,11 @@ theorem not_dvd_of_natDegree_lt (hp : Monic p) (h0 : q ≠ 0) (hl : natDegree q 
 #align polynomial.monic.not_dvd_of_nat_degree_lt Polynomial.Monic.not_dvd_of_natDegree_lt
 -/
 
+#print Polynomial.Monic.not_dvd_of_degree_lt /-
 theorem not_dvd_of_degree_lt (hp : Monic p) (h0 : q ≠ 0) (hl : degree q < degree p) : ¬p ∣ q :=
   Monic.not_dvd_of_natDegree_lt hp h0 <| natDegree_lt_natDegree h0 hl
 #align polynomial.monic.not_dvd_of_degree_lt Polynomial.Monic.not_dvd_of_degree_lt
+-/
 
 theorem nextCoeff_mul (hp : Monic p) (hq : Monic q) :
     nextCoeff (p * q) = nextCoeff p + nextCoeff q :=
@@ -450,9 +462,11 @@ theorem not_isUnit_X_pow_sub_one (R : Type _) [CommRing R] [Nontrivial R] (n : �
   rw [← @nat_degree_one R, ← (monic_X_pow_sub_C _ hn).eq_one_of_isUnit h, nat_degree_X_pow_sub_C]
 #align polynomial.not_is_unit_X_pow_sub_one Polynomial.not_isUnit_X_pow_sub_one
 
+#print Polynomial.Monic.sub_of_left /-
 theorem Monic.sub_of_left {p q : R[X]} (hp : Monic p) (hpq : degree q < degree p) : Monic (p - q) :=
   by rw [sub_eq_add_neg]; apply hp.add_of_left; rwa [degree_neg]
 #align polynomial.monic.sub_of_left Polynomial.Monic.sub_of_left
+-/
 
 theorem Monic.sub_of_right {p q : R[X]} (hq : q.leadingCoeff = -1) (hpq : degree p < degree q) :
     Monic (p - q) :=

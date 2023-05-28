@@ -62,7 +62,7 @@ say that `‖-f‖ = ‖f‖`, instead of the non-working `f.norm_neg`.
 
 noncomputable section
 
-open NNReal ENNReal BigOperators
+open scoped NNReal ENNReal BigOperators
 
 variable {α : Type _} {E : α → Type _} {p q : ℝ≥0∞} [∀ i, NormedAddCommGroup (E i)]
 
@@ -1140,7 +1140,7 @@ section Topology
 
 open Filter
 
-open Topology uniformity
+open scoped Topology uniformity
 
 /-- The coercion from `lp E p` to `Π i, E i` is uniformly continuous. -/
 theorem uniformContinuous_coe [_i : Fact (1 ≤ p)] : UniformContinuous (coe : lp E p → ∀ i, E i) :=

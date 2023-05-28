@@ -68,7 +68,7 @@ noncomputable section
 
 open Metric FiniteDimensional Function
 
-open Manifold
+open scoped Manifold
 
 attribute [local instance] fact_finite_dimensional_of_finrank_eq_succ
 

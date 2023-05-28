@@ -793,7 +793,7 @@ theorem orElse_eq_none' (o o' : Option α) : o.orelse o' = none ↔ o = none ∧
 
 section
 
-open Classical
+open scoped Classical
 
 #print Option.choice /-
 /-- An arbitrary `some a` with `a : α` if `α` is nonempty, and otherwise `none`. -/

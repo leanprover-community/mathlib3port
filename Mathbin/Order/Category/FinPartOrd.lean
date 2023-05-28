@@ -100,6 +100,7 @@ instance hasForgetToFintype : HasForget₂ FinPartOrd FintypeCat
 #align FinPartOrd.has_forget_to_Fintype FinPartOrd.hasForgetToFintype
 -/
 
+#print FinPartOrd.Iso.mk /-
 /-- Constructs an isomorphism of finite partial orders from an order isomorphism between them. -/
 @[simps]
 def Iso.mk {α β : FinPartOrd.{u}} (e : α ≃o β) : α ≅ β
@@ -109,6 +110,7 @@ def Iso.mk {α β : FinPartOrd.{u}} (e : α ≃o β) : α ≅ β
   hom_inv_id' := by ext; exact e.symm_apply_apply _
   inv_hom_id' := by ext; exact e.apply_symm_apply _
 #align FinPartOrd.iso.mk FinPartOrd.Iso.mk
+-/
 
 #print FinPartOrd.dual /-
 /-- `order_dual` as a functor. -/

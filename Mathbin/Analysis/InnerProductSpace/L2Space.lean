@@ -87,7 +87,7 @@ Hilbert space, Hilbert sum, l2, Hilbert basis, unitary equivalence, isometric is
 
 open IsROrC Submodule Filter
 
-open BigOperators NNReal ENNReal Classical ComplexConjugate Topology
+open scoped BigOperators NNReal ENNReal Classical ComplexConjugate Topology
 
 noncomputable section
 

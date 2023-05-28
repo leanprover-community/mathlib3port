@@ -67,7 +67,7 @@ variable {M : Type w} {N P : Type _} [L.Structure M] [L.Structure N] [L.Structur
 
 variable {α : Type u'} {β : Type v'}
 
-open FirstOrder Cardinal
+open scoped FirstOrder Cardinal
 
 open Structure Cardinal Fin
 

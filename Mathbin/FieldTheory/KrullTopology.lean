@@ -58,7 +58,7 @@ all intermediate fields `E` with `E/K` finite dimensional.
 -/
 
 
-open Classical
+open scoped Classical
 
 /-- Mapping intermediate fields along algebra equivalences preserves the partial order -/
 theorem IntermediateField.map_mono {K L M : Type _} [Field K] [Field L] [Field M] [Algebra K L]
@@ -211,7 +211,7 @@ instance (K L : Type _) [Field K] [Field L] [Algebra K L] : TopologicalGroup (L 
 
 section KrullT2
 
-open Topology Filter
+open scoped Topology Filter
 
 /-- Let `L/E/K` be a tower of fields with `E/K` finite. Then `Gal(L/E)` is an open subgroup of
   `L ≃ₐ[K] L`. -/

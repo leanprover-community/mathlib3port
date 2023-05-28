@@ -77,10 +77,12 @@ def chooseAny [Random α] : Gen α :=
 
 variable {α} [Preorder α]
 
+#print SlimCheck.Gen.choose /-
 /-- Lift `random.random_r` to the `gen` monad. -/
 def choose [BoundedRandom α] (x y : α) (p : x ≤ y) : Gen (x .. y) :=
   ⟨fun _ => Rand.randomR x y p⟩
 #align slim_check.gen.choose SlimCheck.Gen.choose
+-/
 
 end Rand
 

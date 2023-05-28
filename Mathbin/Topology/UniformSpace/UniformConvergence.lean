@@ -70,7 +70,7 @@ Uniform limit, uniform convergence, tends uniformly to
 
 noncomputable section
 
-open Topology Classical uniformity Filter
+open scoped Topology Classical uniformity Filter
 
 open Set Filter
 

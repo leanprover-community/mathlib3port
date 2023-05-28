@@ -429,7 +429,7 @@ theorem infs_infs_infs_comm : s ⊼ t ⊼ (u ⊼ v) = s ⊼ u ⊼ (t ⊼ v) :=
 
 end Infs
 
-open SetFamily
+open scoped SetFamily
 
 section DistribLattice
 
@@ -463,7 +463,7 @@ end DistribLattice
 
 end Set
 
-open SetFamily
+open scoped SetFamily
 
 @[simp]
 theorem upperClosure_sups [SemilatticeSup α] (s t : Set α) :

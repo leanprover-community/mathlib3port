@@ -28,7 +28,7 @@ An important definition is `to_alg_hom R S A`, the canonical `R`-algebra homomor
 -/
 
 
-open Pointwise
+open scoped Pointwise
 
 universe u v w u₁ v₁
 

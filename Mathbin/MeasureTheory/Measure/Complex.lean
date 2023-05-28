@@ -38,7 +38,7 @@ Complex measure
 
 noncomputable section
 
-open Classical MeasureTheory ENNReal NNReal
+open scoped Classical MeasureTheory ENNReal NNReal
 
 variable {α β : Type _} {m : MeasurableSpace α}
 

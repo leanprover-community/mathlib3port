@@ -65,7 +65,7 @@ scoped[DualNumber] notation "ε" => DualNumber.eps
 -- mathport name: dual_number
 scoped[DualNumber] postfix:1024 "[ε]" => DualNumber
 
-open DualNumber
+open scoped DualNumber
 
 namespace DualNumber
 

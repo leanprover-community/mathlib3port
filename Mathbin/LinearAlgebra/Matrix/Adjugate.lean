@@ -56,7 +56,7 @@ variable {m : Type u} {n : Type v} {α : Type w}
 
 variable [DecidableEq n] [Fintype n] [DecidableEq m] [Fintype m] [CommRing α]
 
-open Matrix BigOperators Polynomial
+open scoped Matrix BigOperators Polynomial
 
 open Equiv Equiv.Perm Finset
 

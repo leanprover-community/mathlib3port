@@ -29,11 +29,11 @@ This file defines unoriented angles in Euclidean affine spaces.
 
 noncomputable section
 
-open BigOperators
+open scoped BigOperators
 
-open Real
+open scoped Real
 
-open RealInnerProductSpace
+open scoped RealInnerProductSpace
 
 namespace EuclideanGeometry
 

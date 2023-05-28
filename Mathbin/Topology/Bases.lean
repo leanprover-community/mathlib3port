@@ -56,7 +56,7 @@ More fine grained instances for `first_countable_topology`, `separable_space`, `
 
 open Set Filter Function
 
-open Topology Filter
+open scoped Topology Filter
 
 noncomputable section
 
@@ -603,6 +603,7 @@ instance separableSpace_univ {α : Type _} [TopologicalSpace α] [SeparableSpace
 #align separable_space_univ separableSpace_univ
 -/
 
+#print exists_countable_dense_bot_top /-
 /-- If `α` is a separable topological space with a partial order, then there exists a countable
 dense set `s : set α` that contains those of both bottom and top elements of `α` that actually
 exist. For a dense set containing neither bot nor top elements, see
@@ -612,6 +613,7 @@ theorem exists_countable_dense_bot_top (α : Type _) [TopologicalSpace α] [Sepa
     ∃ s : Set α, s.Countable ∧ Dense s ∧ (∀ x, IsBot x → x ∈ s) ∧ ∀ x, IsTop x → x ∈ s := by
   simpa using dense_univ.exists_countable_dense_subset_bot_top
 #align exists_countable_dense_bot_top exists_countable_dense_bot_top
+-/
 
 namespace TopologicalSpace
 

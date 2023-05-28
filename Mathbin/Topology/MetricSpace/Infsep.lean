@@ -40,7 +40,7 @@ namespace Set
 
 section Einfsep
 
-open ENNReal
+open scoped ENNReal
 
 open Function
 
@@ -351,7 +351,7 @@ end Einfsep
 
 section Infsep
 
-open ENNReal
+open scoped ENNReal
 
 open Set Function
 

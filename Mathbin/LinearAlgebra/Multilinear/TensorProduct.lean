@@ -23,7 +23,7 @@ namespace MultilinearMap
 
 section DomCoprod
 
-open TensorProduct
+open scoped TensorProduct
 
 variable {R ι₁ ι₂ ι₃ ι₄ : Type _}
 

@@ -45,7 +45,7 @@ noncomputable section
 
 open Real Set MeasureTheory Filter Asymptotics
 
-open Real Topology FourierTransform
+open scoped Real Topology FourierTransform
 
 open Complex hiding exp continuous_exp abs_of_nonneg sq_abs
 
@@ -396,7 +396,7 @@ namespace GaussianFourier
 
 open intervalIntegral
 
-open Real
+open scoped Real
 
 variable {b : ℂ}
 

@@ -106,7 +106,7 @@ universe u
 
 open Metric Set Filter Fin MeasureTheory TopologicalSpace
 
-open Topology Classical BigOperators ENNReal MeasureTheory NNReal
+open scoped Topology Classical BigOperators ENNReal MeasureTheory NNReal
 
 /-!
 ### Satellite configurations
@@ -545,7 +545,7 @@ theorem exist_disjoint_covering_families {N : ℕ} {τ : ℝ} (hτ : 1 < τ)
 -/
 
 
-open NNReal
+open scoped NNReal
 
 variable [SecondCountableTopology α] [MeasurableSpace α] [OpensMeasurableSpace α]
 

@@ -307,7 +307,7 @@ theorem of_hasBinaryProduct' [HasBinaryProduct X Y] [HasTerminal C] :
 #align category_theory.is_pullback.of_has_binary_product' CategoryTheory.IsPullback.of_hasBinaryProduct'
 -/
 
-open ZeroObject
+open scoped ZeroObject
 
 #print CategoryTheory.IsPullback.of_hasBinaryProduct /-
 theorem of_hasBinaryProduct [HasBinaryProduct X Y] [HasZeroObject C] [HasZeroMorphisms C] :
@@ -463,7 +463,7 @@ theorem of_hasBinaryCoproduct' [HasBinaryCoproduct X Y] [HasInitial C] :
 #align category_theory.is_pushout.of_has_binary_coproduct' CategoryTheory.IsPushout.of_hasBinaryCoproduct'
 -/
 
-open ZeroObject
+open scoped ZeroObject
 
 #print CategoryTheory.IsPushout.of_hasBinaryCoproduct /-
 theorem of_hasBinaryCoproduct [HasBinaryCoproduct X Y] [HasZeroObject C] [HasZeroMorphisms C] :
@@ -541,7 +541,7 @@ section
 
 variable [HasZeroObject C] [HasZeroMorphisms C]
 
-open ZeroObject
+open scoped ZeroObject
 
 #print CategoryTheory.IsPullback.zero_left /-
 /-- The square with `0 : 0 ⟶ 0` on the left and `𝟙 X` on the right is a pullback square. -/
@@ -651,7 +651,7 @@ section
 
 variable [HasZeroObject C] [HasZeroMorphisms C]
 
-open ZeroObject
+open scoped ZeroObject
 
 #print CategoryTheory.IsPullback.of_isBilimit /-
 theorem of_isBilimit {b : BinaryBicone X Y} (h : b.IsBilimit) :
@@ -797,7 +797,7 @@ section
 
 variable [HasZeroObject C] [HasZeroMorphisms C]
 
-open ZeroObject
+open scoped ZeroObject
 
 #print CategoryTheory.IsPushout.zero_right /-
 /-- The square with `0 : 0 ⟶ 0` on the right and `𝟙 X` on the left is a pushout square. -/
@@ -910,7 +910,7 @@ section
 
 variable [HasZeroObject C] [HasZeroMorphisms C]
 
-open ZeroObject
+open scoped ZeroObject
 
 #print CategoryTheory.IsPushout.of_isBilimit /-
 theorem of_isBilimit {b : BinaryBicone X Y} (h : b.IsBilimit) :
@@ -1098,7 +1098,7 @@ theorem flip (p : BicartesianSq f g h i) : BicartesianSq g f i h :=
 
 variable [HasZeroObject C] [HasZeroMorphisms C]
 
-open ZeroObject
+open scoped ZeroObject
 
 #print CategoryTheory.BicartesianSq.of_is_biproduct₁ /-
 /-- ```

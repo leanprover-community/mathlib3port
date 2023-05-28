@@ -57,7 +57,7 @@ noncomputable section
 
 open Set FiniteDimensional TopologicalSpace Filter Asymptotics
 
-open Classical BigOperators Filter Topology Asymptotics NNReal
+open scoped Classical BigOperators Filter Topology Asymptotics NNReal
 
 namespace LinearIsometry
 

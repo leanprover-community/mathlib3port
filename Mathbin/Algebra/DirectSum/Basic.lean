@@ -30,7 +30,7 @@ This notation is in the `direct_sum` locale, accessible after `open_locale direc
 -/
 
 
-open BigOperators
+open scoped BigOperators
 
 universe u v w u₁
 

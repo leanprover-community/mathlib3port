@@ -22,7 +22,7 @@ We construct the power functions `x ^ y`, where `x` and `y` are real numbers.
 
 noncomputable section
 
-open Classical Real BigOperators ComplexConjugate
+open scoped Classical Real BigOperators ComplexConjugate
 
 open Finset Set
 
@@ -81,7 +81,7 @@ theorem rpow_eq_zero_iff_of_nonneg {x y : ℝ} (hx : 0 ≤ x) : x ^ y = 0 ↔ x 
   simp only [rpow_def_of_nonneg hx]; split_ifs <;> simp [*, exp_ne_zero]
 #align real.rpow_eq_zero_iff_of_nonneg Real.rpow_eq_zero_iff_of_nonneg
 
-open Real
+open scoped Real
 
 theorem rpow_def_of_neg {x : ℝ} (hx : x < 0) (y : ℝ) : x ^ y = exp (log x * y) * cos (y * π) :=
   by
@@ -699,10 +699,12 @@ theorem exists_rat_pow_btwn_rat_aux (hn : n ≠ 0) (x y : ℝ) (h : x < y) (hy :
   · exact hy.le
 #align real.exists_rat_pow_btwn_rat_aux Real.exists_rat_pow_btwn_rat_aux
 
+#print Real.exists_rat_pow_btwn_rat /-
 theorem exists_rat_pow_btwn_rat (hn : n ≠ 0) {x y : ℚ} (h : x < y) (hy : 0 < y) :
     ∃ q : ℚ, 0 < q ∧ x < q ^ n ∧ q ^ n < y := by
   apply_mod_cast exists_rat_pow_btwn_rat_aux hn x y <;> assumption
 #align real.exists_rat_pow_btwn_rat Real.exists_rat_pow_btwn_rat
+-/
 
 /-- There is a rational power between any two positive elements of an archimedean ordered field. -/
 theorem exists_rat_pow_btwn {α : Type _} [LinearOrderedField α] [Archimedean α] (hn : n ≠ 0)

@@ -45,7 +45,7 @@ and so on.
 
 open Real
 
-open EuclideanGeometry RealInnerProductSpace Real
+open scoped EuclideanGeometry RealInnerProductSpace Real
 
 namespace EuclideanGeometry
 

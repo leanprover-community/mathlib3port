@@ -24,7 +24,7 @@ universe u v
 
 namespace MvQPF
 
-open MvFunctor
+open scoped MvFunctor
 
 variable {n : ℕ} (i : Fin2 n)
 

@@ -35,7 +35,7 @@ filter, countable
 
 open Set Filter
 
-open Filter
+open scoped Filter
 
 variable {ι : Sort _} {α β : Type _}
 

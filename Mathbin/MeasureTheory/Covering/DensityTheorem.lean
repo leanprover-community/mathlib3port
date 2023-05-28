@@ -36,7 +36,7 @@ noncomputable section
 
 open Set Filter Metric MeasureTheory TopologicalSpace
 
-open NNReal Topology
+open scoped NNReal Topology
 
 namespace IsUnifLocDoublingMeasure
 
@@ -47,7 +47,7 @@ section
 
 variable [SecondCountableTopology α] [BorelSpace α] [LocallyFiniteMeasure μ]
 
-open Topology
+open scoped Topology
 
 /-- A Vitali family in a space with a uniformly locally doubling measure, designed so that the sets
 at `x` contain all `closed_ball y r` when `dist x y ≤ K * r`. -/

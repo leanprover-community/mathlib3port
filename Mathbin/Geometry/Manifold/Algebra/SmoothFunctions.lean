@@ -19,7 +19,7 @@ In this file, we define instances of algebraic structures over smooth functions.
 
 noncomputable section
 
-open Manifold
+open scoped Manifold
 
 variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E]
   [NormedSpace 𝕜 E] {E' : Type _} [NormedAddCommGroup E'] [NormedSpace 𝕜 E'] {H : Type _}

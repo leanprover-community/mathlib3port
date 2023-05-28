@@ -66,11 +66,13 @@ attribute [ematch] le_trans lt_of_le_of_lt lt_of_lt_of_le lt_trans
 
 section
 
+#print le_antisymm' /-
 -- TODO: this seems crazy, but it also seems to work reasonably well
 @[ematch]
 theorem le_antisymm' [PartialOrder α] : ∀ {a b : α}, a ≤ b → b ≤ a → a = b :=
   @le_antisymm _ _
 #align le_antisymm' le_antisymm'
+-/
 
 end
 
@@ -336,6 +338,7 @@ theorem SemilatticeSup.ext_sup {α} {A B : SemilatticeSup α}
   eq_of_forall_ge_iff fun c => by simp only [sup_le_iff] <;> rw [← H, @sup_le_iff α A, H, H]
 #align semilattice_sup.ext_sup SemilatticeSup.ext_sup
 
+#print SemilatticeSup.ext /-
 theorem SemilatticeSup.ext {α} {A B : SemilatticeSup α}
     (H :
       ∀ x y : α,
@@ -348,6 +351,7 @@ theorem SemilatticeSup.ext {α} {A B : SemilatticeSup α}
   cases A; cases B
   injection this <;> congr
 #align semilattice_sup.ext SemilatticeSup.ext
+-/
 
 theorem ite_le_sup (s s' : α) (P : Prop) [Decidable P] : ite P s s' ≤ s ⊔ s' :=
   if h : P then (if_pos h).trans_le le_sup_left else (if_neg h).trans_le le_sup_right
@@ -589,6 +593,7 @@ theorem SemilatticeInf.ext_inf {α} {A B : SemilatticeInf α}
   eq_of_forall_le_iff fun c => by simp only [le_inf_iff] <;> rw [← H, @le_inf_iff α A, H, H]
 #align semilattice_inf.ext_inf SemilatticeInf.ext_inf
 
+#print SemilatticeInf.ext /-
 theorem SemilatticeInf.ext {α} {A B : SemilatticeInf α}
     (H :
       ∀ x y : α,
@@ -601,6 +606,7 @@ theorem SemilatticeInf.ext {α} {A B : SemilatticeInf α}
   cases A; cases B
   injection this <;> congr
 #align semilattice_inf.ext SemilatticeInf.ext
+-/
 
 #print SemilatticeInf.dual_dual /-
 theorem SemilatticeInf.dual_dual (α : Type _) [H : SemilatticeInf α] :
@@ -762,6 +768,7 @@ theorem sup_inf_self : a ⊔ a ⊓ b = a := by simp
 theorem sup_eq_iff_inf_eq : a ⊔ b = b ↔ a ⊓ b = a := by rw [sup_eq_right, ← inf_eq_left]
 #align sup_eq_iff_inf_eq sup_eq_iff_inf_eq
 
+#print Lattice.ext /-
 theorem Lattice.ext {α} {A B : Lattice α}
     (H :
       ∀ x y : α,
@@ -775,6 +782,7 @@ theorem Lattice.ext {α} {A B : Lattice α}
   cases A; cases B
   injection SS <;> injection II <;> congr
 #align lattice.ext Lattice.ext
+-/
 
 end Lattice
 
@@ -969,6 +977,7 @@ theorem inf_eq_minDefault [SemilatticeInf α] [DecidableRel ((· ≤ ·) : α �
   exacts[inf_of_le_left h', inf_of_le_right <| (total_of (· ≤ ·) x y).resolve_left h']
 #align inf_eq_min_default inf_eq_minDefault
 
+#print Lattice.toLinearOrder /-
 /-- A lattice with total order is a linear order.
 
 See note [reducible non-instances]. -/
@@ -986,6 +995,7 @@ def Lattice.toLinearOrder (α : Type u) [Lattice α] [DecidableEq α]
     min := (· ⊓ ·)
     min_def := inf_eq_minDefault }
 #align lattice.to_linear_order Lattice.toLinearOrder
+-/
 
 -- see Note [lower instance priority]
 instance (priority := 100) LinearOrder.toDistribLattice {α : Type u} [o : LinearOrder α] :

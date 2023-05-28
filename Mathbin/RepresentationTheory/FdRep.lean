@@ -114,7 +114,7 @@ example : MonoidalLinear k (FdRep k G) := by infer_instance
 
 open FiniteDimensional
 
-open Classical
+open scoped Classical
 
 -- We need to provide this instance explicitely as otherwise `finrank_hom_simple_simple` gives a
 -- deterministic timeout.

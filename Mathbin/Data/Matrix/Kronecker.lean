@@ -52,7 +52,7 @@ These require `open_locale kronecker`:
 
 namespace Matrix
 
-open Matrix
+open scoped Matrix
 
 variable {R α α' β β' γ γ' : Type _}
 
@@ -276,7 +276,7 @@ end KroneckerMap
 
 section Kronecker
 
-open Matrix
+open scoped Matrix
 
 #print Matrix.kronecker /-
 /-- The Kronecker product. This is just a shorthand for `kronecker_map (*)`. Prefer the notation
@@ -438,7 +438,7 @@ variable (R)
 
 open TensorProduct
 
-open Matrix TensorProduct
+open scoped Matrix TensorProduct
 
 section Module
 
@@ -542,7 +542,7 @@ end Module
 
 section Algebra
 
-open Kronecker
+open scoped Kronecker
 
 open Algebra.TensorProduct
 

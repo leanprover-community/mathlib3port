@@ -211,7 +211,7 @@ noncomputable instance (H : Subgroup G) [Fintype (Sylow p G)] : Fintype (Sylow p
 instance (H : Subgroup G) [Finite (Sylow p G)] : Finite (Sylow p H) := by
   cases nonempty_fintype (Sylow p G); infer_instance
 
-open Pointwise
+open scoped Pointwise
 
 /-- `subgroup.pointwise_mul_action` preserves Sylow subgroups. -/
 instance Sylow.pointwiseMulAction {α : Type _} [Group α] [MulDistribMulAction α G] :
@@ -492,7 +492,7 @@ end InfiniteSylow
 
 open Equiv Equiv.Perm Finset Function List QuotientGroup
 
-open BigOperators
+open scoped BigOperators
 
 universe u v w
 
@@ -715,7 +715,7 @@ theorem subsingleton_of_normal {p : ℕ} [Fact p.Prime] [Finite (Sylow p G)] (P 
 
 section Pointwise
 
-open Pointwise
+open scoped Pointwise
 
 theorem characteristic_of_normal {p : ℕ} [Fact p.Prime] [Finite (Sylow p G)] (P : Sylow p G)
     (h : (P : Subgroup G).Normal) : (P : Subgroup G).Characteristic :=
@@ -764,7 +764,7 @@ theorem normal_of_normalizerCondition (hnc : NormalizerCondition G) {p : ℕ} [F
     normalizerCondition_iff_only_full_group_self_normalizing.mp hnc _ <| normalizer_normalizer _
 #align sylow.normal_of_normalizer_condition Sylow.normal_of_normalizerCondition
 
-open BigOperators
+open scoped BigOperators
 
 /-- If all its sylow groups are normal, then a finite group is isomorphic to the direct product
 of these sylow groups.

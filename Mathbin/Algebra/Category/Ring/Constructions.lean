@@ -35,7 +35,7 @@ universe u u'
 
 open CategoryTheory CategoryTheory.Limits
 
-open TensorProduct
+open scoped TensorProduct
 
 namespace CommRingCat
 

@@ -28,7 +28,7 @@ subset of the complex plane.
 
 open Set Metric MeasureTheory Filter Complex intervalIntegral
 
-open Real Topology
+open scoped Real Topology
 
 variable {E ι : Type _} [NormedAddCommGroup E] [NormedSpace ℂ E] [CompleteSpace E] {U K : Set ℂ}
   {z : ℂ} {M r δ : ℝ} {φ : Filter ι} {F : ι → ℂ → E} {f g : ℂ → E}

@@ -46,7 +46,7 @@ def Commensurable (H K : Subgroup G) : Prop :=
 
 namespace Commensurable
 
-open Pointwise
+open scoped Pointwise
 
 #print Commensurable.refl /-
 @[refl]

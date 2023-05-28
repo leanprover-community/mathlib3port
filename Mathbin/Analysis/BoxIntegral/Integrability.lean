@@ -25,7 +25,7 @@ integral, McShane integral, Bochner integral
 -/
 
 
-open Classical NNReal ENNReal Topology BigOperators
+open scoped Classical NNReal ENNReal Topology BigOperators
 
 universe u v
 

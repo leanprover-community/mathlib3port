@@ -29,7 +29,7 @@ We also define `function.mul_support f = {x | f x ≠ 1}`.
 
 open Set
 
-open BigOperators
+open scoped BigOperators
 
 namespace Function
 

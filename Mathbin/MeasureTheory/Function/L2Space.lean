@@ -32,7 +32,7 @@ noncomputable section
 
 open TopologicalSpace MeasureTheory MeasureTheory.lp Filter
 
-open NNReal ENNReal MeasureTheory
+open scoped NNReal ENNReal MeasureTheory
 
 namespace MeasureTheory
 
@@ -149,7 +149,7 @@ theorem snorm_inner_lt_top (f g : α →₂[μ] E) : snorm (fun x : α => ⟪f x
 
 section InnerProductSpace
 
-open ComplexConjugate
+open scoped ComplexConjugate
 
 include 𝕜
 
@@ -293,7 +293,7 @@ variable {α : Type _} [TopologicalSpace α] [MeasureSpace α] [BorelSpace α] {
 
 variable (μ : Measure α) [FiniteMeasure μ]
 
-open BoundedContinuousFunction ComplexConjugate
+open scoped BoundedContinuousFunction ComplexConjugate
 
 -- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 (α →₂[μ] 𝕜) _ x y

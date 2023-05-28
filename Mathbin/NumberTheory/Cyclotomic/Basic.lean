@@ -65,7 +65,7 @@ included in the `cyclotomic` locale.
 
 open Polynomial Algebra FiniteDimensional Set
 
-open BigOperators
+open scoped BigOperators
 
 universe u v w z
 

@@ -100,6 +100,7 @@ theorem comap_map_of_isPrime_disjoint (I : Ideal R) (hI : I.IsPrime) (hM : Disjo
   exact (hI.mem_or_mem this).resolve_left fun hsc => hM.le_bot ⟨(c * s).2, hsc⟩
 #align is_localization.comap_map_of_is_prime_disjoint IsLocalization.comap_map_of_isPrime_disjoint
 
+#print IsLocalization.orderEmbedding /-
 /-- If `S` is the localization of `R` at a submonoid, the ordering of ideals of `S` is
 embedded in the ordering of ideals of `R`. -/
 def orderEmbedding : Ideal S ↪o Ideal R
@@ -109,6 +110,7 @@ def orderEmbedding : Ideal S ↪o Ideal R
   map_rel_iff' J₁ J₂ :=
     ⟨fun hJ => (map_comap M S) J₁ ▸ (map_comap M S) J₂ ▸ Ideal.map_mono hJ, Ideal.comap_mono⟩
 #align is_localization.order_embedding IsLocalization.orderEmbedding
+-/
 
 /-- If `R` is a ring, then prime ideals in the localization at `M`
 correspond to prime ideals in the original ring `R` that are disjoint from `M`.
@@ -216,7 +218,7 @@ theorem surjective_quotientMap_of_maximal_of_localization {I : Ideal S} [I.IsPri
           (trans hn (by rw [← RingHom.map_mul, ← mk'_eq_mul_mk'_one, mk'_self, RingHom.map_one])))
 #align is_localization.surjective_quotient_map_of_maximal_of_localization IsLocalization.surjective_quotientMap_of_maximal_of_localization
 
-open nonZeroDivisors
+open scoped nonZeroDivisors
 
 theorem bot_lt_comap_prime [IsDomain R] (hM : M ≤ R⁰) (p : Ideal S) [hpp : p.IsPrime]
     (hp0 : p ≠ ⊥) : ⊥ < Ideal.comap (algebraMap R S) p :=

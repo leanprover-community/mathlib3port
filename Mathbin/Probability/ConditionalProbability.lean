@@ -64,7 +64,7 @@ conditional, conditioned, bayes
 
 noncomputable section
 
-open ENNReal
+open scoped ENNReal
 
 open MeasureTheory MeasurableSpace
 

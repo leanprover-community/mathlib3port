@@ -30,7 +30,7 @@ number field, embeddings, places, infinite places
 -/
 
 
-open Classical
+open scoped Classical
 
 namespace NumberField.Embeddings
 
@@ -159,7 +159,7 @@ namespace NumberField.ComplexEmbedding
 
 open Complex NumberField
 
-open ComplexConjugate
+open scoped ComplexConjugate
 
 variable {K : Type _} [Field K]
 

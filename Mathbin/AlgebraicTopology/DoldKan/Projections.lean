@@ -40,7 +40,7 @@ strategy of proof of the Dold-Kan equivalence.
 open
   CategoryTheory CategoryTheory.Category CategoryTheory.Limits CategoryTheory.Preadditive CategoryTheory.SimplicialObject Opposite CategoryTheory.Idempotents
 
-open Simplicial DoldKan
+open scoped Simplicial DoldKan
 
 noncomputable section
 

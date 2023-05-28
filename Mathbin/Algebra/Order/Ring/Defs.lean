@@ -507,6 +507,7 @@ instance (priority := 200) StrictOrderedSemiring.toMulPosStrictMono : MulPosStri
   ⟨fun x a b h => StrictOrderedSemiring.mul_lt_mul_of_pos_right _ _ _ h x.Prop⟩
 #align strict_ordered_semiring.to_mul_pos_strict_mono StrictOrderedSemiring.toMulPosStrictMono
 
+#print StrictOrderedSemiring.toOrderedSemiring' /-
 -- See note [reducible non-instances]
 /-- A choice-free version of `strict_ordered_semiring.to_ordered_semiring` to avoid using choice in
 basic `nat` lemmas. -/
@@ -530,6 +531,7 @@ def StrictOrderedSemiring.toOrderedSemiring' [@DecidableRel α (· ≤ ·)] : Or
       · simp
       · exact (mul_lt_mul_of_pos_right hab hc).le }
 #align strict_ordered_semiring.to_ordered_semiring' StrictOrderedSemiring.toOrderedSemiring'
+-/
 
 #print StrictOrderedSemiring.toOrderedSemiring /-
 -- see Note [lower instance priority]
@@ -644,10 +646,12 @@ theorem lt_two_mul_self (ha : 0 < a) : a < 2 * a :=
   lt_mul_of_one_lt_left ha one_lt_two
 #align lt_two_mul_self lt_two_mul_self
 
+#print StrictOrderedSemiring.toNoMaxOrder /-
 -- see Note [lower instance priority]
 instance (priority := 100) StrictOrderedSemiring.toNoMaxOrder : NoMaxOrder α :=
   ⟨fun a => ⟨a + 1, lt_add_of_pos_right _ one_pos⟩⟩
 #align strict_ordered_semiring.to_no_max_order StrictOrderedSemiring.toNoMaxOrder
+-/
 
 end StrictOrderedSemiring
 
@@ -655,6 +659,7 @@ section StrictOrderedCommSemiring
 
 variable [StrictOrderedCommSemiring α]
 
+#print StrictOrderedCommSemiring.toOrderedCommSemiring' /-
 -- See note [reducible non-instances]
 /-- A choice-free version of `strict_ordered_comm_semiring.to_ordered_comm_semiring` to avoid using
 choice in basic `nat` lemmas. -/
@@ -663,6 +668,7 @@ def StrictOrderedCommSemiring.toOrderedCommSemiring' [@DecidableRel α (· ≤ �
     OrderedCommSemiring α :=
   { ‹StrictOrderedCommSemiring α›, StrictOrderedSemiring.toOrderedSemiring' with }
 #align strict_ordered_comm_semiring.to_ordered_comm_semiring' StrictOrderedCommSemiring.toOrderedCommSemiring'
+-/
 
 #print StrictOrderedCommSemiring.toOrderedCommSemiring /-
 -- see Note [lower instance priority]
@@ -691,6 +697,7 @@ instance (priority := 100) StrictOrderedRing.toStrictOrderedSemiring : StrictOrd
 #align strict_ordered_ring.to_strict_ordered_semiring StrictOrderedRing.toStrictOrderedSemiring
 -/
 
+#print StrictOrderedRing.toOrderedRing' /-
 -- See note [reducible non-instances]
 /-- A choice-free version of `strict_ordered_ring.to_ordered_ring` to avoid using choice in basic
 `int` lemmas. -/
@@ -705,6 +712,7 @@ def StrictOrderedRing.toOrderedRing' [@DecidableRel α (· ≤ ·)] : OrderedRin
       · rw [← hb, MulZeroClass.mul_zero]
       · exact (StrictOrderedRing.mul_pos _ _ ha hb).le }
 #align strict_ordered_ring.to_ordered_ring' StrictOrderedRing.toOrderedRing'
+-/
 
 #print StrictOrderedRing.toOrderedRing /-
 -- see Note [lower instance priority]
@@ -788,6 +796,7 @@ section StrictOrderedCommRing
 
 variable [StrictOrderedCommRing α]
 
+#print StrictOrderedCommRing.toOrderedCommRing' /-
 -- See note [reducible non-instances]
 /-- A choice-free version of `strict_ordered_comm_ring.to_ordered_comm_semiring'` to avoid using
 choice in basic `int` lemmas. -/
@@ -795,6 +804,7 @@ choice in basic `int` lemmas. -/
 def StrictOrderedCommRing.toOrderedCommRing' [@DecidableRel α (· ≤ ·)] : OrderedCommRing α :=
   { ‹StrictOrderedCommRing α›, StrictOrderedRing.toOrderedRing' with }
 #align strict_ordered_comm_ring.to_ordered_comm_ring' StrictOrderedCommRing.toOrderedCommRing'
+-/
 
 #print StrictOrderedCommRing.toStrictOrderedCommSemiring /-
 -- See note [lower instance priority]

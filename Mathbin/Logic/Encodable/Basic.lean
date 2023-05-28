@@ -801,13 +801,17 @@ theorem rel_sequence {r : β → β → Prop} {f : α → β} (hf : Directed r f
 
 variable [Preorder β] {f : α → β} (hf : Directed (· ≤ ·) f)
 
+#print Directed.sequence_mono /-
 theorem sequence_mono : Monotone (f ∘ hf.sequence f) :=
   monotone_nat_of_le_succ <| hf.sequence_mono_nat
 #align directed.sequence_mono Directed.sequence_mono
+-/
 
+#print Directed.le_sequence /-
 theorem le_sequence (a : α) : f a ≤ f (hf.sequence f (encode a + 1)) :=
   hf.rel_sequence a
 #align directed.le_sequence Directed.le_sequence
+-/
 
 end Directed
 

@@ -30,7 +30,7 @@ while the impact on writing code is minimal as `convex_hull 𝕜 s` is automatic
 
 open Set
 
-open Pointwise
+open scoped Pointwise
 
 variable {𝕜 E F : Type _}
 

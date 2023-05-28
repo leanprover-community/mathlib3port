@@ -54,7 +54,7 @@ norm, seminorm
 
 open Set
 
-open NNReal
+open scoped NNReal
 
 variable {ι R R' E F G : Type _}
 

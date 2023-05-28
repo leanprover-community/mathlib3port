@@ -128,7 +128,7 @@ scoped[ChangeOfRings]
 
 end Unbundled
 
-open ChangeOfRings
+open scoped ChangeOfRings
 
 variable (M : ModuleCat.{v} R)
 
@@ -182,7 +182,7 @@ def extendScalars {R : Type u₁} {S : Type u₂} [CommRing R] [CommRing S] (f :
 
 namespace ExtendScalars
 
-open ChangeOfRings
+open scoped ChangeOfRings
 
 variable {R : Type u₁} {S : Type u₂} [CommRing R] [CommRing S] (f : R →+* S)
 
@@ -419,7 +419,7 @@ instance {R : Type u₁} {S : Type u₂} [Ring R] [Ring S] (f : R →+* S) :
 
 namespace ExtendRestrictScalarsAdj
 
-open ChangeOfRings
+open scoped ChangeOfRings
 
 open TensorProduct
 

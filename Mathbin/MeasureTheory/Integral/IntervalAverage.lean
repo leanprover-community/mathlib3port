@@ -32,7 +32,7 @@ We also prove that `⨍ x in a..b, f x = ⨍ x in b..a, f x`, see `interval_aver
 
 open MeasureTheory Set TopologicalSpace
 
-open Interval
+open scoped Interval
 
 variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
 

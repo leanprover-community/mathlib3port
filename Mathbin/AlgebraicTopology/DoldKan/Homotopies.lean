@@ -80,7 +80,7 @@ open Homotopy
 
 open Opposite
 
-open Simplicial DoldKan
+open scoped Simplicial DoldKan
 
 noncomputable section
 

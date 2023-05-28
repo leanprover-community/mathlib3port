@@ -31,7 +31,7 @@ space structure.
 
 open Set Filter Metric
 
-open BoundedContinuousFunction Filter Topology
+open scoped BoundedContinuousFunction Filter Topology
 
 namespace TopologicalSpace
 

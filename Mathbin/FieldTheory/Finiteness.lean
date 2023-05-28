@@ -22,7 +22,7 @@ import Mathbin.LinearAlgebra.Dimension
 
 universe u v
 
-open Classical Cardinal
+open scoped Classical Cardinal
 
 open Cardinal Submodule Module Function
 
@@ -30,6 +30,7 @@ namespace IsNoetherian
 
 variable {K : Type u} {V : Type v} [DivisionRing K] [AddCommGroup V] [Module K V]
 
+#print IsNoetherian.iff_rank_lt_aleph0 /-
 /-- A module over a division ring is noetherian if and only if
 its dimension (as a cardinal) is strictly less than the first infinite cardinal `ℵ₀`.
 -/
@@ -47,14 +48,17 @@ theorem iff_rank_lt_aleph0 : IsNoetherian K V ↔ Module.rank K V < ℵ₀ :=
     refine' isNoetherian_of_fg_of_noetherian _ ⟨Set.Finite.toFinset hbfinite, _⟩
     rw [Set.Finite.coe_toFinset, ← b.span_eq, Basis.coe_ofVectorSpace, Subtype.range_coe]
 #align is_noetherian.iff_rank_lt_aleph_0 IsNoetherian.iff_rank_lt_aleph0
+-/
 
 variable (K V)
 
+#print IsNoetherian.rank_lt_aleph0 /-
 /-- The dimension of a noetherian module over a division ring, as a cardinal,
 is strictly less than the first infinite cardinal `ℵ₀`. -/
 theorem rank_lt_aleph0 : ∀ [IsNoetherian K V], Module.rank K V < ℵ₀ :=
   IsNoetherian.iff_rank_lt_aleph0.1
 #align is_noetherian.rank_lt_aleph_0 IsNoetherian.rank_lt_aleph0
+-/
 
 variable {K V}
 

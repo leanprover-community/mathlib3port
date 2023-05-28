@@ -67,7 +67,7 @@ noncomputable section
 
 open Complex Set MeasureTheory Function Filter TopologicalSpace
 
-open Real BigOperators
+open scoped Real BigOperators
 
 -- mathport name: «exprℝ⁰»
 local notation "ℝ⁰" => Fin 0 → ℝ

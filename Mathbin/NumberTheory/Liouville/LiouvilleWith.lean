@@ -41,7 +41,7 @@ Liouville number, irrational, irrationality exponent
 
 open Filter Metric Real Set
 
-open Filter Topology
+open scoped Filter Topology
 
 /-- We say that a real number `x` is a Liouville number with exponent `p : ℝ` if there exists a real
 number `C` such that for infinitely many denominators `n` there exists a numerator `m` such that

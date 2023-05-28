@@ -21,7 +21,7 @@ import Mathbin.Data.Set.Pointwise.Basic
 
 namespace Set
 
-open BigOperators Pointwise
+open scoped BigOperators Pointwise
 
 open Function
 

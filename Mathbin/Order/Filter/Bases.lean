@@ -80,7 +80,7 @@ with the case `p = λ _, true`.
 
 open Set Filter
 
-open Filter Classical
+open scoped Filter Classical
 
 section Sort
 
@@ -1139,11 +1139,13 @@ protected theorem HasAntitoneBasis.mem [Preorder ι] {l : Filter α} {s : ι →
 #align filter.has_antitone_basis.mem Filter.HasAntitoneBasis.mem
 -/
 
+#print Filter.HasAntitoneBasis.hasBasis_ge /-
 theorem HasAntitoneBasis.hasBasis_ge [Preorder ι] [IsDirected ι (· ≤ ·)] {l : Filter α}
     {s : ι → Set α} (hs : l.HasAntitoneBasis s) (i : ι) : l.HasBasis (fun j => i ≤ j) s :=
   hs.1.to_hasBasis (fun j _ => (exists_ge_ge i j).imp fun k hk => ⟨hk.1, hs.2 hk.2⟩) fun j hj =>
     ⟨j, trivial, Subset.rfl⟩
 #align filter.has_antitone_basis.has_basis_ge Filter.HasAntitoneBasis.hasBasis_ge
+-/
 
 /-- If `f` is countably generated and `f.has_basis p s`, then `f` admits a decreasing basis
 enumerated by natural numbers such that all sets have the form `s i`. More precisely, there is a

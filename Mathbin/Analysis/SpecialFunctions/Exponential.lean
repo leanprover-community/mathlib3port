@@ -58,7 +58,7 @@ We prove most result for an arbitrary field `𝕂`, and then specialize to `𝕂
 
 open Filter IsROrC ContinuousMultilinearMap NormedField Asymptotics
 
-open Nat Topology BigOperators ENNReal
+open scoped Nat Topology BigOperators ENNReal
 
 section AnyFieldAnyAlgebra
 
@@ -262,7 +262,7 @@ variable {𝕂 𝕊 𝔸 : Type _}
 
 variable (𝕂)
 
-open Topology
+open scoped Topology
 
 open Asymptotics Filter
 

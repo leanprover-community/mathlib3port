@@ -58,7 +58,7 @@ open Padic Metric LocalRing
 
 noncomputable section
 
-open Classical
+open scoped Classical
 
 #print PadicInt /-
 /-- The `p`-adic integers `ℤ_[p]` are the `p`-adic numbers with norm `≤ 1`. -/

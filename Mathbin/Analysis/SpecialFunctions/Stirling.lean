@@ -35,7 +35,7 @@ formula for `π`.
 -/
 
 
-open Topology Real BigOperators Nat
+open scoped Topology Real BigOperators Nat
 
 open Finset Filter Nat Real
 

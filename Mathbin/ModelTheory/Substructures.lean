@@ -53,7 +53,7 @@ variable {L : Language.{u, v}} {M : Type w} {N P : Type _}
 
 variable [L.Structure M] [L.Structure N] [L.Structure P]
 
-open FirstOrder Cardinal
+open scoped FirstOrder Cardinal
 
 open Structure Cardinal
 

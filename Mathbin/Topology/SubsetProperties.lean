@@ -60,7 +60,7 @@ https://ncatlab.org/nlab/show/too+simple+to+be+simple#relationship_to_biased_def
 
 open Set Filter Classical TopologicalSpace
 
-open Classical Topology Filter
+open scoped Classical Topology Filter
 
 universe u v
 

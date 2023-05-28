@@ -19,7 +19,7 @@ import Mathbin.Analysis.NormedSpace.Basic
 
 open MeasureTheory Filter ENNReal Set
 
-open NNReal ENNReal
+open scoped NNReal ENNReal
 
 variable {α β γ δ : Type _} {m : MeasurableSpace α} {μ : MeasureTheory.Measure α}
 

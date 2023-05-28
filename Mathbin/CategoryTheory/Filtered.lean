@@ -107,6 +107,7 @@ instance (priority := 100) isFiltered_of_semilatticeSup_nonempty (α : Type u) [
 #align category_theory.is_filtered_of_semilattice_sup_nonempty CategoryTheory.isFiltered_of_semilatticeSup_nonempty
 -/
 
+#print CategoryTheory.isFilteredOrEmpty_of_directed_le /-
 instance (priority := 100) isFilteredOrEmpty_of_directed_le (α : Type u) [Preorder α]
     [IsDirected α (· ≤ ·)] : IsFilteredOrEmpty α
     where
@@ -115,10 +116,13 @@ instance (priority := 100) isFilteredOrEmpty_of_directed_le (α : Type u) [Preor
     ⟨Z, homOfLE h1, homOfLE h2, trivial⟩
   cocone_maps X Y f g := ⟨Y, 𝟙 _, by simp⟩
 #align category_theory.is_filtered_or_empty_of_directed_le CategoryTheory.isFilteredOrEmpty_of_directed_le
+-/
 
+#print CategoryTheory.isFiltered_of_directed_le_nonempty /-
 instance (priority := 100) isFiltered_of_directed_le_nonempty (α : Type u) [Preorder α]
     [IsDirected α (· ≤ ·)] [Nonempty α] : IsFiltered α where
 #align category_theory.is_filtered_of_directed_le_nonempty CategoryTheory.isFiltered_of_directed_le_nonempty
+-/
 
 -- Sanity checks
 example (α : Type u) [SemilatticeSup α] [OrderBot α] : IsFiltered α := by infer_instance
@@ -553,6 +557,7 @@ instance (priority := 100) isCofiltered_of_semilatticeInf_nonempty (α : Type u)
 #align category_theory.is_cofiltered_of_semilattice_inf_nonempty CategoryTheory.isCofiltered_of_semilatticeInf_nonempty
 -/
 
+#print CategoryTheory.isCofilteredOrEmpty_of_directed_ge /-
 instance (priority := 100) isCofilteredOrEmpty_of_directed_ge (α : Type u) [Preorder α]
     [IsDirected α (· ≥ ·)] : IsCofilteredOrEmpty α
     where
@@ -561,10 +566,13 @@ instance (priority := 100) isCofilteredOrEmpty_of_directed_ge (α : Type u) [Pre
     ⟨Z, homOfLE hX, homOfLE hY, trivial⟩
   cone_maps X Y f g := ⟨X, 𝟙 _, by simp⟩
 #align category_theory.is_cofiltered_or_empty_of_directed_ge CategoryTheory.isCofilteredOrEmpty_of_directed_ge
+-/
 
+#print CategoryTheory.isCofiltered_of_directed_ge_nonempty /-
 instance (priority := 100) isCofiltered_of_directed_ge_nonempty (α : Type u) [Preorder α]
     [IsDirected α (· ≥ ·)] [Nonempty α] : IsCofiltered α where
 #align category_theory.is_cofiltered_of_directed_ge_nonempty CategoryTheory.isCofiltered_of_directed_ge_nonempty
+-/
 
 -- Sanity checks
 example (α : Type u) [SemilatticeInf α] [OrderBot α] : IsCofiltered α := by infer_instance

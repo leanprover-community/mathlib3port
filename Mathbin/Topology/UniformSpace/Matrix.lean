@@ -19,7 +19,7 @@ import Mathbin.Data.Matrix.Basic
 -/
 
 
-open uniformity Topology
+open scoped uniformity Topology
 
 variable (m n 𝕜 : Type _) [UniformSpace 𝕜]
 

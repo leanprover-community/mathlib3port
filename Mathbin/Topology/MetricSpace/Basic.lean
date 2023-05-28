@@ -57,7 +57,7 @@ metric, pseudo_metric, dist
 
 open Set Filter TopologicalSpace Bornology
 
-open uniformity Topology BigOperators Filter NNReal ENNReal
+open scoped uniformity Topology BigOperators Filter NNReal ENNReal
 
 universe u v w
 
@@ -816,11 +816,13 @@ theorem isBounded_iff_exists_ge {s : Set α} (c : ℝ) :
     isBounded_iff.2 <| h.imp fun _ => And.right⟩
 #align metric.is_bounded_iff_exists_ge Metric.isBounded_iff_exists_ge
 
+#print Metric.isBounded_iff_nndist /-
 theorem isBounded_iff_nndist {s : Set α} :
     IsBounded s ↔ ∃ C : ℝ≥0, ∀ ⦃x⦄, x ∈ s → ∀ ⦃y⦄, y ∈ s → nndist x y ≤ C := by
   simp only [is_bounded_iff_exists_ge 0, NNReal.exists, ← NNReal.coe_le_coe, ← dist_nndist,
     NNReal.coe_mk, exists_prop]
 #align metric.is_bounded_iff_nndist Metric.isBounded_iff_nndist
+-/
 
 #print Metric.toUniformSpace_eq /-
 theorem toUniformSpace_eq :
@@ -2318,9 +2320,11 @@ theorem dist_pi_const_le (a b : α) : (dist (fun _ : β => a) fun _ => b) ≤ di
   (dist_pi_le_iff dist_nonneg).2 fun _ => le_rfl
 #align dist_pi_const_le dist_pi_const_le
 
+#print nndist_pi_const_le /-
 theorem nndist_pi_const_le (a b : α) : (nndist (fun _ : β => a) fun _ => b) ≤ nndist a b :=
   nndist_pi_le_iff.2 fun _ => le_rfl
 #align nndist_pi_const_le nndist_pi_const_le
+-/
 
 #print dist_pi_const /-
 @[simp]

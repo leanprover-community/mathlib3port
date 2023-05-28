@@ -108,6 +108,7 @@ theorem ext : ∀ c₁ c₂ : ClosureOperator α, (c₁ : α → α) = (c₂ : �
 #align closure_operator.ext ClosureOperator.ext
 -/
 
+#print ClosureOperator.mk' /-
 /-- Constructor for a closure operator using the weaker idempotency axiom: `f (f x) ≤ f x`. -/
 @[simps]
 def mk' (f : α → α) (hf₁ : Monotone f) (hf₂ : ∀ x, x ≤ f x) (hf₃ : ∀ x, f (f x) ≤ f x) :
@@ -117,7 +118,9 @@ def mk' (f : α → α) (hf₁ : Monotone f) (hf₂ : ∀ x, x ≤ f x) (hf₃ :
   le_closure' := hf₂
   idempotent' x := (hf₃ x).antisymm (hf₁ (hf₂ x))
 #align closure_operator.mk' ClosureOperator.mk'
+-/
 
+#print ClosureOperator.mk₂ /-
 /-- Convenience constructor for a closure operator using the weaker minimality axiom:
 `x ≤ f y → f x ≤ f y`, which is sometimes easier to prove in practice. -/
 @[simps]
@@ -128,7 +131,9 @@ def mk₂ (f : α → α) (hf : ∀ x, x ≤ f x) (hmin : ∀ ⦃x y⦄, x ≤ f
   le_closure' := hf
   idempotent' x := (hmin le_rfl).antisymm (hf _)
 #align closure_operator.mk₂ ClosureOperator.mk₂
+-/
 
+#print ClosureOperator.mk₃ /-
 /-- Expanded out version of `mk₂`. `p` implies being closed. This constructor should be used when
 you already know a sufficient condition for being closed and using `mem_mk₃_closed` will avoid you
 the (slight) hassle of having to prove it both inside and outside the constructor. -/
@@ -137,14 +142,18 @@ def mk₃ (f : α → α) (p : α → Prop) (hf : ∀ x, x ≤ f x) (hfp : ∀ x
     (hmin : ∀ ⦃x y⦄, x ≤ y → p y → f x ≤ y) : ClosureOperator α :=
   mk₂ f hf fun x y hxy => hmin hxy (hfp y)
 #align closure_operator.mk₃ ClosureOperator.mk₃
+-/
 
+#print ClosureOperator.closure_mem_mk₃ /-
 /-- This lemma shows that the image of `x` of a closure operator built from the `mk₃` constructor
 respects `p`, the property that was fed into it. -/
 theorem closure_mem_mk₃ {f : α → α} {p : α → Prop} {hf : ∀ x, x ≤ f x} {hfp : ∀ x, p (f x)}
     {hmin : ∀ ⦃x y⦄, x ≤ y → p y → f x ≤ y} (x : α) : p (mk₃ f p hf hfp hmin x) :=
   hfp x
 #align closure_operator.closure_mem_mk₃ ClosureOperator.closure_mem_mk₃
+-/
 
+#print ClosureOperator.closure_le_mk₃_iff /-
 /-- Analogue of `closure_le_closed_iff_le` but with the `p` that was fed into the `mk₃` constructor.
 -/
 theorem closure_le_mk₃_iff {f : α → α} {p : α → Prop} {hf : ∀ x, x ≤ f x} {hfp : ∀ x, p (f x)}
@@ -152,6 +161,7 @@ theorem closure_le_mk₃_iff {f : α → α} {p : α → Prop} {hf : ∀ x, x �
     mk₃ f p hf hfp hmin x ≤ y :=
   hmin hxy hy
 #align closure_operator.closure_le_mk₃_iff ClosureOperator.closure_le_mk₃_iff
+-/
 
 #print ClosureOperator.monotone /-
 @[mono]
@@ -160,11 +170,13 @@ theorem monotone : Monotone c :=
 #align closure_operator.monotone ClosureOperator.monotone
 -/
 
+#print ClosureOperator.le_closure /-
 /-- Every element is less than its closure. This property is sometimes referred to as extensivity or
 inflationarity. -/
 theorem le_closure (x : α) : x ≤ c x :=
   c.le_closure' x
 #align closure_operator.le_closure ClosureOperator.le_closure
+-/
 
 #print ClosureOperator.idempotent /-
 @[simp]
@@ -173,9 +185,11 @@ theorem idempotent (x : α) : c (c x) = c x :=
 #align closure_operator.idempotent ClosureOperator.idempotent
 -/
 
+#print ClosureOperator.le_closure_iff /-
 theorem le_closure_iff (x y : α) : x ≤ c y ↔ c x ≤ c y :=
   ⟨fun h => c.idempotent y ▸ c.Monotone h, fun h => (c.le_closure x).trans h⟩
 #align closure_operator.le_closure_iff ClosureOperator.le_closure_iff
+-/
 
 #print ClosureOperator.closed /-
 /-- An element `x` is closed for the closure operator `c` if it is a fixed point for it. -/
@@ -189,9 +203,11 @@ theorem mem_closed_iff (x : α) : x ∈ c.closed ↔ c x = x :=
 #align closure_operator.mem_closed_iff ClosureOperator.mem_closed_iff
 -/
 
+#print ClosureOperator.mem_closed_iff_closure_le /-
 theorem mem_closed_iff_closure_le (x : α) : x ∈ c.closed ↔ c x ≤ x :=
   ⟨le_of_eq, fun h => h.antisymm (c.le_closure x)⟩
 #align closure_operator.mem_closed_iff_closure_le ClosureOperator.mem_closed_iff_closure_le
+-/
 
 #print ClosureOperator.closure_eq_self_of_mem_closed /-
 theorem closure_eq_self_of_mem_closed {x : α} (h : x ∈ c.closed) : c x = x :=
@@ -220,10 +236,12 @@ def toClosed (x : α) : c.closed :=
 #align closure_operator.to_closed ClosureOperator.toClosed
 -/
 
+#print ClosureOperator.closure_le_closed_iff_le /-
 @[simp]
 theorem closure_le_closed_iff_le (x : α) {y : α} (hy : c.closed y) : c x ≤ y ↔ x ≤ y := by
   rw [← c.closure_eq_self_of_mem_closed hy, ← le_closure_iff]
 #align closure_operator.closure_le_closed_iff_le ClosureOperator.closure_le_closed_iff_le
+-/
 
 #print ClosureOperator.eq_mk₃_closed /-
 /-- A closure operator is equal to the closure operator obtained by feeding `c.closed` into the
@@ -236,11 +254,13 @@ theorem eq_mk₃_closed (c : ClosureOperator α) :
 #align closure_operator.eq_mk₃_closed ClosureOperator.eq_mk₃_closed
 -/
 
+#print ClosureOperator.mem_mk₃_closed /-
 /-- The property `p` fed into the `mk₃` constructor implies being closed. -/
 theorem mem_mk₃_closed {f : α → α} {p : α → Prop} {hf : ∀ x, x ≤ f x} {hfp : ∀ x, p (f x)}
     {hmin : ∀ ⦃x y⦄, x ≤ y → p y → f x ≤ y} {x : α} (hx : p x) : x ∈ (mk₃ f p hf hfp hmin).closed :=
   (hmin le_rfl hx).antisymm (hf _)
 #align closure_operator.mem_mk₃_closed ClosureOperator.mem_mk₃_closed
+-/
 
 end PartialOrder
 

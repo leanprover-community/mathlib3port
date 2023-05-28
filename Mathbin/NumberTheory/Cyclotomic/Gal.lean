@@ -46,7 +46,7 @@ variable {n : ℕ+} (K : Type _) [Field K] {L : Type _} {μ : L}
 
 open Polynomial IsCyclotomicExtension
 
-open Cyclotomic
+open scoped Cyclotomic
 
 namespace IsPrimitiveRoot
 

@@ -84,7 +84,7 @@ each proves that some operations on functors preserves the QPF structure
 
 universe u
 
-open MvFunctor
+open scoped MvFunctor
 
 #print MvQPF /-
 /-- Multivariate quotients of polynomial functors.

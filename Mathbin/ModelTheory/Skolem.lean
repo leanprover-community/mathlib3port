@@ -39,7 +39,7 @@ namespace Language
 
 open Structure Cardinal
 
-open Cardinal
+open scoped Cardinal
 
 variable (L : Language.{u, v}) {M : Type w} [Nonempty M] [L.Structure M]
 

@@ -43,11 +43,13 @@ namespace Ico
 instance [SemilatticeInf α] {a b : α} : SemilatticeInf (Ico a b) :=
   Subtype.semilatticeInf fun x y hx hy => ⟨le_inf hx.1 hy.1, lt_of_le_of_lt inf_le_left hx.2⟩
 
+#print Set.Ico.orderBot /-
 /-- `Ico a b` has a bottom element whenever `a < b`. -/
 @[reducible]
 protected def orderBot [PartialOrder α] {a b : α} (h : a < b) : OrderBot (Ico a b) :=
   (isLeast_Ico h).OrderBot
 #align set.Ico.order_bot Set.Ico.orderBot
+-/
 
 end Ico
 
@@ -63,11 +65,13 @@ namespace Ioc
 instance [SemilatticeSup α] {a b : α} : SemilatticeSup (Ioc a b) :=
   Subtype.semilatticeSup fun x y hx hy => ⟨lt_of_lt_of_le hx.1 le_sup_left, sup_le hx.2 hy.2⟩
 
+#print Set.Ioc.orderTop /-
 /-- `Ioc a b` has a top element whenever `a < b`. -/
 @[reducible]
 protected def orderTop [PartialOrder α] {a b : α} (h : a < b) : OrderTop (Ioc a b) :=
   (isGreatest_Ioc h).OrderTop
 #align set.Ioc.order_top Set.Ioc.orderTop
+-/
 
 end Ioc
 
@@ -164,23 +168,29 @@ instance [SemilatticeSup α] {a b : α} : SemilatticeSup (Icc a b) :=
 instance [Lattice α] {a b : α} : Lattice (Icc a b) :=
   { Icc.semilatticeInf, Icc.semilatticeSup with }
 
+#print Set.Icc.orderBot /-
 /-- `Icc a b` has a bottom element whenever `a ≤ b`. -/
 @[reducible]
 protected def orderBot [Preorder α] {a b : α} (h : a ≤ b) : OrderBot (Icc a b) :=
   (isLeast_Icc h).OrderBot
 #align set.Icc.order_bot Set.Icc.orderBot
+-/
 
+#print Set.Icc.orderTop /-
 /-- `Icc a b` has a top element whenever `a ≤ b`. -/
 @[reducible]
 protected def orderTop [Preorder α] {a b : α} (h : a ≤ b) : OrderTop (Icc a b) :=
   (isGreatest_Icc h).OrderTop
 #align set.Icc.order_top Set.Icc.orderTop
+-/
 
+#print Set.Icc.boundedOrder /-
 /-- `Icc a b` is a `bounded_order` whenever `a ≤ b`. -/
 @[reducible]
 protected def boundedOrder [Preorder α] {a b : α} (h : a ≤ b) : BoundedOrder (Icc a b) :=
   { Icc.orderTop h, Icc.orderBot h with }
 #align set.Icc.bounded_order Set.Icc.boundedOrder
+-/
 
 end Icc
 

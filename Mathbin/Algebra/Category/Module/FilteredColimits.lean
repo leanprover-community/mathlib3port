@@ -30,7 +30,7 @@ universe u v
 
 noncomputable section
 
-open Classical
+open scoped Classical
 
 open CategoryTheory
 

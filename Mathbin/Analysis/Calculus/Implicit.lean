@@ -51,7 +51,7 @@ implicit function, inverse function
 
 noncomputable section
 
-open Topology
+open scoped Topology
 
 open Filter
 

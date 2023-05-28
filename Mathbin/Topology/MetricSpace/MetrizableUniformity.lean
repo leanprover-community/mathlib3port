@@ -48,7 +48,7 @@ metrizable space, uniform space
 
 open Set Function Metric List Filter
 
-open NNReal Filter uniformity
+open scoped NNReal Filter uniformity
 
 variable {X : Type _}
 

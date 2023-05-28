@@ -52,7 +52,7 @@ These definitions are for sums over a `finset`; versions for a
 
 noncomputable section
 
-open BigOperators Affine
+open scoped BigOperators Affine
 
 namespace Finset
 

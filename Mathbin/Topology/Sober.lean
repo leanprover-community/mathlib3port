@@ -208,6 +208,7 @@ theorem genericPoint_specializes [QuasiSober α] [IrreducibleSpace α] (x : α) 
 
 attribute [local instance 10] specializationOrder
 
+#print irreducibleSetEquivPoints /-
 /-- The closed irreducible subsets of a sober space bijects with the points of the space. -/
 noncomputable def irreducibleSetEquivPoints [QuasiSober α] [T0Space α] :
     { s : Set α | IsIrreducible s ∧ IsClosed s } ≃o α
@@ -223,6 +224,7 @@ noncomputable def irreducibleSetEquivPoints [QuasiSober α] [T0Space α] :
     change _ ⤳ _ ↔ _; rw [specializes_iff_closure_subset]
     simp [s.prop.2.closure_eq, t.prop.2.closure_eq, ← Subtype.coe_le_coe]
 #align irreducible_set_equiv_points irreducibleSetEquivPoints
+-/
 
 theorem ClosedEmbedding.quasiSober {f : α → β} (hf : ClosedEmbedding f) [QuasiSober β] :
     QuasiSober α := by

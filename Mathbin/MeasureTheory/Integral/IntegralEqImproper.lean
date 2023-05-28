@@ -71,7 +71,7 @@ in analysis. In particular,
 
 open MeasureTheory Filter Set TopologicalSpace
 
-open ENNReal NNReal Topology
+open scoped ENNReal NNReal Topology
 
 namespace MeasureTheory
 
@@ -682,7 +682,7 @@ end IntegralOfIntervalIntegral
 
 open Real
 
-open Interval
+open scoped Interval
 
 section IoiFTC
 
@@ -839,7 +839,7 @@ section IoiChangeVariables
 
 open Real
 
-open Interval
+open scoped Interval
 
 variable {E : Type _} {f : ℝ → E} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
 
@@ -942,7 +942,7 @@ section IoiIntegrability
 
 open Real
 
-open Interval
+open scoped Interval
 
 variable {E : Type _} [NormedAddCommGroup E]
 

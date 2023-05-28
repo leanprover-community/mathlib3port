@@ -51,7 +51,7 @@ of Patrick Massot.
 
 variable (R : Type) [CommRing R] [IsDomain R]
 
-open Polynomial
+open scoped Polynomial
 
 open Polynomial
 
@@ -86,7 +86,7 @@ end TwoDenominators
 
 section NDenominators
 
-open BigOperators Classical
+open scoped BigOperators Classical
 
 /-- Let R be an integral domain and f ∈ R[X]. Let s be a finite index set.
 Then, a fraction of the form f / ∏ (g i) can be rewritten as q + ∑ (r i) / (g i), where

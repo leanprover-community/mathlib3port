@@ -50,7 +50,7 @@ images of different morphisms commute, we obtain a canonical morphism
 -/
 
 
-open BigOperators
+open scoped BigOperators
 
 namespace Subgroup
 

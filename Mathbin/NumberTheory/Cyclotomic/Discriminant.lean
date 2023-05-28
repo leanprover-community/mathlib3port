@@ -28,7 +28,7 @@ universe u v
 
 open Algebra Polynomial Nat IsPrimitiveRoot PowerBasis
 
-open Polynomial Cyclotomic
+open scoped Polynomial Cyclotomic
 
 namespace IsPrimitiveRoot
 

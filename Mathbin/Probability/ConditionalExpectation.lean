@@ -29,7 +29,7 @@ the main conditional expectation file.
 
 open TopologicalSpace Filter
 
-open NNReal ENNReal MeasureTheory ProbabilityTheory BigOperators
+open scoped NNReal ENNReal MeasureTheory ProbabilityTheory BigOperators
 
 namespace MeasureTheory
 

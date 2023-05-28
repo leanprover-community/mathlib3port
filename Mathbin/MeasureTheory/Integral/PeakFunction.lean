@@ -36,7 +36,7 @@ Note that there are related results about convolution with respect to peak funct
 
 open Set Filter MeasureTheory MeasureTheory.Measure TopologicalSpace Metric
 
-open Topology ENNReal
+open scoped Topology ENNReal
 
 /-- This lemma exists for finsets, but not for sets currently. porting note: move to
 data.set.basic after the port. -/

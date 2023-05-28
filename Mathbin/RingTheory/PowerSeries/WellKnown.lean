@@ -72,7 +72,7 @@ section Field
 
 variable (A A' : Type _) [Ring A] [Ring A'] [Algebra ℚ A] [Algebra ℚ A']
 
-open Nat
+open scoped Nat
 
 #print PowerSeries.exp /-
 /-- Power series for the exponential function at zero. -/

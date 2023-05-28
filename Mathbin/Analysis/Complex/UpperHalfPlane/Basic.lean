@@ -32,7 +32,7 @@ noncomputable section
 
 open Matrix Matrix.SpecialLinearGroup
 
-open Classical BigOperators MatrixGroups
+open scoped Classical BigOperators MatrixGroups
 
 attribute [local instance] Fintype.card_fin_even
 

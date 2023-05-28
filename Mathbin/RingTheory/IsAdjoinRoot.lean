@@ -62,7 +62,7 @@ Using `is_adjoin_root` to map out of `S`:
 -/
 
 
-open Polynomial
+open scoped Polynomial
 
 open Polynomial
 

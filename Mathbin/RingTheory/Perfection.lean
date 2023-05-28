@@ -33,7 +33,7 @@ Define the valuation on the tilt, and define a characteristic predicate for the 
 
 universe u₁ u₂ u₃ u₄
 
-open NNReal
+open scoped NNReal
 
 /-- The perfection of a monoid `M`, defined to be the projective limit of `M`
 using the `p`-th power maps `M → M` indexed by the natural numbers, implemented as
@@ -540,7 +540,7 @@ instance : CharP (PreTilt K v O hv p) p :=
 
 section Classical
 
-open Classical
+open scoped Classical
 
 open Perfection
 

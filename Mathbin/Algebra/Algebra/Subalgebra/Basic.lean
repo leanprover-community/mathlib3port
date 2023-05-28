@@ -27,7 +27,7 @@ More lemmas about `adjoin` can be found in `ring_theory.adjoin`.
 
 universe u u' v w w'
 
-open BigOperators
+open scoped BigOperators
 
 #print Subalgebra /-
 /-- A subalgebra is a sub(semi)ring that includes the range of `algebra_map`. -/

@@ -40,7 +40,7 @@ universe u v w
 
 open Polynomial Matrix
 
-open BigOperators Polynomial
+open scoped BigOperators Polynomial
 
 variable {R : Type u} [CommRing R]
 

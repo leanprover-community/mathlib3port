@@ -37,7 +37,7 @@ kernels.
 
 noncomputable section
 
-open Topology ENNReal MeasureTheory ProbabilityTheory
+open scoped Topology ENNReal MeasureTheory ProbabilityTheory
 
 open Set Function Real ENNReal MeasureTheory Filter ProbabilityTheory ProbabilityTheory.kernel
 

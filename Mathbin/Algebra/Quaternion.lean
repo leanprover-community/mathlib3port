@@ -1508,7 +1508,7 @@ end Quaternion
 
 namespace Cardinal
 
-open Cardinal Quaternion
+open scoped Cardinal Quaternion
 
 section QuaternionAlgebra
 

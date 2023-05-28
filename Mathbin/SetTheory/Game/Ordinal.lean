@@ -30,7 +30,7 @@ universe u
 
 open PGame
 
-open NaturalOps PGame
+open scoped NaturalOps PGame
 
 namespace Ordinal
 

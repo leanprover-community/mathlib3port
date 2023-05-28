@@ -67,7 +67,7 @@ namespace Asymptotics
 
 open Filter Function
 
-open Topology
+open scoped Topology
 
 section NormedAddCommGroup
 
@@ -200,7 +200,7 @@ theorem IsEquivalent.neg (huv : u ~[l] v) : (fun x => -u x) ~[l] fun x => -v x :
 
 end NormedAddCommGroup
 
-open Asymptotics
+open scoped Asymptotics
 
 section NormedField
 
@@ -365,7 +365,7 @@ end Asymptotics
 
 open Filter Asymptotics
 
-open Asymptotics
+open scoped Asymptotics
 
 variable {α β : Type _} [NormedAddCommGroup β]
 

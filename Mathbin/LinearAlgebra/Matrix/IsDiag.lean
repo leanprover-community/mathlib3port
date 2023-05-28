@@ -36,7 +36,7 @@ variable {α β R n m : Type _}
 
 open Function
 
-open Matrix Kronecker
+open scoped Matrix Kronecker
 
 #print Matrix.IsDiag /-
 /-- `A.is_diag` means square matrix `A` is a diagonal matrix. -/

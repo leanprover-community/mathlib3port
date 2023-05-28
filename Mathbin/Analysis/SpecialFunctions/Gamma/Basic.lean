@@ -50,7 +50,7 @@ noncomputable section
 
 open Filter intervalIntegral Set Real MeasureTheory Asymptotics
 
-open Nat Topology ComplexConjugate
+open scoped Nat Topology ComplexConjugate
 
 namespace Real
 

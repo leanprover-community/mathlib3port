@@ -70,7 +70,7 @@ open Finset hiding map
 
 open Finsupp (single)
 
-open BigOperators
+open scoped BigOperators
 
 attribute [-simp] coe_eval₂_hom
 
@@ -110,7 +110,7 @@ scoped[Witt] notation "W_" => wittPolynomial p
 -- Notation with ring of coefficients implicit
 scoped[Witt] notation "W" => wittPolynomial p hole!
 
-open Witt
+open scoped Witt
 
 open MvPolynomial
 

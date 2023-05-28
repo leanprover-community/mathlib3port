@@ -21,7 +21,7 @@ on the Legendre symbol. The main results are `zmod.gauss_lemma_aux` and
 
 open Function Finset Nat FiniteField ZMod
 
-open BigOperators Nat
+open scoped BigOperators Nat
 
 namespace ZMod
 

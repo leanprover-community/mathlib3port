@@ -35,7 +35,7 @@ primitive root of unity `μ : K`, where `K` is a field of characteristic `0`.
 -/
 
 
-open BigOperators
+open scoped BigOperators
 
 namespace Polynomial
 

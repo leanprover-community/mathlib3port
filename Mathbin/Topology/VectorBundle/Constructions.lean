@@ -38,7 +38,7 @@ noncomputable section
 
 open Bundle Set FiberBundle
 
-open Classical Bundle
+open scoped Classical Bundle
 
 /-! ### The trivial vector bundle -/
 

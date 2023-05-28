@@ -30,7 +30,7 @@ namespace DirectSum
 
 open Dfinsupp
 
-open DirectSum
+open scoped DirectSum
 
 variable {R : Type u} {ι : Type v} [CommRing R]
 

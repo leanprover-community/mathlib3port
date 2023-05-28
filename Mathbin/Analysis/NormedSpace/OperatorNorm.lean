@@ -34,7 +34,7 @@ is isometric, as expressed by the typeclass `[ring_hom_isometric σ]`.
 
 noncomputable section
 
-open Classical NNReal Topology
+open scoped Classical NNReal Topology
 
 -- the `ₗ` subscript variables are for special cases about linear (as opposed to semilinear) maps
 variable {𝕜 𝕜₂ 𝕜₃ E Eₗ F Fₗ G Gₗ 𝓕 : Type _}
@@ -1537,7 +1537,7 @@ theorem antilipschitz_of_embedding (f : E →L[𝕜] Fₗ) (hf : Embedding f) :
 
 section Completeness
 
-open Topology
+open scoped Topology
 
 open Filter
 

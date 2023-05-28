@@ -41,7 +41,7 @@ submonoid, submonoids
 -/
 
 
-open BigOperators
+open scoped BigOperators
 
 variable {M A B : Type _}
 

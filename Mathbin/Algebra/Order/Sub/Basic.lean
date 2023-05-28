@@ -28,10 +28,12 @@ section Add
 
 variable [Preorder α] [Add α] [Sub α] [OrderedSub α] {a b c d : α}
 
+#print AddHom.le_map_tsub /-
 theorem AddHom.le_map_tsub [Preorder β] [Add β] [Sub β] [OrderedSub β] (f : AddHom α β)
     (hf : Monotone f) (a b : α) : f a - f b ≤ f (a - b) := by rw [tsub_le_iff_right, ← f.map_add];
   exact hf le_tsub_add
 #align add_hom.le_map_tsub AddHom.le_map_tsub
+-/
 
 theorem le_mul_tsub {R : Type _} [Distrib R] [Preorder R] [Sub R] [OrderedSub R]
     [CovariantClass R R (· * ·) (· ≤ ·)] {a b c : R} : a * b - a * c ≤ a * (b - c) :=

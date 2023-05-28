@@ -89,7 +89,7 @@ theorem add_mul_self (x y : R) : (x + y) * (x + y) = x * x + y * y := by
   rw [← pow_two, ← pow_two, ← pow_two, add_sq]
 #align char_two.add_mul_self CharTwo.add_mul_self
 
-open BigOperators
+open scoped BigOperators
 
 theorem list_sum_sq (l : List R) : l.Sum ^ 2 = (l.map (· ^ 2)).Sum :=
   list_sum_pow_char _ _

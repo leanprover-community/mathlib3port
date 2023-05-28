@@ -26,7 +26,7 @@ noncomputable section
 
 open Real intervalIntegral MeasureTheory Set Filter
 
-open Topology
+open scoped Topology
 
 /-- `exp (-b * x)` is integrable on `(a, ∞)`. -/
 theorem exp_neg_integrableOn_Ioi (a : ℝ) {b : ℝ} (h : 0 < b) :

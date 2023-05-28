@@ -148,10 +148,12 @@ theorem mem_quotient_iff_mem {I J : Ideal R} (hIJ : I ≤ J) {x : R} :
   rw [mem_quotient_iff_mem_sup, sup_eq_left.mpr hIJ]
 #align ideal.mem_quotient_iff_mem Ideal.mem_quotient_iff_mem
 
+#print Ideal.comap_map_mk /-
 theorem comap_map_mk {I J : Ideal R} (h : I ≤ J) :
     Ideal.comap (Ideal.Quotient.mk I) (Ideal.map (Ideal.Quotient.mk I) J) = J := by ext;
   rw [← Ideal.mem_quotient_iff_mem h, Ideal.mem_comap]
 #align ideal.comap_map_mk Ideal.comap_map_mk
+-/
 
 section QuotientAlgebra
 
@@ -435,11 +437,13 @@ theorem comp_quotientMap_eq_of_comp_eq {R' S' : Type _} [CommRing R'] [CommRing 
   exact congr_arg (Quotient.mk' I) (trans (g'.comp_apply f r).symm (hfg ▸ f'.comp_apply g r))
 #align ideal.comp_quotient_map_eq_of_comp_eq Ideal.comp_quotientMap_eq_of_comp_eq
 
+#print Ideal.quotientMapₐ /-
 /-- The algebra hom `A/I →+* B/J` induced by an algebra hom `f : A →ₐ[R₁] B` with `I ≤ f⁻¹(J)`. -/
 def quotientMapₐ {I : Ideal A} (J : Ideal B) (f : A →ₐ[R₁] B) (hIJ : I ≤ J.comap f) :
     A ⧸ I →ₐ[R₁] B ⧸ J :=
   { quotientMap J (f : A →+* B) hIJ with commutes' := fun r => by simp }
 #align ideal.quotient_mapₐ Ideal.quotientMapₐ
+-/
 
 @[simp]
 theorem quotient_map_mkₐ {I : Ideal A} (J : Ideal B) (f : A →ₐ[R₁] B) (H : I ≤ J.comap f) {x : A} :
@@ -604,31 +608,41 @@ theorem quotQuotEquivComm_symm : (quotQuotEquivComm I J).symm = quotQuotEquivCom
 
 variable {I J}
 
+#print DoubleQuot.quotQuotEquivQuotOfLE /-
 /-- **The Third Isomorphism theorem** for rings. See `quot_quot_equiv_quot_sup` for a version
     that does not assume an inclusion of ideals. -/
 def quotQuotEquivQuotOfLE (h : I ≤ J) : (R ⧸ I) ⧸ J.map I.Quotient.mk ≃+* R ⧸ J :=
   (quotQuotEquivQuotSup I J).trans (Ideal.quotEquivOfEq <| sup_eq_right.mpr h)
 #align double_quot.quot_quot_equiv_quot_of_le DoubleQuot.quotQuotEquivQuotOfLE
+-/
 
+#print DoubleQuot.quotQuotEquivQuotOfLE_quotQuotMk /-
 @[simp]
 theorem quotQuotEquivQuotOfLE_quotQuotMk (x : R) (h : I ≤ J) :
     quotQuotEquivQuotOfLE h (quotQuotMk I J x) = J.Quotient.mk x :=
   rfl
 #align double_quot.quot_quot_equiv_quot_of_le_quot_quot_mk DoubleQuot.quotQuotEquivQuotOfLE_quotQuotMk
+-/
 
+#print DoubleQuot.quotQuotEquivQuotOfLE_symm_mk /-
 @[simp]
 theorem quotQuotEquivQuotOfLE_symm_mk (x : R) (h : I ≤ J) :
     (quotQuotEquivQuotOfLE h).symm (J.Quotient.mk x) = quotQuotMk I J x :=
   rfl
 #align double_quot.quot_quot_equiv_quot_of_le_symm_mk DoubleQuot.quotQuotEquivQuotOfLE_symm_mk
+-/
 
+#print DoubleQuot.quotQuotEquivQuotOfLE_comp_quotQuotMk /-
 theorem quotQuotEquivQuotOfLE_comp_quotQuotMk (h : I ≤ J) :
     RingHom.comp (↑(quotQuotEquivQuotOfLE h)) (quotQuotMk I J) = J.Quotient.mk := by ext <;> rfl
 #align double_quot.quot_quot_equiv_quot_of_le_comp_quot_quot_mk DoubleQuot.quotQuotEquivQuotOfLE_comp_quotQuotMk
+-/
 
+#print DoubleQuot.quotQuotEquivQuotOfLE_symm_comp_mk /-
 theorem quotQuotEquivQuotOfLE_symm_comp_mk (h : I ≤ J) :
     RingHom.comp (↑(quotQuotEquivQuotOfLE h).symm) J.Quotient.mk = quotQuotMk I J := by ext <;> rfl
 #align double_quot.quot_quot_equiv_quot_of_le_symm_comp_mk DoubleQuot.quotQuotEquivQuotOfLE_symm_comp_mk
+-/
 
 end
 
@@ -798,11 +812,13 @@ theorem quotQuotEquivComm_comp_quotQuotMkₐ :
 
 variable {I J}
 
+#print DoubleQuot.quotQuotEquivQuotOfLEₐ /-
 /-- The **third isomoprhism theorem** for rings. See `quot_quot_equiv_quot_sup` for version
     that does not assume an inclusion of ideals. -/
 def quotQuotEquivQuotOfLEₐ (h : I ≤ J) : ((A ⧸ I) ⧸ J.map (I.Quotient.mkₐ R)) ≃ₐ[R] A ⧸ J :=
   @AlgEquiv.ofRingEquiv R _ _ _ _ _ _ _ (quotQuotEquivQuotOfLE h) fun _ => rfl
 #align double_quot.quot_quot_equiv_quot_of_leₐ DoubleQuot.quotQuotEquivQuotOfLEₐ
+-/
 
 @[simp]
 theorem quotQuotEquivQuotOfLEₐ_toRingEquiv (h : I ≤ J) :

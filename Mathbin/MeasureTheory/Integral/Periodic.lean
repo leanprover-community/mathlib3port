@@ -31,7 +31,7 @@ period `T`.
 
 open Set Function MeasureTheory MeasureTheory.Measure TopologicalSpace AddSubgroup intervalIntegral
 
-open MeasureTheory NNReal ENNReal
+open scoped MeasureTheory NNReal ENNReal
 
 attribute [-instance] QuotientAddGroup.measurableSpace Quotient.instMeasurableSpace
 

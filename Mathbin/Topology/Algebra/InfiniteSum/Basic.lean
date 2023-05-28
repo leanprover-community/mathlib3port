@@ -37,7 +37,7 @@ noncomputable section
 
 open Classical Filter Finset Function
 
-open BigOperators Classical Topology
+open scoped BigOperators Classical Topology
 
 variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 

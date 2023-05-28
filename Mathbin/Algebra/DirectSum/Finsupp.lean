@@ -26,7 +26,7 @@ universe u v w
 
 noncomputable section
 
-open DirectSum
+open scoped DirectSum
 
 open LinearMap Submodule
 

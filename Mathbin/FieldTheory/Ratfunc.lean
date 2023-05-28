@@ -99,9 +99,9 @@ the codomain is not a field or even an integral domain.
 
 noncomputable section
 
-open Classical
+open scoped Classical
 
-open nonZeroDivisors Polynomial
+open scoped nonZeroDivisors Polynomial
 
 universe u v
 

@@ -62,7 +62,7 @@ Gelfand transform, character space, C⋆-algebra
 
 open WeakDual
 
-open NNReal
+open scoped NNReal
 
 section ComplexBanachAlgebra
 

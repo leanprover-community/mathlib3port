@@ -23,7 +23,7 @@ namespace Complex
 
 open Set Filter
 
-open Real Topology
+open scoped Real Topology
 
 /-- `complex.exp` as a `local_homeomorph` with `source = {z | -π < im z < π}` and
 `target = {z | 0 < re z} ∪ {z | im z ≠ 0}`. This definition is used to prove that `complex.log`
@@ -73,7 +73,7 @@ section LogDeriv
 
 open Complex Filter
 
-open Topology
+open scoped Topology
 
 variable {α : Type _} [TopologicalSpace α] {E : Type _} [NormedAddCommGroup E] [NormedSpace ℂ E]
 

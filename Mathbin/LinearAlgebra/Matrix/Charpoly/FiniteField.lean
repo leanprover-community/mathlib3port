@@ -21,7 +21,7 @@ noncomputable section
 
 open Polynomial Matrix
 
-open Polynomial
+open scoped Polynomial
 
 variable {n : Type _} [DecidableEq n] [Fintype n]
 

@@ -31,7 +31,7 @@ assert_not_exists Module
 
 assert_not_exists Submonoid
 
-open Pointwise
+open scoped Pointwise
 
 #print Real /-
 /-- The type `ℝ` of real numbers constructed as equivalence classes of Cauchy sequences of rational
@@ -526,7 +526,7 @@ instance : SemilatticeInf ℝ :=
 instance : SemilatticeSup ℝ :=
   inferInstance
 
-open Classical
+open scoped Classical
 
 instance : IsTotal ℝ (· ≤ ·) :=
   ⟨fun a => Real.ind_mk a fun a b => Real.ind_mk b fun b => by simpa using le_total a b⟩

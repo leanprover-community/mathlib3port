@@ -38,7 +38,7 @@ open Metric ContinuousLinearMap
 
 open Set Real
 
-open NNReal
+open scoped NNReal
 
 variable {𝕜 𝕜₂ E F G : Type _}
 

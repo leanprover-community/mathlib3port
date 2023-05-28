@@ -369,7 +369,7 @@ theorem mem_biSup_iff_exists_dfinsupp (p : ι → Prop) [DecidablePred p] (S : �
   SetLike.ext_iff.mp (biSup_eq_range_dfinsupp_lsum p S) x
 #align submodule.mem_bsupr_iff_exists_dfinsupp Submodule.mem_biSup_iff_exists_dfinsupp
 
-open BigOperators
+open scoped BigOperators
 
 omit dec_ι
 

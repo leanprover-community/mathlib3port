@@ -37,7 +37,7 @@ second step is implemented in `diff_cont_on_cl.ball_subset_image_closed_ball`.
 
 open Set Filter Metric Complex
 
-open Topology
+open scoped Topology
 
 variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℂ E] {U : Set E} {f : ℂ → ℂ} {g : E → ℂ}
   {z₀ w : ℂ} {ε r m : ℝ}

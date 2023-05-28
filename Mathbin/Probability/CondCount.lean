@@ -43,7 +43,7 @@ predicates.
 
 noncomputable section
 
-open ProbabilityTheory
+open scoped ProbabilityTheory
 
 open MeasureTheory MeasurableSpace
 

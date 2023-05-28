@@ -37,7 +37,7 @@ inequality.
 
 open Nat
 
-open NNRat Pointwise
+open scoped NNRat Pointwise
 
 namespace Finset
 

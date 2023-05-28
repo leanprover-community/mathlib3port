@@ -42,7 +42,7 @@ namespace Ideal
 
 open Set
 
-open BigOperators
+open scoped BigOperators
 
 variable {R : Type u} [CommRing R] (I : Ideal R) {a b : R}
 
@@ -226,7 +226,7 @@ theorem exists_inv {I : Ideal R} [hI : I.IsMaximal] :
   convert hc
 #align ideal.quotient.exists_inv Ideal.Quotient.exists_inv
 
-open Classical
+open scoped Classical
 
 #print Ideal.Quotient.groupWithZero /-
 /-- The quotient by a maximal ideal is a group with zero. This is a `def` rather than `instance`,

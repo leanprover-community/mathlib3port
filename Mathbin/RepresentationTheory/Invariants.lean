@@ -24,7 +24,7 @@ results that the order of `G` is invertible in `k` (e. g. `k` has characteristic
 -/
 
 
-open BigOperators
+open scoped BigOperators
 
 open MonoidAlgebra
 

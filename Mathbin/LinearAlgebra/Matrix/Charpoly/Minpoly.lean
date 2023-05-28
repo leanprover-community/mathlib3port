@@ -38,7 +38,7 @@ open Finset
 
 namespace Matrix
 
-open Matrix
+open scoped Matrix
 
 variable (M : Matrix n n R)
 

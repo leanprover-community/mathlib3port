@@ -29,7 +29,7 @@ local notation "abs'" => Abs.abs
 
 open IsAbsoluteValue
 
-open Classical BigOperators Nat ComplexConjugate
+open scoped Classical BigOperators Nat ComplexConjugate
 
 section
 

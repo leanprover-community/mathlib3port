@@ -47,7 +47,7 @@ Artinian, artinian, Artinian ring, Artinian module, artinian ring, artinian modu
 
 open Set
 
-open BigOperators Pointwise
+open scoped BigOperators Pointwise
 
 #print IsArtinian /-
 /- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`wellFounded_submodule_lt] [] -/

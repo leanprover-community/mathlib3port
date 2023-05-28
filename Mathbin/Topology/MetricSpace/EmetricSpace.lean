@@ -38,7 +38,7 @@ to `emetric_space` at the end.
 
 open Set Filter Classical
 
-open uniformity Topology BigOperators Filter NNReal ENNReal
+open scoped uniformity Topology BigOperators Filter NNReal ENNReal
 
 universe u v w
 

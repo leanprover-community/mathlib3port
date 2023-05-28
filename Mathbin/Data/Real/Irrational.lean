@@ -482,7 +482,7 @@ section Polynomial
 
 open Polynomial
 
-open Polynomial
+open scoped Polynomial
 
 variable (x : ℝ) (p : ℤ[X])
 

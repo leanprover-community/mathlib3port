@@ -76,7 +76,7 @@ variable {α : Type u} {β : Type v} {M : Type w} [DecidableEq β]
 
 open Nat
 
-open BigOperators
+open scoped BigOperators
 
 namespace Finset
 
@@ -344,6 +344,7 @@ between `fintype`s and `s = univ`, `t = univ`. In this case the assumption `∀ 
 holds, so we have four theorems instead of eight. -/
 
 
+#print Fintype.exists_lt_sum_fiber_of_nsmul_lt_sum /-
 /-- The pigeonhole principle for finitely many pigeons of different weights, strict inequality
 version: there is a pigeonhole with the total weight of pigeons in it greater than `b` provided that
 the total number of pigeonholes times `b` is less than the total weight of all pigeons. -/
@@ -352,7 +353,9 @@ theorem exists_lt_sum_fiber_of_nsmul_lt_sum (hb : card β • b < ∑ x, w x) :
   let ⟨y, _, hy⟩ := exists_lt_sum_fiber_of_maps_to_of_nsmul_lt_sum (fun _ _ => mem_univ _) hb
   ⟨y, hy⟩
 #align fintype.exists_lt_sum_fiber_of_nsmul_lt_sum Fintype.exists_lt_sum_fiber_of_nsmul_lt_sum
+-/
 
+#print Fintype.exists_le_sum_fiber_of_nsmul_le_sum /-
 /-- The pigeonhole principle for finitely many pigeons of different weights, non-strict inequality
 version: there is a pigeonhole with the total weight of pigeons in it greater than or equal to `b`
 provided that the total number of pigeonholes times `b` is less than or equal to the total weight of
@@ -363,7 +366,9 @@ theorem exists_le_sum_fiber_of_nsmul_le_sum [Nonempty β] (hb : card β • b �
     exists_le_sum_fiber_of_maps_to_of_nsmul_le_sum (fun _ _ => mem_univ _) univ_nonempty hb
   ⟨y, hy⟩
 #align fintype.exists_le_sum_fiber_of_nsmul_le_sum Fintype.exists_le_sum_fiber_of_nsmul_le_sum
+-/
 
+#print Fintype.exists_sum_fiber_lt_of_sum_lt_nsmul /-
 /-- The pigeonhole principle for finitely many pigeons of different weights, strict inequality
 version: there is a pigeonhole with the total weight of pigeons in it less than `b` provided that
 the total number of pigeonholes times `b` is greater than the total weight of all pigeons. -/
@@ -371,7 +376,9 @@ theorem exists_sum_fiber_lt_of_sum_lt_nsmul (hb : (∑ x, w x) < card β • b) 
     ∃ y, (∑ x in univ.filterₓ fun x => f x = y, w x) < b :=
   @exists_lt_sum_fiber_of_nsmul_lt_sum α β Mᵒᵈ _ _ _ _ _ _ _ hb
 #align fintype.exists_sum_fiber_lt_of_sum_lt_nsmul Fintype.exists_sum_fiber_lt_of_sum_lt_nsmul
+-/
 
+#print Fintype.exists_sum_fiber_le_of_sum_le_nsmul /-
 /-- The pigeonhole principle for finitely many pigeons of different weights, non-strict inequality
 version: there is a pigeonhole with the total weight of pigeons in it less than or equal to `b`
 provided that the total number of pigeonholes times `b` is greater than or equal to the total weight
@@ -380,11 +387,13 @@ theorem exists_sum_fiber_le_of_sum_le_nsmul [Nonempty β] (hb : (∑ x, w x) ≤
     ∃ y, (∑ x in univ.filterₓ fun x => f x = y, w x) ≤ b :=
   @exists_le_sum_fiber_of_nsmul_le_sum α β Mᵒᵈ _ _ _ _ _ _ _ _ hb
 #align fintype.exists_sum_fiber_le_of_sum_le_nsmul Fintype.exists_sum_fiber_le_of_sum_le_nsmul
+-/
 
 end
 
 variable [LinearOrderedCommSemiring M]
 
+#print Fintype.exists_lt_card_fiber_of_nsmul_lt_card /-
 /-- The strong pigeonhole principle for finitely many pigeons and pigeonholes. There is a pigeonhole
 with at least as many pigeons as the ceiling of the average number of pigeons across all
 pigeonholes. -/
@@ -393,6 +402,7 @@ theorem exists_lt_card_fiber_of_nsmul_lt_card (hb : card β • b < card α) :
   let ⟨y, _, h⟩ := exists_lt_card_fiber_of_nsmul_lt_card_of_maps_to (fun _ _ => mem_univ _) hb
   ⟨y, h⟩
 #align fintype.exists_lt_card_fiber_of_nsmul_lt_card Fintype.exists_lt_card_fiber_of_nsmul_lt_card
+-/
 
 #print Fintype.exists_lt_card_fiber_of_mul_lt_card /-
 /-- The strong pigeonhole principle for finitely many pigeons and pigeonholes.
@@ -409,6 +419,7 @@ theorem exists_lt_card_fiber_of_mul_lt_card (hn : card β * n < card α) :
 #align fintype.exists_lt_card_fiber_of_mul_lt_card Fintype.exists_lt_card_fiber_of_mul_lt_card
 -/
 
+#print Fintype.exists_card_fiber_lt_of_card_lt_nsmul /-
 /-- The strong pigeonhole principle for finitely many pigeons and pigeonholes. There is a pigeonhole
 with at most as many pigeons as the floor of the average number of pigeons across all pigeonholes.
 -/
@@ -417,6 +428,7 @@ theorem exists_card_fiber_lt_of_card_lt_nsmul (hb : ↑(card α) < card β • b
   let ⟨y, _, h⟩ := exists_card_fiber_lt_of_card_lt_nsmul hb
   ⟨y, h⟩
 #align fintype.exists_card_fiber_lt_of_card_lt_nsmul Fintype.exists_card_fiber_lt_of_card_lt_nsmul
+-/
 
 #print Fintype.exists_card_fiber_lt_of_card_lt_mul /-
 /-- The strong pigeonhole principle for finitely many pigeons and pigeonholes.
@@ -433,6 +445,7 @@ theorem exists_card_fiber_lt_of_card_lt_mul (hn : card α < card β * n) :
 #align fintype.exists_card_fiber_lt_of_card_lt_mul Fintype.exists_card_fiber_lt_of_card_lt_mul
 -/
 
+#print Fintype.exists_le_card_fiber_of_nsmul_le_card /-
 /-- The strong pigeonhole principle for finitely many pigeons and pigeonholes.  Given a function `f`
 between finite types `α` and `β` and a number `b` such that `card β • b ≤ card α`, there exists an
 element `y : β` such that its preimage has at least `b` elements.
@@ -443,6 +456,7 @@ theorem exists_le_card_fiber_of_nsmul_le_card [Nonempty β] (hb : card β • b 
     exists_le_card_fiber_of_nsmul_le_card_of_maps_to (fun _ _ => mem_univ _) univ_nonempty hb
   ⟨y, h⟩
 #align fintype.exists_le_card_fiber_of_nsmul_le_card Fintype.exists_le_card_fiber_of_nsmul_le_card
+-/
 
 #print Fintype.exists_le_card_fiber_of_mul_le_card /-
 /-- The strong pigeonhole principle for finitely many pigeons and pigeonholes.  Given a function `f`
@@ -455,6 +469,7 @@ theorem exists_le_card_fiber_of_mul_le_card [Nonempty β] (hn : card β * n ≤ 
 #align fintype.exists_le_card_fiber_of_mul_le_card Fintype.exists_le_card_fiber_of_mul_le_card
 -/
 
+#print Fintype.exists_card_fiber_le_of_card_le_nsmul /-
 /-- The strong pigeonhole principle for finitely many pigeons and pigeonholes.  Given a function `f`
 between finite types `α` and `β` and a number `b` such that `card α ≤ card β • b`, there exists an
 element `y : β` such that its preimage has at most `b` elements.
@@ -464,6 +479,7 @@ theorem exists_card_fiber_le_of_card_le_nsmul [Nonempty β] (hb : ↑(card α) �
   let ⟨y, _, h⟩ := exists_card_fiber_le_of_card_le_nsmul univ_nonempty hb
   ⟨y, h⟩
 #align fintype.exists_card_fiber_le_of_card_le_nsmul Fintype.exists_card_fiber_le_of_card_le_nsmul
+-/
 
 #print Fintype.exists_card_fiber_le_of_card_le_mul /-
 /-- The strong pigeonhole principle for finitely many pigeons and pigeonholes.  Given a function `f`

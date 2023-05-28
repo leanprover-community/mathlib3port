@@ -2736,13 +2736,17 @@ theorem subsingleton_of_subsingleton [Subsingleton α] {s : Set α} : Set.Subsin
 #align set.subsingleton_of_subsingleton Set.subsingleton_of_subsingleton
 -/
 
+#print Set.subsingleton_isTop /-
 theorem subsingleton_isTop (α : Type _) [PartialOrder α] : Set.Subsingleton { x : α | IsTop x } :=
   fun x hx y hy => hx.IsMax.eq_of_le (hy x)
 #align set.subsingleton_is_top Set.subsingleton_isTop
+-/
 
+#print Set.subsingleton_isBot /-
 theorem subsingleton_isBot (α : Type _) [PartialOrder α] : Set.Subsingleton { x : α | IsBot x } :=
   fun x hx y hy => hx.IsMin.eq_of_ge (hy x)
 #align set.subsingleton_is_bot Set.subsingleton_isBot
+-/
 
 #print Set.exists_eq_singleton_iff_nonempty_subsingleton /-
 theorem exists_eq_singleton_iff_nonempty_subsingleton :
@@ -2876,30 +2880,38 @@ theorem nontrivial_iff_exists_ne {x} (hx : x ∈ s) : s.Nontrivial ↔ ∃ y ∈
   ⟨fun H => H.exists_ne _, nontrivial_of_exists_ne hx⟩
 #align set.nontrivial_iff_exists_ne Set.nontrivial_iff_exists_ne
 
+#print Set.nontrivial_of_lt /-
 theorem nontrivial_of_lt [Preorder α] {x y} (hx : x ∈ s) (hy : y ∈ s) (hxy : x < y) :
     s.Nontrivial :=
   ⟨x, hx, y, hy, ne_of_lt hxy⟩
 #align set.nontrivial_of_lt Set.nontrivial_of_lt
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+#print Set.nontrivial_of_exists_lt /-
 theorem nontrivial_of_exists_lt [Preorder α] (H : ∃ (x : _)(_ : x ∈ s)(y : _)(_ : y ∈ s), x < y) :
     s.Nontrivial :=
   let ⟨x, hx, y, hy, hxy⟩ := H
   nontrivial_of_lt hx hy hxy
 #align set.nontrivial_of_exists_lt Set.nontrivial_of_exists_lt
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+#print Set.Nontrivial.exists_lt /-
 theorem Nontrivial.exists_lt [LinearOrder α] (hs : s.Nontrivial) :
     ∃ (x : _)(_ : x ∈ s)(y : _)(_ : y ∈ s), x < y :=
   let ⟨x, hx, y, hy, hxy⟩ := hs
   Or.elim (lt_or_gt_of_ne hxy) (fun H => ⟨x, hx, y, hy, H⟩) fun H => ⟨y, hy, x, hx, H⟩
 #align set.nontrivial.exists_lt Set.Nontrivial.exists_lt
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+#print Set.nontrivial_iff_exists_lt /-
 theorem nontrivial_iff_exists_lt [LinearOrder α] :
     s.Nontrivial ↔ ∃ (x : _)(_ : x ∈ s)(y : _)(_ : y ∈ s), x < y :=
   ⟨Nontrivial.exists_lt, nontrivial_of_exists_lt⟩
 #align set.nontrivial_iff_exists_lt Set.nontrivial_iff_exists_lt
+-/
 
 #print Set.Nontrivial.nonempty /-
 protected theorem Nontrivial.nonempty (hs : s.Nontrivial) : s.Nonempty :=
@@ -3146,6 +3158,7 @@ section LinearOrder
 variable [LinearOrder α] [LinearOrder β] {f : α → β}
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a b c «expr ∈ » s) -/
+#print Set.not_monotoneOn_not_antitoneOn_iff_exists_le_le /-
 /-- A function between linear orders which is neither monotone nor antitone makes a dent upright or
 downright. -/
 theorem not_monotoneOn_not_antitoneOn_iff_exists_le_le :
@@ -3156,8 +3169,10 @@ theorem not_monotoneOn_not_antitoneOn_iff_exists_le_le :
   simp [monotone_on_iff_monotone, antitone_on_iff_antitone, and_assoc', exists_and_left,
     not_monotone_not_antitone_iff_exists_le_le, @and_left_comm (_ ∈ s)]
 #align set.not_monotone_on_not_antitone_on_iff_exists_le_le Set.not_monotoneOn_not_antitoneOn_iff_exists_le_le
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a b c «expr ∈ » s) -/
+#print Set.not_monotoneOn_not_antitoneOn_iff_exists_lt_lt /-
 /-- A function between linear orders which is neither monotone nor antitone makes a dent upright or
 downright. -/
 theorem not_monotoneOn_not_antitoneOn_iff_exists_lt_lt :
@@ -3168,6 +3183,7 @@ theorem not_monotoneOn_not_antitoneOn_iff_exists_lt_lt :
   simp [monotone_on_iff_monotone, antitone_on_iff_antitone, and_assoc', exists_and_left,
     not_monotone_not_antitone_iff_exists_lt_lt, @and_left_comm (_ ∈ s)]
 #align set.not_monotone_on_not_antitone_on_iff_exists_lt_lt Set.not_monotoneOn_not_antitoneOn_iff_exists_lt_lt
+-/
 
 end LinearOrder
 

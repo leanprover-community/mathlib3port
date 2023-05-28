@@ -36,7 +36,7 @@ section MoveThis
 -- this section contains lemmas that should be moved to appropriate places after the port to lean 4
 open Filter Set
 
-open Topology
+open scoped Topology
 
 theorem iInf_Ioi_eq_iInf_rat_gt {f : ℝ → ℝ} (x : ℝ) (hf : BddBelow (f '' Ioi x))
     (hf_mono : Monotone f) : (⨅ r : Ioi x, f r) = ⨅ q : { q' : ℚ // x < q' }, f q :=
@@ -212,7 +212,7 @@ open Classical Set Filter Function
 
 open ENNReal (ofReal)
 
-open BigOperators ENNReal NNReal Topology MeasureTheory
+open scoped BigOperators ENNReal NNReal Topology MeasureTheory
 
 /-! ### Basic properties of Stieltjes functions -/
 

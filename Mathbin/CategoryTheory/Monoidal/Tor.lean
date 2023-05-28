@@ -69,7 +69,7 @@ def Tor' (n : ℕ) : C ⥤ C ⥤ C :=
 #align category_theory.Tor' CategoryTheory.Tor'
 -/
 
-open ZeroObject
+open scoped ZeroObject
 
 /-- The higher `Tor` groups for `X` and `Y` are zero if `Y` is projective. -/
 def torSuccOfProjective (X Y : C) [Projective Y] (n : ℕ) : ((Tor C (n + 1)).obj X).obj Y ≅ 0 :=

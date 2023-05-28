@@ -74,7 +74,7 @@ scoped[Polynomial] notation:9000 R "[X]" => Polynomial R
 
 open AddMonoidAlgebra Finsupp Function
 
-open BigOperators Polynomial
+open scoped BigOperators Polynomial
 
 namespace Polynomial
 
@@ -1255,7 +1255,7 @@ section repr
 
 variable [Semiring R]
 
-open Classical
+open scoped Classical
 
 instance [Repr R] : Repr R[X] :=
   ⟨fun p =>

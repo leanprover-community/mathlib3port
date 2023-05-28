@@ -181,7 +181,7 @@ theorem σ_comp_σ {n} {i j : Fin (n + 1)} (H : i ≤ j) :
   simp only [← X.map_comp, ← op_comp, SimplexCategory.σ_comp_σ H]
 #align category_theory.simplicial_object.σ_comp_σ CategoryTheory.SimplicialObject.σ_comp_σ
 
-open Simplicial
+open scoped Simplicial
 
 @[simp, reassoc]
 theorem δ_naturality {X' X : SimplicialObject C} (f : X ⟶ X') {n : ℕ} (i : Fin (n + 2)) :
@@ -701,7 +701,7 @@ variable {C}
 
 end Augmented
 
-open Simplicial
+open scoped Simplicial
 
 /-- Augment a cosimplicial object with an object. -/
 @[simps]

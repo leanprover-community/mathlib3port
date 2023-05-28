@@ -630,7 +630,7 @@ theorem cons_eq_zero_iff {v : Fin n → α} {x : α} : vecCons x v = 0 ↔ x = 0
 #align matrix.cons_eq_zero_iff Matrix.cons_eq_zero_iff
 -/
 
-open Classical
+open scoped Classical
 
 #print Matrix.cons_nonzero_iff /-
 theorem cons_nonzero_iff {v : Fin n → α} {x : α} : vecCons x v ≠ 0 ↔ x ≠ 0 ∨ v ≠ 0 :=

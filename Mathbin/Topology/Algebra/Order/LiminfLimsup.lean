@@ -26,7 +26,7 @@ import Mathbin.Topology.Order.Basic
 
 open Filter TopologicalSpace
 
-open Topology Classical
+open scoped Topology Classical
 
 universe u v
 
@@ -38,15 +38,19 @@ section OrderClosedTopology
 
 variable [SemilatticeSup α] [TopologicalSpace α] [OrderTopology α]
 
+#print isBounded_le_nhds /-
 theorem isBounded_le_nhds (a : α) : (𝓝 a).IsBounded (· ≤ ·) :=
   (isTop_or_exists_gt a).elim (fun h => ⟨a, eventually_of_forall h⟩) fun ⟨b, hb⟩ =>
     ⟨b, ge_mem_nhds hb⟩
 #align is_bounded_le_nhds isBounded_le_nhds
+-/
 
+#print Filter.Tendsto.isBoundedUnder_le /-
 theorem Filter.Tendsto.isBoundedUnder_le {f : Filter β} {u : β → α} {a : α}
     (h : Tendsto u f (𝓝 a)) : f.IsBoundedUnder (· ≤ ·) u :=
   (isBounded_le_nhds a).mono h
 #align filter.tendsto.is_bounded_under_le Filter.Tendsto.isBoundedUnder_le
+-/
 
 #print Filter.Tendsto.bddAbove_range_of_cofinite /-
 theorem Filter.Tendsto.bddAbove_range_of_cofinite {u : β → α} {a : α}
@@ -62,19 +66,25 @@ theorem Filter.Tendsto.bddAbove_range {u : ℕ → α} {a : α} (h : Tendsto u a
 #align filter.tendsto.bdd_above_range Filter.Tendsto.bddAbove_range
 -/
 
+#print isCobounded_ge_nhds /-
 theorem isCobounded_ge_nhds (a : α) : (𝓝 a).IsCobounded (· ≥ ·) :=
   (isBounded_le_nhds a).isCobounded_flip
 #align is_cobounded_ge_nhds isCobounded_ge_nhds
+-/
 
+#print Filter.Tendsto.isCoboundedUnder_ge /-
 theorem Filter.Tendsto.isCoboundedUnder_ge {f : Filter β} {u : β → α} {a : α} [NeBot f]
     (h : Tendsto u f (𝓝 a)) : f.IsCoboundedUnder (· ≥ ·) u :=
   h.isBoundedUnder_le.isCobounded_flip
 #align filter.tendsto.is_cobounded_under_ge Filter.Tendsto.isCoboundedUnder_ge
+-/
 
+#print isBounded_le_atBot /-
 theorem isBounded_le_atBot (α : Type _) [hα : Nonempty α] [Preorder α] :
     (atBot : Filter α).IsBounded (· ≤ ·) :=
   isBounded_iff.2 ⟨Set.Iic hα.some, mem_atBot _, hα.some, fun x hx => hx⟩
 #align is_bounded_le_at_bot isBounded_le_atBot
+-/
 
 theorem Filter.Tendsto.isBoundedUnder_le_atBot {α : Type _} [Nonempty α] [Preorder α] {f : Filter β}
     {u : β → α} (h : Tendsto u f atBot) : f.IsBoundedUnder (· ≤ ·) u :=
@@ -94,14 +104,18 @@ section OrderClosedTopology
 
 variable [SemilatticeInf α] [TopologicalSpace α] [OrderTopology α]
 
+#print isBounded_ge_nhds /-
 theorem isBounded_ge_nhds (a : α) : (𝓝 a).IsBounded (· ≥ ·) :=
   @isBounded_le_nhds αᵒᵈ _ _ _ a
 #align is_bounded_ge_nhds isBounded_ge_nhds
+-/
 
+#print Filter.Tendsto.isBoundedUnder_ge /-
 theorem Filter.Tendsto.isBoundedUnder_ge {f : Filter β} {u : β → α} {a : α}
     (h : Tendsto u f (𝓝 a)) : f.IsBoundedUnder (· ≥ ·) u :=
   (isBounded_ge_nhds a).mono h
 #align filter.tendsto.is_bounded_under_ge Filter.Tendsto.isBoundedUnder_ge
+-/
 
 #print Filter.Tendsto.bddBelow_range_of_cofinite /-
 theorem Filter.Tendsto.bddBelow_range_of_cofinite {u : β → α} {a : α}
@@ -117,19 +131,25 @@ theorem Filter.Tendsto.bddBelow_range {u : ℕ → α} {a : α} (h : Tendsto u a
 #align filter.tendsto.bdd_below_range Filter.Tendsto.bddBelow_range
 -/
 
+#print isCobounded_le_nhds /-
 theorem isCobounded_le_nhds (a : α) : (𝓝 a).IsCobounded (· ≤ ·) :=
   (isBounded_ge_nhds a).isCobounded_flip
 #align is_cobounded_le_nhds isCobounded_le_nhds
+-/
 
+#print Filter.Tendsto.isCoboundedUnder_le /-
 theorem Filter.Tendsto.isCoboundedUnder_le {f : Filter β} {u : β → α} {a : α} [NeBot f]
     (h : Tendsto u f (𝓝 a)) : f.IsCoboundedUnder (· ≤ ·) u :=
   h.isBoundedUnder_ge.isCobounded_flip
 #align filter.tendsto.is_cobounded_under_le Filter.Tendsto.isCoboundedUnder_le
+-/
 
+#print isBounded_ge_atTop /-
 theorem isBounded_ge_atTop (α : Type _) [hα : Nonempty α] [Preorder α] :
     (atTop : Filter α).IsBounded (· ≥ ·) :=
   isBounded_le_atBot αᵒᵈ
 #align is_bounded_ge_at_top isBounded_ge_atTop
+-/
 
 theorem Filter.Tendsto.isBoundedUnder_ge_atTop {α : Type _} [Nonempty α] [Preorder α] {f : Filter β}
     {u : β → α} (h : Tendsto u f atTop) : f.IsBoundedUnder (· ≥ ·) u :=
@@ -149,16 +169,20 @@ section ConditionallyCompleteLinearOrder
 
 variable [ConditionallyCompleteLinearOrder α]
 
+#print lt_mem_sets_of_limsSup_lt /-
 theorem lt_mem_sets_of_limsSup_lt {f : Filter α} {b} (h : f.IsBounded (· ≤ ·)) (l : f.limsSup < b) :
     ∀ᶠ a in f, a < b :=
   let ⟨c, (h : ∀ᶠ a in f, a ≤ c), hcb⟩ := exists_lt_of_csInf_lt h l
   mem_of_superset h fun a hac => lt_of_le_of_lt hac hcb
 #align lt_mem_sets_of_Limsup_lt lt_mem_sets_of_limsSup_lt
+-/
 
+#print gt_mem_sets_of_limsInf_gt /-
 theorem gt_mem_sets_of_limsInf_gt :
     ∀ {f : Filter α} {b}, f.IsBounded (· ≥ ·) → b < f.limsInf → ∀ᶠ a in f, b < a :=
   @lt_mem_sets_of_limsSup_lt αᵒᵈ _
 #align gt_mem_sets_of_Liminf_gt gt_mem_sets_of_limsInf_gt
+-/
 
 variable [TopologicalSpace α] [OrderTopology α]
 
@@ -228,6 +252,7 @@ theorem Filter.Tendsto.liminf_eq {f : Filter β} {u : β → α} {a : α} [NeBot
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
+#print tendsto_of_liminf_eq_limsup /-
 /-- If the liminf and the limsup of a function coincide, then the limit of the function
 exists and has the same value -/
 theorem tendsto_of_liminf_eq_limsup {f : Filter β} {u : β → α} {a : α} (hinf : liminf u f = a)
@@ -241,9 +266,11 @@ theorem tendsto_of_liminf_eq_limsup {f : Filter β} {u : β → α} {a : α} (hi
     Tendsto u f (𝓝 a) :=
   le_nhds_of_limsSup_eq_limsInf h h' hsup hinf
 #align tendsto_of_liminf_eq_limsup tendsto_of_liminf_eq_limsup
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
+#print tendsto_of_le_liminf_of_limsup_le /-
 /-- If a number `a` is less than or equal to the `liminf` of a function `f` at some filter
 and is greater than or equal to the `limsup` of `f`, then `f` tends to `a` along this filter. -/
 theorem tendsto_of_le_liminf_of_limsup_le {f : Filter β} {u : β → α} {a : α} (hinf : a ≤ liminf u f)
@@ -261,9 +288,11 @@ theorem tendsto_of_le_liminf_of_limsup_le {f : Filter β} {u : β → α} {a : �
     tendsto_of_liminf_eq_limsup (le_antisymm (le_trans (liminf_le_limsup h h') hsup) hinf)
       (le_antisymm hsup (le_trans hinf (liminf_le_limsup h h'))) h h'
 #align tendsto_of_le_liminf_of_limsup_le tendsto_of_le_liminf_of_limsup_le
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
+#print tendsto_of_no_upcrossings /-
 /-- Assume that, for any `a < b`, a sequence can not be infinitely many times below `a` and
 above `b`. If it is also ultimately bounded above and below, then it has to converge. This even
 works if `a` and `b` are restricted to a dense subset.
@@ -291,10 +320,12 @@ theorem tendsto_of_no_upcrossings [DenselyOrdered α] {f : Filter β} {u : β �
   have B : ∃ᶠ n in f, b < u n := frequently_lt_of_lt_limsup (is_bounded.is_cobounded_le h') bu
   exact H a as b bs ab ⟨A, B⟩
 #align tendsto_of_no_upcrossings tendsto_of_no_upcrossings
+-/
 
 variable [FirstCountableTopology α] {f : Filter β} [CountableInterFilter f] {u : β → α}
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
+#print eventually_le_limsup /-
 theorem eventually_le_limsup
     (hf : IsBoundedUnder (· ≤ ·) f u := by
       run_tac
@@ -318,8 +349,10 @@ theorem eventually_le_limsup
     contrapose! hy
     exact hx hy
 #align eventually_le_limsup eventually_le_limsup
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
+#print eventually_liminf_le /-
 theorem eventually_liminf_le
     (hf : IsBoundedUnder (· ≥ ·) f u := by
       run_tac
@@ -327,6 +360,7 @@ theorem eventually_liminf_le
     ∀ᶠ b in f, f.liminf u ≤ u b :=
   @eventually_le_limsup αᵒᵈ _ _ _ _ _ _ _ _ hf
 #align eventually_liminf_le eventually_liminf_le
+-/
 
 end ConditionallyCompleteLinearOrder
 
@@ -471,7 +505,7 @@ end Monotone
 
 section InfiAndSupr
 
-open Topology
+open scoped Topology
 
 open Filter Set
 
@@ -489,6 +523,7 @@ theorem iSup_eq_of_forall_le_of_tendsto {x : R} {as : ι → R} (le_x : ∀ i, a
   @iInf_eq_of_forall_le_of_tendsto ι (OrderDual R) _ _ _ x as le_x F _ as_lim
 #align supr_eq_of_forall_le_of_tendsto iSup_eq_of_forall_le_of_tendsto
 
+#print iUnion_Ici_eq_Ioi_of_lt_of_tendsto /-
 theorem iUnion_Ici_eq_Ioi_of_lt_of_tendsto {ι : Type _} (x : R) {as : ι → R} (x_lt : ∀ i, x < as i)
     {F : Filter ι} [Filter.NeBot F] (as_lim : Filter.Tendsto as F (𝓝 x)) :
     (⋃ i : ι, Ici (as i)) = Ioi x :=
@@ -500,18 +535,21 @@ theorem iUnion_Ici_eq_Ioi_of_lt_of_tendsto {ι : Type _} (x : R) {as : ι → R}
   rw [← iInf_eq_of_forall_le_of_tendsto (fun i => (x_lt i).le) as_lim] at *
   exact iUnion_Ici_eq_Ioi_iInf obs
 #align Union_Ici_eq_Ioi_of_lt_of_tendsto iUnion_Ici_eq_Ioi_of_lt_of_tendsto
+-/
 
+#print iUnion_Iic_eq_Iio_of_lt_of_tendsto /-
 theorem iUnion_Iic_eq_Iio_of_lt_of_tendsto {ι : Type _} (x : R) {as : ι → R} (lt_x : ∀ i, as i < x)
     {F : Filter ι} [Filter.NeBot F] (as_lim : Filter.Tendsto as F (𝓝 x)) :
     (⋃ i : ι, Iic (as i)) = Iio x :=
   @iUnion_Ici_eq_Ioi_of_lt_of_tendsto (OrderDual R) _ _ _ ι x as lt_x F _ as_lim
 #align Union_Iic_eq_Iio_of_lt_of_tendsto iUnion_Iic_eq_Iio_of_lt_of_tendsto
+-/
 
 end InfiAndSupr
 
 section Indicator
 
-open BigOperators
+open scoped BigOperators
 
 theorem limsup_eq_tendsto_sum_indicator_nat_atTop (s : ℕ → Set α) :
     limsup s atTop =

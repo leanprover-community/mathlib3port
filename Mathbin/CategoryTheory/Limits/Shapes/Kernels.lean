@@ -480,7 +480,7 @@ section HasZeroObject
 
 variable [HasZeroObject C]
 
-open ZeroObject
+open scoped ZeroObject
 
 #print CategoryTheory.Limits.kernel.zeroKernelFork /-
 /-- The morphism from the zero object determines a cone on a kernel diagram -/
@@ -972,7 +972,7 @@ section HasZeroObject
 
 variable [HasZeroObject C]
 
-open ZeroObject
+open scoped ZeroObject
 
 #print CategoryTheory.Limits.cokernel.zeroCokernelCofork /-
 /-- The morphism to the zero object determines a cocone on a cokernel diagram -/
@@ -1080,7 +1080,7 @@ section HasZeroObject
 
 variable [HasZeroObject C]
 
-open ZeroObject
+open scoped ZeroObject
 
 #print CategoryTheory.Limits.kernel.of_cokernel_of_epi /-
 /-- The kernel of the cokernel of an epimorphism is an isomorphism -/

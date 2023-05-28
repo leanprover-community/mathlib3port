@@ -66,7 +66,7 @@ convex, strictly convex
 
 open Set Metric
 
-open Convex Pointwise
+open scoped Convex Pointwise
 
 #print StrictConvexSpace /-
 /-- A *strictly convex space* is a normed space where the closed balls are strictly convex. We only

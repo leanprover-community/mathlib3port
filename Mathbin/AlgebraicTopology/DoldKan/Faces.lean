@@ -44,7 +44,7 @@ open CategoryTheory.Preadditive
 
 open CategoryTheory.SimplicialObject
 
-open Simplicial DoldKan
+open scoped Simplicial DoldKan
 
 namespace AlgebraicTopology
 

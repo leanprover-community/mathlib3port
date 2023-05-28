@@ -38,7 +38,7 @@ namespace Rat
 
 variable (a b c : ℚ)
 
-open Rat
+open scoped Rat
 
 #print Rat.Nonneg /-
 /-- A rational number is called nonnegative if its numerator is nonnegative. -/
@@ -184,6 +184,7 @@ protected theorem le_def' {p q : ℚ} : p ≤ q ↔ p.num * q.den ≤ q.num * p.
   exact Rat.le_def (by exact_mod_cast p.pos) (by exact_mod_cast q.pos)
 #align rat.le_def' Rat.le_def'
 
+#print Rat.lt_def /-
 protected theorem lt_def {p q : ℚ} : p < q ↔ p.num * q.den < q.num * p.den :=
   by
   rw [lt_iff_le_and_ne, Rat.le_def']
@@ -194,6 +195,7 @@ protected theorem lt_def {p q : ℚ} : p < q ↔ p.num * q.den < q.num * p.den :
     · have tmp := lt_iff_le_and_ne.elim_left h; exact ⟨tmp.left, this.elim_right tmp.right⟩
   exact not_iff_not.elim_right eq_iff_mul_eq_mul
 #align rat.lt_def Rat.lt_def
+-/
 
 theorem nonneg_iff_zero_le {a} : Rat.Nonneg a ↔ 0 ≤ a :=
   show Rat.Nonneg a ↔ Rat.Nonneg (a - 0) by simp
@@ -239,11 +241,14 @@ instance : OrderedCancelAddCommMonoid ℚ := by infer_instance
 
 instance : OrderedAddCommMonoid ℚ := by infer_instance
 
+#print Rat.num_pos_iff_pos /-
 theorem num_pos_iff_pos {a : ℚ} : 0 < a.num ↔ 0 < a :=
   lt_iff_lt_of_le_iff_le <| by
     simpa [(by cases a <;> rfl : (-a).num = -a.num)] using @num_nonneg_iff_zero_le (-a)
 #align rat.num_pos_iff_pos Rat.num_pos_iff_pos
+-/
 
+#print Rat.div_lt_div_iff_mul_lt_mul /-
 theorem div_lt_div_iff_mul_lt_mul {a b c d : ℤ} (b_pos : 0 < b) (d_pos : 0 < d) :
     (a : ℚ) / b < c / d ↔ a * d < c * b :=
   by
@@ -252,9 +257,12 @@ theorem div_lt_div_iff_mul_lt_mul {a b c d : ℤ} (b_pos : 0 < b) (d_pos : 0 < d
   · simp [div_num_denom, Rat.le_def b_pos d_pos]
   · apply not_congr; simp [div_num_denom, Rat.le_def d_pos b_pos]
 #align rat.div_lt_div_iff_mul_lt_mul Rat.div_lt_div_iff_mul_lt_mul
+-/
 
+#print Rat.lt_one_iff_num_lt_denom /-
 theorem lt_one_iff_num_lt_denom {q : ℚ} : q < 1 ↔ q.num < q.den := by simp [Rat.lt_def]
 #align rat.lt_one_iff_num_lt_denom Rat.lt_one_iff_num_lt_denom
+-/
 
 theorem abs_def (q : ℚ) : |q| = q.num.natAbs /. q.den :=
   by

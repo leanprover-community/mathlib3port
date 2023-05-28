@@ -223,12 +223,14 @@ instance (priority := 100) OrderIsoClass.tosInfHomClass [CompleteLattice α] [Co
         simp only [← map_inv_le_iff, le_sInf_iff, Set.ball_image_iff] }
 #align order_iso_class.to_Inf_hom_class OrderIsoClass.tosInfHomClass
 
+#print OrderIsoClass.toCompleteLatticeHomClass /-
 -- See note [lower instance priority]
 instance (priority := 100) OrderIsoClass.toCompleteLatticeHomClass [CompleteLattice α]
     [CompleteLattice β] [OrderIsoClass F α β] : CompleteLatticeHomClass F α β :=
   { OrderIsoClass.tosSupHomClass, OrderIsoClass.toLatticeHomClass,
     show sInfHomClass F α β from inferInstance with }
 #align order_iso_class.to_complete_lattice_hom_class OrderIsoClass.toCompleteLatticeHomClass
+-/
 
 instance [SupSet α] [SupSet β] [sSupHomClass F α β] : CoeTC F (sSupHom α β) :=
   ⟨fun f => ⟨f, map_sSup f⟩⟩

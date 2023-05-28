@@ -183,10 +183,12 @@ theorem orthogonal_orthogonal_monotone {K₁ K₂ : Submodule 𝕜 E} (h : K₁ 
   orthogonal_le (orthogonal_le h)
 #align submodule.orthogonal_orthogonal_monotone Submodule.orthogonal_orthogonal_monotone
 
+#print Submodule.le_orthogonal_orthogonal /-
 /-- `K` is contained in `Kᗮᗮ`. -/
 theorem le_orthogonal_orthogonal : K ≤ Kᗮᗮ :=
   (orthogonal_gc 𝕜 E).le_u_l _
 #align submodule.le_orthogonal_orthogonal Submodule.le_orthogonal_orthogonal
+-/
 
 /-- The inf of two orthogonal subspaces equals the subspace orthogonal
 to the sup. -/

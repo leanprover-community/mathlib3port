@@ -30,7 +30,7 @@ if `s t : set α`, then under suitable assumption on `α`, it is shown
 
 namespace Set
 
-open Pointwise
+open scoped Pointwise
 
 -- mathport name: «expr ⋆»
 local postfix:max "⋆" => star

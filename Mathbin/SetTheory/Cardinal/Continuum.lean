@@ -29,7 +29,7 @@ namespace Cardinal
 
 universe u v
 
-open Cardinal
+open scoped Cardinal
 
 #print Cardinal.continuum /-
 /-- Cardinality of continuum. -/
@@ -70,19 +70,25 @@ theorem lift_le_continuum {c : Cardinal.{u}} : lift.{v} c ≤ 𝔠 ↔ c ≤ �
 #align cardinal.lift_le_continuum Cardinal.lift_le_continuum
 -/
 
+#print Cardinal.continuum_lt_lift /-
 @[simp]
 theorem continuum_lt_lift {c : Cardinal.{u}} : 𝔠 < lift.{v} c ↔ 𝔠 < c := by
   rw [← lift_continuum, lift_lt]
 #align cardinal.continuum_lt_lift Cardinal.continuum_lt_lift
+-/
 
+#print Cardinal.lift_lt_continuum /-
 @[simp]
 theorem lift_lt_continuum {c : Cardinal.{u}} : lift.{v} c < 𝔠 ↔ c < 𝔠 := by
   rw [← lift_continuum, lift_lt]
 #align cardinal.lift_lt_continuum Cardinal.lift_lt_continuum
+-/
 
+#print Cardinal.aleph0_lt_continuum /-
 theorem aleph0_lt_continuum : ℵ₀ < 𝔠 :=
   cantor ℵ₀
 #align cardinal.aleph_0_lt_continuum Cardinal.aleph0_lt_continuum
+-/
 
 #print Cardinal.aleph0_le_continuum /-
 theorem aleph0_le_continuum : ℵ₀ ≤ 𝔠 :=
@@ -103,9 +109,11 @@ theorem mk_set_nat : (#Set ℕ) = 𝔠 := by simp
 #align cardinal.mk_set_nat Cardinal.mk_set_nat
 -/
 
+#print Cardinal.continuum_pos /-
 theorem continuum_pos : 0 < 𝔠 :=
   nat_lt_continuum 0
 #align cardinal.continuum_pos Cardinal.continuum_pos
+-/
 
 #print Cardinal.continuum_ne_zero /-
 theorem continuum_ne_zero : 𝔠 ≠ 0 :=

@@ -45,7 +45,7 @@ As product filter we want to have `F` as result.
 
 open Set
 
-open Filter
+open scoped Filter
 
 namespace Filter
 

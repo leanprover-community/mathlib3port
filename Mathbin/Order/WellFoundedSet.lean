@@ -253,12 +253,14 @@ section Preorder
 
 variable [Preorder α] {s t : Set α} {a : α}
 
+#print Set.isWf_iff_no_descending_seq /-
 theorem isWf_iff_no_descending_seq :
     IsWf s ↔ ∀ f : ℕ → α, StrictAnti f → ¬∀ n, f (OrderDual.toDual n) ∈ s :=
   wellFoundedOn_iff_no_descending_seq.trans
     ⟨fun H f hf => H ⟨⟨f, hf.Injective⟩, fun a b => hf.lt_iff_lt⟩, fun H f =>
       H f fun _ _ => f.map_rel_iff.2⟩
 #align set.is_wf_iff_no_descending_seq Set.isWf_iff_no_descending_seq
+-/
 
 end Preorder
 
@@ -490,9 +492,11 @@ theorem isPwo_iff_exists_monotone_subseq :
   partiallyWellOrderedOn_iff_exists_monotone_subseq
 #align set.is_pwo_iff_exists_monotone_subseq Set.isPwo_iff_exists_monotone_subseq
 
+#print Set.IsPwo.isWf /-
 protected theorem IsPwo.isWf (h : s.IsPwo) : s.IsWf := by
   simpa only [← lt_iff_le_not_le] using h.well_founded_on
 #align set.is_pwo.is_wf Set.IsPwo.isWf
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem IsPwo.prod {t : Set β} (hs : s.IsPwo) (ht : t.IsPwo) : IsPwo (s ×ˢ t) :=
@@ -563,27 +567,37 @@ protected theorem IsPwo.insert (h : IsPwo s) (a : α) : IsPwo (insert a s) :=
 #align set.is_pwo.insert Set.IsPwo.insert
 -/
 
+#print Set.Finite.isWf /-
 protected theorem Finite.isWf (hs : s.Finite) : IsWf s :=
   hs.IsPwo.IsWf
 #align set.finite.is_wf Set.Finite.isWf
+-/
 
+#print Set.isWf_singleton /-
 @[simp]
 theorem isWf_singleton {a : α} : IsWf ({a} : Set α) :=
   (finite_singleton a).IsWf
 #align set.is_wf_singleton Set.isWf_singleton
+-/
 
+#print Set.Subsingleton.isWf /-
 protected theorem Subsingleton.isWf (hs : s.Subsingleton) : IsWf s :=
   hs.IsPwo.IsWf
 #align set.subsingleton.is_wf Set.Subsingleton.isWf
+-/
 
+#print Set.isWf_insert /-
 @[simp]
 theorem isWf_insert {a} : IsWf (insert a s) ↔ IsWf s := by
   simp only [← singleton_union, is_wf_union, is_wf_singleton, true_and_iff]
 #align set.is_wf_insert Set.isWf_insert
+-/
 
+#print Set.IsWf.insert /-
 theorem IsWf.insert (h : IsWf s) (a : α) : IsWf (insert a s) :=
   isWf_insert.2 h
 #align set.is_wf.insert Set.IsWf.insert
+-/
 
 end IsPwo
 
@@ -630,6 +644,7 @@ section LinearOrder
 
 variable [LinearOrder α] {s : Set α}
 
+#print Set.IsWf.isPwo /-
 protected theorem IsWf.isPwo (hs : s.IsWf) : s.IsPwo :=
   by
   intro f hf
@@ -639,11 +654,14 @@ protected theorem IsWf.isPwo (hs : s.IsWf) : s.IsPwo :=
   simp only [forall_range_iff, not_lt] at hm
   exact ⟨m, m + 1, lt_add_one m, hm _⟩
 #align set.is_wf.is_pwo Set.IsWf.isPwo
+-/
 
+#print Set.isWf_iff_isPwo /-
 /-- In a linear order, the predicates `set.is_wf` and `set.is_pwo` are equivalent. -/
 theorem isWf_iff_isPwo : s.IsWf ↔ s.IsPwo :=
   ⟨IsWf.isPwo, IsPwo.isWf⟩
 #align set.is_wf_iff_is_pwo Set.isWf_iff_isPwo
+-/
 
 end LinearOrder
 
@@ -668,10 +686,12 @@ protected theorem isPwo [Preorder α] (s : Finset α) : Set.IsPwo (↑s : Set α
 #align finset.is_pwo Finset.isPwo
 -/
 
+#print Finset.isWf /-
 @[simp]
 protected theorem isWf [Preorder α] (s : Finset α) : Set.IsWf (↑s : Set α) :=
   s.finite_toSet.IsWf
 #align finset.is_wf Finset.isWf
+-/
 
 #print Finset.wellFoundedOn /-
 @[simp]
@@ -716,11 +736,13 @@ theorem partiallyWellOrderedOn_bUnion (s : Finset ι) {f : ι → Set α} :
   simpa only [Finset.sup_eq_iSup] using s.partially_well_ordered_on_sup
 #align finset.partially_well_ordered_on_bUnion Finset.partiallyWellOrderedOn_bUnion
 
+#print Finset.isWf_bUnion /-
 @[simp]
 theorem isWf_bUnion [Preorder α] (s : Finset ι) {f : ι → Set α} :
     (⋃ i ∈ s, f i).IsWf ↔ ∀ i ∈ s, (f i).IsWf :=
   s.wellFoundedOn_bUnion
 #align finset.is_wf_bUnion Finset.isWf_bUnion
+-/
 
 #print Finset.isPwo_bUnion /-
 @[simp]
@@ -738,24 +760,32 @@ section Preorder
 
 variable [Preorder α] {s : Set α} {a : α}
 
+#print Set.IsWf.min /-
 /-- `is_wf.min` returns a minimal element of a nonempty well-founded set. -/
 noncomputable def IsWf.min (hs : IsWf s) (hn : s.Nonempty) : α :=
   hs.min univ (nonempty_iff_univ_nonempty.1 hn.to_subtype)
 #align set.is_wf.min Set.IsWf.min
+-/
 
+#print Set.IsWf.min_mem /-
 theorem IsWf.min_mem (hs : IsWf s) (hn : s.Nonempty) : hs.min hn ∈ s :=
   (WellFounded.min hs univ (nonempty_iff_univ_nonempty.1 hn.to_subtype)).2
 #align set.is_wf.min_mem Set.IsWf.min_mem
+-/
 
+#print Set.IsWf.not_lt_min /-
 theorem IsWf.not_lt_min (hs : IsWf s) (hn : s.Nonempty) (ha : a ∈ s) : ¬a < hs.min hn :=
   hs.not_lt_min univ (nonempty_iff_univ_nonempty.1 hn.to_subtype) (mem_univ (⟨a, ha⟩ : s))
 #align set.is_wf.not_lt_min Set.IsWf.not_lt_min
+-/
 
+#print Set.isWf_min_singleton /-
 @[simp]
 theorem isWf_min_singleton (a) {hs : IsWf ({a} : Set α)} {hn : ({a} : Set α).Nonempty} :
     hs.min hn = a :=
   eq_of_mem_singleton (IsWf.min_mem hs hn)
 #align set.is_wf_min_singleton Set.isWf_min_singleton
+-/
 
 end Preorder
 
@@ -763,18 +793,24 @@ section LinearOrder
 
 variable [LinearOrder α] {s t : Set α} {a : α}
 
+#print Set.IsWf.min_le /-
 theorem IsWf.min_le (hs : s.IsWf) (hn : s.Nonempty) (ha : a ∈ s) : hs.min hn ≤ a :=
   le_of_not_lt (hs.not_lt_min hn ha)
 #align set.is_wf.min_le Set.IsWf.min_le
+-/
 
+#print Set.IsWf.le_min_iff /-
 theorem IsWf.le_min_iff (hs : s.IsWf) (hn : s.Nonempty) : a ≤ hs.min hn ↔ ∀ b, b ∈ s → a ≤ b :=
   ⟨fun ha b hb => le_trans ha (hs.min_le hn hb), fun h => h _ (hs.min_mem _)⟩
 #align set.is_wf.le_min_iff Set.IsWf.le_min_iff
+-/
 
+#print Set.IsWf.min_le_min_of_subset /-
 theorem IsWf.min_le_min_of_subset {hs : s.IsWf} {hsn : s.Nonempty} {ht : t.IsWf} {htn : t.Nonempty}
     (hst : s ⊆ t) : ht.min htn ≤ hs.min hsn :=
   (IsWf.le_min_iff _ _).2 fun b hb => ht.min_le htn (hst hb)
 #align set.is_wf.min_le_min_of_subset Set.IsWf.min_le_min_of_subset
+-/
 
 theorem IsWf.min_union (hs : s.IsWf) (hsn : s.Nonempty) (ht : t.IsWf) (htn : t.Nonempty) :
     (hs.union ht).min (union_nonempty.2 (Or.intro_left _ hsn)) = min (hs.min hsn) (ht.min htn) :=
@@ -950,6 +986,7 @@ theorem WellFounded.isWf [LT α] (h : WellFounded ((· < ·) : α → α → Pro
 #align well_founded.is_wf WellFounded.isWf
 -/
 
+#print Pi.isPwo /-
 /-- A version of **Dickson's lemma** any subset of functions `Π s : σ, α s` is partially well
 ordered, when `σ` is a `fintype` and each `α s` is a linear well order.
 This includes the classical case of Dickson's lemma that `ℕ ^ n` is a well partial order.
@@ -977,4 +1014,5 @@ theorem Pi.isPwo {α : ι → Type _} [∀ i, LinearOrder (α i)] [∀ i, IsWell
     refine' ⟨g'.trans g, fun a b hab => (Finset.forall_mem_cons _ _).2 _⟩
     exact ⟨hg (OrderHomClass.mono g' hab), hg' hab⟩
 #align pi.is_pwo Pi.isPwo
+-/
 

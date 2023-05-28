@@ -42,7 +42,7 @@ algebraic closure, algebraically closed
 
 universe u v w
 
-open Classical BigOperators Polynomial
+open scoped Classical BigOperators Polynomial
 
 open Polynomial
 

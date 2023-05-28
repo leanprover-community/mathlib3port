@@ -46,7 +46,7 @@ open Function MeasureTheory
 
 open Filter hiding map
 
-open Classical ENNReal Pointwise MeasureTheory
+open scoped Classical ENNReal Pointwise MeasureTheory
 
 variable (G : Type _) [MeasurableSpace G]
 

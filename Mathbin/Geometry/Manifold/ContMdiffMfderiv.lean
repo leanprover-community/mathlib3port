@@ -27,7 +27,7 @@ and related notions.
 
 open Set Function Filter ChartedSpace SmoothManifoldWithCorners Bundle
 
-open Topology Manifold Bundle
+open scoped Topology Manifold Bundle
 
 /-! ### Definition of smooth functions between manifolds -/
 

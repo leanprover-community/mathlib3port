@@ -69,7 +69,7 @@ namespace CategoryTheory
 
 open Category Bicategory
 
-open Bicategory
+open scoped Bicategory
 
 universe w₁ w₂ w₃ v₁ v₂ v₃ u₁ u₂ u₃
 

@@ -22,7 +22,7 @@ The main result is `ring_hom.finite_is_local`.
 
 namespace RingHom
 
-open Pointwise
+open scoped Pointwise
 
 theorem finiteType_stableUnderComposition : StableUnderComposition @FiniteType := by introv R hf hg;
   exact hg.comp hf

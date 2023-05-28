@@ -34,7 +34,7 @@ invariant with respect to the kernel.
 
 open MeasureTheory
 
-open MeasureTheory ENNReal ProbabilityTheory
+open scoped MeasureTheory ENNReal ProbabilityTheory
 
 namespace ProbabilityTheory
 

@@ -141,7 +141,7 @@ uniform convergence
 
 noncomputable section
 
-open Topology Classical uniformity Filter
+open scoped Topology Classical uniformity Filter
 
 open Set Filter
 
@@ -214,7 +214,7 @@ def UniformOnFun.toFun {α β} (𝔖) : (α →ᵤ[𝔖] β) ≃ (α → β) :=
 -- `f x` (because of definitional equality with `α → β`).
 end TypeAlias
 
-open UniformConvergence
+open scoped UniformConvergence
 
 namespace UniformFun
 

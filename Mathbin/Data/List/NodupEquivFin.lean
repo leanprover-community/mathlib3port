@@ -101,6 +101,7 @@ theorem get_strictMono (h : l.Sorted (· < ·)) : StrictMono fun i : Fin l.lengt
 
 variable [DecidableEq α]
 
+#print List.Sorted.getIso /-
 /-- If `l` is a list sorted w.r.t. `(<)`, then `list.nth_le` defines an order isomorphism between
 `fin (length l)` and the set of elements of `l`. -/
 def getIso (l : List α) (H : Sorted (· < ·) l) : Fin (length l) ≃o { x // x ∈ l }
@@ -108,6 +109,7 @@ def getIso (l : List α) (H : Sorted (· < ·) l) : Fin (length l) ≃o { x // x
   toEquiv := H.Nodup.getEquiv l
   map_rel_iff' i j := H.get_strictMono.le_iff_le
 #align list.sorted.nth_le_iso List.Sorted.getIso
+-/
 
 variable (H : Sorted (· < ·) l) {x : { x // x ∈ l }} {i : Fin l.length}
 

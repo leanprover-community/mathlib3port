@@ -31,7 +31,7 @@ submonoid, then your localization is trivial (see `is_localization.unique_of_zer
 -/
 
 
-open Cardinal nonZeroDivisors
+open scoped Cardinal nonZeroDivisors
 
 universe u v
 

@@ -31,7 +31,7 @@ Define filters for other cardinalities of the complement.
 
 open Set Function
 
-open Classical
+open scoped Classical
 
 variable {ι α β : Type _} {l : Filter α}
 

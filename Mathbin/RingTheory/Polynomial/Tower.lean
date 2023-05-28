@@ -26,7 +26,7 @@ When you update this file, you can also try to make a corresponding update in
 -/
 
 
-open Polynomial
+open scoped Polynomial
 
 variable (R A B : Type _)
 

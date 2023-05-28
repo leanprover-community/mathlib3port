@@ -37,7 +37,7 @@ compactification.
 
 open Set Metric Filter TopologicalSpace
 
-open Topology Alexandroff
+open scoped Topology Alexandroff
 
 -- mathport name: «exprℚ∞»
 local notation "ℚ∞" => Alexandroff ℚ

@@ -25,7 +25,7 @@ are irreducible, and uniquely determined by their defining property.
 -/
 
 
-open Classical Polynomial
+open scoped Classical Polynomial
 
 open Polynomial Set Function minpoly
 

@@ -330,7 +330,7 @@ instance (priority := 100) of_subsingleton [Subsingleton M] : IsAdicComplete I M
 #align is_adic_complete.of_subsingleton IsAdicComplete.of_subsingleton
 -/
 
-open BigOperators
+open scoped BigOperators
 
 open Finset
 

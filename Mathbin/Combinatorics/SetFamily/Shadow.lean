@@ -190,7 +190,7 @@ theorem mem_shadow_iff_exists_mem_card_add :
 
 end Shadow
 
-open FinsetFamily
+open scoped FinsetFamily
 
 section UpShadow
 

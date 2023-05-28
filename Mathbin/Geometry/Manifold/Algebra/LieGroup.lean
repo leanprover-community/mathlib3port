@@ -43,7 +43,7 @@ so the definition does not apply. Hence the definition should be more general, a
 
 noncomputable section
 
-open Manifold
+open scoped Manifold
 
 -- See note [Design choices about smooth algebraic structures]
 /-- A Lie (additive) group is a group and a smooth manifold at the same time in which

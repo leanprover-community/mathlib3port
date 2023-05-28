@@ -34,7 +34,7 @@ For example, `algebra.adjoin K {x}` might not include `x⁻¹`.
 
 open FiniteDimensional Polynomial
 
-open Classical Polynomial
+open scoped Classical Polynomial
 
 namespace IntermediateField
 
@@ -537,7 +537,7 @@ theorem adjoin_rootSet_isSplittingField {p : F[X]} (hp : p.Splits (algebraMap F 
   isSplittingField_iff.mpr ⟨splits_of_splits hp fun x hx => subset_adjoin F (p.rootSet E) hx, rfl⟩
 #align intermediate_field.adjoin_root_set_is_splitting_field IntermediateField.adjoin_rootSet_isSplittingField
 
-open BigOperators
+open scoped BigOperators
 
 /-- A compositum of splitting fields is a splitting field -/
 theorem isSplittingField_iSup {ι : Type _} {t : ι → IntermediateField F E} {p : ι → F[X]}

@@ -35,7 +35,7 @@ universe u v w w₁ w₂
 
 section Matrices
 
-open Matrix
+open scoped Matrix
 
 variable {R : Type u} [CommRing R]
 

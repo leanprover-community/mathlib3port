@@ -55,7 +55,7 @@ divergence theorem, Bochner integral
 
 open Set Finset TopologicalSpace Function BoxIntegral MeasureTheory Filter
 
-open BigOperators Classical Topology Interval
+open scoped BigOperators Classical Topology Interval
 
 universe u
 
@@ -378,7 +378,7 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable_of_equiv {F : 
 
 end
 
-open Interval
+open scoped Interval
 
 open ContinuousLinearMap (smul_right)
 

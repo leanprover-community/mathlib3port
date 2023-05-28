@@ -50,44 +50,58 @@ variable {α : Type _}
 
 namespace Nonneg
 
+#print Nonneg.orderBot /-
 /-- This instance uses data fields from `subtype.partial_order` to help type-class inference.
 The `set.Ici` data fields are definitionally equal, but that requires unfolding semireducible
 definitions, so type-class inference won't see this. -/
 instance orderBot [Preorder α] {a : α} : OrderBot { x : α // a ≤ x } :=
   { Set.Ici.orderBot with }
 #align nonneg.order_bot Nonneg.orderBot
+-/
 
 theorem bot_eq [Preorder α] {a : α} : (⊥ : { x : α // a ≤ x }) = ⟨a, le_rfl⟩ :=
   rfl
 #align nonneg.bot_eq Nonneg.bot_eq
 
+#print Nonneg.noMaxOrder /-
 instance noMaxOrder [PartialOrder α] [NoMaxOrder α] {a : α} : NoMaxOrder { x : α // a ≤ x } :=
   Set.Ici.noMaxOrder
 #align nonneg.no_max_order Nonneg.noMaxOrder
+-/
 
+#print Nonneg.semilatticeSup /-
 instance semilatticeSup [SemilatticeSup α] {a : α} : SemilatticeSup { x : α // a ≤ x } :=
   Set.Ici.semilatticeSup
 #align nonneg.semilattice_sup Nonneg.semilatticeSup
+-/
 
+#print Nonneg.semilatticeInf /-
 instance semilatticeInf [SemilatticeInf α] {a : α} : SemilatticeInf { x : α // a ≤ x } :=
   Set.Ici.semilatticeInf
 #align nonneg.semilattice_inf Nonneg.semilatticeInf
+-/
 
+#print Nonneg.distribLattice /-
 instance distribLattice [DistribLattice α] {a : α} : DistribLattice { x : α // a ≤ x } :=
   Set.Ici.distribLattice
 #align nonneg.distrib_lattice Nonneg.distribLattice
+-/
 
+#print Nonneg.densely_ordered /-
 instance densely_ordered [Preorder α] [DenselyOrdered α] {a : α} :
     DenselyOrdered { x : α // a ≤ x } :=
   show DenselyOrdered (Ici a) from Set.denselyOrdered
 #align nonneg.densely_ordered Nonneg.densely_ordered
+-/
 
+#print Nonneg.conditionallyCompleteLinearOrder /-
 /-- If `Sup ∅ ≤ a` then `{x : α // a ≤ x}` is a `conditionally_complete_linear_order`. -/
 @[reducible]
 protected noncomputable def conditionallyCompleteLinearOrder [ConditionallyCompleteLinearOrder α]
     {a : α} : ConditionallyCompleteLinearOrder { x : α // a ≤ x } :=
   { @ordConnectedSubsetConditionallyCompleteLinearOrder α (Set.Ici a) _ ⟨⟨a, le_rfl⟩⟩ _ with }
 #align nonneg.conditionally_complete_linear_order Nonneg.conditionallyCompleteLinearOrder
+-/
 
 /-- If `Sup ∅ ≤ a` then `{x : α // a ≤ x}` is a `conditionally_complete_linear_order_bot`.
 
@@ -103,13 +117,17 @@ protected noncomputable def conditionallyCompleteLinearOrderBot [ConditionallyCo
         Subtype.eq <| by rw [bot_eq]; cases' h.lt_or_eq with h2 h2; · simp [h2.not_le]; simp [h2] }
 #align nonneg.conditionally_complete_linear_order_bot Nonneg.conditionallyCompleteLinearOrderBot
 
+#print Nonneg.inhabited /-
 instance inhabited [Preorder α] {a : α} : Inhabited { x : α // a ≤ x } :=
   ⟨⟨a, le_rfl⟩⟩
 #align nonneg.inhabited Nonneg.inhabited
+-/
 
+#print Nonneg.zero /-
 instance zero [Zero α] [Preorder α] : Zero { x : α // 0 ≤ x } :=
   ⟨⟨0, le_rfl⟩⟩
 #align nonneg.has_zero Nonneg.zero
+-/
 
 #print Nonneg.coe_zero /-
 @[simp, norm_cast]
@@ -118,11 +136,13 @@ protected theorem coe_zero [Zero α] [Preorder α] : ((0 : { x : α // 0 ≤ x }
 #align nonneg.coe_zero Nonneg.coe_zero
 -/
 
+#print Nonneg.mk_eq_zero /-
 @[simp]
 theorem mk_eq_zero [Zero α] [Preorder α] {x : α} (hx : 0 ≤ x) :
     (⟨x, hx⟩ : { x : α // 0 ≤ x }) = 0 ↔ x = 0 :=
   Subtype.ext_iff
 #align nonneg.mk_eq_zero Nonneg.mk_eq_zero
+-/
 
 instance add [AddZeroClass α] [Preorder α] [CovariantClass α α (· + ·) (· ≤ ·)] :
     Add { x : α // 0 ≤ x } :=
@@ -343,44 +363,58 @@ section LinearOrder
 
 variable [Zero α] [LinearOrder α]
 
+#print Nonneg.toNonneg /-
 /-- The function `a ↦ max a 0` of type `α → {x : α // 0 ≤ x}`. -/
 def toNonneg (a : α) : { x : α // 0 ≤ x } :=
   ⟨max a 0, le_max_right _ _⟩
 #align nonneg.to_nonneg Nonneg.toNonneg
+-/
 
 @[simp]
 theorem coe_toNonneg {a : α} : (toNonneg a : α) = max a 0 :=
   rfl
 #align nonneg.coe_to_nonneg Nonneg.coe_toNonneg
 
+#print Nonneg.toNonneg_of_nonneg /-
 @[simp]
 theorem toNonneg_of_nonneg {a : α} (h : 0 ≤ a) : toNonneg a = ⟨a, h⟩ := by simp [to_nonneg, h]
 #align nonneg.to_nonneg_of_nonneg Nonneg.toNonneg_of_nonneg
+-/
 
+#print Nonneg.toNonneg_coe /-
 @[simp]
 theorem toNonneg_coe {a : { x : α // 0 ≤ x }} : toNonneg (a : α) = a := by cases' a with a ha;
   exact to_nonneg_of_nonneg ha
 #align nonneg.to_nonneg_coe Nonneg.toNonneg_coe
+-/
 
+#print Nonneg.toNonneg_le /-
 @[simp]
 theorem toNonneg_le {a : α} {b : { x : α // 0 ≤ x }} : toNonneg a ≤ b ↔ a ≤ b := by
   cases' b with b hb; simp [to_nonneg, hb]
 #align nonneg.to_nonneg_le Nonneg.toNonneg_le
+-/
 
+#print Nonneg.toNonneg_lt /-
 @[simp]
 theorem toNonneg_lt {a : { x : α // 0 ≤ x }} {b : α} : a < toNonneg b ↔ ↑a < b := by
   cases' a with a ha; simp [to_nonneg, ha.not_lt]
 #align nonneg.to_nonneg_lt Nonneg.toNonneg_lt
+-/
 
+#print Nonneg.sub /-
 instance sub [Sub α] : Sub { x : α // 0 ≤ x } :=
   ⟨fun x y => toNonneg (x - y)⟩
 #align nonneg.has_sub Nonneg.sub
+-/
 
+#print Nonneg.mk_sub_mk /-
 @[simp]
 theorem mk_sub_mk [Sub α] {x y : α} (hx : 0 ≤ x) (hy : 0 ≤ y) :
     (⟨x, hx⟩ : { x : α // 0 ≤ x }) - ⟨y, hy⟩ = toNonneg (x - y) :=
   rfl
 #align nonneg.mk_sub_mk Nonneg.mk_sub_mk
+-/
 
 end LinearOrder
 

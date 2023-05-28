@@ -49,7 +49,7 @@ noncomputable section
 
 open Set Function Filter TopologicalSpace ENNReal Emetric Finset
 
-open Classical Topology ENNReal MeasureTheory BigOperators
+open scoped Classical Topology ENNReal MeasureTheory BigOperators
 
 variable {α β ι E F 𝕜 : Type _}
 

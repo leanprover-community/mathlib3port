@@ -367,7 +367,7 @@ theorem nilpotent_iff_lowerCentralSeries : IsNilpotent G ↔ ∃ n, lowerCentral
 
 section Classical
 
-open Classical
+open scoped Classical
 
 variable [hG : IsNilpotent G]
 

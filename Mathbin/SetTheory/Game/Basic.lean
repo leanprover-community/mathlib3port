@@ -29,7 +29,7 @@ the abelian group structure on games allows us to simplify many proofs for pre-g
 
 open Function PGame
 
-open PGame
+open scoped PGame
 
 universe u
 

@@ -30,7 +30,7 @@ This file defines covering maps.
 -/
 
 
-open Bundle
+open scoped Bundle
 
 variable {E X : Type _} [TopologicalSpace E] [TopologicalSpace X] (f : E → X) (s : Set X)
 

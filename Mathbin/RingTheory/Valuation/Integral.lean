@@ -20,7 +20,7 @@ The ring of integers is integrally closed inside the original ring.
 
 universe u v w
 
-open BigOperators
+open scoped BigOperators
 
 namespace Valuation
 

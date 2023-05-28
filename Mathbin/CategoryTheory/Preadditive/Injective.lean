@@ -93,7 +93,7 @@ theorem comp_factorThru {J X Y : C} [Injective J] (g : X ⟶ J) (f : X ⟶ Y) [M
 
 section
 
-open ZeroObject
+open scoped ZeroObject
 
 #print CategoryTheory.Injective.zero_injective /-
 instance zero_injective [HasZeroObject C] [HasZeroMorphisms C] : Injective (0 : C)

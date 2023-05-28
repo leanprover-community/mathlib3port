@@ -49,7 +49,7 @@ universe u
 
 open Metric Set FiniteDimensional MeasureTheory Filter Fin
 
-open ENNReal Topology
+open scoped ENNReal Topology
 
 noncomputable section
 

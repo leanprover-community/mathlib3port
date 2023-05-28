@@ -38,7 +38,7 @@ open Filter ENNReal
 
 open Function (support)
 
-open Classical Topology BigOperators NNReal ENNReal MeasureTheory
+open scoped Classical Topology BigOperators NNReal ENNReal MeasureTheory
 
 namespace MeasureTheory
 
@@ -140,10 +140,12 @@ theorem preimage_eq_empty_iff (f : α →ₛ β) (b : β) : f ⁻¹' {b} = ∅ �
   preimage_singleton_eq_empty.trans <| not_congr mem_range.symm
 #align measure_theory.simple_func.preimage_eq_empty_iff MeasureTheory.SimpleFunc.preimage_eq_empty_iff
 
+#print MeasureTheory.SimpleFunc.exists_forall_le /-
 theorem exists_forall_le [Nonempty β] [Preorder β] [IsDirected β (· ≤ ·)] (f : α →ₛ β) :
     ∃ C, ∀ x, f x ≤ C :=
   f.range.exists_le.imp fun C => forall_range_iff.1
 #align measure_theory.simple_func.exists_forall_le MeasureTheory.SimpleFunc.exists_forall_le
+-/
 
 #print MeasureTheory.SimpleFunc.const /-
 /-- Constant function as a `simple_func`. -/
@@ -531,10 +533,12 @@ theorem coe_div [Div β] (f g : α →ₛ β) : ⇑(f / g) = f / g :=
 #align measure_theory.simple_func.coe_sub MeasureTheory.SimpleFunc.coe_sub
 -/
 
+#print MeasureTheory.SimpleFunc.coe_le /-
 @[simp, norm_cast]
 theorem coe_le [Preorder β] {f g : α →ₛ β} : (f : α → β) ≤ g ↔ f ≤ g :=
   Iff.rfl
 #align measure_theory.simple_func.coe_le MeasureTheory.SimpleFunc.coe_le
+-/
 
 #print MeasureTheory.SimpleFunc.coe_sup /-
 @[simp, norm_cast]
@@ -869,6 +873,7 @@ theorem mem_image_of_mem_range_restrict {r : β} {s : Set α} {f : α →ₛ β}
     exact (h0 <| eq_zero_of_mem_range_zero hr).elim
 #align measure_theory.simple_func.mem_image_of_mem_range_restrict MeasureTheory.SimpleFunc.mem_image_of_mem_range_restrict
 
+#print MeasureTheory.SimpleFunc.restrict_mono /-
 @[mono]
 theorem restrict_mono [Preorder β] (s : Set α) {f g : α →ₛ β} (H : f ≤ g) :
     f.restrict s ≤ g.restrict s :=
@@ -876,6 +881,7 @@ theorem restrict_mono [Preorder β] (s : Set α) {f g : α →ₛ β} (H : f ≤
     simp only [coe_restrict _ hs, indicator_le_indicator (H x)]
   else by simp only [restrict_of_not_measurable hs, le_refl]
 #align measure_theory.simple_func.restrict_mono MeasureTheory.SimpleFunc.restrict_mono
+-/
 
 end Restrict
 
@@ -885,13 +891,16 @@ section
 
 variable [SemilatticeSup β] [OrderBot β] [Zero β]
 
+#print MeasureTheory.SimpleFunc.approx /-
 /-- Fix a sequence `i : ℕ → β`. Given a function `α → β`, its `n`-th approximation
 by simple functions is defined so that in case `β = ℝ≥0∞` it sends each `a` to the supremum
 of the set `{i k | k ≤ n ∧ i k ≤ f a}`, see `approx_apply` and `supr_approx_apply` for details. -/
 def approx (i : ℕ → β) (f : α → β) (n : ℕ) : α →ₛ β :=
   (Finset.range n).sup fun k => restrict (const α (i k)) { a : α | i k ≤ f a }
 #align measure_theory.simple_func.approx MeasureTheory.SimpleFunc.approx
+-/
 
+#print MeasureTheory.SimpleFunc.approx_apply /-
 theorem approx_apply [TopologicalSpace β] [OrderClosedTopology β] [MeasurableSpace β]
     [OpensMeasurableSpace β] {i : ℕ → β} {f : α → β} {n : ℕ} (a : α) (hf : Measurable f) :
     (approx i f n : α →ₛ β) a = (Finset.range n).sup fun k => if i k ≤ f a then i k else 0 :=
@@ -904,10 +913,13 @@ theorem approx_apply [TopologicalSpace β] [OrderClosedTopology β] [MeasurableS
   rfl
   exact hf measurableSet_Ici
 #align measure_theory.simple_func.approx_apply MeasureTheory.SimpleFunc.approx_apply
+-/
 
+#print MeasureTheory.SimpleFunc.monotone_approx /-
 theorem monotone_approx (i : ℕ → β) (f : α → β) : Monotone (approx i f) := fun n m h =>
   Finset.sup_mono <| Finset.range_subset.2 h
 #align measure_theory.simple_func.monotone_approx MeasureTheory.SimpleFunc.monotone_approx
+-/
 
 theorem approx_comp [TopologicalSpace β] [OrderClosedTopology β] [MeasurableSpace β]
     [OpensMeasurableSpace β] [MeasurableSpace γ] {i : ℕ → β} {f : γ → β} {g : α → γ} {n : ℕ} (a : α)

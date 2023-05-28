@@ -62,7 +62,7 @@ Vitali-Carathéodory theorem, in the file `measure_theory.vitali_caratheodory`.
 -/
 
 
-open ENNReal NNReal Topology BoundedContinuousFunction
+open scoped ENNReal NNReal Topology BoundedContinuousFunction
 
 open MeasureTheory TopologicalSpace ContinuousMap Set
 

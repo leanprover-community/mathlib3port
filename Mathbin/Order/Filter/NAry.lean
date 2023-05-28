@@ -33,7 +33,7 @@ keep them in sync.
 
 open Function Set
 
-open Filter
+open scoped Filter
 
 namespace Filter
 

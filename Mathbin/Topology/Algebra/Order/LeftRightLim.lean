@@ -41,7 +41,7 @@ Prove corresponding stronger results for strict_mono and strict_anti functions.
 
 open Set Filter
 
-open Topology
+open scoped Topology
 
 section
 

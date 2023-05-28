@@ -35,7 +35,7 @@ namespace FirstOrder
 
 namespace Language
 
-open FirstOrder
+open scoped FirstOrder
 
 open Structure
 

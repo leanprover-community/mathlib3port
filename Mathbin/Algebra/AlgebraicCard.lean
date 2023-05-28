@@ -29,7 +29,7 @@ universe u v
 
 open Cardinal Polynomial Set
 
-open Cardinal Polynomial
+open scoped Cardinal Polynomial
 
 namespace Algebraic
 

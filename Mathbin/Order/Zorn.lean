@@ -110,15 +110,19 @@ section Preorder
 
 variable [Preorder α]
 
+#print zorn_preorder /-
 theorem zorn_preorder (h : ∀ c : Set α, IsChain (· ≤ ·) c → BddAbove c) :
     ∃ m : α, ∀ a, m ≤ a → a ≤ m :=
   exists_maximal_of_chains_bounded h fun a b c => le_trans
 #align zorn_preorder zorn_preorder
+-/
 
+#print zorn_nonempty_preorder /-
 theorem zorn_nonempty_preorder [Nonempty α]
     (h : ∀ c : Set α, IsChain (· ≤ ·) c → c.Nonempty → BddAbove c) : ∃ m : α, ∀ a, m ≤ a → a ≤ m :=
   exists_maximal_of_nonempty_chains_bounded h fun a b c => le_trans
 #align zorn_nonempty_preorder zorn_nonempty_preorder
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (c «expr ⊆ » s) -/
 theorem zorn_preorder₀ (s : Set α)
@@ -149,12 +153,14 @@ theorem zorn_nonempty_preorder₀ (s : Set α)
 #align zorn_nonempty_preorder₀ zorn_nonempty_preorder₀
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (c «expr ⊆ » Ici[set.Ici] a) -/
+#print zorn_nonempty_Ici₀ /-
 theorem zorn_nonempty_Ici₀ (a : α)
     (ih : ∀ (c) (_ : c ⊆ Ici a), IsChain (· ≤ ·) c → ∀ y ∈ c, ∃ ub, a ≤ ub ∧ ∀ z ∈ c, z ≤ ub)
     (x : α) (hax : a ≤ x) : ∃ m, x ≤ m ∧ ∀ z, m ≤ z → z ≤ m :=
   let ⟨m, hma, hxm, hm⟩ := zorn_nonempty_preorder₀ (Ici a) (by simpa using ih) x hax
   ⟨m, hxm, fun z hmz => hm _ (hax.trans <| hxm.trans hmz) hmz⟩
 #align zorn_nonempty_Ici₀ zorn_nonempty_Ici₀
+-/
 
 end Preorder
 
@@ -162,17 +168,21 @@ section PartialOrder
 
 variable [PartialOrder α]
 
+#print zorn_partialOrder /-
 theorem zorn_partialOrder (h : ∀ c : Set α, IsChain (· ≤ ·) c → BddAbove c) :
     ∃ m : α, ∀ a, m ≤ a → a = m :=
   let ⟨m, hm⟩ := zorn_preorder h
   ⟨m, fun a ha => le_antisymm (hm a ha) ha⟩
 #align zorn_partial_order zorn_partialOrder
+-/
 
+#print zorn_nonempty_partialOrder /-
 theorem zorn_nonempty_partialOrder [Nonempty α]
     (h : ∀ c : Set α, IsChain (· ≤ ·) c → c.Nonempty → BddAbove c) : ∃ m : α, ∀ a, m ≤ a → a = m :=
   let ⟨m, hm⟩ := zorn_nonempty_preorder h
   ⟨m, fun a ha => le_antisymm (hm a ha) ha⟩
 #align zorn_nonempty_partial_order zorn_nonempty_partialOrder
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (c «expr ⊆ » s) -/
 theorem zorn_partialOrder₀ (s : Set α)
