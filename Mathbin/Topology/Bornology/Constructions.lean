@@ -74,18 +74,14 @@ theorem isBounded_image_fst_and_snd {s : Set (α × β)} :
 variable {s : Set α} {t : Set β} {S : ∀ i, Set (π i)}
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Bornology.IsBounded.fst_of_prod /-
 theorem IsBounded.fst_of_prod (h : IsBounded (s ×ˢ t)) (ht : t.Nonempty) : IsBounded s :=
   fst_image_prod s ht ▸ (isBounded_image_fst_and_snd.2 h).1
 #align bornology.is_bounded.fst_of_prod Bornology.IsBounded.fst_of_prod
--/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Bornology.IsBounded.snd_of_prod /-
 theorem IsBounded.snd_of_prod (h : IsBounded (s ×ˢ t)) (hs : s.Nonempty) : IsBounded t :=
   snd_image_prod hs t ▸ (isBounded_image_fst_and_snd.2 h).2
 #align bornology.is_bounded.snd_of_prod Bornology.IsBounded.snd_of_prod
--/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem IsBounded.prod (hs : IsBounded s) (ht : IsBounded t) : IsBounded (s ×ˢ t) :=
@@ -95,22 +91,18 @@ theorem IsBounded.prod (hs : IsBounded s) (ht : IsBounded t) : IsBounded (s ×ˢ
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Bornology.isBounded_prod_of_nonempty /-
 theorem isBounded_prod_of_nonempty (hne : Set.Nonempty (s ×ˢ t)) :
     IsBounded (s ×ˢ t) ↔ IsBounded s ∧ IsBounded t :=
   ⟨fun h => ⟨h.fst_of_prod hne.snd, h.snd_of_prod hne.fst⟩, fun h => h.1.Prod h.2⟩
 #align bornology.is_bounded_prod_of_nonempty Bornology.isBounded_prod_of_nonempty
--/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Bornology.isBounded_prod /-
 theorem isBounded_prod : IsBounded (s ×ˢ t) ↔ s = ∅ ∨ t = ∅ ∨ IsBounded s ∧ IsBounded t :=
   by
   rcases s.eq_empty_or_nonempty with (rfl | hs); · simp
   rcases t.eq_empty_or_nonempty with (rfl | ht); · simp
   simp only [hs.ne_empty, ht.ne_empty, is_bounded_prod_of_nonempty (hs.prod ht), false_or_iff]
 #align bornology.is_bounded_prod Bornology.isBounded_prod
--/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Bornology.isBounded_prod_self /-

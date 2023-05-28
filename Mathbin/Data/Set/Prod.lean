@@ -245,10 +245,12 @@ theorem prod_preimage_eq {f : γ → α} {g : δ → β} :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Set.prod_preimage_left /-
 theorem prod_preimage_left {f : γ → α} :
     (f ⁻¹' s) ×ˢ t = (fun p : γ × β => (f p.1, p.2)) ⁻¹' s ×ˢ t :=
   rfl
 #align set.prod_preimage_left Set.prod_preimage_left
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -355,10 +357,12 @@ theorem range_prod_map {m₁ : α → γ} {m₂ : β → δ} : range (Prod.map m
 #align set.range_prod_map Set.range_prod_map
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Set.prod_range_univ_eq /-
 theorem prod_range_univ_eq {m₁ : α → γ} :
     range m₁ ×ˢ (univ : Set β) = range fun p : α × β => (m₁ p.1, p.2) :=
   ext <| by simp [range]
 #align set.prod_range_univ_eq Set.prod_range_univ_eq
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem prod_univ_range_eq {m₂ : β → δ} :
@@ -470,7 +474,6 @@ theorem prod_diff_prod : s ×ˢ t \ s₁ ×ˢ t₁ = s ×ˢ (t \ t₁) ∪ (s \ 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print Set.prod_subset_prod_iff /-
 /-- A product set is included in a product set if and only factors are included, or a factor of the
 first set is empty. -/
 theorem prod_subset_prod_iff : s ×ˢ t ⊆ s₁ ×ˢ t₁ ↔ s ⊆ s₁ ∧ t ⊆ t₁ ∨ s = ∅ ∨ t = ∅ :=
@@ -487,7 +490,6 @@ theorem prod_subset_prod_iff : s ×ˢ t ⊆ s₁ ×ˢ t₁ ↔ s ⊆ s₁ ∧ t 
     simp only [st.1.ne_empty, st.2.ne_empty, or_false_iff] at H
     exact prod_mono H.1 H.2
 #align set.prod_subset_prod_iff Set.prod_subset_prod_iff
--/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

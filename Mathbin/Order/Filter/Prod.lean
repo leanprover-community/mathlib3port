@@ -263,14 +263,18 @@ theorem prod_comap_comap_eq.{u, v, w, x} {α₁ : Type u} {α₂ : Type v} {β�
 #align filter.prod_comap_comap_eq Filter.prod_comap_comap_eq
 -/
 
+#print Filter.prod_comm' /-
 theorem prod_comm' : f ×ᶠ g = comap Prod.swap (g ×ᶠ f) := by
   simp only [Filter.prod, comap_comap, (· ∘ ·), inf_comm, Prod.fst_swap, eq_self_iff_true,
     Prod.snd_swap, comap_inf]
 #align filter.prod_comm' Filter.prod_comm'
+-/
 
+#print Filter.prod_comm /-
 theorem prod_comm : f ×ᶠ g = map (fun p : β × α => (p.2, p.1)) (g ×ᶠ f) := by
   rw [prod_comm', ← map_swap_eq_comap_swap]; rfl
 #align filter.prod_comm Filter.prod_comm
+-/
 
 @[simp]
 theorem map_fst_prod (f : Filter α) (g : Filter β) [NeBot g] : map Prod.fst (f ×ᶠ g) = f :=

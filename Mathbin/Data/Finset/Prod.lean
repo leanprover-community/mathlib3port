@@ -267,10 +267,12 @@ theorem singleton_product {a : α} : ({a} : Finset α) ×ˢ t = t.map ⟨Prod.mk
 #align finset.singleton_product Finset.singleton_product
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Finset.product_singleton /-
 @[simp]
 theorem product_singleton {b : β} : s ×ˢ {b} = s.map ⟨fun i => (i, b), Prod.mk.inj_right _⟩ := by
   ext ⟨x, y⟩; simp [and_left_comm, eq_comm]
 #align finset.product_singleton Finset.product_singleton
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem singleton_product_singleton {a : α} {b : β} :
